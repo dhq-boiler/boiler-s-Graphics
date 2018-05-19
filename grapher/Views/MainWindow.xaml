@@ -9,6 +9,7 @@
     xmlns:local="clr-namespace:grapher.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
+    Loaded="Window_Loaded"
     Title="GRAPHER"
     Width="800"
     Height="450"
@@ -62,16 +63,20 @@
         <DockPanel DockPanel.Dock="Left">
             <ToolBarTray Orientation="Vertical">
                 <ToolBar>
-                    <ToggleButton>
+                    <ToggleButton Command="{Binding SelectModeCommand}" IsChecked="{Binding SelectIsChecked}">
+                        <Image Source="pack://application:,,,/Assets/img/pointer.png" />
+                    </ToggleButton>
+                    <ToggleButton Command="{Binding RectangleModeCommand}" IsChecked="{Binding RectangleIsChecked}">
                         <Image Source="pack://application:,,,/Assets/img/rectangle.png" />
                     </ToggleButton>
                 </ToolBar>
             </ToolBarTray>
         </DockPanel>
-        <ItemsControl ItemsSource="{Binding RenderItems}">
+        <ItemsControl x:Name="viewport_host" ItemsSource="{Binding RenderItems}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <Canvas
+                        x:Name="viewport"
                         AllowDrop="True"
                         Background="Transparent">
                         <i:Interaction.Behaviors>

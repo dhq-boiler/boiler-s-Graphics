@@ -89,6 +89,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Extensions\Extensions.cs" />
     <Compile Include="Models\DraggingItem.cs" />
     <Compile Include="Models\Rectangle.cs" />
     <Compile Include="Models\RenderItem.cs" />
@@ -97,7 +98,9 @@
     <Compile Include="Views\Behaviors\CursorInfo.cs" />
     <Compile Include="Views\Behaviors\DeselectBehavior.cs" />
     <Compile Include="Views\Behaviors\DragStartBehavior.cs" />
+    <Compile Include="Views\Behaviors\DrawBehavior.cs" />
     <Compile Include="Views\Behaviors\DropAcceptDescription.cs" />
+    <Compile Include="Views\Behaviors\RectangleAdorner.cs" />
     <Compile Include="Views\Behaviors\SelectBehavior.cs" />
     <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -144,6 +147,8 @@
   <ItemGroup>
     <Resource Include="Assets\img\rectangle.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Assets\img\pointer.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

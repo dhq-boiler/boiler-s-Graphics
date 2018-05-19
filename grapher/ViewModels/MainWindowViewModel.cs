@@ -1,9 +1,13 @@
-﻿using grapher.Models;
+﻿using grapher.Extensions;
+using grapher.Models;
 using grapher.Views.Behaviors;
+using Prism.Commands;
 using Prism.Mvvm;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Interactivity;
 using System.Windows.Media;
 
 namespace grapher.ViewModels
@@ -12,6 +16,14 @@ namespace grapher.ViewModels
     {
         private ObservableCollection<RenderItemViewModel> _RenderItems;
         private DropAcceptDescription _Description;
+        private bool _SelectIsChecked;
+        private bool _RectangleIsChecked;
+
+        public ICommand SelectModeCommand { get; set; }
+
+        public ICommand RectangleModeCommand { get; set; }
+
+        public Behavior DrawBehavior { get; set; } = new DrawBehavior();
 
         public ObservableCollection<RenderItemViewModel> RenderItems
         {
@@ -26,6 +38,47 @@ namespace grapher.ViewModels
             RenderItems.Add(new RectangleViewModel(new Rectangle() { X = 250, Y = 250, Width = 100, Height = 100, Stroke = new SolidColorBrush(Colors.Black), Fill = new SolidColorBrush(Colors.Blue) }));
             Description = new DropAcceptDescription();
             Description.DragDrop += Description_DragDrop;
+
+            RegisterCommands();
+        }
+
+        public void Initialize()
+        {
+            SwitchToSelectMode();
+        }
+
+        private void RegisterCommands()
+        {
+            SelectModeCommand = new DelegateCommand(() =>
+            {
+                SwitchToSelectMode();
+            });
+            RectangleModeCommand = new DelegateCommand(() =>
+            {
+                SwitchToRectangleMode();
+            });
+        }
+
+        private void SwitchToRectangleMode()
+        {
+            RectangleIsChecked = true;
+            SelectIsChecked = false;
+
+            var itemsControl = (ItemsControl)App.Current.MainWindow.FindName("viewport_host");
+            var canvas = (Canvas)itemsControl.GetChildOfType<Canvas>();
+            var behaviors = Interaction.GetBehaviors(canvas);
+            behaviors.Add(DrawBehavior);
+        }
+
+        private void SwitchToSelectMode()
+        {
+            SelectIsChecked = true;
+            RectangleIsChecked = false;
+
+            var itemsControl = (ItemsControl)App.Current.MainWindow.FindName("viewport_host");
+            var canvas = (Canvas)itemsControl.GetChildOfType<Canvas>();
+            var behaviors = Interaction.GetBehaviors(canvas);
+            behaviors.Remove(DrawBehavior);
         }
 
         private void Description_DragDrop(System.Windows.DragEventArgs obj)
@@ -38,7 +91,7 @@ namespace grapher.ViewModels
             {
                 source = (FrameworkElement)VisualTreeHelper.GetParent((DependencyObject)source);
             }
-            
+
             var position = obj.GetPosition((IInputElement)source);
             rectangle.X.Value = position.X - item.XOffset;
             rectangle.Y.Value = position.Y - item.YOffset;
@@ -48,6 +101,18 @@ namespace grapher.ViewModels
         {
             get { return _Description; }
             set { SetProperty(ref _Description, value); }
+        }
+
+        public bool SelectIsChecked
+        {
+            get { return _SelectIsChecked; }
+            set { SetProperty(ref _SelectIsChecked, value); }
+        }
+
+        public bool RectangleIsChecked
+        {
+            get { return _RectangleIsChecked; }
+            set { SetProperty(ref _RectangleIsChecked, value); }
         }
     }
 }
