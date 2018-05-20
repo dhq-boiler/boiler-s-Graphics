@@ -20,12 +20,17 @@ namespace grapher.ViewModels
         private bool _RectangleIsChecked;
         private Cursor _ViewportCursor;
         private Cursor _ApplicationCursor;
+        private bool _StraightLineIsChecked;
 
         public ICommand SelectModeCommand { get; set; }
 
+        public ICommand StraightLineModeCommand { get; set; }
+
         public ICommand RectangleModeCommand { get; set; }
 
-        public Behavior DrawBehavior { get; set; } = new DrawRectangleBehavior();
+        public Behavior DrawRectangleBehavior { get; set; } = new DrawRectangleBehavior();
+
+        public Behavior DrawStraightLineBehavior { get; set; } = new DrawStraightLineBehavior();
 
         public ObservableCollection<RenderItemViewModel> RenderItems
         {
@@ -56,6 +61,10 @@ namespace grapher.ViewModels
             {
                 SwitchToSelectMode();
             });
+            StraightLineModeCommand = new DelegateCommand(() =>
+            {
+                SwitchToStraightLineMode();
+            });
             RectangleModeCommand = new DelegateCommand(() =>
             {
                 SwitchToRectangleMode();
@@ -66,18 +75,42 @@ namespace grapher.ViewModels
         {
             RectangleIsChecked = true;
             SelectIsChecked = false;
+            StraightLineIsChecked = false;
 
             ViewportCursor = Cursors.Cross;
 
             var itemsControl = (ItemsControl)App.Current.MainWindow.FindName("viewport_host");
             var canvas = (Canvas)itemsControl.GetChildOfType<Canvas>();
             var behaviors = Interaction.GetBehaviors(canvas);
-            behaviors.Add(DrawBehavior);
+            behaviors.Remove(DrawStraightLineBehavior);
+            if (!behaviors.Contains(DrawRectangleBehavior))
+            {
+                behaviors.Add(DrawRectangleBehavior);
+            }
+        }
+
+        private void SwitchToStraightLineMode()
+        {
+            StraightLineIsChecked = true;
+            SelectIsChecked = false;
+            RectangleIsChecked = false;
+
+            ViewportCursor = Cursors.Cross;
+
+            var itemsControl = (ItemsControl)App.Current.MainWindow.FindName("viewport_host");
+            var canvas = (Canvas)itemsControl.GetChildOfType<Canvas>();
+            var behaviors = Interaction.GetBehaviors(canvas);
+            if (!behaviors.Contains(DrawStraightLineBehavior))
+            {
+                behaviors.Add(DrawStraightLineBehavior);
+            }
+            behaviors.Remove(DrawRectangleBehavior);
         }
 
         private void SwitchToSelectMode()
         {
             SelectIsChecked = true;
+            StraightLineIsChecked = false;
             RectangleIsChecked = false;
 
             ViewportCursor = Cursors.Arrow;
@@ -85,13 +118,13 @@ namespace grapher.ViewModels
             var itemsControl = (ItemsControl)App.Current.MainWindow.FindName("viewport_host");
             var canvas = (Canvas)itemsControl.GetChildOfType<Canvas>();
             var behaviors = Interaction.GetBehaviors(canvas);
-            behaviors.Remove(DrawBehavior);
+            behaviors.Remove(DrawStraightLineBehavior);
+            behaviors.Remove(DrawRectangleBehavior);
         }
 
         private void Description_DragDrop(System.Windows.DragEventArgs obj)
         {
             var item = obj.Data.GetData(typeof(DraggingItem)) as DraggingItem;
-            var rectangle = item.Item as RenderItemViewModel;
 
             FrameworkElement source = (FrameworkElement)obj.Source;
             while (!(source is Canvas))
@@ -100,6 +133,8 @@ namespace grapher.ViewModels
             }
 
             var position = obj.GetPosition((IInputElement)source);
+
+            var rectangle = item.Item as RenderItemViewModel;
             rectangle.X.Value = position.X - item.XOffset;
             rectangle.Y.Value = position.Y - item.YOffset;
         }
@@ -126,6 +161,12 @@ namespace grapher.ViewModels
         {
             get { return _SelectIsChecked; }
             set { SetProperty(ref _SelectIsChecked, value); }
+        }
+
+        public bool StraightLineIsChecked
+        {
+            get { return _StraightLineIsChecked; }
+            set { SetProperty(ref _StraightLineIsChecked, value); }
         }
 
         public bool RectangleIsChecked

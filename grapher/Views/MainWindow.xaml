@@ -6,11 +6,12 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+    xmlns:input="clr-namespace:System.Windows.Input;assembly=System"
     xmlns:local="clr-namespace:grapher.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
     xmlns:trigger="clr-namespace:grapher.Views.Triggers"
-    xmlns:input="clr-namespace:System.Windows.Input;assembly=System"
+    xmlns:viewmodel="clr-namespace:grapher.ViewModels"
     Title="GRAPHER"
     Width="800"
     Height="450"
@@ -94,6 +95,9 @@
                     <ToggleButton Command="{Binding SelectModeCommand}" IsChecked="{Binding SelectIsChecked}">
                         <Image Source="pack://application:,,,/Assets/img/pointer.png" />
                     </ToggleButton>
+                    <ToggleButton Command="{Binding StraightLineModeCommand}" IsChecked="{Binding StraightLineIsChecked}">
+                        <Image Source="pack://application:,,,/Assets/img/straightline.png" />
+                    </ToggleButton>
                     <ToggleButton Command="{Binding RectangleModeCommand}" IsChecked="{Binding RectangleIsChecked}">
                         <Image Source="pack://application:,,,/Assets/img/rectangle.png" />
                     </ToggleButton>
@@ -115,35 +119,52 @@
                     </Canvas>
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
-            <ItemsControl.ItemContainerStyle>
-                <Style TargetType="{x:Type ContentPresenter}">
-                    <Setter Property="Canvas.Left" Value="{Binding X.Value}" />
-                    <Setter Property="Canvas.Top" Value="{Binding Y.Value}" />
-                </Style>
-            </ItemsControl.ItemContainerStyle>
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <Rectangle
-                        Width="{Binding Width.Value}"
-                        Height="{Binding Height.Value}"
-                        Fill="{Binding Fill.Value}"
-                        Stroke="{Binding Stroke.Value}">
-                        <i:Interaction.Behaviors>
-                            <behavior:DragStartBehavior AllowedEffects="Move" DragDropData="{Binding}" />
-                            <behavior:SelectBehavior />
-                        </i:Interaction.Behaviors>
-                        <Rectangle.Style>
-                            <Style TargetType="{x:Type Rectangle}">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsSelected.Value}" Value="True">
-                                        <Setter Property="local:AdornedBy.Template" Value="{StaticResource AdornerTemplate}" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Rectangle.Style>
-                    </Rectangle>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
+            <ItemsControl.ItemContainerStyleSelector>
+                <local:ItemsControlItemContainerStyleSelector>
+                    <local:ItemTypedStyle DataType="{x:Type viewmodel:RectangleViewModel}">
+                        <Style TargetType="{x:Type ContentPresenter}">
+                            <Setter Property="Canvas.Left" Value="{Binding X.Value}" />
+                            <Setter Property="Canvas.Top" Value="{Binding Y.Value}" />
+                        </Style>
+                    </local:ItemTypedStyle>
+                    <local:ItemTypedStyle DataType="{x:Type viewmodel:StraightLineViewModel}">
+                        <Style TargetType="{x:Type ContentPresenter}" />
+                    </local:ItemTypedStyle>
+                </local:ItemsControlItemContainerStyleSelector>
+            </ItemsControl.ItemContainerStyleSelector>
+            <ItemsControl.ItemTemplateSelector>
+                <local:ItemsControlTemplateSelector>
+                    <DataTemplate DataType="{x:Type viewmodel:RectangleViewModel}">
+                        <Rectangle
+                            Width="{Binding Width.Value}"
+                            Height="{Binding Height.Value}"
+                            Fill="{Binding Fill.Value}"
+                            Stroke="{Binding Stroke.Value}">
+                            <i:Interaction.Behaviors>
+                                <behavior:DragStartBehavior AllowedEffects="Move" DragDropData="{Binding}" />
+                                <behavior:SelectBehavior />
+                            </i:Interaction.Behaviors>
+                            <Rectangle.Style>
+                                <Style TargetType="{x:Type Rectangle}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsSelected.Value}" Value="True">
+                                            <Setter Property="local:AdornedBy.Template" Value="{StaticResource AdornerTemplate}" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Rectangle.Style>
+                        </Rectangle>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type viewmodel:StraightLineViewModel}">
+                        <Line
+                            Stroke="{Binding Brush.Value}"
+                            X1="{Binding X.Value}"
+                            X2="{Binding X2.Value}"
+                            Y1="{Binding Y.Value}"
+                            Y2="{Binding Y2.Value}" />
+                    </DataTemplate>
+                </local:ItemsControlTemplateSelector>
+            </ItemsControl.ItemTemplateSelector>
         </ItemsControl>
     </DockPanel>
 </Window>

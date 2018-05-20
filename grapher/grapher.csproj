@@ -93,16 +93,24 @@
     <Compile Include="Models\DraggingItem.cs" />
     <Compile Include="Models\Rectangle.cs" />
     <Compile Include="Models\RenderItem.cs" />
+    <Compile Include="Models\StraightLine.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
+    <Compile Include="ViewModels\StraightLineViewModel.cs" />
     <Compile Include="Views\AdornedBy.cs" />
+    <Compile Include="Views\Behaviors\AbstractAdorner.cs" />
     <Compile Include="Views\Behaviors\CursorInfo.cs" />
     <Compile Include="Views\Behaviors\DeselectBehavior.cs" />
     <Compile Include="Views\Behaviors\DragStartBehavior.cs" />
+    <Compile Include="Views\Behaviors\DrawAbstractBehavior.cs" />
     <Compile Include="Views\Behaviors\DrawRectangleBehavior.cs" />
+    <Compile Include="Views\Behaviors\DrawStraightLineBehavior.cs" />
     <Compile Include="Views\Behaviors\DropAcceptDescription.cs" />
     <Compile Include="Views\Behaviors\CursorBehavior.cs" />
     <Compile Include="Views\Behaviors\RectangleAdorner.cs" />
     <Compile Include="Views\Behaviors\SelectBehavior.cs" />
+    <Compile Include="Views\Behaviors\StraightLineAdorner.cs" />
+    <Compile Include="Views\ItemsControlItemContainerStyleSelector.cs" />
+    <Compile Include="Views\ItemsControlTemplateSelector.cs" />
     <Compile Include="Views\Triggers\ResizeThumbDragDeltaEventTrigger.cs" />
     <Compile Include="Views\Triggers\WindowLoadedEventTrigger.cs" />
     <Page Include="Views\MainWindow.xaml">
@@ -153,6 +161,8 @@
   <ItemGroup>
     <Resource Include="Assets\img\pointer.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Assets\img\straightline.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

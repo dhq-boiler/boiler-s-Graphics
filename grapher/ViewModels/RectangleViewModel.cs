@@ -7,7 +7,7 @@ using System.Windows.Media;
 
 namespace grapher.ViewModels
 {
-    class RectangleViewModel : RenderItemViewModel
+    internal class RectangleViewModel : RenderItemViewModel
     {
         private DropAcceptDescription _description;
 
