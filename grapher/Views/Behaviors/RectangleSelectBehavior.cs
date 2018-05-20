@@ -5,7 +5,7 @@ using System.Windows.Shapes;
 
 namespace grapher.Views.Behaviors
 {
-    public class SelectBehavior : Behavior<FrameworkElement>
+    public class RectangleSelectBehavior : Behavior<FrameworkElement>
     {
         protected override void OnAttached()
         {

@@ -22,5 +22,20 @@ namespace grapher.Extensions
             }
             return null;
         }
+
+        public static T GetParentOfType<T>(this DependencyObject obj)
+            where T : DependencyObject
+        {
+            if (obj == null) return null;
+
+            while (!(obj is T))
+            {
+                obj = VisualTreeHelper.GetParent(obj);
+            }
+
+            if (obj == null) return null;
+
+            return (T)obj;
+        }
     }
 }

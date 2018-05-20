@@ -53,6 +53,8 @@ namespace grapher.Views
             //子Controlオブジェクトを生成して設定されたテンプレートを設定する
             var t = e.NewValue as ControlTemplate;
             var ctrl = new Control { Template = t };
+            var sourceElement = me.AdornedElement as FrameworkElement;
+            ctrl.DataContext = sourceElement.DataContext;
             me._Content = ctrl;
             me.AddVisualChild(ctrl);
             me.AddLogicalChild(ctrl);

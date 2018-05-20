@@ -32,7 +32,7 @@
         </ControlTemplate>
 
         <!--  装飾用のテンプレート定義  -->
-        <ControlTemplate x:Key="AdornerTemplate">
+        <ControlTemplate x:Key="RectangleAdornerTemplate">
             <Grid>
                 <Thumb
                     Name="ResizeThumb_LT"
@@ -142,13 +142,13 @@
                             Stroke="{Binding Stroke.Value}">
                             <i:Interaction.Behaviors>
                                 <behavior:DragStartBehavior AllowedEffects="Move" DragDropData="{Binding}" />
-                                <behavior:SelectBehavior />
+                                <behavior:RectangleSelectBehavior />
                             </i:Interaction.Behaviors>
                             <Rectangle.Style>
                                 <Style TargetType="{x:Type Rectangle}">
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding IsSelected.Value}" Value="True">
-                                            <Setter Property="local:AdornedBy.Template" Value="{StaticResource AdornerTemplate}" />
+                                            <Setter Property="local:AdornedBy.Template" Value="{StaticResource RectangleAdornerTemplate}" />
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
@@ -161,7 +161,12 @@
                             X1="{Binding X.Value}"
                             X2="{Binding X2.Value}"
                             Y1="{Binding Y.Value}"
-                            Y2="{Binding Y2.Value}" />
+                            Y2="{Binding Y2.Value}">
+                            <i:Interaction.Behaviors>
+                                <behavior:DragStartBehavior AllowedEffects="Move" DragDropData="{Binding}" />
+                                <behavior:StraightLineSelectBehavior />
+                            </i:Interaction.Behaviors>
+                        </Line>
                     </DataTemplate>
                 </local:ItemsControlTemplateSelector>
             </ItemsControl.ItemTemplateSelector>

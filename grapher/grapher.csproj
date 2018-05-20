@@ -107,10 +107,12 @@
     <Compile Include="Views\Behaviors\DropAcceptDescription.cs" />
     <Compile Include="Views\Behaviors\CursorBehavior.cs" />
     <Compile Include="Views\Behaviors\RectangleAdorner.cs" />
-    <Compile Include="Views\Behaviors\SelectBehavior.cs" />
+    <Compile Include="Views\Behaviors\RectangleSelectBehavior.cs" />
     <Compile Include="Views\Behaviors\StraightLineAdorner.cs" />
+    <Compile Include="Views\Behaviors\StraightLineSelectBehavior.cs" />
     <Compile Include="Views\ItemsControlItemContainerStyleSelector.cs" />
     <Compile Include="Views\ItemsControlTemplateSelector.cs" />
+    <Compile Include="Views\StraightLineResizeHandle.cs" />
     <Compile Include="Views\Triggers\ResizeThumbDragDeltaEventTrigger.cs" />
     <Compile Include="Views\Triggers\WindowLoadedEventTrigger.cs" />
     <Page Include="Views\MainWindow.xaml">
