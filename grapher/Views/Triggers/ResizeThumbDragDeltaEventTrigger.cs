@@ -28,8 +28,13 @@ namespace grapher.Views.Triggers
             //サイズ変更処理(横)
             if (thumb.Name == "ResizeThumb_LT" || thumb.Name == "ResizeThumb_LB")
             {
-                viewModel.X.Value += e.HorizontalChange;
-                viewModel.Width.Value = Math.Max(20, viewModel.Width.Value - e.HorizontalChange);
+                if (viewModel.Width.Value - e.HorizontalChange < 20)
+                { }
+                else
+                {
+                    viewModel.X.Value += e.HorizontalChange;
+                    viewModel.Width.Value = Math.Max(20, viewModel.Width.Value - e.HorizontalChange);
+                }
             }
             else
             {
@@ -39,8 +44,13 @@ namespace grapher.Views.Triggers
             //サイズ変更処理(たて)
             if (thumb.Name == "ResizeThumb_LT" || thumb.Name == "ResizeThumb_RT")
             {
-                viewModel.Y.Value += e.VerticalChange;
-                viewModel.Height.Value = Math.Max(20, viewModel.Height.Value - e.VerticalChange);
+                if (viewModel.Height.Value - e.VerticalChange < 20)
+                { }
+                else
+                {
+                    viewModel.Y.Value += e.VerticalChange;
+                    viewModel.Height.Value = Math.Max(20, viewModel.Height.Value - e.VerticalChange);
+                }
             }
             else
             {
