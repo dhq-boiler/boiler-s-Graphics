@@ -10,6 +10,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
     xmlns:trigger="clr-namespace:grapher.Views.Triggers"
+    xmlns:input="clr-namespace:System.Windows.Input;assembly=System"
     Title="GRAPHER"
     Width="800"
     Height="450"
@@ -37,6 +38,9 @@
                     HorizontalAlignment="Left"
                     VerticalAlignment="Top"
                     Template="{StaticResource ResizeHandleTemplate}">
+                    <i:Interaction.Behaviors>
+                        <behavior:CursorBehavior DefaultCursor="{Binding ViewportCursor}" SpecificCursor="SizeNWSE" />
+                    </i:Interaction.Behaviors>
                     <i:Interaction.Triggers>
                         <trigger:ResizeThumbDragDeltaEventTrigger />
                     </i:Interaction.Triggers>
@@ -46,6 +50,9 @@
                     HorizontalAlignment="Right"
                     VerticalAlignment="Top"
                     Template="{StaticResource ResizeHandleTemplate}">
+                    <i:Interaction.Behaviors>
+                        <behavior:CursorBehavior DefaultCursor="{Binding ViewportCursor}" SpecificCursor="SizeNESW" />
+                    </i:Interaction.Behaviors>
                     <i:Interaction.Triggers>
                         <trigger:ResizeThumbDragDeltaEventTrigger />
                     </i:Interaction.Triggers>
@@ -55,6 +62,9 @@
                     HorizontalAlignment="Left"
                     VerticalAlignment="Bottom"
                     Template="{StaticResource ResizeHandleTemplate}">
+                    <i:Interaction.Behaviors>
+                        <behavior:CursorBehavior DefaultCursor="{Binding ViewportCursor}" SpecificCursor="SizeNESW" />
+                    </i:Interaction.Behaviors>
                     <i:Interaction.Triggers>
                         <trigger:ResizeThumbDragDeltaEventTrigger />
                     </i:Interaction.Triggers>
@@ -64,6 +74,9 @@
                     HorizontalAlignment="Right"
                     VerticalAlignment="Bottom"
                     Template="{StaticResource ResizeHandleTemplate}">
+                    <i:Interaction.Behaviors>
+                        <behavior:CursorBehavior DefaultCursor="{Binding ViewportCursor}" SpecificCursor="SizeNWSE" />
+                    </i:Interaction.Behaviors>
                     <i:Interaction.Triggers>
                         <trigger:ResizeThumbDragDeltaEventTrigger />
                     </i:Interaction.Triggers>
@@ -97,6 +110,7 @@
                         <i:Interaction.Behaviors>
                             <behavior:DragAcceptBehavior Description="{Binding Description}" />
                             <behavior:DeselectBehavior />
+                            <behavior:CursorBehavior DefaultCursor="{Binding ApplicationCursor}" SpecificCursor="{Binding ViewportCursor}" />
                         </i:Interaction.Behaviors>
                     </Canvas>
                 </ItemsPanelTemplate>

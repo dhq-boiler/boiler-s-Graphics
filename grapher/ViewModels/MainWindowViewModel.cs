@@ -18,6 +18,8 @@ namespace grapher.ViewModels
         private DropAcceptDescription _Description;
         private bool _SelectIsChecked;
         private bool _RectangleIsChecked;
+        private Cursor _ViewportCursor;
+        private Cursor _ApplicationCursor;
 
         public ICommand SelectModeCommand { get; set; }
 
@@ -44,6 +46,7 @@ namespace grapher.ViewModels
 
         public void Initialize()
         {
+            ApplicationCursor = Cursors.Arrow;
             SwitchToSelectMode();
         }
 
@@ -64,6 +67,8 @@ namespace grapher.ViewModels
             RectangleIsChecked = true;
             SelectIsChecked = false;
 
+            ViewportCursor = Cursors.Cross;
+
             var itemsControl = (ItemsControl)App.Current.MainWindow.FindName("viewport_host");
             var canvas = (Canvas)itemsControl.GetChildOfType<Canvas>();
             var behaviors = Interaction.GetBehaviors(canvas);
@@ -74,6 +79,8 @@ namespace grapher.ViewModels
         {
             SelectIsChecked = true;
             RectangleIsChecked = false;
+
+            ViewportCursor = Cursors.Arrow;
 
             var itemsControl = (ItemsControl)App.Current.MainWindow.FindName("viewport_host");
             var canvas = (Canvas)itemsControl.GetChildOfType<Canvas>();
@@ -101,6 +108,18 @@ namespace grapher.ViewModels
         {
             get { return _Description; }
             set { SetProperty(ref _Description, value); }
+        }
+
+        public Cursor ApplicationCursor
+        {
+            get { return _ApplicationCursor; }
+            set { SetProperty(ref _ApplicationCursor, value); }
+        }
+
+        public Cursor ViewportCursor
+        {
+            get { return _ViewportCursor; }
+            set { SetProperty(ref _ViewportCursor, value); }
         }
 
         public bool SelectIsChecked
