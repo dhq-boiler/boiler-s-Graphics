@@ -141,7 +141,7 @@
                             Fill="{Binding Fill.Value}"
                             Stroke="{Binding Stroke.Value}">
                             <i:Interaction.Behaviors>
-                                <behavior:DragStartBehavior AllowedEffects="Move" DragDropData="{Binding}" />
+                                <behavior:RectangleDragStartBehavior AllowedEffects="Move" DragDropData="{Binding}" />
                                 <behavior:RectangleSelectBehavior />
                             </i:Interaction.Behaviors>
                             <Rectangle.Style>
@@ -163,7 +163,6 @@
                             Y1="{Binding Y.Value}"
                             Y2="{Binding Y2.Value}">
                             <i:Interaction.Behaviors>
-                                <behavior:DragStartBehavior AllowedEffects="Move" DragDropData="{Binding}" />
                                 <behavior:StraightLineSelectBehavior />
                             </i:Interaction.Behaviors>
                         </Line>

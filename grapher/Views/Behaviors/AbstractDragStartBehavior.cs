@@ -9,114 +9,24 @@ using System.Windows.Media;
 
 namespace grapher.Views.Behaviors
 {
-    internal class DragAdorner : Adorner
-    {
-        #region Fields
-        protected UIElement child;
-        protected double XCenter;
-        protected double YCenter;
-        private double _leftOffset;
-        private double _topOffset;
-        #endregion Fields
-        #region Properties
-        public double LeftOffset
-        {
-            get { return _leftOffset; }
-            set
-            {
-                _leftOffset = value - this.XCenter;
-                UpdatePosition();
-            }
-        }
-
-        public double TopOffset
-        {
-            get { return _topOffset; }
-            set
-            {
-                _topOffset = value - this.YCenter;
-                UpdatePosition();
-            }
-        }
-        #endregion Properties
-        #region Construct
-        public DragAdorner(UIElement owner) : base(owner) { }
-
-        public DragAdorner(UIElement owner, UIElement adornElement, double opacity, Point dragPos)
-            : base(owner)
-        {
-            var _brush = new VisualBrush(adornElement) { Opacity = opacity };
-            var b = VisualTreeHelper.GetDescendantBounds(adornElement);
-            var r = new System.Windows.Shapes.Rectangle() { Width = b.Width, Height = b.Height };
-
-            this.XCenter = dragPos.X;
-            this.YCenter = dragPos.Y;
-
-            r.Fill = _brush;
-            this.child = r;
-        }
-        #endregion Construct
-        #region Methods
-        public override GeneralTransform GetDesiredTransform(GeneralTransform transform)
-        {
-            var result = new GeneralTransformGroup();
-            result.Children.Add(base.GetDesiredTransform(transform));
-            result.Children.Add(new TranslateTransform(_leftOffset, _topOffset));
-            return result;
-        }
-
-        protected override Visual GetVisualChild(int index)
-        {
-            return this.child;
-        }
-
-        protected override int VisualChildrenCount
-        {
-            get { return 1; }
-        }
-
-        protected override Size MeasureOverride(Size finalSize)
-        {
-            this.child.Measure(finalSize);
-            return this.child.DesiredSize;
-        }
-
-        protected override Size ArrangeOverride(Size finalSize)
-        {
-
-            this.child.Arrange(new Rect(this.child.DesiredSize));
-            return finalSize;
-        }
-
-        private void UpdatePosition()
-        {
-            var adorner = this.Parent as AdornerLayer;
-            if (adorner != null)
-            {
-                adorner.Update(this.AdornedElement);
-            }
-        }
-        #endregion Method
-    }
-
-    public class DragStartBehavior : Behavior<FrameworkElement>
+    public abstract class AbstractDragStartBehavior : Behavior<FrameworkElement>
     {
         private Point origin;
         private bool isButtonDown;
         private IInputElement dragItem;
         private Point dragStartPos;
-        private DragAdorner dragGhost;
+        private AbstractDragAdorner dragGhost;
         public static readonly DependencyProperty AllowedEffectsProperty =
             DependencyProperty.Register("AllowedEffects", typeof(DragDropEffects),
-                    typeof(DragStartBehavior), new UIPropertyMetadata(DragDropEffects.All));
+                    typeof(AbstractDragStartBehavior), new UIPropertyMetadata(DragDropEffects.All));
 
         public static readonly DependencyProperty DragDropDataProperty =
             DependencyProperty.Register("DragDropData", typeof(object),
-                    typeof(DragStartBehavior), new PropertyMetadata(null));
+                    typeof(AbstractDragStartBehavior), new PropertyMetadata(null));
 
         public static readonly DependencyProperty IsDragEnableProperty =
             DependencyProperty.Register("IsDragEnable", typeof(bool),
-                    typeof(DragStartBehavior), new UIPropertyMetadata(true));
+                    typeof(AbstractDragStartBehavior), new UIPropertyMetadata(true));
 
         public DragDropEffects AllowedEffects
         {
@@ -192,7 +102,7 @@ namespace grapher.Views.Behaviors
                 {
                     var root = window.Content as UIElement;
                     var layer = AdornerLayer.GetAdornerLayer(root);
-                    this.dragGhost = new DragAdorner(root, (UIElement)sender, 0.5, this.dragStartPos);
+                    this.dragGhost = CreateDragAdorner(root, (UIElement)sender, 0.5, this.dragStartPos);
                     layer.Add(this.dragGhost);
                     var dragItem = new DraggingItem()
                     {
@@ -219,6 +129,8 @@ namespace grapher.Views.Behaviors
                 this.dragItem = null;
             }
         }
+
+        protected abstract AbstractDragAdorner CreateDragAdorner(UIElement owner, UIElement adornedElement, double opacity, Point dragPos);
 
         private void PreviewMouseUpHandler(object sender, MouseButtonEventArgs e)
         {
