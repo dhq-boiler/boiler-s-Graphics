@@ -23,7 +23,7 @@ namespace grapher.ViewModels
 
         public ICommand RectangleModeCommand { get; set; }
 
-        public Behavior DrawBehavior { get; set; } = new DrawBehavior();
+        public Behavior DrawBehavior { get; set; } = new DrawRectangleBehavior();
 
         public ObservableCollection<RenderItemViewModel> RenderItems
         {

@@ -9,12 +9,15 @@
     xmlns:local="clr-namespace:grapher.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
-    Loaded="Window_Loaded"
+    xmlns:trigger="clr-namespace:grapher.Views.Triggers"
     Title="GRAPHER"
     Width="800"
     Height="450"
     prism:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
+    <i:Interaction.Triggers>
+        <trigger:WindowLoadedEventTrigger />
+    </i:Interaction.Triggers>
     <Window.Resources>
         <!--  リサイズハンドル用のテンプレート定義  -->
         <ControlTemplate x:Key="ResizeHandleTemplate" TargetType="Thumb">
@@ -33,26 +36,38 @@
                     Name="ResizeThumb_LT"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Top"
-                    DragDelta="ResizeThumb_DragDelta"
-                    Template="{StaticResource ResizeHandleTemplate}" />
+                    Template="{StaticResource ResizeHandleTemplate}">
+                    <i:Interaction.Triggers>
+                        <trigger:ResizeThumbDragDeltaEventTrigger />
+                    </i:Interaction.Triggers>
+                </Thumb>
                 <Thumb
                     Name="ResizeThumb_RT"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Top"
-                    DragDelta="ResizeThumb_DragDelta"
-                    Template="{StaticResource ResizeHandleTemplate}" />
+                    Template="{StaticResource ResizeHandleTemplate}">
+                    <i:Interaction.Triggers>
+                        <trigger:ResizeThumbDragDeltaEventTrigger />
+                    </i:Interaction.Triggers>
+                </Thumb>
                 <Thumb
                     Name="ResizeThumb_LB"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Bottom"
-                    DragDelta="ResizeThumb_DragDelta"
-                    Template="{StaticResource ResizeHandleTemplate}" />
+                    Template="{StaticResource ResizeHandleTemplate}">
+                    <i:Interaction.Triggers>
+                        <trigger:ResizeThumbDragDeltaEventTrigger />
+                    </i:Interaction.Triggers>
+                </Thumb>
                 <Thumb
                     Name="ResizeThumb_RB"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Bottom"
-                    DragDelta="ResizeThumb_DragDelta"
-                    Template="{StaticResource ResizeHandleTemplate}" />
+                    Template="{StaticResource ResizeHandleTemplate}">
+                    <i:Interaction.Triggers>
+                        <trigger:ResizeThumbDragDeltaEventTrigger />
+                    </i:Interaction.Triggers>
+                </Thumb>
             </Grid>
         </ControlTemplate>
     </Window.Resources>

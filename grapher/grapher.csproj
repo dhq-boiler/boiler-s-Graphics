@@ -98,10 +98,12 @@
     <Compile Include="Views\Behaviors\CursorInfo.cs" />
     <Compile Include="Views\Behaviors\DeselectBehavior.cs" />
     <Compile Include="Views\Behaviors\DragStartBehavior.cs" />
-    <Compile Include="Views\Behaviors\DrawBehavior.cs" />
+    <Compile Include="Views\Behaviors\DrawRectangleBehavior.cs" />
     <Compile Include="Views\Behaviors\DropAcceptDescription.cs" />
     <Compile Include="Views\Behaviors\RectangleAdorner.cs" />
     <Compile Include="Views\Behaviors\SelectBehavior.cs" />
+    <Compile Include="Views\Triggers\ResizeThumbDragDeltaEventTrigger.cs" />
+    <Compile Include="Views\Triggers\WindowLoadedEventTrigger.cs" />
     <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -150,5 +152,6 @@
   <ItemGroup>
     <Resource Include="Assets\img\pointer.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

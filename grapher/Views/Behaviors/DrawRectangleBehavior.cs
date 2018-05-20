@@ -9,7 +9,7 @@ using System.Windows.Media;
 
 namespace grapher.Views.Behaviors
 {
-    public class DrawBehavior : Behavior<Canvas>
+    public class DrawRectangleBehavior : Behavior<Canvas>
     {
         private Point origin;
         private Point dragStartPos;
@@ -52,7 +52,7 @@ namespace grapher.Views.Behaviors
                 if (AssociatedObject.IsMouseCaptured && e.LeftButton == MouseButtonState.Pressed)
                 {
                     var pt = e.GetPosition(AssociatedObject);
-                    _adorner.RightBottom = pt;
+                    _adorner.EndPoint = pt;
                 }
             }
         }
@@ -73,10 +73,10 @@ namespace grapher.Views.Behaviors
         {
             var renderItem = new Rectangle
             {
-                X = Math.Min(_adorner.LeftTop.X, _adorner.RightBottom.X),
-                Y = Math.Min(_adorner.LeftTop.Y, _adorner.RightBottom.Y),
-                Width = Math.Max(_adorner.RightBottom.X - _adorner.LeftTop.X, _adorner.LeftTop.X - _adorner.RightBottom.X),
-                Height = Math.Max(_adorner.RightBottom.Y - _adorner.LeftTop.Y, _adorner.LeftTop.Y - _adorner.RightBottom.Y),
+                X = Math.Min(_adorner.BeginPoint.X, _adorner.EndPoint.X),
+                Y = Math.Min(_adorner.BeginPoint.Y, _adorner.EndPoint.Y),
+                Width = Math.Max(_adorner.EndPoint.X - _adorner.BeginPoint.X, _adorner.BeginPoint.X - _adorner.EndPoint.X),
+                Height = Math.Max(_adorner.EndPoint.Y - _adorner.BeginPoint.Y, _adorner.BeginPoint.Y - _adorner.EndPoint.Y),
                 Stroke = new SolidColorBrush(Colors.Black),
                 Fill = new SolidColorBrush(Colors.Transparent)
             };

@@ -12,12 +12,12 @@ namespace grapher.Views.Behaviors
         private bool _isAttached;
         private Rectangle rectangle;
 
-        public RectangleAdorner(Visual visual, UIElement adornedElement, Point point)
+        public RectangleAdorner(Visual visual, UIElement adornedElement, Point beginPoint)
             : base(adornedElement)
         {
             this._layer = AdornerLayer.GetAdornerLayer(visual);
-            this.LeftTop = point;
-            this.RightBottom = point;
+            this.BeginPoint = beginPoint;
+            this.EndPoint = beginPoint;
 
             rectangle = new Rectangle();
             rectangle.Stroke = new SolidColorBrush(Colors.Black);
@@ -25,19 +25,19 @@ namespace grapher.Views.Behaviors
             Attach();
         }
 
-        public static readonly DependencyProperty LeftTopProperty = DependencyProperty.Register("LeftTop", typeof(Point), typeof(RectangleAdorner), new FrameworkPropertyMetadata(default(Point), FrameworkPropertyMetadataOptions.AffectsRender));
-        public static readonly DependencyProperty RightBottomProperty = DependencyProperty.Register("RightBottom", typeof(Point), typeof(RectangleAdorner), new FrameworkPropertyMetadata(default(Point), FrameworkPropertyMetadataOptions.AffectsRender));
+        public static readonly DependencyProperty BeginPointProperty = DependencyProperty.Register("BeginPoint", typeof(Point), typeof(RectangleAdorner), new FrameworkPropertyMetadata(default(Point), FrameworkPropertyMetadataOptions.AffectsRender));
+        public static readonly DependencyProperty EndPointProperty = DependencyProperty.Register("EndPoint", typeof(Point), typeof(RectangleAdorner), new FrameworkPropertyMetadata(default(Point), FrameworkPropertyMetadataOptions.AffectsRender));
 
-        public Point LeftTop
+        public Point BeginPoint
         {
-            get { return (Point)GetValue(LeftTopProperty); }
-            set { SetValue(LeftTopProperty, value); }
+            get { return (Point)GetValue(BeginPointProperty); }
+            set { SetValue(BeginPointProperty, value); }
         }
 
-        public Point RightBottom
+        public Point EndPoint
         {
-            get { return (Point)GetValue(RightBottomProperty); }
-            set { SetValue(RightBottomProperty, value); }
+            get { return (Point)GetValue(EndPointProperty); }
+            set { SetValue(EndPointProperty, value); }
         }
 
         public void Attach()
@@ -66,11 +66,11 @@ namespace grapher.Views.Behaviors
 
         protected override void OnRender(DrawingContext drawingContext)
         {
-            var lefttop = LeftTop;
-            var rightbottom = RightBottom;
+            var begin = BeginPoint;
+            var end = EndPoint;
 
-            var rect = new Rect(Math.Min(lefttop.X, rightbottom.X), Math.Min(lefttop.Y, rightbottom.Y),
-                Math.Max(rightbottom.X - lefttop.X, lefttop.X - rightbottom.X), Math.Max(rightbottom.Y - lefttop.Y, lefttop.Y - rightbottom.Y));
+            var rect = new Rect(Math.Min(begin.X, end.X), Math.Min(begin.Y, end.Y),
+                Math.Max(end.X - begin.X, begin.X - end.X), Math.Max(end.Y - begin.Y, begin.Y - end.Y));
 
             rectangle.Width = rect.Width;
             rectangle.Height = rect.Height;
