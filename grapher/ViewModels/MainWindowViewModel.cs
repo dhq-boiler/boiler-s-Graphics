@@ -61,15 +61,10 @@ namespace grapher.ViewModels
         [Conditional("DEBUG")]
         private static void ShowDpi()
         {
-            PresentationSource source = PresentationSource.FromVisual(App.Current.MainWindow);
-            double dpiX, dpiY;
-            if (source != null)
-            {
-                dpiX = 96.0 * source.CompositionTarget.TransformToDevice.M11;
-                dpiY = 96.0 * source.CompositionTarget.TransformToDevice.M22;
-                Debug.WriteLine(dpiX, "DpiX");
-                Debug.WriteLine(dpiY, "DpiY");
-            }
+            var dpiX = 96.0 * App.Current.MainWindow.DpiXFactor();
+            var dpiY = 96.0 * App.Current.MainWindow.DpiYFactor();
+            Debug.WriteLine(dpiX, "DpiX");
+            Debug.WriteLine(dpiY, "DpiY");
         }
 
         private void RegisterCommands()

@@ -37,5 +37,31 @@ namespace grapher.Extensions
 
             return (T)obj;
         }
+
+        public static double DpiXFactor(this Visual visual)
+        {
+            var source = PresentationSource.FromVisual(visual);
+            if (source != null)
+            {
+                return source.CompositionTarget.TransformToDevice.M11;
+            }
+            else
+            {
+                return 1.0;
+            }
+        }
+
+        public static double DpiYFactor(this Visual visual)
+        {
+            var source = PresentationSource.FromVisual(visual);
+            if (source != null)
+            {
+                return source.CompositionTarget.TransformToDevice.M22;
+            }
+            else
+            {
+                return 1.0;
+            }
+        }
     }
 }
