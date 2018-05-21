@@ -1,10 +1,7 @@
 ﻿using grapher.Extensions;
 using grapher.Models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -62,13 +59,7 @@ namespace grapher.Views.Behaviors
 
         private void Canvas_PreviewMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            var line = AssociatedObject as Line;
-            var position = e.GetPosition((UIElement)sender);
-            bool result = false;
-            var hitRect = new Rect(position.X - 2, position.Y - 2, 4, 4);
-            VisualTreeHelper.HitTest(line, null, htr => { result = true; return HitTestResultBehavior.Stop; }, new GeometryHitTestParameters(new RectangleGeometry(hitRect)));
-
-            if (result)
+            if (StraightLineHitTest(sender, e))
             {
                 if (!this.IsDragEnable)
                 {
@@ -89,13 +80,7 @@ namespace grapher.Views.Behaviors
 
         private void Canvas_PreviewMouseMove(object sender, System.Windows.Input.MouseEventArgs e)
         {
-            var line = AssociatedObject as Line;
-            var position = e.GetPosition((UIElement)sender);
-            bool result = false;
-            var hitRect = new Rect(position.X - 2, position.Y - 2, 4, 4);
-            VisualTreeHelper.HitTest(line, null, htr => { result = true; return HitTestResultBehavior.Stop; }, new GeometryHitTestParameters(new RectangleGeometry(hitRect)));
-
-            if (result)
+            if (StraightLineHitTest(sender, e))
             {
                 if (!this.IsDragEnable)
                 {
@@ -152,13 +137,7 @@ namespace grapher.Views.Behaviors
 
         private void Canvas_PreviewMouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            var line = AssociatedObject as Line;
-            var position = e.GetPosition((UIElement)sender);
-            bool result = false;
-            var hitRect = new Rect(position.X - 2, position.Y - 2, 4, 4);
-            VisualTreeHelper.HitTest(line, null, htr => { result = true; return HitTestResultBehavior.Stop; }, new GeometryHitTestParameters(new RectangleGeometry(hitRect)));
-
-            if (result)
+            if (StraightLineHitTest(sender, e))
             {
                 this.isButtonDown = false;
             }
@@ -182,6 +161,17 @@ namespace grapher.Views.Behaviors
                 this.dragGhost.LeftOffset = p.X;
                 this.dragGhost.TopOffset = p.Y;
             }
+        }
+
+        private bool StraightLineHitTest(object sender, MouseEventArgs e)
+        {
+            var radius = 2;
+            var line = AssociatedObject as Line;
+            var position = e.GetPosition((UIElement)sender);
+            bool result = false;
+            var hitRect = new Rect(position.X - radius, position.Y - radius, radius * 2, radius * 2);
+            VisualTreeHelper.HitTest(line, null, htr => { result = true; return HitTestResultBehavior.Stop; }, new GeometryHitTestParameters(new RectangleGeometry(hitRect)));
+            return result;
         }
     }
 }
