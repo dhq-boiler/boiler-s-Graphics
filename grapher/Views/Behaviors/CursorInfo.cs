@@ -1,4 +1,5 @@
-﻿using System;
+﻿using grapher.Extensions;
+using System;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Interop;
@@ -29,7 +30,7 @@ namespace grapher.Views.Behaviors
             var hwnd = source.Handle;
 
             ScreenToClient(hwnd, ref p);
-            return new Point(p.X, p.Y);
+            return new Point(p.X / v.DpiXFactor(), p.Y / v.DpiYFactor());
         }
     }
 }
