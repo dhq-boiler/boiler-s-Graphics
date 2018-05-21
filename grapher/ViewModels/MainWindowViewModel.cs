@@ -125,12 +125,7 @@ namespace grapher.ViewModels
         private void Description_DragDrop(System.Windows.DragEventArgs obj)
         {
             var item = obj.Data.GetData(typeof(DraggingItem)) as DraggingItem;
-
-            FrameworkElement source = (FrameworkElement)obj.Source;
-            while (!(source is Canvas))
-            {
-                source = (FrameworkElement)VisualTreeHelper.GetParent((DependencyObject)source);
-            }
+            var source = (obj.Source as FrameworkElement).GetParentOfType<Canvas>();
 
             var position = obj.GetPosition((IInputElement)source);
 
