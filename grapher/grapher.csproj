@@ -112,6 +112,8 @@
     <Compile Include="Views\Behaviors\RectangleDragStartBehavior.cs" />
     <Compile Include="Views\Behaviors\RectangleSelectBehavior.cs" />
     <Compile Include="Views\Behaviors\StraightLineAdorner.cs" />
+    <Compile Include="Views\Behaviors\StraightLineDragAdorner.cs" />
+    <Compile Include="Views\Behaviors\StraightLineDragStartBehavior.cs" />
     <Compile Include="Views\Behaviors\StraightLineSelectBehavior.cs" />
     <Compile Include="Views\ItemsControlItemContainerStyleSelector.cs" />
     <Compile Include="Views\ItemsControlTemplateSelector.cs" />

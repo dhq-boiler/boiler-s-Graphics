@@ -163,6 +163,7 @@
                             Y1="{Binding Y.Value}"
                             Y2="{Binding Y2.Value}">
                             <i:Interaction.Behaviors>
+                                <behavior:StraightLineDragStartBehavior AllowedEffects="Move" DragDropData="{Binding}" />
                                 <behavior:StraightLineSelectBehavior />
                             </i:Interaction.Behaviors>
                         </Line>
