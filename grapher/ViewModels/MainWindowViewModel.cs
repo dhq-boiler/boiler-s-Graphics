@@ -4,6 +4,7 @@ using grapher.Views.Behaviors;
 using Prism.Commands;
 using Prism.Mvvm;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -51,8 +52,24 @@ namespace grapher.ViewModels
 
         public void Initialize()
         {
+            ShowDpi();
+
             ApplicationCursor = Cursors.Arrow;
             SwitchToSelectMode();
+        }
+
+        [Conditional("DEBUG")]
+        private static void ShowDpi()
+        {
+            PresentationSource source = PresentationSource.FromVisual(App.Current.MainWindow);
+            double dpiX, dpiY;
+            if (source != null)
+            {
+                dpiX = 96.0 * source.CompositionTarget.TransformToDevice.M11;
+                dpiY = 96.0 * source.CompositionTarget.TransformToDevice.M22;
+                Debug.WriteLine(dpiX, "DpiX");
+                Debug.WriteLine(dpiY, "DpiY");
+            }
         }
 
         private void RegisterCommands()
