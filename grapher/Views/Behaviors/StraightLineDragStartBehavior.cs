@@ -165,7 +165,7 @@ namespace grapher.Views.Behaviors
 
         private bool StraightLineHitTest(object sender, MouseEventArgs e)
         {
-            var radius = 2;
+            var radius = 3;
             var line = AssociatedObject as Line;
             var position = e.GetPosition((UIElement)sender);
             bool result = false;
