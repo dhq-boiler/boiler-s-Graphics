@@ -14,12 +14,18 @@ namespace grapher.Models
             set { SetProperty(ref _Item, value); }
         }
 
+        /// <summary>
+        /// AssociatedObjectを基準とした相対座標のX値
+        /// </summary>
         public double XOffset
         {
             get { return _XOffset; }
             set { SetProperty(ref _XOffset, value); }
         }
 
+        /// <summary>
+        /// AssociatedObjectを基準とした相対座標のY値
+        /// </summary>
         public double YOffset
         {
             get { return _YOffset; }

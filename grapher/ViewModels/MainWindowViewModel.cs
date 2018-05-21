@@ -144,11 +144,23 @@ namespace grapher.ViewModels
             var item = obj.Data.GetData(typeof(DraggingItem)) as DraggingItem;
             var source = (obj.Source as FrameworkElement).GetParentOfType<Canvas>();
 
-            var position = obj.GetPosition((IInputElement)source);
+            var position = obj.GetPosition(source);
 
-            var rectangle = item.Item as RenderItemViewModel;
-            rectangle.X.Value = position.X - item.XOffset;
-            rectangle.Y.Value = position.Y - item.YOffset;
+            var rectangle = item.Item as RectangleViewModel;
+            if (rectangle != null)
+            {
+                rectangle.X.Value = position.X - item.XOffset;
+                rectangle.Y.Value = position.Y - item.YOffset;
+            }
+
+            var line = item.Item as StraightLineViewModel;
+            if (line != null)
+            {
+                line.X.Value += position.X - item.XOffset;
+                line.Y.Value += position.Y - item.YOffset;
+                line.X2.Value += position.X - item.XOffset;
+                line.Y2.Value += position.Y - item.YOffset;
+            }
         }
 
         public DropAcceptDescription Description
