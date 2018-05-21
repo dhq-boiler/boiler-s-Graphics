@@ -35,12 +35,14 @@ namespace grapher.Views
                 Width = 7,
                 Height = 7,
                 Template = template,
+                UseLayoutRounding = true,
             };
             endThumb = new Thumb
             {
                 Width = 7,
                 Height = 7,
                 Template = template,
+                UseLayoutRounding = true,
             };
 
             startThumb.DragDelta += StartThumb_DragDelta;
