@@ -1,4 +1,6 @@
-﻿using System;
+﻿using grapher.Models;
+using grapher.ViewModels;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -58,16 +60,16 @@ namespace grapher.Views
         {
             Point position = Mouse.GetPosition(this);
 
-            selectedLine.X1 = position.X;
-            selectedLine.Y1 = position.Y;
+            (selectedLine.DataContext as StraightLineViewModel).Model.X = position.X;
+            (selectedLine.DataContext as StraightLineViewModel).Model.Y = position.Y;
         }
 
         private void EndThumb_DragDelta(object sender, DragDeltaEventArgs e)
         {
             Point position = Mouse.GetPosition(this);
 
-            selectedLine.X2 = position.X;
-            selectedLine.Y2 = position.Y;
+            ((selectedLine.DataContext as StraightLineViewModel).Model as StraightLine).X2 = position.X;
+            ((selectedLine.DataContext as StraightLineViewModel).Model as StraightLine).Y2 = position.Y;
         }
 
         protected override int VisualChildrenCount => visualChildren.Count;
