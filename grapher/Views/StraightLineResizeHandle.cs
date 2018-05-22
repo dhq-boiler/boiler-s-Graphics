@@ -1,11 +1,13 @@
 ﻿using grapher.Models;
 using grapher.ViewModels;
+using grapher.Views.Behaviors;
 using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Interactivity;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
@@ -25,6 +27,8 @@ namespace grapher.Views
         private Thumb endThumb;
         private Line selectedLine;
         private VisualCollection visualChildren;
+        private CursorBehavior startThumbBehavior;
+        private CursorBehavior endThumbBehavior;
 
         public StraightLineResizeHandle(UIElement adornedElement)
             : base(adornedElement)
@@ -47,6 +51,15 @@ namespace grapher.Views
                 UseLayoutRounding = true,
             };
 
+            Cursor cursor = GetCursor(adornedElement as Line);
+            startThumbBehavior = new CursorBehavior() { DefaultCursor = Cursors.Arrow, SpecificCursor = cursor };
+            endThumbBehavior = new CursorBehavior() { DefaultCursor = Cursors.Arrow, SpecificCursor = cursor };
+
+            var behaviors = Interaction.GetBehaviors(startThumb);
+            behaviors.Add(startThumbBehavior);
+            behaviors = Interaction.GetBehaviors(endThumb);
+            behaviors.Add(endThumbBehavior);
+
             startThumb.DragDelta += StartThumb_DragDelta;
             endThumb.DragDelta += EndThumb_DragDelta;
 
@@ -54,6 +67,33 @@ namespace grapher.Views
             visualChildren.Add(endThumb);
 
             selectedLine = AdornedElement as Line;
+        }
+
+        private static Cursor GetCursor(Line line)
+        {
+            Cursor cursor = null;
+            var radian = Math.Atan((line.Y2 - line.Y1) / (line.X2 - line.X1));
+            if (radian >= -1d / 2d * Math.PI && radian < -3d / 8d * Math.PI)
+            {
+                cursor = Cursors.SizeNS;
+            }
+            if (radian >= -3d / 8d * Math.PI && radian < -1d/8d * Math.PI)
+            {
+                cursor = Cursors.SizeNESW;
+            }
+            else if (radian >= -1d / 8d * Math.PI && radian < 1d / 8d * Math.PI)
+            {
+                cursor = Cursors.SizeWE;
+            }
+            else if (radian >= 1d / 8d * Math.PI && radian < 3d / 8d * Math.PI)
+            {
+                cursor = Cursors.SizeNWSE;
+            }
+            else if (radian >= 3d / 8d * Math.PI && radian <= 1d / 2d * Math.PI)
+            {
+                cursor = Cursors.SizeNS;
+            }
+            return cursor;
         }
 
         private void StartThumb_DragDelta(object sender, DragDeltaEventArgs e)
@@ -83,6 +123,9 @@ namespace grapher.Views
         {
             if (AdornedElement is Line)
             {
+                startThumbBehavior.SpecificCursor = GetCursor(AdornedElement as Line);
+                endThumbBehavior.SpecificCursor = GetCursor(AdornedElement as Line);
+
                 selectedLine = AdornedElement as Line;
                 start = new Point(selectedLine.X1, selectedLine.Y1);
                 end = new Point(selectedLine.X2, selectedLine.Y2);
