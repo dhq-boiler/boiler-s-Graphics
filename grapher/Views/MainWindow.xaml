@@ -101,6 +101,9 @@
                     <ToggleButton Command="{Binding RectangleModeCommand}" IsChecked="{Binding RectangleIsChecked}">
                         <Image Source="pack://application:,,,/Assets/img/rectangle.png" />
                     </ToggleButton>
+                    <ToggleButton Command="{Binding EllipseModeCommand}" IsChecked="{Binding EllipseIsChecked}">
+                        <Image Source="pack://application:,,,/Assets/img/ellipse.png" />
+                    </ToggleButton>
                 </ToolBar>
             </ToolBarTray>
         </DockPanel>
@@ -129,6 +132,12 @@
                     </local:ItemTypedStyle>
                     <local:ItemTypedStyle DataType="{x:Type viewmodel:StraightLineViewModel}">
                         <Style TargetType="{x:Type ContentPresenter}" />
+                    </local:ItemTypedStyle>
+                    <local:ItemTypedStyle DataType="{x:Type viewmodel:EllipseViewModel}">
+                        <Style TargetType="{x:Type ContentPresenter}">
+                            <Setter Property="Canvas.Left" Value="{Binding X.Value}" />
+                            <Setter Property="Canvas.Top" Value="{Binding Y.Value}" />
+                        </Style>
                     </local:ItemTypedStyle>
                 </local:ItemsControlItemContainerStyleSelector>
             </ItemsControl.ItemContainerStyleSelector>
@@ -167,6 +176,26 @@
                                 <behavior:StraightLineSelectBehavior />
                             </i:Interaction.Behaviors>
                         </Line>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type viewmodel:EllipseViewModel}">
+                        <Ellipse
+                            Width="{Binding Width.Value}"
+                            Height="{Binding Height.Value}"
+                            Fill="{Binding Fill.Value}"
+                            Stroke="{Binding Stroke.Value}">
+                            <i:Interaction.Behaviors>
+                                <behavior:EllipseSelectBehavior />
+                            </i:Interaction.Behaviors>
+                            <Ellipse.Style>
+                                <Style TargetType="{x:Type Ellipse}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsSelected.Value}" Value="True">
+                                            <Setter Property="local:AdornedBy.Template" Value="{StaticResource RectangleAdornerTemplate}" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Ellipse.Style>
+                        </Ellipse>
                     </DataTemplate>
                 </local:ItemsControlTemplateSelector>
             </ItemsControl.ItemTemplateSelector>

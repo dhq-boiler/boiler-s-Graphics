@@ -91,9 +91,11 @@
     </ApplicationDefinition>
     <Compile Include="Extensions\Extensions.cs" />
     <Compile Include="Models\DraggingItem.cs" />
+    <Compile Include="Models\Ellipse.cs" />
     <Compile Include="Models\Rectangle.cs" />
     <Compile Include="Models\RenderItem.cs" />
     <Compile Include="Models\StraightLine.cs" />
+    <Compile Include="ViewModels\EllipseViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\StraightLineViewModel.cs" />
     <Compile Include="Views\AdornedBy.cs" />
@@ -103,10 +105,13 @@
     <Compile Include="Views\Behaviors\AbstractDragAdorner.cs" />
     <Compile Include="Views\Behaviors\AbstractDragStartBehavior.cs" />
     <Compile Include="Views\Behaviors\DrawAbstractBehavior.cs" />
+    <Compile Include="Views\Behaviors\DrawEllipseBehavior.cs" />
     <Compile Include="Views\Behaviors\DrawRectangleBehavior.cs" />
     <Compile Include="Views\Behaviors\DrawStraightLineBehavior.cs" />
     <Compile Include="Views\Behaviors\DropAcceptDescription.cs" />
     <Compile Include="Views\Behaviors\CursorBehavior.cs" />
+    <Compile Include="Views\Behaviors\EllipseAdorner.cs" />
+    <Compile Include="Views\Behaviors\EllipseSelectBehavior.cs" />
     <Compile Include="Views\Behaviors\RectangleAdorner.cs" />
     <Compile Include="Views\Behaviors\RectangleDragAdorner.cs" />
     <Compile Include="Views\Behaviors\RectangleDragStartBehavior.cs" />
@@ -170,6 +175,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\img\straightline.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\img\ellipse.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

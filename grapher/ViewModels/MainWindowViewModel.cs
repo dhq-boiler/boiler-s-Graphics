@@ -22,6 +22,7 @@ namespace grapher.ViewModels
         private Cursor _ViewportCursor;
         private Cursor _ApplicationCursor;
         private bool _StraightLineIsChecked;
+        private bool _EllipseIsChecked;
 
         public ICommand SelectModeCommand { get; set; }
 
@@ -29,9 +30,13 @@ namespace grapher.ViewModels
 
         public ICommand RectangleModeCommand { get; set; }
 
+        public ICommand EllipseModeCommand { get; set; }
+
         public Behavior DrawRectangleBehavior { get; set; } = new DrawRectangleBehavior();
 
         public Behavior DrawStraightLineBehavior { get; set; } = new DrawStraightLineBehavior();
+
+        public Behavior DrawEllipseBehavior { get; set; } = new DrawEllipseBehavior();
 
         public ObservableCollection<RenderItemViewModel> RenderItems
         {
@@ -81,6 +86,10 @@ namespace grapher.ViewModels
             {
                 SwitchToRectangleMode();
             });
+            EllipseModeCommand = new DelegateCommand(() =>
+            {
+                SwitchToEllipseMode();
+            });
         }
 
         private void SwitchToRectangleMode()
@@ -88,6 +97,7 @@ namespace grapher.ViewModels
             RectangleIsChecked = true;
             SelectIsChecked = false;
             StraightLineIsChecked = false;
+            EllipseIsChecked = false;
 
             ViewportCursor = Cursors.Cross;
 
@@ -99,6 +109,7 @@ namespace grapher.ViewModels
             {
                 behaviors.Add(DrawRectangleBehavior);
             }
+            behaviors.Remove(DrawEllipseBehavior);
         }
 
         private void SwitchToStraightLineMode()
@@ -106,6 +117,7 @@ namespace grapher.ViewModels
             StraightLineIsChecked = true;
             SelectIsChecked = false;
             RectangleIsChecked = false;
+            EllipseIsChecked = false;
 
             ViewportCursor = Cursors.Cross;
 
@@ -117,6 +129,27 @@ namespace grapher.ViewModels
                 behaviors.Add(DrawStraightLineBehavior);
             }
             behaviors.Remove(DrawRectangleBehavior);
+            behaviors.Remove(DrawEllipseBehavior);
+        }
+
+        private void SwitchToEllipseMode()
+        {
+            EllipseIsChecked = true;
+            SelectIsChecked = false;
+            RectangleIsChecked = false;
+            StraightLineIsChecked = false;
+
+            ViewportCursor = Cursors.Cross;
+
+            var itemsControl = (ItemsControl)App.Current.MainWindow.FindName("viewport_host");
+            var canvas = (Canvas)itemsControl.GetChildOfType<Canvas>();
+            var behaviors = Interaction.GetBehaviors(canvas);
+            behaviors.Remove(DrawStraightLineBehavior);
+            behaviors.Remove(DrawRectangleBehavior);
+            if (!behaviors.Contains(DrawEllipseBehavior))
+            {
+                behaviors.Add(DrawEllipseBehavior);
+            }
         }
 
         private void SwitchToSelectMode()
@@ -124,6 +157,7 @@ namespace grapher.ViewModels
             SelectIsChecked = true;
             StraightLineIsChecked = false;
             RectangleIsChecked = false;
+            EllipseIsChecked = false;
 
             ViewportCursor = Cursors.Arrow;
 
@@ -132,6 +166,7 @@ namespace grapher.ViewModels
             var behaviors = Interaction.GetBehaviors(canvas);
             behaviors.Remove(DrawStraightLineBehavior);
             behaviors.Remove(DrawRectangleBehavior);
+            behaviors.Remove(DrawEllipseBehavior);
         }
 
         private void Description_DragDrop(System.Windows.DragEventArgs obj)
@@ -192,6 +227,12 @@ namespace grapher.ViewModels
         {
             get { return _RectangleIsChecked; }
             set { SetProperty(ref _RectangleIsChecked, value); }
+        }
+
+        public bool EllipseIsChecked
+        {
+            get { return _EllipseIsChecked; }
+            set { SetProperty(ref _EllipseIsChecked, value); }
         }
     }
 }
