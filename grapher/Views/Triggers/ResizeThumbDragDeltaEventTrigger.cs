@@ -28,33 +28,33 @@ namespace grapher.Views.Triggers
             //サイズ変更処理(横)
             if (thumb.Name == "ResizeThumb_LT" || thumb.Name == "ResizeThumb_LB")
             {
-                if (viewModel.Width.Value - e.HorizontalChange < 20)
+                if (viewModel.Model.Width - e.HorizontalChange < 20)
                 { }
                 else
                 {
-                    viewModel.X.Value += e.HorizontalChange;
-                    viewModel.Width.Value = Math.Max(20, viewModel.Width.Value - e.HorizontalChange);
+                    viewModel.Model.X += e.HorizontalChange;
+                    viewModel.Model.Width = Math.Max(20, viewModel.Model.Width - e.HorizontalChange);
                 }
             }
             else
             {
-                viewModel.Width.Value = Math.Max(20, viewModel.Width.Value + e.HorizontalChange);
+                viewModel.Model.Width = Math.Max(20, viewModel.Model.Width + e.HorizontalChange);
             }
 
             //サイズ変更処理(たて)
             if (thumb.Name == "ResizeThumb_LT" || thumb.Name == "ResizeThumb_RT")
             {
-                if (viewModel.Height.Value - e.VerticalChange < 20)
+                if (viewModel.Model.Height - e.VerticalChange < 20)
                 { }
                 else
                 {
-                    viewModel.Y.Value += e.VerticalChange;
-                    viewModel.Height.Value = Math.Max(20, viewModel.Height.Value - e.VerticalChange);
+                    viewModel.Model.Y += e.VerticalChange;
+                    viewModel.Model.Height = Math.Max(20, viewModel.Model.Height - e.VerticalChange);
                 }
             }
             else
             {
-                viewModel.Height.Value = Math.Max(20, viewModel.Height.Value + e.VerticalChange);
+                viewModel.Model.Height = Math.Max(20, viewModel.Model.Height + e.VerticalChange);
             }
             e.Handled = true;
         }

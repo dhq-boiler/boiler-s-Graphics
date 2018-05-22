@@ -23,7 +23,7 @@ namespace grapher.Views.Behaviors
         {
             var rectangle = AssociatedObject as Rectangle;
             var viewModel = rectangle.DataContext as RenderItemViewModel;
-            viewModel.IsSelected.Value = true;
+            viewModel.Model.IsSelected = true;
         }
     }
 }

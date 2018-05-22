@@ -23,7 +23,7 @@ namespace grapher.Views.Behaviors
         {
             foreach (var item in this.AssociatedObject.Children)
             {
-                ((item as FrameworkElement).DataContext as RenderItemViewModel).IsSelected.Value = false;
+                ((item as FrameworkElement).DataContext as RenderItemViewModel).Model.IsSelected = false;
             }
         }
     }

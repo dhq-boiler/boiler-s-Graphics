@@ -144,17 +144,17 @@ namespace grapher.ViewModels
             var rectangle = item.Item as RectangleViewModel;
             if (rectangle != null)
             {
-                rectangle.X.Value = position.X - item.XOffset;
-                rectangle.Y.Value = position.Y - item.YOffset;
+                rectangle.Model.X = position.X - item.XOffset;
+                rectangle.Model.Y = position.Y - item.YOffset;
             }
 
             var line = item.Item as StraightLineViewModel;
             if (line != null)
             {
-                line.X.Value += position.X - item.XOffset;
-                line.Y.Value += position.Y - item.YOffset;
-                line.X2.Value += position.X - item.XOffset;
-                line.Y2.Value += position.Y - item.YOffset;
+                line.Model.X += position.X - item.XOffset;
+                line.Model.Y += position.Y - item.YOffset;
+                (line.Model as StraightLine).X2 += position.X - item.XOffset;
+                (line.Model as StraightLine).Y2 += position.Y - item.YOffset;
             }
         }
 

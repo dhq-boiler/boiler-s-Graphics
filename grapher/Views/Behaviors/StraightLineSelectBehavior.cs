@@ -39,7 +39,7 @@ namespace grapher.Views.Behaviors
             if (result)
             {
                 var viewModel = line.DataContext as RenderItemViewModel;
-                viewModel.IsSelected.Value = true;
+                viewModel.Model.IsSelected = true;
 
                 if (adorner == null)
                 {
