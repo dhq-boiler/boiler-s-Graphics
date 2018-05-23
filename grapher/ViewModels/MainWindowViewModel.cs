@@ -29,6 +29,22 @@ namespace grapher.ViewModels
         private Cursor _ApplicationCursor;
         private bool _StraightLineIsChecked;
         private bool _EllipseIsChecked;
+        private Type[] extraTypes =
+            {
+                typeof(BitmapCacheBrush),
+                typeof(LinearGradientBrush),
+                typeof(RadialGradientBrush),
+                typeof(SolidColorBrush),
+                typeof(DrawingBrush),
+                typeof(ImageBrush),
+                typeof(VisualBrush),
+                typeof(MatrixTransform),
+                typeof(RotateTransform),
+                typeof(ScaleTransform),
+                typeof(SkewTransform),
+                typeof(TransformGroup),
+                typeof(TranslateTransform)
+            };
 
         public ICommand SelectModeCommand { get; set; }
 
@@ -37,6 +53,8 @@ namespace grapher.ViewModels
         public ICommand RectangleModeCommand { get; set; }
 
         public ICommand EllipseModeCommand { get; set; }
+
+        public ICommand OpenFileCommand { get; set; }
 
         public ICommand SaveAsCommand { get; set; }
 
@@ -99,10 +117,25 @@ namespace grapher.ViewModels
             {
                 SwitchToEllipseMode();
             });
+            OpenFileCommand = new DelegateCommand(() =>
+            {
+                OpenFileDialogAndDeserialize();
+            });
             SaveAsCommand = new DelegateCommand(() =>
             {
                 OpenSaveFileDialogAndSerialize();
             });
+        }
+
+        private void OpenFileDialogAndDeserialize()
+        {
+            var dialog = new OpenFileDialog();
+            dialog.Title = "開く";
+            dialog.Filter = "全てのファイル|*.*|GRAPHERファイル|*.grapher";
+            if (dialog.ShowDialog() == true)
+            {
+                Deserialize(dialog.FileName);
+            }
         }
 
         private void OpenSaveFileDialogAndSerialize()
@@ -116,27 +149,35 @@ namespace grapher.ViewModels
             }
         }
 
+        private void Deserialize(string fileName)
+        {
+            var deserializer = new XmlSerializer(typeof(Diagram), extraTypes);
+            var sr = new StreamReader(fileName, new UTF8Encoding(false));
+            var obj = deserializer.Deserialize(sr) as Diagram;
+            RenderItems = new ObservableCollection<RenderItemViewModel>();
+            foreach (var item in obj.RenderItems)
+            {
+                switch (item.GetType().Name)
+                {
+                    case "Rectangle":
+                        RenderItems.Add(new RectangleViewModel(item as Rectangle));
+                        break;
+                    case "StraightLine":
+                        RenderItems.Add(new StraightLineViewModel(item as StraightLine));
+                        break;
+                    case "Ellipse":
+                        RenderItems.Add(new EllipseViewModel(item as Ellipse));
+                        break;
+                }
+            }
+        }
+
         private void Serialize(string fileName)
         {
             var renderItems = RenderItems.Select(i => i.Model);
             var serializeObj = new Diagram();
             serializeObj.RenderItems = renderItems.ToList();
-            var serializer = new XmlSerializer(typeof(Diagram), new Type[] 
-            {
-                typeof(BitmapCacheBrush),
-                typeof(LinearGradientBrush),
-                typeof(RadialGradientBrush),
-                typeof(SolidColorBrush),
-                typeof(DrawingBrush),
-                typeof(ImageBrush),
-                typeof(VisualBrush),
-                typeof(MatrixTransform),
-                typeof(RotateTransform),
-                typeof(ScaleTransform),
-                typeof(SkewTransform),
-                typeof(TransformGroup),
-                typeof(TranslateTransform)
-            });
+            var serializer = new XmlSerializer(typeof(Diagram), extraTypes);
             var sw = new StreamWriter(fileName, false, new UTF8Encoding(false));
             serializer.Serialize(sw, serializeObj);
             sw.Close();

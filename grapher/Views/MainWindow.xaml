@@ -88,6 +88,7 @@
     <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_File">
+                <MenuItem Command="{Binding OpenFileCommand}" Header="Open file..." />
                 <MenuItem Command="{Binding SaveAsCommand}" Header="Save as..." />
             </MenuItem>
         </Menu>
