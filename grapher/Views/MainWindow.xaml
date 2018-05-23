@@ -17,6 +17,9 @@
     Height="450"
     prism:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
+    <i:Interaction.Behaviors>
+        <behavior:DeleteBehavior />
+    </i:Interaction.Behaviors>
     <i:Interaction.Triggers>
         <trigger:WindowLoadedEventTrigger />
     </i:Interaction.Triggers>

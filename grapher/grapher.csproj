@@ -102,6 +102,7 @@
     <Compile Include="Views\AdornedBy.cs" />
     <Compile Include="Views\Behaviors\AbstractAdorner.cs" />
     <Compile Include="Views\Behaviors\CursorInfo.cs" />
+    <Compile Include="Views\Behaviors\DeleteBehavior.cs" />
     <Compile Include="Views\Behaviors\DeselectBehavior.cs" />
     <Compile Include="Views\Behaviors\AbstractDragAdorner.cs" />
     <Compile Include="Views\Behaviors\AbstractDragStartBehavior.cs" />
