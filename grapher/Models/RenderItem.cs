@@ -1,7 +1,13 @@
 ﻿using Prism.Mvvm;
+using System;
+using System.Xml.Serialization;
 
 namespace grapher.Models
 {
+    [Serializable]
+    [XmlInclude(typeof(Rectangle))]
+    [XmlInclude(typeof(StraightLine))]
+    [XmlInclude(typeof(Ellipse))]
     public class RenderItem : BindableBase
     {
         private double _X;
@@ -34,6 +40,7 @@ namespace grapher.Models
             set { SetProperty(ref _Height, value); }
         }
 
+        [XmlIgnore]
         public bool IsSelected
         {
             get { return _IsSelected; }

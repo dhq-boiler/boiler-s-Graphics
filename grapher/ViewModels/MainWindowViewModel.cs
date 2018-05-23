@@ -1,15 +1,21 @@
 ﻿using grapher.Extensions;
 using grapher.Models;
 using grapher.Views.Behaviors;
+using Microsoft.Win32;
 using Prism.Commands;
 using Prism.Mvvm;
+using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interactivity;
 using System.Windows.Media;
+using System.Xml.Serialization;
 
 namespace grapher.ViewModels
 {
@@ -32,6 +38,8 @@ namespace grapher.ViewModels
 
         public ICommand EllipseModeCommand { get; set; }
 
+        public ICommand SaveAsCommand { get; set; }
+
         public Behavior DrawRectangleBehavior { get; set; } = new DrawRectangleBehavior();
 
         public Behavior DrawStraightLineBehavior { get; set; } = new DrawStraightLineBehavior();
@@ -49,6 +57,7 @@ namespace grapher.ViewModels
             RenderItems = new ObservableCollection<RenderItemViewModel>();
             RenderItems.Add(new RectangleViewModel(new Rectangle() { X = 50, Y = 50, Width = 100, Height = 100, Stroke = new SolidColorBrush(Colors.Black), Fill = new SolidColorBrush(Colors.Gray) }));
             RenderItems.Add(new RectangleViewModel(new Rectangle() { X = 250, Y = 250, Width = 100, Height = 100, Stroke = new SolidColorBrush(Colors.Black), Fill = new SolidColorBrush(Colors.Blue) }));
+            RenderItems.Add(new EllipseViewModel(new Ellipse() { X = 300, Y = 100, Width = 150, Height = 100, Stroke = new SolidColorBrush(Colors.Red), Fill = new LinearGradientBrush(Colors.DarkBlue, Colors.LightBlue, 0) }));
             Description = new DropAcceptDescription();
             Description.DragDrop += Description_DragDrop;
 
@@ -90,6 +99,47 @@ namespace grapher.ViewModels
             {
                 SwitchToEllipseMode();
             });
+            SaveAsCommand = new DelegateCommand(() =>
+            {
+                OpenSaveFileDialogAndSerialize();
+            });
+        }
+
+        private void OpenSaveFileDialogAndSerialize()
+        {
+            var dialog = new SaveFileDialog();
+            dialog.Title = "名前を付けて保存";
+            dialog.Filter = "全てのファイル|*.*|GRAPHERファイル|*.grapher";
+            if (dialog.ShowDialog() == true)
+            {
+                Serialize(dialog.FileName);
+            }
+        }
+
+        private void Serialize(string fileName)
+        {
+            var renderItems = RenderItems.Select(i => i.Model);
+            var serializeObj = new Diagram();
+            serializeObj.RenderItems = renderItems.ToList();
+            var serializer = new XmlSerializer(typeof(Diagram), new Type[] 
+            {
+                typeof(BitmapCacheBrush),
+                typeof(LinearGradientBrush),
+                typeof(RadialGradientBrush),
+                typeof(SolidColorBrush),
+                typeof(DrawingBrush),
+                typeof(ImageBrush),
+                typeof(VisualBrush),
+                typeof(MatrixTransform),
+                typeof(RotateTransform),
+                typeof(ScaleTransform),
+                typeof(SkewTransform),
+                typeof(TransformGroup),
+                typeof(TranslateTransform)
+            });
+            var sw = new StreamWriter(fileName, false, new UTF8Encoding(false));
+            serializer.Serialize(sw, serializeObj);
+            sw.Close();
         }
 
         private void SwitchToRectangleMode()

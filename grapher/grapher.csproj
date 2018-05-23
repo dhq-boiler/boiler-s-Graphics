@@ -90,6 +90,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Extensions\Extensions.cs" />
+    <Compile Include="Models\Diagram.cs" />
     <Compile Include="Models\DraggingItem.cs" />
     <Compile Include="Models\Ellipse.cs" />
     <Compile Include="Models\Rectangle.cs" />

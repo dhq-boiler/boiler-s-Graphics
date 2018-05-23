@@ -87,7 +87,9 @@
     </Window.Resources>
     <DockPanel>
         <Menu DockPanel.Dock="Top">
-            <MenuItem Header="_File" />
+            <MenuItem Header="_File">
+                <MenuItem Command="{Binding SaveAsCommand}" Header="Save as..." />
+            </MenuItem>
         </Menu>
         <DockPanel DockPanel.Dock="Left">
             <ToolBarTray Orientation="Vertical">
