@@ -191,6 +191,13 @@ namespace grapher.ViewModels
                 (line.Model as StraightLine).X2 += position.X - item.XOffset;
                 (line.Model as StraightLine).Y2 += position.Y - item.YOffset;
             }
+
+            var ellipse = item.Item as EllipseViewModel;
+            if (ellipse != null)
+            {
+                ellipse.Model.X = position.X - item.XOffset;
+                ellipse.Model.Y = position.Y - item.YOffset;
+            }
         }
 
         public DropAcceptDescription Description

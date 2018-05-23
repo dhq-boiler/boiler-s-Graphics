@@ -111,6 +111,8 @@
     <Compile Include="Views\Behaviors\DropAcceptDescription.cs" />
     <Compile Include="Views\Behaviors\CursorBehavior.cs" />
     <Compile Include="Views\Behaviors\EllipseAdorner.cs" />
+    <Compile Include="Views\Behaviors\EllipseDragAdorner.cs" />
+    <Compile Include="Views\Behaviors\EllipseDragStartBehavior.cs" />
     <Compile Include="Views\Behaviors\EllipseSelectBehavior.cs" />
     <Compile Include="Views\Behaviors\RectangleAdorner.cs" />
     <Compile Include="Views\Behaviors\RectangleDragAdorner.cs" />

@@ -184,6 +184,7 @@
                             Fill="{Binding Fill.Value}"
                             Stroke="{Binding Stroke.Value}">
                             <i:Interaction.Behaviors>
+                                <behavior:EllipseDragStartBehavior AllowedEffects="Move" DragDropData="{Binding}" />
                                 <behavior:EllipseSelectBehavior />
                             </i:Interaction.Behaviors>
                             <Ellipse.Style>
