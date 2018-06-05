@@ -99,6 +99,7 @@
     <Compile Include="Controls\ZoomBox.cs" />
     <Compile Include="Converters\ConnectionPathConverter.cs" />
     <Compile Include="Converters\ImageUrlConverter.cs" />
+    <Compile Include="Converters\PointsToAngleConverter.cs" />
     <Compile Include="Extensions\Extensions.cs" />
     <Compile Include="Helpers\ConnectorInfo.cs" />
     <Compile Include="Helpers\DragObject.cs" />
@@ -122,8 +123,9 @@
     <Compile Include="UserControls\ToolBoxControl.xaml.cs">
       <DependentUpon>ToolBoxControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\ConnectorBaseViewModel.cs" />
     <Compile Include="ViewModels\ConnectorInfoBase.cs" />
-    <Compile Include="ViewModels\ConnectorViewModel.cs" />
+    <Compile Include="ViewModels\PolygonalConnectorViewModel.cs" />
     <Compile Include="ViewModels\DesignerItemViewModelBase.cs" />
     <Compile Include="ViewModels\DiagramViewModel.cs" />
     <Compile Include="ViewModels\EllipseViewModel.cs" />
@@ -134,6 +136,7 @@
     <Compile Include="ViewModels\PersistDesignerItemViewModel.cs" />
     <Compile Include="ViewModels\SelectableDesignerItemViewModelBase.cs" />
     <Compile Include="ViewModels\SettingsDesignerItemViewModel.cs" />
+    <Compile Include="ViewModels\StraightConnectorViewModel.cs" />
     <Compile Include="ViewModels\StraightLineViewModel.cs" />
     <Compile Include="ViewModels\ToolBoxViewModel.cs" />
     <Compile Include="Views\AdornedBy.cs" />

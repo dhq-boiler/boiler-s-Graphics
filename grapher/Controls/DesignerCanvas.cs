@@ -5,8 +5,6 @@ using grapher.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -17,7 +15,7 @@ namespace grapher.Controls
 {
     public class DesignerCanvas : Canvas
     {
-        private ConnectorViewModel partialConnection;
+        private ConnectorBaseViewModel partialConnection;
         private List<Connector> connectorsHit = new List<Connector>();
         private Connector sourceConnector;
         private Point? rubberbandSelectionStartPoint = null;

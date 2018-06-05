@@ -7,7 +7,7 @@ using System.Windows;
 
 namespace grapher.ViewModels
 {
-    public class ConnectorViewModel : SelectableDesignerItemViewModelBase
+    public class ConnectorBaseViewModel : SelectableDesignerItemViewModelBase
     {
         private FullyCreatedConnectorInfo sourceConnectorInfo;
         private ConnectorInfoBase sinkConnectorInfo;
@@ -17,19 +17,16 @@ namespace grapher.ViewModels
         private Point endPoint;
         private Rect area;
 
-
-        public ConnectorViewModel(int id, IDiagramViewModel parent,
+        public ConnectorBaseViewModel(int id, IDiagramViewModel parent,
             FullyCreatedConnectorInfo sourceConnectorInfo, FullyCreatedConnectorInfo sinkConnectorInfo) : base(id, parent)
         {
             Init(sourceConnectorInfo, sinkConnectorInfo);
         }
 
-        public ConnectorViewModel(FullyCreatedConnectorInfo sourceConnectorInfo, ConnectorInfoBase sinkConnectorInfo)
+        public ConnectorBaseViewModel(FullyCreatedConnectorInfo sourceConnectorInfo, ConnectorInfoBase sinkConnectorInfo)
         {
             Init(sourceConnectorInfo, sinkConnectorInfo);
         }
-
-        public static IPathFinder PathFinder { get; set; }
 
         public bool IsFullConnection
         {
@@ -76,7 +73,7 @@ namespace grapher.ViewModels
             {
                 return connectionPoints;
             }
-            private set
+            protected set
             {
                 if (connectionPoints != value)
                 {
@@ -205,14 +202,18 @@ namespace grapher.ViewModels
                                   ConnectionPoints[1].Y,
                                   ConnectionPoints[1]);
 
-                ConnectionPoints = PathFinder.GetConnectionLine(sourceInfo, sinkInfo, true);
+                SetConnectionPoints(sourceInfo, sinkInfo, true);
             }
             else
             {
-                ConnectionPoints = PathFinder.GetConnectionLine(sourceInfo, ConnectionPoints[1], ConnectorOrientation.Left);
+                SetConnectionPoints(sourceInfo, ConnectionPoints[1], ConnectorOrientation.Left);
                 EndPoint = new Point();
             }
         }
+
+        protected virtual void SetConnectionPoints(ConnectorInfo sourceInfo, ConnectorInfo sinkInfo, bool showLastLine) { }
+
+        protected virtual void SetConnectionPoints(ConnectorInfo source, Point sinkPoint, ConnectorOrientation preferredOrientation) { }
 
         private void ConnectorViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
@@ -232,10 +233,12 @@ namespace grapher.ViewModels
 
         private void Init(FullyCreatedConnectorInfo sourceConnectorInfo, ConnectorInfoBase sinkConnectorInfo)
         {
-            PathFinder = new OrthogonalPathFinder();
+            InitPathFinder();
             this.Parent = sourceConnectorInfo.DataItem.Parent;
             this.SourceConnectorInfo = sourceConnectorInfo;
             this.SinkConnectorInfo = sinkConnectorInfo;
         }
+
+        protected virtual void InitPathFinder() { }
     }
 }
