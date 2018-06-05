@@ -8,7 +8,7 @@ namespace grapher.Views.Triggers
     {
         protected override void OnEvent(EventArgs eventArgs)
         {
-            ((AssociatedObject as MainWindow).DataContext as MainWindowViewModel).Initialize();
+            //((AssociatedObject as MainWindow).DataContext as MainWindowViewModel).Initialize();
         }
     }
 }

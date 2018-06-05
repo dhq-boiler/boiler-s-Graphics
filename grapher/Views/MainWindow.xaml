@@ -11,201 +11,36 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
     xmlns:trigger="clr-namespace:grapher.Views.Triggers"
+    xmlns:usercontrol="clr-namespace:grapher.UserControls"
     xmlns:viewmodel="clr-namespace:grapher.ViewModels"
     Title="GRAPHER"
     Width="800"
     Height="450"
     prism:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
-    <i:Interaction.Behaviors>
-        <behavior:DeleteBehavior />
-    </i:Interaction.Behaviors>
-    <i:Interaction.Triggers>
-        <trigger:WindowLoadedEventTrigger />
-    </i:Interaction.Triggers>
-    <Window.Resources>
-        <!--  リサイズハンドル用のテンプレート定義  -->
-        <ControlTemplate x:Key="ResizeHandleTemplate" TargetType="Thumb">
-            <Rectangle
-                Width="7"
-                Height="7"
-                Margin="-3"
-                Fill="White"
-                Stroke="DimGray" />
-        </ControlTemplate>
+    <Window.InputBindings>
+        <KeyBinding Key="Del" Command="{Binding DeleteSelectedItemsCommand}" />
+    </Window.InputBindings>
+    <Grid Margin="0,5,0,0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="230" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
 
-        <!--  装飾用のテンプレート定義  -->
-        <ControlTemplate x:Key="RectangleAdornerTemplate">
-            <Grid>
-                <Thumb
-                    Name="ResizeThumb_LT"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Top"
-                    Template="{StaticResource ResizeHandleTemplate}">
-                    <i:Interaction.Behaviors>
-                        <behavior:CursorBehavior DefaultCursor="{Binding ViewportCursor}" SpecificCursor="SizeNWSE" />
-                    </i:Interaction.Behaviors>
-                    <i:Interaction.Triggers>
-                        <trigger:ResizeThumbDragDeltaEventTrigger />
-                    </i:Interaction.Triggers>
-                </Thumb>
-                <Thumb
-                    Name="ResizeThumb_RT"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Top"
-                    Template="{StaticResource ResizeHandleTemplate}">
-                    <i:Interaction.Behaviors>
-                        <behavior:CursorBehavior DefaultCursor="{Binding ViewportCursor}" SpecificCursor="SizeNESW" />
-                    </i:Interaction.Behaviors>
-                    <i:Interaction.Triggers>
-                        <trigger:ResizeThumbDragDeltaEventTrigger />
-                    </i:Interaction.Triggers>
-                </Thumb>
-                <Thumb
-                    Name="ResizeThumb_LB"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Bottom"
-                    Template="{StaticResource ResizeHandleTemplate}">
-                    <i:Interaction.Behaviors>
-                        <behavior:CursorBehavior DefaultCursor="{Binding ViewportCursor}" SpecificCursor="SizeNESW" />
-                    </i:Interaction.Behaviors>
-                    <i:Interaction.Triggers>
-                        <trigger:ResizeThumbDragDeltaEventTrigger />
-                    </i:Interaction.Triggers>
-                </Thumb>
-                <Thumb
-                    Name="ResizeThumb_RB"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Bottom"
-                    Template="{StaticResource ResizeHandleTemplate}">
-                    <i:Interaction.Behaviors>
-                        <behavior:CursorBehavior DefaultCursor="{Binding ViewportCursor}" SpecificCursor="SizeNWSE" />
-                    </i:Interaction.Behaviors>
-                    <i:Interaction.Triggers>
-                        <trigger:ResizeThumbDragDeltaEventTrigger />
-                    </i:Interaction.Triggers>
-                </Thumb>
-            </Grid>
-        </ControlTemplate>
-    </Window.Resources>
-    <DockPanel>
-        <Menu DockPanel.Dock="Top">
-            <MenuItem Header="_File">
-                <MenuItem Command="{Binding OpenFileCommand}" Header="Open file..." />
-                <MenuItem Command="{Binding SaveAsCommand}" Header="Save as..." />
-            </MenuItem>
-        </Menu>
-        <DockPanel DockPanel.Dock="Left">
-            <ToolBarTray Orientation="Vertical">
-                <ToolBar>
-                    <ToggleButton Command="{Binding SelectModeCommand}" IsChecked="{Binding SelectIsChecked}">
-                        <Image Source="pack://application:,,,/Assets/img/pointer.png" />
-                    </ToggleButton>
-                    <ToggleButton Command="{Binding StraightLineModeCommand}" IsChecked="{Binding StraightLineIsChecked}">
-                        <Image Source="pack://application:,,,/Assets/img/straightline.png" />
-                    </ToggleButton>
-                    <ToggleButton Command="{Binding RectangleModeCommand}" IsChecked="{Binding RectangleIsChecked}">
-                        <Image Source="pack://application:,,,/Assets/img/rectangle.png" />
-                    </ToggleButton>
-                    <ToggleButton Command="{Binding EllipseModeCommand}" IsChecked="{Binding EllipseIsChecked}">
-                        <Image Source="pack://application:,,,/Assets/img/ellipse.png" />
-                    </ToggleButton>
-                </ToolBar>
-            </ToolBarTray>
-        </DockPanel>
-        <ItemsControl x:Name="viewport_host" ItemsSource="{Binding RenderItems}">
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <Canvas
-                        x:Name="viewport"
-                        AllowDrop="True"
-                        Background="Transparent">
-                        <i:Interaction.Behaviors>
-                            <behavior:DragAcceptBehavior Description="{Binding Description}" />
-                            <behavior:DeselectBehavior />
-                            <behavior:CursorBehavior DefaultCursor="{Binding ApplicationCursor}" SpecificCursor="{Binding ViewportCursor}" />
-                        </i:Interaction.Behaviors>
-                    </Canvas>
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-            <ItemsControl.ItemContainerStyleSelector>
-                <local:ItemsControlItemContainerStyleSelector>
-                    <local:ItemTypedStyle DataType="{x:Type viewmodel:RectangleViewModel}">
-                        <Style TargetType="{x:Type ContentPresenter}">
-                            <Setter Property="Canvas.Left" Value="{Binding X.Value}" />
-                            <Setter Property="Canvas.Top" Value="{Binding Y.Value}" />
-                        </Style>
-                    </local:ItemTypedStyle>
-                    <local:ItemTypedStyle DataType="{x:Type viewmodel:StraightLineViewModel}">
-                        <Style TargetType="{x:Type ContentPresenter}" />
-                    </local:ItemTypedStyle>
-                    <local:ItemTypedStyle DataType="{x:Type viewmodel:EllipseViewModel}">
-                        <Style TargetType="{x:Type ContentPresenter}">
-                            <Setter Property="Canvas.Left" Value="{Binding X.Value}" />
-                            <Setter Property="Canvas.Top" Value="{Binding Y.Value}" />
-                        </Style>
-                    </local:ItemTypedStyle>
-                </local:ItemsControlItemContainerStyleSelector>
-            </ItemsControl.ItemContainerStyleSelector>
-            <ItemsControl.ItemTemplateSelector>
-                <local:ItemsControlTemplateSelector>
-                    <DataTemplate DataType="{x:Type viewmodel:RectangleViewModel}">
-                        <Rectangle
-                            Width="{Binding Width.Value}"
-                            Height="{Binding Height.Value}"
-                            Fill="{Binding Fill.Value}"
-                            Stroke="{Binding Stroke.Value}">
-                            <i:Interaction.Behaviors>
-                                <behavior:RectangleDragStartBehavior AllowedEffects="Move" DragDropData="{Binding}" />
-                                <behavior:RectangleSelectBehavior />
-                            </i:Interaction.Behaviors>
-                            <Rectangle.Style>
-                                <Style TargetType="{x:Type Rectangle}">
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsSelected.Value}" Value="True">
-                                            <Setter Property="local:AdornedBy.Template" Value="{StaticResource RectangleAdornerTemplate}" />
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Rectangle.Style>
-                        </Rectangle>
-                    </DataTemplate>
-                    <DataTemplate DataType="{x:Type viewmodel:StraightLineViewModel}">
-                        <Line
-                            Stroke="{Binding Brush.Value}"
-                            X1="{Binding X.Value}"
-                            X2="{Binding X2.Value}"
-                            Y1="{Binding Y.Value}"
-                            Y2="{Binding Y2.Value}">
-                            <i:Interaction.Behaviors>
-                                <behavior:StraightLineDragStartBehavior AllowedEffects="Move" DragDropData="{Binding}" />
-                                <behavior:StraightLineSelectBehavior />
-                            </i:Interaction.Behaviors>
-                        </Line>
-                    </DataTemplate>
-                    <DataTemplate DataType="{x:Type viewmodel:EllipseViewModel}">
-                        <Ellipse
-                            Width="{Binding Width.Value}"
-                            Height="{Binding Height.Value}"
-                            Fill="{Binding Fill.Value}"
-                            Stroke="{Binding Stroke.Value}">
-                            <i:Interaction.Behaviors>
-                                <behavior:EllipseDragStartBehavior AllowedEffects="Move" DragDropData="{Binding}" />
-                                <behavior:EllipseSelectBehavior />
-                            </i:Interaction.Behaviors>
-                            <Ellipse.Style>
-                                <Style TargetType="{x:Type Ellipse}">
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsSelected.Value}" Value="True">
-                                            <Setter Property="local:AdornedBy.Template" Value="{StaticResource RectangleAdornerTemplate}" />
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Ellipse.Style>
-                        </Ellipse>
-                    </DataTemplate>
-                </local:ItemsControlTemplateSelector>
-            </ItemsControl.ItemTemplateSelector>
-        </ItemsControl>
-    </DockPanel>
+        <!--  ToolBox Control  -->
+        <usercontrol:ToolBoxControl Grid.Column="0" DataContext="{Binding ToolBoxViewModel}" />
+
+        <GridSplitter
+            Grid.Column="1"
+            Width="3"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Stretch"
+            Background="Transparent" />
+
+        <!--  Diagram Control  -->
+        <usercontrol:DiagramControl
+            Grid.Column="1"
+            Margin="3,1,0,0"
+            DataContext="{Binding DiagramViewModel}" />
+    </Grid>
 </Window>
