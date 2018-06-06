@@ -42,7 +42,7 @@ namespace grapher.Controls
                     Rect rectangleBounds = sourceConnector.TransformToVisual(this).TransformBounds(new Rect(sourceConnector.RenderSize));
                     Point point = new Point(rectangleBounds.Left + (rectangleBounds.Width / 2),
                                             rectangleBounds.Bottom + (rectangleBounds.Height / 2));
-                    partialConnection = new ConnectorViewModel(sourceDataItem, new PartCreatedConnectionInfo(point));
+                    partialConnection = new PolygonalConnectorViewModel(sourceDataItem, new PartCreatedConnectionInfo(point));
                     sourceDataItem.DataItem.Parent.AddItemCommand.Execute(partialConnection);
                 }
             }
@@ -90,7 +90,7 @@ namespace grapher.Controls
                     int indexOfLastTempConnection = sinkDataItem.DataItem.Parent.Items.Count - 1;
                     sinkDataItem.DataItem.Parent.RemoveItemCommand.Execute(
                         sinkDataItem.DataItem.Parent.Items[indexOfLastTempConnection]);
-                    sinkDataItem.DataItem.Parent.AddItemCommand.Execute(new ConnectorViewModel(sourceDataItem, sinkDataItem));
+                    sinkDataItem.DataItem.Parent.AddItemCommand.Execute(new PolygonalConnectorViewModel(sourceDataItem, sinkDataItem));
                 }
                 else
                 {
