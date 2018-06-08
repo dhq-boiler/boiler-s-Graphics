@@ -122,7 +122,7 @@ namespace grapher.ViewModels
             return new ConnectorInfo()
             {
                 Orientation = orientation,
-                DesignerItemSize = new Size(DesignerItemViewModelBase.ItemWidth, DesignerItemViewModelBase.ItemHeight),
+                DesignerItemSize = new Size(DesignerItemViewModelBase.DefaultWidth, DesignerItemViewModelBase.DefaultHeight),
                 DesignerItemLeft = left,
                 DesignerItemTop = top,
                 Position = position

@@ -18,16 +18,16 @@ namespace grapher.Helpers
             switch (connector.Orientation)
             {
                 case ConnectorOrientation.Top:
-                    point = new Point(connector.DataItem.Left + (DesignerItemViewModelBase.ItemWidth / 2), connector.DataItem.Top - (ConnectorInfoBase.ConnectorHeight));
+                    point = new Point(connector.DataItem.Left + (connector.DataItem.Width / 2), connector.DataItem.Top - (ConnectorInfoBase.ConnectorHeight));
                     break;
                 case ConnectorOrientation.Bottom:
-                    point = new Point(connector.DataItem.Left + (DesignerItemViewModelBase.ItemWidth / 2), (connector.DataItem.Top + DesignerItemViewModelBase.ItemHeight) + (ConnectorInfoBase.ConnectorHeight / 2));
+                    point = new Point(connector.DataItem.Left + (connector.DataItem.Width / 2), (connector.DataItem.Top + connector.DataItem.Height) + (ConnectorInfoBase.ConnectorHeight / 2));
                     break;
                 case ConnectorOrientation.Right:
-                    point = new Point(connector.DataItem.Left + DesignerItemViewModelBase.ItemWidth + (ConnectorInfoBase.ConnectorWidth), connector.DataItem.Top + (DesignerItemViewModelBase.ItemHeight / 2));
+                    point = new Point(connector.DataItem.Left + connector.DataItem.Width + (ConnectorInfoBase.ConnectorWidth), connector.DataItem.Top + (connector.DataItem.Height / 2));
                     break;
                 case ConnectorOrientation.Left:
-                    point = new Point(connector.DataItem.Left - ConnectorInfoBase.ConnectorWidth, connector.DataItem.Top + (DesignerItemViewModelBase.ItemHeight / 2));
+                    point = new Point(connector.DataItem.Left - ConnectorInfoBase.ConnectorWidth, connector.DataItem.Top + (connector.DataItem.Height / 2));
                     break;
             }
 

@@ -14,10 +14,13 @@ namespace grapher.ViewModels
         private bool showConnectors = false;
         private List<FullyCreatedConnectorInfo> connectors = new List<FullyCreatedConnectorInfo>();
 
-        private static double itemWidth = 65;
-        private static double itemHeight = 65;
         private double _Left;
         private double _Top;
+        private double width;
+        private double height;
+
+        public static readonly double DefaultWidth = 65d;
+        public static readonly double DefaultHeight = 65d;
 
         public DesignerItemViewModelBase(int id, IDiagramViewModel parent, double left, double top) : base(id, parent)
         {
@@ -57,14 +60,16 @@ namespace grapher.ViewModels
 
 
 
-        public static double ItemWidth
+        public double Width
         {
-            get { return itemWidth; }
+            get { return width; }
+            set { SetProperty(ref width, value); }
         }
 
-        public static double ItemHeight
+        public double Height
         {
-            get { return itemHeight; }
+            get { return height; }
+            set { SetProperty(ref height, value); }
         }
 
         public bool ShowConnectors

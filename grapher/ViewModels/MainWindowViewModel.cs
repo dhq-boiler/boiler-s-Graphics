@@ -27,6 +27,7 @@ namespace grapher.ViewModels
         {
             DiagramViewModel = new DiagramViewModel();
             ToolBoxViewModel = new ToolBoxViewModel();
+            ToolBarViewModel = new ToolBarViewModel();
         }
 
         public DiagramViewModel DiagramViewModel
@@ -41,8 +42,15 @@ namespace grapher.ViewModels
             set { SetProperty(ref _ToolBoxViewModel, value); }
         }
 
+        public ToolBarViewModel ToolBarViewModel
+        {
+            get { return _ToolBarViewModel; }
+            set { SetProperty(ref _ToolBarViewModel, value); }
+        }
+
         private ObservableCollection<RenderItemViewModel> _RenderItems;
         private ToolBoxViewModel _ToolBoxViewModel;
+        private ToolBarViewModel _ToolBarViewModel;
 
         //private DropAcceptDescription _Description;
         //private bool _SelectIsChecked;

@@ -21,26 +21,28 @@
     <Window.InputBindings>
         <KeyBinding Key="Del" Command="{Binding DeleteSelectedItemsCommand}" />
     </Window.InputBindings>
-    <Grid Margin="0,5,0,0">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="230" />
-            <ColumnDefinition />
-        </Grid.ColumnDefinitions>
+    <DockPanel>
 
         <!--  ToolBox Control  -->
-        <usercontrol:ToolBoxControl Grid.Column="0" DataContext="{Binding ToolBoxViewModel}" />
+        <!--<usercontrol:ToolBoxControl Grid.Column="0" DataContext="{Binding ToolBoxViewModel}" />-->
 
-        <GridSplitter
-            Grid.Column="1"
-            Width="3"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Stretch"
-            Background="Transparent" />
+        <ToolBarTray DockPanel.Dock="Left" Orientation="Vertical">
+            <ToolBar ItemsSource="{Binding ToolBarViewModel.ToolItems}">
+                <ToolBar.ItemTemplate>
+                    <DataTemplate>
+                        <ToggleButton
+                            Width="40"
+                            Height="40"
+                            Command="{Binding Command}"
+                            IsChecked="{Binding IsChecked}">
+                            <Image Source="{Binding ImageUrl}" />
+                        </ToggleButton>
+                    </DataTemplate>
+                </ToolBar.ItemTemplate>
+            </ToolBar>
+        </ToolBarTray>
 
         <!--  Diagram Control  -->
-        <usercontrol:DiagramControl
-            Grid.Column="1"
-            Margin="3,1,0,0"
-            DataContext="{Binding DiagramViewModel}" />
-    </Grid>
+        <usercontrol:DiagramControl Margin="3,1,0,0" DataContext="{Binding DiagramViewModel}" />
+    </DockPanel>
 </Window>
