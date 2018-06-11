@@ -7,7 +7,7 @@
             : base(id, parent, sourceConnectorInfo, sinkConnectorInfo)
         { }
 
-        public StraightConnectorViewModel(FullyCreatedConnectorInfo sourceConnectorInfo, ConnectorInfoBase sinkConnectorInfo)
+        public StraightConnectorViewModel(ConnectorInfoBase sourceConnectorInfo, ConnectorInfoBase sinkConnectorInfo)
             : base(sourceConnectorInfo, sinkConnectorInfo)
         { }
     }

@@ -1,13 +1,12 @@
-﻿using grapher.Adorners;
-using grapher.Helpers;
+﻿using grapher.Helpers;
 using grapher.Messenger;
+using grapher.Strategies;
 using grapher.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -22,9 +21,11 @@ namespace grapher.Controls
         public DesignerCanvas()
         {
             this.AllowDrop = true;
+            LineFactory = new PolygonalLineFactory();
             Mediator.Instance.Register(this);
         }
 
+        public LineFactory LineFactory { get; set; }
 
         public Connector SourceConnector
         {
@@ -41,7 +42,7 @@ namespace grapher.Controls
                     Rect rectangleBounds = sourceConnector.TransformToVisual(this).TransformBounds(new Rect(sourceConnector.RenderSize));
                     Point point = new Point(rectangleBounds.Left + (rectangleBounds.Width / 2),
                                             rectangleBounds.Bottom + (rectangleBounds.Height / 2));
-                    partialConnection = new PolygonalConnectorViewModel(sourceDataItem, new PartCreatedConnectionInfo(point));
+                    partialConnection = LineFactory.Create(sourceDataItem, new PartCreatedConnectionInfo(point));
                     sourceDataItem.DataItem.Parent.AddItemCommand.Execute(partialConnection);
                 }
             }
@@ -69,7 +70,7 @@ namespace grapher.Controls
                     int indexOfLastTempConnection = sinkDataItem.DataItem.Parent.Items.Count - 1;
                     sinkDataItem.DataItem.Parent.RemoveItemCommand.Execute(
                         sinkDataItem.DataItem.Parent.Items[indexOfLastTempConnection]);
-                    sinkDataItem.DataItem.Parent.AddItemCommand.Execute(new PolygonalConnectorViewModel(sourceDataItem, sinkDataItem));
+                    sinkDataItem.DataItem.Parent.AddItemCommand.Execute(LineFactory.Create(sourceDataItem, sinkDataItem));
                 }
                 else
                 {
@@ -77,6 +78,7 @@ namespace grapher.Controls
                     int indexOfLastTempConnection = sourceDataItem.DataItem.Parent.Items.Count - 1;
                     sourceDataItem.DataItem.Parent.RemoveItemCommand.Execute(
                         sourceDataItem.DataItem.Parent.Items[indexOfLastTempConnection]);
+                    sourceDataItem.DataItem.Parent.AddItemCommand.Execute(LineFactory.Create(sourceDataItem, new PartCreatedConnectionInfo(e.GetPosition(this))));
                 }
             }
             connectorsHit = new List<Connector>();

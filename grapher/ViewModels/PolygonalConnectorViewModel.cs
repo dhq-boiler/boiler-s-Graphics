@@ -11,7 +11,7 @@ namespace grapher.ViewModels
             : base(id, parent, sourceConnectorInfo, sinkConnectorInfo)
         { }
 
-        public PolygonalConnectorViewModel(FullyCreatedConnectorInfo sourceConnectorInfo, ConnectorInfoBase sinkConnectorInfo)
+        public PolygonalConnectorViewModel(ConnectorInfoBase sourceConnectorInfo, ConnectorInfoBase sinkConnectorInfo)
             : base(sourceConnectorInfo, sinkConnectorInfo)
         { }
 

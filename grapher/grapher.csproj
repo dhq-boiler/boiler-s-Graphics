@@ -91,6 +91,7 @@
     </ApplicationDefinition>
     <Compile Include="Adorners\RubberbandAdorner.cs" />
     <Compile Include="Adorners\SettingAdorner.cs" />
+    <Compile Include="Adorners\StraightLineAdorner.cs" />
     <Compile Include="AttachedProperties\DragAndDropProps.cs" />
     <Compile Include="AttachedProperties\ItemConnectProps.cs" />
     <Compile Include="AttachedProperties\SelectionProps.cs" />
@@ -118,6 +119,9 @@
     <Compile Include="Models\Rectangle.cs" />
     <Compile Include="Models\RenderItem.cs" />
     <Compile Include="Models\StraightLine.cs" />
+    <Compile Include="Strategies\LineFactory.cs" />
+    <Compile Include="Strategies\PolygonalLineFactory.cs" />
+    <Compile Include="Strategies\StraightLineFactory.cs" />
     <Compile Include="StyleSelectors\DesignerItemsControlItemStyleSelector.cs" />
     <Compile Include="UserControls\DiagramControl.xaml.cs">
       <DependentUpon>DiagramControl.xaml</DependentUpon>
@@ -160,6 +164,7 @@
     <Compile Include="Views\Behaviors\EllipseDragAdorner.cs" />
     <Compile Include="Views\Behaviors\EllipseDragStartBehavior.cs" />
     <Compile Include="Views\Behaviors\EllipseSelectBehavior.cs" />
+    <Compile Include="Views\Behaviors\NDrawStraightLineBehavior.cs" />
     <Compile Include="Views\Behaviors\RectangleAdorner.cs" />
     <Compile Include="Views\Behaviors\RectangleDragAdorner.cs" />
     <Compile Include="Views\Behaviors\RectangleDragStartBehavior.cs" />
@@ -283,6 +288,9 @@
   <ItemGroup>
     <Resource Include="Assets\img\Persist.png" />
     <Resource Include="Assets\img\Setting.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\img\rubberband.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

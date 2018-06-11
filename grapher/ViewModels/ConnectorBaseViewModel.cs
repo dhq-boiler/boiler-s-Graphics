@@ -9,7 +9,7 @@ namespace grapher.ViewModels
 {
     public class ConnectorBaseViewModel : SelectableDesignerItemViewModelBase
     {
-        private FullyCreatedConnectorInfo sourceConnectorInfo;
+        private ConnectorInfoBase sourceConnectorInfo;
         private ConnectorInfoBase sinkConnectorInfo;
         private Point sourceB;
         private Point sourceA;
@@ -23,7 +23,7 @@ namespace grapher.ViewModels
             Init(sourceConnectorInfo, sinkConnectorInfo);
         }
 
-        public ConnectorBaseViewModel(FullyCreatedConnectorInfo sourceConnectorInfo, ConnectorInfoBase sinkConnectorInfo)
+        public ConnectorBaseViewModel(ConnectorInfoBase sourceConnectorInfo, ConnectorInfoBase sinkConnectorInfo)
         {
             Init(sourceConnectorInfo, sinkConnectorInfo);
         }
@@ -129,7 +129,7 @@ namespace grapher.ViewModels
             };
         }
 
-        public FullyCreatedConnectorInfo SourceConnectorInfo
+        public ConnectorInfoBase SourceConnectorInfo
         {
             get
             {
@@ -141,9 +141,19 @@ namespace grapher.ViewModels
                 {
 
                     sourceConnectorInfo = value;
-                    SourceA = PointHelper.GetPointForConnector(this.SourceConnectorInfo);
+                    if (sourceConnectorInfo is PartCreatedConnectionInfo)
+                    {
+                        SourceA = (sourceConnectorInfo as PartCreatedConnectionInfo).CurrentLocation;
+                    }
+                    if (sourceConnectorInfo is FullyCreatedConnectorInfo)
+                    {
+                        SourceA = PointHelper.GetPointForConnector(this.SourceConnectorInfo as FullyCreatedConnectorInfo);
+                    }
                     RaisePropertyChanged("SourceConnectorInfo");
-                    (sourceConnectorInfo.DataItem as INotifyPropertyChanged).PropertyChanged += new WeakINPCEventHandler(ConnectorViewModel_PropertyChanged).Handler;
+                    if (sourceConnectorInfo is FullyCreatedConnectorInfo)
+                    {
+                        ((sourceConnectorInfo as FullyCreatedConnectorInfo).DataItem as INotifyPropertyChanged).PropertyChanged += new WeakINPCEventHandler(ConnectorViewModel_PropertyChanged).Handler;
+                    }
                 }
             }
         }
@@ -167,7 +177,6 @@ namespace grapher.ViewModels
                     }
                     else
                     {
-
                         SourceB = ((PartCreatedConnectionInfo)SinkConnectorInfo).CurrentLocation;
                     }
                     RaisePropertyChanged("SinkConnectorInfo");
@@ -221,7 +230,10 @@ namespace grapher.ViewModels
             {
                 case "Left":
                 case "Top":
-                    SourceA = PointHelper.GetPointForConnector(this.SourceConnectorInfo);
+                    if (SourceConnectorInfo is FullyCreatedConnectorInfo)
+                    {
+                        SourceA = PointHelper.GetPointForConnector(this.SourceConnectorInfo as FullyCreatedConnectorInfo);
+                    }
                     if (this.SinkConnectorInfo is FullyCreatedConnectorInfo)
                     {
                         SourceB = PointHelper.GetPointForConnector((FullyCreatedConnectorInfo)this.SinkConnectorInfo);
@@ -231,10 +243,13 @@ namespace grapher.ViewModels
             }
         }
 
-        private void Init(FullyCreatedConnectorInfo sourceConnectorInfo, ConnectorInfoBase sinkConnectorInfo)
+        private void Init(ConnectorInfoBase sourceConnectorInfo, ConnectorInfoBase sinkConnectorInfo)
         {
             InitPathFinder();
-            this.Parent = sourceConnectorInfo.DataItem.Parent;
+            if (sourceConnectorInfo is FullyCreatedConnectorInfo)
+            {
+                this.Parent = (sourceConnectorInfo as FullyCreatedConnectorInfo).DataItem.Parent;
+            }
             this.SourceConnectorInfo = sourceConnectorInfo;
             this.SinkConnectorInfo = sinkConnectorInfo;
         }
