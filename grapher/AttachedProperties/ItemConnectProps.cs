@@ -1,4 +1,6 @@
-﻿using grapher.ViewModels;
+﻿using grapher.Controls;
+using grapher.Extensions;
+using grapher.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,10 +38,12 @@ namespace grapher.AttachedProperties
             if ((bool)e.NewValue)
             {
                 fe.MouseEnter += Fe_MouseEnter;
+                fe.MouseLeave += Fe_MouseLeave;
             }
             else
             {
                 fe.MouseEnter -= Fe_MouseEnter;
+                fe.MouseLeave -= Fe_MouseLeave;
             }
         }
 
@@ -51,6 +55,18 @@ namespace grapher.AttachedProperties
             {
                 DesignerItemViewModelBase designerItem = (DesignerItemViewModelBase)((FrameworkElement)sender).DataContext;
                 designerItem.ShowConnectors = true;
+            }
+        }
+
+        private static void Fe_MouseLeave(object sender, MouseEventArgs e)
+        {
+            if (((FrameworkElement)sender).DataContext is DesignerItemViewModelBase)
+            {
+                DesignerItemViewModelBase designerItem = (DesignerItemViewModelBase)((FrameworkElement)sender).DataContext;
+
+                if (((FrameworkElement)sender).GetParentOfType<DesignerCanvas>().SourceConnector != null) return;
+
+                designerItem.ShowConnectors = false;
             }
         }
     }

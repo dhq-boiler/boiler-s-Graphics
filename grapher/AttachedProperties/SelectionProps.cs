@@ -62,7 +62,7 @@ namespace grapher.AttachedProperties
                         selectableDesignerItemViewModelBase.IsSelected = !selectableDesignerItemViewModelBase.IsSelected;
                     }
                 }
-                else if (!selectableDesignerItemViewModelBase.IsSelected)
+                else
                 {
                     foreach (SelectableDesignerItemViewModelBase item in selectableDesignerItemViewModelBase.Parent.SelectedItems)
                         item.IsSelected = false;
