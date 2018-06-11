@@ -22,6 +22,18 @@ namespace grapher.ViewModels
                 behaviors.Clear();
                 SelectOneToolItem("pointer");
             })));
+            ToolItems.Add(new ToolItemData("rubberband", "pack://application:,,,/Assets/img/rubberband.png", new DelegateCommand(() =>
+            {
+                var behavior = new RubberbandBehavior();
+                var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
+                var behaviors = Interaction.GetBehaviors(designerCanvas);
+                behaviors.Clear();
+                if (!behaviors.Contains(behavior))
+                {
+                    behaviors.Add(behavior);
+                }
+                SelectOneToolItem("rubberband");
+            })));
             ToolItems.Add(new ToolItemData("straightline", "pack://application:,,,/Assets/img/straightline.png", new DelegateCommand(() =>
             {
                 var behavior = new NDrawStraightLineBehavior();
@@ -36,18 +48,6 @@ namespace grapher.ViewModels
             })));
             ToolItems.Add(new ToolItemData("rectangle", "pack://application:,,,/Assets/img/rectangle.png", new DelegateCommand(() =>
             {
-            })));
-            ToolItems.Add(new ToolItemData("rubberband", "pack://application:,,,/Assets/img/rubberband.png", new DelegateCommand(() =>
-            {
-                var behavior = new RubberbandBehavior();
-                var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-                var behaviors = Interaction.GetBehaviors(designerCanvas);
-                behaviors.Clear();
-                if (!behaviors.Contains(behavior))
-                {
-                    behaviors.Add(behavior);
-                }
-                SelectOneToolItem("rubberband");
             })));
             ToolItems.Add(new ToolItemData("ellipse", "pack://application:,,,/Assets/img/ellipse.png", null));
             ToolItems.Add(new ToolItemData("symbol-a", "pack://application:,,,/Assets/img/Setting.png", new DelegateCommand(() =>
