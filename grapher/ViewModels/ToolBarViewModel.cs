@@ -48,6 +48,15 @@ namespace grapher.ViewModels
             })));
             ToolItems.Add(new ToolItemData("rectangle", "pack://application:,,,/Assets/img/rectangle.png", new DelegateCommand(() =>
             {
+                var behavior = new NDrawRectangleBehavior();
+                var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
+                var behaviors = Interaction.GetBehaviors(designerCanvas);
+                behaviors.Clear();
+                if (!behaviors.Contains(behavior))
+                {
+                    behaviors.Add(behavior);
+                }
+                SelectOneToolItem("rectangle");
             })));
             ToolItems.Add(new ToolItemData("ellipse", "pack://application:,,,/Assets/img/ellipse.png", null));
             ToolItems.Add(new ToolItemData("symbol-a", "pack://application:,,,/Assets/img/Setting.png", new DelegateCommand(() =>

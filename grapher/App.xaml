@@ -18,6 +18,7 @@
 
                 <ResourceDictionary Source="pack://application:,,,/grapher;component/Resources/Styles.xaml" />
 
+                <ResourceDictionary Source="pack://application:,,,/grapher;component/Resources/DesignerItems/RectangleDesignerItemDataTemplate.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/grapher;component/Resources/DesignerItems/SettingsDesignerItemDataTemplate.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/grapher;component/Resources/DesignerItems/PersistDesignerItemDataTemplate.xaml" />
             </ResourceDictionary.MergedDictionaries>
