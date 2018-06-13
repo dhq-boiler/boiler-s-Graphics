@@ -45,6 +45,11 @@
                                     <DataTemplate>
                                         <Grid x:Name="selectedGrid">
                                             <control:DragThumb x:Name="PART_DragThumb" Cursor="SizeAll" />
+                                            <!--  PART_ResizeDecorator  -->
+                                            <Control
+                                                x:Name="PART_ResizeDecorator"
+                                                Template="{StaticResource ResizeDecoratorTemplate}"
+                                                Visibility="Collapsed" />
                                             <ContentPresenter
                                                 x:Name="PART_ContentPresenter"
                                                 HorizontalAlignment="Stretch"
@@ -87,6 +92,7 @@
                                             </DataTrigger>
 
                                             <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                                                <Setter TargetName="PART_ResizeDecorator" Property="Visibility" Value="Visible" />
                                                 <Setter TargetName="selectedGrid" Property="Effect">
                                                     <Setter.Value>
                                                         <DropShadowEffect

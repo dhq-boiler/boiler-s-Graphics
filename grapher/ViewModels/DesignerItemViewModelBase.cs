@@ -18,7 +18,8 @@ namespace grapher.ViewModels
         private double _Top;
         private double width;
         private double height;
-
+        private double _MinWidth;
+        private double _MinHeight;
         public static readonly double DefaultWidth = 65d;
         public static readonly double DefaultHeight = 65d;
 
@@ -58,7 +59,17 @@ namespace grapher.ViewModels
             get { return connectors[3]; }
         }
 
+        public double MinWidth
+        {
+            get { return _MinWidth; }
+            set { SetProperty(ref _MinWidth, value); }
+        }
 
+        public double MinHeight
+        {
+            get { return _MinHeight; }
+            set { SetProperty(ref _MinHeight, value); }
+        }
 
         public double Width
         {
@@ -111,6 +122,9 @@ namespace grapher.ViewModels
             connectors.Add(new FullyCreatedConnectorInfo(this, ConnectorOrientation.Bottom));
             connectors.Add(new FullyCreatedConnectorInfo(this, ConnectorOrientation.Left));
             connectors.Add(new FullyCreatedConnectorInfo(this, ConnectorOrientation.Right));
+
+            MinWidth = 0;
+            MinHeight = 0;
         }
     }
 }
