@@ -26,6 +26,31 @@
         </Setter>
     </Style>
 
+    <ControlTemplate x:Key="ResizeHandleTemplate" TargetType="{x:Type Thumb}">
+        <Rectangle
+            Width="7"
+            Height="7"
+            Margin="-3"
+            Fill="White"
+            Stroke="DimGray" />
+    </ControlTemplate>
+
+    <ControlTemplate x:Key="VerticalResizeHandleTemplate" TargetType="{x:Type Thumb}">
+        <Rectangle
+            Width="2"
+            VerticalAlignment="Stretch"
+            Fill="#6c809a"
+            Stroke="Transparent" />
+    </ControlTemplate>
+
+    <ControlTemplate x:Key="HorizontalResizeHandleTemplate" TargetType="{x:Type Thumb}">
+        <Rectangle
+            Height="2"
+            HorizontalAlignment="Stretch"
+            Fill="#6c809a"
+            Stroke="Transparent" />
+    </ControlTemplate>
+
     <!--  ResizeDecorator Default Template  -->
     <ControlTemplate x:Key="ResizeDecoratorTemplate" TargetType="{x:Type Control}">
         <Grid Opacity="0.7" SnapsToDevicePixels="true">
@@ -34,53 +59,61 @@
                 Margin="0,-4,0,0"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Top"
-                Cursor="SizeNS" />
+                Cursor="SizeNS"
+                Template="{StaticResource HorizontalResizeHandleTemplate}" />
             <control:ResizeThumb
                 Width="3"
                 Margin="-4,0,0,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Stretch"
-                Cursor="SizeWE" />
+                Cursor="SizeWE"
+                Template="{StaticResource VerticalResizeHandleTemplate}" />
             <control:ResizeThumb
                 Width="3"
                 Margin="0,0,-4,0"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Stretch"
-                Cursor="SizeWE" />
+                Cursor="SizeWE"
+                Template="{StaticResource VerticalResizeHandleTemplate}" />
             <control:ResizeThumb
                 Height="3"
                 Margin="0,0,0,-4"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Bottom"
-                Cursor="SizeNS" />
+                Cursor="SizeNS"
+                Template="{StaticResource HorizontalResizeHandleTemplate}" />
             <control:ResizeThumb
                 Width="7"
                 Height="7"
                 Margin="-6,-6,0,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
-                Cursor="SizeNWSE" />
+                Cursor="SizeNWSE"
+                Template="{StaticResource ResizeHandleTemplate}" />
             <control:ResizeThumb
                 Width="7"
                 Height="7"
                 Margin="0,-6,-6,0"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Top"
-                Cursor="SizeNESW" />
+                Cursor="SizeNESW"
+                Template="{StaticResource ResizeHandleTemplate}" />
             <control:ResizeThumb
                 Width="7"
                 Height="7"
                 Margin="-6,0,0,-6"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Bottom"
-                Cursor="SizeNESW" />
+                Cursor="SizeNESW"
+                Template="{StaticResource ResizeHandleTemplate}" />
             <control:ResizeThumb
                 Width="7"
                 Height="7"
                 Margin="0,0,-6,-6"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Bottom"
-                Cursor="SizeNWSE" />
+                Cursor="SizeNWSE"
+                Template="{StaticResource ResizeHandleTemplate}" />
         </Grid>
     </ControlTemplate>
 
