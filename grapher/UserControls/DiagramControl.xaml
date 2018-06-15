@@ -131,7 +131,11 @@
                                                     X1="{Binding ConnectionPoints[0].X}"
                                                     X2="{Binding ConnectionPoints[1].X}"
                                                     Y1="{Binding ConnectionPoints[0].Y}"
-                                                    Y2="{Binding ConnectionPoints[1].Y}" />
+                                                    Y2="{Binding ConnectionPoints[1].Y}">
+                                                    <i:Interaction.Behaviors>
+                                                        <behavior:StraightLineSelectBehavior />
+                                                    </i:Interaction.Behaviors>
+                                                </Line>
                                                 <Path
                                                     x:Name="arrow"
                                                     Canvas.Left="{Binding EndPoint.X}"
