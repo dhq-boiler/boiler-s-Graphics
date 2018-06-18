@@ -38,8 +38,8 @@ namespace grapher.Views.Behaviors
 
             if (result)
             {
-                var viewModel = line.DataContext as RenderItemViewModel;
-                viewModel.Model.IsSelected = true;
+                var viewModel = line.DataContext as ConnectorBaseViewModel;
+                viewModel.IsSelected = true;
 
                 if (adorner == null)
                 {

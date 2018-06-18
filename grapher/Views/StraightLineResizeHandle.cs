@@ -1,4 +1,6 @@
-﻿using grapher.Models;
+﻿using grapher.Controls;
+using grapher.Extensions;
+using grapher.Models;
 using grapher.ViewModels;
 using grapher.Views.Behaviors;
 using System;
@@ -98,18 +100,18 @@ namespace grapher.Views
 
         private void StartThumb_DragDelta(object sender, DragDeltaEventArgs e)
         {
-            Point position = Mouse.GetPosition(this);
-
-            (selectedLine.DataContext as StraightLineViewModel).Model.X = position.X;
-            (selectedLine.DataContext as StraightLineViewModel).Model.Y = position.Y;
+            var canvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
+            Point position = Mouse.GetPosition(canvas);
+            var viewModel = selectedLine.DataContext as ConnectorBaseViewModel;
+            viewModel.SourceA = position;
         }
 
         private void EndThumb_DragDelta(object sender, DragDeltaEventArgs e)
         {
-            Point position = Mouse.GetPosition(this);
-
-            ((selectedLine.DataContext as StraightLineViewModel).Model as StraightLine).X2 = position.X;
-            ((selectedLine.DataContext as StraightLineViewModel).Model as StraightLine).Y2 = position.Y;
+            var canvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
+            Point position = Mouse.GetPosition(canvas);
+            var viewModel = selectedLine.DataContext as ConnectorBaseViewModel;
+            viewModel.SourceB = position;
         }
 
         protected override int VisualChildrenCount => visualChildren.Count;

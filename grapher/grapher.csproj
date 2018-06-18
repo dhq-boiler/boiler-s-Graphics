@@ -89,16 +89,68 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Adorners\RectangleAdorner.cs" />
+    <Compile Include="Adorners\RubberbandAdorner.cs" />
+    <Compile Include="Adorners\SettingAdorner.cs" />
+    <Compile Include="Adorners\StraightLineAdorner.cs" />
+    <Compile Include="AttachedProperties\DragAndDropProps.cs" />
+    <Compile Include="AttachedProperties\ItemConnectProps.cs" />
+    <Compile Include="AttachedProperties\SelectionProps.cs" />
+    <Compile Include="Controls\Connector.cs" />
+    <Compile Include="Controls\DesignerCanvas.cs" />
+    <Compile Include="Controls\DragThumb.cs" />
+    <Compile Include="Controls\ResizeHandle.cs" />
+    <Compile Include="Controls\ResizeThumb.cs" />
+    <Compile Include="Controls\ZoomBox.cs" />
+    <Compile Include="Converters\ConnectionPathConverter.cs" />
+    <Compile Include="Converters\ImageUrlConverter.cs" />
+    <Compile Include="Converters\PointsToAngleConverter.cs" />
+    <Compile Include="Converters\ShiftCoordinateConverter.cs" />
     <Compile Include="Extensions\Extensions.cs" />
+    <Compile Include="Helpers\ConnectorInfo.cs" />
+    <Compile Include="Helpers\DragObject.cs" />
+    <Compile Include="Helpers\IPathFinder.cs" />
+    <Compile Include="Helpers\OrthogonalPathFinder.cs" />
+    <Compile Include="Helpers\PointHelper.cs" />
+    <Compile Include="Helpers\ToolBoxData.cs" />
+    <Compile Include="Helpers\ToolItemData.cs" />
+    <Compile Include="Helpers\WeakINPCEventHandler.cs" />
+    <Compile Include="Messenger\Mediator.cs" />
+    <Compile Include="Messenger\MediatorMessageSinkAttribute.cs" />
     <Compile Include="Models\Diagram.cs" />
     <Compile Include="Models\DraggingItem.cs" />
     <Compile Include="Models\Ellipse.cs" />
     <Compile Include="Models\Rectangle.cs" />
     <Compile Include="Models\RenderItem.cs" />
     <Compile Include="Models\StraightLine.cs" />
+    <Compile Include="Strategies\LineFactory.cs" />
+    <Compile Include="Strategies\PolygonalLineFactory.cs" />
+    <Compile Include="Strategies\StraightLineFactory.cs" />
+    <Compile Include="StyleSelectors\DesignerItemsControlItemStyleSelector.cs" />
+    <Compile Include="UserControls\DiagramControl.xaml.cs">
+      <DependentUpon>DiagramControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\ToolBoxControl.xaml.cs">
+      <DependentUpon>ToolBoxControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModels\ConnectorBaseViewModel.cs" />
+    <Compile Include="ViewModels\ConnectorInfoBase.cs" />
+    <Compile Include="ViewModels\NRectangleViewModel.cs" />
+    <Compile Include="ViewModels\PolygonalConnectorViewModel.cs" />
+    <Compile Include="ViewModels\DesignerItemViewModelBase.cs" />
+    <Compile Include="ViewModels\DiagramViewModel.cs" />
     <Compile Include="ViewModels\EllipseViewModel.cs" />
+    <Compile Include="ViewModels\FullyCreatedConnectorInfo.cs" />
+    <Compile Include="ViewModels\IDiagramViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
+    <Compile Include="ViewModels\PartCreatedConnectionInfo.cs" />
+    <Compile Include="ViewModels\PersistDesignerItemViewModel.cs" />
+    <Compile Include="ViewModels\SelectableDesignerItemViewModelBase.cs" />
+    <Compile Include="ViewModels\SettingsDesignerItemViewModel.cs" />
+    <Compile Include="ViewModels\StraightConnectorViewModel.cs" />
     <Compile Include="ViewModels\StraightLineViewModel.cs" />
+    <Compile Include="ViewModels\ToolBarViewModel.cs" />
+    <Compile Include="ViewModels\ToolBoxViewModel.cs" />
     <Compile Include="Views\AdornedBy.cs" />
     <Compile Include="Views\Behaviors\AbstractAdorner.cs" />
     <Compile Include="Views\Behaviors\CursorInfo.cs" />
@@ -109,6 +161,7 @@
     <Compile Include="Views\Behaviors\DrawAbstractBehavior.cs" />
     <Compile Include="Views\Behaviors\DrawEllipseBehavior.cs" />
     <Compile Include="Views\Behaviors\DrawRectangleBehavior.cs" />
+    <Compile Include="Views\Behaviors\DrawSettingBehavior.cs" />
     <Compile Include="Views\Behaviors\DrawStraightLineBehavior.cs" />
     <Compile Include="Views\Behaviors\DropAcceptDescription.cs" />
     <Compile Include="Views\Behaviors\CursorBehavior.cs" />
@@ -116,10 +169,13 @@
     <Compile Include="Views\Behaviors\EllipseDragAdorner.cs" />
     <Compile Include="Views\Behaviors\EllipseDragStartBehavior.cs" />
     <Compile Include="Views\Behaviors\EllipseSelectBehavior.cs" />
+    <Compile Include="Views\Behaviors\NDrawRectangleBehavior.cs" />
+    <Compile Include="Views\Behaviors\NDrawStraightLineBehavior.cs" />
     <Compile Include="Views\Behaviors\RectangleAdorner.cs" />
     <Compile Include="Views\Behaviors\RectangleDragAdorner.cs" />
     <Compile Include="Views\Behaviors\RectangleDragStartBehavior.cs" />
     <Compile Include="Views\Behaviors\RectangleSelectBehavior.cs" />
+    <Compile Include="Views\Behaviors\RubberbandBehavior.cs" />
     <Compile Include="Views\Behaviors\StraightLineAdorner.cs" />
     <Compile Include="Views\Behaviors\StraightLineDragAdorner.cs" />
     <Compile Include="Views\Behaviors\StraightLineDragStartBehavior.cs" />
@@ -129,6 +185,62 @@
     <Compile Include="Views\StraightLineResizeHandle.cs" />
     <Compile Include="Views\Triggers\ResizeThumbDragDeltaEventTrigger.cs" />
     <Compile Include="Views\Triggers\WindowLoadedEventTrigger.cs" />
+    <Page Include="Resources\DesignerItems\PersistDesignerItemDataTemplate.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\DesignerItems\RectangleDesignerItemDataTemplate.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\DesignerItems\SettingsDesignerItemDataTemplate.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Styles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Styles\DesignerItems.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Styles\Expander.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Styles\GroupBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Styles\ScrollBar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Styles\ScrollViewer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Styles\Shared.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Styles\ToolTip.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Styles\ZoomBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\DiagramControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\ToolBoxControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -182,6 +294,13 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\img\ellipse.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\img\Persist.png" />
+    <Resource Include="Assets\img\Setting.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\img\rubberband.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
