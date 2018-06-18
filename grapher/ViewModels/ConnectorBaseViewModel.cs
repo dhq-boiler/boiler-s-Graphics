@@ -230,16 +230,17 @@ namespace grapher.ViewModels
             {
                 case "Left":
                 case "Top":
+                case "Width":
+                case "Height":
                     if (SourceConnectorInfo is FullyCreatedConnectorInfo)
                     {
                         SourceA = PointHelper.GetPointForConnector(this.SourceConnectorInfo as FullyCreatedConnectorInfo);
                     }
                     if (this.SinkConnectorInfo is FullyCreatedConnectorInfo)
                     {
-                        SourceB = PointHelper.GetPointForConnector((FullyCreatedConnectorInfo)this.SinkConnectorInfo);
+                        SourceB = PointHelper.GetPointForConnector(this.SinkConnectorInfo as FullyCreatedConnectorInfo);
                     }
                     break;
-
             }
         }
 
