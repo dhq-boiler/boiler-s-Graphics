@@ -5,6 +5,7 @@ using Microsoft.Win32;
 using Prism.Commands;
 using Prism.Mvvm;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
@@ -22,12 +23,21 @@ namespace grapher.ViewModels
     public class MainWindowViewModel : BindableBase
     {
         private DiagramViewModel _DiagramViewModel;
+        private ObservableCollection<RenderItemViewModel> _RenderItems;
+        private List<SelectableDesignerItemViewModelBase> itemsToRemove;
+        private ToolBoxViewModel _ToolBoxViewModel;
+        private ToolBarViewModel _ToolBarViewModel;
 
         public MainWindowViewModel()
         {
             DiagramViewModel = new DiagramViewModel();
             ToolBoxViewModel = new ToolBoxViewModel();
             ToolBarViewModel = new ToolBarViewModel();
+
+            DeleteSelectedItemsCommand = new DelegateCommand<object>(p =>
+            {
+                ExecuteDeleteSelectedItemsCommand(p);
+            });
         }
 
         public DiagramViewModel DiagramViewModel
@@ -48,9 +58,38 @@ namespace grapher.ViewModels
             set { SetProperty(ref _ToolBarViewModel, value); }
         }
 
-        private ObservableCollection<RenderItemViewModel> _RenderItems;
-        private ToolBoxViewModel _ToolBoxViewModel;
-        private ToolBarViewModel _ToolBarViewModel;
+        public DelegateCommand<object> DeleteSelectedItemsCommand { get; private set; }
+
+        private void ExecuteDeleteSelectedItemsCommand(object parameter)
+        {
+            itemsToRemove = DiagramViewModel.SelectedItems;
+            List<SelectableDesignerItemViewModelBase> connectionsToAlsoRemove = new List<SelectableDesignerItemViewModelBase>();
+
+            foreach (var connector in DiagramViewModel.Items.OfType<ConnectorBaseViewModel>())
+            {
+                if (connector.SourceConnectorInfo is FullyCreatedConnectorInfo 
+                    && ItemsToDeleteHasConnector(itemsToRemove, connector.SourceConnectorInfo as FullyCreatedConnectorInfo))
+                {
+                    connectionsToAlsoRemove.Add(connector);
+                }
+
+                if (connector.SinkConnectorInfo is FullyCreatedConnectorInfo
+                    && ItemsToDeleteHasConnector(itemsToRemove, connector.SinkConnectorInfo as FullyCreatedConnectorInfo))
+                {
+                    connectionsToAlsoRemove.Add(connector);
+                }
+            }
+            itemsToRemove.AddRange(connectionsToAlsoRemove);
+            foreach (var selectedItem in itemsToRemove)
+            {
+                DiagramViewModel.RemoveItemCommand.Execute(selectedItem);
+            }
+        }
+
+        private bool ItemsToDeleteHasConnector(List<SelectableDesignerItemViewModelBase> itemsToRemove, FullyCreatedConnectorInfo connector)
+        {
+            return itemsToRemove.Contains(connector.DataItem);
+        }
 
         //private DropAcceptDescription _Description;
         //private bool _SelectIsChecked;
