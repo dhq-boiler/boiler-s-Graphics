@@ -99,11 +99,13 @@
     <Compile Include="Controls\Connector.cs" />
     <Compile Include="Controls\DesignerCanvas.cs" />
     <Compile Include="Controls\DragThumb.cs" />
+    <Compile Include="Controls\ResizeHandle.cs" />
     <Compile Include="Controls\ResizeThumb.cs" />
     <Compile Include="Controls\ZoomBox.cs" />
     <Compile Include="Converters\ConnectionPathConverter.cs" />
     <Compile Include="Converters\ImageUrlConverter.cs" />
     <Compile Include="Converters\PointsToAngleConverter.cs" />
+    <Compile Include="Converters\ShiftCoordinateConverter.cs" />
     <Compile Include="Extensions\Extensions.cs" />
     <Compile Include="Helpers\ConnectorInfo.cs" />
     <Compile Include="Helpers\DragObject.cs" />

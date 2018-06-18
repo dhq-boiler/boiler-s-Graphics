@@ -131,11 +131,7 @@
                                                     X1="{Binding ConnectionPoints[0].X}"
                                                     X2="{Binding ConnectionPoints[1].X}"
                                                     Y1="{Binding ConnectionPoints[0].Y}"
-                                                    Y2="{Binding ConnectionPoints[1].Y}">
-                                                    <i:Interaction.Behaviors>
-                                                        <behavior:StraightLineSelectBehavior />
-                                                    </i:Interaction.Behaviors>
-                                                </Line>
+                                                    Y2="{Binding ConnectionPoints[1].Y}" />
                                                 <Path
                                                     x:Name="arrow"
                                                     Canvas.Left="{Binding EndPoint.X}"
@@ -157,12 +153,18 @@
                                                         </TransformGroup>
                                                     </Path.RenderTransform>
                                                 </Path>
+                                                <!--  PART_ResizeDecorator  -->
+                                                <Control
+                                                    x:Name="PART_ResizeDecorator"
+                                                    Template="{StaticResource StraightLineResizeDecoratorTemplate}"
+                                                    Visibility="Collapsed" />
                                             </Canvas>
                                             <DataTemplate.Triggers>
                                                 <DataTrigger Binding="{Binding IsSelected}" Value="True">
                                                     <Setter TargetName="straightline" Property="Stroke" Value="Black" />
                                                     <Setter TargetName="arrow" Property="Stroke" Value="Black" />
                                                     <Setter TargetName="arrow" Property="Fill" Value="Black" />
+                                                    <Setter TargetName="PART_ResizeDecorator" Property="Visibility" Value="Visible" />
                                                 </DataTrigger>
                                             </DataTemplate.Triggers>
                                         </DataTemplate>

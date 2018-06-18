@@ -1,8 +1,10 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:control="clr-namespace:grapher.Controls">
+    xmlns:control="clr-namespace:grapher.Controls"
+    xmlns:converter="clr-namespace:grapher.Converters">
 
+    <converter:ShiftCoordinateConverter x:Key="shiftCoordinateConverter" />
 
     <!--  Connector Style  -->
     <Style TargetType="{x:Type control:Connector}">
@@ -25,6 +27,15 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <ControlTemplate x:Key="ResizeHandle_ResizeHandleTemplate" TargetType="{x:Type control:ResizeHandle}">
+        <Rectangle
+            Width="7"
+            Height="7"
+            Margin="-3"
+            Fill="White"
+            Stroke="DimGray" />
+    </ControlTemplate>
 
     <ControlTemplate x:Key="ResizeHandleTemplate" TargetType="{x:Type Thumb}">
         <Rectangle
@@ -49,6 +60,27 @@
             HorizontalAlignment="Stretch"
             Fill="#6c809a"
             Stroke="Transparent" />
+    </ControlTemplate>
+
+    <ControlTemplate x:Key="StraightLineResizeDecoratorTemplate" TargetType="{x:Type Control}">
+        <Canvas Opacity="0.7" SnapsToDevicePixels="true">
+            <control:ResizeHandle
+                x:Name="ResizeHandle_BeginPoint"
+                Canvas.Left="{Binding ConnectionPoints[0].X, Converter={StaticResource shiftCoordinateConverter}, ConverterParameter=7}"
+                Canvas.Top="{Binding ConnectionPoints[0].Y, Converter={StaticResource shiftCoordinateConverter}, ConverterParameter=7}"
+                Width="7"
+                Height="7"
+                OppositeHandle="{Binding ElementName=ResizeHandle_EndPoint}"
+                Template="{StaticResource ResizeHandle_ResizeHandleTemplate}" />
+            <control:ResizeHandle
+                x:Name="ResizeHandle_EndPoint"
+                Canvas.Left="{Binding ConnectionPoints[1].X, Converter={StaticResource shiftCoordinateConverter}, ConverterParameter=7}"
+                Canvas.Top="{Binding ConnectionPoints[1].Y, Converter={StaticResource shiftCoordinateConverter}, ConverterParameter=7}"
+                Width="7"
+                Height="7"
+                OppositeHandle="{Binding ElementName=ResizeHandle_BeginPoint}"
+                Template="{StaticResource ResizeHandle_ResizeHandleTemplate}" />
+        </Canvas>
     </ControlTemplate>
 
     <!--  ResizeDecorator Default Template  -->

@@ -4,6 +4,7 @@ using grapher.Strategies;
 using grapher.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -17,6 +18,7 @@ namespace grapher.Controls
         private ConnectorBaseViewModel partialConnection;
         private List<Connector> connectorsHit = new List<Connector>();
         private Connector sourceConnector;
+        private bool isDragging;
 
         public DesignerCanvas()
         {
@@ -48,9 +50,16 @@ namespace grapher.Controls
             }
         }
 
+        public ResizeHandle MoveConnector { get; set; }
+
         protected override void OnMouseDown(MouseButtonEventArgs e)
         {
             base.OnMouseDown(e);
+
+            if (MoveConnector != null)
+            {
+                isDragging = true;
+            }
         }
 
         protected override void OnMouseUp(MouseButtonEventArgs e)
@@ -81,8 +90,45 @@ namespace grapher.Controls
                     sourceDataItem.DataItem.Parent.AddItemCommand.Execute(LineFactory.Create(sourceDataItem, new PartCreatedConnectionInfo(e.GetPosition(this))));
                 }
             }
+
+            if (MoveConnector != null)
+            {
+                isDragging = false;
+
+                if (connectorsHit.Count() == 2)
+                {
+                    var viewModel = MoveConnector.OppositeHandle.DataContext as StraightConnectorViewModel;
+                    Connector sinkConnector = connectorsHit.Last();
+                    FullyCreatedConnectorInfo sinkDataItem = sinkConnector.DataContext as FullyCreatedConnectorInfo;
+
+                    switch (MoveConnector.Name)
+                    {
+                        case "ResizeHandle_BeginPoint":
+                            viewModel.SourceConnectorInfo = sinkDataItem;
+                            break;
+                        case "ResizeHandle_EndPoint":
+                            viewModel.SinkConnectorInfo = sinkDataItem;
+                            break;
+                    }
+                }
+                else if (connectorsHit.Count() == 1)
+                {
+                    var viewModel = MoveConnector.OppositeHandle.DataContext as StraightConnectorViewModel;
+                    switch (MoveConnector.Name)
+                    {
+                        case "ResizeHandle_BeginPoint":
+                            viewModel.SourceConnectorInfo = new PartCreatedConnectionInfo(e.GetPosition(this));
+                            break;
+                        case "ResizeHandle_EndPoint":
+                            viewModel.SinkConnectorInfo = new PartCreatedConnectionInfo(e.GetPosition(this));
+                            break;
+                    }
+                }
+            }
+
             connectorsHit = new List<Connector>();
             sourceConnector = null;
+            MoveConnector = null;
         }
 
 
@@ -99,6 +145,26 @@ namespace grapher.Controls
                     HitTesting(currentPoint);
                 }
                 e.Handled = true;
+            }
+
+            if (MoveConnector != null && isDragging && e.LeftButton == MouseButtonState.Pressed)
+            {
+                var viewModel = MoveConnector.DataContext as StraightConnectorViewModel;
+                switch (MoveConnector.Name)
+                {
+                    case "ResizeHandle_BeginPoint":
+                        viewModel.SourceA = e.GetPosition(this);
+                        break;
+                    case "ResizeHandle_EndPoint":
+                        viewModel.SourceB = e.GetPosition(this);
+                        break;
+                }
+                HitTesting(e.GetPosition(this));
+            }
+
+            if (e.LeftButton != MouseButtonState.Pressed)
+            {
+                isDragging = false;
             }
         }
 
