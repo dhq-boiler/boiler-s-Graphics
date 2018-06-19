@@ -4,7 +4,6 @@ using grapher.Strategies;
 using grapher.ViewModels;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -97,7 +96,7 @@ namespace grapher.Controls
 
                 if (connectorsHit.Count() == 2)
                 {
-                    var viewModel = MoveConnector.OppositeHandle.DataContext as StraightConnectorViewModel;
+                    var viewModel = MoveConnector.DataContext as ConnectorBaseViewModel;
                     Connector sinkConnector = connectorsHit.Last();
                     FullyCreatedConnectorInfo sinkDataItem = sinkConnector.DataContext as FullyCreatedConnectorInfo;
 
@@ -113,7 +112,7 @@ namespace grapher.Controls
                 }
                 else if (connectorsHit.Count() == 1)
                 {
-                    var viewModel = MoveConnector.OppositeHandle.DataContext as StraightConnectorViewModel;
+                    var viewModel = MoveConnector.DataContext as ConnectorBaseViewModel;
                     switch (MoveConnector.Name)
                     {
                         case "ResizeHandle_BeginPoint":
@@ -145,11 +144,12 @@ namespace grapher.Controls
                     HitTesting(currentPoint);
                 }
                 e.Handled = true;
+                return;
             }
 
             if (MoveConnector != null && isDragging && e.LeftButton == MouseButtonState.Pressed)
             {
-                var viewModel = MoveConnector.DataContext as StraightConnectorViewModel;
+                var viewModel = MoveConnector.DataContext as ConnectorBaseViewModel;
                 switch (MoveConnector.Name)
                 {
                     case "ResizeHandle_BeginPoint":
@@ -160,6 +160,8 @@ namespace grapher.Controls
                         break;
                 }
                 HitTesting(e.GetPosition(this));
+                e.Handled = true;
+                return;
             }
 
             if (e.LeftButton != MouseButtonState.Pressed)

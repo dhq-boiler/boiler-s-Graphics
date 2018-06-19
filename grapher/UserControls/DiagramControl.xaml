@@ -199,12 +199,18 @@
                                                         <RotateTransform x:Name="rot" />
                                                     </Path.RenderTransform>
                                                 </Path>
+
+                                                <Control
+                                                    x:Name="PART_ResizeDecorator"
+                                                    Template="{StaticResource PolygonalLineResizeDecoratorTemplate}"
+                                                    Visibility="Collapsed" />
                                             </Canvas>
                                             <DataTemplate.Triggers>
                                                 <DataTrigger Binding="{Binding IsSelected}" Value="True">
                                                     <Setter TargetName="poly" Property="Stroke" Value="Black" />
                                                     <Setter TargetName="arrow" Property="Stroke" Value="Black" />
                                                     <Setter TargetName="arrow" Property="Fill" Value="Black" />
+                                                    <Setter TargetName="PART_ResizeDecorator" Property="Visibility" Value="Visible" />
                                                 </DataTrigger>
                                                 <DataTrigger Binding="{Binding Path=SinkConnectorInfo.Orientation}" Value="Left">
                                                     <Setter TargetName="arrow" Property="Margin" Value="-15,-5,0,0" />

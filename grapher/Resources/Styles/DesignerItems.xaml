@@ -83,6 +83,25 @@
         </Canvas>
     </ControlTemplate>
 
+    <ControlTemplate x:Key="PolygonalLineResizeDecoratorTemplate" TargetType="{x:Type Control}">
+        <Canvas Opacity="0.7" SnapsToDevicePixels="True">
+            <control:ResizeHandle
+                x:Name="ResizeHandle_BeginPoint"
+                Canvas.Left="{Binding ConnectionPoints[0].X, Converter={StaticResource shiftCoordinateConverter}, ConverterParameter=7}"
+                Canvas.Top="{Binding ConnectionPoints[0].Y, Converter={StaticResource shiftCoordinateConverter}, ConverterParameter=7}"
+                Width="7"
+                Height="7"
+                Template="{StaticResource ResizeHandle_ResizeHandleTemplate}" />
+            <control:ResizeHandle
+                x:Name="ResizeHandle_EndPoint"
+                Canvas.Left="{Binding EndPoint.X, Converter={StaticResource shiftCoordinateConverter}, ConverterParameter=7}"
+                Canvas.Top="{Binding EndPoint.Y, Converter={StaticResource shiftCoordinateConverter}, ConverterParameter=7}"
+                Width="7"
+                Height="7"
+                Template="{StaticResource ResizeHandle_ResizeHandleTemplate}" />
+        </Canvas>
+    </ControlTemplate>
+
     <!--  ResizeDecorator Default Template  -->
     <ControlTemplate x:Key="ResizeDecoratorTemplate" TargetType="{x:Type Control}">
         <Grid Opacity="0.7" SnapsToDevicePixels="true">

@@ -216,7 +216,7 @@ namespace grapher.ViewModels
             else
             {
                 SetConnectionPoints(sourceInfo, ConnectionPoints[1], ConnectorOrientation.Left);
-                EndPoint = new Point();
+                EndPoint = ConnectionPoints.Last();
             }
         }
 
