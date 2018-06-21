@@ -1,9 +1,11 @@
-﻿using grapher.Helpers;
+﻿using grapher.Extensions;
+using grapher.Helpers;
 using grapher.Messenger;
 using grapher.Strategies;
 using grapher.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -15,7 +17,7 @@ namespace grapher.Controls
     public class DesignerCanvas : Canvas
     {
         private ConnectorBaseViewModel _partialConnection;
-        private List<Connector> _connectorsHit = new List<Connector>();
+        private HashSet<Connector> _connectorsHit = new HashSet<Connector>();
         private Connector _sourceConnector;
         private bool _isDragging;
 
@@ -70,7 +72,7 @@ namespace grapher.Controls
             if (_sourceConnector != null)
             {
                 FullyCreatedConnectorInfo sourceDataItem = _sourceConnector.DataContext as FullyCreatedConnectorInfo;
-                if (_connectorsHit.Count() == 2)
+                if (_connectorsHit.Count() == 1)
                 {
                     Connector sinkConnector = _connectorsHit.Last();
                     FullyCreatedConnectorInfo sinkDataItem = sinkConnector.DataContext as FullyCreatedConnectorInfo;
@@ -95,7 +97,7 @@ namespace grapher.Controls
                 _isDragging = false;
 
                 var viewModel = MoveConnector.DataContext as ConnectorBaseViewModel;
-                if (_connectorsHit.Count() == 2)
+                if (_connectorsHit.Count() >= 2)
                 {
                     Connector sinkConnector = _connectorsHit.Last();
                     FullyCreatedConnectorInfo sinkDataItem = sinkConnector.DataContext as FullyCreatedConnectorInfo;
@@ -125,7 +127,7 @@ namespace grapher.Controls
                 viewModel.IsHitTestVisible = true;
             }
 
-            _connectorsHit = new List<Connector>();
+            _connectorsHit = new HashSet<Connector>();
             _sourceConnector = null;
             MoveConnector = null;
         }
@@ -205,17 +207,22 @@ namespace grapher.Controls
 
         private void HitTesting(Point hitPoint)
         {
-            DependencyObject hitObject = this.InputHitTest(hitPoint) as DependencyObject;
-            while (hitObject != null &&
-                    hitObject.GetType() != typeof(DesignerCanvas))
+            _connectorsHit.Clear();
+            Debug.WriteLine("----------------");
+            HitTestResultBehavior callback(HitTestResult result)
             {
-                if (hitObject is Connector)
+                Debug.WriteLine(result.VisualHit);
+                var connector = result.VisualHit.GetParentOfType<Connector>();
+                if (connector != null)
                 {
-                    if (!_connectorsHit.Contains(hitObject as Connector))
-                        _connectorsHit.Add(hitObject as Connector);
+                    _connectorsHit.Add(connector);
                 }
-                hitObject = VisualTreeHelper.GetParent(hitObject);
+                Debug.WriteLine("----continue----");
+                return HitTestResultBehavior.Continue;
             }
+            VisualTreeHelper.HitTest(this, null, callback, new GeometryHitTestParameters(new RectangleGeometry(new Rect(hitPoint.X - 2, hitPoint.Y - 2, 4, 4))));
+
+            Debug.WriteLine($"ConnectorHitCount:{_connectorsHit.Count}");
         }
 
 

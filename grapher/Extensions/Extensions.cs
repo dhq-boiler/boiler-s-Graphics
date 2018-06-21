@@ -28,7 +28,7 @@ namespace grapher.Extensions
         {
             if (obj == null) return null;
 
-            while (!(obj is T))
+            while (obj != null && !(obj is T))
             {
                 obj = VisualTreeHelper.GetParent(obj);
             }
