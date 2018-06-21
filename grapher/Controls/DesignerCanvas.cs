@@ -94,9 +94,9 @@ namespace grapher.Controls
             {
                 isDragging = false;
 
+                var viewModel = MoveConnector.DataContext as ConnectorBaseViewModel;
                 if (connectorsHit.Count() == 2)
                 {
-                    var viewModel = MoveConnector.DataContext as ConnectorBaseViewModel;
                     Connector sinkConnector = connectorsHit.Last();
                     FullyCreatedConnectorInfo sinkDataItem = sinkConnector.DataContext as FullyCreatedConnectorInfo;
 
@@ -112,7 +112,6 @@ namespace grapher.Controls
                 }
                 else if (connectorsHit.Count() == 1)
                 {
-                    var viewModel = MoveConnector.DataContext as ConnectorBaseViewModel;
                     switch (MoveConnector.Name)
                     {
                         case "ResizeHandle_BeginPoint":
@@ -123,7 +122,6 @@ namespace grapher.Controls
                             break;
                     }
                 }
-                var viewModel = MoveConnector.DataContext as ConnectorBaseViewModel;
                 viewModel.IsHitTestVisible = true;
             }
 
@@ -137,15 +135,16 @@ namespace grapher.Controls
         {
             base.OnMouseMove(e);
 
-            (DataContext as DiagramViewModel).CurrentPoint = e.GetPosition(this);
+            var position = e.GetPosition(this);
+
+            (DataContext as DiagramViewModel).CurrentPoint = position;
 
             if (SourceConnector != null)
             {
                 if (e.LeftButton == MouseButtonState.Pressed)
                 {
-                    Point currentPoint = e.GetPosition(this);
-                    partialConnection.SinkConnectorInfo = new PartCreatedConnectionInfo(currentPoint);
-                    HitTesting(currentPoint);
+                    partialConnection.SinkConnectorInfo = new PartCreatedConnectionInfo(position);
+                    HitTesting(position);
                 }
                 e.Handled = true;
                 return;
@@ -157,10 +156,10 @@ namespace grapher.Controls
                 switch (MoveConnector.Name)
                 {
                     case "ResizeHandle_BeginPoint":
-                        viewModel.SourceA = e.GetPosition(this);
+                        viewModel.SourceA = position;
                         break;
                     case "ResizeHandle_EndPoint":
-                        viewModel.SourceB = e.GetPosition(this);
+                        viewModel.SourceB = position;
                         break;
                 }
                 viewModel.IsHitTestVisible = true;
