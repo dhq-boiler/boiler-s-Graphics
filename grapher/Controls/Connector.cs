@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -31,6 +26,15 @@ namespace grapher.Controls
                 element = VisualTreeHelper.GetParent(element);
 
             return element as DesignerCanvas;
+        }
+
+        public Point GetCenterPoint()
+        {
+            var canvas = GetDesignerCanvas(this);
+            var point = TransformToVisual(canvas).Transform(new Point(0, 0));
+            point.X += Width / 2;
+            point.Y += Height / 2;
+            return point;
         }
     }
 
