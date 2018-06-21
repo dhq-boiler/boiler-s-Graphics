@@ -43,6 +43,18 @@
             </ToolBar>
         </ToolBarTray>
 
+        <StatusBar DockPanel.Dock="Bottom">
+            <StatusBarItem>
+                <TextBlock>
+                    <Run>(</Run>
+                    <Run Text="{Binding DiagramViewModel.CurrentPoint.X, StringFormat=##0.##}" />
+                    <Run xml:space="preserve" Text=",&#x09;" />
+                    <Run Text="{Binding DiagramViewModel.CurrentPoint.Y, StringFormat=##0.##}" />
+                    <Run>)</Run>
+                </TextBlock>
+            </StatusBarItem>
+        </StatusBar>
+
         <!--  Diagram Control  -->
         <usercontrol:DiagramControl Margin="3,1,0,0" DataContext="{Binding DiagramViewModel}" />
     </DockPanel>

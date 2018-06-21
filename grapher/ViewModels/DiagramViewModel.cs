@@ -7,12 +7,14 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace grapher.ViewModels
 {
     public class DiagramViewModel : BindableBase, IDiagramViewModel
     {
         private ObservableCollection<SelectableDesignerItemViewModelBase> items = new ObservableCollection<SelectableDesignerItemViewModelBase>();
+        private Point _CurrentPoint;
 
         public DiagramViewModel()
         {
@@ -81,6 +83,12 @@ namespace grapher.ViewModels
         private void ExecuteCreateNewDiagramCommand(object parameter)
         {
             Items.Clear();
+        }
+
+        public Point CurrentPoint
+        {
+            get { return _CurrentPoint; }
+            set { SetProperty(ref _CurrentPoint, value); }
         }
     }
 }

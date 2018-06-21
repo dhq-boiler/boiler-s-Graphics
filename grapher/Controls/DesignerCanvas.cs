@@ -135,6 +135,8 @@ namespace grapher.Controls
         {
             base.OnMouseMove(e);
 
+            (DataContext as DiagramViewModel).CurrentPoint = e.GetPosition(this);
+
             if (SourceConnector != null)
             {
                 if (e.LeftButton == MouseButtonState.Pressed)
