@@ -4,7 +4,7 @@ using System.Windows.Media;
 
 namespace grapher.Views.Behaviors
 {
-    abstract class AbstractAdorner : Adorner
+    internal abstract class AbstractAdorner : Adorner
     {
         private AdornerLayer _layer;
         private bool _isAttached;
@@ -12,7 +12,7 @@ namespace grapher.Views.Behaviors
         public AbstractAdorner(Visual visual, UIElement adornedElement)
             : base(adornedElement)
         {
-            this._layer = AdornerLayer.GetAdornerLayer(visual);
+            _layer = AdornerLayer.GetAdornerLayer(visual);
 
             Attach();
         }
@@ -34,24 +34,24 @@ namespace grapher.Views.Behaviors
 
         public void Attach()
         {
-            if (this._layer != null)
+            if (_layer != null)
             {
-                if (!this._isAttached)
+                if (!_isAttached)
                 {
-                    this._layer.Add(this);
-                    this._isAttached = true;
+                    _layer.Add(this);
+                    _isAttached = true;
                 }
             }
         }
 
         public void Detach()
         {
-            if (this._layer != null)
+            if (_layer != null)
             {
-                if (this._isAttached)
+                if (_isAttached)
                 {
-                    this._layer.Remove(this);
-                    this._isAttached = false;
+                    _layer.Remove(this);
+                    _isAttached = false;
                 }
             }
         }

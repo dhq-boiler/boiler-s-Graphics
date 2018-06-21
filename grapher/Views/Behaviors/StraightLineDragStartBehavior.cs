@@ -12,13 +12,13 @@ using System.Windows.Shapes;
 
 namespace grapher.Views.Behaviors
 {
-    class StraightLineDragStartBehavior : Behavior<FrameworkElement>
+    internal class StraightLineDragStartBehavior : Behavior<FrameworkElement>
     {
-        private Point origin;
-        private bool isButtonDown;
-        private IInputElement dragItem;
-        private Point dragStartPos;
-        private AbstractDragAdorner dragGhost;
+        private Point _origin;
+        private bool _isButtonDown;
+        private IInputElement _dragItem;
+        private Point _dragStartPos;
+        private AbstractDragAdorner _dragGhost;
         public static readonly DependencyProperty AllowedEffectsProperty =
             DependencyProperty.Register("AllowedEffects", typeof(DragDropEffects),
                     typeof(StraightLineDragStartBehavior), new UIPropertyMetadata(DragDropEffects.All));
@@ -65,15 +65,15 @@ namespace grapher.Views.Behaviors
                 {
                     return;
                 }
-                this.origin = e.GetPosition(this.AssociatedObject);
-                this.isButtonDown = true;
+                _origin = e.GetPosition(this.AssociatedObject);
+                _isButtonDown = true;
 
                 if (sender is IInputElement)
                 {
                     // マウスダウンされたアイテムを記憶
-                    this.dragItem = sender as IInputElement;
+                    _dragItem = sender as IInputElement;
                     // マウスダウン時の座標を取得
-                    this.dragStartPos = e.GetPosition(this.dragItem);
+                    _dragStartPos = e.GetPosition(_dragItem);
                 }
             }
         }
@@ -86,13 +86,13 @@ namespace grapher.Views.Behaviors
                 {
                     return;
                 }
-                if (e.LeftButton != MouseButtonState.Pressed || !this.isButtonDown)
+                if (e.LeftButton != MouseButtonState.Pressed || !_isButtonDown)
                 {
                     return;
                 }
                 var point = e.GetPosition(this.AssociatedObject);
 
-                if (CheckDistance(point, this.origin))
+                if (CheckDistance(point, _origin))
                 {
                     // アクティブWindowの直下のContentに対して、Adornerを付加する
                     var window = Application.Current.Windows.OfType<Window>().FirstOrDefault(w => w.IsActive);
@@ -101,8 +101,8 @@ namespace grapher.Views.Behaviors
                     {
                         var root = window.Content as UIElement;
                         var layer = AdornerLayer.GetAdornerLayer(root);
-                        this.dragGhost = CreateDragAdorner(root, AssociatedObject, 0.5, this.dragStartPos);
-                        layer.Add(this.dragGhost);
+                        _dragGhost = CreateDragAdorner(root, AssociatedObject, 0.5, _dragStartPos);
+                        layer.Add(_dragGhost);
                         var dragItem = new DraggingItem()
                         {
                             Item = DragDropData,
@@ -110,7 +110,7 @@ namespace grapher.Views.Behaviors
                             YOffset = point.Y
                         };
                         DragDrop.DoDragDrop(this.AssociatedObject, dragItem, this.AllowedEffects);
-                        layer.Remove(this.dragGhost);
+                        layer.Remove(_dragGhost);
                     }
                     else
                     {
@@ -122,10 +122,10 @@ namespace grapher.Views.Behaviors
                         };
                         DragDrop.DoDragDrop(this.AssociatedObject, dragItem, this.AllowedEffects);
                     }
-                    this.isButtonDown = false;
+                    _isButtonDown = false;
                     e.Handled = true;
-                    this.dragGhost = null;
-                    this.dragItem = null;
+                    _dragGhost = null;
+                    _dragItem = null;
                 }
             }
         }
@@ -139,7 +139,7 @@ namespace grapher.Views.Behaviors
         {
             if (StraightLineHitTest(sender, e))
             {
-                this.isButtonDown = false;
+                _isButtonDown = false;
             }
         }
 
@@ -155,11 +155,11 @@ namespace grapher.Views.Behaviors
             {
                 return;
             }
-            if (this.dragGhost != null)
+            if (_dragGhost != null)
             {
-                var p = CursorInfo.GetNowPosition((Visual)this.dragItem);
-                this.dragGhost.LeftOffset = p.X;
-                this.dragGhost.TopOffset = p.Y;
+                var p = CursorInfo.GetNowPosition((Visual)_dragItem);
+                _dragGhost.LeftOffset = p.X;
+                _dragGhost.TopOffset = p.Y;
             }
         }
 

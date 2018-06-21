@@ -4,7 +4,7 @@ using System.Windows.Interactivity;
 
 namespace grapher.Views.Behaviors
 {
-    class CursorBehavior : Behavior<FrameworkElement>
+    internal class CursorBehavior : Behavior<FrameworkElement>
     {
         public static readonly DependencyProperty DefaultCursorProperty = DependencyProperty.Register("DefaultCursor", typeof(Cursor), typeof(CursorBehavior), new FrameworkPropertyMetadata(Cursors.Arrow));
         public static readonly DependencyProperty SpecificCursorProperty = DependencyProperty.Register("SpecificCursor", typeof(Cursor), typeof(CursorBehavior), new FrameworkPropertyMetadata(Cursors.Arrow));

@@ -24,7 +24,7 @@ namespace grapher.ViewModels
     {
         private DiagramViewModel _DiagramViewModel;
         private ObservableCollection<RenderItemViewModel> _RenderItems;
-        private List<SelectableDesignerItemViewModelBase> itemsToRemove;
+        private List<SelectableDesignerItemViewModelBase> _itemsToRemove;
         private ToolBoxViewModel _ToolBoxViewModel;
         private ToolBarViewModel _ToolBarViewModel;
 
@@ -62,25 +62,25 @@ namespace grapher.ViewModels
 
         private void ExecuteDeleteSelectedItemsCommand(object parameter)
         {
-            itemsToRemove = DiagramViewModel.SelectedItems;
+            _itemsToRemove = DiagramViewModel.SelectedItems;
             List<SelectableDesignerItemViewModelBase> connectionsToAlsoRemove = new List<SelectableDesignerItemViewModelBase>();
 
             foreach (var connector in DiagramViewModel.Items.OfType<ConnectorBaseViewModel>())
             {
-                if (connector.SourceConnectorInfo is FullyCreatedConnectorInfo 
-                    && ItemsToDeleteHasConnector(itemsToRemove, connector.SourceConnectorInfo as FullyCreatedConnectorInfo))
+                if (connector.SourceConnectorInfo is FullyCreatedConnectorInfo
+                    && ItemsToDeleteHasConnector(_itemsToRemove, connector.SourceConnectorInfo as FullyCreatedConnectorInfo))
                 {
                     connectionsToAlsoRemove.Add(connector);
                 }
 
                 if (connector.SinkConnectorInfo is FullyCreatedConnectorInfo
-                    && ItemsToDeleteHasConnector(itemsToRemove, connector.SinkConnectorInfo as FullyCreatedConnectorInfo))
+                    && ItemsToDeleteHasConnector(_itemsToRemove, connector.SinkConnectorInfo as FullyCreatedConnectorInfo))
                 {
                     connectionsToAlsoRemove.Add(connector);
                 }
             }
-            itemsToRemove.AddRange(connectionsToAlsoRemove);
-            foreach (var selectedItem in itemsToRemove)
+            _itemsToRemove.AddRange(connectionsToAlsoRemove);
+            foreach (var selectedItem in _itemsToRemove)
             {
                 DiagramViewModel.RemoveItemCommand.Execute(selectedItem);
             }

@@ -15,19 +15,19 @@ namespace grapher.Adorners
 {
     public class RubberbandAdorner : Adorner
     {
-        private Point? startPoint;
-        private Point? endPoint;
-        private Pen rubberbandPen;
+        private Point? _startPoint;
+        private Point? _endPoint;
+        private Pen _rubberbandPen;
 
-        private DesignerCanvas designerCanvas;
+        private DesignerCanvas _designerCanvas;
 
         public RubberbandAdorner(DesignerCanvas designerCanvas, Point? dragStartPoint)
             : base(designerCanvas)
         {
-            this.designerCanvas = designerCanvas;
-            this.startPoint = dragStartPoint;
-            rubberbandPen = new Pen(Brushes.LightSlateGray, 1);
-            rubberbandPen.DashStyle = new DashStyle(new double[] { 2 }, 1);
+            _designerCanvas = designerCanvas;
+            _startPoint = dragStartPoint;
+            _rubberbandPen = new Pen(Brushes.LightSlateGray, 1);
+            _rubberbandPen.DashStyle = new DashStyle(new double[] { 2 }, 1);
         }
 
         protected override void OnMouseMove(System.Windows.Input.MouseEventArgs e)
@@ -37,7 +37,7 @@ namespace grapher.Adorners
                 if (!this.IsMouseCaptured)
                     this.CaptureMouse();
 
-                endPoint = e.GetPosition(this);
+                _endPoint = e.GetPosition(this);
                 UpdateSelection();
                 this.InvalidateVisual();
             }
@@ -55,7 +55,7 @@ namespace grapher.Adorners
             if (this.IsMouseCaptured) this.ReleaseMouseCapture();
 
             // remove this adorner from adorner layer
-            AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(this.designerCanvas);
+            AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(_designerCanvas);
             if (adornerLayer != null)
                 adornerLayer.Remove(this);
 
@@ -71,8 +71,8 @@ namespace grapher.Adorners
             // the ConnectionAdorner does.
             dc.DrawRectangle(Brushes.Transparent, null, new Rect(RenderSize));
 
-            if (this.startPoint.HasValue && this.endPoint.HasValue)
-                dc.DrawRectangle(Brushes.Transparent, rubberbandPen, new Rect(this.startPoint.Value, this.endPoint.Value));
+            if (_startPoint.HasValue && _endPoint.HasValue)
+                dc.DrawRectangle(Brushes.Transparent, _rubberbandPen, new Rect(_startPoint.Value, _endPoint.Value));
         }
 
 
@@ -89,9 +89,9 @@ namespace grapher.Adorners
 
         private void UpdateSelection()
         {
-            IDiagramViewModel vm = (designerCanvas.DataContext as IDiagramViewModel);
-            Rect rubberBand = new Rect(startPoint.Value, endPoint.Value);
-            ItemsControl itemsControl = GetParent<ItemsControl>(typeof(ItemsControl), designerCanvas);
+            IDiagramViewModel vm = (_designerCanvas.DataContext as IDiagramViewModel);
+            Rect rubberBand = new Rect(_startPoint.Value, _endPoint.Value);
+            ItemsControl itemsControl = GetParent<ItemsControl>(typeof(ItemsControl), _designerCanvas);
 
             foreach (SelectableDesignerItemViewModelBase item in vm.Items)
             {
@@ -100,7 +100,7 @@ namespace grapher.Adorners
                     DependencyObject container = itemsControl.ItemContainerGenerator.ContainerFromItem(item);
 
                     Rect itemRect = VisualTreeHelper.GetDescendantBounds((Visual)container);
-                    Rect itemBounds = ((Visual)container).TransformToAncestor(designerCanvas).TransformBounds(itemRect);
+                    Rect itemBounds = ((Visual)container).TransformToAncestor(_designerCanvas).TransformBounds(itemRect);
 
                     if (rubberBand.Contains(itemBounds))
                     {

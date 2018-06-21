@@ -9,9 +9,9 @@ using System.Windows.Shapes;
 
 namespace grapher.Views.Behaviors
 {
-    class StraightLineSelectBehavior : Behavior<FrameworkElement>
+    internal class StraightLineSelectBehavior : Behavior<FrameworkElement>
     {
-        private StraightLineResizeHandle adorner;
+        private StraightLineResizeHandle _adorner;
 
         protected override void OnAttached()
         {
@@ -41,20 +41,20 @@ namespace grapher.Views.Behaviors
                 var viewModel = line.DataContext as ConnectorBaseViewModel;
                 viewModel.IsSelected = true;
 
-                if (adorner == null)
+                if (_adorner == null)
                 {
                     var layer = AdornerLayer.GetAdornerLayer(line);
-                    adorner = new StraightLineResizeHandle(line);
-                    layer.Add(adorner);
+                    _adorner = new StraightLineResizeHandle(line);
+                    layer.Add(_adorner);
                 }
             }
             else
             {
-                if (adorner != null)
+                if (_adorner != null)
                 {
                     var layer = AdornerLayer.GetAdornerLayer(line);
-                    layer.Remove(adorner);
-                    adorner = null;
+                    layer.Remove(_adorner);
+                    _adorner = null;
                 }
             }
         }

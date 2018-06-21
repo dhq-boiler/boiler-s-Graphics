@@ -7,10 +7,10 @@ using System.Windows.Media;
 
 namespace grapher.Views.Behaviors
 {
-    abstract class DrawAbstractBehavior<T> : Behavior<Canvas> where T : AbstractAdorner
+    internal abstract class DrawAbstractBehavior<T> : Behavior<Canvas> where T : AbstractAdorner
     {
-        private Point origin;
-        private Point dragStartPos;
+        private Point _origin;
+        private Point _dragStartPos;
 
         public T Adorner { get; private set; }
 
@@ -32,14 +32,14 @@ namespace grapher.Views.Behaviors
 
         private void PreviewMouseDownHandler(object sender, MouseButtonEventArgs e)
         {
-            origin = e.GetPosition(this.AssociatedObject);
+            _origin = e.GetPosition(this.AssociatedObject);
 
             if (sender is IInputElement)
             {
-                dragStartPos = e.GetPosition(sender as IInputElement);
+                _dragStartPos = e.GetPosition(sender as IInputElement);
             }
 
-            Adorner = CreateAdornerObject(AssociatedObject, AssociatedObject, origin);
+            Adorner = CreateAdornerObject(AssociatedObject, AssociatedObject, _origin);
 
             AssociatedObject.CaptureMouse();
         }

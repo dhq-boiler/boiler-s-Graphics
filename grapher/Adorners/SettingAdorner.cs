@@ -15,16 +15,16 @@ namespace grapher.Adorners
 {
     public class SettingAdorner : Adorner
     {
-        private Point? startPoint;
-        private Point? endPoint;
+        private Point? _startPoint;
+        private Point? _endPoint;
 
-        private DesignerCanvas designerCanvas;
+        private DesignerCanvas _designerCanvas;
 
         public SettingAdorner(DesignerCanvas designerCanvas, Point? dragStartPoint)
             : base(designerCanvas)
         {
-            this.designerCanvas = designerCanvas;
-            this.startPoint = dragStartPoint;
+            _designerCanvas = designerCanvas;
+            _startPoint = dragStartPoint;
         }
 
         protected override void OnMouseMove(System.Windows.Input.MouseEventArgs e)
@@ -34,7 +34,7 @@ namespace grapher.Adorners
                 if (!this.IsMouseCaptured)
                     this.CaptureMouse();
 
-                endPoint = e.GetPosition(this);
+                _endPoint = e.GetPosition(this);
                 this.InvalidateVisual();
             }
             else
@@ -51,22 +51,22 @@ namespace grapher.Adorners
             if (this.IsMouseCaptured) this.ReleaseMouseCapture();
 
             // remove this adorner from adorner layer
-            AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(this.designerCanvas);
+            AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(_designerCanvas);
             if (adornerLayer != null)
                 adornerLayer.Remove(this);
 
-            if (startPoint.HasValue && endPoint.HasValue)
+            if (_startPoint.HasValue && _endPoint.HasValue)
             {
                 DesignerItemViewModelBase itemBase = new SettingsDesignerItemViewModel();
-                itemBase.Left = Math.Max(0, startPoint.Value.X);
-                itemBase.Top = Math.Max(0, startPoint.Value.Y);
-                itemBase.Width = Math.Abs(endPoint.Value.X - startPoint.Value.X);
-                itemBase.Height = Math.Abs(endPoint.Value.Y - startPoint.Value.Y);
+                itemBase.Left = Math.Max(0, _startPoint.Value.X);
+                itemBase.Top = Math.Max(0, _startPoint.Value.Y);
+                itemBase.Width = Math.Abs(_endPoint.Value.X - _startPoint.Value.X);
+                itemBase.Height = Math.Abs(_endPoint.Value.Y - _startPoint.Value.Y);
                 itemBase.IsSelected = true;
                 ((AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel).AddItemCommand.Execute(itemBase);
 
-                startPoint = null;
-                endPoint = null;
+                _startPoint = null;
+                _endPoint = null;
             }
 
             e.Handled = true;
@@ -81,8 +81,8 @@ namespace grapher.Adorners
 
             dc.DrawRectangle(Brushes.Transparent, null, new Rect(RenderSize));
 
-            if (this.startPoint.HasValue && this.endPoint.HasValue)
-                dc.DrawRectangle(brush, null, new Rect(this.startPoint.Value, this.endPoint.Value));
+            if (_startPoint.HasValue && _endPoint.HasValue)
+                dc.DrawRectangle(brush, null, new Rect(_startPoint.Value, _endPoint.Value));
         }
     }
 }

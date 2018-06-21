@@ -49,7 +49,7 @@ namespace grapher.AttachedProperties
 
         #endregion
 
-        static void Fe_MouseEnter(object sender, MouseEventArgs e)
+        private static void Fe_MouseEnter(object sender, MouseEventArgs e)
         {
             if (((FrameworkElement)sender).DataContext is DesignerItemViewModelBase)
             {

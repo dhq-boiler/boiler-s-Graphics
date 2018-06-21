@@ -13,9 +13,9 @@ using System.Windows.Interactivity;
 
 namespace grapher.Views.Behaviors
 {
-    class RubberbandBehavior : Behavior<DesignerCanvas>
+    internal class RubberbandBehavior : Behavior<DesignerCanvas>
     {
-        private Point? rubberbandSelectionStartPoint = null;
+        private Point? _rubberbandSelectionStartPoint = null;
 
         protected override void OnAttached()
         {
@@ -38,17 +38,17 @@ namespace grapher.Views.Behaviors
             {
                 // if mouse button is not pressed we have no drag operation, ...
                 if (e.LeftButton != MouseButtonState.Pressed)
-                    rubberbandSelectionStartPoint = null;
+                    _rubberbandSelectionStartPoint = null;
 
                 // ... but if mouse button is pressed and start
                 // point value is set we do have one
-                if (this.rubberbandSelectionStartPoint.HasValue)
+                if (_rubberbandSelectionStartPoint.HasValue)
                 {
                     // create rubberband adorner
                     AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(canvas);
                     if (adornerLayer != null)
                     {
-                        RubberbandAdorner adorner = new RubberbandAdorner(canvas, rubberbandSelectionStartPoint);
+                        RubberbandAdorner adorner = new RubberbandAdorner(canvas, _rubberbandSelectionStartPoint);
                         if (adorner != null)
                         {
                             adornerLayer.Add(adorner);
@@ -68,7 +68,7 @@ namespace grapher.Views.Behaviors
                 {
                     // in case that this click is the start for a 
                     // drag operation we cache the start point
-                    rubberbandSelectionStartPoint = e.GetPosition(AssociatedObject);
+                    _rubberbandSelectionStartPoint = e.GetPosition(AssociatedObject);
 
                     IDiagramViewModel vm = (AssociatedObject.DataContext as IDiagramViewModel);
                     if (!(Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))

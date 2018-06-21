@@ -4,7 +4,6 @@ using System.Xml.Serialization;
 
 namespace grapher.Models
 {
-
     [Serializable]
     public class Ellipse : RenderItem
     {

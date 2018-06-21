@@ -13,7 +13,7 @@ namespace grapher.ViewModels
 {
     public class DiagramViewModel : BindableBase, IDiagramViewModel
     {
-        private ObservableCollection<SelectableDesignerItemViewModelBase> items = new ObservableCollection<SelectableDesignerItemViewModelBase>();
+        private ObservableCollection<SelectableDesignerItemViewModelBase> _items = new ObservableCollection<SelectableDesignerItemViewModelBase>();
         private Point _CurrentPoint;
 
         public DiagramViewModel()
@@ -45,7 +45,7 @@ namespace grapher.ViewModels
 
         public ObservableCollection<SelectableDesignerItemViewModelBase> Items
         {
-            get { return items; }
+            get { return _items; }
         }
 
         public List<SelectableDesignerItemViewModelBase> SelectedItems
@@ -59,7 +59,7 @@ namespace grapher.ViewModels
             {
                 SelectableDesignerItemViewModelBase item = (SelectableDesignerItemViewModelBase)parameter;
                 item.Parent = this;
-                items.Add(item);
+                _items.Add(item);
             }
         }
 
@@ -68,7 +68,7 @@ namespace grapher.ViewModels
             if (parameter is SelectableDesignerItemViewModelBase)
             {
                 SelectableDesignerItemViewModelBase item = (SelectableDesignerItemViewModelBase)parameter;
-                items.Remove(item);
+                _items.Remove(item);
             }
         }
 

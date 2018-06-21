@@ -43,7 +43,7 @@ namespace grapher.AttachedProperties
 
         #endregion
 
-        static void Fe_PreviewMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private static void Fe_PreviewMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             SelectableDesignerItemViewModelBase selectableDesignerItemViewModelBase =
                 (SelectableDesignerItemViewModelBase)((FrameworkElement)sender).DataContext;

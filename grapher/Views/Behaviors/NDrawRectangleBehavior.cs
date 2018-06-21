@@ -6,9 +6,9 @@ using System.Windows.Interactivity;
 
 namespace grapher.Views.Behaviors
 {
-    class NDrawRectangleBehavior : Behavior<DesignerCanvas>
+    internal class NDrawRectangleBehavior : Behavior<DesignerCanvas>
     {
-        private Point? rectangleStartPoint;
+        private Point? _rectangleStartPoint;
 
         protected override void OnAttached()
         {
@@ -30,7 +30,7 @@ namespace grapher.Views.Behaviors
             {
                 if (e.Source == AssociatedObject)
                 {
-                    rectangleStartPoint = e.GetPosition(AssociatedObject);
+                    _rectangleStartPoint = e.GetPosition(AssociatedObject);
 
                     e.Handled = true;
                 }
@@ -43,14 +43,14 @@ namespace grapher.Views.Behaviors
             if (canvas.SourceConnector == null)
             {
                 if (e.LeftButton != MouseButtonState.Pressed)
-                    rectangleStartPoint = null;
+                    _rectangleStartPoint = null;
 
-                if (rectangleStartPoint.HasValue)
+                if (_rectangleStartPoint.HasValue)
                 {
                     AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(canvas);
                     if (adornerLayer != null)
                     {
-                        var adorner = new Adorners.RectangleAdorner(canvas, rectangleStartPoint);
+                        var adorner = new Adorners.RectangleAdorner(canvas, _rectangleStartPoint);
                         if (adorner != null)
                         {
                             adornerLayer.Add(adorner);

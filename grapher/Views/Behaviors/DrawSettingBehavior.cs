@@ -13,9 +13,9 @@ using System.Windows.Interactivity;
 
 namespace grapher.Views.Behaviors
 {
-    class DrawSettingBehavior : Behavior<DesignerCanvas>
+    internal class DrawSettingBehavior : Behavior<DesignerCanvas>
     {
-        private Point? settingDrawingStartPoint = null;
+        private Point? _settingDrawingStartPoint = null;
 
         protected override void OnAttached()
         {
@@ -37,14 +37,14 @@ namespace grapher.Views.Behaviors
             if (canvas.SourceConnector == null)
             {
                 if (e.LeftButton != MouseButtonState.Pressed)
-                    settingDrawingStartPoint = null;
+                    _settingDrawingStartPoint = null;
 
-                if (this.settingDrawingStartPoint.HasValue)
+                if (_settingDrawingStartPoint.HasValue)
                 {
                     AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(canvas);
                     if (adornerLayer != null)
                     {
-                        SettingAdorner adorner = new SettingAdorner(canvas, settingDrawingStartPoint);
+                        SettingAdorner adorner = new SettingAdorner(canvas, _settingDrawingStartPoint);
                         if (adorner != null)
                         {
                             adornerLayer.Add(adorner);
@@ -61,7 +61,7 @@ namespace grapher.Views.Behaviors
             {
                 if (e.Source == AssociatedObject)
                 {
-                    settingDrawingStartPoint = e.GetPosition(AssociatedObject);
+                    _settingDrawingStartPoint = e.GetPosition(AssociatedObject);
 
                     e.Handled = true;
                 }

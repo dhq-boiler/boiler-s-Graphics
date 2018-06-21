@@ -22,7 +22,6 @@ namespace grapher.ViewModels
         private void Init()
         {
             this.ShowConnectors = false;
-
         }
     }
 }

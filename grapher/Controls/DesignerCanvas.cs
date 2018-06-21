@@ -14,10 +14,10 @@ namespace grapher.Controls
 {
     public class DesignerCanvas : Canvas
     {
-        private ConnectorBaseViewModel partialConnection;
-        private List<Connector> connectorsHit = new List<Connector>();
-        private Connector sourceConnector;
-        private bool isDragging;
+        private ConnectorBaseViewModel _partialConnection;
+        private List<Connector> _connectorsHit = new List<Connector>();
+        private Connector _sourceConnector;
+        private bool _isDragging;
 
         public DesignerCanvas()
         {
@@ -30,21 +30,21 @@ namespace grapher.Controls
 
         public Connector SourceConnector
         {
-            get { return sourceConnector; }
+            get { return _sourceConnector; }
             set
             {
-                if (sourceConnector != value)
+                if (_sourceConnector != value)
                 {
-                    sourceConnector = value;
-                    connectorsHit.Add(sourceConnector);
-                    FullyCreatedConnectorInfo sourceDataItem = sourceConnector.DataContext as FullyCreatedConnectorInfo;
+                    _sourceConnector = value;
+                    _connectorsHit.Add(_sourceConnector);
+                    FullyCreatedConnectorInfo sourceDataItem = _sourceConnector.DataContext as FullyCreatedConnectorInfo;
 
 
-                    Rect rectangleBounds = sourceConnector.TransformToVisual(this).TransformBounds(new Rect(sourceConnector.RenderSize));
+                    Rect rectangleBounds = _sourceConnector.TransformToVisual(this).TransformBounds(new Rect(_sourceConnector.RenderSize));
                     Point point = new Point(rectangleBounds.Left + (rectangleBounds.Width / 2),
                                             rectangleBounds.Bottom + (rectangleBounds.Height / 2));
-                    partialConnection = LineFactory.Create(sourceDataItem, new PartCreatedConnectionInfo(point));
-                    sourceDataItem.DataItem.Parent.AddItemCommand.Execute(partialConnection);
+                    _partialConnection = LineFactory.Create(sourceDataItem, new PartCreatedConnectionInfo(point));
+                    sourceDataItem.DataItem.Parent.AddItemCommand.Execute(_partialConnection);
                 }
             }
         }
@@ -57,7 +57,7 @@ namespace grapher.Controls
 
             if (MoveConnector != null)
             {
-                isDragging = true;
+                _isDragging = true;
             }
         }
 
@@ -67,12 +67,12 @@ namespace grapher.Controls
 
             Mediator.Instance.NotifyColleagues<bool>("DoneDrawingMessage", true);
 
-            if (sourceConnector != null)
+            if (_sourceConnector != null)
             {
-                FullyCreatedConnectorInfo sourceDataItem = sourceConnector.DataContext as FullyCreatedConnectorInfo;
-                if (connectorsHit.Count() == 2)
+                FullyCreatedConnectorInfo sourceDataItem = _sourceConnector.DataContext as FullyCreatedConnectorInfo;
+                if (_connectorsHit.Count() == 2)
                 {
-                    Connector sinkConnector = connectorsHit.Last();
+                    Connector sinkConnector = _connectorsHit.Last();
                     FullyCreatedConnectorInfo sinkDataItem = sinkConnector.DataContext as FullyCreatedConnectorInfo;
 
                     int indexOfLastTempConnection = sinkDataItem.DataItem.Parent.Items.Count - 1;
@@ -92,12 +92,12 @@ namespace grapher.Controls
 
             if (MoveConnector != null)
             {
-                isDragging = false;
+                _isDragging = false;
 
                 var viewModel = MoveConnector.DataContext as ConnectorBaseViewModel;
-                if (connectorsHit.Count() == 2)
+                if (_connectorsHit.Count() == 2)
                 {
-                    Connector sinkConnector = connectorsHit.Last();
+                    Connector sinkConnector = _connectorsHit.Last();
                     FullyCreatedConnectorInfo sinkDataItem = sinkConnector.DataContext as FullyCreatedConnectorInfo;
 
                     switch (MoveConnector.Name)
@@ -110,7 +110,7 @@ namespace grapher.Controls
                             break;
                     }
                 }
-                else if (connectorsHit.Count() == 1)
+                else if (_connectorsHit.Count() == 1)
                 {
                     switch (MoveConnector.Name)
                     {
@@ -125,8 +125,8 @@ namespace grapher.Controls
                 viewModel.IsHitTestVisible = true;
             }
 
-            connectorsHit = new List<Connector>();
-            sourceConnector = null;
+            _connectorsHit = new List<Connector>();
+            _sourceConnector = null;
             MoveConnector = null;
         }
 
@@ -143,14 +143,14 @@ namespace grapher.Controls
             {
                 if (e.LeftButton == MouseButtonState.Pressed)
                 {
-                    partialConnection.SinkConnectorInfo = new PartCreatedConnectionInfo(position);
+                    _partialConnection.SinkConnectorInfo = new PartCreatedConnectionInfo(position);
                     HitTesting(position);
                 }
                 e.Handled = true;
                 return;
             }
 
-            if (MoveConnector != null && isDragging && e.LeftButton == MouseButtonState.Pressed)
+            if (MoveConnector != null && _isDragging && e.LeftButton == MouseButtonState.Pressed)
             {
                 var viewModel = MoveConnector.DataContext as ConnectorBaseViewModel;
                 switch (MoveConnector.Name)
@@ -171,7 +171,7 @@ namespace grapher.Controls
 
             if (e.LeftButton != MouseButtonState.Pressed)
             {
-                isDragging = false;
+                _isDragging = false;
             }
         }
 
@@ -211,12 +211,11 @@ namespace grapher.Controls
             {
                 if (hitObject is Connector)
                 {
-                    if (!connectorsHit.Contains(hitObject as Connector))
-                        connectorsHit.Add(hitObject as Connector);
+                    if (!_connectorsHit.Contains(hitObject as Connector))
+                        _connectorsHit.Add(hitObject as Connector);
                 }
                 hitObject = VisualTreeHelper.GetParent(hitObject);
             }
-
         }
 
 

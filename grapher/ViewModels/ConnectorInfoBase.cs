@@ -10,8 +10,8 @@ namespace grapher.ViewModels
 {
     public abstract class ConnectorInfoBase : BindableBase
     {
-        private static double connectorWidth = 8;
-        private static double connectorHeight = 8;
+        private static double s_connectorWidth = 8;
+        private static double s_connectorHeight = 8;
 
         public ConnectorInfoBase(ConnectorOrientation orientation)
         {
@@ -22,12 +22,12 @@ namespace grapher.ViewModels
 
         public static double ConnectorWidth
         {
-            get { return connectorWidth; }
+            get { return s_connectorWidth; }
         }
 
         public static double ConnectorHeight
         {
-            get { return connectorHeight; }
+            get { return s_connectorHeight; }
         }
     }
 }

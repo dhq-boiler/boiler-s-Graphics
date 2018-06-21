@@ -9,15 +9,15 @@ namespace grapher.ViewModels
 {
     public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewModelBase
     {
-        private double left;
-        private double top;
-        private bool showConnectors = false;
-        private List<FullyCreatedConnectorInfo> connectors = new List<FullyCreatedConnectorInfo>();
+        private double _left;
+        private double _top;
+        private bool _showConnectors = false;
+        private List<FullyCreatedConnectorInfo> _connectors = new List<FullyCreatedConnectorInfo>();
 
         private double _Left;
         private double _Top;
-        private double width;
-        private double height;
+        private double _width;
+        private double _height;
         private double _MinWidth;
         private double _MinHeight;
         public static readonly double DefaultWidth = 65d;
@@ -25,8 +25,8 @@ namespace grapher.ViewModels
 
         public DesignerItemViewModelBase(int id, IDiagramViewModel parent, double left, double top) : base(id, parent)
         {
-            this.left = left;
-            this.top = top;
+            _left = left;
+            _top = top;
             Init();
         }
 
@@ -38,25 +38,25 @@ namespace grapher.ViewModels
 
         public FullyCreatedConnectorInfo TopConnector
         {
-            get { return connectors[0]; }
+            get { return _connectors[0]; }
         }
 
 
         public FullyCreatedConnectorInfo BottomConnector
         {
-            get { return connectors[1]; }
+            get { return _connectors[1]; }
         }
 
 
         public FullyCreatedConnectorInfo LeftConnector
         {
-            get { return connectors[2]; }
+            get { return _connectors[2]; }
         }
 
 
         public FullyCreatedConnectorInfo RightConnector
         {
-            get { return connectors[3]; }
+            get { return _connectors[3]; }
         }
 
         public double MinWidth
@@ -73,27 +73,27 @@ namespace grapher.ViewModels
 
         public double Width
         {
-            get { return width; }
-            set { SetProperty(ref width, value); }
+            get { return _width; }
+            set { SetProperty(ref _width, value); }
         }
 
         public double Height
         {
-            get { return height; }
-            set { SetProperty(ref height, value); }
+            get { return _height; }
+            set { SetProperty(ref _height, value); }
         }
 
         public bool ShowConnectors
         {
             get
             {
-                return showConnectors;
+                return _showConnectors;
             }
             set
             {
-                if (showConnectors != value)
+                if (_showConnectors != value)
                 {
-                    showConnectors = value;
+                    _showConnectors = value;
                     TopConnector.ShowConnectors = value;
                     BottomConnector.ShowConnectors = value;
                     RightConnector.ShowConnectors = value;
@@ -118,10 +118,10 @@ namespace grapher.ViewModels
 
         private void Init()
         {
-            connectors.Add(new FullyCreatedConnectorInfo(this, ConnectorOrientation.Top));
-            connectors.Add(new FullyCreatedConnectorInfo(this, ConnectorOrientation.Bottom));
-            connectors.Add(new FullyCreatedConnectorInfo(this, ConnectorOrientation.Left));
-            connectors.Add(new FullyCreatedConnectorInfo(this, ConnectorOrientation.Right));
+            _connectors.Add(new FullyCreatedConnectorInfo(this, ConnectorOrientation.Top));
+            _connectors.Add(new FullyCreatedConnectorInfo(this, ConnectorOrientation.Bottom));
+            _connectors.Add(new FullyCreatedConnectorInfo(this, ConnectorOrientation.Left));
+            _connectors.Add(new FullyCreatedConnectorInfo(this, ConnectorOrientation.Right));
 
             MinWidth = 0;
             MinHeight = 0;

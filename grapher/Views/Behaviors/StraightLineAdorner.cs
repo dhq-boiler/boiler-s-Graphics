@@ -3,7 +3,7 @@ using System.Windows.Media;
 
 namespace grapher.Views.Behaviors
 {
-    class StraightLineAdorner : AbstractAdorner
+    internal class StraightLineAdorner : AbstractAdorner
     {
         public StraightLineAdorner(Visual visual, UIElement adornedElement)
             : base(visual, adornedElement)

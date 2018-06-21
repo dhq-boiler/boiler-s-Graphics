@@ -2,7 +2,7 @@
 
 namespace grapher.Strategies
 {
-    class PolygonalLineFactory : LineFactory
+    internal class PolygonalLineFactory : LineFactory
     {
         public override ConnectorBaseViewModel Create(ConnectorInfoBase sourceConnectorInfo, ConnectorInfoBase sinkConnectorInfo)
         {

@@ -5,7 +5,7 @@ using System.Windows.Shapes;
 
 namespace grapher.Views.Behaviors
 {
-    class EllipseSelectBehavior : Behavior<FrameworkElement>
+    internal class EllipseSelectBehavior : Behavior<FrameworkElement>
     {
         protected override void OnAttached()
         {

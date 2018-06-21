@@ -64,7 +64,7 @@ namespace grapher.AttachedProperties
 
         #endregion
 
-        static void Fe_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+        private static void Fe_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
         {
             Point? dragStartPoint = GetDragStartPoint((DependencyObject)sender);
 
@@ -81,7 +81,7 @@ namespace grapher.AttachedProperties
             }
         }
 
-        static void Fe_PreviewMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private static void Fe_PreviewMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             SetDragStartPoint((DependencyObject)sender, e.GetPosition((IInputElement)sender));
         }

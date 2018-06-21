@@ -35,7 +35,6 @@ namespace grapher.Views
         //添付プロパティTemplateの設定時に初期化処理を行う
         private static void OnTemplateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-
             var adorned = d as FrameworkElement;
             var me = new AdornedBy(adorned);
 
@@ -59,7 +58,6 @@ namespace grapher.Views
             me.AddVisualChild(ctrl);
             me.AddLogicalChild(ctrl);
             me.InvalidateVisual();
-
         }
 
         //装飾層に登録する

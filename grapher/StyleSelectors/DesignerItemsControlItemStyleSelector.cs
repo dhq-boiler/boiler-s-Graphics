@@ -27,7 +27,6 @@ namespace grapher.StyleSelectors
 
             if (item is DesignerItemViewModelBase)
             {
-
                 return (Style)itemsControl.FindResource("designerItemStyle");
             }
 

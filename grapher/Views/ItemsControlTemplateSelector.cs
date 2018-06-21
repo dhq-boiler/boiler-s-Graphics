@@ -6,7 +6,7 @@ using System.Windows.Markup;
 namespace grapher.Views
 {
     [ContentProperty("Items")]
-    class ItemsControlTemplateSelector : DataTemplateSelector
+    internal class ItemsControlTemplateSelector : DataTemplateSelector
     {
         public List<DataTemplate> Items { get; set; }
 

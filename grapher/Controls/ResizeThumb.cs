@@ -17,11 +17,11 @@ namespace grapher.Controls
             base.DragDelta += new DragDeltaEventHandler(ResizeThumb_DragDelta);
         }
 
-        void ResizeThumb_DragDelta(object sender, DragDeltaEventArgs e)
+        private void ResizeThumb_DragDelta(object sender, DragDeltaEventArgs e)
         {
             var designerItem = this.DataContext as DesignerItemViewModelBase;
 
-            if (designerItem != null &&  designerItem.IsSelected)
+            if (designerItem != null && designerItem.IsSelected)
             {
                 double minLeft, minTop, minDeltaHorizontal, minDeltaVertical;
                 double dragDeltaVertical, dragDeltaHorizontal;

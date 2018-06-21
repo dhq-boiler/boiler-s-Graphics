@@ -3,7 +3,7 @@ using System.Windows.Media;
 
 namespace grapher.Extensions
 {
-    static class Extensions
+    internal static class Extensions
     {
         /*
          * https://stackoverflow.com/questions/10279092/how-to-get-children-of-a-wpf-container-by-type

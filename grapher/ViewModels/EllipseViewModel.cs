@@ -5,7 +5,7 @@ using System.Windows.Media;
 
 namespace grapher.ViewModels
 {
-    class EllipseViewModel : RenderItemViewModel
+    internal class EllipseViewModel : RenderItemViewModel
     {
         public ReactiveProperty<Brush> Stroke { get; set; }
 

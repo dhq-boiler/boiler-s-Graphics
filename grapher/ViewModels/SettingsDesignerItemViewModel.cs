@@ -9,7 +9,6 @@ namespace grapher.ViewModels
 {
     public class SettingsDesignerItemViewModel : DesignerItemViewModelBase
     {
-
         public SettingsDesignerItemViewModel(int id, DiagramViewModel parent, double left, double top)
             : base(id, parent, left, top)
         {

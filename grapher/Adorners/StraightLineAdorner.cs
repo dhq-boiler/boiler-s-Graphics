@@ -7,21 +7,21 @@ using System.Windows.Media;
 
 namespace grapher.Adorners
 {
-    class StraightLineAdorner : Adorner
+    internal class StraightLineAdorner : Adorner
     {
-        private DesignerCanvas designerCanvas;
-        private Point? startPoint;
-        private Point? endPoint;
-        private Pen straightLinePen;
+        private DesignerCanvas _designerCanvas;
+        private Point? _startPoint;
+        private Point? _endPoint;
+        private Pen _straightLinePen;
 
         public StraightLineAdorner(DesignerCanvas designerCanvas, Point? dragStartPoint)
             : base(designerCanvas)
         {
-            this.designerCanvas = designerCanvas;
-            this.startPoint = dragStartPoint;
+            _designerCanvas = designerCanvas;
+            _startPoint = dragStartPoint;
             var brush = new SolidColorBrush(Colors.Black);
             brush.Opacity = 0.5;
-            this.straightLinePen = new Pen(brush, 1);
+            _straightLinePen = new Pen(brush, 1);
         }
 
         protected override void OnMouseMove(MouseEventArgs e)
@@ -31,7 +31,7 @@ namespace grapher.Adorners
                 if (!this.IsMouseCaptured)
                     this.CaptureMouse();
 
-                endPoint = e.GetPosition(this);
+                _endPoint = e.GetPosition(this);
                 this.InvalidateVisual();
             }
             else
@@ -48,17 +48,17 @@ namespace grapher.Adorners
             if (this.IsMouseCaptured) this.ReleaseMouseCapture();
 
             // remove this adorner from adorner layer
-            AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(this.designerCanvas);
+            AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(_designerCanvas);
             if (adornerLayer != null)
                 adornerLayer.Remove(this);
 
-            if (startPoint.HasValue && endPoint.HasValue)
+            if (_startPoint.HasValue && _endPoint.HasValue)
             {
-                var item = new StraightConnectorViewModel(new PartCreatedConnectionInfo(startPoint.Value), new PartCreatedConnectionInfo(endPoint.Value));
+                var item = new StraightConnectorViewModel(new PartCreatedConnectionInfo(_startPoint.Value), new PartCreatedConnectionInfo(_endPoint.Value));
                 ((AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel).AddItemCommand.Execute(item);
 
-                startPoint = null;
-                endPoint = null;
+                _startPoint = null;
+                _endPoint = null;
             }
 
             e.Handled = true;
@@ -70,8 +70,8 @@ namespace grapher.Adorners
 
             dc.DrawRectangle(Brushes.Transparent, null, new Rect(RenderSize));
 
-            if (startPoint.HasValue && endPoint.HasValue)
-                dc.DrawLine(straightLinePen, startPoint.Value, endPoint.Value);
+            if (_startPoint.HasValue && _endPoint.HasValue)
+                dc.DrawLine(_straightLinePen, _startPoint.Value, _endPoint.Value);
         }
     }
 }

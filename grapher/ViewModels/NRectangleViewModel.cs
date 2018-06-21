@@ -1,4 +1,5 @@
-﻿namespace grapher.ViewModels
+﻿
+namespace grapher.ViewModels
 {
     public class NRectangleViewModel : DesignerItemViewModelBase
     {

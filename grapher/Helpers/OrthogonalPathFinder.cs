@@ -449,7 +449,6 @@ namespace grapher.Helpers
                         return s1;
                     else
                         return s2;
-
                 }
                 else
                 {

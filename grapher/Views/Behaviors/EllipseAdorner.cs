@@ -5,7 +5,7 @@ using System.Windows.Shapes;
 
 namespace grapher.Views.Behaviors
 {
-    class EllipseAdorner : AbstractAdorner
+    internal class EllipseAdorner : AbstractAdorner
     {
         public EllipseAdorner(Visual visual, UIElement adornedElement)
             : base(visual, adornedElement)

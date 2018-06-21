@@ -9,7 +9,7 @@ using System.Windows.Interactivity;
 
 namespace grapher.Views.Behaviors
 {
-    class DeleteBehavior : Behavior<FrameworkElement>
+    internal class DeleteBehavior : Behavior<FrameworkElement>
     {
         protected override void OnAttached()
         {

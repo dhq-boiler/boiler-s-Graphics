@@ -3,7 +3,7 @@ using System.Windows.Shapes;
 
 namespace grapher.Views.Behaviors
 {
-    class StraightLineDragAdorner : AbstractDragAdorner
+    internal class StraightLineDragAdorner : AbstractDragAdorner
     {
         public StraightLineDragAdorner(UIElement owner, UIElement adornElement, double opacity, Point dragPos)
             : base(owner, adornElement, opacity, dragPos)

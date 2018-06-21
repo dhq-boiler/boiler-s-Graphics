@@ -65,7 +65,7 @@ namespace grapher.ViewModels
 
         private void Init()
         {
-            SelectItemCommand = new DelegateCommand<object>(p=> SelectItem((bool)p, !IsSelected));
+            SelectItemCommand = new DelegateCommand<object>(p => SelectItem((bool)p, !IsSelected));
         }
     }
 }

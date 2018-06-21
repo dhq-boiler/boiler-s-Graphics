@@ -6,7 +6,7 @@ using System.Windows.Media;
 
 namespace grapher.Views.Behaviors
 {
-    class DrawEllipseBehavior : DrawAbstractBehavior<EllipseAdorner>
+    internal class DrawEllipseBehavior : DrawAbstractBehavior<EllipseAdorner>
     {
         protected override EllipseAdorner CreateAdornerObject(Visual visual, UIElement adornedElement, Point beginPoint)
         {

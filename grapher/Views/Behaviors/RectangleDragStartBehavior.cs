@@ -2,7 +2,7 @@
 
 namespace grapher.Views.Behaviors
 {
-    class RectangleDragStartBehavior : AbstractDragStartBehavior
+    internal class RectangleDragStartBehavior : AbstractDragStartBehavior
     {
         protected override AbstractDragAdorner CreateDragAdorner(UIElement owner, UIElement adornedElement, double opacity, Point dragPos)
         {

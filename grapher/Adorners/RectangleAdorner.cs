@@ -8,21 +8,21 @@ using System.Windows.Media;
 
 namespace grapher.Adorners
 {
-    class RectangleAdorner : Adorner
+    internal class RectangleAdorner : Adorner
     {
-        private DesignerCanvas designerCanvas;
-        private Point? startPoint;
-        private Point? endPoint;
-        private Pen rectanglePen;
+        private DesignerCanvas _designerCanvas;
+        private Point? _startPoint;
+        private Point? _endPoint;
+        private Pen _rectanglePen;
 
         public RectangleAdorner(DesignerCanvas designerCanvas, Point? dragStartPoint)
             : base(designerCanvas)
         {
-            this.designerCanvas = designerCanvas;
-            this.startPoint = dragStartPoint;
+            _designerCanvas = designerCanvas;
+            _startPoint = dragStartPoint;
             var brush = new SolidColorBrush(Colors.Black);
             brush.Opacity = 0.5;
-            this.rectanglePen = new Pen(brush, 1);
+            _rectanglePen = new Pen(brush, 1);
         }
 
         protected override void OnMouseMove(MouseEventArgs e)
@@ -32,7 +32,7 @@ namespace grapher.Adorners
                 if (!this.IsMouseCaptured)
                     this.CaptureMouse();
 
-                endPoint = e.GetPosition(this);
+                _endPoint = e.GetPosition(this);
                 this.InvalidateVisual();
             }
             else
@@ -49,21 +49,21 @@ namespace grapher.Adorners
             if (this.IsMouseCaptured) this.ReleaseMouseCapture();
 
             // remove this adorner from adorner layer
-            AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(this.designerCanvas);
+            AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(_designerCanvas);
             if (adornerLayer != null)
                 adornerLayer.Remove(this);
 
-            if (startPoint.HasValue && endPoint.HasValue)
+            if (_startPoint.HasValue && _endPoint.HasValue)
             {
                 var item = new NRectangleViewModel();
-                item.Left = Math.Min(startPoint.Value.X, endPoint.Value.X);
-                item.Top = Math.Min(startPoint.Value.Y, endPoint.Value.Y);
-                item.Width = Math.Max(startPoint.Value.X - endPoint.Value.X, endPoint.Value.X - startPoint.Value.X);
-                item.Height = Math.Max(startPoint.Value.Y - endPoint.Value.Y, endPoint.Value.Y - startPoint.Value.Y);
+                item.Left = Math.Min(_startPoint.Value.X, _endPoint.Value.X);
+                item.Top = Math.Min(_startPoint.Value.Y, _endPoint.Value.Y);
+                item.Width = Math.Max(_startPoint.Value.X - _endPoint.Value.X, _endPoint.Value.X - _startPoint.Value.X);
+                item.Height = Math.Max(_startPoint.Value.Y - _endPoint.Value.Y, _endPoint.Value.Y - _startPoint.Value.Y);
                 ((AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel).AddItemCommand.Execute(item);
 
-                startPoint = null;
-                endPoint = null;
+                _startPoint = null;
+                _endPoint = null;
             }
 
             e.Handled = true;
@@ -75,8 +75,8 @@ namespace grapher.Adorners
 
             dc.DrawRectangle(Brushes.Transparent, null, new Rect(RenderSize));
 
-            if (startPoint.HasValue && endPoint.HasValue)
-                dc.DrawRectangle(Brushes.Transparent, rectanglePen, new Rect(startPoint.Value, endPoint.Value));
+            if (_startPoint.HasValue && _endPoint.HasValue)
+                dc.DrawRectangle(Brushes.Transparent, _rectanglePen, new Rect(_startPoint.Value, _endPoint.Value));
         }
     }
 }

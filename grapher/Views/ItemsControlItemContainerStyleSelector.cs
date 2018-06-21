@@ -7,7 +7,7 @@ using System.Windows.Markup;
 namespace grapher.Views
 {
     [ContentProperty("Items")]
-    class ItemsControlItemContainerStyleSelector : StyleSelector
+    internal class ItemsControlItemContainerStyleSelector : StyleSelector
     {
         public List<ItemTypedStyle> Items { get; set; }
 

@@ -5,7 +5,7 @@ using System.Windows.Media;
 
 namespace grapher.Views.Behaviors
 {
-    class DrawStraightLineBehavior : DrawAbstractBehavior<StraightLineAdorner>
+    internal class DrawStraightLineBehavior : DrawAbstractBehavior<StraightLineAdorner>
     {
         protected override StraightLineAdorner CreateAdornerObject(Visual visual, UIElement adornedElement, Point beginPoint)
         {

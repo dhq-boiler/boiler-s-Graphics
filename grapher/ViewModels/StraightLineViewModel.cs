@@ -5,7 +5,7 @@ using System.Windows.Media;
 
 namespace grapher.ViewModels
 {
-    class StraightLineViewModel : RenderItemViewModel
+    internal class StraightLineViewModel : RenderItemViewModel
     {
         public ReactiveProperty<double> X2 { get; set; }
 

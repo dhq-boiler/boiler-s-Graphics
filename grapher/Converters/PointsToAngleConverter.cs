@@ -6,7 +6,7 @@ using System.Windows.Data;
 
 namespace grapher.Converters
 {
-    class PointsToAngleConverter : IValueConverter
+    internal class PointsToAngleConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

@@ -77,11 +77,9 @@ namespace grapher.Messenger
     /// </summary>
     public class Mediator
     {
-
-
         #region Data
-        static readonly Mediator instance = new Mediator();
-        static readonly object syncLock = new object();
+        private static readonly Mediator s_instance = new Mediator();
+        private static readonly object s_syncLock = new object();
         private readonly Dictionary<object, List<WeakAction>> _registeredHandlers =
             new Dictionary<object, List<WeakAction>>();
         #endregion
@@ -89,12 +87,10 @@ namespace grapher.Messenger
         #region Ctor
         static Mediator()
         {
-
         }
 
         private Mediator()
         {
-
         }
         #endregion
 
@@ -175,7 +171,6 @@ namespace grapher.Messenger
                         wrCopy.Add(weakRe);
                     }
                 }
-
             }
 
             foreach (var cb in wrCopy)
@@ -204,7 +199,7 @@ namespace grapher.Messenger
         {
             get
             {
-                return instance;
+                return s_instance;
             }
         }
 

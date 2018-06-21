@@ -15,7 +15,7 @@ namespace grapher.Controls
             base.DragDelta += new DragDeltaEventHandler(DragThumb_DragDelta);
         }
 
-        void DragThumb_DragDelta(object sender, DragDeltaEventArgs e)
+        private void DragThumb_DragDelta(object sender, DragDeltaEventArgs e)
         {
             DesignerItemViewModelBase designerItem = this.DataContext as DesignerItemViewModelBase;
 
@@ -38,7 +38,6 @@ namespace grapher.Controls
                     double deltaVertical = Math.Max(-minTop, e.VerticalChange);
                     item.Left += deltaHorizontal;
                     item.Top += deltaVertical;
-
                 }
                 e.Handled = true;
             }

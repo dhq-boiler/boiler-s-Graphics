@@ -21,31 +21,31 @@ namespace grapher.Views
      * answerer Trevor Elliott https://stackoverflow.com/users/852555/trevor-elliott
      */
 
-    class StraightLineResizeHandle : Adorner
+    internal class StraightLineResizeHandle : Adorner
     {
-        private Point start;
-        private Point end;
-        private Thumb startThumb;
-        private Thumb endThumb;
-        private Line selectedLine;
-        private VisualCollection visualChildren;
-        private CursorBehavior startThumbBehavior;
-        private CursorBehavior endThumbBehavior;
+        private Point _start;
+        private Point _end;
+        private Thumb _startThumb;
+        private Thumb _endThumb;
+        private Line _selectedLine;
+        private VisualCollection _visualChildren;
+        private CursorBehavior _startThumbBehavior;
+        private CursorBehavior _endThumbBehavior;
 
         public StraightLineResizeHandle(UIElement adornedElement)
             : base(adornedElement)
         {
-            visualChildren = new VisualCollection(this);
+            _visualChildren = new VisualCollection(this);
 
             var template = (ControlTemplate)App.Current.MainWindow.FindResource("ResizeHandleTemplate");
-            startThumb = new Thumb
+            _startThumb = new Thumb
             {
                 Width = 7,
                 Height = 7,
                 Template = template,
                 UseLayoutRounding = true,
             };
-            endThumb = new Thumb
+            _endThumb = new Thumb
             {
                 Width = 7,
                 Height = 7,
@@ -54,21 +54,21 @@ namespace grapher.Views
             };
 
             Cursor cursor = GetCursor(adornedElement as Line);
-            startThumbBehavior = new CursorBehavior() { DefaultCursor = Cursors.Arrow, SpecificCursor = cursor };
-            endThumbBehavior = new CursorBehavior() { DefaultCursor = Cursors.Arrow, SpecificCursor = cursor };
+            _startThumbBehavior = new CursorBehavior() { DefaultCursor = Cursors.Arrow, SpecificCursor = cursor };
+            _endThumbBehavior = new CursorBehavior() { DefaultCursor = Cursors.Arrow, SpecificCursor = cursor };
 
-            var behaviors = Interaction.GetBehaviors(startThumb);
-            behaviors.Add(startThumbBehavior);
-            behaviors = Interaction.GetBehaviors(endThumb);
-            behaviors.Add(endThumbBehavior);
+            var behaviors = Interaction.GetBehaviors(_startThumb);
+            behaviors.Add(_startThumbBehavior);
+            behaviors = Interaction.GetBehaviors(_endThumb);
+            behaviors.Add(_endThumbBehavior);
 
-            startThumb.DragDelta += StartThumb_DragDelta;
-            endThumb.DragDelta += EndThumb_DragDelta;
+            _startThumb.DragDelta += StartThumb_DragDelta;
+            _endThumb.DragDelta += EndThumb_DragDelta;
 
-            visualChildren.Add(startThumb);
-            visualChildren.Add(endThumb);
+            _visualChildren.Add(_startThumb);
+            _visualChildren.Add(_endThumb);
 
-            selectedLine = AdornedElement as Line;
+            _selectedLine = AdornedElement as Line;
         }
 
         private static Cursor GetCursor(Line line)
@@ -79,7 +79,7 @@ namespace grapher.Views
             {
                 cursor = Cursors.SizeNS;
             }
-            if (radian >= -3d / 8d * Math.PI && radian < -1d/8d * Math.PI)
+            if (radian >= -3d / 8d * Math.PI && radian < -1d / 8d * Math.PI)
             {
                 cursor = Cursors.SizeNESW;
             }
@@ -102,7 +102,7 @@ namespace grapher.Views
         {
             var canvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
             Point position = Mouse.GetPosition(canvas);
-            var viewModel = selectedLine.DataContext as ConnectorBaseViewModel;
+            var viewModel = _selectedLine.DataContext as ConnectorBaseViewModel;
             viewModel.SourceA = position;
         }
 
@@ -110,42 +110,42 @@ namespace grapher.Views
         {
             var canvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
             Point position = Mouse.GetPosition(canvas);
-            var viewModel = selectedLine.DataContext as ConnectorBaseViewModel;
+            var viewModel = _selectedLine.DataContext as ConnectorBaseViewModel;
             viewModel.SourceB = position;
         }
 
-        protected override int VisualChildrenCount => visualChildren.Count;
+        protected override int VisualChildrenCount => _visualChildren.Count;
 
         protected override Visual GetVisualChild(int index)
         {
-            return visualChildren[index];
+            return _visualChildren[index];
         }
 
         protected override void OnRender(DrawingContext drawingContext)
         {
             if (AdornedElement is Line)
             {
-                startThumbBehavior.SpecificCursor = GetCursor(AdornedElement as Line);
-                endThumbBehavior.SpecificCursor = GetCursor(AdornedElement as Line);
+                _startThumbBehavior.SpecificCursor = GetCursor(AdornedElement as Line);
+                _endThumbBehavior.SpecificCursor = GetCursor(AdornedElement as Line);
 
-                selectedLine = AdornedElement as Line;
-                start = new Point(selectedLine.X1, selectedLine.Y1);
-                end = new Point(selectedLine.X2, selectedLine.Y2);
+                _selectedLine = AdornedElement as Line;
+                _start = new Point(_selectedLine.X1, _selectedLine.Y1);
+                _end = new Point(_selectedLine.X2, _selectedLine.Y2);
             }
         }
 
         protected override Size ArrangeOverride(Size finalSize)
         {
-            selectedLine = AdornedElement as Line;
+            _selectedLine = AdornedElement as Line;
 
-            double left = Math.Min(selectedLine.X1, selectedLine.X2);
-            double top = Math.Min(selectedLine.Y1, selectedLine.Y2);
+            double left = Math.Min(_selectedLine.X1, _selectedLine.X2);
+            double top = Math.Min(_selectedLine.Y1, _selectedLine.Y2);
 
-            var startRect = new Rect(selectedLine.X1 - (startThumb.Width / 2), selectedLine.Y1 - (startThumb.Height / 2), startThumb.Width, startThumb.Height);
-            startThumb.Arrange(startRect);
+            var startRect = new Rect(_selectedLine.X1 - (_startThumb.Width / 2), _selectedLine.Y1 - (_startThumb.Height / 2), _startThumb.Width, _startThumb.Height);
+            _startThumb.Arrange(startRect);
 
-            var endRect = new Rect(selectedLine.X2 - (endThumb.Width / 2), selectedLine.Y2 - (endThumb.Height / 2), endThumb.Width, endThumb.Height);
-            endThumb.Arrange(endRect);
+            var endRect = new Rect(_selectedLine.X2 - (_endThumb.Width / 2), _selectedLine.Y2 - (_endThumb.Height / 2), _endThumb.Width, _endThumb.Height);
+            _endThumb.Arrange(endRect);
 
             return finalSize;
         }

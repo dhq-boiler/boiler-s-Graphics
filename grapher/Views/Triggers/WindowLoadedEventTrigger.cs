@@ -4,7 +4,7 @@ using System.Windows.Interactivity;
 
 namespace grapher.Views.Triggers
 {
-    class WindowLoadedEventTrigger : EventTrigger
+    internal class WindowLoadedEventTrigger : EventTrigger
     {
         protected override void OnEvent(EventArgs eventArgs)
         {

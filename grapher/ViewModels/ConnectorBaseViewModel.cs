@@ -9,13 +9,13 @@ namespace grapher.ViewModels
 {
     public class ConnectorBaseViewModel : SelectableDesignerItemViewModelBase
     {
-        private ConnectorInfoBase sourceConnectorInfo;
-        private ConnectorInfoBase sinkConnectorInfo;
-        private Point sourceB;
-        private Point sourceA;
-        private List<Point> connectionPoints;
-        private Point endPoint;
-        private Rect area;
+        private ConnectorInfoBase _sourceConnectorInfo;
+        private ConnectorInfoBase _sinkConnectorInfo;
+        private Point _sourceB;
+        private Point _sourceA;
+        private List<Point> _connectionPoints;
+        private Point _endPoint;
+        private Rect _area;
         private bool _IsHitTestVisible;
 
         public ConnectorBaseViewModel(int id, IDiagramViewModel parent,
@@ -37,20 +37,20 @@ namespace grapher.ViewModels
 
         public bool IsFullConnection
         {
-            get { return sinkConnectorInfo is FullyCreatedConnectorInfo; }
+            get { return _sinkConnectorInfo is FullyCreatedConnectorInfo; }
         }
 
         public Point SourceA
         {
             get
             {
-                return sourceA;
+                return _sourceA;
             }
             set
             {
-                if (sourceA != value)
+                if (_sourceA != value)
                 {
-                    sourceA = value;
+                    _sourceA = value;
                     UpdateArea();
                     RaisePropertyChanged("SourceA");
                 }
@@ -61,13 +61,13 @@ namespace grapher.ViewModels
         {
             get
             {
-                return sourceB;
+                return _sourceB;
             }
             set
             {
-                if (sourceB != value)
+                if (_sourceB != value)
                 {
-                    sourceB = value;
+                    _sourceB = value;
                     UpdateArea();
                     RaisePropertyChanged("SourceB");
                 }
@@ -78,13 +78,13 @@ namespace grapher.ViewModels
         {
             get
             {
-                return connectionPoints;
+                return _connectionPoints;
             }
             protected set
             {
-                if (connectionPoints != value)
+                if (_connectionPoints != value)
                 {
-                    connectionPoints = value;
+                    _connectionPoints = value;
                     RaisePropertyChanged("ConnectionPoints");
                 }
             }
@@ -94,13 +94,13 @@ namespace grapher.ViewModels
         {
             get
             {
-                return endPoint;
+                return _endPoint;
             }
             private set
             {
-                if (endPoint != value)
+                if (_endPoint != value)
                 {
-                    endPoint = value;
+                    _endPoint = value;
                     RaisePropertyChanged("EndPoint");
                 }
             }
@@ -110,13 +110,13 @@ namespace grapher.ViewModels
         {
             get
             {
-                return area;
+                return _area;
             }
             private set
             {
-                if (area != value)
+                if (_area != value)
                 {
-                    area = value;
+                    _area = value;
                     UpdateConnectionPoints();
                     RaisePropertyChanged("Area");
                 }
@@ -125,7 +125,6 @@ namespace grapher.ViewModels
 
         public ConnectorInfo ConnectorInfo(ConnectorOrientation orientation, double left, double top, Point position)
         {
-
             return new ConnectorInfo()
             {
                 Orientation = orientation,
@@ -140,26 +139,25 @@ namespace grapher.ViewModels
         {
             get
             {
-                return sourceConnectorInfo;
+                return _sourceConnectorInfo;
             }
             set
             {
-                if (sourceConnectorInfo != value)
+                if (_sourceConnectorInfo != value)
                 {
-
-                    sourceConnectorInfo = value;
-                    if (sourceConnectorInfo is PartCreatedConnectionInfo)
+                    _sourceConnectorInfo = value;
+                    if (_sourceConnectorInfo is PartCreatedConnectionInfo)
                     {
-                        SourceA = (sourceConnectorInfo as PartCreatedConnectionInfo).CurrentLocation;
+                        SourceA = (_sourceConnectorInfo as PartCreatedConnectionInfo).CurrentLocation;
                     }
-                    if (sourceConnectorInfo is FullyCreatedConnectorInfo)
+                    if (_sourceConnectorInfo is FullyCreatedConnectorInfo)
                     {
                         SourceA = PointHelper.GetPointForConnector(this.SourceConnectorInfo as FullyCreatedConnectorInfo);
                     }
                     RaisePropertyChanged("SourceConnectorInfo");
-                    if (sourceConnectorInfo is FullyCreatedConnectorInfo)
+                    if (_sourceConnectorInfo is FullyCreatedConnectorInfo)
                     {
-                        ((sourceConnectorInfo as FullyCreatedConnectorInfo).DataItem as INotifyPropertyChanged).PropertyChanged += new WeakINPCEventHandler(ConnectorViewModel_PropertyChanged).Handler;
+                        ((_sourceConnectorInfo as FullyCreatedConnectorInfo).DataItem as INotifyPropertyChanged).PropertyChanged += new WeakINPCEventHandler(ConnectorViewModel_PropertyChanged).Handler;
                     }
                 }
             }
@@ -169,18 +167,17 @@ namespace grapher.ViewModels
         {
             get
             {
-                return sinkConnectorInfo;
+                return _sinkConnectorInfo;
             }
             set
             {
-                if (sinkConnectorInfo != value)
+                if (_sinkConnectorInfo != value)
                 {
-
-                    sinkConnectorInfo = value;
+                    _sinkConnectorInfo = value;
                     if (SinkConnectorInfo is FullyCreatedConnectorInfo)
                     {
                         SourceB = PointHelper.GetPointForConnector((FullyCreatedConnectorInfo)SinkConnectorInfo);
-                        (((FullyCreatedConnectorInfo)sinkConnectorInfo).DataItem as INotifyPropertyChanged).PropertyChanged += new WeakINPCEventHandler(ConnectorViewModel_PropertyChanged).Handler;
+                        (((FullyCreatedConnectorInfo)_sinkConnectorInfo).DataItem as INotifyPropertyChanged).PropertyChanged += new WeakINPCEventHandler(ConnectorViewModel_PropertyChanged).Handler;
                     }
                     else
                     {
@@ -200,7 +197,6 @@ namespace grapher.ViewModels
         {
             ConnectionPoints = new List<Point>()
                                    {
-
                                        new Point( SourceA.X  <  SourceB.X ? 0d : Area.Width, SourceA.Y  <  SourceB.Y ? 0d : Area.Height ),
                                        new Point(SourceA.X  >  SourceB.X ? 0d : Area.Width, SourceA.Y  >  SourceB.Y ? 0d : Area.Height)
                                    };

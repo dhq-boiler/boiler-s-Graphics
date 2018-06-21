@@ -6,9 +6,9 @@ using System.Windows.Interactivity;
 
 namespace grapher.Views.Behaviors
 {
-    class NDrawStraightLineBehavior : Behavior<DesignerCanvas>
+    internal class NDrawStraightLineBehavior : Behavior<DesignerCanvas>
     {
-        private Point? straightLineStartPoint;
+        private Point? _straightLineStartPoint;
 
         protected override void OnAttached()
         {
@@ -30,7 +30,7 @@ namespace grapher.Views.Behaviors
             {
                 if (e.Source == AssociatedObject)
                 {
-                    straightLineStartPoint = e.GetPosition(AssociatedObject);
+                    _straightLineStartPoint = e.GetPosition(AssociatedObject);
 
                     e.Handled = true;
                 }
@@ -43,14 +43,14 @@ namespace grapher.Views.Behaviors
             if (canvas.SourceConnector == null)
             {
                 if (e.LeftButton != MouseButtonState.Pressed)
-                    straightLineStartPoint = null;
+                    _straightLineStartPoint = null;
 
-                if (straightLineStartPoint.HasValue)
+                if (_straightLineStartPoint.HasValue)
                 {
                     AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(canvas);
                     if (adornerLayer != null)
                     {
-                        var adorner = new Adorners.StraightLineAdorner(canvas, straightLineStartPoint);
+                        var adorner = new Adorners.StraightLineAdorner(canvas, _straightLineStartPoint);
                         if (adorner != null)
                         {
                             adornerLayer.Add(adorner);

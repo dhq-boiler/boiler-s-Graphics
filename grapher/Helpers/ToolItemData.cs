@@ -23,7 +23,7 @@ namespace grapher.Helpers
         public string Name { get; private set; }
         public string ImageUrl { get; private set; }
         public ICommand Command { get; private set; }
-        
+
         public bool IsChecked
         {
             get { return _IsChecked; }
