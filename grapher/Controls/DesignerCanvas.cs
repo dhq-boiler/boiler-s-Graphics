@@ -123,6 +123,8 @@ namespace grapher.Controls
                             break;
                     }
                 }
+                var viewModel = MoveConnector.DataContext as ConnectorBaseViewModel;
+                viewModel.IsHitTestVisible = true;
             }
 
             connectorsHit = new List<Connector>();
@@ -161,7 +163,9 @@ namespace grapher.Controls
                         viewModel.SourceB = e.GetPosition(this);
                         break;
                 }
-                HitTesting(e.GetPosition(this));
+                viewModel.IsHitTestVisible = true;
+                HitTesting(position);
+                viewModel.IsHitTestVisible = false;
                 e.Handled = true;
                 return;
             }

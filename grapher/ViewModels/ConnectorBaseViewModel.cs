@@ -16,6 +16,7 @@ namespace grapher.ViewModels
         private List<Point> connectionPoints;
         private Point endPoint;
         private Rect area;
+        private bool _IsHitTestVisible;
 
         public ConnectorBaseViewModel(int id, IDiagramViewModel parent,
             FullyCreatedConnectorInfo sourceConnectorInfo, FullyCreatedConnectorInfo sinkConnectorInfo) : base(id, parent)
@@ -26,6 +27,12 @@ namespace grapher.ViewModels
         public ConnectorBaseViewModel(ConnectorInfoBase sourceConnectorInfo, ConnectorInfoBase sinkConnectorInfo)
         {
             Init(sourceConnectorInfo, sinkConnectorInfo);
+        }
+
+        public bool IsHitTestVisible
+        {
+            get { return _IsHitTestVisible; }
+            set { SetProperty(ref _IsHitTestVisible, value); }
         }
 
         public bool IsFullConnection
@@ -246,6 +253,7 @@ namespace grapher.ViewModels
 
         private void Init(ConnectorInfoBase sourceConnectorInfo, ConnectorInfoBase sinkConnectorInfo)
         {
+            IsHitTestVisible = true;
             InitPathFinder();
             if (sourceConnectorInfo is FullyCreatedConnectorInfo)
             {

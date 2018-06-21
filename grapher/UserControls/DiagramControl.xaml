@@ -176,6 +176,7 @@
                                                 VerticalAlignment="Stretch">
                                                 <Polyline
                                                     x:Name="poly"
+                                                    IsHitTestVisible="{Binding IsHitTestVisible}"
                                                     Points="{Binding Path=ConnectionPoints, Converter={x:Static converter:ConnectionPathConverter.Instance}}"
                                                     Stroke="Gray"
                                                     StrokeThickness="2" />
@@ -191,6 +192,7 @@
                                                     VerticalAlignment="Top"
                                                     Data="M0,10 L5,0 10,10 z"
                                                     Fill="Gray"
+                                                    IsHitTestVisible="{Binding IsHitTestVisible}"
                                                     RenderTransformOrigin="0.5,0.5"
                                                     Stretch="Fill"
                                                     Stroke="Gray"
@@ -203,7 +205,8 @@
                                                 <Control
                                                     x:Name="PART_ResizeDecorator"
                                                     Template="{StaticResource PolygonalLineResizeDecoratorTemplate}"
-                                                    Visibility="Collapsed" />
+                                                    Visibility="Collapsed"
+                                                    IsHitTestVisible="{Binding IsHitTestVisible}" />
                                             </Canvas>
                                             <DataTemplate.Triggers>
                                                 <DataTrigger Binding="{Binding IsSelected}" Value="True">
