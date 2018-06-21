@@ -57,24 +57,28 @@
                                                 Content="{TemplateBinding Content}" />
                                             <Grid x:Name="PART_ConnectorDecorator" Margin="-5">
                                                 <control:Connector
+                                                    x:Name="Connector_Left"
                                                     HorizontalAlignment="Left"
                                                     VerticalAlignment="Center"
                                                     DataContext="{Binding LeftConnector}"
                                                     Orientation="Left"
                                                     Visibility="{Binding Path=ShowConnectors, Converter={StaticResource BoolToVisibilityConverter}}" />
                                                 <control:Connector
+                                                    x:Name="Connector_Top"
                                                     HorizontalAlignment="Center"
                                                     VerticalAlignment="Top"
                                                     DataContext="{Binding TopConnector}"
                                                     Orientation="Top"
                                                     Visibility="{Binding Path=ShowConnectors, Converter={StaticResource BoolToVisibilityConverter}}" />
                                                 <control:Connector
+                                                    x:Name="Connector_Right"
                                                     HorizontalAlignment="Right"
                                                     VerticalAlignment="Center"
                                                     DataContext="{Binding RightConnector}"
                                                     Orientation="Right"
                                                     Visibility="{Binding Path=ShowConnectors, Converter={StaticResource BoolToVisibilityConverter}}" />
                                                 <control:Connector
+                                                    x:Name="Connector_Bottom"
                                                     HorizontalAlignment="Center"
                                                     VerticalAlignment="Bottom"
                                                     DataContext="{Binding BottomConnector}"
