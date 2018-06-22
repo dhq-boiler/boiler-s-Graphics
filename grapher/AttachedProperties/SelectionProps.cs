@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace grapher.AttachedProperties
 {
@@ -68,7 +69,20 @@ namespace grapher.AttachedProperties
                         item.IsSelected = false;
 
                     selectableDesignerItemViewModelBase.Parent.SelectedItems.Clear();
+                    selectableDesignerItemViewModelBase.Parent.EdgeColors.Clear();
                     selectableDesignerItemViewModelBase.IsSelected = true;
+
+                    Color color = Colors.Transparent;
+                    if (selectableDesignerItemViewModelBase is DesignerItemViewModelBase)
+                    {
+                        color = (selectableDesignerItemViewModelBase as DesignerItemViewModelBase).EdgeColor;
+                    }
+                    else if (selectableDesignerItemViewModelBase is ConnectorBaseViewModel)
+                    {
+                        //TODO
+                        //color = (selectableDesignerItemViewModelBase as ConnectorBaseViewModel).ed
+                    }
+                    selectableDesignerItemViewModelBase.Parent.EdgeColors.Add(color);
                 }
             }
         }

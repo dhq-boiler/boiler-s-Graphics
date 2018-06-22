@@ -1,13 +1,17 @@
 ﻿using grapher.Messenger;
 using Prism.Commands;
 using Prism.Mvvm;
+using Reactive.Bindings;
+using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media;
 
 namespace grapher.ViewModels
 {
@@ -15,6 +19,7 @@ namespace grapher.ViewModels
     {
         private ObservableCollection<SelectableDesignerItemViewModelBase> _items = new ObservableCollection<SelectableDesignerItemViewModelBase>();
         private Point _CurrentPoint;
+        private ObservableCollection<Color> _EdgeColors = new ObservableCollection<Color>();
 
         public DiagramViewModel()
         {
@@ -23,10 +28,11 @@ namespace grapher.ViewModels
             ClearSelectedItemsCommand = new DelegateCommand<object>(p => ExecuteClearSelectedItemsCommand(p));
             CreateNewDiagramCommand = new DelegateCommand<object>(p => ExecuteCreateNewDiagramCommand(p));
 
+            EdgeColors.CollectionChangedAsObservable()
+                .Subscribe(_ => RaisePropertyChanged("EdgeColors"));
+
             Mediator.Instance.Register(this);
         }
-
-
 
         [MediatorMessageSink("DoneDrawingMessage")]
         public void OnDoneDrawingMessage(bool dummy)
@@ -36,7 +42,6 @@ namespace grapher.ViewModels
                 item.ShowConnectors = false;
             }
         }
-
 
         public DelegateCommand<object> AddItemCommand { get; private set; }
         public DelegateCommand<object> RemoveItemCommand { get; private set; }
@@ -51,6 +56,12 @@ namespace grapher.ViewModels
         public List<SelectableDesignerItemViewModelBase> SelectedItems
         {
             get { return Items.Where(x => x.IsSelected).ToList(); }
+        }
+
+        public ObservableCollection<Color> EdgeColors
+        {
+            get { return _EdgeColors; }
+            set { SetProperty(ref _EdgeColors, value); }
         }
 
         private void ExecuteAddItemCommand(object parameter)

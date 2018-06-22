@@ -1,6 +1,7 @@
 ﻿using grapher.Controls;
 using grapher.ViewModels;
 using System;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -60,6 +61,13 @@ namespace grapher.Adorners
                 item.Top = Math.Min(_startPoint.Value.Y, _endPoint.Value.Y);
                 item.Width = Math.Max(_startPoint.Value.X - _endPoint.Value.X, _endPoint.Value.X - _startPoint.Value.X);
                 item.Height = Math.Max(_startPoint.Value.Y - _endPoint.Value.Y, _endPoint.Value.Y - _startPoint.Value.Y);
+                item.EdgeColor = new Color()
+                {
+                    A = 255,
+                    R = (byte)new Random().Next(255),
+                    G = (byte)new Random().Next(255),
+                    B = (byte)new Random().Next(255),
+                };
                 ((AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel).AddItemCommand.Execute(item);
 
                 _startPoint = null;

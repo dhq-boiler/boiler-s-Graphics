@@ -106,6 +106,8 @@
     <Compile Include="Converters\ImageUrlConverter.cs" />
     <Compile Include="Converters\PointsToAngleConverter.cs" />
     <Compile Include="Converters\ShiftCoordinateConverter.cs" />
+    <Compile Include="Converters\StrokeColorConverter.cs" />
+    <Compile Include="Converters\ToSolidColorBrushConverter.cs" />
     <Compile Include="Extensions\Extensions.cs" />
     <Compile Include="Helpers\ConnectorInfo.cs" />
     <Compile Include="Helpers\DragObject.cs" />

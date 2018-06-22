@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 
 namespace grapher.ViewModels
 {
@@ -14,6 +15,7 @@ namespace grapher.ViewModels
         DelegateCommand<object> RemoveItemCommand { get; }
         DelegateCommand<object> ClearSelectedItemsCommand { get; }
         List<SelectableDesignerItemViewModelBase> SelectedItems { get; }
+        ObservableCollection<Color> EdgeColors { get; }
         ObservableCollection<SelectableDesignerItemViewModelBase> Items { get; }
     }
 }

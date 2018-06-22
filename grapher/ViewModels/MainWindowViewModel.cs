@@ -62,7 +62,7 @@ namespace grapher.ViewModels
 
         private void ExecuteDeleteSelectedItemsCommand(object parameter)
         {
-            _itemsToRemove = DiagramViewModel.SelectedItems;
+            _itemsToRemove = DiagramViewModel.SelectedItems.ToList();
             List<SelectableDesignerItemViewModelBase> connectionsToAlsoRemove = new List<SelectableDesignerItemViewModelBase>();
 
             foreach (var connector in DiagramViewModel.Items.OfType<ConnectorBaseViewModel>())

@@ -13,6 +13,7 @@
     xmlns:trigger="clr-namespace:grapher.Views.Triggers"
     xmlns:usercontrol="clr-namespace:grapher.UserControls"
     xmlns:viewmodel="clr-namespace:grapher.ViewModels"
+    xmlns:converter="clr-namespace:grapher.Converters"
     Title="GRAPHER"
     Width="800"
     Height="450"
@@ -21,10 +22,35 @@
     <Window.InputBindings>
         <KeyBinding Key="Del" Command="{Binding DeleteSelectedItemsCommand}" />
     </Window.InputBindings>
+    <Window.Resources>
+        <converter:StrokeColorConverter x:Key="StrokeColorConverter" />
+    </Window.Resources>
     <DockPanel>
 
         <!--  ToolBox Control  -->
         <!--<usercontrol:ToolBoxControl Grid.Column="0" DataContext="{Binding ToolBoxViewModel}" />-->
+
+        <ToolBarTray DockPanel.Dock="Top" Orientation="Horizontal">
+            <ToolBar>
+                <StackPanel Orientation="Horizontal">
+                    <Grid>
+                        <Rectangle
+                            Width="20"
+                            Height="20"
+                            Fill="White"
+                            Stroke="Black"
+                            StrokeThickness="1" />
+                        <Rectangle
+                            Width="16"
+                            Height="16"
+                            Margin="4"
+                            Fill="Transparent"
+                            Stroke="{Binding DiagramViewModel.EdgeColors, Converter={StaticResource StrokeColorConverter}}"
+                            StrokeThickness="2" />
+                    </Grid>
+                </StackPanel>
+            </ToolBar>
+        </ToolBarTray>
 
         <ToolBarTray DockPanel.Dock="Left" Orientation="Vertical">
             <ToolBar ItemsSource="{Binding ToolBarViewModel.ToolItems}">
