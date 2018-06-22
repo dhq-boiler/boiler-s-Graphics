@@ -24,7 +24,7 @@ namespace grapher.Controls
         public DesignerCanvas()
         {
             this.AllowDrop = true;
-            LineFactory = new PolygonalLineFactory();
+            LineFactory = new StraightLineFactory();
             Mediator.Instance.Register(this);
         }
 
