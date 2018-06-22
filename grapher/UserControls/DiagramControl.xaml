@@ -132,6 +132,7 @@
                                                     x:Name="straightline"
                                                     Stroke="Gray"
                                                     StrokeThickness="2"
+                                                    IsHitTestVisible="{Binding IsHitTestVisible}"
                                                     X1="{Binding ConnectionPoints[0].X}"
                                                     X2="{Binding ConnectionPoints[1].X}"
                                                     Y1="{Binding ConnectionPoints[0].Y}"
@@ -147,6 +148,7 @@
                                                     Data="M0,10 L5,0 10,10 z"
                                                     Fill="Gray"
                                                     RenderTransformOrigin="0,0"
+                                                    IsHitTestVisible="{Binding IsHitTestVisible}"
                                                     Stretch="Fill"
                                                     Stroke="Gray"
                                                     Visibility="{Binding Path=IsFullConnection, Converter={StaticResource BoolToVisibilityConverter}}">
