@@ -41,6 +41,8 @@ namespace grapher.ViewModels
             });
             SelectColorCommand = new DelegateCommand<DiagramViewModel>(p =>
             {
+                var dialog = new ColorPickerDialog();
+                dialog.ShowDialog();
             });
         }
 
