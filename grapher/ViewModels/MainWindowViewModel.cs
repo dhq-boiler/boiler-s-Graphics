@@ -1,5 +1,6 @@
 ﻿using grapher.Extensions;
 using grapher.Models;
+using grapher.Views;
 using grapher.Views.Behaviors;
 using Microsoft.Win32;
 using Prism.Commands;
@@ -38,6 +39,9 @@ namespace grapher.ViewModels
             {
                 ExecuteDeleteSelectedItemsCommand(p);
             });
+            SelectColorCommand = new DelegateCommand<DiagramViewModel>(p =>
+            {
+            });
         }
 
         public DiagramViewModel DiagramViewModel
@@ -59,6 +63,8 @@ namespace grapher.ViewModels
         }
 
         public DelegateCommand<object> DeleteSelectedItemsCommand { get; private set; }
+
+        public DelegateCommand<DiagramViewModel> SelectColorCommand { get; }
 
         private void ExecuteDeleteSelectedItemsCommand(object parameter)
         {

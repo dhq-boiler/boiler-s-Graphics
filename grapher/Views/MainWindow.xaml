@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:behavior="clr-namespace:grapher.Views.Behaviors"
+    xmlns:converter="clr-namespace:grapher.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
@@ -13,7 +14,6 @@
     xmlns:trigger="clr-namespace:grapher.Views.Triggers"
     xmlns:usercontrol="clr-namespace:grapher.UserControls"
     xmlns:viewmodel="clr-namespace:grapher.ViewModels"
-    xmlns:converter="clr-namespace:grapher.Converters"
     Title="GRAPHER"
     Width="800"
     Height="450"
@@ -33,21 +33,27 @@
         <ToolBarTray DockPanel.Dock="Top" Orientation="Horizontal">
             <ToolBar>
                 <StackPanel Orientation="Horizontal">
-                    <Grid>
-                        <Rectangle
-                            Width="20"
-                            Height="20"
-                            Fill="White"
-                            Stroke="Black"
-                            StrokeThickness="1" />
-                        <Rectangle
-                            Width="16"
-                            Height="16"
-                            Margin="4"
-                            Fill="Transparent"
-                            Stroke="{Binding DiagramViewModel.EdgeColors, Converter={StaticResource StrokeColorConverter}}"
-                            StrokeThickness="2" />
-                    </Grid>
+                    <Button Command="{Binding SelectColorCommand}" CommandParameter="{Binding DiagramViewModel}">
+                        <Button.Template>
+                            <ControlTemplate TargetType="{x:Type Button}">
+                                <Grid>
+                                    <Rectangle
+                                        Width="20"
+                                        Height="20"
+                                        Fill="White"
+                                        Stroke="Black"
+                                        StrokeThickness="1" />
+                                    <Rectangle
+                                        Width="16"
+                                        Height="16"
+                                        Margin="4"
+                                        Fill="Transparent"
+                                        Stroke="{Binding DiagramViewModel.EdgeColors, Converter={StaticResource StrokeColorConverter}}"
+                                        StrokeThickness="2" />
+                                </Grid>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
                 </StackPanel>
             </ToolBar>
         </ToolBarTray>
