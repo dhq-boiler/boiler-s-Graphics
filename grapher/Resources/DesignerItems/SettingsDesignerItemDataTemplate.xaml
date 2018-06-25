@@ -5,19 +5,21 @@
 
     <!--  DataTemplate for DesignerCanvas look and feel  -->
     <DataTemplate DataType="{x:Type viewModel:SettingsDesignerItemViewModel}">
-        <Grid>
-            <Image
-                IsHitTestVisible="False"
-                Source="../../Assets/img/Setting.png"
-                Stretch="Fill"
-                Tag="setting" />
-            <Button
-                Margin="5"
-                HorizontalAlignment="Right"
-                VerticalAlignment="Bottom"
-                Command="{Binding ShowDataChangeWindowCommand}"
-                Template="{StaticResource infoButtonTemplate}" />
-        </Grid>
+        <Border BorderBrush="{Binding EdgeColor, Converter={StaticResource solidColorBrushConverter}}" BorderThickness="1">
+            <Grid>
+                <Image
+                    IsHitTestVisible="False"
+                    Source="../../Assets/img/Setting.png"
+                    Stretch="Fill"
+                    Tag="setting" />
+                <Button
+                    Margin="5"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Bottom"
+                    Command="{Binding ShowDataChangeWindowCommand}"
+                    Template="{StaticResource infoButtonTemplate}" />
+            </Grid>
+        </Border>
     </DataTemplate>
 
     <!--  DataTemplate for Popup look and feel  -->
