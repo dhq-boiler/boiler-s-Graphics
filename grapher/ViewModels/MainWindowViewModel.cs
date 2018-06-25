@@ -1,9 +1,11 @@
 ﻿using grapher.Extensions;
+using grapher.Helpers;
 using grapher.Models;
 using grapher.Views;
 using grapher.Views.Behaviors;
 using Microsoft.Win32;
 using Prism.Commands;
+using Prism.Interactivity.InteractionRequest;
 using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
@@ -29,6 +31,8 @@ namespace grapher.ViewModels
         private ToolBoxViewModel _ToolBoxViewModel;
         private ToolBarViewModel _ToolBarViewModel;
 
+        public InteractionRequest<Notification> OpenColorPickerRequest { get; } = new InteractionRequest<Notification>();
+
         public MainWindowViewModel()
         {
             DiagramViewModel = new DiagramViewModel();
@@ -41,8 +45,20 @@ namespace grapher.ViewModels
             });
             SelectColorCommand = new DelegateCommand<DiagramViewModel>(p =>
             {
-                var dialog = new ColorPickerDialog();
-                dialog.ShowDialog();
+                var exchange = new ColorExchange()
+                {
+                    Old = DiagramViewModel.EdgeColors.FirstOrDefault()
+                };
+                OpenColorPickerRequest.Raise(new Notification() { Title = "Color picker", Content = exchange });
+                if (exchange.New.HasValue)
+                {
+                    DiagramViewModel.EdgeColors.Clear();
+                    DiagramViewModel.EdgeColors.Add(exchange.New.Value);
+                    foreach (var item in DiagramViewModel.SelectedItems.OfType<DesignerItemViewModelBase>())
+                    {
+                        item.EdgeColor = exchange.New.Value;
+                    }
+                }
             });
         }
 

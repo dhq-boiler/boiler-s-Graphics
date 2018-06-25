@@ -390,7 +390,16 @@
                         Minimum="0"
                         Value="{Binding B.Value, Mode=TwoWay}" />
                 </DockPanel>
-                <DockPanel />
+                <DockPanel>
+                    <Button
+                        Width="75"
+                        Height="25"
+                        Margin="5"
+                        Command="{Binding OkCommand}"
+                        Content="OK"
+                        DockPanel.Dock="Right" />
+                    <DockPanel />
+                </DockPanel>
             </DockPanel>
         </DockPanel>
     </DockPanel>

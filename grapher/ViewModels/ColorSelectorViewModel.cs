@@ -1,5 +1,7 @@
-﻿using OpenCvSharp;
+﻿using grapher.Helpers;
+using OpenCvSharp;
 using OpenCvSharp.Extensions;
+using Prism.Interactivity.InteractionRequest;
 using Prism.Mvvm;
 using Reactive.Bindings;
 using System;
@@ -9,7 +11,7 @@ using System.Windows.Media.Imaging;
 
 namespace grapher.ViewModels
 {
-    internal class ColorSelectorViewModel : BindableBase
+    internal class ColorSelectorViewModel : BindableBase, IInteractionRequestAware
     {
         private byte _A;
         private WriteableBitmap _WhiteBlackColumnMap;
@@ -19,9 +21,21 @@ namespace grapher.ViewModels
         private WriteableBitmap _BlueSelector;
         private bool _hsv2bgr;
         private bool _bgr2hsv;
+        private INotification _Notification;
 
         public ColorSelectorViewModel()
         {
+            OkCommand = Color
+                .Where(x => x != null)
+                .Select(_ => true)
+                .ToReactiveCommand();
+
+            OkCommand.Subscribe(_ =>
+            {
+                EditTarget.New = Color.Value;
+                FinishInteraction();
+            });
+
             Hue.Subscribe(_ =>
             {
                 GenerateSaturationValueMat();
@@ -344,5 +358,22 @@ namespace grapher.ViewModels
         public ReactiveProperty<byte> B { get; } = new ReactiveProperty<byte>();
 
         public ReactiveProperty<Color> Color { get; } = new ReactiveProperty<Color>();
+
+        public ReactiveCommand OkCommand { get; }
+
+        public ColorExchange EditTarget { get; set; }
+
+        public INotification Notification
+        {
+            get { return _Notification; }
+            set
+            {
+                _Notification = value;
+                EditTarget = value.Content as ColorExchange;
+                Color.Value = EditTarget.Old;
+            }
+        }
+
+        public Action FinishInteraction { get; set; }
     }
 }

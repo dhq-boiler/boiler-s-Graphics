@@ -19,6 +19,21 @@
     Height="450"
     prism:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
+    <i:Interaction.Triggers>
+        <prism:InteractionRequestTrigger SourceObject="{Binding OpenColorPickerRequest}">
+            <prism:PopupWindowAction CenterOverAssociatedObject="True" IsModal="True">
+                <prism:PopupWindowAction.WindowStyle>
+                    <Style TargetType="{x:Type Window}">
+                        <Setter Property="ResizeMode" Value="NoResize" />
+                        <Setter Property="SizeToContent" Value="WidthAndHeight" />
+                    </Style>
+                </prism:PopupWindowAction.WindowStyle>
+                <prism:PopupWindowAction.WindowContent>
+                    <local:ColorSelector />
+                </prism:PopupWindowAction.WindowContent>
+            </prism:PopupWindowAction>
+        </prism:InteractionRequestTrigger>
+    </i:Interaction.Triggers>
     <Window.InputBindings>
         <KeyBinding Key="Del" Command="{Binding DeleteSelectedItemsCommand}" />
     </Window.InputBindings>
@@ -65,9 +80,9 @@
                         <ToggleButton
                             Width="40"
                             Height="40"
+                            Padding="3"
                             Command="{Binding Command}"
-                            IsChecked="{Binding IsChecked}"
-                            Padding="3">
+                            IsChecked="{Binding IsChecked}">
                             <Image Source="{Binding ImageUrl}" />
                         </ToggleButton>
                     </DataTemplate>

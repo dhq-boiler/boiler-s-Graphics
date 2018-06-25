@@ -126,6 +126,7 @@
     <Compile Include="Converters\StrokeColorConverter.cs" />
     <Compile Include="Converters\ToSolidColorBrushConverter.cs" />
     <Compile Include="Extensions\Extensions.cs" />
+    <Compile Include="Helpers\ColorExchange.cs" />
     <Compile Include="Helpers\ConnectorInfo.cs" />
     <Compile Include="Helpers\DragObject.cs" />
     <Compile Include="Helpers\IPathFinder.cs" />
