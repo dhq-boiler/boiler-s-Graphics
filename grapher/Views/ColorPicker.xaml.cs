@@ -15,12 +15,9 @@ using System.Windows.Shapes;
 
 namespace grapher.Views
 {
-    /// <summary>
-    /// ColorSelector.xaml の相互作用ロジック
-    /// </summary>
-    public partial class ColorSelector : UserControl
+    public partial class ColorPicker : UserControl
     {
-        public ColorSelector()
+        public ColorPicker()
         {
             InitializeComponent();
         }

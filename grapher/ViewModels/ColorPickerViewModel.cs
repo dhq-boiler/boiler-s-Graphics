@@ -11,7 +11,7 @@ using System.Windows.Media.Imaging;
 
 namespace grapher.ViewModels
 {
-    internal class ColorSelectorViewModel : BindableBase, IInteractionRequestAware
+    internal class ColorPickerViewModel : BindableBase, IInteractionRequestAware
     {
         private byte _A;
         private WriteableBitmap _WhiteBlackColumnMap;
@@ -23,7 +23,7 @@ namespace grapher.ViewModels
         private bool _bgr2hsv;
         private INotification _Notification;
 
-        public ColorSelectorViewModel()
+        public ColorPickerViewModel()
         {
             OkCommand = Color
                 .Where(x => x != null)

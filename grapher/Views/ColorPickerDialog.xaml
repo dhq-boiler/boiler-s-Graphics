@@ -9,5 +9,5 @@
     ResizeMode="NoResize"
     SizeToContent="WidthAndHeight"
     mc:Ignorable="d">
-    <local:ColorSelector />
+    <local:ColorPicker />
 </Window>
