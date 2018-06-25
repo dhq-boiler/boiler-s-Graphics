@@ -31,6 +31,8 @@ namespace grapher.ViewModels
             EdgeColors.CollectionChangedAsObservable()
                 .Subscribe(_ => RaisePropertyChanged("EdgeColors"));
 
+            EdgeColors.Add(Colors.Black);
+
             Mediator.Instance.Register(this);
         }
 
