@@ -2,6 +2,7 @@
     x:Class="grapher.Views.ColorMap"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converter="clr-namespace:grapher.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:grapher.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -26,13 +27,30 @@
         </Style>
     </UserControl.Resources>
     <Canvas>
-        <Image MouseDown="Image_MouseDown" Source="{Binding Source, RelativeSource={RelativeSource AncestorType={x:Type local:ColorMap}}}" />
+        <Image
+            x:Name="Image"
+            MouseDown="Image_MouseDown"
+            Source="{Binding Source, RelativeSource={RelativeSource AncestorType={x:Type local:ColorMap}}}" />
         <Thumb
             x:Name="Thumb"
             Canvas.Left="{Binding X, RelativeSource={RelativeSource AncestorType={x:Type local:ColorMap}}}"
             Canvas.Top="{Binding Y, RelativeSource={RelativeSource AncestorType={x:Type local:ColorMap}}}"
             Width="11"
             Height="11"
-            DragDelta="Thumb_DragDelta" />
+            DragDelta="Thumb_DragDelta"
+            PreviewMouseDown="Thumb_PreviewMouseDown"
+            PreviewMouseUp="Thumb_PreviewMouseUp">
+            <Thumb.ToolTip>
+                <ToolTip>
+                    <TextBlock>
+                        <Run Text="Saturation:" />
+                        <Run Text="{Binding Saturation.Value, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                        <LineBreak />
+                        <Run Text="Value:" />
+                        <Run Text="{Binding Value.Value, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                    </TextBlock>
+                </ToolTip>
+            </Thumb.ToolTip>
+        </Thumb>
     </Canvas>
 </UserControl>

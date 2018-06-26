@@ -1,6 +1,9 @@
-﻿using System;
+﻿using Reactive.Bindings;
+using System;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
@@ -69,33 +72,72 @@ namespace grapher.Views
             set { SetValue(ColorProperty, value); }
         }
 
+        public static readonly DependencyProperty SaturationProperty = DependencyProperty.Register("Saturation", typeof(byte), typeof(ColorMap), new FrameworkPropertyMetadata(default(byte), new PropertyChangedCallback(OnSaturationChanged)));
+
+        public byte Saturation
+        {
+            get { return (byte)GetValue(SaturationProperty); }
+            set { SetValue(SaturationProperty, value); }
+        }
+
+        private static void OnSaturationChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var ctrl = d as ColorMap;
+            ctrl.X = (byte)e.NewValue - (ctrl.Thumb.Width - 1) / 2;
+        }
+
+        public static readonly DependencyProperty ValueProperty = DependencyProperty.Register("Value", typeof(byte), typeof(ColorMap), new FrameworkPropertyMetadata(default(byte), new PropertyChangedCallback(OnValueChanged)));
+
+        public byte Value
+        {
+            get { return (byte)GetValue(ValueProperty); }
+            set { SetValue(ValueProperty, value); }
+        }
+
+        private static void OnValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var ctrl = d as ColorMap;
+            ctrl.Y = 255 - (byte)e.NewValue - (ctrl.Thumb.Height - 1) / 2;
+        }
+
         private void Thumb_DragDelta(object sender, System.Windows.Controls.Primitives.DragDeltaEventArgs e)
         {
-            var newX = X + e.HorizontalChange;
-            var newY = Y + e.VerticalChange;
+            var newSaturation = X + e.HorizontalChange + (Thumb.Width - 1) / 2;
+            var newValue = Y + e.VerticalChange + (Thumb.Height - 1) / 2;
 
-            if (newX < -(Thumb.Width - 1) / 2)
+            if (newSaturation < 0)
             {
-                newX = -(Thumb.Width - 1) / 2;
+                newSaturation = 0;
             }
 
-            if (newY < -(Thumb.Height - 1) / 2)
+            if (newValue < 0)
             {
-                newY = -(Thumb.Height - 1) / 2;
+                newValue = 0;
             }
 
-            if (newX > 256 - (Thumb.Width - 1) / 2 - 1)
+            if (newSaturation > 255)
             {
-                newX = 256 - (Thumb.Width - 1) / 2 - 1;
+                newSaturation = 255;
             }
 
-            if (newY > 256 - (Thumb.Height - 1) / 2 - 1)
+            if (newValue > 255)
             {
-                newY = 256 - (Thumb.Height - 1) / 2 - 1;
+                newValue = 255;
             }
 
-            X = newX;
-            Y = newY;
+            Saturation = (byte)Math.Round(newSaturation);
+            Value = (byte)Math.Round(255 - newValue);
+
+            var tooltip = (ToolTip)Thumb.ToolTip;
+            tooltip.Placement = System.Windows.Controls.Primitives.PlacementMode.Relative;
+
+            var currentPosition = Mouse.GetPosition((IInputElement)Image);
+            var locationFromScreen = Image.PointToScreen(currentPosition);
+            var source = PresentationSource.FromVisual(this);
+            var targetPoint = source.CompositionTarget.TransformFromDevice.Transform(locationFromScreen);
+
+            tooltip.HorizontalOffset = targetPoint.X + tooltip.ActualWidth;
+            tooltip.VerticalOffset = targetPoint.Y + tooltip.ActualHeight;
         }
 
         private void PickupColor()
@@ -131,6 +173,18 @@ namespace grapher.Views
 
             X = position.X - (Thumb.Width / 2);
             Y = position.Y - (Thumb.Height / 2);
+        }
+
+        private void Thumb_PreviewMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            var tooltip = (ToolTip)Thumb.ToolTip;
+            tooltip.IsOpen = true;
+        }
+
+        private void Thumb_PreviewMouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            var tooltip = (ToolTip)Thumb.ToolTip;
+            tooltip.IsOpen = false;
         }
     }
 }

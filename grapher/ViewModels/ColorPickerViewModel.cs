@@ -47,14 +47,34 @@ namespace grapher.ViewModels
                 }
             });
 
+            Saturation.Subscribe(_ =>
+            {
+                if (!_bgr2hsv)
+                {
+                    _hsv2bgr = true;
+                    HSV2RGB();
+                    _hsv2bgr = false;
+                }
+            });
+
+            Value.Subscribe(_ =>
+            {
+                if (!_bgr2hsv)
+                {
+                    _hsv2bgr = true;
+                    HSV2RGB();
+                    _hsv2bgr = false;
+                }
+            });
+
             R.Subscribe(_ =>
             {
                 if (!_hsv2bgr)
                 {
                     _bgr2hsv = true;
                     RecalcHue();
-                    RecalcSaturation();
                     RecalcValue();
+                    RecalcSaturation();
                     _bgr2hsv = false;
                 }
             });
@@ -65,8 +85,8 @@ namespace grapher.ViewModels
                 {
                     _bgr2hsv = true;
                     RecalcHue();
-                    RecalcSaturation();
                     RecalcValue();
+                    RecalcSaturation();
                     _bgr2hsv = false;
                 }
             });
@@ -77,19 +97,22 @@ namespace grapher.ViewModels
                 {
                     _bgr2hsv = true;
                     RecalcHue();
-                    RecalcSaturation();
                     RecalcValue();
+                    RecalcSaturation();
                     _bgr2hsv = false;
                 }
             });
 
             Color.Subscribe(_ =>
             {
-                _hsv2bgr = true;
-                _bgr2hsv = true;
-                SetRGB();
-                _hsv2bgr = false;
-                _bgr2hsv = false;
+                if (!_hsv2bgr && !_bgr2hsv)
+                {
+                    _hsv2bgr = true;
+                    _bgr2hsv = true;
+                    SetRGB();
+                    _hsv2bgr = false;
+                    _bgr2hsv = false;
+                }
             });
 
             GenerateHueSelectorMat();
@@ -304,6 +327,59 @@ namespace grapher.ViewModels
             R.Value = Color.Value.R;
             G.Value = Color.Value.G;
             B.Value = Color.Value.B;
+        }
+
+        private void HSV2RGB()
+        {
+            var hue = Hue.Value * 2d;
+            var saturation = Saturation.Value / 255d;
+            var value = Value.Value / 255d;
+
+            var C = value * saturation;
+            var X = C * (1 - Math.Abs((hue / 60d) % 2d - 1d));
+            var m = value - C;
+
+            double _r = 0, _g = 0, _b = 0;
+            if (0 <= hue && hue < 60)
+            {
+                _r = C;
+                _g = X;
+                _b = 0;
+            }
+            else if (60 <= hue && hue < 120)
+            {
+                _r = X;
+                _g = C;
+                _b = 0;
+            }
+            else if (120 <= hue && hue < 180)
+            {
+                _r = 0;
+                _g = C;
+                _b = X;
+            }
+            else if (180 <= hue && hue < 240)
+            {
+                _r = 0;
+                _g = X;
+                _b = C;
+            }
+            else if (240 <= hue && hue < 300)
+            {
+                _r = X;
+                _g = 0;
+                _b = C;
+            }
+            else if (300 <= hue && hue < 360)
+            {
+                _r = C;
+                _g = 0;
+                _b = X;
+            }
+
+            R.Value = (byte)((_r + m) * 255d);
+            G.Value = (byte)((_g + m) * 255d);
+            B.Value = (byte)((_b + m) * 255d);
         }
 
         public WriteableBitmap WhiteBlackColorMap

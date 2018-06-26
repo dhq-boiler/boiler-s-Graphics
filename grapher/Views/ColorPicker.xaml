@@ -299,8 +299,9 @@
             <local:ColorMap
                 x:Name="ColorMap"
                 Margin="5"
+                Saturation="{Binding Saturation.Value, Mode=TwoWay}"
                 Source="{Binding WhiteBlackColorMap}"
-                Color="{Binding Color.Value, Mode=OneWayToSource}" />
+                Value="{Binding Value.Value, Mode=TwoWay}"/>
         </DockPanel>
         <DockPanel Width="266">
             <Grid DockPanel.Dock="Top">
