@@ -294,25 +294,19 @@
 
         <SolidColorBrush x:Key="LightColorBrush" Color="#DDD" />
     </UserControl.Resources>
-    <DockPanel>
+    <DockPanel Background="#FF2D2D30">
         <DockPanel Width="266" DockPanel.Dock="Left">
             <local:ColorMap
                 x:Name="ColorMap"
                 Margin="5"
                 Saturation="{Binding Saturation.Value, Mode=TwoWay}"
                 Source="{Binding WhiteBlackColorMap}"
+                Color="{Binding Output.Value, Mode=OneWayToSource}"
                 Value="{Binding Value.Value, Mode=TwoWay}"/>
         </DockPanel>
         <DockPanel Width="266">
             <Grid DockPanel.Dock="Top">
-                <Grid Width="256" Height="100">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
-                    <DockPanel Grid.Column="0" Background="White" />
-                    <DockPanel Grid.Column="1" Background="Black" />
-                </Grid>
+                <Grid Width="256" Height="100" />
                 <Grid>
                     <Rectangle
                         Width="75"

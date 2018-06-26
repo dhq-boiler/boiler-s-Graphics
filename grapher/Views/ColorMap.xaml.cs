@@ -1,6 +1,5 @@
 ﻿using Reactive.Bindings;
 using System;
-using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -128,6 +127,11 @@ namespace grapher.Views
             Saturation = (byte)Math.Round(newSaturation);
             Value = (byte)Math.Round(255 - newValue);
 
+            SetToolTipCoordinate();
+        }
+
+        private void SetToolTipCoordinate()
+        {
             var tooltip = (ToolTip)Thumb.ToolTip;
             tooltip.Placement = System.Windows.Controls.Primitives.PlacementMode.Relative;
 
@@ -136,8 +140,8 @@ namespace grapher.Views
             var source = PresentationSource.FromVisual(this);
             var targetPoint = source.CompositionTarget.TransformFromDevice.Transform(locationFromScreen);
 
-            tooltip.HorizontalOffset = targetPoint.X + tooltip.ActualWidth;
-            tooltip.VerticalOffset = targetPoint.Y + tooltip.ActualHeight;
+            tooltip.HorizontalOffset = targetPoint.X + 10;
+            tooltip.VerticalOffset = targetPoint.Y + 10;
         }
 
         private void PickupColor()
@@ -171,8 +175,10 @@ namespace grapher.Views
                 return;
             }
 
-            X = position.X - (Thumb.Width / 2);
-            Y = position.Y - (Thumb.Height / 2);
+            Saturation = (byte)Math.Round(position.X);
+            Value = (byte)Math.Round(255 - position.Y);
+
+            SetToolTipCoordinate();
         }
 
         private void Thumb_PreviewMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)

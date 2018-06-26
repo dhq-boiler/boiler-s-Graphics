@@ -32,7 +32,7 @@ namespace grapher.ViewModels
 
             OkCommand.Subscribe(_ =>
             {
-                EditTarget.New = Color.Value;
+                EditTarget.New = Output.Value;
                 FinishInteraction();
             });
 
@@ -434,6 +434,8 @@ namespace grapher.ViewModels
         public ReactiveProperty<byte> B { get; } = new ReactiveProperty<byte>();
 
         public ReactiveProperty<Color> Color { get; } = new ReactiveProperty<Color>();
+
+        public ReactiveProperty<Color> Output { get; } = new ReactiveProperty<Color>();
 
         public ReactiveCommand OkCommand { get; }
 
