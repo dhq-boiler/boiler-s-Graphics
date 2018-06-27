@@ -7,6 +7,7 @@
     <DataTemplate DataType="{x:Type viewModel:SettingsDesignerItemViewModel}">
         <Border BorderBrush="{Binding EdgeColor, Converter={StaticResource solidColorBrushConverter}}" BorderThickness="1">
             <Grid>
+                <Grid Background="{Binding FillColor, Converter={StaticResource solidColorBrushConverter}}" IsHitTestVisible="False" />
                 <Image
                     IsHitTestVisible="False"
                     Source="../../Assets/img/Setting.png"
