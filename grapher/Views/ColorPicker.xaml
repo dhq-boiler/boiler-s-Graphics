@@ -302,7 +302,7 @@
                 Saturation="{Binding Saturation.Value, Mode=TwoWay}"
                 Source="{Binding WhiteBlackColorMap}"
                 Color="{Binding Output.Value, Mode=OneWayToSource}"
-                Value="{Binding Value.Value, Mode=TwoWay}"/>
+                Value="{Binding Value.Value, Mode=TwoWay}" />
         </DockPanel>
         <DockPanel Width="266">
             <Grid DockPanel.Dock="Top">
@@ -321,7 +321,12 @@
             </Grid>
             <DockPanel>
                 <DockPanel DockPanel.Dock="Top">
-                    <Label Width="35" DockPanel.Dock="Left">Hue</Label>
+                    <Label
+                        Width="35"
+                        DockPanel.Dock="Left"
+                        Foreground="White">
+                        Hue
+                    </Label>
                     <TextBox
                         Width="25"
                         Height="20"
@@ -330,18 +335,29 @@
                         TextAlignment="Right" />
                     <local:ColorSlider
                         x:Name="Hue_Slider"
+                        VerticalAlignment="Center"
                         BackgroundBitmapSource="{Binding HueSelector}"
                         Maximum="180"
                         Minimum="0"
                         Value="{Binding Hue.Value, Mode=TwoWay}" />
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top">
-                    <Label Width="35" DockPanel.Dock="Left">A</Label>
+                    <Label
+                        Width="35"
+                        DockPanel.Dock="Left"
+                        Foreground="White">
+                        A
+                    </Label>
                     <TextBox DockPanel.Dock="Right" />
                     <Rectangle Fill="Green" />
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top">
-                    <Label Width="35" DockPanel.Dock="Left">R</Label>
+                    <Label
+                        Width="35"
+                        DockPanel.Dock="Left"
+                        Foreground="White">
+                        R
+                    </Label>
                     <TextBox
                         Width="25"
                         Height="20"
@@ -350,13 +366,19 @@
                         TextAlignment="Right" />
                     <local:ColorSlider
                         x:Name="Red_Slider"
+                        VerticalAlignment="Center"
                         BackgroundBitmapSource="{Binding RedSelector}"
                         Maximum="255"
                         Minimum="0"
                         Value="{Binding R.Value, Mode=TwoWay}" />
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top">
-                    <Label Width="35" DockPanel.Dock="Left">G</Label>
+                    <Label
+                        Width="35"
+                        DockPanel.Dock="Left"
+                        Foreground="White">
+                        G
+                    </Label>
                     <TextBox
                         Width="25"
                         Height="20"
@@ -365,13 +387,19 @@
                         TextAlignment="Right" />
                     <local:ColorSlider
                         x:Name="Green_Slider"
+                        VerticalAlignment="Center"
                         BackgroundBitmapSource="{Binding GreenSelector}"
                         Maximum="255"
                         Minimum="0"
                         Value="{Binding G.Value, Mode=TwoWay}" />
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top">
-                    <Label Width="35" DockPanel.Dock="Left">B</Label>
+                    <Label
+                        Width="35"
+                        DockPanel.Dock="Left"
+                        Foreground="White">
+                        B
+                    </Label>
                     <TextBox
                         Width="25"
                         Height="20"
@@ -380,6 +408,7 @@
                         TextAlignment="Right" />
                     <local:ColorSlider
                         x:Name="Blue_Slider"
+                        VerticalAlignment="Center"
                         BackgroundBitmapSource="{Binding BlueSelector}"
                         Maximum="255"
                         Minimum="0"
