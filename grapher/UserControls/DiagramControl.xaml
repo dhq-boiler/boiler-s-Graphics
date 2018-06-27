@@ -130,9 +130,9 @@
                                                 VerticalAlignment="Stretch">
                                                 <Line
                                                     x:Name="straightline"
-                                                    Stroke="Gray"
-                                                    StrokeThickness="2"
                                                     IsHitTestVisible="{Binding IsHitTestVisible}"
+                                                    Stroke="{Binding EdgeColor, Converter={StaticResource solidColorBrushConverter}}"
+                                                    StrokeThickness="2"
                                                     X1="{Binding ConnectionPoints[0].X}"
                                                     X2="{Binding ConnectionPoints[1].X}"
                                                     Y1="{Binding ConnectionPoints[0].Y}"
@@ -146,11 +146,11 @@
                                                     HorizontalAlignment="Left"
                                                     VerticalAlignment="Top"
                                                     Data="M0,10 L5,0 10,10 z"
-                                                    Fill="Gray"
-                                                    RenderTransformOrigin="0,0"
+                                                    Fill="{Binding EdgeColor, Converter={StaticResource solidColorBrushConverter}}"
                                                     IsHitTestVisible="{Binding IsHitTestVisible}"
+                                                    RenderTransformOrigin="0,0"
                                                     Stretch="Fill"
-                                                    Stroke="Gray"
+                                                    Stroke="{Binding EdgeColor, Converter={StaticResource solidColorBrushConverter}}"
                                                     Visibility="{Binding Path=IsFullConnection, Converter={StaticResource BoolToVisibilityConverter}}">
                                                     <Path.RenderTransform>
                                                         <TransformGroup>
@@ -167,9 +167,6 @@
                                             </Canvas>
                                             <DataTemplate.Triggers>
                                                 <DataTrigger Binding="{Binding IsSelected}" Value="True">
-                                                    <Setter TargetName="straightline" Property="Stroke" Value="Black" />
-                                                    <Setter TargetName="arrow" Property="Stroke" Value="Black" />
-                                                    <Setter TargetName="arrow" Property="Fill" Value="Black" />
                                                     <Setter TargetName="PART_ResizeDecorator" Property="Visibility" Value="Visible" />
                                                 </DataTrigger>
                                             </DataTemplate.Triggers>
@@ -184,7 +181,7 @@
                                                     x:Name="poly"
                                                     IsHitTestVisible="{Binding IsHitTestVisible}"
                                                     Points="{Binding Path=ConnectionPoints, Converter={x:Static converter:ConnectionPathConverter.Instance}}"
-                                                    Stroke="Gray"
+                                                    Stroke="{Binding EdgeColor, Converter={StaticResource solidColorBrushConverter}}"
                                                     StrokeThickness="2" />
 
 
@@ -197,11 +194,11 @@
                                                     HorizontalAlignment="Left"
                                                     VerticalAlignment="Top"
                                                     Data="M0,10 L5,0 10,10 z"
-                                                    Fill="Gray"
+                                                    Fill="{Binding EdgeColor, Converter={StaticResource solidColorBrushConverter}}"
                                                     IsHitTestVisible="{Binding IsHitTestVisible}"
                                                     RenderTransformOrigin="0.5,0.5"
                                                     Stretch="Fill"
-                                                    Stroke="Gray"
+                                                    Stroke="{Binding EdgeColor, Converter={StaticResource solidColorBrushConverter}}"
                                                     Visibility="{Binding Path=IsFullConnection, Converter={StaticResource BoolToVisibilityConverter}}">
                                                     <Path.RenderTransform>
                                                         <RotateTransform x:Name="rot" />
@@ -210,15 +207,12 @@
 
                                                 <Control
                                                     x:Name="PART_ResizeDecorator"
+                                                    IsHitTestVisible="{Binding IsHitTestVisible}"
                                                     Template="{StaticResource PolygonalLineResizeDecoratorTemplate}"
-                                                    Visibility="Collapsed"
-                                                    IsHitTestVisible="{Binding IsHitTestVisible}" />
+                                                    Visibility="Collapsed" />
                                             </Canvas>
                                             <DataTemplate.Triggers>
                                                 <DataTrigger Binding="{Binding IsSelected}" Value="True">
-                                                    <Setter TargetName="poly" Property="Stroke" Value="Black" />
-                                                    <Setter TargetName="arrow" Property="Stroke" Value="Black" />
-                                                    <Setter TargetName="arrow" Property="Fill" Value="Black" />
                                                     <Setter TargetName="PART_ResizeDecorator" Property="Visibility" Value="Visible" />
                                                 </DataTrigger>
                                                 <DataTrigger Binding="{Binding Path=SinkConnectorInfo.Orientation}" Value="Left">

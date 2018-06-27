@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
+using System.Windows.Media;
 
 namespace grapher.ViewModels
 {
@@ -17,6 +18,7 @@ namespace grapher.ViewModels
         private Point _endPoint;
         private Rect _area;
         private bool _IsHitTestVisible;
+        private Color _EdgeColor;
 
         public ConnectorBaseViewModel(int id, IDiagramViewModel parent,
             FullyCreatedConnectorInfo sourceConnectorInfo, FullyCreatedConnectorInfo sinkConnectorInfo) : base(id, parent)
@@ -27,6 +29,12 @@ namespace grapher.ViewModels
         public ConnectorBaseViewModel(ConnectorInfoBase sourceConnectorInfo, ConnectorInfoBase sinkConnectorInfo)
         {
             Init(sourceConnectorInfo, sinkConnectorInfo);
+        }
+
+        public Color EdgeColor
+        {
+            get { return _EdgeColor; }
+            set { SetProperty(ref _EdgeColor, value); }
         }
 
         public bool IsHitTestVisible

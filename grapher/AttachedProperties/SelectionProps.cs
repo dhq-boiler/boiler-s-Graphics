@@ -79,8 +79,7 @@ namespace grapher.AttachedProperties
                     }
                     else if (selectableDesignerItemViewModelBase is ConnectorBaseViewModel)
                     {
-                        //TODO
-                        //color = (selectableDesignerItemViewModelBase as ConnectorBaseViewModel).ed
+                        color = (selectableDesignerItemViewModelBase as ConnectorBaseViewModel).EdgeColor;
                     }
                     selectableDesignerItemViewModelBase.Parent.EdgeColors.Add(color);
                 }

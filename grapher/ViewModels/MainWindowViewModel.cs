@@ -58,6 +58,10 @@ namespace grapher.ViewModels
                     {
                         item.EdgeColor = exchange.New.Value;
                     }
+                    foreach (var item in DiagramViewModel.SelectedItems.OfType<ConnectorBaseViewModel>())
+                    {
+                        item.EdgeColor = exchange.New.Value;
+                    }
                 }
             });
         }

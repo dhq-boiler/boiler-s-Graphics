@@ -22,7 +22,8 @@ namespace grapher.Adorners
         {
             _designerCanvas = designerCanvas;
             _startPoint = dragStartPoint;
-            var brush = new SolidColorBrush(Colors.Black);
+            var parent = (AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel;
+            var brush = new SolidColorBrush(parent.EdgeColors.First());
             brush.Opacity = 0.5;
             _rectanglePen = new Pen(brush, 1);
         }
