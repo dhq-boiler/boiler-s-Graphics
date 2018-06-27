@@ -8,7 +8,7 @@
     <DataTemplate DataType="{x:Type viewModel:NRectangleViewModel}">
         <Grid>
             <Rectangle
-                Fill="Transparent"
+                Fill="{Binding FillColor, Converter={StaticResource solidColorBrushConverter}}"
                 IsHitTestVisible="False"
                 Stretch="Fill"
                 Stroke="{Binding EdgeColor, Converter={StaticResource solidColorBrushConverter}}"

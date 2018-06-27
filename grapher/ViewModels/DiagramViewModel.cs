@@ -20,6 +20,7 @@ namespace grapher.ViewModels
         private ObservableCollection<SelectableDesignerItemViewModelBase> _items = new ObservableCollection<SelectableDesignerItemViewModelBase>();
         private Point _CurrentPoint;
         private ObservableCollection<Color> _EdgeColors = new ObservableCollection<Color>();
+        private ObservableCollection<Color> _FillColors = new ObservableCollection<Color>();
 
         public DiagramViewModel()
         {
@@ -30,8 +31,11 @@ namespace grapher.ViewModels
 
             EdgeColors.CollectionChangedAsObservable()
                 .Subscribe(_ => RaisePropertyChanged("EdgeColors"));
+            FillColors.CollectionChangedAsObservable()
+                .Subscribe(_ => RaisePropertyChanged("FillColors"));
 
             EdgeColors.Add(Colors.Black);
+            FillColors.Add(Colors.Transparent);
 
             Mediator.Instance.Register(this);
         }
@@ -64,6 +68,12 @@ namespace grapher.ViewModels
         {
             get { return _EdgeColors; }
             set { SetProperty(ref _EdgeColors, value); }
+        }
+
+        public ObservableCollection<Color> FillColors
+        {
+            get { return _FillColors; }
+            set { SetProperty(ref _FillColors, value); }
         }
 
         private void ExecuteAddItemCommand(object parameter)

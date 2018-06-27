@@ -16,6 +16,7 @@ namespace grapher.ViewModels
         DelegateCommand<object> ClearSelectedItemsCommand { get; }
         List<SelectableDesignerItemViewModelBase> SelectedItems { get; }
         ObservableCollection<Color> EdgeColors { get; }
+        ObservableCollection<Color> FillColors { get; }
         ObservableCollection<SelectableDesignerItemViewModelBase> Items { get; }
     }
 }

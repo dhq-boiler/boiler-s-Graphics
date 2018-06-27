@@ -66,6 +66,7 @@ namespace grapher.Adorners
                 item.Width = Math.Max(_startPoint.Value.X - _endPoint.Value.X, _endPoint.Value.X - _startPoint.Value.X);
                 item.Height = Math.Max(_startPoint.Value.Y - _endPoint.Value.Y, _endPoint.Value.Y - _startPoint.Value.Y);
                 item.EdgeColor = item.Parent.EdgeColors.First();
+                item.FillColor = item.Parent.FillColors.First();
                 ((AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel).AddItemCommand.Execute(item);
 
                 _startPoint = null;

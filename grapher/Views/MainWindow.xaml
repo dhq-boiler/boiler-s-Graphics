@@ -33,6 +33,19 @@
                 </prism:PopupWindowAction.WindowContent>
             </prism:PopupWindowAction>
         </prism:InteractionRequestTrigger>
+        <prism:InteractionRequestTrigger SourceObject="{Binding OpenFillColorPickerRequest}">
+            <prism:PopupWindowAction CenterOverAssociatedObject="True" IsModal="True">
+                <prism:PopupWindowAction.WindowStyle>
+                    <Style TargetType="{x:Type Window}">
+                        <Setter Property="ResizeMode" Value="NoResize" />
+                        <Setter Property="SizeToContent" Value="WidthAndHeight" />
+                    </Style>
+                </prism:PopupWindowAction.WindowStyle>
+                <prism:PopupWindowAction.WindowContent>
+                    <local:ColorPicker />
+                </prism:PopupWindowAction.WindowContent>
+            </prism:PopupWindowAction>
+        </prism:InteractionRequestTrigger>
     </i:Interaction.Triggers>
     <Window.InputBindings>
         <KeyBinding Key="Del" Command="{Binding DeleteSelectedItemsCommand}" />
@@ -65,6 +78,25 @@
                                         Fill="Transparent"
                                         Stroke="{Binding DiagramViewModel.EdgeColors, Converter={StaticResource StrokeColorConverter}}"
                                         StrokeThickness="2" />
+                                </Grid>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                    <Button Command="{Binding SelectFillColorCommand}" CommandParameter="{Binding DiagramViewModel}">
+                        <Button.Template>
+                            <ControlTemplate TargetType="{x:Type Button}">
+                                <Grid>
+                                    <Rectangle
+                                        Width="20"
+                                        Height="20"
+                                        Fill="White"
+                                        Stroke="Black"
+                                        StrokeThickness="1" />
+                                    <Rectangle
+                                        Width="16"
+                                        Height="16"
+                                        Margin="4"
+                                        Fill="{Binding DiagramViewModel.FillColors, Converter={StaticResource StrokeColorConverter}}" />
                                 </Grid>
                             </ControlTemplate>
                         </Button.Template>

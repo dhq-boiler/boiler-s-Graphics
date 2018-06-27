@@ -22,6 +22,7 @@ namespace grapher.ViewModels
         private double _MinWidth;
         private double _MinHeight;
         private Color _EdgeColor;
+        private Color _FillColor;
         public static readonly double DefaultWidth = 65d;
         public static readonly double DefaultHeight = 65d;
 
@@ -41,6 +42,12 @@ namespace grapher.ViewModels
         {
             get { return _EdgeColor; }
             set { SetProperty(ref _EdgeColor, value); }
+        }
+
+        public Color FillColor
+        {
+            get { return _FillColor; }
+            set { SetProperty(ref _FillColor, value); }
         }
 
         public FullyCreatedConnectorInfo TopConnector

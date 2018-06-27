@@ -33,6 +33,8 @@ namespace grapher.ViewModels
 
         public InteractionRequest<Notification> OpenColorPickerRequest { get; } = new InteractionRequest<Notification>();
 
+        public InteractionRequest<Notification> OpenFillColorPickerRequest { get; } = new InteractionRequest<Notification>();
+
         public MainWindowViewModel()
         {
             DiagramViewModel = new DiagramViewModel();
@@ -64,6 +66,23 @@ namespace grapher.ViewModels
                     }
                 }
             });
+            SelectFillColorCommand = new DelegateCommand<DiagramViewModel>(p =>
+            {
+                var exchange = new ColorExchange()
+                {
+                    Old = DiagramViewModel.FillColors.FirstOrDefault()
+                };
+                OpenFillColorPickerRequest.Raise(new Notification() { Title = "Color picker", Content = exchange });
+                if (exchange.New.HasValue)
+                {
+                    DiagramViewModel.FillColors.Clear();
+                    DiagramViewModel.FillColors.Add(exchange.New.Value);
+                    foreach (var item in DiagramViewModel.SelectedItems.OfType<DesignerItemViewModelBase>())
+                    {
+                        item.FillColor = exchange.New.Value;
+                    }
+                }
+            });
         }
 
         public DiagramViewModel DiagramViewModel
@@ -87,6 +106,8 @@ namespace grapher.ViewModels
         public DelegateCommand<object> DeleteSelectedItemsCommand { get; private set; }
 
         public DelegateCommand<DiagramViewModel> SelectColorCommand { get; }
+
+        public DelegateCommand<DiagramViewModel> SelectFillColorCommand { get; }
 
         private void ExecuteDeleteSelectedItemsCommand(object parameter)
         {

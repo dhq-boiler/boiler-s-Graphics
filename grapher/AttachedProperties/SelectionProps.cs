@@ -70,18 +70,22 @@ namespace grapher.AttachedProperties
 
                     selectableDesignerItemViewModelBase.Parent.SelectedItems.Clear();
                     selectableDesignerItemViewModelBase.Parent.EdgeColors.Clear();
+                    selectableDesignerItemViewModelBase.Parent.FillColors.Clear();
                     selectableDesignerItemViewModelBase.IsSelected = true;
 
-                    Color color = Colors.Transparent;
+                    Color edgeColor = Colors.Transparent;
+                    Color fillColor = Colors.Transparent;
                     if (selectableDesignerItemViewModelBase is DesignerItemViewModelBase)
                     {
-                        color = (selectableDesignerItemViewModelBase as DesignerItemViewModelBase).EdgeColor;
+                        edgeColor = (selectableDesignerItemViewModelBase as DesignerItemViewModelBase).EdgeColor;
+                        fillColor = (selectableDesignerItemViewModelBase as DesignerItemViewModelBase).FillColor;
                     }
                     else if (selectableDesignerItemViewModelBase is ConnectorBaseViewModel)
                     {
-                        color = (selectableDesignerItemViewModelBase as ConnectorBaseViewModel).EdgeColor;
+                        edgeColor = (selectableDesignerItemViewModelBase as ConnectorBaseViewModel).EdgeColor;
                     }
-                    selectableDesignerItemViewModelBase.Parent.EdgeColors.Add(color);
+                    selectableDesignerItemViewModelBase.Parent.EdgeColors.Add(edgeColor);
+                    selectableDesignerItemViewModelBase.Parent.FillColors.Add(fillColor);
                 }
             }
         }
