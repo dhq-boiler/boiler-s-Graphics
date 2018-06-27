@@ -38,6 +38,20 @@ namespace grapher.Extensions
             return (T)obj;
         }
 
+        public static DependencyObject GetParentOfType(this DependencyObject obj, string name)
+        {
+            if (obj == null) return null;
+
+            while (obj != null && (obj is FrameworkElement && !(obj as FrameworkElement).Name.Equals(name)))
+            {
+                obj = VisualTreeHelper.GetParent(obj);
+            }
+
+            if (obj == null) return null;
+
+            return obj;
+        }
+
         public static double DpiXFactor(this Visual visual)
         {
             var source = PresentationSource.FromVisual(visual);

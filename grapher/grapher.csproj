@@ -118,6 +118,7 @@
     <Compile Include="Controls\DragThumb.cs" />
     <Compile Include="Controls\ResizeHandle.cs" />
     <Compile Include="Controls\ResizeThumb.cs" />
+    <Compile Include="Controls\RotateThumb.cs" />
     <Compile Include="Controls\ZoomBox.cs" />
     <Compile Include="Converters\ConnectionPathConverter.cs" />
     <Compile Include="Converters\ImageUrlConverter.cs" />
