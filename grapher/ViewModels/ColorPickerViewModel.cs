@@ -324,9 +324,7 @@ namespace grapher.ViewModels
 
         private void SetRGB()
         {
-            R.Value = Color.Value.R;
-            G.Value = Color.Value.G;
-            B.Value = Color.Value.B;
+            HSV2RGB();
         }
 
         private void HSV2RGB()
@@ -340,7 +338,7 @@ namespace grapher.ViewModels
             var m = value - C;
 
             double _r = 0, _g = 0, _b = 0;
-            if (0 <= hue && hue < 60)
+            if ((0 <= hue && hue < 60) || hue == 360)
             {
                 _r = C;
                 _g = X;
