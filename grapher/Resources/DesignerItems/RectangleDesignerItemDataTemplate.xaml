@@ -1,15 +1,17 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:convereter="clr-namespace:grapher.Converters"
     xmlns:local="clr-namespace:grapher.Resources.DesignerItems"
     xmlns:viewModel="clr-namespace:grapher.ViewModels">
+    <convereter:ToSolidColorBrushConverter x:Key="solidColorBrushConverter" />
     <DataTemplate DataType="{x:Type viewModel:NRectangleViewModel}">
         <Grid>
             <Rectangle
                 Fill="Transparent"
                 IsHitTestVisible="False"
                 Stretch="Fill"
-                Stroke="Black"
+                Stroke="{Binding EdgeColor, Converter={StaticResource solidColorBrushConverter}}"
                 StrokeThickness="1" />
         </Grid>
     </DataTemplate>

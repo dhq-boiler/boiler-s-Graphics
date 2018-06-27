@@ -1,5 +1,7 @@
 ﻿using grapher.Controls;
 using grapher.ViewModels;
+using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -7,6 +9,7 @@ using System.Windows.Media;
 
 namespace grapher.Adorners
 {
+    [Obsolete]
     internal class StraightLineAdorner : Adorner
     {
         private DesignerCanvas _designerCanvas;
@@ -19,7 +22,8 @@ namespace grapher.Adorners
         {
             _designerCanvas = designerCanvas;
             _startPoint = dragStartPoint;
-            var brush = new SolidColorBrush(Colors.Black);
+            var parent = (AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel;
+            var brush = new SolidColorBrush(parent.EdgeColors.First());
             brush.Opacity = 0.5;
             _straightLinePen = new Pen(brush, 1);
         }
@@ -55,6 +59,8 @@ namespace grapher.Adorners
             if (_startPoint.HasValue && _endPoint.HasValue)
             {
                 var item = new StraightConnectorViewModel(new PartCreatedConnectionInfo(_startPoint.Value), new PartCreatedConnectionInfo(_endPoint.Value));
+                item.Parent = (AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel;
+                item.EdgeColor = item.Parent.EdgeColors.First();
                 ((AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel).AddItemCommand.Execute(item);
 
                 _startPoint = null;

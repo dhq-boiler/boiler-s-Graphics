@@ -1,6 +1,8 @@
 ﻿using grapher.Controls;
 using grapher.ViewModels;
 using System;
+using System.Linq;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -20,7 +22,8 @@ namespace grapher.Adorners
         {
             _designerCanvas = designerCanvas;
             _startPoint = dragStartPoint;
-            var brush = new SolidColorBrush(Colors.Black);
+            var parent = (AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel;
+            var brush = new SolidColorBrush(parent.EdgeColors.First());
             brush.Opacity = 0.5;
             _rectanglePen = new Pen(brush, 1);
         }
@@ -55,11 +58,14 @@ namespace grapher.Adorners
 
             if (_startPoint.HasValue && _endPoint.HasValue)
             {
+                var rand = new Random();
                 var item = new NRectangleViewModel();
+                item.Parent = (AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel;
                 item.Left = Math.Min(_startPoint.Value.X, _endPoint.Value.X);
                 item.Top = Math.Min(_startPoint.Value.Y, _endPoint.Value.Y);
                 item.Width = Math.Max(_startPoint.Value.X - _endPoint.Value.X, _endPoint.Value.X - _startPoint.Value.X);
                 item.Height = Math.Max(_startPoint.Value.Y - _endPoint.Value.Y, _endPoint.Value.Y - _startPoint.Value.Y);
+                item.EdgeColor = item.Parent.EdgeColors.First();
                 ((AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel).AddItemCommand.Execute(item);
 
                 _startPoint = null;

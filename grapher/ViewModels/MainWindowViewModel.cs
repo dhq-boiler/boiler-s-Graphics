@@ -1,8 +1,11 @@
 ﻿using grapher.Extensions;
+using grapher.Helpers;
 using grapher.Models;
+using grapher.Views;
 using grapher.Views.Behaviors;
 using Microsoft.Win32;
 using Prism.Commands;
+using Prism.Interactivity.InteractionRequest;
 using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
@@ -28,6 +31,8 @@ namespace grapher.ViewModels
         private ToolBoxViewModel _ToolBoxViewModel;
         private ToolBarViewModel _ToolBarViewModel;
 
+        public InteractionRequest<Notification> OpenColorPickerRequest { get; } = new InteractionRequest<Notification>();
+
         public MainWindowViewModel()
         {
             DiagramViewModel = new DiagramViewModel();
@@ -37,6 +42,27 @@ namespace grapher.ViewModels
             DeleteSelectedItemsCommand = new DelegateCommand<object>(p =>
             {
                 ExecuteDeleteSelectedItemsCommand(p);
+            });
+            SelectColorCommand = new DelegateCommand<DiagramViewModel>(p =>
+            {
+                var exchange = new ColorExchange()
+                {
+                    Old = DiagramViewModel.EdgeColors.FirstOrDefault()
+                };
+                OpenColorPickerRequest.Raise(new Notification() { Title = "Color picker", Content = exchange });
+                if (exchange.New.HasValue)
+                {
+                    DiagramViewModel.EdgeColors.Clear();
+                    DiagramViewModel.EdgeColors.Add(exchange.New.Value);
+                    foreach (var item in DiagramViewModel.SelectedItems.OfType<DesignerItemViewModelBase>())
+                    {
+                        item.EdgeColor = exchange.New.Value;
+                    }
+                    foreach (var item in DiagramViewModel.SelectedItems.OfType<ConnectorBaseViewModel>())
+                    {
+                        item.EdgeColor = exchange.New.Value;
+                    }
+                }
             });
         }
 
@@ -60,9 +86,11 @@ namespace grapher.ViewModels
 
         public DelegateCommand<object> DeleteSelectedItemsCommand { get; private set; }
 
+        public DelegateCommand<DiagramViewModel> SelectColorCommand { get; }
+
         private void ExecuteDeleteSelectedItemsCommand(object parameter)
         {
-            _itemsToRemove = DiagramViewModel.SelectedItems;
+            _itemsToRemove = DiagramViewModel.SelectedItems.ToList();
             List<SelectableDesignerItemViewModelBase> connectionsToAlsoRemove = new List<SelectableDesignerItemViewModelBase>();
 
             foreach (var connector in DiagramViewModel.Items.OfType<ConnectorBaseViewModel>())

@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:behavior="clr-namespace:grapher.Views.Behaviors"
+    xmlns:converter="clr-namespace:grapher.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
@@ -18,13 +19,59 @@
     Height="450"
     prism:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
+    <i:Interaction.Triggers>
+        <prism:InteractionRequestTrigger SourceObject="{Binding OpenColorPickerRequest}">
+            <prism:PopupWindowAction CenterOverAssociatedObject="True" IsModal="True">
+                <prism:PopupWindowAction.WindowStyle>
+                    <Style TargetType="{x:Type Window}">
+                        <Setter Property="ResizeMode" Value="NoResize" />
+                        <Setter Property="SizeToContent" Value="WidthAndHeight" />
+                    </Style>
+                </prism:PopupWindowAction.WindowStyle>
+                <prism:PopupWindowAction.WindowContent>
+                    <local:ColorPicker />
+                </prism:PopupWindowAction.WindowContent>
+            </prism:PopupWindowAction>
+        </prism:InteractionRequestTrigger>
+    </i:Interaction.Triggers>
     <Window.InputBindings>
         <KeyBinding Key="Del" Command="{Binding DeleteSelectedItemsCommand}" />
     </Window.InputBindings>
+    <Window.Resources>
+        <converter:StrokeColorConverter x:Key="StrokeColorConverter" />
+    </Window.Resources>
     <DockPanel>
 
         <!--  ToolBox Control  -->
         <!--<usercontrol:ToolBoxControl Grid.Column="0" DataContext="{Binding ToolBoxViewModel}" />-->
+
+        <ToolBarTray DockPanel.Dock="Top" Orientation="Horizontal">
+            <ToolBar>
+                <StackPanel Orientation="Horizontal">
+                    <Button Command="{Binding SelectColorCommand}" CommandParameter="{Binding DiagramViewModel}">
+                        <Button.Template>
+                            <ControlTemplate TargetType="{x:Type Button}">
+                                <Grid>
+                                    <Rectangle
+                                        Width="20"
+                                        Height="20"
+                                        Fill="White"
+                                        Stroke="Black"
+                                        StrokeThickness="1" />
+                                    <Rectangle
+                                        Width="16"
+                                        Height="16"
+                                        Margin="4"
+                                        Fill="Transparent"
+                                        Stroke="{Binding DiagramViewModel.EdgeColors, Converter={StaticResource StrokeColorConverter}}"
+                                        StrokeThickness="2" />
+                                </Grid>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                </StackPanel>
+            </ToolBar>
+        </ToolBarTray>
 
         <ToolBarTray DockPanel.Dock="Left" Orientation="Vertical">
             <ToolBar ItemsSource="{Binding ToolBarViewModel.ToolItems}">
@@ -33,9 +80,9 @@
                         <ToggleButton
                             Width="40"
                             Height="40"
+                            Padding="3"
                             Command="{Binding Command}"
-                            IsChecked="{Binding IsChecked}"
-                            Padding="3">
+                            IsChecked="{Binding IsChecked}">
                             <Image Source="{Binding ImageUrl}" />
                         </ToggleButton>
                     </DataTemplate>

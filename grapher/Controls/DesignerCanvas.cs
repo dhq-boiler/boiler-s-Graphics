@@ -46,6 +46,8 @@ namespace grapher.Controls
                     Point point = new Point(rectangleBounds.Left + (rectangleBounds.Width / 2),
                                             rectangleBounds.Bottom + (rectangleBounds.Height / 2));
                     _partialConnection = LineFactory.Create(sourceDataItem, new PartCreatedConnectionInfo(point));
+                    _partialConnection.Parent = sourceDataItem.DataItem.Parent;
+                    _partialConnection.EdgeColor = _partialConnection.Parent.EdgeColors.First();
                     sourceDataItem.DataItem.Parent.AddItemCommand.Execute(_partialConnection);
                 }
             }
@@ -80,7 +82,10 @@ namespace grapher.Controls
                     int indexOfLastTempConnection = sinkDataItem.DataItem.Parent.Items.Count - 1;
                     sinkDataItem.DataItem.Parent.RemoveItemCommand.Execute(
                         sinkDataItem.DataItem.Parent.Items[indexOfLastTempConnection]);
-                    sinkDataItem.DataItem.Parent.AddItemCommand.Execute(LineFactory.Create(sourceDataItem, sinkDataItem));
+                    var line = LineFactory.Create(sourceDataItem, sinkDataItem);
+                    line.Parent = sinkDataItem.DataItem.Parent;
+                    line.EdgeColor = line.Parent.EdgeColors.First();
+                    sinkDataItem.DataItem.Parent.AddItemCommand.Execute(line);
                 }
                 else
                 {
@@ -88,7 +93,10 @@ namespace grapher.Controls
                     int indexOfLastTempConnection = sourceDataItem.DataItem.Parent.Items.Count - 1;
                     sourceDataItem.DataItem.Parent.RemoveItemCommand.Execute(
                         sourceDataItem.DataItem.Parent.Items[indexOfLastTempConnection]);
-                    sourceDataItem.DataItem.Parent.AddItemCommand.Execute(LineFactory.Create(sourceDataItem, new PartCreatedConnectionInfo(e.GetPosition(this))));
+                    var line = LineFactory.Create(sourceDataItem, new PartCreatedConnectionInfo(e.GetPosition(this)));
+                    line.Parent = sourceDataItem.DataItem.Parent;
+                    line.EdgeColor = line.Parent.EdgeColors.First();
+                    sourceDataItem.DataItem.Parent.AddItemCommand.Execute(line);
                 }
             }
 

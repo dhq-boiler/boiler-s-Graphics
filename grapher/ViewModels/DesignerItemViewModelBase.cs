@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 
 namespace grapher.ViewModels
 {
@@ -20,6 +21,7 @@ namespace grapher.ViewModels
         private double _height;
         private double _MinWidth;
         private double _MinHeight;
+        private Color _EdgeColor;
         public static readonly double DefaultWidth = 65d;
         public static readonly double DefaultHeight = 65d;
 
@@ -35,6 +37,11 @@ namespace grapher.ViewModels
             Init();
         }
 
+        public Color EdgeColor
+        {
+            get { return _EdgeColor; }
+            set { SetProperty(ref _EdgeColor, value); }
+        }
 
         public FullyCreatedConnectorInfo TopConnector
         {
