@@ -135,6 +135,7 @@
     <Compile Include="Helpers\PointHelper.cs" />
     <Compile Include="Helpers\ToolBoxData.cs" />
     <Compile Include="Helpers\ToolItemData.cs" />
+    <Compile Include="Helpers\TransformNotification.cs" />
     <Compile Include="Helpers\WeakINPCEventHandler.cs" />
     <Compile Include="Messenger\Mediator.cs" />
     <Compile Include="Messenger\MediatorMessageSinkAttribute.cs" />

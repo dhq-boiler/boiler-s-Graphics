@@ -29,15 +29,15 @@ namespace grapher.Controls
 
                 foreach (DesignerItemViewModelBase item in designerItems.OfType<DesignerItemViewModelBase>())
                 {
-                    double left = item.Left;
-                    double top = item.Top;
+                    double left = item.Left.Value;
+                    double top = item.Top.Value;
                     minLeft = double.IsNaN(left) ? 0 : Math.Min(left, minLeft);
                     minTop = double.IsNaN(top) ? 0 : Math.Min(top, minTop);
 
                     double deltaHorizontal = Math.Max(-minLeft, e.HorizontalChange);
                     double deltaVertical = Math.Max(-minTop, e.VerticalChange);
-                    item.Left += deltaHorizontal;
-                    item.Top += deltaVertical;
+                    item.Left.Value += deltaHorizontal;
+                    item.Top.Value += deltaVertical;
                 }
                 e.Handled = true;
             }

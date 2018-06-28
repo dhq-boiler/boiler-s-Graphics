@@ -1,24 +1,18 @@
 ﻿using grapher.Controls;
+using grapher.Helpers;
+using Reactive.Bindings;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Media;
 
 namespace grapher.ViewModels
 {
-    public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewModelBase
+    public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewModelBase, IObservable<TransformNotification>
     {
-        private double _left;
-        private double _top;
         private bool _showConnectors = false;
         private List<FullyCreatedConnectorInfo> _connectors = new List<FullyCreatedConnectorInfo>();
 
-        private double _Left;
-        private double _Top;
-        private double _width;
-        private double _height;
         private double _MinWidth;
         private double _MinHeight;
         private Color _EdgeColor;
@@ -28,8 +22,8 @@ namespace grapher.ViewModels
 
         public DesignerItemViewModelBase(int id, IDiagramViewModel parent, double left, double top) : base(id, parent)
         {
-            _left = left;
-            _top = top;
+            Left.Value = left;
+            Top.Value = top;
             Init();
         }
 
@@ -85,17 +79,11 @@ namespace grapher.ViewModels
             set { SetProperty(ref _MinHeight, value); }
         }
 
-        public double Width
-        {
-            get { return _width; }
-            set { SetProperty(ref _width, value); }
-        }
+        public ReactiveProperty<double> Width { get; } = new ReactiveProperty<double>();
 
-        public double Height
-        {
-            get { return _height; }
-            set { SetProperty(ref _height, value); }
-        }
+        public ReactiveProperty<double> Height { get; } = new ReactiveProperty<double>();
+
+        public ReactiveProperty<double> RotateAngle { get; } = new ReactiveProperty<double>();
 
         public bool ShowConnectors
         {
@@ -117,28 +105,69 @@ namespace grapher.ViewModels
             }
         }
 
+        public ReactiveProperty<double> Left { get; } = new ReactiveProperty<double>();
 
-        public double Left
-        {
-            get { return _Left; }
-            set { SetProperty(ref _Left, value); }
-        }
+        public ReactiveProperty<double> Top { get; } = new ReactiveProperty<double>();
 
-        public double Top
+        public ReactiveProperty<Point> CenterPoint { get; } = new ReactiveProperty<Point>();
+
+        private void UpdateCenterPoint()
         {
-            get { return _Top; }
-            set { SetProperty(ref _Top, value); }
+            var leftTop = new Point(Left.Value, Top.Value);
+            var center = new Point(leftTop.X + Width.Value * 0.5, leftTop.Y + Height.Value * 0.5);
+            CenterPoint.Value = center;
         }
 
         private void Init()
         {
-            _connectors.Add(new FullyCreatedConnectorInfo(this, ConnectorOrientation.Top));
-            _connectors.Add(new FullyCreatedConnectorInfo(this, ConnectorOrientation.Bottom));
-            _connectors.Add(new FullyCreatedConnectorInfo(this, ConnectorOrientation.Left));
-            _connectors.Add(new FullyCreatedConnectorInfo(this, ConnectorOrientation.Right));
+            _connectors.Add(new FullyCreatedConnectorInfo(this, ConnectorOrientation.Top, 270));
+            _connectors.Add(new FullyCreatedConnectorInfo(this, ConnectorOrientation.Bottom, 90));
+            _connectors.Add(new FullyCreatedConnectorInfo(this, ConnectorOrientation.Left, 180));
+            _connectors.Add(new FullyCreatedConnectorInfo(this, ConnectorOrientation.Right, 0));
 
             MinWidth = 0;
             MinHeight = 0;
+
+            Left.Subscribe(_ => UpdateTransform());
+            Top.Subscribe(_ => UpdateTransform());
+            Width.Subscribe(_ => UpdateTransform());
+            Height.Subscribe(_ => UpdateTransform());
+            RotateAngle.Subscribe(_ => UpdateTransform());
+        }
+
+        public void UpdateTransform()
+        {
+            UpdateCenterPoint();
+            ObserversOnNext();
+        }
+
+        public void ObserversOnNext()
+        {
+            _observers.ForEach(x => x.OnNext(new TransformNotification()));
+        }
+
+        private List<IObserver<TransformNotification>> _observers = new List<IObserver<TransformNotification>>();
+
+        public IDisposable Subscribe(IObserver<TransformNotification> observer)
+        {
+            _observers.Add(observer);
+            return new DesignerItemViewModelBaseDisposable(this, observer);
+        }
+
+        public class DesignerItemViewModelBaseDisposable : IDisposable
+        {
+            private DesignerItemViewModelBase _obj;
+            private IObserver<TransformNotification> _observer;
+            public DesignerItemViewModelBaseDisposable(DesignerItemViewModelBase obj, IObserver<TransformNotification> observer)
+            {
+                _obj = obj;
+                _observer = observer;
+            }
+
+            public void Dispose()
+            {
+                _obj._observers.Remove(_observer);
+            }
         }
     }
 }

@@ -1,9 +1,4 @@
 ﻿using grapher.Controls;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace grapher.ViewModels
 {
@@ -11,14 +6,17 @@ namespace grapher.ViewModels
     {
         private bool _ShowConnectors = false;
 
-        public FullyCreatedConnectorInfo(DesignerItemViewModelBase dataItem, ConnectorOrientation orientation)
+        public FullyCreatedConnectorInfo(DesignerItemViewModelBase dataItem, ConnectorOrientation orientation, double degree)
             : base(orientation)
         {
             this.DataItem = dataItem;
+            Degree = degree;
         }
 
 
         public DesignerItemViewModelBase DataItem { get; private set; }
+
+        public double Degree { get; private set; }
 
         public bool ShowConnectors
         {

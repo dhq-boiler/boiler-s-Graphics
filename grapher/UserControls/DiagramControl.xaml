@@ -33,12 +33,12 @@
                     <ItemsControl.Resources>
 
                         <Style x:Key="designerItemStyle" TargetType="{x:Type ContentPresenter}">
-                            <Setter Property="Canvas.Top" Value="{Binding Top}" />
-                            <Setter Property="Canvas.Left" Value="{Binding Left}" />
+                            <Setter Property="Canvas.Top" Value="{Binding Top.Value}" />
+                            <Setter Property="Canvas.Left" Value="{Binding Left.Value}" />
                             <Setter Property="attached:SelectionProps.EnabledForSelection" Value="True" />
                             <Setter Property="attached:ItemConnectProps.EnabledForConnection" Value="True" />
-                            <Setter Property="Width" Value="{Binding Width}" />
-                            <Setter Property="Height" Value="{Binding Height}" />
+                            <Setter Property="Width" Value="{Binding Width.Value}" />
+                            <Setter Property="Height" Value="{Binding Height.Value}" />
                             <Setter Property="SnapsToDevicePixels" Value="True" />
                             <Setter Property="ContentTemplate">
                                 <Setter.Value>
@@ -47,6 +47,11 @@
                                             <Grid.Style>
                                                 <Style TargetType="{x:Type Grid}">
                                                     <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
+                                                    <Setter Property="RenderTransform">
+                                                        <Setter.Value>
+                                                            <RotateTransform Angle="{Binding RotateAngle.Value}" />
+                                                        </Setter.Value>
+                                                    </Setter>
                                                 </Style>
                                             </Grid.Style>
                                             <control:DragThumb x:Name="PART_DragThumb" Cursor="SizeAll" />

@@ -1,10 +1,6 @@
 ﻿using grapher.Extensions;
 using grapher.ViewModels;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -62,6 +58,8 @@ namespace grapher.Controls
 
         private void RotateThumb_DragDelta(object sender, DragDeltaEventArgs e)
         {
+            var viewModel = DataContext as DesignerItemViewModelBase;
+
             if (_designerItem != null && _canvas != null)
             {
                 Point currentPoint = Mouse.GetPosition(_canvas);
@@ -69,8 +67,7 @@ namespace grapher.Controls
 
                 double angle = Vector.AngleBetween(_startVector, deltaVector);
 
-                RotateTransform rotateTransform = _designerItem.RenderTransform as RotateTransform;
-                rotateTransform.Angle = _initialAngle + Math.Round(angle, 0);
+                viewModel.RotateAngle.Value = _initialAngle + Math.Round(angle, 0);
                 _designerItem.InvalidateMeasure();
             }
         }

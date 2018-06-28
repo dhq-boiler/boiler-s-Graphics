@@ -243,8 +243,8 @@ namespace grapher.Controls
                 (DataContext as IDiagramViewModel).ClearSelectedItemsCommand.Execute(null);
                 Point position = e.GetPosition(this);
                 DesignerItemViewModelBase itemBase = (DesignerItemViewModelBase)Activator.CreateInstance(dragObject.ContentType);
-                itemBase.Left = Math.Max(0, position.X - DesignerItemViewModelBase.DefaultWidth / 2);
-                itemBase.Top = Math.Max(0, position.Y - DesignerItemViewModelBase.DefaultHeight / 2);
+                itemBase.Left.Value = Math.Max(0, position.X - DesignerItemViewModelBase.DefaultWidth / 2);
+                itemBase.Top.Value = Math.Max(0, position.Y - DesignerItemViewModelBase.DefaultHeight / 2);
                 itemBase.IsSelected = true;
                 (DataContext as IDiagramViewModel).AddItemCommand.Execute(itemBase);
             }
