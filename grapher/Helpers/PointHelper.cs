@@ -1,10 +1,6 @@
 ﻿using grapher.Controls;
 using grapher.ViewModels;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace grapher.Helpers
@@ -18,18 +14,28 @@ namespace grapher.Helpers
             switch (connector.Orientation)
             {
                 case ConnectorOrientation.Top:
-                    point = new Point(connector.DataItem.Left + (connector.DataItem.Width / 2), connector.DataItem.Top - (ConnectorInfoBase.ConnectorHeight));
+                    point = new Point(connector.DataItem.Left.Value + (connector.DataItem.Width.Value / 2), connector.DataItem.Top.Value - (ConnectorInfoBase.ConnectorHeight));
                     break;
                 case ConnectorOrientation.Bottom:
-                    point = new Point(connector.DataItem.Left + (connector.DataItem.Width / 2), (connector.DataItem.Top + connector.DataItem.Height) + (ConnectorInfoBase.ConnectorHeight / 2));
+                    point = new Point(connector.DataItem.Left.Value + (connector.DataItem.Width.Value / 2), (connector.DataItem.Top.Value + connector.DataItem.Height.Value) + (ConnectorInfoBase.ConnectorHeight / 2));
                     break;
                 case ConnectorOrientation.Right:
-                    point = new Point(connector.DataItem.Left + connector.DataItem.Width + (ConnectorInfoBase.ConnectorWidth), connector.DataItem.Top + (connector.DataItem.Height / 2));
+                    point = new Point(connector.DataItem.Left.Value + connector.DataItem.Width.Value + (ConnectorInfoBase.ConnectorWidth), connector.DataItem.Top.Value + (connector.DataItem.Height.Value / 2));
                     break;
                 case ConnectorOrientation.Left:
-                    point = new Point(connector.DataItem.Left - ConnectorInfoBase.ConnectorWidth, connector.DataItem.Top + (connector.DataItem.Height / 2));
+                    point = new Point(connector.DataItem.Left.Value - ConnectorInfoBase.ConnectorWidth, connector.DataItem.Top.Value + (connector.DataItem.Height.Value / 2));
                     break;
             }
+
+            var centerPoint = connector.DataItem.CenterPoint.Value;
+            var rotateAngle = connector.DataItem.RotateAngle.Value;
+            var initialDegree = connector.Degree;
+            var rad = (rotateAngle + initialDegree) * Math.PI / 180d;
+            var z1 = point.X - centerPoint.X;
+            var z2 = point.Y - centerPoint.Y;
+
+            point.X = centerPoint.X + Math.Sqrt(Math.Pow(z1, 2) + Math.Pow(z2, 2)) * Math.Cos(rad);
+            point.Y = centerPoint.Y + Math.Sqrt(Math.Pow(z1, 2) + Math.Pow(z2, 2)) * Math.Sin(rad);
 
             return point;
         }

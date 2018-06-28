@@ -43,13 +43,13 @@ namespace grapher.Controls
                         {
                             case VerticalAlignment.Bottom:
                                 dragDeltaVertical = Math.Min(-e.VerticalChange, minDeltaVertical);
-                                viewModel.Height = viewModel.Height - dragDeltaVertical;
+                                viewModel.Height.Value = viewModel.Height.Value - dragDeltaVertical;
                                 break;
                             case VerticalAlignment.Top:
-                                double top = viewModel.Top;
+                                double top = viewModel.Top.Value;
                                 dragDeltaVertical = Math.Min(Math.Max(-minTop, e.VerticalChange), minDeltaVertical);
-                                viewModel.Top = top + dragDeltaVertical;
-                                viewModel.Height = viewModel.Height - dragDeltaVertical;
+                                viewModel.Top.Value = top + dragDeltaVertical;
+                                viewModel.Height.Value = viewModel.Height.Value - dragDeltaVertical;
                                 break;
                             default:
                                 break;
@@ -58,14 +58,14 @@ namespace grapher.Controls
                         switch (base.HorizontalAlignment)
                         {
                             case HorizontalAlignment.Left:
-                                double left = viewModel.Left;
+                                double left = viewModel.Left.Value;
                                 dragDeltaHorizontal = Math.Min(Math.Max(-minLeft, e.HorizontalChange), minDeltaHorizontal);
-                                viewModel.Left = left + dragDeltaHorizontal;
-                                viewModel.Width = viewModel.Width - dragDeltaHorizontal;
+                                viewModel.Left.Value = left + dragDeltaHorizontal;
+                                viewModel.Width.Value = viewModel.Width.Value - dragDeltaHorizontal;
                                 break;
                             case HorizontalAlignment.Right:
                                 dragDeltaHorizontal = Math.Min(-e.HorizontalChange, minDeltaHorizontal);
-                                viewModel.Width = viewModel.Width - dragDeltaHorizontal;
+                                viewModel.Width.Value = viewModel.Width.Value - dragDeltaHorizontal;
                                 break;
                             default:
                                 break;
@@ -90,14 +90,14 @@ namespace grapher.Controls
                 if (item is DesignerItemViewModelBase)
                 {
                     var viewModel = item as DesignerItemViewModelBase;
-                    double left = viewModel.Left;
-                    double top = viewModel.Top;
+                    double left = viewModel.Left.Value;
+                    double top = viewModel.Top.Value;
 
                     minLeft = double.IsNaN(left) ? 0 : Math.Min(left, minLeft);
                     minTop = double.IsNaN(top) ? 0 : Math.Min(top, minTop);
 
-                    minDeltaVertical = Math.Min(minDeltaVertical, viewModel.Height - viewModel.MinHeight);
-                    minDeltaHorizontal = Math.Min(minDeltaHorizontal, viewModel.Width - viewModel.MinWidth);
+                    minDeltaVertical = Math.Min(minDeltaVertical, viewModel.Height.Value - viewModel.MinHeight);
+                    minDeltaHorizontal = Math.Min(minDeltaHorizontal, viewModel.Width.Value - viewModel.MinWidth);
                 }
                 else if (item is ConnectorBaseViewModel)
                 {

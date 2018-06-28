@@ -1,14 +1,14 @@
 ﻿using grapher.Controls;
 using grapher.Helpers;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Media;
 
 namespace grapher.ViewModels
 {
-    public class ConnectorBaseViewModel : SelectableDesignerItemViewModelBase
+    public class ConnectorBaseViewModel : SelectableDesignerItemViewModelBase, IObserver<TransformNotification>
     {
         private ConnectorInfoBase _sourceConnectorInfo;
         private ConnectorInfoBase _sinkConnectorInfo;
@@ -19,6 +19,8 @@ namespace grapher.ViewModels
         private Rect _area;
         private bool _IsHitTestVisible;
         private Color _EdgeColor;
+        private IDisposable _sourceConnectorDisconnecting;
+        private IDisposable _sinkConnectorDisconnecting;
 
         public ConnectorBaseViewModel(int id, IDiagramViewModel parent,
             FullyCreatedConnectorInfo sourceConnectorInfo, FullyCreatedConnectorInfo sinkConnectorInfo) : base(id, parent)
@@ -161,12 +163,10 @@ namespace grapher.ViewModels
                     if (_sourceConnectorInfo is FullyCreatedConnectorInfo)
                     {
                         SourceA = PointHelper.GetPointForConnector(this.SourceConnectorInfo as FullyCreatedConnectorInfo);
+                        _sourceConnectorDisconnecting?.Dispose();
+                        _sourceConnectorDisconnecting = (_sourceConnectorInfo as FullyCreatedConnectorInfo).DataItem.Subscribe(this);
                     }
                     RaisePropertyChanged("SourceConnectorInfo");
-                    if (_sourceConnectorInfo is FullyCreatedConnectorInfo)
-                    {
-                        ((_sourceConnectorInfo as FullyCreatedConnectorInfo).DataItem as INotifyPropertyChanged).PropertyChanged += new WeakINPCEventHandler(ConnectorViewModel_PropertyChanged).Handler;
-                    }
                 }
             }
         }
@@ -185,7 +185,8 @@ namespace grapher.ViewModels
                     if (SinkConnectorInfo is FullyCreatedConnectorInfo)
                     {
                         SourceB = PointHelper.GetPointForConnector((FullyCreatedConnectorInfo)SinkConnectorInfo);
-                        (((FullyCreatedConnectorInfo)_sinkConnectorInfo).DataItem as INotifyPropertyChanged).PropertyChanged += new WeakINPCEventHandler(ConnectorViewModel_PropertyChanged).Handler;
+                        _sinkConnectorDisconnecting?.Dispose();
+                        _sinkConnectorDisconnecting = (_sinkConnectorInfo as FullyCreatedConnectorInfo).DataItem.Subscribe(this);
                     }
                     else
                     {
@@ -235,26 +236,6 @@ namespace grapher.ViewModels
 
         protected virtual void SetConnectionPoints(ConnectorInfo source, Point sinkPoint, ConnectorOrientation preferredOrientation) { }
 
-        private void ConnectorViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            switch (e.PropertyName)
-            {
-                case "Left":
-                case "Top":
-                case "Width":
-                case "Height":
-                    if (SourceConnectorInfo is FullyCreatedConnectorInfo)
-                    {
-                        SourceA = PointHelper.GetPointForConnector(this.SourceConnectorInfo as FullyCreatedConnectorInfo);
-                    }
-                    if (this.SinkConnectorInfo is FullyCreatedConnectorInfo)
-                    {
-                        SourceB = PointHelper.GetPointForConnector(this.SinkConnectorInfo as FullyCreatedConnectorInfo);
-                    }
-                    break;
-            }
-        }
-
         private void Init(ConnectorInfoBase sourceConnectorInfo, ConnectorInfoBase sinkConnectorInfo)
         {
             IsHitTestVisible = true;
@@ -268,5 +249,31 @@ namespace grapher.ViewModels
         }
 
         protected virtual void InitPathFinder() { }
+
+        #region IObserver<TransformNotification>
+
+        public void OnNext(TransformNotification value)
+        {
+            if (SourceConnectorInfo is FullyCreatedConnectorInfo)
+            {
+                SourceA = PointHelper.GetPointForConnector(this.SourceConnectorInfo as FullyCreatedConnectorInfo);
+            }
+            if (this.SinkConnectorInfo is FullyCreatedConnectorInfo)
+            {
+                SourceB = PointHelper.GetPointForConnector(this.SinkConnectorInfo as FullyCreatedConnectorInfo);
+            }
+        }
+
+        public void OnError(Exception error)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void OnCompleted()
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion //IObserver<TransformNotification>
     }
 }

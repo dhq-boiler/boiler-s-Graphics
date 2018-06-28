@@ -58,10 +58,10 @@ namespace grapher.Adorners
             if (_startPoint.HasValue && _endPoint.HasValue)
             {
                 DesignerItemViewModelBase itemBase = new SettingsDesignerItemViewModel();
-                itemBase.Left = Math.Max(0, _startPoint.Value.X);
-                itemBase.Top = Math.Max(0, _startPoint.Value.Y);
-                itemBase.Width = Math.Abs(_endPoint.Value.X - _startPoint.Value.X);
-                itemBase.Height = Math.Abs(_endPoint.Value.Y - _startPoint.Value.Y);
+                itemBase.Left.Value = Math.Max(0, _startPoint.Value.X);
+                itemBase.Top.Value = Math.Max(0, _startPoint.Value.Y);
+                itemBase.Width.Value = Math.Abs(_endPoint.Value.X - _startPoint.Value.X);
+                itemBase.Height.Value = Math.Abs(_endPoint.Value.Y - _startPoint.Value.Y);
                 itemBase.IsSelected = true;
                 ((AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel).AddItemCommand.Execute(itemBase);
 
