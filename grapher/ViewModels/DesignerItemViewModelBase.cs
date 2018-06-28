@@ -146,6 +146,8 @@ namespace grapher.ViewModels
             _observers.ForEach(x => x.OnNext(new TransformNotification()));
         }
 
+        #region IObservable<TransformNotification>
+
         private List<IObserver<TransformNotification>> _observers = new List<IObserver<TransformNotification>>();
 
         public IDisposable Subscribe(IObserver<TransformNotification> observer)
@@ -169,5 +171,7 @@ namespace grapher.ViewModels
                 _obj._observers.Remove(_observer);
             }
         }
+
+        #endregion //IObservable<TransformNotification>
     }
 }
