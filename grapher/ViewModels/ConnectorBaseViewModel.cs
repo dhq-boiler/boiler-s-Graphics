@@ -242,7 +242,7 @@ namespace grapher.ViewModels
             InitPathFinder();
             if (sourceConnectorInfo is FullyCreatedConnectorInfo)
             {
-                this.Parent = (sourceConnectorInfo as FullyCreatedConnectorInfo).DataItem.Parent;
+                this.Owner = (sourceConnectorInfo as FullyCreatedConnectorInfo).DataItem.Owner;
             }
             this.SourceConnectorInfo = sourceConnectorInfo;
             this.SinkConnectorInfo = sinkConnectorInfo;

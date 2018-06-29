@@ -65,12 +65,12 @@ namespace grapher.AttachedProperties
                 }
                 else
                 {
-                    foreach (SelectableDesignerItemViewModelBase item in selectableDesignerItemViewModelBase.Parent.SelectedItems)
+                    foreach (SelectableDesignerItemViewModelBase item in selectableDesignerItemViewModelBase.Owner.SelectedItems)
                         item.IsSelected = false;
 
-                    selectableDesignerItemViewModelBase.Parent.SelectedItems.Clear();
-                    selectableDesignerItemViewModelBase.Parent.EdgeColors.Clear();
-                    selectableDesignerItemViewModelBase.Parent.FillColors.Clear();
+                    selectableDesignerItemViewModelBase.Owner.SelectedItems.Clear();
+                    selectableDesignerItemViewModelBase.Owner.EdgeColors.Clear();
+                    selectableDesignerItemViewModelBase.Owner.FillColors.Clear();
                     selectableDesignerItemViewModelBase.IsSelected = true;
 
                     Color edgeColor = Colors.Transparent;
@@ -84,8 +84,8 @@ namespace grapher.AttachedProperties
                     {
                         edgeColor = (selectableDesignerItemViewModelBase as ConnectorBaseViewModel).EdgeColor;
                     }
-                    selectableDesignerItemViewModelBase.Parent.EdgeColors.Add(edgeColor);
-                    selectableDesignerItemViewModelBase.Parent.FillColors.Add(fillColor);
+                    selectableDesignerItemViewModelBase.Owner.EdgeColors.Add(edgeColor);
+                    selectableDesignerItemViewModelBase.Owner.FillColors.Add(fillColor);
                 }
             }
         }

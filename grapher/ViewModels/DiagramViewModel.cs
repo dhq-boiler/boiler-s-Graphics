@@ -81,7 +81,7 @@ namespace grapher.ViewModels
             if (parameter is SelectableDesignerItemViewModelBase)
             {
                 SelectableDesignerItemViewModelBase item = (SelectableDesignerItemViewModelBase)parameter;
-                item.Parent = this;
+                item.Owner = this;
                 _items.Add(item);
             }
         }

@@ -21,7 +21,7 @@ namespace grapher.ViewModels
         public SelectableDesignerItemViewModelBase(int id, IDiagramViewModel parent)
         {
             this.Id = id;
-            this.Parent = parent;
+            this.Owner = parent;
             Init();
         }
 
@@ -32,10 +32,10 @@ namespace grapher.ViewModels
 
         public List<SelectableDesignerItemViewModelBase> SelectedItems
         {
-            get { return Parent.SelectedItems; }
+            get { return Owner.SelectedItems; }
         }
 
-        public IDiagramViewModel Parent { get; set; }
+        public IDiagramViewModel Owner { get; set; }
         public DelegateCommand<object> SelectItemCommand { get; private set; }
         public int Id { get; set; }
 
@@ -54,7 +54,7 @@ namespace grapher.ViewModels
         {
             if (newselect)
             {
-                foreach (var designerItemViewModelBase in Parent.SelectedItems.ToList())
+                foreach (var designerItemViewModelBase in Owner.SelectedItems.ToList())
                 {
                     designerItemViewModelBase.IsSelected = false;
                 }
