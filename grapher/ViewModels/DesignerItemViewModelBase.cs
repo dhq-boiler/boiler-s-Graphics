@@ -138,12 +138,18 @@ namespace grapher.ViewModels
         public void UpdateTransform()
         {
             UpdateCenterPoint();
-            ObserversOnNext();
+            TransformObserversOnNext();
         }
 
-        public void ObserversOnNext()
+        public void TransformObserversOnNext()
         {
             _observers.ForEach(x => x.OnNext(new TransformNotification()));
+        }
+
+        public override void OnNext(GroupTransformNotification value)
+        {
+            Left.Value += value.LeftChange;
+            Top.Value += value.TopChange;
         }
 
         #region IObservable<TransformNotification>

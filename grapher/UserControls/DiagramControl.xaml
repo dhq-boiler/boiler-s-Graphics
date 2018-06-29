@@ -281,7 +281,14 @@
                     </ItemsControl.ItemsPanel>
 
                 </ItemsControl>
-
+                <ScrollViewer.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Grouping">
+                            <MenuItem Command="{Binding GroupCommand}" Header="Group" />
+                            <MenuItem Command="{Binding UngroupCommand}" Header="Ungroup" />
+                        </MenuItem>
+                    </ContextMenu>
+                </ScrollViewer.ContextMenu>
 
             </ScrollViewer>
             <control:ZoomBox

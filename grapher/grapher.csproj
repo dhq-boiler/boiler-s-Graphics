@@ -130,6 +130,7 @@
     <Compile Include="Helpers\ColorExchange.cs" />
     <Compile Include="Helpers\ConnectorInfo.cs" />
     <Compile Include="Helpers\DragObject.cs" />
+    <Compile Include="Helpers\GroupTransformNotification.cs" />
     <Compile Include="Helpers\IPathFinder.cs" />
     <Compile Include="Helpers\OrthogonalPathFinder.cs" />
     <Compile Include="Helpers\PointHelper.cs" />
@@ -158,6 +159,7 @@
     <Compile Include="ViewModels\ColorPickerViewModel.cs" />
     <Compile Include="ViewModels\ConnectorBaseViewModel.cs" />
     <Compile Include="ViewModels\ConnectorInfoBase.cs" />
+    <Compile Include="ViewModels\GroupItemViewModel.cs" />
     <Compile Include="ViewModels\NRectangleViewModel.cs" />
     <Compile Include="ViewModels\PolygonalConnectorViewModel.cs" />
     <Compile Include="ViewModels\DesignerItemViewModelBase.cs" />
@@ -220,6 +222,10 @@
     <Compile Include="Views\StraightLineResizeHandle.cs" />
     <Compile Include="Views\Triggers\ResizeThumbDragDeltaEventTrigger.cs" />
     <Compile Include="Views\Triggers\WindowLoadedEventTrigger.cs" />
+    <Page Include="Resources\DesignerItems\GroupItemDataTemplate.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Resources\DesignerItems\PersistDesignerItemDataTemplate.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

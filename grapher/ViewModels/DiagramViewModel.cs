@@ -28,6 +28,8 @@ namespace grapher.ViewModels
             RemoveItemCommand = new DelegateCommand<object>(p => ExecuteRemoveItemCommand(p));
             ClearSelectedItemsCommand = new DelegateCommand<object>(p => ExecuteClearSelectedItemsCommand(p));
             CreateNewDiagramCommand = new DelegateCommand<object>(p => ExecuteCreateNewDiagramCommand(p));
+            GroupCommand = new DelegateCommand(() => ExecuteGroupItemsCommand());
+            UngroupCommand = new DelegateCommand(() => ExecuteUngroupItemsCommand());
 
             EdgeColors.CollectionChangedAsObservable()
                 .Subscribe(_ => RaisePropertyChanged("EdgeColors"));
@@ -53,6 +55,8 @@ namespace grapher.ViewModels
         public DelegateCommand<object> RemoveItemCommand { get; private set; }
         public DelegateCommand<object> ClearSelectedItemsCommand { get; private set; }
         public DelegateCommand<object> CreateNewDiagramCommand { get; private set; }
+        public DelegateCommand GroupCommand { get; private set; }
+        public DelegateCommand UngroupCommand { get; private set; }
 
         public ObservableCollection<SelectableDesignerItemViewModelBase> Items
         {
@@ -108,6 +112,89 @@ namespace grapher.ViewModels
             Items.Clear();
         }
 
+        private void ExecuteGroupItemsCommand()
+        {
+            var items = from item in SelectedItems
+                        where item.ParentID == Guid.Empty
+                        select item;
+
+            var rect = GetBoundingRectangle(items);
+
+            var groupItem = new GroupItemViewModel();
+            groupItem.Width.Value = rect.Width;
+            groupItem.Height.Value = rect.Height;
+            groupItem.Left.Value = rect.Left;
+            groupItem.Top.Value = rect.Top;
+
+            AddItemCommand.Execute(groupItem);
+
+            foreach (var item in items)
+            {
+                item.GroupDisposable = groupItem.Subscribe(item);
+                item.ParentID = groupItem.ID;
+            }
+
+            groupItem.SelectItemCommand.Execute(true);
+        }
+
+        private void ExecuteUngroupItemsCommand()
+        {
+            var groups = from item in SelectedItems
+                         where item.ParentID == Guid.Empty
+                         select item;
+
+            foreach (var groupRoot in groups)
+            {
+                var children = from child in Items
+                               where child.ParentID == groupRoot.ID
+                               select child;
+
+                foreach (var child in children)
+                {
+                    child.GroupDisposable.Dispose();
+                    child.ParentID = Guid.Empty;
+                }
+
+                SelectedItems.Remove(groupRoot);
+                Items.Remove(groupRoot);
+                //UpdateZIndex();
+            }
+        }
+
+        private static Rect GetBoundingRectangle(IEnumerable<SelectableDesignerItemViewModelBase> items)
+        {
+            double x1 = Double.MaxValue;
+            double y1 = Double.MaxValue;
+            double x2 = Double.MinValue;
+            double y2 = Double.MinValue;
+
+            foreach (var item in items)
+            {
+                if (item is DesignerItemViewModelBase designerItem)
+                {
+                    x1 = Math.Min(designerItem.Left.Value, x1);
+                    y1 = Math.Min(designerItem.Top.Value, y1);
+
+                    x2 = Math.Max(designerItem.Left.Value + designerItem.Width.Value, x2);
+                    y2 = Math.Max(designerItem.Top.Value + designerItem.Height.Value, y2);
+                }
+                else if (item is ConnectorBaseViewModel connector)
+                {
+                    x1 = Math.Min(Math.Min(connector.SourceA.X, connector.SourceB.X), x1);
+                    y1 = Math.Min(Math.Min(connector.SourceA.Y, connector.SourceB.Y), y1);
+
+                    x2 = Math.Max(Math.Max(connector.SourceA.X, connector.SourceB.X), x2);
+                    y2 = Math.Max(Math.Max(connector.SourceA.Y, connector.SourceB.Y), y2);
+                }
+            }
+
+            return new Rect(new Point(x1, y1), new Point(x2, y2));
+        }
+
+        /// <summary>
+        /// 現在ポインティングしている座標
+        /// ステータスバー上の座標インジケーターに使用される
+        /// </summary>
         public Point CurrentPoint
         {
             get { return _CurrentPoint; }

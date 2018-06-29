@@ -1,4 +1,5 @@
-﻿using Prism.Commands;
+﻿using grapher.Helpers;
+using Prism.Commands;
 using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,7 @@ namespace grapher.ViewModels
     }
 
 
-    public class SelectableDesignerItemViewModelBase : BindableBase, ISelectItems
+    public abstract class SelectableDesignerItemViewModelBase : BindableBase, ISelectItems, IObserver<GroupTransformNotification>
     {
         private bool _IsSelected;
 
@@ -45,6 +46,12 @@ namespace grapher.ViewModels
             set { SetProperty(ref _IsSelected, value); }
         }
 
+        public Guid ID { get; set; } = Guid.NewGuid();
+
+        public Guid ParentID { get; set; }
+
+        public IDisposable GroupDisposable { get; internal set; }
+
         private void ExecuteSelectItemCommand(object param)
         {
             SelectItem((bool)param, !IsSelected);
@@ -67,5 +74,21 @@ namespace grapher.ViewModels
         {
             SelectItemCommand = new DelegateCommand<object>(p => SelectItem((bool)p, !IsSelected));
         }
+
+        #region IObserver<GroupTransformNotification>
+
+        public abstract void OnNext(GroupTransformNotification value);
+
+        public void OnError(Exception error)
+        {
+            throw new NotSupportedException();
+        }
+
+        public void OnCompleted()
+        {
+            throw new NotSupportedException();
+        }
+
+        #endregion //IObserver<GroupTransformNotification>
     }
 }

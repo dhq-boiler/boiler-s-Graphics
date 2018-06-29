@@ -2,6 +2,7 @@
 using grapher.Helpers;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Media;
@@ -272,6 +273,25 @@ namespace grapher.ViewModels
         public void OnCompleted()
         {
             throw new NotImplementedException();
+        }
+
+        #endregion //IObserver<TransformNotification>
+
+        #region IObserver<GroupTransformNotification>
+
+        public override void OnNext(GroupTransformNotification value)
+        {
+            var a = SourceA;
+            var b = SourceB;
+
+            a.X += value.LeftChange;
+            b.X += value.LeftChange;
+
+            a.Y += value.TopChange;
+            b.Y += value.TopChange;
+
+            SourceA = a;
+            SourceB = b;
         }
 
         #endregion //IObserver<TransformNotification>
