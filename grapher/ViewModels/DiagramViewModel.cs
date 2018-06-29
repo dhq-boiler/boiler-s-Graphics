@@ -8,8 +8,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 
@@ -28,8 +26,20 @@ namespace grapher.ViewModels
             RemoveItemCommand = new DelegateCommand<object>(p => ExecuteRemoveItemCommand(p));
             ClearSelectedItemsCommand = new DelegateCommand<object>(p => ExecuteClearSelectedItemsCommand(p));
             CreateNewDiagramCommand = new DelegateCommand<object>(p => ExecuteCreateNewDiagramCommand(p));
-            GroupCommand = new DelegateCommand(() => ExecuteGroupItemsCommand());
-            UngroupCommand = new DelegateCommand(() => ExecuteUngroupItemsCommand());
+            GroupCommand = new DelegateCommand(() => ExecuteGroupItemsCommand(), () => CanExecuteGroup());
+            UngroupCommand = new DelegateCommand(() => ExecuteUngroupItemsCommand(), () => CanExecuteUngroup());
+
+            SelectedItems = Items
+                .ObserveElementProperty(x => x.IsSelected)
+                .Where(x => x.Instance.IsSelected)
+                .Select(x => x.Instance)
+                .ToReactiveCollection();
+            SelectedItems.CollectionChangedAsObservable()
+                .Subscribe(_ =>
+                {
+                    GroupCommand.RaiseCanExecuteChanged();
+                    UngroupCommand.RaiseCanExecuteChanged();
+                });
 
             EdgeColors.CollectionChangedAsObservable()
                 .Subscribe(_ => RaisePropertyChanged("EdgeColors"));
@@ -63,10 +73,7 @@ namespace grapher.ViewModels
             get { return _items; }
         }
 
-        public List<SelectableDesignerItemViewModelBase> SelectedItems
-        {
-            get { return Items.Where(x => x.IsSelected).ToList(); }
-        }
+        public ReactiveCollection<SelectableDesignerItemViewModelBase> SelectedItems { get; }
 
         public ObservableCollection<Color> EdgeColors
         {
@@ -137,13 +144,21 @@ namespace grapher.ViewModels
             groupItem.SelectItemCommand.Execute(true);
         }
 
+        private bool CanExecuteGroup()
+        {
+            var items = from item in SelectedItems
+                        where item.ParentID == Guid.Empty
+                        select item;
+            return items.Count() > 1;
+        }
+
         private void ExecuteUngroupItemsCommand()
         {
             var groups = from item in SelectedItems
                          where item.ParentID == Guid.Empty
                          select item;
 
-            foreach (var groupRoot in groups)
+            foreach (var groupRoot in groups.ToList())
             {
                 var children = from child in Items
                                where child.ParentID == groupRoot.ID
@@ -159,6 +174,13 @@ namespace grapher.ViewModels
                 Items.Remove(groupRoot);
                 //UpdateZIndex();
             }
+        }
+
+        private bool CanExecuteUngroup()
+        {
+            var items = from item in SelectedItems.OfType<GroupItemViewModel>()
+                        select item;
+            return items.Count() > 0;
         }
 
         private static Rect GetBoundingRectangle(IEnumerable<SelectableDesignerItemViewModelBase> items)

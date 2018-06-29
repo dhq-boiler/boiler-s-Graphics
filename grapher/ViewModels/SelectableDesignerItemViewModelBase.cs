@@ -1,11 +1,9 @@
 ﻿using grapher.Helpers;
 using Prism.Commands;
 using Prism.Mvvm;
+using Reactive.Bindings;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace grapher.ViewModels
 {
@@ -31,7 +29,7 @@ namespace grapher.ViewModels
             Init();
         }
 
-        public List<SelectableDesignerItemViewModelBase> SelectedItems
+        public ReactiveCollection<SelectableDesignerItemViewModelBase> SelectedItems
         {
             get { return Owner.SelectedItems; }
         }
