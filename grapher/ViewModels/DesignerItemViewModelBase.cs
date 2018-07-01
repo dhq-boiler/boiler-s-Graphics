@@ -3,6 +3,7 @@ using grapher.Helpers;
 using Reactive.Bindings;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Media;
 
@@ -148,8 +149,33 @@ namespace grapher.ViewModels
 
         public override void OnNext(GroupTransformNotification value)
         {
-            Left.Value += value.LeftChange;
-            Top.Value += value.TopChange;
+            var oldLeft = Left.Value;
+            var oldTop = Top.Value;
+            var oldWidth = value.OldWidth;
+            var oldHeight = value.OldHeight;
+
+            switch (value.Type)
+            {
+                case TransformType.Move:
+                    Left.Value += value.LeftChange;
+                    Top.Value += value.TopChange;
+                    break;
+                case TransformType.Resize:
+                    Left.Value = (Left.Value - value.GroupLeftTop.X) * ((oldWidth + value.WidthChange) / (oldWidth)) + value.GroupLeftTop.X;
+                    Top.Value = (Top.Value - value.GroupLeftTop.Y) * ((oldHeight + value.HeightChange) / (oldHeight)) + value.GroupLeftTop.Y;
+                    Width.Value = (oldWidth + value.WidthChange) / oldWidth * Width.Value;
+                    Height.Value = (oldHeight + value.HeightChange) / oldHeight * Height.Value;
+                    break;
+                case TransformType.Rotate:
+                    RotateAngle.Value += value.RotateAngleChange;
+                    Debug.WriteLine(RotateAngle.Value);
+                    var rad = RotateAngle.Value * Math.PI / 180;
+                    var x = oldLeft - value.GroupCenter.X;
+                    var y = oldTop - value.GroupCenter.Y;
+                    Left.Value = x * Math.Cos(rad) - y * Math.Sin(rad);
+                    Top.Value = x * Math.Sin(rad) + y * Math.Cos(rad);
+                    break;
+            }
         }
 
         #region IObservable<TransformNotification>

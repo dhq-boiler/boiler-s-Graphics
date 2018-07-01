@@ -1,9 +1,7 @@
 ﻿using grapher.Helpers;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Windows;
 
 namespace grapher.ViewModels
 {
@@ -11,6 +9,9 @@ namespace grapher.ViewModels
     {
         private double _leftOld;
         private double _topOld;
+        private double _widthOld;
+        private double _heightOld;
+        private double _lotateAngleOld;
 
         public GroupItemViewModel()
             : base()
@@ -19,6 +20,7 @@ namespace grapher.ViewModels
             {
                 var notification = new GroupTransformNotification()
                 {
+                    Type = TransformType.Move,
                     LeftChange = l - _leftOld
                 };
                 GroupTransformObserversOnNext(notification);
@@ -28,10 +30,49 @@ namespace grapher.ViewModels
             {
                 var notification = new GroupTransformNotification()
                 {
+                    Type = TransformType.Move,
                     TopChange = t - _topOld
                 };
                 GroupTransformObserversOnNext(notification);
                 _topOld = t;
+            });
+            Width.Subscribe(w =>
+            {
+                var notification = new GroupTransformNotification()
+                {
+                    Type = TransformType.Resize,
+                    GroupLeftTop = new Point(Left.Value, Top.Value),
+                    OldWidth = _widthOld,
+                    OldHeight = _heightOld,
+                    WidthChange = w - _widthOld
+                };
+                GroupTransformObserversOnNext(notification);
+                _widthOld = w;
+            });
+            Height.Subscribe(h =>
+            {
+                var notification = new GroupTransformNotification()
+                {
+                    Type = TransformType.Resize,
+                    GroupLeftTop = new Point(Left.Value, Top.Value),
+                    OldWidth = _widthOld,
+                    OldHeight = _heightOld,
+                    HeightChange = h - _heightOld
+                };
+                GroupTransformObserversOnNext(notification);
+                _heightOld = h;
+            });
+            RotateAngle.Subscribe(a =>
+            {
+                var notification = new GroupTransformNotification()
+                {
+                    Type = TransformType.Rotate,
+                    GroupLeftTop = new Point(Left.Value, Top.Value),
+                    GroupCenter = new Point(Left.Value + Width.Value / 2, Top.Value + Height.Value / 2),
+                    RotateAngleChange = a - _lotateAngleOld
+                };
+                GroupTransformObserversOnNext(notification);
+                _lotateAngleOld = a;
             });
         }
 
