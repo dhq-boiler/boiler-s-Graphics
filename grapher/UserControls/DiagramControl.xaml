@@ -49,7 +49,7 @@
                                                     <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
                                                     <Setter Property="RenderTransform">
                                                         <Setter.Value>
-                                                            <RotateTransform Angle="{Binding RotateAngle.Value}" />
+                                                            <MatrixTransform Matrix="{Binding Matrix.Value}" />
                                                         </Setter.Value>
                                                     </Setter>
                                                 </Style>

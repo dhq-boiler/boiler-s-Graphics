@@ -84,7 +84,9 @@ namespace grapher.ViewModels
 
         public ReactiveProperty<double> Height { get; } = new ReactiveProperty<double>();
 
-        public ReactiveProperty<double> RotateAngle { get; } = new ReactiveProperty<double>();
+        public ReactiveProperty<double> RotationAngle { get; } = new ReactiveProperty<double>();
+
+        public ReactiveProperty<Matrix> Matrix { get; } = new ReactiveProperty<Matrix>();
 
         public bool ShowConnectors
         {
@@ -112,6 +114,8 @@ namespace grapher.ViewModels
 
         public ReactiveProperty<Point> CenterPoint { get; } = new ReactiveProperty<Point>();
 
+        public ReactiveProperty<Point> RotatedCenterPoint { get; } = new ReactiveProperty<Point>();
+
         private void UpdateCenterPoint()
         {
             var leftTop = new Point(Left.Value, Top.Value);
@@ -129,11 +133,21 @@ namespace grapher.ViewModels
             MinWidth = 0;
             MinHeight = 0;
 
-            Left.Subscribe(_ => UpdateTransform());
-            Top.Subscribe(_ => UpdateTransform());
+            Left.Subscribe(left =>
+            {
+                UpdateTransform();
+                Debug.WriteLine($"Left:{left}");
+            });
+            Top.Subscribe(top =>
+            {
+                UpdateTransform();
+                Debug.WriteLine($"Top:{top}");
+            });
             Width.Subscribe(_ => UpdateTransform());
             Height.Subscribe(_ => UpdateTransform());
-            RotateAngle.Subscribe(_ => UpdateTransform());
+            RotationAngle.Subscribe(_ => UpdateTransform());
+
+            Matrix.Value = new Matrix();
         }
 
         public void UpdateTransform()
@@ -167,13 +181,10 @@ namespace grapher.ViewModels
                     Height.Value = (oldHeight + value.HeightChange) / oldHeight * Height.Value;
                     break;
                 case TransformType.Rotate:
-                    RotateAngle.Value += value.RotateAngleChange;
-                    Debug.WriteLine(RotateAngle.Value);
-                    var rad = RotateAngle.Value * Math.PI / 180;
-                    var x = oldLeft - value.GroupCenter.X;
-                    var y = oldTop - value.GroupCenter.Y;
-                    Left.Value = x * Math.Cos(rad) - y * Math.Sin(rad);
-                    Top.Value = x * Math.Sin(rad) + y * Math.Cos(rad);
+                    var diffAngle = value.RotateAngleChange;
+                    var matrix = Matrix.Value;
+                    matrix.RotateAt(diffAngle, value.GroupCenter.X - Left.Value - Width.Value / 2, value.GroupCenter.Y - Top.Value - Height.Value / 2);
+                    Matrix.Value = matrix;
                     break;
             }
         }

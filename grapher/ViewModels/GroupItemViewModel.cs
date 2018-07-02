@@ -62,7 +62,7 @@ namespace grapher.ViewModels
                 GroupTransformObserversOnNext(notification);
                 _heightOld = h;
             });
-            RotateAngle.Subscribe(a =>
+            RotationAngle.Subscribe(a =>
             {
                 var notification = new GroupTransformNotification()
                 {
@@ -72,6 +72,10 @@ namespace grapher.ViewModels
                     RotateAngleChange = a - _lotateAngleOld
                 };
                 GroupTransformObserversOnNext(notification);
+
+                //rotate group boundary
+                //Matrix.Value.RotateAt(a - _lotateAngleOld, Left.Value + Width.Value / 2, Top.Value + Height.Value / 2);
+
                 _lotateAngleOld = a;
             });
         }

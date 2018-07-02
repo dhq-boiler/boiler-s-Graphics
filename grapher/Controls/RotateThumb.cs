@@ -1,6 +1,8 @@
-﻿using grapher.Extensions;
+﻿using grapher.Exceptions;
+using grapher.Extensions;
 using grapher.ViewModels;
 using System;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -11,12 +13,13 @@ namespace grapher.Controls
 {
     public class RotateThumb : Thumb
     {
-        private double _initialAngle;
-        private RotateTransform _rotateTransform;
+        private Matrix _initialMatrix;
+        private MatrixTransform _rotateTransform;
         private Vector _startVector;
         private Point _centerPoint;
         private FrameworkElement _designerItem;
         private Canvas _canvas;
+        private double _previousAngleInDegrees;
 
         public RotateThumb()
         {
@@ -42,15 +45,14 @@ namespace grapher.Controls
                     Point startPoint = Mouse.GetPosition(_canvas);
                     _startVector = Point.Subtract(startPoint, _centerPoint);
 
-                    _rotateTransform = _designerItem.RenderTransform as RotateTransform;
+                    _rotateTransform = _designerItem.RenderTransform as MatrixTransform;
                     if (_rotateTransform == null)
                     {
-                        _designerItem.RenderTransform = new RotateTransform(0);
-                        _initialAngle = 0;
+                        throw new UnexpectedException();
                     }
                     else
                     {
-                        _initialAngle = _rotateTransform.Angle;
+                        _initialMatrix = _rotateTransform.Matrix;
                     }
                 }
             }
@@ -65,9 +67,15 @@ namespace grapher.Controls
                 Point currentPoint = Mouse.GetPosition(_canvas);
                 Vector deltaVector = Point.Subtract(currentPoint, _centerPoint);
 
-                double angle = Vector.AngleBetween(_startVector, deltaVector);
+                double angleInDegrees = Vector.AngleBetween(_startVector, deltaVector);
 
-                viewModel.RotateAngle.Value = _initialAngle + Math.Round(angle, 0);
+                viewModel.RotationAngle.Value = Math.Round(angleInDegrees, 0);
+
+                var diff = angleInDegrees - _previousAngleInDegrees;
+                _initialMatrix.RotateAt(diff, 0.5, 0.5);
+                viewModel.Matrix.Value = _initialMatrix;
+                _previousAngleInDegrees = angleInDegrees;
+
                 _designerItem.InvalidateMeasure();
             }
         }
