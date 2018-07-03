@@ -72,7 +72,7 @@ namespace grapher.Controls
                 viewModel.RotationAngle.Value = Math.Round(angleInDegrees, 0);
 
                 var diff = angleInDegrees - _previousAngleInDegrees;
-                _initialMatrix.RotateAt(diff, 0.5, 0.5);
+                _initialMatrix.RotateAt(diff, 0, 0);
                 viewModel.Matrix.Value = _initialMatrix;
                 _previousAngleInDegrees = angleInDegrees;
 
