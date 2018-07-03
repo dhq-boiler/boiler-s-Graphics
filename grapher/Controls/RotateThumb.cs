@@ -24,6 +24,21 @@ namespace grapher.Controls
             DragStarted += new DragStartedEventHandler(this.RotateThumb_DragStarted);
         }
 
+        protected override void OnMouseDown(MouseButtonEventArgs e)
+        {
+            base.OnMouseDown(e);
+
+            (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "回転";
+        }
+
+        protected override void OnMouseUp(MouseButtonEventArgs e)
+        {
+            base.OnMouseUp(e);
+
+            (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "";
+            (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = "";
+        }
+
         private void RotateThumb_DragStarted(object sender, DragStartedEventArgs e)
         {
             _designerItem = this.GetParentOfType("selectedGrid") as FrameworkElement;
@@ -68,6 +83,9 @@ namespace grapher.Controls
                 double angle = Vector.AngleBetween(_startVector, deltaVector);
 
                 viewModel.RotateAngle.Value = _initialAngle + Math.Round(angle, 0);
+
+                (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = $"角度 {viewModel.RotateAngle.Value}°";
+
                 _designerItem.InvalidateMeasure();
             }
         }

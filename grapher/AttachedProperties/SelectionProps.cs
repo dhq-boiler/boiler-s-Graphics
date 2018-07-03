@@ -1,9 +1,4 @@
 ﻿using grapher.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -72,6 +67,17 @@ namespace grapher.AttachedProperties
                     selectableDesignerItemViewModelBase.Parent.EdgeColors.Clear();
                     selectableDesignerItemViewModelBase.Parent.FillColors.Clear();
                     selectableDesignerItemViewModelBase.IsSelected = true;
+
+                    if (selectableDesignerItemViewModelBase is DesignerItemViewModelBase)
+                    {
+                        var viewModel = selectableDesignerItemViewModelBase as DesignerItemViewModelBase;
+                        (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = $"(x, y) = ({viewModel.Left.Value}, {viewModel.Top.Value}) (w, h) = ({viewModel.Width.Value}, {viewModel.Height.Value})";
+                    }
+                    else if (selectableDesignerItemViewModelBase is ConnectorBaseViewModel)
+                    {
+                        var viewModel = selectableDesignerItemViewModelBase as ConnectorBaseViewModel;
+                        (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = $"({viewModel.SourceA.X}, {viewModel.SourceA.Y}) - ({viewModel.SourceB.X}, {viewModel.SourceB.Y})";
+                    }
 
                     Color edgeColor = Colors.Transparent;
                     Color fillColor = Colors.Transparent;

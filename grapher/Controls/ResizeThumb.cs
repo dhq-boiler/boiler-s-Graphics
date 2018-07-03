@@ -1,12 +1,10 @@
-﻿using grapher.Extensions;
-using grapher.ViewModels;
+﻿using grapher.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls.Primitives;
+using System.Windows.Input;
 
 namespace grapher.Controls
 {
@@ -15,6 +13,21 @@ namespace grapher.Controls
         public ResizeThumb()
         {
             base.DragDelta += new DragDeltaEventHandler(ResizeThumb_DragDelta);
+        }
+
+        protected override void OnMouseDown(MouseButtonEventArgs e)
+        {
+            base.OnMouseDown(e);
+
+            (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "リサイズ";
+        }
+
+        protected override void OnMouseUp(MouseButtonEventArgs e)
+        {
+            base.OnMouseUp(e);
+
+            (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "";
+            (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = "";
         }
 
         private void ResizeThumb_DragDelta(object sender, DragDeltaEventArgs e)
@@ -70,6 +83,8 @@ namespace grapher.Controls
                             default:
                                 break;
                         }
+
+                        (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = $"(w, h) = ({viewModel.Width.Value}, {viewModel.Height.Value})";
                     }
                 }
                 e.Handled = true;

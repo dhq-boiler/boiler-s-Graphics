@@ -38,6 +38,9 @@ namespace grapher.Adorners
                     this.CaptureMouse();
 
                 _endPoint = e.GetPosition(this);
+
+                (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = $"({_startPoint.Value.X}, {_startPoint.Value.Y}) - ({_endPoint.Value.X}, {_endPoint.Value.Y})";
+
                 UpdateSelection();
                 this.InvalidateVisual();
             }
@@ -58,6 +61,9 @@ namespace grapher.Adorners
             AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(_designerCanvas);
             if (adornerLayer != null)
                 adornerLayer.Remove(this);
+
+            (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "";
+            (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = "";
 
             e.Handled = true;
         }
