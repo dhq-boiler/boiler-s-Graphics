@@ -67,6 +67,7 @@ namespace grapher.Controls
                     else
                     {
                         _initialMatrix = _rotateTransform.Matrix;
+                        _previousAngleInDegrees = 0;
                     }
                 }
             }
