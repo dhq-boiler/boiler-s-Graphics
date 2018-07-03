@@ -1,11 +1,6 @@
 ﻿using grapher.Extensions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using grapher.ViewModels;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace grapher.Controls
@@ -36,6 +31,13 @@ namespace grapher.Controls
             {
                 canvas.MoveConnector = this;
             }
+        }
+
+        protected override void OnMouseDown(MouseButtonEventArgs e)
+        {
+            base.OnMouseDown(e);
+
+            (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "変形";
         }
     }
 }

@@ -15,8 +15,6 @@
     xmlns:usercontrol="clr-namespace:grapher.UserControls"
     xmlns:viewmodel="clr-namespace:grapher.ViewModels"
     Title="GRAPHER"
-    Width="800"
-    Height="450"
     prism:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
     <i:Interaction.Triggers>
@@ -124,12 +122,24 @@
 
         <StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem>
-                <TextBlock>
+                <TextBlock Width="80">
                     <Run>(</Run>
                     <Run Text="{Binding DiagramViewModel.CurrentPoint.X, StringFormat=##0.##}" />
                     <Run xml:space="preserve" Text=",&#x09;" />
                     <Run Text="{Binding DiagramViewModel.CurrentPoint.Y, StringFormat=##0.##}" />
                     <Run>)</Run>
+                </TextBlock>
+            </StatusBarItem>
+            <Separator />
+            <StatusBarItem>
+                <TextBlock Width="100" TextAlignment="Center">
+                    <Run Text="{Binding CurrentOperation.Value}" />
+                </TextBlock>
+            </StatusBarItem>
+            <Separator />
+            <StatusBarItem>
+                <TextBlock Width="300" TextAlignment="Left">
+                    <Run Text="{Binding Details.Value}" />
                 </TextBlock>
             </StatusBarItem>
         </StatusBar>
