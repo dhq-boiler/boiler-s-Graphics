@@ -28,6 +28,10 @@ namespace grapher.ViewModels
             CreateNewDiagramCommand = new DelegateCommand<object>(p => ExecuteCreateNewDiagramCommand(p));
             GroupCommand = new DelegateCommand(() => ExecuteGroupItemsCommand(), () => CanExecuteGroup());
             UngroupCommand = new DelegateCommand(() => ExecuteUngroupItemsCommand(), () => CanExecuteUngroup());
+            BringForwardCommand = new DelegateCommand(() => ExecuteBringForwardCommand(), () => CanExecuteOrder());
+            SendBackwardCommand = new DelegateCommand(() => ExecuteSendBackwardCommand(), () => CanExecuteOrder());
+            BringForegroundCommand = new DelegateCommand(() => ExecuteBringForegroundCommand(), () => CanExecuteOrder());
+            SendBackgroundCommand = new DelegateCommand(() => ExecuteSendBackgroundCommand(), () => CanExecuteOrder());
 
             SelectedItems = Items
                 .ObserveElementProperty(x => x.IsSelected)
@@ -39,6 +43,10 @@ namespace grapher.ViewModels
                 {
                     GroupCommand.RaiseCanExecuteChanged();
                     UngroupCommand.RaiseCanExecuteChanged();
+                    BringForwardCommand.RaiseCanExecuteChanged();
+                    SendBackwardCommand.RaiseCanExecuteChanged();
+                    BringForegroundCommand.RaiseCanExecuteChanged();
+                    SendBackgroundCommand.RaiseCanExecuteChanged();
                 });
 
             EdgeColors.CollectionChangedAsObservable()
@@ -67,6 +75,10 @@ namespace grapher.ViewModels
         public DelegateCommand<object> CreateNewDiagramCommand { get; private set; }
         public DelegateCommand GroupCommand { get; private set; }
         public DelegateCommand UngroupCommand { get; private set; }
+        public DelegateCommand BringForegroundCommand { get; private set; }
+        public DelegateCommand BringForwardCommand { get; private set; }
+        public DelegateCommand SendBackwardCommand { get; private set; }
+        public DelegateCommand SendBackgroundCommand { get; private set; }
 
         public ObservableCollection<SelectableDesignerItemViewModelBase> Items
         {
@@ -181,6 +193,125 @@ namespace grapher.ViewModels
             var items = from item in SelectedItems.OfType<GroupItemViewModel>()
                         select item;
             return items.Count() > 0;
+        }
+
+        private void ExecuteBringForwardCommand()
+        {
+            var ordered = from item in SelectedItems
+                          orderby item.ZIndex.Value descending
+                          select item;
+
+            int count = Items.Count;
+
+            for (int i = 0; i < ordered.Count(); ++i)
+            {
+                int currentIndex = ordered.ElementAt(i).ZIndex.Value;
+                int newIndex = Math.Min(count - 1 - i, currentIndex + 1);
+                if (currentIndex != newIndex)
+                {
+                    ordered.ElementAt(i).ZIndex.Value = newIndex;
+                    var exists = Items.Where(item => item.ZIndex.Value == newIndex);
+
+                    foreach (var item in exists)
+                    {
+                        if (item != ordered.ElementAt(i))
+                        {
+                            item.ZIndex.Value = currentIndex;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        private void ExecuteSendBackwardCommand()
+        {
+            var ordered = from item in SelectedItems
+                          orderby item.ZIndex.Value ascending
+                          select item;
+
+            int count = Items.Count;
+
+            for (int i = 0; i < ordered.Count(); ++i)
+            {
+                int currentIndex = ordered.ElementAt(i).ZIndex.Value;
+                int newIndex = Math.Max(i, currentIndex - 1);
+                if (currentIndex != newIndex)
+                {
+                    ordered.ElementAt(i).ZIndex.Value = newIndex;
+                    var exists = Items.Where(item => item.ZIndex.Value == newIndex);
+
+                    foreach (var item in exists)
+                    {
+                        if (item != ordered.ElementAt(i))
+                        {
+                            item.ZIndex.Value = currentIndex;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        private void ExecuteBringForegroundCommand()
+        {
+            var ordered = from item in SelectedItems
+                          orderby item.ZIndex.Value descending
+                          select item;
+
+            int count = Items.Count;
+
+            for (int i = 0; i < ordered.Count(); ++i)
+            {
+                int currentIndex = ordered.ElementAt(i).ZIndex.Value;
+                int newIndex = Items.Count - 1;
+                if (currentIndex != newIndex)
+                {
+                    ordered.ElementAt(i).ZIndex.Value = newIndex;
+                    var exists = Items.Where(item => item.ZIndex.Value <= newIndex);
+
+                    foreach (var item in exists)
+                    {
+                        if (item != ordered.ElementAt(i))
+                        {
+                            item.ZIndex.Value -= 1;
+                        }
+                    }
+                }
+            }
+        }
+
+        private void ExecuteSendBackgroundCommand()
+        {
+            var ordered = from item in SelectedItems
+                          orderby item.ZIndex.Value ascending
+                          select item;
+
+            int count = Items.Count;
+
+            for (int i = 0; i < ordered.Count(); ++i)
+            {
+                int currentIndex = ordered.ElementAt(i).ZIndex.Value;
+                int newIndex = 0;
+                if (currentIndex != newIndex)
+                {
+                    ordered.ElementAt(i).ZIndex.Value = newIndex;
+                    var exists = Items.Where(item => item.ZIndex.Value >= newIndex);
+
+                    foreach (var item in exists)
+                    {
+                        if (item != ordered.ElementAt(i))
+                        {
+                            item.ZIndex.Value += 1;
+                        }
+                    }
+                }
+            }
+        }
+
+        private bool CanExecuteOrder()
+        {
+            return SelectedItems.Count() > 0;
         }
 
         private static Rect GetBoundingRectangle(IEnumerable<SelectableDesignerItemViewModelBase> items)

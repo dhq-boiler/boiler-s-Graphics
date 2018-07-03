@@ -1,10 +1,6 @@
 ﻿using grapher.Controls;
 using grapher.ViewModels;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -63,6 +59,7 @@ namespace grapher.Adorners
                 itemBase.Width.Value = Math.Abs(_endPoint.Value.X - _startPoint.Value.X);
                 itemBase.Height.Value = Math.Abs(_endPoint.Value.Y - _startPoint.Value.Y);
                 itemBase.IsSelected = true;
+                itemBase.ZIndex.Value = itemBase.Owner.Items.Count;
                 ((AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel).AddItemCommand.Execute(itemBase);
 
                 _startPoint = null;

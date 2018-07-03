@@ -35,6 +35,7 @@
                         <Style x:Key="designerItemStyle" TargetType="{x:Type ContentPresenter}">
                             <Setter Property="Canvas.Top" Value="{Binding Top.Value}" />
                             <Setter Property="Canvas.Left" Value="{Binding Left.Value}" />
+                            <Setter Property="Panel.ZIndex" Value="{Binding ZIndex.Value}" />
                             <Setter Property="attached:SelectionProps.EnabledForSelection" Value="True" />
                             <Setter Property="attached:ItemConnectProps.EnabledForConnection" Value="True" />
                             <Setter Property="Width" Value="{Binding Width.Value}" />
@@ -128,6 +129,7 @@
                             <Setter Property="Height" Value="{Binding Area.Height}" />
                             <Setter Property="Canvas.Top" Value="{Binding Area.Top}" />
                             <Setter Property="Canvas.Left" Value="{Binding Area.Left}" />
+                            <Setter Property="Panel.ZIndex" Value="{Binding ZIndex.Value}" />
                             <Setter Property="attached:SelectionProps.EnabledForSelection" Value="True" />
                             <Setter Property="ContentTemplateSelector">
                                 <Setter.Value>
@@ -286,6 +288,12 @@
                         <MenuItem Header="Grouping">
                             <MenuItem Command="{Binding GroupCommand}" Header="Group" />
                             <MenuItem Command="{Binding UngroupCommand}" Header="Ungroup" />
+                        </MenuItem>
+                        <MenuItem Header="Ordering">
+                            <MenuItem Command="{Binding BringForegroundCommand}" Header="Bring foreground" />
+                            <MenuItem Command="{Binding BringForwardCommand}" Header="Bring forward" />
+                            <MenuItem Command="{Binding SendBackwardCommand}" Header="Send backward" />
+                            <MenuItem Command="{Binding SendBackgroundCommand}" Header="Send background" />
                         </MenuItem>
                     </ContextMenu>
                 </ScrollViewer.ContextMenu>

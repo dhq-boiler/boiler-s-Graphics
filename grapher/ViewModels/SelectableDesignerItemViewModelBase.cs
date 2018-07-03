@@ -44,6 +44,8 @@ namespace grapher.ViewModels
             set { SetProperty(ref _IsSelected, value); }
         }
 
+        public ReactiveProperty<int> ZIndex { get; } = new ReactiveProperty<int>();
+
         public Guid ID { get; set; } = Guid.NewGuid();
 
         public Guid ParentID { get; set; }

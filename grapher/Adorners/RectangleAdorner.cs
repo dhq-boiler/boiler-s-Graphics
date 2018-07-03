@@ -69,6 +69,7 @@ namespace grapher.Adorners
                 item.Height.Value = Math.Max(_startPoint.Value.Y - _endPoint.Value.Y, _endPoint.Value.Y - _startPoint.Value.Y);
                 item.EdgeColor = item.Owner.EdgeColors.First();
                 item.FillColor = item.Owner.FillColors.First();
+                item.ZIndex.Value = item.Owner.Items.Count;
                 ((AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel).AddItemCommand.Execute(item);
 
                 _startPoint = null;

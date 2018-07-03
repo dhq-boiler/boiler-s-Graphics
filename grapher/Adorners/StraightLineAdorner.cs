@@ -62,6 +62,7 @@ namespace grapher.Adorners
                 var item = new StraightConnectorViewModel(new PartCreatedConnectionInfo(_startPoint.Value), new PartCreatedConnectionInfo(_endPoint.Value));
                 item.Owner = (AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel;
                 item.EdgeColor = item.Owner.EdgeColors.First();
+                item.ZIndex.Value = item.Owner.Items.Count;
                 ((AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel).AddItemCommand.Execute(item);
 
                 _startPoint = null;
