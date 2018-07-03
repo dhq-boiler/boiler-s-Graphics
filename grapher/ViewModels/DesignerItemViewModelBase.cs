@@ -182,6 +182,7 @@ namespace grapher.ViewModels
                     break;
                 case TransformType.Rotate:
                     var diffAngle = value.RotateAngleChange;
+                    RotationAngle.Value += diffAngle; //for only calculate rotation angle sum
                     var matrix = Matrix.Value;
                     matrix.RotateAt(diffAngle, value.GroupCenter.X - Left.Value - Width.Value / 2, value.GroupCenter.Y - Top.Value - Height.Value / 2);
                     Left.Value += matrix.OffsetX;

@@ -83,9 +83,9 @@ namespace grapher.Controls
 
                 double angleInDegrees = Vector.AngleBetween(_startVector, deltaVector);
 
-                viewModel.RotationAngle.Value = Math.Round(angleInDegrees, 0);
-
                 var diff = angleInDegrees - _previousAngleInDegrees;
+                diff = Math.Round(diff, 0);
+                viewModel.RotationAngle.Value += diff;
                 _initialMatrix.RotateAt(diff, 0, 0);
                 viewModel.Matrix.Value = _initialMatrix;
                 _previousAngleInDegrees = angleInDegrees;
