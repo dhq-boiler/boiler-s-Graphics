@@ -46,9 +46,9 @@ namespace grapher.Controls
                     Point point = new Point(rectangleBounds.Left + (rectangleBounds.Width / 2),
                                             rectangleBounds.Bottom + (rectangleBounds.Height / 2));
                     _partialConnection = LineFactory.Create(sourceDataItem, new PartCreatedConnectionInfo(point));
-                    _partialConnection.Parent = sourceDataItem.DataItem.Parent;
-                    _partialConnection.EdgeColor = _partialConnection.Parent.EdgeColors.First();
-                    sourceDataItem.DataItem.Parent.AddItemCommand.Execute(_partialConnection);
+                    _partialConnection.Owner = sourceDataItem.DataItem.Owner;
+                    _partialConnection.EdgeColor = _partialConnection.Owner.EdgeColors.First();
+                    sourceDataItem.DataItem.Owner.AddItemCommand.Execute(_partialConnection);
                 }
             }
         }
@@ -79,24 +79,24 @@ namespace grapher.Controls
                     Connector sinkConnector = _connectorsHit.Last();
                     FullyCreatedConnectorInfo sinkDataItem = sinkConnector.DataContext as FullyCreatedConnectorInfo;
 
-                    int indexOfLastTempConnection = sinkDataItem.DataItem.Parent.Items.Count - 1;
-                    sinkDataItem.DataItem.Parent.RemoveItemCommand.Execute(
-                        sinkDataItem.DataItem.Parent.Items[indexOfLastTempConnection]);
+                    int indexOfLastTempConnection = sinkDataItem.DataItem.Owner.Items.Count - 1;
+                    sinkDataItem.DataItem.Owner.RemoveItemCommand.Execute(
+                        sinkDataItem.DataItem.Owner.Items[indexOfLastTempConnection]);
                     var line = LineFactory.Create(sourceDataItem, sinkDataItem);
-                    line.Parent = sinkDataItem.DataItem.Parent;
-                    line.EdgeColor = line.Parent.EdgeColors.First();
-                    sinkDataItem.DataItem.Parent.AddItemCommand.Execute(line);
+                    line.Owner = sinkDataItem.DataItem.Owner;
+                    line.EdgeColor = line.Owner.EdgeColors.First();
+                    sinkDataItem.DataItem.Owner.AddItemCommand.Execute(line);
                 }
                 else
                 {
                     //Need to remove last item as we did not finish drawing the path
-                    int indexOfLastTempConnection = sourceDataItem.DataItem.Parent.Items.Count - 1;
-                    sourceDataItem.DataItem.Parent.RemoveItemCommand.Execute(
-                        sourceDataItem.DataItem.Parent.Items[indexOfLastTempConnection]);
+                    int indexOfLastTempConnection = sourceDataItem.DataItem.Owner.Items.Count - 1;
+                    sourceDataItem.DataItem.Owner.RemoveItemCommand.Execute(
+                        sourceDataItem.DataItem.Owner.Items[indexOfLastTempConnection]);
                     var line = LineFactory.Create(sourceDataItem, new PartCreatedConnectionInfo(e.GetPosition(this)));
-                    line.Parent = sourceDataItem.DataItem.Parent;
-                    line.EdgeColor = line.Parent.EdgeColors.First();
-                    sourceDataItem.DataItem.Parent.AddItemCommand.Execute(line);
+                    line.Owner = sourceDataItem.DataItem.Owner;
+                    line.EdgeColor = line.Owner.EdgeColors.First();
+                    sourceDataItem.DataItem.Owner.AddItemCommand.Execute(line);
                 }
             }
 

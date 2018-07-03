@@ -1,10 +1,9 @@
-﻿using Prism.Commands;
+﻿using grapher.Helpers;
+using Prism.Commands;
 using Prism.Mvvm;
+using Reactive.Bindings;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace grapher.ViewModels
 {
@@ -14,14 +13,14 @@ namespace grapher.ViewModels
     }
 
 
-    public class SelectableDesignerItemViewModelBase : BindableBase, ISelectItems
+    public abstract class SelectableDesignerItemViewModelBase : BindableBase, ISelectItems, IObserver<GroupTransformNotification>
     {
         private bool _IsSelected;
 
         public SelectableDesignerItemViewModelBase(int id, IDiagramViewModel parent)
         {
             this.Id = id;
-            this.Parent = parent;
+            this.Owner = parent;
             Init();
         }
 
@@ -30,12 +29,12 @@ namespace grapher.ViewModels
             Init();
         }
 
-        public List<SelectableDesignerItemViewModelBase> SelectedItems
+        public ReactiveCollection<SelectableDesignerItemViewModelBase> SelectedItems
         {
-            get { return Parent.SelectedItems; }
+            get { return Owner.SelectedItems; }
         }
 
-        public IDiagramViewModel Parent { get; set; }
+        public IDiagramViewModel Owner { get; set; }
         public DelegateCommand<object> SelectItemCommand { get; private set; }
         public int Id { get; set; }
 
@@ -44,6 +43,12 @@ namespace grapher.ViewModels
             get { return _IsSelected; }
             set { SetProperty(ref _IsSelected, value); }
         }
+
+        public Guid ID { get; set; } = Guid.NewGuid();
+
+        public Guid ParentID { get; set; }
+
+        public IDisposable GroupDisposable { get; internal set; }
 
         private void ExecuteSelectItemCommand(object param)
         {
@@ -54,7 +59,7 @@ namespace grapher.ViewModels
         {
             if (newselect)
             {
-                foreach (var designerItemViewModelBase in Parent.SelectedItems.ToList())
+                foreach (var designerItemViewModelBase in Owner.SelectedItems.ToList())
                 {
                     designerItemViewModelBase.IsSelected = false;
                 }
@@ -67,5 +72,21 @@ namespace grapher.ViewModels
         {
             SelectItemCommand = new DelegateCommand<object>(p => SelectItem((bool)p, !IsSelected));
         }
+
+        #region IObserver<GroupTransformNotification>
+
+        public abstract void OnNext(GroupTransformNotification value);
+
+        public void OnError(Exception error)
+        {
+            throw new NotSupportedException();
+        }
+
+        public void OnCompleted()
+        {
+            throw new NotSupportedException();
+        }
+
+        #endregion //IObserver<GroupTransformNotification>
     }
 }

@@ -3,6 +3,7 @@ using grapher.Helpers;
 using Reactive.Bindings;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Media;
 
@@ -83,7 +84,9 @@ namespace grapher.ViewModels
 
         public ReactiveProperty<double> Height { get; } = new ReactiveProperty<double>();
 
-        public ReactiveProperty<double> RotateAngle { get; } = new ReactiveProperty<double>();
+        public ReactiveProperty<double> RotationAngle { get; } = new ReactiveProperty<double>();
+
+        public ReactiveProperty<Matrix> Matrix { get; } = new ReactiveProperty<Matrix>();
 
         public bool ShowConnectors
         {
@@ -111,6 +114,8 @@ namespace grapher.ViewModels
 
         public ReactiveProperty<Point> CenterPoint { get; } = new ReactiveProperty<Point>();
 
+        public ReactiveProperty<Point> RotatedCenterPoint { get; } = new ReactiveProperty<Point>();
+
         private void UpdateCenterPoint()
         {
             var leftTop = new Point(Left.Value, Top.Value);
@@ -128,22 +133,65 @@ namespace grapher.ViewModels
             MinWidth = 0;
             MinHeight = 0;
 
-            Left.Subscribe(_ => UpdateTransform());
-            Top.Subscribe(_ => UpdateTransform());
+            Left.Subscribe(left =>
+            {
+                UpdateTransform();
+                Debug.WriteLine($"Left:{left}");
+            });
+            Top.Subscribe(top =>
+            {
+                UpdateTransform();
+                Debug.WriteLine($"Top:{top}");
+            });
             Width.Subscribe(_ => UpdateTransform());
             Height.Subscribe(_ => UpdateTransform());
-            RotateAngle.Subscribe(_ => UpdateTransform());
+            RotationAngle.Subscribe(_ => UpdateTransform());
+
+            Matrix.Value = new Matrix();
         }
 
         public void UpdateTransform()
         {
             UpdateCenterPoint();
-            ObserversOnNext();
+            TransformObserversOnNext();
         }
 
-        public void ObserversOnNext()
+        public void TransformObserversOnNext()
         {
             _observers.ForEach(x => x.OnNext(new TransformNotification()));
+        }
+
+        public override void OnNext(GroupTransformNotification value)
+        {
+            var oldLeft = Left.Value;
+            var oldTop = Top.Value;
+            var oldWidth = value.OldWidth;
+            var oldHeight = value.OldHeight;
+
+            switch (value.Type)
+            {
+                case TransformType.Move:
+                    Left.Value += value.LeftChange;
+                    Top.Value += value.TopChange;
+                    break;
+                case TransformType.Resize:
+                    Left.Value = (Left.Value - value.GroupLeftTop.X) * ((oldWidth + value.WidthChange) / (oldWidth)) + value.GroupLeftTop.X;
+                    Top.Value = (Top.Value - value.GroupLeftTop.Y) * ((oldHeight + value.HeightChange) / (oldHeight)) + value.GroupLeftTop.Y;
+                    Width.Value = (oldWidth + value.WidthChange) / oldWidth * Width.Value;
+                    Height.Value = (oldHeight + value.HeightChange) / oldHeight * Height.Value;
+                    break;
+                case TransformType.Rotate:
+                    var diffAngle = value.RotateAngleChange;
+                    RotationAngle.Value += diffAngle; //for only calculate rotation angle sum
+                    var matrix = Matrix.Value;
+                    matrix.RotateAt(diffAngle, value.GroupCenter.X - Left.Value - Width.Value / 2, value.GroupCenter.Y - Top.Value - Height.Value / 2);
+                    Left.Value += matrix.OffsetX;
+                    Top.Value += matrix.OffsetY;
+                    matrix.OffsetX = 0;
+                    matrix.OffsetY = 0;
+                    Matrix.Value = matrix;
+                    break;
+            }
         }
 
         #region IObservable<TransformNotification>

@@ -62,13 +62,13 @@ namespace grapher.Adorners
             {
                 var rand = new Random();
                 var item = new NRectangleViewModel();
-                item.Parent = (AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel;
+                item.Owner = (AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel;
                 item.Left.Value = Math.Min(_startPoint.Value.X, _endPoint.Value.X);
                 item.Top.Value = Math.Min(_startPoint.Value.Y, _endPoint.Value.Y);
                 item.Width.Value = Math.Max(_startPoint.Value.X - _endPoint.Value.X, _endPoint.Value.X - _startPoint.Value.X);
                 item.Height.Value = Math.Max(_startPoint.Value.Y - _endPoint.Value.Y, _endPoint.Value.Y - _startPoint.Value.Y);
-                item.EdgeColor = item.Parent.EdgeColors.First();
-                item.FillColor = item.Parent.FillColors.First();
+                item.EdgeColor = item.Owner.EdgeColors.First();
+                item.FillColor = item.Owner.FillColors.First();
                 ((AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel).AddItemCommand.Execute(item);
 
                 _startPoint = null;

@@ -28,7 +28,7 @@ namespace grapher.Helpers
             }
 
             var centerPoint = connector.DataItem.CenterPoint.Value;
-            var rotateAngle = connector.DataItem.RotateAngle.Value;
+            var rotateAngle = connector.DataItem.RotationAngle.Value;
             var initialDegree = connector.Degree;
             var rad = (rotateAngle + initialDegree) * Math.PI / 180d;
             var z1 = point.X - centerPoint.X;

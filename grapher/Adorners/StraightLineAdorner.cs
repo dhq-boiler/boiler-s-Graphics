@@ -60,8 +60,8 @@ namespace grapher.Adorners
             if (_startPoint.HasValue && _endPoint.HasValue)
             {
                 var item = new StraightConnectorViewModel(new PartCreatedConnectionInfo(_startPoint.Value), new PartCreatedConnectionInfo(_endPoint.Value));
-                item.Parent = (AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel;
-                item.EdgeColor = item.Parent.EdgeColors.First();
+                item.Owner = (AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel;
+                item.EdgeColor = item.Owner.EdgeColors.First();
                 ((AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel).AddItemCommand.Execute(item);
 
                 _startPoint = null;

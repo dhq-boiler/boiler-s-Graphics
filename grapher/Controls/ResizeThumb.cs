@@ -40,7 +40,7 @@ namespace grapher.Controls
                 double dragDeltaVertical, dragDeltaHorizontal;
 
                 // only resize DesignerItems
-                var selectedDesignerItems = from item in designerItem.Parent.SelectedItems
+                var selectedDesignerItems = from item in designerItem.Owner.SelectedItems
                                             where item is DesignerItemViewModelBase
                                             select item;
 
