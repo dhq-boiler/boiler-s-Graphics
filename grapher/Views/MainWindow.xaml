@@ -15,8 +15,6 @@
     xmlns:usercontrol="clr-namespace:grapher.UserControls"
     xmlns:viewmodel="clr-namespace:grapher.ViewModels"
     Title="GRAPHER"
-    Width="800"
-    Height="450"
     prism:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
     <i:Interaction.Triggers>
