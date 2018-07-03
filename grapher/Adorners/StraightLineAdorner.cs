@@ -1,6 +1,5 @@
 ﻿using grapher.Controls;
 using grapher.ViewModels;
-using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Documents;
@@ -9,7 +8,6 @@ using System.Windows.Media;
 
 namespace grapher.Adorners
 {
-    [Obsolete]
     internal class StraightLineAdorner : Adorner
     {
         private DesignerCanvas _designerCanvas;
@@ -36,6 +34,9 @@ namespace grapher.Adorners
                     this.CaptureMouse();
 
                 _endPoint = e.GetPosition(this);
+
+                (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = $"({_startPoint.Value.X}, {_startPoint.Value.Y}) - ({_endPoint.Value.X}, {_endPoint.Value.Y})";
+
                 this.InvalidateVisual();
             }
             else
@@ -66,6 +67,9 @@ namespace grapher.Adorners
                 _startPoint = null;
                 _endPoint = null;
             }
+
+            (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "";
+            (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = "";
 
             e.Handled = true;
         }

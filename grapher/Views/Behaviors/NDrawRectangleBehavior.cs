@@ -1,4 +1,5 @@
 ﻿using grapher.Controls;
+using grapher.ViewModels;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -47,6 +48,8 @@ namespace grapher.Views.Behaviors
 
                 if (_rectangleStartPoint.HasValue)
                 {
+                    (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "描画";
+
                     AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(canvas);
                     if (adornerLayer != null)
                     {

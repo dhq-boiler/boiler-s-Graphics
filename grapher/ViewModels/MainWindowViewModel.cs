@@ -1,25 +1,11 @@
-﻿using grapher.Extensions;
-using grapher.Helpers;
-using grapher.Models;
-using grapher.Views;
-using grapher.Views.Behaviors;
-using Microsoft.Win32;
+﻿using grapher.Helpers;
 using Prism.Commands;
 using Prism.Interactivity.InteractionRequest;
 using Prism.Mvvm;
-using System;
+using Reactive.Bindings;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
-using System.Windows.Interactivity;
-using System.Windows.Media;
-using System.Xml.Serialization;
 
 namespace grapher.ViewModels
 {
@@ -102,6 +88,10 @@ namespace grapher.ViewModels
             get { return _ToolBarViewModel; }
             set { SetProperty(ref _ToolBarViewModel, value); }
         }
+
+        public ReactiveProperty<string> CurrentOperation { get; } = new ReactiveProperty<string>();
+
+        public ReactiveProperty<string> Details { get; } = new ReactiveProperty<string>();
 
         public DelegateCommand<object> DeleteSelectedItemsCommand { get; private set; }
 

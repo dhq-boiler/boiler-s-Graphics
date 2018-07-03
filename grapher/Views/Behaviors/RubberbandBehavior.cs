@@ -70,6 +70,8 @@ namespace grapher.Views.Behaviors
                     // drag operation we cache the start point
                     _rubberbandSelectionStartPoint = e.GetPosition(AssociatedObject);
 
+                    (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "範囲選択";
+
                     IDiagramViewModel vm = (AssociatedObject.DataContext as IDiagramViewModel);
                     if (!(Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
                     {

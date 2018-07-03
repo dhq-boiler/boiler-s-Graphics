@@ -1,10 +1,8 @@
 ﻿using grapher.ViewModels;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Controls.Primitives;
+using System.Windows.Input;
 
 namespace grapher.Controls
 {
@@ -21,6 +19,8 @@ namespace grapher.Controls
 
             if (designerItem != null && designerItem.IsSelected)
             {
+                (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "移動";
+
                 double minLeft = double.MaxValue;
                 double minTop = double.MaxValue;
 
@@ -38,6 +38,8 @@ namespace grapher.Controls
                     double deltaVertical = Math.Max(-minTop, e.VerticalChange);
                     item.Left.Value += deltaHorizontal;
                     item.Top.Value += deltaVertical;
+
+                    (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = $"(x, y) = ({item.Left.Value}, {item.Top.Value})";
                 }
                 e.Handled = true;
             }

@@ -133,6 +133,9 @@ namespace grapher.Controls
                     }
                 }
                 viewModel.IsHitTestVisible = true;
+
+                (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "";
+                (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = "";
             }
 
             _connectorsHit = new HashSet<Connector>();
@@ -167,11 +170,14 @@ namespace grapher.Controls
                 {
                     case "ResizeHandle_BeginPoint":
                         viewModel.SourceA = position;
+                        (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = $"({position.X}, {position.Y}) - ({viewModel.SourceB.X}, {viewModel.SourceB.Y})";
                         break;
                     case "ResizeHandle_EndPoint":
                         viewModel.SourceB = position;
+                        (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = $"({viewModel.SourceA.X}, {viewModel.SourceA.Y}) - ({position.X}, {position.Y})";
                         break;
                 }
+
                 viewModel.IsHitTestVisible = true;
                 HitTesting(position);
                 viewModel.IsHitTestVisible = false;
