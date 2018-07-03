@@ -151,6 +151,7 @@ namespace grapher.ViewModels
             {
                 item.GroupDisposable = groupItem.Subscribe(item);
                 item.ParentID = groupItem.ID;
+                item.EnableForSelection.Value = false;
             }
 
             groupItem.SelectItemCommand.Execute(true);
@@ -180,6 +181,7 @@ namespace grapher.ViewModels
                 {
                     child.GroupDisposable.Dispose();
                     child.ParentID = Guid.Empty;
+                    child.EnableForSelection.Value = true;
                 }
 
                 SelectedItems.Remove(groupRoot);

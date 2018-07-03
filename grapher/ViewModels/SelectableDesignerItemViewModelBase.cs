@@ -44,6 +44,8 @@ namespace grapher.ViewModels
             set { SetProperty(ref _IsSelected, value); }
         }
 
+        public ReactiveProperty<bool> EnableForSelection { get; } = new ReactiveProperty<bool>();
+
         public ReactiveProperty<int> ZIndex { get; } = new ReactiveProperty<int>();
 
         public Guid ID { get; set; } = Guid.NewGuid();
@@ -73,6 +75,8 @@ namespace grapher.ViewModels
         private void Init()
         {
             SelectItemCommand = new DelegateCommand<object>(p => SelectItem((bool)p, !IsSelected));
+
+            EnableForSelection.Value = true;
         }
 
         #region IObserver<GroupTransformNotification>
