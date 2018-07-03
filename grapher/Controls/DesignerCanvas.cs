@@ -45,8 +45,7 @@ namespace grapher.Controls
                     Rect rectangleBounds = _sourceConnector.TransformToVisual(this).TransformBounds(new Rect(_sourceConnector.RenderSize));
                     Point point = new Point(rectangleBounds.Left + (rectangleBounds.Width / 2),
                                             rectangleBounds.Bottom + (rectangleBounds.Height / 2));
-                    _partialConnection = LineFactory.Create(sourceDataItem, new PartCreatedConnectionInfo(point));
-                    _partialConnection.Owner = sourceDataItem.DataItem.Owner;
+                    _partialConnection = LineFactory.Create(sourceDataItem.DataItem.Owner, sourceDataItem, new PartCreatedConnectionInfo(point));
                     _partialConnection.EdgeColor = _partialConnection.Owner.EdgeColors.First();
                     sourceDataItem.DataItem.Owner.AddItemCommand.Execute(_partialConnection);
                 }
@@ -82,8 +81,7 @@ namespace grapher.Controls
                     int indexOfLastTempConnection = sinkDataItem.DataItem.Owner.Items.Count - 1;
                     sinkDataItem.DataItem.Owner.RemoveItemCommand.Execute(
                         sinkDataItem.DataItem.Owner.Items[indexOfLastTempConnection]);
-                    var line = LineFactory.Create(sourceDataItem, sinkDataItem);
-                    line.Owner = sinkDataItem.DataItem.Owner;
+                    var line = LineFactory.Create(sinkDataItem.DataItem.Owner, sourceDataItem, sinkDataItem);
                     line.EdgeColor = line.Owner.EdgeColors.First();
                     sinkDataItem.DataItem.Owner.AddItemCommand.Execute(line);
                 }
@@ -93,8 +91,7 @@ namespace grapher.Controls
                     int indexOfLastTempConnection = sourceDataItem.DataItem.Owner.Items.Count - 1;
                     sourceDataItem.DataItem.Owner.RemoveItemCommand.Execute(
                         sourceDataItem.DataItem.Owner.Items[indexOfLastTempConnection]);
-                    var line = LineFactory.Create(sourceDataItem, new PartCreatedConnectionInfo(e.GetPosition(this)));
-                    line.Owner = sourceDataItem.DataItem.Owner;
+                    var line = LineFactory.Create(sourceDataItem.DataItem.Owner, sourceDataItem, new PartCreatedConnectionInfo(e.GetPosition(this)));
                     line.EdgeColor = line.Owner.EdgeColors.First();
                     sourceDataItem.DataItem.Owner.AddItemCommand.Execute(line);
                 }

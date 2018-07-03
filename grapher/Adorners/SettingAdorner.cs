@@ -54,6 +54,7 @@ namespace grapher.Adorners
             if (_startPoint.HasValue && _endPoint.HasValue)
             {
                 DesignerItemViewModelBase itemBase = new SettingsDesignerItemViewModel();
+                itemBase.Owner = (AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel;
                 itemBase.Left.Value = Math.Max(0, _startPoint.Value.X);
                 itemBase.Top.Value = Math.Max(0, _startPoint.Value.Y);
                 itemBase.Width.Value = Math.Abs(_endPoint.Value.X - _startPoint.Value.X);

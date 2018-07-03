@@ -4,9 +4,14 @@ namespace grapher.Strategies
 {
     internal class StraightLineFactory : LineFactory
     {
-        public override ConnectorBaseViewModel Create(ConnectorInfoBase sourceConnectorInfo, ConnectorInfoBase sinkConnectorInfo)
+        public override ConnectorBaseViewModel Create(IDiagramViewModel viewModel, ConnectorInfoBase sourceConnectorInfo, ConnectorInfoBase sinkConnectorInfo)
         {
-            return new StraightConnectorViewModel(sourceConnectorInfo, sinkConnectorInfo);
+            var ret = new StraightConnectorViewModel(sourceConnectorInfo, sinkConnectorInfo)
+            {
+                Owner = viewModel
+            };
+            ret.ZIndex.Value = ret.Owner.Items.Count;
+            return ret;
         }
     }
 }
