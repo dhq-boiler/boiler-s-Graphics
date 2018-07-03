@@ -146,6 +146,7 @@ namespace grapher.ViewModels
             Width.Subscribe(_ => UpdateTransform());
             Height.Subscribe(_ => UpdateTransform());
             RotationAngle.Subscribe(_ => UpdateTransform());
+            Matrix.Subscribe(_ => UpdateTransform());
 
             Matrix.Value = new Matrix();
         }
