@@ -138,7 +138,7 @@
             </StatusBarItem>
             <Separator />
             <StatusBarItem>
-                <TextBlock Width="300" TextAlignment="Left">
+                <TextBlock Width="Auto" TextAlignment="Left">
                     <Run Text="{Binding Details.Value}" />
                 </TextBlock>
             </StatusBarItem>
