@@ -184,6 +184,10 @@ namespace grapher.ViewModels
                     var diffAngle = value.RotateAngleChange;
                     var matrix = Matrix.Value;
                     matrix.RotateAt(diffAngle, value.GroupCenter.X - Left.Value - Width.Value / 2, value.GroupCenter.Y - Top.Value - Height.Value / 2);
+                    Left.Value += matrix.OffsetX;
+                    Top.Value += matrix.OffsetY;
+                    matrix.OffsetX = 0;
+                    matrix.OffsetY = 0;
                     Matrix.Value = matrix;
                     break;
             }
