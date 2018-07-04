@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:grapher"
+    xmlns:property="clr-namespace:grapher.Properties"
     StartupUri="Views/MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
@@ -23,6 +24,7 @@
                 <ResourceDictionary Source="pack://application:,,,/grapher;component/Resources/DesignerItems/SettingsDesignerItemDataTemplate.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/grapher;component/Resources/DesignerItems/PersistDesignerItemDataTemplate.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            <property:Resources x:Key="resources" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

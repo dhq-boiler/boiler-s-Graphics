@@ -285,15 +285,15 @@
                 </ItemsControl>
                 <ScrollViewer.ContextMenu>
                     <ContextMenu>
-                        <MenuItem Header="Grouping">
-                            <MenuItem Command="{Binding GroupCommand}" Header="Group" />
-                            <MenuItem Command="{Binding UngroupCommand}" Header="Ungroup" />
+                        <MenuItem Header="{Binding Grouping, Mode=OneWay, Source={StaticResource resources}}">
+                            <MenuItem Command="{Binding GroupCommand}" Header="{Binding Command_Group, Mode=OneWay, Source={StaticResource resources}}" />
+                            <MenuItem Command="{Binding UngroupCommand}" Header="{Binding Command_Ungroup, Mode=OneWay, Source={StaticResource resources}}" />
                         </MenuItem>
-                        <MenuItem Header="Ordering">
-                            <MenuItem Command="{Binding BringForegroundCommand}" Header="Bring foreground" />
-                            <MenuItem Command="{Binding BringForwardCommand}" Header="Bring forward" />
-                            <MenuItem Command="{Binding SendBackwardCommand}" Header="Send backward" />
-                            <MenuItem Command="{Binding SendBackgroundCommand}" Header="Send background" />
+                        <MenuItem Header="{Binding Ordering, Mode=OneWay, Source={StaticResource resources}}">
+                            <MenuItem Command="{Binding BringForegroundCommand}" Header="{Binding Command_BringForeground, Mode=OneWay, Source={StaticResource resources}}" />
+                            <MenuItem Command="{Binding BringForwardCommand}" Header="{Binding Command_BringForward, Mode=OneWay, Source={StaticResource resources}}" />
+                            <MenuItem Command="{Binding SendBackwardCommand}" Header="{Binding Command_SendBackward, Mode=OneWay, Source={StaticResource resources}}" />
+                            <MenuItem Command="{Binding SendBackgroundCommand}" Header="{Binding Command_SendBackground, Mode=OneWay, Source={StaticResource resources}}" />
                         </MenuItem>
                     </ContextMenu>
                 </ScrollViewer.ContextMenu>

@@ -118,27 +118,27 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Command_BringForeground" xml:space="preserve">
-    <value>Bring foreground</value>
+    <value>最前面へ移動</value>
   </data>
   <data name="Command_BringForward" xml:space="preserve">
-    <value>Bring forward</value>
+    <value>前面へ移動</value>
   </data>
   <data name="Command_Group" xml:space="preserve">
-    <value>Group</value>
+    <value>グループ化</value>
   </data>
   <data name="Command_SendBackground" xml:space="preserve">
-    <value>Send background</value>
+    <value>最背面へ移動</value>
   </data>
   <data name="Command_SendBackward" xml:space="preserve">
-    <value>Send backward</value>
+    <value>背面へ移動</value>
   </data>
   <data name="Command_Ungroup" xml:space="preserve">
-    <value>Ungroup</value>
+    <value>グループ化解除</value>
   </data>
   <data name="Grouping" xml:space="preserve">
-    <value>Grouping</value>
+    <value>グループ</value>
   </data>
   <data name="Ordering" xml:space="preserve">
-    <value>Ordering</value>
+    <value>順序</value>
   </data>
 </root>
