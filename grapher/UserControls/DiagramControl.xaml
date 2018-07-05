@@ -140,6 +140,16 @@
                                                 Margin="0"
                                                 HorizontalAlignment="Stretch"
                                                 VerticalAlignment="Stretch">
+                                                <Canvas.Style>
+                                                    <Style TargetType="{x:Type Canvas}">
+                                                        <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
+                                                        <Setter Property="RenderTransform">
+                                                            <Setter.Value>
+                                                                <MatrixTransform Matrix="{Binding Matrix.Value}" />
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </Style>
+                                                </Canvas.Style>
                                                 <Line
                                                     x:Name="straightline"
                                                     IsHitTestVisible="{Binding IsHitTestVisible}"
@@ -189,6 +199,16 @@
                                                 Margin="0"
                                                 HorizontalAlignment="Stretch"
                                                 VerticalAlignment="Stretch">
+                                                <Canvas.Style>
+                                                    <Style TargetType="{x:Type Canvas}">
+                                                        <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
+                                                        <Setter Property="RenderTransform">
+                                                            <Setter.Value>
+                                                                <MatrixTransform Matrix="{Binding Matrix.Value}" />
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </Style>
+                                                </Canvas.Style>
                                                 <Polyline
                                                     x:Name="poly"
                                                     IsHitTestVisible="{Binding IsHitTestVisible}"

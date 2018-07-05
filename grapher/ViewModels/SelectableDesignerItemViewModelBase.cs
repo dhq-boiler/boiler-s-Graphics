@@ -4,6 +4,7 @@ using Prism.Mvvm;
 using Reactive.Bindings;
 using System;
 using System.Linq;
+using System.Windows.Media;
 
 namespace grapher.ViewModels
 {
@@ -43,6 +44,10 @@ namespace grapher.ViewModels
             get { return _IsSelected; }
             set { SetProperty(ref _IsSelected, value); }
         }
+
+        public ReactiveProperty<Matrix> Matrix { get; } = new ReactiveProperty<Matrix>();
+
+        public ReactiveProperty<double> RotationAngle { get; } = new ReactiveProperty<double>();
 
         public ReactiveProperty<bool> EnableForSelection { get; } = new ReactiveProperty<bool>();
 

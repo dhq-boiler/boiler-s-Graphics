@@ -2,7 +2,6 @@
 using grapher.Helpers;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Media;
@@ -265,33 +264,55 @@ namespace grapher.ViewModels
             }
         }
 
-        public void OnError(Exception error)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void OnCompleted()
-        {
-            throw new NotImplementedException();
-        }
-
         #endregion //IObserver<TransformNotification>
 
         #region IObserver<GroupTransformNotification>
 
         public override void OnNext(GroupTransformNotification value)
         {
-            var a = SourceA;
-            var b = SourceB;
+            var oldWidth = value.OldWidth;
+            var oldHeight = value.OldHeight;
 
-            a.X += value.LeftChange;
-            b.X += value.LeftChange;
-
-            a.Y += value.TopChange;
-            b.Y += value.TopChange;
-
-            SourceA = a;
-            SourceB = b;
+            switch (value.Type)
+            {
+                case TransformType.Move:
+                    var a = SourceA;
+                    var b = SourceB;
+                    a.X += value.LeftChange;
+                    b.X += value.LeftChange;
+                    a.Y += value.TopChange;
+                    b.Y += value.TopChange;
+                    SourceA = a;
+                    SourceB = b;
+                    break;
+                case TransformType.Resize:
+                    a = SourceA;
+                    b = SourceB;
+                    a.X = (a.X - value.GroupLeftTop.X) * ((oldWidth + value.WidthChange) / (oldWidth)) + value.GroupLeftTop.X;
+                    b.X = (b.X - value.GroupLeftTop.X) * ((oldWidth + value.WidthChange) / (oldWidth)) + value.GroupLeftTop.X;
+                    a.Y = (a.Y - value.GroupLeftTop.Y) * ((oldHeight + value.HeightChange) / (oldHeight)) + value.GroupLeftTop.Y;
+                    b.Y = (b.Y - value.GroupLeftTop.Y) * ((oldHeight + value.HeightChange) / (oldHeight)) + value.GroupLeftTop.Y;
+                    SourceA = a;
+                    SourceB = b;
+                    break;
+                case TransformType.Rotate:
+                    a = SourceA;
+                    b = SourceB;
+                    var diffAngle = value.RotateAngleChange;
+                    RotationAngle.Value += diffAngle; //for only calcurate rotation angle sum
+                    var matrix = Matrix.Value;
+                    matrix.RotateAt(diffAngle, value.GroupCenter.X - a.X / 2 - b.X / 2, value.GroupCenter.Y - a.Y / 2 - b.Y / 2);
+                    a.X += matrix.OffsetX;
+                    b.X += matrix.OffsetX;
+                    a.Y += matrix.OffsetY;
+                    b.Y += matrix.OffsetY;
+                    matrix.OffsetX = 0;
+                    matrix.OffsetY = 0;
+                    SourceA = a;
+                    SourceB = b;
+                    Matrix.Value = matrix;
+                    break;
+            }
         }
 
         #endregion //IObserver<TransformNotification>

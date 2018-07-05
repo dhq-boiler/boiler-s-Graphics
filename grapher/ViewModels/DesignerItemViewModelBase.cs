@@ -84,10 +84,6 @@ namespace grapher.ViewModels
 
         public ReactiveProperty<double> Height { get; } = new ReactiveProperty<double>();
 
-        public ReactiveProperty<double> RotationAngle { get; } = new ReactiveProperty<double>();
-
-        public ReactiveProperty<Matrix> Matrix { get; } = new ReactiveProperty<Matrix>();
-
         public bool ShowConnectors
         {
             get
