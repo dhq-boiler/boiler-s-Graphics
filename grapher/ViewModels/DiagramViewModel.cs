@@ -327,11 +327,18 @@ namespace grapher.ViewModels
             {
                 if (item is DesignerItemViewModelBase designerItem)
                 {
-                    x1 = Math.Min(designerItem.Left.Value, x1);
-                    y1 = Math.Min(designerItem.Top.Value, y1);
+                    var centerPoint = designerItem.CenterPoint.Value;
+                    var angleInDegrees = designerItem.RotationAngle.Value;
 
-                    x2 = Math.Max(designerItem.Left.Value + designerItem.Width.Value, x2);
-                    y2 = Math.Max(designerItem.Top.Value + designerItem.Height.Value, y2);
+                    var p1 = new Point(designerItem.Left.Value, designerItem.Top.Value);
+                    var p2 = new Point(designerItem.Left.Value + designerItem.Width.Value, designerItem.Top.Value);
+                    var p3 = new Point(designerItem.Left.Value + designerItem.Width.Value, designerItem.Top.Value + designerItem.Height.Value);
+                    var p4 = new Point(designerItem.Left.Value, designerItem.Top.Value + designerItem.Height.Value);
+
+                    UpdateBoundary(ref x1, ref y1, ref x2, ref y2, centerPoint, angleInDegrees + 135, p1);
+                    UpdateBoundary(ref x1, ref y1, ref x2, ref y2, centerPoint, angleInDegrees + 45, p2);
+                    UpdateBoundary(ref x1, ref y1, ref x2, ref y2, centerPoint, angleInDegrees - 45, p3);
+                    UpdateBoundary(ref x1, ref y1, ref x2, ref y2, centerPoint, angleInDegrees - 135, p4);
                 }
                 else if (item is ConnectorBaseViewModel connector)
                 {
@@ -344,6 +351,28 @@ namespace grapher.ViewModels
             }
 
             return new Rect(new Point(x1, y1), new Point(x2, y2));
+        }
+
+        private static void UpdateBoundary(ref double x1, ref double y1, ref double x2, ref double y2, Point centerPoint, double angleInDegrees, Point point)
+        {
+            var rad = angleInDegrees * Math.PI / 180;
+
+            var t = RotatePoint(centerPoint, point, rad);
+
+            x1 = Math.Min(t.Item1, x1);
+            y1 = Math.Min(t.Item2, y1);
+            x2 = Math.Max(t.Item1, x2);
+            y2 = Math.Max(t.Item2, y2);
+        }
+
+        private static Tuple<double, double> RotatePoint(Point center, Point point, double rad)
+        {
+            var z1 = point.X - center.X;
+            var z2 = point.Y - center.Y;
+            var x = center.X + Math.Sqrt(Math.Pow(z1, 2) + Math.Pow(z2, 2)) * Math.Cos(rad);
+            var y = center.Y + Math.Sqrt(Math.Pow(z1, 2) + Math.Pow(z2, 2)) * Math.Sin(rad);
+
+            return new Tuple<double, double>(x, y);
         }
 
         /// <summary>
