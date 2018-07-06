@@ -154,6 +154,51 @@ namespace grapher.ViewModels
                 item.EnableForSelection.Value = false;
             }
 
+            var groupItems = from it in Items
+                             where it.ParentID == groupItem.ID
+                             select it;
+
+            var theMostForwardItem = (from it in groupItems
+                                      orderby it.ZIndex.Value descending
+                                      select it).Take(1).SingleOrDefault();
+
+            var sortList = from it in Items
+                           where it.ZIndex.Value < theMostForwardItem.ZIndex.Value && it.ID != groupItem.ID
+                           orderby it.ZIndex.Value descending
+                           select it;
+
+            var swapItems = (from it in groupItems
+                             orderby it.ZIndex.Value descending
+                             select it).Skip(1);
+
+            for (int i = 0; i < swapItems.Count(); ++i)
+            {
+                var it = swapItems.ElementAt(i);
+                it.ZIndex.Value = theMostForwardItem.ZIndex.Value - i - 1;
+            }
+
+            for (int i = 0, j = 0; i < sortList.Count(); ++i)
+            {
+                var it = sortList.ElementAt(i);
+                if (it.ParentID == groupItem.ID)
+                {
+                    j++;
+                    continue;
+                }
+                it.ZIndex.Value = theMostForwardItem.ZIndex.Value - swapItems.Count() - (i - j);
+            }
+
+            groupItem.ZIndex.Value = theMostForwardItem.ZIndex.Value + 1;
+
+            var adds = from item in Items
+                       where item.ID != groupItem.ID && item.ZIndex.Value >= groupItem.ZIndex.Value
+                       select item;
+
+            foreach (var add in adds)
+            {
+                add.ZIndex.Value += 1;
+            }
+
             groupItem.SelectItemCommand.Execute(true);
         }
 
@@ -187,6 +232,17 @@ namespace grapher.ViewModels
                 SelectedItems.Remove(groupRoot);
                 Items.Remove(groupRoot);
                 //UpdateZIndex();
+
+                var groupZIndex = groupRoot.ZIndex.Value;
+
+                var it = from item in Items
+                         where item.ZIndex.Value > groupZIndex
+                         select item;
+
+                foreach (var x in it)
+                {
+                    x.ZIndex.Value -= 1;
+                }
             }
         }
 
@@ -211,15 +267,53 @@ namespace grapher.ViewModels
                 int newIndex = Math.Min(count - 1 - i, currentIndex + 1);
                 if (currentIndex != newIndex)
                 {
-                    ordered.ElementAt(i).ZIndex.Value = newIndex;
-                    var exists = Items.Where(item => item.ZIndex.Value == newIndex);
-
-                    foreach (var item in exists)
+                    if (ordered.ElementAt(i) is GroupItemViewModel)
                     {
-                        if (item != ordered.ElementAt(i))
+                        ordered.ElementAt(i).ZIndex.Value = newIndex;
+
+                        var children = from item in Items
+                                       where item.ParentID == ordered.ElementAt(i).ID
+                                       orderby item.ZIndex.Value descending
+                                       select item;
+
+                        int youngestChildrenZIndex = 0;
+
+                        for (int j = 0; j < children.Count(); ++j)
                         {
-                            item.ZIndex.Value = currentIndex;
-                            break;
+                            var child = children.ElementAt(j);
+                            youngestChildrenZIndex = child.ZIndex.Value = newIndex - j - 1;
+                        }
+
+                        var younger = from item in Items
+                                      where item.ID != ordered.ElementAt(i).ID && item.ParentID != ordered.ElementAt(i).ID
+                                      && item.ZIndex.Value <= ordered.ElementAt(i).ZIndex.Value && item.ZIndex.Value >= youngestChildrenZIndex
+                                      select item;
+
+                        var x = from item in Items
+                                where item.ID != ordered.ElementAt(i).ID && item.ParentID != ordered.ElementAt(i).ID
+                                && item.ZIndex.Value < youngestChildrenZIndex
+                                select item;
+
+                        var z = x.ToList();
+                        z.AddRange(younger);
+
+                        for (int j = 0; j < z.Count(); ++j)
+                        {
+                            z.ElementAt(j).ZIndex.Value = j;
+                        }
+                    }
+                    else
+                    {
+                        ordered.ElementAt(i).ZIndex.Value = newIndex;
+                        var exists = Items.Where(item => item.ZIndex.Value == newIndex);
+
+                        foreach (var item in exists)
+                        {
+                            if (item != ordered.ElementAt(i))
+                            {
+                                item.ZIndex.Value = currentIndex;
+                                break;
+                            }
                         }
                     }
                 }
@@ -240,15 +334,53 @@ namespace grapher.ViewModels
                 int newIndex = Math.Max(i, currentIndex - 1);
                 if (currentIndex != newIndex)
                 {
-                    ordered.ElementAt(i).ZIndex.Value = newIndex;
-                    var exists = Items.Where(item => item.ZIndex.Value == newIndex);
-
-                    foreach (var item in exists)
+                    if (ordered.ElementAt(i) is GroupItemViewModel)
                     {
-                        if (item != ordered.ElementAt(i))
+                        ordered.ElementAt(i).ZIndex.Value = newIndex;
+
+                        var children = (from item in Items
+                                        where item.ParentID == ordered.ElementAt(i).ID
+                                        orderby item.ZIndex.Value descending
+                                        select item).ToList();
+
+                        int youngestChildrenZIndex = 0;
+
+                        for (int j = 0; j < children.Count(); ++j)
                         {
-                            item.ZIndex.Value = currentIndex;
-                            break;
+                            var child = children.ElementAt(j);
+                            youngestChildrenZIndex = child.ZIndex.Value = newIndex - j - 1;
+                        }
+
+                        var older = from item in Items
+                                    where item.ID != ordered.ElementAt(i).ID && item.ParentID != ordered.ElementAt(i).ID
+                                    && item.ZIndex.Value <= ordered.ElementAt(i).ZIndex.Value && item.ZIndex.Value >= youngestChildrenZIndex
+                                    select item;
+
+                        var x = from item in Items
+                                where item.ID != ordered.ElementAt(i).ID && item.ParentID != ordered.ElementAt(i).ID
+                                && item.ZIndex.Value > ordered.ElementAt(i).ZIndex.Value
+                                select item;
+
+                        var z = older.ToList();
+                        z.AddRange(x);
+
+                        for (int j = 0; j < z.Count(); ++j)
+                        {
+                            z.ElementAt(j).ZIndex.Value = Items.Count() - j - 1;
+                        }
+                    }
+                    else
+                    {
+                        ordered.ElementAt(i).ZIndex.Value = newIndex;
+                        var exists = Items.Where(item => item.ZIndex.Value == newIndex);
+
+                        foreach (var item in exists)
+                        {
+                            if (item != ordered.ElementAt(i))
+                            {
+                                item.ZIndex.Value = currentIndex;
+                                break;
+                            }
                         }
                     }
                 }

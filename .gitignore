@@ -2,3 +2,5 @@
 grapher/bin/
 grapher/obj/
 packages/
+grapher.Test/bin/
+grapher.Test/obj/

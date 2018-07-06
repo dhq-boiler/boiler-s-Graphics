@@ -3,6 +3,7 @@ using Prism.Commands;
 using Prism.Mvvm;
 using Reactive.Bindings;
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows.Media;
 
@@ -52,6 +53,10 @@ namespace grapher.ViewModels
         public ReactiveProperty<bool> EnableForSelection { get; } = new ReactiveProperty<bool>();
 
         public ReactiveProperty<int> ZIndex { get; } = new ReactiveProperty<int>();
+
+#if DEBUG
+        public string Name { get; set; }
+#endif
 
         public Guid ID { get; set; } = Guid.NewGuid();
 
