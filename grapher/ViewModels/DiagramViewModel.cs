@@ -32,6 +32,7 @@ namespace grapher.ViewModels
         public DelegateCommand SendBackgroundCommand { get; private set; }
         public DelegateCommand AlignTopCommand { get; private set; }
         public DelegateCommand AlignVerticalCenterCommand { get; private set; }
+        public DelegateCommand AlignBottomCommand { get; private set; }
 
         public DiagramViewModel()
         {
@@ -47,6 +48,7 @@ namespace grapher.ViewModels
             SendBackgroundCommand = new DelegateCommand(() => ExecuteSendBackgroundCommand(), () => CanExecuteOrder());
             AlignTopCommand = new DelegateCommand(() => ExecuteAlignTopCommand(), () => CanExecuteAlign());
             AlignVerticalCenterCommand = new DelegateCommand(() => ExecuteAlignVerticalCenterCommand(), () => CanExecuteAlign());
+            AlignBottomCommand = new DelegateCommand(() => ExecuteAlignBottomCommand(), () => CanExecuteAlign());
 
             SelectedItems = Items
                 .ObserveElementProperty(x => x.IsSelected)
@@ -615,6 +617,21 @@ namespace grapher.ViewModels
                 foreach (var item in SelectedItems)
                 {
                     double delta = bottom - (GetTop(item) + GetHeight(item) / 2);
+                    SetTop(item, GetTop(item) + delta);
+                }
+            }
+        }
+
+        private void ExecuteAlignBottomCommand()
+        {
+            if (SelectedItems.Count() > 1)
+            {
+                var first = SelectedItems.First();
+                double bottom = GetTop(first) + GetHeight(first);
+
+                foreach (var item in SelectedItems)
+                {
+                    double delta = bottom - (GetTop(item) + GetHeight(item));
                     SetTop(item, GetTop(item) + delta);
                 }
             }
