@@ -638,7 +638,7 @@ namespace grapher.ViewModels
             return list;
         }
 
-        private static Rect GetBoundingRectangle(IEnumerable<SelectableDesignerItemViewModelBase> items)
+        public static Rect GetBoundingRectangle(IEnumerable<SelectableDesignerItemViewModelBase> items)
         {
             double x1 = Double.MaxValue;
             double y1 = Double.MaxValue;
@@ -652,15 +652,22 @@ namespace grapher.ViewModels
                     var centerPoint = designerItem.CenterPoint.Value;
                     var angleInDegrees = designerItem.RotationAngle.Value;
 
+                    var p0 = new Point(designerItem.Left.Value + designerItem.Width.Value, designerItem.Top.Value + designerItem.Height.Value / 2);
                     var p1 = new Point(designerItem.Left.Value, designerItem.Top.Value);
                     var p2 = new Point(designerItem.Left.Value + designerItem.Width.Value, designerItem.Top.Value);
                     var p3 = new Point(designerItem.Left.Value + designerItem.Width.Value, designerItem.Top.Value + designerItem.Height.Value);
                     var p4 = new Point(designerItem.Left.Value, designerItem.Top.Value + designerItem.Height.Value);
 
-                    UpdateBoundary(ref x1, ref y1, ref x2, ref y2, centerPoint, angleInDegrees + 135, p1);
-                    UpdateBoundary(ref x1, ref y1, ref x2, ref y2, centerPoint, angleInDegrees + 45, p2);
-                    UpdateBoundary(ref x1, ref y1, ref x2, ref y2, centerPoint, angleInDegrees - 45, p3);
-                    UpdateBoundary(ref x1, ref y1, ref x2, ref y2, centerPoint, angleInDegrees - 135, p4);
+                    var vector_p0_center = p0 - centerPoint;
+                    var vector_p1_center = p1 - centerPoint;
+                    var vector_p2_center = p2 - centerPoint;
+                    var vector_p3_center = p3 - centerPoint;
+                    var vector_p4_center = p4 - centerPoint;
+
+                    UpdateBoundary(ref x1, ref y1, ref x2, ref y2, centerPoint, angleInDegrees + Vector.AngleBetween(vector_p0_center, vector_p1_center), p1);
+                    UpdateBoundary(ref x1, ref y1, ref x2, ref y2, centerPoint, angleInDegrees + Vector.AngleBetween(vector_p0_center, vector_p2_center), p2);
+                    UpdateBoundary(ref x1, ref y1, ref x2, ref y2, centerPoint, angleInDegrees + Vector.AngleBetween(vector_p0_center, vector_p3_center), p3);
+                    UpdateBoundary(ref x1, ref y1, ref x2, ref y2, centerPoint, angleInDegrees + Vector.AngleBetween(vector_p0_center, vector_p4_center), p4);
                 }
                 else if (item is ConnectorBaseViewModel connector)
                 {
