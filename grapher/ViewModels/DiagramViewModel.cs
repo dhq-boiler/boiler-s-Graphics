@@ -162,10 +162,10 @@ namespace grapher.ViewModels
                                       orderby it.ZIndex.Value descending
                                       select it).Take(1).SingleOrDefault();
 
-            var sortList = from it in Items
-                           where it.ZIndex.Value < theMostForwardItem.ZIndex.Value && it.ID != groupItem.ID
-                           orderby it.ZIndex.Value descending
-                           select it;
+            var sortList = (from it in Items
+                            where it.ZIndex.Value < theMostForwardItem.ZIndex.Value && it.ID != groupItem.ID
+                            orderby it.ZIndex.Value descending
+                            select it).ToList();
 
             var swapItems = (from it in groupItems
                              orderby it.ZIndex.Value descending
@@ -177,6 +177,8 @@ namespace grapher.ViewModels
                 it.ZIndex.Value = theMostForwardItem.ZIndex.Value - i - 1;
             }
 
+            var swapItemsCount = swapItems.Count();
+
             for (int i = 0, j = 0; i < sortList.Count(); ++i)
             {
                 var it = sortList.ElementAt(i);
@@ -185,7 +187,7 @@ namespace grapher.ViewModels
                     j++;
                     continue;
                 }
-                it.ZIndex.Value = theMostForwardItem.ZIndex.Value - swapItems.Count() - (i - j);
+                it.ZIndex.Value = theMostForwardItem.ZIndex.Value - swapItemsCount - (i - j) - 1;
             }
 
             groupItem.ZIndex.Value = theMostForwardItem.ZIndex.Value + 1;
@@ -264,7 +266,13 @@ namespace grapher.ViewModels
             for (int i = 0; i < ordered.Count(); ++i)
             {
                 int currentIndex = ordered.ElementAt(i).ZIndex.Value;
-                int newIndex = Math.Min(count - 1 - i, currentIndex + 1);
+                var next = (from x in Items
+                            where x.ZIndex.Value == currentIndex + 1
+                            select x).SingleOrDefault();
+
+                if (next == null) continue;
+
+                int newIndex = next.ParentID != Guid.Empty ? Items.Single(x => x.ID == next.ParentID).ZIndex.Value : Math.Min(count - 1 - i, currentIndex + 1);
                 if (currentIndex != newIndex)
                 {
                     if (ordered.ElementAt(i) is GroupItemViewModel)
@@ -311,7 +319,23 @@ namespace grapher.ViewModels
                         {
                             if (item != ordered.ElementAt(i))
                             {
-                                item.ZIndex.Value = currentIndex;
+                                if (item is GroupItemViewModel)
+                                {
+                                    var children = from it in Items
+                                                   where it.ParentID == item.ID
+                                                   select it;
+
+                                    foreach (var child in children)
+                                    {
+                                        child.ZIndex.Value -= 1;
+                                    }
+
+                                    item.ZIndex.Value = currentIndex + children.Count();
+                                }
+                                else
+                                {
+                                    item.ZIndex.Value = currentIndex;
+                                }
                                 break;
                             }
                         }
@@ -331,17 +355,25 @@ namespace grapher.ViewModels
             for (int i = 0; i < ordered.Count(); ++i)
             {
                 int currentIndex = ordered.ElementAt(i).ZIndex.Value;
-                int newIndex = Math.Max(i, currentIndex - 1);
+                var previous = (from x in Items
+                                where x.ZIndex.Value == currentIndex - 1
+                                select x).SingleOrDefault();
+
+                if (previous == null) continue;
+
+                int newIndex = previous is GroupItemViewModel ? Items.Where(x => x.ParentID == previous.ID).Min(x => x.ZIndex.Value) : Math.Max(i, currentIndex - 1);
                 if (currentIndex != newIndex)
                 {
                     if (ordered.ElementAt(i) is GroupItemViewModel)
                     {
-                        ordered.ElementAt(i).ZIndex.Value = newIndex;
-
                         var children = (from item in Items
                                         where item.ParentID == ordered.ElementAt(i).ID
                                         orderby item.ZIndex.Value descending
                                         select item).ToList();
+
+                        if (children.Any(c => c.ZIndex.Value == 0)) continue;
+
+                        ordered.ElementAt(i).ZIndex.Value = newIndex;
 
                         int youngestChildrenZIndex = 0;
 
@@ -363,10 +395,12 @@ namespace grapher.ViewModels
 
                         var z = older.ToList();
                         z.AddRange(x);
+                        z.Reverse();
 
                         for (int j = 0; j < z.Count(); ++j)
                         {
-                            z.ElementAt(j).ZIndex.Value = Items.Count() - j - 1;
+                            var elm = z.ElementAt(j);
+                            elm.ZIndex.Value = Items.Count() - j - 1;
                         }
                     }
                     else
@@ -378,7 +412,27 @@ namespace grapher.ViewModels
                         {
                             if (item != ordered.ElementAt(i))
                             {
-                                item.ZIndex.Value = currentIndex;
+                                if (item.ParentID != Guid.Empty)
+                                {
+                                    var children = from it in Items
+                                                   where it.ParentID == item.ParentID
+                                                   select it;
+
+                                    foreach (var child in children)
+                                    {
+                                        child.ZIndex.Value += 1;
+                                    }
+
+                                    var parent = (from it in Items
+                                                  where it.ID == item.ParentID
+                                                  select it).Single();
+
+                                    parent.ZIndex.Value = children.Max(x => x.ZIndex.Value) + 1;
+                                }
+                                else
+                                {
+                                    item.ZIndex.Value = currentIndex;
+                                }
                                 break;
                             }
                         }
@@ -397,18 +451,50 @@ namespace grapher.ViewModels
 
             for (int i = 0; i < ordered.Count(); ++i)
             {
-                int currentIndex = ordered.ElementAt(i).ZIndex.Value;
+                var current = ordered.ElementAt(i);
+                int currentIndex = current.ZIndex.Value;
                 int newIndex = Items.Count - 1;
                 if (currentIndex != newIndex)
                 {
-                    ordered.ElementAt(i).ZIndex.Value = newIndex;
-                    var exists = Items.Where(item => item.ZIndex.Value <= newIndex);
+                    var oldCurrentIndex = current.ZIndex.Value;
+                    current.ZIndex.Value = newIndex;
 
-                    foreach (var item in exists)
+                    if (current is GroupItemViewModel)
                     {
-                        if (item != ordered.ElementAt(i))
+                        var children = from item in Items
+                                       where item.ParentID == current.ID
+                                       orderby item.ZIndex.Value descending
+                                       select item;
+
+                        for (int j = 0; j < children.Count(); ++j)
                         {
-                            item.ZIndex.Value -= 1;
+                            var child = children.ElementAt(j);
+                            child.ZIndex.Value = current.ZIndex.Value - j - 1;
+                        }
+
+                        var minValue = children.Min(x => x.ZIndex.Value);
+
+                        var other = (from item in Items
+                                     where item.ParentID != current.ID && item.ID != current.ID
+                                     orderby item.ZIndex.Value descending
+                                     select item).ToList();
+
+                        for (int j = 0; j < other.Count(); ++j)
+                        {
+                            var item = other.ElementAt(j);
+                            item.ZIndex.Value = minValue - j - 1;
+                        }
+                    }
+                    else
+                    {
+                        var exists = Items.Where(item => item.ZIndex.Value <= newIndex && item.ZIndex.Value > oldCurrentIndex);
+
+                        foreach (var item in exists)
+                        {
+                            if (item != current)
+                            {
+                                item.ZIndex.Value -= 1;
+                            }
                         }
                     }
                 }
@@ -425,18 +511,50 @@ namespace grapher.ViewModels
 
             for (int i = 0; i < ordered.Count(); ++i)
             {
-                int currentIndex = ordered.ElementAt(i).ZIndex.Value;
-                int newIndex = 0;
+                var current = ordered.ElementAt(i);
+                int currentIndex = current.ZIndex.Value;
+                int newIndex = current is GroupItemViewModel ? Items.Where(x => x.ParentID == current.ID).Count() : 0;
                 if (currentIndex != newIndex)
                 {
-                    ordered.ElementAt(i).ZIndex.Value = newIndex;
-                    var exists = Items.Where(item => item.ZIndex.Value >= newIndex);
+                    var oldCurrentIndex = current.ZIndex.Value;
+                    current.ZIndex.Value = newIndex;
 
-                    foreach (var item in exists)
+                    if (current is GroupItemViewModel)
                     {
-                        if (item != ordered.ElementAt(i))
+                        var children = (from item in Items
+                                        where item.ParentID == current.ID
+                                        orderby item.ZIndex.Value descending
+                                        select item).ToList();
+
+                        for (int j = 0; j < children.Count(); ++j)
                         {
-                            item.ZIndex.Value += 1;
+                            var child = children.ElementAt(j);
+                            child.ZIndex.Value = current.ZIndex.Value - j - 1;
+                        }
+
+                        var other = (from item in Items
+                                     where item.ParentID != current.ID && item.ID != current.ID
+                                     orderby item.ZIndex.Value descending
+                                     select item).ToList();
+
+                        var maxValue = Items.Count() - 1;
+
+                        for (int j = 0; j < other.Count(); ++j)
+                        {
+                            var item = other.ElementAt(j);
+                            item.ZIndex.Value = maxValue - j;
+                        }
+                    }
+                    else
+                    {
+                        var exists = Items.Where(item => item.ZIndex.Value >= newIndex && item.ZIndex.Value < oldCurrentIndex);
+
+                        foreach (var item in exists)
+                        {
+                            if (item != current)
+                            {
+                                item.ZIndex.Value += 1;
+                            }
                         }
                     }
                 }
