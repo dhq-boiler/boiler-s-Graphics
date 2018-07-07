@@ -70,6 +70,8 @@ namespace grapher.Adorners
                 item.EdgeColor = item.Owner.EdgeColors.First();
                 item.FillColor = item.Owner.FillColors.First();
                 item.ZIndex.Value = item.Owner.Items.Count;
+                item.IsSelected = true;
+                item.Owner.DeselectAll();
                 ((AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel).AddItemCommand.Execute(item);
 
                 _startPoint = null;

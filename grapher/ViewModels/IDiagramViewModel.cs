@@ -14,5 +14,7 @@ namespace grapher.ViewModels
         ObservableCollection<Color> EdgeColors { get; }
         ObservableCollection<Color> FillColors { get; }
         ObservableCollection<SelectableDesignerItemViewModelBase> Items { get; }
+
+        void DeselectAll();
     }
 }

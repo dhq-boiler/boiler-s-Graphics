@@ -60,6 +60,7 @@ namespace grapher.Adorners
                 itemBase.Width.Value = Math.Abs(_endPoint.Value.X - _startPoint.Value.X);
                 itemBase.Height.Value = Math.Abs(_endPoint.Value.Y - _startPoint.Value.Y);
                 itemBase.IsSelected = true;
+                itemBase.Owner.DeselectAll();
                 itemBase.ZIndex.Value = itemBase.Owner.Items.Count;
                 ((AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel).AddItemCommand.Execute(itemBase);
 

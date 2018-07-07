@@ -103,6 +103,14 @@ namespace grapher.ViewModels
             set { SetProperty(ref _FillColors, value); }
         }
 
+        public void DeselectAll()
+        {
+            foreach (var item in Items)
+            {
+                item.IsSelected = false;
+            }
+        }
+
         private void ExecuteAddItemCommand(object parameter)
         {
             if (parameter is SelectableDesignerItemViewModelBase)
