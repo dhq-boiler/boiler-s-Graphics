@@ -20,6 +20,18 @@ namespace grapher.ViewModels
         private ObservableCollection<Color> _EdgeColors = new ObservableCollection<Color>();
         private ObservableCollection<Color> _FillColors = new ObservableCollection<Color>();
 
+        public DelegateCommand<object> AddItemCommand { get; private set; }
+        public DelegateCommand<object> RemoveItemCommand { get; private set; }
+        public DelegateCommand<object> ClearSelectedItemsCommand { get; private set; }
+        public DelegateCommand<object> CreateNewDiagramCommand { get; private set; }
+        public DelegateCommand GroupCommand { get; private set; }
+        public DelegateCommand UngroupCommand { get; private set; }
+        public DelegateCommand BringForegroundCommand { get; private set; }
+        public DelegateCommand BringForwardCommand { get; private set; }
+        public DelegateCommand SendBackwardCommand { get; private set; }
+        public DelegateCommand SendBackgroundCommand { get; private set; }
+        public DelegateCommand AlignTopCommand { get; private set; }
+
         public DiagramViewModel()
         {
             AddItemCommand = new DelegateCommand<object>(p => ExecuteAddItemCommand(p));
@@ -32,6 +44,7 @@ namespace grapher.ViewModels
             SendBackwardCommand = new DelegateCommand(() => ExecuteSendBackwardCommand(), () => CanExecuteOrder());
             BringForegroundCommand = new DelegateCommand(() => ExecuteBringForegroundCommand(), () => CanExecuteOrder());
             SendBackgroundCommand = new DelegateCommand(() => ExecuteSendBackgroundCommand(), () => CanExecuteOrder());
+            AlignTopCommand = new DelegateCommand(() => ExecuteAlignTopCommand(), () => CanExecuteAlign());
 
             SelectedItems = Items
                 .ObserveElementProperty(x => x.IsSelected)
@@ -47,6 +60,8 @@ namespace grapher.ViewModels
                     SendBackwardCommand.RaiseCanExecuteChanged();
                     BringForegroundCommand.RaiseCanExecuteChanged();
                     SendBackgroundCommand.RaiseCanExecuteChanged();
+
+                    AlignTopCommand.RaiseCanExecuteChanged();
                 });
 
             EdgeColors.CollectionChangedAsObservable()
@@ -68,17 +83,6 @@ namespace grapher.ViewModels
                 item.ShowConnectors = false;
             }
         }
-
-        public DelegateCommand<object> AddItemCommand { get; private set; }
-        public DelegateCommand<object> RemoveItemCommand { get; private set; }
-        public DelegateCommand<object> ClearSelectedItemsCommand { get; private set; }
-        public DelegateCommand<object> CreateNewDiagramCommand { get; private set; }
-        public DelegateCommand GroupCommand { get; private set; }
-        public DelegateCommand UngroupCommand { get; private set; }
-        public DelegateCommand BringForegroundCommand { get; private set; }
-        public DelegateCommand BringForwardCommand { get; private set; }
-        public DelegateCommand SendBackwardCommand { get; private set; }
-        public DelegateCommand SendBackgroundCommand { get; private set; }
 
         public ObservableCollection<SelectableDesignerItemViewModelBase> Items
         {
@@ -130,6 +134,8 @@ namespace grapher.ViewModels
         {
             Items.Clear();
         }
+
+        #region Grouping
 
         private void ExecuteGroupItemsCommand()
         {
@@ -254,6 +260,10 @@ namespace grapher.ViewModels
                         select item;
             return items.Count() > 0;
         }
+
+        #endregion //Grouping
+
+        #region Ordering
 
         private void ExecuteBringForwardCommand()
         {
@@ -564,6 +574,60 @@ namespace grapher.ViewModels
         private bool CanExecuteOrder()
         {
             return SelectedItems.Count() > 0;
+        }
+
+        #endregion //Ordering
+
+        #region Alignment
+
+        private void ExecuteAlignTopCommand()
+        {
+            if (SelectedItems.Count() > 1)
+            {
+                var first = SelectedItems.First();
+                double top = GetTop(first);
+
+                foreach (var item in SelectedItems)
+                {
+                    double delta = top - GetTop(item);
+                    SetTop(item, GetTop(item) + delta);
+                }
+            }
+        }
+
+        private void SetTop(SelectableDesignerItemViewModelBase item, double value)
+        {
+            if (item is DesignerItemViewModelBase di)
+            {
+                di.Top.Value = value;
+            }
+            else if (item is ConnectorBaseViewModel connector)
+            {
+                //do nothing
+            }
+        }
+
+        private double GetTop(SelectableDesignerItemViewModelBase first)
+        {
+            return first is DesignerItemViewModelBase ? (first as DesignerItemViewModelBase).Top.Value
+                : first is ConnectorBaseViewModel ? Math.Min((first as ConnectorBaseViewModel).SourceA.Y, (first as ConnectorBaseViewModel).SourceB.Y)
+                : Items.Where(x => x.ParentID == (first as GroupItemViewModel).ID).Min(x => GetTop(x));
+        }
+
+        private bool CanExecuteAlign()
+        {
+            return SelectedItems.Count() > 0;
+        }
+
+        #endregion //Alignment
+
+        private IEnumerable<SelectableDesignerItemViewModelBase> GetGroupMembers(SelectableDesignerItemViewModelBase item)
+        {
+            var list = new List<SelectableDesignerItemViewModelBase>();
+            list.Add(item);
+            var children = Items.Where(x => x.ParentID == item.ID);
+            list.AddRange(children);
+            return list;
         }
 
         private static Rect GetBoundingRectangle(IEnumerable<SelectableDesignerItemViewModelBase> items)
