@@ -31,6 +31,7 @@ namespace grapher.ViewModels
         public DelegateCommand SendBackwardCommand { get; private set; }
         public DelegateCommand SendBackgroundCommand { get; private set; }
         public DelegateCommand AlignTopCommand { get; private set; }
+        public DelegateCommand AlignVerticalCenterCommand { get; private set; }
 
         public DiagramViewModel()
         {
@@ -45,6 +46,7 @@ namespace grapher.ViewModels
             BringForegroundCommand = new DelegateCommand(() => ExecuteBringForegroundCommand(), () => CanExecuteOrder());
             SendBackgroundCommand = new DelegateCommand(() => ExecuteSendBackgroundCommand(), () => CanExecuteOrder());
             AlignTopCommand = new DelegateCommand(() => ExecuteAlignTopCommand(), () => CanExecuteAlign());
+            AlignVerticalCenterCommand = new DelegateCommand(() => ExecuteAlignVerticalCenterCommand(), () => CanExecuteAlign());
 
             SelectedItems = Items
                 .ObserveElementProperty(x => x.IsSelected)
@@ -601,6 +603,28 @@ namespace grapher.ViewModels
                     SetTop(item, GetTop(item) + delta);
                 }
             }
+        }
+
+        private void ExecuteAlignVerticalCenterCommand()
+        {
+            if (SelectedItems.Count() > 1)
+            {
+                var first = SelectedItems.First();
+                double bottom = GetTop(first) + GetHeight(first) / 2;
+
+                foreach (var item in SelectedItems)
+                {
+                    double delta = bottom - (GetTop(item) + GetHeight(item) / 2);
+                    SetTop(item, GetTop(item) + delta);
+                }
+            }
+        }
+
+        private double GetHeight(SelectableDesignerItemViewModelBase first)
+        {
+            return first is DesignerItemViewModelBase ? (first as DesignerItemViewModelBase).Height.Value
+                 : first is ConnectorBaseViewModel ? Math.Max((first as ConnectorBaseViewModel).SourceA.Y - (first as ConnectorBaseViewModel).SourceB.Y, (first as ConnectorBaseViewModel).SourceB.Y - (first as ConnectorBaseViewModel).SourceA.Y)
+                 : (first as GroupItemViewModel).Height.Value;
         }
 
         private void SetTop(SelectableDesignerItemViewModelBase item, double value)
