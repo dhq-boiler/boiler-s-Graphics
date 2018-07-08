@@ -36,6 +36,7 @@ namespace grapher.ViewModels
         public DelegateCommand AlignLeftCommand { get; private set; }
         public DelegateCommand AlignHorizontalCenterCommand { get; private set; }
         public DelegateCommand AlignRightCommand { get; private set; }
+        public DelegateCommand DistributeHorizontalCommand { get; private set; }
 
         public DiagramViewModel()
         {
@@ -55,6 +56,7 @@ namespace grapher.ViewModels
             AlignLeftCommand = new DelegateCommand(() => ExecuteAlignLeftCommand(), () => CanExecuteAlign());
             AlignHorizontalCenterCommand = new DelegateCommand(() => ExecuteAlignHorizontalCenterCommand(), () => CanExecuteAlign());
             AlignRightCommand = new DelegateCommand(() => ExecuteAlignRightCommand(), () => CanExecuteAlign());
+            DistributeHorizontalCommand = new DelegateCommand(() => ExecuteDistributeHorizontalCommand(), () => CanExecuteDistribute());
 
             SelectedItems = Items
                 .ObserveElementProperty(x => x.IsSelected)
@@ -693,6 +695,48 @@ namespace grapher.ViewModels
             }
         }
 
+        private void ExecuteDistributeHorizontalCommand()
+        {
+            var selectedItems = from item in SelectedItems
+                                let itemLeft = GetLeft(item)
+                                orderby itemLeft
+                                select item;
+
+            if (selectedItems.Count() > 1)
+            {
+                double left = double.MaxValue;
+                double right = double.MinValue;
+                double sumWidth = 0;
+
+                foreach (var item in selectedItems)
+                {
+                    left = Math.Min(left, GetLeft(item));
+                    right = Math.Max(right, GetLeft(item) + GetWidth(item));
+                    sumWidth += GetWidth(item);
+                }
+
+                double distance = Math.Max(0, (right - left - sumWidth) / (selectedItems.Count() - 1));
+                double offset = GetLeft(selectedItems.First());
+
+                foreach (var item in selectedItems)
+                {
+                    double delta = offset - GetLeft(item);
+                    SetLeft(item, GetLeft(item) + delta);
+                    offset = offset + GetWidth(item) + distance;
+                }
+            }
+        }
+
+        private bool CanExecuteAlign()
+        {
+            return SelectedItems.Count() > 1;
+        }
+
+        private bool CanExecuteDistribute()
+        {
+            return SelectedItems.Count() > 1;
+        }
+
         private double GetWidth(SelectableDesignerItemViewModelBase item)
         {
             return item is DesignerItemViewModelBase ? (item as DesignerItemViewModelBase).Width.Value
@@ -743,11 +787,6 @@ namespace grapher.ViewModels
             return item is DesignerItemViewModelBase ? (item as DesignerItemViewModelBase).Top.Value
                 : item is ConnectorBaseViewModel ? Math.Min((item as ConnectorBaseViewModel).SourceA.Y, (item as ConnectorBaseViewModel).SourceB.Y)
                 : Items.Where(x => x.ParentID == (item as GroupItemViewModel).ID).Min(x => GetTop(x));
-        }
-
-        private bool CanExecuteAlign()
-        {
-            return SelectedItems.Count() > 1;
         }
 
         #endregion //Alignment
