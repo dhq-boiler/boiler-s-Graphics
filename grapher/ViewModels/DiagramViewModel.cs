@@ -35,6 +35,7 @@ namespace grapher.ViewModels
         public DelegateCommand AlignBottomCommand { get; private set; }
         public DelegateCommand AlignLeftCommand { get; private set; }
         public DelegateCommand AlignHorizontalCenterCommand { get; private set; }
+        public DelegateCommand AlignRightCommand { get; private set; }
 
         public DiagramViewModel()
         {
@@ -53,6 +54,7 @@ namespace grapher.ViewModels
             AlignBottomCommand = new DelegateCommand(() => ExecuteAlignBottomCommand(), () => CanExecuteAlign());
             AlignLeftCommand = new DelegateCommand(() => ExecuteAlignLeftCommand(), () => CanExecuteAlign());
             AlignHorizontalCenterCommand = new DelegateCommand(() => ExecuteAlignHorizontalCenterCommand(), () => CanExecuteAlign());
+            AlignRightCommand = new DelegateCommand(() => ExecuteAlignRightCommand(), () => CanExecuteAlign());
 
             SelectedItems = Items
                 .ObserveElementProperty(x => x.IsSelected)
@@ -74,6 +76,7 @@ namespace grapher.ViewModels
                     AlignBottomCommand.RaiseCanExecuteChanged();
                     AlignLeftCommand.RaiseCanExecuteChanged();
                     AlignHorizontalCenterCommand.RaiseCanExecuteChanged();
+                    AlignRightCommand.RaiseCanExecuteChanged();
                 });
 
             EdgeColors.CollectionChangedAsObservable()
@@ -670,6 +673,21 @@ namespace grapher.ViewModels
                 foreach (var item in SelectedItems)
                 {
                     double delta = center - (GetLeft(item) + GetWidth(item) / 2);
+                    SetLeft(item, GetLeft(item) + delta);
+                }
+            }
+        }
+
+        private void ExecuteAlignRightCommand()
+        {
+            if (SelectedItems.Count() > 1)
+            {
+                var first = SelectedItems.First();
+                double right = GetLeft(first) + GetWidth(first);
+
+                foreach (var item in SelectedItems)
+                {
+                    double delta = right - (GetLeft(item) + GetWidth(item));
                     SetLeft(item, GetLeft(item) + delta);
                 }
             }
