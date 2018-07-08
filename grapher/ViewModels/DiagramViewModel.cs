@@ -20,6 +20,25 @@ namespace grapher.ViewModels
         private ObservableCollection<Color> _EdgeColors = new ObservableCollection<Color>();
         private ObservableCollection<Color> _FillColors = new ObservableCollection<Color>();
 
+        public DelegateCommand<object> AddItemCommand { get; private set; }
+        public DelegateCommand<object> RemoveItemCommand { get; private set; }
+        public DelegateCommand<object> ClearSelectedItemsCommand { get; private set; }
+        public DelegateCommand<object> CreateNewDiagramCommand { get; private set; }
+        public DelegateCommand GroupCommand { get; private set; }
+        public DelegateCommand UngroupCommand { get; private set; }
+        public DelegateCommand BringForegroundCommand { get; private set; }
+        public DelegateCommand BringForwardCommand { get; private set; }
+        public DelegateCommand SendBackwardCommand { get; private set; }
+        public DelegateCommand SendBackgroundCommand { get; private set; }
+        public DelegateCommand AlignTopCommand { get; private set; }
+        public DelegateCommand AlignVerticalCenterCommand { get; private set; }
+        public DelegateCommand AlignBottomCommand { get; private set; }
+        public DelegateCommand AlignLeftCommand { get; private set; }
+        public DelegateCommand AlignHorizontalCenterCommand { get; private set; }
+        public DelegateCommand AlignRightCommand { get; private set; }
+        public DelegateCommand DistributeHorizontalCommand { get; private set; }
+        public DelegateCommand DistributeVerticalCommand { get; private set; }
+
         public DiagramViewModel()
         {
             AddItemCommand = new DelegateCommand<object>(p => ExecuteAddItemCommand(p));
@@ -32,6 +51,14 @@ namespace grapher.ViewModels
             SendBackwardCommand = new DelegateCommand(() => ExecuteSendBackwardCommand(), () => CanExecuteOrder());
             BringForegroundCommand = new DelegateCommand(() => ExecuteBringForegroundCommand(), () => CanExecuteOrder());
             SendBackgroundCommand = new DelegateCommand(() => ExecuteSendBackgroundCommand(), () => CanExecuteOrder());
+            AlignTopCommand = new DelegateCommand(() => ExecuteAlignTopCommand(), () => CanExecuteAlign());
+            AlignVerticalCenterCommand = new DelegateCommand(() => ExecuteAlignVerticalCenterCommand(), () => CanExecuteAlign());
+            AlignBottomCommand = new DelegateCommand(() => ExecuteAlignBottomCommand(), () => CanExecuteAlign());
+            AlignLeftCommand = new DelegateCommand(() => ExecuteAlignLeftCommand(), () => CanExecuteAlign());
+            AlignHorizontalCenterCommand = new DelegateCommand(() => ExecuteAlignHorizontalCenterCommand(), () => CanExecuteAlign());
+            AlignRightCommand = new DelegateCommand(() => ExecuteAlignRightCommand(), () => CanExecuteAlign());
+            DistributeHorizontalCommand = new DelegateCommand(() => ExecuteDistributeHorizontalCommand(), () => CanExecuteDistribute());
+            DistributeVerticalCommand = new DelegateCommand(() => ExecuteDistributeVerticalCommand(), () => CanExecuteDistribute());
 
             SelectedItems = Items
                 .ObserveElementProperty(x => x.IsSelected)
@@ -47,6 +74,13 @@ namespace grapher.ViewModels
                     SendBackwardCommand.RaiseCanExecuteChanged();
                     BringForegroundCommand.RaiseCanExecuteChanged();
                     SendBackgroundCommand.RaiseCanExecuteChanged();
+
+                    AlignTopCommand.RaiseCanExecuteChanged();
+                    AlignVerticalCenterCommand.RaiseCanExecuteChanged();
+                    AlignBottomCommand.RaiseCanExecuteChanged();
+                    AlignLeftCommand.RaiseCanExecuteChanged();
+                    AlignHorizontalCenterCommand.RaiseCanExecuteChanged();
+                    AlignRightCommand.RaiseCanExecuteChanged();
                 });
 
             EdgeColors.CollectionChangedAsObservable()
@@ -69,17 +103,6 @@ namespace grapher.ViewModels
             }
         }
 
-        public DelegateCommand<object> AddItemCommand { get; private set; }
-        public DelegateCommand<object> RemoveItemCommand { get; private set; }
-        public DelegateCommand<object> ClearSelectedItemsCommand { get; private set; }
-        public DelegateCommand<object> CreateNewDiagramCommand { get; private set; }
-        public DelegateCommand GroupCommand { get; private set; }
-        public DelegateCommand UngroupCommand { get; private set; }
-        public DelegateCommand BringForegroundCommand { get; private set; }
-        public DelegateCommand BringForwardCommand { get; private set; }
-        public DelegateCommand SendBackwardCommand { get; private set; }
-        public DelegateCommand SendBackgroundCommand { get; private set; }
-
         public ObservableCollection<SelectableDesignerItemViewModelBase> Items
         {
             get { return _items; }
@@ -97,6 +120,14 @@ namespace grapher.ViewModels
         {
             get { return _FillColors; }
             set { SetProperty(ref _FillColors, value); }
+        }
+
+        public void DeselectAll()
+        {
+            foreach (var item in Items)
+            {
+                item.IsSelected = false;
+            }
         }
 
         private void ExecuteAddItemCommand(object parameter)
@@ -130,6 +161,8 @@ namespace grapher.ViewModels
         {
             Items.Clear();
         }
+
+        #region Grouping
 
         private void ExecuteGroupItemsCommand()
         {
@@ -254,6 +287,10 @@ namespace grapher.ViewModels
                         select item;
             return items.Count() > 0;
         }
+
+        #endregion //Grouping
+
+        #region Ordering
 
         private void ExecuteBringForwardCommand()
         {
@@ -566,7 +603,238 @@ namespace grapher.ViewModels
             return SelectedItems.Count() > 0;
         }
 
-        private static Rect GetBoundingRectangle(IEnumerable<SelectableDesignerItemViewModelBase> items)
+        #endregion //Ordering
+
+        #region Alignment
+
+        private void ExecuteAlignTopCommand()
+        {
+            if (SelectedItems.Count() > 1)
+            {
+                var first = SelectedItems.First();
+                double top = GetTop(first);
+
+                foreach (var item in SelectedItems)
+                {
+                    double delta = top - GetTop(item);
+                    SetTop(item, GetTop(item) + delta);
+                }
+            }
+        }
+
+        private void ExecuteAlignVerticalCenterCommand()
+        {
+            if (SelectedItems.Count() > 1)
+            {
+                var first = SelectedItems.First();
+                double bottom = GetTop(first) + GetHeight(first) / 2;
+
+                foreach (var item in SelectedItems)
+                {
+                    double delta = bottom - (GetTop(item) + GetHeight(item) / 2);
+                    SetTop(item, GetTop(item) + delta);
+                }
+            }
+        }
+
+        private void ExecuteAlignBottomCommand()
+        {
+            if (SelectedItems.Count() > 1)
+            {
+                var first = SelectedItems.First();
+                double bottom = GetTop(first) + GetHeight(first);
+
+                foreach (var item in SelectedItems)
+                {
+                    double delta = bottom - (GetTop(item) + GetHeight(item));
+                    SetTop(item, GetTop(item) + delta);
+                }
+            }
+        }
+
+        private void ExecuteAlignLeftCommand()
+        {
+            if (SelectedItems.Count() > 1)
+            {
+                var first = SelectedItems.First();
+                double left = GetLeft(first);
+
+                foreach (var item in SelectedItems)
+                {
+                    double delta = left - GetLeft(item);
+                    SetLeft(item, GetLeft(item) + delta);
+                }
+            }
+        }
+
+        private void ExecuteAlignHorizontalCenterCommand()
+        {
+            if (SelectedItems.Count() > 1)
+            {
+                var first = SelectedItems.First();
+                double center = GetLeft(first) + GetWidth(first) / 2;
+
+                foreach (var item in SelectedItems)
+                {
+                    double delta = center - (GetLeft(item) + GetWidth(item) / 2);
+                    SetLeft(item, GetLeft(item) + delta);
+                }
+            }
+        }
+
+        private void ExecuteAlignRightCommand()
+        {
+            if (SelectedItems.Count() > 1)
+            {
+                var first = SelectedItems.First();
+                double right = GetLeft(first) + GetWidth(first);
+
+                foreach (var item in SelectedItems)
+                {
+                    double delta = right - (GetLeft(item) + GetWidth(item));
+                    SetLeft(item, GetLeft(item) + delta);
+                }
+            }
+        }
+
+        private void ExecuteDistributeHorizontalCommand()
+        {
+            var selectedItems = from item in SelectedItems
+                                let itemLeft = GetLeft(item)
+                                orderby itemLeft
+                                select item;
+
+            if (selectedItems.Count() > 1)
+            {
+                double left = double.MaxValue;
+                double right = double.MinValue;
+                double sumWidth = 0;
+
+                foreach (var item in selectedItems)
+                {
+                    left = Math.Min(left, GetLeft(item));
+                    right = Math.Max(right, GetLeft(item) + GetWidth(item));
+                    sumWidth += GetWidth(item);
+                }
+
+                double distance = Math.Max(0, (right - left - sumWidth) / (selectedItems.Count() - 1));
+                double offset = GetLeft(selectedItems.First());
+
+                foreach (var item in selectedItems)
+                {
+                    double delta = offset - GetLeft(item);
+                    SetLeft(item, GetLeft(item) + delta);
+                    offset = offset + GetWidth(item) + distance;
+                }
+            }
+        }
+
+        private void ExecuteDistributeVerticalCommand()
+        {
+            var selectedItems = from item in SelectedItems
+                                let itemTop = GetTop(item)
+                                orderby itemTop
+                                select item;
+
+            if (selectedItems.Count() > 1)
+            {
+                double top = double.MaxValue;
+                double bottom = double.MinValue;
+                double sumHeight = 0;
+
+                foreach (var item in selectedItems)
+                {
+                    top = Math.Min(top, GetTop(item));
+                    bottom = Math.Max(bottom, GetTop(item) + GetHeight(item));
+                    sumHeight += GetHeight(item);
+                }
+
+                double distance = Math.Max(0, (bottom - top - sumHeight) / (selectedItems.Count() - 1));
+                double offset = GetTop(selectedItems.First());
+
+                foreach (var item in selectedItems)
+                {
+                    double delta = offset - GetTop(item);
+                    SetTop(item, GetTop(item) + delta);
+                    offset = offset + GetHeight(item) + distance;
+                }
+            }
+        }
+
+        private bool CanExecuteAlign()
+        {
+            return SelectedItems.Count() > 1;
+        }
+
+        private bool CanExecuteDistribute()
+        {
+            return SelectedItems.Count() > 1;
+        }
+
+        private double GetWidth(SelectableDesignerItemViewModelBase item)
+        {
+            return item is DesignerItemViewModelBase ? (item as DesignerItemViewModelBase).Width.Value
+                 : item is ConnectorBaseViewModel ? Math.Max((item as ConnectorBaseViewModel).SourceA.X - (item as ConnectorBaseViewModel).SourceB.X, (item as ConnectorBaseViewModel).SourceB.X - (item as ConnectorBaseViewModel).SourceA.X)
+                 : (item as GroupItemViewModel).Width.Value;
+        }
+
+        private void SetLeft(SelectableDesignerItemViewModelBase item, double value)
+        {
+            if (item is DesignerItemViewModelBase di)
+            {
+                di.Left.Value = value;
+            }
+            else if (item is ConnectorBaseViewModel connector)
+            {
+                //do nothing
+            }
+        }
+
+        private double GetLeft(SelectableDesignerItemViewModelBase item)
+        {
+            return item is DesignerItemViewModelBase ? (item as DesignerItemViewModelBase).Left.Value
+                : item is ConnectorBaseViewModel ? Math.Min((item as ConnectorBaseViewModel).SourceA.X, (item as ConnectorBaseViewModel).SourceB.X)
+                : Items.Where(x => x.ParentID == (item as GroupItemViewModel).ID).Min(x => GetLeft(x));
+        }
+
+        private double GetHeight(SelectableDesignerItemViewModelBase item)
+        {
+            return item is DesignerItemViewModelBase ? (item as DesignerItemViewModelBase).Height.Value
+                 : item is ConnectorBaseViewModel ? Math.Max((item as ConnectorBaseViewModel).SourceA.Y - (item as ConnectorBaseViewModel).SourceB.Y, (item as ConnectorBaseViewModel).SourceB.Y - (item as ConnectorBaseViewModel).SourceA.Y)
+                 : (item as GroupItemViewModel).Height.Value;
+        }
+
+        private void SetTop(SelectableDesignerItemViewModelBase item, double value)
+        {
+            if (item is DesignerItemViewModelBase di)
+            {
+                di.Top.Value = value;
+            }
+            else if (item is ConnectorBaseViewModel connector)
+            {
+                //do nothing
+            }
+        }
+
+        private double GetTop(SelectableDesignerItemViewModelBase item)
+        {
+            return item is DesignerItemViewModelBase ? (item as DesignerItemViewModelBase).Top.Value
+                : item is ConnectorBaseViewModel ? Math.Min((item as ConnectorBaseViewModel).SourceA.Y, (item as ConnectorBaseViewModel).SourceB.Y)
+                : Items.Where(x => x.ParentID == (item as GroupItemViewModel).ID).Min(x => GetTop(x));
+        }
+
+        #endregion //Alignment
+
+        private IEnumerable<SelectableDesignerItemViewModelBase> GetGroupMembers(SelectableDesignerItemViewModelBase item)
+        {
+            var list = new List<SelectableDesignerItemViewModelBase>();
+            list.Add(item);
+            var children = Items.Where(x => x.ParentID == item.ID);
+            list.AddRange(children);
+            return list;
+        }
+
+        public static Rect GetBoundingRectangle(IEnumerable<SelectableDesignerItemViewModelBase> items)
         {
             double x1 = Double.MaxValue;
             double y1 = Double.MaxValue;
@@ -580,15 +848,22 @@ namespace grapher.ViewModels
                     var centerPoint = designerItem.CenterPoint.Value;
                     var angleInDegrees = designerItem.RotationAngle.Value;
 
+                    var p0 = new Point(designerItem.Left.Value + designerItem.Width.Value, designerItem.Top.Value + designerItem.Height.Value / 2);
                     var p1 = new Point(designerItem.Left.Value, designerItem.Top.Value);
                     var p2 = new Point(designerItem.Left.Value + designerItem.Width.Value, designerItem.Top.Value);
                     var p3 = new Point(designerItem.Left.Value + designerItem.Width.Value, designerItem.Top.Value + designerItem.Height.Value);
                     var p4 = new Point(designerItem.Left.Value, designerItem.Top.Value + designerItem.Height.Value);
 
-                    UpdateBoundary(ref x1, ref y1, ref x2, ref y2, centerPoint, angleInDegrees + 135, p1);
-                    UpdateBoundary(ref x1, ref y1, ref x2, ref y2, centerPoint, angleInDegrees + 45, p2);
-                    UpdateBoundary(ref x1, ref y1, ref x2, ref y2, centerPoint, angleInDegrees - 45, p3);
-                    UpdateBoundary(ref x1, ref y1, ref x2, ref y2, centerPoint, angleInDegrees - 135, p4);
+                    var vector_p0_center = p0 - centerPoint;
+                    var vector_p1_center = p1 - centerPoint;
+                    var vector_p2_center = p2 - centerPoint;
+                    var vector_p3_center = p3 - centerPoint;
+                    var vector_p4_center = p4 - centerPoint;
+
+                    UpdateBoundary(ref x1, ref y1, ref x2, ref y2, centerPoint, angleInDegrees + Vector.AngleBetween(vector_p0_center, vector_p1_center), p1);
+                    UpdateBoundary(ref x1, ref y1, ref x2, ref y2, centerPoint, angleInDegrees + Vector.AngleBetween(vector_p0_center, vector_p2_center), p2);
+                    UpdateBoundary(ref x1, ref y1, ref x2, ref y2, centerPoint, angleInDegrees + Vector.AngleBetween(vector_p0_center, vector_p3_center), p3);
+                    UpdateBoundary(ref x1, ref y1, ref x2, ref y2, centerPoint, angleInDegrees + Vector.AngleBetween(vector_p0_center, vector_p4_center), p4);
                 }
                 else if (item is ConnectorBaseViewModel connector)
                 {

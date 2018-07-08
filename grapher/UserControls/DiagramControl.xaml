@@ -315,6 +315,18 @@
                             <MenuItem Command="{Binding SendBackwardCommand}" Header="{Binding Command_SendBackward, Mode=OneWay, Source={StaticResource resources}}" />
                             <MenuItem Command="{Binding SendBackgroundCommand}" Header="{Binding Command_SendBackground, Mode=OneWay, Source={StaticResource resources}}" />
                         </MenuItem>
+                        <MenuItem Header="Alignment">
+                            <MenuItem Command="{Binding AlignTopCommand}" Header="Align top" />
+                            <MenuItem Command="{Binding AlignVerticalCenterCommand}" Header="Align vertical center" />
+                            <MenuItem Command="{Binding AlignBottomCommand}" Header="Align bottom" />
+                            <Separator />
+                            <MenuItem Command="{Binding AlignLeftCommand}" Header="Align left" />
+                            <MenuItem Command="{Binding AlignHorizontalCenterCommand}" Header="Align horizontal center" />
+                            <MenuItem Command="{Binding AlignRightCommand}" Header="Align right" />
+                            <Separator />
+                            <MenuItem Command="{Binding DistributeHorizontalCommand}" Header="Distribute horizontal" />
+                            <MenuItem Command="{Binding DistributeVerticalCommand}" Header="Distribute vertical" />
+                        </MenuItem>
                     </ContextMenu>
                 </ScrollViewer.ContextMenu>
 
