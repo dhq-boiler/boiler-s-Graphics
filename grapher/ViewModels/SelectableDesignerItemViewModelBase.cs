@@ -83,6 +83,11 @@ namespace grapher.ViewModels
             IsSelected = select;
         }
 
+        public bool IsSameGroup(SelectableDesignerItemViewModelBase target)
+        {
+            return this.ParentID == target.ParentID && this.ParentID != Guid.Empty;
+        }
+
         private void Init()
         {
             SelectItemCommand = new DelegateCommand<object>(p => SelectItem((bool)p, !IsSelected));
