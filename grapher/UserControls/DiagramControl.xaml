@@ -325,6 +325,7 @@
                             <MenuItem Command="{Binding AlignRightCommand}" Header="Align right" />
                             <Separator />
                             <MenuItem Command="{Binding DistributeHorizontalCommand}" Header="Distribute horizontal" />
+                            <MenuItem Command="{Binding DistributeVerticalCommand}" Header="Distribute vertical" />
                         </MenuItem>
                     </ContextMenu>
                 </ScrollViewer.ContextMenu>

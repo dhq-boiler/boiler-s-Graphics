@@ -37,6 +37,7 @@ namespace grapher.ViewModels
         public DelegateCommand AlignHorizontalCenterCommand { get; private set; }
         public DelegateCommand AlignRightCommand { get; private set; }
         public DelegateCommand DistributeHorizontalCommand { get; private set; }
+        public DelegateCommand DistributeVerticalCommand { get; private set; }
 
         public DiagramViewModel()
         {
@@ -57,6 +58,7 @@ namespace grapher.ViewModels
             AlignHorizontalCenterCommand = new DelegateCommand(() => ExecuteAlignHorizontalCenterCommand(), () => CanExecuteAlign());
             AlignRightCommand = new DelegateCommand(() => ExecuteAlignRightCommand(), () => CanExecuteAlign());
             DistributeHorizontalCommand = new DelegateCommand(() => ExecuteDistributeHorizontalCommand(), () => CanExecuteDistribute());
+            DistributeVerticalCommand = new DelegateCommand(() => ExecuteDistributeVerticalCommand(), () => CanExecuteDistribute());
 
             SelectedItems = Items
                 .ObserveElementProperty(x => x.IsSelected)
@@ -723,6 +725,38 @@ namespace grapher.ViewModels
                     double delta = offset - GetLeft(item);
                     SetLeft(item, GetLeft(item) + delta);
                     offset = offset + GetWidth(item) + distance;
+                }
+            }
+        }
+
+        private void ExecuteDistributeVerticalCommand()
+        {
+            var selectedItems = from item in SelectedItems
+                                let itemTop = GetTop(item)
+                                orderby itemTop
+                                select item;
+
+            if (selectedItems.Count() > 1)
+            {
+                double top = double.MaxValue;
+                double bottom = double.MinValue;
+                double sumHeight = 0;
+
+                foreach (var item in selectedItems)
+                {
+                    top = Math.Min(top, GetTop(item));
+                    bottom = Math.Max(bottom, GetTop(item) + GetHeight(item));
+                    sumHeight += GetHeight(item);
+                }
+
+                double distance = Math.Max(0, (bottom - top - sumHeight) / (selectedItems.Count() - 1));
+                double offset = GetTop(selectedItems.First());
+
+                foreach (var item in selectedItems)
+                {
+                    double delta = offset - GetTop(item);
+                    SetTop(item, GetTop(item) + delta);
+                    offset = offset + GetHeight(item) + distance;
                 }
             }
         }
