@@ -104,7 +104,7 @@ namespace grapher.Controls
                 var viewModel = MoveConnector.DataContext as ConnectorBaseViewModel;
                 if (_connectorsHit.Count() >= 2)
                 {
-                    Connector sinkConnector = _connectorsHit.Last();
+                    Connector sinkConnector = _connectorsHit.Where(x => x.DataContext is FullyCreatedConnectorInfo).Last();
                     FullyCreatedConnectorInfo sinkDataItem = sinkConnector.DataContext as FullyCreatedConnectorInfo;
 
                     switch (MoveConnector.Name)
