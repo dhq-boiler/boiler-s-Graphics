@@ -315,17 +315,17 @@
                             <MenuItem Command="{Binding SendBackwardCommand}" Header="{Binding Command_SendBackward, Mode=OneWay, Source={StaticResource resources}}" />
                             <MenuItem Command="{Binding SendBackgroundCommand}" Header="{Binding Command_SendBackground, Mode=OneWay, Source={StaticResource resources}}" />
                         </MenuItem>
-                        <MenuItem Header="Alignment">
-                            <MenuItem Command="{Binding AlignTopCommand}" Header="Align top" />
-                            <MenuItem Command="{Binding AlignVerticalCenterCommand}" Header="Align vertical center" />
-                            <MenuItem Command="{Binding AlignBottomCommand}" Header="Align bottom" />
+                        <MenuItem Header="{Binding Alignment, Mode=OneWay, Source={StaticResource resources}}">
+                            <MenuItem Command="{Binding AlignTopCommand}" Header="{Binding Command_AlignTop, Mode=OneWay, Source={StaticResource resources}}" />
+                            <MenuItem Command="{Binding AlignVerticalCenterCommand}" Header="{Binding Command_AlignVerticalCenter, Mode=OneWay, Source={StaticResource resources}}" />
+                            <MenuItem Command="{Binding AlignBottomCommand}" Header="{Binding Command_AlignBottom, Mode=OneWay, Source={StaticResource resources}}" />
                             <Separator />
-                            <MenuItem Command="{Binding AlignLeftCommand}" Header="Align left" />
-                            <MenuItem Command="{Binding AlignHorizontalCenterCommand}" Header="Align horizontal center" />
-                            <MenuItem Command="{Binding AlignRightCommand}" Header="Align right" />
+                            <MenuItem Command="{Binding AlignLeftCommand}" Header="{Binding Command_AlignLeft, Mode=OneWay, Source={StaticResource resources}}" />
+                            <MenuItem Command="{Binding AlignHorizontalCenterCommand}" Header="{Binding Command_AlignHorizontalCenter, Mode=OneWay, Source={StaticResource resources}}" />
+                            <MenuItem Command="{Binding AlignRightCommand}" Header="{Binding Command_AlignRight, Mode=OneWay, Source={StaticResource resources}}" />
                             <Separator />
-                            <MenuItem Command="{Binding DistributeHorizontalCommand}" Header="Distribute horizontal" />
-                            <MenuItem Command="{Binding DistributeVerticalCommand}" Header="Distribute vertical" />
+                            <MenuItem Command="{Binding DistributeHorizontalCommand}" Header="{Binding Command_DistributeHorizontal, Mode=OneWay, Source={StaticResource resources}}" />
+                            <MenuItem Command="{Binding DistributeVerticalCommand}" Header="{Binding Command_DistributeVertical, Mode=OneWay, Source={StaticResource resources}}" />
                         </MenuItem>
                     </ContextMenu>
                 </ScrollViewer.ContextMenu>

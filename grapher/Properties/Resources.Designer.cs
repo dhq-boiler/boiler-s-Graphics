@@ -61,6 +61,69 @@ namespace grapher.Properties {
         }
         
         /// <summary>
+        ///   Alignment に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Alignment {
+            get {
+                return ResourceManager.GetString("Alignment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Align bottom に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Command_AlignBottom {
+            get {
+                return ResourceManager.GetString("Command_AlignBottom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Align horizontal center に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Command_AlignHorizontalCenter {
+            get {
+                return ResourceManager.GetString("Command_AlignHorizontalCenter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Align left に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Command_AlignLeft {
+            get {
+                return ResourceManager.GetString("Command_AlignLeft", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Align right に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Command_AlignRight {
+            get {
+                return ResourceManager.GetString("Command_AlignRight", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Align top に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Command_AlignTop {
+            get {
+                return ResourceManager.GetString("Command_AlignTop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Align vertical center に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Command_AlignVerticalCenter {
+            get {
+                return ResourceManager.GetString("Command_AlignVerticalCenter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Bring foreground に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_BringForeground {
@@ -75,6 +138,24 @@ namespace grapher.Properties {
         public static string Command_BringForward {
             get {
                 return ResourceManager.GetString("Command_BringForward", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Distribute horizontal に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Command_DistributeHorizontal {
+            get {
+                return ResourceManager.GetString("Command_DistributeHorizontal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Distribute vertical に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Command_DistributeVertical {
+            get {
+                return ResourceManager.GetString("Command_DistributeVertical", resourceCulture);
             }
         }
         

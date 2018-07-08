@@ -117,11 +117,38 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Alignment" xml:space="preserve">
+    <value>Alignment</value>
+  </data>
+  <data name="Command_AlignBottom" xml:space="preserve">
+    <value>Align bottom</value>
+  </data>
+  <data name="Command_AlignHorizontalCenter" xml:space="preserve">
+    <value>Align horizontal center</value>
+  </data>
+  <data name="Command_AlignLeft" xml:space="preserve">
+    <value>Align left</value>
+  </data>
+  <data name="Command_AlignRight" xml:space="preserve">
+    <value>Align right</value>
+  </data>
+  <data name="Command_AlignTop" xml:space="preserve">
+    <value>Align top</value>
+  </data>
+  <data name="Command_AlignVerticalCenter" xml:space="preserve">
+    <value>Align vertical center</value>
+  </data>
   <data name="Command_BringForeground" xml:space="preserve">
     <value>Bring foreground</value>
   </data>
   <data name="Command_BringForward" xml:space="preserve">
     <value>Bring forward</value>
+  </data>
+  <data name="Command_DistributeHorizontal" xml:space="preserve">
+    <value>Distribute horizontal</value>
+  </data>
+  <data name="Command_DistributeVertical" xml:space="preserve">
+    <value>Distribute vertical</value>
   </data>
   <data name="Command_Group" xml:space="preserve">
     <value>Group</value>
