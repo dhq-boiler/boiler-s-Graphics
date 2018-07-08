@@ -239,6 +239,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Resources\Icons.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Resources\Styles.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -360,6 +364,22 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\img\rubberband.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\img\AlignObjectsBottom.png" />
+    <Resource Include="Assets\img\AlignObjectsCenteredHorizontal.png" />
+    <Resource Include="Assets\img\AlignObjectsCenteredVertical.png" />
+    <Resource Include="Assets\img\AlignObjectsLeft.png" />
+    <Resource Include="Assets\img\AlignObjectsRight.png" />
+    <Resource Include="Assets\img\AlignObjectsTop.png" />
+    <Resource Include="Assets\img\BringForward.png" />
+    <Resource Include="Assets\img\BringToFront.png" />
+    <Resource Include="Assets\img\DistributeObjectsHorizontal.png" />
+    <Resource Include="Assets\img\DistributeObjectsVertical.png" />
+    <Resource Include="Assets\img\Group.png" />
+    <Resource Include="Assets\img\SendBackward.png" />
+    <Resource Include="Assets\img\SendToBack.png" />
+    <Resource Include="Assets\img\Ungroup.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
