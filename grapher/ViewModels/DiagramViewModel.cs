@@ -66,6 +66,8 @@ namespace grapher.ViewModels
                     SendBackgroundCommand.RaiseCanExecuteChanged();
 
                     AlignTopCommand.RaiseCanExecuteChanged();
+                    AlignVerticalCenterCommand.RaiseCanExecuteChanged();
+                    AlignBottomCommand.RaiseCanExecuteChanged();
                 });
 
             EdgeColors.CollectionChangedAsObservable()
@@ -665,7 +667,7 @@ namespace grapher.ViewModels
 
         private bool CanExecuteAlign()
         {
-            return SelectedItems.Count() > 0;
+            return SelectedItems.Count() > 1;
         }
 
         #endregion //Alignment
