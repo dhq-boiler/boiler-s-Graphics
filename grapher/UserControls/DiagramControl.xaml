@@ -319,6 +319,8 @@
                             <MenuItem Command="{Binding AlignTopCommand}" Header="Align top" />
                             <MenuItem Command="{Binding AlignVerticalCenterCommand}" Header="Align vertical center" />
                             <MenuItem Command="{Binding AlignBottomCommand}" Header="Align bottom" />
+                            <Separator />
+                            <MenuItem Command="{Binding AlignLeftCommand}" Header="Align left" />
                         </MenuItem>
                     </ContextMenu>
                 </ScrollViewer.ContextMenu>

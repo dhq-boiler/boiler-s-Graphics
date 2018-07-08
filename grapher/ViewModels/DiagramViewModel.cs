@@ -33,6 +33,7 @@ namespace grapher.ViewModels
         public DelegateCommand AlignTopCommand { get; private set; }
         public DelegateCommand AlignVerticalCenterCommand { get; private set; }
         public DelegateCommand AlignBottomCommand { get; private set; }
+        public DelegateCommand AlignLeftCommand { get; private set; }
 
         public DiagramViewModel()
         {
@@ -49,6 +50,7 @@ namespace grapher.ViewModels
             AlignTopCommand = new DelegateCommand(() => ExecuteAlignTopCommand(), () => CanExecuteAlign());
             AlignVerticalCenterCommand = new DelegateCommand(() => ExecuteAlignVerticalCenterCommand(), () => CanExecuteAlign());
             AlignBottomCommand = new DelegateCommand(() => ExecuteAlignBottomCommand(), () => CanExecuteAlign());
+            AlignLeftCommand = new DelegateCommand(() => ExecuteAlignLeftCommand(), () => CanExecuteAlign());
 
             SelectedItems = Items
                 .ObserveElementProperty(x => x.IsSelected)
@@ -68,6 +70,7 @@ namespace grapher.ViewModels
                     AlignTopCommand.RaiseCanExecuteChanged();
                     AlignVerticalCenterCommand.RaiseCanExecuteChanged();
                     AlignBottomCommand.RaiseCanExecuteChanged();
+                    AlignLeftCommand.RaiseCanExecuteChanged();
                 });
 
             EdgeColors.CollectionChangedAsObservable()
@@ -639,11 +642,45 @@ namespace grapher.ViewModels
             }
         }
 
-        private double GetHeight(SelectableDesignerItemViewModelBase first)
+        private void ExecuteAlignLeftCommand()
         {
-            return first is DesignerItemViewModelBase ? (first as DesignerItemViewModelBase).Height.Value
-                 : first is ConnectorBaseViewModel ? Math.Max((first as ConnectorBaseViewModel).SourceA.Y - (first as ConnectorBaseViewModel).SourceB.Y, (first as ConnectorBaseViewModel).SourceB.Y - (first as ConnectorBaseViewModel).SourceA.Y)
-                 : (first as GroupItemViewModel).Height.Value;
+            if (SelectedItems.Count() > 1)
+            {
+                var first = SelectedItems.First();
+                double left = GetLeft(first);
+
+                foreach (var item in SelectedItems)
+                {
+                    double delta = left - GetLeft(item);
+                    SetLeft(item, GetLeft(item) + delta);
+                }
+            }
+        }
+
+        private void SetLeft(SelectableDesignerItemViewModelBase item, double value)
+        {
+            if (item is DesignerItemViewModelBase di)
+            {
+                di.Left.Value = value;
+            }
+            else if (item is ConnectorBaseViewModel connector)
+            {
+                //do nothing
+            }
+        }
+
+        private double GetLeft(SelectableDesignerItemViewModelBase item)
+        {
+            return item is DesignerItemViewModelBase ? (item as DesignerItemViewModelBase).Left.Value
+                : item is ConnectorBaseViewModel ? Math.Min((item as ConnectorBaseViewModel).SourceA.X, (item as ConnectorBaseViewModel).SourceB.X)
+                : Items.Where(x => x.ParentID == (item as GroupItemViewModel).ID).Min(x => GetLeft(x));
+        }
+
+        private double GetHeight(SelectableDesignerItemViewModelBase item)
+        {
+            return item is DesignerItemViewModelBase ? (item as DesignerItemViewModelBase).Height.Value
+                 : item is ConnectorBaseViewModel ? Math.Max((item as ConnectorBaseViewModel).SourceA.Y - (item as ConnectorBaseViewModel).SourceB.Y, (item as ConnectorBaseViewModel).SourceB.Y - (item as ConnectorBaseViewModel).SourceA.Y)
+                 : (item as GroupItemViewModel).Height.Value;
         }
 
         private void SetTop(SelectableDesignerItemViewModelBase item, double value)
@@ -658,11 +695,11 @@ namespace grapher.ViewModels
             }
         }
 
-        private double GetTop(SelectableDesignerItemViewModelBase first)
+        private double GetTop(SelectableDesignerItemViewModelBase item)
         {
-            return first is DesignerItemViewModelBase ? (first as DesignerItemViewModelBase).Top.Value
-                : first is ConnectorBaseViewModel ? Math.Min((first as ConnectorBaseViewModel).SourceA.Y, (first as ConnectorBaseViewModel).SourceB.Y)
-                : Items.Where(x => x.ParentID == (first as GroupItemViewModel).ID).Min(x => GetTop(x));
+            return item is DesignerItemViewModelBase ? (item as DesignerItemViewModelBase).Top.Value
+                : item is ConnectorBaseViewModel ? Math.Min((item as ConnectorBaseViewModel).SourceA.Y, (item as ConnectorBaseViewModel).SourceB.Y)
+                : Items.Where(x => x.ParentID == (item as GroupItemViewModel).ID).Min(x => GetTop(x));
         }
 
         private bool CanExecuteAlign()
