@@ -1,5 +1,6 @@
 ﻿using grapher.Controls;
 using grapher.Helpers;
+using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -165,6 +166,7 @@ namespace grapher.ViewModels
                         SourceA = PointHelper.GetPointForConnector(this.SourceConnectorInfo as FullyCreatedConnectorInfo);
                         _sourceConnectorDisconnecting?.Dispose();
                         _sourceConnectorDisconnecting = (_sourceConnectorInfo as FullyCreatedConnectorInfo).DataItem.Subscribe(this);
+                        _sourceConnectorDisconnecting.AddTo(_CompositeDisposable);
                     }
                     RaisePropertyChanged("SourceConnectorInfo");
                 }
@@ -187,6 +189,7 @@ namespace grapher.ViewModels
                         SourceB = PointHelper.GetPointForConnector((FullyCreatedConnectorInfo)SinkConnectorInfo);
                         _sinkConnectorDisconnecting?.Dispose();
                         _sinkConnectorDisconnecting = (_sinkConnectorInfo as FullyCreatedConnectorInfo).DataItem.Subscribe(this);
+                        _sinkConnectorDisconnecting.AddTo(_CompositeDisposable);
                     }
                     else
                     {

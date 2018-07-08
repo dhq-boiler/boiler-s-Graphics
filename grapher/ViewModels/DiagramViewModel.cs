@@ -146,6 +146,7 @@ namespace grapher.ViewModels
             {
                 SelectableDesignerItemViewModelBase item = (SelectableDesignerItemViewModelBase)parameter;
                 _items.Remove(item);
+                item.Dispose();
             }
         }
 
