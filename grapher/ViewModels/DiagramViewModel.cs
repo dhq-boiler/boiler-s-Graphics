@@ -34,6 +34,7 @@ namespace grapher.ViewModels
         public DelegateCommand AlignVerticalCenterCommand { get; private set; }
         public DelegateCommand AlignBottomCommand { get; private set; }
         public DelegateCommand AlignLeftCommand { get; private set; }
+        public DelegateCommand AlignHorizontalCenterCommand { get; private set; }
 
         public DiagramViewModel()
         {
@@ -51,6 +52,7 @@ namespace grapher.ViewModels
             AlignVerticalCenterCommand = new DelegateCommand(() => ExecuteAlignVerticalCenterCommand(), () => CanExecuteAlign());
             AlignBottomCommand = new DelegateCommand(() => ExecuteAlignBottomCommand(), () => CanExecuteAlign());
             AlignLeftCommand = new DelegateCommand(() => ExecuteAlignLeftCommand(), () => CanExecuteAlign());
+            AlignHorizontalCenterCommand = new DelegateCommand(() => ExecuteAlignHorizontalCenterCommand(), () => CanExecuteAlign());
 
             SelectedItems = Items
                 .ObserveElementProperty(x => x.IsSelected)
@@ -71,6 +73,7 @@ namespace grapher.ViewModels
                     AlignVerticalCenterCommand.RaiseCanExecuteChanged();
                     AlignBottomCommand.RaiseCanExecuteChanged();
                     AlignLeftCommand.RaiseCanExecuteChanged();
+                    AlignHorizontalCenterCommand.RaiseCanExecuteChanged();
                 });
 
             EdgeColors.CollectionChangedAsObservable()
@@ -655,6 +658,28 @@ namespace grapher.ViewModels
                     SetLeft(item, GetLeft(item) + delta);
                 }
             }
+        }
+
+        private void ExecuteAlignHorizontalCenterCommand()
+        {
+            if (SelectedItems.Count() > 1)
+            {
+                var first = SelectedItems.First();
+                double center = GetLeft(first) + GetWidth(first) / 2;
+
+                foreach (var item in SelectedItems)
+                {
+                    double delta = center - (GetLeft(item) + GetWidth(item) / 2);
+                    SetLeft(item, GetLeft(item) + delta);
+                }
+            }
+        }
+
+        private double GetWidth(SelectableDesignerItemViewModelBase item)
+        {
+            return item is DesignerItemViewModelBase ? (item as DesignerItemViewModelBase).Width.Value
+                 : item is ConnectorBaseViewModel ? Math.Max((item as ConnectorBaseViewModel).SourceA.X - (item as ConnectorBaseViewModel).SourceB.X, (item as ConnectorBaseViewModel).SourceB.X - (item as ConnectorBaseViewModel).SourceA.X)
+                 : (item as GroupItemViewModel).Width.Value;
         }
 
         private void SetLeft(SelectableDesignerItemViewModelBase item, double value)
