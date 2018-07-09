@@ -2,18 +2,60 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:grapher.Resources">
-    <Image x:Key="Icon_AlignBottom" Source="pack://application:,,,/Assets/img/AlignObjectsBottom.png" />
-    <Image x:Key="Icon_AlignCenteredHorizontal" Source="pack://application:,,,/Assets/img/AlignObjectsCenteredHorizontal.png" />
-    <Image x:Key="Icon_AlignCenteredVertical" Source="pack://application:,,,/Assets/img/AlignObjectsCenteredVertical.png" />
-    <Image x:Key="Icon_AlignLeft" Source="pack://application:,,,/Assets/img/AlignObjectsLeft.png" />
-    <Image x:Key="Icon_AlignRight" Source="pack://application:,,,/Assets/img/AlignObjectsRight.png" />
-    <Image x:Key="Icon_AlignTop" Source="pack://application:,,,/Assets/img/AlignObjectsTop.png" />
-    <Image x:Key="Icon_BringForward" Source="pack://application:,,,/Assets/img/BringForward.png" />
-    <Image x:Key="Icon_BringToFront" Source="pack://application:,,,/Assets/img/BringToFront.png" />
-    <Image x:Key="Icon_DistributeHorizontal" Source="pack://application:,,,/Assets/img/DistributeObjectsHorizontal.png" />
-    <Image x:Key="Icon_DistributeVertical" Source="pack://application:,,,/Assets/img/DistributeObjectsVertical.png" />
-    <Image x:Key="Icon_Group" Source="pack://application:,,,/Assets/img/Group.png" />
-    <Image x:Key="Icon_SendBackward" Source="pack://application:,,,/Assets/img/SendBackward.png" />
-    <Image x:Key="Icon_SendToBack" Source="pack://application:,,,/Assets/img/SendToBack.png" />
-    <Image x:Key="Icon_Ungroup" Source="pack://application:,,,/Assets/img/Ungroup.png" />
+    <Image
+        x:Key="Icon_AlignBottom"
+        x:Shared="False"
+        Source="pack://application:,,,/Assets/img/AlignObjectsBottom.png" />
+    <Image
+        x:Key="Icon_AlignCenteredHorizontal"
+        x:Shared="False"
+        Source="pack://application:,,,/Assets/img/AlignObjectsCenteredHorizontal.png" />
+    <Image
+        x:Key="Icon_AlignCenteredVertical"
+        x:Shared="False"
+        Source="pack://application:,,,/Assets/img/AlignObjectsCenteredVertical.png" />
+    <Image
+        x:Key="Icon_AlignLeft"
+        x:Shared="False"
+        Source="pack://application:,,,/Assets/img/AlignObjectsLeft.png" />
+    <Image
+        x:Key="Icon_AlignRight"
+        x:Shared="False"
+        Source="pack://application:,,,/Assets/img/AlignObjectsRight.png" />
+    <Image
+        x:Key="Icon_AlignTop"
+        x:Shared="False"
+        Source="pack://application:,,,/Assets/img/AlignObjectsTop.png" />
+    <Image
+        x:Key="Icon_BringForward"
+        x:Shared="False"
+        Source="pack://application:,,,/Assets/img/BringForward.png" />
+    <Image
+        x:Key="Icon_BringToFront"
+        x:Shared="False"
+        Source="pack://application:,,,/Assets/img/BringToFront.png" />
+    <Image
+        x:Key="Icon_DistributeHorizontal"
+        x:Shared="False"
+        Source="pack://application:,,,/Assets/img/DistributeObjectsHorizontal.png" />
+    <Image
+        x:Key="Icon_DistributeVertical"
+        x:Shared="False"
+        Source="pack://application:,,,/Assets/img/DistributeObjectsVertical.png" />
+    <Image
+        x:Key="Icon_Group"
+        x:Shared="False"
+        Source="pack://application:,,,/Assets/img/Group.png" />
+    <Image
+        x:Key="Icon_SendBackward"
+        x:Shared="False"
+        Source="pack://application:,,,/Assets/img/SendBackward.png" />
+    <Image
+        x:Key="Icon_SendToBack"
+        x:Shared="False"
+        Source="pack://application:,,,/Assets/img/SendToBack.png" />
+    <Image
+        x:Key="Icon_Ungroup"
+        x:Shared="False"
+        Source="pack://application:,,,/Assets/img/Ungroup.png" />
 </ResourceDictionary>
