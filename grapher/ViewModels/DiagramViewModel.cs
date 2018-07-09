@@ -81,6 +81,8 @@ namespace grapher.ViewModels
                     AlignLeftCommand.RaiseCanExecuteChanged();
                     AlignHorizontalCenterCommand.RaiseCanExecuteChanged();
                     AlignRightCommand.RaiseCanExecuteChanged();
+                    DistributeHorizontalCommand.RaiseCanExecuteChanged();
+                    DistributeVerticalCommand.RaiseCanExecuteChanged();
                 });
 
             EdgeColors.CollectionChangedAsObservable()
