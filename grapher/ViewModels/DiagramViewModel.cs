@@ -60,11 +60,29 @@ namespace grapher.ViewModels
             DistributeHorizontalCommand = new DelegateCommand(() => ExecuteDistributeHorizontalCommand(), () => CanExecuteDistribute());
             DistributeVerticalCommand = new DelegateCommand(() => ExecuteDistributeVerticalCommand(), () => CanExecuteDistribute());
 
-            SelectedItems = Items
+            Items
                 .ObserveElementProperty(x => x.IsSelected)
-                .Where(x => x.Instance.IsSelected)
-                .Select(x => x.Instance)
-                .ToReactiveCollection();
+                .Subscribe(x =>
+                {
+                    if (x.Value)
+                    {
+                        SelectedItems.Add(x.Instance);
+                    }
+                    else
+                    {
+                        SelectedItems.Remove(x.Instance);
+                    }
+                });
+            Items
+                .ObserveRemoveChangedItems()
+                .Merge(Items.ObserveReplaceChangedItems().Select(x => x.OldItem))
+                .Subscribe(xs =>
+                {
+                    foreach (var x in xs)
+                    {
+                        if (x.IsSelected) { SelectedItems.Remove(x); }
+                    }
+                });
             SelectedItems.CollectionChangedAsObservable()
                 .Subscribe(_ =>
                 {
@@ -110,7 +128,7 @@ namespace grapher.ViewModels
             get { return _items; }
         }
 
-        public ReactiveCollection<SelectableDesignerItemViewModelBase> SelectedItems { get; }
+        public ReactiveCollection<SelectableDesignerItemViewModelBase> SelectedItems { get; } = new ReactiveCollection<SelectableDesignerItemViewModelBase>();
 
         public ObservableCollection<Color> EdgeColors
         {
@@ -267,7 +285,6 @@ namespace grapher.ViewModels
                     child.EnableForSelection.Value = true;
                 }
 
-                SelectedItems.Remove(groupRoot);
                 Items.Remove(groupRoot);
                 //UpdateZIndex();
 
