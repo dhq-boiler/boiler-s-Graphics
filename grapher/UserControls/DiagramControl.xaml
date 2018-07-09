@@ -306,68 +306,82 @@
                 <ScrollViewer.ContextMenu>
                     <ContextMenu>
                         <MenuItem Header="{Binding Grouping, Mode=OneWay, Source={StaticResource resources}}">
-                            <MenuItem
-                                Command="{Binding GroupCommand}"
-                                Header="{Binding Command_Group, Mode=OneWay, Source={StaticResource resources}}"
-                                Icon="{StaticResource Icon_Group}" />
-                            <MenuItem
-                                Command="{Binding UngroupCommand}"
-                                Header="{Binding Command_Ungroup, Mode=OneWay, Source={StaticResource resources}}"
-                                Icon="{StaticResource Icon_Ungroup}" />
+                            <MenuItem Command="{Binding GroupCommand}" Header="{Binding Command_Group, Mode=OneWay, Source={StaticResource resources}}">
+                                <MenuItem.Icon>
+                                    <Image Source="{StaticResource Icon_Group}" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Command="{Binding UngroupCommand}" Header="{Binding Command_Ungroup, Mode=OneWay, Source={StaticResource resources}}">
+                                <MenuItem.Icon>
+                                    <Image Source="{StaticResource Icon_Ungroup}" />
+                                </MenuItem.Icon>
+                            </MenuItem>
                         </MenuItem>
                         <MenuItem Header="{Binding Ordering, Mode=OneWay, Source={StaticResource resources}}">
-                            <MenuItem
-                                Command="{Binding BringForegroundCommand}"
-                                Header="{Binding Command_BringForeground, Mode=OneWay, Source={StaticResource resources}}"
-                                Icon="{StaticResource Icon_BringToFront}" />
-                            <MenuItem
-                                Command="{Binding BringForwardCommand}"
-                                Header="{Binding Command_BringForward, Mode=OneWay, Source={StaticResource resources}}"
-                                Icon="{StaticResource Icon_BringForward}" />
-                            <MenuItem
-                                Command="{Binding SendBackwardCommand}"
-                                Header="{Binding Command_SendBackward, Mode=OneWay, Source={StaticResource resources}}"
-                                Icon="{StaticResource Icon_SendBackward}" />
-                            <MenuItem
-                                Command="{Binding SendBackgroundCommand}"
-                                Header="{Binding Command_SendBackground, Mode=OneWay, Source={StaticResource resources}}"
-                                Icon="{StaticResource Icon_SendToBack}" />
+                            <MenuItem Command="{Binding BringForegroundCommand}" Header="{Binding Command_BringForeground, Mode=OneWay, Source={StaticResource resources}}">
+                                <MenuItem.Icon>
+                                    <Image Source="{StaticResource Icon_BringToFront}" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Command="{Binding BringForwardCommand}" Header="{Binding Command_BringForward, Mode=OneWay, Source={StaticResource resources}}">
+                                <MenuItem.Icon>
+                                    <Image Source="{StaticResource Icon_BringForward}" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Command="{Binding SendBackwardCommand}" Header="{Binding Command_SendBackward, Mode=OneWay, Source={StaticResource resources}}">
+                                <MenuItem.Icon>
+                                    <Image Source="{StaticResource Icon_SendBackward}" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Command="{Binding SendBackgroundCommand}" Header="{Binding Command_SendBackground, Mode=OneWay, Source={StaticResource resources}}">
+                                <MenuItem.Icon>
+                                    <Image Source="{StaticResource Icon_SendToBack}" />
+                                </MenuItem.Icon>
+                            </MenuItem>
                         </MenuItem>
                         <MenuItem Header="{Binding Alignment, Mode=OneWay, Source={StaticResource resources}}">
-                            <MenuItem
-                                Command="{Binding AlignTopCommand}"
-                                Header="{Binding Command_AlignTop, Mode=OneWay, Source={StaticResource resources}}"
-                                Icon="{StaticResource Icon_AlignTop}" />
-                            <MenuItem
-                                Command="{Binding AlignVerticalCenterCommand}"
-                                Header="{Binding Command_AlignVerticalCenter, Mode=OneWay, Source={StaticResource resources}}"
-                                Icon="{StaticResource Icon_AlignCenteredVertical}" />
-                            <MenuItem
-                                Command="{Binding AlignBottomCommand}"
-                                Header="{Binding Command_AlignBottom, Mode=OneWay, Source={StaticResource resources}}"
-                                Icon="{StaticResource Icon_AlignBottom}" />
+                            <MenuItem Command="{Binding AlignTopCommand}" Header="{Binding Command_AlignTop, Mode=OneWay, Source={StaticResource resources}}">
+                                <MenuItem.Icon>
+                                    <Image Source="{StaticResource Icon_AlignTop}" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Command="{Binding AlignVerticalCenterCommand}" Header="{Binding Command_AlignVerticalCenter, Mode=OneWay, Source={StaticResource resources}}">
+                                <MenuItem.Icon>
+                                    <Image Source="{StaticResource Icon_AlignCenteredVertical}" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Command="{Binding AlignBottomCommand}" Header="{Binding Command_AlignBottom, Mode=OneWay, Source={StaticResource resources}}">
+                                <MenuItem.Icon>
+                                    <Image Source="{StaticResource Icon_AlignBottom}" />
+                                </MenuItem.Icon>
+                            </MenuItem>
                             <Separator />
-                            <MenuItem
-                                Command="{Binding AlignLeftCommand}"
-                                Header="{Binding Command_AlignLeft, Mode=OneWay, Source={StaticResource resources}}"
-                                Icon="{StaticResource Icon_AlignLeft}" />
-                            <MenuItem
-                                Command="{Binding AlignHorizontalCenterCommand}"
-                                Header="{Binding Command_AlignHorizontalCenter, Mode=OneWay, Source={StaticResource resources}}"
-                                Icon="{StaticResource Icon_AlignCenteredHorizontal}" />
-                            <MenuItem
-                                Command="{Binding AlignRightCommand}"
-                                Header="{Binding Command_AlignRight, Mode=OneWay, Source={StaticResource resources}}"
-                                Icon="{StaticResource Icon_AlignRight}" />
+                            <MenuItem Command="{Binding AlignLeftCommand}" Header="{Binding Command_AlignLeft, Mode=OneWay, Source={StaticResource resources}}">
+                                <MenuItem.Icon>
+                                    <Image Source="{StaticResource Icon_AlignLeft}" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Command="{Binding AlignHorizontalCenterCommand}" Header="{Binding Command_AlignHorizontalCenter, Mode=OneWay, Source={StaticResource resources}}">
+                                <MenuItem.Icon>
+                                    <Image Source="{StaticResource Icon_AlignCenteredHorizontal}" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Command="{Binding AlignRightCommand}" Header="{Binding Command_AlignRight, Mode=OneWay, Source={StaticResource resources}}">
+                                <MenuItem.Icon>
+                                    <Image Source="{StaticResource Icon_AlignRight}" />
+                                </MenuItem.Icon>
+                            </MenuItem>
                             <Separator />
-                            <MenuItem
-                                Command="{Binding DistributeHorizontalCommand}"
-                                Header="{Binding Command_DistributeHorizontal, Mode=OneWay, Source={StaticResource resources}}"
-                                Icon="{StaticResource Icon_DistributeHorizontal}" />
-                            <MenuItem
-                                Command="{Binding DistributeVerticalCommand}"
-                                Header="{Binding Command_DistributeVertical, Mode=OneWay, Source={StaticResource resources}}"
-                                Icon="{StaticResource Icon_DistributeVertical}" />
+                            <MenuItem Command="{Binding DistributeHorizontalCommand}" Header="{Binding Command_DistributeHorizontal, Mode=OneWay, Source={StaticResource resources}}">
+                                <MenuItem.Icon>
+                                    <Image Source="{StaticResource Icon_DistributeHorizontal}" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Command="{Binding DistributeVerticalCommand}" Header="{Binding Command_DistributeVertical, Mode=OneWay, Source={StaticResource resources}}">
+                                <MenuItem.Icon>
+                                    <Image Source="{StaticResource Icon_DistributeVertical}" />
+                                </MenuItem.Icon>
+                            </MenuItem>
                         </MenuItem>
                     </ContextMenu>
                 </ScrollViewer.ContextMenu>

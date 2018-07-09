@@ -118,10 +118,38 @@
                                         Fill="White"
                                         Stroke="Black"
                                         StrokeThickness="1" />
-                                    <ContentPresenter
-                                        Width="16"
-                                        Height="16"
-                                        Content="{StaticResource Icon_Group}" />
+                                    <ContentControl Width="16" Height="16">
+                                        <ContentControl.Style>
+                                            <Style TargetType="{x:Type ContentControl}">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" Value="True">
+                                                        <Setter Property="Content">
+                                                            <Setter.Value>
+                                                                <Image
+                                                                    Width="16"
+                                                                    Height="16"
+                                                                    Source="{StaticResource Icon_Group}" />
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" Value="False">
+                                                        <Setter Property="Content">
+                                                            <Setter.Value>
+                                                                <Image Width="16" Height="16">
+                                                                    <Image.Source>
+                                                                        <FormatConvertedBitmap DestinationFormat="Gray32Float" Source="{StaticResource Icon_Group}" />
+                                                                    </Image.Source>
+                                                                    <Image.OpacityMask>
+                                                                        <ImageBrush ImageSource="{StaticResource Icon_Group}" />
+                                                                    </Image.OpacityMask>
+                                                                </Image>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </ContentControl.Style>
+                                    </ContentControl>
                                 </Grid>
                             </ControlTemplate>
                         </Button.Template>
@@ -136,10 +164,38 @@
                                         Fill="White"
                                         Stroke="Black"
                                         StrokeThickness="1" />
-                                    <ContentPresenter
-                                        Width="16"
-                                        Height="16"
-                                        Content="{StaticResource Icon_Ungroup}" />
+                                    <ContentControl Width="16" Height="16">
+                                        <ContentControl.Style>
+                                            <Style TargetType="{x:Type ContentControl}">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" Value="True">
+                                                        <Setter Property="Content">
+                                                            <Setter.Value>
+                                                                <Image
+                                                                    Width="16"
+                                                                    Height="16"
+                                                                    Source="{StaticResource Icon_Ungroup}" />
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" Value="False">
+                                                        <Setter Property="Content">
+                                                            <Setter.Value>
+                                                                <Image Width="16" Height="16">
+                                                                    <Image.Source>
+                                                                        <FormatConvertedBitmap DestinationFormat="Gray32Float" Source="{StaticResource Icon_Ungroup}" />
+                                                                    </Image.Source>
+                                                                    <Image.OpacityMask>
+                                                                        <ImageBrush ImageSource="{StaticResource Icon_Ungroup}" />
+                                                                    </Image.OpacityMask>
+                                                                </Image>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </ContentControl.Style>
+                                    </ContentControl>
                                 </Grid>
                             </ControlTemplate>
                         </Button.Template>
@@ -158,10 +214,38 @@
                                         Fill="White"
                                         Stroke="Black"
                                         StrokeThickness="1" />
-                                    <ContentPresenter
-                                        Width="16"
-                                        Height="16"
-                                        Content="{StaticResource Icon_BringToFront}" />
+                                    <ContentControl Width="16" Height="16">
+                                        <ContentControl.Style>
+                                            <Style TargetType="{x:Type ContentControl}">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" Value="True">
+                                                        <Setter Property="Content">
+                                                            <Setter.Value>
+                                                                <Image
+                                                                    Width="16"
+                                                                    Height="16"
+                                                                    Source="{StaticResource Icon_BringToFront}" />
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" Value="False">
+                                                        <Setter Property="Content">
+                                                            <Setter.Value>
+                                                                <Image Width="16" Height="16">
+                                                                    <Image.Source>
+                                                                        <FormatConvertedBitmap DestinationFormat="Gray32Float" Source="{StaticResource Icon_BringToFront}" />
+                                                                    </Image.Source>
+                                                                    <Image.OpacityMask>
+                                                                        <ImageBrush ImageSource="{StaticResource Icon_BringToFront}" />
+                                                                    </Image.OpacityMask>
+                                                                </Image>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </ContentControl.Style>
+                                    </ContentControl>
                                 </Grid>
                             </ControlTemplate>
                         </Button.Template>
@@ -176,10 +260,38 @@
                                         Fill="White"
                                         Stroke="Black"
                                         StrokeThickness="1" />
-                                    <ContentPresenter
-                                        Width="16"
-                                        Height="16"
-                                        Content="{StaticResource Icon_BringForward}" />
+                                    <ContentControl Width="16" Height="16">
+                                        <ContentControl.Style>
+                                            <Style TargetType="{x:Type ContentControl}">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" Value="True">
+                                                        <Setter Property="Content">
+                                                            <Setter.Value>
+                                                                <Image
+                                                                    Width="16"
+                                                                    Height="16"
+                                                                    Source="{StaticResource Icon_BringForward}" />
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" Value="False">
+                                                        <Setter Property="Content">
+                                                            <Setter.Value>
+                                                                <Image Width="16" Height="16">
+                                                                    <Image.Source>
+                                                                        <FormatConvertedBitmap DestinationFormat="Gray32Float" Source="{StaticResource Icon_BringForward}" />
+                                                                    </Image.Source>
+                                                                    <Image.OpacityMask>
+                                                                        <ImageBrush ImageSource="{StaticResource Icon_BringForward}" />
+                                                                    </Image.OpacityMask>
+                                                                </Image>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </ContentControl.Style>
+                                    </ContentControl>
                                 </Grid>
                             </ControlTemplate>
                         </Button.Template>
@@ -194,10 +306,38 @@
                                         Fill="White"
                                         Stroke="Black"
                                         StrokeThickness="1" />
-                                    <ContentPresenter
-                                        Width="16"
-                                        Height="16"
-                                        Content="{StaticResource Icon_SendBackward}" />
+                                    <ContentControl Width="16" Height="16">
+                                        <ContentControl.Style>
+                                            <Style TargetType="{x:Type ContentControl}">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" Value="True">
+                                                        <Setter Property="Content">
+                                                            <Setter.Value>
+                                                                <Image
+                                                                    Width="16"
+                                                                    Height="16"
+                                                                    Source="{StaticResource Icon_SendBackward}" />
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" Value="False">
+                                                        <Setter Property="Content">
+                                                            <Setter.Value>
+                                                                <Image Width="16" Height="16">
+                                                                    <Image.Source>
+                                                                        <FormatConvertedBitmap DestinationFormat="Gray32Float" Source="{StaticResource Icon_SendBackward}" />
+                                                                    </Image.Source>
+                                                                    <Image.OpacityMask>
+                                                                        <ImageBrush ImageSource="{StaticResource Icon_SendBackward}" />
+                                                                    </Image.OpacityMask>
+                                                                </Image>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </ContentControl.Style>
+                                    </ContentControl>
                                 </Grid>
                             </ControlTemplate>
                         </Button.Template>
@@ -212,10 +352,38 @@
                                         Fill="White"
                                         Stroke="Black"
                                         StrokeThickness="1" />
-                                    <ContentPresenter
-                                        Width="16"
-                                        Height="16"
-                                        Content="{StaticResource Icon_SendToBack}" />
+                                    <ContentControl Width="16" Height="16">
+                                        <ContentControl.Style>
+                                            <Style TargetType="{x:Type ContentControl}">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" Value="True">
+                                                        <Setter Property="Content">
+                                                            <Setter.Value>
+                                                                <Image
+                                                                    Width="16"
+                                                                    Height="16"
+                                                                    Source="{StaticResource Icon_SendToBack}" />
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" Value="False">
+                                                        <Setter Property="Content">
+                                                            <Setter.Value>
+                                                                <Image Width="16" Height="16">
+                                                                    <Image.Source>
+                                                                        <FormatConvertedBitmap DestinationFormat="Gray32Float" Source="{StaticResource Icon_SendToBack}" />
+                                                                    </Image.Source>
+                                                                    <Image.OpacityMask>
+                                                                        <ImageBrush ImageSource="{StaticResource Icon_SendToBack}" />
+                                                                    </Image.OpacityMask>
+                                                                </Image>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </ContentControl.Style>
+                                    </ContentControl>
                                 </Grid>
                             </ControlTemplate>
                         </Button.Template>
@@ -234,10 +402,38 @@
                                         Fill="White"
                                         Stroke="Black"
                                         StrokeThickness="1" />
-                                    <ContentPresenter
-                                        Width="16"
-                                        Height="16"
-                                        Content="{StaticResource Icon_AlignTop}" />
+                                    <ContentControl Width="16" Height="16">
+                                        <ContentControl.Style>
+                                            <Style TargetType="{x:Type ContentControl}">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" Value="True">
+                                                        <Setter Property="Content">
+                                                            <Setter.Value>
+                                                                <Image
+                                                                    Width="16"
+                                                                    Height="16"
+                                                                    Source="{StaticResource Icon_AlignTop}" />
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" Value="False">
+                                                        <Setter Property="Content">
+                                                            <Setter.Value>
+                                                                <Image Width="16" Height="16">
+                                                                    <Image.Source>
+                                                                        <FormatConvertedBitmap DestinationFormat="Gray32Float" Source="{StaticResource Icon_AlignTop}" />
+                                                                    </Image.Source>
+                                                                    <Image.OpacityMask>
+                                                                        <ImageBrush ImageSource="{StaticResource Icon_AlignTop}" />
+                                                                    </Image.OpacityMask>
+                                                                </Image>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </ContentControl.Style>
+                                    </ContentControl>
                                 </Grid>
                             </ControlTemplate>
                         </Button.Template>
@@ -252,10 +448,38 @@
                                         Fill="White"
                                         Stroke="Black"
                                         StrokeThickness="1" />
-                                    <ContentPresenter
-                                        Width="16"
-                                        Height="16"
-                                        Content="{StaticResource Icon_AlignCenteredVertical}" />
+                                    <ContentControl Width="16" Height="16">
+                                        <ContentControl.Style>
+                                            <Style TargetType="{x:Type ContentControl}">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" Value="True">
+                                                        <Setter Property="Content">
+                                                            <Setter.Value>
+                                                                <Image
+                                                                    Width="16"
+                                                                    Height="16"
+                                                                    Source="{StaticResource Icon_AlignCenteredVertical}" />
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" Value="False">
+                                                        <Setter Property="Content">
+                                                            <Setter.Value>
+                                                                <Image Width="16" Height="16">
+                                                                    <Image.Source>
+                                                                        <FormatConvertedBitmap DestinationFormat="Gray32Float" Source="{StaticResource Icon_AlignCenteredVertical}" />
+                                                                    </Image.Source>
+                                                                    <Image.OpacityMask>
+                                                                        <ImageBrush ImageSource="{StaticResource Icon_AlignCenteredVertical}" />
+                                                                    </Image.OpacityMask>
+                                                                </Image>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </ContentControl.Style>
+                                    </ContentControl>
                                 </Grid>
                             </ControlTemplate>
                         </Button.Template>
@@ -270,10 +494,38 @@
                                         Fill="White"
                                         Stroke="Black"
                                         StrokeThickness="1" />
-                                    <ContentPresenter
-                                        Width="16"
-                                        Height="16"
-                                        Content="{StaticResource Icon_AlignBottom}" />
+                                    <ContentControl Width="16" Height="16">
+                                        <ContentControl.Style>
+                                            <Style TargetType="{x:Type ContentControl}">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" Value="True">
+                                                        <Setter Property="Content">
+                                                            <Setter.Value>
+                                                                <Image
+                                                                    Width="16"
+                                                                    Height="16"
+                                                                    Source="{StaticResource Icon_AlignBottom}" />
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" Value="False">
+                                                        <Setter Property="Content">
+                                                            <Setter.Value>
+                                                                <Image Width="16" Height="16">
+                                                                    <Image.Source>
+                                                                        <FormatConvertedBitmap DestinationFormat="Gray32Float" Source="{StaticResource Icon_AlignBottom}" />
+                                                                    </Image.Source>
+                                                                    <Image.OpacityMask>
+                                                                        <ImageBrush ImageSource="{StaticResource Icon_AlignBottom}" />
+                                                                    </Image.OpacityMask>
+                                                                </Image>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </ContentControl.Style>
+                                    </ContentControl>
                                 </Grid>
                             </ControlTemplate>
                         </Button.Template>
@@ -289,10 +541,38 @@
                                         Fill="White"
                                         Stroke="Black"
                                         StrokeThickness="1" />
-                                    <ContentPresenter
-                                        Width="16"
-                                        Height="16"
-                                        Content="{StaticResource Icon_AlignLeft}" />
+                                    <ContentControl Width="16" Height="16">
+                                        <ContentControl.Style>
+                                            <Style TargetType="{x:Type ContentControl}">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" Value="True">
+                                                        <Setter Property="Content">
+                                                            <Setter.Value>
+                                                                <Image
+                                                                    Width="16"
+                                                                    Height="16"
+                                                                    Source="{StaticResource Icon_AlignLeft}" />
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" Value="False">
+                                                        <Setter Property="Content">
+                                                            <Setter.Value>
+                                                                <Image Width="16" Height="16">
+                                                                    <Image.Source>
+                                                                        <FormatConvertedBitmap DestinationFormat="Gray32Float" Source="{StaticResource Icon_AlignLeft}" />
+                                                                    </Image.Source>
+                                                                    <Image.OpacityMask>
+                                                                        <ImageBrush ImageSource="{StaticResource Icon_AlignLeft}" />
+                                                                    </Image.OpacityMask>
+                                                                </Image>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </ContentControl.Style>
+                                    </ContentControl>
                                 </Grid>
                             </ControlTemplate>
                         </Button.Template>
@@ -307,10 +587,38 @@
                                         Fill="White"
                                         Stroke="Black"
                                         StrokeThickness="1" />
-                                    <ContentPresenter
-                                        Width="16"
-                                        Height="16"
-                                        Content="{StaticResource Icon_AlignCenteredHorizontal}" />
+                                    <ContentControl Width="16" Height="16">
+                                        <ContentControl.Style>
+                                            <Style TargetType="{x:Type ContentControl}">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" Value="True">
+                                                        <Setter Property="Content">
+                                                            <Setter.Value>
+                                                                <Image
+                                                                    Width="16"
+                                                                    Height="16"
+                                                                    Source="{StaticResource Icon_AlignCenteredHorizontal}" />
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" Value="False">
+                                                        <Setter Property="Content">
+                                                            <Setter.Value>
+                                                                <Image Width="16" Height="16">
+                                                                    <Image.Source>
+                                                                        <FormatConvertedBitmap DestinationFormat="Gray32Float" Source="{StaticResource Icon_AlignCenteredHorizontal}" />
+                                                                    </Image.Source>
+                                                                    <Image.OpacityMask>
+                                                                        <ImageBrush ImageSource="{StaticResource Icon_AlignCenteredHorizontal}" />
+                                                                    </Image.OpacityMask>
+                                                                </Image>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </ContentControl.Style>
+                                    </ContentControl>
                                 </Grid>
                             </ControlTemplate>
                         </Button.Template>
@@ -325,10 +633,38 @@
                                         Fill="White"
                                         Stroke="Black"
                                         StrokeThickness="1" />
-                                    <ContentPresenter
-                                        Width="16"
-                                        Height="16"
-                                        Content="{StaticResource Icon_AlignRight}" />
+                                    <ContentControl Width="16" Height="16">
+                                        <ContentControl.Style>
+                                            <Style TargetType="{x:Type ContentControl}">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" Value="True">
+                                                        <Setter Property="Content">
+                                                            <Setter.Value>
+                                                                <Image
+                                                                    Width="16"
+                                                                    Height="16"
+                                                                    Source="{StaticResource Icon_AlignRight}" />
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" Value="False">
+                                                        <Setter Property="Content">
+                                                            <Setter.Value>
+                                                                <Image Width="16" Height="16">
+                                                                    <Image.Source>
+                                                                        <FormatConvertedBitmap DestinationFormat="Gray32Float" Source="{StaticResource Icon_AlignRight}" />
+                                                                    </Image.Source>
+                                                                    <Image.OpacityMask>
+                                                                        <ImageBrush ImageSource="{StaticResource Icon_AlignRight}" />
+                                                                    </Image.OpacityMask>
+                                                                </Image>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </ContentControl.Style>
+                                    </ContentControl>
                                 </Grid>
                             </ControlTemplate>
                         </Button.Template>
@@ -344,10 +680,38 @@
                                         Fill="White"
                                         Stroke="Black"
                                         StrokeThickness="1" />
-                                    <ContentPresenter
-                                        Width="16"
-                                        Height="16"
-                                        Content="{StaticResource Icon_DistributeHorizontal}" />
+                                    <ContentControl Width="16" Height="16">
+                                        <ContentControl.Style>
+                                            <Style TargetType="{x:Type ContentControl}">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" Value="True">
+                                                        <Setter Property="Content">
+                                                            <Setter.Value>
+                                                                <Image
+                                                                    Width="16"
+                                                                    Height="16"
+                                                                    Source="{StaticResource Icon_DistributeHorizontal}" />
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" Value="False">
+                                                        <Setter Property="Content">
+                                                            <Setter.Value>
+                                                                <Image Width="16" Height="16">
+                                                                    <Image.Source>
+                                                                        <FormatConvertedBitmap DestinationFormat="Gray32Float" Source="{StaticResource Icon_DistributeHorizontal}" />
+                                                                    </Image.Source>
+                                                                    <Image.OpacityMask>
+                                                                        <ImageBrush ImageSource="{StaticResource Icon_DistributeHorizontal}" />
+                                                                    </Image.OpacityMask>
+                                                                </Image>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </ContentControl.Style>
+                                    </ContentControl>
                                 </Grid>
                             </ControlTemplate>
                         </Button.Template>
@@ -362,10 +726,38 @@
                                         Fill="White"
                                         Stroke="Black"
                                         StrokeThickness="1" />
-                                    <ContentPresenter
-                                        Width="16"
-                                        Height="16"
-                                        Content="{StaticResource Icon_DistributeVertical}" />
+                                    <ContentControl Width="16" Height="16">
+                                        <ContentControl.Style>
+                                            <Style TargetType="{x:Type ContentControl}">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" Value="True">
+                                                        <Setter Property="Content">
+                                                            <Setter.Value>
+                                                                <Image
+                                                                    Width="16"
+                                                                    Height="16"
+                                                                    Source="{StaticResource Icon_DistributeVertical}" />
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" Value="False">
+                                                        <Setter Property="Content">
+                                                            <Setter.Value>
+                                                                <Image Width="16" Height="16">
+                                                                    <Image.Source>
+                                                                        <FormatConvertedBitmap DestinationFormat="Gray32Float" Source="{StaticResource Icon_DistributeVertical}" />
+                                                                    </Image.Source>
+                                                                    <Image.OpacityMask>
+                                                                        <ImageBrush ImageSource="{StaticResource Icon_DistributeVertical}" />
+                                                                    </Image.OpacityMask>
+                                                                </Image>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </ContentControl.Style>
+                                    </ContentControl>
                                 </Grid>
                             </ControlTemplate>
                         </Button.Template>
