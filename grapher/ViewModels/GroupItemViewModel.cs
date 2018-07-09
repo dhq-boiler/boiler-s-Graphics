@@ -73,9 +73,6 @@ namespace grapher.ViewModels
                 };
                 GroupTransformObserversOnNext(notification);
 
-                //rotate group boundary
-                //Matrix.Value.RotateAt(a - _lotateAngleOld, Left.Value + Width.Value / 2, Top.Value + Height.Value / 2);
-
                 _lotateAngleOld = a;
             });
         }

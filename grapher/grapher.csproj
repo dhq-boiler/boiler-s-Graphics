@@ -180,15 +180,11 @@
     <Compile Include="Views\AdornedBy.cs" />
     <Compile Include="Views\Behaviors\AbstractAdorner.cs" />
     <Compile Include="Views\Behaviors\CursorInfo.cs" />
-    <Compile Include="Views\Behaviors\DeleteBehavior.cs" />
     <Compile Include="Views\Behaviors\DeselectBehavior.cs" />
     <Compile Include="Views\Behaviors\AbstractDragAdorner.cs" />
     <Compile Include="Views\Behaviors\AbstractDragStartBehavior.cs" />
     <Compile Include="Views\Behaviors\DrawAbstractBehavior.cs" />
-    <Compile Include="Views\Behaviors\DrawEllipseBehavior.cs" />
-    <Compile Include="Views\Behaviors\DrawRectangleBehavior.cs" />
     <Compile Include="Views\Behaviors\DrawSettingBehavior.cs" />
-    <Compile Include="Views\Behaviors\DrawStraightLineBehavior.cs" />
     <Compile Include="Views\Behaviors\DropAcceptDescription.cs" />
     <Compile Include="Views\Behaviors\CursorBehavior.cs" />
     <Compile Include="Views\Behaviors\EllipseAdorner.cs" />

@@ -286,7 +286,6 @@ namespace grapher.ViewModels
                 }
 
                 Items.Remove(groupRoot);
-                //UpdateZIndex();
 
                 var groupZIndex = groupRoot.ZIndex.Value;
 
