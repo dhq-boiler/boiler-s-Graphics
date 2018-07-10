@@ -7,18 +7,20 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Media;
 
 namespace grapher.ViewModels
 {
-    public class DiagramViewModel : BindableBase, IDiagramViewModel
+    public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     {
         private ObservableCollection<SelectableDesignerItemViewModelBase> _items = new ObservableCollection<SelectableDesignerItemViewModelBase>();
         private Point _CurrentPoint;
         private ObservableCollection<Color> _EdgeColors = new ObservableCollection<Color>();
         private ObservableCollection<Color> _FillColors = new ObservableCollection<Color>();
+        private CompositeDisposable _CompositeDisposable = new CompositeDisposable();
 
         public DelegateCommand<object> AddItemCommand { get; private set; }
         public DelegateCommand<object> RemoveItemCommand { get; private set; }
@@ -78,7 +80,8 @@ namespace grapher.ViewModels
                     {
                         SelectedItems.Remove(x.Instance);
                     }
-                });
+                })
+                .AddTo(_CompositeDisposable);
             Items
                 .ObserveRemoveChangedItems()
                 .Merge(Items.ObserveReplaceChangedItems().Select(x => x.OldItem))
@@ -88,7 +91,8 @@ namespace grapher.ViewModels
                     {
                         if (x.IsSelected) { SelectedItems.Remove(x); }
                     }
-                });
+                })
+                .AddTo(_CompositeDisposable);
             SelectedItems.CollectionChangedAsObservable()
                 .Subscribe(_ =>
                 {
@@ -110,12 +114,15 @@ namespace grapher.ViewModels
 
                     UniformWidthCommand.RaiseCanExecuteChanged();
                     UniformHeightCommand.RaiseCanExecuteChanged();
-                });
+                })
+                .AddTo(_CompositeDisposable);
 
             EdgeColors.CollectionChangedAsObservable()
-                .Subscribe(_ => RaisePropertyChanged("EdgeColors"));
+                .Subscribe(_ => RaisePropertyChanged("EdgeColors"))
+                .AddTo(_CompositeDisposable);
             FillColors.CollectionChangedAsObservable()
-                .Subscribe(_ => RaisePropertyChanged("FillColors"));
+                .Subscribe(_ => RaisePropertyChanged("FillColors"))
+                .AddTo(_CompositeDisposable);
 
             EdgeColors.Add(Colors.Black);
             FillColors.Add(Colors.Transparent);
@@ -983,5 +990,14 @@ namespace grapher.ViewModels
             get { return _CurrentPoint; }
             set { SetProperty(ref _CurrentPoint, value); }
         }
+
+        #region IDisposable
+
+        public void Dispose()
+        {
+            _CompositeDisposable.Dispose();
+        }
+
+        #endregion //IDisposable
     }
 }
