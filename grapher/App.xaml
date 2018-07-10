@@ -18,6 +18,7 @@
                 <ResourceDictionary Source="pack://application:,,,/grapher;component/Resources/Styles/DesignerItems.xaml" />
 
                 <ResourceDictionary Source="pack://application:,,,/grapher;component/Resources/Styles.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/grapher;component/Resources/Icons.xaml" />
 
                 <ResourceDictionary Source="pack://application:,,,/grapher;component/Resources/DesignerItems/GroupItemDataTemplate.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/grapher;component/Resources/DesignerItems/RectangleDesignerItemDataTemplate.xaml" />

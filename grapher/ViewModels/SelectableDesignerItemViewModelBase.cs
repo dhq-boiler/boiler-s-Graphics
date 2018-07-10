@@ -3,8 +3,8 @@ using Prism.Commands;
 using Prism.Mvvm;
 using Reactive.Bindings;
 using System;
-using System.Diagnostics;
 using System.Linq;
+using System.Reactive.Disposables;
 using System.Windows.Media;
 
 namespace grapher.ViewModels
@@ -15,9 +15,10 @@ namespace grapher.ViewModels
     }
 
 
-    public abstract class SelectableDesignerItemViewModelBase : BindableBase, ISelectItems, IObserver<GroupTransformNotification>
+    public abstract class SelectableDesignerItemViewModelBase : BindableBase, ISelectItems, IObserver<GroupTransformNotification>, IDisposable
     {
         private bool _IsSelected;
+        protected CompositeDisposable _CompositeDisposable = new CompositeDisposable();
 
         public SelectableDesignerItemViewModelBase(int id, IDiagramViewModel parent)
         {
@@ -82,6 +83,11 @@ namespace grapher.ViewModels
             IsSelected = select;
         }
 
+        public bool IsSameGroup(SelectableDesignerItemViewModelBase target)
+        {
+            return this.ParentID == target.ParentID && this.ParentID != Guid.Empty;
+        }
+
         private void Init()
         {
             SelectItemCommand = new DelegateCommand<object>(p => SelectItem((bool)p, !IsSelected));
@@ -104,5 +110,15 @@ namespace grapher.ViewModels
         }
 
         #endregion //IObserver<GroupTransformNotification>
+
+        #region IDisposable
+
+        public void Dispose()
+        {
+            _CompositeDisposable.Dispose();
+            _CompositeDisposable = null;
+        }
+
+        #endregion //IDisposable
     }
 }

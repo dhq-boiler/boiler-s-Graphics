@@ -1,5 +1,6 @@
 ﻿using grapher.Controls;
 using grapher.Helpers;
+using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -165,6 +166,7 @@ namespace grapher.ViewModels
                         SourceA = PointHelper.GetPointForConnector(this.SourceConnectorInfo as FullyCreatedConnectorInfo);
                         _sourceConnectorDisconnecting?.Dispose();
                         _sourceConnectorDisconnecting = (_sourceConnectorInfo as FullyCreatedConnectorInfo).DataItem.Subscribe(this);
+                        _sourceConnectorDisconnecting.AddTo(_CompositeDisposable);
                     }
                     RaisePropertyChanged("SourceConnectorInfo");
                 }
@@ -187,6 +189,7 @@ namespace grapher.ViewModels
                         SourceB = PointHelper.GetPointForConnector((FullyCreatedConnectorInfo)SinkConnectorInfo);
                         _sinkConnectorDisconnecting?.Dispose();
                         _sinkConnectorDisconnecting = (_sinkConnectorInfo as FullyCreatedConnectorInfo).DataItem.Subscribe(this);
+                        _sinkConnectorDisconnecting.AddTo(_CompositeDisposable);
                     }
                     else
                     {
@@ -254,13 +257,16 @@ namespace grapher.ViewModels
 
         public void OnNext(TransformNotification value)
         {
-            if (SourceConnectorInfo is FullyCreatedConnectorInfo)
+            if (!value.Sender.IsSameGroup(this))
             {
-                SourceA = PointHelper.GetPointForConnector(this.SourceConnectorInfo as FullyCreatedConnectorInfo);
-            }
-            if (this.SinkConnectorInfo is FullyCreatedConnectorInfo)
-            {
-                SourceB = PointHelper.GetPointForConnector(this.SinkConnectorInfo as FullyCreatedConnectorInfo);
+                if (SourceConnectorInfo is FullyCreatedConnectorInfo sourceInfo && sourceInfo.DataItem == value.Sender)
+                {
+                    SourceA = PointHelper.GetPointForConnector(this.SourceConnectorInfo as FullyCreatedConnectorInfo);
+                }
+                if (this.SinkConnectorInfo is FullyCreatedConnectorInfo sinkInfo && sinkInfo.DataItem == value.Sender)
+                {
+                    SourceB = PointHelper.GetPointForConnector(this.SinkConnectorInfo as FullyCreatedConnectorInfo);
+                }
             }
         }
 
@@ -299,19 +305,30 @@ namespace grapher.ViewModels
                     a = SourceA;
                     b = SourceB;
                     var diffAngle = value.RotateAngleChange;
-                    RotationAngle.Value += diffAngle; //for only calcurate rotation angle sum
-                    var matrix = Matrix.Value;
-                    matrix.RotateAt(diffAngle, value.GroupCenter.X - a.X / 2 - b.X / 2, value.GroupCenter.Y - a.Y / 2 - b.Y / 2);
-                    a.X += matrix.OffsetX;
-                    b.X += matrix.OffsetX;
-                    a.Y += matrix.OffsetY;
-                    b.Y += matrix.OffsetY;
-                    matrix.OffsetX = 0;
-                    matrix.OffsetY = 0;
-                    SourceA = a;
-                    SourceB = b;
-                    Matrix.Value = matrix;
+                    var center = value.GroupCenter;
+                    var matrix = new Matrix();
+                    //derive rotated 0 degree point
+                    matrix.RotateAt(-RotationAngle.Value, center.X, center.Y);
+                    var origA = matrix.Transform(a);
+                    var origB = matrix.Transform(b);
+                    //derive rotated N degrees point from rotated 0 degree point in transform result
+                    matrix = new Matrix();
+                    RotationAngle.Value += diffAngle;
+                    matrix.RotateAt(RotationAngle.Value, center.X, center.Y);
+                    var newA = matrix.Transform(origA);
+                    var newB = matrix.Transform(origB);
+                    SourceA = newA;
+                    SourceB = newB;
                     break;
+            }
+
+            if (SourceConnectorInfo is FullyCreatedConnectorInfo sourceInfo && !sourceInfo.DataItem.IsSameGroup(this))
+            {
+                SourceA = PointHelper.GetPointForConnector(sourceInfo);
+            }
+            if (SinkConnectorInfo is FullyCreatedConnectorInfo sinkInfo && !sinkInfo.DataItem.IsSameGroup(this))
+            {
+                SourceB = PointHelper.GetPointForConnector(sinkInfo);
             }
         }
 

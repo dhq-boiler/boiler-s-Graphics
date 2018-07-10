@@ -60,10 +60,7 @@ namespace grapher.AttachedProperties
                 }
                 else
                 {
-                    foreach (SelectableDesignerItemViewModelBase item in selectableDesignerItemViewModelBase.Owner.SelectedItems)
-                        item.IsSelected = false;
-
-                    selectableDesignerItemViewModelBase.Owner.SelectedItems.Clear();
+                    selectableDesignerItemViewModelBase.Owner.DeselectAll();
                     selectableDesignerItemViewModelBase.Owner.EdgeColors.Clear();
                     selectableDesignerItemViewModelBase.Owner.FillColors.Clear();
                     selectableDesignerItemViewModelBase.IsSelected = true;

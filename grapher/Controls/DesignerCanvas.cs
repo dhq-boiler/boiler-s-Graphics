@@ -79,8 +79,9 @@ namespace grapher.Controls
                     FullyCreatedConnectorInfo sinkDataItem = sinkConnector.DataContext as FullyCreatedConnectorInfo;
 
                     int indexOfLastTempConnection = sinkDataItem.DataItem.Owner.Items.Count - 1;
-                    sinkDataItem.DataItem.Owner.RemoveItemCommand.Execute(
-                        sinkDataItem.DataItem.Owner.Items[indexOfLastTempConnection]);
+                    var lastTempConnection = sinkDataItem.DataItem.Owner.Items[indexOfLastTempConnection];
+                    sinkDataItem.DataItem.Owner.RemoveItemCommand.Execute(lastTempConnection);
+
                     var line = LineFactory.Create(sinkDataItem.DataItem.Owner, sourceDataItem, sinkDataItem);
                     line.EdgeColor = line.Owner.EdgeColors.First();
                     sinkDataItem.DataItem.Owner.AddItemCommand.Execute(line);
@@ -89,8 +90,9 @@ namespace grapher.Controls
                 {
                     //Need to remove last item as we did not finish drawing the path
                     int indexOfLastTempConnection = sourceDataItem.DataItem.Owner.Items.Count - 1;
-                    sourceDataItem.DataItem.Owner.RemoveItemCommand.Execute(
-                        sourceDataItem.DataItem.Owner.Items[indexOfLastTempConnection]);
+                    var lastTempConnection = sourceDataItem.DataItem.Owner.Items[indexOfLastTempConnection];
+                    sourceDataItem.DataItem.Owner.RemoveItemCommand.Execute(lastTempConnection);
+
                     var line = LineFactory.Create(sourceDataItem.DataItem.Owner, sourceDataItem, new PartCreatedConnectionInfo(e.GetPosition(this)));
                     line.EdgeColor = line.Owner.EdgeColors.First();
                     sourceDataItem.DataItem.Owner.AddItemCommand.Execute(line);
@@ -104,7 +106,7 @@ namespace grapher.Controls
                 var viewModel = MoveConnector.DataContext as ConnectorBaseViewModel;
                 if (_connectorsHit.Count() >= 2)
                 {
-                    Connector sinkConnector = _connectorsHit.Last();
+                    Connector sinkConnector = _connectorsHit.Where(x => x.DataContext is FullyCreatedConnectorInfo).Last();
                     FullyCreatedConnectorInfo sinkDataItem = sinkConnector.DataContext as FullyCreatedConnectorInfo;
 
                     switch (MoveConnector.Name)

@@ -117,11 +117,38 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Alignment" xml:space="preserve">
+    <value>配置</value>
+  </data>
+  <data name="Command_AlignBottom" xml:space="preserve">
+    <value>下揃え</value>
+  </data>
+  <data name="Command_AlignHorizontalCenter" xml:space="preserve">
+    <value>左右中央揃え</value>
+  </data>
+  <data name="Command_AlignLeft" xml:space="preserve">
+    <value>左揃え</value>
+  </data>
+  <data name="Command_AlignRight" xml:space="preserve">
+    <value>右揃え</value>
+  </data>
+  <data name="Command_AlignTop" xml:space="preserve">
+    <value>上揃え</value>
+  </data>
+  <data name="Command_AlignVerticalCenter" xml:space="preserve">
+    <value>上下中央揃え</value>
+  </data>
   <data name="Command_BringForeground" xml:space="preserve">
     <value>最前面へ移動</value>
   </data>
   <data name="Command_BringForward" xml:space="preserve">
     <value>前面へ移動</value>
+  </data>
+  <data name="Command_DistributeHorizontal" xml:space="preserve">
+    <value>左右に整列</value>
+  </data>
+  <data name="Command_DistributeVertical" xml:space="preserve">
+    <value>上下に整列</value>
   </data>
   <data name="Command_Group" xml:space="preserve">
     <value>グループ化</value>

@@ -180,15 +180,11 @@
     <Compile Include="Views\AdornedBy.cs" />
     <Compile Include="Views\Behaviors\AbstractAdorner.cs" />
     <Compile Include="Views\Behaviors\CursorInfo.cs" />
-    <Compile Include="Views\Behaviors\DeleteBehavior.cs" />
     <Compile Include="Views\Behaviors\DeselectBehavior.cs" />
     <Compile Include="Views\Behaviors\AbstractDragAdorner.cs" />
     <Compile Include="Views\Behaviors\AbstractDragStartBehavior.cs" />
     <Compile Include="Views\Behaviors\DrawAbstractBehavior.cs" />
-    <Compile Include="Views\Behaviors\DrawEllipseBehavior.cs" />
-    <Compile Include="Views\Behaviors\DrawRectangleBehavior.cs" />
     <Compile Include="Views\Behaviors\DrawSettingBehavior.cs" />
-    <Compile Include="Views\Behaviors\DrawStraightLineBehavior.cs" />
     <Compile Include="Views\Behaviors\DropAcceptDescription.cs" />
     <Compile Include="Views\Behaviors\CursorBehavior.cs" />
     <Compile Include="Views\Behaviors\EllipseAdorner.cs" />
@@ -236,6 +232,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Resources\DesignerItems\SettingsDesignerItemDataTemplate.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Icons.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -360,6 +360,22 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\img\rubberband.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\img\AlignObjectsBottom.png" />
+    <Resource Include="Assets\img\AlignObjectsCenteredHorizontal.png" />
+    <Resource Include="Assets\img\AlignObjectsCenteredVertical.png" />
+    <Resource Include="Assets\img\AlignObjectsLeft.png" />
+    <Resource Include="Assets\img\AlignObjectsRight.png" />
+    <Resource Include="Assets\img\AlignObjectsTop.png" />
+    <Resource Include="Assets\img\BringForward.png" />
+    <Resource Include="Assets\img\BringToFront.png" />
+    <Resource Include="Assets\img\DistributeObjectsHorizontal.png" />
+    <Resource Include="Assets\img\DistributeObjectsVertical.png" />
+    <Resource Include="Assets\img\Group.png" />
+    <Resource Include="Assets\img\SendBackward.png" />
+    <Resource Include="Assets\img\SendToBack.png" />
+    <Resource Include="Assets\img\Ungroup.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

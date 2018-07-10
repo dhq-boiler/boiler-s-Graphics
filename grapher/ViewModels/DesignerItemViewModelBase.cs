@@ -1,9 +1,9 @@
 ﻿using grapher.Controls;
 using grapher.Helpers;
 using Reactive.Bindings;
+using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Windows;
 using System.Windows.Media;
 
@@ -129,20 +129,24 @@ namespace grapher.ViewModels
             MinWidth = 0;
             MinHeight = 0;
 
-            Left.Subscribe(left =>
-            {
-                UpdateTransform();
-                Debug.WriteLine($"Left:{left}");
-            });
-            Top.Subscribe(top =>
-            {
-                UpdateTransform();
-                Debug.WriteLine($"Top:{top}");
-            });
-            Width.Subscribe(_ => UpdateTransform());
-            Height.Subscribe(_ => UpdateTransform());
-            RotationAngle.Subscribe(_ => UpdateTransform());
-            Matrix.Subscribe(_ => UpdateTransform());
+            Left
+                .Subscribe(left => UpdateTransform())
+                .AddTo(_CompositeDisposable);
+            Top
+                .Subscribe(top => UpdateTransform())
+                .AddTo(_CompositeDisposable);
+            Width
+                .Subscribe(_ => UpdateTransform())
+                .AddTo(_CompositeDisposable);
+            Height
+                .Subscribe(_ => UpdateTransform())
+                .AddTo(_CompositeDisposable);
+            RotationAngle
+                .Subscribe(_ => UpdateTransform())
+                .AddTo(_CompositeDisposable);
+            Matrix
+                .Subscribe(_ => UpdateTransform())
+                .AddTo(_CompositeDisposable);
 
             Matrix.Value = new Matrix();
         }
@@ -155,7 +159,7 @@ namespace grapher.ViewModels
 
         public void TransformObserversOnNext()
         {
-            _observers.ForEach(x => x.OnNext(new TransformNotification()));
+            _observers.ForEach(x => x.OnNext(new TransformNotification() { Sender = this }));
         }
 
         public override void OnNext(GroupTransformNotification value)
