@@ -58,4 +58,12 @@
         x:Key="Icon_Ungroup"
         x:Shared="False"
         UriSource="pack://application:,,,/Assets/img/Ungroup.png" />
+    <BitmapImage
+        x:Key="Icon_UniformWidth"
+        x:Shared="False"
+        UriSource="pack://application:,,,/Assets/img/UniformWidth.png" />
+    <BitmapImage
+        x:Key="Icon_UniformHeight"
+        x:Shared="False"
+        UriSource="pack://application:,,,/Assets/img/UniformHeight.png" />
 </ResourceDictionary>

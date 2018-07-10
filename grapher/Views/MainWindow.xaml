@@ -47,6 +47,10 @@
     </i:Interaction.Triggers>
     <Window.InputBindings>
         <KeyBinding Key="Del" Command="{Binding DeleteSelectedItemsCommand}" />
+        <KeyBinding
+            Key="A"
+            Command="{Binding DiagramViewModel.SelectAllCommand}"
+            Modifiers="Ctrl" />
     </Window.InputBindings>
     <Window.Resources>
         <converter:StrokeColorConverter x:Key="StrokeColorConverter" />
@@ -749,6 +753,102 @@
                                                                     </Image.Source>
                                                                     <Image.OpacityMask>
                                                                         <ImageBrush ImageSource="{StaticResource Icon_DistributeVertical}" />
+                                                                    </Image.OpacityMask>
+                                                                </Image>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </ContentControl.Style>
+                                    </ContentControl>
+                                </Grid>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                </StackPanel>
+            </ToolBar>
+            <ToolBar>
+                <StackPanel Orientation="Horizontal">
+                    <Button Command="{Binding DiagramViewModel.UniformWidthCommand}" ToolTip="{Binding Command_UniformWidth, Mode=OneWay, Source={StaticResource resources}}">
+                        <Button.Template>
+                            <ControlTemplate TargetType="{x:Type Button}">
+                                <Grid>
+                                    <Rectangle
+                                        Width="20"
+                                        Height="20"
+                                        Fill="White"
+                                        Stroke="Black"
+                                        StrokeThickness="1" />
+                                    <ContentControl Width="16" Height="16">
+                                        <ContentControl.Style>
+                                            <Style TargetType="{x:Type ContentControl}">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" Value="True">
+                                                        <Setter Property="Content">
+                                                            <Setter.Value>
+                                                                <Image
+                                                                    Width="16"
+                                                                    Height="16"
+                                                                    Source="{StaticResource Icon_UniformWidth}" />
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" Value="False">
+                                                        <Setter Property="Content">
+                                                            <Setter.Value>
+                                                                <Image Width="16" Height="16">
+                                                                    <Image.Source>
+                                                                        <FormatConvertedBitmap DestinationFormat="Gray32Float" Source="{StaticResource Icon_UniformWidth}" />
+                                                                    </Image.Source>
+                                                                    <Image.OpacityMask>
+                                                                        <ImageBrush ImageSource="{StaticResource Icon_UniformWidth}" />
+                                                                    </Image.OpacityMask>
+                                                                </Image>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </ContentControl.Style>
+                                    </ContentControl>
+                                </Grid>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                    <Button Command="{Binding DiagramViewModel.UniformHeightCommand}" ToolTip="{Binding Command_UniformHeight, Mode=OneWay, Source={StaticResource resources}}">
+                        <Button.Template>
+                            <ControlTemplate TargetType="{x:Type Button}">
+                                <Grid>
+                                    <Rectangle
+                                        Width="20"
+                                        Height="20"
+                                        Fill="White"
+                                        Stroke="Black"
+                                        StrokeThickness="1" />
+                                    <ContentControl Width="16" Height="16">
+                                        <ContentControl.Style>
+                                            <Style TargetType="{x:Type ContentControl}">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" Value="True">
+                                                        <Setter Property="Content">
+                                                            <Setter.Value>
+                                                                <Image
+                                                                    Width="16"
+                                                                    Height="16"
+                                                                    Source="{StaticResource Icon_UniformHeight}" />
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" Value="False">
+                                                        <Setter Property="Content">
+                                                            <Setter.Value>
+                                                                <Image Width="16" Height="16">
+                                                                    <Image.Source>
+                                                                        <FormatConvertedBitmap DestinationFormat="Gray32Float" Source="{StaticResource Icon_UniformHeight}" />
+                                                                    </Image.Source>
+                                                                    <Image.OpacityMask>
+                                                                        <ImageBrush ImageSource="{StaticResource Icon_UniformHeight}" />
                                                                     </Image.OpacityMask>
                                                                 </Image>
                                                             </Setter.Value>

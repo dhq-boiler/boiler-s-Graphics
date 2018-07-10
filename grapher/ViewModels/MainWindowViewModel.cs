@@ -3,28 +3,27 @@ using Prism.Commands;
 using Prism.Interactivity.InteractionRequest;
 using Prism.Mvvm;
 using Reactive.Bindings;
+using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reactive.Disposables;
 
 namespace grapher.ViewModels
 {
-    public class MainWindowViewModel : BindableBase
+    public class MainWindowViewModel : BindableBase, IDisposable
     {
         private DiagramViewModel _DiagramViewModel;
-        private ObservableCollection<RenderItemViewModel> _RenderItems;
         private List<SelectableDesignerItemViewModelBase> _itemsToRemove;
-        private ToolBoxViewModel _ToolBoxViewModel;
         private ToolBarViewModel _ToolBarViewModel;
+        private CompositeDisposable _CompositeDisposable = new CompositeDisposable();
 
         public InteractionRequest<Notification> OpenColorPickerRequest { get; } = new InteractionRequest<Notification>();
-
         public InteractionRequest<Notification> OpenFillColorPickerRequest { get; } = new InteractionRequest<Notification>();
 
         public MainWindowViewModel()
         {
             DiagramViewModel = new DiagramViewModel();
-            ToolBoxViewModel = new ToolBoxViewModel();
+            _CompositeDisposable.Add(DiagramViewModel);
             ToolBarViewModel = new ToolBarViewModel();
 
             DeleteSelectedItemsCommand = new DelegateCommand<object>(p =>
@@ -77,12 +76,6 @@ namespace grapher.ViewModels
             set { SetProperty(ref _DiagramViewModel, value); }
         }
 
-        public ToolBoxViewModel ToolBoxViewModel
-        {
-            get { return _ToolBoxViewModel; }
-            set { SetProperty(ref _ToolBoxViewModel, value); }
-        }
-
         public ToolBarViewModel ToolBarViewModel
         {
             get { return _ToolBarViewModel; }
@@ -129,5 +122,14 @@ namespace grapher.ViewModels
         {
             return itemsToRemove.Contains(connector.DataItem);
         }
+
+        #region IDisposable
+
+        public void Dispose()
+        {
+            _CompositeDisposable.Dispose();
+        }
+
+        #endregion //IDisposable
     }
 }

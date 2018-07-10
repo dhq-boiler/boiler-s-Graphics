@@ -377,6 +377,10 @@
     <Resource Include="Assets\img\SendToBack.png" />
     <Resource Include="Assets\img\Ungroup.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\img\UniformHeight.png" />
+    <Resource Include="Assets\img\UniformWidth.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>"$(SolutionDir)CodeFormatter\CodeFormatter" "$(ProjectDir)$(ProjectFileName)" /nounicode /nocopyright</PreBuildEvent>

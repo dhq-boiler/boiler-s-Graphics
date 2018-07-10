@@ -162,6 +162,12 @@
   <data name="Command_Ungroup" xml:space="preserve">
     <value>グループ化解除</value>
   </data>
+  <data name="Command_UniformHeight" xml:space="preserve">
+    <value>高さを合わせる</value>
+  </data>
+  <data name="Command_UniformWidth" xml:space="preserve">
+    <value>幅を合わせる</value>
+  </data>
   <data name="Grouping" xml:space="preserve">
     <value>グループ</value>
   </data>

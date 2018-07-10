@@ -162,6 +162,12 @@
   <data name="Command_Ungroup" xml:space="preserve">
     <value>Ungroup</value>
   </data>
+  <data name="Command_UniformHeight" xml:space="preserve">
+    <value>Uniform height</value>
+  </data>
+  <data name="Command_UniformWidth" xml:space="preserve">
+    <value>Uniform width</value>
+  </data>
   <data name="Grouping" xml:space="preserve">
     <value>Grouping</value>
   </data>
