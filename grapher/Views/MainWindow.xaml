@@ -47,6 +47,10 @@
     </i:Interaction.Triggers>
     <Window.InputBindings>
         <KeyBinding Key="Del" Command="{Binding DeleteSelectedItemsCommand}" />
+        <KeyBinding
+            Key="A"
+            Command="{Binding DiagramViewModel.SelectAllCommand}"
+            Modifiers="Ctrl" />
     </Window.InputBindings>
     <Window.Resources>
         <converter:StrokeColorConverter x:Key="StrokeColorConverter" />

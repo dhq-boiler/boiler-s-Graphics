@@ -38,6 +38,7 @@ namespace grapher.ViewModels
         public DelegateCommand AlignRightCommand { get; private set; }
         public DelegateCommand DistributeHorizontalCommand { get; private set; }
         public DelegateCommand DistributeVerticalCommand { get; private set; }
+        public DelegateCommand SelectAllCommand { get; private set; }
 
         public DiagramViewModel()
         {
@@ -59,6 +60,7 @@ namespace grapher.ViewModels
             AlignRightCommand = new DelegateCommand(() => ExecuteAlignRightCommand(), () => CanExecuteAlign());
             DistributeHorizontalCommand = new DelegateCommand(() => ExecuteDistributeHorizontalCommand(), () => CanExecuteDistribute());
             DistributeVerticalCommand = new DelegateCommand(() => ExecuteDistributeVerticalCommand(), () => CanExecuteDistribute());
+            SelectAllCommand = new DelegateCommand(() => ExecuteSelectAllCommand());
 
             Items
                 .ObserveElementProperty(x => x.IsSelected)
@@ -843,6 +845,11 @@ namespace grapher.ViewModels
         }
 
         #endregion //Alignment
+
+        private void ExecuteSelectAllCommand()
+        {
+            Items.ToList().ForEach(x => x.IsSelected = true);
+        }
 
         private IEnumerable<SelectableDesignerItemViewModelBase> GetGroupMembers(SelectableDesignerItemViewModelBase item)
         {
