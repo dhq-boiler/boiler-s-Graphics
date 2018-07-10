@@ -196,6 +196,24 @@ namespace grapher.Properties {
         }
         
         /// <summary>
+        ///   Uniform height に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Command_UniformHeight {
+            get {
+                return ResourceManager.GetString("Command_UniformHeight", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Uniform width に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Command_UniformWidth {
+            get {
+                return ResourceManager.GetString("Command_UniformWidth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Grouping に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Grouping {

@@ -39,6 +39,8 @@ namespace grapher.ViewModels
         public DelegateCommand DistributeHorizontalCommand { get; private set; }
         public DelegateCommand DistributeVerticalCommand { get; private set; }
         public DelegateCommand SelectAllCommand { get; private set; }
+        public DelegateCommand UniformWidthCommand { get; private set; }
+        public DelegateCommand UniformHeightCommand { get; private set; }
 
         public DiagramViewModel()
         {
@@ -61,6 +63,8 @@ namespace grapher.ViewModels
             DistributeHorizontalCommand = new DelegateCommand(() => ExecuteDistributeHorizontalCommand(), () => CanExecuteDistribute());
             DistributeVerticalCommand = new DelegateCommand(() => ExecuteDistributeVerticalCommand(), () => CanExecuteDistribute());
             SelectAllCommand = new DelegateCommand(() => ExecuteSelectAllCommand());
+            UniformWidthCommand = new DelegateCommand(() => ExecuteUniformWidthCommand(), () => CanExecuteUniform());
+            UniformHeightCommand = new DelegateCommand(() => ExecuteUniformHeightCommand(), () => CanExecuteUniform());
 
             Items
                 .ObserveElementProperty(x => x.IsSelected)
@@ -103,6 +107,9 @@ namespace grapher.ViewModels
                     AlignRightCommand.RaiseCanExecuteChanged();
                     DistributeHorizontalCommand.RaiseCanExecuteChanged();
                     DistributeVerticalCommand.RaiseCanExecuteChanged();
+
+                    UniformWidthCommand.RaiseCanExecuteChanged();
+                    UniformHeightCommand.RaiseCanExecuteChanged();
                 });
 
             EdgeColors.CollectionChangedAsObservable()
@@ -850,6 +857,47 @@ namespace grapher.ViewModels
         {
             Items.ToList().ForEach(x => x.IsSelected = true);
         }
+
+        #region Uniform
+
+        private void ExecuteUniformWidthCommand()
+        {
+            var selectedItems = SelectedItems.OfType<DesignerItemViewModelBase>();
+            if (selectedItems.Count() > 1)
+            {
+                var first = selectedItems.First();
+                double width = first.Width.Value;
+
+                foreach (var item in selectedItems)
+                {
+                    double delta = width - item.Width.Value;
+                    item.Width.Value += delta;
+                }
+            }
+        }
+
+        private void ExecuteUniformHeightCommand()
+        {
+            var selectedItems = SelectedItems.OfType<DesignerItemViewModelBase>();
+            if (selectedItems.Count() > 1)
+            {
+                var first = selectedItems.First();
+                double height = first.Height.Value;
+
+                foreach (var item in selectedItems)
+                {
+                    double delta = height - item.Height.Value;
+                    item.Height.Value += delta;
+                }
+            }
+        }
+
+        private bool CanExecuteUniform()
+        {
+            return SelectedItems.OfType<DesignerItemViewModelBase>().Count() > 1;
+        }
+
+        #endregion //Uniform
 
         private IEnumerable<SelectableDesignerItemViewModelBase> GetGroupMembers(SelectableDesignerItemViewModelBase item)
         {
