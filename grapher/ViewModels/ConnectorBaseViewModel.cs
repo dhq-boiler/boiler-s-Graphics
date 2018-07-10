@@ -9,7 +9,7 @@ using System.Windows.Media;
 
 namespace grapher.ViewModels
 {
-    public class ConnectorBaseViewModel : SelectableDesignerItemViewModelBase, IObserver<TransformNotification>
+    public abstract class ConnectorBaseViewModel : SelectableDesignerItemViewModelBase, IObserver<TransformNotification>, ICloneable
     {
         private ConnectorInfoBase _sourceConnectorInfo;
         private ConnectorInfoBase _sinkConnectorInfo;

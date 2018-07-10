@@ -43,6 +43,7 @@ namespace grapher.ViewModels
         public DelegateCommand SelectAllCommand { get; private set; }
         public DelegateCommand UniformWidthCommand { get; private set; }
         public DelegateCommand UniformHeightCommand { get; private set; }
+        public DelegateCommand DuplicateCommand { get; private set; }
 
         public DiagramViewModel()
         {
@@ -67,6 +68,7 @@ namespace grapher.ViewModels
             SelectAllCommand = new DelegateCommand(() => ExecuteSelectAllCommand());
             UniformWidthCommand = new DelegateCommand(() => ExecuteUniformWidthCommand(), () => CanExecuteUniform());
             UniformHeightCommand = new DelegateCommand(() => ExecuteUniformHeightCommand(), () => CanExecuteUniform());
+            DuplicateCommand = new DelegateCommand(() => ExecuteDuplicateCommand(), () => CanExecuteDuplicate());
 
             Items
                 .ObserveElementProperty(x => x.IsSelected)
@@ -905,6 +907,155 @@ namespace grapher.ViewModels
         }
 
         #endregion //Uniform
+
+        #region Duplicate
+
+        private void ExecuteDuplicateCommand()
+        {
+            DuplicateObjects(SelectedItems);
+        }
+
+        private void DuplicateObjects(IEnumerable<SelectableDesignerItemViewModelBase> items)
+        {
+            var selectedItems = from item in items.OfType<DesignerItemViewModelBase>()
+                                orderby item.ZIndex.Value ascending
+                                select item;
+
+            var oldNewList = new List<Tuple<SelectableDesignerItemViewModelBase, SelectableDesignerItemViewModelBase>>();
+
+            foreach (var item in selectedItems)
+            {
+                DuplicateDesignerItem(selectedItems, oldNewList, item);
+            }
+
+            var connectedConnectors = from item in items.OfType<ConnectorBaseViewModel>()
+                                      where item.SourceConnectorInfo is FullyCreatedConnectorInfo || item.SinkConnectorInfo is FullyCreatedConnectorInfo
+                                      select item;
+
+            var connectedTargets = (from item in connectedConnectors
+                                    where item.SourceConnectorInfo is FullyCreatedConnectorInfo
+                                    select (item.SourceConnectorInfo as FullyCreatedConnectorInfo).DataItem)
+                                   .Union(
+                                    from item in connectedConnectors
+                                    where item.SinkConnectorInfo is FullyCreatedConnectorInfo
+                                    select (item.SinkConnectorInfo as FullyCreatedConnectorInfo).DataItem);
+
+            var connectedItems = from item in items.OfType<DesignerItemViewModelBase>()
+                                 where connectedTargets.Contains(item)
+                                 select item;
+
+            var selectedConnectors = from item in items.OfType<ConnectorBaseViewModel>()
+                                     orderby item.ZIndex.Value ascending
+                                     select item;
+
+            foreach (var connector in selectedConnectors)
+            {
+                DuplicateConnector(connectedItems, oldNewList, connector);
+            }
+        }
+
+        private void DuplicateDesignerItem(IOrderedEnumerable<DesignerItemViewModelBase> selectedItems, List<Tuple<SelectableDesignerItemViewModelBase, SelectableDesignerItemViewModelBase>> oldNewList, DesignerItemViewModelBase item, GroupItemViewModel parent = null)
+        {
+            if (item is GroupItemViewModel groupItem)
+            {
+                var cloneGroup = groupItem.Clone() as GroupItemViewModel;
+                cloneGroup.ZIndex.Value = Items.Count();
+                if (parent != null)
+                {
+                    cloneGroup.ParentID = parent.ID;
+                    cloneGroup.EnableForSelection.Value = false;
+                    cloneGroup.GroupDisposable = parent.Subscribe(cloneGroup);
+                }
+
+                var children = from it in Items.OfType<DesignerItemViewModelBase>()
+                               where it.ParentID == item.ID
+                               orderby it.ZIndex.Value ascending
+                               select it;
+
+                foreach (var child in children)
+                {
+                    DuplicateDesignerItem(selectedItems, oldNewList, child, cloneGroup);
+                }
+
+                var childrenConnectors = from it in Items.OfType<ConnectorBaseViewModel>()
+                                         where it.ParentID == item.ID
+                                         orderby it.ZIndex.Value ascending
+                                         select it;
+
+                var childrenConnectedConnectors = from it in childrenConnectors
+                                                  where it.SourceConnectorInfo is FullyCreatedConnectorInfo || it.SinkConnectorInfo is FullyCreatedConnectorInfo
+                                                  select it;
+
+                var childrenConnectedTargets = (from it in childrenConnectedConnectors
+                                                where it.SourceConnectorInfo is FullyCreatedConnectorInfo
+                                                select (it.SourceConnectorInfo as FullyCreatedConnectorInfo).DataItem)
+                                                .Union(
+                                                from it in childrenConnectedConnectors
+                                                where it.SinkConnectorInfo is FullyCreatedConnectorInfo
+                                                select (it.SinkConnectorInfo as FullyCreatedConnectorInfo).DataItem);
+
+                var childrenConnectedItems = from it in selectedItems.Union(children).Distinct()
+                                             where childrenConnectedTargets.Contains(it)
+                                             select it;
+
+                foreach (var connector in childrenConnectors)
+                {
+                    DuplicateConnector(childrenConnectedItems, oldNewList, connector, cloneGroup);
+                }
+
+                oldNewList.Add(new Tuple<SelectableDesignerItemViewModelBase, SelectableDesignerItemViewModelBase>(groupItem, cloneGroup));
+                Items.Add(cloneGroup);
+            }
+            else
+            {
+                var clone = item.Clone() as SelectableDesignerItemViewModelBase;
+                clone.ZIndex.Value = Items.Count();
+                if (parent != null)
+                {
+                    clone.ParentID = parent.ID;
+                    clone.EnableForSelection.Value = false;
+                    clone.GroupDisposable = parent.Subscribe(clone);
+                }
+                oldNewList.Add(new Tuple<SelectableDesignerItemViewModelBase, SelectableDesignerItemViewModelBase>(item, clone));
+                Items.Add(clone);
+            }
+        }
+
+        private void DuplicateConnector(IEnumerable<DesignerItemViewModelBase> connectedItems, List<Tuple<SelectableDesignerItemViewModelBase, SelectableDesignerItemViewModelBase>> oldNewList, ConnectorBaseViewModel connector, GroupItemViewModel groupItem = null)
+        {
+            var clone = connector.Clone() as ConnectorBaseViewModel;
+            if (connector.SourceConnectorInfo is FullyCreatedConnectorInfo sourceInfo && connectedItems.Contains(sourceInfo.DataItem))
+            {
+                var connectDestination = oldNewList.Where(x => x.Item1 == sourceInfo.DataItem)
+                                                   .Select(x => x.Item2)
+                                                   .Cast<DesignerItemViewModelBase>()
+                                                   .Single();
+                clone.SourceConnectorInfo = new FullyCreatedConnectorInfo(connectDestination, sourceInfo.Orientation, sourceInfo.Degree);
+            }
+            if (connector.SinkConnectorInfo is FullyCreatedConnectorInfo sinkInfo && connectedItems.Contains(sinkInfo.DataItem))
+            {
+                var connectDestination = oldNewList.Where(x => x.Item1 == sinkInfo.DataItem)
+                                                   .Select(x => x.Item2)
+                                                   .Cast<DesignerItemViewModelBase>()
+                                                   .Single();
+                clone.SinkConnectorInfo = new FullyCreatedConnectorInfo(connectDestination, sinkInfo.Orientation, sinkInfo.Degree);
+            }
+            clone.ZIndex.Value = Items.Count();
+            if (groupItem != null)
+            {
+                clone.ParentID = groupItem.ID;
+                clone.EnableForSelection.Value = false;
+                clone.GroupDisposable = groupItem.Subscribe(clone);
+            }
+            Items.Add(clone);
+        }
+
+        private bool CanExecuteDuplicate()
+        {
+            return SelectedItems.Count() > 0;
+        }
+
+        #endregion //Duplicate
 
         private IEnumerable<SelectableDesignerItemViewModelBase> GetGroupMembers(SelectableDesignerItemViewModelBase item)
         {

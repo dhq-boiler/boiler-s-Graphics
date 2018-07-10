@@ -31,5 +31,20 @@ namespace grapher.ViewModels
         {
             PathFinder = new OrthogonalPathFinder();
         }
+
+        #region IClonable
+
+        public override object Clone()
+        {
+            var clone = new PolygonalConnectorViewModel(SourceConnectorInfo, SinkConnectorInfo);
+            clone.Owner = Owner;
+            clone.EdgeColor = EdgeColor;
+            clone.SourceA = SourceA;
+            clone.SourceB = SourceB;
+
+            return clone;
+        }
+
+        #endregion //IClonable
     }
 }

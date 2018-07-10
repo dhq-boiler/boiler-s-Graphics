@@ -51,6 +51,10 @@
             Key="A"
             Command="{Binding DiagramViewModel.SelectAllCommand}"
             Modifiers="Ctrl" />
+        <KeyBinding
+            Key="D"
+            Command="{Binding DiagramViewModel.DuplicateCommand}"
+            Modifiers="Ctrl" />
     </Window.InputBindings>
     <Window.Resources>
         <converter:StrokeColorConverter x:Key="StrokeColorConverter" />

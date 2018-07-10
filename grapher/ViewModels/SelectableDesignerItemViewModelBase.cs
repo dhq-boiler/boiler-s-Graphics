@@ -15,7 +15,7 @@ namespace grapher.ViewModels
     }
 
 
-    public abstract class SelectableDesignerItemViewModelBase : BindableBase, ISelectItems, IObserver<GroupTransformNotification>, IDisposable
+    public abstract class SelectableDesignerItemViewModelBase : BindableBase, ISelectItems, IObserver<GroupTransformNotification>, IDisposable, ICloneable
     {
         private bool _IsSelected;
         protected CompositeDisposable _CompositeDisposable = new CompositeDisposable();
@@ -120,5 +120,11 @@ namespace grapher.ViewModels
         }
 
         #endregion //IDisposable
+
+        #region IClonable
+
+        public abstract object Clone();
+
+        #endregion //IClonable
     }
 }
