@@ -4,7 +4,6 @@ using Prism.Interactivity.InteractionRequest;
 using Prism.Mvvm;
 using Reactive.Bindings;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace grapher.ViewModels
@@ -12,19 +11,15 @@ namespace grapher.ViewModels
     public class MainWindowViewModel : BindableBase
     {
         private DiagramViewModel _DiagramViewModel;
-        private ObservableCollection<RenderItemViewModel> _RenderItems;
         private List<SelectableDesignerItemViewModelBase> _itemsToRemove;
-        private ToolBoxViewModel _ToolBoxViewModel;
         private ToolBarViewModel _ToolBarViewModel;
 
         public InteractionRequest<Notification> OpenColorPickerRequest { get; } = new InteractionRequest<Notification>();
-
         public InteractionRequest<Notification> OpenFillColorPickerRequest { get; } = new InteractionRequest<Notification>();
 
         public MainWindowViewModel()
         {
             DiagramViewModel = new DiagramViewModel();
-            ToolBoxViewModel = new ToolBoxViewModel();
             ToolBarViewModel = new ToolBarViewModel();
 
             DeleteSelectedItemsCommand = new DelegateCommand<object>(p =>
@@ -75,12 +70,6 @@ namespace grapher.ViewModels
         {
             get { return _DiagramViewModel; }
             set { SetProperty(ref _DiagramViewModel, value); }
-        }
-
-        public ToolBoxViewModel ToolBoxViewModel
-        {
-            get { return _ToolBoxViewModel; }
-            set { SetProperty(ref _ToolBoxViewModel, value); }
         }
 
         public ToolBarViewModel ToolBarViewModel
