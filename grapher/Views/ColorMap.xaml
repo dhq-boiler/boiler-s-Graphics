@@ -6,8 +6,10 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:grapher.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModel="clr-namespace:grapher.ViewModels"
     Width="256"
     Height="256"
+    d:DataContext="{d:DesignInstance {x:Type viewModel:ColorPickerViewModel}}"
     mc:Ignorable="d">
     <UserControl.Resources>
         <Style TargetType="{x:Type Thumb}">
@@ -44,10 +46,10 @@
                 <ToolTip>
                     <TextBlock>
                         <Run Text="Saturation:" />
-                        <Run Text="{Binding Saturation.Value, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                        <Run Text="{Binding Saturation.Value}" />
                         <LineBreak />
                         <Run Text="Value:" />
-                        <Run Text="{Binding Value.Value, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                        <Run Text="{Binding Value.Value}" />
                     </TextBlock>
                 </ToolTip>
             </Thumb.ToolTip>
