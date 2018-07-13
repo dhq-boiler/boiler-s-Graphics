@@ -4,14 +4,16 @@ using OpenCvSharp.Extensions;
 using Prism.Interactivity.InteractionRequest;
 using Prism.Mvvm;
 using Reactive.Bindings;
+using Reactive.Bindings.Extensions;
 using System;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 namespace grapher.ViewModels
 {
-    internal class ColorPickerViewModel : BindableBase, IInteractionRequestAware
+    internal class ColorPickerViewModel : BindableBase, IInteractionRequestAware, IDisposable
     {
         private byte _A;
         private WriteableBitmap _WhiteBlackColumnMap;
@@ -22,6 +24,7 @@ namespace grapher.ViewModels
         private bool _hsv2bgr;
         private bool _bgr2hsv;
         private INotification _Notification;
+        private CompositeDisposable _disposables = new CompositeDisposable();
 
         public ColorPickerViewModel()
         {
@@ -30,90 +33,106 @@ namespace grapher.ViewModels
                 .Select(_ => true)
                 .ToReactiveCommand();
 
-            OkCommand.Subscribe(_ =>
-            {
-                EditTarget.New = Output.Value;
-                FinishInteraction();
-            });
-
-            Hue.Subscribe(_ =>
-            {
-                GenerateSaturationValueMat();
-                if (!_bgr2hsv)
+            OkCommand
+                .Subscribe(_ =>
                 {
-                    _hsv2bgr = true;
-                    SetRGB();
-                    _hsv2bgr = false;
-                }
-            });
+                    EditTarget.New = Output.Value;
+                    FinishInteraction();
+                })
+                .AddTo(_disposables);
 
-            Saturation.Subscribe(_ =>
-            {
-                if (!_bgr2hsv)
+            Hue
+                .Subscribe(_ =>
                 {
-                    _hsv2bgr = true;
-                    HSV2RGB();
-                    _hsv2bgr = false;
-                }
-            });
+                    GenerateSaturationValueMat();
+                    if (!_bgr2hsv)
+                    {
+                        _hsv2bgr = true;
+                        SetRGB();
+                        _hsv2bgr = false;
+                    }
+                })
+                .AddTo(_disposables);
 
-            Value.Subscribe(_ =>
-            {
-                if (!_bgr2hsv)
+            Saturation
+                .Subscribe(_ =>
                 {
-                    _hsv2bgr = true;
-                    HSV2RGB();
-                    _hsv2bgr = false;
-                }
-            });
+                    if (!_bgr2hsv)
+                    {
+                        _hsv2bgr = true;
+                        HSV2RGB();
+                        _hsv2bgr = false;
+                    }
+                })
+                .AddTo(_disposables);
 
-            R.Subscribe(_ =>
-            {
-                if (!_hsv2bgr)
+            Value
+                .Subscribe(_ =>
                 {
-                    _bgr2hsv = true;
-                    RecalcHue();
-                    RecalcValue();
-                    RecalcSaturation();
-                    _bgr2hsv = false;
-                }
-            });
+                    if (!_bgr2hsv)
+                    {
+                        _hsv2bgr = true;
+                        HSV2RGB();
+                        _hsv2bgr = false;
+                    }
+                })
+                .AddTo(_disposables);
 
-            G.Subscribe(_ =>
-            {
-                if (!_hsv2bgr)
+            R
+                .Subscribe(_ =>
                 {
-                    _bgr2hsv = true;
-                    RecalcHue();
-                    RecalcValue();
-                    RecalcSaturation();
-                    _bgr2hsv = false;
-                }
-            });
+                    if (!_hsv2bgr)
+                    {
+                        _bgr2hsv = true;
+                        RecalcHue();
+                        RecalcValue();
+                        RecalcSaturation();
+                        _bgr2hsv = false;
+                    }
+                })
+                .AddTo(_disposables);
 
-            B.Subscribe(_ =>
-            {
-                if (!_hsv2bgr)
+            G
+                .Subscribe(_ =>
                 {
-                    _bgr2hsv = true;
-                    RecalcHue();
-                    RecalcValue();
-                    RecalcSaturation();
-                    _bgr2hsv = false;
-                }
-            });
+                    if (!_hsv2bgr)
+                    {
+                        _bgr2hsv = true;
+                        RecalcHue();
+                        RecalcValue();
+                        RecalcSaturation();
+                        _bgr2hsv = false;
+                    }
+                })
+                .AddTo(_disposables);
 
-            Color.Subscribe(_ =>
-            {
-                if (!_hsv2bgr && !_bgr2hsv)
+            B
+                .Subscribe(_ =>
                 {
-                    _hsv2bgr = true;
-                    _bgr2hsv = true;
-                    SetRGB();
-                    _hsv2bgr = false;
-                    _bgr2hsv = false;
-                }
-            });
+                    if (!_hsv2bgr)
+                    {
+                        _bgr2hsv = true;
+                        RecalcHue();
+                        RecalcValue();
+                        RecalcSaturation();
+                        _bgr2hsv = false;
+                    }
+                })
+                .AddTo(_disposables);
+
+            Color
+                .Subscribe(_ =>
+                {
+                    if (!_hsv2bgr && !_bgr2hsv)
+                    {
+                        _hsv2bgr = true;
+                        _bgr2hsv = true;
+                        SetRGB();
+                        _hsv2bgr = false;
+                        _bgr2hsv = false;
+                    }
+                })
+                .AddTo(_disposables);
 
             GenerateHueSelectorMat();
             GenerateSaturationValueMat();
@@ -451,5 +470,14 @@ namespace grapher.ViewModels
         }
 
         public Action FinishInteraction { get; set; }
+
+        #region IDisposable
+
+        public void Dispose()
+        {
+            _disposables.Dispose();
+        }
+
+        #endregion //IDisposable
     }
 }
