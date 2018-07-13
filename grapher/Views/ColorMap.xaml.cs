@@ -1,5 +1,6 @@
 ﻿using Reactive.Bindings;
 using System;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -140,7 +141,7 @@ namespace grapher.Views
             var source = PresentationSource.FromVisual(this);
             var targetPoint = source.CompositionTarget.TransformFromDevice.Transform(locationFromScreen);
 
-            tooltip.HorizontalOffset = targetPoint.X + 10;
+            tooltip.HorizontalOffset = targetPoint.X - 10;
             tooltip.VerticalOffset = targetPoint.Y + 10;
         }
 
@@ -167,6 +168,8 @@ namespace grapher.Views
             }
         }
 
+        public bool IsPressed { get; private set; }
+
         private void Image_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             var position = e.GetPosition(sender as IInputElement);
@@ -179,6 +182,48 @@ namespace grapher.Views
             Value = (byte)Math.Round(255 - position.Y);
 
             SetToolTipCoordinate();
+
+            IsPressed = true;
+
+            var tooltip = (ToolTip)Thumb.ToolTip;
+            tooltip.IsOpen = true;
+
+            Image.CaptureMouse();
+        }
+
+        private void Image_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (IsPressed && e.LeftButton == MouseButtonState.Pressed)
+            {
+                var position = e.GetPosition(sender as IInputElement);
+                if (position.X < 0 || position.X > 254 || position.Y < 0 || position.Y > 254)
+                {
+                    return;
+                }
+
+                Saturation = (byte)Math.Round(position.X);
+                Value = (byte)Math.Round(255 - position.Y);
+
+                SetToolTipCoordinate();
+            }
+            else
+            {
+                IsPressed = false;
+                Image.ReleaseMouseCapture();
+            }
+        }
+
+        private void Image_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            if (IsPressed)
+            {
+                IsPressed = false;
+            }
+
+            var tooltip = (ToolTip)Thumb.ToolTip;
+            tooltip.IsOpen = false;
+
+            Image.ReleaseMouseCapture();
         }
 
         private void Thumb_PreviewMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -191,6 +236,45 @@ namespace grapher.Views
         {
             var tooltip = (ToolTip)Thumb.ToolTip;
             tooltip.IsOpen = false;
+        }
+
+        private void Thumb_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            if (IsPressed)
+            {
+                IsPressed = false;
+            }
+
+            var tooltip = (ToolTip)Thumb.ToolTip;
+            tooltip.IsOpen = false;
+
+            Image.ReleaseMouseCapture();
+        }
+
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            var tooltip = (ToolTip)Thumb.ToolTip;
+            tooltip.Placement = System.Windows.Controls.Primitives.PlacementMode.Relative;
+
+            var locationFromScreen = Thumb.PointToScreen(new Point(0, 0));
+            var source = PresentationSource.FromVisual(this);
+            var targetPoint = source.CompositionTarget.TransformFromDevice.Transform(locationFromScreen);
+
+            tooltip.HorizontalOffset = 0 + 10;
+            tooltip.VerticalOffset = 0 + 10;
+        }
+
+        private void Thumb_ToolTipOpening(object sender, ToolTipEventArgs e)
+        {
+            var tooltip = (ToolTip)Thumb.ToolTip;
+            tooltip.Placement = System.Windows.Controls.Primitives.PlacementMode.Relative;
+
+            var locationFromScreen = Thumb.PointToScreen(new Point(0, 0));
+            var source = PresentationSource.FromVisual(this);
+            var targetPoint = source.CompositionTarget.TransformFromDevice.Transform(locationFromScreen);
+
+            tooltip.HorizontalOffset = 0;
+            tooltip.VerticalOffset = 0 + 10;
         }
     }
 }

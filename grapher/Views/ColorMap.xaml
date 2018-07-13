@@ -10,6 +10,7 @@
     Width="256"
     Height="256"
     d:DataContext="{d:DesignInstance {x:Type viewModel:ColorPickerViewModel}}"
+    Loaded="UserControl_Loaded"
     mc:Ignorable="d">
     <UserControl.Resources>
         <Style TargetType="{x:Type Thumb}">
@@ -32,6 +33,8 @@
         <Image
             x:Name="Image"
             MouseDown="Image_MouseDown"
+            MouseMove="Image_MouseMove"
+            MouseUp="Image_MouseUp"
             Source="{Binding Source, RelativeSource={RelativeSource AncestorType={x:Type local:ColorMap}}}" />
         <Thumb
             x:Name="Thumb"
@@ -40,8 +43,12 @@
             Width="11"
             Height="11"
             DragDelta="Thumb_DragDelta"
+            MouseUp="Thumb_MouseUp"
             PreviewMouseDown="Thumb_PreviewMouseDown"
-            PreviewMouseUp="Thumb_PreviewMouseUp">
+            PreviewMouseUp="Thumb_PreviewMouseUp"
+            ToolTipOpening="Thumb_ToolTipOpening"
+            ToolTipService.BetweenShowDelay="0"
+            ToolTipService.InitialShowDelay="0">
             <Thumb.ToolTip>
                 <ToolTip>
                     <TextBlock>
