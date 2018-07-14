@@ -153,6 +153,9 @@
   <data name="Command_Group" xml:space="preserve">
     <value>グループ化</value>
   </data>
+  <data name="Command_Save" xml:space="preserve">
+    <value>保存</value>
+  </data>
   <data name="Command_SendBackground" xml:space="preserve">
     <value>最背面へ移動</value>
   </data>

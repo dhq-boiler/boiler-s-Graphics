@@ -153,6 +153,9 @@
   <data name="Command_Group" xml:space="preserve">
     <value>Group</value>
   </data>
+  <data name="Command_Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
   <data name="Command_SendBackground" xml:space="preserve">
     <value>Send background</value>
   </data>

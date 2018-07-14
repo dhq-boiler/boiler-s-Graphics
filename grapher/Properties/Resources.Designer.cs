@@ -169,6 +169,15 @@ namespace grapher.Properties {
         }
         
         /// <summary>
+        ///   Save に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Command_Save {
+            get {
+                return ResourceManager.GetString("Command_Save", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Send background に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_SendBackground {

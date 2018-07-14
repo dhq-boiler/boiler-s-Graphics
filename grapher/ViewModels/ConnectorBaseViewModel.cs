@@ -146,6 +146,8 @@ namespace grapher.ViewModels
             };
         }
 
+        public Guid SourceConnectedDataItemID { get; set; }
+
         public ConnectorInfoBase SourceConnectorInfo
         {
             get
@@ -167,11 +169,14 @@ namespace grapher.ViewModels
                         _sourceConnectorDisconnecting?.Dispose();
                         _sourceConnectorDisconnecting = (_sourceConnectorInfo as FullyCreatedConnectorInfo).DataItem.Subscribe(this);
                         _sourceConnectorDisconnecting.AddTo(_CompositeDisposable);
+                        SourceConnectedDataItemID = (_sourceConnectorInfo as FullyCreatedConnectorInfo).DataItem.ID;
                     }
                     RaisePropertyChanged("SourceConnectorInfo");
                 }
             }
         }
+
+        public Guid SinkConnectedDataItemID { get; set; }
 
         public ConnectorInfoBase SinkConnectorInfo
         {
@@ -190,6 +195,7 @@ namespace grapher.ViewModels
                         _sinkConnectorDisconnecting?.Dispose();
                         _sinkConnectorDisconnecting = (_sinkConnectorInfo as FullyCreatedConnectorInfo).DataItem.Subscribe(this);
                         _sinkConnectorDisconnecting.AddTo(_CompositeDisposable);
+                        SinkConnectedDataItemID = (_sinkConnectorInfo as FullyCreatedConnectorInfo).DataItem.ID;
                     }
                     else
                     {

@@ -1,4 +1,5 @@
 ﻿using grapher.Messenger;
+using Microsoft.Win32;
 using Prism.Commands;
 using Prism.Mvvm;
 using Reactive.Bindings;
@@ -11,6 +12,7 @@ using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Media;
+using System.Xml.Linq;
 
 namespace grapher.ViewModels
 {
@@ -26,6 +28,7 @@ namespace grapher.ViewModels
         public DelegateCommand<object> RemoveItemCommand { get; private set; }
         public DelegateCommand<object> ClearSelectedItemsCommand { get; private set; }
         public DelegateCommand<object> CreateNewDiagramCommand { get; private set; }
+        public DelegateCommand SaveCommand { get; private set; }
         public DelegateCommand GroupCommand { get; private set; }
         public DelegateCommand UngroupCommand { get; private set; }
         public DelegateCommand BringForegroundCommand { get; private set; }
@@ -51,6 +54,7 @@ namespace grapher.ViewModels
             RemoveItemCommand = new DelegateCommand<object>(p => ExecuteRemoveItemCommand(p));
             ClearSelectedItemsCommand = new DelegateCommand<object>(p => ExecuteClearSelectedItemsCommand(p));
             CreateNewDiagramCommand = new DelegateCommand<object>(p => ExecuteCreateNewDiagramCommand(p));
+            SaveCommand = new DelegateCommand(() => ExecuteSaveCommand());
             GroupCommand = new DelegateCommand(() => ExecuteGroupItemsCommand(), () => CanExecuteGroup());
             UngroupCommand = new DelegateCommand(() => ExecuteUngroupItemsCommand(), () => CanExecuteUngroup());
             BringForwardCommand = new DelegateCommand(() => ExecuteBringForwardCommand(), () => CanExecuteOrder());
@@ -199,6 +203,78 @@ namespace grapher.ViewModels
         private void ExecuteCreateNewDiagramCommand(object parameter)
         {
             Items.Clear();
+        }
+
+        private void ExecuteSaveCommand()
+        {
+            var designerItems = this.Items.OfType<DesignerItemViewModelBase>();
+            var connections = this.Items.OfType<ConnectorBaseViewModel>();
+
+            XElement designerItemsXML = SerializeDesignerItems(designerItems);
+            XElement connectionsXML = SerializeConnections(connections);
+
+            XElement root = new XElement("Grapher");
+            root.Add(designerItemsXML);
+            root.Add(connectionsXML);
+
+            SaveFile(root);
+        }
+
+        private XElement SerializeDesignerItems(IEnumerable<DesignerItemViewModelBase> designerItems)
+        {
+            XElement serializedItems = new XElement("DesignerItems",
+                                       from item in designerItems
+                                       select new XElement("DesignerItem",
+                                                  new XElement("Type", item.GetType().FullName),
+                                                  new XElement("Left", item.Left.Value),
+                                                  new XElement("Top", item.Top.Value),
+                                                  new XElement("Width", item.Width.Value),
+                                                  new XElement("Height", item.Height.Value),
+                                                  new XElement("ID", item.ID),
+                                                  new XElement("ParentID", item.ParentID),
+                                                  new XElement("ZIndex", item.ZIndex.Value),
+                                                  new XElement("Matrix", item.Matrix.Value),
+                                                  new XElement("EdgeColor", item.EdgeColor),
+                                                  new XElement("FillColor", item.FillColor)
+                                              )
+                                   );
+
+            return serializedItems;
+        }
+
+        private XElement SerializeConnections(IEnumerable<ConnectorBaseViewModel> connections)
+        {
+            var serializedConnections = new XElement("Connections",
+                           from connection in connections
+                           select new XElement("Connection",
+                                      new XElement("Type", connection.GetType().FullName),
+                                      new XElement("SourceID", connection.SourceConnectedDataItemID),
+                                      new XElement("SinkID", connection.SinkConnectedDataItemID),
+                                      new XElement("SourceA", connection.SourceA),
+                                      new XElement("SourceB", connection.SourceB),
+                                      new XElement("ZIndex", connection.ZIndex.Value),
+                                      new XElement("EdgeColor", connection.EdgeColor)
+                                     )
+                                  );
+
+            return serializedConnections;
+        }
+
+        private void SaveFile(XElement xElement)
+        {
+            var saveFile = new SaveFileDialog();
+            saveFile.Filter = "Files (*.xml)|*.xml|All Files (*.*)|*.*";
+            if (saveFile.ShowDialog() == true)
+            {
+                try
+                {
+                    xElement.Save(saveFile.FileName);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.StackTrace, ex.Message, MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
         }
 
         #region Grouping
