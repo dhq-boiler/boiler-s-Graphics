@@ -46,11 +46,12 @@
             MouseUp="Thumb_MouseUp"
             PreviewMouseDown="Thumb_PreviewMouseDown"
             PreviewMouseUp="Thumb_PreviewMouseUp"
+            ToolTipClosing="Thumb_ToolTipClosing"
             ToolTipOpening="Thumb_ToolTipOpening"
             ToolTipService.BetweenShowDelay="0"
             ToolTipService.InitialShowDelay="0">
             <Thumb.ToolTip>
-                <ToolTip>
+                <ToolTip DataContext="{Binding Path=PlacementTarget.DataContext, RelativeSource={x:Static RelativeSource.Self}}">
                     <TextBlock>
                         <Run Text="Saturation:" />
                         <Run Text="{Binding Saturation.Value}" />

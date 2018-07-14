@@ -16,6 +16,17 @@ namespace grapher.Views
         {
             InitializeComponent();
 
+            var tooltip = (ToolTip)Thumb.ToolTip;
+            if (tooltip.PlacementTarget == null)
+            {
+                tooltip.PlacementTarget = this;
+            }
+            tooltip.PlacementRectangle = new Rect(0, 0, 0, 0);
+            tooltip.Placement = System.Windows.Controls.Primitives.PlacementMode.Relative;
+
+            tooltip.HorizontalOffset = 0 + 10;
+            tooltip.VerticalOffset = 0 + 10;
+
             X = -(Thumb.Width / 2);
             Y = -(Thumb.Height / 2);
         }
@@ -132,15 +143,14 @@ namespace grapher.Views
         private void SetToolTipCoordinate()
         {
             var tooltip = (ToolTip)Thumb.ToolTip;
-            tooltip.Placement = System.Windows.Controls.Primitives.PlacementMode.Relative;
 
             var currentPosition = Mouse.GetPosition((IInputElement)Image);
             var locationFromScreen = Image.PointToScreen(currentPosition);
             var source = PresentationSource.FromVisual(this);
             var targetPoint = source.CompositionTarget.TransformFromDevice.Transform(locationFromScreen);
 
-            tooltip.HorizontalOffset = targetPoint.X - 10;
-            tooltip.VerticalOffset = targetPoint.Y + 10;
+            tooltip.HorizontalOffset = currentPosition.X + 10;
+            tooltip.VerticalOffset = currentPosition.Y + 10;
         }
 
         private void PickupColor()
@@ -227,6 +237,14 @@ namespace grapher.Views
         private void Thumb_PreviewMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             var tooltip = (ToolTip)Thumb.ToolTip;
+            if (tooltip.PlacementTarget == null)
+            {
+                tooltip.PlacementTarget = this;
+            }
+
+            tooltip.HorizontalOffset = X + 13;
+            tooltip.VerticalOffset = Y + 14;
+
             tooltip.IsOpen = true;
         }
 
@@ -252,7 +270,6 @@ namespace grapher.Views
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             var tooltip = (ToolTip)Thumb.ToolTip;
-            tooltip.Placement = System.Windows.Controls.Primitives.PlacementMode.Relative;
 
             var locationFromScreen = Thumb.PointToScreen(new Point(0, 0));
             var source = PresentationSource.FromVisual(this);
@@ -265,14 +282,23 @@ namespace grapher.Views
         private void Thumb_ToolTipOpening(object sender, ToolTipEventArgs e)
         {
             var tooltip = (ToolTip)Thumb.ToolTip;
-            tooltip.Placement = System.Windows.Controls.Primitives.PlacementMode.Relative;
 
             var locationFromScreen = Thumb.PointToScreen(new Point(0, 0));
             var source = PresentationSource.FromVisual(this);
             var targetPoint = source.CompositionTarget.TransformFromDevice.Transform(locationFromScreen);
 
-            tooltip.HorizontalOffset = 0;
+            tooltip.HorizontalOffset = 0 + 10;
             tooltip.VerticalOffset = 0 + 10;
+        }
+
+        private void Thumb_ToolTipClosing(object sender, ToolTipEventArgs e)
+        {
+            var tooltip = (ToolTip)Thumb.ToolTip;
+
+            tooltip.HorizontalOffset = 0 + 10;
+            tooltip.VerticalOffset = 0 + 10;
+
+            e.Handled = true;
         }
     }
 }
