@@ -18,6 +18,10 @@ namespace grapher.ViewModels
             : base(new PartCreatedConnectionInfo(p1), new PartCreatedConnectionInfo(p2))
         { }
 
+        public StraightConnectorViewModel()
+            : base(new PartCreatedConnectionInfo(new Point()), new PartCreatedConnectionInfo(new Point()))
+        { }
+
         #region IClonable
 
         public override object Clone()

@@ -1,4 +1,5 @@
-﻿using grapher.Messenger;
+﻿using grapher.Controls;
+using grapher.Messenger;
 using Microsoft.Win32;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -10,6 +11,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Media;
 using System.Xml.Linq;
@@ -28,6 +30,7 @@ namespace grapher.ViewModels
         public DelegateCommand<object> RemoveItemCommand { get; private set; }
         public DelegateCommand<object> ClearSelectedItemsCommand { get; private set; }
         public DelegateCommand<object> CreateNewDiagramCommand { get; private set; }
+        public DelegateCommand LoadCommand { get; private set; }
         public DelegateCommand SaveCommand { get; private set; }
         public DelegateCommand GroupCommand { get; private set; }
         public DelegateCommand UngroupCommand { get; private set; }
@@ -54,6 +57,7 @@ namespace grapher.ViewModels
             RemoveItemCommand = new DelegateCommand<object>(p => ExecuteRemoveItemCommand(p));
             ClearSelectedItemsCommand = new DelegateCommand<object>(p => ExecuteClearSelectedItemsCommand(p));
             CreateNewDiagramCommand = new DelegateCommand<object>(p => ExecuteCreateNewDiagramCommand(p));
+            LoadCommand = new DelegateCommand(() => ExecuteLoadCommand());
             SaveCommand = new DelegateCommand(() => ExecuteSaveCommand());
             GroupCommand = new DelegateCommand(() => ExecuteGroupItemsCommand(), () => CanExecuteGroup());
             UngroupCommand = new DelegateCommand(() => ExecuteUngroupItemsCommand(), () => CanExecuteUngroup());
@@ -205,6 +209,8 @@ namespace grapher.ViewModels
             Items.Clear();
         }
 
+        #region Save
+
         private void ExecuteSaveCommand()
         {
             var designerItems = this.Items.OfType<DesignerItemViewModelBase>();
@@ -252,12 +258,21 @@ namespace grapher.ViewModels
                                       new XElement("SinkID", connection.SinkConnectedDataItemID),
                                       new XElement("SourceA", connection.SourceA),
                                       new XElement("SourceB", connection.SourceB),
+                                      new XElement("SourceOrientation", connection.SourceConnectorInfo.Orientation),
+                                      new XElement("SinkOrientation", connection.SinkConnectorInfo.Orientation),
+                                      new XElement("SourceDegree", GetDegreeOrNan(connection.SourceConnectorInfo)),
+                                      new XElement("SinkDegree", GetDegreeOrNan(connection.SinkConnectorInfo)),
                                       new XElement("ZIndex", connection.ZIndex.Value),
                                       new XElement("EdgeColor", connection.EdgeColor)
                                      )
                                   );
 
             return serializedConnections;
+        }
+
+        private double GetDegreeOrNan(ConnectorInfoBase connectorInfo)
+        {
+            return connectorInfo is FullyCreatedConnectorInfo fully? fully.Degree: double.NaN;
         }
 
         private void SaveFile(XElement xElement)
@@ -276,6 +291,104 @@ namespace grapher.ViewModels
                 }
             }
         }
+
+        #endregion //Save
+
+        #region Load
+
+        private void ExecuteLoadCommand()
+        {
+            var root = LoadSerializedDataFromFile();
+
+            if (root == null)
+            {
+                return;
+            }
+
+            Items.Clear();
+
+            var tempItems = new List<SelectableDesignerItemViewModelBase>();
+
+            var designerItemXMLs = root.Elements("DesignerItems").Elements("DesignerItem");
+            foreach (var designerItemXML in designerItemXMLs)
+            {
+                var item = (DesignerItemViewModelBase)DeserializeInstance(designerItemXML);
+                item.Left.Value = double.Parse(designerItemXML.Element("Left").Value);
+                item.Top.Value = double.Parse(designerItemXML.Element("Top").Value);
+                item.Width.Value = double.Parse(designerItemXML.Element("Width").Value);
+                item.Height.Value = double.Parse(designerItemXML.Element("Height").Value);
+                item.ID = Guid.Parse(designerItemXML.Element("ID").Value);
+                item.ParentID = Guid.Parse(designerItemXML.Element("ParentID").Value);
+                item.ZIndex.Value = Int32.Parse(designerItemXML.Element("ZIndex").Value);
+                item.Matrix.Value = new Matrix();
+                item.EdgeColor = (Color)ColorConverter.ConvertFromString(designerItemXML.Element("EdgeColor").Value);
+                item.FillColor = (Color)ColorConverter.ConvertFromString(designerItemXML.Element("FillColor").Value);
+                item.Owner = this;
+                tempItems.Add(item);
+            }
+
+            //connector
+            var connectorXmls = root.Elements("Connections").Elements("Connection");
+            foreach (var connectorXml in connectorXmls)
+            {
+                var item = (ConnectorBaseViewModel)DeserializeInstance(connectorXml);
+                item.SourceA = Point.Parse(connectorXml.Element("SourceA").Value);
+                item.SourceB = Point.Parse(connectorXml.Element("SourceB").Value);
+                item.SourceConnectorInfo = DeserializeConnectorInfo(connectorXml, "SourceID", "SourceOrientation", "SourceDegree", item.SourceA, tempItems);
+                item.SinkConnectorInfo = DeserializeConnectorInfo(connectorXml, "SinkID", "SinkOrientation", "SinkDegree", item.SourceB, tempItems);
+                item.ZIndex.Value = Int32.Parse(connectorXml.Element("ZIndex").Value);
+                item.EdgeColor = (Color)ColorConverter.ConvertFromString(connectorXml.Element("EdgeColor").Value);
+                item.Owner = this;
+                tempItems.Add(item);
+            }
+
+            //grouping
+            foreach (var groupItem in tempItems.OfType<GroupItemViewModel>().ToList())
+            {
+                var children = from item in tempItems
+                               where item.ParentID == groupItem.ID
+                               select item;
+
+                children.ToList().ForEach(x => groupItem.AddGroup(x));
+            }
+
+            Items.AddRange(tempItems.OrderBy(x => x.ZIndex.Value));
+        }
+
+        private ConnectorInfoBase DeserializeConnectorInfo(XElement connectorXml, string anyIdElementName, string anyOrientationElementName, string anyDegreeElementName, Point current, List<SelectableDesignerItemViewModelBase> tempItems)
+        {
+            var sourceId = Guid.Parse(connectorXml.Element(anyIdElementName).Value);
+            return (sourceId != Guid.Empty ? new FullyCreatedConnectorInfo((DesignerItemViewModelBase)tempItems.Single(x => x.ID == sourceId), (ConnectorOrientation)Enum.Parse(typeof(ConnectorOrientation), connectorXml.Element(anyOrientationElementName).Value), double.Parse(connectorXml.Element(anyDegreeElementName).Value))
+                    : (ConnectorInfoBase)new PartCreatedConnectionInfo(current));
+        }
+
+        private SelectableDesignerItemViewModelBase DeserializeInstance(XElement designerItemXML)
+        {
+            var className = designerItemXML.Element("Type").Value;
+            return (SelectableDesignerItemViewModelBase)Activator.CreateInstance(Assembly.GetExecutingAssembly().GetName().Name, className).Unwrap();
+        }
+
+        private XElement LoadSerializedDataFromFile()
+        {
+            var openFile = new OpenFileDialog();
+            openFile.Filter = "Designer Files (*.xml)|*.xml|All Files (*.*)|*.*";
+
+            if (openFile.ShowDialog() == true)
+            {
+                try
+                {
+                    return XElement.Load(openFile.FileName);
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(e.StackTrace, e.Message, MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+
+            return null;
+        }
+
+        #endregion //Load
 
         #region Grouping
 

@@ -3,6 +3,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:grapher.Resources">
     <BitmapImage
+        x:Key="Icon_Load"
+        x:Shared="False"
+        UriSource="pack://application:,,,/Assets/img/OpenFolder.png" />
+    <BitmapImage
         x:Key="Icon_Save"
         x:Shared="False"
         UriSource="pack://application:,,,/Assets/img/Save.png" />
