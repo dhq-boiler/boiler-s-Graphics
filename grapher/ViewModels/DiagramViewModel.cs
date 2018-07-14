@@ -297,7 +297,7 @@ namespace grapher.ViewModels
 
             foreach (var item in items)
             {
-                item.GroupDisposable = groupItem.Subscribe(item);
+                groupItem.AddGroup(item);
                 item.ParentID = groupItem.ID;
                 item.EnableForSelection.Value = false;
             }

@@ -84,7 +84,7 @@ namespace grapher.ViewModels
 
         public void AddGroup(SelectableDesignerItemViewModelBase viewModel)
         {
-            Subscribe(viewModel);
+            viewModel.GroupDisposable = Subscribe(viewModel);
         }
 
         #region IObservable<GroupTransformNotification>
