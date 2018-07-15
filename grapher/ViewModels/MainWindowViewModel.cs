@@ -97,21 +97,22 @@ namespace grapher.ViewModels
             _itemsToRemove = DiagramViewModel.SelectedItems.ToList();
             List<SelectableDesignerItemViewModelBase> connectionsToAlsoRemove = new List<SelectableDesignerItemViewModelBase>();
 
-            foreach (var connector in DiagramViewModel.Items.OfType<ConnectorBaseViewModel>())
-            {
-                if (connector.SourceConnectorInfo is FullyCreatedConnectorInfo
-                    && ItemsToDeleteHasConnector(_itemsToRemove, connector.SourceConnectorInfo as FullyCreatedConnectorInfo))
-                {
-                    connectionsToAlsoRemove.Add(connector);
-                }
+            //TODO オプション化
+            //foreach (var connector in DiagramViewModel.Items.OfType<ConnectorBaseViewModel>())
+            //{
+            //    if (connector.SourceConnectorInfo is FullyCreatedConnectorInfo
+            //        && ItemsToDeleteHasConnector(_itemsToRemove, connector.SourceConnectorInfo as FullyCreatedConnectorInfo))
+            //    {
+            //        connectionsToAlsoRemove.Add(connector);
+            //    }
 
-                if (connector.SinkConnectorInfo is FullyCreatedConnectorInfo
-                    && ItemsToDeleteHasConnector(_itemsToRemove, connector.SinkConnectorInfo as FullyCreatedConnectorInfo))
-                {
-                    connectionsToAlsoRemove.Add(connector);
-                }
-            }
-            _itemsToRemove.AddRange(connectionsToAlsoRemove);
+            //    if (connector.SinkConnectorInfo is FullyCreatedConnectorInfo
+            //        && ItemsToDeleteHasConnector(_itemsToRemove, connector.SinkConnectorInfo as FullyCreatedConnectorInfo))
+            //    {
+            //        connectionsToAlsoRemove.Add(connector);
+            //    }
+            //}
+            //_itemsToRemove.AddRange(connectionsToAlsoRemove);
             foreach (var selectedItem in _itemsToRemove)
             {
                 DiagramViewModel.RemoveItemCommand.Execute(selectedItem);
