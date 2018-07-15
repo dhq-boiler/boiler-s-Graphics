@@ -191,8 +191,39 @@ namespace grapher.ViewModels
             if (parameter is SelectableDesignerItemViewModelBase)
             {
                 SelectableDesignerItemViewModelBase item = (SelectableDesignerItemViewModelBase)parameter;
+                RemoveGroupMembers(item);
                 _items.Remove(item);
                 item.Dispose();
+                UpdateZIndex();
+            }
+        }
+
+        private void UpdateZIndex()
+        {
+            var items = (from item in Items
+                         orderby item.ZIndex.Value ascending
+                         select item).ToList();
+
+            for (int i = 0; i < items.Count; ++i)
+            {
+                items.ElementAt(i).ZIndex.Value = i;
+            }
+        }
+
+        private void RemoveGroupMembers(SelectableDesignerItemViewModelBase item)
+        {
+            if (item is GroupItemViewModel groupItem)
+            {
+                var children = (from it in Items
+                                where it.ParentID == groupItem.ID
+                                select it).ToList();
+
+                foreach (var child in children)
+                {
+                    RemoveGroupMembers(child);
+                    Items.Remove(child);
+                    child.Dispose();
+                }
             }
         }
 
