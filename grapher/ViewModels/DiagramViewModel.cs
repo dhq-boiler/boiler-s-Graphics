@@ -262,13 +262,13 @@ namespace grapher.ViewModels
             XElement serializedItems = new XElement("DesignerItems",
                                        from item in designerItems
                                        select new XElement("DesignerItem",
+                                                  new XElement("ID", item.ID),
+                                                  new XElement("ParentID", item.ParentID),
                                                   new XElement("Type", item.GetType().FullName),
                                                   new XElement("Left", item.Left.Value),
                                                   new XElement("Top", item.Top.Value),
                                                   new XElement("Width", item.Width.Value),
                                                   new XElement("Height", item.Height.Value),
-                                                  new XElement("ID", item.ID),
-                                                  new XElement("ParentID", item.ParentID),
                                                   new XElement("ZIndex", item.ZIndex.Value),
                                                   new XElement("Matrix", item.Matrix.Value),
                                                   new XElement("EdgeColor", item.EdgeColor),
@@ -284,6 +284,8 @@ namespace grapher.ViewModels
             var serializedConnections = new XElement("Connections",
                            from connection in connections
                            select new XElement("Connection",
+                                      new XElement("ID", connection.ID),
+                                      new XElement("ParentID", connection.ParentID),
                                       new XElement("Type", connection.GetType().FullName),
                                       new XElement("SourceID", connection.SourceConnectedDataItemID),
                                       new XElement("SinkID", connection.SinkConnectedDataItemID),
@@ -363,6 +365,8 @@ namespace grapher.ViewModels
             foreach (var connectorXml in connectorXmls)
             {
                 var item = (ConnectorBaseViewModel)DeserializeInstance(connectorXml);
+                item.ID = Guid.Parse(connectorXml.Element("ID").Value);
+                item.ParentID = Guid.Parse(connectorXml.Element("ParentID").Value);
                 item.SourceA = Point.Parse(connectorXml.Element("SourceA").Value);
                 item.SourceB = Point.Parse(connectorXml.Element("SourceB").Value);
                 item.SourceConnectorInfo = DeserializeConnectorInfo(connectorXml, "SourceID", "SourceOrientation", "SourceDegree", item.SourceA, tempItems);
