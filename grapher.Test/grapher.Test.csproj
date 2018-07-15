@@ -76,6 +76,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BoundaryTest.cs" />
+    <Compile Include="GroupingTest.cs" />
     <Compile Include="OrderingTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SelectedItemsTest.cs" />

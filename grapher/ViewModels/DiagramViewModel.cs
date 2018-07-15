@@ -1185,7 +1185,6 @@ namespace grapher.ViewModels
             if (item is GroupItemViewModel groupItem)
             {
                 var cloneGroup = groupItem.Clone() as GroupItemViewModel;
-                cloneGroup.ZIndex.Value = Items.Count();
                 if (parent != null)
                 {
                     cloneGroup.ParentID = parent.ID;
@@ -1230,6 +1229,7 @@ namespace grapher.ViewModels
                 }
 
                 oldNewList.Add(new Tuple<SelectableDesignerItemViewModelBase, SelectableDesignerItemViewModelBase>(groupItem, cloneGroup));
+                cloneGroup.ZIndex.Value = Items.Count();
                 Items.Add(cloneGroup);
             }
             else
