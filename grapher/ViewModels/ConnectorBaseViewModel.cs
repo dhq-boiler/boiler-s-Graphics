@@ -167,7 +167,7 @@ namespace grapher.ViewModels
                     {
                         SourceA = PointHelper.GetPointForConnector(this.SourceConnectorInfo as FullyCreatedConnectorInfo);
                         _sourceConnectorDisconnecting?.Dispose();
-                        _sourceConnectorDisconnecting = (_sourceConnectorInfo as FullyCreatedConnectorInfo).DataItem.Subscribe(this);
+                        _sourceConnectorDisconnecting = (_sourceConnectorInfo as FullyCreatedConnectorInfo).DataItem.Connect(this);
                         _sourceConnectorDisconnecting.AddTo(_CompositeDisposable);
                         SourceConnectedDataItemID = (_sourceConnectorInfo as FullyCreatedConnectorInfo).DataItem.ID;
                     }
@@ -193,7 +193,7 @@ namespace grapher.ViewModels
                     {
                         SourceB = PointHelper.GetPointForConnector((FullyCreatedConnectorInfo)SinkConnectorInfo);
                         _sinkConnectorDisconnecting?.Dispose();
-                        _sinkConnectorDisconnecting = (_sinkConnectorInfo as FullyCreatedConnectorInfo).DataItem.Subscribe(this);
+                        _sinkConnectorDisconnecting = (_sinkConnectorInfo as FullyCreatedConnectorInfo).DataItem.Connect(this);
                         _sinkConnectorDisconnecting.AddTo(_CompositeDisposable);
                         SinkConnectedDataItemID = (_sinkConnectorInfo as FullyCreatedConnectorInfo).DataItem.ID;
                     }

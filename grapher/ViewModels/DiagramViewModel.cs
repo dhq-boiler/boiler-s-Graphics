@@ -492,6 +492,8 @@ namespace grapher.ViewModels
                     child.EnableForSelection.Value = true;
                 }
 
+                groupRoot.Dispose();
+
                 Items.Remove(groupRoot);
 
                 var groupZIndex = groupRoot.ZIndex.Value;
@@ -1153,7 +1155,7 @@ namespace grapher.ViewModels
                 {
                     cloneGroup.ParentID = parent.ID;
                     cloneGroup.EnableForSelection.Value = false;
-                    cloneGroup.GroupDisposable = parent.Subscribe(cloneGroup);
+                    parent.AddGroup(cloneGroup);
                 }
 
                 var children = from it in Items.OfType<DesignerItemViewModelBase>()
@@ -1203,7 +1205,7 @@ namespace grapher.ViewModels
                 {
                     clone.ParentID = parent.ID;
                     clone.EnableForSelection.Value = false;
-                    clone.GroupDisposable = parent.Subscribe(clone);
+                    parent.AddGroup(clone);
                 }
                 oldNewList.Add(new Tuple<SelectableDesignerItemViewModelBase, SelectableDesignerItemViewModelBase>(item, clone));
                 Items.Add(clone);
@@ -1234,7 +1236,7 @@ namespace grapher.ViewModels
             {
                 clone.ParentID = groupItem.ID;
                 clone.EnableForSelection.Value = false;
-                clone.GroupDisposable = groupItem.Subscribe(clone);
+                groupItem.AddGroup(clone);
             }
             Items.Add(clone);
         }

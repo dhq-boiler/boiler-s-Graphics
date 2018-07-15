@@ -151,6 +151,13 @@ namespace grapher.ViewModels
             Matrix.Value = new Matrix();
         }
 
+        public IDisposable Connect(ConnectorBaseViewModel connector)
+        {
+            var disposable = Subscribe(connector);
+            _CompositeDisposable.Add(disposable);
+            return disposable;
+        }
+
         public void UpdateTransform()
         {
             UpdateCenterPoint();
