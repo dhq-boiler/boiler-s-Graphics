@@ -30,7 +30,7 @@ platform: Any CPU
 configuration: Release
 
 before_build:
-  - nuget restore
+  - ps: nuget restore grapher.sln
 
 build:
   project: grapher.sln
