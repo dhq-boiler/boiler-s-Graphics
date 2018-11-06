@@ -29,12 +29,12 @@ platform: Any CPU
 
 configuration: Release
 
+before_build:
+  - nuget restore
+
 build:
   project: grapher.sln
   verbosity: minimal
-
-before_build:
-  - nuget restore grapher.sln
 
 test:
   assemblies:
