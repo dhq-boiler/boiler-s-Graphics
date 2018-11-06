@@ -34,7 +34,7 @@ build:
   verbosity: minimal
 
 before_build:
-  - nuget restore
+  - nuget restore grapher.sln
 
 test:
   assemblies:
