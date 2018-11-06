@@ -1,0 +1,54 @@
+version: 1.0.{build}-{branch}
+
+branches:
+  only:
+    - master
+    - develop
+
+skip_branch_with_pr: true
+
+max_jobs: 1
+
+image: Visual Studio 2017
+
+init:
+  - git config --global core.autocrlf input
+
+clone_folder: c:\projects\grapher
+
+shallow_clone: true
+
+assembly_info:
+  patch: true
+  file: AssemblyInfo.*
+  assembly_version: "1.0.{build}"
+  assembly_file_version: "{version}"
+  assembly_informational_version: "{version}"
+
+platform: Any CPU
+
+configuration: Release
+
+build:
+  project: grapher.sln
+  verbosity: minimal
+
+before_build:
+  - nuget restore
+
+test:
+  assemblies:
+    only:
+      - grapher.Test.dll
+
+artifacts:
+  - path: grapher.zip
+
+deploy:
+  - provider: GitHub
+    artifact: grapher.zip
+    draft: false
+    prerelease: false
+    on:
+      branch: master
+      appveyor_repo_tag: true
