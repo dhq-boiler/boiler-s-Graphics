@@ -55,9 +55,7 @@ namespace grapher.ViewModels
 
         public ReactiveProperty<int> ZIndex { get; } = new ReactiveProperty<int>();
 
-#if DEBUG
         public string Name { get; set; }
-#endif
 
         public Guid ID { get; set; } = Guid.NewGuid();
 
