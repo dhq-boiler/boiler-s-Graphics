@@ -38,8 +38,8 @@ build:
 
 after_build:
   - cmd: 7z a grapher.zip %APPVEYOR_BUILD_FOLDER%\grapher\bin\Release\*.*
-  - cmd: 7z a grapher.zip %APPVEYOR_BUILD_FOLDER%\grapher\bin\Release\dll\*.*
-  - cmd: 7z a grapher.zip %APPVEYOR_BUILD_FOLDER%\grapher\bin\Release\ja-JP\*.*
+  - cmd: 7z a grapher.zip %APPVEYOR_BUILD_FOLDER%\grapher\bin\Release\dll
+  - cmd: 7z a grapher.zip %APPVEYOR_BUILD_FOLDER%\grapher\bin\Release\ja-JP
 
 test:
   assemblies:
