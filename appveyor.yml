@@ -61,6 +61,5 @@ deploy:
 
 notifications:
   - provider: Slack
-    incoming_webhook:
-      secure: https://hooks.slack.com/services/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
+    incoming_webhook: https://hooks.slack.com/services/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
     channel: '#build'
