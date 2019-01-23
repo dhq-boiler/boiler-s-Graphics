@@ -58,3 +58,9 @@ deploy:
     on:
       branch: master
       appveyor_repo_tag: true
+
+notifications:
+  - provider: Slack
+    auth_token:
+      secure: xoxp-426987669473-427437360435-530728714084-a585d02acf285a33a9f05a1787dbbaa8
+    channel: '#build'
