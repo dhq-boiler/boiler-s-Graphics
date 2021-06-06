@@ -388,6 +388,9 @@
   <ItemGroup>
     <Resource Include="Assets\img\OpenFolder.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\img\Export.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>

@@ -61,6 +61,15 @@ namespace grapher.Properties {
         }
         
         /// <summary>
+        ///   Alignment に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Alignment {
+            get {
+                return ResourceManager.GetString("Alignment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Align bottom に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_AlignBottom {
@@ -147,6 +156,15 @@ namespace grapher.Properties {
         public static string Command_DistributeVertical {
             get {
                 return ResourceManager.GetString("Command_DistributeVertical", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Export に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Command_Export {
+            get {
+                return ResourceManager.GetString("Command_Export", resourceCulture);
             }
         }
         

@@ -1,5 +1,7 @@
 ﻿using grapher.Controls;
+using grapher.Extensions;
 using grapher.Messenger;
+using grapher.UserControls;
 using Microsoft.Win32;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -8,12 +10,15 @@ using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reflection;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Xml.Linq;
 
 namespace grapher.ViewModels
@@ -32,6 +37,7 @@ namespace grapher.ViewModels
         public DelegateCommand<object> CreateNewDiagramCommand { get; private set; }
         public DelegateCommand LoadCommand { get; private set; }
         public DelegateCommand SaveCommand { get; private set; }
+        public DelegateCommand ExportCommand { get; private set; }
         public DelegateCommand GroupCommand { get; private set; }
         public DelegateCommand UngroupCommand { get; private set; }
         public DelegateCommand BringForegroundCommand { get; private set; }
@@ -59,6 +65,7 @@ namespace grapher.ViewModels
             CreateNewDiagramCommand = new DelegateCommand<object>(p => ExecuteCreateNewDiagramCommand(p));
             LoadCommand = new DelegateCommand(() => ExecuteLoadCommand());
             SaveCommand = new DelegateCommand(() => ExecuteSaveCommand());
+            ExportCommand = new DelegateCommand(() => ExecuteExportCommand());
             GroupCommand = new DelegateCommand(() => ExecuteGroupItemsCommand(), () => CanExecuteGroup());
             UngroupCommand = new DelegateCommand(() => ExecuteUngroupItemsCommand(), () => CanExecuteUngroup());
             BringForwardCommand = new DelegateCommand(() => ExecuteBringForwardCommand(), () => CanExecuteOrder());
@@ -238,6 +245,27 @@ namespace grapher.ViewModels
         private void ExecuteCreateNewDiagramCommand(object parameter)
         {
             Items.Clear();
+        }
+
+        private void ExecuteExportCommand()
+        {
+            var childrenCount = VisualTreeHelper.GetChildrenCount(App.Current.MainWindow);
+            var diagramControl = App.Current.MainWindow.GetChildOfType<DiagramControl>();
+            var itemsControl = diagramControl.GetChildOfType<ItemsControl>();
+            foreach (var item in itemsControl.Items.Cast<SelectableDesignerItemViewModelBase>())
+            {
+                item.IsSelected = false;
+            }
+            var rtb = new RenderTargetBitmap((int)itemsControl.ActualWidth, (int)itemsControl.ActualHeight, 96, 96, PixelFormats.Pbgra32);
+            rtb.Render(itemsControl);
+
+            JpegBitmapEncoder encoder = new JpegBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(rtb));
+            encoder.QualityLevel = 100;
+            using (var stream = File.Create("TEST.jpg"))
+            {
+                encoder.Save(stream);
+            }
         }
 
         #region Save

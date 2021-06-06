@@ -164,6 +164,52 @@
                             </ControlTemplate>
                         </Button.Template>
                     </Button>
+                    <Button Command="{Binding DiagramViewModel.ExportCommand}" ToolTip="{Binding Command_Export, Mode=OneWay, Source={StaticResource resources}}">
+                        <Button.Template>
+                            <ControlTemplate TargetType="{x:Type Button}">
+                                <Grid>
+                                    <Rectangle
+                                        Width="20"
+                                        Height="20"
+                                        Fill="White"
+                                        Stroke="Black"
+                                        StrokeThickness="1" />
+                                    <ContentControl Width="16" Height="16">
+                                        <ContentControl.Style>
+                                            <Style TargetType="{x:Type ContentControl}">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" Value="True">
+                                                        <Setter Property="Content">
+                                                            <Setter.Value>
+                                                                <Image
+                                                                    Width="16"
+                                                                    Height="16"
+                                                                    Source="{StaticResource Icon_Export}" />
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" Value="False">
+                                                        <Setter Property="Content">
+                                                            <Setter.Value>
+                                                                <Image Width="16" Height="16">
+                                                                    <Image.Source>
+                                                                        <FormatConvertedBitmap DestinationFormat="Gray32Float" Source="{StaticResource Icon_Save}" />
+                                                                    </Image.Source>
+                                                                    <Image.OpacityMask>
+                                                                        <ImageBrush ImageSource="{StaticResource Icon_Export}" />
+                                                                    </Image.OpacityMask>
+                                                                </Image>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </ContentControl.Style>
+                                    </ContentControl>
+                                </Grid>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
                 </StackPanel>
             </ToolBar>
             <ToolBar>
