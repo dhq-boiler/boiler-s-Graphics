@@ -22,7 +22,7 @@ namespace grapher.ViewModels
 
         public MainWindowViewModel()
         {
-            DiagramViewModel = new DiagramViewModel();
+            DiagramViewModel = new DiagramViewModel(1000, 1000);
             _CompositeDisposable.Add(DiagramViewModel);
             ToolBarViewModel = new ToolBarViewModel();
 

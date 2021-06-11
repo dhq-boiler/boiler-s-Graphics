@@ -30,6 +30,8 @@ namespace grapher.ViewModels
         private ObservableCollection<Color> _EdgeColors = new ObservableCollection<Color>();
         private ObservableCollection<Color> _FillColors = new ObservableCollection<Color>();
         private CompositeDisposable _CompositeDisposable = new CompositeDisposable();
+        private int _Width;
+        private int _Height;
 
         public DelegateCommand<object> AddItemCommand { get; private set; }
         public DelegateCommand<object> RemoveItemCommand { get; private set; }
@@ -57,7 +59,7 @@ namespace grapher.ViewModels
         public DelegateCommand UniformHeightCommand { get; private set; }
         public DelegateCommand DuplicateCommand { get; private set; }
 
-        public DiagramViewModel()
+        public DiagramViewModel(int width, int height)
         {
             AddItemCommand = new DelegateCommand<object>(p => ExecuteAddItemCommand(p));
             RemoveItemCommand = new DelegateCommand<object>(p => ExecuteRemoveItemCommand(p));
@@ -144,6 +146,9 @@ namespace grapher.ViewModels
             EdgeColors.Add(Colors.Black);
             FillColors.Add(Colors.Transparent);
 
+            Width = width;
+            Height = height;
+
             Mediator.Instance.Register(this);
         }
 
@@ -173,6 +178,18 @@ namespace grapher.ViewModels
         {
             get { return _FillColors; }
             set { SetProperty(ref _FillColors, value); }
+        }
+
+        public int Width
+        {
+            get { return _Width; }
+            set { SetProperty(ref _Width, value); }
+        }
+
+        public int Height
+        {
+            get { return _Height; }
+            set { SetProperty(ref _Height, value); }
         }
 
         public void DeselectAll()

@@ -16,5 +16,9 @@ namespace grapher.ViewModels
         ObservableCollection<SelectableDesignerItemViewModelBase> Items { get; }
 
         void DeselectAll();
+
+        int Width { get; }
+
+        int Height { get; }
     }
 }
