@@ -252,12 +252,24 @@ namespace grapher.ViewModels
             var childrenCount = VisualTreeHelper.GetChildrenCount(App.Current.MainWindow);
             var diagramControl = App.Current.MainWindow.GetChildOfType<DiagramControl>();
             var itemsControl = diagramControl.GetChildOfType<ItemsControl>();
+            var tempIsSelected = new Dictionary<SelectableDesignerItemViewModelBase, bool>();
             foreach (var item in itemsControl.Items.Cast<SelectableDesignerItemViewModelBase>())
             {
+                tempIsSelected.Add(item, item.IsSelected);
                 item.IsSelected = false;
             }
             var rtb = new RenderTargetBitmap((int)itemsControl.ActualWidth, (int)itemsControl.ActualHeight, 96, 96, PixelFormats.Pbgra32);
             rtb.Render(itemsControl);
+
+            //IsSelectedの復元
+            foreach (var item in itemsControl.Items.Cast<SelectableDesignerItemViewModelBase>())
+            {
+                bool outIsSelected;
+                if (tempIsSelected.TryGetValue(item, out outIsSelected))
+                {
+                    item.IsSelected = outIsSelected;
+                }
+            }
 
             JpegBitmapEncoder encoder = new JpegBitmapEncoder();
             encoder.Frames.Add(BitmapFrame.Create(rtb));
