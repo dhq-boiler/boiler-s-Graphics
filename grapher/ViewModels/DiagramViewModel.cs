@@ -33,6 +33,7 @@ namespace grapher.ViewModels
         private CompositeDisposable _CompositeDisposable = new CompositeDisposable();
         private int _Width;
         private int _Height;
+        private double _BorderThickness;
 
         public DelegateCommand<object> AddItemCommand { get; private set; }
         public DelegateCommand<object> RemoveItemCommand { get; private set; }
@@ -63,6 +64,12 @@ namespace grapher.ViewModels
 
         public double ScaleX { get; set; } = 1.0;
         public double ScaleY { get; set; } = 1.0;
+
+        public double BorderThickness
+        {
+            get { return _BorderThickness; }
+            set { SetProperty(ref _BorderThickness, value); }
+        }
 
         public DiagramViewModel()
         {
@@ -99,6 +106,7 @@ namespace grapher.ViewModels
                 var matrix = (dockpanel.LayoutTransform as MatrixTransform).Matrix;
                 ScaleX += args.Delta / 1000d;
                 ScaleY += args.Delta / 1000d;
+                
                 matrix.Scale(ScaleX, ScaleY);
                 dockpanel.RenderTransform = new MatrixTransform(matrix);
                 args.Handled = true;
@@ -162,6 +170,8 @@ namespace grapher.ViewModels
 
             EdgeColors.Add(Colors.Black);
             FillColors.Add(Colors.Transparent);
+
+            BorderThickness = 1.0;
         }
 
         public DiagramViewModel(int width, int height)

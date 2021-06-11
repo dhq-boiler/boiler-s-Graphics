@@ -69,7 +69,7 @@
                         <MatrixTransform />
                     </DockPanel.LayoutTransform>
                     <Border BorderBrush="Black"
-                        BorderThickness="1"
+                        BorderThickness="{Binding BorderThickness}"
                         Width="{Binding Width, Converter={StaticResource Plus2Converter}}"
                         Height="{Binding Height, Converter={StaticResource Plus2Converter}}">
                         <ItemsControl ItemContainerStyleSelector="{x:Static selector:DesignerItemsControlItemStyleSelector.Instance}"
