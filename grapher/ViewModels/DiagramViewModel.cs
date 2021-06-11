@@ -17,6 +17,7 @@ using System.Reactive.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Xml.Linq;
@@ -58,8 +59,12 @@ namespace grapher.ViewModels
         public DelegateCommand UniformWidthCommand { get; private set; }
         public DelegateCommand UniformHeightCommand { get; private set; }
         public DelegateCommand DuplicateCommand { get; private set; }
+        public DelegateCommand<MouseWheelEventArgs> MouseWheelCommand { get; private set; }
 
-        public DiagramViewModel(int width, int height)
+        public double ScaleX { get; set; } = 1.0;
+        public double ScaleY { get; set; } = 1.0;
+
+        public DiagramViewModel()
         {
             AddItemCommand = new DelegateCommand<object>(p => ExecuteAddItemCommand(p));
             RemoveItemCommand = new DelegateCommand<object>(p => ExecuteRemoveItemCommand(p));
@@ -86,6 +91,18 @@ namespace grapher.ViewModels
             UniformWidthCommand = new DelegateCommand(() => ExecuteUniformWidthCommand(), () => CanExecuteUniform());
             UniformHeightCommand = new DelegateCommand(() => ExecuteUniformHeightCommand(), () => CanExecuteUniform());
             DuplicateCommand = new DelegateCommand(() => ExecuteDuplicateCommand(), () => CanExecuteDuplicate());
+            MouseWheelCommand = new DelegateCommand<MouseWheelEventArgs>(args =>
+            {
+                var diagramControl = App.Current.MainWindow.GetChildOfType<DiagramControl>();
+                var scrollViewer = diagramControl.GetChildOfType<ScrollViewer>();
+                var dockpanel = scrollViewer.GetChildOfType<DockPanel>();
+                var matrix = (dockpanel.LayoutTransform as MatrixTransform).Matrix;
+                ScaleX += args.Delta / 1000d;
+                ScaleY += args.Delta / 1000d;
+                matrix.Scale(ScaleX, ScaleY);
+                dockpanel.RenderTransform = new MatrixTransform(matrix);
+                args.Handled = true;
+            });
 
             Items
                 .ObserveElementProperty(x => x.IsSelected)
@@ -145,7 +162,11 @@ namespace grapher.ViewModels
 
             EdgeColors.Add(Colors.Black);
             FillColors.Add(Colors.Transparent);
+        }
 
+        public DiagramViewModel(int width, int height)
+            : this()
+        {
             Width = width;
             Height = height;
 
