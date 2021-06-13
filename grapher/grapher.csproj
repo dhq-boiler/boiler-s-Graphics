@@ -110,6 +110,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Adorners\PictureAdorner.cs" />
     <Compile Include="Adorners\RectangleAdorner.cs" />
     <Compile Include="Adorners\RubberbandAdorner.cs" />
     <Compile Include="Adorners\SettingAdorner.cs" />
@@ -169,6 +170,7 @@
     <Compile Include="ViewModels\ConnectorInfoBase.cs" />
     <Compile Include="ViewModels\GroupItemViewModel.cs" />
     <Compile Include="ViewModels\NRectangleViewModel.cs" />
+    <Compile Include="ViewModels\PictureDesignerItemViewModel.cs" />
     <Compile Include="ViewModels\PolygonalConnectorViewModel.cs" />
     <Compile Include="ViewModels\DesignerItemViewModelBase.cs" />
     <Compile Include="ViewModels\DiagramViewModel.cs" />
@@ -200,6 +202,7 @@
     <Compile Include="Views\Behaviors\EllipseSelectBehavior.cs" />
     <Compile Include="Views\Behaviors\NDrawRectangleBehavior.cs" />
     <Compile Include="Views\Behaviors\NDrawStraightLineBehavior.cs" />
+    <Compile Include="Views\Behaviors\PictureBehavior.cs" />
     <Compile Include="Views\Behaviors\RectangleAdorner.cs" />
     <Compile Include="Views\Behaviors\RectangleDragAdorner.cs" />
     <Compile Include="Views\Behaviors\RectangleDragStartBehavior.cs" />
@@ -233,6 +236,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Resources\DesignerItems\PersistDesignerItemDataTemplate.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\DesignerItems\PictureDesignerItemDataTemplate.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -398,6 +405,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\img\Export.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\img\picture.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

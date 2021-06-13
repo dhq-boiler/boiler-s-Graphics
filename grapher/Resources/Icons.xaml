@@ -78,4 +78,8 @@
         x:Key="Icon_Export"
         x:Shared="False"
         UriSource="pack://application:,,,/Assets/img/Export.png" />
+    <BitmapImage
+        x:Key="Icon_Picture"
+        x:Shared="False"
+        UriSource="pack://application:,,,/Assets/img/Picture.png" />
 </ResourceDictionary>

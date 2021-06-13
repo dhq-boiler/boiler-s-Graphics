@@ -405,8 +405,10 @@ namespace grapher.ViewModels
 
         private XElement SerializeDesignerItems(IEnumerable<DesignerItemViewModelBase> designerItems)
         {
-            XElement serializedItems = new XElement("DesignerItems",
-                                       from item in designerItems
+            XElement serializedItems = null;
+            serializedItems = new XElement("DesignerItems",
+                                       (from item in designerItems
+                                       where item.GetType() != typeof(PictureDesignerItemViewModel)
                                        select new XElement("DesignerItem",
                                                   new XElement("ID", item.ID),
                                                   new XElement("ParentID", item.ParentID),
@@ -419,7 +421,26 @@ namespace grapher.ViewModels
                                                   new XElement("Matrix", item.Matrix.Value),
                                                   new XElement("EdgeColor", item.EdgeColor),
                                                   new XElement("FillColor", item.FillColor)
-                                              )
+                                              ))
+                                       .Union(
+                                           from item in designerItems
+                                           where item.GetType() == typeof(PictureDesignerItemViewModel)
+                                           select new XElement("DesignerItem",
+                                                  new XElement("ID", item.ID),
+                                                  new XElement("ParentID", item.ParentID),
+                                                  new XElement("Type", item.GetType().FullName),
+                                                  new XElement("Left", item.Left.Value),
+                                                  new XElement("Top", item.Top.Value),
+                                                  new XElement("Width", item.Width.Value),
+                                                  new XElement("Height", item.Height.Value),
+                                                  new XElement("ZIndex", item.ZIndex.Value),
+                                                  new XElement("Matrix", item.Matrix.Value),
+                                                  new XElement("EdgeColor", item.EdgeColor),
+                                                  new XElement("FillColor", item.FillColor),
+                                                  new XElement("FileName", (item as PictureDesignerItemViewModel).FileName)
+                                            )
+                                       )
+                                       
                                    );
 
             return serializedItems;
@@ -503,6 +524,11 @@ namespace grapher.ViewModels
                 item.EdgeColor = (Color)ColorConverter.ConvertFromString(designerItemXML.Element("EdgeColor").Value);
                 item.FillColor = (Color)ColorConverter.ConvertFromString(designerItemXML.Element("FillColor").Value);
                 item.Owner = this;
+                if (item is PictureDesignerItemViewModel)
+                {
+                    var picture = item as PictureDesignerItemViewModel;
+                    picture.FileName = designerItemXML.Element("FileName").Value;
+                }
                 tempItems.Add(item);
             }
 

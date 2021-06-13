@@ -2,10 +2,12 @@
 using grapher.Extensions;
 using grapher.Helpers;
 using grapher.Views.Behaviors;
+using Microsoft.Win32;
 using Prism.Commands;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Microsoft.Xaml.Behaviors;
+using System.IO;
 
 namespace grapher.ViewModels
 {
@@ -70,6 +72,24 @@ namespace grapher.ViewModels
                     behaviors.Add(behavior);
                 }
                 SelectOneToolItem("symbol-a");
+            })));
+            ToolItems.Add(new ToolItemData("picture", "pack://application:,,,/Assets/img/Picture.png", new DelegateCommand(() =>
+            {
+                var dialog = new OpenFileDialog();
+                dialog.Multiselect = false;
+                dialog.Filter = "JPEG file|*.jpg;*.jpeg|PNG file|*.png|GIF file|*.gif|BMP file|*.bmp|ALL|*.*";
+                if (dialog.ShowDialog() == true)
+                {
+                    var behavior = new PictureBehavior(dialog.FileName);
+                    var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
+                    var behaviors = Interaction.GetBehaviors(designerCanvas);
+                    behaviors.Clear();
+                    if (!behaviors.Contains(behavior))
+                    {
+                        behaviors.Add(behavior);
+                    }
+                    SelectOneToolItem("picture");
+                }
             })));
         }
 
