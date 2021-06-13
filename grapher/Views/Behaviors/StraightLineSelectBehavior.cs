@@ -3,7 +3,7 @@ using grapher.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
-using System.Windows.Interactivity;
+using Microsoft.Xaml.Behaviors;
 using System.Windows.Media;
 using System.Windows.Shapes;
 

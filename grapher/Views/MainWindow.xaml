@@ -6,7 +6,7 @@
     xmlns:converter="clr-namespace:grapher.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
-    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:input="clr-namespace:System.Windows.Input;assembly=System"
     xmlns:local="clr-namespace:grapher.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -18,32 +18,32 @@
     prism:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
     <i:Interaction.Triggers>
-        <prism:InteractionRequestTrigger SourceObject="{Binding OpenColorPickerRequest}">
-            <prism:PopupWindowAction CenterOverAssociatedObject="True" IsModal="True">
-                <prism:PopupWindowAction.WindowStyle>
+        <trigger:InteractionRequestTrigger SourceObject="{Binding OpenColorPickerRequest}">
+            <trigger:PopupWindowAction CenterOverAssociatedObject="True" IsModal="True">
+                <trigger:PopupWindowAction.WindowStyle>
                     <Style TargetType="{x:Type Window}">
                         <Setter Property="ResizeMode" Value="NoResize" />
                         <Setter Property="SizeToContent" Value="WidthAndHeight" />
                     </Style>
-                </prism:PopupWindowAction.WindowStyle>
-                <prism:PopupWindowAction.WindowContent>
+                </trigger:PopupWindowAction.WindowStyle>
+                <trigger:PopupWindowAction.WindowContent>
                     <local:ColorPicker />
-                </prism:PopupWindowAction.WindowContent>
-            </prism:PopupWindowAction>
-        </prism:InteractionRequestTrigger>
-        <prism:InteractionRequestTrigger SourceObject="{Binding OpenFillColorPickerRequest}">
-            <prism:PopupWindowAction CenterOverAssociatedObject="True" IsModal="True">
-                <prism:PopupWindowAction.WindowStyle>
+                </trigger:PopupWindowAction.WindowContent>
+            </trigger:PopupWindowAction>
+        </trigger:InteractionRequestTrigger>
+        <trigger:InteractionRequestTrigger SourceObject="{Binding OpenFillColorPickerRequest}">
+            <trigger:PopupWindowAction CenterOverAssociatedObject="True" IsModal="True">
+                <trigger:PopupWindowAction.WindowStyle>
                     <Style TargetType="{x:Type Window}">
                         <Setter Property="ResizeMode" Value="NoResize" />
                         <Setter Property="SizeToContent" Value="WidthAndHeight" />
                     </Style>
-                </prism:PopupWindowAction.WindowStyle>
-                <prism:PopupWindowAction.WindowContent>
+                </trigger:PopupWindowAction.WindowStyle>
+                <trigger:PopupWindowAction.WindowContent>
                     <local:ColorPicker />
-                </prism:PopupWindowAction.WindowContent>
-            </prism:PopupWindowAction>
-        </prism:InteractionRequestTrigger>
+                </trigger:PopupWindowAction.WindowContent>
+            </trigger:PopupWindowAction>
+        </trigger:InteractionRequestTrigger>
     </i:Interaction.Triggers>
     <Window.InputBindings>
         <KeyBinding Key="Del" Command="{Binding DeleteSelectedItemsCommand}" />

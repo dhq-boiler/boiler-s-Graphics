@@ -5,7 +5,7 @@ using grapher.Views.Behaviors;
 using Prism.Commands;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows.Interactivity;
+using Microsoft.Xaml.Behaviors;
 
 namespace grapher.ViewModels
 {

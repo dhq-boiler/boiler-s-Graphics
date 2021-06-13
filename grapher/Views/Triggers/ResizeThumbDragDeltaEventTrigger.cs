@@ -5,7 +5,7 @@ using System.Windows.Controls.Primitives;
 
 namespace grapher.Views.Triggers
 {
-    internal class ResizeThumbDragDeltaEventTrigger : System.Windows.Interactivity.EventTrigger
+    internal class ResizeThumbDragDeltaEventTrigger : Microsoft.Xaml.Behaviors.EventTrigger
     {
         public ResizeThumbDragDeltaEventTrigger()
             : base("DragDelta")

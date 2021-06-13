@@ -8,7 +8,7 @@
     xmlns:converter="clr-namespace:grapher.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:grapher="clr-namespace:grapher"
-    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:local="clr-namespace:grapher.UserControls"
     xmlns:helper="clr-namespace:grapher.Helpers"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
