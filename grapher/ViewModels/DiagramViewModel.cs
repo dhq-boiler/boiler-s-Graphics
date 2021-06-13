@@ -66,6 +66,8 @@ namespace grapher.ViewModels
         public DelegateCommand<MouseEventArgs> PreviewMouseDownCommand { get; private set; }
         public DelegateCommand<MouseEventArgs> PreviewMouseUpCommand { get; private set; }
         public DelegateCommand<MouseEventArgs> MouseMoveCommand { get; private set; }
+        public DelegateCommand<MouseEventArgs> MouseLeaveCommand { get; private set; }
+        public DelegateCommand<MouseEventArgs> MouseEnterCommand { get; private set; }
 
         public double ScaleX { get; set; } = 1.0;
         public double ScaleY { get; set; } = 1.0;
@@ -128,12 +130,7 @@ namespace grapher.ViewModels
             });
             PreviewMouseUpCommand = new DelegateCommand<MouseEventArgs>(args =>
             {
-                if (args.MiddleButton == MouseButtonState.Released)
-                {
-                    _MiddleButtonIsPressed = false;
-                    var diagramControl = App.Current.MainWindow.GetChildOfType<DiagramControl>();
-                    diagramControl.Cursor = Cursors.Arrow;
-                }
+                ReleaseMiddleButton(args);
             });
             MouseMoveCommand = new DelegateCommand<MouseEventArgs>(args =>
             {
@@ -146,6 +143,20 @@ namespace grapher.ViewModels
                     scrollViewer.ScrollToVerticalOffset(scrollViewer.VerticalOffset - diff.Y);
                     scrollViewer.ScrollToHorizontalOffset(scrollViewer.HorizontalOffset - diff.X);
                     _MousePointerPosition = newMousePointerPosition;
+                }
+            });
+            MouseLeaveCommand = new DelegateCommand<MouseEventArgs>(args =>
+            {
+                if (_MiddleButtonIsPressed)
+                {
+                    ReleaseMiddleButton(args);
+                }
+            });
+            MouseEnterCommand = new DelegateCommand<MouseEventArgs>(args =>
+            {
+                if (_MiddleButtonIsPressed)
+                {
+                    ReleaseMiddleButton(args);
                 }
             });
 
@@ -209,6 +220,16 @@ namespace grapher.ViewModels
             FillColors.Add(Colors.Transparent);
 
             BorderThickness = 1.0;
+        }
+
+        private void ReleaseMiddleButton(MouseEventArgs args)
+        {
+            if (args.MiddleButton == MouseButtonState.Released)
+            {
+                _MiddleButtonIsPressed = false;
+                var diagramControl = App.Current.MainWindow.GetChildOfType<DiagramControl>();
+                diagramControl.Cursor = Cursors.Arrow;
+            }
         }
 
         public DiagramViewModel(int width, int height)

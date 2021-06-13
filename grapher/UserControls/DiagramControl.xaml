@@ -41,6 +41,12 @@
                     <i:EventTrigger EventName="MouseMove">
                         <helper:EventToCommand Command="{Binding MouseMoveCommand}" PassEventArgsToCommand="True" />
                     </i:EventTrigger>
+                    <i:EventTrigger EventName="MouseLeave">
+                        <helper:EventToCommand Command="{Binding MouseLeaveCommand}" PassEventArgsToCommand="True" />
+                    </i:EventTrigger>
+                    <i:EventTrigger EventName="MouseEnter">
+                        <helper:EventToCommand Command="{Binding MouseEnterCommand}" PassEventArgsToCommand="True" />
+                    </i:EventTrigger>
                 </i:Interaction.Triggers>
                 <ScrollViewer.Background>
                     <VisualBrush Stretch="None"
