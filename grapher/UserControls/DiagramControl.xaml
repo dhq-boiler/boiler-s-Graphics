@@ -32,6 +32,15 @@
                     <i:EventTrigger EventName="PreviewMouseWheel">
                         <helper:EventToCommand Command="{Binding MouseWheelCommand}" PassEventArgsToCommand="True" />
                     </i:EventTrigger>
+                    <i:EventTrigger EventName="PreviewMouseDown">
+                        <helper:EventToCommand Command="{Binding PreviewMouseDownCommand}" PassEventArgsToCommand="True" />
+                    </i:EventTrigger>
+                    <i:EventTrigger EventName="PreviewMouseUp">
+                        <helper:EventToCommand Command="{Binding PreviewMouseUpCommand}" PassEventArgsToCommand="True" />
+                    </i:EventTrigger>
+                    <i:EventTrigger EventName="MouseMove">
+                        <helper:EventToCommand Command="{Binding MouseMoveCommand}" PassEventArgsToCommand="True" />
+                    </i:EventTrigger>
                 </i:Interaction.Triggers>
                 <ScrollViewer.Background>
                     <VisualBrush Stretch="None"

@@ -34,6 +34,8 @@ namespace grapher.ViewModels
         private int _Width;
         private int _Height;
         private double _BorderThickness;
+        private bool _MiddleButtonIsPressed;
+        private Point _MousePointerPosition;
 
         public DelegateCommand<object> AddItemCommand { get; private set; }
         public DelegateCommand<object> RemoveItemCommand { get; private set; }
@@ -61,6 +63,9 @@ namespace grapher.ViewModels
         public DelegateCommand UniformHeightCommand { get; private set; }
         public DelegateCommand DuplicateCommand { get; private set; }
         public DelegateCommand<MouseWheelEventArgs> MouseWheelCommand { get; private set; }
+        public DelegateCommand<MouseEventArgs> PreviewMouseDownCommand { get; private set; }
+        public DelegateCommand<MouseEventArgs> PreviewMouseUpCommand { get; private set; }
+        public DelegateCommand<MouseEventArgs> MouseMoveCommand { get; private set; }
 
         public double ScaleX { get; set; } = 1.0;
         public double ScaleY { get; set; } = 1.0;
@@ -110,6 +115,38 @@ namespace grapher.ViewModels
                 matrix.Scale(ScaleX, ScaleY);
                 dockpanel.RenderTransform = new MatrixTransform(matrix);
                 args.Handled = true;
+            });
+            PreviewMouseDownCommand = new DelegateCommand<MouseEventArgs>(args =>
+            {
+                if (args.MiddleButton == MouseButtonState.Pressed)
+                {
+                    _MiddleButtonIsPressed = true;
+                    var diagramControl = App.Current.MainWindow.GetChildOfType<DiagramControl>();
+                    _MousePointerPosition = args.GetPosition(diagramControl);
+                    diagramControl.Cursor = Cursors.SizeAll;
+                }
+            });
+            PreviewMouseUpCommand = new DelegateCommand<MouseEventArgs>(args =>
+            {
+                if (args.MiddleButton == MouseButtonState.Released)
+                {
+                    _MiddleButtonIsPressed = false;
+                    var diagramControl = App.Current.MainWindow.GetChildOfType<DiagramControl>();
+                    diagramControl.Cursor = Cursors.Arrow;
+                }
+            });
+            MouseMoveCommand = new DelegateCommand<MouseEventArgs>(args =>
+            {
+                if (_MiddleButtonIsPressed)
+                {
+                    var diagramControl = App.Current.MainWindow.GetChildOfType<DiagramControl>();
+                    var scrollViewer = diagramControl.GetChildOfType<ScrollViewer>();
+                    var newMousePointerPosition = args.GetPosition(diagramControl);
+                    var diff = newMousePointerPosition - _MousePointerPosition;
+                    scrollViewer.ScrollToVerticalOffset(scrollViewer.VerticalOffset - diff.Y);
+                    scrollViewer.ScrollToHorizontalOffset(scrollViewer.HorizontalOffset - diff.X);
+                    _MousePointerPosition = newMousePointerPosition;
+                }
             });
 
             Items
