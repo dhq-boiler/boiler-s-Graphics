@@ -14,7 +14,7 @@ namespace grapher.Views.Behaviors
 {
     internal class PictureBehavior : Behavior<DesignerCanvas>
     {
-        private Point? _settingDrawingStartPoint = null;
+        private Point? _pictureDrawingStartPoint = null;
         private string _filename;
         public PictureBehavior(string filename)
         {
@@ -41,14 +41,14 @@ namespace grapher.Views.Behaviors
             if (canvas.SourceConnector == null)
             {
                 if (e.LeftButton != MouseButtonState.Pressed)
-                    _settingDrawingStartPoint = null;
+                    _pictureDrawingStartPoint = null;
 
-                if (_settingDrawingStartPoint.HasValue)
+                if (_pictureDrawingStartPoint.HasValue)
                 {
                     AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(canvas);
                     if (adornerLayer != null)
                     {
-                        PictureAdorner adorner = new PictureAdorner(canvas, _settingDrawingStartPoint, _filename);
+                        PictureAdorner adorner = new PictureAdorner(canvas, _pictureDrawingStartPoint, _filename);
                         if (adorner != null)
                         {
                             adornerLayer.Add(adorner);
@@ -65,7 +65,7 @@ namespace grapher.Views.Behaviors
             {
                 if (e.Source == AssociatedObject)
                 {
-                    _settingDrawingStartPoint = e.GetPosition(AssociatedObject);
+                    _pictureDrawingStartPoint = e.GetPosition(AssociatedObject);
 
                     e.Handled = true;
                 }
