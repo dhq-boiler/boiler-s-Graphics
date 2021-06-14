@@ -19,15 +19,19 @@ namespace grapher.Adorners
         private Point? _startPoint;
         private Point? _endPoint;
         private string _filename;
+        private bool _LeftShiftKeyIsPressed;
+        private bool _RightShiftKeyIsPressed;
 
         private DesignerCanvas _designerCanvas;
 
-        public PictureAdorner(DesignerCanvas designerCanvas, Point? dragStartPoint, string filename)
+        public PictureAdorner(DesignerCanvas designerCanvas, Point? dragStartPoint, string filename, bool leftShiftKeyIsPressed, bool rightShiftKeyIsPressed)
             : base(designerCanvas)
         {
             _designerCanvas = designerCanvas;
             _startPoint = dragStartPoint;
             _filename = filename;
+            _LeftShiftKeyIsPressed = leftShiftKeyIsPressed;
+            _RightShiftKeyIsPressed = rightShiftKeyIsPressed;
         }
 
         protected override void OnMouseMove(System.Windows.Input.MouseEventArgs e)
@@ -89,7 +93,30 @@ namespace grapher.Adorners
             dc.DrawRectangle(Brushes.Transparent, null, new Rect(RenderSize));
 
             if (_startPoint.HasValue && _endPoint.HasValue)
-                dc.DrawRectangle(brush, null, new Rect(_startPoint.Value, _endPoint.Value));
+            {
+                var diff = _endPoint.Value - _startPoint.Value;
+                if (_LeftShiftKeyIsPressed || _RightShiftKeyIsPressed)
+                {
+                    var bitmap = BitmapFactory.FromStream(new FileStream(_filename, FileMode.Open, FileAccess.Read));
+                    if (diff.X > diff.Y)
+                    {
+                        var y = _startPoint.Value.Y + diff.Y;
+                        var x = _startPoint.Value.X + (diff.Y / bitmap.Height) * bitmap.Width;
+                        _endPoint = new Point(x, y);
+                    }
+                    else if (diff.X < diff.Y)
+                    {
+                        var x = _startPoint.Value.X + diff.X;
+                        var y = _startPoint.Value.Y + (diff.X / bitmap.Width) * bitmap.Height;
+                        _endPoint = new Point(x, y);
+                    }
+                    dc.DrawRectangle(brush, null, new Rect(_startPoint.Value, _endPoint.Value));
+                }
+                else
+                {
+                    dc.DrawRectangle(brush, null, new Rect(_startPoint.Value, _endPoint.Value));
+                }
+            }
         }
     }
 }

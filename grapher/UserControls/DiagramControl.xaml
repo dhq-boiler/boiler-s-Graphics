@@ -88,9 +88,10 @@
                         Width="{Binding Width, Converter={StaticResource Plus2Converter}}"
                         Height="{Binding Height, Converter={StaticResource Plus2Converter}}">
                         <ItemsControl ItemContainerStyleSelector="{x:Static selector:DesignerItemsControlItemStyleSelector.Instance}"
-                                  ItemsSource="{Binding Items}"
-                                  Width="{Binding Width}"
-                                  Height="{Binding Height}">
+                                      ItemsSource="{Binding Items}"
+                                      Width="{Binding Width}"
+                                      Height="{Binding Height}"
+                                      Background="Transparent">
                             <ItemsControl.Resources>
 
                                 <Style x:Key="designerItemStyle" TargetType="{x:Type ContentPresenter}">
@@ -353,12 +354,11 @@
 
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
-                                    <control:DesignerCanvas
-                                    x:Name="designerCanvas"
-                                    Width="{Binding Width}"
-                                    Height="{Binding Height}"
-                                    AllowDrop="True"
-                                    Background="White" />
+                                    <control:DesignerCanvas x:Name="designerCanvas"
+                                                            Width="{Binding Width}"
+                                                            Height="{Binding Height}"
+                                                            AllowDrop="True"
+                                                            Background="White" />
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
                         </ItemsControl>

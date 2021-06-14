@@ -16,6 +16,8 @@ namespace grapher.Views.Behaviors
     {
         private Point? _pictureDrawingStartPoint = null;
         private string _filename;
+        private bool _LeftShiftKeyIsPressed;
+        private bool _RightShiftKeyIsPressed;
         public PictureBehavior(string filename)
         {
             _filename = filename;
@@ -25,6 +27,8 @@ namespace grapher.Views.Behaviors
         {
             this.AssociatedObject.MouseDown += AssociatedObject_MouseDown;
             this.AssociatedObject.MouseMove += AssociatedObject_MouseMove;
+            this.AssociatedObject.PreviewKeyDown += AssociatedObject_PreviewKeyDown;
+            this.AssociatedObject.PreviewKeyUp += AssociatedObject_PreviewKeyUp;
             base.OnAttached();
         }
 
@@ -32,7 +36,35 @@ namespace grapher.Views.Behaviors
         {
             this.AssociatedObject.MouseDown -= AssociatedObject_MouseDown;
             this.AssociatedObject.MouseMove -= AssociatedObject_MouseMove;
+            this.AssociatedObject.PreviewKeyDown -= AssociatedObject_PreviewKeyDown;
+            this.AssociatedObject.PreviewKeyUp -= AssociatedObject_PreviewKeyUp;
             base.OnDetaching();
+        }
+
+        private void AssociatedObject_PreviewKeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            //set Breakpoint but not fire this event
+            if (e.Key == Key.LeftShift)
+            {
+                _LeftShiftKeyIsPressed = false;
+            }
+            if (e.Key == Key.RightShift)
+            {
+                _RightShiftKeyIsPressed = false;
+            }
+        }
+
+        private void AssociatedObject_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            //set Breakpoint but not fire this event
+            if (e.Key == Key.LeftShift)
+            {
+                _LeftShiftKeyIsPressed = true;
+            }
+            if (e.Key == Key.RightShift)
+            {
+                _RightShiftKeyIsPressed = true;
+            }
         }
 
         private void AssociatedObject_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
@@ -48,7 +80,7 @@ namespace grapher.Views.Behaviors
                     AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(canvas);
                     if (adornerLayer != null)
                     {
-                        PictureAdorner adorner = new PictureAdorner(canvas, _pictureDrawingStartPoint, _filename);
+                        PictureAdorner adorner = new PictureAdorner(canvas, _pictureDrawingStartPoint, _filename, _LeftShiftKeyIsPressed, _RightShiftKeyIsPressed);
                         if (adorner != null)
                         {
                             adornerLayer.Add(adorner);
