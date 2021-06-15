@@ -19,19 +19,15 @@ namespace grapher.Adorners
         private Point? _startPoint;
         private Point? _endPoint;
         private string _filename;
-        private bool _LeftShiftKeyIsPressed;
-        private bool _RightShiftKeyIsPressed;
 
         private DesignerCanvas _designerCanvas;
 
-        public PictureAdorner(DesignerCanvas designerCanvas, Point? dragStartPoint, string filename, bool leftShiftKeyIsPressed, bool rightShiftKeyIsPressed)
+        public PictureAdorner(DesignerCanvas designerCanvas, Point? dragStartPoint, string filename)
             : base(designerCanvas)
         {
             _designerCanvas = designerCanvas;
             _startPoint = dragStartPoint;
             _filename = filename;
-            _LeftShiftKeyIsPressed = leftShiftKeyIsPressed;
-            _RightShiftKeyIsPressed = rightShiftKeyIsPressed;
         }
 
         protected override void OnMouseMove(System.Windows.Input.MouseEventArgs e)
@@ -95,7 +91,8 @@ namespace grapher.Adorners
             if (_startPoint.HasValue && _endPoint.HasValue)
             {
                 var diff = _endPoint.Value - _startPoint.Value;
-                if (_LeftShiftKeyIsPressed || _RightShiftKeyIsPressed)
+                if ((Keyboard.GetKeyStates(Key.LeftShift) & KeyStates.Down) == KeyStates.Down ||
+                    (Keyboard.GetKeyStates(Key.RightShift) & KeyStates.Down) == KeyStates.Down)
                 {
                     var bitmap = BitmapFactory.FromStream(new FileStream(_filename, FileMode.Open, FileAccess.Read));
                     if (diff.X > diff.Y)
