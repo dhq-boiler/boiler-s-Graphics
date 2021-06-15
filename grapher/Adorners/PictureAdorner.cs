@@ -64,8 +64,11 @@ namespace grapher.Adorners
 
             if (_startPoint.HasValue && _endPoint.HasValue)
             {
+                var bitmap = BitmapFactory.FromStream(new FileStream(_filename, FileMode.Open, FileAccess.Read));
                 PictureDesignerItemViewModel itemBase = new PictureDesignerItemViewModel();
                 itemBase.FileName = _filename;
+                itemBase.FileWidth = bitmap.Width;
+                itemBase.FileHeight = bitmap.Height;
                 itemBase.Owner = (AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel;
                 itemBase.Left.Value = Math.Max(0, _startPoint.Value.X);
                 itemBase.Top.Value = Math.Max(0, _startPoint.Value.Y);

@@ -52,36 +52,71 @@ namespace grapher.Controls
                     if (item is DesignerItemViewModelBase)
                     {
                         var viewModel = item as DesignerItemViewModelBase;
-                        switch (base.VerticalAlignment)
+                        if (viewModel is PictureDesignerItemViewModel &&
+                            ((Keyboard.GetKeyStates(Key.LeftShift) & KeyStates.Down) == KeyStates.Down ||
+                             (Keyboard.GetKeyStates(Key.RightShift) & KeyStates.Down) == KeyStates.Down))
                         {
-                            case VerticalAlignment.Bottom:
-                                dragDeltaVertical = Math.Min(-e.VerticalChange, minDeltaVertical);
-                                viewModel.Height.Value = viewModel.Height.Value - dragDeltaVertical;
-                                break;
-                            case VerticalAlignment.Top:
-                                double top = viewModel.Top.Value;
+                            var picViewModel = viewModel as PictureDesignerItemViewModel;
+                            if (base.VerticalAlignment == VerticalAlignment.Top && base.HorizontalAlignment == HorizontalAlignment.Left)
+                            {
+                                //????????????????
+                            }
+                            else if (base.VerticalAlignment == VerticalAlignment.Top && base.HorizontalAlignment == HorizontalAlignment.Right)
+                            {
+                                double top = picViewModel.Top.Value;
                                 dragDeltaVertical = Math.Min(Math.Max(-minTop, e.VerticalChange), minDeltaVertical);
-                                viewModel.Top.Value = top + dragDeltaVertical;
-                                viewModel.Height.Value = viewModel.Height.Value - dragDeltaVertical;
-                                break;
-                            default:
-                                break;
-                        }
-
-                        switch (base.HorizontalAlignment)
-                        {
-                            case HorizontalAlignment.Left:
-                                double left = viewModel.Left.Value;
+                                picViewModel.Top.Value = top + dragDeltaVertical;
+                                picViewModel.Height.Value = picViewModel.Height.Value - dragDeltaVertical;
+                                picViewModel.Width.Value = (picViewModel.Height.Value / picViewModel.FileHeight) * picViewModel.FileWidth;
+                            }
+                            else if (base.VerticalAlignment == VerticalAlignment.Bottom && base.HorizontalAlignment == HorizontalAlignment.Left)
+                            {
+                                double left = picViewModel.Left.Value;
                                 dragDeltaHorizontal = Math.Min(Math.Max(-minLeft, e.HorizontalChange), minDeltaHorizontal);
-                                viewModel.Left.Value = left + dragDeltaHorizontal;
-                                viewModel.Width.Value = viewModel.Width.Value - dragDeltaHorizontal;
-                                break;
-                            case HorizontalAlignment.Right:
-                                dragDeltaHorizontal = Math.Min(-e.HorizontalChange, minDeltaHorizontal);
-                                viewModel.Width.Value = viewModel.Width.Value - dragDeltaHorizontal;
-                                break;
-                            default:
-                                break;
+                                picViewModel.Left.Value = left + dragDeltaHorizontal;
+                                picViewModel.Width.Value = picViewModel.Width.Value - dragDeltaHorizontal;
+                                picViewModel.Height.Value = (picViewModel.Width.Value / picViewModel.FileWidth) * picViewModel.FileHeight;
+                            }
+                            else if (base.VerticalAlignment == VerticalAlignment.Bottom && base.HorizontalAlignment == HorizontalAlignment.Right)
+                            {
+                                dragDeltaVertical = Math.Min(-e.VerticalChange, minDeltaVertical);
+                                picViewModel.Height.Value = picViewModel.Height.Value - dragDeltaVertical;
+                                picViewModel.Width.Value = (picViewModel.Height.Value / picViewModel.FileHeight) * picViewModel.FileWidth;
+                            }
+                        }
+                        else
+                        {
+                            switch (base.VerticalAlignment)
+                            {
+                                case VerticalAlignment.Bottom:
+                                    dragDeltaVertical = Math.Min(-e.VerticalChange, minDeltaVertical);
+                                    viewModel.Height.Value = viewModel.Height.Value - dragDeltaVertical;
+                                    break;
+                                case VerticalAlignment.Top:
+                                    double top = viewModel.Top.Value;
+                                    dragDeltaVertical = Math.Min(Math.Max(-minTop, e.VerticalChange), minDeltaVertical);
+                                    viewModel.Top.Value = top + dragDeltaVertical;
+                                    viewModel.Height.Value = viewModel.Height.Value - dragDeltaVertical;
+                                    break;
+                                default:
+                                    break;
+                            }
+
+                            switch (base.HorizontalAlignment)
+                            {
+                                case HorizontalAlignment.Left:
+                                    double left = viewModel.Left.Value;
+                                    dragDeltaHorizontal = Math.Min(Math.Max(-minLeft, e.HorizontalChange), minDeltaHorizontal);
+                                    viewModel.Left.Value = left + dragDeltaHorizontal;
+                                    viewModel.Width.Value = viewModel.Width.Value - dragDeltaHorizontal;
+                                    break;
+                                case HorizontalAlignment.Right:
+                                    dragDeltaHorizontal = Math.Min(-e.HorizontalChange, minDeltaHorizontal);
+                                    viewModel.Width.Value = viewModel.Width.Value - dragDeltaHorizontal;
+                                    break;
+                                default:
+                                    break;
+                            }
                         }
 
                         (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = $"(w, h) = ({viewModel.Width.Value}, {viewModel.Height.Value})";

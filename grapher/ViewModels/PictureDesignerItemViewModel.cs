@@ -9,11 +9,25 @@ namespace grapher.ViewModels
     public class PictureDesignerItemViewModel : DesignerItemViewModelBase
     {
         private string _FileName;
+        private double _FileWidth;
+        private double _FileHeight;
 
         public string FileName
         {
             get { return _FileName; }
             set { SetProperty(ref _FileName, value); }
+        }
+
+        public double FileWidth
+        {
+            get { return _FileWidth; }
+            set { SetProperty(ref _FileWidth, value); }
+        }
+
+        public double FileHeight
+        {
+            get { return _FileHeight; }
+            set { SetProperty(ref _FileHeight, value); }
         }
 
         public PictureDesignerItemViewModel(int id, DiagramViewModel parent, double left, double top)
