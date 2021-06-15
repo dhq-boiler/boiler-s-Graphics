@@ -8,6 +8,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using Microsoft.Xaml.Behaviors;
 using System.IO;
+using System.Windows.Media.Imaging;
 
 namespace grapher.ViewModels
 {
@@ -80,7 +81,8 @@ namespace grapher.ViewModels
                 dialog.Filter = "JPEG file|*.jpg;*.jpeg|PNG file|*.png|GIF file|*.gif|BMP file|*.bmp|ALL|*.*";
                 if (dialog.ShowDialog() == true)
                 {
-                    var behavior = new PictureBehavior(dialog.FileName);
+                    var bitmap = BitmapFactory.FromStream(new FileStream(dialog.FileName, FileMode.Open, FileAccess.Read));
+                    var behavior = new PictureBehavior(dialog.FileName, bitmap.Width, bitmap.Height);
                     var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
                     var behaviors = Interaction.GetBehaviors(designerCanvas);
                     behaviors.Clear();

@@ -19,15 +19,19 @@ namespace grapher.Adorners
         private Point? _startPoint;
         private Point? _endPoint;
         private string _filename;
+        private double _Width;
+        private double _Height;
 
         private DesignerCanvas _designerCanvas;
 
-        public PictureAdorner(DesignerCanvas designerCanvas, Point? dragStartPoint, string filename)
+        public PictureAdorner(DesignerCanvas designerCanvas, Point? dragStartPoint, string filename, double width, double height)
             : base(designerCanvas)
         {
             _designerCanvas = designerCanvas;
             _startPoint = dragStartPoint;
             _filename = filename;
+            _Width = width;
+            _Height = height;
         }
 
         protected override void OnMouseMove(System.Windows.Input.MouseEventArgs e)
@@ -94,17 +98,16 @@ namespace grapher.Adorners
                 if ((Keyboard.GetKeyStates(Key.LeftShift) & KeyStates.Down) == KeyStates.Down ||
                     (Keyboard.GetKeyStates(Key.RightShift) & KeyStates.Down) == KeyStates.Down)
                 {
-                    var bitmap = BitmapFactory.FromStream(new FileStream(_filename, FileMode.Open, FileAccess.Read));
                     if (diff.X > diff.Y)
                     {
                         var y = _startPoint.Value.Y + diff.Y;
-                        var x = _startPoint.Value.X + (diff.Y / bitmap.Height) * bitmap.Width;
+                        var x = _startPoint.Value.X + (diff.Y / _Height) * _Width;
                         _endPoint = new Point(x, y);
                     }
                     else if (diff.X < diff.Y)
                     {
                         var x = _startPoint.Value.X + diff.X;
-                        var y = _startPoint.Value.Y + (diff.X / bitmap.Width) * bitmap.Height;
+                        var y = _startPoint.Value.Y + (diff.X / _Width) * _Height;
                         _endPoint = new Point(x, y);
                     }
                     dc.DrawRectangle(brush, null, new Rect(_startPoint.Value, _endPoint.Value));

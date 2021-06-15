@@ -16,9 +16,13 @@ namespace grapher.Views.Behaviors
     {
         private Point? _pictureDrawingStartPoint = null;
         private string _filename;
-        public PictureBehavior(string filename)
+        private double _Width;
+        private double _Height;
+        public PictureBehavior(string filename, double width, double height)
         {
             _filename = filename;
+            _Width = width;
+            _Height = height;
         }
 
         protected override void OnAttached()
@@ -48,7 +52,7 @@ namespace grapher.Views.Behaviors
                     AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(canvas);
                     if (adornerLayer != null)
                     {
-                        PictureAdorner adorner = new PictureAdorner(canvas, _pictureDrawingStartPoint, _filename);
+                        PictureAdorner adorner = new PictureAdorner(canvas, _pictureDrawingStartPoint, _filename, _Width, _Height);
                         if (adorner != null)
                         {
                             adornerLayer.Add(adorner);
