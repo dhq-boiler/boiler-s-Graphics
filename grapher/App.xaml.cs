@@ -1,4 +1,7 @@
-﻿using System;
+﻿using grapher.Views;
+using Prism.Ioc;
+using Prism.Unity;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -11,7 +14,17 @@ namespace grapher
     /// <summary>
     /// App.xaml の相互作用ロジック
     /// </summary>
-    public partial class App : Application
+    public partial class App : PrismApplication
     {
+        protected override Window CreateShell()
+        {
+            var w = Container.Resolve<MainWindow>();
+            return w;
+        }
+
+        protected override void RegisterTypes(IContainerRegistry containerRegistry)
+        {
+            containerRegistry.RegisterDialog<ColorPicker, ViewModels.ColorPickerViewModel>();
+        }
     }
 }

@@ -17,34 +17,6 @@
     Title="GRAPHER"
     prism:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
-    <i:Interaction.Triggers>
-        <trigger:InteractionRequestTrigger SourceObject="{Binding OpenColorPickerRequest}">
-            <trigger:PopupWindowAction CenterOverAssociatedObject="True" IsModal="True">
-                <trigger:PopupWindowAction.WindowStyle>
-                    <Style TargetType="{x:Type Window}">
-                        <Setter Property="ResizeMode" Value="NoResize" />
-                        <Setter Property="SizeToContent" Value="WidthAndHeight" />
-                    </Style>
-                </trigger:PopupWindowAction.WindowStyle>
-                <trigger:PopupWindowAction.WindowContent>
-                    <local:ColorPicker />
-                </trigger:PopupWindowAction.WindowContent>
-            </trigger:PopupWindowAction>
-        </trigger:InteractionRequestTrigger>
-        <trigger:InteractionRequestTrigger SourceObject="{Binding OpenFillColorPickerRequest}">
-            <trigger:PopupWindowAction CenterOverAssociatedObject="True" IsModal="True">
-                <trigger:PopupWindowAction.WindowStyle>
-                    <Style TargetType="{x:Type Window}">
-                        <Setter Property="ResizeMode" Value="NoResize" />
-                        <Setter Property="SizeToContent" Value="WidthAndHeight" />
-                    </Style>
-                </trigger:PopupWindowAction.WindowStyle>
-                <trigger:PopupWindowAction.WindowContent>
-                    <local:ColorPicker />
-                </trigger:PopupWindowAction.WindowContent>
-            </trigger:PopupWindowAction>
-        </trigger:InteractionRequestTrigger>
-    </i:Interaction.Triggers>
     <Window.InputBindings>
         <KeyBinding Key="Del" Command="{Binding DeleteSelectedItemsCommand}" />
         <KeyBinding

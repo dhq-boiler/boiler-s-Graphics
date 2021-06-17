@@ -1,7 +1,8 @@
 ﻿using grapher.Helpers;
+using grapher.Views;
 using Prism.Commands;
-using Prism.Interactivity.InteractionRequest;
 using Prism.Mvvm;
+using Prism.Services.Dialogs;
 using Reactive.Bindings;
 using System;
 using System.Collections.Generic;
@@ -16,12 +17,11 @@ namespace grapher.ViewModels
         private List<SelectableDesignerItemViewModelBase> _itemsToRemove;
         private ToolBarViewModel _ToolBarViewModel;
         private CompositeDisposable _CompositeDisposable = new CompositeDisposable();
+        private IDialogService dlgService = null;
 
-        public InteractionRequest<Notification> OpenColorPickerRequest { get; } = new InteractionRequest<Notification>();
-        public InteractionRequest<Notification> OpenFillColorPickerRequest { get; } = new InteractionRequest<Notification>();
-
-        public MainWindowViewModel()
+        public MainWindowViewModel(IDialogService dialogService)
         {
+            this.dlgService = dialogService;
             DiagramViewModel = new DiagramViewModel(1000, 1000);
             _CompositeDisposable.Add(DiagramViewModel);
             ToolBarViewModel = new ToolBarViewModel();
@@ -32,39 +32,63 @@ namespace grapher.ViewModels
             });
             SelectColorCommand = new DelegateCommand<DiagramViewModel>(p =>
             {
-                var exchange = new ColorExchange()
+                IDialogResult result = null;
+                this.dlgService.ShowDialog(nameof(ColorPicker), 
+                                           new DialogParameters()
+                                           {
+                                               {
+                                                   "ColorExchange",
+                                                   new ColorExchange()
+                                                   {
+                                                       Old = DiagramViewModel.EdgeColors.FirstOrDefault()
+                                                   }
+                                               }
+                                           },
+                                           ret => result = ret);
+                if (result != null)
                 {
-                    Old = DiagramViewModel.EdgeColors.FirstOrDefault()
-                };
-                OpenColorPickerRequest.Raise(new Notification() { Title = "Color picker", Content = exchange });
-                if (exchange.New.HasValue)
-                {
-                    DiagramViewModel.EdgeColors.Clear();
-                    DiagramViewModel.EdgeColors.Add(exchange.New.Value);
-                    foreach (var item in DiagramViewModel.SelectedItems.OfType<DesignerItemViewModelBase>())
+                    var exchange = result.Parameters.GetValue<ColorExchange>("ColorExchange");
+                    if (exchange != null)
                     {
-                        item.EdgeColor = exchange.New.Value;
-                    }
-                    foreach (var item in DiagramViewModel.SelectedItems.OfType<ConnectorBaseViewModel>())
-                    {
-                        item.EdgeColor = exchange.New.Value;
+                        DiagramViewModel.EdgeColors.Clear();
+                        DiagramViewModel.EdgeColors.Add(exchange.New.Value);
+                        foreach (var item in DiagramViewModel.SelectedItems.OfType<DesignerItemViewModelBase>())
+                        {
+                            item.EdgeColor = exchange.New.Value;
+                        }
+                        foreach (var item in DiagramViewModel.SelectedItems.OfType<ConnectorBaseViewModel>())
+                        {
+                            item.EdgeColor = exchange.New.Value;
+                        }
                     }
                 }
             });
             SelectFillColorCommand = new DelegateCommand<DiagramViewModel>(p =>
             {
-                var exchange = new ColorExchange()
+                IDialogResult result = null;
+                this.dlgService.ShowDialog(nameof(ColorPicker),
+                                           new DialogParameters()
+                                           {
+                                               {
+                                                   "ColorExchange",
+                                                   new ColorExchange()
+                                                   {
+                                                       Old = DiagramViewModel.FillColors.FirstOrDefault()
+                                                   }
+                                               }
+                                           },
+                                           ret => result = ret);
+                if (result != null)
                 {
-                    Old = DiagramViewModel.FillColors.FirstOrDefault()
-                };
-                OpenFillColorPickerRequest.Raise(new Notification() { Title = "Color picker", Content = exchange });
-                if (exchange.New.HasValue)
-                {
-                    DiagramViewModel.FillColors.Clear();
-                    DiagramViewModel.FillColors.Add(exchange.New.Value);
-                    foreach (var item in DiagramViewModel.SelectedItems.OfType<DesignerItemViewModelBase>())
+                    var exchange = result.Parameters.GetValue<ColorExchange>("ColorExchange");
+                    if (exchange != null)
                     {
-                        item.FillColor = exchange.New.Value;
+                        DiagramViewModel.FillColors.Clear();
+                        DiagramViewModel.FillColors.Add(exchange.New.Value);
+                        foreach (var item in DiagramViewModel.SelectedItems.OfType<DesignerItemViewModelBase>())
+                        {
+                            item.FillColor = exchange.New.Value;
+                        }
                     }
                 }
             });

@@ -1,8 +1,8 @@
 ﻿using grapher.Helpers;
 using OpenCvSharp;
 using OpenCvSharp.Extensions;
-using Prism.Interactivity.InteractionRequest;
 using Prism.Mvvm;
+using Prism.Services.Dialogs;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 
 namespace grapher.ViewModels
 {
-    internal class ColorPickerViewModel : BindableBase, IInteractionRequestAware, IDisposable
+    internal class ColorPickerViewModel : BindableBase, IDialogAware, IDisposable
     {
         private byte _A;
         private WriteableBitmap _WhiteBlackColumnMap;
@@ -23,8 +23,9 @@ namespace grapher.ViewModels
         private WriteableBitmap _BlueSelector;
         private bool _hsv2bgr;
         private bool _bgr2hsv;
-        private INotification _Notification;
         private CompositeDisposable _disposables = new CompositeDisposable();
+
+        public event Action<IDialogResult> RequestClose;
 
         public ColorPickerViewModel()
         {
@@ -37,7 +38,9 @@ namespace grapher.ViewModels
                 .Subscribe(_ =>
                 {
                     EditTarget.New = Output.Value;
-                    FinishInteraction();
+                    var parameters = new DialogParameters() { { "ColorExchange", EditTarget } };
+                    var ret = new DialogResult(ButtonResult.OK, parameters);
+                    RequestClose.Invoke(ret);
                 })
                 .AddTo(_disposables);
 
@@ -458,24 +461,27 @@ namespace grapher.ViewModels
 
         public ColorExchange EditTarget { get; set; }
 
-        public INotification Notification
-        {
-            get { return _Notification; }
-            set
-            {
-                _Notification = value;
-                EditTarget = value.Content as ColorExchange;
-                Color.Value = EditTarget.Old;
-            }
-        }
-
-        public Action FinishInteraction { get; set; }
+        public string Title => "カラーピッカー";
 
         #region IDisposable
 
         public void Dispose()
         {
             _disposables.Dispose();
+        }
+
+        public bool CanCloseDialog()
+        {
+            return true;
+        }
+
+        public void OnDialogClosed()
+        {
+        }
+
+        public void OnDialogOpened(IDialogParameters parameters)
+        {
+            EditTarget = parameters.GetValue<ColorExchange>("ColorExchange");
         }
 
         #endregion //IDisposable
