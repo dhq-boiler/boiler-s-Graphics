@@ -93,6 +93,10 @@ namespace grapher.ViewModels
                     SelectOneToolItem("picture");
                 }
             })));
+            ToolItems.Add(new ToolItemData("letter", "pack://application:,,,/Assets/img/A.png", new DelegateCommand(() =>
+            {
+
+            })));
         }
 
         private void SelectOneToolItem(string toolName)
