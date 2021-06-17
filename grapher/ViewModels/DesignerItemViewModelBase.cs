@@ -4,6 +4,7 @@ using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Media;
 
@@ -108,6 +109,10 @@ namespace grapher.ViewModels
 
         public ReactiveProperty<double> Top { get; } = new ReactiveProperty<double>();
 
+        public ReadOnlyReactiveProperty<double> Right { get; private set; }
+
+        public ReadOnlyReactiveProperty<double> Bottom { get; private set; }
+
         public ReactiveProperty<Point> CenterPoint { get; } = new ReactiveProperty<Point>();
 
         public ReactiveProperty<Point> RotatedCenterPoint { get; } = new ReactiveProperty<Point>();
@@ -147,6 +152,10 @@ namespace grapher.ViewModels
             Matrix
                 .Subscribe(_ => UpdateTransform())
                 .AddTo(_CompositeDisposable);
+            Right = Left.Select(x => x + Width.Value)
+                        .ToReadOnlyReactiveProperty();
+            Bottom = Top.Select(x => x + Height.Value)
+                        .ToReadOnlyReactiveProperty();
 
             Matrix.Value = new Matrix();
         }

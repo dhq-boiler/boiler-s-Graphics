@@ -1,6 +1,7 @@
 ﻿using grapher.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls.Primitives;
@@ -59,7 +60,12 @@ namespace grapher.Controls
                             var picViewModel = viewModel as PictureDesignerItemViewModel;
                             if (base.VerticalAlignment == VerticalAlignment.Top && base.HorizontalAlignment == HorizontalAlignment.Left)
                             {
-                                //????????????????
+                                double left = picViewModel.Left.Value;
+                                dragDeltaHorizontal = Math.Min(Math.Max(-minLeft, e.HorizontalChange), minDeltaHorizontal);
+                                picViewModel.Left.Value = left + dragDeltaHorizontal;
+                                picViewModel.Width.Value = picViewModel.Width.Value - dragDeltaHorizontal;
+                                picViewModel.Height.Value = (picViewModel.Width.Value / picViewModel.FileWidth) * picViewModel.FileHeight;
+                                picViewModel.Top.Value = picViewModel.Bottom.Value - picViewModel.Height.Value;
                             }
                             else if (base.VerticalAlignment == VerticalAlignment.Top && base.HorizontalAlignment == HorizontalAlignment.Right)
                             {
