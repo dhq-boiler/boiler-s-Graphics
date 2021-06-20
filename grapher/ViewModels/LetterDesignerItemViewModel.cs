@@ -56,8 +56,7 @@ namespace grapher.ViewModels
                     {
                         if (LetterSettingDialogIsOpen)
                         {
-                            if (LetterSettingDialogClose != null)
-                                LetterSettingDialogClose(this, new EventArgs());
+                            LetterSettingDialogClose?.Invoke(this, new EventArgs());
                             LetterSettingDialogIsOpen = false;
                         }
                     }
