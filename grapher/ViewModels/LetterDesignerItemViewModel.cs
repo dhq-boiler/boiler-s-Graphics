@@ -3,6 +3,7 @@ using grapher.Views;
 using Prism.Ioc;
 using Prism.Services.Dialogs;
 using Prism.Unity;
+using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,17 +31,18 @@ namespace grapher.ViewModels
         }
 
         public LetterDesignerItemViewModel()
+            : base()
         {
             Init();
-            PropertyChanged += LetterDesignerItemViewModel_PropertyChanged;
         }
 
-        private void LetterDesignerItemViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void Init()
         {
-            switch (e.PropertyName)
-            {
-                case "IsSelected":
-                    if (IsSelected)
+            this.ShowConnectors = false;
+            this.ObserveProperty(x => x.IsSelected)
+                .Subscribe(isSelected =>
+                {
+                    if (isSelected)
                     {
                         if (!LetterSettingDialogIsOpen)
                         {
@@ -59,13 +61,8 @@ namespace grapher.ViewModels
                             LetterSettingDialogIsOpen = false;
                         }
                     }
-                    break;
-            }
-        }
-
-        private void Init()
-        {
-            this.ShowConnectors = false;
+                })
+                .AddTo(_CompositeDisposable);
         }
 
         #region IClonable
