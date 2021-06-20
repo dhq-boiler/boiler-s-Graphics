@@ -306,6 +306,10 @@ namespace grapher.ViewModels
                 SelectableDesignerItemViewModelBase item = (SelectableDesignerItemViewModelBase)parameter;
                 RemoveGroupMembers(item);
                 _items.Remove(item);
+                if (item is LetterDesignerItemViewModel)
+                {
+                    (item as LetterDesignerItemViewModel).CloseLetterSettingDialog();
+                }
                 item.Dispose();
                 UpdateZIndex();
             }

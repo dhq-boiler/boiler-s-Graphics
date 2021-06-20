@@ -11,12 +11,12 @@
     <StackPanel Orientation="Vertical">
         <DockPanel>
             <Label DockPanel.Dock="Left">文字列：</Label>
-            <TextBox Text="{Binding ViewModel.LetterString}" />
+            <TextBox Text="{Binding ViewModel.LetterString, Mode=TwoWay}" />
         </DockPanel>
         <DockPanel>
             <Label DockPanel.Dock="Left">フォント：</Label>
             <ComboBox ItemsSource="{Binding FontFamilies}"
-                      DisplayMemberPath="Name"
+                      DisplayMemberPath="FamilyName"
                       SelectedItem="{Binding ViewModel.SelectedFontFamily}" />
         </DockPanel>
         <WrapPanel Orientation="Horizontal">

@@ -1,0 +1,13 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:convereter="clr-namespace:grapher.Converters"
+                    xmlns:viewModel="clr-namespace:grapher.ViewModels">
+    <convereter:ToSolidColorBrushConverter x:Key="solidColorBrushConverter" />
+    <DataTemplate DataType="{x:Type viewModel:LetterDesignerItemViewModel}">
+        <Path Stroke="{Binding EdgeColor, Converter={StaticResource solidColorBrushConverter}}"
+              StrokeThickness="1"
+              Fill="{Binding FillColor, Converter={StaticResource solidColorBrushConverter}}"
+              Data="{Binding PathGeometry}">
+        </Path>
+    </DataTemplate>
+</ResourceDictionary>

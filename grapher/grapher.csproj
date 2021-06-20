@@ -172,6 +172,7 @@
     <Compile Include="Models\Diagram.cs" />
     <Compile Include="Models\DraggingItem.cs" />
     <Compile Include="Models\Ellipse.cs" />
+    <Compile Include="Models\FontFamilyEx.cs" />
     <Compile Include="Models\Letter.cs" />
     <Compile Include="Models\Rectangle.cs" />
     <Compile Include="Models\RenderItem.cs" />
@@ -259,6 +260,10 @@
     <Compile Include="Views\Triggers\ResizeThumbDragDeltaEventTrigger.cs" />
     <Compile Include="Views\Triggers\WindowLoadedEventTrigger.cs" />
     <Page Include="Resources\DesignerItems\GroupItemDataTemplate.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\DesignerItems\LetterDesignerItemDataTemplate.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

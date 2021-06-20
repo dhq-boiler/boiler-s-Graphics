@@ -1,19 +1,23 @@
-﻿using Prism.Mvvm;
+﻿using grapher.Models;
+using Prism.Mvvm;
 using Prism.Services.Dialogs;
+using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Markup;
+using System.Windows.Media;
 
 namespace grapher.ViewModels
 {
     public class LetterSettingViewModel : BindableBase, IDialogAware
     {
         private LetterDesignerItemViewModel _ViewModel;
-        private ObservableCollection<FontFamily> _FontFamilies;
+        private ObservableCollection<FontFamilyEx> _FontFamilies;
 
         public LetterDesignerItemViewModel ViewModel
         {
@@ -21,7 +25,7 @@ namespace grapher.ViewModels
             set { SetProperty(ref _ViewModel, value); }
         }
 
-        public ObservableCollection<FontFamily> FontFamilies
+        public ObservableCollection<FontFamilyEx> FontFamilies
         {
             get { return _FontFamilies; }
             set { SetProperty(ref _FontFamilies, value); }
@@ -29,9 +33,8 @@ namespace grapher.ViewModels
 
         public LetterSettingViewModel()
         {
-            System.Drawing.Text.InstalledFontCollection ifc = new System.Drawing.Text.InstalledFontCollection();
-            FontFamilies = new ObservableCollection<FontFamily>();
-            FontFamilies.AddRange(ifc.Families);
+            var fontFamilies = Fonts.GetFontFamilies("C:\\Windows\\Fonts");
+            FontFamilies = new ObservableCollection<FontFamilyEx>(fontFamilies.Select(x => new FontFamilyEx(x)));
         }
 
         public string Title => "レタリング";
