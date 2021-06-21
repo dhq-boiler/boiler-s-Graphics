@@ -234,6 +234,7 @@ namespace grapher.ViewModels
 
         private void WithoutLineBreak(GlyphTypeface glyphTypeface)
         {
+            var l = new List<PathGeometry>();
             var list = new List<PathGeometry>();
             //refresh path geometry
             PathGeometry = new PathGeometry();
@@ -245,14 +246,11 @@ namespace grapher.ViewModels
                 Geometry geometry = glyphTypeface.GetGlyphOutline(glyphIndex, FontSize, FontSize);
                 PathGeometry pg = geometry.GetOutlinedPathGeometry();
                 maxHeight = Math.Max(maxHeight, pg.Bounds.Height);
+                l.Add(pg);
             }
 
-            foreach (var @char in LetterString)
+            foreach (var pg in l)
             {
-                ushort glyphIndex;
-                glyphTypeface.CharacterToGlyphMap.TryGetValue((int)@char, out glyphIndex);
-                Geometry geometry = glyphTypeface.GetGlyphOutline(glyphIndex, FontSize, FontSize);
-                PathGeometry pg = geometry.GetOutlinedPathGeometry();
                 pg.Transform = new MatrixTransform(1.0, 0, 0, 1.0, list.SumWidthExceptInfinity(glyphTypeface, FontSize), maxHeight);
                 PathGeometry.AddGeometry(pg);
                 list.Add(pg);
