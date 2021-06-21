@@ -35,7 +35,7 @@
         <WrapPanel Orientation="Horizontal">
             <CheckBox Content="自動改行"
                       Margin="5"
-                      IsChecked="{Binding ViewModel.AutoLineBreak}" />
+                      IsChecked="{Binding ViewModel.AutoLineBreak, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
         </WrapPanel>
     </StackPanel>
 </UserControl>

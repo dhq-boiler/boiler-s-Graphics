@@ -132,6 +132,9 @@ namespace grapher.ViewModels
             this.ObserveProperty(x => x.Width.Value)
                 .Subscribe(_ => RenderLetter())
                 .AddTo(_CompositeDisposable);
+            this.ObserveProperty(x => x.AutoLineBreak)
+                .Subscribe(_ => RenderLetter())
+                .AddTo(_CompositeDisposable);
         }
 
         public void CloseLetterSettingDialog()
@@ -145,8 +148,7 @@ namespace grapher.ViewModels
 
         private void RenderLetter()
         {
-            if (!string.IsNullOrEmpty(LetterString) &&
-                SelectedFontFamily != null && SelectedFontFamily.BaseUri != null &&
+            if (SelectedFontFamily != null && SelectedFontFamily.BaseUri != null &&
                 FontSize > 0)
             {
                 var typeface = SelectedFontFamily.GetTypefaces().First();
@@ -185,11 +187,21 @@ namespace grapher.ViewModels
                     glyphTypeface.CharacterToGlyphMap.TryGetValue((int)@char, out glyphIndex);
                     Geometry geometry = glyphTypeface.GetGlyphOutline(glyphIndex, FontSize, FontSize);
                     PathGeometry pg = geometry.GetOutlinedPathGeometry();
-                    if (pg.Bounds.Width > Width.Value)
-                        return;
-                    if (width + pg.Bounds.Width > Width.Value)
-                        break;
-                    width += pg.Bounds.Width;
+                    if (double.IsInfinity(pg.Bounds.Width))
+                    {
+                        var spaceWidth = glyphTypeface.GetAvgWidth(FontSize);
+                        if (width + spaceWidth > Width.Value)
+                            break;
+                        width += spaceWidth;
+                    }
+                    else
+                    {
+                        if (pg.Bounds.Width > Width.Value)
+                            return;
+                        if (width + pg.Bounds.Width > Width.Value)
+                            break;
+                        width += pg.Bounds.Width;
+                    }
                     maxHeight = Math.Max(maxHeight, pg.Bounds.Height);
                     listLineBreak.Add(pg);
                     next = i + 1;
@@ -206,8 +218,16 @@ namespace grapher.ViewModels
                     PathGeometry pg = geometry.GetOutlinedPathGeometry();
                     if (widthClone + pg.Bounds.Width > Width.Value)
                         break;
-                    widthClone += pg.Bounds.Width;
-                    pg.Transform = new MatrixTransform(1.0, 0, 0, 1.0, list.Sum(x => x.Bounds.Width + 5), maxHeight + offsetY);
+                    if (double.IsInfinity(pg.Bounds.Width))
+                    {
+                        var spaceWidth = glyphTypeface.GetAvgWidth(FontSize);
+                        widthClone += spaceWidth;
+                    }
+                    else
+                    {
+                        widthClone += pg.Bounds.Width;
+                    }
+                    pg.Transform = new MatrixTransform(1.0, 0, 0, 1.0, list.SumWidthExceptInfinity(glyphTypeface, FontSize), maxHeight + offsetY);
                     PathGeometry.AddGeometry(pg);
                     list.Add(pg);
                 }
@@ -238,7 +258,7 @@ namespace grapher.ViewModels
                 glyphTypeface.CharacterToGlyphMap.TryGetValue((int)@char, out glyphIndex);
                 Geometry geometry = glyphTypeface.GetGlyphOutline(glyphIndex, FontSize, FontSize);
                 PathGeometry pg = geometry.GetOutlinedPathGeometry();
-                pg.Transform = new MatrixTransform(1.0, 0, 0, 1.0, list.Sum(x => x.Bounds.Width + 5), maxHeight);
+                pg.Transform = new MatrixTransform(1.0, 0, 0, 1.0, list.SumWidthExceptInfinity(glyphTypeface, FontSize), maxHeight);
                 PathGeometry.AddGeometry(pg);
                 list.Add(pg);
             }
