@@ -9,17 +9,18 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <StackPanel Orientation="Vertical">
-        <DockPanel>
+        <DockPanel Margin="5">
             <Label DockPanel.Dock="Left">文字列：</Label>
             <TextBox Text="{Binding ViewModel.LetterString, Mode=TwoWay}" />
         </DockPanel>
-        <DockPanel>
+        <DockPanel Margin="5">
             <Label DockPanel.Dock="Left">フォント：</Label>
             <ComboBox ItemsSource="{Binding FontFamilies}"
                       DisplayMemberPath="FamilyName"
                       SelectedItem="{Binding ViewModel.SelectedFontFamily}" />
         </DockPanel>
-        <WrapPanel Orientation="Horizontal">
+        <WrapPanel Orientation="Horizontal"
+                   Margin="5">
             <CheckBox Content="太字"
                       Margin="5"
                       IsChecked="{Binding ViewModel.IsBold}" />
@@ -27,7 +28,7 @@
                       Margin="5"
                       IsChecked="{Binding ViewModel.IsItalic}" />
         </WrapPanel>
-        <DockPanel>
+        <DockPanel Margin="5">
             <Label DockPanel.Dock="Left">フォントサイズ：</Label>
             <TextBox Text="{Binding ViewModel.FontSize}" />
         </DockPanel>
