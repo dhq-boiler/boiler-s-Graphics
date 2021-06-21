@@ -13,6 +13,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Media;
 
 namespace grapher.ViewModels
@@ -21,7 +22,7 @@ namespace grapher.ViewModels
     {
         private bool _LetterSettingDialogIsOpen = false;
         private string _LetterString = string.Empty;
-        private System.Windows.Media.FontFamily _SelectedFontFamily;
+        private FontFamilyEx _SelectedFontFamily;
         private bool _IsBold;
         private bool _IsItalic;
         private int _FontSize;
@@ -40,7 +41,7 @@ namespace grapher.ViewModels
             set { SetProperty(ref _LetterString, value); }
         }
 
-        public System.Windows.Media.FontFamily SelectedFontFamily
+        public FontFamilyEx SelectedFontFamily
         {
             get { return _SelectedFontFamily; }
             set { SetProperty(ref _SelectedFontFamily, value); }
@@ -151,7 +152,9 @@ namespace grapher.ViewModels
             if (SelectedFontFamily != null && SelectedFontFamily.BaseUri != null &&
                 FontSize > 0)
             {
-                var typeface = SelectedFontFamily.GetTypefaces().First();
+                var fontStyle = IsItalic ? FontStyles.Italic : FontStyles.Normal;
+                var fontWeight = IsBold ? FontWeights.Bold : FontWeights.Normal;
+                var typeface = new Typeface(new FontFamilyEx(SelectedFontFamily.FamilyName), fontStyle, fontWeight, FontStretches.Normal);
                 GlyphTypeface glyphTypeface;
                 if (!typeface.TryGetGlyphTypeface(out glyphTypeface))
                     return;

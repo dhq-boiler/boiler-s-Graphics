@@ -10,19 +10,14 @@ namespace grapher.Models
 {
     public class FontFamilyEx : FontFamily
     {
-        private Uri _BaseUri;
-
         public FontFamilyEx(FontFamily fontFamily)
             : base(new Uri(fontFamily.Source), GetFamilyName(fontFamily.FamilyNames))
         {
-            BaseUri = new Uri(fontFamily.Source);
         }
 
-        public new Uri BaseUri
-        {
-            get { return base.BaseUri != null ? base.BaseUri : _BaseUri; }
-            set { _BaseUri = value; }
-        }
+        public FontFamilyEx(string familyName)
+            : base(familyName)
+        { }
 
         public string FamilyName
         {
