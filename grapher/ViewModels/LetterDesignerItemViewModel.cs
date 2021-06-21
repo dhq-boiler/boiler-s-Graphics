@@ -209,13 +209,8 @@ namespace grapher.ViewModels
 
                 var list = new List<PathGeometry>();
 
-                for (int i = 0; i < letterString.Count() && widthClone < Width.Value; ++i)
+                foreach (var pg in listLineBreak)
                 {
-                    var @char = letterString.ElementAt(i);
-                    ushort glyphIndex;
-                    glyphTypeface.CharacterToGlyphMap.TryGetValue((int)@char, out glyphIndex);
-                    Geometry geometry = glyphTypeface.GetGlyphOutline(glyphIndex, FontSize, FontSize);
-                    PathGeometry pg = geometry.GetOutlinedPathGeometry();
                     if (widthClone + pg.Bounds.Width > Width.Value)
                         break;
                     if (double.IsInfinity(pg.Bounds.Width))
