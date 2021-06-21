@@ -32,5 +32,10 @@
             <Label DockPanel.Dock="Left">フォントサイズ：</Label>
             <TextBox Text="{Binding ViewModel.FontSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
         </DockPanel>
+        <WrapPanel Orientation="Horizontal">
+            <CheckBox Content="自動改行"
+                      Margin="5"
+                      IsChecked="{Binding ViewModel.AutoLineBreak}" />
+        </WrapPanel>
     </StackPanel>
 </UserControl>

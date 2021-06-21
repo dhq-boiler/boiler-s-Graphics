@@ -26,6 +26,7 @@ namespace grapher.ViewModels
         private bool _IsItalic;
         private int _FontSize;
         private PathGeometry _PathGeometry;
+        private bool _AutoLineBreak;
 
         public bool LetterSettingDialogIsOpen
         {
@@ -67,6 +68,12 @@ namespace grapher.ViewModels
         {
             get { return _PathGeometry; }
             set { SetProperty(ref _PathGeometry, value); }
+        }
+
+        public bool AutoLineBreak
+        {
+            get { return _AutoLineBreak; }
+            set { SetProperty(ref _AutoLineBreak, value); }
         }
 
         public event EventHandler LetterSettingDialogClose;
@@ -122,6 +129,9 @@ namespace grapher.ViewModels
             this.ObserveProperty(x => x.FontSize)
                 .Subscribe(_ => RenderLetter())
                 .AddTo(_CompositeDisposable);
+            this.ObserveProperty(x => x.Width.Value)
+                .Subscribe(_ => RenderLetter())
+                .AddTo(_CompositeDisposable);
         }
 
         public void CloseLetterSettingDialog()
@@ -139,26 +149,98 @@ namespace grapher.ViewModels
                 SelectedFontFamily != null && SelectedFontFamily.BaseUri != null &&
                 FontSize > 0)
             {
-                foreach (var @char in LetterString)
+                var typeface = SelectedFontFamily.GetTypefaces().First();
+                GlyphTypeface glyphTypeface;
+                if (!typeface.TryGetGlyphTypeface(out glyphTypeface))
+                    return;
+                if (AutoLineBreak)
+                    WithLineBreak(glyphTypeface);
+                else
+                    WithoutLineBreak(glyphTypeface);
+            }
+        }
+
+        private void WithLineBreak(GlyphTypeface glyphTypeface)
+        {
+            //refresh path geometry
+            PathGeometry = new PathGeometry();
+            var listLineBreak = new List<PathGeometry>();
+            double width = 0d;
+            double offsetY = 0d;
+            int next = 0;
+            int allcount = 0;
+            while (allcount < LetterString.Count() && Width.Value > 0)
+            {
+                double maxHeight = 0d;
+                var letterString = LetterString.Skip(allcount);
+
+                listLineBreak.Clear();
+                width = 0d;
+                double widthClone = width;
+
+                for (int i = 0; i < letterString.Count() && width < Width.Value; ++i)
                 {
-                    //ここから GlyphTypeface.ctor -> GlyphTypeface.Initialize -> FontCacheUtil.SplitFontFaceIndex のLine507-518までを抜き出した
-                    //var components = SelectedFontFamily.BaseUri.GetComponents(UriComponents.Fragment, UriFormat.SafeUnescaped);
-                    //if (!string.IsNullOrEmpty(components))
-                    //{
-                    //    var faceIndex = 0;
-                    //    if (!int.TryParse(components, NumberStyles.None, CultureInfo.InvariantCulture, out faceIndex))
-                    //    {
-                    //        throw new ArgumentException("FaceIndexMustBePositiveOrZero", "fontUri"); //ここで例外発生
-                    //    }
-                    //}
-                    //ここまで
-                    GlyphTypeface glyphTypeface = new GlyphTypeface(SelectedFontFamily.BaseUri);
+                    var @char = letterString.ElementAt(i);
                     ushort glyphIndex;
                     glyphTypeface.CharacterToGlyphMap.TryGetValue((int)@char, out glyphIndex);
                     Geometry geometry = glyphTypeface.GetGlyphOutline(glyphIndex, FontSize, FontSize);
                     PathGeometry pg = geometry.GetOutlinedPathGeometry();
-                    PathGeometry = pg;
+                    if (pg.Bounds.Width > Width.Value)
+                        return;
+                    if (width + pg.Bounds.Width > Width.Value)
+                        break;
+                    width += pg.Bounds.Width;
+                    maxHeight = Math.Max(maxHeight, pg.Bounds.Height);
+                    listLineBreak.Add(pg);
+                    next = i + 1;
                 }
+
+                var list = new List<PathGeometry>();
+
+                for (int i = 0; i < letterString.Count() && widthClone < Width.Value; ++i)
+                {
+                    var @char = letterString.ElementAt(i);
+                    ushort glyphIndex;
+                    glyphTypeface.CharacterToGlyphMap.TryGetValue((int)@char, out glyphIndex);
+                    Geometry geometry = glyphTypeface.GetGlyphOutline(glyphIndex, FontSize, FontSize);
+                    PathGeometry pg = geometry.GetOutlinedPathGeometry();
+                    if (widthClone + pg.Bounds.Width > Width.Value)
+                        break;
+                    widthClone += pg.Bounds.Width;
+                    pg.Transform = new MatrixTransform(1.0, 0, 0, 1.0, list.Sum(x => x.Bounds.Width + 5), maxHeight + offsetY);
+                    PathGeometry.AddGeometry(pg);
+                    list.Add(pg);
+                }
+
+                offsetY += maxHeight;
+                allcount += next;
+            }
+        }
+
+        private void WithoutLineBreak(GlyphTypeface glyphTypeface)
+        {
+            var list = new List<PathGeometry>();
+            //refresh path geometry
+            PathGeometry = new PathGeometry();
+            double maxHeight = 0d;
+            foreach (var @char in LetterString)
+            {
+                ushort glyphIndex;
+                glyphTypeface.CharacterToGlyphMap.TryGetValue((int)@char, out glyphIndex);
+                Geometry geometry = glyphTypeface.GetGlyphOutline(glyphIndex, FontSize, FontSize);
+                PathGeometry pg = geometry.GetOutlinedPathGeometry();
+                maxHeight = Math.Max(maxHeight, pg.Bounds.Height);
+            }
+
+            foreach (var @char in LetterString)
+            {
+                ushort glyphIndex;
+                glyphTypeface.CharacterToGlyphMap.TryGetValue((int)@char, out glyphIndex);
+                Geometry geometry = glyphTypeface.GetGlyphOutline(glyphIndex, FontSize, FontSize);
+                PathGeometry pg = geometry.GetOutlinedPathGeometry();
+                pg.Transform = new MatrixTransform(1.0, 0, 0, 1.0, list.Sum(x => x.Bounds.Width + 5), maxHeight);
+                PathGeometry.AddGeometry(pg);
+                list.Add(pg);
             }
         }
 
