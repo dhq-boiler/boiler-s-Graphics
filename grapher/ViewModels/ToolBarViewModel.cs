@@ -9,15 +9,18 @@ using System.Linq;
 using Microsoft.Xaml.Behaviors;
 using System.IO;
 using System.Windows.Media.Imaging;
+using Prism.Services.Dialogs;
 
 namespace grapher.ViewModels
 {
     public class ToolBarViewModel
     {
+        private IDialogService dlgService = null;
         public ObservableCollection<ToolItemData> ToolItems { get; } = new ObservableCollection<ToolItemData>();
 
-        public ToolBarViewModel()
+        public ToolBarViewModel(IDialogService dialogService)
         {
+            this.dlgService = dialogService;
             ToolItems.Add(new ToolItemData("pointer", "pack://application:,,,/Assets/img/pointer.png", new DelegateCommand(() =>
             {
                 var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
@@ -92,6 +95,18 @@ namespace grapher.ViewModels
                     }
                     SelectOneToolItem("picture");
                 }
+            })));
+            ToolItems.Add(new ToolItemData("letter", "pack://application:,,,/Assets/img/A.png", new DelegateCommand(() =>
+            {
+                var behavior = new LetterBehavior();
+                var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
+                var behaviors = Interaction.GetBehaviors(designerCanvas);
+                behaviors.Clear();
+                if (!behaviors.Contains(behavior))
+                {
+                    behaviors.Add(behavior);
+                }
+                SelectOneToolItem("letter");
             })));
         }
 

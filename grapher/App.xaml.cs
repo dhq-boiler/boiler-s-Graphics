@@ -25,6 +25,7 @@ namespace grapher
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             containerRegistry.RegisterDialog<ColorPicker, ViewModels.ColorPickerViewModel>();
+            containerRegistry.RegisterDialog<LetterSetting, ViewModels.LetterSettingViewModel>();
         }
     }
 }

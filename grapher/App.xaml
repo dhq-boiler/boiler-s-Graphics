@@ -25,6 +25,8 @@
                 <ResourceDictionary Source="pack://application:,,,/grapher;component/Resources/DesignerItems/SettingsDesignerItemDataTemplate.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/grapher;component/Resources/DesignerItems/PersistDesignerItemDataTemplate.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/grapher;component/Resources/DesignerItems/PictureDesignerItemDataTemplate.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/grapher;component/Resources/DesignerItems/PathDesignerItemDataTemplate.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/grapher;component/Resources/DesignerItems/LetterDesignerItemDataTemplate.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <property:Resources x:Key="resources" />
         </ResourceDictionary>

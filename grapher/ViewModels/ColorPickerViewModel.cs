@@ -1,6 +1,7 @@
 ﻿using grapher.Helpers;
 using OpenCvSharp;
 using OpenCvSharp.Extensions;
+using OpenCvSharp.WpfExtensions;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
 using Reactive.Bindings;

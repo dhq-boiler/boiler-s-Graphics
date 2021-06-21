@@ -24,7 +24,7 @@ namespace grapher.ViewModels
             this.dlgService = dialogService;
             DiagramViewModel = new DiagramViewModel(1000, 1000);
             _CompositeDisposable.Add(DiagramViewModel);
-            ToolBarViewModel = new ToolBarViewModel();
+            ToolBarViewModel = new ToolBarViewModel(dialogService);
 
             DeleteSelectedItemsCommand = new DelegateCommand<object>(p =>
             {

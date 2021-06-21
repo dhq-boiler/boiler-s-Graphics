@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Windows;
 using System.Windows.Media;
 
 namespace grapher.Extensions
@@ -76,6 +78,40 @@ namespace grapher.Extensions
             {
                 return 1.0;
             }
+        }
+
+        public static double SumWidthExceptInfinity(this IEnumerable<PathGeometry> geometries, GlyphTypeface glyphTypeface, int fontSize)
+        {
+            double ret = 0;
+            foreach (var pg in geometries)
+            {
+                var value = pg.Bounds.Width;
+                if (double.IsInfinity(value))
+                {
+                    var spaceWidth = glyphTypeface.GetAvgWidth(fontSize);
+                    ret += spaceWidth;
+                }
+                else
+                {
+                    ret += value + 5;
+                }
+            }
+            return ret;
+        }
+
+        public static double GetAvgWidth(this GlyphTypeface glyphTypeface, int fontSize)
+        {
+            const string str = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            double ret = 0d;
+            foreach (var @char in str)
+            {
+                ushort glyphIndex;
+                glyphTypeface.CharacterToGlyphMap.TryGetValue((int)@char, out glyphIndex);
+                Geometry geometry = glyphTypeface.GetGlyphOutline(glyphIndex, fontSize, fontSize);
+                PathGeometry pg = geometry.GetOutlinedPathGeometry();
+                ret += pg.Bounds.Width;
+            }
+            return ret / str.Count();
         }
     }
 }
