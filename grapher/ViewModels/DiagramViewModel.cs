@@ -1,6 +1,7 @@
 ﻿using grapher.Controls;
 using grapher.Extensions;
 using grapher.Messenger;
+using grapher.Models;
 using grapher.UserControls;
 using Microsoft.Win32;
 using Prism.Commands;
@@ -412,7 +413,8 @@ namespace grapher.ViewModels
             XElement serializedItems = null;
             serializedItems = new XElement("DesignerItems",
                                        (from item in designerItems
-                                       where item.GetType() != typeof(PictureDesignerItemViewModel)
+                                       where item.GetType() != typeof(PictureDesignerItemViewModel) 
+                                          && item.GetType() != typeof(LetterDesignerItemViewModel)
                                        select new XElement("DesignerItem",
                                                   new XElement("ID", item.ID),
                                                   new XElement("ParentID", item.ParentID),
@@ -430,18 +432,42 @@ namespace grapher.ViewModels
                                            from item in designerItems
                                            where item.GetType() == typeof(PictureDesignerItemViewModel)
                                            select new XElement("DesignerItem",
-                                                  new XElement("ID", item.ID),
-                                                  new XElement("ParentID", item.ParentID),
-                                                  new XElement("Type", item.GetType().FullName),
-                                                  new XElement("Left", item.Left.Value),
-                                                  new XElement("Top", item.Top.Value),
-                                                  new XElement("Width", item.Width.Value),
-                                                  new XElement("Height", item.Height.Value),
-                                                  new XElement("ZIndex", item.ZIndex.Value),
-                                                  new XElement("Matrix", item.Matrix.Value),
-                                                  new XElement("EdgeColor", item.EdgeColor),
-                                                  new XElement("FillColor", item.FillColor),
-                                                  new XElement("FileName", (item as PictureDesignerItemViewModel).FileName)
+                                                      new XElement("ID", item.ID),
+                                                      new XElement("ParentID", item.ParentID),
+                                                      new XElement("Type", item.GetType().FullName),
+                                                      new XElement("Left", item.Left.Value),
+                                                      new XElement("Top", item.Top.Value),
+                                                      new XElement("Width", item.Width.Value),
+                                                      new XElement("Height", item.Height.Value),
+                                                      new XElement("ZIndex", item.ZIndex.Value),
+                                                      new XElement("Matrix", item.Matrix.Value),
+                                                      new XElement("EdgeColor", item.EdgeColor),
+                                                      new XElement("FillColor", item.FillColor),
+                                                      new XElement("FileName", (item as PictureDesignerItemViewModel).FileName)
+                                            )
+                                       )
+                                       .Union(
+                                           from item in designerItems
+                                           where item.GetType() == typeof(LetterDesignerItemViewModel)
+                                           select new XElement("DesignerItem",
+                                                        new XElement("ID", item.ID),
+                                                        new XElement("ParentID", item.ParentID),
+                                                        new XElement("Type", item.GetType().FullName),
+                                                        new XElement("Left", item.Left.Value),
+                                                        new XElement("Top", item.Top.Value),
+                                                        new XElement("Width", item.Width.Value),
+                                                        new XElement("Height", item.Height.Value),
+                                                        new XElement("ZIndex", item.ZIndex.Value),
+                                                        new XElement("Matrix", item.Matrix.Value),
+                                                        new XElement("EdgeColor", item.EdgeColor),
+                                                        new XElement("FillColor", item.FillColor),
+                                                        new XElement("LetterString", (item as LetterDesignerItemViewModel).LetterString),
+                                                        new XElement("SelectedFontFamily", (item as LetterDesignerItemViewModel).SelectedFontFamily),
+                                                        new XElement("IsBold", (item as LetterDesignerItemViewModel).IsBold),
+                                                        new XElement("IsItalic", (item as LetterDesignerItemViewModel).IsItalic),
+                                                        new XElement("FontSize", (item as LetterDesignerItemViewModel).FontSize),
+                                                        new XElement("PathGeometry", (item as LetterDesignerItemViewModel).PathGeometry),
+                                                        new XElement("AutoLineBreak", (item as LetterDesignerItemViewModel).AutoLineBreak)
                                             )
                                        )
                                        
@@ -532,6 +558,17 @@ namespace grapher.ViewModels
                 {
                     var picture = item as PictureDesignerItemViewModel;
                     picture.FileName = designerItemXML.Element("FileName").Value;
+                }
+                if (item is LetterDesignerItemViewModel)
+                {
+                    var letter = item as LetterDesignerItemViewModel;
+                    letter.LetterString = designerItemXML.Element("LetterString").Value;
+                    letter.SelectedFontFamily = new FontFamilyEx(designerItemXML.Element("SelectedFontFamily").Value);
+                    letter.IsBold = bool.Parse(designerItemXML.Element("IsBold").Value);
+                    letter.IsItalic = bool.Parse(designerItemXML.Element("IsItalic").Value);
+                    letter.FontSize = int.Parse(designerItemXML.Element("FontSize").Value);
+                    letter.PathGeometry = PathGeometry.CreateFromGeometry(Geometry.Parse(designerItemXML.Element("PathGeometry").Value));
+                    letter.AutoLineBreak = bool.Parse(designerItemXML.Element("AutoLineBreak").Value);
                 }
                 tempItems.Add(item);
             }

@@ -8,11 +8,7 @@ using Prism.Unity;
 using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 
@@ -149,8 +145,7 @@ namespace grapher.ViewModels
 
         private void RenderLetter()
         {
-            if (SelectedFontFamily != null && SelectedFontFamily.BaseUri != null &&
-                FontSize > 0)
+            if (SelectedFontFamily != null && FontSize > 0)
             {
                 var fontStyle = IsItalic ? FontStyles.Italic : FontStyles.Normal;
                 var fontWeight = IsBold ? FontWeights.Bold : FontWeights.Normal;
