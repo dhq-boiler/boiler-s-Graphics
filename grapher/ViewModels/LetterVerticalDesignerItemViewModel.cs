@@ -271,6 +271,13 @@ namespace grapher.ViewModels
             clone.FillColor = FillColor;
             clone.Matrix.Value = Matrix.Value;
             clone.RotationAngle.Value = RotationAngle.Value;
+            clone.LetterString = LetterString;
+            clone.SelectedFontFamily = SelectedFontFamily;
+            clone.IsBold = IsBold;
+            clone.IsItalic = IsItalic;
+            clone.FontSize = FontSize;
+            clone.PathGeometry = PathGeometry;
+            clone.AutoLineBreak = AutoLineBreak;
             return clone;
         }
 
