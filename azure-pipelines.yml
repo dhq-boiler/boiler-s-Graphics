@@ -27,12 +27,18 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
-- task: VSTest@2
+- task: CmdLine@2
   inputs:
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
-    testAssemblyVer2: |
-      **\*Test.dll
+    script: |
+      packages\NUnit.ConsoleRunner.3.12.0\tools\nunit3-console.exe grapher.Test\bin\Release\grapher.Test.dll
+
+- task: PublishTestResults@2
+  displayName: "Publish unit test result"
+  condition: always()
+  inputs:
+    testResultsFormat: 'NUnit'
+    testResultsFiles: '**/TestResult.xml'
+    failTaskOnFailedTests: false
 
 # Archive files
 # Compress files into .7z, .tar.gz, or .zip
