@@ -26,6 +26,7 @@ namespace grapher
         {
             containerRegistry.RegisterDialog<ColorPicker, ViewModels.ColorPickerViewModel>();
             containerRegistry.RegisterDialog<LetterSetting, ViewModels.LetterSettingViewModel>();
+            containerRegistry.RegisterDialog<LetterVerticalSetting, ViewModels.LetterVerticalSettingViewModel>();
         }
     }
 }

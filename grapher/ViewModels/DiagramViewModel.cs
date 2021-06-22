@@ -413,9 +413,10 @@ namespace grapher.ViewModels
             XElement serializedItems = null;
             serializedItems = new XElement("DesignerItems",
                                        (from item in designerItems
-                                       where item.GetType() != typeof(PictureDesignerItemViewModel) 
+                                       where item.GetType() != typeof(PictureDesignerItemViewModel)
                                           && item.GetType() != typeof(LetterDesignerItemViewModel)
-                                       select new XElement("DesignerItem",
+                                          && item.GetType() != typeof(LetterVerticalDesignerItemViewModel)
+                                        select new XElement("DesignerItem",
                                                   new XElement("ID", item.ID),
                                                   new XElement("ParentID", item.ParentID),
                                                   new XElement("Type", item.GetType().FullName),
@@ -470,7 +471,31 @@ namespace grapher.ViewModels
                                                         new XElement("AutoLineBreak", (item as LetterDesignerItemViewModel).AutoLineBreak)
                                             )
                                        )
-                                       
+                                       .Union(
+                                           from item in designerItems
+                                           where item.GetType() == typeof(LetterVerticalDesignerItemViewModel)
+                                           select new XElement("DesignerItem",
+                                                        new XElement("ID", item.ID),
+                                                        new XElement("ParentID", item.ParentID),
+                                                        new XElement("Type", item.GetType().FullName),
+                                                        new XElement("Left", item.Left.Value),
+                                                        new XElement("Top", item.Top.Value),
+                                                        new XElement("Width", item.Width.Value),
+                                                        new XElement("Height", item.Height.Value),
+                                                        new XElement("ZIndex", item.ZIndex.Value),
+                                                        new XElement("Matrix", item.Matrix.Value),
+                                                        new XElement("EdgeColor", item.EdgeColor),
+                                                        new XElement("FillColor", item.FillColor),
+                                                        new XElement("LetterString", (item as LetterVerticalDesignerItemViewModel).LetterString),
+                                                        new XElement("SelectedFontFamily", (item as LetterVerticalDesignerItemViewModel).SelectedFontFamily),
+                                                        new XElement("IsBold", (item as LetterVerticalDesignerItemViewModel).IsBold),
+                                                        new XElement("IsItalic", (item as LetterVerticalDesignerItemViewModel).IsItalic),
+                                                        new XElement("FontSize", (item as LetterVerticalDesignerItemViewModel).FontSize),
+                                                        new XElement("PathGeometry", (item as LetterVerticalDesignerItemViewModel).PathGeometry),
+                                                        new XElement("AutoLineBreak", (item as LetterVerticalDesignerItemViewModel).AutoLineBreak)
+                                            )
+                                       )
+
                                    );
 
             return serializedItems;
@@ -562,6 +587,17 @@ namespace grapher.ViewModels
                 if (item is LetterDesignerItemViewModel)
                 {
                     var letter = item as LetterDesignerItemViewModel;
+                    letter.LetterString = designerItemXML.Element("LetterString").Value;
+                    letter.SelectedFontFamily = new FontFamilyEx(designerItemXML.Element("SelectedFontFamily").Value);
+                    letter.IsBold = bool.Parse(designerItemXML.Element("IsBold").Value);
+                    letter.IsItalic = bool.Parse(designerItemXML.Element("IsItalic").Value);
+                    letter.FontSize = int.Parse(designerItemXML.Element("FontSize").Value);
+                    letter.PathGeometry = PathGeometry.CreateFromGeometry(Geometry.Parse(designerItemXML.Element("PathGeometry").Value));
+                    letter.AutoLineBreak = bool.Parse(designerItemXML.Element("AutoLineBreak").Value);
+                }
+                if (item is LetterVerticalDesignerItemViewModel)
+                {
+                    var letter = item as LetterVerticalDesignerItemViewModel;
                     letter.LetterString = designerItemXML.Element("LetterString").Value;
                     letter.SelectedFontFamily = new FontFamilyEx(designerItemXML.Element("SelectedFontFamily").Value);
                     letter.IsBold = bool.Parse(designerItemXML.Element("IsBold").Value);

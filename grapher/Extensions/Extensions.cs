@@ -99,6 +99,25 @@ namespace grapher.Extensions
             return ret;
         }
 
+        public static double SumHeightExceptInfinity(this IEnumerable<PathGeometry> geometries, GlyphTypeface glyphTypeface, int fontSize)
+        {
+            double ret = 0;
+            foreach (var pg in geometries)
+            {
+                var value = pg.Bounds.Height;
+                if (double.IsInfinity(value))
+                {
+                    var spaceHeight = glyphTypeface.GetAvgHeight(fontSize);
+                    ret += spaceHeight;
+                }
+                else
+                {
+                    ret += value + 5;
+                }
+            }
+            return ret;
+        }
+
         public static double GetAvgWidth(this GlyphTypeface glyphTypeface, int fontSize)
         {
             const string str = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -110,6 +129,21 @@ namespace grapher.Extensions
                 Geometry geometry = glyphTypeface.GetGlyphOutline(glyphIndex, fontSize, fontSize);
                 PathGeometry pg = geometry.GetOutlinedPathGeometry();
                 ret += pg.Bounds.Width;
+            }
+            return ret / str.Count();
+        }
+
+        public static double GetAvgHeight(this GlyphTypeface glyphTypeface, int fontSize)
+        {
+            const string str = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            double ret = 0d;
+            foreach (var @char in str)
+            {
+                ushort glyphIndex;
+                glyphTypeface.CharacterToGlyphMap.TryGetValue((int)@char, out glyphIndex);
+                Geometry geometry = glyphTypeface.GetGlyphOutline(glyphIndex, fontSize, fontSize);
+                PathGeometry pg = geometry.GetOutlinedPathGeometry();
+                ret += pg.Bounds.Height;
             }
             return ret / str.Count();
         }

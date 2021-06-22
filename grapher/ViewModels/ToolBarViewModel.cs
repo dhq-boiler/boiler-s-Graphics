@@ -108,6 +108,18 @@ namespace grapher.ViewModels
                 }
                 SelectOneToolItem("letter");
             })));
+            ToolItems.Add(new ToolItemData("letter-vertical", "pack://application:,,,/Assets/img/A_Vertical.png", new DelegateCommand(() =>
+            {
+                var behavior = new LetterVerticalBehavior();
+                var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
+                var behaviors = Interaction.GetBehaviors(designerCanvas);
+                behaviors.Clear();
+                if (!behaviors.Contains(behavior))
+                {
+                    behaviors.Add(behavior);
+                }
+                SelectOneToolItem("letter-vertical");
+            })));
         }
 
         private void SelectOneToolItem(string toolName)

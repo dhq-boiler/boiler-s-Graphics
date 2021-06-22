@@ -130,6 +130,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Adorners\LetterAdorner.cs" />
+    <Compile Include="Adorners\LetterVerticalAdorner.cs" />
     <Compile Include="Adorners\PictureAdorner.cs" />
     <Compile Include="Adorners\RectangleAdorner.cs" />
     <Compile Include="Adorners\RubberbandAdorner.cs" />
@@ -192,7 +193,9 @@
     <Compile Include="ViewModels\ConnectorInfoBase.cs" />
     <Compile Include="ViewModels\GroupItemViewModel.cs" />
     <Compile Include="ViewModels\LetterDesignerItemViewModel.cs" />
+    <Compile Include="ViewModels\LetterVerticalSettingViewModel.cs" />
     <Compile Include="ViewModels\LetterSettingViewModel.cs" />
+    <Compile Include="ViewModels\LetterVerticalDesignerItemViewModel.cs" />
     <Compile Include="ViewModels\NRectangleViewModel.cs" />
     <Compile Include="ViewModels\PathDesignerItemViewModel.cs" />
     <Compile Include="ViewModels\PictureDesignerItemViewModel.cs" />
@@ -226,6 +229,7 @@
     <Compile Include="Views\Behaviors\EllipseDragStartBehavior.cs" />
     <Compile Include="Views\Behaviors\EllipseSelectBehavior.cs" />
     <Compile Include="Views\Behaviors\LetterBehavior.cs" />
+    <Compile Include="Views\Behaviors\LetterVerticalBehavior.cs" />
     <Compile Include="Views\Behaviors\NDrawRectangleBehavior.cs" />
     <Compile Include="Views\Behaviors\NDrawStraightLineBehavior.cs" />
     <Compile Include="Views\Behaviors\PictureBehavior.cs" />
@@ -252,6 +256,9 @@
     </Compile>
     <Compile Include="Views\ItemsControlItemContainerStyleSelector.cs" />
     <Compile Include="Views\ItemsControlTemplateSelector.cs" />
+    <Compile Include="Views\LetterVerticalSetting.xaml.cs">
+      <DependentUpon>LetterVerticalSetting.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\LetterSetting.xaml.cs">
       <DependentUpon>LetterSetting.xaml</DependentUpon>
     </Compile>
@@ -264,6 +271,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Resources\DesignerItems\LetterDesignerItemDataTemplate.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\DesignerItems\LetterVerticalDesignerItemDataTemplate.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -350,6 +361,10 @@
     <Page Include="Views\ColorSlider.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\LetterVerticalSetting.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\LetterSetting.xaml">
       <SubType>Designer</SubType>
@@ -451,6 +466,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\img\A.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\img\A_Vertical.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

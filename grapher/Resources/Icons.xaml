@@ -86,4 +86,8 @@
         x:Key="Icon_A"
         x:Shared="False"
         UriSource="pack://application:,,,/Assets/img/A.png" />
+    <BitmapImage
+        x:Key="Icon_A_Vertical"
+        x:Shared="False"
+        UriSource="pack://application:,,,/Assets/img/A_Vertical.png" />
 </ResourceDictionary>
