@@ -30,7 +30,7 @@ steps:
 - task: CmdLine@2
   inputs:
     script: |
-      packages\NUnit.ConsoleRunner.3.12.0\tools\nunit3-console.exe boiler'sGraphics.Test\bin\Release\boiler_sGraphics.Test.dll
+      packages\NUnit.ConsoleRunner.3.12.0\tools\nunit3-console.exe boilersGraphics.Test\bin\Release\boilersGraphics.Test.dll
 
 - task: PublishTestResults@2
   displayName: "Publish unit test result"
@@ -44,11 +44,11 @@ steps:
 # Compress files into .7z, .tar.gz, or .zip
 - task: ArchiveFiles@2
   inputs:
-    rootFolderOrFile: '$(System.DefaultWorkingDirectory)\boiler_sGraphics\bin\Release' 
+    rootFolderOrFile: '$(System.DefaultWorkingDirectory)\boilersGraphics\bin\Release' 
     includeRootFolder: false
     archiveType: 'zip' # Options: zip, 7z, tar, wim
     tarCompression: 'gz' # Optional. Options: gz, bz2, xz, none
-    archiveFile: '$(Build.ArtifactStagingDirectory)/boiler_sGraphics_$(Build.BuildId).zip' 
+    archiveFile: '$(Build.ArtifactStagingDirectory)/boilersGraphics_$(Build.BuildId).zip' 
     replaceExistingArchive: true 
     #verbose: # Optional
     #quiet: # Optional
@@ -68,7 +68,7 @@ steps:
     #releaseNotesSource: 'file' # Optional. Options: file, input
     #releaseNotesFile: # Optional
     #releaseNotes: # Optional
-    assets: '$(Build.ArtifactStagingDirectory)\boiler_sGraphics_$(Build.BuildId).zip' # Optional
+    assets: '$(Build.ArtifactStagingDirectory)\boilersGraphics_$(Build.BuildId).zip' # Optional
     assetUploadMode: 'delete' # Optional. Options: delete, replace
     isDraft: false # Optional
     isPreRelease: false # Optional

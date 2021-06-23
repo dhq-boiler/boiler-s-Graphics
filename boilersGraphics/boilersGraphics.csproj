@@ -1,0 +1,484 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\OpenCvSharp4.runtime.win.4.5.2.20210404\build\net\OpenCvSharp4.runtime.win.props" Condition="Exists('..\packages\OpenCvSharp4.runtime.win.4.5.2.20210404\build\net\OpenCvSharp4.runtime.win.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{22E14D88-7443-4526-9C02-3523E08FFA83}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>boilersGraphics</RootNamespace>
+    <AssemblyName>boilersGraphics</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Xaml.Behaviors, Version=1.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Xaml.Behaviors.Wpf.1.1.31\lib\net45\Microsoft.Xaml.Behaviors.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenCvSharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=6adad1e807fea099, processorArchitecture=MSIL">
+      <HintPath>..\packages\OpenCvSharp4.4.5.2.20210404\lib\net461\OpenCvSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenCvSharp.Extensions, Version=1.0.0.0, Culture=neutral, PublicKeyToken=6adad1e807fea099, processorArchitecture=MSIL">
+      <HintPath>..\packages\OpenCvSharp4.4.5.2.20210404\lib\net461\OpenCvSharp.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenCvSharp.WpfExtensions, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\OpenCvSharp4.WpfExtensions.4.5.2.20210404\lib\net461\OpenCvSharp.WpfExtensions.dll</HintPath>
+    </Reference>
+    <Reference Include="Prism, Version=8.1.97.5141, Culture=neutral, PublicKeyToken=40ee6c3a2184dc59, processorArchitecture=MSIL">
+      <HintPath>..\packages\Prism.Core.8.1.97\lib\net47\Prism.dll</HintPath>
+    </Reference>
+    <Reference Include="Prism.Unity.Wpf, Version=8.1.97.5141, Culture=neutral, PublicKeyToken=40ee6c3a2184dc59, processorArchitecture=MSIL">
+      <HintPath>..\packages\Prism.Unity.8.1.97\lib\net47\Prism.Unity.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="Prism.Wpf, Version=8.1.97.5141, Culture=neutral, PublicKeyToken=40ee6c3a2184dc59, processorArchitecture=MSIL">
+      <HintPath>..\packages\Prism.Wpf.8.1.97\lib\net47\Prism.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="ReactiveProperty, Version=7.11.0.0, Culture=neutral, PublicKeyToken=910d1732782c71cb, processorArchitecture=MSIL">
+      <HintPath>..\packages\ReactiveProperty.7.11.0\lib\netstandard2.0\ReactiveProperty.dll</HintPath>
+    </Reference>
+    <Reference Include="ReactiveProperty.Core, Version=7.11.0.0, Culture=neutral, PublicKeyToken=910d1732782c71cb, processorArchitecture=MSIL">
+      <HintPath>..\packages\ReactiveProperty.Core.7.11.0\lib\netstandard2.0\ReactiveProperty.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.Annotations, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ComponentModel.Annotations.5.0.0\lib\net461\System.ComponentModel.Annotations.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Drawing.Common, Version=4.0.0.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Drawing.Common.5.0.2\lib\net461\System.Drawing.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive, Version=5.0.0.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Reactive.5.0.0\lib\net472\System.Reactive.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.5.0.0\lib\net45\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="Unity.Abstractions, Version=5.11.7.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.Abstractions.5.11.7\lib\net48\Unity.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Container, Version=5.11.11.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.Container.5.11.11\lib\net48\Unity.Container.dll</HintPath>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="WriteableBitmapEx.Wpf, Version=1.6.7.0, Culture=neutral, PublicKeyToken=50375ca6144f1c69, processorArchitecture=MSIL">
+      <HintPath>..\packages\WriteableBitmapEx.1.6.7\lib\net40\WriteableBitmapEx.Wpf.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="Adorners\LetterAdorner.cs" />
+    <Compile Include="Adorners\LetterVerticalAdorner.cs" />
+    <Compile Include="Adorners\PictureAdorner.cs" />
+    <Compile Include="Adorners\RectangleAdorner.cs" />
+    <Compile Include="Adorners\RubberbandAdorner.cs" />
+    <Compile Include="Adorners\SettingAdorner.cs" />
+    <Compile Include="Adorners\StraightLineAdorner.cs" />
+    <Compile Include="AttachedProperties\DragAndDropProps.cs" />
+    <Compile Include="AttachedProperties\ItemConnectProps.cs" />
+    <Compile Include="AttachedProperties\SelectionProps.cs" />
+    <Compile Include="Controls\Connector.cs" />
+    <Compile Include="Controls\DesignerCanvas.cs" />
+    <Compile Include="Controls\DragThumb.cs" />
+    <Compile Include="Controls\ResizeHandle.cs" />
+    <Compile Include="Controls\ResizeThumb.cs" />
+    <Compile Include="Controls\RotateThumb.cs" />
+    <Compile Include="Converters\Plus2Converter.cs" />
+    <Compile Include="Exceptions\UnexpectedException.cs" />
+    <Compile Include="Controls\ZoomBox.cs" />
+    <Compile Include="Converters\ConnectionPathConverter.cs" />
+    <Compile Include="Converters\ImageUrlConverter.cs" />
+    <Compile Include="Converters\PointsToAngleConverter.cs" />
+    <Compile Include="Converters\ShiftCoordinateConverter.cs" />
+    <Compile Include="Converters\StrokeColorConverter.cs" />
+    <Compile Include="Converters\ToSolidColorBrushConverter.cs" />
+    <Compile Include="Extensions\Extensions.cs" />
+    <Compile Include="Helpers\ColorExchange.cs" />
+    <Compile Include="Helpers\ConnectorInfo.cs" />
+    <Compile Include="Helpers\DragObject.cs" />
+    <Compile Include="Helpers\EventToCommand.cs" />
+    <Compile Include="Helpers\GroupTransformNotification.cs" />
+    <Compile Include="Helpers\IEventArgsConverter.cs" />
+    <Compile Include="Helpers\IPathFinder.cs" />
+    <Compile Include="Helpers\OrthogonalPathFinder.cs" />
+    <Compile Include="Helpers\PointHelper.cs" />
+    <Compile Include="Helpers\ToolBoxData.cs" />
+    <Compile Include="Helpers\ToolItemData.cs" />
+    <Compile Include="Helpers\TransformNotification.cs" />
+    <Compile Include="Helpers\WeakINPCEventHandler.cs" />
+    <Compile Include="Messenger\Mediator.cs" />
+    <Compile Include="Messenger\MediatorMessageSinkAttribute.cs" />
+    <Compile Include="Models\Diagram.cs" />
+    <Compile Include="Models\DraggingItem.cs" />
+    <Compile Include="Models\Ellipse.cs" />
+    <Compile Include="Models\FontFamilyEx.cs" />
+    <Compile Include="Models\Letter.cs" />
+    <Compile Include="Models\Rectangle.cs" />
+    <Compile Include="Models\RenderItem.cs" />
+    <Compile Include="Models\StraightLine.cs" />
+    <Compile Include="Strategies\LineFactory.cs" />
+    <Compile Include="Strategies\PolygonalLineFactory.cs" />
+    <Compile Include="Strategies\StraightLineFactory.cs" />
+    <Compile Include="StyleSelectors\DesignerItemsControlItemStyleSelector.cs" />
+    <Compile Include="UserControls\DiagramControl.xaml.cs">
+      <DependentUpon>DiagramControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\ToolBoxControl.xaml.cs">
+      <DependentUpon>ToolBoxControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModels\ColorPickerViewModel.cs" />
+    <Compile Include="ViewModels\ConnectorBaseViewModel.cs" />
+    <Compile Include="ViewModels\ConnectorInfoBase.cs" />
+    <Compile Include="ViewModels\GroupItemViewModel.cs" />
+    <Compile Include="ViewModels\LetterDesignerItemViewModel.cs" />
+    <Compile Include="ViewModels\LetterVerticalSettingViewModel.cs" />
+    <Compile Include="ViewModels\LetterSettingViewModel.cs" />
+    <Compile Include="ViewModels\LetterVerticalDesignerItemViewModel.cs" />
+    <Compile Include="ViewModels\NRectangleViewModel.cs" />
+    <Compile Include="ViewModels\PathDesignerItemViewModel.cs" />
+    <Compile Include="ViewModels\PictureDesignerItemViewModel.cs" />
+    <Compile Include="ViewModels\PolygonalConnectorViewModel.cs" />
+    <Compile Include="ViewModels\DesignerItemViewModelBase.cs" />
+    <Compile Include="ViewModels\DiagramViewModel.cs" />
+    <Compile Include="ViewModels\EllipseViewModel.cs" />
+    <Compile Include="ViewModels\FullyCreatedConnectorInfo.cs" />
+    <Compile Include="ViewModels\IDiagramViewModel.cs" />
+    <Compile Include="ViewModels\MainWindowViewModel.cs" />
+    <Compile Include="ViewModels\PartCreatedConnectionInfo.cs" />
+    <Compile Include="ViewModels\PersistDesignerItemViewModel.cs" />
+    <Compile Include="ViewModels\SelectableDesignerItemViewModelBase.cs" />
+    <Compile Include="ViewModels\SettingsDesignerItemViewModel.cs" />
+    <Compile Include="ViewModels\StraightConnectorViewModel.cs" />
+    <Compile Include="ViewModels\StraightLineViewModel.cs" />
+    <Compile Include="ViewModels\ToolBarViewModel.cs" />
+    <Compile Include="ViewModels\ToolBoxViewModel.cs" />
+    <Compile Include="Views\AdornedBy.cs" />
+    <Compile Include="Views\Behaviors\AbstractAdorner.cs" />
+    <Compile Include="Views\Behaviors\CursorInfo.cs" />
+    <Compile Include="Views\Behaviors\DeselectBehavior.cs" />
+    <Compile Include="Views\Behaviors\AbstractDragAdorner.cs" />
+    <Compile Include="Views\Behaviors\AbstractDragStartBehavior.cs" />
+    <Compile Include="Views\Behaviors\DrawAbstractBehavior.cs" />
+    <Compile Include="Views\Behaviors\DrawSettingBehavior.cs" />
+    <Compile Include="Views\Behaviors\DropAcceptDescription.cs" />
+    <Compile Include="Views\Behaviors\CursorBehavior.cs" />
+    <Compile Include="Views\Behaviors\EllipseAdorner.cs" />
+    <Compile Include="Views\Behaviors\EllipseDragAdorner.cs" />
+    <Compile Include="Views\Behaviors\EllipseDragStartBehavior.cs" />
+    <Compile Include="Views\Behaviors\EllipseSelectBehavior.cs" />
+    <Compile Include="Views\Behaviors\LetterBehavior.cs" />
+    <Compile Include="Views\Behaviors\LetterVerticalBehavior.cs" />
+    <Compile Include="Views\Behaviors\NDrawRectangleBehavior.cs" />
+    <Compile Include="Views\Behaviors\NDrawStraightLineBehavior.cs" />
+    <Compile Include="Views\Behaviors\PictureBehavior.cs" />
+    <Compile Include="Views\Behaviors\RectangleAdorner.cs" />
+    <Compile Include="Views\Behaviors\RectangleDragAdorner.cs" />
+    <Compile Include="Views\Behaviors\RectangleDragStartBehavior.cs" />
+    <Compile Include="Views\Behaviors\RectangleSelectBehavior.cs" />
+    <Compile Include="Views\Behaviors\RubberbandBehavior.cs" />
+    <Compile Include="Views\Behaviors\StraightLineAdorner.cs" />
+    <Compile Include="Views\Behaviors\StraightLineDragAdorner.cs" />
+    <Compile Include="Views\Behaviors\StraightLineDragStartBehavior.cs" />
+    <Compile Include="Views\Behaviors\StraightLineSelectBehavior.cs" />
+    <Compile Include="Views\ColorMap.xaml.cs">
+      <DependentUpon>ColorMap.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ColorPickerDialog.xaml.cs">
+      <DependentUpon>ColorPickerDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ColorPicker.xaml.cs">
+      <DependentUpon>ColorPicker.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ColorSlider.xaml.cs">
+      <DependentUpon>ColorSlider.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ItemsControlItemContainerStyleSelector.cs" />
+    <Compile Include="Views\ItemsControlTemplateSelector.cs" />
+    <Compile Include="Views\LetterVerticalSetting.xaml.cs">
+      <DependentUpon>LetterVerticalSetting.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\LetterSetting.xaml.cs">
+      <DependentUpon>LetterSetting.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\StraightLineResizeHandle.cs" />
+    <Compile Include="Views\Triggers\InteractionRequestTrigger.cs" />
+    <Compile Include="Views\Triggers\ResizeThumbDragDeltaEventTrigger.cs" />
+    <Compile Include="Views\Triggers\WindowLoadedEventTrigger.cs" />
+    <Page Include="Resources\DesignerItems\GroupItemDataTemplate.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\DesignerItems\LetterDesignerItemDataTemplate.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\DesignerItems\LetterVerticalDesignerItemDataTemplate.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\DesignerItems\PathDesignerItemDataTemplate.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\DesignerItems\PersistDesignerItemDataTemplate.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\DesignerItems\PictureDesignerItemDataTemplate.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\DesignerItems\RectangleDesignerItemDataTemplate.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\DesignerItems\SettingsDesignerItemDataTemplate.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Icons.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Styles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Styles\DesignerItems.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Styles\Expander.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Styles\GroupBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Styles\ScrollBar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Styles\ScrollViewer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Styles\Shared.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Styles\ToolTip.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Styles\ZoomBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\DiagramControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\ToolBoxControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ColorMap.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ColorPickerDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ColorPicker.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ColorSlider.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\LetterVerticalSetting.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\LetterSetting.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ViewModels\RectangleViewModel.cs" />
+    <Compile Include="ViewModels\RenderItemViewModel.cs" />
+    <Compile Include="Views\MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.ja-JP.resx" />
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\img\rectangle.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\img\pointer.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\img\straightline.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\img\ellipse.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\img\Persist.png" />
+    <Resource Include="Assets\img\Setting.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\img\rubberband.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\img\AlignObjectsBottom.png" />
+    <Resource Include="Assets\img\AlignObjectsCenteredHorizontal.png" />
+    <Resource Include="Assets\img\AlignObjectsCenteredVertical.png" />
+    <Resource Include="Assets\img\AlignObjectsLeft.png" />
+    <Resource Include="Assets\img\AlignObjectsRight.png" />
+    <Resource Include="Assets\img\AlignObjectsTop.png" />
+    <Resource Include="Assets\img\BringForward.png" />
+    <Resource Include="Assets\img\BringToFront.png" />
+    <Resource Include="Assets\img\DistributeObjectsHorizontal.png" />
+    <Resource Include="Assets\img\DistributeObjectsVertical.png" />
+    <Resource Include="Assets\img\Group.png" />
+    <Resource Include="Assets\img\SendBackward.png" />
+    <Resource Include="Assets\img\SendToBack.png" />
+    <Resource Include="Assets\img\Ungroup.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\img\UniformHeight.png" />
+    <Resource Include="Assets\img\UniformWidth.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\img\Save.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\img\OpenFolder.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\img\Export.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\img\picture.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\img\A.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\img\A_Vertical.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>このプロジェクトは、このコンピューター上にない NuGet パッケージを参照しています。それらのパッケージをダウンロードするには、[NuGet パッケージの復元] を使用します。詳細については、http://go.microsoft.com/fwlink/?LinkID=322105 を参照してください。見つからないファイルは {0} です。</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\OpenCvSharp4.runtime.win.4.5.2.20210404\build\net\OpenCvSharp4.runtime.win.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\OpenCvSharp4.runtime.win.4.5.2.20210404\build\net\OpenCvSharp4.runtime.win.props'))" />
+  </Target>
+</Project>

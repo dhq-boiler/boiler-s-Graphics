@@ -1,0 +1,12 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:viewModel="clr-namespace:boilersGraphics.ViewModels">
+    <DataTemplate DataType="{x:Type viewModel:PictureDesignerItemViewModel}">
+        <Border BorderBrush="{Binding EdgeColor, Converter={StaticResource solidColorBrushConverter}}" BorderThickness="1">
+            <Image IsHitTestVisible="False"
+                   Source="{Binding FileName}"
+                   Stretch="Fill"
+                   Tag="picture" />
+        </Border>
+    </DataTemplate>
+</ResourceDictionary>
