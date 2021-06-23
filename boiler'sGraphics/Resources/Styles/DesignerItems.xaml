@@ -1,0 +1,244 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:control="clr-namespace:boiler_sGraphics.Controls"
+    xmlns:converter="clr-namespace:boiler_sGraphics.Converters">
+
+    <converter:ShiftCoordinateConverter x:Key="shiftCoordinateConverter" />
+
+    <!--  Connector Style  -->
+    <Style TargetType="{x:Type control:Connector}">
+        <Setter Property="Width" Value="8" />
+        <Setter Property="Height" Value="8" />
+        <Setter Property="Cursor" Value="Cross" />
+        <Setter Property="SnapsToDevicePixels" Value="true" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type control:Connector}">
+                    <Grid>
+                        <!--  transparent extra space makes connector easier to hit  -->
+                        <Rectangle Margin="-2" Fill="Transparent" />
+                        <Rectangle
+                            Fill="Lavender"
+                            Stroke="#AA000080"
+                            StrokeThickness="1" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <ControlTemplate x:Key="RotateThumbTemplate" TargetType="{x:Type control:RotateThumb}">
+        <Ellipse
+            Width="{TemplateBinding Width}"
+            Height="{TemplateBinding Height}"
+            Fill="Blue"
+            Stroke="Transparent" />
+    </ControlTemplate>
+
+    <ControlTemplate x:Key="ResizeHandle_ResizeHandleTemplate" TargetType="{x:Type control:ResizeHandle}">
+        <Rectangle
+            Width="7"
+            Height="7"
+            Margin="-3"
+            Fill="White"
+            IsHitTestVisible="{Binding IsHitTestVisible}"
+            Stroke="DimGray" />
+    </ControlTemplate>
+
+    <ControlTemplate x:Key="ResizeHandleTemplate" TargetType="{x:Type Thumb}">
+        <Rectangle
+            Width="7"
+            Height="7"
+            Margin="-3"
+            Fill="White"
+            Stroke="DimGray" />
+    </ControlTemplate>
+
+    <ControlTemplate x:Key="VerticalResizeHandleTemplate" TargetType="{x:Type Thumb}">
+        <Rectangle
+            Width="2"
+            VerticalAlignment="Stretch"
+            Fill="#6c809a"
+            Stroke="Transparent" />
+    </ControlTemplate>
+
+    <ControlTemplate x:Key="HorizontalResizeHandleTemplate" TargetType="{x:Type Thumb}">
+        <Rectangle
+            Height="2"
+            HorizontalAlignment="Stretch"
+            Fill="#6c809a"
+            Stroke="Transparent" />
+    </ControlTemplate>
+
+    <ControlTemplate x:Key="StraightLineResizeDecoratorTemplate" TargetType="{x:Type Control}">
+        <Canvas Opacity="0.7" SnapsToDevicePixels="true">
+            <control:ResizeHandle
+                x:Name="ResizeHandle_BeginPoint"
+                Canvas.Left="{Binding ConnectionPoints[0].X, Converter={StaticResource shiftCoordinateConverter}, ConverterParameter=7}"
+                Canvas.Top="{Binding ConnectionPoints[0].Y, Converter={StaticResource shiftCoordinateConverter}, ConverterParameter=7}"
+                Width="7"
+                Height="7"
+                OppositeHandle="{Binding ElementName=ResizeHandle_EndPoint}"
+                Template="{StaticResource ResizeHandle_ResizeHandleTemplate}" />
+            <control:ResizeHandle
+                x:Name="ResizeHandle_EndPoint"
+                Canvas.Left="{Binding ConnectionPoints[1].X, Converter={StaticResource shiftCoordinateConverter}, ConverterParameter=7}"
+                Canvas.Top="{Binding ConnectionPoints[1].Y, Converter={StaticResource shiftCoordinateConverter}, ConverterParameter=7}"
+                Width="7"
+                Height="7"
+                OppositeHandle="{Binding ElementName=ResizeHandle_BeginPoint}"
+                Template="{StaticResource ResizeHandle_ResizeHandleTemplate}" />
+        </Canvas>
+    </ControlTemplate>
+
+    <ControlTemplate x:Key="PolygonalLineResizeDecoratorTemplate" TargetType="{x:Type Control}">
+        <Canvas Opacity="0.7" SnapsToDevicePixels="True">
+            <control:ResizeHandle
+                x:Name="ResizeHandle_BeginPoint"
+                Canvas.Left="{Binding ConnectionPoints[0].X, Converter={StaticResource shiftCoordinateConverter}, ConverterParameter=7}"
+                Canvas.Top="{Binding ConnectionPoints[0].Y, Converter={StaticResource shiftCoordinateConverter}, ConverterParameter=7}"
+                Width="7"
+                Height="7"
+                Template="{StaticResource ResizeHandle_ResizeHandleTemplate}" />
+            <control:ResizeHandle
+                x:Name="ResizeHandle_EndPoint"
+                Canvas.Left="{Binding EndPoint.X, Converter={StaticResource shiftCoordinateConverter}, ConverterParameter=7}"
+                Canvas.Top="{Binding EndPoint.Y, Converter={StaticResource shiftCoordinateConverter}, ConverterParameter=7}"
+                Width="7"
+                Height="7"
+                Template="{StaticResource ResizeHandle_ResizeHandleTemplate}" />
+        </Canvas>
+    </ControlTemplate>
+
+    <!--  ResizeDecorator Default Template  -->
+    <ControlTemplate x:Key="ResizeDecoratorTemplate" TargetType="{x:Type Control}">
+        <Grid>
+            <Grid Opacity="0.7" SnapsToDevicePixels="true">
+                <control:RotateThumb
+                    Width="7"
+                    Height="7"
+                    Margin="0,-20,0,0"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Top"
+                    Cursor="Hand"
+                    Template="{StaticResource RotateThumbTemplate}" />
+                <control:ResizeThumb
+                    Height="3"
+                    Margin="0,-4,0,0"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Top"
+                    Cursor="SizeNS"
+                    Template="{StaticResource HorizontalResizeHandleTemplate}" />
+                <control:ResizeThumb
+                    Width="3"
+                    Margin="-4,0,0,0"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Stretch"
+                    Cursor="SizeWE"
+                    Template="{StaticResource VerticalResizeHandleTemplate}" />
+                <control:ResizeThumb
+                    Width="3"
+                    Margin="0,0,-4,0"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Stretch"
+                    Cursor="SizeWE"
+                    Template="{StaticResource VerticalResizeHandleTemplate}" />
+                <control:ResizeThumb
+                    Height="3"
+                    Margin="0,0,0,-4"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Bottom"
+                    Cursor="SizeNS"
+                    Template="{StaticResource HorizontalResizeHandleTemplate}" />
+                <control:ResizeThumb
+                    Width="7"
+                    Height="7"
+                    Margin="-6,-6,0,0"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
+                    Cursor="SizeNWSE"
+                    Template="{StaticResource ResizeHandleTemplate}" />
+                <control:ResizeThumb
+                    Width="7"
+                    Height="7"
+                    Margin="0,-6,-6,0"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Top"
+                    Cursor="SizeNESW"
+                    Template="{StaticResource ResizeHandleTemplate}" />
+                <control:ResizeThumb
+                    Width="7"
+                    Height="7"
+                    Margin="-6,0,0,-6"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Bottom"
+                    Cursor="SizeNESW"
+                    Template="{StaticResource ResizeHandleTemplate}" />
+                <control:ResizeThumb
+                    Width="7"
+                    Height="7"
+                    Margin="0,0,-6,-6"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Bottom"
+                    Cursor="SizeNWSE"
+                    Template="{StaticResource ResizeHandleTemplate}" />
+            </Grid>
+            <Grid
+                Margin="-3"
+                IsHitTestVisible="False"
+                Opacity="1">
+                <Line
+                    Margin="0,-11,0,0"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Top"
+                    Stroke="#6c809a"
+                    StrokeThickness="1"
+                    X1="0"
+                    X2="0"
+                    Y1="0"
+                    Y2="11" />
+            </Grid>
+        </Grid>
+    </ControlTemplate>
+
+    <!--  ConnectorDecoratorTemplate Default Template  -->
+    <ControlTemplate x:Key="ConnectorDecoratorTemplate" TargetType="{x:Type Control}">
+        <Grid Margin="-5">
+            <control:Connector
+                x:Name="Left"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                Orientation="Left" />
+            <control:Connector
+                x:Name="Top"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Top"
+                Orientation="Top" />
+            <control:Connector
+                x:Name="Right"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                Orientation="Right" />
+            <control:Connector
+                x:Name="Bottom"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Bottom"
+                Orientation="Bottom" />
+        </Grid>
+    </ControlTemplate>
+
+
+    <!--  DragThumb Default Template  -->
+    <Style TargetType="{x:Type control:DragThumb}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type control:DragThumb}">
+                    <Rectangle Fill="Transparent" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+</ResourceDictionary>

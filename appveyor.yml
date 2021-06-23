@@ -14,7 +14,7 @@ image: Visual Studio 2017
 init:
   - git config --global core.autocrlf input
 
-clone_folder: c:\projects\grapher
+clone_folder: c:\projects\boiler'sGraphics
 
 shallow_clone: true
 
@@ -30,29 +30,29 @@ platform: Any CPU
 configuration: Release
 
 before_build:
-  - ps: nuget restore grapher.sln
+  - ps: nuget restore boiler'sGraphics.sln
 
 build:
-  project: grapher.sln
+  project: boiler'sGraphics.sln
   verbosity: minimal
 
 after_build:
-  - cmd: 7z a grapher.zip %APPVEYOR_BUILD_FOLDER%\grapher\bin\Release\*.*
-  - cmd: 7z a grapher.zip %APPVEYOR_BUILD_FOLDER%\grapher\bin\Release\dll
-  - cmd: 7z a grapher.zip %APPVEYOR_BUILD_FOLDER%\grapher\bin\Release\ja-JP
+  - cmd: 7z a boiler_sGraphics.zip %APPVEYOR_BUILD_FOLDER%\boiler'sGraphics\bin\Release\*.*
+  - cmd: 7z a boiler_sGraphics.zip %APPVEYOR_BUILD_FOLDER%\boiler'sGraphics\bin\Release\dll
+  - cmd: 7z a boiler_sGraphics.zip %APPVEYOR_BUILD_FOLDER%\boiler'sGraphics\bin\Release\ja-JP
 
 test:
   assemblies:
     only:
-      - grapher.Test.dll
+      - boiler_sGraphics.Test.dll
 
 artifacts:
-  - path: grapher.zip
-    name: grapher.zip
+  - path: boiler_sGraphics.zip
+    name: boiler_sGraphics.zip
 
 deploy:
   - provider: GitHub
-    artifact: grapher.zip
+    artifact: boiler_sGraphics.zip
     draft: false
     prerelease: false
     on:

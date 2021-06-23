@@ -1,6 +1,6 @@
 .vs/
-grapher/bin/
-grapher/obj/
+boiler'sGraphics/bin/
+boiler'sGraphics/obj/
 packages/
-grapher.Test/bin/
-grapher.Test/obj/
+boiler'sGraphics.Test/bin/
+boiler'sGraphics.Test/obj/
