@@ -23,9 +23,14 @@
         <converter:PointsToAngleConverter x:Key="PointsToAngleConverter" />
         <converter:Plus2Converter x:Key="Plus2Converter" />
     </UserControl.Resources>
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <helper:EventToCommand Command="{Binding LoadedCommand}" PassEventArgsToCommand="True" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <Border BorderBrush="LightGray" BorderThickness="1">
-        <DockPanel>
-            <ScrollViewer Name="DesignerScrollViewer"
+        <Grid>
+            <ScrollViewer x:Name="DesignerScrollViewer"
                           HorizontalScrollBarVisibility="Auto"
                           VerticalScrollBarVisibility="Auto">
                 <i:Interaction.Triggers>
@@ -446,7 +451,6 @@
                         </MenuItem>
                     </ContextMenu>
                 </ScrollViewer.ContextMenu>
-
             </ScrollViewer>
             <!--<control:ZoomBox
                 x:Name="zoomBox"
@@ -456,7 +460,14 @@
                 VerticalAlignment="Top"
                 ScrollViewer="{Binding ElementName=DesignerScrollViewer}" />-->
 
+            <control:MiniMap x:Name="miniMap"
+                             Width="180"
+                             Margin="0,5,25,0"
+                             HorizontalAlignment="Right"
+                             VerticalAlignment="Top"
+                             ScrollViewer="{Binding ElementName=DesignerScrollViewer}"
+                             DesignerCanvas="{Binding ElementName=designerCanvas}"/>
 
-        </DockPanel>
+        </Grid>
     </Border>
 </UserControl>

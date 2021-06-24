@@ -70,6 +70,8 @@ namespace boilersGraphics.ViewModels
         public DelegateCommand<MouseEventArgs> MouseLeaveCommand { get; private set; }
         public DelegateCommand<MouseEventArgs> MouseEnterCommand { get; private set; }
 
+        public DelegateCommand<RoutedEventArgs> LoadedCommand { get; private set; }
+
         public double ScaleX { get; set; } = 1.0;
         public double ScaleY { get; set; } = 1.0;
 
@@ -111,12 +113,11 @@ namespace boilersGraphics.ViewModels
                 var diagramControl = App.Current.MainWindow.GetChildOfType<DiagramControl>();
                 var scrollViewer = diagramControl.GetChildOfType<ScrollViewer>();
                 var dockpanel = scrollViewer.GetChildOfType<DockPanel>();
-                var matrix = (dockpanel.LayoutTransform as MatrixTransform).Matrix;
                 ScaleX += args.Delta / 1000d;
                 ScaleY += args.Delta / 1000d;
-                
+                var matrix = new Matrix();
                 matrix.Scale(ScaleX, ScaleY);
-                dockpanel.RenderTransform = new MatrixTransform(matrix);
+                dockpanel.LayoutTransform = new MatrixTransform(matrix);
                 args.Handled = true;
             });
             PreviewMouseDownCommand = new DelegateCommand<MouseEventArgs>(args =>
@@ -159,6 +160,12 @@ namespace boilersGraphics.ViewModels
                 {
                     ReleaseMiddleButton(args);
                 }
+            });
+            LoadedCommand = new DelegateCommand<RoutedEventArgs>(args =>
+            {
+                DiagramControl diagramControl = args.Source as DiagramControl;
+                MiniMap miniMap = diagramControl.GetChildOfType<MiniMap>();
+                miniMap.DesignerCanvas = diagramControl.GetChildOfType<DesignerCanvas>();
             });
 
             Items

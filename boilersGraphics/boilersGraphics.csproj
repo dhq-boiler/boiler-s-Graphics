@@ -142,6 +142,7 @@
     <Compile Include="Controls\Connector.cs" />
     <Compile Include="Controls\DesignerCanvas.cs" />
     <Compile Include="Controls\DragThumb.cs" />
+    <Compile Include="Controls\MiniMap.cs" />
     <Compile Include="Controls\ResizeHandle.cs" />
     <Compile Include="Controls\ResizeThumb.cs" />
     <Compile Include="Controls\RotateThumb.cs" />
@@ -315,6 +316,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Resources\Styles\GroupBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Styles\MiniMap.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

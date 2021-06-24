@@ -16,6 +16,7 @@
                 <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/Styles/ScrollViewer.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/Styles/ZoomBox.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/Styles/DesignerItems.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/Styles/MiniMap.xaml" />
                 
                 <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/Styles.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/Icons.xaml" />
