@@ -182,9 +182,6 @@
                                             Width="{Binding MiniMapWidth}"
                                             Height="{Binding MiniMapHeight}"
                                             Background="{StaticResource AlphaBrush}">
-                                        <!--<Canvas.Background>
-                                            <VisualBrush Visual="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ScrollViewer.Content}" />
-                                        </Canvas.Background>-->
                                         <Rectangle Canvas.Left="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=CanvasLeft}"
                                                    Canvas.Top="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=CanvasTop}"
                                                    Width="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=CanvasWidth}"
