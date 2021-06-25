@@ -1,4 +1,6 @@
-﻿using boilersGraphics.ViewModels;
+﻿using boilersGraphics.Extensions;
+using boilersGraphics.UserControls;
+using boilersGraphics.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -127,6 +129,32 @@ namespace boilersGraphics.Controls
 
         #endregion
 
+        #region MiniMapWidth
+
+        public static readonly DependencyProperty MiniMapWidthProperty =
+            DependencyProperty.Register("MiniMapWidth", typeof(double), typeof(MiniMap));
+
+        public double MiniMapWidth
+        {
+            get { return (double)GetValue(MiniMapWidthProperty); }
+            set { SetValue(MiniMapWidthProperty, value); }
+        }
+
+        #endregion
+
+        #region MiniMapHeight
+
+        public static readonly DependencyProperty MiniMapHeightProperty =
+            DependencyProperty.Register("MiniMapHeight", typeof(double), typeof(MiniMap));
+
+        public double MiniMapHeight
+        {
+            get { return (double)GetValue(MiniMapHeightProperty); }
+            set { SetValue(MiniMapHeightProperty, value); }
+        }
+
+        #endregion
+
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
@@ -174,15 +202,34 @@ namespace boilersGraphics.Controls
 
         private void DesignerCanvas_LayoutUpdated(object sender, EventArgs e)
         {
-            double scale, xOffset, yOffset;
-            this.InvalidateScale(out scale, out xOffset, out yOffset);
+            var diagramControl = App.Current.MainWindow.GetChildOfType<DiagramControl>();
+            var border = diagramControl.FindName("CanvasEdge") as Border;
+            var diagramVM = ((App.Current.MainWindow.DataContext) as MainWindowViewModel).DiagramViewModel;
+            double scale;
+            if (diagramVM.WorldWidth >= diagramVM.WorldHeight)
+            {
+                scale = Width / diagramVM.WorldWidth;
+                MiniMapWidth = diagramVM.WorldWidth * scale;
+                MiniMapHeight = diagramVM.WorldHeight * scale;
+                CanvasLeft = diagramVM.Width * scale;
+                CanvasTop = diagramVM.Height * scale;
+                CanvasWidth = diagramVM.Width * scale;
+                CanvasHeight = diagramVM.Height * scale;
+            }
+            else
+            {
+                scale = Height / diagramVM.WorldHeight;
+                MiniMapWidth = diagramVM.WorldWidth * scale;
+                MiniMapHeight = diagramVM.WorldHeight * scale;
+                CanvasLeft = diagramVM.Width * scale;
+                CanvasTop = diagramVM.Height * scale;
+                CanvasWidth = diagramVM.Width * scale;
+                CanvasHeight = diagramVM.Height * scale;
+            }
+            Canvas.SetLeft(_zoomThumb, this.ScrollViewer.HorizontalOffset * scale);
+            Canvas.SetTop(_zoomThumb, this.ScrollViewer.VerticalOffset * scale);
             _zoomThumb.Width = this.ScrollViewer.ViewportWidth * scale;
             _zoomThumb.Height = this.ScrollViewer.ViewportHeight * scale;
-            CanvasWidth = ((App.Current.MainWindow.DataContext) as MainWindowViewModel).DiagramViewModel.Width * scale;
-            CanvasHeight = ((App.Current.MainWindow.DataContext) as MainWindowViewModel).DiagramViewModel.Height * scale;
-            Canvas.SetLeft(_zoomThumb, xOffset + this.ScrollViewer.HorizontalOffset * scale);
-            Canvas.SetTop(_zoomThumb, yOffset + this.ScrollViewer.VerticalOffset * scale);
-            //CanvasLeft
         }
 
         //private void DesignerCanvas_MouseWheel(object sender, EventArgs e)
