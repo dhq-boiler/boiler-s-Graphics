@@ -84,14 +84,18 @@
                         </VisualBrush.Visual>
                     </VisualBrush>
                 </ScrollViewer.Background>
-                <DockPanel>
-                    <DockPanel.LayoutTransform>
+                <Canvas Width="{Binding WorldWidth}"
+                        Height="{Binding WorldHeight}">
+                    <Canvas.LayoutTransform>
                         <MatrixTransform />
-                    </DockPanel.LayoutTransform>
-                    <Border BorderBrush="Black"
-                        BorderThickness="{Binding BorderThickness}"
-                        Width="{Binding Width, Converter={StaticResource Plus2Converter}}"
-                        Height="{Binding Height, Converter={StaticResource Plus2Converter}}">
+                    </Canvas.LayoutTransform>
+                    <Border x:Name="CanvasEdge"
+                            BorderBrush="Black"
+                            BorderThickness="{Binding BorderThickness}"
+                            Canvas.Left="{Binding Left}"
+                            Canvas.Top="{Binding Top}"
+                            Width="{Binding Width, Converter={StaticResource Plus2Converter}}"
+                            Height="{Binding Height, Converter={StaticResource Plus2Converter}}">
                         <ItemsControl ItemContainerStyleSelector="{x:Static selector:DesignerItemsControlItemStyleSelector.Instance}"
                                       ItemsSource="{Binding Items}"
                                       Width="{Binding Width}"
@@ -368,7 +372,7 @@
                             </ItemsControl.ItemsPanel>
                         </ItemsControl>
                     </Border>
-                </DockPanel>
+                </Canvas>
                 <ScrollViewer.ContextMenu>
                     <ContextMenu>
                         <MenuItem Header="{Binding Grouping, Mode=OneWay, Source={StaticResource resources}}">

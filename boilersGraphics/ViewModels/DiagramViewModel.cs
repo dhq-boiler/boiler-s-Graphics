@@ -32,8 +32,12 @@ namespace boilersGraphics.ViewModels
         private ObservableCollection<Color> _EdgeColors = new ObservableCollection<Color>();
         private ObservableCollection<Color> _FillColors = new ObservableCollection<Color>();
         private CompositeDisposable _CompositeDisposable = new CompositeDisposable();
+        private double _Left;
+        private double _Top;
         private int _Width;
         private int _Height;
+        private double _WorldWidth;
+        private double _WorldHeight;
         private double _BorderThickness;
         private bool _MiddleButtonIsPressed;
         private Point _MousePointerPosition;
@@ -112,12 +116,12 @@ namespace boilersGraphics.ViewModels
             {
                 var diagramControl = App.Current.MainWindow.GetChildOfType<DiagramControl>();
                 var scrollViewer = diagramControl.GetChildOfType<ScrollViewer>();
-                var dockpanel = scrollViewer.GetChildOfType<DockPanel>();
+                var canvas = scrollViewer.GetChildOfType<Canvas>();
                 ScaleX += args.Delta / 1000d;
                 ScaleY += args.Delta / 1000d;
                 var matrix = new Matrix();
                 matrix.Scale(ScaleX, ScaleY);
-                dockpanel.LayoutTransform = new MatrixTransform(matrix);
+                canvas.LayoutTransform = new MatrixTransform(matrix);
                 args.Handled = true;
             });
             PreviewMouseDownCommand = new DelegateCommand<MouseEventArgs>(args =>
@@ -217,6 +221,22 @@ namespace boilersGraphics.ViewModels
                 })
                 .AddTo(_CompositeDisposable);
 
+            this.ObserveProperty(x => x.Width)
+                .Subscribe(x =>
+                {
+                    Left = x;
+                    WorldWidth = Width * 3;
+                })
+                .AddTo(_CompositeDisposable);
+            this.ObserveProperty(x => x.Height)
+                .Subscribe(x =>
+                {
+                    Top = x;
+                    WorldHeight = Height * 3;
+                })
+
+                .AddTo(_CompositeDisposable);
+
             EdgeColors.CollectionChangedAsObservable()
                 .Subscribe(_ => RaisePropertyChanged("EdgeColors"))
                 .AddTo(_CompositeDisposable);
@@ -277,6 +297,18 @@ namespace boilersGraphics.ViewModels
             set { SetProperty(ref _FillColors, value); }
         }
 
+        public double Left
+        {
+            get { return _Left; }
+            set { SetProperty(ref _Left, value); }
+        }
+
+        public double Top
+        {
+            get { return _Top; }
+            set { SetProperty(ref _Top, value); }
+        }
+
         public int Width
         {
             get { return _Width; }
@@ -287,6 +319,18 @@ namespace boilersGraphics.ViewModels
         {
             get { return _Height; }
             set { SetProperty(ref _Height, value); }
+        }
+
+        public double WorldWidth
+        {
+            get { return _WorldWidth; }
+            set { SetProperty(ref _WorldWidth, value); }
+        }
+
+        public double WorldHeight
+        {
+            get { return _WorldHeight; }
+            set { SetProperty(ref _WorldHeight, value); }
         }
 
         public void DeselectAll()
