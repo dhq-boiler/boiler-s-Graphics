@@ -201,7 +201,7 @@
                                                             <ControlTemplate TargetType="Thumb">
                                                                 <Rectangle
                                                                     Fill="Transparent"
-                                                                    Stroke="Black"
+                                                                    Stroke="Red"
                                                                     StrokeThickness="1" />
                                                             </ControlTemplate>
                                                         </Setter.Value>
