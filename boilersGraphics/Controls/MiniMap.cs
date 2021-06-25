@@ -46,43 +46,6 @@ namespace boilersGraphics.Controls
             set { SetValue(DesignerCanvasProperty, value); }
         }
 
-        public static readonly DependencyProperty CanvasLeftProperty =
-            DependencyProperty.Register("CanvasLeft", typeof(double), typeof(MiniMap));
-
-        public static readonly DependencyProperty CanvasTopProperty =
-            DependencyProperty.Register("CanvasTop", typeof(double), typeof(MiniMap));
-
-        public static readonly DependencyProperty CanvasWidthProperty =
-            DependencyProperty.Register("CanvasWidth", typeof(double), typeof(MiniMap));
-
-        public static readonly DependencyProperty CanvasHeightProperty =
-            DependencyProperty.Register("CanvasHeight", typeof(double), typeof(MiniMap));
-
-        public double CanvasLeft
-        {
-            get { return (double)GetValue(CanvasLeftProperty); }
-            set { SetValue(CanvasLeftProperty, value); }
-        }
-
-        public double CanvasTop
-        {
-            get { return (double)GetValue(CanvasTopProperty); }
-            set { SetValue(CanvasTopProperty, value); }
-        }
-
-        public double CanvasWidth
-        {
-            get { return (double)GetValue(CanvasWidthProperty); }
-            set { SetValue(CanvasWidthProperty, value); }
-        }
-
-        public double CanvasHeight
-        {
-            get { return (double)GetValue(CanvasHeightProperty); }
-            set { SetValue(CanvasHeightProperty, value); }
-        }
-
-
         private static void OnDesignerCanvasChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             MiniMap target = (MiniMap)d;
@@ -109,6 +72,58 @@ namespace boilersGraphics.Controls
         }
 
         #endregion
+
+        #endregion
+
+        #region CanvasLeft
+
+        public static readonly DependencyProperty CanvasLeftProperty =
+            DependencyProperty.Register("CanvasLeft", typeof(double), typeof(MiniMap));
+
+        public double CanvasLeft
+        {
+            get { return (double)GetValue(CanvasLeftProperty); }
+            set { SetValue(CanvasLeftProperty, value); }
+        }
+
+        #endregion
+
+        #region CanvasTop
+
+        public static readonly DependencyProperty CanvasTopProperty =
+            DependencyProperty.Register("CanvasTop", typeof(double), typeof(MiniMap));
+
+        public double CanvasTop
+        {
+            get { return (double)GetValue(CanvasTopProperty); }
+            set { SetValue(CanvasTopProperty, value); }
+        }
+
+        #endregion
+
+        #region CanvasWidth
+
+        public static readonly DependencyProperty CanvasWidthProperty =
+            DependencyProperty.Register("CanvasWidth", typeof(double), typeof(MiniMap));
+
+        public double CanvasWidth
+        {
+            get { return (double)GetValue(CanvasWidthProperty); }
+            set { SetValue(CanvasWidthProperty, value); }
+        }
+
+        #endregion
+
+        #region CanvasHeight
+
+        public static readonly DependencyProperty CanvasHeightProperty =
+            DependencyProperty.Register("CanvasHeight", typeof(double), typeof(MiniMap));
+
+        public double CanvasHeight
+        {
+            get { return (double)GetValue(CanvasHeightProperty); }
+            set { SetValue(CanvasHeightProperty, value); }
+        }
 
         #endregion
 
