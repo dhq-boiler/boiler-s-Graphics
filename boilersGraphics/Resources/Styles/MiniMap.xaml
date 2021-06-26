@@ -190,7 +190,10 @@
                                                 <VisualBrush Visual="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ScrollViewer.Content}" />
                                             </Rectangle.Fill>
                                         </Rectangle>
-                                        <Thumb Name="PART_ZoomThumb" Cursor="SizeAll">
+                                        <Thumb Name="PART_ZoomThumb"
+                                               Cursor="SizeAll"
+                                               Width="{Binding ViewportWidth, RelativeSource={RelativeSource TemplatedParent}}"
+                                               Height="{Binding ViewportHeight, RelativeSource={RelativeSource TemplatedParent}}">
                                             <Thumb.Style>
                                                 <Style TargetType="Thumb">
                                                     <Setter Property="Template">

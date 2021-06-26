@@ -155,6 +155,32 @@ namespace boilersGraphics.Controls
 
         #endregion
 
+        #region ViewportWidth
+
+        public static readonly DependencyProperty ViewportWidthProperty =
+            DependencyProperty.Register("ViewportWidth", typeof(double), typeof(MiniMap));
+
+        public double ViewportWidth
+        {
+            get { return (double)GetValue(ViewportWidthProperty); }
+            set { SetValue(ViewportWidthProperty, value); }
+        }
+
+        #endregion
+
+        #region ViewportHeight
+
+        public static readonly DependencyProperty ViewportHeightProperty =
+            DependencyProperty.Register("ViewportHeight", typeof(double), typeof(MiniMap));
+
+        public double ViewportHeight
+        {
+            get { return (double)GetValue(ViewportHeightProperty); }
+            set { SetValue(ViewportHeightProperty, value); }
+        }
+
+        #endregion
+
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
@@ -228,8 +254,10 @@ namespace boilersGraphics.Controls
             }
             Canvas.SetLeft(_zoomThumb, this.ScrollViewer.HorizontalOffset * scale);
             Canvas.SetTop(_zoomThumb, this.ScrollViewer.VerticalOffset * scale);
-            _zoomThumb.Width = this.ScrollViewer.ViewportWidth * scale;
-            _zoomThumb.Height = this.ScrollViewer.ViewportHeight * scale;
+            //_zoomThumb.Width = this.ScrollViewer.ViewportWidth * scale;
+            //_zoomThumb.Height = this.ScrollViewer.ViewportHeight * scale;
+            ViewportWidth = this.ScrollViewer.ViewportWidth * scale;
+            ViewportHeight = this.ScrollViewer.ViewportHeight * scale;
         }
 
         //private void DesignerCanvas_MouseWheel(object sender, EventArgs e)
