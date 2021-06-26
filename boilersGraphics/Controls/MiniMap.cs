@@ -155,6 +155,32 @@ namespace boilersGraphics.Controls
 
         #endregion
 
+        #region ViewportLeft
+
+        public static readonly DependencyProperty ViewportLeftProperty =
+            DependencyProperty.Register("ViewportLeft", typeof(double), typeof(MiniMap));
+
+        public double ViewportLeft
+        {
+            get { return (double)GetValue(ViewportLeftProperty); }
+            set { SetValue(ViewportLeftProperty, value); }
+        }
+
+        #endregion
+
+        #region ViewportTop
+
+        public static readonly DependencyProperty ViewportTopProperty =
+            DependencyProperty.Register("ViewportTop", typeof(double), typeof(MiniMap));
+
+        public double ViewportTop
+        {
+            get { return (double)GetValue(ViewportTopProperty); }
+            set { SetValue(ViewportTopProperty, value); }
+        }
+
+        #endregion
+
         #region ViewportWidth
 
         public static readonly DependencyProperty ViewportWidthProperty =
@@ -252,10 +278,8 @@ namespace boilersGraphics.Controls
                 CanvasWidth = diagramVM.Width * scale;
                 CanvasHeight = diagramVM.Height * scale;
             }
-            Canvas.SetLeft(_zoomThumb, this.ScrollViewer.HorizontalOffset * scale);
-            Canvas.SetTop(_zoomThumb, this.ScrollViewer.VerticalOffset * scale);
-            //_zoomThumb.Width = this.ScrollViewer.ViewportWidth * scale;
-            //_zoomThumb.Height = this.ScrollViewer.ViewportHeight * scale;
+            ViewportLeft = this.ScrollViewer.HorizontalOffset * scale;
+            ViewportTop = this.ScrollViewer.VerticalOffset * scale;
             ViewportWidth = this.ScrollViewer.ViewportWidth * scale;
             ViewportHeight = this.ScrollViewer.ViewportHeight * scale;
         }

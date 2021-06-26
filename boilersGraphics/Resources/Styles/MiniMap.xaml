@@ -192,6 +192,8 @@
                                         </Rectangle>
                                         <Thumb Name="PART_ZoomThumb"
                                                Cursor="SizeAll"
+                                               Canvas.Left="{Binding ViewportLeft, RelativeSource={RelativeSource TemplatedParent}}"
+                                               Canvas.Top="{Binding ViewportTop, RelativeSource={RelativeSource TemplatedParent}}"
                                                Width="{Binding ViewportWidth, RelativeSource={RelativeSource TemplatedParent}}"
                                                Height="{Binding ViewportHeight, RelativeSource={RelativeSource TemplatedParent}}">
                                             <Thumb.Style>
