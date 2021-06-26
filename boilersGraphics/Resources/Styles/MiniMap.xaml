@@ -179,8 +179,8 @@
                                 BorderThickness="0,1,0,0">
                                 <Grid>
                                     <Canvas Name="PART_ZoomCanvas"
-                                            Width="{Binding MiniMapWidth}"
-                                            Height="{Binding MiniMapHeight}"
+                                            Width="{Binding MiniMapWidth, RelativeSource={RelativeSource TemplatedParent}}"
+                                            Height="{Binding MiniMapHeight, RelativeSource={RelativeSource TemplatedParent}}"
                                             Background="{StaticResource AlphaBrush}">
                                         <Rectangle Canvas.Left="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=CanvasLeft}"
                                                    Canvas.Top="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=CanvasTop}"
