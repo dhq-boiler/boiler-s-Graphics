@@ -17,6 +17,8 @@
     xmlns:viewModel="clr-namespace:boilersGraphics.ViewModels"
     d:DesignHeight="450"
     d:DesignWidth="800"
+    Width="{Binding ControlWidth, Mode=OneWayToSource}"
+    Height="{Binding ControlHeight, Mode=OneWayToSource}"
     mc:Ignorable="d">
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />

@@ -41,6 +41,8 @@ namespace boilersGraphics.ViewModels
         private double _BorderThickness;
         private bool _MiddleButtonIsPressed;
         private Point _MousePointerPosition;
+        private double _ControlWidth;
+        private double _ControlHeight;
 
         public DelegateCommand<object> AddItemCommand { get; private set; }
         public DelegateCommand<object> RemoveItemCommand { get; private set; }
@@ -331,6 +333,18 @@ namespace boilersGraphics.ViewModels
         {
             get { return _WorldHeight; }
             set { SetProperty(ref _WorldHeight, value); }
+        }
+
+        public double ControlWidth
+        {
+            get { return _ControlWidth; }
+            set { SetProperty(ref _ControlWidth, value); }
+        }
+
+        public double ControlHeight
+        {
+            get { return _ControlHeight; }
+            set { SetProperty(ref _ControlHeight, value); }
         }
 
         public void DeselectAll()
