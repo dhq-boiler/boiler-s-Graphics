@@ -16,6 +16,8 @@
     xmlns:viewmodel="clr-namespace:boilersGraphics.ViewModels"
     Title="boiler's Graphics"
     prism:ViewModelLocator.AutoWireViewModel="True"
+    Width="{Binding Width}"
+    Height="{Binding Height}"
     mc:Ignorable="d">
     <Window.InputBindings>
         <KeyBinding Key="Del" Command="{Binding DeleteSelectedItemsCommand}" />

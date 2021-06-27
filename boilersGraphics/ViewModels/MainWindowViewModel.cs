@@ -18,6 +18,8 @@ namespace boilersGraphics.ViewModels
         private ToolBarViewModel _ToolBarViewModel;
         private CompositeDisposable _CompositeDisposable = new CompositeDisposable();
         private IDialogService dlgService = null;
+        private double _Width;
+        private double _Height;
 
         public MainWindowViewModel(IDialogService dialogService)
         {
@@ -25,6 +27,8 @@ namespace boilersGraphics.ViewModels
             DiagramViewModel = new DiagramViewModel(1000, 1000);
             _CompositeDisposable.Add(DiagramViewModel);
             ToolBarViewModel = new ToolBarViewModel(dialogService);
+            Width = 1200;
+            Height = 800;
 
             DeleteSelectedItemsCommand = new DelegateCommand<object>(p =>
             {
@@ -92,6 +96,18 @@ namespace boilersGraphics.ViewModels
                     }
                 }
             });
+        }
+
+        public double Width
+        {
+            get { return _Width; }
+            set { SetProperty(ref _Width, value); }
+        }
+
+        public double Height
+        {
+            get { return _Height; }
+            set { SetProperty(ref _Height, value); }
         }
 
         public DiagramViewModel DiagramViewModel
