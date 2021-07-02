@@ -220,34 +220,31 @@
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
-                                    <!--<Slider
-                                        Name="PART_ZoomSlider"
-                                        MinWidth="104"
-                                        MinHeight="21"
-                                        Margin="0"
-                                        HorizontalAlignment="Center"
-                                        VerticalAlignment="Center"
-                                        IsMoveToPointEnabled="False"
-                                        IsSnapToTickEnabled="True"
-                                        LargeChange="25"
-                                        Maximum="500"
-                                        Minimum="25"
-                                        SmallChange="25"
-                                        Ticks="25,50,75,100,125,150,200,300,400,500"
-                                        Value="100" />
+                                    <Slider Name="PART_ZoomSlider"
+                                            MinWidth="104"
+                                            MinHeight="21"
+                                            Margin="0"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            IsMoveToPointEnabled="False"
+                                            IsSnapToTickEnabled="True"
+                                            LargeChange="25"
+                                            Maximum="500"
+                                            Minimum="25"
+                                            SmallChange="25"
+                                            Ticks="25,50,75,100,125,150,200,300,400,500"
+                                            Value="100" />
 
-                                    <TextBlock
-                                        Grid.Column="1"
-                                        Margin="0,0,14,0"
-                                        HorizontalAlignment="Right"
-                                        VerticalAlignment="Center"
-                                        Text="{Binding ElementName=PART_ZoomSlider, Path=Value}" />
-                                    <TextBlock
-                                        Grid.Column="1"
-                                        Margin="1,0,2,0"
-                                        HorizontalAlignment="Right"
-                                        VerticalAlignment="Center"
-                                        Text="%" />-->
+                                    <TextBlock Grid.Column="1"
+                                               Margin="0,0,14,0"
+                                               HorizontalAlignment="Right"
+                                               VerticalAlignment="Center"
+                                               Text="{Binding ElementName=PART_ZoomSlider, Path=Value}" />
+                                    <TextBlock Grid.Column="1"
+                                               Margin="1,0,2,0"
+                                               HorizontalAlignment="Right"
+                                               VerticalAlignment="Center"
+                                               Text="%" />
                                 </Grid>
                             </Expander.Header>
                         </Expander>

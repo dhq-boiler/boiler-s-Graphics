@@ -18,6 +18,7 @@ namespace boilersGraphics.Controls
     {
         private Thumb _zoomThumb;
         private Canvas _zoomCanvas;
+        private Slider _zoomSlider;
         private ScaleTransform _scaleTransform;
 
         #region DPs
@@ -62,14 +63,14 @@ namespace boilersGraphics.Controls
             if (oldDesignerCanvas != null)
             {
                 newDesignerCanvas.LayoutUpdated -= new EventHandler(this.DesignerCanvas_LayoutUpdated);
-                //newDesignerCanvas.MouseWheel -= new MouseWheelEventHandler(this.DesignerCanvas_MouseWheel);
+                newDesignerCanvas.MouseWheel -= new MouseWheelEventHandler(this.DesignerCanvas_MouseWheel);
             }
 
             if (newDesignerCanvas != null)
             {
                 newDesignerCanvas.LayoutUpdated += new EventHandler(this.DesignerCanvas_LayoutUpdated);
-                //newDesignerCanvas.MouseWheel += new MouseWheelEventHandler(this.DesignerCanvas_MouseWheel);
-                newDesignerCanvas.LayoutTransform = _scaleTransform;
+                newDesignerCanvas.MouseWheel += new MouseWheelEventHandler(this.DesignerCanvas_MouseWheel);
+                //newDesignerCanvas.LayoutTransform = _scaleTransform;
             }
         }
 
@@ -222,27 +223,21 @@ namespace boilersGraphics.Controls
             if (_zoomCanvas == null)
                 throw new Exception("PART_ZoomCanvas template is missing!");
 
-            //_zoomSlider = Template.FindName("PART_ZoomSlider", this) as Slider;
-            //if (_zoomSlider == null)
-            //    throw new Exception("PART_ZoomSlider template is missing!");
+            _zoomSlider = Template.FindName("PART_ZoomSlider", this) as Slider;
+            if (_zoomSlider == null)
+                throw new Exception("PART_ZoomSlider template is missing!");
 
             _zoomThumb.DragDelta += new DragDeltaEventHandler(this.Thumb_DragDelta);
-            //_zoomSlider.ValueChanged += new RoutedPropertyChangedEventHandler<double>(this.ZoomSlider_ValueChanged);
+            _zoomSlider.ValueChanged += new RoutedPropertyChangedEventHandler<double>(this.ZoomSlider_ValueChanged);
             _scaleTransform = new ScaleTransform();
         }
 
-        //private void ZoomSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        //{
-        //    double scale = e.NewValue / e.OldValue;
-        //    double halfViewportHeight = this.ScrollViewer.ViewportHeight / 2;
-        //    double newVerticalOffset = ((this.ScrollViewer.VerticalOffset + halfViewportHeight) * scale - halfViewportHeight);
-        //    double halfViewportWidth = this.ScrollViewer.ViewportWidth / 2;
-        //    double newHorizontalOffset = ((this.ScrollViewer.HorizontalOffset + halfViewportWidth) * scale - halfViewportWidth);
-        //    _scaleTransform.ScaleX *= scale;
-        //    _scaleTransform.ScaleY *= scale;
-        //    this.ScrollViewer.ScrollToHorizontalOffset(newHorizontalOffset);
-        //    this.ScrollViewer.ScrollToVerticalOffset(newVerticalOffset);
-        //}
+        private void ZoomSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            double scale = e.NewValue / e.OldValue;
+            ViewportWidth = ViewportWidth * scale; //機能しない
+            ViewportHeight = ViewportHeight * scale; //機能しない
+        }
 
         private void Thumb_DragDelta(object sender, DragDeltaEventArgs e)
         {
@@ -284,15 +279,15 @@ namespace boilersGraphics.Controls
             ViewportHeight = this.ScrollViewer.ViewportHeight * scale;
         }
 
-        //private void DesignerCanvas_MouseWheel(object sender, EventArgs e)
-        //{
-        //    MouseWheelEventArgs wheel = (MouseWheelEventArgs)e;
+        private void DesignerCanvas_MouseWheel(object sender, EventArgs e)
+        {
+            MouseWheelEventArgs wheel = (MouseWheelEventArgs)e;
 
-        //    //divide the value by 10 so that it is more smooth
-        //    double value = Math.Max(0, wheel.Delta / 10);
-        //    value = Math.Min(wheel.Delta, 10);
-        //    _zoomSlider.Value += value;
-        //}
+            //divide the value by 10 so that it is more smooth
+            double value = Math.Max(0, wheel.Delta / 10);
+            value = Math.Min(wheel.Delta, 10);
+            _zoomSlider.Value += value;
+        }
 
         private void InvalidateScale(out double scale, out double xOffset, out double yOffset)
         {
