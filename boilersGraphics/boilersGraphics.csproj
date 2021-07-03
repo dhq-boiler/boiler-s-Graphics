@@ -197,6 +197,7 @@
     <Compile Include="ViewModels\LetterVerticalSettingViewModel.cs" />
     <Compile Include="ViewModels\LetterSettingViewModel.cs" />
     <Compile Include="ViewModels\LetterVerticalDesignerItemViewModel.cs" />
+    <Compile Include="ViewModels\MiniMapViewModel.cs" />
     <Compile Include="ViewModels\NRectangleViewModel.cs" />
     <Compile Include="ViewModels\PathDesignerItemViewModel.cs" />
     <Compile Include="ViewModels\PictureDesignerItemViewModel.cs" />

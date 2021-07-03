@@ -21,6 +21,13 @@ namespace boilersGraphics.Controls
         private Slider _zoomSlider;
         private ScaleTransform _scaleTransform;
 
+        public MiniMapViewModel ViewModel { get; private set; }
+
+        public MiniMap()
+        {
+            DataContext = ViewModel = new MiniMapViewModel(this);
+        }
+
         #region DPs
 
         #region ScrollViewer
@@ -32,6 +39,7 @@ namespace boilersGraphics.Controls
 
         public static readonly DependencyProperty ScrollViewerProperty =
             DependencyProperty.Register("ScrollViewer", typeof(ScrollViewer), typeof(MiniMap));
+
         #endregion
 
         #region DesignerCanvas
@@ -70,141 +78,12 @@ namespace boilersGraphics.Controls
             {
                 newDesignerCanvas.LayoutUpdated += new EventHandler(this.DesignerCanvas_LayoutUpdated);
                 newDesignerCanvas.MouseWheel += new MouseWheelEventHandler(this.DesignerCanvas_MouseWheel);
-                //newDesignerCanvas.LayoutTransform = _scaleTransform;
+                newDesignerCanvas.LayoutTransform = _scaleTransform;
+                ViewModel.Scale.Value = _scaleTransform.ScaleX;
             }
         }
 
         #endregion
-
-        #endregion
-
-        #region CanvasLeft
-
-        public static readonly DependencyProperty CanvasLeftProperty =
-            DependencyProperty.Register("CanvasLeft", typeof(double), typeof(MiniMap));
-
-        public double CanvasLeft
-        {
-            get { return (double)GetValue(CanvasLeftProperty); }
-            set { SetValue(CanvasLeftProperty, value); }
-        }
-
-        #endregion
-
-        #region CanvasTop
-
-        public static readonly DependencyProperty CanvasTopProperty =
-            DependencyProperty.Register("CanvasTop", typeof(double), typeof(MiniMap));
-
-        public double CanvasTop
-        {
-            get { return (double)GetValue(CanvasTopProperty); }
-            set { SetValue(CanvasTopProperty, value); }
-        }
-
-        #endregion
-
-        #region CanvasWidth
-
-        public static readonly DependencyProperty CanvasWidthProperty =
-            DependencyProperty.Register("CanvasWidth", typeof(double), typeof(MiniMap));
-
-        public double CanvasWidth
-        {
-            get { return (double)GetValue(CanvasWidthProperty); }
-            set { SetValue(CanvasWidthProperty, value); }
-        }
-
-        #endregion
-
-        #region CanvasHeight
-
-        public static readonly DependencyProperty CanvasHeightProperty =
-            DependencyProperty.Register("CanvasHeight", typeof(double), typeof(MiniMap));
-
-        public double CanvasHeight
-        {
-            get { return (double)GetValue(CanvasHeightProperty); }
-            set { SetValue(CanvasHeightProperty, value); }
-        }
-
-        #endregion
-
-        #region MiniMapWidth
-
-        public static readonly DependencyProperty MiniMapWidthProperty =
-            DependencyProperty.Register("MiniMapWidth", typeof(double), typeof(MiniMap));
-
-        public double MiniMapWidth
-        {
-            get { return (double)GetValue(MiniMapWidthProperty); }
-            set { SetValue(MiniMapWidthProperty, value); }
-        }
-
-        #endregion
-
-        #region MiniMapHeight
-
-        public static readonly DependencyProperty MiniMapHeightProperty =
-            DependencyProperty.Register("MiniMapHeight", typeof(double), typeof(MiniMap));
-
-        public double MiniMapHeight
-        {
-            get { return (double)GetValue(MiniMapHeightProperty); }
-            set { SetValue(MiniMapHeightProperty, value); }
-        }
-
-        #endregion
-
-        #region ViewportLeft
-
-        public static readonly DependencyProperty ViewportLeftProperty =
-            DependencyProperty.Register("ViewportLeft", typeof(double), typeof(MiniMap));
-
-        public double ViewportLeft
-        {
-            get { return (double)GetValue(ViewportLeftProperty); }
-            set { SetValue(ViewportLeftProperty, value); }
-        }
-
-        #endregion
-
-        #region ViewportTop
-
-        public static readonly DependencyProperty ViewportTopProperty =
-            DependencyProperty.Register("ViewportTop", typeof(double), typeof(MiniMap));
-
-        public double ViewportTop
-        {
-            get { return (double)GetValue(ViewportTopProperty); }
-            set { SetValue(ViewportTopProperty, value); }
-        }
-
-        #endregion
-
-        #region ViewportWidth
-
-        public static readonly DependencyProperty ViewportWidthProperty =
-            DependencyProperty.Register("ViewportWidth", typeof(double), typeof(MiniMap));
-
-        public double ViewportWidth
-        {
-            get { return (double)GetValue(ViewportWidthProperty); }
-            set { SetValue(ViewportWidthProperty, value); }
-        }
-
-        #endregion
-
-        #region ViewportHeight
-
-        public static readonly DependencyProperty ViewportHeightProperty =
-            DependencyProperty.Register("ViewportHeight", typeof(double), typeof(MiniMap));
-
-        public double ViewportHeight
-        {
-            get { return (double)GetValue(ViewportHeightProperty); }
-            set { SetValue(ViewportHeightProperty, value); }
-        }
 
         #endregion
 
@@ -235,16 +114,18 @@ namespace boilersGraphics.Controls
         private void ZoomSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             double scale = e.NewValue / e.OldValue;
-            ViewportWidth = ViewportWidth * scale; //機能しない
-            ViewportHeight = ViewportHeight * scale; //機能しない
+            ViewModel.Scale.Value *= scale;
+            _scaleTransform.ScaleX *= scale;
+            _scaleTransform.ScaleY *= scale;
+            ViewModel.ViewportWidth.Value = ViewModel.ViewportWidth.Value / ViewModel.Scale.Value;
+            ViewModel.ViewportHeight.Value = ViewModel.ViewportHeight.Value / ViewModel.Scale.Value;
         }
 
         private void Thumb_DragDelta(object sender, DragDeltaEventArgs e)
         {
-            double scale, xOffset, yOffset;
-            this.InvalidateScale(out scale, out xOffset, out yOffset);
-            this.ScrollViewer.ScrollToHorizontalOffset(this.ScrollViewer.HorizontalOffset + e.HorizontalChange / scale);
-            this.ScrollViewer.ScrollToVerticalOffset(this.ScrollViewer.VerticalOffset + e.VerticalChange / scale);
+            double scale = ViewModel.Scale.Value;
+            ViewModel.ViewportLeft.Value = ViewModel.ViewportLeft.Value + e.HorizontalChange / scale;
+            ViewModel.ViewportTop.Value = ViewModel.ViewportTop.Value + e.VerticalChange / scale;
         }
 
         private void DesignerCanvas_LayoutUpdated(object sender, EventArgs e)
@@ -253,30 +134,36 @@ namespace boilersGraphics.Controls
             var border = diagramControl.FindName("CanvasEdge") as Border;
             var diagramVM = ((App.Current.MainWindow.DataContext) as MainWindowViewModel).DiagramViewModel;
             double scale;
-            if (diagramVM.WorldWidth >= diagramVM.WorldHeight)
+            switch (ViewModel.Scale.Value)
             {
-                scale = Width / diagramVM.WorldWidth;
-                MiniMapWidth = diagramVM.WorldWidth * scale;
-                MiniMapHeight = diagramVM.WorldHeight * scale;
-                CanvasLeft = diagramVM.Width * scale;
-                CanvasTop = diagramVM.Height * scale;
-                CanvasWidth = diagramVM.Width * scale;
-                CanvasHeight = diagramVM.Height * scale;
+                case 1.0:
+                    if (diagramVM.WorldWidth >= diagramVM.WorldHeight)
+                    {
+                        scale = Width / diagramVM.WorldWidth;
+                        ViewModel.MiniMapWidth.Value = diagramVM.WorldWidth * scale;
+                        ViewModel.MiniMapHeight.Value = diagramVM.WorldHeight * scale;
+                        ViewModel.CanvasLeft.Value = diagramVM.Width * scale;
+                        ViewModel.CanvasTop.Value = diagramVM.Height * scale;
+                        ViewModel.CanvasWidth.Value = diagramVM.Width * scale;
+                        ViewModel.CanvasHeight.Value = diagramVM.Height * scale;
+                    }
+                    else
+                    {
+                        scale = Height / diagramVM.WorldHeight;
+                        ViewModel.MiniMapWidth.Value = diagramVM.WorldWidth * scale;
+                        ViewModel.MiniMapHeight.Value = diagramVM.WorldHeight * scale;
+                        ViewModel.CanvasLeft.Value = diagramVM.Width * scale;
+                        ViewModel.CanvasTop.Value = diagramVM.Height * scale;
+                        ViewModel.CanvasWidth.Value = diagramVM.Width * scale;
+                        ViewModel.CanvasHeight.Value = diagramVM.Height * scale;
+                    }
+                    //ViewModel.ViewportLeft.Value = this.ScrollViewer.HorizontalOffset * scale;
+                    //ViewModel.ViewportTop.Value = this.ScrollViewer.VerticalOffset * scale;
+                    ViewModel.ViewportWidth.Value = this.ScrollViewer.ViewportWidth * scale;
+                    ViewModel.ViewportHeight.Value = this.ScrollViewer.ViewportHeight * scale;
+                    ViewModel.Ratio.Value = scale;
+                    break;
             }
-            else
-            {
-                scale = Height / diagramVM.WorldHeight;
-                MiniMapWidth = diagramVM.WorldWidth * scale;
-                MiniMapHeight = diagramVM.WorldHeight * scale;
-                CanvasLeft = diagramVM.Width * scale;
-                CanvasTop = diagramVM.Height * scale;
-                CanvasWidth = diagramVM.Width * scale;
-                CanvasHeight = diagramVM.Height * scale;
-            }
-            ViewportLeft = this.ScrollViewer.HorizontalOffset * scale;
-            ViewportTop = this.ScrollViewer.VerticalOffset * scale;
-            ViewportWidth = this.ScrollViewer.ViewportWidth * scale;
-            ViewportHeight = this.ScrollViewer.ViewportHeight * scale;
         }
 
         private void DesignerCanvas_MouseWheel(object sender, EventArgs e)
@@ -287,21 +174,6 @@ namespace boilersGraphics.Controls
             double value = Math.Max(0, wheel.Delta / 10);
             value = Math.Min(wheel.Delta, 10);
             _zoomSlider.Value += value;
-        }
-
-        private void InvalidateScale(out double scale, out double xOffset, out double yOffset)
-        {
-            double w = DesignerCanvas.ActualWidth * _scaleTransform.ScaleX;
-            double h = DesignerCanvas.ActualHeight * _scaleTransform.ScaleY;
-
-            // zoom canvas size
-            double x = _zoomCanvas.ActualWidth;
-            double y = _zoomCanvas.ActualHeight;
-            double scaleX = x / w;
-            double scaleY = y / h;
-            scale = (scaleX < scaleY) ? scaleX : scaleY;
-            xOffset = (x - scale * w) / 2;
-            yOffset = (y - scale * h) / 2;
         }
     }
 }

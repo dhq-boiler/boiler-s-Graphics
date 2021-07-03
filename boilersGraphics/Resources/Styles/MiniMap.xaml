@@ -179,23 +179,23 @@
                                 BorderThickness="0,1,0,0">
                                 <Grid>
                                     <Canvas Name="PART_ZoomCanvas"
-                                            Width="{Binding MiniMapWidth, RelativeSource={RelativeSource TemplatedParent}}"
-                                            Height="{Binding MiniMapHeight, RelativeSource={RelativeSource TemplatedParent}}"
+                                            Width="{Binding MiniMapWidth.Value}"
+                                            Height="{Binding MiniMapHeight.Value}"
                                             Background="{StaticResource AlphaBrush}">
-                                        <Rectangle Canvas.Left="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=CanvasLeft}"
-                                                   Canvas.Top="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=CanvasTop}"
-                                                   Width="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=CanvasWidth}"
-                                                   Height="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=CanvasHeight}">
+                                        <Rectangle Canvas.Left="{Binding CanvasLeft.Value}"
+                                                   Canvas.Top="{Binding CanvasTop.Value}"
+                                                   Width="{Binding CanvasWidth.Value}"
+                                                   Height="{Binding CanvasHeight.Value}">
                                             <Rectangle.Fill>
                                                 <VisualBrush Visual="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ScrollViewer.Content}" />
                                             </Rectangle.Fill>
                                         </Rectangle>
                                         <Thumb Name="PART_ZoomThumb"
                                                Cursor="SizeAll"
-                                               Canvas.Left="{Binding ViewportLeft, RelativeSource={RelativeSource TemplatedParent}}"
-                                               Canvas.Top="{Binding ViewportTop, RelativeSource={RelativeSource TemplatedParent}}"
-                                               Width="{Binding ViewportWidth, RelativeSource={RelativeSource TemplatedParent}}"
-                                               Height="{Binding ViewportHeight, RelativeSource={RelativeSource TemplatedParent}}">
+                                               Canvas.Left="{Binding ViewportLeft.Value}"
+                                               Canvas.Top="{Binding ViewportTop.Value}"
+                                               Width="{Binding ViewportWidth.Value}"
+                                               Height="{Binding ViewportHeight.Value}">
                                             <Thumb.Style>
                                                 <Style TargetType="Thumb">
                                                     <Setter Property="Template">
