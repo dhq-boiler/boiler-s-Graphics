@@ -1,4 +1,5 @@
 ﻿using boilersGraphics.Controls;
+using boilersGraphics.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,7 +29,7 @@ namespace boilersGraphics.UserControls
 
         private void DesignerCanvas_Loaded(object sender, RoutedEventArgs e)
         {
-            DesignerCanvas myDesignerCanvas = sender as DesignerCanvas;
+            DesignerCanvas myDesignerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
             zoomBox.DesignerCanvas = myDesignerCanvas;
         }
     }

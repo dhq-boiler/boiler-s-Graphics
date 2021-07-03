@@ -32,6 +32,8 @@ namespace boilersGraphics.ViewModels
         private ObservableCollection<Color> _EdgeColors = new ObservableCollection<Color>();
         private ObservableCollection<Color> _FillColors = new ObservableCollection<Color>();
         private CompositeDisposable _CompositeDisposable = new CompositeDisposable();
+        private int _Width;
+        private int _Height;
         private double _BorderThickness;
         private bool _MiddleButtonIsPressed;
         private Point _MousePointerPosition;
@@ -267,6 +269,18 @@ namespace boilersGraphics.ViewModels
             get { return _FillColors; }
             set { SetProperty(ref _FillColors, value); }
         }
+        public int Width
+        {
+            get { return _Width; }
+            set { SetProperty(ref _Width, value); }
+        }
+
+        public int Height
+        {
+            get { return _Height; }
+            set { SetProperty(ref _Height, value); }
+        }
+
 
         public void DeselectAll()
         {

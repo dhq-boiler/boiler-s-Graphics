@@ -17,14 +17,14 @@
     xmlns:viewModel="clr-namespace:boilersGraphics.ViewModels"
     d:DesignHeight="450"
     d:DesignWidth="800"
+    Loaded="DesignerCanvas_Loaded"
     mc:Ignorable="d">
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         <converter:PointsToAngleConverter x:Key="PointsToAngleConverter" />
-        <converter:Plus2Converter x:Key="Plus2Converter" />
     </UserControl.Resources>
     <Border BorderBrush="LightGray" BorderThickness="1">
-        <DockPanel>
+        <Grid>
             <ScrollViewer Name="DesignerScrollViewer"
                           HorizontalScrollBarVisibility="Auto"
                           VerticalScrollBarVisibility="Auto">
@@ -85,8 +85,8 @@
                     </DockPanel.LayoutTransform>
                     <Border BorderBrush="Black"
                         BorderThickness="{Binding BorderThickness}"
-                        Width="{Binding Width, Converter={StaticResource Plus2Converter}}"
-                        Height="{Binding Height, Converter={StaticResource Plus2Converter}}">
+                        Width="{Binding Width}"
+                        Height="{Binding Height}">
                         <ItemsControl ItemContainerStyleSelector="{x:Static selector:DesignerItemsControlItemStyleSelector.Instance}"
                                       ItemsSource="{Binding Items}"
                                       Width="{Binding Width}"
@@ -448,15 +448,15 @@
                 </ScrollViewer.ContextMenu>
 
             </ScrollViewer>
-            <!--<control:ZoomBox
+            <control:ZoomBox
                 x:Name="zoomBox"
                 Width="180"
                 Margin="0,5,25,0"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Top"
-                ScrollViewer="{Binding ElementName=DesignerScrollViewer}" />-->
+                ScrollViewer="{Binding ElementName=DesignerScrollViewer}" />
 
 
-        </DockPanel>
+        </Grid>
     </Border>
 </UserControl>
