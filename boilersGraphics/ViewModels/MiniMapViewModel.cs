@@ -31,7 +31,7 @@ namespace boilersGraphics.ViewModels
         private MiniMap parent;
         private bool disposedValue;
 
-        public MiniMapViewModel(MiniMap parent)
+        public MiniMapViewModel(MiniMap parent, Canvas zoomCanvas)
         {
             this.parent = parent;
             Scale.Value = 1.0;
@@ -43,7 +43,8 @@ namespace boilersGraphics.ViewModels
                         ViewportLeft.Value = 0;
                     else if (x + ViewportWidth.Value > MiniMapWidth.Value)
                         ViewportLeft.Value = MiniMapWidth.Value - ViewportWidth.Value;
-                    parent.ScrollViewer?.ScrollToHorizontalOffset(ViewportLeft.Value / Ratio.Value);
+                    if (zoomCanvas.ActualWidth > 0)
+                        parent.ScrollViewer?.ScrollToHorizontalOffset(ViewportLeft.Value * parent.ScrollViewer.ExtentWidth / zoomCanvas.ActualWidth);
                 })
                 .AddTo(disposables);
             this.ViewportTop
@@ -53,7 +54,8 @@ namespace boilersGraphics.ViewModels
                         ViewportTop.Value = 0;
                     else if (x + ViewportHeight.Value > MiniMapHeight.Value)
                         ViewportTop.Value = MiniMapHeight.Value - ViewportHeight.Value;
-                    parent.ScrollViewer?.ScrollToVerticalOffset(ViewportTop.Value / Ratio.Value);
+                    if (zoomCanvas.ActualHeight > 0)
+                        parent.ScrollViewer?.ScrollToVerticalOffset(ViewportTop.Value * parent.ScrollViewer.ExtentHeight / zoomCanvas.ActualHeight);
                 })
                 .AddTo(disposables);
         }

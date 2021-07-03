@@ -25,7 +25,6 @@ namespace boilersGraphics.Controls
 
         public MiniMap()
         {
-            DataContext = ViewModel = new MiniMapViewModel(this);
         }
 
         #region DPs
@@ -71,13 +70,13 @@ namespace boilersGraphics.Controls
             if (oldDesignerCanvas != null)
             {
                 newDesignerCanvas.LayoutUpdated -= new EventHandler(this.DesignerCanvas_LayoutUpdated);
-                newDesignerCanvas.MouseWheel -= new MouseWheelEventHandler(this.DesignerCanvas_MouseWheel);
+                //newDesignerCanvas.MouseWheel -= new MouseWheelEventHandler(this.DesignerCanvas_MouseWheel);
             }
 
             if (newDesignerCanvas != null)
             {
                 newDesignerCanvas.LayoutUpdated += new EventHandler(this.DesignerCanvas_LayoutUpdated);
-                newDesignerCanvas.MouseWheel += new MouseWheelEventHandler(this.DesignerCanvas_MouseWheel);
+                //newDesignerCanvas.MouseWheel += new MouseWheelEventHandler(this.DesignerCanvas_MouseWheel);
                 newDesignerCanvas.LayoutTransform = _scaleTransform;
                 ViewModel.Scale.Value = _scaleTransform.ScaleX;
             }
@@ -109,6 +108,7 @@ namespace boilersGraphics.Controls
             _zoomThumb.DragDelta += new DragDeltaEventHandler(this.Thumb_DragDelta);
             _zoomSlider.ValueChanged += new RoutedPropertyChangedEventHandler<double>(this.ZoomSlider_ValueChanged);
             _scaleTransform = new ScaleTransform();
+            DataContext = ViewModel = new MiniMapViewModel(this, _zoomCanvas);
         }
 
         private void ZoomSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -157,23 +157,20 @@ namespace boilersGraphics.Controls
                         ViewModel.CanvasWidth.Value = diagramVM.Width * scale;
                         ViewModel.CanvasHeight.Value = diagramVM.Height * scale;
                     }
-                    //ViewModel.ViewportLeft.Value = this.ScrollViewer.HorizontalOffset * scale;
-                    //ViewModel.ViewportTop.Value = this.ScrollViewer.VerticalOffset * scale;
                     ViewModel.ViewportWidth.Value = this.ScrollViewer.ViewportWidth * scale;
                     ViewModel.ViewportHeight.Value = this.ScrollViewer.ViewportHeight * scale;
-                    ViewModel.Ratio.Value = scale;
                     break;
             }
         }
 
-        private void DesignerCanvas_MouseWheel(object sender, EventArgs e)
-        {
-            MouseWheelEventArgs wheel = (MouseWheelEventArgs)e;
+        //private void DesignerCanvas_MouseWheel(object sender, EventArgs e)
+        //{
+        //    MouseWheelEventArgs wheel = (MouseWheelEventArgs)e;
 
-            //divide the value by 10 so that it is more smooth
-            double value = Math.Max(0, wheel.Delta / 10);
-            value = Math.Min(wheel.Delta, 10);
-            _zoomSlider.Value += value;
-        }
+        //    //divide the value by 10 so that it is more smooth
+        //    double value = Math.Max(0, wheel.Delta / 10);
+        //    value = Math.Min(wheel.Delta, 10);
+        //    _zoomSlider.Value += value;
+        //}
     }
 }
