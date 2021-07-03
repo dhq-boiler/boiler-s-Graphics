@@ -121,9 +121,21 @@ namespace boilersGraphics.ViewModels
                 var canvas = scrollViewer.GetChildOfType<Canvas>();
                 ScaleX += args.Delta / 1000d;
                 ScaleY += args.Delta / 1000d;
+
+                var relativeMiddle = new Point(scrollViewer.ActualWidth / 2, scrollViewer.ActualHeight / 2);
+                var oldLocation = canvas.LayoutTransform.Transform(canvas.PointFromScreen(relativeMiddle));
+
                 var matrix = new Matrix();
                 matrix.Scale(ScaleX, ScaleY);
                 canvas.LayoutTransform = new MatrixTransform(matrix);
+
+                var newLocation = canvas.LayoutTransform.Transform(canvas.PointFromScreen(relativeMiddle));
+
+                var shift = newLocation - oldLocation;
+
+                scrollViewer.ScrollToVerticalOffset(scrollViewer.VerticalOffset + shift.Y);
+                scrollViewer.ScrollToHorizontalOffset(scrollViewer.HorizontalOffset + shift.X);
+
                 args.Handled = true;
             });
             PreviewMouseDownCommand = new DelegateCommand<MouseEventArgs>(args =>
