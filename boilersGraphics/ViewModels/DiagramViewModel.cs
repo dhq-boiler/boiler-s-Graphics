@@ -109,14 +109,11 @@ namespace boilersGraphics.ViewModels
             MouseWheelCommand = new DelegateCommand<MouseWheelEventArgs>(args =>
             {
                 var diagramControl = App.Current.MainWindow.GetChildOfType<DiagramControl>();
-                var scrollViewer = diagramControl.GetChildOfType<ScrollViewer>();
-                var dockpanel = scrollViewer.GetChildOfType<DockPanel>();
-                var matrix = (dockpanel.LayoutTransform as MatrixTransform).Matrix;
-                ScaleX += args.Delta / 1000d;
-                ScaleY += args.Delta / 1000d;
-                
-                matrix.Scale(ScaleX, ScaleY);
-                dockpanel.RenderTransform = new MatrixTransform(matrix);
+                var zoomBox = diagramControl.GetChildOfType<ZoomBox>();
+                if (args.Delta > 0)
+                    zoomBox.ZoomSliderPlus();
+                else if (args.Delta < 0)
+                    zoomBox.ZoomSliderMinus();
                 args.Handled = true;
             });
             PreviewMouseDownCommand = new DelegateCommand<MouseEventArgs>(args =>

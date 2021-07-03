@@ -113,6 +113,26 @@ namespace boilersGraphics.Controls
             this.ScrollViewer.ScrollToVerticalOffset(newVerticalOffset);
         }
 
+        public void ZoomSliderPlus()
+        {
+            var ticks = _zoomSlider.Ticks;
+            int index = ticks.IndexOf(_zoomSlider.Value);
+            index++;
+            if (index > ticks.Count() - 1)
+                index = ticks.Count() - 1;
+            _zoomSlider.Value = ticks[index];
+        }
+
+        public void ZoomSliderMinus()
+        {
+            var ticks = _zoomSlider.Ticks;
+            int index = ticks.IndexOf(_zoomSlider.Value);
+            index--;
+            if (index < 0)
+                index = 0;
+            _zoomSlider.Value = ticks[index];
+        }
+
         private void Thumb_DragDelta(object sender, DragDeltaEventArgs e)
         {
             double scale, xOffset, yOffset;
