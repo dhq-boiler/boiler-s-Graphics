@@ -12,7 +12,7 @@ using System.Windows.Controls;
 
 namespace boilersGraphics.ViewModels
 {
-    public class MiniMapViewModel : BindableBase
+    public class MiniMapViewModel : BindableBase, IDisposable
     {
         private CompositeDisposable disposables = new CompositeDisposable();
         public ReactiveProperty<double> CanvasLeft { get; set; } = new ReactiveProperty<double>();
@@ -29,6 +29,7 @@ namespace boilersGraphics.ViewModels
         public ReactiveProperty<double> Ratio { get; set; } = new ReactiveProperty<double>();
 
         private MiniMap parent;
+        private bool disposedValue;
 
         public MiniMapViewModel(MiniMap parent)
         {
@@ -55,6 +56,49 @@ namespace boilersGraphics.ViewModels
                     parent.ScrollViewer?.ScrollToVerticalOffset(ViewportTop.Value / Ratio.Value);
                 })
                 .AddTo(disposables);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    CanvasLeft.Dispose();
+                    CanvasTop.Dispose();
+                    CanvasWidth.Dispose();
+                    CanvasHeight.Dispose();
+                    MiniMapWidth.Dispose();
+                    MiniMapHeight.Dispose();
+                    ViewportLeft.Dispose();
+                    ViewportTop.Dispose();
+                    ViewportWidth.Dispose();
+                    ViewportHeight.Dispose();
+                    Scale.Dispose();
+                    Ratio.Dispose();
+                }
+
+                CanvasLeft = null;
+                CanvasTop = null;
+                CanvasWidth = null;
+                CanvasHeight = null;
+                MiniMapWidth = null;
+                MiniMapHeight = null;
+                ViewportLeft = null;
+                ViewportTop = null;
+                ViewportWidth = null;
+                ViewportHeight = null;
+                Scale = null;
+                Ratio = null;
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            // このコードを変更しないでください。
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }
