@@ -458,21 +458,14 @@
                     </ContextMenu>
                 </ScrollViewer.ContextMenu>
             </ScrollViewer>
-            <!--<control:ZoomBox
-                x:Name="zoomBox"
-                Width="180"
-                Margin="0,5,25,0"
-                HorizontalAlignment="Right"
-                VerticalAlignment="Top"
-                ScrollViewer="{Binding ElementName=DesignerScrollViewer}" />-->
 
-            <control:MiniMap x:Name="miniMap"
+            <!--<control:MiniMap x:Name="miniMap"
                              Width="180"
                              Margin="0,5,25,0"
                              HorizontalAlignment="Right"
                              VerticalAlignment="Top"
                              ScrollViewer="{Binding ElementName=DesignerScrollViewer}"
-                             DesignerCanvas="{Binding ElementName=designerCanvas}"/>
+                             DesignerCanvas="{Binding ElementName=designerCanvas}"/>-->
 
         </Grid>
     </Border>

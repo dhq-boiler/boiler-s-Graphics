@@ -169,9 +169,9 @@ namespace boilersGraphics.ViewModels
             });
             LoadedCommand = new DelegateCommand<RoutedEventArgs>(args =>
             {
-                DiagramControl diagramControl = args.Source as DiagramControl;
-                MiniMap miniMap = diagramControl.GetChildOfType<MiniMap>();
-                miniMap.DesignerCanvas = diagramControl.GetChildOfType<DesignerCanvas>();
+                //DiagramControl diagramControl = args.Source as DiagramControl;
+                //MiniMap miniMap = diagramControl.GetChildOfType<MiniMap>();
+                //miniMap.DesignerCanvas = diagramControl.GetChildOfType<DesignerCanvas>();
             });
 
             Items
