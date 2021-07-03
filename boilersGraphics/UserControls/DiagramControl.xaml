@@ -79,291 +79,281 @@
                         </VisualBrush.Visual>
                     </VisualBrush>
                 </ScrollViewer.Background>
-                <DockPanel>
-                    <DockPanel.LayoutTransform>
-                        <MatrixTransform />
-                    </DockPanel.LayoutTransform>
-                    <Border BorderBrush="Black"
-                        BorderThickness="{Binding BorderThickness}"
-                        Width="{Binding Width}"
-                        Height="{Binding Height}">
-                        <ItemsControl ItemContainerStyleSelector="{x:Static selector:DesignerItemsControlItemStyleSelector.Instance}"
-                                      ItemsSource="{Binding Items}"
-                                      Width="{Binding Width}"
-                                      Height="{Binding Height}"
-                                      Background="Transparent">
-                            <ItemsControl.Resources>
+                <ItemsControl ItemContainerStyleSelector="{x:Static selector:DesignerItemsControlItemStyleSelector.Instance}"
+                              ItemsSource="{Binding Items}"
+                              Background="Transparent"
+                              BorderBrush="Black"
+                              BorderThickness="{Binding BorderThickness}">
+                    <ItemsControl.Resources>
 
-                                <Style x:Key="designerItemStyle" TargetType="{x:Type ContentPresenter}">
-                                    <Setter Property="Canvas.Top" Value="{Binding Top.Value}" />
-                                    <Setter Property="Canvas.Left" Value="{Binding Left.Value}" />
-                                    <Setter Property="Panel.ZIndex" Value="{Binding ZIndex.Value}" />
-                                    <Setter Property="attached:SelectionProps.EnabledForSelection" Value="{Binding EnableForSelection.Value}" />
-                                    <Setter Property="attached:ItemConnectProps.EnabledForConnection" Value="True" />
-                                    <Setter Property="Width" Value="{Binding Width.Value}" />
-                                    <Setter Property="Height" Value="{Binding Height.Value}" />
-                                    <Setter Property="SnapsToDevicePixels" Value="True" />
-                                    <Setter Property="ContentTemplate">
-                                        <Setter.Value>
-                                            <DataTemplate>
-                                                <Grid x:Name="selectedGrid">
-                                                    <Grid.Style>
-                                                        <Style TargetType="{x:Type Grid}">
-                                                            <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
-                                                            <Setter Property="RenderTransform">
-                                                                <Setter.Value>
-                                                                    <MatrixTransform Matrix="{Binding Matrix.Value}" />
-                                                                </Setter.Value>
-                                                            </Setter>
-                                                        </Style>
-                                                    </Grid.Style>
-                                                    <control:DragThumb x:Name="PART_DragThumb" Cursor="SizeAll" />
-                                                    <!--  PART_ResizeDecorator  -->
-                                                    <Control
-                                                    x:Name="PART_ResizeDecorator"
-                                                    Template="{StaticResource ResizeDecoratorTemplate}"
-                                                    Visibility="Collapsed" />
-                                                    <ContentPresenter
-                                                    x:Name="PART_ContentPresenter"
-                                                    HorizontalAlignment="Stretch"
-                                                    VerticalAlignment="Stretch"
-                                                    Content="{TemplateBinding Content}" />
-                                                    <Grid x:Name="PART_ConnectorDecorator" Margin="-5">
-                                                        <control:Connector
-                                                        x:Name="Connector_Left"
-                                                        HorizontalAlignment="Left"
-                                                        VerticalAlignment="Center"
-                                                        DataContext="{Binding LeftConnector}"
-                                                        Orientation="Left"
-                                                        Visibility="{Binding Path=ShowConnectors, Converter={StaticResource BoolToVisibilityConverter}}" />
-                                                        <control:Connector
-                                                        x:Name="Connector_Top"
-                                                        HorizontalAlignment="Center"
-                                                        VerticalAlignment="Top"
-                                                        DataContext="{Binding TopConnector}"
-                                                        Orientation="Top"
-                                                        Visibility="{Binding Path=ShowConnectors, Converter={StaticResource BoolToVisibilityConverter}}" />
-                                                        <control:Connector
-                                                        x:Name="Connector_Right"
-                                                        HorizontalAlignment="Right"
-                                                        VerticalAlignment="Center"
-                                                        DataContext="{Binding RightConnector}"
-                                                        Orientation="Right"
-                                                        Visibility="{Binding Path=ShowConnectors, Converter={StaticResource BoolToVisibilityConverter}}" />
-                                                        <control:Connector
-                                                        x:Name="Connector_Bottom"
-                                                        HorizontalAlignment="Center"
-                                                        VerticalAlignment="Bottom"
-                                                        DataContext="{Binding BottomConnector}"
-                                                        Orientation="Bottom"
-                                                        Visibility="{Binding Path=ShowConnectors, Converter={StaticResource BoolToVisibilityConverter}}" />
-                                                    </Grid>
-                                                </Grid>
-                                                <DataTemplate.Triggers>
-                                                    <Trigger Property="IsMouseOver" Value="true">
-                                                        <Setter TargetName="PART_ConnectorDecorator" Property="Visibility" Value="Visible" />
-                                                    </Trigger>
+                        <Style x:Key="designerItemStyle" TargetType="{x:Type ContentPresenter}">
+                            <Setter Property="Canvas.Top" Value="{Binding Top.Value}" />
+                            <Setter Property="Canvas.Left" Value="{Binding Left.Value}" />
+                            <Setter Property="Panel.ZIndex" Value="{Binding ZIndex.Value}" />
+                            <Setter Property="attached:SelectionProps.EnabledForSelection" Value="{Binding EnableForSelection.Value}" />
+                            <Setter Property="attached:ItemConnectProps.EnabledForConnection" Value="True" />
+                            <Setter Property="Width" Value="{Binding Width.Value}" />
+                            <Setter Property="Height" Value="{Binding Height.Value}" />
+                            <Setter Property="SnapsToDevicePixels" Value="True" />
+                            <Setter Property="ContentTemplate">
+                                <Setter.Value>
+                                    <DataTemplate>
+                                        <Grid x:Name="selectedGrid">
+                                            <Grid.Style>
+                                                <Style TargetType="{x:Type Grid}">
+                                                    <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
+                                                    <Setter Property="RenderTransform">
+                                                        <Setter.Value>
+                                                            <MatrixTransform Matrix="{Binding Matrix.Value}" />
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </Style>
+                                            </Grid.Style>
+                                            <control:DragThumb x:Name="PART_DragThumb" Cursor="SizeAll" />
+                                            <!--  PART_ResizeDecorator  -->
+                                            <Control
+                                            x:Name="PART_ResizeDecorator"
+                                            Template="{StaticResource ResizeDecoratorTemplate}"
+                                            Visibility="Collapsed" />
+                                            <ContentPresenter
+                                            x:Name="PART_ContentPresenter"
+                                            HorizontalAlignment="Stretch"
+                                            VerticalAlignment="Stretch"
+                                            Content="{TemplateBinding Content}" />
+                                            <Grid x:Name="PART_ConnectorDecorator" Margin="-5">
+                                                <control:Connector
+                                                x:Name="Connector_Left"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Center"
+                                                DataContext="{Binding LeftConnector}"
+                                                Orientation="Left"
+                                                Visibility="{Binding Path=ShowConnectors, Converter={StaticResource BoolToVisibilityConverter}}" />
+                                                <control:Connector
+                                                x:Name="Connector_Top"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Top"
+                                                DataContext="{Binding TopConnector}"
+                                                Orientation="Top"
+                                                Visibility="{Binding Path=ShowConnectors, Converter={StaticResource BoolToVisibilityConverter}}" />
+                                                <control:Connector
+                                                x:Name="Connector_Right"
+                                                HorizontalAlignment="Right"
+                                                VerticalAlignment="Center"
+                                                DataContext="{Binding RightConnector}"
+                                                Orientation="Right"
+                                                Visibility="{Binding Path=ShowConnectors, Converter={StaticResource BoolToVisibilityConverter}}" />
+                                                <control:Connector
+                                                x:Name="Connector_Bottom"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Bottom"
+                                                DataContext="{Binding BottomConnector}"
+                                                Orientation="Bottom"
+                                                Visibility="{Binding Path=ShowConnectors, Converter={StaticResource BoolToVisibilityConverter}}" />
+                                            </Grid>
+                                        </Grid>
+                                        <DataTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="true">
+                                                <Setter TargetName="PART_ConnectorDecorator" Property="Visibility" Value="Visible" />
+                                            </Trigger>
 
-                                                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource Self}, Path=IsDragConnectionOver}" Value="True">
-                                                        <Setter TargetName="PART_ConnectorDecorator" Property="Visibility" Value="Visible" />
-                                                    </DataTrigger>
+                                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource Self}, Path=IsDragConnectionOver}" Value="True">
+                                                <Setter TargetName="PART_ConnectorDecorator" Property="Visibility" Value="Visible" />
+                                            </DataTrigger>
 
-                                                    <DataTrigger Binding="{Binding IsSelected}" Value="True">
-                                                        <Setter TargetName="PART_ResizeDecorator" Property="Visibility" Value="Visible" />
-                                                        <Setter TargetName="selectedGrid" Property="Effect">
+                                            <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                                                <Setter TargetName="PART_ResizeDecorator" Property="Visibility" Value="Visible" />
+                                                <Setter TargetName="selectedGrid" Property="Effect">
+                                                    <Setter.Value>
+                                                        <DropShadowEffect
+                                                        BlurRadius="30"
+                                                        Opacity="1.0"
+                                                        ShadowDepth="0"
+                                                        Color="Black" />
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </DataTrigger>
+                                        </DataTemplate.Triggers>
+                                    </DataTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+
+                        <Style x:Key="connectorItemStyle" TargetType="{x:Type ContentPresenter}">
+                            <Setter Property="Width" Value="{Binding Area.Width}" />
+                            <Setter Property="Height" Value="{Binding Area.Height}" />
+                            <Setter Property="Canvas.Top" Value="{Binding Area.Top}" />
+                            <Setter Property="Canvas.Left" Value="{Binding Area.Left}" />
+                            <Setter Property="Panel.ZIndex" Value="{Binding ZIndex.Value}" />
+                            <Setter Property="attached:SelectionProps.EnabledForSelection" Value="{Binding EnableForSelection.Value}" />
+                            <Setter Property="ContentTemplateSelector">
+                                <Setter.Value>
+                                    <view:ItemsControlTemplateSelector>
+                                        <DataTemplate DataType="{x:Type viewModel:StraightConnectorViewModel}">
+                                            <Canvas
+                                            x:Name="selectedGrid"
+                                            Margin="0"
+                                            HorizontalAlignment="Stretch"
+                                            VerticalAlignment="Stretch">
+                                                <Canvas.Style>
+                                                    <Style TargetType="{x:Type Canvas}">
+                                                        <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
+                                                        <Setter Property="RenderTransform">
                                                             <Setter.Value>
-                                                                <DropShadowEffect
-                                                                BlurRadius="30"
-                                                                Opacity="1.0"
-                                                                ShadowDepth="0"
-                                                                Color="Black" />
+                                                                <MatrixTransform Matrix="{Binding Matrix.Value}" />
                                                             </Setter.Value>
                                                         </Setter>
-                                                    </DataTrigger>
-                                                </DataTemplate.Triggers>
-                                            </DataTemplate>
-                                        </Setter.Value>
-                                    </Setter>
-                                </Style>
-
-                                <Style x:Key="connectorItemStyle" TargetType="{x:Type ContentPresenter}">
-                                    <Setter Property="Width" Value="{Binding Area.Width}" />
-                                    <Setter Property="Height" Value="{Binding Area.Height}" />
-                                    <Setter Property="Canvas.Top" Value="{Binding Area.Top}" />
-                                    <Setter Property="Canvas.Left" Value="{Binding Area.Left}" />
-                                    <Setter Property="Panel.ZIndex" Value="{Binding ZIndex.Value}" />
-                                    <Setter Property="attached:SelectionProps.EnabledForSelection" Value="{Binding EnableForSelection.Value}" />
-                                    <Setter Property="ContentTemplateSelector">
-                                        <Setter.Value>
-                                            <view:ItemsControlTemplateSelector>
-                                                <DataTemplate DataType="{x:Type viewModel:StraightConnectorViewModel}">
-                                                    <Canvas
-                                                    x:Name="selectedGrid"
-                                                    Margin="0"
-                                                    HorizontalAlignment="Stretch"
-                                                    VerticalAlignment="Stretch">
-                                                        <Canvas.Style>
-                                                            <Style TargetType="{x:Type Canvas}">
-                                                                <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
-                                                                <Setter Property="RenderTransform">
-                                                                    <Setter.Value>
-                                                                        <MatrixTransform Matrix="{Binding Matrix.Value}" />
-                                                                    </Setter.Value>
-                                                                </Setter>
-                                                            </Style>
-                                                        </Canvas.Style>
-                                                        <Line
-                                                        x:Name="straightline"
-                                                        IsHitTestVisible="{Binding IsHitTestVisible}"
-                                                        Stroke="{Binding EdgeColor, Converter={StaticResource solidColorBrushConverter}}"
-                                                        StrokeThickness="2"
-                                                        X1="{Binding ConnectionPoints[0].X}"
-                                                        X2="{Binding ConnectionPoints[1].X}"
-                                                        Y1="{Binding ConnectionPoints[0].Y}"
-                                                        Y2="{Binding ConnectionPoints[1].Y}" />
-                                                        <Path
-                                                        x:Name="arrow"
-                                                        Canvas.Left="{Binding EndPoint.X}"
-                                                        Canvas.Top="{Binding EndPoint.Y}"
-                                                        Width="10"
-                                                        Height="10"
-                                                        HorizontalAlignment="Left"
-                                                        VerticalAlignment="Top"
-                                                        Data="M0,10 L5,0 10,10 z"
-                                                        Fill="{Binding EdgeColor, Converter={StaticResource solidColorBrushConverter}}"
-                                                        IsHitTestVisible="{Binding IsHitTestVisible}"
-                                                        RenderTransformOrigin="0,0"
-                                                        Stretch="Fill"
-                                                        Stroke="{Binding EdgeColor, Converter={StaticResource solidColorBrushConverter}}"
-                                                        Visibility="{Binding Path=IsFullConnection, Converter={StaticResource BoolToVisibilityConverter}}">
-                                                            <Path.RenderTransform>
-                                                                <TransformGroup>
-                                                                    <TranslateTransform X="-5" />
-                                                                    <RotateTransform x:Name="rot" Angle="{Binding ConnectionPoints, Converter={StaticResource PointsToAngleConverter}}" />
-                                                                </TransformGroup>
-                                                            </Path.RenderTransform>
-                                                        </Path>
-                                                        <!--  PART_ResizeDecorator  -->
-                                                        <Control
-                                                        x:Name="PART_ResizeDecorator"
-                                                        Template="{StaticResource StraightLineResizeDecoratorTemplate}"
-                                                        Visibility="Collapsed" />
-                                                    </Canvas>
-                                                    <DataTemplate.Triggers>
-                                                        <DataTrigger Binding="{Binding IsSelected}" Value="True">
-                                                            <Setter TargetName="PART_ResizeDecorator" Property="Visibility" Value="Visible" />
-                                                        </DataTrigger>
-                                                    </DataTemplate.Triggers>
-                                                </DataTemplate>
-                                                <DataTemplate DataType="{x:Type viewModel:PolygonalConnectorViewModel}">
-                                                    <Canvas
-                                                    x:Name="selectedGrid"
-                                                    Margin="0"
-                                                    HorizontalAlignment="Stretch"
-                                                    VerticalAlignment="Stretch">
-                                                        <Canvas.Style>
-                                                            <Style TargetType="{x:Type Canvas}">
-                                                                <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
-                                                                <Setter Property="RenderTransform">
-                                                                    <Setter.Value>
-                                                                        <MatrixTransform Matrix="{Binding Matrix.Value}" />
-                                                                    </Setter.Value>
-                                                                </Setter>
-                                                            </Style>
-                                                        </Canvas.Style>
-                                                        <Polyline
-                                                        x:Name="poly"
-                                                        IsHitTestVisible="{Binding IsHitTestVisible}"
-                                                        Points="{Binding Path=ConnectionPoints, Converter={x:Static converter:ConnectionPathConverter.Instance}}"
-                                                        Stroke="{Binding EdgeColor, Converter={StaticResource solidColorBrushConverter}}"
-                                                        StrokeThickness="2" />
+                                                    </Style>
+                                                </Canvas.Style>
+                                                <Line
+                                                x:Name="straightline"
+                                                IsHitTestVisible="{Binding IsHitTestVisible}"
+                                                Stroke="{Binding EdgeColor, Converter={StaticResource solidColorBrushConverter}}"
+                                                StrokeThickness="2"
+                                                X1="{Binding ConnectionPoints[0].X}"
+                                                X2="{Binding ConnectionPoints[1].X}"
+                                                Y1="{Binding ConnectionPoints[0].Y}"
+                                                Y2="{Binding ConnectionPoints[1].Y}" />
+                                                <Path
+                                                x:Name="arrow"
+                                                Canvas.Left="{Binding EndPoint.X}"
+                                                Canvas.Top="{Binding EndPoint.Y}"
+                                                Width="10"
+                                                Height="10"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Top"
+                                                Data="M0,10 L5,0 10,10 z"
+                                                Fill="{Binding EdgeColor, Converter={StaticResource solidColorBrushConverter}}"
+                                                IsHitTestVisible="{Binding IsHitTestVisible}"
+                                                RenderTransformOrigin="0,0"
+                                                Stretch="Fill"
+                                                Stroke="{Binding EdgeColor, Converter={StaticResource solidColorBrushConverter}}"
+                                                Visibility="{Binding Path=IsFullConnection, Converter={StaticResource BoolToVisibilityConverter}}">
+                                                    <Path.RenderTransform>
+                                                        <TransformGroup>
+                                                            <TranslateTransform X="-5" />
+                                                            <RotateTransform x:Name="rot" Angle="{Binding ConnectionPoints, Converter={StaticResource PointsToAngleConverter}}" />
+                                                        </TransformGroup>
+                                                    </Path.RenderTransform>
+                                                </Path>
+                                                <!--  PART_ResizeDecorator  -->
+                                                <Control
+                                                x:Name="PART_ResizeDecorator"
+                                                Template="{StaticResource StraightLineResizeDecoratorTemplate}"
+                                                Visibility="Collapsed" />
+                                            </Canvas>
+                                            <DataTemplate.Triggers>
+                                                <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                                                    <Setter TargetName="PART_ResizeDecorator" Property="Visibility" Value="Visible" />
+                                                </DataTrigger>
+                                            </DataTemplate.Triggers>
+                                        </DataTemplate>
+                                        <DataTemplate DataType="{x:Type viewModel:PolygonalConnectorViewModel}">
+                                            <Canvas
+                                            x:Name="selectedGrid"
+                                            Margin="0"
+                                            HorizontalAlignment="Stretch"
+                                            VerticalAlignment="Stretch">
+                                                <Canvas.Style>
+                                                    <Style TargetType="{x:Type Canvas}">
+                                                        <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
+                                                        <Setter Property="RenderTransform">
+                                                            <Setter.Value>
+                                                                <MatrixTransform Matrix="{Binding Matrix.Value}" />
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </Style>
+                                                </Canvas.Style>
+                                                <Polyline
+                                                x:Name="poly"
+                                                IsHitTestVisible="{Binding IsHitTestVisible}"
+                                                Points="{Binding Path=ConnectionPoints, Converter={x:Static converter:ConnectionPathConverter.Instance}}"
+                                                Stroke="{Binding EdgeColor, Converter={StaticResource solidColorBrushConverter}}"
+                                                StrokeThickness="2" />
 
 
-                                                        <Path
-                                                        x:Name="arrow"
-                                                        Canvas.Left="{Binding EndPoint.X}"
-                                                        Canvas.Top="{Binding EndPoint.Y}"
-                                                        Width="10"
-                                                        Height="10"
-                                                        HorizontalAlignment="Left"
-                                                        VerticalAlignment="Top"
-                                                        Data="M0,10 L5,0 10,10 z"
-                                                        Fill="{Binding EdgeColor, Converter={StaticResource solidColorBrushConverter}}"
-                                                        IsHitTestVisible="{Binding IsHitTestVisible}"
-                                                        RenderTransformOrigin="0.5,0.5"
-                                                        Stretch="Fill"
-                                                        Stroke="{Binding EdgeColor, Converter={StaticResource solidColorBrushConverter}}"
-                                                        Visibility="{Binding Path=IsFullConnection, Converter={StaticResource BoolToVisibilityConverter}}">
-                                                            <Path.RenderTransform>
-                                                                <RotateTransform x:Name="rot" />
-                                                            </Path.RenderTransform>
-                                                        </Path>
+                                                <Path
+                                                x:Name="arrow"
+                                                Canvas.Left="{Binding EndPoint.X}"
+                                                Canvas.Top="{Binding EndPoint.Y}"
+                                                Width="10"
+                                                Height="10"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Top"
+                                                Data="M0,10 L5,0 10,10 z"
+                                                Fill="{Binding EdgeColor, Converter={StaticResource solidColorBrushConverter}}"
+                                                IsHitTestVisible="{Binding IsHitTestVisible}"
+                                                RenderTransformOrigin="0.5,0.5"
+                                                Stretch="Fill"
+                                                Stroke="{Binding EdgeColor, Converter={StaticResource solidColorBrushConverter}}"
+                                                Visibility="{Binding Path=IsFullConnection, Converter={StaticResource BoolToVisibilityConverter}}">
+                                                    <Path.RenderTransform>
+                                                        <RotateTransform x:Name="rot" />
+                                                    </Path.RenderTransform>
+                                                </Path>
 
-                                                        <Control
-                                                        x:Name="PART_ResizeDecorator"
-                                                        IsHitTestVisible="{Binding IsHitTestVisible}"
-                                                        Template="{StaticResource PolygonalLineResizeDecoratorTemplate}"
-                                                        Visibility="Collapsed" />
-                                                    </Canvas>
-                                                    <DataTemplate.Triggers>
-                                                        <DataTrigger Binding="{Binding IsSelected}" Value="True">
-                                                            <Setter TargetName="PART_ResizeDecorator" Property="Visibility" Value="Visible" />
-                                                        </DataTrigger>
-                                                        <DataTrigger Binding="{Binding Path=SinkConnectorInfo.Orientation}" Value="Left">
-                                                            <Setter TargetName="arrow" Property="Margin" Value="-15,-5,0,0" />
-                                                            <Setter TargetName="arrow" Property="RenderTransform">
-                                                                <Setter.Value>
-                                                                    <RotateTransform Angle="90" />
-                                                                </Setter.Value>
-                                                            </Setter>
-                                                        </DataTrigger>
-                                                        <DataTrigger Binding="{Binding Path=SinkConnectorInfo.Orientation}" Value="Top">
-                                                            <Setter TargetName="arrow" Property="Margin" Value="-5,-15,0,0" />
-                                                            <Setter TargetName="arrow" Property="RenderTransform">
-                                                                <Setter.Value>
-                                                                    <RotateTransform Angle="180" />
-                                                                </Setter.Value>
-                                                            </Setter>
-                                                        </DataTrigger>
-                                                        <DataTrigger Binding="{Binding Path=SinkConnectorInfo.Orientation}" Value="Right">
-                                                            <Setter TargetName="arrow" Property="Margin" Value="5,-5,0,0" />
-                                                            <Setter TargetName="arrow" Property="RenderTransform">
-                                                                <Setter.Value>
-                                                                    <RotateTransform Angle="-90" />
-                                                                </Setter.Value>
-                                                            </Setter>
-                                                        </DataTrigger>
-                                                        <DataTrigger Binding="{Binding Path=SinkConnectorInfo.Orientation}" Value="Bottom">
-                                                            <Setter TargetName="arrow" Property="Margin" Value="-5,10,0,0" />
-                                                            <Setter TargetName="arrow" Property="RenderTransform">
-                                                                <Setter.Value>
-                                                                    <RotateTransform Angle="0" />
-                                                                </Setter.Value>
-                                                            </Setter>
-                                                        </DataTrigger>
+                                                <Control
+                                                x:Name="PART_ResizeDecorator"
+                                                IsHitTestVisible="{Binding IsHitTestVisible}"
+                                                Template="{StaticResource PolygonalLineResizeDecoratorTemplate}"
+                                                Visibility="Collapsed" />
+                                            </Canvas>
+                                            <DataTemplate.Triggers>
+                                                <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                                                    <Setter TargetName="PART_ResizeDecorator" Property="Visibility" Value="Visible" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Path=SinkConnectorInfo.Orientation}" Value="Left">
+                                                    <Setter TargetName="arrow" Property="Margin" Value="-15,-5,0,0" />
+                                                    <Setter TargetName="arrow" Property="RenderTransform">
+                                                        <Setter.Value>
+                                                            <RotateTransform Angle="90" />
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Path=SinkConnectorInfo.Orientation}" Value="Top">
+                                                    <Setter TargetName="arrow" Property="Margin" Value="-5,-15,0,0" />
+                                                    <Setter TargetName="arrow" Property="RenderTransform">
+                                                        <Setter.Value>
+                                                            <RotateTransform Angle="180" />
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Path=SinkConnectorInfo.Orientation}" Value="Right">
+                                                    <Setter TargetName="arrow" Property="Margin" Value="5,-5,0,0" />
+                                                    <Setter TargetName="arrow" Property="RenderTransform">
+                                                        <Setter.Value>
+                                                            <RotateTransform Angle="-90" />
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Path=SinkConnectorInfo.Orientation}" Value="Bottom">
+                                                    <Setter TargetName="arrow" Property="Margin" Value="-5,10,0,0" />
+                                                    <Setter TargetName="arrow" Property="RenderTransform">
+                                                        <Setter.Value>
+                                                            <RotateTransform Angle="0" />
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </DataTrigger>
 
-                                                    </DataTemplate.Triggers>
-                                                </DataTemplate>
-                                            </view:ItemsControlTemplateSelector>
-                                        </Setter.Value>
-                                    </Setter>
-                                </Style>
+                                            </DataTemplate.Triggers>
+                                        </DataTemplate>
+                                    </view:ItemsControlTemplateSelector>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
 
 
-                            </ItemsControl.Resources>
+                    </ItemsControl.Resources>
 
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <control:DesignerCanvas x:Name="designerCanvas"
-                                                            Width="{Binding Width}"
-                                                            Height="{Binding Height}"
-                                                            AllowDrop="True"
-                                                            Background="White" />
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-                        </ItemsControl>
-                    </Border>
-                </DockPanel>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <control:DesignerCanvas x:Name="designerCanvas"
+                                                    Width="{Binding Width}"
+                                                    Height="{Binding Height}"
+                                                    AllowDrop="True"
+                                                    Background="White" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
                 <ScrollViewer.ContextMenu>
                     <ContextMenu>
                         <MenuItem Header="{Binding Grouping, Mode=OneWay, Source={StaticResource resources}}">
