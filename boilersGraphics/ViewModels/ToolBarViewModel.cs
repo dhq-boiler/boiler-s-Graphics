@@ -64,7 +64,18 @@ namespace boilersGraphics.ViewModels
                 }
                 SelectOneToolItem("rectangle");
             })));
-            ToolItems.Add(new ToolItemData("ellipse", "pack://application:,,,/Assets/img/ellipse.png", null));
+            ToolItems.Add(new ToolItemData("ellipse", "pack://application:,,,/Assets/img/ellipse.png", new DelegateCommand(() =>
+            {
+                var behavior = new NDrawEllipseBehavior();
+                var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
+                var behaviors = Interaction.GetBehaviors(designerCanvas);
+                behaviors.Clear();
+                if (!behaviors.Contains(behavior))
+                {
+                    behaviors.Add(behavior);
+                }
+                SelectOneToolItem("ellipse");
+            })));
             ToolItems.Add(new ToolItemData("symbol-a", "pack://application:,,,/Assets/img/Setting.png", new DelegateCommand(() =>
             {
                 var behavior = new DrawSettingBehavior();
