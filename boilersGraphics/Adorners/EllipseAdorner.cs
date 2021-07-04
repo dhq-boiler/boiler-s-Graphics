@@ -39,7 +39,20 @@ namespace boilersGraphics.Adorners
 
                 _endPoint = e.GetPosition(this);
 
-                (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = $"({_startPoint.Value.X}, {_startPoint.Value.Y}) - ({_endPoint.Value.X}, {_endPoint.Value.Y}) (w, h) = ({_endPoint.Value.X - _startPoint.Value.X}, {_endPoint.Value.Y - _startPoint.Value.Y})";
+                if ((Keyboard.GetKeyStates(Key.LeftShift) & KeyStates.Down) == KeyStates.Down ||
+                    (Keyboard.GetKeyStates(Key.RightShift) & KeyStates.Down) == KeyStates.Down)
+                {
+                    var diff = _endPoint.Value - _startPoint.Value;
+                    var x = Math.Max(diff.X, diff.Y);
+                    var y = Math.Max(diff.X, diff.Y);
+                    _endPoint = new Point(_startPoint.Value.X + x, _startPoint.Value.Y + y);
+
+                    (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = $"({_startPoint.Value.X}, {_startPoint.Value.Y}) - ({_endPoint.Value.X}, {_endPoint.Value.Y}) (w, h) = ({_endPoint.Value.X - _startPoint.Value.X}, {_endPoint.Value.Y - _startPoint.Value.Y})";
+                }
+                else
+                {
+                    (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = $"({_startPoint.Value.X}, {_startPoint.Value.Y}) - ({_endPoint.Value.X}, {_endPoint.Value.Y}) (w, h) = ({_endPoint.Value.X - _startPoint.Value.X}, {_endPoint.Value.Y - _startPoint.Value.Y})";
+                }
 
                 this.InvalidateVisual();
             }
@@ -95,10 +108,27 @@ namespace boilersGraphics.Adorners
 
             if (_startPoint.HasValue && _endPoint.HasValue)
             {
-                var center = new Point((_endPoint.Value.X + _startPoint.Value.X) / 2, (_endPoint.Value.Y + _startPoint.Value.Y) / 2);
-                var radiusX = (_endPoint.Value.X - _startPoint.Value.X) / 2;
-                var radiusY = (_endPoint.Value.Y - _startPoint.Value.Y) / 2;
-                dc.DrawEllipse(Brushes.Transparent, _ellipsePen, center, radiusX, radiusY);
+                if ((Keyboard.GetKeyStates(Key.LeftShift) & KeyStates.Down) == KeyStates.Down ||
+                    (Keyboard.GetKeyStates(Key.RightShift) & KeyStates.Down) == KeyStates.Down)
+                {
+                    var diff = _endPoint.Value - _startPoint.Value;
+
+                    var x = Math.Max(diff.X, diff.Y);
+                    var y = Math.Max(diff.X, diff.Y);
+                    _endPoint = new Point(_startPoint.Value.X + x, _startPoint.Value.Y + y);
+
+                    var center = new Point((_endPoint.Value.X + _startPoint.Value.X) / 2, (_endPoint.Value.Y + _startPoint.Value.Y) / 2);
+                    var radiusX = (_endPoint.Value.X - _startPoint.Value.X) / 2;
+                    var radiusY = (_endPoint.Value.Y - _startPoint.Value.Y) / 2;
+                    dc.DrawEllipse(Brushes.Transparent, _ellipsePen, center, radiusX, radiusY);
+                }
+                else
+                {
+                    var center = new Point((_endPoint.Value.X + _startPoint.Value.X) / 2, (_endPoint.Value.Y + _startPoint.Value.Y) / 2);
+                    var radiusX = (_endPoint.Value.X - _startPoint.Value.X) / 2;
+                    var radiusY = (_endPoint.Value.Y - _startPoint.Value.Y) / 2;
+                    dc.DrawEllipse(Brushes.Transparent, _ellipsePen, center, radiusX, radiusY);
+                }
             }
         }
     }
