@@ -180,7 +180,9 @@
                                 BorderBrush="DimGray"
                                 BorderThickness="0,1,0,0">
                                 <Grid>
-                                    <Canvas Name="PART_ZoomCanvas" Margin="5">
+                                    <Canvas Name="PART_ZoomCanvas"
+                                            Margin="5"
+                                            ClipToBounds="True">
                                         <Canvas.Background>
                                             <VisualBrush Stretch="Uniform" Visual="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ScrollViewer.Content}" />
                                         </Canvas.Background>
@@ -192,7 +194,7 @@
                                                             <ControlTemplate TargetType="Thumb">
                                                                 <Rectangle
                                                                     Fill="Transparent"
-                                                                    Stroke="Black"
+                                                                    Stroke="Red"
                                                                     StrokeThickness="1" />
                                                             </ControlTemplate>
                                                         </Setter.Value>
