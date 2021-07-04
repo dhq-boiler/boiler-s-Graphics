@@ -90,6 +90,45 @@ namespace boilersGraphics.Controls
                                 picViewModel.Width.Value = (picViewModel.Height.Value / picViewModel.FileHeight) * picViewModel.FileWidth;
                             }
                         }
+                        else if (viewModel is NEllipseViewModel &&
+                            ((Keyboard.GetKeyStates(Key.LeftShift) & KeyStates.Down) == KeyStates.Down ||
+                             (Keyboard.GetKeyStates(Key.RightShift) & KeyStates.Down) == KeyStates.Down))
+                        {
+                            var ellipse = viewModel as NEllipseViewModel;
+                            if (base.VerticalAlignment == VerticalAlignment.Top && base.HorizontalAlignment == HorizontalAlignment.Left)
+                            {
+                                double left = ellipse.Left.Value;
+                                double top = ellipse.Top.Value;
+                                dragDeltaHorizontal = Math.Min(Math.Max(-minLeft, e.HorizontalChange), minDeltaHorizontal);
+                                dragDeltaVertical = Math.Min(Math.Max(-minTop, e.VerticalChange), minDeltaVertical);
+                                ellipse.Left.Value = left + dragDeltaHorizontal;
+                                ellipse.Top.Value = top + dragDeltaHorizontal;
+                                ellipse.Width.Value = ellipse.Width.Value - dragDeltaHorizontal;
+                                ellipse.Height.Value = ellipse.Width.Value - dragDeltaHorizontal;
+                            }
+                            else if (base.VerticalAlignment == VerticalAlignment.Top && base.HorizontalAlignment == HorizontalAlignment.Right)
+                            {
+                                double top = ellipse.Top.Value;
+                                dragDeltaVertical = Math.Min(Math.Max(-minTop, e.VerticalChange), minDeltaVertical);
+                                ellipse.Top.Value = top + dragDeltaVertical;
+                                ellipse.Height.Value = ellipse.Height.Value - dragDeltaVertical;
+                                ellipse.Width.Value = ellipse.Height.Value - dragDeltaVertical;
+                            }
+                            else if (base.VerticalAlignment == VerticalAlignment.Bottom && base.HorizontalAlignment == HorizontalAlignment.Left)
+                            {
+                                double left = ellipse.Left.Value;
+                                dragDeltaHorizontal = Math.Min(Math.Max(-minLeft, e.HorizontalChange), minDeltaHorizontal);
+                                ellipse.Left.Value = left + dragDeltaHorizontal;
+                                ellipse.Width.Value = ellipse.Width.Value - dragDeltaHorizontal;
+                                ellipse.Height.Value = ellipse.Width.Value - dragDeltaHorizontal;
+                            }
+                            else if (base.VerticalAlignment == VerticalAlignment.Bottom && base.HorizontalAlignment == HorizontalAlignment.Right)
+                            {
+                                dragDeltaVertical = Math.Min(-e.VerticalChange, minDeltaVertical);
+                                ellipse.Height.Value = ellipse.Height.Value - dragDeltaVertical;
+                                ellipse.Width.Value = ellipse.Height.Value - dragDeltaVertical;
+                            }
+                        }
                         else
                         {
                             switch (base.VerticalAlignment)
