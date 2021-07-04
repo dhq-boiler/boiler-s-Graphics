@@ -357,17 +357,27 @@ namespace boilersGraphics.ViewModels
 
         private void ExecuteExportCommand()
         {
-            var childrenCount = VisualTreeHelper.GetChildrenCount(App.Current.MainWindow);
             var diagramControl = App.Current.MainWindow.GetChildOfType<DiagramControl>();
             var itemsControl = diagramControl.GetChildOfType<ItemsControl>();
+            var designerCanvas = diagramControl.GetChildOfType<DesignerCanvas>();
+
             var tempIsSelected = new Dictionary<SelectableDesignerItemViewModelBase, bool>();
             foreach (var item in itemsControl.Items.Cast<SelectableDesignerItemViewModelBase>())
             {
                 tempIsSelected.Add(item, item.IsSelected);
                 item.IsSelected = false;
             }
-            var rtb = new RenderTargetBitmap((int)itemsControl.ActualWidth, (int)itemsControl.ActualHeight, 96, 96, PixelFormats.Pbgra32);
-            rtb.Render(itemsControl);
+
+            var rtb = new RenderTargetBitmap((int)designerCanvas.ActualWidth, (int)designerCanvas.ActualHeight, 96, 96, PixelFormats.Pbgra32);
+
+            DrawingVisual visual = new DrawingVisual();
+            using (DrawingContext context = visual.RenderOpen())
+            {
+                VisualBrush brush = new VisualBrush(designerCanvas);
+                context.DrawRectangle(brush, null, new Rect(new Point(), new Size(designerCanvas.Width, designerCanvas.Height)));
+            }
+
+            rtb.Render(visual);
 
             //IsSelectedの復元
             foreach (var item in itemsControl.Items.Cast<SelectableDesignerItemViewModelBase>())
