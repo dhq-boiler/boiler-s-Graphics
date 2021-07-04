@@ -14,7 +14,7 @@
     xmlns:trigger="clr-namespace:boilersGraphics.Views.Triggers"
     xmlns:usercontrol="clr-namespace:boilersGraphics.UserControls"
     xmlns:viewmodel="clr-namespace:boilersGraphics.ViewModels"
-    Title="GRAPHER"
+    Title="boiler's Graphics"
     prism:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
     <Window.InputBindings>
