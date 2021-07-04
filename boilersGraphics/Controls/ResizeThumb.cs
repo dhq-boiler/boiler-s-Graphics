@@ -98,13 +98,11 @@ namespace boilersGraphics.Controls
                             if (base.VerticalAlignment == VerticalAlignment.Top && base.HorizontalAlignment == HorizontalAlignment.Left)
                             {
                                 double left = ellipse.Left.Value;
-                                double top = ellipse.Top.Value;
                                 dragDeltaHorizontal = Math.Min(Math.Max(-minLeft, e.HorizontalChange), minDeltaHorizontal);
-                                dragDeltaVertical = Math.Min(Math.Max(-minTop, e.VerticalChange), minDeltaVertical);
                                 ellipse.Left.Value = left + dragDeltaHorizontal;
-                                ellipse.Top.Value = top + dragDeltaHorizontal;
                                 ellipse.Width.Value = ellipse.Width.Value - dragDeltaHorizontal;
                                 ellipse.Height.Value = ellipse.Width.Value - dragDeltaHorizontal;
+                                ellipse.Top.Value = ellipse.Bottom.Value - ellipse.Height.Value;
                             }
                             else if (base.VerticalAlignment == VerticalAlignment.Top && base.HorizontalAlignment == HorizontalAlignment.Right)
                             {
