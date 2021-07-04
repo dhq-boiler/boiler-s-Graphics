@@ -1,5 +1,6 @@
 ﻿using boilersGraphics.Controls;
 using boilersGraphics.Extensions;
+using boilersGraphics.Helpers;
 using boilersGraphics.Messenger;
 using boilersGraphics.Models;
 using boilersGraphics.UserControls;
@@ -72,6 +73,17 @@ namespace boilersGraphics.ViewModels
 
         public double ScaleX { get; set; } = 1.0;
         public double ScaleY { get; set; } = 1.0;
+
+        public IEnumerable<Point> SnapPoints
+        {
+            get {
+                var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
+                return designerCanvas.EnumerateChildOfType<ResizeThumb>()
+                      .Where(x => !(x is null))
+                      .Select(x => x.TransformToAncestor(designerCanvas).Transform(new Point(0, 0)))
+                      .Distinct(new SnapPointDistincter());
+            }
+        }
 
         public double BorderThickness
         {

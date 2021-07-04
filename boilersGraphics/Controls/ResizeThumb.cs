@@ -206,5 +206,10 @@ namespace boilersGraphics.Controls
                 }
             }
         }
+
+        public override string ToString()
+        {
+            return base.ToString() + $" Margin={Margin}";
+        }
     }
 }

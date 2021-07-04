@@ -138,6 +138,7 @@
     <Compile Include="Adorners\RectangleAdorner.cs" />
     <Compile Include="Adorners\RubberbandAdorner.cs" />
     <Compile Include="Adorners\SettingAdorner.cs" />
+    <Compile Include="Adorners\SnapPointAdorner.cs" />
     <Compile Include="Adorners\StraightLineAdorner.cs" />
     <Compile Include="AttachedProperties\DragAndDropProps.cs" />
     <Compile Include="AttachedProperties\ItemConnectProps.cs" />
@@ -166,6 +167,7 @@
     <Compile Include="Helpers\IPathFinder.cs" />
     <Compile Include="Helpers\OrthogonalPathFinder.cs" />
     <Compile Include="Helpers\PointHelper.cs" />
+    <Compile Include="Helpers\SnapPointDistincter.cs" />
     <Compile Include="Helpers\ToolBoxData.cs" />
     <Compile Include="Helpers\ToolItemData.cs" />
     <Compile Include="Helpers\TransformNotification.cs" />

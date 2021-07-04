@@ -115,6 +115,7 @@
     <ControlTemplate x:Key="ResizeDecoratorTemplate" TargetType="{x:Type Control}">
         <Grid>
             <Grid Opacity="0.7" SnapsToDevicePixels="true">
+                <!-- 上の回転ツマミ部分 -->
                 <control:RotateThumb
                     Width="7"
                     Height="7"
@@ -123,6 +124,7 @@
                     VerticalAlignment="Top"
                     Cursor="Hand"
                     Template="{StaticResource RotateThumbTemplate}" />
+                <!-- 上 -->
                 <control:ResizeThumb
                     Height="3"
                     Margin="0,-4,0,0"
@@ -130,6 +132,7 @@
                     VerticalAlignment="Top"
                     Cursor="SizeNS"
                     Template="{StaticResource HorizontalResizeHandleTemplate}" />
+                <!-- 左 -->
                 <control:ResizeThumb
                     Width="3"
                     Margin="-4,0,0,0"
@@ -137,6 +140,7 @@
                     VerticalAlignment="Stretch"
                     Cursor="SizeWE"
                     Template="{StaticResource VerticalResizeHandleTemplate}" />
+                <!-- 右 -->
                 <control:ResizeThumb
                     Width="3"
                     Margin="0,0,-4,0"
@@ -144,6 +148,7 @@
                     VerticalAlignment="Stretch"
                     Cursor="SizeWE"
                     Template="{StaticResource VerticalResizeHandleTemplate}" />
+                <!-- 下 -->
                 <control:ResizeThumb
                     Height="3"
                     Margin="0,0,0,-4"
@@ -151,6 +156,7 @@
                     VerticalAlignment="Bottom"
                     Cursor="SizeNS"
                     Template="{StaticResource HorizontalResizeHandleTemplate}" />
+                <!-- 左上 -->
                 <control:ResizeThumb
                     Width="7"
                     Height="7"
@@ -159,6 +165,7 @@
                     VerticalAlignment="Top"
                     Cursor="SizeNWSE"
                     Template="{StaticResource ResizeHandleTemplate}" />
+                <!-- 右上 -->
                 <control:ResizeThumb
                     Width="7"
                     Height="7"
@@ -167,6 +174,7 @@
                     VerticalAlignment="Top"
                     Cursor="SizeNESW"
                     Template="{StaticResource ResizeHandleTemplate}" />
+                <!-- 左下 -->
                 <control:ResizeThumb
                     Width="7"
                     Height="7"
@@ -175,6 +183,7 @@
                     VerticalAlignment="Bottom"
                     Cursor="SizeNESW"
                     Template="{StaticResource ResizeHandleTemplate}" />
+                <!-- 右下 -->
                 <control:ResizeThumb
                     Width="7"
                     Height="7"
