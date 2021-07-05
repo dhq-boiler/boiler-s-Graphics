@@ -129,7 +129,7 @@
                 <control:ResizeThumb
                     Height="3"
                     Margin="0,-4,0,0"
-                    HorizontalAlignment="Stretch"
+                    HorizontalAlignment="Center"
                     VerticalAlignment="Top"
                     Cursor="SizeNS"
                     Template="{StaticResource HorizontalResizeHandleTemplate}"
@@ -139,7 +139,7 @@
                     Width="3"
                     Margin="-4,0,0,0"
                     HorizontalAlignment="Left"
-                    VerticalAlignment="Stretch"
+                    VerticalAlignment="Center"
                     Cursor="SizeWE"
                     Template="{StaticResource VerticalResizeHandleTemplate}"
                     Tag="左" />
@@ -148,7 +148,7 @@
                     Width="3"
                     Margin="0,0,-4,0"
                     HorizontalAlignment="Right"
-                    VerticalAlignment="Stretch"
+                    VerticalAlignment="Center"
                     Cursor="SizeWE"
                     Template="{StaticResource VerticalResizeHandleTemplate}"
                     Tag="右" />
@@ -156,7 +156,7 @@
                 <control:ResizeThumb
                     Height="3"
                     Margin="0,0,0,-4"
-                    HorizontalAlignment="Stretch"
+                    HorizontalAlignment="Center"
                     VerticalAlignment="Bottom"
                     Cursor="SizeNS"
                     Template="{StaticResource HorizontalResizeHandleTemplate}"
