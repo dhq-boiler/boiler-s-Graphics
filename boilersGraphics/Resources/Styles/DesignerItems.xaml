@@ -127,6 +127,7 @@
                     Tag="回転ツマミ" />
                 <!-- 上 -->
                 <control:ResizeThumb
+                    Width="3"
                     Height="3"
                     Margin="0,0,0,0"
                     HorizontalAlignment="Center"
@@ -137,6 +138,7 @@
                 <!-- 左 -->
                 <control:ResizeThumb
                     Width="3"
+                    Height="3"
                     Margin="0,0,0,0"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
@@ -146,6 +148,7 @@
                 <!-- 右 -->
                 <control:ResizeThumb
                     Width="3"
+                    Height="3"
                     Margin="0,0,-2,0"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Center"
@@ -154,6 +157,7 @@
                     Tag="右" />
                 <!-- 下 -->
                 <control:ResizeThumb
+                    Width="3"
                     Height="3"
                     Margin="0,0,0,-2"
                     HorizontalAlignment="Center"

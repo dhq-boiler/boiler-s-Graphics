@@ -82,10 +82,30 @@ namespace boilersGraphics.ViewModels
                 var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
                 var resizeThumbs = designerCanvas.EnumerateChildOfType<ResizeThumb>();
                 var sets = resizeThumbs
-                                .Select(x => new Tuple<ResizeThumb, Point>(x, x.TransformToAncestor(designerCanvas).Transform(new Point(0, 0))));
-                                //.Distinct(new SnapPointDistincter());
+                                .Select(x => new Tuple<ResizeThumb, Point>(x, GetCenter(x)));
                 DebugPrint(Width, Height, sets);
                 return sets.Select(x => x.Item2);
+            }
+        }
+
+        private Point GetCenter(ResizeThumb rt)
+        {
+            var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
+            var leftTop = rt.TransformToAncestor(designerCanvas).Transform(new Point(0, 0));
+            switch (rt.Tag)
+            {
+                case "左上":
+                case "右上":
+                case "左下":
+                case "右下":
+                    return new Point(leftTop.X + rt.Width / 2, leftTop.Y + rt.Height / 2);
+                case "左":
+                case "上":
+                case "右":
+                case "下":
+                    return new Point(leftTop.X, leftTop.Y);
+                default:
+                    throw new Exception("ResizeThumb.Tag doesn't set");
             }
         }
 
