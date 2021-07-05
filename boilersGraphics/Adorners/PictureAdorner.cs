@@ -70,10 +70,10 @@ namespace boilersGraphics.Adorners
                 itemBase.FileWidth = bitmap.Width;
                 itemBase.FileHeight = bitmap.Height;
                 itemBase.Owner = (AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel;
-                itemBase.Left.Value = Math.Max(0, _startPoint.Value.X);
-                itemBase.Top.Value = Math.Max(0, _startPoint.Value.Y);
-                itemBase.Width.Value = Math.Abs(_endPoint.Value.X - _startPoint.Value.X);
-                itemBase.Height.Value = Math.Abs(_endPoint.Value.Y - _startPoint.Value.Y);
+                itemBase.Left.Value = Math.Min(_startPoint.Value.X, _endPoint.Value.X);
+                itemBase.Top.Value = Math.Min(_startPoint.Value.Y, _endPoint.Value.Y);
+                itemBase.Width.Value = Math.Max(_startPoint.Value.X - _endPoint.Value.X, _endPoint.Value.X - _startPoint.Value.X);
+                itemBase.Height.Value = Math.Max(_startPoint.Value.Y - _endPoint.Value.Y, _endPoint.Value.Y - _startPoint.Value.Y);
                 itemBase.IsSelected = true;
                 itemBase.Owner.DeselectAll();
                 itemBase.ZIndex.Value = itemBase.Owner.Items.Count;
