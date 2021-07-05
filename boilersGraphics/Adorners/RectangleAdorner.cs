@@ -9,7 +9,6 @@ using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 
 namespace boilersGraphics.Adorners
 {
@@ -48,7 +47,6 @@ namespace boilersGraphics.Adorners
 
                 var diagramVM = mainWindowVM.DiagramViewModel;
                 var snapPoints = diagramVM.SnapPoints;
-                DebugPrint(diagramVM.Width, diagramVM.Height, snapPoints);
                 Point? snapped = null;
                 foreach (var snapPoint in snapPoints)
                 {
@@ -101,37 +99,6 @@ namespace boilersGraphics.Adorners
             }
 
             e.Handled = true;
-        }
-
-        [Conditional("DEBUG")]
-        private void DebugPrint(int width, int height, IEnumerable<Point> snapPoints)
-        {
-            var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-            var rtb = new RenderTargetBitmap((int)designerCanvas.ActualWidth, (int)designerCanvas.ActualHeight, 96, 96, PixelFormats.Pbgra32);
-
-            DrawingVisual visual = new DrawingVisual();
-            using (DrawingContext context = visual.RenderOpen())
-            {
-                VisualBrush brush = new VisualBrush(designerCanvas);
-                context.DrawRectangle(brush, null, new Rect(new Point(), new Size(designerCanvas.Width, designerCanvas.Height)));
-
-                foreach (var snapPoint in snapPoints)
-                {
-                    context.DrawEllipse(Brushes.Red, new Pen(Brushes.Red, 1), snapPoint, 2, 2);
-                }
-            }
-
-            rtb.Render(visual);
-
-            //OpenCvSharp.Cv2.ImShow()するためには src_depth != CV_16F && src_depth != CV_32S である必要があるから、予めBgr24に変換しておく
-            FormatConvertedBitmap newFormatedBitmapSource = new FormatConvertedBitmap();
-            newFormatedBitmapSource.BeginInit();
-            newFormatedBitmapSource.Source = rtb;
-            newFormatedBitmapSource.DestinationFormat = PixelFormats.Bgr24;
-            newFormatedBitmapSource.EndInit();
-
-            var mat = OpenCvSharp.WpfExtensions.BitmapSourceConverter.ToMat(newFormatedBitmapSource);
-            OpenCvSharp.Cv2.ImShow("DebugPrint", mat);
         }
 
         private void RemoveAllAdornerFromAdornerLayerAndDictionary(DesignerCanvas designerCanvas)

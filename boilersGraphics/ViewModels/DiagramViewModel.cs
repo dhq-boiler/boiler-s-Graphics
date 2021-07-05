@@ -12,6 +12,7 @@ using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reactive.Disposables;
@@ -78,11 +79,44 @@ namespace boilersGraphics.ViewModels
         {
             get {
                 var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-                return designerCanvas.EnumerateChildOfType<ResizeThumb>()
-                      .Where(x => !(x is null))
-                      .Select(x => x.TransformToAncestor(designerCanvas).Transform(new Point(0, 0)))
-                      .Distinct(new SnapPointDistincter());
+                var snapPoints = designerCanvas.EnumerateChildOfType<ResizeThumb>()
+                                .Where(x => !(x is null))
+                                .Select(x => x.TransformToAncestor(designerCanvas).Transform(new Point(0, 0)))
+                                .Distinct(new SnapPointDistincter());
+                DebugPrint(Width, Height, snapPoints);
+                return snapPoints;
             }
+        }
+
+        [Conditional("DEBUG")]
+        private void DebugPrint(int width, int height, IEnumerable<Point> snapPoints)
+        {
+            var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
+            var rtb = new RenderTargetBitmap((int)designerCanvas.ActualWidth, (int)designerCanvas.ActualHeight, 96, 96, PixelFormats.Pbgra32);
+
+            DrawingVisual visual = new DrawingVisual();
+            using (DrawingContext context = visual.RenderOpen())
+            {
+                VisualBrush brush = new VisualBrush(designerCanvas);
+                context.DrawRectangle(brush, null, new Rect(new Point(), new Size(designerCanvas.Width, designerCanvas.Height)));
+
+                foreach (var snapPoint in snapPoints)
+                {
+                    context.DrawEllipse(Brushes.Red, new Pen(Brushes.Red, 1), snapPoint, 2, 2);
+                }
+            }
+
+            rtb.Render(visual);
+
+            //OpenCvSharp.Cv2.ImShow()するためには src_depth != CV_16F && src_depth != CV_32S である必要があるから、予めBgr24に変換しておく
+            FormatConvertedBitmap newFormatedBitmapSource = new FormatConvertedBitmap();
+            newFormatedBitmapSource.BeginInit();
+            newFormatedBitmapSource.Source = rtb;
+            newFormatedBitmapSource.DestinationFormat = PixelFormats.Bgr24;
+            newFormatedBitmapSource.EndInit();
+
+            var mat = OpenCvSharp.WpfExtensions.BitmapSourceConverter.ToMat(newFormatedBitmapSource);
+            OpenCvSharp.Cv2.ImShow("DebugPrint", mat);
         }
 
         public double BorderThickness
