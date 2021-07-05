@@ -95,10 +95,13 @@ namespace boilersGraphics.ViewModels
             switch (rt.Tag)
             {
                 case "左上":
+                    return new Point(leftTop.X + rt.Width - 1, leftTop.Y + rt.Height - 1);
                 case "右上":
+                    return new Point(leftTop.X, leftTop.Y + rt.Height - 1);
                 case "左下":
+                    return new Point(leftTop.X + rt.Width - 1, leftTop.Y);
                 case "右下":
-                    return new Point(leftTop.X + rt.Width / 2, leftTop.Y + rt.Height / 2);
+                    return new Point(leftTop.X, leftTop.Y);
                 case "左":
                 case "上":
                 case "右":
