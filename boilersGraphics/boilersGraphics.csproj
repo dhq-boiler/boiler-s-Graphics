@@ -182,9 +182,6 @@
     <Compile Include="Models\Rectangle.cs" />
     <Compile Include="Models\RenderItem.cs" />
     <Compile Include="Models\StraightLine.cs" />
-    <Compile Include="Strategies\LineFactory.cs" />
-    <Compile Include="Strategies\PolygonalLineFactory.cs" />
-    <Compile Include="Strategies\StraightLineFactory.cs" />
     <Compile Include="StyleSelectors\DesignerItemsControlItemStyleSelector.cs" />
     <Compile Include="UserControls\DiagramControl.xaml.cs">
       <DependentUpon>DiagramControl.xaml</DependentUpon>
@@ -204,7 +201,6 @@
     <Compile Include="ViewModels\NRectangleViewModel.cs" />
     <Compile Include="ViewModels\PathDesignerItemViewModel.cs" />
     <Compile Include="ViewModels\PictureDesignerItemViewModel.cs" />
-    <Compile Include="ViewModels\PolygonalConnectorViewModel.cs" />
     <Compile Include="ViewModels\DesignerItemViewModelBase.cs" />
     <Compile Include="ViewModels\DiagramViewModel.cs" />
     <Compile Include="ViewModels\EllipseViewModel.cs" />
@@ -476,6 +472,7 @@
   <ItemGroup>
     <Resource Include="Assets\img\A_Vertical.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>

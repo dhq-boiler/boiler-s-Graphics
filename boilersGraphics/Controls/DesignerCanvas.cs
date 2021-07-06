@@ -1,7 +1,6 @@
 ﻿using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
 using boilersGraphics.Messenger;
-using boilersGraphics.Strategies;
 using boilersGraphics.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -21,11 +20,8 @@ namespace boilersGraphics.Controls
         public DesignerCanvas()
         {
             this.AllowDrop = true;
-            LineFactory = new StraightLineFactory();
             Mediator.Instance.Register(this);
         }
-
-        public LineFactory LineFactory { get; set; }
 
         protected override void OnMouseDown(MouseButtonEventArgs e)
         {
