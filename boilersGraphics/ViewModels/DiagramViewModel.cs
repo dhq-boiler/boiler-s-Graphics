@@ -82,7 +82,8 @@ namespace boilersGraphics.ViewModels
                 var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
                 var resizeThumbs = designerCanvas.EnumerateChildOfType<SnapPoint>();
                 var sets = resizeThumbs
-                                .Select(x => new Tuple<SnapPoint, Point>(x, GetCenter(x)));
+                                .Select(x => new Tuple<SnapPoint, Point>(x, GetCenter(x)))
+                                .Distinct();
                 DebugPrint(Width, Height, sets);
                 return sets.Select(x => x.Item2);
             }
