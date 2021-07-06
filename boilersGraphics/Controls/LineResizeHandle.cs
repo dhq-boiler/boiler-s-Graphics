@@ -64,7 +64,7 @@ namespace boilersGraphics.Controls
                 var mainWindowVM = (App.Current.MainWindow.DataContext as MainWindowViewModel);
                 var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
                 var diagramVM = mainWindowVM.DiagramViewModel;
-                var snapPoints = diagramVM.SnapPoints;
+                var snapPoints = diagramVM.GetSnapPoints(new List<SnapPoint>() { this, OppositeHandle });
                 Point? snapped = null;
 
                 foreach (var snapPoint in snapPoints)

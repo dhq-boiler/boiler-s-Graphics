@@ -89,6 +89,17 @@ namespace boilersGraphics.ViewModels
             }
         }
 
+        public IEnumerable<Point> GetSnapPoints(IEnumerable<SnapPoint> exceptSnapPoints)
+        {
+            var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
+            var resizeThumbs = designerCanvas.EnumerateChildOfType<SnapPoint>();
+            var sets = resizeThumbs
+                            .Where(x => !exceptSnapPoints.Contains(x))
+                            .Select(x => new Tuple<SnapPoint, Point>(x, GetCenter(x)))
+                            .Distinct();
+            return sets.Select(x => x.Item2);
+        }
+
         private Point GetCenter(SnapPoint snapPoint)
         {
             var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
