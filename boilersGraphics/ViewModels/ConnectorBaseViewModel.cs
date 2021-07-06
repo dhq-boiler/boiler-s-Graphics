@@ -3,6 +3,7 @@ using boilersGraphics.Helpers;
 using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Media;
@@ -13,7 +14,7 @@ namespace boilersGraphics.ViewModels
     {
         private bool _IsHitTestVisible;
         private Color _EdgeColor;
-        private List<Point> _Points;
+        private ObservableCollection<Point> _Points;
 
         public ConnectorBaseViewModel(int id, IDiagramViewModel parent) : base(id, parent)
         {
@@ -37,7 +38,7 @@ namespace boilersGraphics.ViewModels
             set { SetProperty(ref _IsHitTestVisible, value); }
         }
 
-        public List<Point> Points
+        public ObservableCollection<Point> Points
         {
             get { return _Points; }
             set { SetProperty(ref _Points, value); }
@@ -61,7 +62,7 @@ namespace boilersGraphics.ViewModels
 
         private void Init()
         {
-            _Points = new List<Point>();
+            _Points = new ObservableCollection<Point>();
             IsHitTestVisible = true;
             InitPathFinder();
         }
