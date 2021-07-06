@@ -25,6 +25,7 @@ namespace boilersGraphics.Views.Behaviors
         {
             this.AssociatedObject.MouseDown += AssociatedObject_MouseDown;
             this.AssociatedObject.MouseMove += AssociatedObject_MouseMove;
+            this.AssociatedObject.MouseUp += AssociatedObject_MouseUp;
             base.OnAttached();
         }
 
@@ -32,6 +33,7 @@ namespace boilersGraphics.Views.Behaviors
         {
             this.AssociatedObject.MouseDown -= AssociatedObject_MouseDown;
             this.AssociatedObject.MouseMove -= AssociatedObject_MouseMove;
+            this.AssociatedObject.MouseUp -= AssociatedObject_MouseUp;
             base.OnDetaching();
         }
 
@@ -114,6 +116,12 @@ namespace boilersGraphics.Views.Behaviors
                     }
                 }
             }
+        }
+
+        private void AssociatedObject_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            // release mouse capture
+            if (AssociatedObject.IsMouseCaptured) AssociatedObject.ReleaseMouseCapture();
         }
 
         private void RemoveAllAdornerFromAdornerLayerAndDictionary(DesignerCanvas designerCanvas)
