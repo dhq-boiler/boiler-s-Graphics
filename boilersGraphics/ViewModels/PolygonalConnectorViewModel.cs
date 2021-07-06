@@ -6,26 +6,15 @@ namespace boilersGraphics.ViewModels
 {
     public class PolygonalConnectorViewModel : ConnectorBaseViewModel
     {
-        public PolygonalConnectorViewModel(int id, IDiagramViewModel parent,
-            FullyCreatedConnectorInfo sourceConnectorInfo, FullyCreatedConnectorInfo sinkConnectorInfo)
-            : base(id, parent, sourceConnectorInfo, sinkConnectorInfo)
+        public PolygonalConnectorViewModel(int id, IDiagramViewModel parent)
+            : base(id, parent)
         { }
 
-        public PolygonalConnectorViewModel(ConnectorInfoBase sourceConnectorInfo, ConnectorInfoBase sinkConnectorInfo)
-            : base(sourceConnectorInfo, sinkConnectorInfo)
+        public PolygonalConnectorViewModel()
+            : base()
         { }
 
         public static IPathFinder PathFinder { get; set; }
-
-        protected override void SetConnectionPoints(ConnectorInfo sourceInfo, ConnectorInfo sinkInfo, bool showLastLine)
-        {
-            ConnectionPoints = PathFinder.GetConnectionLine(sourceInfo, sinkInfo, showLastLine);
-        }
-
-        protected override void SetConnectionPoints(ConnectorInfo source, Point sinkPoint, ConnectorOrientation preferredOrientation)
-        {
-            ConnectionPoints = PathFinder.GetConnectionLine(source, sinkPoint, preferredOrientation);
-        }
 
         protected override void InitPathFinder()
         {
@@ -36,11 +25,11 @@ namespace boilersGraphics.ViewModels
 
         public override object Clone()
         {
-            var clone = new PolygonalConnectorViewModel(SourceConnectorInfo, SinkConnectorInfo);
+            var clone = new PolygonalConnectorViewModel();
             clone.Owner = Owner;
             clone.EdgeColor = EdgeColor;
-            clone.SourceA = SourceA;
-            clone.SourceB = SourceB;
+            clone.Points[0] = Points[0];
+            clone.Points[1] = Points[1];
 
             return clone;
         }

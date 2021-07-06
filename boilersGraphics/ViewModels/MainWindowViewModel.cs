@@ -162,11 +162,6 @@ namespace boilersGraphics.ViewModels
             }
         }
 
-        private bool ItemsToDeleteHasConnector(List<SelectableDesignerItemViewModelBase> itemsToRemove, FullyCreatedConnectorInfo connector)
-        {
-            return itemsToRemove.Contains(connector.DataItem);
-        }
-
         #region IDisposable
 
         public void Dispose()

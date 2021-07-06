@@ -1,36 +1,35 @@
 ﻿
+using System.Collections.Generic;
 using System.Windows;
 
 namespace boilersGraphics.ViewModels
 {
     public class StraightConnectorViewModel : ConnectorBaseViewModel
     {
-        public StraightConnectorViewModel(int id, IDiagramViewModel parent,
-            FullyCreatedConnectorInfo sourceConnectorInfo, FullyCreatedConnectorInfo sinkConnectorInfo)
-            : base(id, parent, sourceConnectorInfo, sinkConnectorInfo)
-        { }
-
-        public StraightConnectorViewModel(ConnectorInfoBase sourceConnectorInfo, ConnectorInfoBase sinkConnectorInfo)
-            : base(sourceConnectorInfo, sinkConnectorInfo)
-        { }
-
-        public StraightConnectorViewModel(Point p1, Point p2)
-            : base(new PartCreatedConnectionInfo(p1), new PartCreatedConnectionInfo(p2))
+        public StraightConnectorViewModel(int id, IDiagramViewModel parent)
+            : base(id, parent)
         { }
 
         public StraightConnectorViewModel()
-            : base(new PartCreatedConnectionInfo(new Point()), new PartCreatedConnectionInfo(new Point()))
+            : base()
         { }
+
+        public StraightConnectorViewModel(Point p1, Point p2)
+            : base()
+        {
+            Points.Add(p1);
+            Points.Add(p2);
+        }
 
         #region IClonable
 
         public override object Clone()
         {
-            var clone = new StraightConnectorViewModel(SourceA, SourceB);
+            var clone = new StraightConnectorViewModel(Points[0], Points[1]);
             clone.Owner = Owner;
             clone.EdgeColor = EdgeColor;
-            clone.SourceA = SourceA;
-            clone.SourceB = SourceB;
+            clone.Points[0] = Points[0];
+            clone.Points[1] = Points[1];
 
             return clone;
         }

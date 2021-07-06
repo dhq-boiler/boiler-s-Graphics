@@ -146,7 +146,7 @@
     <Compile Include="Controls\Connector.cs" />
     <Compile Include="Controls\DesignerCanvas.cs" />
     <Compile Include="Controls\DragThumb.cs" />
-    <Compile Include="Controls\ResizeHandle.cs" />
+    <Compile Include="Controls\LineResizeHandle.cs" />
     <Compile Include="Controls\ResizeThumb.cs" />
     <Compile Include="Controls\RotateThumb.cs" />
     <Compile Include="Exceptions\UnexpectedException.cs" />
@@ -166,7 +166,6 @@
     <Compile Include="Helpers\IEventArgsConverter.cs" />
     <Compile Include="Helpers\IPathFinder.cs" />
     <Compile Include="Helpers\OrthogonalPathFinder.cs" />
-    <Compile Include="Helpers\PointHelper.cs" />
     <Compile Include="Helpers\SnapPointDistincter.cs" />
     <Compile Include="Helpers\ToolBoxData.cs" />
     <Compile Include="Helpers\ToolItemData.cs" />

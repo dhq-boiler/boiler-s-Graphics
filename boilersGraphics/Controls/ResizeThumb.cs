@@ -195,11 +195,11 @@ namespace boilersGraphics.Controls
                 else if (item is ConnectorBaseViewModel)
                 {
                     var viewModel = item as ConnectorBaseViewModel;
-                    double left = Math.Min(viewModel.SourceA.X, viewModel.SourceB.X);
-                    double top = Math.Min(viewModel.SourceA.Y, viewModel.SourceB.Y);
+                    double left = Math.Min(viewModel.Points[0].X, viewModel.Points[1].X);
+                    double top = Math.Min(viewModel.Points[0].Y, viewModel.Points[1].Y);
 
-                    double width = Math.Max(viewModel.SourceA.X, viewModel.SourceB.X) - Math.Min(viewModel.SourceA.X, viewModel.SourceB.X);
-                    double height = Math.Max(viewModel.SourceA.Y, viewModel.SourceB.Y) - Math.Min(viewModel.SourceA.Y, viewModel.SourceB.Y);
+                    double width = Math.Max(viewModel.Points[0].X, viewModel.Points[1].X) - Math.Min(viewModel.Points[0].X, viewModel.Points[1].X);
+                    double height = Math.Max(viewModel.Points[0].Y, viewModel.Points[1].Y) - Math.Min(viewModel.Points[0].Y, viewModel.Points[1].Y);
 
                     minDeltaVertical = Math.Min(minDeltaVertical, height);
                     minDeltaHorizontal = Math.Min(minDeltaHorizontal, width);

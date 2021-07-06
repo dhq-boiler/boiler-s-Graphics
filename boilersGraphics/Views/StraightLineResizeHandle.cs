@@ -103,7 +103,7 @@ namespace boilersGraphics.Views
             var canvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
             Point position = Mouse.GetPosition(canvas);
             var viewModel = _selectedLine.DataContext as ConnectorBaseViewModel;
-            viewModel.SourceA = position;
+            viewModel.Points[0] = position;
         }
 
         private void EndThumb_DragDelta(object sender, DragDeltaEventArgs e)
@@ -111,7 +111,7 @@ namespace boilersGraphics.Views
             var canvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
             Point position = Mouse.GetPosition(canvas);
             var viewModel = _selectedLine.DataContext as ConnectorBaseViewModel;
-            viewModel.SourceB = position;
+            viewModel.Points[1] = position;
         }
 
         protected override int VisualChildrenCount => _visualChildren.Count;

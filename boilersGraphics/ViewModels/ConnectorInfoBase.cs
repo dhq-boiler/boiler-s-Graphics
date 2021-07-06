@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace boilersGraphics.ViewModels
 {
+    [Obsolete]
     public abstract class ConnectorInfoBase : BindableBase
     {
         private static double s_connectorWidth = 8;

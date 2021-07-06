@@ -36,7 +36,7 @@
             Stroke="Transparent" />
     </ControlTemplate>
 
-    <ControlTemplate x:Key="ResizeHandle_ResizeHandleTemplate" TargetType="{x:Type control:ResizeHandle}">
+    <ControlTemplate x:Key="ResizeHandle_ResizeHandleTemplate" TargetType="{x:Type control:LineResizeHandle}">
         <Rectangle
             Width="7"
             Height="7"
@@ -73,20 +73,22 @@
 
     <ControlTemplate x:Key="StraightLineResizeDecoratorTemplate" TargetType="{x:Type Control}">
         <Canvas Opacity="0.7" SnapsToDevicePixels="true">
-            <control:ResizeHandle
+            <control:LineResizeHandle
                 x:Name="ResizeHandle_BeginPoint"
-                Canvas.Left="{Binding ConnectionPoints[0].X, Converter={StaticResource shiftCoordinateConverter}, ConverterParameter=7}"
-                Canvas.Top="{Binding ConnectionPoints[0].Y, Converter={StaticResource shiftCoordinateConverter}, ConverterParameter=7}"
+                Canvas.Left="{Binding Points[0].X, Converter={StaticResource shiftCoordinateConverter}, ConverterParameter=7}"
+                Canvas.Top="{Binding Points[0].Y, Converter={StaticResource shiftCoordinateConverter}, ConverterParameter=7}"
                 Width="7"
                 Height="7"
+                TargetPointIndex="0"
                 OppositeHandle="{Binding ElementName=ResizeHandle_EndPoint}"
                 Template="{StaticResource ResizeHandle_ResizeHandleTemplate}" />
-            <control:ResizeHandle
+            <control:LineResizeHandle
                 x:Name="ResizeHandle_EndPoint"
-                Canvas.Left="{Binding ConnectionPoints[1].X, Converter={StaticResource shiftCoordinateConverter}, ConverterParameter=7}"
-                Canvas.Top="{Binding ConnectionPoints[1].Y, Converter={StaticResource shiftCoordinateConverter}, ConverterParameter=7}"
+                Canvas.Left="{Binding Points[1].X, Converter={StaticResource shiftCoordinateConverter}, ConverterParameter=7}"
+                Canvas.Top="{Binding Points[1].Y, Converter={StaticResource shiftCoordinateConverter}, ConverterParameter=7}"
                 Width="7"
                 Height="7"
+                TargetPointIndex="1"
                 OppositeHandle="{Binding ElementName=ResizeHandle_BeginPoint}"
                 Template="{StaticResource ResizeHandle_ResizeHandleTemplate}" />
         </Canvas>
@@ -94,17 +96,17 @@
 
     <ControlTemplate x:Key="PolygonalLineResizeDecoratorTemplate" TargetType="{x:Type Control}">
         <Canvas Opacity="0.7" SnapsToDevicePixels="True">
-            <control:ResizeHandle
+            <control:LineResizeHandle
                 x:Name="ResizeHandle_BeginPoint"
-                Canvas.Left="{Binding ConnectionPoints[0].X, Converter={StaticResource shiftCoordinateConverter}, ConverterParameter=7}"
-                Canvas.Top="{Binding ConnectionPoints[0].Y, Converter={StaticResource shiftCoordinateConverter}, ConverterParameter=7}"
+                Canvas.Left="{Binding Points[0].X, Converter={StaticResource shiftCoordinateConverter}, ConverterParameter=7}"
+                Canvas.Top="{Binding Points[0].Y, Converter={StaticResource shiftCoordinateConverter}, ConverterParameter=7}"
                 Width="7"
                 Height="7"
                 Template="{StaticResource ResizeHandle_ResizeHandleTemplate}" />
-            <control:ResizeHandle
+            <control:LineResizeHandle
                 x:Name="ResizeHandle_EndPoint"
-                Canvas.Left="{Binding EndPoint.X, Converter={StaticResource shiftCoordinateConverter}, ConverterParameter=7}"
-                Canvas.Top="{Binding EndPoint.Y, Converter={StaticResource shiftCoordinateConverter}, ConverterParameter=7}"
+                Canvas.Left="{Binding Points[1].X, Converter={StaticResource shiftCoordinateConverter}, ConverterParameter=7}"
+                Canvas.Top="{Binding Points[1].Y, Converter={StaticResource shiftCoordinateConverter}, ConverterParameter=7}"
                 Width="7"
                 Height="7"
                 Template="{StaticResource ResizeHandle_ResizeHandleTemplate}" />

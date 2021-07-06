@@ -4,9 +4,9 @@ namespace boilersGraphics.Strategies
 {
     internal class StraightLineFactory : LineFactory
     {
-        public override ConnectorBaseViewModel Create(IDiagramViewModel viewModel, ConnectorInfoBase sourceConnectorInfo, ConnectorInfoBase sinkConnectorInfo)
+        public override ConnectorBaseViewModel Create(IDiagramViewModel viewModel)
         {
-            var ret = new StraightConnectorViewModel(sourceConnectorInfo, sinkConnectorInfo)
+            var ret = new StraightConnectorViewModel()
             {
                 Owner = viewModel
             };

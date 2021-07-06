@@ -1,7 +1,9 @@
 ﻿using boilersGraphics.Controls;
+using System;
 
 namespace boilersGraphics.ViewModels
 {
+    [Obsolete]
     public class FullyCreatedConnectorInfo : ConnectorInfoBase
     {
         private bool _ShowConnectors = false;

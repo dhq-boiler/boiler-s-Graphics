@@ -209,11 +209,11 @@
                                                 IsHitTestVisible="{Binding IsHitTestVisible}"
                                                 Stroke="{Binding EdgeColor, Converter={StaticResource solidColorBrushConverter}}"
                                                 StrokeThickness="2"
-                                                X1="{Binding ConnectionPoints[0].X}"
-                                                X2="{Binding ConnectionPoints[1].X}"
-                                                Y1="{Binding ConnectionPoints[0].Y}"
-                                                Y2="{Binding ConnectionPoints[1].Y}" />
-                                                <Path
+                                                X1="{Binding Points[0].X}"
+                                                X2="{Binding Points[1].X}"
+                                                Y1="{Binding Points[0].Y}"
+                                                Y2="{Binding Points[1].Y}" />
+                                                <!--<Path
                                                 x:Name="arrow"
                                                 Canvas.Left="{Binding EndPoint.X}"
                                                 Canvas.Top="{Binding EndPoint.Y}"
@@ -234,7 +234,7 @@
                                                             <RotateTransform x:Name="rot" Angle="{Binding ConnectionPoints, Converter={StaticResource PointsToAngleConverter}}" />
                                                         </TransformGroup>
                                                     </Path.RenderTransform>
-                                                </Path>
+                                                </Path>-->
                                                 <!--  PART_ResizeDecorator  -->
                                                 <Control
                                                 x:Name="PART_ResizeDecorator"

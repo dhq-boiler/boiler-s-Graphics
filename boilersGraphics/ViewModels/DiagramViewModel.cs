@@ -596,23 +596,14 @@ namespace boilersGraphics.ViewModels
                                       new XElement("Type", connection.GetType().FullName),
                                       new XElement("SourceID", connection.SourceConnectedDataItemID),
                                       new XElement("SinkID", connection.SinkConnectedDataItemID),
-                                      new XElement("SourceA", connection.SourceA),
-                                      new XElement("SourceB", connection.SourceB),
-                                      new XElement("SourceOrientation", connection.SourceConnectorInfo.Orientation),
-                                      new XElement("SinkOrientation", connection.SinkConnectorInfo.Orientation),
-                                      new XElement("SourceDegree", GetDegreeOrNan(connection.SourceConnectorInfo)),
-                                      new XElement("SinkDegree", GetDegreeOrNan(connection.SinkConnectorInfo)),
+                                      new XElement("BeginPoint", connection.Points[0]),
+                                      new XElement("EndPoint", connection.Points[1]),
                                       new XElement("ZIndex", connection.ZIndex.Value),
                                       new XElement("EdgeColor", connection.EdgeColor)
                                      )
                                   );
 
             return serializedConnections;
-        }
-
-        private double GetDegreeOrNan(ConnectorInfoBase connectorInfo)
-        {
-            return connectorInfo is FullyCreatedConnectorInfo fully? fully.Degree: double.NaN;
         }
 
         private void SaveFile(XElement xElement)
@@ -701,10 +692,8 @@ namespace boilersGraphics.ViewModels
                 var item = (ConnectorBaseViewModel)DeserializeInstance(connectorXml);
                 item.ID = Guid.Parse(connectorXml.Element("ID").Value);
                 item.ParentID = Guid.Parse(connectorXml.Element("ParentID").Value);
-                item.SourceA = Point.Parse(connectorXml.Element("SourceA").Value);
-                item.SourceB = Point.Parse(connectorXml.Element("SourceB").Value);
-                item.SourceConnectorInfo = DeserializeConnectorInfo(connectorXml, "SourceID", "SourceOrientation", "SourceDegree", item.SourceA, tempItems);
-                item.SinkConnectorInfo = DeserializeConnectorInfo(connectorXml, "SinkID", "SinkOrientation", "SinkDegree", item.SourceB, tempItems);
+                item.Points[0] = Point.Parse(connectorXml.Element("BeginPoint").Value);
+                item.Points[1] = Point.Parse(connectorXml.Element("EndPoint").Value);
                 item.ZIndex.Value = Int32.Parse(connectorXml.Element("ZIndex").Value);
                 item.EdgeColor = (Color)ColorConverter.ConvertFromString(connectorXml.Element("EdgeColor").Value);
                 item.Owner = this;
@@ -722,13 +711,6 @@ namespace boilersGraphics.ViewModels
             }
 
             Items.AddRange(tempItems.OrderBy(x => x.ZIndex.Value));
-        }
-
-        private ConnectorInfoBase DeserializeConnectorInfo(XElement connectorXml, string anyIdElementName, string anyOrientationElementName, string anyDegreeElementName, Point current, List<SelectableDesignerItemViewModelBase> tempItems)
-        {
-            var sourceId = Guid.Parse(connectorXml.Element(anyIdElementName).Value);
-            return (sourceId != Guid.Empty ? new FullyCreatedConnectorInfo((DesignerItemViewModelBase)tempItems.Single(x => x.ID == sourceId), (ConnectorOrientation)Enum.Parse(typeof(ConnectorOrientation), connectorXml.Element(anyOrientationElementName).Value), double.Parse(connectorXml.Element(anyDegreeElementName).Value))
-                    : (ConnectorInfoBase)new PartCreatedConnectionInfo(current));
         }
 
         private SelectableDesignerItemViewModelBase DeserializeInstance(XElement designerItemXML)
@@ -1371,7 +1353,7 @@ namespace boilersGraphics.ViewModels
         private double GetWidth(SelectableDesignerItemViewModelBase item)
         {
             return item is DesignerItemViewModelBase ? (item as DesignerItemViewModelBase).Width.Value
-                 : item is ConnectorBaseViewModel ? Math.Max((item as ConnectorBaseViewModel).SourceA.X - (item as ConnectorBaseViewModel).SourceB.X, (item as ConnectorBaseViewModel).SourceB.X - (item as ConnectorBaseViewModel).SourceA.X)
+                 : item is ConnectorBaseViewModel ? Math.Max((item as ConnectorBaseViewModel).Points[0].X - (item as ConnectorBaseViewModel).Points[1].X, (item as ConnectorBaseViewModel).Points[1].X - (item as ConnectorBaseViewModel).Points[0].X)
                  : (item as GroupItemViewModel).Width.Value;
         }
 
@@ -1390,14 +1372,14 @@ namespace boilersGraphics.ViewModels
         private double GetLeft(SelectableDesignerItemViewModelBase item)
         {
             return item is DesignerItemViewModelBase ? (item as DesignerItemViewModelBase).Left.Value
-                : item is ConnectorBaseViewModel ? Math.Min((item as ConnectorBaseViewModel).SourceA.X, (item as ConnectorBaseViewModel).SourceB.X)
+                : item is ConnectorBaseViewModel ? Math.Min((item as ConnectorBaseViewModel).Points[0].X, (item as ConnectorBaseViewModel).Points[1].X)
                 : Items.Where(x => x.ParentID == (item as GroupItemViewModel).ID).Min(x => GetLeft(x));
         }
 
         private double GetHeight(SelectableDesignerItemViewModelBase item)
         {
             return item is DesignerItemViewModelBase ? (item as DesignerItemViewModelBase).Height.Value
-                 : item is ConnectorBaseViewModel ? Math.Max((item as ConnectorBaseViewModel).SourceA.Y - (item as ConnectorBaseViewModel).SourceB.Y, (item as ConnectorBaseViewModel).SourceB.Y - (item as ConnectorBaseViewModel).SourceA.Y)
+                 : item is ConnectorBaseViewModel ? Math.Max((item as ConnectorBaseViewModel).Points[0].Y - (item as ConnectorBaseViewModel).Points[1].Y, (item as ConnectorBaseViewModel).Points[1].Y - (item as ConnectorBaseViewModel).Points[0].Y)
                  : (item as GroupItemViewModel).Height.Value;
         }
 
@@ -1416,7 +1398,7 @@ namespace boilersGraphics.ViewModels
         private double GetTop(SelectableDesignerItemViewModelBase item)
         {
             return item is DesignerItemViewModelBase ? (item as DesignerItemViewModelBase).Top.Value
-                : item is ConnectorBaseViewModel ? Math.Min((item as ConnectorBaseViewModel).SourceA.Y, (item as ConnectorBaseViewModel).SourceB.Y)
+                : item is ConnectorBaseViewModel ? Math.Min((item as ConnectorBaseViewModel).Points[0].Y, (item as ConnectorBaseViewModel).Points[1].Y)
                 : Items.Where(x => x.ParentID == (item as GroupItemViewModel).ID).Min(x => GetTop(x));
         }
 
@@ -1488,29 +1470,13 @@ namespace boilersGraphics.ViewModels
                 DuplicateDesignerItem(selectedItems, oldNewList, item);
             }
 
-            var connectedConnectors = from item in items.OfType<ConnectorBaseViewModel>()
-                                      where item.SourceConnectorInfo is FullyCreatedConnectorInfo || item.SinkConnectorInfo is FullyCreatedConnectorInfo
-                                      select item;
-
-            var connectedTargets = (from item in connectedConnectors
-                                    where item.SourceConnectorInfo is FullyCreatedConnectorInfo
-                                    select (item.SourceConnectorInfo as FullyCreatedConnectorInfo).DataItem)
-                                   .Union(
-                                    from item in connectedConnectors
-                                    where item.SinkConnectorInfo is FullyCreatedConnectorInfo
-                                    select (item.SinkConnectorInfo as FullyCreatedConnectorInfo).DataItem);
-
-            var connectedItems = from item in items.OfType<DesignerItemViewModelBase>()
-                                 where connectedTargets.Contains(item)
-                                 select item;
-
             var selectedConnectors = from item in items.OfType<ConnectorBaseViewModel>()
                                      orderby item.ZIndex.Value ascending
                                      select item;
 
             foreach (var connector in selectedConnectors)
             {
-                DuplicateConnector(connectedItems, oldNewList, connector);
+                //DuplicateConnector(oldNewList, connector);
             }
         }
 
@@ -1541,25 +1507,9 @@ namespace boilersGraphics.ViewModels
                                          orderby it.ZIndex.Value ascending
                                          select it;
 
-                var childrenConnectedConnectors = from it in childrenConnectors
-                                                  where it.SourceConnectorInfo is FullyCreatedConnectorInfo || it.SinkConnectorInfo is FullyCreatedConnectorInfo
-                                                  select it;
-
-                var childrenConnectedTargets = (from it in childrenConnectedConnectors
-                                                where it.SourceConnectorInfo is FullyCreatedConnectorInfo
-                                                select (it.SourceConnectorInfo as FullyCreatedConnectorInfo).DataItem)
-                                                .Union(
-                                                from it in childrenConnectedConnectors
-                                                where it.SinkConnectorInfo is FullyCreatedConnectorInfo
-                                                select (it.SinkConnectorInfo as FullyCreatedConnectorInfo).DataItem);
-
-                var childrenConnectedItems = from it in selectedItems.Union(children).Distinct()
-                                             where childrenConnectedTargets.Contains(it)
-                                             select it;
-
                 foreach (var connector in childrenConnectors)
                 {
-                    DuplicateConnector(childrenConnectedItems, oldNewList, connector, cloneGroup);
+                    //DuplicateConnector(childrenConnectedItems, oldNewList, connector, cloneGroup);
                 }
 
                 oldNewList.Add(new Tuple<SelectableDesignerItemViewModelBase, SelectableDesignerItemViewModelBase>(groupItem, cloneGroup));
@@ -1584,22 +1534,6 @@ namespace boilersGraphics.ViewModels
         private void DuplicateConnector(IEnumerable<DesignerItemViewModelBase> connectedItems, List<Tuple<SelectableDesignerItemViewModelBase, SelectableDesignerItemViewModelBase>> oldNewList, ConnectorBaseViewModel connector, GroupItemViewModel groupItem = null)
         {
             var clone = connector.Clone() as ConnectorBaseViewModel;
-            if (connector.SourceConnectorInfo is FullyCreatedConnectorInfo sourceInfo && connectedItems.Contains(sourceInfo.DataItem))
-            {
-                var connectDestination = oldNewList.Where(x => x.Item1 == sourceInfo.DataItem)
-                                                   .Select(x => x.Item2)
-                                                   .Cast<DesignerItemViewModelBase>()
-                                                   .Single();
-                clone.SourceConnectorInfo = new FullyCreatedConnectorInfo(connectDestination, sourceInfo.Orientation, sourceInfo.Degree);
-            }
-            if (connector.SinkConnectorInfo is FullyCreatedConnectorInfo sinkInfo && connectedItems.Contains(sinkInfo.DataItem))
-            {
-                var connectDestination = oldNewList.Where(x => x.Item1 == sinkInfo.DataItem)
-                                                   .Select(x => x.Item2)
-                                                   .Cast<DesignerItemViewModelBase>()
-                                                   .Single();
-                clone.SinkConnectorInfo = new FullyCreatedConnectorInfo(connectDestination, sinkInfo.Orientation, sinkInfo.Degree);
-            }
             clone.ZIndex.Value = Items.Count();
             if (groupItem != null)
             {
@@ -1659,11 +1593,11 @@ namespace boilersGraphics.ViewModels
                 }
                 else if (item is ConnectorBaseViewModel connector)
                 {
-                    x1 = Math.Min(Math.Min(connector.SourceA.X, connector.SourceB.X), x1);
-                    y1 = Math.Min(Math.Min(connector.SourceA.Y, connector.SourceB.Y), y1);
+                    x1 = Math.Min(Math.Min(connector.Points[0].X, connector.Points[1].X), x1);
+                    y1 = Math.Min(Math.Min(connector.Points[0].Y, connector.Points[1].Y), y1);
 
-                    x2 = Math.Max(Math.Max(connector.SourceA.X, connector.SourceB.X), x2);
-                    y2 = Math.Max(Math.Max(connector.SourceA.Y, connector.SourceB.Y), y2);
+                    x2 = Math.Max(Math.Max(connector.Points[0].X, connector.Points[1].X), x2);
+                    y2 = Math.Max(Math.Max(connector.Points[0].Y, connector.Points[1].Y), y2);
                 }
             }
 

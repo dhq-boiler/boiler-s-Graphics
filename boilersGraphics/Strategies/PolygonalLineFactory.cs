@@ -4,9 +4,9 @@ namespace boilersGraphics.Strategies
 {
     internal class PolygonalLineFactory : LineFactory
     {
-        public override ConnectorBaseViewModel Create(IDiagramViewModel viewModel, ConnectorInfoBase sourceConnectorInfo, ConnectorInfoBase sinkConnectorInfo)
+        public override ConnectorBaseViewModel Create(IDiagramViewModel viewModel)
         {
-            var ret = new PolygonalConnectorViewModel(sourceConnectorInfo, sinkConnectorInfo)
+            var ret = new PolygonalConnectorViewModel()
             {
                 Owner = viewModel
             };

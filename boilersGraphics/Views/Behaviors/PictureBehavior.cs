@@ -47,67 +47,64 @@ namespace boilersGraphics.Views.Behaviors
         private void AssociatedObject_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
         {
             var canvas = AssociatedObject as DesignerCanvas;
-            if (canvas.SourceConnector == null)
+            var mainWindowVM = (App.Current.MainWindow.DataContext as MainWindowViewModel);
+            var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
+            var diagramVM = mainWindowVM.DiagramViewModel;
+            var snapPoints = diagramVM.SnapPoints;
+            Point? snapped = null;
+            var currentPoint = e.GetPosition(AssociatedObject);
+            foreach (var snapPoint in snapPoints)
             {
-                var mainWindowVM = (App.Current.MainWindow.DataContext as MainWindowViewModel);
-                var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-                var diagramVM = mainWindowVM.DiagramViewModel;
-                var snapPoints = diagramVM.SnapPoints;
-                Point? snapped = null;
-                var currentPoint = e.GetPosition(AssociatedObject);
-                foreach (var snapPoint in snapPoints)
+                if (currentPoint.X > snapPoint.X - mainWindowVM.SnapPower.Value
+                    && currentPoint.X < snapPoint.X + mainWindowVM.SnapPower.Value
+                    && currentPoint.Y > snapPoint.Y - mainWindowVM.SnapPower.Value
+                    && currentPoint.Y < snapPoint.Y + mainWindowVM.SnapPower.Value)
                 {
-                    if (currentPoint.X > snapPoint.X - mainWindowVM.SnapPower.Value
-                     && currentPoint.X < snapPoint.X + mainWindowVM.SnapPower.Value
-                     && currentPoint.Y > snapPoint.Y - mainWindowVM.SnapPower.Value
-                     && currentPoint.Y < snapPoint.Y + mainWindowVM.SnapPower.Value)
-                    {
-                        //スナップする座標を一時変数へ保存
-                        snapped = snapPoint;
-                    }
+                    //スナップする座標を一時変数へ保存
+                    snapped = snapPoint;
                 }
+            }
 
-                if (snapped != null)
+            if (snapped != null)
+            {
+                AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(designerCanvas);
+                RemoveFromAdornerLayerAndDictionary(snapped, adornerLayer);
+
+                //ドラッグ終了座標を一時変数で上書きしてスナップ
+                _pictureDrawingStartPoint = snapped;
+                if (adornerLayer != null)
                 {
-                    AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(designerCanvas);
-                    RemoveFromAdornerLayerAndDictionary(snapped, adornerLayer);
-
-                    //ドラッグ終了座標を一時変数で上書きしてスナップ
-                    _pictureDrawingStartPoint = snapped;
-                    if (adornerLayer != null)
+                    Trace.WriteLine($"Snap={snapped.Value}");
+                    if (!_adorners.ContainsKey(snapped.Value))
                     {
-                        Trace.WriteLine($"Snap={snapped.Value}");
-                        if (!_adorners.ContainsKey(snapped.Value))
-                        {
-                            var adorner = new Adorners.SnapPointAdorner(designerCanvas, snapped.Value);
-                            if (adorner != null)
-                            {
-                                adornerLayer.Add(adorner);
-
-                                //ディクショナリに記憶する
-                                _adorners.Add(snapped.Value, adorner);
-                            }
-                        }
-                    }
-                }
-                else //スナップしなかった場合
-                {
-                    RemoveAllAdornerFromAdornerLayerAndDictionary(designerCanvas);
-                }
-
-                if (e.LeftButton != MouseButtonState.Pressed)
-                    _pictureDrawingStartPoint = null;
-
-                if (_pictureDrawingStartPoint.HasValue)
-                {
-                    AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(canvas);
-                    if (adornerLayer != null)
-                    {
-                        PictureAdorner adorner = new PictureAdorner(canvas, _pictureDrawingStartPoint, _filename, _Width, _Height);
+                        var adorner = new Adorners.SnapPointAdorner(designerCanvas, snapped.Value);
                         if (adorner != null)
                         {
                             adornerLayer.Add(adorner);
+
+                            //ディクショナリに記憶する
+                            _adorners.Add(snapped.Value, adorner);
                         }
+                    }
+                }
+            }
+            else //スナップしなかった場合
+            {
+                RemoveAllAdornerFromAdornerLayerAndDictionary(designerCanvas);
+            }
+
+            if (e.LeftButton != MouseButtonState.Pressed)
+                _pictureDrawingStartPoint = null;
+
+            if (_pictureDrawingStartPoint.HasValue)
+            {
+                AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(canvas);
+                if (adornerLayer != null)
+                {
+                    PictureAdorner adorner = new PictureAdorner(canvas, _pictureDrawingStartPoint, _filename, _Width, _Height);
+                    if (adorner != null)
+                    {
+                        adornerLayer.Add(adorner);
                     }
                 }
             }

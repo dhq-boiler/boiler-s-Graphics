@@ -73,7 +73,7 @@ namespace boilersGraphics.AttachedProperties
                     else if (selectableDesignerItemViewModelBase is ConnectorBaseViewModel)
                     {
                         var viewModel = selectableDesignerItemViewModelBase as ConnectorBaseViewModel;
-                        (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = $"({viewModel.SourceA.X}, {viewModel.SourceA.Y}) - ({viewModel.SourceB.X}, {viewModel.SourceB.Y})";
+                        (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = $"({viewModel.Points[0].X}, {viewModel.Points[0].Y}) - ({viewModel.Points[1].X}, {viewModel.Points[1].Y})";
                     }
 
                     Color edgeColor = Colors.Transparent;
