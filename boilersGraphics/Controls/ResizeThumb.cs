@@ -9,7 +9,7 @@ using System.Windows.Input;
 
 namespace boilersGraphics.Controls
 {
-    public class ResizeThumb : Thumb
+    public class ResizeThumb : SnapPoint
     {
         public ResizeThumb()
         {

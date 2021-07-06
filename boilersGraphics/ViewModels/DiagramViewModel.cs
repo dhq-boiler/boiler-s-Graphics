@@ -80,26 +80,26 @@ namespace boilersGraphics.ViewModels
         {
             get {
                 var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-                var resizeThumbs = designerCanvas.EnumerateChildOfType<ResizeThumb>();
+                var resizeThumbs = designerCanvas.EnumerateChildOfType<SnapPoint>();
                 var sets = resizeThumbs
-                                .Select(x => new Tuple<ResizeThumb, Point>(x, GetCenter(x)));
+                                .Select(x => new Tuple<SnapPoint, Point>(x, GetCenter(x)));
                 DebugPrint(Width, Height, sets);
                 return sets.Select(x => x.Item2);
             }
         }
 
-        private Point GetCenter(ResizeThumb rt)
+        private Point GetCenter(SnapPoint snapPoint)
         {
             var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-            var leftTop = rt.TransformToAncestor(designerCanvas).Transform(new Point(0, 0));
-            switch (rt.Tag)
+            var leftTop = snapPoint.TransformToAncestor(designerCanvas).Transform(new Point(0, 0));
+            switch (snapPoint.Tag)
             {
                 case "左上":
-                    return new Point(leftTop.X + rt.Width - 1, leftTop.Y + rt.Height - 1);
+                    return new Point(leftTop.X + snapPoint.Width - 1, leftTop.Y + snapPoint.Height - 1);
                 case "右上":
-                    return new Point(leftTop.X, leftTop.Y + rt.Height - 1);
+                    return new Point(leftTop.X, leftTop.Y + snapPoint.Height - 1);
                 case "左下":
-                    return new Point(leftTop.X + rt.Width - 1, leftTop.Y);
+                    return new Point(leftTop.X + snapPoint.Width - 1, leftTop.Y);
                 case "右下":
                     return new Point(leftTop.X, leftTop.Y);
                 case "左":
@@ -107,13 +107,17 @@ namespace boilersGraphics.ViewModels
                 case "右":
                 case "下":
                     return new Point(leftTop.X, leftTop.Y);
+                case "始点":
+                    return new Point(leftTop.X + snapPoint.Width / 2, leftTop.Y + snapPoint.Height / 2);
+                case "終点":
+                    return new Point(leftTop.X + snapPoint.Width / 2, leftTop.Y + snapPoint.Height / 2);
                 default:
                     throw new Exception("ResizeThumb.Tag doesn't set");
             }
         }
 
         [Conditional("DEBUG")]
-        private void DebugPrint(int width, int height, IEnumerable<Tuple<ResizeThumb, Point>> sets)
+        private void DebugPrint(int width, int height, IEnumerable<Tuple<SnapPoint, Point>> sets)
         {
             var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
             var rtb = new RenderTargetBitmap((int)designerCanvas.ActualWidth, (int)designerCanvas.ActualHeight, 96, 96, PixelFormats.Pbgra32);

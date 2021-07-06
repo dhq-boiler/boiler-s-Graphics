@@ -81,7 +81,8 @@
                 Height="7"
                 TargetPointIndex="0"
                 OppositeHandle="{Binding ElementName=ResizeHandle_EndPoint}"
-                Template="{StaticResource ResizeHandle_ResizeHandleTemplate}" />
+                Template="{StaticResource ResizeHandle_ResizeHandleTemplate}"
+                Tag="始点" />
             <control:LineResizeHandle
                 x:Name="ResizeHandle_EndPoint"
                 Canvas.Left="{Binding Points[1].X, Converter={StaticResource shiftCoordinateConverter}, ConverterParameter=7}"
@@ -90,7 +91,8 @@
                 Height="7"
                 TargetPointIndex="1"
                 OppositeHandle="{Binding ElementName=ResizeHandle_BeginPoint}"
-                Template="{StaticResource ResizeHandle_ResizeHandleTemplate}" />
+                Template="{StaticResource ResizeHandle_ResizeHandleTemplate}"
+                Tag="終点" />
         </Canvas>
     </ControlTemplate>
 

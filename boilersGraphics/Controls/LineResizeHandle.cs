@@ -8,7 +8,7 @@ using System.Windows.Input;
 
 namespace boilersGraphics.Controls
 {
-    public class LineResizeHandle : Thumb
+    public class LineResizeHandle : SnapPoint
     {
         public static readonly DependencyProperty OppositeHandleProperty = DependencyProperty.Register("OppositeHandle", typeof(LineResizeHandle), typeof(LineResizeHandle));
 
