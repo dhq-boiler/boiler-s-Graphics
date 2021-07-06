@@ -18,73 +18,63 @@ namespace boilersGraphics.ViewModels
         private IDialogService dlgService = null;
         public ObservableCollection<ToolItemData> ToolItems { get; } = new ObservableCollection<ToolItemData>();
 
+        public BehaviorCollection Behaviors { get { return Interaction.GetBehaviors(App.Current.MainWindow.GetChildOfType<DesignerCanvas>()); } }
+
         public ToolBarViewModel(IDialogService dialogService)
         {
             this.dlgService = dialogService;
             ToolItems.Add(new ToolItemData("pointer", "pack://application:,,,/Assets/img/pointer.png", new DelegateCommand(() =>
             {
-                var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-                var behaviors = Interaction.GetBehaviors(designerCanvas);
-                behaviors.Clear();
+                Behaviors.Clear();
                 SelectOneToolItem("pointer");
             })));
             ToolItems.Add(new ToolItemData("rubberband", "pack://application:,,,/Assets/img/rubberband.png", new DelegateCommand(() =>
             {
                 var behavior = new RubberbandBehavior();
-                var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-                var behaviors = Interaction.GetBehaviors(designerCanvas);
-                behaviors.Clear();
-                if (!behaviors.Contains(behavior))
+                Behaviors.Clear();
+                if (!Behaviors.Contains(behavior))
                 {
-                    behaviors.Add(behavior);
+                    Behaviors.Add(behavior);
                 }
                 SelectOneToolItem("rubberband");
             })));
             ToolItems.Add(new ToolItemData("straightline", "pack://application:,,,/Assets/img/straightline.png", new DelegateCommand(() =>
             {
                 var behavior = new NDrawStraightLineBehavior();
-                var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-                var behaviors = Interaction.GetBehaviors(designerCanvas);
-                behaviors.Clear();
-                if (!behaviors.Contains(behavior))
+                Behaviors.Clear();
+                if (!Behaviors.Contains(behavior))
                 {
-                    behaviors.Add(behavior);
+                    Behaviors.Add(behavior);
                 }
                 SelectOneToolItem("straightline");
             })));
             ToolItems.Add(new ToolItemData("rectangle", "pack://application:,,,/Assets/img/rectangle.png", new DelegateCommand(() =>
             {
                 var behavior = new NDrawRectangleBehavior();
-                var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-                var behaviors = Interaction.GetBehaviors(designerCanvas);
-                behaviors.Clear();
-                if (!behaviors.Contains(behavior))
+                Behaviors.Clear();
+                if (!Behaviors.Contains(behavior))
                 {
-                    behaviors.Add(behavior);
+                    Behaviors.Add(behavior);
                 }
                 SelectOneToolItem("rectangle");
             })));
             ToolItems.Add(new ToolItemData("ellipse", "pack://application:,,,/Assets/img/ellipse.png", new DelegateCommand(() =>
             {
                 var behavior = new NDrawEllipseBehavior();
-                var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-                var behaviors = Interaction.GetBehaviors(designerCanvas);
-                behaviors.Clear();
-                if (!behaviors.Contains(behavior))
+                Behaviors.Clear();
+                if (!Behaviors.Contains(behavior))
                 {
-                    behaviors.Add(behavior);
+                    Behaviors.Add(behavior);
                 }
                 SelectOneToolItem("ellipse");
             })));
             ToolItems.Add(new ToolItemData("symbol-a", "pack://application:,,,/Assets/img/Setting.png", new DelegateCommand(() =>
             {
                 var behavior = new DrawSettingBehavior();
-                var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-                var behaviors = Interaction.GetBehaviors(designerCanvas);
-                behaviors.Clear();
-                if (!behaviors.Contains(behavior))
+                Behaviors.Clear();
+                if (!Behaviors.Contains(behavior))
                 {
-                    behaviors.Add(behavior);
+                    Behaviors.Add(behavior);
                 }
                 SelectOneToolItem("symbol-a");
             })));
@@ -97,12 +87,10 @@ namespace boilersGraphics.ViewModels
                 {
                     var bitmap = BitmapFactory.FromStream(new FileStream(dialog.FileName, FileMode.Open, FileAccess.Read));
                     var behavior = new PictureBehavior(dialog.FileName, bitmap.Width, bitmap.Height);
-                    var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-                    var behaviors = Interaction.GetBehaviors(designerCanvas);
-                    behaviors.Clear();
-                    if (!behaviors.Contains(behavior))
+                    Behaviors.Clear();
+                    if (!Behaviors.Contains(behavior))
                     {
-                        behaviors.Add(behavior);
+                        Behaviors.Add(behavior);
                     }
                     SelectOneToolItem("picture");
                 }
@@ -110,24 +98,20 @@ namespace boilersGraphics.ViewModels
             ToolItems.Add(new ToolItemData("letter", "pack://application:,,,/Assets/img/A.png", new DelegateCommand(() =>
             {
                 var behavior = new LetterBehavior();
-                var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-                var behaviors = Interaction.GetBehaviors(designerCanvas);
-                behaviors.Clear();
-                if (!behaviors.Contains(behavior))
+                Behaviors.Clear();
+                if (!Behaviors.Contains(behavior))
                 {
-                    behaviors.Add(behavior);
+                    Behaviors.Add(behavior);
                 }
                 SelectOneToolItem("letter");
             })));
             ToolItems.Add(new ToolItemData("letter-vertical", "pack://application:,,,/Assets/img/A_Vertical.png", new DelegateCommand(() =>
             {
                 var behavior = new LetterVerticalBehavior();
-                var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-                var behaviors = Interaction.GetBehaviors(designerCanvas);
-                behaviors.Clear();
-                if (!behaviors.Contains(behavior))
+                Behaviors.Clear();
+                if (!Behaviors.Contains(behavior))
                 {
-                    behaviors.Add(behavior);
+                    Behaviors.Add(behavior);
                 }
                 SelectOneToolItem("letter-vertical");
             })));
