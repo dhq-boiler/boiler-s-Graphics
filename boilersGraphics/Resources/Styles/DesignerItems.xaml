@@ -36,7 +36,7 @@
             Stroke="Transparent" />
     </ControlTemplate>
 
-    <ControlTemplate x:Key="ResizeHandle_ResizeHandleTemplate" TargetType="{x:Type control:ResizeHandle}">
+    <ControlTemplate x:Key="ResizeHandle_ResizeHandleTemplate" TargetType="{x:Type control:LineResizeHandle}">
         <Rectangle
             Width="7"
             Height="7"
@@ -73,38 +73,42 @@
 
     <ControlTemplate x:Key="StraightLineResizeDecoratorTemplate" TargetType="{x:Type Control}">
         <Canvas Opacity="0.7" SnapsToDevicePixels="true">
-            <control:ResizeHandle
+            <control:LineResizeHandle
                 x:Name="ResizeHandle_BeginPoint"
-                Canvas.Left="{Binding ConnectionPoints[0].X, Converter={StaticResource shiftCoordinateConverter}, ConverterParameter=7}"
-                Canvas.Top="{Binding ConnectionPoints[0].Y, Converter={StaticResource shiftCoordinateConverter}, ConverterParameter=7}"
+                Canvas.Left="{Binding Points[0].X, Converter={StaticResource shiftCoordinateConverter}, ConverterParameter=7}"
+                Canvas.Top="{Binding Points[0].Y, Converter={StaticResource shiftCoordinateConverter}, ConverterParameter=7}"
                 Width="7"
                 Height="7"
+                TargetPointIndex="0"
                 OppositeHandle="{Binding ElementName=ResizeHandle_EndPoint}"
-                Template="{StaticResource ResizeHandle_ResizeHandleTemplate}" />
-            <control:ResizeHandle
+                Template="{StaticResource ResizeHandle_ResizeHandleTemplate}"
+                Tag="始点" />
+            <control:LineResizeHandle
                 x:Name="ResizeHandle_EndPoint"
-                Canvas.Left="{Binding ConnectionPoints[1].X, Converter={StaticResource shiftCoordinateConverter}, ConverterParameter=7}"
-                Canvas.Top="{Binding ConnectionPoints[1].Y, Converter={StaticResource shiftCoordinateConverter}, ConverterParameter=7}"
+                Canvas.Left="{Binding Points[1].X, Converter={StaticResource shiftCoordinateConverter}, ConverterParameter=7}"
+                Canvas.Top="{Binding Points[1].Y, Converter={StaticResource shiftCoordinateConverter}, ConverterParameter=7}"
                 Width="7"
                 Height="7"
+                TargetPointIndex="1"
                 OppositeHandle="{Binding ElementName=ResizeHandle_BeginPoint}"
-                Template="{StaticResource ResizeHandle_ResizeHandleTemplate}" />
+                Template="{StaticResource ResizeHandle_ResizeHandleTemplate}"
+                Tag="終点" />
         </Canvas>
     </ControlTemplate>
 
     <ControlTemplate x:Key="PolygonalLineResizeDecoratorTemplate" TargetType="{x:Type Control}">
         <Canvas Opacity="0.7" SnapsToDevicePixels="True">
-            <control:ResizeHandle
+            <control:LineResizeHandle
                 x:Name="ResizeHandle_BeginPoint"
-                Canvas.Left="{Binding ConnectionPoints[0].X, Converter={StaticResource shiftCoordinateConverter}, ConverterParameter=7}"
-                Canvas.Top="{Binding ConnectionPoints[0].Y, Converter={StaticResource shiftCoordinateConverter}, ConverterParameter=7}"
+                Canvas.Left="{Binding Points[0].X, Converter={StaticResource shiftCoordinateConverter}, ConverterParameter=7}"
+                Canvas.Top="{Binding Points[0].Y, Converter={StaticResource shiftCoordinateConverter}, ConverterParameter=7}"
                 Width="7"
                 Height="7"
                 Template="{StaticResource ResizeHandle_ResizeHandleTemplate}" />
-            <control:ResizeHandle
+            <control:LineResizeHandle
                 x:Name="ResizeHandle_EndPoint"
-                Canvas.Left="{Binding EndPoint.X, Converter={StaticResource shiftCoordinateConverter}, ConverterParameter=7}"
-                Canvas.Top="{Binding EndPoint.Y, Converter={StaticResource shiftCoordinateConverter}, ConverterParameter=7}"
+                Canvas.Left="{Binding Points[1].X, Converter={StaticResource shiftCoordinateConverter}, ConverterParameter=7}"
+                Canvas.Top="{Binding Points[1].Y, Converter={StaticResource shiftCoordinateConverter}, ConverterParameter=7}"
                 Width="7"
                 Height="7"
                 Template="{StaticResource ResizeHandle_ResizeHandleTemplate}" />
@@ -115,6 +119,7 @@
     <ControlTemplate x:Key="ResizeDecoratorTemplate" TargetType="{x:Type Control}">
         <Grid>
             <Grid Opacity="0.7" SnapsToDevicePixels="true">
+                <!-- 上の回転ツマミ部分 -->
                 <control:RotateThumb
                     Width="7"
                     Height="7"
@@ -122,35 +127,49 @@
                     HorizontalAlignment="Center"
                     VerticalAlignment="Top"
                     Cursor="Hand"
-                    Template="{StaticResource RotateThumbTemplate}" />
+                    Template="{StaticResource RotateThumbTemplate}"
+                    Tag="回転ツマミ" />
+                <!-- 上 -->
                 <control:ResizeThumb
+                    Width="3"
                     Height="3"
-                    Margin="0,-4,0,0"
-                    HorizontalAlignment="Stretch"
+                    Margin="0,0,0,0"
+                    HorizontalAlignment="Center"
                     VerticalAlignment="Top"
                     Cursor="SizeNS"
-                    Template="{StaticResource HorizontalResizeHandleTemplate}" />
+                    Template="{StaticResource HorizontalResizeHandleTemplate}"
+                    Tag="上" />
+                <!-- 左 -->
                 <control:ResizeThumb
                     Width="3"
-                    Margin="-4,0,0,0"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Stretch"
-                    Cursor="SizeWE"
-                    Template="{StaticResource VerticalResizeHandleTemplate}" />
-                <control:ResizeThumb
-                    Width="3"
-                    Margin="0,0,-4,0"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Stretch"
-                    Cursor="SizeWE"
-                    Template="{StaticResource VerticalResizeHandleTemplate}" />
-                <control:ResizeThumb
                     Height="3"
-                    Margin="0,0,0,-4"
-                    HorizontalAlignment="Stretch"
+                    Margin="0,0,0,0"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    Cursor="SizeWE"
+                    Template="{StaticResource VerticalResizeHandleTemplate}"
+                    Tag="左" />
+                <!-- 右 -->
+                <control:ResizeThumb
+                    Width="3"
+                    Height="3"
+                    Margin="0,0,-2,0"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Cursor="SizeWE"
+                    Template="{StaticResource VerticalResizeHandleTemplate}"
+                    Tag="右" />
+                <!-- 下 -->
+                <control:ResizeThumb
+                    Width="3"
+                    Height="3"
+                    Margin="0,0,0,-2"
+                    HorizontalAlignment="Center"
                     VerticalAlignment="Bottom"
                     Cursor="SizeNS"
-                    Template="{StaticResource HorizontalResizeHandleTemplate}" />
+                    Template="{StaticResource HorizontalResizeHandleTemplate}"
+                    Tag="下" />
+                <!-- 左上 -->
                 <control:ResizeThumb
                     Width="7"
                     Height="7"
@@ -158,7 +177,9 @@
                     HorizontalAlignment="Left"
                     VerticalAlignment="Top"
                     Cursor="SizeNWSE"
-                    Template="{StaticResource ResizeHandleTemplate}" />
+                    Template="{StaticResource ResizeHandleTemplate}"
+                    Tag="左上" />
+                <!-- 右上 -->
                 <control:ResizeThumb
                     Width="7"
                     Height="7"
@@ -166,7 +187,9 @@
                     HorizontalAlignment="Right"
                     VerticalAlignment="Top"
                     Cursor="SizeNESW"
-                    Template="{StaticResource ResizeHandleTemplate}" />
+                    Template="{StaticResource ResizeHandleTemplate}"
+                    Tag="右上" />
+                <!-- 左下 -->
                 <control:ResizeThumb
                     Width="7"
                     Height="7"
@@ -174,7 +197,9 @@
                     HorizontalAlignment="Left"
                     VerticalAlignment="Bottom"
                     Cursor="SizeNESW"
-                    Template="{StaticResource ResizeHandleTemplate}" />
+                    Template="{StaticResource ResizeHandleTemplate}"
+                    Tag="左下" />
+                <!-- 右下 -->
                 <control:ResizeThumb
                     Width="7"
                     Height="7"
@@ -182,7 +207,8 @@
                     HorizontalAlignment="Right"
                     VerticalAlignment="Bottom"
                     Cursor="SizeNWSE"
-                    Template="{StaticResource ResizeHandleTemplate}" />
+                    Template="{StaticResource ResizeHandleTemplate}"
+                    Tag="右下" />
             </Grid>
             <Grid
                 Margin="-3"

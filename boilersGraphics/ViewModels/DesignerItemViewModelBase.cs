@@ -13,7 +13,6 @@ namespace boilersGraphics.ViewModels
     public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewModelBase, IObservable<TransformNotification>, ICloneable
     {
         private bool _showConnectors = false;
-        private List<FullyCreatedConnectorInfo> _connectors = new List<FullyCreatedConnectorInfo>();
 
         private double _MinWidth;
         private double _MinHeight;
@@ -46,29 +45,6 @@ namespace boilersGraphics.ViewModels
             set { SetProperty(ref _FillColor, value); }
         }
 
-        public FullyCreatedConnectorInfo TopConnector
-        {
-            get { return _connectors[0]; }
-        }
-
-
-        public FullyCreatedConnectorInfo BottomConnector
-        {
-            get { return _connectors[1]; }
-        }
-
-
-        public FullyCreatedConnectorInfo LeftConnector
-        {
-            get { return _connectors[2]; }
-        }
-
-
-        public FullyCreatedConnectorInfo RightConnector
-        {
-            get { return _connectors[3]; }
-        }
-
         public double MinWidth
         {
             get { return _MinWidth; }
@@ -96,10 +72,6 @@ namespace boilersGraphics.ViewModels
                 if (_showConnectors != value)
                 {
                     _showConnectors = value;
-                    TopConnector.ShowConnectors = value;
-                    BottomConnector.ShowConnectors = value;
-                    RightConnector.ShowConnectors = value;
-                    LeftConnector.ShowConnectors = value;
                     RaisePropertyChanged("ShowConnectors");
                 }
             }
@@ -126,11 +98,6 @@ namespace boilersGraphics.ViewModels
 
         private void Init()
         {
-            _connectors.Add(new FullyCreatedConnectorInfo(this, ConnectorOrientation.Top, 270));
-            _connectors.Add(new FullyCreatedConnectorInfo(this, ConnectorOrientation.Bottom, 90));
-            _connectors.Add(new FullyCreatedConnectorInfo(this, ConnectorOrientation.Left, 180));
-            _connectors.Add(new FullyCreatedConnectorInfo(this, ConnectorOrientation.Right, 0));
-
             MinWidth = 0;
             MinHeight = 0;
 

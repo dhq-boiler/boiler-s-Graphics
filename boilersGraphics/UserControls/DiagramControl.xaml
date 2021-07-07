@@ -209,11 +209,11 @@
                                                 IsHitTestVisible="{Binding IsHitTestVisible}"
                                                 Stroke="{Binding EdgeColor, Converter={StaticResource solidColorBrushConverter}}"
                                                 StrokeThickness="2"
-                                                X1="{Binding ConnectionPoints[0].X}"
-                                                X2="{Binding ConnectionPoints[1].X}"
-                                                Y1="{Binding ConnectionPoints[0].Y}"
-                                                Y2="{Binding ConnectionPoints[1].Y}" />
-                                                <Path
+                                                X1="{Binding Points[0].X}"
+                                                X2="{Binding Points[1].X}"
+                                                Y1="{Binding Points[0].Y}"
+                                                Y2="{Binding Points[1].Y}" />
+                                                <!--<Path
                                                 x:Name="arrow"
                                                 Canvas.Left="{Binding EndPoint.X}"
                                                 Canvas.Top="{Binding EndPoint.Y}"
@@ -234,7 +234,7 @@
                                                             <RotateTransform x:Name="rot" Angle="{Binding ConnectionPoints, Converter={StaticResource PointsToAngleConverter}}" />
                                                         </TransformGroup>
                                                     </Path.RenderTransform>
-                                                </Path>
+                                                </Path>-->
                                                 <!--  PART_ResizeDecorator  -->
                                                 <Control
                                                 x:Name="PART_ResizeDecorator"
@@ -245,95 +245,6 @@
                                                 <DataTrigger Binding="{Binding IsSelected}" Value="True">
                                                     <Setter TargetName="PART_ResizeDecorator" Property="Visibility" Value="Visible" />
                                                 </DataTrigger>
-                                            </DataTemplate.Triggers>
-                                        </DataTemplate>
-                                        <DataTemplate DataType="{x:Type viewModel:PolygonalConnectorViewModel}">
-                                            <Canvas
-                                            x:Name="selectedGrid"
-                                            Margin="0"
-                                            HorizontalAlignment="Stretch"
-                                            VerticalAlignment="Stretch">
-                                                <Canvas.Style>
-                                                    <Style TargetType="{x:Type Canvas}">
-                                                        <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
-                                                        <Setter Property="RenderTransform">
-                                                            <Setter.Value>
-                                                                <MatrixTransform Matrix="{Binding Matrix.Value}" />
-                                                            </Setter.Value>
-                                                        </Setter>
-                                                    </Style>
-                                                </Canvas.Style>
-                                                <Polyline
-                                                x:Name="poly"
-                                                IsHitTestVisible="{Binding IsHitTestVisible}"
-                                                Points="{Binding Path=ConnectionPoints, Converter={x:Static converter:ConnectionPathConverter.Instance}}"
-                                                Stroke="{Binding EdgeColor, Converter={StaticResource solidColorBrushConverter}}"
-                                                StrokeThickness="2" />
-
-
-                                                <Path
-                                                x:Name="arrow"
-                                                Canvas.Left="{Binding EndPoint.X}"
-                                                Canvas.Top="{Binding EndPoint.Y}"
-                                                Width="10"
-                                                Height="10"
-                                                HorizontalAlignment="Left"
-                                                VerticalAlignment="Top"
-                                                Data="M0,10 L5,0 10,10 z"
-                                                Fill="{Binding EdgeColor, Converter={StaticResource solidColorBrushConverter}}"
-                                                IsHitTestVisible="{Binding IsHitTestVisible}"
-                                                RenderTransformOrigin="0.5,0.5"
-                                                Stretch="Fill"
-                                                Stroke="{Binding EdgeColor, Converter={StaticResource solidColorBrushConverter}}"
-                                                Visibility="{Binding Path=IsFullConnection, Converter={StaticResource BoolToVisibilityConverter}}">
-                                                    <Path.RenderTransform>
-                                                        <RotateTransform x:Name="rot" />
-                                                    </Path.RenderTransform>
-                                                </Path>
-
-                                                <Control
-                                                x:Name="PART_ResizeDecorator"
-                                                IsHitTestVisible="{Binding IsHitTestVisible}"
-                                                Template="{StaticResource PolygonalLineResizeDecoratorTemplate}"
-                                                Visibility="Collapsed" />
-                                            </Canvas>
-                                            <DataTemplate.Triggers>
-                                                <DataTrigger Binding="{Binding IsSelected}" Value="True">
-                                                    <Setter TargetName="PART_ResizeDecorator" Property="Visibility" Value="Visible" />
-                                                </DataTrigger>
-                                                <DataTrigger Binding="{Binding Path=SinkConnectorInfo.Orientation}" Value="Left">
-                                                    <Setter TargetName="arrow" Property="Margin" Value="-15,-5,0,0" />
-                                                    <Setter TargetName="arrow" Property="RenderTransform">
-                                                        <Setter.Value>
-                                                            <RotateTransform Angle="90" />
-                                                        </Setter.Value>
-                                                    </Setter>
-                                                </DataTrigger>
-                                                <DataTrigger Binding="{Binding Path=SinkConnectorInfo.Orientation}" Value="Top">
-                                                    <Setter TargetName="arrow" Property="Margin" Value="-5,-15,0,0" />
-                                                    <Setter TargetName="arrow" Property="RenderTransform">
-                                                        <Setter.Value>
-                                                            <RotateTransform Angle="180" />
-                                                        </Setter.Value>
-                                                    </Setter>
-                                                </DataTrigger>
-                                                <DataTrigger Binding="{Binding Path=SinkConnectorInfo.Orientation}" Value="Right">
-                                                    <Setter TargetName="arrow" Property="Margin" Value="5,-5,0,0" />
-                                                    <Setter TargetName="arrow" Property="RenderTransform">
-                                                        <Setter.Value>
-                                                            <RotateTransform Angle="-90" />
-                                                        </Setter.Value>
-                                                    </Setter>
-                                                </DataTrigger>
-                                                <DataTrigger Binding="{Binding Path=SinkConnectorInfo.Orientation}" Value="Bottom">
-                                                    <Setter TargetName="arrow" Property="Margin" Value="-5,10,0,0" />
-                                                    <Setter TargetName="arrow" Property="RenderTransform">
-                                                        <Setter.Value>
-                                                            <RotateTransform Angle="0" />
-                                                        </Setter.Value>
-                                                    </Setter>
-                                                </DataTrigger>
-
                                             </DataTemplate.Triggers>
                                         </DataTemplate>
                                     </view:ItemsControlTemplateSelector>

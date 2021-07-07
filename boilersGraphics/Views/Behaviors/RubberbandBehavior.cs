@@ -34,25 +34,22 @@ namespace boilersGraphics.Views.Behaviors
         private void AssociatedObject_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
         {
             var canvas = AssociatedObject as DesignerCanvas;
-            if (canvas.SourceConnector == null)
-            {
-                // if mouse button is not pressed we have no drag operation, ...
-                if (e.LeftButton != MouseButtonState.Pressed)
-                    _rubberbandSelectionStartPoint = null;
+            // if mouse button is not pressed we have no drag operation, ...
+            if (e.LeftButton != MouseButtonState.Pressed)
+                _rubberbandSelectionStartPoint = null;
 
-                // ... but if mouse button is pressed and start
-                // point value is set we do have one
-                if (_rubberbandSelectionStartPoint.HasValue)
+            // ... but if mouse button is pressed and start
+            // point value is set we do have one
+            if (_rubberbandSelectionStartPoint.HasValue)
+            {
+                // create rubberband adorner
+                AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(canvas);
+                if (adornerLayer != null)
                 {
-                    // create rubberband adorner
-                    AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(canvas);
-                    if (adornerLayer != null)
+                    RubberbandAdorner adorner = new RubberbandAdorner(canvas, _rubberbandSelectionStartPoint);
+                    if (adorner != null)
                     {
-                        RubberbandAdorner adorner = new RubberbandAdorner(canvas, _rubberbandSelectionStartPoint);
-                        if (adorner != null)
-                        {
-                            adornerLayer.Add(adorner);
-                        }
+                        adornerLayer.Add(adorner);
                     }
                 }
             }

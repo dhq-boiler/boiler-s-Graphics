@@ -6,6 +6,7 @@ using Prism.Services.Dialogs;
 using Reactive.Bindings;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Disposables;
 
@@ -92,6 +93,20 @@ namespace boilersGraphics.ViewModels
                     }
                 }
             });
+            GetSnapPointsCommand = new DelegateCommand(() =>
+            {
+                Trace.Write($"SnapPoints = ");
+                for (int i = 0; i < DiagramViewModel.SnapPoints.Count(); i++)
+                {
+                    var point = DiagramViewModel.SnapPoints.ElementAt(i);
+                    if (DiagramViewModel.SnapPoints.Last() == point)
+                        Trace.WriteLine($"[{point.X}, {point.Y}]");
+                    else
+                        Trace.Write($"[{point.X}, {point.Y}],");
+                }
+            });
+
+            SnapPower.Value = 10;
         }
 
         public DiagramViewModel DiagramViewModel
@@ -110,11 +125,15 @@ namespace boilersGraphics.ViewModels
 
         public ReactiveProperty<string> Details { get; } = new ReactiveProperty<string>();
 
+        public ReactiveProperty<double> SnapPower { get; } = new ReactiveProperty<double>();
+
         public DelegateCommand<object> DeleteSelectedItemsCommand { get; private set; }
 
         public DelegateCommand<DiagramViewModel> SelectColorCommand { get; }
 
         public DelegateCommand<DiagramViewModel> SelectFillColorCommand { get; }
+
+        public DelegateCommand GetSnapPointsCommand { get; }
 
         private void ExecuteDeleteSelectedItemsCommand(object parameter)
         {
@@ -141,11 +160,6 @@ namespace boilersGraphics.ViewModels
             {
                 DiagramViewModel.RemoveItemCommand.Execute(selectedItem);
             }
-        }
-
-        private bool ItemsToDeleteHasConnector(List<SelectableDesignerItemViewModelBase> itemsToRemove, FullyCreatedConnectorInfo connector)
-        {
-            return itemsToRemove.Contains(connector.DataItem);
         }
 
         #region IDisposable

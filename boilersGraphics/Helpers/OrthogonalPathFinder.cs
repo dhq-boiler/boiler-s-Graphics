@@ -9,6 +9,7 @@ using System.Windows.Controls;
 
 namespace boilersGraphics.Helpers
 {
+    [Obsolete]
     public class OrthogonalPathFinder : IPathFinder
     {
         private const int margin = 20;

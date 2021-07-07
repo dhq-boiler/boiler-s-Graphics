@@ -1,7 +1,9 @@
 ﻿using boilersGraphics.Controls;
+using boilersGraphics.Extensions;
 using boilersGraphics.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -21,6 +23,7 @@ namespace boilersGraphics.Adorners
         private string _filename;
         private double _Width;
         private double _Height;
+        private Dictionary<Point, Adorner> _adorners;
 
         private DesignerCanvas _designerCanvas;
 
@@ -32,6 +35,7 @@ namespace boilersGraphics.Adorners
             _filename = filename;
             _Width = width;
             _Height = height;
+            _adorners = new Dictionary<Point, Adorner>();
         }
 
         protected override void OnMouseMove(System.Windows.Input.MouseEventArgs e)
@@ -42,6 +46,54 @@ namespace boilersGraphics.Adorners
                     this.CaptureMouse();
 
                 _endPoint = e.GetPosition(this);
+
+                var mainWindowVM = (App.Current.MainWindow.DataContext as MainWindowViewModel);
+                var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
+
+                var diagramVM = mainWindowVM.DiagramViewModel;
+                var snapPoints = diagramVM.SnapPoints;
+                Point? snapped = null;
+                foreach (var snapPoint in snapPoints)
+                {
+                    if (_endPoint.Value.X > snapPoint.X - mainWindowVM.SnapPower.Value
+                     && _endPoint.Value.X < snapPoint.X + mainWindowVM.SnapPower.Value
+                     && _endPoint.Value.Y > snapPoint.Y - mainWindowVM.SnapPower.Value
+                     && _endPoint.Value.Y < snapPoint.Y + mainWindowVM.SnapPower.Value)
+                    {
+                        //スナップする座標を一時変数へ保存
+                        snapped = snapPoint;
+                    }
+                }
+
+                //スナップした場合
+                if (snapped != null)
+                {
+                    AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(designerCanvas);
+                    RemoveFromAdornerLayerAndDictionary(snapped, adornerLayer);
+
+                    //ドラッグ終了座標を一時変数で上書きしてスナップ
+                    _endPoint = snapped;
+                    if (adornerLayer != null)
+                    {
+                        Trace.WriteLine($"Snap={snapped.Value}");
+                        if (!_adorners.ContainsKey(snapped.Value))
+                        {
+                            var adorner = new Adorners.SnapPointAdorner(designerCanvas, snapped.Value);
+                            if (adorner != null)
+                            {
+                                adornerLayer.Add(adorner);
+
+                                //ディクショナリに記憶する
+                                _adorners.Add(snapped.Value, adorner);
+                            }
+                        }
+                    }
+                }
+                else //スナップしなかった場合
+                {
+                    RemoveAllAdornerFromAdornerLayerAndDictionary(designerCanvas);
+                }
+
                 this.InvalidateVisual();
             }
             else
@@ -52,6 +104,35 @@ namespace boilersGraphics.Adorners
             e.Handled = true;
         }
 
+        private void RemoveAllAdornerFromAdornerLayerAndDictionary(DesignerCanvas designerCanvas)
+        {
+            AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(designerCanvas);
+            var removes = _adorners.ToList();
+
+            removes.ForEach(x =>
+            {
+                if (adornerLayer != null)
+                {
+                    adornerLayer.Remove(x.Value);
+                }
+                _adorners.Remove(x.Key);
+            });
+        }
+
+        private void RemoveFromAdornerLayerAndDictionary(Point? snapped, AdornerLayer adornerLayer)
+        {
+            var removes = _adorners.Where(x => x.Key != snapped)
+                                                       .ToList();
+            removes.ForEach(x =>
+            {
+                if (adornerLayer != null)
+                {
+                    adornerLayer.Remove(x.Value);
+                }
+                _adorners.Remove(x.Key);
+            });
+        }
+
         protected override void OnMouseUp(System.Windows.Input.MouseButtonEventArgs e)
         {
             // release mouse capture
@@ -60,7 +141,14 @@ namespace boilersGraphics.Adorners
             // remove this adorner from adorner layer
             AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(_designerCanvas);
             if (adornerLayer != null)
+            {
                 adornerLayer.Remove(this);
+
+                foreach (var adorner in _adorners)
+                    adornerLayer.Remove(adorner.Value);
+
+                _adorners.Clear();
+            }
 
             if (_startPoint.HasValue && _endPoint.HasValue)
             {
@@ -70,10 +158,10 @@ namespace boilersGraphics.Adorners
                 itemBase.FileWidth = bitmap.Width;
                 itemBase.FileHeight = bitmap.Height;
                 itemBase.Owner = (AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel;
-                itemBase.Left.Value = Math.Max(0, _startPoint.Value.X);
-                itemBase.Top.Value = Math.Max(0, _startPoint.Value.Y);
-                itemBase.Width.Value = Math.Abs(_endPoint.Value.X - _startPoint.Value.X);
-                itemBase.Height.Value = Math.Abs(_endPoint.Value.Y - _startPoint.Value.Y);
+                itemBase.Left.Value = Math.Min(_startPoint.Value.X, _endPoint.Value.X);
+                itemBase.Top.Value = Math.Min(_startPoint.Value.Y, _endPoint.Value.Y);
+                itemBase.Width.Value = Math.Max(_startPoint.Value.X - _endPoint.Value.X, _endPoint.Value.X - _startPoint.Value.X);
+                itemBase.Height.Value = Math.Max(_startPoint.Value.Y - _endPoint.Value.Y, _endPoint.Value.Y - _startPoint.Value.Y);
                 itemBase.IsSelected = true;
                 itemBase.Owner.DeselectAll();
                 itemBase.ZIndex.Value = itemBase.Owner.Items.Count;

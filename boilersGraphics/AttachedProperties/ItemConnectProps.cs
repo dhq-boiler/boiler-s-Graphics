@@ -64,8 +64,6 @@ namespace boilersGraphics.AttachedProperties
             {
                 DesignerItemViewModelBase designerItem = (DesignerItemViewModelBase)((FrameworkElement)sender).DataContext;
 
-                if (((FrameworkElement)sender).GetParentOfType<DesignerCanvas>().SourceConnector != null) return;
-
                 designerItem.ShowConnectors = false;
             }
         }

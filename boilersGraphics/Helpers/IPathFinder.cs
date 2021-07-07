@@ -8,6 +8,7 @@ using System.Windows;
 
 namespace boilersGraphics.Helpers
 {
+    [Obsolete]
     public interface IPathFinder
     {
         List<Point> GetConnectionLine(ConnectorInfo source, ConnectorInfo sink, bool showLastLine);

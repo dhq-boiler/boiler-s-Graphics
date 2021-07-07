@@ -8,6 +8,7 @@ using System.Windows;
 
 namespace boilersGraphics.ViewModels
 {
+    [Obsolete]
     public class PartCreatedConnectionInfo : ConnectorInfoBase
     {
         public Point CurrentLocation { get; set; }

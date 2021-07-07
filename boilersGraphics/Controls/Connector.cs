@@ -7,16 +7,6 @@ namespace boilersGraphics.Controls
 {
     public class Connector : Control
     {
-        protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
-        {
-            base.OnMouseLeftButtonDown(e);
-            DesignerCanvas canvas = GetDesignerCanvas(this);
-            if (canvas != null)
-            {
-                canvas.SourceConnector = this;
-            }
-        }
-
         public ConnectorOrientation Orientation { get; set; }
 
         // iterate through visual tree to get parent DesignerCanvas

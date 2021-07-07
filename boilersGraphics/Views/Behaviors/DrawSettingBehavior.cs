@@ -34,21 +34,18 @@ namespace boilersGraphics.Views.Behaviors
         private void AssociatedObject_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
         {
             var canvas = AssociatedObject as DesignerCanvas;
-            if (canvas.SourceConnector == null)
-            {
-                if (e.LeftButton != MouseButtonState.Pressed)
-                    _settingDrawingStartPoint = null;
+            if (e.LeftButton != MouseButtonState.Pressed)
+                _settingDrawingStartPoint = null;
 
-                if (_settingDrawingStartPoint.HasValue)
+            if (_settingDrawingStartPoint.HasValue)
+            {
+                AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(canvas);
+                if (adornerLayer != null)
                 {
-                    AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(canvas);
-                    if (adornerLayer != null)
+                    SettingAdorner adorner = new SettingAdorner(canvas, _settingDrawingStartPoint);
+                    if (adorner != null)
                     {
-                        SettingAdorner adorner = new SettingAdorner(canvas, _settingDrawingStartPoint);
-                        if (adorner != null)
-                        {
-                            adornerLayer.Add(adorner);
-                        }
+                        adornerLayer.Add(adorner);
                     }
                 }
             }
