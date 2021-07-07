@@ -44,22 +44,6 @@ namespace boilersGraphics.ViewModels
             set { SetProperty(ref _Points, value); }
         }
 
-        public ConnectorInfo ConnectorInfo(ConnectorOrientation orientation, double left, double top, Point position)
-        {
-            return new ConnectorInfo()
-            {
-                Orientation = orientation,
-                DesignerItemSize = new Size(DesignerItemViewModelBase.DefaultWidth, DesignerItemViewModelBase.DefaultHeight),
-                DesignerItemLeft = left,
-                DesignerItemTop = top,
-                Position = position
-            };
-        }
-
-        public Guid SourceConnectedDataItemID { get; set; }
-
-        public Guid SinkConnectedDataItemID { get; set; }
-
         private void Init()
         {
             _Points = new ObservableCollection<Point>();

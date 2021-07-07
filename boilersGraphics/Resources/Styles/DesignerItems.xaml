@@ -6,28 +6,6 @@
 
     <converter:ShiftCoordinateConverter x:Key="shiftCoordinateConverter" />
 
-    <!--  Connector Style  -->
-    <Style TargetType="{x:Type control:Connector}">
-        <Setter Property="Width" Value="8" />
-        <Setter Property="Height" Value="8" />
-        <Setter Property="Cursor" Value="Cross" />
-        <Setter Property="SnapsToDevicePixels" Value="true" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type control:Connector}">
-                    <Grid>
-                        <!--  transparent extra space makes connector easier to hit  -->
-                        <Rectangle Margin="-2" Fill="Transparent" />
-                        <Rectangle
-                            Fill="Lavender"
-                            Stroke="#AA000080"
-                            StrokeThickness="1" />
-                    </Grid>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
     <ControlTemplate x:Key="RotateThumbTemplate" TargetType="{x:Type control:RotateThumb}">
         <Ellipse
             Width="{TemplateBinding Width}"
@@ -227,33 +205,6 @@
             </Grid>
         </Grid>
     </ControlTemplate>
-
-    <!--  ConnectorDecoratorTemplate Default Template  -->
-    <ControlTemplate x:Key="ConnectorDecoratorTemplate" TargetType="{x:Type Control}">
-        <Grid Margin="-5">
-            <control:Connector
-                x:Name="Left"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Center"
-                Orientation="Left" />
-            <control:Connector
-                x:Name="Top"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Top"
-                Orientation="Top" />
-            <control:Connector
-                x:Name="Right"
-                HorizontalAlignment="Right"
-                VerticalAlignment="Center"
-                Orientation="Right" />
-            <control:Connector
-                x:Name="Bottom"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Bottom"
-                Orientation="Bottom" />
-        </Grid>
-    </ControlTemplate>
-
 
     <!--  DragThumb Default Template  -->
     <Style TargetType="{x:Type control:DragThumb}">

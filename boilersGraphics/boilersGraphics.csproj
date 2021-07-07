@@ -143,7 +143,6 @@
     <Compile Include="AttachedProperties\DragAndDropProps.cs" />
     <Compile Include="AttachedProperties\ItemConnectProps.cs" />
     <Compile Include="AttachedProperties\SelectionProps.cs" />
-    <Compile Include="Controls\Connector.cs" />
     <Compile Include="Controls\DesignerCanvas.cs" />
     <Compile Include="Controls\DragThumb.cs" />
     <Compile Include="Controls\LineResizeHandle.cs" />
@@ -161,13 +160,10 @@
     <Compile Include="Converters\ToSolidColorBrushConverter.cs" />
     <Compile Include="Extensions\Extensions.cs" />
     <Compile Include="Helpers\ColorExchange.cs" />
-    <Compile Include="Helpers\ConnectorInfo.cs" />
     <Compile Include="Helpers\DragObject.cs" />
     <Compile Include="Helpers\EventToCommand.cs" />
     <Compile Include="Helpers\GroupTransformNotification.cs" />
     <Compile Include="Helpers\IEventArgsConverter.cs" />
-    <Compile Include="Helpers\IPathFinder.cs" />
-    <Compile Include="Helpers\OrthogonalPathFinder.cs" />
     <Compile Include="Helpers\SnapPointDistincter.cs" />
     <Compile Include="Helpers\ToolBoxData.cs" />
     <Compile Include="Helpers\ToolItemData.cs" />
@@ -193,7 +189,6 @@
     </Compile>
     <Compile Include="ViewModels\ColorPickerViewModel.cs" />
     <Compile Include="ViewModels\ConnectorBaseViewModel.cs" />
-    <Compile Include="ViewModels\ConnectorInfoBase.cs" />
     <Compile Include="ViewModels\GroupItemViewModel.cs" />
     <Compile Include="ViewModels\LetterDesignerItemViewModel.cs" />
     <Compile Include="ViewModels\LetterVerticalSettingViewModel.cs" />
@@ -206,10 +201,8 @@
     <Compile Include="ViewModels\DesignerItemViewModelBase.cs" />
     <Compile Include="ViewModels\DiagramViewModel.cs" />
     <Compile Include="ViewModels\EllipseViewModel.cs" />
-    <Compile Include="ViewModels\FullyCreatedConnectorInfo.cs" />
     <Compile Include="ViewModels\IDiagramViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
-    <Compile Include="ViewModels\PartCreatedConnectionInfo.cs" />
     <Compile Include="ViewModels\PersistDesignerItemViewModel.cs" />
     <Compile Include="ViewModels\SelectableDesignerItemViewModelBase.cs" />
     <Compile Include="ViewModels\SettingsDesignerItemViewModel.cs" />

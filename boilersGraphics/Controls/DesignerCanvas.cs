@@ -15,8 +15,6 @@ namespace boilersGraphics.Controls
 {
     public class DesignerCanvas : Canvas
     {
-        private HashSet<Connector> _connectorsHit = new HashSet<Connector>();
-
         public DesignerCanvas()
         {
             this.AllowDrop = true;
@@ -33,8 +31,6 @@ namespace boilersGraphics.Controls
             base.OnMouseUp(e);
 
             Mediator.Instance.NotifyColleagues<bool>("DoneDrawingMessage", true);
-
-            _connectorsHit = new HashSet<Connector>();
         }
 
 
@@ -74,27 +70,6 @@ namespace boilersGraphics.Controls
             size.Height += 10;
             return size;
         }
-
-        private void HitTesting(Point hitPoint)
-        {
-            _connectorsHit.Clear();
-            Debug.WriteLine("----------------");
-            HitTestResultBehavior callback(HitTestResult result)
-            {
-                Debug.WriteLine(result.VisualHit);
-                var connector = result.VisualHit.GetParentOfType<Connector>();
-                if (connector != null)
-                {
-                    _connectorsHit.Add(connector);
-                }
-                Debug.WriteLine("----continue----");
-                return HitTestResultBehavior.Continue;
-            }
-            VisualTreeHelper.HitTest(this, null, callback, new GeometryHitTestParameters(new RectangleGeometry(new Rect(hitPoint.X - 2, hitPoint.Y - 2, 4, 4))));
-
-            Debug.WriteLine($"ConnectorHitCount:{_connectorsHit.Count}");
-        }
-
 
         protected override void OnDrop(DragEventArgs e)
         {
