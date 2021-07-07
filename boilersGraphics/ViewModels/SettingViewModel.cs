@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,26 +17,20 @@ namespace boilersGraphics.ViewModels
     {
         private bool disposedValue;
         private CompositeDisposable _disposables = new CompositeDisposable();
-        private Setting _EditTarget;
 
         public ReactiveCommand OkCommand { get; set; }
         public ReactiveCommand CancelCommand { get; set; }
 
-        public Models.Setting EditTarget
-        {
-            get { return _EditTarget; }
-            set { SetProperty(ref _EditTarget, value); }
-        }
+        public ReactiveProperty<Models.Setting> EditTarget { get; set; } = new ReactiveProperty<Setting>();
 
         public SettingViewModel()
         {
-            OkCommand = new ReactiveCommand();
+            EditTarget.Value = new Setting();
             CancelCommand = new ReactiveCommand();
-            EditTarget = new Models.Setting();
-
+            OkCommand = new ReactiveCommand();
             OkCommand.Subscribe(_ =>
             {
-                var parameters = new DialogParameters() { { "Setting", EditTarget } };
+                var parameters = new DialogParameters() { { "Setting", EditTarget.Value } };
                 var ret = new DialogResult(ButtonResult.OK, parameters);
                 RequestClose.Invoke(ret);
             })
@@ -63,7 +58,7 @@ namespace boilersGraphics.ViewModels
 
         public void OnDialogOpened(IDialogParameters parameters)
         {
-            EditTarget = parameters.GetValue<Models.Setting>("Setting");
+            EditTarget.Value = parameters.GetValue<Models.Setting>("Setting");
         }
 
         protected virtual void Dispose(bool disposing)
