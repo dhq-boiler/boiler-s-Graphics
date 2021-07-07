@@ -137,7 +137,6 @@
     <Compile Include="Adorners\PictureAdorner.cs" />
     <Compile Include="Adorners\RectangleAdorner.cs" />
     <Compile Include="Adorners\RubberbandAdorner.cs" />
-    <Compile Include="Adorners\SettingAdorner.cs" />
     <Compile Include="Adorners\SnapPointAdorner.cs" />
     <Compile Include="Adorners\StraightLineAdorner.cs" />
     <Compile Include="AttachedProperties\DragAndDropProps.cs" />
@@ -203,14 +202,11 @@
     <Compile Include="ViewModels\EllipseViewModel.cs" />
     <Compile Include="ViewModels\IDiagramViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
-    <Compile Include="ViewModels\PersistDesignerItemViewModel.cs" />
     <Compile Include="ViewModels\SelectableDesignerItemViewModelBase.cs" />
-    <Compile Include="ViewModels\SettingsDesignerItemViewModel.cs" />
     <Compile Include="ViewModels\SettingViewModel.cs" />
     <Compile Include="ViewModels\StraightConnectorViewModel.cs" />
     <Compile Include="ViewModels\StraightLineViewModel.cs" />
     <Compile Include="ViewModels\ToolBarViewModel.cs" />
-    <Compile Include="ViewModels\ToolBoxViewModel.cs" />
     <Compile Include="Views\AdornedBy.cs" />
     <Compile Include="Views\Behaviors\AbstractAdorner.cs" />
     <Compile Include="Views\Behaviors\CursorInfo.cs" />
@@ -218,7 +214,6 @@
     <Compile Include="Views\Behaviors\AbstractDragAdorner.cs" />
     <Compile Include="Views\Behaviors\AbstractDragStartBehavior.cs" />
     <Compile Include="Views\Behaviors\DrawAbstractBehavior.cs" />
-    <Compile Include="Views\Behaviors\DrawSettingBehavior.cs" />
     <Compile Include="Views\Behaviors\DropAcceptDescription.cs" />
     <Compile Include="Views\Behaviors\CursorBehavior.cs" />
     <Compile Include="Views\Behaviors\LetterBehavior.cs" />
@@ -279,10 +274,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Resources\DesignerItems\PersistDesignerItemDataTemplate.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Resources\DesignerItems\PictureDesignerItemDataTemplate.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -292,10 +283,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Resources\DesignerItems\RectangleDesignerItemDataTemplate.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\DesignerItems\SettingsDesignerItemDataTemplate.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -429,10 +416,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\img\ellipse.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Assets\img\Persist.png" />
-    <Resource Include="Assets\img\Setting.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\img\rubberband.png" />

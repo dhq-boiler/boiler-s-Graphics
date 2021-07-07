@@ -68,16 +68,6 @@ namespace boilersGraphics.ViewModels
                 }
                 SelectOneToolItem("ellipse");
             })));
-            ToolItems.Add(new ToolItemData("symbol-a", "pack://application:,,,/Assets/img/Setting.png", new DelegateCommand(() =>
-            {
-                var behavior = new DrawSettingBehavior();
-                Behaviors.Clear();
-                if (!Behaviors.Contains(behavior))
-                {
-                    Behaviors.Add(behavior);
-                }
-                SelectOneToolItem("symbol-a");
-            })));
             ToolItems.Add(new ToolItemData("picture", "pack://application:,,,/Assets/img/Picture.png", new DelegateCommand(() =>
             {
                 var dialog = new OpenFileDialog();

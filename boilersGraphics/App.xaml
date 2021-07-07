@@ -22,8 +22,6 @@
                 
                 <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/DesignerItems/GroupItemDataTemplate.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/DesignerItems/RectangleDesignerItemDataTemplate.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/DesignerItems/SettingsDesignerItemDataTemplate.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/DesignerItems/PersistDesignerItemDataTemplate.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/DesignerItems/PictureDesignerItemDataTemplate.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/DesignerItems/PathDesignerItemDataTemplate.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/DesignerItems/LetterDesignerItemDataTemplate.xaml" />
