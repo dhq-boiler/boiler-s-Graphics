@@ -165,6 +165,9 @@
   <data name="Command_SendBackward" xml:space="preserve">
     <value>背面へ移動</value>
   </data>
+  <data name="Command_Setting" xml:space="preserve">
+    <value>設定</value>
+  </data>
   <data name="Command_Ungroup" xml:space="preserve">
     <value>グループ化解除</value>
   </data>

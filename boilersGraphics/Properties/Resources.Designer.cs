@@ -205,6 +205,15 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Setting に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Command_Setting {
+            get {
+                return ResourceManager.GetString("Command_Setting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ungroup に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_Ungroup {

@@ -4,9 +4,11 @@ using boilersGraphics.Helpers;
 using boilersGraphics.Messenger;
 using boilersGraphics.Models;
 using boilersGraphics.UserControls;
+using boilersGraphics.Views;
 using Microsoft.Win32;
 using Prism.Commands;
 using Prism.Mvvm;
+using Prism.Services.Dialogs;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
@@ -30,6 +32,7 @@ namespace boilersGraphics.ViewModels
 {
     public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     {
+        private IDialogService dlgService;
         private ObservableCollection<SelectableDesignerItemViewModelBase> _items = new ObservableCollection<SelectableDesignerItemViewModelBase>();
         private Point _CurrentPoint;
         private ObservableCollection<Color> _EdgeColors = new ObservableCollection<Color>();
@@ -63,6 +66,7 @@ namespace boilersGraphics.ViewModels
         public DelegateCommand DistributeHorizontalCommand { get; private set; }
         public DelegateCommand DistributeVerticalCommand { get; private set; }
         public DelegateCommand SelectAllCommand { get; private set; }
+        public DelegateCommand SettingCommand { get; private set; }
         public DelegateCommand UniformWidthCommand { get; private set; }
         public DelegateCommand UniformHeightCommand { get; private set; }
         public DelegateCommand DuplicateCommand { get; private set; }
@@ -196,6 +200,7 @@ namespace boilersGraphics.ViewModels
             DistributeHorizontalCommand = new DelegateCommand(() => ExecuteDistributeHorizontalCommand(), () => CanExecuteDistribute());
             DistributeVerticalCommand = new DelegateCommand(() => ExecuteDistributeVerticalCommand(), () => CanExecuteDistribute());
             SelectAllCommand = new DelegateCommand(() => ExecuteSelectAllCommand());
+            SettingCommand = new DelegateCommand(() => ExecuteSettingCommand());
             UniformWidthCommand = new DelegateCommand(() => ExecuteUniformWidthCommand(), () => CanExecuteUniform());
             UniformHeightCommand = new DelegateCommand(() => ExecuteUniformHeightCommand(), () => CanExecuteUniform());
             DuplicateCommand = new DelegateCommand(() => ExecuteDuplicateCommand(), () => CanExecuteDuplicate());
@@ -313,6 +318,21 @@ namespace boilersGraphics.ViewModels
             BorderThickness = 1.0;
         }
 
+        private void ExecuteSettingCommand()
+        {
+            IDialogResult result = null;
+            var setting = new Models.Setting();
+            setting.Width.Value = this.Width;
+            setting.Height.Value = this.Height;
+            dlgService.ShowDialog(nameof(Views.Setting), new DialogParameters() { { "Setting",  setting} }, ret => result = ret);
+            if (result != null && result.Result == ButtonResult.OK)
+            {
+                var s = result.Parameters.GetValue<Models.Setting>("Setting");
+                Width = s.Width.Value;
+                Height = s.Height.Value;
+            }
+        }
+
         private void ReleaseMiddleButton(MouseEventArgs args)
         {
             if (args.MiddleButton == MouseButtonState.Released)
@@ -323,9 +343,10 @@ namespace boilersGraphics.ViewModels
             }
         }
 
-        public DiagramViewModel(int width, int height)
+        public DiagramViewModel(IDialogService dlgService, int width, int height)
             : this()
         {
+            this.dlgService = dlgService;
             Width = width;
             Height = height;
 
