@@ -324,12 +324,16 @@ namespace boilersGraphics.ViewModels
             var setting = new Models.Setting();
             setting.Width.Value = this.Width;
             setting.Height.Value = this.Height;
+            setting.EnablePointSnap.Value = this.EnablePointSnap.Value;
+            setting.SnapPower.Value = (App.Current.MainWindow.DataContext as MainWindowViewModel).SnapPower.Value;
             dlgService.ShowDialog(nameof(Views.Setting), new DialogParameters() { { "Setting",  setting} }, ret => result = ret);
             if (result != null && result.Result == ButtonResult.OK)
             {
                 var s = result.Parameters.GetValue<Models.Setting>("Setting");
                 Width = s.Width.Value;
                 Height = s.Height.Value;
+                EnablePointSnap.Value = s.EnablePointSnap.Value;
+                (App.Current.MainWindow.DataContext as MainWindowViewModel).SnapPower.Value = s.SnapPower.Value;
             }
         }
 
@@ -392,6 +396,7 @@ namespace boilersGraphics.ViewModels
             set { SetProperty(ref _Height, value); }
         }
 
+        public ReactiveProperty<bool> EnablePointSnap { get; set; } = new ReactiveProperty<bool>();
 
         public void DeselectAll()
         {

@@ -34,6 +34,8 @@
                 <Grid.RowDefinitions>
                     <RowDefinition />
                     <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
                 </Grid.RowDefinitions>
                 <Label Grid.Row="0" 
                        Grid.Column="0">キャンパスの幅</Label>
@@ -49,6 +51,34 @@
                          HorizontalAlignment="Stretch"
                          HorizontalContentAlignment="Right"
                          Text="{Binding EditTarget.Value.Height.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource IntToStringConverter}}" />
+                <CheckBox Grid.Row="2"
+                          Grid.Column="0"
+                          Grid.ColumnSpan="2"
+                          x:Name="enablePointSnap"
+                          Margin="5"
+                          IsChecked="{Binding EditTarget.Value.EnablePointSnap.Value}">ポイントにスナップする</CheckBox>
+                <Label Grid.Row="3"
+                       Grid.Column="0">ポイントにスナップする範囲</Label>
+                <TextBox Grid.Row="3"
+                         Grid.Column="1"
+                         HorizontalAlignment="Stretch"
+                         HorizontalContentAlignment="Right"
+                         Text="{Binding EditTarget.Value.SnapPower.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <TextBox.Style>
+                        <Style TargetType="{x:Type TextBox}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ElementName=enablePointSnap, Path=IsChecked}" Value="True">
+                                    <Setter Property="IsReadOnly" Value="False" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding ElementName=enablePointSnap, Path=IsChecked}" Value="False">
+                                    <Setter Property="IsReadOnly" Value="True" />
+                                    <Setter Property="Foreground" Value="Gray" />
+                                    <Setter Property="BorderBrush" Value="Gray" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBox.Style>
+                </TextBox>
             </Grid>
             <StackPanel Orientation="Horizontal">
             </StackPanel>

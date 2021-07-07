@@ -12,5 +12,7 @@ namespace boilersGraphics.Models
     {
         public ReactiveProperty<int> Width { get; set; } = new ReactiveProperty<int>();
         public ReactiveProperty<int> Height { get; set; } = new ReactiveProperty<int>();
+        public ReactiveProperty<bool> EnablePointSnap { get; set; } = new ReactiveProperty<bool>();
+        public ReactiveProperty<double> SnapPower { get; set; } = new ReactiveProperty<double>();
     }
 }
