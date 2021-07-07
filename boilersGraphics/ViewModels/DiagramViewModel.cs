@@ -523,13 +523,21 @@ namespace boilersGraphics.ViewModels
         {
             var designerItems = this.Items.OfType<DesignerItemViewModelBase>();
             var connections = this.Items.OfType<ConnectorBaseViewModel>();
+            var mainWindowVM = (App.Current.MainWindow.DataContext as MainWindowViewModel);
 
             XElement designerItemsXML = SerializeDesignerItems(designerItems);
             XElement connectionsXML = SerializeConnections(connections);
+            XElement configurationXML = new XElement("Configuration",
+                    new XElement("Width", Width),
+                    new XElement("Height", Height),
+                    new XElement("EnablePointSnap", EnablePointSnap.Value),
+                    new XElement("SnapPower", mainWindowVM.SnapPower.Value)
+                );
 
             XElement root = new XElement("boilersGraphics");
             root.Add(designerItemsXML);
             root.Add(connectionsXML);
+            root.Add(configurationXML);
 
             SaveFile(root);
         }
@@ -635,8 +643,6 @@ namespace boilersGraphics.ViewModels
                                       new XElement("ID", connection.ID),
                                       new XElement("ParentID", connection.ParentID),
                                       new XElement("Type", connection.GetType().FullName),
-                                      new XElement("SourceID", connection.SourceConnectedDataItemID),
-                                      new XElement("SinkID", connection.SinkConnectedDataItemID),
                                       new XElement("BeginPoint", connection.Points[0]),
                                       new XElement("EndPoint", connection.Points[1]),
                                       new XElement("ZIndex", connection.ZIndex.Value),
@@ -733,6 +739,9 @@ namespace boilersGraphics.ViewModels
                 var item = (ConnectorBaseViewModel)DeserializeInstance(connectorXml);
                 item.ID = Guid.Parse(connectorXml.Element("ID").Value);
                 item.ParentID = Guid.Parse(connectorXml.Element("ParentID").Value);
+                item.Points = new ObservableCollection<Point>();
+                item.Points.Add(new Point());
+                item.Points.Add(new Point());
                 item.Points[0] = Point.Parse(connectorXml.Element("BeginPoint").Value);
                 item.Points[1] = Point.Parse(connectorXml.Element("EndPoint").Value);
                 item.ZIndex.Value = Int32.Parse(connectorXml.Element("ZIndex").Value);
