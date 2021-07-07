@@ -3,11 +3,14 @@ using boilersGraphics.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls.Primitives;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace boilersGraphics.Controls
 {
@@ -232,6 +235,39 @@ namespace boilersGraphics.Controls
                 }
                 e.Handled = true;
             }
+        }
+
+        private void DebugPrint(string windowName, Rect rect, Point? value = null)
+        {
+            var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
+            var rtb = new RenderTargetBitmap((int)designerCanvas.ActualWidth, (int)designerCanvas.ActualHeight, 96, 96, PixelFormats.Pbgra32);
+
+            DrawingVisual visual = new DrawingVisual();
+            using (DrawingContext context = visual.RenderOpen())
+            {
+                VisualBrush brush = new VisualBrush(designerCanvas);
+                context.DrawRectangle(brush, null, new Rect(new Point(), new Size(designerCanvas.Width, designerCanvas.Height)));
+
+                context.DrawRectangle(Brushes.Transparent, new Pen(Brushes.Blue, 1), rect);
+
+                context.DrawText(new FormattedText($"({rect.X}, {rect.Y})", CultureInfo.CurrentCulture, FlowDirection.LeftToRight, new Typeface("メイリオ"), 12, Brushes.Blue, VisualTreeHelper.GetDpi(designerCanvas).PixelsPerDip), new Point(rect.X + 10, rect.Y + 10));
+                context.DrawText(new FormattedText(rect.Height.ToString(), CultureInfo.CurrentCulture, FlowDirection.LeftToRight, new Typeface("メイリオ"), 12, Brushes.Blue, VisualTreeHelper.GetDpi(designerCanvas).PixelsPerDip), new Point(rect.X, rect.Y + rect.Height / 2));
+
+                if (value != null)
+                    context.DrawEllipse(Brushes.Transparent, new Pen(Brushes.Red, 1), value.Value, 2, 2);
+            }
+
+            rtb.Render(visual);
+
+            //OpenCvSharp.Cv2.ImShow()するためには src_depth != CV_16F && src_depth != CV_32S である必要があるから、予めBgr24に変換しておく
+            FormatConvertedBitmap newFormatedBitmapSource = new FormatConvertedBitmap();
+            newFormatedBitmapSource.BeginInit();
+            newFormatedBitmapSource.Source = rtb;
+            newFormatedBitmapSource.DestinationFormat = PixelFormats.Bgr24;
+            newFormatedBitmapSource.EndInit();
+
+            var mat = OpenCvSharp.WpfExtensions.BitmapSourceConverter.ToMat(newFormatedBitmapSource);
+            OpenCvSharp.Cv2.ImShow(windowName, mat);
         }
 
         private void Sum(ref Rect rect, double dragDeltaHorizontal, double dragDeltaVertical, HorizontalAlignment horizontalAlignment, VerticalAlignment verticalAlignment)

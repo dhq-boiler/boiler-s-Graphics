@@ -84,7 +84,6 @@ namespace boilersGraphics.ViewModels
                 var sets = resizeThumbs
                                 .Select(x => new Tuple<SnapPoint, Point>(x, GetCenter(x)))
                                 .Distinct();
-                DebugPrint(Width, Height, sets);
                 return sets.Select(x => x.Item2);
             }
         }
