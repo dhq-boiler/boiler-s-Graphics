@@ -60,8 +60,6 @@ namespace boilersGraphics.Controls
                 var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
                 var correspondingViews = designerCanvas.GetCorrespondingViews<ResizeThumb>(this.DataContext);
                 var diagramVM = mainWindowVM.DiagramViewModel;
-                var snapPoints = diagramVM.GetSnapPoints(new List<SnapPoint>(correspondingViews));
-                Point? snapped = null;
                 
                 foreach (var item in selectedDesignerItems)
                 {
@@ -149,53 +147,93 @@ namespace boilersGraphics.Controls
                             dragDeltaHorizontal = Math.Min(Math.Max(-minLeft, e.HorizontalChange), minDeltaHorizontal);
                             Sum(ref rect, dragDeltaHorizontal, dragDeltaVertical, base.HorizontalAlignment, base.VerticalAlignment);
 
-                            foreach (var snapPoint in snapPoints)
+                            if (diagramVM.EnablePointSnap.Value)
                             {
-                                var p = GetPosition(rect, base.VerticalAlignment, base.HorizontalAlignment);
-                                if (p.X > snapPoint.X - mainWindowVM.SnapPower.Value
-                                 && p.X < snapPoint.X + mainWindowVM.SnapPower.Value
-                                 && p.Y > snapPoint.Y - mainWindowVM.SnapPower.Value
-                                 && p.Y < snapPoint.Y + mainWindowVM.SnapPower.Value)
+                                var snapPoints = diagramVM.GetSnapPoints(new List<SnapPoint>(correspondingViews));
+                                Point? snapped = null;
+
+                                foreach (var snapPoint in snapPoints)
                                 {
-                                    //スナップする座標を一時変数へ保存
-                                    snapped = snapPoint;
-                                }
-                            }
-
-                            //スナップした場合
-                            if (snapped != null)
-                            {
-                                AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(designerCanvas);
-                                RemoveFromAdornerLayerAndDictionary(snapped, adornerLayer);
-
-                                //ドラッグ終了座標を一時変数で上書きしてスナップ
-                                SetRect(ref rect, snapped.Value, base.VerticalAlignment, base.HorizontalAlignment);
-
-                                viewModel.Left.Value = rect.X;
-                                viewModel.Top.Value = rect.Y;
-                                viewModel.Width.Value = rect.Width;
-                                viewModel.Height.Value = rect.Height;
-
-                                if (adornerLayer != null)
-                                {
-                                    Trace.WriteLine($"Snap={snapped.Value}");
-                                    if (!_adorners.ContainsKey(snapped.Value))
+                                    var p = GetPosition(rect, base.VerticalAlignment, base.HorizontalAlignment);
+                                    if (p.X > snapPoint.X - mainWindowVM.SnapPower.Value
+                                     && p.X < snapPoint.X + mainWindowVM.SnapPower.Value
+                                     && p.Y > snapPoint.Y - mainWindowVM.SnapPower.Value
+                                     && p.Y < snapPoint.Y + mainWindowVM.SnapPower.Value)
                                     {
-                                        var adorner = new Adorners.SnapPointAdorner(designerCanvas, snapped.Value);
-                                        if (adorner != null)
-                                        {
-                                            adornerLayer.Add(adorner);
+                                        //スナップする座標を一時変数へ保存
+                                        snapped = snapPoint;
+                                    }
+                                }
 
-                                            //ディクショナリに記憶する
-                                            _adorners.Add(snapped.Value, adorner);
+                                //スナップした場合
+                                if (snapped != null)
+                                {
+                                    AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(designerCanvas);
+                                    RemoveFromAdornerLayerAndDictionary(snapped, adornerLayer);
+
+                                    //ドラッグ終了座標を一時変数で上書きしてスナップ
+                                    SetRect(ref rect, snapped.Value, base.VerticalAlignment, base.HorizontalAlignment);
+
+                                    viewModel.Left.Value = rect.X;
+                                    viewModel.Top.Value = rect.Y;
+                                    viewModel.Width.Value = rect.Width;
+                                    viewModel.Height.Value = rect.Height;
+
+                                    if (adornerLayer != null)
+                                    {
+                                        Trace.WriteLine($"Snap={snapped.Value}");
+                                        if (!_adorners.ContainsKey(snapped.Value))
+                                        {
+                                            var adorner = new Adorners.SnapPointAdorner(designerCanvas, snapped.Value);
+                                            if (adorner != null)
+                                            {
+                                                adornerLayer.Add(adorner);
+
+                                                //ディクショナリに記憶する
+                                                _adorners.Add(snapped.Value, adorner);
+                                            }
                                         }
                                     }
                                 }
-                            }
-                            else //スナップしなかった場合
-                            {
-                                RemoveAllAdornerFromAdornerLayerAndDictionary(designerCanvas);
+                                else //スナップしなかった場合
+                                {
+                                    RemoveAllAdornerFromAdornerLayerAndDictionary(designerCanvas);
 
+                                    switch (base.VerticalAlignment)
+                                    {
+                                        case VerticalAlignment.Bottom:
+                                            dragDeltaVertical = Math.Min(-e.VerticalChange, minDeltaVertical);
+                                            viewModel.Height.Value = viewModel.Height.Value - dragDeltaVertical;
+                                            break;
+                                        case VerticalAlignment.Top:
+                                            double top = viewModel.Top.Value;
+                                            dragDeltaVertical = Math.Min(Math.Max(-minTop, e.VerticalChange), minDeltaVertical);
+                                            viewModel.Top.Value = top + dragDeltaVertical;
+                                            viewModel.Height.Value = viewModel.Height.Value - dragDeltaVertical;
+                                            break;
+                                        default:
+                                            break;
+                                    }
+
+                                    switch (base.HorizontalAlignment)
+                                    {
+                                        case HorizontalAlignment.Left:
+                                            double left = viewModel.Left.Value;
+                                            dragDeltaHorizontal = Math.Min(Math.Max(-minLeft, e.HorizontalChange), minDeltaHorizontal);
+                                            viewModel.Left.Value = left + dragDeltaHorizontal;
+                                            viewModel.Width.Value = viewModel.Width.Value - dragDeltaHorizontal;
+                                            break;
+                                        case HorizontalAlignment.Right:
+                                            dragDeltaHorizontal = Math.Min(-e.HorizontalChange, minDeltaHorizontal);
+                                            viewModel.Width.Value = viewModel.Width.Value - dragDeltaHorizontal;
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                }
+                            }
+                            else
+                            {
                                 switch (base.VerticalAlignment)
                                 {
                                     case VerticalAlignment.Bottom:

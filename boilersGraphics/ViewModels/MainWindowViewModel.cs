@@ -23,7 +23,7 @@ namespace boilersGraphics.ViewModels
         public MainWindowViewModel(IDialogService dialogService)
         {
             this.dlgService = dialogService;
-            DiagramViewModel = new DiagramViewModel(1000, 1000);
+            DiagramViewModel = new DiagramViewModel(this.dlgService, 1000, 1000);
             _CompositeDisposable.Add(DiagramViewModel);
             ToolBarViewModel = new ToolBarViewModel(dialogService);
 

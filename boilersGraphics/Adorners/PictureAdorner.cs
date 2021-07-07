@@ -51,47 +51,50 @@ namespace boilersGraphics.Adorners
                 var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
 
                 var diagramVM = mainWindowVM.DiagramViewModel;
-                var snapPoints = diagramVM.SnapPoints;
-                Point? snapped = null;
-                foreach (var snapPoint in snapPoints)
+                if (diagramVM.EnablePointSnap.Value)
                 {
-                    if (_endPoint.Value.X > snapPoint.X - mainWindowVM.SnapPower.Value
-                     && _endPoint.Value.X < snapPoint.X + mainWindowVM.SnapPower.Value
-                     && _endPoint.Value.Y > snapPoint.Y - mainWindowVM.SnapPower.Value
-                     && _endPoint.Value.Y < snapPoint.Y + mainWindowVM.SnapPower.Value)
+                    var snapPoints = diagramVM.SnapPoints;
+                    Point? snapped = null;
+                    foreach (var snapPoint in snapPoints)
                     {
-                        //スナップする座標を一時変数へ保存
-                        snapped = snapPoint;
-                    }
-                }
-
-                //スナップした場合
-                if (snapped != null)
-                {
-                    AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(designerCanvas);
-                    RemoveFromAdornerLayerAndDictionary(snapped, adornerLayer);
-
-                    //ドラッグ終了座標を一時変数で上書きしてスナップ
-                    _endPoint = snapped;
-                    if (adornerLayer != null)
-                    {
-                        Trace.WriteLine($"Snap={snapped.Value}");
-                        if (!_adorners.ContainsKey(snapped.Value))
+                        if (_endPoint.Value.X > snapPoint.X - mainWindowVM.SnapPower.Value
+                         && _endPoint.Value.X < snapPoint.X + mainWindowVM.SnapPower.Value
+                         && _endPoint.Value.Y > snapPoint.Y - mainWindowVM.SnapPower.Value
+                         && _endPoint.Value.Y < snapPoint.Y + mainWindowVM.SnapPower.Value)
                         {
-                            var adorner = new Adorners.SnapPointAdorner(designerCanvas, snapped.Value);
-                            if (adorner != null)
-                            {
-                                adornerLayer.Add(adorner);
+                            //スナップする座標を一時変数へ保存
+                            snapped = snapPoint;
+                        }
+                    }
 
-                                //ディクショナリに記憶する
-                                _adorners.Add(snapped.Value, adorner);
+                    //スナップした場合
+                    if (snapped != null)
+                    {
+                        AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(designerCanvas);
+                        RemoveFromAdornerLayerAndDictionary(snapped, adornerLayer);
+
+                        //ドラッグ終了座標を一時変数で上書きしてスナップ
+                        _endPoint = snapped;
+                        if (adornerLayer != null)
+                        {
+                            Trace.WriteLine($"Snap={snapped.Value}");
+                            if (!_adorners.ContainsKey(snapped.Value))
+                            {
+                                var adorner = new Adorners.SnapPointAdorner(designerCanvas, snapped.Value);
+                                if (adorner != null)
+                                {
+                                    adornerLayer.Add(adorner);
+
+                                    //ディクショナリに記憶する
+                                    _adorners.Add(snapped.Value, adorner);
+                                }
                             }
                         }
                     }
-                }
-                else //スナップしなかった場合
-                {
-                    RemoveAllAdornerFromAdornerLayerAndDictionary(designerCanvas);
+                    else //スナップしなかった場合
+                    {
+                        RemoveAllAdornerFromAdornerLayerAndDictionary(designerCanvas);
+                    }
                 }
 
                 this.InvalidateVisual();

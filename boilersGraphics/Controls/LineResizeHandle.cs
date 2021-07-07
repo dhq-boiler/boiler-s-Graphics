@@ -64,47 +64,50 @@ namespace boilersGraphics.Controls
                 var mainWindowVM = (App.Current.MainWindow.DataContext as MainWindowViewModel);
                 var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
                 var diagramVM = mainWindowVM.DiagramViewModel;
-                var snapPoints = diagramVM.GetSnapPoints(new List<SnapPoint>() { this, OppositeHandle });
-                Point? snapped = null;
-
-                foreach (var snapPoint in snapPoints)
+                if (diagramVM.EnablePointSnap.Value)
                 {
-                    if (point.X > snapPoint.X - mainWindowVM.SnapPower.Value
-                        && point.X < snapPoint.X + mainWindowVM.SnapPower.Value
-                        && point.Y > snapPoint.Y - mainWindowVM.SnapPower.Value
-                        && point.Y < snapPoint.Y + mainWindowVM.SnapPower.Value)
-                    {
-                        //スナップする座標を一時変数へ保存
-                        snapped = snapPoint;
-                    }
-                }
+                    var snapPoints = diagramVM.GetSnapPoints(new List<SnapPoint>() { this, OppositeHandle });
+                    Point? snapped = null;
 
-                if (snapped != null)
-                {
-                    AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(designerCanvas);
-                    RemoveFromAdornerLayerAndDictionary(snapped, adornerLayer);
-
-                    //ドラッグ終了座標を一時変数で上書きしてスナップ
-                    point = snapped.Value;
-                    if (adornerLayer != null)
+                    foreach (var snapPoint in snapPoints)
                     {
-                        Trace.WriteLine($"Snap={snapped.Value}");
-                        if (!_adorners.ContainsKey(snapped.Value))
+                        if (point.X > snapPoint.X - mainWindowVM.SnapPower.Value
+                            && point.X < snapPoint.X + mainWindowVM.SnapPower.Value
+                            && point.Y > snapPoint.Y - mainWindowVM.SnapPower.Value
+                            && point.Y < snapPoint.Y + mainWindowVM.SnapPower.Value)
                         {
-                            var adorner = new Adorners.SnapPointAdorner(designerCanvas, snapped.Value);
-                            if (adorner != null)
-                            {
-                                adornerLayer.Add(adorner);
+                            //スナップする座標を一時変数へ保存
+                            snapped = snapPoint;
+                        }
+                    }
 
-                                //ディクショナリに記憶する
-                                _adorners.Add(snapped.Value, adorner);
+                    if (snapped != null)
+                    {
+                        AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(designerCanvas);
+                        RemoveFromAdornerLayerAndDictionary(snapped, adornerLayer);
+
+                        //ドラッグ終了座標を一時変数で上書きしてスナップ
+                        point = snapped.Value;
+                        if (adornerLayer != null)
+                        {
+                            Trace.WriteLine($"Snap={snapped.Value}");
+                            if (!_adorners.ContainsKey(snapped.Value))
+                            {
+                                var adorner = new Adorners.SnapPointAdorner(designerCanvas, snapped.Value);
+                                if (adorner != null)
+                                {
+                                    adornerLayer.Add(adorner);
+
+                                    //ディクショナリに記憶する
+                                    _adorners.Add(snapped.Value, adorner);
+                                }
                             }
                         }
                     }
-                }
-                else //スナップしなかった場合
-                {
-                    RemoveAllAdornerFromAdornerLayerAndDictionary(designerCanvas);
+                    else //スナップしなかった場合
+                    {
+                        RemoveAllAdornerFromAdornerLayerAndDictionary(designerCanvas);
+                    }
                 }
 
                 vm.Points[TargetPointIndex] = point;

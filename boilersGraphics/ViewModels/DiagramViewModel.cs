@@ -4,9 +4,11 @@ using boilersGraphics.Helpers;
 using boilersGraphics.Messenger;
 using boilersGraphics.Models;
 using boilersGraphics.UserControls;
+using boilersGraphics.Views;
 using Microsoft.Win32;
 using Prism.Commands;
 using Prism.Mvvm;
+using Prism.Services.Dialogs;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
@@ -30,6 +32,7 @@ namespace boilersGraphics.ViewModels
 {
     public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     {
+        private IDialogService dlgService;
         private ObservableCollection<SelectableDesignerItemViewModelBase> _items = new ObservableCollection<SelectableDesignerItemViewModelBase>();
         private Point _CurrentPoint;
         private ObservableCollection<Color> _EdgeColors = new ObservableCollection<Color>();
@@ -63,6 +66,7 @@ namespace boilersGraphics.ViewModels
         public DelegateCommand DistributeHorizontalCommand { get; private set; }
         public DelegateCommand DistributeVerticalCommand { get; private set; }
         public DelegateCommand SelectAllCommand { get; private set; }
+        public DelegateCommand SettingCommand { get; private set; }
         public DelegateCommand UniformWidthCommand { get; private set; }
         public DelegateCommand UniformHeightCommand { get; private set; }
         public DelegateCommand DuplicateCommand { get; private set; }
@@ -196,6 +200,7 @@ namespace boilersGraphics.ViewModels
             DistributeHorizontalCommand = new DelegateCommand(() => ExecuteDistributeHorizontalCommand(), () => CanExecuteDistribute());
             DistributeVerticalCommand = new DelegateCommand(() => ExecuteDistributeVerticalCommand(), () => CanExecuteDistribute());
             SelectAllCommand = new DelegateCommand(() => ExecuteSelectAllCommand());
+            SettingCommand = new DelegateCommand(() => ExecuteSettingCommand());
             UniformWidthCommand = new DelegateCommand(() => ExecuteUniformWidthCommand(), () => CanExecuteUniform());
             UniformHeightCommand = new DelegateCommand(() => ExecuteUniformHeightCommand(), () => CanExecuteUniform());
             DuplicateCommand = new DelegateCommand(() => ExecuteDuplicateCommand(), () => CanExecuteDuplicate());
@@ -313,6 +318,25 @@ namespace boilersGraphics.ViewModels
             BorderThickness = 1.0;
         }
 
+        private void ExecuteSettingCommand()
+        {
+            IDialogResult result = null;
+            var setting = new Models.Setting();
+            setting.Width.Value = this.Width;
+            setting.Height.Value = this.Height;
+            setting.EnablePointSnap.Value = this.EnablePointSnap.Value;
+            setting.SnapPower.Value = (App.Current.MainWindow.DataContext as MainWindowViewModel).SnapPower.Value;
+            dlgService.ShowDialog(nameof(Views.Setting), new DialogParameters() { { "Setting",  setting} }, ret => result = ret);
+            if (result != null && result.Result == ButtonResult.OK)
+            {
+                var s = result.Parameters.GetValue<Models.Setting>("Setting");
+                Width = s.Width.Value;
+                Height = s.Height.Value;
+                EnablePointSnap.Value = s.EnablePointSnap.Value;
+                (App.Current.MainWindow.DataContext as MainWindowViewModel).SnapPower.Value = s.SnapPower.Value;
+            }
+        }
+
         private void ReleaseMiddleButton(MouseEventArgs args)
         {
             if (args.MiddleButton == MouseButtonState.Released)
@@ -323,9 +347,10 @@ namespace boilersGraphics.ViewModels
             }
         }
 
-        public DiagramViewModel(int width, int height)
+        public DiagramViewModel(IDialogService dlgService, int width, int height)
             : this()
         {
+            this.dlgService = dlgService;
             Width = width;
             Height = height;
 
@@ -371,6 +396,7 @@ namespace boilersGraphics.ViewModels
             set { SetProperty(ref _Height, value); }
         }
 
+        public ReactiveProperty<bool> EnablePointSnap { get; set; } = new ReactiveProperty<bool>();
 
         public void DeselectAll()
         {
@@ -497,13 +523,21 @@ namespace boilersGraphics.ViewModels
         {
             var designerItems = this.Items.OfType<DesignerItemViewModelBase>();
             var connections = this.Items.OfType<ConnectorBaseViewModel>();
+            var mainWindowVM = (App.Current.MainWindow.DataContext as MainWindowViewModel);
 
             XElement designerItemsXML = SerializeDesignerItems(designerItems);
             XElement connectionsXML = SerializeConnections(connections);
+            XElement configurationXML = new XElement("Configuration",
+                    new XElement("Width", Width),
+                    new XElement("Height", Height),
+                    new XElement("EnablePointSnap", EnablePointSnap.Value),
+                    new XElement("SnapPower", mainWindowVM.SnapPower.Value)
+                );
 
             XElement root = new XElement("boilersGraphics");
             root.Add(designerItemsXML);
             root.Add(connectionsXML);
+            root.Add(configurationXML);
 
             SaveFile(root);
         }
@@ -609,8 +643,6 @@ namespace boilersGraphics.ViewModels
                                       new XElement("ID", connection.ID),
                                       new XElement("ParentID", connection.ParentID),
                                       new XElement("Type", connection.GetType().FullName),
-                                      new XElement("SourceID", connection.SourceConnectedDataItemID),
-                                      new XElement("SinkID", connection.SinkConnectedDataItemID),
                                       new XElement("BeginPoint", connection.Points[0]),
                                       new XElement("EndPoint", connection.Points[1]),
                                       new XElement("ZIndex", connection.ZIndex.Value),
@@ -707,6 +739,9 @@ namespace boilersGraphics.ViewModels
                 var item = (ConnectorBaseViewModel)DeserializeInstance(connectorXml);
                 item.ID = Guid.Parse(connectorXml.Element("ID").Value);
                 item.ParentID = Guid.Parse(connectorXml.Element("ParentID").Value);
+                item.Points = new ObservableCollection<Point>();
+                item.Points.Add(new Point());
+                item.Points.Add(new Point());
                 item.Points[0] = Point.Parse(connectorXml.Element("BeginPoint").Value);
                 item.Points[1] = Point.Parse(connectorXml.Element("EndPoint").Value);
                 item.ZIndex.Value = Int32.Parse(connectorXml.Element("ZIndex").Value);

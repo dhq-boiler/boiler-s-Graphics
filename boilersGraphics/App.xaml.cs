@@ -27,6 +27,7 @@ namespace boilersGraphics
             containerRegistry.RegisterDialog<ColorPicker, ViewModels.ColorPickerViewModel>();
             containerRegistry.RegisterDialog<LetterSetting, ViewModels.LetterSettingViewModel>();
             containerRegistry.RegisterDialog<LetterVerticalSetting, ViewModels.LetterVerticalSettingViewModel>();
+            containerRegistry.RegisterDialog<Views.Setting, ViewModels.SettingViewModel>();
         }
     }
 }
