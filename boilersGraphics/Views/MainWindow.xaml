@@ -1026,9 +1026,6 @@
                             </ControlTemplate>
                         </Button.Template>
                     </Button>
-                    <Button Command="{Binding GetSnapPointsCommand}">
-                        GetSnapPoints
-                    </Button>
                 </StackPanel>
             </ToolBar>
         </ToolBarTray>
