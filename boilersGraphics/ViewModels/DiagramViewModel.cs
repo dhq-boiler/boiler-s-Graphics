@@ -476,44 +476,16 @@ namespace boilersGraphics.ViewModels
 
         private void ExecuteExportCommand()
         {
-            var diagramControl = App.Current.MainWindow.GetChildOfType<DiagramControl>();
-            var itemsControl = diagramControl.GetChildOfType<ItemsControl>();
-            var designerCanvas = diagramControl.GetChildOfType<DesignerCanvas>();
+            ExportCanvas();
+        }
 
-            var tempIsSelected = new Dictionary<SelectableDesignerItemViewModelBase, bool>();
-            foreach (var item in itemsControl.Items.Cast<SelectableDesignerItemViewModelBase>())
+        private void ExportCanvas()
+        {
+            IDialogResult result = null;
+            this.dlgService.ShowDialog(nameof(Export), ret => result = ret);
+            if (result != null)
             {
-                tempIsSelected.Add(item, item.IsSelected);
-                item.IsSelected = false;
-            }
-
-            var rtb = new RenderTargetBitmap((int)designerCanvas.ActualWidth, (int)designerCanvas.ActualHeight, 96, 96, PixelFormats.Pbgra32);
-
-            DrawingVisual visual = new DrawingVisual();
-            using (DrawingContext context = visual.RenderOpen())
-            {
-                VisualBrush brush = new VisualBrush(designerCanvas);
-                context.DrawRectangle(brush, null, new Rect(new Point(), new Size(designerCanvas.Width, designerCanvas.Height)));
-            }
-
-            rtb.Render(visual);
-
-            //IsSelectedの復元
-            foreach (var item in itemsControl.Items.Cast<SelectableDesignerItemViewModelBase>())
-            {
-                bool outIsSelected;
-                if (tempIsSelected.TryGetValue(item, out outIsSelected))
-                {
-                    item.IsSelected = outIsSelected;
-                }
-            }
-
-            JpegBitmapEncoder encoder = new JpegBitmapEncoder();
-            encoder.Frames.Add(BitmapFrame.Create(rtb));
-            encoder.QualityLevel = 100;
-            using (var stream = File.Create("TEST.jpg"))
-            {
-                encoder.Save(stream);
+                
             }
         }
 

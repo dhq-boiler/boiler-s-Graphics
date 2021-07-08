@@ -148,6 +148,7 @@
     <Compile Include="Controls\ResizeThumb.cs" />
     <Compile Include="Controls\RotateThumb.cs" />
     <Compile Include="Controls\SnapPoint.cs" />
+    <Compile Include="Converters\ExtensionConverter.cs" />
     <Compile Include="Converters\IntToStringConverter.cs" />
     <Compile Include="Exceptions\UnexpectedException.cs" />
     <Compile Include="Controls\ZoomBox.cs" />
@@ -188,6 +189,7 @@
     </Compile>
     <Compile Include="ViewModels\ColorPickerViewModel.cs" />
     <Compile Include="ViewModels\ConnectorBaseViewModel.cs" />
+    <Compile Include="ViewModels\ExportViewModel.cs" />
     <Compile Include="ViewModels\GroupItemViewModel.cs" />
     <Compile Include="ViewModels\LetterDesignerItemViewModel.cs" />
     <Compile Include="ViewModels\LetterVerticalSettingViewModel.cs" />
@@ -242,6 +244,9 @@
     </Compile>
     <Compile Include="Views\ColorSlider.xaml.cs">
       <DependentUpon>ColorSlider.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Export.xaml.cs">
+      <DependentUpon>Export.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ItemsControlItemContainerStyleSelector.cs" />
     <Compile Include="Views\ItemsControlTemplateSelector.cs" />
@@ -347,6 +352,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ColorSlider.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Export.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
