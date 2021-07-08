@@ -43,14 +43,14 @@
                          Grid.Column="1"
                          HorizontalAlignment="Stretch"
                          HorizontalContentAlignment="Right"
-                         Text="{Binding EditTarget.Value.Width.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource IntToStringConverter}}" />
+                         Text="{Binding EditTarget.Value.Width.Value, Converter={StaticResource IntToStringConverter}}" />
                 <Label Grid.Row="1"
                        Grid.Column="0">キャンパスの高さ</Label>
                 <TextBox Grid.Row="1"
                          Grid.Column="1"
                          HorizontalAlignment="Stretch"
                          HorizontalContentAlignment="Right"
-                         Text="{Binding EditTarget.Value.Height.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource IntToStringConverter}}" />
+                         Text="{Binding EditTarget.Value.Height.Value, Converter={StaticResource IntToStringConverter}}" />
                 <CheckBox Grid.Row="2"
                           Grid.Column="0"
                           Grid.ColumnSpan="2"
