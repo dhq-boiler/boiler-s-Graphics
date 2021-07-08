@@ -15,7 +15,6 @@ namespace boilersGraphics.ViewModels
     public class MainWindowViewModel : BindableBase, IDisposable
     {
         private DiagramViewModel _DiagramViewModel;
-        private List<SelectableDesignerItemViewModelBase> _itemsToRemove;
         private ToolBarViewModel _ToolBarViewModel;
         private CompositeDisposable _CompositeDisposable = new CompositeDisposable();
         private IDialogService dlgService = null;
@@ -123,26 +122,8 @@ namespace boilersGraphics.ViewModels
 
         private void ExecuteDeleteSelectedItemsCommand(object parameter)
         {
-            _itemsToRemove = DiagramViewModel.SelectedItems.ToList();
-            List<SelectableDesignerItemViewModelBase> connectionsToAlsoRemove = new List<SelectableDesignerItemViewModelBase>();
-
-            //TODO オプション化
-            //foreach (var connector in DiagramViewModel.Items.OfType<ConnectorBaseViewModel>())
-            //{
-            //    if (connector.SourceConnectorInfo is FullyCreatedConnectorInfo
-            //        && ItemsToDeleteHasConnector(_itemsToRemove, connector.SourceConnectorInfo as FullyCreatedConnectorInfo))
-            //    {
-            //        connectionsToAlsoRemove.Add(connector);
-            //    }
-
-            //    if (connector.SinkConnectorInfo is FullyCreatedConnectorInfo
-            //        && ItemsToDeleteHasConnector(_itemsToRemove, connector.SinkConnectorInfo as FullyCreatedConnectorInfo))
-            //    {
-            //        connectionsToAlsoRemove.Add(connector);
-            //    }
-            //}
-            //_itemsToRemove.AddRange(connectionsToAlsoRemove);
-            foreach (var selectedItem in _itemsToRemove)
+            var itemsToRemove = DiagramViewModel.SelectedItems.ToList();
+            foreach (var selectedItem in itemsToRemove)
             {
                 DiagramViewModel.RemoveItemCommand.Execute(selectedItem);
             }
