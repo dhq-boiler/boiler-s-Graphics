@@ -17,7 +17,10 @@ namespace boilersGraphics.Converters
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return int.Parse(value.ToString());
+            var str = value as string;
+            if (string.IsNullOrEmpty(str))
+                return 0;
+            return int.Parse(str);
         }
     }
 }
