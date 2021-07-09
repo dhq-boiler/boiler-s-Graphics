@@ -16,7 +16,7 @@
         <StackPanel DockPanel.Dock="Bottom"
                     HorizontalAlignment="Right"
                     Orientation="Horizontal">
-            <Button Command="{Binding OkCommand}"
+            <Button Command="{Binding OkCommand.Value}"
                     Width="100"
                     Height="25"
                     Margin="5">OK</Button>
@@ -43,14 +43,14 @@
                          Grid.Column="1"
                          HorizontalAlignment="Stretch"
                          HorizontalContentAlignment="Right"
-                         Text="{Binding EditTarget.Value.Width.Value, Converter={StaticResource IntToStringConverter}}" />
+                         Text="{Binding EditTarget.Value.Width.Value, Converter={StaticResource IntToStringConverter}, UpdateSourceTrigger=PropertyChanged}" />
                 <Label Grid.Row="1"
                        Grid.Column="0">キャンパスの高さ</Label>
                 <TextBox Grid.Row="1"
                          Grid.Column="1"
                          HorizontalAlignment="Stretch"
                          HorizontalContentAlignment="Right"
-                         Text="{Binding EditTarget.Value.Height.Value, Converter={StaticResource IntToStringConverter}}" />
+                         Text="{Binding EditTarget.Value.Height.Value, Converter={StaticResource IntToStringConverter}, UpdateSourceTrigger=PropertyChanged}" />
                 <CheckBox Grid.Row="2"
                           Grid.Column="0"
                           Grid.ColumnSpan="2"

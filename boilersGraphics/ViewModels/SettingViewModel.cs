@@ -18,7 +18,7 @@ namespace boilersGraphics.ViewModels
         private bool disposedValue;
         private CompositeDisposable _disposables = new CompositeDisposable();
 
-        public ReactiveCommand OkCommand { get; set; }
+        public ReactiveProperty<ReactiveCommand> OkCommand { get; set; } = new ReactiveProperty<ReactiveCommand>();
         public ReactiveCommand CancelCommand { get; set; }
 
         public ReactiveProperty<Models.Setting> EditTarget { get; set; } = new ReactiveProperty<Setting>();
@@ -27,22 +27,26 @@ namespace boilersGraphics.ViewModels
         {
             EditTarget.Value = new Setting();
             CancelCommand = new ReactiveCommand();
-            OkCommand = EditTarget.Value
-                       .Width
-                       .CombineLatest(EditTarget.Value.Height, (x, y) => x * y)
-                       .Select(x => x > 0)
-                       .ToReactiveCommand();
-            OkCommand.Subscribe(_ =>
-            {
-                var parameters = new DialogParameters() { { "Setting", EditTarget.Value } };
-                var ret = new DialogResult(ButtonResult.OK, parameters);
-                RequestClose.Invoke(ret);
-            })
-            .AddTo(_disposables);
             CancelCommand.Subscribe(_ =>
             {
                 var ret = new DialogResult(ButtonResult.Cancel, null);
                 RequestClose.Invoke(ret);
+            })
+            .AddTo(_disposables);
+            EditTarget.Subscribe(_ =>
+            {
+                OkCommand.Value = EditTarget.Value
+                             .Width
+                             .CombineLatest(EditTarget.Value.Height, (x, y) => x * y)
+                             .Select(x => x > 0)
+                             .ToReactiveCommand();
+                OkCommand.Value.Subscribe(__ =>
+                {
+                    var parameters = new DialogParameters() { { "Setting", EditTarget.Value } };
+                    var ret = new DialogResult(ButtonResult.OK, parameters);
+                    RequestClose.Invoke(ret);
+                })
+                .AddTo(_disposables);
             })
             .AddTo(_disposables);
         }
