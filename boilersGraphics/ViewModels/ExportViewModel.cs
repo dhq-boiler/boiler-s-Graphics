@@ -127,7 +127,7 @@ namespace boilersGraphics.ViewModels
             }
         }
 
-        abstract class FileGenerator<T> : IFileGenerator where T : BitmapEncoder
+        abstract class FileGenerator<T> : IFileGenerator where T : BitmapEncoder, new()
 
         {
             protected BitmapEncoder encoder;
@@ -136,7 +136,15 @@ namespace boilersGraphics.ViewModels
                 encoder = CreateEncoder();
             }
 
-            public abstract BitmapEncoder CreateEncoder();
+            public T Cast()
+            {
+                return encoder as T;
+            }
+
+            public T CreateEncoder()
+            {
+                return new T();
+            }
 
             public abstract void SetQualityLevel(int level);
 
@@ -156,24 +164,14 @@ namespace boilersGraphics.ViewModels
 
         class JpegFileGenerator : FileGenerator<JpegBitmapEncoder>
         {
-            public override BitmapEncoder CreateEncoder()
-            {
-                return new JpegBitmapEncoder();
-            }
-
             public override void SetQualityLevel(int level)
             {
-                (encoder as JpegBitmapEncoder).QualityLevel = level;
+                Cast().QualityLevel = level;
             }
         }
 
         class PngFileGenerator : FileGenerator<PngBitmapEncoder>
         {
-            public override BitmapEncoder CreateEncoder()
-            {
-                return new PngBitmapEncoder();
-            }
-
             public override void SetQualityLevel(int level)
             {
             }
@@ -181,11 +179,6 @@ namespace boilersGraphics.ViewModels
 
         class GifFileGenerator : FileGenerator<GifBitmapEncoder>
         {
-            public override BitmapEncoder CreateEncoder()
-            {
-                return new GifBitmapEncoder();
-            }
-
             public override void SetQualityLevel(int level)
             {
             }
@@ -193,11 +186,6 @@ namespace boilersGraphics.ViewModels
 
         class BmpFileGenerator : FileGenerator<BmpBitmapEncoder>
         {
-            public override BitmapEncoder CreateEncoder()
-            {
-                return new BmpBitmapEncoder();
-            }
-
             public override void SetQualityLevel(int level)
             {
             }
@@ -205,9 +193,8 @@ namespace boilersGraphics.ViewModels
 
         class TiffFileGenerator : FileGenerator<TiffBitmapEncoder>
         {
-            public override BitmapEncoder CreateEncoder()
+            public override void SetQualityLevel(int level)
             {
-                return new TiffBitmapEncoder();
             }
 
             public override void SetQualityLevel(int level)
