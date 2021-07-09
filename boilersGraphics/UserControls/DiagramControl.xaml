@@ -134,6 +134,9 @@
                                                     </Setter.Value>
                                                 </Setter>
                                             </DataTrigger>
+                                            <DataTrigger Binding="{Binding IsSelected}" Value="False">
+                                                <Setter TargetName="PART_ResizeDecorator" Property="Visibility" Value="Hidden" />
+                                            </DataTrigger>
                                         </DataTemplate.Triggers>
                                     </DataTemplate>
                                 </Setter.Value>
