@@ -93,6 +93,8 @@ namespace boilersGraphics.ViewModels
             generator.AddFrame(BitmapFrame.Create(rtb));
             generator.SetQualityLevel(QualityLevel.Value);
             generator.Save(Path.Value);
+
+            OkClose();
         }
 
         interface IFileGenerator
@@ -197,6 +199,12 @@ namespace boilersGraphics.ViewModels
             public override void SetQualityLevel(int level)
             {
             }
+        }
+
+        private void OkClose()
+        {
+            var result = new DialogResult(ButtonResult.OK);
+            RequestClose.Invoke(result);
         }
 
         private void CancelClose()
