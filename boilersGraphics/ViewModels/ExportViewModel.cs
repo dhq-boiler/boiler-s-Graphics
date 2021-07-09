@@ -119,6 +119,8 @@ namespace boilersGraphics.ViewModels
                         return new GifFileGenerator();
                     case ".bmp":
                         return new BmpFileGenerator();
+                    case ".tiff":
+                        return new TiffFileGenerator();
                     default:
                         throw new NotSupportedException($"{extension} is not supported");
                 }
@@ -201,6 +203,18 @@ namespace boilersGraphics.ViewModels
             }
         }
 
+        class TiffFileGenerator : FileGenerator<TiffBitmapEncoder>
+        {
+            public override BitmapEncoder CreateEncoder()
+            {
+                return new TiffBitmapEncoder();
+            }
+
+            public override void SetQualityLevel(int level)
+            {
+            }
+        }
+
         private void OkClose()
         {
             var result = new DialogResult(ButtonResult.OK);
@@ -216,7 +230,7 @@ namespace boilersGraphics.ViewModels
         private void OpenFileDialog()
         {
             var fileDialog = new SaveFileDialog();
-            fileDialog.Filter = "JPEG file|*.jpg;*.jpeg|PNG file|*.png|GIF file|*.gif|BMP file|*.bmp";
+            fileDialog.Filter = "JPEG file|*.jpg;*.jpeg|PNG file|*.png|GIF file|*.gif|BMP file|*.bmp|TIFF file|*.tiff";
             if (fileDialog.ShowDialog() == true)
             {
                 Path.Value = fileDialog.FileName;
