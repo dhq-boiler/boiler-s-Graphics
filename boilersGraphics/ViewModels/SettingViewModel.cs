@@ -27,7 +27,11 @@ namespace boilersGraphics.ViewModels
         {
             EditTarget.Value = new Setting();
             CancelCommand = new ReactiveCommand();
-            OkCommand = new ReactiveCommand();
+            OkCommand = EditTarget.Value
+                       .Width
+                       .CombineLatest(EditTarget.Value.Height, (x, y) => x * y)
+                       .Select(x => x > 0)
+                       .ToReactiveCommand();
             OkCommand.Subscribe(_ =>
             {
                 var parameters = new DialogParameters() { { "Setting", EditTarget.Value } };
