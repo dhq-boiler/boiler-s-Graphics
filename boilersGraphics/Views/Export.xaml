@@ -72,6 +72,9 @@
                             <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value=".tiff">
                                 <Setter Property="Visibility" Value="Collapsed" />
                             </DataTrigger>
+                            <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value=".wmp">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                            </DataTrigger>
                         </Style.Triggers>
                     </Style>
                 </Label.Style>
@@ -107,6 +110,9 @@
                             <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value=".tiff">
                                 <Setter Property="Visibility" Value="Collapsed" />
                             </DataTrigger>
+                            <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value=".wmp">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                            </DataTrigger>
                         </Style.Triggers>
                     </Style>
                 </Slider.Style>
@@ -137,6 +143,9 @@
                                 <Setter Property="Visibility" Value="Collapsed" />
                             </DataTrigger>
                             <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value=".tiff">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value=".wmp">
                                 <Setter Property="Visibility" Value="Collapsed" />
                             </DataTrigger>
                         </Style.Triggers>
