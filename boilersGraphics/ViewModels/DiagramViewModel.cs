@@ -655,6 +655,12 @@ namespace boilersGraphics.ViewModels
                 return;
             }
 
+            var configuration = root.Element("Configuration");
+            Width = int.Parse(configuration.Element("Width").Value);
+            Height = int.Parse(configuration.Element("Height").Value);
+            EnablePointSnap.Value = bool.Parse(configuration.Element("EnablePointSnap").Value);
+            (App.Current.MainWindow.DataContext as MainWindowViewModel).SnapPower.Value = double.Parse(configuration.Element("SnapPower").Value);
+
             Items.Clear();
 
             var tempItems = new List<SelectableDesignerItemViewModelBase>();
