@@ -538,7 +538,8 @@ namespace boilersGraphics.ViewModels
                                                   new XElement("ZIndex", item.ZIndex.Value),
                                                   new XElement("Matrix", item.Matrix.Value),
                                                   new XElement("EdgeColor", item.EdgeColor),
-                                                  new XElement("FillColor", item.FillColor)
+                                                  new XElement("FillColor", item.FillColor),
+                                                  new XElement("EdgeThickness", item.EdgeThickness)
                                               ))
                                        .Union(
                                            from item in designerItems
@@ -555,6 +556,7 @@ namespace boilersGraphics.ViewModels
                                                       new XElement("Matrix", item.Matrix.Value),
                                                       new XElement("EdgeColor", item.EdgeColor),
                                                       new XElement("FillColor", item.FillColor),
+                                                      new XElement("EdgeThickness", item.EdgeThickness),
                                                       new XElement("FileName", (item as PictureDesignerItemViewModel).FileName)
                                             )
                                        )
@@ -573,6 +575,7 @@ namespace boilersGraphics.ViewModels
                                                         new XElement("Matrix", item.Matrix.Value),
                                                         new XElement("EdgeColor", item.EdgeColor),
                                                         new XElement("FillColor", item.FillColor),
+                                                        new XElement("EdgeThickness", item.EdgeThickness),
                                                         new XElement("LetterString", (item as LetterDesignerItemViewModel).LetterString),
                                                         new XElement("SelectedFontFamily", (item as LetterDesignerItemViewModel).SelectedFontFamily),
                                                         new XElement("IsBold", (item as LetterDesignerItemViewModel).IsBold),
@@ -597,6 +600,7 @@ namespace boilersGraphics.ViewModels
                                                         new XElement("Matrix", item.Matrix.Value),
                                                         new XElement("EdgeColor", item.EdgeColor),
                                                         new XElement("FillColor", item.FillColor),
+                                                        new XElement("EdgeThickness", item.EdgeThickness),
                                                         new XElement("LetterString", (item as LetterVerticalDesignerItemViewModel).LetterString),
                                                         new XElement("SelectedFontFamily", (item as LetterVerticalDesignerItemViewModel).SelectedFontFamily),
                                                         new XElement("IsBold", (item as LetterVerticalDesignerItemViewModel).IsBold),
@@ -684,6 +688,7 @@ namespace boilersGraphics.ViewModels
                 item.Matrix.Value = new Matrix();
                 item.EdgeColor = (Color)ColorConverter.ConvertFromString(designerItemXML.Element("EdgeColor").Value);
                 item.FillColor = (Color)ColorConverter.ConvertFromString(designerItemXML.Element("FillColor").Value);
+                item.EdgeThickness = double.Parse(designerItemXML.Element("EdgeThickness").Value);
                 item.Owner = this;
                 if (item is PictureDesignerItemViewModel)
                 {
@@ -729,6 +734,7 @@ namespace boilersGraphics.ViewModels
                 item.Points[1] = Point.Parse(connectorXml.Element("EndPoint").Value);
                 item.ZIndex.Value = Int32.Parse(connectorXml.Element("ZIndex").Value);
                 item.EdgeColor = (Color)ColorConverter.ConvertFromString(connectorXml.Element("EdgeColor").Value);
+                item.EdgeThickness = double.Parse(connectorXml.Element("EdgeThickness").Value);
                 item.Owner = this;
                 tempItems.Add(item);
             }
