@@ -5,7 +5,7 @@
     <convereter:ToSolidColorBrushConverter x:Key="solidColorBrushConverter" />
     <DataTemplate DataType="{x:Type viewModel:LetterDesignerItemViewModel}">
         <Path Stroke="{Binding EdgeColor, Converter={StaticResource solidColorBrushConverter}}"
-              StrokeThickness="1"
+              StrokeThickness="{Binding EdgeThickness}"
               Fill="{Binding FillColor, Converter={StaticResource solidColorBrushConverter}}"
               Data="{Binding PathGeometry}">
         </Path>

@@ -12,7 +12,7 @@
                 IsHitTestVisible="False"
                 Stretch="Fill"
                 Stroke="{Binding EdgeColor, Converter={StaticResource solidColorBrushConverter}}"
-                StrokeThickness="1" />
+                StrokeThickness="{Binding EdgeThickness}" />
         </Grid>
     </DataTemplate>
 </ResourceDictionary>

@@ -27,7 +27,7 @@ namespace boilersGraphics.Adorners
             var parent = (AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel;
             var brush = new SolidColorBrush(parent.EdgeColors.First());
             brush.Opacity = 0.5;
-            _straightLinePen = new Pen(brush, 1);
+            _straightLinePen = new Pen(brush, parent.EdgeThickness.Value);
             _adorners = new Dictionary<Point, Adorner>();
         }
 
@@ -153,6 +153,7 @@ namespace boilersGraphics.Adorners
                 var item = new StraightConnectorViewModel(_startPoint.Value, _endPoint.Value);
                 item.Owner = (AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel;
                 item.EdgeColor = item.Owner.EdgeColors.First();
+                item.EdgeThickness = item.Owner.EdgeThickness.Value;
                 item.ZIndex.Value = item.Owner.Items.Count;
                 item.IsSelected = true;
                 item.Owner.DeselectAll();

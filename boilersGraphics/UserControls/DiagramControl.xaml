@@ -83,7 +83,7 @@
                               ItemsSource="{Binding Items}"
                               Background="Transparent"
                               BorderBrush="Black"
-                              BorderThickness="{Binding BorderThickness}">
+                              BorderThickness="{Binding CanvasBorderThickness}">
                     <ItemsControl.Resources>
 
                         <Style x:Key="designerItemStyle" TargetType="{x:Type ContentPresenter}">
@@ -173,7 +173,7 @@
                                                 x:Name="straightline"
                                                 IsHitTestVisible="{Binding IsHitTestVisible}"
                                                 Stroke="{Binding EdgeColor, Converter={StaticResource solidColorBrushConverter}}"
-                                                StrokeThickness="2"
+                                                StrokeThickness="{Binding EdgeThickness}"
                                                 X1="{Binding Points[0].X}"
                                                 X2="{Binding Points[1].X}"
                                                 Y1="{Binding Points[0].Y}"

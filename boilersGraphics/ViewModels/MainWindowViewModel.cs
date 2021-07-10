@@ -4,6 +4,7 @@ using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
 using Reactive.Bindings;
+using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -25,6 +26,23 @@ namespace boilersGraphics.ViewModels
             DiagramViewModel = new DiagramViewModel(this.dlgService, 1000, 1000);
             _CompositeDisposable.Add(DiagramViewModel);
             ToolBarViewModel = new ToolBarViewModel(dialogService);
+
+            EdgeThicknessOptions.Add(0.0);
+            EdgeThicknessOptions.Add(1.0);
+            EdgeThicknessOptions.Add(2.0);
+            EdgeThicknessOptions.Add(3.0);
+            EdgeThicknessOptions.Add(4.0);
+            EdgeThicknessOptions.Add(5.0);
+            EdgeThicknessOptions.Add(10.0);
+            EdgeThicknessOptions.Add(15.0);
+            EdgeThicknessOptions.Add(20.0);
+            EdgeThicknessOptions.Add(25.0);
+            EdgeThicknessOptions.Add(30.0);
+            EdgeThicknessOptions.Add(35.0);
+            EdgeThicknessOptions.Add(40.0);
+            EdgeThicknessOptions.Add(45.0);
+            EdgeThicknessOptions.Add(50.0);
+            EdgeThicknessOptions.Add(100.0);
 
             DeleteSelectedItemsCommand = new DelegateCommand<object>(p =>
             {
@@ -92,6 +110,14 @@ namespace boilersGraphics.ViewModels
                     }
                 }
             });
+            DiagramViewModel.EdgeThickness.Subscribe(x =>
+            {
+                foreach (var item in DiagramViewModel.SelectedItems.OfType<DesignerItemViewModelBase>())
+                {
+                    item.EdgeThickness = x;
+                }
+            })
+            .AddTo(_CompositeDisposable);
 
             SnapPower.Value = 10;
         }
@@ -113,6 +139,8 @@ namespace boilersGraphics.ViewModels
         public ReactiveProperty<string> Details { get; } = new ReactiveProperty<string>();
 
         public ReactiveProperty<double> SnapPower { get; } = new ReactiveProperty<double>();
+
+        public ReactiveCollection<double> EdgeThicknessOptions { get; } = new ReactiveCollection<double>();
 
         public DelegateCommand<object> DeleteSelectedItemsCommand { get; private set; }
 

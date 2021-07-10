@@ -3,7 +3,7 @@
                     xmlns:viewModel="clr-namespace:boilersGraphics.ViewModels">
     <DataTemplate DataType="{x:Type viewModel:PathDesignerItemViewModel}">
         <Path Stroke="{Binding EdgeColor}"
-              StrokeThickness="1"
+              StrokeThickness="{Binding EdgeThickness}"
               Fill="{Binding FillColor}"
               Data="{Binding Points}" />
     </DataTemplate>

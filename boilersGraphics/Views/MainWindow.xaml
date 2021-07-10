@@ -232,6 +232,44 @@
             </ToolBar>
             <ToolBar>
                 <StackPanel Orientation="Horizontal">
+                    <ComboBox x:Name="EdgeThicknessComboBox"
+                              ItemsSource="{Binding EdgeThicknessOptions}"
+                              SelectedValue="{Binding DiagramViewModel.EdgeThickness.Value}"
+                              Width="155"
+                              Height="25"
+                              Padding="0">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="75" />
+                                        <ColumnDefinition Width="50" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="25" />
+                                    </Grid.RowDefinitions>
+                                    <Line Grid.Column="0"
+                                          Grid.Row="0"
+                                          X1="0"
+                                          Y1="15"
+                                          X2="75"
+                                          Y2="15"
+                                          Stroke="{Binding DataContext.DiagramViewModel.EdgeColors[0], Converter={StaticResource solidColorBrushConverter}, ElementName=EdgeThicknessComboBox}"
+                                          StrokeThickness="{Binding}" />
+                                    <Label Grid.Column="1"
+                                           Grid.Row="0"
+                                           VerticalAlignment="Center">
+                                        <Label.Content>
+                                            <TextBlock>
+                                                <Run Text="{Binding Mode=OneWay}" />
+                                                <Run Text="pt" />
+                                            </TextBlock>
+                                        </Label.Content>
+                                    </Label>
+                                </Grid>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
                     <Button Command="{Binding SelectColorCommand}" CommandParameter="{Binding DiagramViewModel}">
                         <Button.Template>
                             <ControlTemplate TargetType="{x:Type Button}">

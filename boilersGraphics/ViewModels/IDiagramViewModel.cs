@@ -13,6 +13,7 @@ namespace boilersGraphics.ViewModels
         ReactiveCollection<SelectableDesignerItemViewModelBase> SelectedItems { get; }
         ObservableCollection<Color> EdgeColors { get; }
         ObservableCollection<Color> FillColors { get; }
+        ReactiveProperty<double> EdgeThickness { get; }
         ObservableCollection<SelectableDesignerItemViewModelBase> Items { get; }
 
         void DeselectAll();

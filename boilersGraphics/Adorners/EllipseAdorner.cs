@@ -27,7 +27,7 @@ namespace boilersGraphics.Adorners
             var parent = (AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel;
             var brush = new SolidColorBrush(parent.EdgeColors.First());
             brush.Opacity = 0.5;
-            _ellipsePen = new Pen(brush, 1);
+            _ellipsePen = new Pen(brush, parent.EdgeThickness.Value);
         }
 
         protected override void OnMouseMove(MouseEventArgs e)
@@ -116,7 +116,10 @@ namespace boilersGraphics.Adorners
                     item.Height.Value = Math.Max(_startPoint.Value.Y - _endPoint.Value.Y, _endPoint.Value.Y - _startPoint.Value.Y);
                 }
 
+                Dilate(item);
+
                 item.EdgeColor = item.Owner.EdgeColors.First();
+                item.EdgeThickness = item.Owner.EdgeThickness.Value;
                 item.FillColor = item.Owner.FillColors.First();
                 item.ZIndex.Value = item.Owner.Items.Count;
                 item.IsSelected = true;
@@ -131,6 +134,16 @@ namespace boilersGraphics.Adorners
             (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = "";
 
             e.Handled = true;
+        }
+
+        //EdgeThickness分だけitemを拡張することでElipseAdornerの見た目と描画を一致させる
+        private void Dilate(NEllipseViewModel item)
+        {
+            var parent = (AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel;
+            item.Left.Value -= parent.EdgeThickness.Value / 2;
+            item.Top.Value -= parent.EdgeThickness.Value / 2;
+            item.Width.Value += parent.EdgeThickness.Value;
+            item.Height.Value += parent.EdgeThickness.Value;
         }
 
         protected override void OnRender(DrawingContext dc)

@@ -18,6 +18,7 @@ namespace boilersGraphics.ViewModels
         private double _MinHeight;
         private Color _EdgeColor;
         private Color _FillColor;
+        private double _EdgeThickness;
         public static readonly double DefaultWidth = 65d;
         public static readonly double DefaultHeight = 65d;
 
@@ -37,6 +38,12 @@ namespace boilersGraphics.ViewModels
         {
             get { return _EdgeColor; }
             set { SetProperty(ref _EdgeColor, value); }
+        }
+
+        public double EdgeThickness
+        {
+            get { return _EdgeThickness; }
+            set { SetProperty(ref _EdgeThickness, value); }
         }
 
         public Color FillColor

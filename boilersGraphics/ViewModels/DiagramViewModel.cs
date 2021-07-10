@@ -40,7 +40,7 @@ namespace boilersGraphics.ViewModels
         private CompositeDisposable _CompositeDisposable = new CompositeDisposable();
         private int _Width;
         private int _Height;
-        private double _BorderThickness;
+        private double _CanvasBorderThickness;
         private bool _MiddleButtonIsPressed;
         private Point _MousePointerPosition;
 
@@ -170,10 +170,10 @@ namespace boilersGraphics.ViewModels
             return brush;
         }
 
-        public double BorderThickness
+        public double CanvasBorderThickness
         {
-            get { return _BorderThickness; }
-            set { SetProperty(ref _BorderThickness, value); }
+            get { return _CanvasBorderThickness; }
+            set { SetProperty(ref _CanvasBorderThickness, value); }
         }
 
         public DiagramViewModel()
@@ -315,7 +315,9 @@ namespace boilersGraphics.ViewModels
             EdgeColors.Add(Colors.Black);
             FillColors.Add(Colors.Transparent);
 
-            BorderThickness = 1.0;
+            EdgeThickness.Value = 1.0;
+
+            CanvasBorderThickness = 1.0;
         }
 
         private void ExecuteSettingCommand()
@@ -384,6 +386,9 @@ namespace boilersGraphics.ViewModels
             get { return _FillColors; }
             set { SetProperty(ref _FillColors, value); }
         }
+
+        public ReactiveProperty<double> EdgeThickness { get; } = new ReactiveProperty<double>();
+
         public int Width
         {
             get { return _Width; }
