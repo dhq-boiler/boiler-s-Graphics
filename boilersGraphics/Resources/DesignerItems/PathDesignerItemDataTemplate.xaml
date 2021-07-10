@@ -1,0 +1,10 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:viewModel="clr-namespace:boilersGraphics.ViewModels">
+    <DataTemplate DataType="{x:Type viewModel:PathDesignerItemViewModel}">
+        <Path Stroke="{Binding EdgeColor}"
+              StrokeThickness="{Binding EdgeThickness}"
+              Fill="{Binding FillColor}"
+              Data="{Binding Points}" />
+    </DataTemplate>
+</ResourceDictionary>

@@ -1,0 +1,65 @@
+version: 1.0.{build}-{branch}
+
+branches:
+  only:
+    - master
+    - develop
+
+skip_branch_with_pr: true
+
+max_jobs: 1
+
+image: Visual Studio 2017
+
+init:
+  - git config --global core.autocrlf input
+
+clone_folder: c:\projects\boilersGraphics
+
+shallow_clone: true
+
+assembly_info:
+  patch: true
+  file: AssemblyInfo.*
+  assembly_version: "1.0.{build}"
+  assembly_file_version: "{version}"
+  assembly_informational_version: "{version}"
+
+platform: Any CPU
+
+configuration: Release
+
+before_build:
+  - ps: nuget restore boilersGraphics.sln
+
+build:
+  project: boilersGraphics.sln
+  verbosity: minimal
+
+after_build:
+  - cmd: 7z a boilersGraphics.zip %APPVEYOR_BUILD_FOLDER%\boilersGraphics\bin\Release\*.*
+  - cmd: 7z a boilersGraphics.zip %APPVEYOR_BUILD_FOLDER%\boilersGraphics\bin\Release\dll
+  - cmd: 7z a boilersGraphics.zip %APPVEYOR_BUILD_FOLDER%\boilersGraphics\bin\Release\ja-JP
+
+test:
+  assemblies:
+    only:
+      - boilersGraphics.Test.dll
+
+artifacts:
+  - path: boilersGraphics.zip
+    name: boilersGraphics.zip
+
+deploy:
+  - provider: GitHub
+    artifact: boilersGraphics.zip
+    draft: false
+    prerelease: false
+    on:
+      branch: master
+      appveyor_repo_tag: true
+
+notifications:
+  - provider: Slack
+    incoming_webhook: https://hooks.slack.com/services/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
+    channel: '#build'
