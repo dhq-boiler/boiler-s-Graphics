@@ -1623,8 +1623,9 @@ namespace boilersGraphics.ViewModels
             }
             else
             {
-                var clone = item.Clone() as SelectableDesignerItemViewModelBase;
+                var clone = item.Clone() as DesignerItemViewModelBase;
                 clone.ZIndex.Value = Items.Count();
+                clone.EdgeThickness = item.EdgeThickness;
                 if (parent != null)
                 {
                     clone.ParentID = parent.ID;
