@@ -50,7 +50,7 @@
                         </DockPanel.Resources>
                         <Menu DockPanel.Dock="Left">
                             <MenuItem Header="ファイル(_F)">
-
+                                <MenuItem Header="boiler's Graphics を終了する" Command="{Binding ExitApplicationCommand}" InputGestureText="Alt+F4"/>
                             </MenuItem>
                         </Menu>
                         <StackPanel DockPanel.Dock="Right"
@@ -136,6 +136,7 @@
             Key="D"
             Command="{Binding DiagramViewModel.DuplicateCommand}"
             Modifiers="Ctrl" />
+        <KeyBinding Command="{Binding ExitApplicationCommand}" Gesture="Alt+F4" />
     </Window.InputBindings>
     <Window.Resources>
         <converter:StrokeColorConverter x:Key="StrokeColorConverter" />

@@ -11,6 +11,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reflection;
+using System.Windows;
 
 namespace boilersGraphics.ViewModels
 {
@@ -118,6 +119,10 @@ namespace boilersGraphics.ViewModels
                     }
                 }
             });
+            ExitApplicationCommand = new DelegateCommand(() =>
+            {
+                Application.Current.Shutdown();
+            });
             DiagramViewModel.EdgeThickness.Subscribe(x =>
             {
                 foreach (var item in DiagramViewModel.SelectedItems.OfType<DesignerItemViewModelBase>())
@@ -157,6 +162,8 @@ namespace boilersGraphics.ViewModels
         public DelegateCommand<DiagramViewModel> SelectColorCommand { get; }
 
         public DelegateCommand<DiagramViewModel> SelectFillColorCommand { get; }
+
+        public DelegateCommand ExitApplicationCommand { get; }
 
         private void ExecuteDeleteSelectedItemsCommand(object parameter)
         {
