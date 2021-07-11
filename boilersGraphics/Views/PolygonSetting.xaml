@@ -7,9 +7,16 @@
              xmlns:prism="http://prismlibrary.com/"
              xmlns:control="clr-namespace:boilersGraphics.Controls"
              xmlns:converter="clr-namespace:boilersGraphics.Converters"
+             xmlns:helper="clr-namespace:boilersGraphics.Helpers"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="KeyDown">
+            <helper:EventToCommand Command="{Binding KeyDownCommand}" PassEventArgsToCommand="True" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <UserControl.Resources>
         <converter:DoubleToStringConverter x:Key="DoubleToStringConverter" />
     </UserControl.Resources>

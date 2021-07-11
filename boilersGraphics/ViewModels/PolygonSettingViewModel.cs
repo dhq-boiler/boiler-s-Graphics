@@ -1,4 +1,5 @@
 ﻿using boilersGraphics.Models;
+using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
 using Reactive.Bindings;
@@ -12,6 +13,7 @@ using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace boilersGraphics.ViewModels
@@ -38,23 +40,20 @@ namespace boilersGraphics.ViewModels
 
         public ReactiveCommand DrawCommand { get; }
 
+        public DelegateCommand<KeyEventArgs> KeyDownCommand { get; }
+
         public string Title => "多角形";
 
         public PolygonSettingViewModel()
         {
             AddCornerCommand.Subscribe(_ =>
             {
-                var corner = new Corner();
-                corner.Number.Value = Corners.Count + 1;
-                Corners.Add(corner);
+                AddCorner();
             })
             .AddTo(_disposables);
             RemoveCornerCommand.Subscribe(x =>
             {
-                int indexOf = Corners.IndexOf(x);
-                Corners.Remove(x);
-                Corners.Where(y => y.Number.Value - 1 > indexOf).ToList().ForEach(y => y.Number.Value -= 1);
-                UpdateSegments();
+                RemoveCorner(x);
             })
             .AddTo(_disposables);
             StartPointX.Subscribe(x =>
@@ -103,6 +102,35 @@ namespace boilersGraphics.ViewModels
                 RequestClose.Invoke(result);
             })
             .AddTo(_disposables);
+            KeyDownCommand = new DelegateCommand<KeyEventArgs>(args =>
+            {
+                if (args.Key == Key.Add)
+                {
+                    AddCorner();
+                    args.Handled = true;
+                }
+                else if (args.Key == Key.Subtract)
+                {
+                    var target = (args.OriginalSource as FrameworkElement).DataContext as Corner;
+                    RemoveCorner(target);
+                    args.Handled = true;
+                }
+            });
+        }
+
+        private void RemoveCorner(Corner x)
+        {
+            int indexOf = Corners.IndexOf(x);
+            Corners.Remove(x);
+            Corners.Where(y => y.Number.Value - 1 > indexOf).ToList().ForEach(y => y.Number.Value -= 1);
+            UpdateSegments();
+        }
+
+        private void AddCorner()
+        {
+            var corner = new Corner();
+            corner.Number.Value = Corners.Count + 1;
+            Corners.Add(corner);
         }
 
         private void UpdateSegments()
