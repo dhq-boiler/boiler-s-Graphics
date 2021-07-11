@@ -26,17 +26,18 @@ namespace boilersGraphics.ViewModels
         {
             this.dlgService = dialogService;
 
-            var version = Assembly.GetExecutingAssembly().GetName().Version;
-            var majorMinorBuild = $"{version.Major}.{version.Minor}.{version.Build}";
-            var appnameAndVersion = $"boiler's Graphics {majorMinorBuild}";
-
-            Title.Value = appnameAndVersion;
-            
             DiagramViewModel = new DiagramViewModel(this.dlgService, 1000, 1000);
             _CompositeDisposable.Add(DiagramViewModel);
             ToolBarViewModel = new ToolBarViewModel(dialogService);
 
             DiagramViewModel.EnableMiniMap.Value = true;
+
+            DiagramViewModel.FileName.Subscribe(x =>
+            {
+                Title.Value = $"{x}\t{App.GetAppNameAndVersion()}";
+            })
+            .AddTo(_CompositeDisposable);
+            DiagramViewModel.FileName.Value = "*";
 
             EdgeThicknessOptions.Add(0.0);
             EdgeThicknessOptions.Add(1.0);

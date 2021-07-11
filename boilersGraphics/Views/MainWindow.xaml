@@ -41,8 +41,11 @@
             Modifiers="Ctrl" />
         <KeyBinding Command="{Binding ExitApplicationCommand}" Gesture="Alt+F4" />
         <KeyBinding Key="S"
-                    Modifiers="Ctrl"
+                    Modifiers="Ctrl+Shift"
                     Command="{Binding DiagramViewModel.SaveCommand}" />
+        <KeyBinding Key="S"
+                    Modifiers="Ctrl"
+                    Command="{Binding DiagramViewModel.OverwriteCommand}" />
         <KeyBinding Key="E"
                     Modifiers="Ctrl"
                     Command="{Binding DiagramViewModel.ExportCommand}" />
@@ -79,7 +82,8 @@
                         <Menu DockPanel.Dock="Left">
                             <MenuItem Header="ファイル(_F)">
                                 <MenuItem Header="開く(_O)" Command="{Binding DiagramViewModel.LoadCommand}" />
-                                <MenuItem Header="名前を付けて保存" Command="{Binding DiagramViewModel.SaveCommand}" InputGestureText="Ctrl+S" />
+                                <MenuItem Header="名前を付けて保存" Command="{Binding DiagramViewModel.SaveCommand}" InputGestureText="Ctrl+Shift+S" />
+                                <MenuItem Header="上書き保存" Command="{Binding DiagramViewModel.OverwriteCommand}" InputGestureText="Ctrl+S" />
                                 <MenuItem Header="エクスポート" Command="{Binding DiagramViewModel.ExportCommand}" InputGestureText="Ctrl+E" />
                                 <MenuItem Header="boiler's Graphics を終了する" Command="{Binding ExitApplicationCommand}" InputGestureText="Alt+F4"/>
                             </MenuItem>
@@ -264,7 +268,7 @@
                             </ControlTemplate>
                         </Button.Template>
                     </Button>
-                    <Button Command="{Binding DiagramViewModel.SaveCommand}" ToolTip="{Binding Command_Save, Mode=OneWay, Source={StaticResource resources}}">
+                    <Button Command="{Binding DiagramViewModel.OverwriteCommand}" ToolTip="{Binding Command_Overwrite, Mode=OneWay, Source={StaticResource resources}}">
                         <Button.Template>
                             <ControlTemplate TargetType="{x:Type Button}">
                                 <Grid>
