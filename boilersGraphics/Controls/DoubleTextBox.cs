@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Input;
 
 namespace boilersGraphics.Controls
 {
@@ -49,6 +50,22 @@ namespace boilersGraphics.Controls
 
                 textBox.Text = newText;
             }
+        }
+
+        protected override void OnPreviewMouseDown(MouseButtonEventArgs e)
+        {
+            if (!IsFocused)
+            {
+                FocusManager.SetFocusedElement(FocusManager.GetFocusScope(this), this);
+                SelectAll();
+                e.Handled = true;
+            }
+        }
+
+        protected override void OnGotFocus(RoutedEventArgs e)
+        {
+            SelectAll();
+            e.Handled = true;
         }
 
         protected override void OnTextChanged(TextChangedEventArgs e)
