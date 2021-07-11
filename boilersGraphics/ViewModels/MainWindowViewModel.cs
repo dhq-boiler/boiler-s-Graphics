@@ -36,6 +36,8 @@ namespace boilersGraphics.ViewModels
             _CompositeDisposable.Add(DiagramViewModel);
             ToolBarViewModel = new ToolBarViewModel(dialogService);
 
+            DiagramViewModel.EnableMiniMap.Value = true;
+
             EdgeThicknessOptions.Add(0.0);
             EdgeThicknessOptions.Add(1.0);
             EdgeThicknessOptions.Add(2.0);
@@ -123,6 +125,10 @@ namespace boilersGraphics.ViewModels
             {
                 Application.Current.Shutdown();
             });
+            SwitchMiniMapCommand = new DelegateCommand(() =>
+            {
+                DiagramViewModel.EnableMiniMap.Value = !DiagramViewModel.EnableMiniMap.Value;
+            });
             DiagramViewModel.EdgeThickness.Subscribe(x =>
             {
                 foreach (var item in DiagramViewModel.SelectedItems.OfType<DesignerItemViewModelBase>())
@@ -164,6 +170,8 @@ namespace boilersGraphics.ViewModels
         public DelegateCommand<DiagramViewModel> SelectFillColorCommand { get; }
 
         public DelegateCommand ExitApplicationCommand { get; }
+
+        public DelegateCommand SwitchMiniMapCommand { get; }
 
         private void ExecuteDeleteSelectedItemsCommand(object parameter)
         {

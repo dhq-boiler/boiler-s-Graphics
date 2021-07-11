@@ -389,6 +389,8 @@ namespace boilersGraphics.ViewModels
 
         public ReactiveProperty<double> EdgeThickness { get; } = new ReactiveProperty<double>();
 
+        public ReactiveProperty<bool> EnableMiniMap { get; } = new ReactiveProperty<bool>();
+
         public int Width
         {
             get { return _Width; }
