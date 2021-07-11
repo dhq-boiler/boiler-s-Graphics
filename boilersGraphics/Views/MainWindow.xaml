@@ -19,6 +19,10 @@
     x:Name="MainWindowInstance"
     WindowStyle="None"
     mc:Ignorable="d">
+    <Window.Resources>
+        <converter:StrokeColorConverter x:Key="StrokeColorConverter" />
+        <converter:WindowStateToVisibilityConverter x:Key="WindowStateToVisibilityConverter" />
+    </Window.Resources>
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="{x:Static SystemParameters.CaptionHeight}"
                       ResizeBorderThickness="{x:Static SystemParameters.WindowResizeBorderThickness}"
@@ -70,7 +74,8 @@
                             <Button Content="1"
                                     Foreground="Gray"
                                     Style="{DynamicResource CaptionButtonStyleKey}"
-                                    Command="{x:Static SystemCommands.MaximizeWindowCommand}">
+                                    Command="{x:Static SystemCommands.MaximizeWindowCommand}"
+                                    Visibility="{Binding ElementName=MainWindowInstance, Path=WindowState, Converter={StaticResource WindowStateToVisibilityConverter}, ConverterParameter=最大化}">
                                 <Button.ToolTip>
                                     <ToolTip FontFamily="メイリオ">
                                         <TextBlock Text="最大化" />
@@ -80,7 +85,8 @@
                             <Button Content="2"
                                     Foreground="Gray"
                                     Style="{DynamicResource CaptionButtonStyleKey}"
-                                    Command="{x:Static SystemCommands.RestoreWindowCommand}">
+                                    Command="{x:Static SystemCommands.RestoreWindowCommand}"
+                                    Visibility="{Binding ElementName=MainWindowInstance, Path=WindowState, Converter={StaticResource WindowStateToVisibilityConverter}, ConverterParameter=元に戻す}">
                                 <Button.ToolTip>
                                     <ToolTip FontFamily="メイリオ">
                                         <TextBlock Text="元に戻す(縮小)" />
@@ -138,9 +144,6 @@
             Modifiers="Ctrl" />
         <KeyBinding Command="{Binding ExitApplicationCommand}" Gesture="Alt+F4" />
     </Window.InputBindings>
-    <Window.Resources>
-        <converter:StrokeColorConverter x:Key="StrokeColorConverter" />
-    </Window.Resources>
     <DockPanel>
         <ToolBarTray DockPanel.Dock="Top" Orientation="Horizontal">
             <ToolBarTray.Resources>
