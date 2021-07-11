@@ -627,7 +627,8 @@ namespace boilersGraphics.ViewModels
                                       new XElement("BeginPoint", connection.Points[0]),
                                       new XElement("EndPoint", connection.Points[1]),
                                       new XElement("ZIndex", connection.ZIndex.Value),
-                                      new XElement("EdgeColor", connection.EdgeColor)
+                                      new XElement("EdgeColor", connection.EdgeColor),
+                                      new XElement("EdgeThickness", connection.EdgeThickness)
                                      )
                                   );
 
