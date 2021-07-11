@@ -150,6 +150,7 @@
     <Compile Include="Controls\SnapPoint.cs" />
     <Compile Include="Converters\ExtensionConverter.cs" />
     <Compile Include="Converters\IntToStringConverter.cs" />
+    <Compile Include="Converters\WindowStateToVisibilityConverter.cs" />
     <Compile Include="Exceptions\UnexpectedException.cs" />
     <Compile Include="Controls\ZoomBox.cs" />
     <Compile Include="Converters\ConnectionPathConverter.cs" />
@@ -382,6 +383,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Views\Setting.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Theme.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

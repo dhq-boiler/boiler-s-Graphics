@@ -6,10 +6,9 @@ using Prism.Services.Dialogs;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Disposables;
+using System.Windows;
 
 namespace boilersGraphics.ViewModels
 {
@@ -23,9 +22,19 @@ namespace boilersGraphics.ViewModels
         public MainWindowViewModel(IDialogService dialogService)
         {
             this.dlgService = dialogService;
+
             DiagramViewModel = new DiagramViewModel(this.dlgService, 1000, 1000);
             _CompositeDisposable.Add(DiagramViewModel);
             ToolBarViewModel = new ToolBarViewModel(dialogService);
+
+            DiagramViewModel.EnableMiniMap.Value = true;
+
+            DiagramViewModel.FileName.Subscribe(x =>
+            {
+                Title.Value = $"{x}\t{App.GetAppNameAndVersion()}";
+            })
+            .AddTo(_CompositeDisposable);
+            DiagramViewModel.FileName.Value = "*";
 
             EdgeThicknessOptions.Add(0.0);
             EdgeThicknessOptions.Add(1.0);
@@ -110,11 +119,22 @@ namespace boilersGraphics.ViewModels
                     }
                 }
             });
+            ExitApplicationCommand = new DelegateCommand(() =>
+            {
+                Application.Current.Shutdown();
+            });
+            SwitchMiniMapCommand = new DelegateCommand(() =>
+            {
+                DiagramViewModel.EnableMiniMap.Value = !DiagramViewModel.EnableMiniMap.Value;
+            });
             DiagramViewModel.EdgeThickness.Subscribe(x =>
             {
-                foreach (var item in DiagramViewModel.SelectedItems.OfType<DesignerItemViewModelBase>())
+                if (x.HasValue)
                 {
-                    item.EdgeThickness = x;
+                    foreach (var item in DiagramViewModel.SelectedItems.OfType<DesignerItemViewModelBase>())
+                    {
+                        item.EdgeThickness = x.Value;
+                    }
                 }
             })
             .AddTo(_CompositeDisposable);
@@ -142,11 +162,17 @@ namespace boilersGraphics.ViewModels
 
         public ReactiveCollection<double> EdgeThicknessOptions { get; } = new ReactiveCollection<double>();
 
+        public ReactiveProperty<string> Title { get; } = new ReactiveProperty<string>();
+
         public DelegateCommand<object> DeleteSelectedItemsCommand { get; private set; }
 
         public DelegateCommand<DiagramViewModel> SelectColorCommand { get; }
 
         public DelegateCommand<DiagramViewModel> SelectFillColorCommand { get; }
+
+        public DelegateCommand ExitApplicationCommand { get; }
+
+        public DelegateCommand SwitchMiniMapCommand { get; }
 
         private void ExecuteDeleteSelectedItemsCommand(object parameter)
         {

@@ -178,6 +178,15 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Overwrite に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Command_Overwrite {
+            get {
+                return ResourceManager.GetString("Command_Overwrite", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Save に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_Save {

@@ -50,6 +50,7 @@ namespace boilersGraphics.ViewModels
         public DelegateCommand<object> CreateNewDiagramCommand { get; private set; }
         public DelegateCommand LoadCommand { get; private set; }
         public DelegateCommand SaveCommand { get; private set; }
+        public DelegateCommand OverwriteCommand { get; private set; }
         public DelegateCommand ExportCommand { get; private set; }
         public DelegateCommand GroupCommand { get; private set; }
         public DelegateCommand UngroupCommand { get; private set; }
@@ -184,6 +185,7 @@ namespace boilersGraphics.ViewModels
             CreateNewDiagramCommand = new DelegateCommand<object>(p => ExecuteCreateNewDiagramCommand(p));
             LoadCommand = new DelegateCommand(() => ExecuteLoadCommand());
             SaveCommand = new DelegateCommand(() => ExecuteSaveCommand());
+            OverwriteCommand = new DelegateCommand(() => ExecuteOverwriteCommand());
             ExportCommand = new DelegateCommand(() => ExecuteExportCommand());
             GroupCommand = new DelegateCommand(() => ExecuteGroupItemsCommand(), () => CanExecuteGroup());
             UngroupCommand = new DelegateCommand(() => ExecuteUngroupItemsCommand(), () => CanExecuteUngroup());
@@ -282,7 +284,7 @@ namespace boilersGraphics.ViewModels
                 })
                 .AddTo(_CompositeDisposable);
             SelectedItems.CollectionChangedAsObservable()
-                .Subscribe(_ =>
+                .Subscribe(selectedItems =>
                 {
                     GroupCommand.RaiseCanExecuteChanged();
                     UngroupCommand.RaiseCanExecuteChanged();
@@ -387,7 +389,11 @@ namespace boilersGraphics.ViewModels
             set { SetProperty(ref _FillColors, value); }
         }
 
-        public ReactiveProperty<double> EdgeThickness { get; } = new ReactiveProperty<double>();
+        public ReactiveProperty<double?> EdgeThickness { get; } = new ReactiveProperty<double?>();
+
+        public ReactiveProperty<bool> EnableMiniMap { get; } = new ReactiveProperty<bool>();
+
+        public ReactiveProperty<string> FileName { get; } = new ReactiveProperty<string>();
 
         public int Width
         {
@@ -639,20 +645,75 @@ namespace boilersGraphics.ViewModels
         {
             var saveFile = new SaveFileDialog();
             saveFile.Filter = "Files (*.xml)|*.xml|All Files (*.*)|*.*";
+            var oldFileName = FileName.Value;
             if (saveFile.ShowDialog() == true)
             {
                 try
                 {
+                    FileName.Value = saveFile.FileName;
                     xElement.Save(saveFile.FileName);
                 }
                 catch (Exception ex)
                 {
+                    FileName.Value = oldFileName;
                     MessageBox.Show(ex.StackTrace, ex.Message, MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
         }
 
         #endregion //Save
+
+        #region Overwrite
+
+        private void ExecuteOverwriteCommand()
+        {
+            var designerItems = this.Items.OfType<DesignerItemViewModelBase>();
+            var connections = this.Items.OfType<ConnectorBaseViewModel>();
+            var mainWindowVM = (App.Current.MainWindow.DataContext as MainWindowViewModel);
+
+            XElement designerItemsXML = SerializeDesignerItems(designerItems);
+            XElement connectionsXML = SerializeConnections(connections);
+            XElement configurationXML = new XElement("Configuration",
+                    new XElement("Width", Width),
+                    new XElement("Height", Height),
+                    new XElement("EnablePointSnap", EnablePointSnap.Value),
+                    new XElement("SnapPower", mainWindowVM.SnapPower.Value)
+                );
+
+            XElement root = new XElement("boilersGraphics");
+            root.Add(designerItemsXML);
+            root.Add(connectionsXML);
+            root.Add(configurationXML);
+            Save(root);
+        }
+
+        private void Save(XElement root)
+        {
+            if (FileName.Value == "*")
+            {
+                var saveFile = new SaveFileDialog();
+                saveFile.Filter = "Files (*.xml)|*.xml|All Files (*.*)|*.*";
+                if (saveFile.ShowDialog() == true)
+                {
+                    try
+                    {
+                        FileName.Value = saveFile.FileName;
+                        root.Save(saveFile.FileName);
+                    }
+                    catch (Exception ex)
+                    {
+                        FileName.Value = "*";
+                        MessageBox.Show(ex.StackTrace, ex.Message, MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
+            }
+            else
+            {
+                root.Save(FileName.Value);
+            }
+        }
+
+        #endregion
 
         #region Load
 
@@ -764,14 +825,18 @@ namespace boilersGraphics.ViewModels
             var openFile = new OpenFileDialog();
             openFile.Filter = "Designer Files (*.xml)|*.xml|All Files (*.*)|*.*";
 
+            var oldFileName = FileName.Value;
+
             if (openFile.ShowDialog() == true)
             {
                 try
                 {
+                    FileName.Value = openFile.FileName;
                     return XElement.Load(openFile.FileName);
                 }
                 catch (Exception e)
                 {
+                    FileName.Value = oldFileName;
                     MessageBox.Show(e.StackTrace, e.Message, MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
@@ -1558,8 +1623,9 @@ namespace boilersGraphics.ViewModels
             }
             else
             {
-                var clone = item.Clone() as SelectableDesignerItemViewModelBase;
+                var clone = item.Clone() as DesignerItemViewModelBase;
                 clone.ZIndex.Value = Items.Count();
+                clone.EdgeThickness = item.EdgeThickness;
                 if (parent != null)
                 {
                     clone.ParentID = parent.ID;
