@@ -43,6 +43,9 @@
         <KeyBinding Key="S"
                     Modifiers="Ctrl"
                     Command="{Binding DiagramViewModel.SaveCommand}" />
+        <KeyBinding Key="E"
+                    Modifiers="Ctrl"
+                    Command="{Binding DiagramViewModel.ExportCommand}" />
     </Window.InputBindings>
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="{x:Static SystemParameters.CaptionHeight}"
@@ -77,6 +80,7 @@
                             <MenuItem Header="ファイル(_F)">
                                 <MenuItem Header="開く(_O)" Command="{Binding DiagramViewModel.LoadCommand}" />
                                 <MenuItem Header="名前を付けて保存" Command="{Binding DiagramViewModel.SaveCommand}" InputGestureText="Ctrl+S" />
+                                <MenuItem Header="エクスポート" Command="{Binding DiagramViewModel.ExportCommand}" InputGestureText="Ctrl+E" />
                                 <MenuItem Header="boiler's Graphics を終了する" Command="{Binding ExitApplicationCommand}" InputGestureText="Alt+F4"/>
                             </MenuItem>
                         </Menu>
