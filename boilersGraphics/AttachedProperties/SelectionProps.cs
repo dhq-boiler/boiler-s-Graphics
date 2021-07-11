@@ -1,4 +1,5 @@
 ﻿using boilersGraphics.ViewModels;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -57,12 +58,34 @@ namespace boilersGraphics.AttachedProperties
                     {
                         selectableDesignerItemViewModelBase.IsSelected = !selectableDesignerItemViewModelBase.IsSelected;
                     }
+
+                    var owner = selectableDesignerItemViewModelBase.Owner;
+                    var edgeThicknesses = owner.SelectedItems.Select(x =>
+                    {
+                        if (x is DesignerItemViewModelBase)
+                        {
+                            return (x as DesignerItemViewModelBase).EdgeThickness;
+                        }
+                        else
+                        {
+                            return (x as ConnectorBaseViewModel).EdgeThickness;
+                        };
+                    });
+                    if (edgeThicknesses.All(x => x == edgeThicknesses.First()))
+                    {
+                        owner.EdgeThickness.Value = edgeThicknesses.First();
+                    }
+                    else
+                    {
+                        owner.EdgeThickness.Value = null;
+                    }
                 }
                 else
                 {
                     selectableDesignerItemViewModelBase.Owner.DeselectAll();
                     selectableDesignerItemViewModelBase.Owner.EdgeColors.Clear();
                     selectableDesignerItemViewModelBase.Owner.FillColors.Clear();
+                    selectableDesignerItemViewModelBase.Owner.EdgeThickness.Value = double.NaN;
                     selectableDesignerItemViewModelBase.IsSelected = true;
 
                     if (selectableDesignerItemViewModelBase is DesignerItemViewModelBase)
@@ -89,6 +112,23 @@ namespace boilersGraphics.AttachedProperties
                     }
                     selectableDesignerItemViewModelBase.Owner.EdgeColors.Add(edgeColor);
                     selectableDesignerItemViewModelBase.Owner.FillColors.Add(fillColor);
+
+                    var owner = selectableDesignerItemViewModelBase.Owner;
+                    var edgeThicknesses = owner.SelectedItems.Select(x =>
+                    {
+                        if (x is DesignerItemViewModelBase)
+                        {
+                            return (x as DesignerItemViewModelBase).EdgeThickness;
+                        }
+                        else
+                        {
+                            return (x as ConnectorBaseViewModel).EdgeThickness;
+                        };
+                    });
+                    if (edgeThicknesses.All(x => x == edgeThicknesses.First()))
+                    {
+                        owner.EdgeThickness.Value = edgeThicknesses.First();
+                    }
                 }
             }
         }

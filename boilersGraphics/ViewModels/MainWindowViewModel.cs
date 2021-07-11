@@ -6,11 +6,8 @@ using Prism.Services.Dialogs;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Disposables;
-using System.Reflection;
 using System.Windows;
 
 namespace boilersGraphics.ViewModels
@@ -132,9 +129,12 @@ namespace boilersGraphics.ViewModels
             });
             DiagramViewModel.EdgeThickness.Subscribe(x =>
             {
-                foreach (var item in DiagramViewModel.SelectedItems.OfType<DesignerItemViewModelBase>())
+                if (x.HasValue)
                 {
-                    item.EdgeThickness = x;
+                    foreach (var item in DiagramViewModel.SelectedItems.OfType<DesignerItemViewModelBase>())
+                    {
+                        item.EdgeThickness = x.Value;
+                    }
                 }
             })
             .AddTo(_CompositeDisposable);

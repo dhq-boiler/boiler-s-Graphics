@@ -284,7 +284,7 @@ namespace boilersGraphics.ViewModels
                 })
                 .AddTo(_CompositeDisposable);
             SelectedItems.CollectionChangedAsObservable()
-                .Subscribe(_ =>
+                .Subscribe(selectedItems =>
                 {
                     GroupCommand.RaiseCanExecuteChanged();
                     UngroupCommand.RaiseCanExecuteChanged();
@@ -389,7 +389,7 @@ namespace boilersGraphics.ViewModels
             set { SetProperty(ref _FillColors, value); }
         }
 
-        public ReactiveProperty<double> EdgeThickness { get; } = new ReactiveProperty<double>();
+        public ReactiveProperty<double?> EdgeThickness { get; } = new ReactiveProperty<double?>();
 
         public ReactiveProperty<bool> EnableMiniMap { get; } = new ReactiveProperty<bool>();
 
