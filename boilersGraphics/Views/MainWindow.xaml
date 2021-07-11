@@ -141,15 +141,6 @@
         <converter:StrokeColorConverter x:Key="StrokeColorConverter" />
     </Window.Resources>
     <DockPanel>
-        <DockPanel DockPanel.Dock="Top">
-            <StackPanel Orientation="Horizontal"
-                        DockPanel.Dock="Right">
-                
-            </StackPanel>
-        </DockPanel>
-        <!--  ToolBox Control  -->
-        <!--<usercontrol:ToolBoxControl Grid.Column="0" DataContext="{Binding ToolBoxViewModel}" />-->
-
         <ToolBarTray DockPanel.Dock="Top" Orientation="Horizontal">
             <ToolBarTray.Resources>
                 <Style TargetType="{x:Type Button}">
