@@ -14,9 +14,118 @@
     xmlns:trigger="clr-namespace:boilersGraphics.Views.Triggers"
     xmlns:usercontrol="clr-namespace:boilersGraphics.UserControls"
     xmlns:viewmodel="clr-namespace:boilersGraphics.ViewModels"
-    Title="boiler's Graphics"
+    Title="{Binding Title.Value}"
     prism:ViewModelLocator.AutoWireViewModel="True"
+    x:Name="MainWindowInstance"
+    WindowStyle="None"
     mc:Ignorable="d">
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="{x:Static SystemParameters.CaptionHeight}"
+                      ResizeBorderThickness="{x:Static SystemParameters.WindowResizeBorderThickness}"
+                      UseAeroCaptionButtons="True" />
+    </WindowChrome.WindowChrome>
+    <Window.Template>
+        <ControlTemplate TargetType="Window">
+            <Border x:Name="border"
+                                Background="#ffffff"
+                                BorderBrush="#cccccc"
+                                BorderThickness="1">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <DockPanel Grid.Row="0">
+                        <DockPanel.Resources>
+                            <Style TargetType="MenuItem">
+                                <Setter Property="Background" Value="White" />
+                                <Setter Property="BorderThickness" Value="0" />
+                                <Setter Property="Height" Value="26" />
+                                <Setter Property="WindowChrome.IsHitTestVisibleInChrome" Value="True" />
+                            </Style>
+                            <Style x:Key="{x:Static MenuItem.SeparatorStyleKey}" TargetType="Separator">
+                                <Setter Property="Background" Value="White" />
+                                <Setter Property="BorderBrush" Value="White" />
+                            </Style>
+                        </DockPanel.Resources>
+                        <Menu DockPanel.Dock="Left">
+                            <MenuItem Header="ファイル(_F)">
+
+                            </MenuItem>
+                        </Menu>
+                        <StackPanel DockPanel.Dock="Right"
+                                    Orientation="Horizontal"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Stretch">
+                            <Button Content="0"
+                                    Foreground="Gray"
+                                    Style="{DynamicResource CaptionButtonStyleKey}"
+                                    Command="{x:Static SystemCommands.MinimizeWindowCommand}">
+                                <Button.ToolTip>
+                                    <ToolTip FontFamily="メイリオ">
+                                        <TextBlock Text="最小化" />
+                                    </ToolTip>
+                                </Button.ToolTip>
+                            </Button>
+                            <Button Content="1"
+                                    Foreground="Gray"
+                                    Style="{DynamicResource CaptionButtonStyleKey}"
+                                    Command="{x:Static SystemCommands.MaximizeWindowCommand}">
+                                <Button.ToolTip>
+                                    <ToolTip FontFamily="メイリオ">
+                                        <TextBlock Text="最大化" />
+                                    </ToolTip>
+                                </Button.ToolTip>
+                            </Button>
+                            <Button Content="2"
+                                    Foreground="Gray"
+                                    Style="{DynamicResource CaptionButtonStyleKey}"
+                                    Command="{x:Static SystemCommands.RestoreWindowCommand}">
+                                <Button.ToolTip>
+                                    <ToolTip FontFamily="メイリオ">
+                                        <TextBlock Text="元に戻す(縮小)" />
+                                    </ToolTip>
+                                </Button.ToolTip>
+                            </Button>
+                            <Button Content="r"
+                                    Foreground="Gray"
+                                    Style="{DynamicResource CaptionButtonStyleKey}"
+                                    Command="{x:Static SystemCommands.CloseWindowCommand}">
+                                <Button.ToolTip>
+                                    <ToolTip FontFamily="メイリオ">
+                                        <TextBlock Text="閉じる" />
+                                    </ToolTip>
+                                </Button.ToolTip>
+                            </Button>
+                        </StackPanel>
+                        <TextBlock Text="{Binding Title.Value}"
+                                   DockPanel.Dock="Right"
+                                   HorizontalAlignment="Right"
+                                   VerticalAlignment="Center"
+                                   Margin="5,0,0,0" />
+                    </DockPanel>
+                    <Grid Grid.Row="1">
+                        <ContentPresenter HorizontalAlignment="Stretch"
+                                                      VerticalAlignment="Stretch" />
+                    </Grid>
+                </Grid>
+            </Border>
+            <ControlTemplate.Triggers>
+                <Trigger Property="WindowState" Value="Maximized">
+                    <Setter TargetName="border" Property="BorderThickness" Value="8" />
+                </Trigger>
+                <Trigger Property="WindowState" Value="Normal">
+                    <Setter TargetName="border" Property="BorderThickness" Value="1" />
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+    </Window.Template>
+    <Window.CommandBindings>
+        <CommandBinding Command="{x:Static SystemCommands.CloseWindowCommand}" CanExecute="CommandBinding_CanExecute_Close" Executed="CommandBinding_Executed_Close" />
+        <CommandBinding Command="{x:Static SystemCommands.MaximizeWindowCommand}" CanExecute="CommandBinding_CanExecute_Maximize" Executed="CommandBinding_Executed_Maximize" />
+        <CommandBinding Command="{x:Static SystemCommands.MinimizeWindowCommand}" CanExecute="CommandBinding_CanExecute_Minimize" Executed="CommandBinding_Executed_Minimize" />
+        <CommandBinding Command="{x:Static SystemCommands.RestoreWindowCommand}" CanExecute="CommandBinding_CanExecute_Restore" Executed="CommandBinding_Executed_Restore" />
+    </Window.CommandBindings>
     <Window.InputBindings>
         <KeyBinding Key="Del" Command="{Binding DeleteSelectedItemsCommand}" />
         <KeyBinding
@@ -32,7 +141,12 @@
         <converter:StrokeColorConverter x:Key="StrokeColorConverter" />
     </Window.Resources>
     <DockPanel>
-
+        <DockPanel DockPanel.Dock="Top">
+            <StackPanel Orientation="Horizontal"
+                        DockPanel.Dock="Right">
+                
+            </StackPanel>
+        </DockPanel>
         <!--  ToolBox Control  -->
         <!--<usercontrol:ToolBoxControl Grid.Column="0" DataContext="{Binding ToolBoxViewModel}" />-->
 

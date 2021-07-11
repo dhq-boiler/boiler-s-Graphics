@@ -8,6 +8,7 @@
     <prism:PrismApplication.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Views/Theme.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/Styles/Shared.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/Styles/ScrollBar.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/Styles/Expander.xaml" />

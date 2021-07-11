@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Disposables;
+using System.Reflection;
 
 namespace boilersGraphics.ViewModels
 {
@@ -23,6 +24,13 @@ namespace boilersGraphics.ViewModels
         public MainWindowViewModel(IDialogService dialogService)
         {
             this.dlgService = dialogService;
+
+            var version = Assembly.GetExecutingAssembly().GetName().Version;
+            var majorMinorBuild = $"{version.Major}.{version.Minor}.{version.Build}";
+            var appnameAndVersion = $"boiler's Graphics {majorMinorBuild}";
+
+            Title.Value = appnameAndVersion;
+            
             DiagramViewModel = new DiagramViewModel(this.dlgService, 1000, 1000);
             _CompositeDisposable.Add(DiagramViewModel);
             ToolBarViewModel = new ToolBarViewModel(dialogService);
@@ -141,6 +149,8 @@ namespace boilersGraphics.ViewModels
         public ReactiveProperty<double> SnapPower { get; } = new ReactiveProperty<double>();
 
         public ReactiveCollection<double> EdgeThicknessOptions { get; } = new ReactiveCollection<double>();
+
+        public ReactiveProperty<string> Title { get; } = new ReactiveProperty<string>();
 
         public DelegateCommand<object> DeleteSelectedItemsCommand { get; private set; }
 
