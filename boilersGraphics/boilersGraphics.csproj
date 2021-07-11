@@ -143,11 +143,13 @@
     <Compile Include="AttachedProperties\ItemConnectProps.cs" />
     <Compile Include="AttachedProperties\SelectionProps.cs" />
     <Compile Include="Controls\DesignerCanvas.cs" />
+    <Compile Include="Controls\DoubleTextBox.cs" />
     <Compile Include="Controls\DragThumb.cs" />
     <Compile Include="Controls\LineResizeHandle.cs" />
     <Compile Include="Controls\ResizeThumb.cs" />
     <Compile Include="Controls\RotateThumb.cs" />
     <Compile Include="Controls\SnapPoint.cs" />
+    <Compile Include="Converters\DoubleToStringConverter.cs" />
     <Compile Include="Converters\ExtensionConverter.cs" />
     <Compile Include="Converters\IntToStringConverter.cs" />
     <Compile Include="Converters\ObservableCollectionToPathSegmentCollection.cs" />

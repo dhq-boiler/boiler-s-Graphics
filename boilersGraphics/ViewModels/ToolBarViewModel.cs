@@ -115,8 +115,7 @@ namespace boilersGraphics.ViewModels
                 if (result != null && result.Result == ButtonResult.OK)
                 {
                     var corners = result.Parameters.GetValue<ObservableCollection<Corner>>("Corners");
-                    var segments = result.Parameters.GetValue<ObservableCollection<PathSegment>>("Segments");
-                    var segmentsCollection = new PathSegmentCollection(segments);
+                    var data = result.Parameters.GetValue<string>("Data");
                 }
             })));
         }

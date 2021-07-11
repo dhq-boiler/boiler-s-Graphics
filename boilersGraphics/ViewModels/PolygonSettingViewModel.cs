@@ -23,7 +23,7 @@ namespace boilersGraphics.ViewModels
 
         public event Action<IDialogResult> RequestClose;
 
-        public ReactiveProperty<PathSegmentCollection> Segments { get; private set; } = new ReactiveProperty<PathSegmentCollection>();
+        public ReactiveProperty<string> Data { get; private set; } = new ReactiveProperty<string>();
         public ReactiveProperty<double> StartPointX { get; private set; } = new ReactiveProperty<double>();
         public ReactiveProperty<double> StartPointY { get; private set; } = new ReactiveProperty<double>();
 
@@ -49,7 +49,6 @@ namespace boilersGraphics.ViewModels
                 Corners.Add(corner);
             })
             .AddTo(_disposables);
-            Segments.Value = new PathSegmentCollection();
             RemoveCornerCommand.Subscribe(x =>
             {
                 int indexOf = Corners.IndexOf(x);
@@ -98,7 +97,7 @@ namespace boilersGraphics.ViewModels
                                               new DialogParameters() 
                                               {
                                                   { "Corners", Corners },
-                                                  { "Segments", Segments }
+                                                  { "Data", Data.Value }
                                               }
                                               );
                 RequestClose.Invoke(result);
@@ -108,13 +107,17 @@ namespace boilersGraphics.ViewModels
 
         private void UpdateSegments()
         {
-            Segments.Value.Clear();
+            Data.Value = "";
             var collection = new PathSegmentCollection();
-
+            var data = $"M {StartPoint.Value}";
             var list = new List<Corner>();
             foreach (var corner in Corners)
             {
                 var angle = list.Sum(x => x.Angle.Value);
+                var point = new System.Windows.Point(
+                                Math.Round(corner.Radius.Value * Math.Cos(angle * Math.PI / 180.0), 2, MidpointRounding.AwayFromZero),
+                                Math.Round(corner.Radius.Value * Math.Sin(angle * Math.PI / 180.0), 2, MidpointRounding.AwayFromZero));
+                data += $" L {point}";
                 collection.Add(
                     new LineSegment()
                     {
@@ -130,7 +133,8 @@ namespace boilersGraphics.ViewModels
                                             );
                 list.Add(corner);
             }
-            Segments.Value = collection;
+            data += " Z";
+            Data.Value = data;
         }
 
         protected virtual void Dispose(bool disposing)
@@ -141,7 +145,6 @@ namespace boilersGraphics.ViewModels
                 {
                 }
 
-                Segments = null;
                 disposedValue = true;
             }
         }
