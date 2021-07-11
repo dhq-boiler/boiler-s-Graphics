@@ -23,6 +23,27 @@
         <converter:StrokeColorConverter x:Key="StrokeColorConverter" />
         <converter:WindowStateToVisibilityConverter x:Key="WindowStateToVisibilityConverter" />
     </Window.Resources>
+    <Window.CommandBindings>
+        <CommandBinding Command="{x:Static SystemCommands.CloseWindowCommand}" CanExecute="CommandBinding_CanExecute_Close" Executed="CommandBinding_Executed_Close" />
+        <CommandBinding Command="{x:Static SystemCommands.MaximizeWindowCommand}" CanExecute="CommandBinding_CanExecute_Maximize" Executed="CommandBinding_Executed_Maximize" />
+        <CommandBinding Command="{x:Static SystemCommands.MinimizeWindowCommand}" CanExecute="CommandBinding_CanExecute_Minimize" Executed="CommandBinding_Executed_Minimize" />
+        <CommandBinding Command="{x:Static SystemCommands.RestoreWindowCommand}" CanExecute="CommandBinding_CanExecute_Restore" Executed="CommandBinding_Executed_Restore" />
+    </Window.CommandBindings>
+    <Window.InputBindings>
+        <KeyBinding Key="Del" Command="{Binding DeleteSelectedItemsCommand}" />
+        <KeyBinding
+            Key="A"
+            Command="{Binding DiagramViewModel.SelectAllCommand}"
+            Modifiers="Ctrl" />
+        <KeyBinding
+            Key="D"
+            Command="{Binding DiagramViewModel.DuplicateCommand}"
+            Modifiers="Ctrl" />
+        <KeyBinding Command="{Binding ExitApplicationCommand}" Gesture="Alt+F4" />
+        <KeyBinding Key="S"
+                    Modifiers="Ctrl"
+                    Command="{Binding DiagramViewModel.SaveCommand}" />
+    </Window.InputBindings>
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="{x:Static SystemParameters.CaptionHeight}"
                       ResizeBorderThickness="{x:Static SystemParameters.WindowResizeBorderThickness}"
@@ -54,6 +75,7 @@
                         </DockPanel.Resources>
                         <Menu DockPanel.Dock="Left">
                             <MenuItem Header="ファイル(_F)">
+                                <MenuItem Header="名前を付けて保存" Command="{Binding DiagramViewModel.SaveCommand}" InputGestureText="Ctrl+S" />
                                 <MenuItem Header="boiler's Graphics を終了する" Command="{Binding ExitApplicationCommand}" InputGestureText="Alt+F4"/>
                             </MenuItem>
                         </Menu>
@@ -126,24 +148,6 @@
             </ControlTemplate.Triggers>
         </ControlTemplate>
     </Window.Template>
-    <Window.CommandBindings>
-        <CommandBinding Command="{x:Static SystemCommands.CloseWindowCommand}" CanExecute="CommandBinding_CanExecute_Close" Executed="CommandBinding_Executed_Close" />
-        <CommandBinding Command="{x:Static SystemCommands.MaximizeWindowCommand}" CanExecute="CommandBinding_CanExecute_Maximize" Executed="CommandBinding_Executed_Maximize" />
-        <CommandBinding Command="{x:Static SystemCommands.MinimizeWindowCommand}" CanExecute="CommandBinding_CanExecute_Minimize" Executed="CommandBinding_Executed_Minimize" />
-        <CommandBinding Command="{x:Static SystemCommands.RestoreWindowCommand}" CanExecute="CommandBinding_CanExecute_Restore" Executed="CommandBinding_Executed_Restore" />
-    </Window.CommandBindings>
-    <Window.InputBindings>
-        <KeyBinding Key="Del" Command="{Binding DeleteSelectedItemsCommand}" />
-        <KeyBinding
-            Key="A"
-            Command="{Binding DiagramViewModel.SelectAllCommand}"
-            Modifiers="Ctrl" />
-        <KeyBinding
-            Key="D"
-            Command="{Binding DiagramViewModel.DuplicateCommand}"
-            Modifiers="Ctrl" />
-        <KeyBinding Command="{Binding ExitApplicationCommand}" Gesture="Alt+F4" />
-    </Window.InputBindings>
     <DockPanel>
         <ToolBarTray DockPanel.Dock="Top" Orientation="Horizontal">
             <ToolBarTray.Resources>
