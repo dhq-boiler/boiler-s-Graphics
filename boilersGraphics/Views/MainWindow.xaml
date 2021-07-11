@@ -83,6 +83,9 @@
                                 <MenuItem Header="エクスポート" Command="{Binding DiagramViewModel.ExportCommand}" InputGestureText="Ctrl+E" />
                                 <MenuItem Header="boiler's Graphics を終了する" Command="{Binding ExitApplicationCommand}" InputGestureText="Alt+F4"/>
                             </MenuItem>
+                            <MenuItem Header="キャンパス(_C)">
+                                <MenuItem Header="設定(_S)" Command="{Binding DiagramViewModel.SettingCommand}" />
+                            </MenuItem>
                         </Menu>
                         <StackPanel DockPanel.Dock="Right"
                                     Orientation="Horizontal"
