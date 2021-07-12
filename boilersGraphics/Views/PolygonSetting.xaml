@@ -24,10 +24,10 @@
         <DockPanel DockPanel.Dock="Right">
             <StackPanel Orientation="Horizontal"
                         DockPanel.Dock="Top">
-                <Label Content="Start X" />
+                <Label Content="始点X" />
                 <control:DoubleTextBox DoubleText="{Binding StartPointX.Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DoubleToStringConverter}}"
                          Width="50" />
-                <Label Content="Start Y" />
+                <Label Content="始点Y" />
                 <control:DoubleTextBox DoubleText="{Binding StartPointY.Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DoubleToStringConverter}}"
                          Width="50" />
             </StackPanel>
