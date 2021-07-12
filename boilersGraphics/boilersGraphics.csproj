@@ -135,6 +135,7 @@
     <Compile Include="Adorners\LetterAdorner.cs" />
     <Compile Include="Adorners\LetterVerticalAdorner.cs" />
     <Compile Include="Adorners\PictureAdorner.cs" />
+    <Compile Include="Adorners\PolygonAdorner.cs" />
     <Compile Include="Adorners\RectangleAdorner.cs" />
     <Compile Include="Adorners\RubberbandAdorner.cs" />
     <Compile Include="Adorners\SnapPointAdorner.cs" />
@@ -201,6 +202,7 @@
     <Compile Include="ViewModels\LetterSettingViewModel.cs" />
     <Compile Include="ViewModels\LetterVerticalDesignerItemViewModel.cs" />
     <Compile Include="ViewModels\NEllipseViewModel.cs" />
+    <Compile Include="ViewModels\NPolygonViewModel.cs" />
     <Compile Include="ViewModels\NRectangleViewModel.cs" />
     <Compile Include="ViewModels\PathDesignerItemViewModel.cs" />
     <Compile Include="ViewModels\PictureDesignerItemViewModel.cs" />
@@ -227,6 +229,7 @@
     <Compile Include="Views\Behaviors\LetterBehavior.cs" />
     <Compile Include="Views\Behaviors\LetterVerticalBehavior.cs" />
     <Compile Include="Views\Behaviors\NDrawEllipseBehavior.cs" />
+    <Compile Include="Views\Behaviors\NDrawPolygonBehavior.cs" />
     <Compile Include="Views\Behaviors\NDrawRectangleBehavior.cs" />
     <Compile Include="Views\Behaviors\NDrawStraightLineBehavior.cs" />
     <Compile Include="Views\Behaviors\PictureBehavior.cs" />
@@ -293,6 +296,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Resources\DesignerItems\EllipseDesignerItemDataTemplate.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\DesignerItems\PolygonDesignerItemDataTemplate.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

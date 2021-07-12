@@ -1,4 +1,6 @@
-﻿using boilersGraphics.Models;
+﻿using boilersGraphics.Controls;
+using boilersGraphics.Extensions;
+using boilersGraphics.Models;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
@@ -13,6 +15,7 @@ using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -96,7 +99,8 @@ namespace boilersGraphics.ViewModels
                                               new DialogParameters() 
                                               {
                                                   { "Corners", Corners },
-                                                  { "Data", Data.Value }
+                                                  { "Data", Data.Value },
+                                                  { "StartPoint", StartPoint.Value }
                                               }
                                               );
                 RequestClose.Invoke(result);
@@ -107,12 +111,6 @@ namespace boilersGraphics.ViewModels
                 if (args.Key == Key.Add)
                 {
                     AddCorner();
-                    args.Handled = true;
-                }
-                else if (args.Key == Key.Subtract)
-                {
-                    var target = (args.OriginalSource as FrameworkElement).DataContext as Corner;
-                    RemoveCorner(target);
                     args.Handled = true;
                 }
             });
@@ -126,11 +124,12 @@ namespace boilersGraphics.ViewModels
             UpdateSegments();
         }
 
-        private void AddCorner()
+        private Corner AddCorner()
         {
             var corner = new Corner();
             corner.Number.Value = Corners.Count + 1;
             Corners.Add(corner);
+            return corner;
         }
 
         private void UpdateSegments()

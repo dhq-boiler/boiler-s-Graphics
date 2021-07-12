@@ -4,7 +4,7 @@ using System.Windows;
 
 namespace boilersGraphics.Models
 {
-    internal class Corner : BindableBase
+    public class Corner : BindableBase
     {
         public ReactiveProperty<int> Number { get; set; } = new ReactiveProperty<int>();
 
@@ -13,5 +13,24 @@ namespace boilersGraphics.Models
         public ReactiveProperty<double> Angle { get; set; } = new ReactiveProperty<double>();
 
         public ReactiveProperty<Point> Point { get; set; } = new ReactiveProperty<Point>();
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is Corner))
+                return false;
+            var corner = obj as Corner;
+            return Number.Value.Equals(corner.Number.Value)
+                && Radius.Value.Equals(corner.Radius.Value)
+                && Angle.Value.Equals(corner.Angle.Value)
+                && Point.Value.Equals(corner.Point.Value);
+        }
+
+        public override int GetHashCode()
+        {
+            return Number.GetHashCode()
+                 ^ Radius.GetHashCode()
+                 ^ Angle.GetHashCode()
+                 ^ Point.GetHashCode();
+        }
     }
 }

@@ -13,6 +13,7 @@ using Prism.Services.Dialogs;
 using boilersGraphics.Views;
 using boilersGraphics.Models;
 using System.Windows.Media;
+using System.Windows;
 
 namespace boilersGraphics.ViewModels
 {
@@ -116,6 +117,14 @@ namespace boilersGraphics.ViewModels
                 {
                     var corners = result.Parameters.GetValue<ObservableCollection<Corner>>("Corners");
                     var data = result.Parameters.GetValue<string>("Data");
+                    var startPoint = result.Parameters.GetValue<Point>("StartPoint");
+                    var behavior = new NDrawPolygonBehavior(corners, data, startPoint);
+                    Behaviors.Clear();
+                    if (!Behaviors.Contains(behavior))
+                    {
+                        Behaviors.Add(behavior);
+                    }
+                    SelectOneToolItem("polygon");
                 }
             })));
         }

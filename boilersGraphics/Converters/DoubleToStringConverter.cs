@@ -20,14 +20,14 @@ namespace boilersGraphics.Converters
             var str = value as string;
             if (string.IsNullOrEmpty(str))
                 return 0;
+            if (str.Last() == '.' || str.Last() == '-')
+                return Binding.DoNothing;
             try
             {
                 return double.Parse(str);
             }
             catch (FormatException)
             {
-                if (str.Last() == '.')
-                    return double.Parse(str + "0"); //最後に"."が入力された場合
                 return 0;
             }
         }
