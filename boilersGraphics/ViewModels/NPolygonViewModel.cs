@@ -49,7 +49,7 @@ namespace boilersGraphics.ViewModels
 
         public override object Clone()
         {
-            var clone = new NEllipseViewModel();
+            var clone = new NPolygonViewModel();
             clone.Owner = Owner;
             clone.Left.Value = Left.Value;
             clone.Top.Value = Top.Value;
@@ -60,6 +60,7 @@ namespace boilersGraphics.ViewModels
             clone.EdgeThickness = EdgeThickness;
             clone.Matrix.Value = Matrix.Value;
             clone.RotationAngle.Value = RotationAngle.Value;
+            clone.Data.Value = Data.Value;
             return clone;
         }
 
