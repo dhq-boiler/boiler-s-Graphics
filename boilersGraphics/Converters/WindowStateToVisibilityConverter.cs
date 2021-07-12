@@ -18,6 +18,7 @@ namespace boilersGraphics.Converters
                 switch ((WindowState)value)
                 {
                     case WindowState.Maximized:
+                    case WindowState.Minimized:
                         return Visibility.Visible;
                     case WindowState.Normal:
                         return Visibility.Collapsed;
@@ -32,6 +33,7 @@ namespace boilersGraphics.Converters
                     case WindowState.Maximized:
                         return Visibility.Collapsed;
                     case WindowState.Normal:
+                    case WindowState.Minimized:
                         return Visibility.Visible;
                     default:
                         throw new NotSupportedException();

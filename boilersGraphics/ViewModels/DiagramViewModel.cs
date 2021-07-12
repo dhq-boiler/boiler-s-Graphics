@@ -533,6 +533,7 @@ namespace boilersGraphics.ViewModels
                                        where item.GetType() != typeof(PictureDesignerItemViewModel)
                                           && item.GetType() != typeof(LetterDesignerItemViewModel)
                                           && item.GetType() != typeof(LetterVerticalDesignerItemViewModel)
+                                          && item.GetType() != typeof(NPolygonViewModel)
                                         select new XElement("DesignerItem",
                                                   new XElement("ID", item.ID),
                                                   new XElement("ParentID", item.ParentID),
@@ -616,6 +617,25 @@ namespace boilersGraphics.ViewModels
                                                         new XElement("AutoLineBreak", (item as LetterVerticalDesignerItemViewModel).AutoLineBreak)
                                             )
                                        )
+                                       .Union(
+                                           from item in designerItems
+                                           where item.GetType() == typeof(NPolygonViewModel)
+                                           select new XElement("DesignerItem",
+                                                   new XElement("ID", item.ID),
+                                                   new XElement("ParentID", item.ParentID),
+                                                   new XElement("Type", item.GetType().FullName),
+                                                   new XElement("Left", item.Left.Value),
+                                                   new XElement("Top", item.Top.Value),
+                                                   new XElement("Width", item.Width.Value),
+                                                   new XElement("Height", item.Height.Value),
+                                                   new XElement("ZIndex", item.ZIndex.Value),
+                                                   new XElement("Matrix", item.Matrix.Value),
+                                                   new XElement("EdgeColor", item.EdgeColor),
+                                                   new XElement("FillColor", item.FillColor),
+                                                   new XElement("EdgeThickness", item.EdgeThickness),
+                                                   new XElement("Data", (item as NPolygonViewModel).Data.Value)
+                                               )
+                                           )
 
                                    );
 
@@ -778,6 +798,11 @@ namespace boilersGraphics.ViewModels
                     letter.FontSize = int.Parse(designerItemXML.Element("FontSize").Value);
                     letter.PathGeometry = PathGeometry.CreateFromGeometry(Geometry.Parse(designerItemXML.Element("PathGeometry").Value));
                     letter.AutoLineBreak = bool.Parse(designerItemXML.Element("AutoLineBreak").Value);
+                }
+                if (item is NPolygonViewModel)
+                {
+                    var polygon = item as NPolygonViewModel;
+                    polygon.Data.Value = designerItemXML.Element("Data").Value;
                 }
                 tempItems.Add(item);
             }
