@@ -94,8 +94,8 @@
                                 <MenuItem Header="boiler's Graphics を終了する" Command="{Binding ExitApplicationCommand}" InputGestureText="Alt+F4"/>
                             </MenuItem>
                             <MenuItem Header="編集(_E)">
-                                <MenuItem Header="切り取り(_T)" Command="{Binding DiagramViewModel.CutCommand}" />
-                                <MenuItem Header="貼り付け(_P)" Command="{Binding DiagramViewModel.PasteCommand}" />
+                                <MenuItem Header="切り取り(_T)" Command="{Binding DiagramViewModel.CutCommand}" InputGestureText="Ctrl+X" />
+                                <MenuItem Header="貼り付け(_P)" Command="{Binding DiagramViewModel.PasteCommand}" InputGestureText="Ctrl+V"/>
                             </MenuItem>
                             <MenuItem Header="キャンパス(_C)">
                                 <MenuItem Header="設定(_S)" Command="{Binding DiagramViewModel.SettingCommand}" />
