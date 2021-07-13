@@ -49,7 +49,7 @@
         <KeyBinding Key="E"
                     Modifiers="Ctrl"
                     Command="{Binding DiagramViewModel.ExportCommand}" />
-        <KeyBinding Key="C"
+        <KeyBinding Key="X"
                     Modifiers="Ctrl"
                     Command="{Binding DiagramViewModel.CutCommand}" />
         <KeyBinding Key="V"
