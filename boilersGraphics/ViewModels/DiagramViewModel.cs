@@ -75,6 +75,7 @@ namespace boilersGraphics.ViewModels
         public DelegateCommand DuplicateCommand { get; private set; }
         public DelegateCommand CutCommand { get; private set; }
         public DelegateCommand PasteCommand { get; private set; }
+        public DelegateCommand EditMenuOpenedCommand { get; private set; }
         public DelegateCommand<MouseWheelEventArgs> MouseWheelCommand { get; private set; }
         public DelegateCommand<MouseEventArgs> PreviewMouseDownCommand { get; private set; }
         public DelegateCommand<MouseEventArgs> PreviewMouseUpCommand { get; private set; }
@@ -263,6 +264,11 @@ namespace boilersGraphics.ViewModels
                     ReleaseMiddleButton(args);
                 }
             });
+            EditMenuOpenedCommand = new DelegateCommand(() =>
+            {
+                CutCommand.RaiseCanExecuteChanged();
+                PasteCommand.RaiseCanExecuteChanged();
+            });
 
             Items
                 .ObserveElementProperty(x => x.IsSelected)
@@ -418,7 +424,20 @@ namespace boilersGraphics.ViewModels
         private bool CanExecutePaste()
         {
             var obj = Clipboard.GetDataObject();
-            return obj.GetDataPresent(typeof(string));
+            if (obj.GetDataPresent(typeof(string)))
+            {
+                var str = obj.GetData(typeof(string)) as string;
+                try
+                {
+                    var root = XElement.Parse(str);
+                    return root.Descendants("DesignerItems").Count() > 0 || root.Descendants("Connections").Count() > 0;
+                }
+                catch (XmlException)
+                {
+                    return false;
+                }
+            }
+            return false;
         }
 
         private void ExecuteCutCommand()

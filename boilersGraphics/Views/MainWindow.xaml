@@ -12,6 +12,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
     xmlns:trigger="clr-namespace:boilersGraphics.Views.Triggers"
+    xmlns:helper="clr-namespace:boilersGraphics.Helpers"
     xmlns:usercontrol="clr-namespace:boilersGraphics.UserControls"
     xmlns:viewmodel="clr-namespace:boilersGraphics.ViewModels"
     Title="{Binding Title.Value}"
@@ -94,6 +95,11 @@
                                 <MenuItem Header="boiler's Graphics を終了する" Command="{Binding ExitApplicationCommand}" InputGestureText="Alt+F4"/>
                             </MenuItem>
                             <MenuItem Header="編集(_E)">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="SubmenuOpened">
+                                        <helper:EventToCommand Command="{Binding DiagramViewModel.EditMenuOpenedCommand}" />
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
                                 <MenuItem Header="切り取り(_T)" Command="{Binding DiagramViewModel.CutCommand}" InputGestureText="Ctrl+X" />
                                 <MenuItem Header="貼り付け(_P)" Command="{Binding DiagramViewModel.PasteCommand}" InputGestureText="Ctrl+V"/>
                             </MenuItem>
