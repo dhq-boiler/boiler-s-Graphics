@@ -320,7 +320,8 @@
                 Margin="0,5,25,0"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Top"
-                ScrollViewer="{Binding ElementName=DesignerScrollViewer}" />
+                ScrollViewer="{Binding ElementName=DesignerScrollViewer}"
+                Visibility="{Binding EnableMiniMap.Value, Converter={StaticResource BoolToVisibilityConverter}}"/>
 
 
         </Grid>

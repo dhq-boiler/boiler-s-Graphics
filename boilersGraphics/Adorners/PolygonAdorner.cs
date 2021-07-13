@@ -1,9 +1,14 @@
 ﻿using boilersGraphics.Controls;
 using boilersGraphics.Extensions;
+using boilersGraphics.Models;
 using boilersGraphics.ViewModels;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -11,24 +16,30 @@ using System.Windows.Media;
 
 namespace boilersGraphics.Adorners
 {
-    internal class StraightLineAdorner : Adorner
+    public class PolygonAdorner : Adorner
     {
+        private Point? _dragStartPoint;
+        private Point? _dragEndPoint;
+        private Pen _edgePen;
         private DesignerCanvas _designerCanvas;
-        private Point? _startPoint;
-        private Point? _endPoint;
-        private Pen _straightLinePen;
         private Dictionary<Point, Adorner> _adorners;
+        private string _data;
+        private readonly Point _startPoint;
+        private ObservableCollection<Corner> _corners;
 
-        public StraightLineAdorner(DesignerCanvas designerCanvas, Point? dragStartPoint)
+        public PolygonAdorner(DesignerCanvas designerCanvas, Point? dragStartPoint, ObservableCollection<Corner> corners, string data, Point startPoint)
             : base(designerCanvas)
         {
             _designerCanvas = designerCanvas;
-            _startPoint = dragStartPoint;
+            _dragStartPoint = dragStartPoint;
             var parent = (AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel;
             var brush = new SolidColorBrush(parent.EdgeColors.First());
             brush.Opacity = 0.5;
-            _straightLinePen = new Pen(brush, parent.EdgeThickness.Value.Value);
+            _edgePen = new Pen(brush, parent.EdgeThickness.Value.Value);
             _adorners = new Dictionary<Point, Adorner>();
+            _data = data;
+            _startPoint = startPoint;
+            _corners = corners;
         }
 
         protected override void OnMouseMove(MouseEventArgs e)
@@ -38,7 +49,8 @@ namespace boilersGraphics.Adorners
                 if (!this.IsMouseCaptured)
                     this.CaptureMouse();
 
-                _endPoint = e.GetPosition(this);
+                //ドラッグ終了座標を更新
+                _dragEndPoint = e.GetPosition(this);
 
                 var mainWindowVM = (App.Current.MainWindow.DataContext as MainWindowViewModel);
                 var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
@@ -50,10 +62,10 @@ namespace boilersGraphics.Adorners
                     Point? snapped = null;
                     foreach (var snapPoint in snapPoints)
                     {
-                        if (_endPoint.Value.X > snapPoint.X - mainWindowVM.SnapPower.Value
-                         && _endPoint.Value.X < snapPoint.X + mainWindowVM.SnapPower.Value
-                         && _endPoint.Value.Y > snapPoint.Y - mainWindowVM.SnapPower.Value
-                         && _endPoint.Value.Y < snapPoint.Y + mainWindowVM.SnapPower.Value)
+                        if (_dragEndPoint.Value.X > snapPoint.X - mainWindowVM.SnapPower.Value
+                         && _dragEndPoint.Value.X < snapPoint.X + mainWindowVM.SnapPower.Value
+                         && _dragEndPoint.Value.Y > snapPoint.Y - mainWindowVM.SnapPower.Value
+                         && _dragEndPoint.Value.Y < snapPoint.Y + mainWindowVM.SnapPower.Value)
                         {
                             //スナップする座標を一時変数へ保存
                             snapped = snapPoint;
@@ -67,7 +79,7 @@ namespace boilersGraphics.Adorners
                         RemoveFromAdornerLayerAndDictionary(snapped, adornerLayer);
 
                         //ドラッグ終了座標を一時変数で上書きしてスナップ
-                        _endPoint = snapped;
+                        _dragEndPoint = snapped;
                         if (adornerLayer != null)
                         {
                             Trace.WriteLine($"Snap={snapped.Value}");
@@ -90,7 +102,7 @@ namespace boilersGraphics.Adorners
                     }
                 }
 
-                (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = $"({_startPoint.Value.X}, {_startPoint.Value.Y}) - ({_endPoint.Value.X}, {_endPoint.Value.Y})";
+                (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = $"({_dragStartPoint.Value.X}, {_dragStartPoint.Value.Y}) - ({_dragEndPoint.Value.X}, {_dragEndPoint.Value.Y}) (w, h) = ({_dragEndPoint.Value.X - _dragStartPoint.Value.X}, {_dragEndPoint.Value.Y - _dragStartPoint.Value.Y})";
 
                 this.InvalidateVisual();
             }
@@ -148,19 +160,25 @@ namespace boilersGraphics.Adorners
                 _adorners.Clear();
             }
 
-            if (_startPoint.HasValue && _endPoint.HasValue)
+            if (_dragStartPoint.HasValue && _dragEndPoint.HasValue)
             {
-                var item = new StraightConnectorViewModel(_startPoint.Value, _endPoint.Value);
+                var item = new NPolygonViewModel();
                 item.Owner = (AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel;
+                item.Left.Value = Math.Min(_dragStartPoint.Value.X, _dragEndPoint.Value.X);
+                item.Top.Value = Math.Min(_dragStartPoint.Value.Y, _dragEndPoint.Value.Y);
+                item.Width.Value = Math.Max(_dragStartPoint.Value.X - _dragEndPoint.Value.X, _dragEndPoint.Value.X - _dragStartPoint.Value.X);
+                item.Height.Value = Math.Max(_dragStartPoint.Value.Y - _dragEndPoint.Value.Y, _dragEndPoint.Value.Y - _dragStartPoint.Value.Y);
                 item.EdgeColor = item.Owner.EdgeColors.First();
+                item.FillColor = item.Owner.FillColors.First();
                 item.EdgeThickness = item.Owner.EdgeThickness.Value.Value;
                 item.ZIndex.Value = item.Owner.Items.Count;
+                item.Data.Value = _data;
                 item.IsSelected = true;
                 item.Owner.DeselectAll();
                 ((AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel).AddItemCommand.Execute(item);
 
-                _startPoint = null;
-                _endPoint = null;
+                _dragStartPoint = null;
+                _dragEndPoint = null;
             }
 
             (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "";
@@ -175,8 +193,31 @@ namespace boilersGraphics.Adorners
 
             dc.DrawRectangle(Brushes.Transparent, null, new Rect(RenderSize));
 
-            if (_startPoint.HasValue && _endPoint.HasValue)
-                dc.DrawLine(_straightLinePen, _startPoint.Value, _endPoint.Value);
+            if (_dragStartPoint.HasValue && _dragEndPoint.HasValue)
+            {
+                var diff = _dragEndPoint.Value - _dragStartPoint.Value;
+                var points = new List<Point>();
+                points.Add(_startPoint);
+                points.AddRange(_corners.Select(x => x.Point.Value));
+                var width = points.Select(x => x.X).Max() - points.Select(x => x.X).Min();
+                var height = points.Select(y => y.Y).Max() - points.Select(y => y.Y).Min();
+
+                var geometry = new StreamGeometry();
+                geometry.FillRule = FillRule.EvenOdd;
+                using (StreamGeometryContext ctx = geometry.Open())
+                {
+                    ctx.BeginFigure(_startPoint.Multiple(diff.X / width, diff.Y / height)
+                                               .Shift((_dragStartPoint.Value.X + _dragEndPoint.Value.X) / 2, (_dragStartPoint.Value.Y + _dragEndPoint.Value.Y) / 2), true, true);
+
+                    foreach (var corner in _corners)
+                    {
+                        ctx.LineTo(corner.Point.Value.Multiple(diff.X / width, diff.Y / height)
+                                                     .Shift((_dragStartPoint.Value.X + _dragEndPoint.Value.X) / 2, (_dragStartPoint.Value.Y + _dragEndPoint.Value.Y) / 2), true, false);
+                    }
+                }
+                geometry.Freeze();
+                dc.DrawGeometry(Brushes.Transparent, _edgePen, geometry);
+            }
         }
     }
 }

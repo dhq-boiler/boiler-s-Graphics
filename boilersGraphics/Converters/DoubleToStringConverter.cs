@@ -8,7 +8,7 @@ using System.Windows.Data;
 
 namespace boilersGraphics.Converters
 {
-    class IntToStringConverter : IValueConverter
+    class DoubleToStringConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -20,9 +20,11 @@ namespace boilersGraphics.Converters
             var str = value as string;
             if (string.IsNullOrEmpty(str))
                 return 0;
+            if (str.Last() == '.' || str.Last() == '-')
+                return Binding.DoNothing;
             try
             {
-                return int.Parse(str);
+                return double.Parse(str);
             }
             catch (FormatException)
             {

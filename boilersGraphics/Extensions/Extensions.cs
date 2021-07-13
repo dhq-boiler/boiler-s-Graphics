@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using boilersGraphics.ViewModels;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Media;
@@ -47,12 +48,18 @@ namespace boilersGraphics.Extensions
             }
         }
 
-        public static IEnumerable<T> GetCorrespondingViews<T>(this FrameworkElement depObj, object dataContext)
+        public static IEnumerable<T> GetCorrespondingViews<T>(this FrameworkElement parent, object dataContext, bool parentInclude = false)
             where T : FrameworkElement
         {
-            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++)
+            if (parent.DataContext == dataContext)
             {
-                var child = VisualTreeHelper.GetChild(depObj, i);
+                if (parent is T)
+                    yield return parent as T;
+            }
+
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
+            {
+                var child = VisualTreeHelper.GetChild(parent, i);
 
                 var result = (child as IEnumerable<T>) ?? EnumerateChildOfType<T>(child);
                 if (result != null)
@@ -190,6 +197,35 @@ namespace boilersGraphics.Extensions
                 ret += pg.Bounds.Height;
             }
             return ret / str.Count();
+        }
+
+        public static Point Shift(this Point target, double x, double y)
+        {
+            return new Point(target.X + x, target.Y + y);
+        }
+
+        public static Point Multiple(this Point target, double x, double y)
+        {
+            return new Point(target.X * x, target.Y * y);
+        }
+
+        public static IEnumerable<SelectableDesignerItemViewModelBase> WithPickupChildren(this IEnumerable<SelectableDesignerItemViewModelBase> selected, IEnumerable<SelectableDesignerItemViewModelBase> all)
+        {
+            foreach (var item in selected)
+            {
+                if (item is GroupItemViewModel)
+                {
+                    var group = item as GroupItemViewModel;
+                    var id = group.ID;
+                    var idmatch = all.Where(x => x.ParentID == id);
+                    foreach (var idmatchitem in idmatch)
+                    {
+                        yield return idmatchitem;
+                    }
+                }
+
+                yield return item;
+            }
         }
     }
 }

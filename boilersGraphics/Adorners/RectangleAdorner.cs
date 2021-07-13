@@ -28,7 +28,7 @@ namespace boilersGraphics.Adorners
             var parent = (AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel;
             var brush = new SolidColorBrush(parent.EdgeColors.First());
             brush.Opacity = 0.5;
-            _rectanglePen = new Pen(brush, parent.EdgeThickness.Value);
+            _rectanglePen = new Pen(brush, parent.EdgeThickness.Value.Value);
             _adorners = new Dictionary<Point, Adorner>();
         }
 
@@ -161,7 +161,7 @@ namespace boilersGraphics.Adorners
                 item.Height.Value = Math.Max(_startPoint.Value.Y - _endPoint.Value.Y, _endPoint.Value.Y - _startPoint.Value.Y);
                 item.EdgeColor = item.Owner.EdgeColors.First();
                 item.FillColor = item.Owner.FillColors.First();
-                item.EdgeThickness = item.Owner.EdgeThickness.Value;
+                item.EdgeThickness = item.Owner.EdgeThickness.Value.Value;
                 item.ZIndex.Value = item.Owner.Items.Count;
                 item.IsSelected = true;
                 item.Owner.DeselectAll();
@@ -191,11 +191,11 @@ namespace boilersGraphics.Adorners
         {
             var parent = (AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel;
             var point1 = _startPoint.Value;
-            point1.X += parent.EdgeThickness.Value / 2;
-            point1.Y += parent.EdgeThickness.Value / 2;
+            point1.X += parent.EdgeThickness.Value.Value / 2;
+            point1.Y += parent.EdgeThickness.Value.Value / 2;
             var point2 = _endPoint.Value;
-            point2.X -= parent.EdgeThickness.Value / 2;
-            point2.Y -= parent.EdgeThickness.Value / 2;
+            point2.X -= parent.EdgeThickness.Value.Value / 2;
+            point2.Y -= parent.EdgeThickness.Value.Value / 2;
             return new Rect(point1, point2);
         }
     }

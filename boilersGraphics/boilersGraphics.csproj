@@ -135,6 +135,7 @@
     <Compile Include="Adorners\LetterAdorner.cs" />
     <Compile Include="Adorners\LetterVerticalAdorner.cs" />
     <Compile Include="Adorners\PictureAdorner.cs" />
+    <Compile Include="Adorners\PolygonAdorner.cs" />
     <Compile Include="Adorners\RectangleAdorner.cs" />
     <Compile Include="Adorners\RubberbandAdorner.cs" />
     <Compile Include="Adorners\SnapPointAdorner.cs" />
@@ -143,13 +144,17 @@
     <Compile Include="AttachedProperties\ItemConnectProps.cs" />
     <Compile Include="AttachedProperties\SelectionProps.cs" />
     <Compile Include="Controls\DesignerCanvas.cs" />
+    <Compile Include="Controls\DoubleTextBox.cs" />
     <Compile Include="Controls\DragThumb.cs" />
     <Compile Include="Controls\LineResizeHandle.cs" />
     <Compile Include="Controls\ResizeThumb.cs" />
     <Compile Include="Controls\RotateThumb.cs" />
     <Compile Include="Controls\SnapPoint.cs" />
+    <Compile Include="Converters\DoubleToStringConverter.cs" />
     <Compile Include="Converters\ExtensionConverter.cs" />
     <Compile Include="Converters\IntToStringConverter.cs" />
+    <Compile Include="Converters\ObservableCollectionToPathSegmentCollection.cs" />
+    <Compile Include="Converters\WindowStateToVisibilityConverter.cs" />
     <Compile Include="Exceptions\UnexpectedException.cs" />
     <Compile Include="Controls\ZoomBox.cs" />
     <Compile Include="Converters\ConnectionPathConverter.cs" />
@@ -189,6 +194,7 @@
     </Compile>
     <Compile Include="ViewModels\ColorPickerViewModel.cs" />
     <Compile Include="ViewModels\ConnectorBaseViewModel.cs" />
+    <Compile Include="Models\Corner.cs" />
     <Compile Include="ViewModels\ExportViewModel.cs" />
     <Compile Include="ViewModels\GroupItemViewModel.cs" />
     <Compile Include="ViewModels\LetterDesignerItemViewModel.cs" />
@@ -196,6 +202,7 @@
     <Compile Include="ViewModels\LetterSettingViewModel.cs" />
     <Compile Include="ViewModels\LetterVerticalDesignerItemViewModel.cs" />
     <Compile Include="ViewModels\NEllipseViewModel.cs" />
+    <Compile Include="ViewModels\NPolygonViewModel.cs" />
     <Compile Include="ViewModels\NRectangleViewModel.cs" />
     <Compile Include="ViewModels\PathDesignerItemViewModel.cs" />
     <Compile Include="ViewModels\PictureDesignerItemViewModel.cs" />
@@ -204,6 +211,7 @@
     <Compile Include="ViewModels\EllipseViewModel.cs" />
     <Compile Include="ViewModels\IDiagramViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
+    <Compile Include="ViewModels\PolygonSettingViewModel.cs" />
     <Compile Include="ViewModels\SelectableDesignerItemViewModelBase.cs" />
     <Compile Include="ViewModels\SettingViewModel.cs" />
     <Compile Include="ViewModels\StraightConnectorViewModel.cs" />
@@ -221,6 +229,7 @@
     <Compile Include="Views\Behaviors\LetterBehavior.cs" />
     <Compile Include="Views\Behaviors\LetterVerticalBehavior.cs" />
     <Compile Include="Views\Behaviors\NDrawEllipseBehavior.cs" />
+    <Compile Include="Views\Behaviors\NDrawPolygonBehavior.cs" />
     <Compile Include="Views\Behaviors\NDrawRectangleBehavior.cs" />
     <Compile Include="Views\Behaviors\NDrawStraightLineBehavior.cs" />
     <Compile Include="Views\Behaviors\PictureBehavior.cs" />
@@ -256,6 +265,9 @@
     <Compile Include="Views\LetterSetting.xaml.cs">
       <DependentUpon>LetterSetting.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\PolygonSetting.xaml.cs">
+      <DependentUpon>PolygonSetting.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Setting.xaml.cs">
       <DependentUpon>Setting.xaml</DependentUpon>
     </Compile>
@@ -284,6 +296,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Resources\DesignerItems\EllipseDesignerItemDataTemplate.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\DesignerItems\PolygonDesignerItemDataTemplate.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -381,7 +397,15 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\PolygonSetting.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Setting.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Theme.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -469,6 +493,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\img\Gear.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\img\pentagon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

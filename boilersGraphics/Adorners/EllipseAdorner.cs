@@ -27,7 +27,7 @@ namespace boilersGraphics.Adorners
             var parent = (AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel;
             var brush = new SolidColorBrush(parent.EdgeColors.First());
             brush.Opacity = 0.5;
-            _ellipsePen = new Pen(brush, parent.EdgeThickness.Value);
+            _ellipsePen = new Pen(brush, parent.EdgeThickness.Value.Value);
         }
 
         protected override void OnMouseMove(MouseEventArgs e)
@@ -119,7 +119,7 @@ namespace boilersGraphics.Adorners
                 Dilate(item);
 
                 item.EdgeColor = item.Owner.EdgeColors.First();
-                item.EdgeThickness = item.Owner.EdgeThickness.Value;
+                item.EdgeThickness = item.Owner.EdgeThickness.Value.Value;
                 item.FillColor = item.Owner.FillColors.First();
                 item.ZIndex.Value = item.Owner.Items.Count;
                 item.IsSelected = true;
@@ -140,10 +140,10 @@ namespace boilersGraphics.Adorners
         private void Dilate(NEllipseViewModel item)
         {
             var parent = (AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel;
-            item.Left.Value -= parent.EdgeThickness.Value / 2;
-            item.Top.Value -= parent.EdgeThickness.Value / 2;
-            item.Width.Value += parent.EdgeThickness.Value;
-            item.Height.Value += parent.EdgeThickness.Value;
+            item.Left.Value -= parent.EdgeThickness.Value.Value / 2;
+            item.Top.Value -= parent.EdgeThickness.Value.Value / 2;
+            item.Width.Value += parent.EdgeThickness.Value.Value;
+            item.Height.Value += parent.EdgeThickness.Value.Value;
         }
 
         protected override void OnRender(DrawingContext dc)

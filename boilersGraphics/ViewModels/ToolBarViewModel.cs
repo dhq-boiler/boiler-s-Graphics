@@ -10,6 +10,10 @@ using Microsoft.Xaml.Behaviors;
 using System.IO;
 using System.Windows.Media.Imaging;
 using Prism.Services.Dialogs;
+using boilersGraphics.Views;
+using boilersGraphics.Models;
+using System.Windows.Media;
+using System.Windows;
 
 namespace boilersGraphics.ViewModels
 {
@@ -104,6 +108,24 @@ namespace boilersGraphics.ViewModels
                     Behaviors.Add(behavior);
                 }
                 SelectOneToolItem("letter-vertical");
+            })));
+            ToolItems.Add(new ToolItemData("polygon", "pack://application:,,,/Assets/img/pentagon.png", new DelegateCommand(() =>
+            {
+                IDialogResult result = null;
+                this.dlgService.ShowDialog(nameof(PolygonSetting), ret => result = ret);
+                if (result != null && result.Result == ButtonResult.OK)
+                {
+                    var corners = result.Parameters.GetValue<ObservableCollection<Corner>>("Corners");
+                    var data = result.Parameters.GetValue<string>("Data");
+                    var startPoint = result.Parameters.GetValue<Point>("StartPoint");
+                    var behavior = new NDrawPolygonBehavior(corners, data, startPoint);
+                    Behaviors.Clear();
+                    if (!Behaviors.Contains(behavior))
+                    {
+                        Behaviors.Add(behavior);
+                    }
+                    SelectOneToolItem("polygon");
+                }
             })));
         }
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Reactive.Bindings;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,15 +7,15 @@ using System.Threading.Tasks;
 
 namespace boilersGraphics.ViewModels
 {
-    public class NEllipseViewModel : DesignerItemViewModelBase
+    public class NPolygonViewModel : DesignerItemViewModelBase
     {
-        public NEllipseViewModel()
+        public NPolygonViewModel()
             : base()
         {
             Init();
         }
 
-        public NEllipseViewModel(double left, double top, double width, double height)
+        public NPolygonViewModel(double left, double top, double width, double height)
             : base()
         {
             Init();
@@ -24,14 +25,14 @@ namespace boilersGraphics.ViewModels
             Height.Value = height;
         }
 
-        public NEllipseViewModel(double left, double top, double width, double height, double angleInDegrees)
+        public NPolygonViewModel(double left, double top, double width, double height, double angleInDegrees)
             : this(left, top, width, height)
         {
             RotationAngle.Value = angleInDegrees;
             Matrix.Value.RotateAt(angleInDegrees, 0, 0);
         }
 
-        public NEllipseViewModel(int id, IDiagramViewModel parent, double left, double top)
+        public NPolygonViewModel(int id, IDiagramViewModel parent, double left, double top)
             : base(id, parent, left, top)
         {
             Init();
@@ -42,11 +43,13 @@ namespace boilersGraphics.ViewModels
             this.ShowConnectors = false;
         }
 
+        public ReactiveProperty<string> Data { get; set; } = new ReactiveProperty<string>();
+
         #region IClonable
 
         public override object Clone()
         {
-            var clone = new NEllipseViewModel();
+            var clone = new NPolygonViewModel();
             clone.Owner = Owner;
             clone.Left.Value = Left.Value;
             clone.Top.Value = Top.Value;
@@ -57,6 +60,7 @@ namespace boilersGraphics.ViewModels
             clone.EdgeThickness = EdgeThickness;
             clone.Matrix.Value = Matrix.Value;
             clone.RotationAngle.Value = RotationAngle.Value;
+            clone.Data.Value = Data.Value;
             return clone;
         }
 

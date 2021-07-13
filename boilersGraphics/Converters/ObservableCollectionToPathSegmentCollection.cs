@@ -1,33 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
+using System.Windows.Media;
 
 namespace boilersGraphics.Converters
 {
-    class IntToStringConverter : IValueConverter
+    class ObservableCollectionToPathSegmentCollection : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return value.ToString();
+            return new PathSegmentCollection(value as ObservableCollection<PathSegment>);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var str = value as string;
-            if (string.IsNullOrEmpty(str))
-                return 0;
-            try
-            {
-                return int.Parse(str);
-            }
-            catch (FormatException)
-            {
-                return 0;
-            }
+            throw new NotImplementedException();
         }
     }
 }

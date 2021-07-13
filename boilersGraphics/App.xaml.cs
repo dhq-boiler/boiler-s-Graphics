@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -29,6 +30,15 @@ namespace boilersGraphics
             containerRegistry.RegisterDialog<LetterVerticalSetting, ViewModels.LetterVerticalSettingViewModel>();
             containerRegistry.RegisterDialog<Views.Setting, ViewModels.SettingViewModel>();
             containerRegistry.RegisterDialog<Export, ViewModels.ExportViewModel>();
+            containerRegistry.RegisterDialog<PolygonSetting, ViewModels.PolygonSettingViewModel>();
+        }
+
+        public static string GetAppNameAndVersion()
+        {
+            var version = Assembly.GetExecutingAssembly().GetName().Version;
+            var majorMinorBuild = $"{version.Major}.{version.Minor}.{version.Build}";
+            var appnameAndVersion = $"boiler's Graphics {majorMinorBuild}";
+            return appnameAndVersion;
         }
     }
 }

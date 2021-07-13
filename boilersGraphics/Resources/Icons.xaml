@@ -94,4 +94,8 @@
         x:Key="Icon_Gear"
         x:Shared="False"
         UriSource="pack://application:,,,/Assets/img/Gear.png" />
+    <BitmapImage
+        x:Key="Icon_Pentagon"
+        x:Shared="False"
+        UriSource="pack://application:,,,/Assets/img/pentagon.png" />
 </ResourceDictionary>
