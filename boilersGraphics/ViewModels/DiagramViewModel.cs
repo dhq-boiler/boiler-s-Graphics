@@ -401,10 +401,18 @@ namespace boilersGraphics.ViewModels
                 item.Owner = this;
                 list.Add(item);
             }
-            foreach (var item in list)
+
+            //grouping
+            foreach (var groupItem in list.OfType<GroupItemViewModel>().ToList())
             {
-                Items.Add(item);
+                var children = from item in list
+                               where item.ParentID == groupItem.ID
+                               select item;
+
+                children.ToList().ForEach(x => groupItem.AddGroup(x));
             }
+
+            Items.AddRange(list.OrderBy(x => x.ZIndex.Value));
         }
 
         private bool CanExecutePaste()
@@ -417,27 +425,27 @@ namespace boilersGraphics.ViewModels
         {
             var selectedItems = SelectedItems.ToList();
             var root = new XElement("Data");
-            root.Add(new XElement("DesignerItems", (from item in selectedItems.OfType<DesignerItemViewModelBase>()
-                                                    where item.GetType() != typeof(PictureDesignerItemViewModel)
-                                                       && item.GetType() != typeof(LetterDesignerItemViewModel)
-                                                       && item.GetType() != typeof(LetterVerticalDesignerItemViewModel)
-                                                       && item.GetType() != typeof(NPolygonViewModel)
-                                                    select new XElement("DesignerItem",
-                                                              new XElement("ID", item.ID),
-                                                              new XElement("ParentID", item.ParentID),
-                                                              new XElement("Type", item.GetType().FullName),
-                                                              new XElement("Left", item.Left.Value),
-                                                              new XElement("Top", item.Top.Value),
-                                                              new XElement("Width", item.Width.Value),
-                                                              new XElement("Height", item.Height.Value),
-                                                              new XElement("ZIndex", item.ZIndex.Value),
-                                                              new XElement("Matrix", item.Matrix.Value),
-                                                              new XElement("EdgeColor", item.EdgeColor),
-                                                              new XElement("FillColor", item.FillColor),
-                                                              new XElement("EdgeThickness", item.EdgeThickness)
-                                                          ))
+            var designerItems = (from item in selectedItems.WithPickupChildren(Items).OfType<DesignerItemViewModelBase>()
+                                 where item.GetType() != typeof(PictureDesignerItemViewModel)
+                                    && item.GetType() != typeof(LetterDesignerItemViewModel)
+                                    && item.GetType() != typeof(LetterVerticalDesignerItemViewModel)
+                                    && item.GetType() != typeof(NPolygonViewModel)
+                                 select new XElement("DesignerItem",
+                                           new XElement("ID", item.ID),
+                                           new XElement("ParentID", item.ParentID),
+                                           new XElement("Type", item.GetType().FullName),
+                                           new XElement("Left", item.Left.Value),
+                                           new XElement("Top", item.Top.Value),
+                                           new XElement("Width", item.Width.Value),
+                                           new XElement("Height", item.Height.Value),
+                                           new XElement("ZIndex", item.ZIndex.Value),
+                                           new XElement("Matrix", item.Matrix.Value),
+                                           new XElement("EdgeColor", item.EdgeColor),
+                                           new XElement("FillColor", item.FillColor),
+                                           new XElement("EdgeThickness", item.EdgeThickness)
+                                       ))
                                                .Union(
-                                                   from item in selectedItems.OfType<DesignerItemViewModelBase>()
+                                                   from item in selectedItems.WithPickupChildren(Items).OfType<DesignerItemViewModelBase>()
                                                    where item.GetType() == typeof(PictureDesignerItemViewModel)
                                                    select new XElement("DesignerItem",
                                                               new XElement("ID", item.ID),
@@ -456,7 +464,7 @@ namespace boilersGraphics.ViewModels
                                                     )
                                                )
                                                .Union(
-                                                   from item in selectedItems.OfType<DesignerItemViewModelBase>()
+                                                   from item in selectedItems.WithPickupChildren(Items).OfType<DesignerItemViewModelBase>()
                                                    where item.GetType() == typeof(LetterDesignerItemViewModel)
                                                    select new XElement("DesignerItem",
                                                                 new XElement("ID", item.ID),
@@ -481,7 +489,7 @@ namespace boilersGraphics.ViewModels
                                                     )
                                                )
                                                .Union(
-                                                   from item in selectedItems.OfType<DesignerItemViewModelBase>()
+                                                   from item in selectedItems.WithPickupChildren(Items).OfType<DesignerItemViewModelBase>()
                                                    where item.GetType() == typeof(LetterVerticalDesignerItemViewModel)
                                                    select new XElement("DesignerItem",
                                                                 new XElement("ID", item.ID),
@@ -506,7 +514,7 @@ namespace boilersGraphics.ViewModels
                                                     )
                                                )
                                                .Union(
-                                                   from item in selectedItems.OfType<DesignerItemViewModelBase>()
+                                                   from item in selectedItems.WithPickupChildren(Items).OfType<DesignerItemViewModelBase>()
                                                    where item.GetType() == typeof(NPolygonViewModel)
                                                    select new XElement("DesignerItem",
                                                            new XElement("ID", item.ID),
@@ -522,9 +530,9 @@ namespace boilersGraphics.ViewModels
                                                            new XElement("FillColor", item.FillColor),
                                                            new XElement("EdgeThickness", item.EdgeThickness),
                                                            new XElement("Data", (item as NPolygonViewModel).Data.Value)
-                                                       )
-                                                   )));
-            root.Add(new XElement("Connections", from connection in selectedItems.OfType<ConnectorBaseViewModel>()
+                                                       ));
+            root.Add(new XElement("DesignerItems", designerItems));
+            root.Add(new XElement("Connections", from connection in selectedItems.WithPickupChildren(Items).OfType<ConnectorBaseViewModel>()
                                                  select new XElement("Connection",
                                                     new XElement("ID", connection.ID),
                                                     new XElement("ParentID", connection.ParentID),
@@ -536,8 +544,10 @@ namespace boilersGraphics.ViewModels
                                                     new XElement("EdgeThickness", connection.EdgeThickness)
                                                  )));
             Clipboard.SetDataObject(root.ToString(), false);
+
             foreach (var selectedItem in selectedItems)
             {
+                RemoveGroupMembers(selectedItem);
                 Items.Remove(selectedItem);
             }
         }

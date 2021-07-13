@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using boilersGraphics.ViewModels;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Media;
@@ -206,6 +207,25 @@ namespace boilersGraphics.Extensions
         public static Point Multiple(this Point target, double x, double y)
         {
             return new Point(target.X * x, target.Y * y);
+        }
+
+        public static IEnumerable<SelectableDesignerItemViewModelBase> WithPickupChildren(this IEnumerable<SelectableDesignerItemViewModelBase> selected, IEnumerable<SelectableDesignerItemViewModelBase> all)
+        {
+            foreach (var item in selected)
+            {
+                if (item is GroupItemViewModel)
+                {
+                    var group = item as GroupItemViewModel;
+                    var id = group.ID;
+                    var idmatch = all.Where(x => x.ParentID == id);
+                    foreach (var idmatchitem in idmatch)
+                    {
+                        yield return idmatchitem;
+                    }
+                }
+
+                yield return item;
+            }
         }
     }
 }
