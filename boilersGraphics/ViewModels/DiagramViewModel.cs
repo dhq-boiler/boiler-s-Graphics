@@ -335,6 +335,12 @@ namespace boilersGraphics.ViewModels
             EdgeThickness.Value = 1.0;
 
             CanvasBorderThickness = 1.0;
+
+            var b = new BezierCurveViewModel(new Point(100, 100), new Point(300, 300), new Point(150, 150), new Point(250, 250));
+            b.Owner = this;
+            b.EdgeColor = Colors.Black;
+            b.EdgeThickness = 5;
+            Items.Add(b);
         }
 
         private void ExecuteCopyCommand()

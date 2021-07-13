@@ -143,6 +143,7 @@
     <Compile Include="AttachedProperties\DragAndDropProps.cs" />
     <Compile Include="AttachedProperties\ItemConnectProps.cs" />
     <Compile Include="AttachedProperties\SelectionProps.cs" />
+    <Compile Include="Controls\ControlPoint.cs" />
     <Compile Include="Controls\DesignerCanvas.cs" />
     <Compile Include="Controls\DoubleTextBox.cs" />
     <Compile Include="Controls\DragThumb.cs" />
@@ -192,6 +193,7 @@
     <Compile Include="UserControls\ToolBoxControl.xaml.cs">
       <DependentUpon>ToolBoxControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\BezierCurveViewModel.cs" />
     <Compile Include="ViewModels\ColorPickerViewModel.cs" />
     <Compile Include="ViewModels\ConnectorBaseViewModel.cs" />
     <Compile Include="Models\Corner.cs" />
@@ -296,6 +298,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Resources\DesignerItems\EllipseDesignerItemDataTemplate.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\DesignerItems\BezierCurveDataTemplate.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
