@@ -49,6 +49,12 @@
         <KeyBinding Key="E"
                     Modifiers="Ctrl"
                     Command="{Binding DiagramViewModel.ExportCommand}" />
+        <KeyBinding Key="C"
+                    Modifiers="Ctrl"
+                    Command="{Binding DiagramViewModel.CutCommand}" />
+        <KeyBinding Key="V"
+                    Modifiers="Ctrl"
+                    Command="{Binding DiagramViewModel.PasteCommand}" />
     </Window.InputBindings>
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="{x:Static SystemParameters.CaptionHeight}"
@@ -86,6 +92,10 @@
                                 <MenuItem Header="上書き保存" Command="{Binding DiagramViewModel.OverwriteCommand}" InputGestureText="Ctrl+S" />
                                 <MenuItem Header="エクスポート" Command="{Binding DiagramViewModel.ExportCommand}" InputGestureText="Ctrl+E" />
                                 <MenuItem Header="boiler's Graphics を終了する" Command="{Binding ExitApplicationCommand}" InputGestureText="Alt+F4"/>
+                            </MenuItem>
+                            <MenuItem Header="編集(_E)">
+                                <MenuItem Header="切り取り(_T)" Command="{Binding DiagramViewModel.CutCommand}" />
+                                <MenuItem Header="貼り付け(_P)" Command="{Binding DiagramViewModel.PasteCommand}" />
                             </MenuItem>
                             <MenuItem Header="キャンパス(_C)">
                                 <MenuItem Header="設定(_S)" Command="{Binding DiagramViewModel.SettingCommand}" />
