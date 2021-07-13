@@ -26,7 +26,9 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Xml;
 using System.Xml.Linq;
+using System.Xml.Serialization;
 
 namespace boilersGraphics.ViewModels
 {
@@ -71,6 +73,10 @@ namespace boilersGraphics.ViewModels
         public DelegateCommand UniformWidthCommand { get; private set; }
         public DelegateCommand UniformHeightCommand { get; private set; }
         public DelegateCommand DuplicateCommand { get; private set; }
+        public DelegateCommand CutCommand { get; private set; }
+        public DelegateCommand CopyCommand { get; private set; }
+        public DelegateCommand PasteCommand { get; private set; }
+        public DelegateCommand EditMenuOpenedCommand { get; private set; }
         public DelegateCommand<MouseWheelEventArgs> MouseWheelCommand { get; private set; }
         public DelegateCommand<MouseEventArgs> PreviewMouseDownCommand { get; private set; }
         public DelegateCommand<MouseEventArgs> PreviewMouseUpCommand { get; private set; }
@@ -206,6 +212,9 @@ namespace boilersGraphics.ViewModels
             UniformWidthCommand = new DelegateCommand(() => ExecuteUniformWidthCommand(), () => CanExecuteUniform());
             UniformHeightCommand = new DelegateCommand(() => ExecuteUniformHeightCommand(), () => CanExecuteUniform());
             DuplicateCommand = new DelegateCommand(() => ExecuteDuplicateCommand(), () => CanExecuteDuplicate());
+            CutCommand = new DelegateCommand(() => ExecuteCutCommand(), () => CanExecuteCut());
+            CopyCommand = new DelegateCommand(() => ExecuteCopyCommand(), () => CanExecuteCopy());
+            PasteCommand = new DelegateCommand(() => ExecutePasteCommand(), () => CanExecutePaste());
             MouseWheelCommand = new DelegateCommand<MouseWheelEventArgs>(args =>
             {
                 var diagramControl = App.Current.MainWindow.GetChildOfType<DiagramControl>();
@@ -256,6 +265,12 @@ namespace boilersGraphics.ViewModels
                 {
                     ReleaseMiddleButton(args);
                 }
+            });
+            EditMenuOpenedCommand = new DelegateCommand(() =>
+            {
+                CutCommand.RaiseCanExecuteChanged();
+                CopyCommand.RaiseCanExecuteChanged();
+                PasteCommand.RaiseCanExecuteChanged();
             });
 
             Items
@@ -320,6 +335,263 @@ namespace boilersGraphics.ViewModels
             EdgeThickness.Value = 1.0;
 
             CanvasBorderThickness = 1.0;
+        }
+
+        private void ExecuteCopyCommand()
+        {
+            CopyToClipboard();
+        }
+
+        private bool CanExecuteCopy()
+        {
+            return SelectedItems.Count > 0;
+        }
+
+        private void ExecutePasteCommand()
+        {
+            var obj = Clipboard.GetDataObject();
+            var str = obj.GetData(typeof(string)) as string;
+            var root = XElement.Parse(str);
+            var designerItemsElm = root.Descendants("DesignerItems").Elements("DesignerItem");
+            var list = new List<SelectableDesignerItemViewModelBase>();
+            foreach (var designerItemElm in designerItemsElm)
+            {
+                var item = (DesignerItemViewModelBase)DeserializeInstance(designerItemElm);
+                item.Left.Value = double.Parse(designerItemElm.Element("Left").Value);
+                item.Top.Value = double.Parse(designerItemElm.Element("Top").Value);
+                item.Width.Value = double.Parse(designerItemElm.Element("Width").Value);
+                item.Height.Value = double.Parse(designerItemElm.Element("Height").Value);
+                item.ID = Guid.Parse(designerItemElm.Element("ID").Value);
+                item.ParentID = Guid.Parse(designerItemElm.Element("ParentID").Value);
+                item.ZIndex.Value = Int32.Parse(designerItemElm.Element("ZIndex").Value);
+                item.Matrix.Value = new Matrix();
+                item.EdgeColor = (Color)ColorConverter.ConvertFromString(designerItemElm.Element("EdgeColor").Value);
+                item.FillColor = (Color)ColorConverter.ConvertFromString(designerItemElm.Element("FillColor").Value);
+                item.EdgeThickness = double.Parse(designerItemElm.Element("EdgeThickness").Value);
+                item.Owner = this;
+                if (item is PictureDesignerItemViewModel)
+                {
+                    var picture = item as PictureDesignerItemViewModel;
+                    picture.FileName = designerItemElm.Element("FileName").Value;
+                }
+                if (item is LetterDesignerItemViewModel)
+                {
+                    var letter = item as LetterDesignerItemViewModel;
+                    letter.LetterString = designerItemElm.Element("LetterString").Value;
+                    letter.SelectedFontFamily = new FontFamilyEx(designerItemElm.Element("SelectedFontFamily").Value);
+                    letter.IsBold = bool.Parse(designerItemElm.Element("IsBold").Value);
+                    letter.IsItalic = bool.Parse(designerItemElm.Element("IsItalic").Value);
+                    letter.FontSize = int.Parse(designerItemElm.Element("FontSize").Value);
+                    letter.PathGeometry = PathGeometry.CreateFromGeometry(Geometry.Parse(designerItemElm.Element("PathGeometry").Value));
+                    letter.AutoLineBreak = bool.Parse(designerItemElm.Element("AutoLineBreak").Value);
+                }
+                if (item is LetterVerticalDesignerItemViewModel)
+                {
+                    var letter = item as LetterVerticalDesignerItemViewModel;
+                    letter.LetterString = designerItemElm.Element("LetterString").Value;
+                    letter.SelectedFontFamily = new FontFamilyEx(designerItemElm.Element("SelectedFontFamily").Value);
+                    letter.IsBold = bool.Parse(designerItemElm.Element("IsBold").Value);
+                    letter.IsItalic = bool.Parse(designerItemElm.Element("IsItalic").Value);
+                    letter.FontSize = int.Parse(designerItemElm.Element("FontSize").Value);
+                    letter.PathGeometry = PathGeometry.CreateFromGeometry(Geometry.Parse(designerItemElm.Element("PathGeometry").Value));
+                    letter.AutoLineBreak = bool.Parse(designerItemElm.Element("AutoLineBreak").Value);
+                }
+                if (item is NPolygonViewModel)
+                {
+                    var polygon = item as NPolygonViewModel;
+                    polygon.Data.Value = designerItemElm.Element("Data").Value;
+                }
+                list.Add(item);
+            }
+            var connectorsElm = root.Descendants("Connections").Elements("Connection");
+            foreach (var connectorElm in connectorsElm)
+            {
+                var item = (ConnectorBaseViewModel)DeserializeInstance(connectorElm);
+                item.ID = Guid.Parse(connectorElm.Element("ID").Value);
+                item.ParentID = Guid.Parse(connectorElm.Element("ParentID").Value);
+                item.Points = new ObservableCollection<Point>();
+                item.Points.Add(new Point());
+                item.Points.Add(new Point());
+                item.Points[0] = Point.Parse(connectorElm.Element("BeginPoint").Value);
+                item.Points[1] = Point.Parse(connectorElm.Element("EndPoint").Value);
+                item.ZIndex.Value = Int32.Parse(connectorElm.Element("ZIndex").Value);
+                item.EdgeColor = (Color)ColorConverter.ConvertFromString(connectorElm.Element("EdgeColor").Value);
+                item.EdgeThickness = double.Parse(connectorElm.Element("EdgeThickness").Value);
+                item.Owner = this;
+                list.Add(item);
+            }
+
+            //grouping
+            foreach (var groupItem in list.OfType<GroupItemViewModel>().ToList())
+            {
+                var children = from item in list
+                               where item.ParentID == groupItem.ID
+                               select item;
+
+                children.ToList().ForEach(x => groupItem.AddGroup(x));
+            }
+
+            Items.AddRange(list.OrderBy(x => x.ZIndex.Value));
+        }
+
+        private bool CanExecutePaste()
+        {
+            var obj = Clipboard.GetDataObject();
+            if (obj.GetDataPresent(typeof(string)))
+            {
+                var str = obj.GetData(typeof(string)) as string;
+                try
+                {
+                    var root = XElement.Parse(str);
+                    return root.Descendants("DesignerItems").Count() > 0 || root.Descendants("Connections").Count() > 0;
+                }
+                catch (XmlException)
+                {
+                    return false;
+                }
+            }
+            return false;
+        }
+
+        private void ExecuteCutCommand()
+        {
+            CopyToClipboard();
+
+            foreach (var selectedItem in SelectedItems)
+            {
+                RemoveGroupMembers(selectedItem);
+                Items.Remove(selectedItem);
+            }
+        }
+
+        private void CopyToClipboard()
+        {
+            var selectedItems = SelectedItems.ToList();
+            var root = new XElement("Data");
+            var designerItems = (from item in selectedItems.WithPickupChildren(Items).OfType<DesignerItemViewModelBase>()
+                                 where item.GetType() != typeof(PictureDesignerItemViewModel)
+                                    && item.GetType() != typeof(LetterDesignerItemViewModel)
+                                    && item.GetType() != typeof(LetterVerticalDesignerItemViewModel)
+                                    && item.GetType() != typeof(NPolygonViewModel)
+                                 select new XElement("DesignerItem",
+                                           new XElement("ID", item.ID),
+                                           new XElement("ParentID", item.ParentID),
+                                           new XElement("Type", item.GetType().FullName),
+                                           new XElement("Left", item.Left.Value),
+                                           new XElement("Top", item.Top.Value),
+                                           new XElement("Width", item.Width.Value),
+                                           new XElement("Height", item.Height.Value),
+                                           new XElement("ZIndex", item.ZIndex.Value),
+                                           new XElement("Matrix", item.Matrix.Value),
+                                           new XElement("EdgeColor", item.EdgeColor),
+                                           new XElement("FillColor", item.FillColor),
+                                           new XElement("EdgeThickness", item.EdgeThickness)
+                                       ))
+                                               .Union(
+                                                   from item in selectedItems.WithPickupChildren(Items).OfType<DesignerItemViewModelBase>()
+                                                   where item.GetType() == typeof(PictureDesignerItemViewModel)
+                                                   select new XElement("DesignerItem",
+                                                              new XElement("ID", item.ID),
+                                                              new XElement("ParentID", item.ParentID),
+                                                              new XElement("Type", item.GetType().FullName),
+                                                              new XElement("Left", item.Left.Value),
+                                                              new XElement("Top", item.Top.Value),
+                                                              new XElement("Width", item.Width.Value),
+                                                              new XElement("Height", item.Height.Value),
+                                                              new XElement("ZIndex", item.ZIndex.Value),
+                                                              new XElement("Matrix", item.Matrix.Value),
+                                                              new XElement("EdgeColor", item.EdgeColor),
+                                                              new XElement("FillColor", item.FillColor),
+                                                              new XElement("EdgeThickness", item.EdgeThickness),
+                                                              new XElement("FileName", (item as PictureDesignerItemViewModel).FileName)
+                                                    )
+                                               )
+                                               .Union(
+                                                   from item in selectedItems.WithPickupChildren(Items).OfType<DesignerItemViewModelBase>()
+                                                   where item.GetType() == typeof(LetterDesignerItemViewModel)
+                                                   select new XElement("DesignerItem",
+                                                                new XElement("ID", item.ID),
+                                                                new XElement("ParentID", item.ParentID),
+                                                                new XElement("Type", item.GetType().FullName),
+                                                                new XElement("Left", item.Left.Value),
+                                                                new XElement("Top", item.Top.Value),
+                                                                new XElement("Width", item.Width.Value),
+                                                                new XElement("Height", item.Height.Value),
+                                                                new XElement("ZIndex", item.ZIndex.Value),
+                                                                new XElement("Matrix", item.Matrix.Value),
+                                                                new XElement("EdgeColor", item.EdgeColor),
+                                                                new XElement("FillColor", item.FillColor),
+                                                                new XElement("EdgeThickness", item.EdgeThickness),
+                                                                new XElement("LetterString", (item as LetterDesignerItemViewModel).LetterString),
+                                                                new XElement("SelectedFontFamily", (item as LetterDesignerItemViewModel).SelectedFontFamily),
+                                                                new XElement("IsBold", (item as LetterDesignerItemViewModel).IsBold),
+                                                                new XElement("IsItalic", (item as LetterDesignerItemViewModel).IsItalic),
+                                                                new XElement("FontSize", (item as LetterDesignerItemViewModel).FontSize),
+                                                                new XElement("PathGeometry", (item as LetterDesignerItemViewModel).PathGeometry),
+                                                                new XElement("AutoLineBreak", (item as LetterDesignerItemViewModel).AutoLineBreak)
+                                                    )
+                                               )
+                                               .Union(
+                                                   from item in selectedItems.WithPickupChildren(Items).OfType<DesignerItemViewModelBase>()
+                                                   where item.GetType() == typeof(LetterVerticalDesignerItemViewModel)
+                                                   select new XElement("DesignerItem",
+                                                                new XElement("ID", item.ID),
+                                                                new XElement("ParentID", item.ParentID),
+                                                                new XElement("Type", item.GetType().FullName),
+                                                                new XElement("Left", item.Left.Value),
+                                                                new XElement("Top", item.Top.Value),
+                                                                new XElement("Width", item.Width.Value),
+                                                                new XElement("Height", item.Height.Value),
+                                                                new XElement("ZIndex", item.ZIndex.Value),
+                                                                new XElement("Matrix", item.Matrix.Value),
+                                                                new XElement("EdgeColor", item.EdgeColor),
+                                                                new XElement("FillColor", item.FillColor),
+                                                                new XElement("EdgeThickness", item.EdgeThickness),
+                                                                new XElement("LetterString", (item as LetterVerticalDesignerItemViewModel).LetterString),
+                                                                new XElement("SelectedFontFamily", (item as LetterVerticalDesignerItemViewModel).SelectedFontFamily),
+                                                                new XElement("IsBold", (item as LetterVerticalDesignerItemViewModel).IsBold),
+                                                                new XElement("IsItalic", (item as LetterVerticalDesignerItemViewModel).IsItalic),
+                                                                new XElement("FontSize", (item as LetterVerticalDesignerItemViewModel).FontSize),
+                                                                new XElement("PathGeometry", (item as LetterVerticalDesignerItemViewModel).PathGeometry),
+                                                                new XElement("AutoLineBreak", (item as LetterVerticalDesignerItemViewModel).AutoLineBreak)
+                                                    )
+                                               )
+                                               .Union(
+                                                   from item in selectedItems.WithPickupChildren(Items).OfType<DesignerItemViewModelBase>()
+                                                   where item.GetType() == typeof(NPolygonViewModel)
+                                                   select new XElement("DesignerItem",
+                                                           new XElement("ID", item.ID),
+                                                           new XElement("ParentID", item.ParentID),
+                                                           new XElement("Type", item.GetType().FullName),
+                                                           new XElement("Left", item.Left.Value),
+                                                           new XElement("Top", item.Top.Value),
+                                                           new XElement("Width", item.Width.Value),
+                                                           new XElement("Height", item.Height.Value),
+                                                           new XElement("ZIndex", item.ZIndex.Value),
+                                                           new XElement("Matrix", item.Matrix.Value),
+                                                           new XElement("EdgeColor", item.EdgeColor),
+                                                           new XElement("FillColor", item.FillColor),
+                                                           new XElement("EdgeThickness", item.EdgeThickness),
+                                                           new XElement("Data", (item as NPolygonViewModel).Data.Value)
+                                                       ));
+            root.Add(new XElement("DesignerItems", designerItems));
+            root.Add(new XElement("Connections", from connection in selectedItems.WithPickupChildren(Items).OfType<ConnectorBaseViewModel>()
+                                                 select new XElement("Connection",
+                                                    new XElement("ID", connection.ID),
+                                                    new XElement("ParentID", connection.ParentID),
+                                                    new XElement("Type", connection.GetType().FullName),
+                                                    new XElement("BeginPoint", connection.Points[0]),
+                                                    new XElement("EndPoint", connection.Points[1]),
+                                                    new XElement("ZIndex", connection.ZIndex.Value),
+                                                    new XElement("EdgeColor", connection.EdgeColor),
+                                                    new XElement("EdgeThickness", connection.EdgeThickness)
+                                                 )));
+            Clipboard.SetDataObject(root.ToString(), false);
+        }
+
+        private bool CanExecuteCut()
+        {
+            return SelectedItems.Count > 0;
         }
 
         private void ExecuteSettingCommand()
@@ -437,6 +709,10 @@ namespace boilersGraphics.ViewModels
                 if (item is LetterDesignerItemViewModel)
                 {
                     (item as LetterDesignerItemViewModel).CloseLetterSettingDialog();
+                }
+                if (item is LetterVerticalDesignerItemViewModel)
+                {
+                    (item as LetterVerticalDesignerItemViewModel).CloseLetterSettingDialog();
                 }
                 item.Dispose();
                 UpdateZIndex();
