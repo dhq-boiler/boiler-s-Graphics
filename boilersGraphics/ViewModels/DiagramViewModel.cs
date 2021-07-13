@@ -74,6 +74,7 @@ namespace boilersGraphics.ViewModels
         public DelegateCommand UniformHeightCommand { get; private set; }
         public DelegateCommand DuplicateCommand { get; private set; }
         public DelegateCommand CutCommand { get; private set; }
+        public DelegateCommand CopyCommand { get; private set; }
         public DelegateCommand PasteCommand { get; private set; }
         public DelegateCommand EditMenuOpenedCommand { get; private set; }
         public DelegateCommand<MouseWheelEventArgs> MouseWheelCommand { get; private set; }
@@ -212,6 +213,7 @@ namespace boilersGraphics.ViewModels
             UniformHeightCommand = new DelegateCommand(() => ExecuteUniformHeightCommand(), () => CanExecuteUniform());
             DuplicateCommand = new DelegateCommand(() => ExecuteDuplicateCommand(), () => CanExecuteDuplicate());
             CutCommand = new DelegateCommand(() => ExecuteCutCommand(), () => CanExecuteCut());
+            CopyCommand = new DelegateCommand(() => ExecuteCopyCommand(), () => CanExecuteCopy());
             PasteCommand = new DelegateCommand(() => ExecutePasteCommand(), () => CanExecutePaste());
             MouseWheelCommand = new DelegateCommand<MouseWheelEventArgs>(args =>
             {
@@ -267,6 +269,7 @@ namespace boilersGraphics.ViewModels
             EditMenuOpenedCommand = new DelegateCommand(() =>
             {
                 CutCommand.RaiseCanExecuteChanged();
+                CopyCommand.RaiseCanExecuteChanged();
                 PasteCommand.RaiseCanExecuteChanged();
             });
 
@@ -332,6 +335,16 @@ namespace boilersGraphics.ViewModels
             EdgeThickness.Value = 1.0;
 
             CanvasBorderThickness = 1.0;
+        }
+
+        private void ExecuteCopyCommand()
+        {
+            CopyToClipboard();
+        }
+
+        private bool CanExecuteCopy()
+        {
+            return SelectedItems.Count > 0;
         }
 
         private void ExecutePasteCommand()
@@ -441,6 +454,17 @@ namespace boilersGraphics.ViewModels
         }
 
         private void ExecuteCutCommand()
+        {
+            CopyToClipboard();
+
+            foreach (var selectedItem in SelectedItems)
+            {
+                RemoveGroupMembers(selectedItem);
+                Items.Remove(selectedItem);
+            }
+        }
+
+        private void CopyToClipboard()
         {
             var selectedItems = SelectedItems.ToList();
             var root = new XElement("Data");
@@ -563,12 +587,6 @@ namespace boilersGraphics.ViewModels
                                                     new XElement("EdgeThickness", connection.EdgeThickness)
                                                  )));
             Clipboard.SetDataObject(root.ToString(), false);
-
-            foreach (var selectedItem in selectedItems)
-            {
-                RemoveGroupMembers(selectedItem);
-                Items.Remove(selectedItem);
-            }
         }
 
         private bool CanExecuteCut()

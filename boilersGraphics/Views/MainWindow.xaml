@@ -53,6 +53,9 @@
         <KeyBinding Key="X"
                     Modifiers="Ctrl"
                     Command="{Binding DiagramViewModel.CutCommand}" />
+        <KeyBinding Key="C"
+                    Modifiers="Ctrl"
+                    Command="{Binding DiagramViewModel.CopyCommand}" />
         <KeyBinding Key="V"
                     Modifiers="Ctrl"
                     Command="{Binding DiagramViewModel.PasteCommand}" />
@@ -101,6 +104,7 @@
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                                 <MenuItem Header="切り取り(_T)" Command="{Binding DiagramViewModel.CutCommand}" InputGestureText="Ctrl+X" />
+                                <MenuItem Header="コピー(_C)" Command="{Binding DiagramViewModel.CopyCommand}" InputGestureText="Ctrl+C" />
                                 <MenuItem Header="貼り付け(_P)" Command="{Binding DiagramViewModel.PasteCommand}" InputGestureText="Ctrl+V"/>
                             </MenuItem>
                             <MenuItem Header="キャンパス(_C)">
