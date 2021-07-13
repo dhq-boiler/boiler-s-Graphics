@@ -4,6 +4,8 @@ boiler's Graphics はベクターグラフィックスドローイングツー�
 
 # DEMO
 
+※準備中
+
 # Features
 
 * 無料で使用できる
@@ -16,15 +18,16 @@ boiler's Graphicsを動作させるには .NET Framework 4.8 が必要です。
 
 # How to install
 
- 1. ReleasesページからboilersGraphics_*.zipをダウンロードします。
+ 1. Releasesページから boilersGraphics_*.zip をダウンロードします。
  2. ダウンロードしたzipファイルを展開します。
  3. 展開したフォルダを安全な場所に配置します。
- 4. 配置したフォルダ内のboilersGraphics.exeを実行します。
+ 4. 配置したフォルダ内の boilersGraphics.exe を実行します。
 
-なお、zipでのバイナリ配布は継続しますが、バージョン2.0からsetup.exeによるインストール方法を提供する予定です。
+なお、zipでのバイナリ配布は継続しますが、バージョン2.0から setup.exe によるインストール方法を提供する予定です。
 
 # Loadmap
 
+![Loadmap](https://github.com/dhq-boiler/boiler-s-Graphics/blob/32e614ae2b4d93766f4eb8b17fcf3794d8525221/WebComponents/boilersGraphics_loadmap.jpg)
 
 # Author
 
