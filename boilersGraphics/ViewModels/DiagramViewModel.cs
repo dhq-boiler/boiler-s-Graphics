@@ -663,6 +663,10 @@ namespace boilersGraphics.ViewModels
                 {
                     (item as LetterDesignerItemViewModel).CloseLetterSettingDialog();
                 }
+                if (item is LetterVerticalDesignerItemViewModel)
+                {
+                    (item as LetterVerticalDesignerItemViewModel).CloseLetterSettingDialog();
+                }
                 item.Dispose();
                 UpdateZIndex();
             }
