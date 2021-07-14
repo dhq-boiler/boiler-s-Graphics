@@ -204,7 +204,7 @@
                                                 <Control
                                                 x:Name="PART_ResizeDecorator"
                                                 Template="{StaticResource StraightLineResizeDecoratorTemplate}"
-                                                Visibility="Collapsed" />
+                                                Visibility="Hidden" />
                                             </Canvas>
                                             <DataTemplate.Triggers>
                                                 <DataTrigger Binding="{Binding IsSelected}" Value="True">
@@ -294,7 +294,7 @@
                                                 <Control
                                                 x:Name="PART_ResizeDecorator"
                                                 Template="{StaticResource BezierCurveResizeDecoratorTemplate}"
-                                                Visibility="Collapsed" />
+                                                Visibility="Hidden" />
                                             </Canvas>
                                             <DataTemplate.Triggers>
                                                 <DataTrigger Binding="{Binding IsSelected}" Value="True">
