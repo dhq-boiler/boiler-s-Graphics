@@ -1,4 +1,5 @@
-﻿using Reactive.Bindings;
+﻿using boilersGraphics.Helpers;
+using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.Generic;
@@ -51,6 +52,7 @@ namespace boilersGraphics.ViewModels
                     point.X = Math.Min(Points[0].X, ControlPoint1.Value.X);
                     point.Y = Math.Min(Points[0].Y, ControlPoint1.Value.Y);
                     ControlLine1LeftTop.Value = point;
+                    SetLeftTop();
                 }
             })
             .AddTo(_CompositeDisposable);
@@ -62,6 +64,7 @@ namespace boilersGraphics.ViewModels
                     point.X = Math.Min(Points[1].X, ControlPoint2.Value.X);
                     point.Y = Math.Min(Points[1].Y, ControlPoint2.Value.Y);
                     ControlLine2LeftTop.Value = point;
+                    SetLeftTop();
                 }
             })
             .AddTo(_CompositeDisposable);
@@ -71,11 +74,19 @@ namespace boilersGraphics.ViewModels
         {
             if (Points.Count >= 2)
             {
-                var point = new Point();
-                point.X = Math.Min(Points[0].X, Points[1].X);
-                point.Y = Math.Min(Points[0].Y, Points[1].Y);
-                LeftTop.Value = point;
+                SetLeftTop();
             }
+        }
+
+        private void SetLeftTop()
+        {
+            var tarray = new List<double> { 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0 };
+            var points = new List<Point>();
+            foreach (var t in tarray)
+            {
+                points.Add(BezierCurve.Evaluate(t, new List<Point>() { this.Points[0], this.ControlPoint1.Value, this.ControlPoint2.Value, this.Points[1] }));
+            }
+            LeftTop.Value = new Point(points.Select(x => x.X).Min(), points.Select(x => x.Y).Min());
         }
 
         public override object Clone()
