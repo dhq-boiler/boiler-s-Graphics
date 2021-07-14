@@ -3,6 +3,7 @@ using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -48,10 +49,7 @@ namespace boilersGraphics.ViewModels
             {
                 if (Points.Count > 0)
                 {
-                    var point = new Point();
-                    point.X = Math.Min(Points[0].X, ControlPoint1.Value.X);
-                    point.Y = Math.Min(Points[0].Y, ControlPoint1.Value.Y);
-                    ControlLine1LeftTop.Value = point;
+                    SetLeftTopOfControlLine1();
                     SetLeftTop();
                 }
             })
@@ -60,26 +58,48 @@ namespace boilersGraphics.ViewModels
             {
                 if (Points.Count > 1)
                 {
-                    var point = new Point();
-                    point.X = Math.Min(Points[1].X, ControlPoint2.Value.X);
-                    point.Y = Math.Min(Points[1].Y, ControlPoint2.Value.Y);
-                    ControlLine2LeftTop.Value = point;
+                    SetLeftTopOfControlLine2();
                     SetLeftTop();
                 }
             })
             .AddTo(_CompositeDisposable);
         }
 
+        private void SetLeftTopOfControlLine1()
+        {
+            var point = new Point();
+            point.X = Math.Min(Points[0].X, ControlPoint1.Value.X);
+            point.Y = Math.Min(Points[0].Y, ControlPoint1.Value.Y);
+            ControlLine1LeftTop.Value = point;
+            Trace.WriteLine($"ControlLine1LeftTop={ControlLine1LeftTop.Value}");
+        }
+
+        private void SetLeftTopOfControlLine2()
+        {
+            var point = new Point();
+            point.X = Math.Min(Points[1].X, ControlPoint2.Value.X);
+            point.Y = Math.Min(Points[1].Y, ControlPoint2.Value.Y);
+            ControlLine2LeftTop.Value = point;
+            Trace.WriteLine($"ControlLine2LeftTop={ControlLine2LeftTop.Value}");
+        }
+
         private void Points_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             if (Points.Count >= 2)
             {
+                Trace.WriteLine($"P1={Points[0]} P2={Points[1]}");
+                SetLeftTopOfControlLine1();
+                SetLeftTopOfControlLine2();
                 SetLeftTop();
             }
+            else
+                Trace.WriteLine("Points.Count < 2");
         }
 
         private void SetLeftTop()
         {
+            if (Points.Count != 2)
+                throw new Exception("Points.Count == 2");
             var tarray = new List<double> { 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0 };
             var points = new List<Point>();
             foreach (var t in tarray)

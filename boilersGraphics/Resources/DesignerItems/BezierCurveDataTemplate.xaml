@@ -1,11 +1,12 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:convereter="clr-namespace:boilersGraphics.Converters"
+    xmlns:converter="clr-namespace:boilersGraphics.Converters"
     xmlns:local="clr-namespace:boilersGraphics.Resources.DesignerItems"
     xmlns:control="clr-namespace:boilersGraphics.Controls"
     xmlns:viewModel="clr-namespace:boilersGraphics.ViewModels">
-    <convereter:ToSolidColorBrushConverter x:Key="solidColorBrushConverter" />
+    <converter:ToSolidColorBrushConverter x:Key="solidColorBrushConverter" />
+    <converter:ShiftCoordinateConverter x:Key="shiftCoordinateConverter" />
     <DataTemplate DataType="{x:Type viewModel:BezierCurveViewModel}">
         <Canvas>
             <Path Canvas.Left="{Binding LeftTop.Value.X}"
@@ -54,16 +55,38 @@
                     </PathGeometry>
                 </Path.Data>
             </Path>
+            <control:LineResizeHandle
+                x:Name="ResizeHandle_BeginPoint"
+                Canvas.Left="{Binding Points[0].X, Converter={StaticResource shiftCoordinateConverter}, ConverterParameter=7}"
+                Canvas.Top="{Binding Points[0].Y, Converter={StaticResource shiftCoordinateConverter}, ConverterParameter=7}"
+                Width="7"
+                Height="7"
+                TargetPointIndex="0"
+                OppositeHandle="{Binding ElementName=ResizeHandle_EndPoint}"
+                Template="{StaticResource ResizeHandle_ResizeHandleTemplate}"
+                Tag="始点" />
             <control:ControlPoint x:Name="ControlPoint1"
                                   Background="Red"
                                   Canvas.Left="{Binding ControlPoint1.Value.X}"
                                   Canvas.Top="{Binding ControlPoint1.Value.Y}"
-                                  Point="{Binding ControlPoint1.Value, Mode=TwoWay}" />
+                                  Point="{Binding ControlPoint1.Value, Mode=TwoWay}"
+                                  Tag="制御点" />
             <control:ControlPoint x:Name="ControlPoint2"
                                   Background="Red"
                                   Canvas.Left="{Binding ControlPoint2.Value.X}"
                                   Canvas.Top="{Binding ControlPoint2.Value.Y}"
-                                  Point="{Binding ControlPoint2.Value, Mode=TwoWay}" />
+                                  Point="{Binding ControlPoint2.Value, Mode=TwoWay}"
+                                  Tag="制御点" />
+            <control:LineResizeHandle
+                x:Name="ResizeHandle_EndPoint"
+                Canvas.Left="{Binding Points[1].X, Converter={StaticResource shiftCoordinateConverter}, ConverterParameter=7}"
+                Canvas.Top="{Binding Points[1].Y, Converter={StaticResource shiftCoordinateConverter}, ConverterParameter=7}"
+                Width="7"
+                Height="7"
+                TargetPointIndex="1"
+                OppositeHandle="{Binding ElementName=ResizeHandle_BeginPoint}"
+                Template="{StaticResource ResizeHandle_ResizeHandleTemplate}"
+                Tag="終点" />
         </Canvas>
     </DataTemplate>
 </ResourceDictionary>
