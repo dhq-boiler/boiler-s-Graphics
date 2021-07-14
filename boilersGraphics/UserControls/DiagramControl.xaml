@@ -204,7 +204,97 @@
                                                 <Control
                                                 x:Name="PART_ResizeDecorator"
                                                 Template="{StaticResource StraightLineResizeDecoratorTemplate}"
-                                                Visibility="Collapsed" />
+                                                Visibility="Hidden" />
+                                            </Canvas>
+                                            <DataTemplate.Triggers>
+                                                <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                                                    <Setter TargetName="PART_ResizeDecorator" Property="Visibility" Value="Visible" />
+                                                </DataTrigger>
+                                            </DataTemplate.Triggers>
+                                        </DataTemplate>
+                                        <DataTemplate DataType="{x:Type viewModel:BezierCurveViewModel}">
+                                            <Canvas
+                                            x:Name="selectedGrid"
+                                            Margin="0"
+                                            HorizontalAlignment="Stretch"
+                                            VerticalAlignment="Stretch">
+                                                <Canvas.Style>
+                                                    <Style TargetType="{x:Type Canvas}">
+                                                        <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
+                                                        <Setter Property="RenderTransform">
+                                                            <Setter.Value>
+                                                                <MatrixTransform Matrix="{Binding Matrix.Value}" />
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </Style>
+                                                </Canvas.Style>
+                                                <Path Canvas.Left="{Binding LeftTop.Value.X}"
+                                                      Canvas.Top="{Binding LeftTop.Value.Y}"
+                                                      IsHitTestVisible="True"
+                                                      Stretch="Fill"
+                                                      Stroke="{Binding EdgeColor, Converter={StaticResource solidColorBrushConverter}}"
+                                                      StrokeThickness="{Binding EdgeThickness}">
+                                                    <Path.Data>
+                                                        <PathGeometry>
+                                                            <PathFigure StartPoint="{Binding Points[0]}">
+                                                                <BezierSegment Point1="{Binding ControlPoint1.Value}"
+                                                                               Point2="{Binding ControlPoint2.Value}"
+                                                                               Point3="{Binding Points[1]}" />
+                                                            </PathFigure>
+                                                        </PathGeometry>
+                                                    </Path.Data>
+                                                </Path>
+                                                <Path Canvas.Left="{Binding ControlLine1LeftTop.Value.X}"
+                                                      Canvas.Top="{Binding ControlLine1LeftTop.Value.Y}"
+                                                      IsHitTestVisible="True"
+                                                      Stretch="Fill"
+                                                      Stroke="SkyBlue"
+                                                      StrokeThickness="2"
+                                                      StrokeDashArray="2 2">
+                                                    <Path.Data>
+                                                        <PathGeometry>
+                                                            <PathFigure StartPoint="{Binding Points[0]}">
+                                                                <LineSegment Point="{Binding ControlPoint1.Value}" />
+                                                            </PathFigure>
+                                                        </PathGeometry>
+                                                    </Path.Data>
+                                                </Path>
+                                                <Path Canvas.Left="{Binding ControlLine2LeftTop.Value.X}"
+                                                      Canvas.Top="{Binding ControlLine2LeftTop.Value.Y}"
+                                                      IsHitTestVisible="True"
+                                                      Stretch="Fill"
+                                                      Stroke="SkyBlue"
+                                                      StrokeThickness="2"
+                                                      StrokeDashArray="2 2">
+                                                    <Path.Data>
+                                                        <PathGeometry>
+                                                            <PathFigure StartPoint="{Binding ControlPoint2.Value}">
+                                                                <LineSegment Point="{Binding Points[1]}" />
+                                                            </PathFigure>
+                                                        </PathGeometry>
+                                                    </Path.Data>
+                                                </Path>
+                                                <control:ControlPoint x:Name="ControlPoint1"
+                                                                      Width="5"
+                                                                      Height="5"
+                                                                      Background="Red"
+                                                                      Canvas.Left="{Binding ControlPoint1.Value.X}"
+                                                                      Canvas.Top="{Binding ControlPoint1.Value.Y}"
+                                                                      Point="{Binding ControlPoint1.Value, Mode=TwoWay}"
+                                                                      Tag="制御点" />
+                                                <control:ControlPoint x:Name="ControlPoint2"
+                                                                      Width="5"
+                                                                      Height="5"
+                                                                      Background="Red"
+                                                                      Canvas.Left="{Binding ControlPoint2.Value.X}"
+                                                                      Canvas.Top="{Binding ControlPoint2.Value.Y}"
+                                                                      Point="{Binding ControlPoint2.Value, Mode=TwoWay}"
+                                                                      Tag="制御点" />
+                                                <!--  PART_ResizeDecorator  -->
+                                                <Control
+                                                x:Name="PART_ResizeDecorator"
+                                                Template="{StaticResource BezierCurveResizeDecoratorTemplate}"
+                                                Visibility="Hidden" />
                                             </Canvas>
                                             <DataTemplate.Triggers>
                                                 <DataTrigger Binding="{Binding IsSelected}" Value="True">
