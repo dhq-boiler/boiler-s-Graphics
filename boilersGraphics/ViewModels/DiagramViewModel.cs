@@ -418,6 +418,12 @@ namespace boilersGraphics.ViewModels
                 item.EdgeColor = (Color)ColorConverter.ConvertFromString(connectorElm.Element("EdgeColor").Value);
                 item.EdgeThickness = double.Parse(connectorElm.Element("EdgeThickness").Value);
                 item.Owner = this;
+                if (item is BezierCurveViewModel)
+                {
+                    var bezier = item as BezierCurveViewModel;
+                    bezier.ControlPoint1.Value = Point.Parse(connectorElm.Element("ControlPoint1").Value);
+                    bezier.ControlPoint2.Value = Point.Parse(connectorElm.Element("ControlPoint2").Value);
+                }
                 list.Add(item);
             }
 
@@ -457,7 +463,7 @@ namespace boilersGraphics.ViewModels
         {
             CopyToClipboard();
 
-            foreach (var selectedItem in SelectedItems)
+            foreach (var selectedItem in SelectedItems.ToList())
             {
                 RemoveGroupMembers(selectedItem);
                 Items.Remove(selectedItem);
@@ -575,17 +581,34 @@ namespace boilersGraphics.ViewModels
                                                            new XElement("Data", (item as NPolygonViewModel).Data.Value)
                                                        ));
             root.Add(new XElement("DesignerItems", designerItems));
-            root.Add(new XElement("Connections", from connection in selectedItems.WithPickupChildren(Items).OfType<ConnectorBaseViewModel>()
-                                                 select new XElement("Connection",
-                                                    new XElement("ID", connection.ID),
-                                                    new XElement("ParentID", connection.ParentID),
-                                                    new XElement("Type", connection.GetType().FullName),
-                                                    new XElement("BeginPoint", connection.Points[0]),
-                                                    new XElement("EndPoint", connection.Points[1]),
-                                                    new XElement("ZIndex", connection.ZIndex.Value),
-                                                    new XElement("EdgeColor", connection.EdgeColor),
-                                                    new XElement("EdgeThickness", connection.EdgeThickness)
-                                                 )));
+            root.Add(new XElement("Connections", (from connection in selectedItems.WithPickupChildren(Items).OfType<ConnectorBaseViewModel>()
+                                                  where connection.GetType() != typeof(BezierCurveViewModel)
+                                                  select new XElement("Connection",
+                                                             new XElement("ID", connection.ID),
+                                                             new XElement("ParentID", connection.ParentID),
+                                                             new XElement("Type", connection.GetType().FullName),
+                                                             new XElement("BeginPoint", connection.Points[0]),
+                                                             new XElement("EndPoint", connection.Points[1]),
+                                                             new XElement("ZIndex", connection.ZIndex.Value),
+                                                             new XElement("EdgeColor", connection.EdgeColor),
+                                                             new XElement("EdgeThickness", connection.EdgeThickness)
+                                                            ))
+                                                 .Union(
+                                                     from connection in selectedItems.WithPickupChildren(Items).OfType<ConnectorBaseViewModel>()
+                                                     where connection.GetType() == typeof(BezierCurveViewModel)
+                                                     select new XElement("Connection",
+                                                                 new XElement("ID", connection.ID),
+                                                                 new XElement("ParentID", connection.ParentID),
+                                                                 new XElement("Type", connection.GetType().FullName),
+                                                                 new XElement("BeginPoint", connection.Points[0]),
+                                                                 new XElement("EndPoint", connection.Points[1]),
+                                                                 new XElement("ZIndex", connection.ZIndex.Value),
+                                                                 new XElement("EdgeColor", connection.EdgeColor),
+                                                                 new XElement("EdgeThickness", connection.EdgeThickness),
+                                                                 new XElement("ControlPoint1", (connection as BezierCurveViewModel).ControlPoint1.Value),
+                                                                 new XElement("ControlPoint2", (connection as BezierCurveViewModel).ControlPoint2.Value)
+                                                                 ))
+                                                 ));
             Clipboard.SetDataObject(root.ToString(), false);
         }
 
@@ -921,7 +944,8 @@ namespace boilersGraphics.ViewModels
         private XElement SerializeConnections(IEnumerable<ConnectorBaseViewModel> connections)
         {
             var serializedConnections = new XElement("Connections",
-                           from connection in connections
+                           (from connection in connections
+                           where connection.GetType() != typeof(BezierCurveViewModel)
                            select new XElement("Connection",
                                       new XElement("ID", connection.ID),
                                       new XElement("ParentID", connection.ParentID),
@@ -931,7 +955,22 @@ namespace boilersGraphics.ViewModels
                                       new XElement("ZIndex", connection.ZIndex.Value),
                                       new XElement("EdgeColor", connection.EdgeColor),
                                       new XElement("EdgeThickness", connection.EdgeThickness)
-                                     )
+                                     ))
+                            .Union(
+                               from connection in connections
+                               where connection.GetType() == typeof(BezierCurveViewModel)
+                               select new XElement("Connection",
+                                          new XElement("ID", connection.ID),
+                                          new XElement("ParentID", connection.ParentID),
+                                          new XElement("Type", connection.GetType().FullName),
+                                          new XElement("BeginPoint", connection.Points[0]),
+                                          new XElement("EndPoint", connection.Points[1]),
+                                          new XElement("ZIndex", connection.ZIndex.Value),
+                                          new XElement("EdgeColor", connection.EdgeColor),
+                                          new XElement("EdgeThickness", connection.EdgeThickness),
+                                          new XElement("ControlPoint1", (connection as BezierCurveViewModel).ControlPoint1.Value),
+                                          new XElement("ControlPoint2", (connection as BezierCurveViewModel).ControlPoint2.Value)
+                                         ))
                                   );
 
             return serializedConnections;
@@ -1099,6 +1138,12 @@ namespace boilersGraphics.ViewModels
                 item.EdgeColor = (Color)ColorConverter.ConvertFromString(connectorXml.Element("EdgeColor").Value);
                 item.EdgeThickness = double.Parse(connectorXml.Element("EdgeThickness").Value);
                 item.Owner = this;
+                if (item is BezierCurveViewModel)
+                {
+                    var bezier = item as BezierCurveViewModel;
+                    bezier.ControlPoint1.Value = Point.Parse(connectorXml.Element("ControlPoint1").Value);
+                    bezier.ControlPoint2.Value = Point.Parse(connectorXml.Element("ControlPoint2").Value);
+                }
                 tempItems.Add(item);
             }
 
