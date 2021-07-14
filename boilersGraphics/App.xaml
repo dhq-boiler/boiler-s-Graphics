@@ -29,7 +29,6 @@
                 <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/DesignerItems/LetterVerticalDesignerItemDataTemplate.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/DesignerItems/EllipseDesignerItemDataTemplate.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/DesignerItems/PolygonDesignerItemDataTemplate.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/DesignerItems/BezierCurveDataTemplate.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <property:Resources x:Key="resources" />
         </ResourceDictionary>
