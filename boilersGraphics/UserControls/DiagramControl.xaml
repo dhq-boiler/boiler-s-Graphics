@@ -275,16 +275,16 @@
                                                     </Path.Data>
                                                 </Path>
                                                 <control:ControlPoint x:Name="ControlPoint1"
-                                                                      Width="2"
-                                                                      Height="2"
+                                                                      Width="5"
+                                                                      Height="5"
                                                                       Background="Red"
                                                                       Canvas.Left="{Binding ControlPoint1.Value.X}"
                                                                       Canvas.Top="{Binding ControlPoint1.Value.Y}"
                                                                       Point="{Binding ControlPoint1.Value, Mode=TwoWay}"
                                                                       Tag="制御点" />
                                                 <control:ControlPoint x:Name="ControlPoint2"
-                                                                      Width="2"
-                                                                      Height="2"
+                                                                      Width="5"
+                                                                      Height="5"
                                                                       Background="Red"
                                                                       Canvas.Left="{Binding ControlPoint2.Value.X}"
                                                                       Canvas.Top="{Binding ControlPoint2.Value.Y}"
