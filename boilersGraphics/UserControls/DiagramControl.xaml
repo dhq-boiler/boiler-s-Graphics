@@ -244,13 +244,15 @@
                                                         </PathGeometry>
                                                     </Path.Data>
                                                 </Path>
-                                                <Path Canvas.Left="{Binding ControlLine1LeftTop.Value.X}"
+                                                <Path x:Name="ControlLine1"
+                                                      Canvas.Left="{Binding ControlLine1LeftTop.Value.X}"
                                                       Canvas.Top="{Binding ControlLine1LeftTop.Value.Y}"
                                                       IsHitTestVisible="True"
                                                       Stretch="Fill"
                                                       Stroke="SkyBlue"
                                                       StrokeThickness="2"
-                                                      StrokeDashArray="2 2">
+                                                      StrokeDashArray="2 2"
+                                                      Visibility="Hidden">
                                                     <Path.Data>
                                                         <PathGeometry>
                                                             <PathFigure StartPoint="{Binding Points[0]}">
@@ -259,13 +261,15 @@
                                                         </PathGeometry>
                                                     </Path.Data>
                                                 </Path>
-                                                <Path Canvas.Left="{Binding ControlLine2LeftTop.Value.X}"
+                                                <Path x:Name="ControlLine2"
+                                                      Canvas.Left="{Binding ControlLine2LeftTop.Value.X}"
                                                       Canvas.Top="{Binding ControlLine2LeftTop.Value.Y}"
                                                       IsHitTestVisible="True"
                                                       Stretch="Fill"
                                                       Stroke="SkyBlue"
                                                       StrokeThickness="2"
-                                                      StrokeDashArray="2 2">
+                                                      StrokeDashArray="2 2"
+                                                      Visibility="Hidden">
                                                     <Path.Data>
                                                         <PathGeometry>
                                                             <PathFigure StartPoint="{Binding ControlPoint2.Value}">
@@ -281,7 +285,8 @@
                                                                       Canvas.Left="{Binding ControlPoint1.Value.X}"
                                                                       Canvas.Top="{Binding ControlPoint1.Value.Y}"
                                                                       Point="{Binding ControlPoint1.Value, Mode=TwoWay}"
-                                                                      Tag="制御点" />
+                                                                      Tag="制御点"
+                                                                      Visibility="Hidden" />
                                                 <control:ControlPoint x:Name="ControlPoint2"
                                                                       Width="5"
                                                                       Height="5"
@@ -289,7 +294,8 @@
                                                                       Canvas.Left="{Binding ControlPoint2.Value.X}"
                                                                       Canvas.Top="{Binding ControlPoint2.Value.Y}"
                                                                       Point="{Binding ControlPoint2.Value, Mode=TwoWay}"
-                                                                      Tag="制御点" />
+                                                                      Tag="制御点"
+                                                                      Visibility="Hidden" />
                                                 <!--  PART_ResizeDecorator  -->
                                                 <Control
                                                 x:Name="PART_ResizeDecorator"
@@ -299,6 +305,10 @@
                                             <DataTemplate.Triggers>
                                                 <DataTrigger Binding="{Binding IsSelected}" Value="True">
                                                     <Setter TargetName="PART_ResizeDecorator" Property="Visibility" Value="Visible" />
+                                                    <Setter TargetName="ControlPoint1" Property="Visibility" Value="Visible" />
+                                                    <Setter TargetName="ControlPoint2" Property="Visibility" Value="Visible" />
+                                                    <Setter TargetName="ControlLine1" Property="Visibility" Value="Visible" />
+                                                    <Setter TargetName="ControlLine2" Property="Visibility" Value="Visible" />
                                                 </DataTrigger>
                                             </DataTemplate.Triggers>
                                         </DataTemplate>
