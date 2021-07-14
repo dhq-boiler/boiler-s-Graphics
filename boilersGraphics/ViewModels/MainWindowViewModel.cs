@@ -135,6 +135,11 @@ namespace boilersGraphics.ViewModels
                     {
                         item.EdgeThickness = x.Value;
                     }
+
+                    foreach (var item in DiagramViewModel.SelectedItems.OfType<ConnectorBaseViewModel>())
+                    {
+                        item.EdgeThickness = x.Value;
+                    }
                 }
             })
             .AddTo(_CompositeDisposable);

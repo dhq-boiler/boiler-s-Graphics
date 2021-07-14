@@ -74,6 +74,31 @@
         </Canvas>
     </ControlTemplate>
 
+    <ControlTemplate x:Key="BezierCurveResizeDecoratorTemplate" TargetType="{x:Type Control}">
+        <Canvas Opacity="0.7" SnapsToDevicePixels="true">
+            <control:LineResizeHandle
+                x:Name="ResizeHandle_BeginPoint"
+                Canvas.Left="{Binding Points[0].X, Converter={StaticResource shiftCoordinateConverter}, ConverterParameter=7}"
+                Canvas.Top="{Binding Points[0].Y, Converter={StaticResource shiftCoordinateConverter}, ConverterParameter=7}"
+                Width="7"
+                Height="7"
+                TargetPointIndex="0"
+                OppositeHandle="{Binding ElementName=ResizeHandle_EndPoint}"
+                Template="{StaticResource ResizeHandle_ResizeHandleTemplate}"
+                Tag="始点" />
+            <control:LineResizeHandle
+                x:Name="ResizeHandle_EndPoint"
+                Canvas.Left="{Binding Points[1].X, Converter={StaticResource shiftCoordinateConverter}, ConverterParameter=7}"
+                Canvas.Top="{Binding Points[1].Y, Converter={StaticResource shiftCoordinateConverter}, ConverterParameter=7}"
+                Width="7"
+                Height="7"
+                TargetPointIndex="1"
+                OppositeHandle="{Binding ElementName=ResizeHandle_BeginPoint}"
+                Template="{StaticResource ResizeHandle_ResizeHandleTemplate}"
+                Tag="終点" />
+        </Canvas>
+    </ControlTemplate>
+
     <ControlTemplate x:Key="PolygonalLineResizeDecoratorTemplate" TargetType="{x:Type Control}">
         <Canvas Opacity="0.7" SnapsToDevicePixels="True">
             <control:LineResizeHandle

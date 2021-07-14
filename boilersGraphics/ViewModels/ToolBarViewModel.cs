@@ -127,6 +127,16 @@ namespace boilersGraphics.ViewModels
                     SelectOneToolItem("polygon");
                 }
             })));
+            ToolItems.Add(new ToolItemData("bezier", "pack://application:,,,/Assets/img/BezierCurve.png", new DelegateCommand(() =>
+            {
+                var behavior = new NDrawBezierCurveBehavior();
+                Behaviors.Clear();
+                if (!Behaviors.Contains(behavior))
+                {
+                    Behaviors.Add(behavior);
+                }
+                SelectOneToolItem("bezier");
+            })));
         }
 
         private void SelectOneToolItem(string toolName)

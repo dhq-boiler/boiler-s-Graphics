@@ -98,4 +98,8 @@
         x:Key="Icon_Pentagon"
         x:Shared="False"
         UriSource="pack://application:,,,/Assets/img/pentagon.png" />
+    <BitmapImage
+        x:Key="Icon_BezierCurve"
+        x:Shared="False"
+        UriSource="pack://application:,,,/Assets/img/BezierCurve.png" />
 </ResourceDictionary>
