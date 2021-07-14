@@ -131,6 +131,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Adorners\BezierCurveAdorner.cs" />
     <Compile Include="Adorners\EllipseAdorner.cs" />
     <Compile Include="Adorners\LetterAdorner.cs" />
     <Compile Include="Adorners\LetterVerticalAdorner.cs" />
@@ -231,6 +232,7 @@
     <Compile Include="Views\Behaviors\CursorBehavior.cs" />
     <Compile Include="Views\Behaviors\LetterBehavior.cs" />
     <Compile Include="Views\Behaviors\LetterVerticalBehavior.cs" />
+    <Compile Include="Views\Behaviors\NDrawBezierCurveBehavior.cs" />
     <Compile Include="Views\Behaviors\NDrawEllipseBehavior.cs" />
     <Compile Include="Views\Behaviors\NDrawPolygonBehavior.cs" />
     <Compile Include="Views\Behaviors\NDrawRectangleBehavior.cs" />
