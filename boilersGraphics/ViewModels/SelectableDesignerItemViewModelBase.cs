@@ -55,6 +55,8 @@ namespace boilersGraphics.ViewModels
 
         public ReactiveProperty<int> ZIndex { get; } = new ReactiveProperty<int>();
 
+        public ReactiveProperty<PathGeometry> PathGeometry { get; set; } = new ReactiveProperty<PathGeometry>();
+
         public string Name { get; set; }
 
         public Guid ID { get; set; } = Guid.NewGuid();
