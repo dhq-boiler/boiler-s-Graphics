@@ -224,13 +224,6 @@
     <Compile Include="ViewModels\ToolBarViewModel.cs" />
     <Compile Include="Views\AdornedBy.cs" />
     <Compile Include="Views\Behaviors\AbstractAdorner.cs" />
-    <Compile Include="Views\Behaviors\CursorInfo.cs" />
-    <Compile Include="Views\Behaviors\DeselectBehavior.cs" />
-    <Compile Include="Views\Behaviors\AbstractDragAdorner.cs" />
-    <Compile Include="Views\Behaviors\AbstractDragStartBehavior.cs" />
-    <Compile Include="Views\Behaviors\DrawAbstractBehavior.cs" />
-    <Compile Include="Views\Behaviors\DropAcceptDescription.cs" />
-    <Compile Include="Views\Behaviors\CursorBehavior.cs" />
     <Compile Include="Views\Behaviors\LetterBehavior.cs" />
     <Compile Include="Views\Behaviors\LetterVerticalBehavior.cs" />
     <Compile Include="Views\Behaviors\NDrawBezierCurveBehavior.cs" />
@@ -240,14 +233,8 @@
     <Compile Include="Views\Behaviors\NDrawStraightLineBehavior.cs" />
     <Compile Include="Views\Behaviors\PictureBehavior.cs" />
     <Compile Include="Views\Behaviors\RectangleAdorner.cs" />
-    <Compile Include="Views\Behaviors\RectangleDragAdorner.cs" />
-    <Compile Include="Views\Behaviors\RectangleDragStartBehavior.cs" />
-    <Compile Include="Views\Behaviors\RectangleSelectBehavior.cs" />
     <Compile Include="Views\Behaviors\RubberbandBehavior.cs" />
     <Compile Include="Views\Behaviors\StraightLineAdorner.cs" />
-    <Compile Include="Views\Behaviors\StraightLineDragAdorner.cs" />
-    <Compile Include="Views\Behaviors\StraightLineDragStartBehavior.cs" />
-    <Compile Include="Views\Behaviors\StraightLineSelectBehavior.cs" />
     <Compile Include="Views\ColorMap.xaml.cs">
       <DependentUpon>ColorMap.xaml</DependentUpon>
     </Compile>
@@ -277,7 +264,6 @@
     <Compile Include="Views\Setting.xaml.cs">
       <DependentUpon>Setting.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\StraightLineResizeHandle.cs" />
     <Compile Include="Views\Triggers\InteractionRequestTrigger.cs" />
     <Compile Include="Views\Triggers\ResizeThumbDragDeltaEventTrigger.cs" />
     <Compile Include="Views\Triggers\WindowLoadedEventTrigger.cs" />
