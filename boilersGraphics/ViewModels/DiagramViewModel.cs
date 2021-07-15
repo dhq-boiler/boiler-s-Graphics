@@ -357,7 +357,9 @@ namespace boilersGraphics.ViewModels
 
         private bool CanExecuteExclude()
         {
-            return SelectedItems.Count == 2;
+            return SelectedItems.Count == 2 &&
+                   SelectedItems.ElementAt(0).GetType() != typeof(PictureDesignerItemViewModel) &&
+                   SelectedItems.ElementAt(1).GetType() != typeof(PictureDesignerItemViewModel);
         }
 
         private void ExecuteXorCommand()
@@ -367,7 +369,9 @@ namespace boilersGraphics.ViewModels
 
         private bool CanExecuteXor()
         {
-            return SelectedItems.Count == 2;
+            return SelectedItems.Count == 2 &&
+                   SelectedItems.ElementAt(0).GetType() != typeof(PictureDesignerItemViewModel) &&
+                   SelectedItems.ElementAt(1).GetType() != typeof(PictureDesignerItemViewModel);
         }
 
         private void ExecuteIntersectCommand()
@@ -377,7 +381,9 @@ namespace boilersGraphics.ViewModels
 
         private bool CanExecuteIntersect()
         {
-            return SelectedItems.Count == 2;
+            return SelectedItems.Count == 2 &&
+                   SelectedItems.ElementAt(0).GetType() != typeof(PictureDesignerItemViewModel) &&
+                   SelectedItems.ElementAt(1).GetType() != typeof(PictureDesignerItemViewModel);
         }
 
         private void ExecuteUnionCommand()
@@ -408,7 +414,9 @@ namespace boilersGraphics.ViewModels
 
         private bool CanExecuteUnion()
         {
-            return SelectedItems.Count == 2;
+            return SelectedItems.Count == 2 &&
+                   SelectedItems.ElementAt(0).GetType() != typeof(PictureDesignerItemViewModel) &&
+                   SelectedItems.ElementAt(1).GetType() != typeof(PictureDesignerItemViewModel);
         }
 
         private void ExecuteCopyCommand()
