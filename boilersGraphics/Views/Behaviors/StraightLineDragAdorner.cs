@@ -1,8 +1,10 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Shapes;
 
 namespace boilersGraphics.Views.Behaviors
 {
+    [Obsolete]
     internal class StraightLineDragAdorner : AbstractDragAdorner
     {
         public StraightLineDragAdorner(UIElement owner, UIElement adornElement, double opacity, Point dragPos)

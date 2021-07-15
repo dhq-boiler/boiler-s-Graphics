@@ -12,6 +12,7 @@ using System.Windows.Shapes;
 
 namespace boilersGraphics.Views.Behaviors
 {
+    [Obsolete]
     internal class StraightLineDragStartBehavior : Behavior<FrameworkElement>
     {
         private Point _origin;

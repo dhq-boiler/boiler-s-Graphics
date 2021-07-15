@@ -9,6 +9,7 @@ using System.Windows.Media;
 
 namespace boilersGraphics.Views.Behaviors
 {
+    [Obsolete]
     public abstract class AbstractDragStartBehavior : Behavior<FrameworkElement>
     {
         private Point _origin;

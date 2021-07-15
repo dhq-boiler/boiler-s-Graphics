@@ -1,9 +1,11 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Media;
 
 namespace boilersGraphics.Views.Behaviors
 {
+    [Obsolete]
     public abstract class AbstractDragAdorner : Adorner
     {
         #region Fields
