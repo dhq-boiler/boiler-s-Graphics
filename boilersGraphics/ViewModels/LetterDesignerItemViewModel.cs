@@ -22,7 +22,6 @@ namespace boilersGraphics.ViewModels
         private bool _IsBold;
         private bool _IsItalic;
         private int _FontSize;
-        private PathGeometry _PathGeometry;
         private bool _AutoLineBreak;
 
         public bool LetterSettingDialogIsOpen
@@ -59,12 +58,6 @@ namespace boilersGraphics.ViewModels
         {
             get { return _FontSize; }
             set { SetProperty(ref _FontSize, value); }
-        }
-
-        public PathGeometry PathGeometry
-        {
-            get { return _PathGeometry; }
-            set { SetProperty(ref _PathGeometry, value); }
         }
 
         public bool AutoLineBreak
@@ -163,7 +156,7 @@ namespace boilersGraphics.ViewModels
         private void WithLineBreak(GlyphTypeface glyphTypeface)
         {
             //refresh path geometry
-            PathGeometry = new PathGeometry();
+            PathGeometry.Value = new PathGeometry();
             var listLineBreak = new List<PathGeometry>();
             double width = 0d;
             double offsetY = 0d;
@@ -221,7 +214,7 @@ namespace boilersGraphics.ViewModels
                         widthClone += pg.Bounds.Width;
                     }
                     pg.Transform = new MatrixTransform(1.0, 0, 0, 1.0, list.SumWidthExceptInfinity(glyphTypeface, FontSize), maxHeight + offsetY);
-                    PathGeometry.AddGeometry(pg);
+                    PathGeometry.Value.AddGeometry(pg);
                     list.Add(pg);
                 }
 
@@ -235,7 +228,7 @@ namespace boilersGraphics.ViewModels
             var l = new List<PathGeometry>();
             var list = new List<PathGeometry>();
             //refresh path geometry
-            PathGeometry = new PathGeometry();
+            PathGeometry.Value = new PathGeometry();
             double maxHeight = 0d;
             foreach (var @char in LetterString)
             {
@@ -250,7 +243,7 @@ namespace boilersGraphics.ViewModels
             foreach (var pg in l)
             {
                 pg.Transform = new MatrixTransform(1.0, 0, 0, 1.0, list.SumWidthExceptInfinity(glyphTypeface, FontSize), maxHeight);
-                PathGeometry.AddGeometry(pg);
+                PathGeometry.Value.AddGeometry(pg);
                 list.Add(pg);
             }
         }

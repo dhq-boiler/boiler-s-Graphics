@@ -52,7 +52,6 @@ namespace boilersGraphics.Helpers
                     letter.IsBold = bool.Parse(designerItemElm.Element("IsBold").Value);
                     letter.IsItalic = bool.Parse(designerItemElm.Element("IsItalic").Value);
                     letter.FontSize = int.Parse(designerItemElm.Element("FontSize").Value);
-                    letter.PathGeometry = PathGeometry.CreateFromGeometry(Geometry.Parse(designerItemElm.Element("PathGeometry").Value));
                     letter.AutoLineBreak = bool.Parse(designerItemElm.Element("AutoLineBreak").Value);
                 }
                 if (item is LetterVerticalDesignerItemViewModel)
@@ -63,7 +62,6 @@ namespace boilersGraphics.Helpers
                     letter.IsBold = bool.Parse(designerItemElm.Element("IsBold").Value);
                     letter.IsItalic = bool.Parse(designerItemElm.Element("IsItalic").Value);
                     letter.FontSize = int.Parse(designerItemElm.Element("FontSize").Value);
-                    letter.PathGeometry = PathGeometry.CreateFromGeometry(Geometry.Parse(designerItemElm.Element("PathGeometry").Value));
                     letter.AutoLineBreak = bool.Parse(designerItemElm.Element("AutoLineBreak").Value);
                 }
                 if (item is NPolygonViewModel)

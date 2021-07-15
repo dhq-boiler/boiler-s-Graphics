@@ -81,6 +81,7 @@ namespace boilersGraphics.ViewModels
         public DelegateCommand IntersectCommand { get; private set; }
         public DelegateCommand XorCommand { get; private set; }
         public DelegateCommand ExcludeCommand { get; private set; }
+        public DelegateCommand ClipCommand { get; private set; }
         public DelegateCommand<MouseWheelEventArgs> MouseWheelCommand { get; private set; }
         public DelegateCommand<MouseEventArgs> PreviewMouseDownCommand { get; private set; }
         public DelegateCommand<MouseEventArgs> PreviewMouseUpCommand { get; private set; }
@@ -223,6 +224,7 @@ namespace boilersGraphics.ViewModels
             IntersectCommand = new DelegateCommand(() => ExecuteIntersectCommand(), () => CanExecuteIntersect());
             XorCommand = new DelegateCommand(() => ExecuteXorCommand(), () => CanExecuteXor());
             ExcludeCommand = new DelegateCommand(() => ExecuteExcludeCommand(), () => CanExecuteExclude());
+            ClipCommand = new DelegateCommand(() => ExecuteClipCommand(), () => CanExecuteClip());
             MouseWheelCommand = new DelegateCommand<MouseWheelEventArgs>(args =>
             {
                 var diagramControl = App.Current.MainWindow.GetChildOfType<DiagramControl>();
@@ -332,6 +334,8 @@ namespace boilersGraphics.ViewModels
                     IntersectCommand.RaiseCanExecuteChanged();
                     XorCommand.RaiseCanExecuteChanged();
                     ExcludeCommand.RaiseCanExecuteChanged();
+
+                    ClipCommand.RaiseCanExecuteChanged();
                 })
                 .AddTo(_CompositeDisposable);
 
@@ -348,6 +352,21 @@ namespace boilersGraphics.ViewModels
             EdgeThickness.Value = 1.0;
 
             CanvasBorderThickness = 1.0;
+        }
+
+        private void ExecuteClipCommand()
+        {
+            var picture = SelectedItems.OfType<PictureDesignerItemViewModel>().First();
+            var other = SelectedItems.Last();
+            picture.Clip.Value = other.PathGeometry.Value;
+            Items.Remove(other);
+        }
+
+        private bool CanExecuteClip()
+        {
+            return SelectedItems.Count == 2 &&
+                   SelectedItems.First().GetType() == typeof(PictureDesignerItemViewModel);
+
         }
 
         private void ExecuteExcludeCommand()
