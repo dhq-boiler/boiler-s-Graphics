@@ -16,6 +16,7 @@
                 <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/Styles/ToolTip.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/Styles/ScrollViewer.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/Styles/ZoomBox.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/Styles/Combine.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/Styles/DesignerItems.xaml" />
                 
                 <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/Styles.xaml" />
@@ -29,6 +30,7 @@
                 <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/DesignerItems/LetterVerticalDesignerItemDataTemplate.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/DesignerItems/EllipseDesignerItemDataTemplate.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/DesignerItems/PolygonDesignerItemDataTemplate.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/DesignerItems/CombineDesignerItemDataTemplate.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <property:Resources x:Key="resources" />
         </ResourceDictionary>

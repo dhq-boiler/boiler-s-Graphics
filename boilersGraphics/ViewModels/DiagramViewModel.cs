@@ -77,6 +77,7 @@ namespace boilersGraphics.ViewModels
         public DelegateCommand CopyCommand { get; private set; }
         public DelegateCommand PasteCommand { get; private set; }
         public DelegateCommand EditMenuOpenedCommand { get; private set; }
+        public DelegateCommand UnionCommand { get; private set; }
         public DelegateCommand<MouseWheelEventArgs> MouseWheelCommand { get; private set; }
         public DelegateCommand<MouseEventArgs> PreviewMouseDownCommand { get; private set; }
         public DelegateCommand<MouseEventArgs> PreviewMouseUpCommand { get; private set; }
@@ -215,6 +216,7 @@ namespace boilersGraphics.ViewModels
             CutCommand = new DelegateCommand(() => ExecuteCutCommand(), () => CanExecuteCut());
             CopyCommand = new DelegateCommand(() => ExecuteCopyCommand(), () => CanExecuteCopy());
             PasteCommand = new DelegateCommand(() => ExecutePasteCommand(), () => CanExecutePaste());
+            UnionCommand = new DelegateCommand(() => ExecuteUnionCommand(), () => CanExecuteUnion());
             MouseWheelCommand = new DelegateCommand<MouseWheelEventArgs>(args =>
             {
                 var diagramControl = App.Current.MainWindow.GetChildOfType<DiagramControl>();
@@ -319,6 +321,8 @@ namespace boilersGraphics.ViewModels
 
                     UniformWidthCommand.RaiseCanExecuteChanged();
                     UniformHeightCommand.RaiseCanExecuteChanged();
+
+                    UnionCommand.RaiseCanExecuteChanged();
                 })
                 .AddTo(_CompositeDisposable);
 
@@ -335,6 +339,31 @@ namespace boilersGraphics.ViewModels
             EdgeThickness.Value = 1.0;
 
             CanvasBorderThickness = 1.0;
+        }
+
+        private void ExecuteUnionCommand()
+        {
+            var item1 = SelectedItems.OfType<DesignerItemViewModelBase>().First();
+            var item2 = SelectedItems.OfType<DesignerItemViewModelBase>().Last();
+            var combine = new CombineGeometryViewModel(Math.Min(item1.Left.Value, item2.Left.Value),
+                                                       Math.Min(item1.Top.Value, item2.Top.Value),
+                                                       Math.Max(item1.Right.Value, item2.Right.Value) - Math.Min(item1.Left.Value, item2.Left.Value),
+                                                       Math.Max(item1.Bottom.Value, item2.Bottom.Value) - Math.Min(item1.Top.Value, item2.Top.Value));
+            Items.Remove(item1);
+            Items.Remove(item2);
+            combine.EdgeColor = item1.EdgeColor;
+            combine.EdgeThickness = item1.EdgeThickness;
+            combine.FillColor = item1.FillColor;
+            combine.IsSelected = true;
+            combine.Owner = this;
+            combine.ZIndex.Value = Items.Count;
+            combine.PathGeometry.Value = Geometry.Combine(item1.PathGeometry.Value, item2.PathGeometry.Value, GeometryCombineMode.Union, null);
+            Items.Add(combine);
+        }
+
+        private bool CanExecuteUnion()
+        {
+            return SelectedItems.Count == 2;
         }
 
         private void ExecuteCopyCommand()
