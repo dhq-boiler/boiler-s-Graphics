@@ -79,6 +79,7 @@ namespace boilersGraphics.ViewModels
         public DelegateCommand EditMenuOpenedCommand { get; private set; }
         public DelegateCommand UnionCommand { get; private set; }
         public DelegateCommand IntersectCommand { get; private set; }
+        public DelegateCommand XorCommand { get; private set; }
         public DelegateCommand<MouseWheelEventArgs> MouseWheelCommand { get; private set; }
         public DelegateCommand<MouseEventArgs> PreviewMouseDownCommand { get; private set; }
         public DelegateCommand<MouseEventArgs> PreviewMouseUpCommand { get; private set; }
@@ -219,6 +220,7 @@ namespace boilersGraphics.ViewModels
             PasteCommand = new DelegateCommand(() => ExecutePasteCommand(), () => CanExecutePaste());
             UnionCommand = new DelegateCommand(() => ExecuteUnionCommand(), () => CanExecuteUnion());
             IntersectCommand = new DelegateCommand(() => ExecuteIntersectCommand(), () => CanExecuteIntersect());
+            XorCommand = new DelegateCommand(() => ExecuteXorCommand(), () => CanExecuteXor());
             MouseWheelCommand = new DelegateCommand<MouseWheelEventArgs>(args =>
             {
                 var diagramControl = App.Current.MainWindow.GetChildOfType<DiagramControl>();
@@ -326,6 +328,7 @@ namespace boilersGraphics.ViewModels
 
                     UnionCommand.RaiseCanExecuteChanged();
                     IntersectCommand.RaiseCanExecuteChanged();
+                    XorCommand.RaiseCanExecuteChanged();
                 })
                 .AddTo(_CompositeDisposable);
 
@@ -342,6 +345,16 @@ namespace boilersGraphics.ViewModels
             EdgeThickness.Value = 1.0;
 
             CanvasBorderThickness = 1.0;
+        }
+
+        private void ExecuteXorCommand()
+        {
+            CombineAndAddItem(GeometryCombineMode.Xor);
+        }
+
+        private bool CanExecuteXor()
+        {
+            return SelectedItems.Count == 2;
         }
 
         private void ExecuteIntersectCommand()
