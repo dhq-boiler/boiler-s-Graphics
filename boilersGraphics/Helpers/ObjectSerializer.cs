@@ -28,7 +28,8 @@ namespace boilersGraphics.Helpers
                               new XElement("Matrix", item.Matrix.Value),
                               new XElement("EdgeColor", item.EdgeColor),
                               new XElement("FillColor", item.FillColor),
-                              new XElement("EdgeThickness", item.EdgeThickness)
+                              new XElement("EdgeThickness", item.EdgeThickness),
+                              new XElement("PathGeometry", item.PathGeometry.Value)
                           ))
                     .Union(
                         from item in selectedItems.WithPickupChildren(dialogViewModel.Items).OfType<DesignerItemViewModelBase>()
@@ -115,6 +116,7 @@ namespace boilersGraphics.Helpers
                                 new XElement("EdgeColor", item.EdgeColor),
                                 new XElement("FillColor", item.FillColor),
                                 new XElement("EdgeThickness", item.EdgeThickness),
+                                new XElement("PathGeometry", item.PathGeometry.Value),
                                 new XElement("Data", (item as NPolygonViewModel).Data.Value)
                             )
                         );
@@ -133,7 +135,8 @@ namespace boilersGraphics.Helpers
                                new XElement("EndPoint", connection.Points[1]),
                                new XElement("ZIndex", connection.ZIndex.Value),
                                new XElement("EdgeColor", connection.EdgeColor),
-                               new XElement("EdgeThickness", connection.EdgeThickness)
+                               new XElement("EdgeThickness", connection.EdgeThickness),
+                               new XElement("PathGeometry", connection.PathGeometry.Value)
                     ))
                     .Union(
                         from connection in selectedItems.WithPickupChildren(dialogViewModel.Items).OfType<ConnectorBaseViewModel>()
@@ -148,7 +151,8 @@ namespace boilersGraphics.Helpers
                                     new XElement("EdgeColor", connection.EdgeColor),
                                     new XElement("EdgeThickness", connection.EdgeThickness),
                                     new XElement("ControlPoint1", (connection as BezierCurveViewModel).ControlPoint1.Value),
-                                    new XElement("ControlPoint2", (connection as BezierCurveViewModel).ControlPoint2.Value)
+                                    new XElement("ControlPoint2", (connection as BezierCurveViewModel).ControlPoint2.Value),
+                                    new XElement("PathGeometry", connection.PathGeometry.Value)
                     ));
         }
     }

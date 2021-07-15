@@ -37,6 +37,7 @@ namespace boilersGraphics.Helpers
                 item.EdgeColor = (Color)ColorConverter.ConvertFromString(designerItemElm.Element("EdgeColor").Value);
                 item.FillColor = (Color)ColorConverter.ConvertFromString(designerItemElm.Element("FillColor").Value);
                 item.EdgeThickness = double.Parse(designerItemElm.Element("EdgeThickness").Value);
+                item.PathGeometry.Value = PathGeometry.CreateFromGeometry(PathGeometry.Parse(designerItemElm.Element("PathGeometry").Value));
                 item.Owner = diagramViewModel;
                 if (item is PictureDesignerItemViewModel)
                 {
@@ -86,6 +87,7 @@ namespace boilersGraphics.Helpers
                 item.ZIndex.Value = Int32.Parse(connectorElm.Element("ZIndex").Value);
                 item.EdgeColor = (Color)ColorConverter.ConvertFromString(connectorElm.Element("EdgeColor").Value);
                 item.EdgeThickness = double.Parse(connectorElm.Element("EdgeThickness").Value);
+                item.PathGeometry.Value = PathGeometry.CreateFromGeometry(PathGeometry.Parse(connectorElm.Element("PathGeometry").Value));
                 item.Owner = diagramViewModel;
                 if (item is BezierCurveViewModel)
                 {
