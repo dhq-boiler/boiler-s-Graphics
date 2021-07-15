@@ -1,7 +1,9 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 
 namespace boilersGraphics.Views.Behaviors
 {
+    [Obsolete]
     internal class RectangleDragStartBehavior : AbstractDragStartBehavior
     {
         protected override AbstractDragAdorner CreateDragAdorner(UIElement owner, UIElement adornedElement, double opacity, Point dragPos)

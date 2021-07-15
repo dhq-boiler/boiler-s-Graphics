@@ -1,8 +1,10 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Media;
 
 namespace boilersGraphics.Views.Behaviors
 {
+    [Obsolete]
     internal class RectangleDragAdorner : AbstractDragAdorner
     {
         public RectangleDragAdorner(UIElement owner, UIElement adornElement, double opacity, Point dragPos)
