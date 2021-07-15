@@ -345,10 +345,7 @@ namespace boilersGraphics.ViewModels
         {
             var item1 = SelectedItems.OfType<DesignerItemViewModelBase>().First();
             var item2 = SelectedItems.OfType<DesignerItemViewModelBase>().Last();
-            var combine = new CombineGeometryViewModel(Math.Min(item1.Left.Value, item2.Left.Value),
-                                                       Math.Min(item1.Top.Value, item2.Top.Value),
-                                                       Math.Max(item1.Right.Value, item2.Right.Value) - Math.Min(item1.Left.Value, item2.Left.Value),
-                                                       Math.Max(item1.Bottom.Value, item2.Bottom.Value) - Math.Min(item1.Top.Value, item2.Top.Value));
+            var combine = new CombineGeometryViewModel();
             Items.Remove(item1);
             Items.Remove(item2);
             combine.EdgeColor = item1.EdgeColor;
@@ -358,6 +355,10 @@ namespace boilersGraphics.ViewModels
             combine.Owner = this;
             combine.ZIndex.Value = Items.Count;
             combine.PathGeometry.Value = Geometry.Combine(item1.PathGeometry.Value, item2.PathGeometry.Value, GeometryCombineMode.Union, null);
+            combine.Left.Value = combine.PathGeometry.Value.Bounds.Left;
+            combine.Top.Value = combine.PathGeometry.Value.Bounds.Top;
+            combine.Width.Value = combine.PathGeometry.Value.Bounds.Width;
+            combine.Height.Value = combine.PathGeometry.Value.Bounds.Height;
             Items.Add(combine);
         }
 
