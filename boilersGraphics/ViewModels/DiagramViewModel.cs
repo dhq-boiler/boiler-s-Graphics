@@ -78,6 +78,7 @@ namespace boilersGraphics.ViewModels
         public DelegateCommand PasteCommand { get; private set; }
         public DelegateCommand EditMenuOpenedCommand { get; private set; }
         public DelegateCommand UnionCommand { get; private set; }
+        public DelegateCommand IntersectCommand { get; private set; }
         public DelegateCommand<MouseWheelEventArgs> MouseWheelCommand { get; private set; }
         public DelegateCommand<MouseEventArgs> PreviewMouseDownCommand { get; private set; }
         public DelegateCommand<MouseEventArgs> PreviewMouseUpCommand { get; private set; }
@@ -217,6 +218,7 @@ namespace boilersGraphics.ViewModels
             CopyCommand = new DelegateCommand(() => ExecuteCopyCommand(), () => CanExecuteCopy());
             PasteCommand = new DelegateCommand(() => ExecutePasteCommand(), () => CanExecutePaste());
             UnionCommand = new DelegateCommand(() => ExecuteUnionCommand(), () => CanExecuteUnion());
+            IntersectCommand = new DelegateCommand(() => ExecuteIntersectCommand(), () => CanExecuteIntersect());
             MouseWheelCommand = new DelegateCommand<MouseWheelEventArgs>(args =>
             {
                 var diagramControl = App.Current.MainWindow.GetChildOfType<DiagramControl>();
@@ -323,6 +325,7 @@ namespace boilersGraphics.ViewModels
                     UniformHeightCommand.RaiseCanExecuteChanged();
 
                     UnionCommand.RaiseCanExecuteChanged();
+                    IntersectCommand.RaiseCanExecuteChanged();
                 })
                 .AddTo(_CompositeDisposable);
 
@@ -341,7 +344,22 @@ namespace boilersGraphics.ViewModels
             CanvasBorderThickness = 1.0;
         }
 
+        private void ExecuteIntersectCommand()
+        {
+            CombineAndAddItem(GeometryCombineMode.Intersect);
+        }
+
+        private bool CanExecuteIntersect()
+        {
+            return SelectedItems.Count == 2;
+        }
+
         private void ExecuteUnionCommand()
+        {
+            CombineAndAddItem(GeometryCombineMode.Union);
+        }
+
+        private void CombineAndAddItem(GeometryCombineMode mode)
         {
             var item1 = SelectedItems.OfType<DesignerItemViewModelBase>().First();
             var item2 = SelectedItems.OfType<DesignerItemViewModelBase>().Last();
@@ -354,7 +372,7 @@ namespace boilersGraphics.ViewModels
             combine.IsSelected = true;
             combine.Owner = this;
             combine.ZIndex.Value = Items.Count;
-            combine.PathGeometry.Value = Geometry.Combine(item1.PathGeometry.Value, item2.PathGeometry.Value, GeometryCombineMode.Union, null);
+            combine.PathGeometry.Value = Geometry.Combine(item1.PathGeometry.Value, item2.PathGeometry.Value, mode, null);
             combine.Left.Value = combine.PathGeometry.Value.Bounds.Left;
             combine.Top.Value = combine.PathGeometry.Value.Bounds.Top;
             combine.Width.Value = combine.PathGeometry.Value.Bounds.Width;
