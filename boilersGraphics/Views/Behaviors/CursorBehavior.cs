@@ -1,9 +1,11 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Input;
 using Microsoft.Xaml.Behaviors;
 
 namespace boilersGraphics.Views.Behaviors
 {
+    [Obsolete]
     internal class CursorBehavior : Behavior<FrameworkElement>
     {
         public static readonly DependencyProperty DefaultCursorProperty = DependencyProperty.Register("DefaultCursor", typeof(Cursor), typeof(CursorBehavior), new FrameworkPropertyMetadata(Cursors.Arrow));

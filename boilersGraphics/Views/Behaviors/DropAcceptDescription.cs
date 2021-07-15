@@ -4,6 +4,7 @@ using Microsoft.Xaml.Behaviors;
 
 namespace boilersGraphics.Views.Behaviors
 {
+    [Obsolete]
     public sealed class DropAcceptDescription
     {
         #region Events
@@ -50,6 +51,7 @@ namespace boilersGraphics.Views.Behaviors
     /// ドロップ対象オブジェクト用ビヘイビア
     /// <see cref="http://b.starwing.net/?p=131"/>
     /// </summary>
+    [Obsolete]
     public class DragAcceptBehavior : Behavior<FrameworkElement>
     {
         #region Fields

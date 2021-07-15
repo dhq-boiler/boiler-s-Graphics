@@ -2,9 +2,11 @@
 using System.Windows;
 using Microsoft.Xaml.Behaviors;
 using System.Windows.Shapes;
+using System;
 
 namespace boilersGraphics.Views.Behaviors
 {
+    [Obsolete]
     public class RectangleSelectBehavior : Behavior<FrameworkElement>
     {
         protected override void OnAttached()

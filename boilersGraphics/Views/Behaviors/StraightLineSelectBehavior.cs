@@ -6,9 +6,11 @@ using System.Windows.Documents;
 using Microsoft.Xaml.Behaviors;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using System;
 
 namespace boilersGraphics.Views.Behaviors
 {
+    [Obsolete]
     internal class StraightLineSelectBehavior : Behavior<FrameworkElement>
     {
         private StraightLineResizeHandle _adorner;

@@ -2,9 +2,11 @@
 using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Xaml.Behaviors;
+using System;
 
 namespace boilersGraphics.Views.Behaviors
 {
+    [Obsolete]
     public class DeselectBehavior : Behavior<Canvas>
     {
         protected override void OnAttached()

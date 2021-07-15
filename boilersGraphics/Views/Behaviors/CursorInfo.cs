@@ -7,6 +7,7 @@ using System.Windows.Media;
 
 namespace boilersGraphics.Views.Behaviors
 {
+    [Obsolete]
     public static class CursorInfo
     {
         [DllImport("user32.dll")]

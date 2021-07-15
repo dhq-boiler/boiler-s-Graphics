@@ -21,6 +21,7 @@ namespace boilersGraphics.Views
      * answerer Trevor Elliott https://stackoverflow.com/users/852555/trevor-elliott
      */
 
+    [Obsolete]
     internal class StraightLineResizeHandle : Adorner
     {
         private Point _start;

@@ -7,6 +7,7 @@ using System.Windows.Media;
 
 namespace boilersGraphics.Views.Behaviors
 {
+    [Obsolete]
     internal abstract class DrawAbstractBehavior<T> : Behavior<Canvas> where T : AbstractAdorner
     {
         private Point _origin;
