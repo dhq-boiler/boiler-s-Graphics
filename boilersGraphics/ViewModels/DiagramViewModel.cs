@@ -80,6 +80,7 @@ namespace boilersGraphics.ViewModels
         public DelegateCommand UnionCommand { get; private set; }
         public DelegateCommand IntersectCommand { get; private set; }
         public DelegateCommand XorCommand { get; private set; }
+        public DelegateCommand ExcludeCommand { get; private set; }
         public DelegateCommand<MouseWheelEventArgs> MouseWheelCommand { get; private set; }
         public DelegateCommand<MouseEventArgs> PreviewMouseDownCommand { get; private set; }
         public DelegateCommand<MouseEventArgs> PreviewMouseUpCommand { get; private set; }
@@ -221,6 +222,7 @@ namespace boilersGraphics.ViewModels
             UnionCommand = new DelegateCommand(() => ExecuteUnionCommand(), () => CanExecuteUnion());
             IntersectCommand = new DelegateCommand(() => ExecuteIntersectCommand(), () => CanExecuteIntersect());
             XorCommand = new DelegateCommand(() => ExecuteXorCommand(), () => CanExecuteXor());
+            ExcludeCommand = new DelegateCommand(() => ExecuteExcludeCommand(), () => CanExecuteExclude());
             MouseWheelCommand = new DelegateCommand<MouseWheelEventArgs>(args =>
             {
                 var diagramControl = App.Current.MainWindow.GetChildOfType<DiagramControl>();
@@ -329,6 +331,7 @@ namespace boilersGraphics.ViewModels
                     UnionCommand.RaiseCanExecuteChanged();
                     IntersectCommand.RaiseCanExecuteChanged();
                     XorCommand.RaiseCanExecuteChanged();
+                    ExcludeCommand.RaiseCanExecuteChanged();
                 })
                 .AddTo(_CompositeDisposable);
 
@@ -345,6 +348,16 @@ namespace boilersGraphics.ViewModels
             EdgeThickness.Value = 1.0;
 
             CanvasBorderThickness = 1.0;
+        }
+
+        private void ExecuteExcludeCommand()
+        {
+            CombineAndAddItem(GeometryCombineMode.Exclude);
+        }
+
+        private bool CanExecuteExclude()
+        {
+            return SelectedItems.Count == 2;
         }
 
         private void ExecuteXorCommand()
