@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Documents;
+using System.Windows.Input;
 
 namespace boilersGraphics.Helpers
 {
@@ -20,7 +21,7 @@ namespace boilersGraphics.Helpers
             _adorners = new Dictionary<Point, Adorner>();
         }
 
-        public void OnMouseMove(ref Point? currentPoint)
+        public void OnMouseMove(ref Point currentPoint)
         {
             var mainWindowVM = (App.Current.MainWindow.DataContext as MainWindowViewModel);
             var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
@@ -31,10 +32,10 @@ namespace boilersGraphics.Helpers
                 Point? snapped = null;
                 foreach (var snapPoint in snapPoints)
                 {
-                    if (currentPoint.Value.X > snapPoint.X - mainWindowVM.SnapPower.Value
-                     && currentPoint.Value.X < snapPoint.X + mainWindowVM.SnapPower.Value
-                     && currentPoint.Value.Y > snapPoint.Y - mainWindowVM.SnapPower.Value
-                     && currentPoint.Value.Y < snapPoint.Y + mainWindowVM.SnapPower.Value)
+                    if (currentPoint.X > snapPoint.X - mainWindowVM.SnapPower.Value
+                     && currentPoint.X < snapPoint.X + mainWindowVM.SnapPower.Value
+                     && currentPoint.Y > snapPoint.Y - mainWindowVM.SnapPower.Value
+                     && currentPoint.Y < snapPoint.Y + mainWindowVM.SnapPower.Value)
                     {
                         //スナップする座標を一時変数へ保存
                         snapped = snapPoint;
@@ -48,7 +49,7 @@ namespace boilersGraphics.Helpers
                     RemoveFromAdornerLayerAndDictionary(snapped, adornerLayer);
 
                     //ドラッグ終了座標を一時変数で上書きしてスナップ
-                    currentPoint = snapped;
+                    currentPoint = snapped.Value;
                     if (adornerLayer != null)
                     {
                         if (!_adorners.ContainsKey(snapped.Value))

@@ -47,8 +47,12 @@ namespace boilersGraphics.Adorners
                     this.CaptureMouse();
 
                 _endPoint = e.GetPosition(this);
-
-                _snapAction.OnMouseMove(ref _endPoint);
+                var currentPosition = _endPoint.Value;
+                _snapAction.OnMouseMove(ref currentPosition);
+                _endPoint = currentPosition;
+                
+                (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.CurrentPoint = currentPosition;
+                (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = $"({_startPoint.Value.X}, {_startPoint.Value.Y}) - ({_endPoint.Value.X}, {_endPoint.Value.Y}) (w, h) = ({_endPoint.Value.X - _startPoint.Value.X}, {_endPoint.Value.Y - _startPoint.Value.Y})";
 
                 this.InvalidateVisual();
             }

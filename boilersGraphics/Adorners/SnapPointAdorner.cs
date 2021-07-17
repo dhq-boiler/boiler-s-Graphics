@@ -20,6 +20,7 @@ namespace boilersGraphics.Adorners
             : base(element)
         {
             _point = point;
+            IsHitTestVisible = false;
         }
 
         protected override void OnRender(DrawingContext drawingContext)

@@ -39,9 +39,14 @@ namespace boilersGraphics.Adorners
                 if (!this.IsMouseCaptured)
                     this.CaptureMouse();
 
+                //ドラッグ終了座標を更新
                 _endPoint = e.GetPosition(this);
+                var currentPosition = _endPoint.Value;
+                _snapAction.OnMouseMove(ref currentPosition);
+                _endPoint = currentPosition;
 
-                _snapAction.OnMouseMove(ref _endPoint);
+                (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.CurrentPoint = currentPosition;
+                (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = $"({_startPoint.Value.X}, {_startPoint.Value.Y}) - ({_endPoint.Value.X}, {_endPoint.Value.Y}) (w, h) = ({_endPoint.Value.X - _startPoint.Value.X}, {_endPoint.Value.Y - _startPoint.Value.Y})";
 
                 (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = $"({_startPoint.Value.X}, {_startPoint.Value.Y}) - ({_endPoint.Value.X}, {_endPoint.Value.Y})";
 
