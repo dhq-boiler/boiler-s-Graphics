@@ -79,7 +79,10 @@ namespace boilersGraphics.Helpers
             AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(designerCanvas);
             if (adornerLayer != null)
             {
-                adornerLayer.Remove(targetAdorner);
+                if (targetAdorner != null)
+                {
+                    adornerLayer.Remove(targetAdorner);
+                }
 
                 foreach (var adorner in _adorners)
                     adornerLayer.Remove(adorner.Value);
