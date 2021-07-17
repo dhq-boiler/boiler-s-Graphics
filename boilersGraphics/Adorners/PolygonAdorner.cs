@@ -52,9 +52,11 @@ namespace boilersGraphics.Adorners
 
                 //ドラッグ終了座標を更新
                 _dragEndPoint = e.GetPosition(this);
+                var currentPosition = _dragEndPoint.Value;
+                _snapAction.OnMouseMove(ref currentPosition);
+                _dragEndPoint = currentPosition;
 
-                _snapAction.OnMouseMove(ref _dragEndPoint);
-
+                (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.CurrentPoint = currentPosition;
                 (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = $"({_dragStartPoint.Value.X}, {_dragStartPoint.Value.Y}) - ({_dragEndPoint.Value.X}, {_dragEndPoint.Value.Y}) (w, h) = ({_dragEndPoint.Value.X - _dragStartPoint.Value.X}, {_dragEndPoint.Value.Y - _dragStartPoint.Value.Y})";
 
                 this.InvalidateVisual();

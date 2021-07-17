@@ -15,11 +15,11 @@ namespace boilersGraphics.Views.Behaviors
     internal class NDrawStraightLineBehavior : Behavior<DesignerCanvas>
     {
         private Point? _straightLineStartPoint;
-        private SnapAction _snapAction;
+        private SnapAction snapAction;
 
         public NDrawStraightLineBehavior()
         {
-            _snapAction = new SnapAction();
+            snapAction = new SnapAction();
         }
 
         protected override void OnAttached()
@@ -54,14 +54,15 @@ namespace boilersGraphics.Views.Behaviors
         private void AssociatedObject_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
         {
             var canvas = AssociatedObject as DesignerCanvas;
-            _straightLineStartPoint = e.GetPosition(AssociatedObject);
-            _snapAction.OnMouseMove(ref _straightLineStartPoint);
+            Point current = e.GetPosition(canvas);
+            snapAction.OnMouseMove(ref current);
 
             if (e.LeftButton != MouseButtonState.Pressed)
                 _straightLineStartPoint = null;
 
             if (_straightLineStartPoint.HasValue)
             {
+                _straightLineStartPoint = current;
                 (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "描画";
 
                 AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(canvas);

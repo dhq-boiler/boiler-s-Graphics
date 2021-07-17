@@ -15,11 +15,11 @@ namespace boilersGraphics.Views.Behaviors
     internal class NDrawRectangleBehavior : Behavior<DesignerCanvas>
     {
         private Point? _rectangleStartPoint;
-        private SnapAction _snapAction;
+        private SnapAction snapAction;
 
         public NDrawRectangleBehavior()
         {
-            _snapAction = new SnapAction();
+            snapAction = new SnapAction();
         }
 
         protected override void OnAttached()
@@ -54,14 +54,15 @@ namespace boilersGraphics.Views.Behaviors
         private void AssociatedObject_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
         {
             var canvas = AssociatedObject as DesignerCanvas;
-            _rectangleStartPoint = e.GetPosition(AssociatedObject);
-            _snapAction.OnMouseMove(ref _rectangleStartPoint);
+            Point current = e.GetPosition(canvas);
+            snapAction.OnMouseMove(ref current);
 
             if (e.LeftButton != MouseButtonState.Pressed)
                 _rectangleStartPoint = null;
 
             if (_rectangleStartPoint.HasValue)
             {
+                _rectangleStartPoint = current;
                 (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "描画";
 
                 AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(canvas);

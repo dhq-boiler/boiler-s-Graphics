@@ -22,14 +22,13 @@ namespace boilersGraphics.Views.Behaviors
         private string _filename;
         private double _Width;
         private double _Height;
-        private SnapAction _snapAction;
-
+        private SnapAction snapAction;
         public PictureBehavior(string filename, double width, double height)
         {
             _filename = filename;
             _Width = width;
             _Height = height;
-            _snapAction = new SnapAction();
+            snapAction = new SnapAction();
         }
 
         protected override void OnAttached()
@@ -51,14 +50,15 @@ namespace boilersGraphics.Views.Behaviors
         private void AssociatedObject_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
         {
             var canvas = AssociatedObject as DesignerCanvas;
-            _pictureDrawingStartPoint = e.GetPosition(AssociatedObject);
-            _snapAction.OnMouseMove(ref _pictureDrawingStartPoint);
+            Point current = e.GetPosition(canvas);
+            snapAction.OnMouseMove(ref current);
 
             if (e.LeftButton != MouseButtonState.Pressed)
                 _pictureDrawingStartPoint = null;
 
             if (_pictureDrawingStartPoint.HasValue)
             {
+                _pictureDrawingStartPoint = current;
                 AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(canvas);
                 if (adornerLayer != null)
                 {

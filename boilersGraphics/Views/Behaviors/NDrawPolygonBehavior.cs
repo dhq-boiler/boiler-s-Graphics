@@ -21,14 +21,14 @@ namespace boilersGraphics.Views.Behaviors
     internal class NDrawPolygonBehavior : Behavior<DesignerCanvas>
     {
         private Point? _polygonDrawingStartPoint = null;
-        private SnapAction _snapAction;
+        private SnapAction snapAction;
 
         public NDrawPolygonBehavior(ObservableCollection<Corner> corners, string data, Point startPoint)
         {
             Corners = corners;
             Data = data;
             StartPoint = startPoint;
-            _snapAction = new SnapAction();
+            snapAction = new SnapAction();
         }
 
         public ObservableCollection<Corner> Corners { get; }
@@ -67,14 +67,15 @@ namespace boilersGraphics.Views.Behaviors
         private void AssociatedObject_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
         {
             var canvas = AssociatedObject as DesignerCanvas;
-            _polygonDrawingStartPoint = e.GetPosition(AssociatedObject);
-            _snapAction.OnMouseMove(ref _polygonDrawingStartPoint);
+            Point current = e.GetPosition(canvas);
+            snapAction.OnMouseMove(ref current);
 
             if (e.LeftButton != MouseButtonState.Pressed)
                 _polygonDrawingStartPoint = null;
 
             if (_polygonDrawingStartPoint.HasValue)
             {
+                _polygonDrawingStartPoint = current;
                 (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "描画";
 
                 AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(canvas);
