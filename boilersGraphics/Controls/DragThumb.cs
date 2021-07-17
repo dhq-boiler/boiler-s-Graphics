@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace boilersGraphics.Controls
@@ -13,6 +14,13 @@ namespace boilersGraphics.Controls
         public DragThumb()
         {
             base.DragDelta += new DragDeltaEventHandler(DragThumb_DragDelta);
+        }
+
+        protected override void OnMouseUp(MouseButtonEventArgs e)
+        {
+            base.OnMouseUp(e);
+            (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "";
+            (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = "";
         }
 
         private void DragThumb_DragDelta(object sender, DragDeltaEventArgs e)
