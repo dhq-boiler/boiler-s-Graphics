@@ -1,4 +1,5 @@
 ﻿using boilersGraphics.Controls;
+using boilersGraphics.Helpers;
 using boilersGraphics.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -122,7 +123,7 @@ namespace boilersGraphics.Adorners
                 item.EdgeThickness = item.Owner.EdgeThickness.Value.Value;
                 item.FillColor = item.Owner.FillColors.First();
                 item.ZIndex.Value = item.Owner.Items.Count;
-                item.PathGeometry.Value = CreateEllipse(item);
+                item.PathGeometry.Value = GeometryCreator.CreateEllipse(item);
                 item.IsSelected = true;
                 item.Owner.DeselectAll();
                 ((AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel).AddItemCommand.Execute(item);
@@ -135,11 +136,6 @@ namespace boilersGraphics.Adorners
             (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = "";
 
             e.Handled = true;
-        }
-
-        private PathGeometry CreateEllipse(NEllipseViewModel item)
-        {
-            return PathGeometry.CreateFromGeometry(new EllipseGeometry(new Point(item.Left.Value + item.Width.Value / 2, item.Top.Value + item.Height.Value / 2), item.Width.Value / 2, item.Height.Value / 2));
         }
 
         //EdgeThickness分だけitemを拡張することでElipseAdornerの見た目と描画を一致させる

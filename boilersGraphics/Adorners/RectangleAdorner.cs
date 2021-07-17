@@ -80,7 +80,7 @@ namespace boilersGraphics.Adorners
                 item.FillColor = item.Owner.FillColors.First();
                 item.EdgeThickness = item.Owner.EdgeThickness.Value.Value;
                 item.ZIndex.Value = item.Owner.Items.Count;
-                item.PathGeometry.Value = CreateRectangle(item);
+                item.PathGeometry.Value = GeometryCreator.CreateRectangle(item);
                 item.IsSelected = true;
                 item.Owner.DeselectAll();
                 ((AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel).AddItemCommand.Execute(item);
@@ -93,21 +93,6 @@ namespace boilersGraphics.Adorners
             (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = "";
 
             e.Handled = true;
-        }
-
-        private PathGeometry CreateRectangle(NRectangleViewModel item)
-        {
-            var geometry = new StreamGeometry();
-            geometry.FillRule = FillRule.EvenOdd;
-            using (var ctx = geometry.Open())
-            {
-                ctx.BeginFigure(new Point(item.Left.Value, item.Top.Value), true, true);
-                ctx.LineTo(new Point(item.Left.Value + item.Width.Value, item.Top.Value), true, false);
-                ctx.LineTo(new Point(item.Left.Value + item.Width.Value, item.Top.Value + item.Height.Value), true, false);
-                ctx.LineTo(new Point(item.Left.Value, item.Top.Value + item.Height.Value), true, false);
-            }
-            geometry.Freeze();
-            return PathGeometry.CreateFromGeometry(geometry);
         }
 
         protected override void OnRender(DrawingContext dc)
