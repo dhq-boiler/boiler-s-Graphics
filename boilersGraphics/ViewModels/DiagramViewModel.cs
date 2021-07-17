@@ -357,8 +357,10 @@ namespace boilersGraphics.ViewModels
         private void ExecuteClipCommand()
         {
             var picture = SelectedItems.OfType<PictureDesignerItemViewModel>().First();
-            var other = SelectedItems.Last();
-            picture.Clip.Value = other.PathGeometry.Value;
+            var other = SelectedItems.OfType<DesignerItemViewModelBase>().Last();
+            var pathGeometry = other.PathGeometry.Value;
+            //pathGeometry.Transform = new TranslateTransform(other.Left.Value - picture.Left.Value, other.Top.Value - picture.Top.Value);
+            picture.Clip.Value = pathGeometry;
             Items.Remove(other);
         }
 
@@ -366,7 +368,6 @@ namespace boilersGraphics.ViewModels
         {
             return SelectedItems.Count == 2 &&
                    SelectedItems.First().GetType() == typeof(PictureDesignerItemViewModel);
-
         }
 
         private void ExecuteExcludeCommand()
