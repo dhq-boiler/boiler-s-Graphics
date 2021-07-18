@@ -369,6 +369,11 @@
                                     </Button.Template>
                                 </Button>
                             </WrapPanel>
+                            <Expander.Header>
+                                <Grid>
+                                    <Label Content="結合" />
+                                </Grid>
+                            </Expander.Header>
                         </Expander>
                     </Border>
                 </ControlTemplate>
