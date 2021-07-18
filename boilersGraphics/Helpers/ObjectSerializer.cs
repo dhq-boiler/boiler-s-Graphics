@@ -8,10 +8,9 @@ namespace boilersGraphics.Helpers
 {
     class ObjectSerializer
     {
-        public static IEnumerable<XElement> SerializeDesignerItems(DiagramViewModel dialogViewModel)
+        public static IEnumerable<XElement> SerializeDesignerItems(DiagramViewModel dialogViewModel, IEnumerable<SelectableDesignerItemViewModelBase> items)
         {
-            var selectedItems = dialogViewModel.SelectedItems;
-            return (from item in selectedItems.WithPickupChildren(dialogViewModel.Items).OfType<DesignerItemViewModelBase>()
+            var targets = (from item in items.WithPickupChildren(dialogViewModel.Items).OfType<DesignerItemViewModelBase>()
                     where item.GetType() != typeof(PictureDesignerItemViewModel)
                        && item.GetType() != typeof(LetterDesignerItemViewModel)
                        && item.GetType() != typeof(LetterVerticalDesignerItemViewModel)
@@ -28,10 +27,11 @@ namespace boilersGraphics.Helpers
                               new XElement("Matrix", item.Matrix.Value),
                               new XElement("EdgeColor", item.EdgeColor),
                               new XElement("FillColor", item.FillColor),
-                              new XElement("EdgeThickness", item.EdgeThickness)
+                              new XElement("EdgeThickness", item.EdgeThickness),
+                              new XElement("PathGeometry", item.PathGeometry.Value)
                           ))
                     .Union(
-                        from item in selectedItems.WithPickupChildren(dialogViewModel.Items).OfType<DesignerItemViewModelBase>()
+                        from item in items.WithPickupChildren(dialogViewModel.Items).OfType<DesignerItemViewModelBase>()
                         where item.GetType() == typeof(PictureDesignerItemViewModel)
                         select new XElement("DesignerItem",
                                     new XElement("ID", item.ID),
@@ -50,7 +50,7 @@ namespace boilersGraphics.Helpers
                         )
                     )
                     .Union(
-                        from item in selectedItems.WithPickupChildren(dialogViewModel.Items).OfType<DesignerItemViewModelBase>()
+                        from item in items.WithPickupChildren(dialogViewModel.Items).OfType<DesignerItemViewModelBase>()
                         where item.GetType() == typeof(LetterDesignerItemViewModel)
                         select new XElement("DesignerItem",
                                     new XElement("ID", item.ID),
@@ -75,7 +75,7 @@ namespace boilersGraphics.Helpers
                         )
                     )
                     .Union(
-                        from item in selectedItems.WithPickupChildren(dialogViewModel.Items).OfType<DesignerItemViewModelBase>()
+                        from item in items.WithPickupChildren(dialogViewModel.Items).OfType<DesignerItemViewModelBase>()
                         where item.GetType() == typeof(LetterVerticalDesignerItemViewModel)
                         select new XElement("DesignerItem",
                                     new XElement("ID", item.ID),
@@ -100,7 +100,7 @@ namespace boilersGraphics.Helpers
                         )
                     )
                     .Union(
-                        from item in selectedItems.WithPickupChildren(dialogViewModel.Items).OfType<DesignerItemViewModelBase>()
+                        from item in items.WithPickupChildren(dialogViewModel.Items).OfType<DesignerItemViewModelBase>()
                         where item.GetType() == typeof(NPolygonViewModel)
                         select new XElement("DesignerItem",
                                 new XElement("ID", item.ID),
@@ -115,15 +115,16 @@ namespace boilersGraphics.Helpers
                                 new XElement("EdgeColor", item.EdgeColor),
                                 new XElement("FillColor", item.FillColor),
                                 new XElement("EdgeThickness", item.EdgeThickness),
+                                new XElement("PathGeometry", item.PathGeometry.Value),
                                 new XElement("Data", (item as NPolygonViewModel).Data.Value)
                             )
                         );
+            return targets;
         }
 
-        public static IEnumerable<XElement> SerializeConnections(DiagramViewModel dialogViewModel)
+        public static IEnumerable<XElement> SerializeConnections(DiagramViewModel dialogViewModel, IEnumerable<SelectableDesignerItemViewModelBase> items)
         {
-            var selectedItems = dialogViewModel.SelectedItems;
-            return (from connection in selectedItems.WithPickupChildren(dialogViewModel.Items).OfType<ConnectorBaseViewModel>()
+            return (from connection in items.WithPickupChildren(dialogViewModel.Items).OfType<ConnectorBaseViewModel>()
                     where connection.GetType() != typeof(BezierCurveViewModel)
                     select new XElement("Connection",
                                new XElement("ID", connection.ID),
@@ -133,10 +134,11 @@ namespace boilersGraphics.Helpers
                                new XElement("EndPoint", connection.Points[1]),
                                new XElement("ZIndex", connection.ZIndex.Value),
                                new XElement("EdgeColor", connection.EdgeColor),
-                               new XElement("EdgeThickness", connection.EdgeThickness)
+                               new XElement("EdgeThickness", connection.EdgeThickness),
+                               new XElement("PathGeometry", connection.PathGeometry.Value)
                     ))
                     .Union(
-                        from connection in selectedItems.WithPickupChildren(dialogViewModel.Items).OfType<ConnectorBaseViewModel>()
+                        from connection in items.WithPickupChildren(dialogViewModel.Items).OfType<ConnectorBaseViewModel>()
                         where connection.GetType() == typeof(BezierCurveViewModel)
                         select new XElement("Connection",
                                     new XElement("ID", connection.ID),
@@ -148,7 +150,8 @@ namespace boilersGraphics.Helpers
                                     new XElement("EdgeColor", connection.EdgeColor),
                                     new XElement("EdgeThickness", connection.EdgeThickness),
                                     new XElement("ControlPoint1", (connection as BezierCurveViewModel).ControlPoint1.Value),
-                                    new XElement("ControlPoint2", (connection as BezierCurveViewModel).ControlPoint2.Value)
+                                    new XElement("ControlPoint2", (connection as BezierCurveViewModel).ControlPoint2.Value),
+                                    new XElement("PathGeometry", connection.PathGeometry.Value)
                     ));
         }
     }

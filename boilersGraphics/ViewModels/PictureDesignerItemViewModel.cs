@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Reactive.Bindings;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 
 namespace boilersGraphics.ViewModels
 {
@@ -29,6 +31,8 @@ namespace boilersGraphics.ViewModels
             get { return _FileHeight; }
             set { SetProperty(ref _FileHeight, value); }
         }
+
+        public ReactiveProperty<Geometry> Clip { get; set; } = new ReactiveProperty<Geometry>();
 
         public PictureDesignerItemViewModel(int id, DiagramViewModel parent, double left, double top)
             : base(id, parent, left, top)
@@ -61,6 +65,7 @@ namespace boilersGraphics.ViewModels
             clone.EdgeThickness = EdgeThickness;
             clone.Matrix.Value = Matrix.Value;
             clone.RotationAngle.Value = RotationAngle.Value;
+            clone.Clip.Value = Clip.Value;
             return clone;
         }
 

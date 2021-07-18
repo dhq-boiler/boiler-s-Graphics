@@ -5,11 +5,12 @@
     xmlns:local="clr-namespace:boilersGraphics.Resources.DesignerItems"
     xmlns:viewModel="clr-namespace:boilersGraphics.ViewModels">
     <convereter:ToSolidColorBrushConverter x:Key="solidColorBrushConverter" />
-    <DataTemplate DataType="{x:Type viewModel:NEllipseViewModel}">
-        <Path Stroke="{Binding EdgeColor, Converter={StaticResource solidColorBrushConverter}}"
-              StrokeThickness="{Binding EdgeThickness}"
-              Stretch="Fill"
-              Fill="{Binding FillColor, Converter={StaticResource solidColorBrushConverter}}"
-              Data="{Binding PathGeometry.Value}" />
+    <DataTemplate DataType="{x:Type viewModel:CombineGeometryViewModel}">
+        <Path Fill="{Binding FillColor, Converter={StaticResource solidColorBrushConverter}}"
+                IsHitTestVisible="False"
+                Stretch="Fill"
+                Stroke="{Binding EdgeColor, Converter={StaticResource solidColorBrushConverter}}"
+                StrokeThickness="{Binding EdgeThickness}"
+                Data="{Binding PathGeometry.Value}" />
     </DataTemplate>
 </ResourceDictionary>

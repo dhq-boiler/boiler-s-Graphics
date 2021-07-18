@@ -144,6 +144,7 @@
     <Compile Include="AttachedProperties\DragAndDropProps.cs" />
     <Compile Include="AttachedProperties\ItemConnectProps.cs" />
     <Compile Include="AttachedProperties\SelectionProps.cs" />
+    <Compile Include="Controls\Combine.cs" />
     <Compile Include="Controls\ControlPoint.cs" />
     <Compile Include="Controls\DesignerCanvas.cs" />
     <Compile Include="Controls\DoubleTextBox.cs" />
@@ -170,6 +171,7 @@
     <Compile Include="Helpers\ColorExchange.cs" />
     <Compile Include="Helpers\DragObject.cs" />
     <Compile Include="Helpers\EventToCommand.cs" />
+    <Compile Include="Helpers\GeometryCreator.cs" />
     <Compile Include="Helpers\GroupTransformNotification.cs" />
     <Compile Include="Helpers\IEventArgsConverter.cs" />
     <Compile Include="Helpers\ObjectDeserializer.cs" />
@@ -200,6 +202,7 @@
     </Compile>
     <Compile Include="ViewModels\BezierCurveViewModel.cs" />
     <Compile Include="ViewModels\ColorPickerViewModel.cs" />
+    <Compile Include="ViewModels\CombineGeometryViewModel.cs" />
     <Compile Include="ViewModels\ConnectorBaseViewModel.cs" />
     <Compile Include="Models\Corner.cs" />
     <Compile Include="ViewModels\ExportViewModel.cs" />
@@ -293,6 +296,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Resources\DesignerItems\CombineDesignerItemDataTemplate.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Resources\DesignerItems\PolygonDesignerItemDataTemplate.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -306,6 +313,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Resources\Styles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Styles\Combine.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -493,6 +504,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\img\BezierCurve.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\img\exclude.png" />
+    <Resource Include="Assets\img\intersect.png" />
+    <Resource Include="Assets\img\union.png" />
+    <Resource Include="Assets\img\xor.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

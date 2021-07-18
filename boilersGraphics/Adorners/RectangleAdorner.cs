@@ -2,6 +2,7 @@
 using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
 using boilersGraphics.ViewModels;
+using Reactive.Bindings;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -79,6 +80,7 @@ namespace boilersGraphics.Adorners
                 item.FillColor = item.Owner.FillColors.First();
                 item.EdgeThickness = item.Owner.EdgeThickness.Value.Value;
                 item.ZIndex.Value = item.Owner.Items.Count;
+                item.PathGeometry.Value = GeometryCreator.CreateRectangle(item);
                 item.IsSelected = true;
                 item.Owner.DeselectAll();
                 ((AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel).AddItemCommand.Execute(item);

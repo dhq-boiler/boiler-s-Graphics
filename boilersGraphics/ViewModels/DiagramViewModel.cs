@@ -77,6 +77,11 @@ namespace boilersGraphics.ViewModels
         public DelegateCommand CopyCommand { get; private set; }
         public DelegateCommand PasteCommand { get; private set; }
         public DelegateCommand EditMenuOpenedCommand { get; private set; }
+        public DelegateCommand UnionCommand { get; private set; }
+        public DelegateCommand IntersectCommand { get; private set; }
+        public DelegateCommand XorCommand { get; private set; }
+        public DelegateCommand ExcludeCommand { get; private set; }
+        public DelegateCommand ClipCommand { get; private set; }
         public DelegateCommand<MouseWheelEventArgs> MouseWheelCommand { get; private set; }
         public DelegateCommand<MouseEventArgs> PreviewMouseDownCommand { get; private set; }
         public DelegateCommand<MouseEventArgs> PreviewMouseUpCommand { get; private set; }
@@ -215,6 +220,11 @@ namespace boilersGraphics.ViewModels
             CutCommand = new DelegateCommand(() => ExecuteCutCommand(), () => CanExecuteCut());
             CopyCommand = new DelegateCommand(() => ExecuteCopyCommand(), () => CanExecuteCopy());
             PasteCommand = new DelegateCommand(() => ExecutePasteCommand(), () => CanExecutePaste());
+            UnionCommand = new DelegateCommand(() => ExecuteUnionCommand(), () => CanExecuteUnion());
+            IntersectCommand = new DelegateCommand(() => ExecuteIntersectCommand(), () => CanExecuteIntersect());
+            XorCommand = new DelegateCommand(() => ExecuteXorCommand(), () => CanExecuteXor());
+            ExcludeCommand = new DelegateCommand(() => ExecuteExcludeCommand(), () => CanExecuteExclude());
+            ClipCommand = new DelegateCommand(() => ExecuteClipCommand(), () => CanExecuteClip());
             MouseWheelCommand = new DelegateCommand<MouseWheelEventArgs>(args =>
             {
                 var diagramControl = App.Current.MainWindow.GetChildOfType<DiagramControl>();
@@ -319,6 +329,13 @@ namespace boilersGraphics.ViewModels
 
                     UniformWidthCommand.RaiseCanExecuteChanged();
                     UniformHeightCommand.RaiseCanExecuteChanged();
+
+                    UnionCommand.RaiseCanExecuteChanged();
+                    IntersectCommand.RaiseCanExecuteChanged();
+                    XorCommand.RaiseCanExecuteChanged();
+                    ExcludeCommand.RaiseCanExecuteChanged();
+
+                    ClipCommand.RaiseCanExecuteChanged();
                 })
                 .AddTo(_CompositeDisposable);
 
@@ -335,6 +352,110 @@ namespace boilersGraphics.ViewModels
             EdgeThickness.Value = 1.0;
 
             CanvasBorderThickness = 1.0;
+        }
+
+        private void ExecuteClipCommand()
+        {
+            var picture = SelectedItems.OfType<PictureDesignerItemViewModel>().First();
+            var other = SelectedItems.OfType<DesignerItemViewModelBase>().Last();
+            var pathGeometry = GeometryCreator.CreateRectangle(other as NRectangleViewModel, picture.Left.Value, picture.Top.Value);
+            picture.Clip.Value = pathGeometry;
+            Items.Remove(other);
+        }
+
+        private bool CanExecuteClip()
+        {
+            return SelectedItems.Count == 2 &&
+                   SelectedItems.First().GetType() == typeof(PictureDesignerItemViewModel);
+        }
+
+        private void ExecuteExcludeCommand()
+        {
+            CombineAndAddItem(GeometryCombineMode.Exclude);
+        }
+
+        private bool CanExecuteExclude()
+        {
+            var countIsCorrent = SelectedItems.Count == 2;
+            if (countIsCorrent)
+            {
+                var firstElementTypeIsCorrect = SelectedItems.ElementAt(0).GetType() != typeof(PictureDesignerItemViewModel);
+                var secondElementTypeIsCorrect = SelectedItems.ElementAt(1).GetType() != typeof(PictureDesignerItemViewModel);
+                return countIsCorrent && firstElementTypeIsCorrect && secondElementTypeIsCorrect;
+            }
+            return false;
+        }
+
+        private void ExecuteXorCommand()
+        {
+            CombineAndAddItem(GeometryCombineMode.Xor);
+        }
+
+        private bool CanExecuteXor()
+        {
+            var countIsCorrent = SelectedItems.Count == 2;
+            if (countIsCorrent)
+            {
+                var firstElementTypeIsCorrect = SelectedItems.ElementAt(0).GetType() != typeof(PictureDesignerItemViewModel);
+                var secondElementTypeIsCorrect = SelectedItems.ElementAt(1).GetType() != typeof(PictureDesignerItemViewModel);
+                return countIsCorrent && firstElementTypeIsCorrect && secondElementTypeIsCorrect;
+            }
+            return false;
+        }
+
+        private void ExecuteIntersectCommand()
+        {
+            CombineAndAddItem(GeometryCombineMode.Intersect);
+        }
+
+        private bool CanExecuteIntersect()
+        {
+            var countIsCorrent = SelectedItems.Count == 2;
+            if (countIsCorrent)
+            {
+                var firstElementTypeIsCorrect = SelectedItems.ElementAt(0).GetType() != typeof(PictureDesignerItemViewModel);
+                var secondElementTypeIsCorrect = SelectedItems.ElementAt(1).GetType() != typeof(PictureDesignerItemViewModel);
+                return countIsCorrent && firstElementTypeIsCorrect && secondElementTypeIsCorrect;
+            }
+            return false;
+        }
+
+        private void ExecuteUnionCommand()
+        {
+            CombineAndAddItem(GeometryCombineMode.Union);
+        }
+
+        private void CombineAndAddItem(GeometryCombineMode mode)
+        {
+            var item1 = SelectedItems.OfType<DesignerItemViewModelBase>().First();
+            var item2 = SelectedItems.OfType<DesignerItemViewModelBase>().Last();
+            var combine = new CombineGeometryViewModel();
+            Items.Remove(item1);
+            Items.Remove(item2);
+            combine.EdgeColor = item1.EdgeColor;
+            combine.EdgeThickness = item1.EdgeThickness;
+            combine.FillColor = item1.FillColor;
+            combine.IsSelected = true;
+            combine.Owner = this;
+            combine.ZIndex.Value = Items.Count;
+            combine.PathGeometry.Value = Geometry.Combine(item1.PathGeometry.Value, item2.PathGeometry.Value, mode, null);
+            combine.Left.Value = combine.PathGeometry.Value.Bounds.Left;
+            combine.Top.Value = combine.PathGeometry.Value.Bounds.Top;
+            combine.Width.Value = combine.PathGeometry.Value.Bounds.Width;
+            combine.Height.Value = combine.PathGeometry.Value.Bounds.Height;
+            Items.Add(combine);
+        }
+
+        private bool CanExecuteUnion()
+        {
+            var countIsCorrent = SelectedItems.Count == 2;
+            if (countIsCorrent)
+            {
+                var firstElementTypeIsCorrect = SelectedItems.ElementAt(0).GetType() != typeof(PictureDesignerItemViewModel);
+                var secondElementTypeIsCorrect = SelectedItems.ElementAt(1).GetType() != typeof(PictureDesignerItemViewModel);
+                return countIsCorrent && firstElementTypeIsCorrect && secondElementTypeIsCorrect;
+            }
+            return false;
         }
 
         private void ExecuteCopyCommand()
@@ -389,8 +510,8 @@ namespace boilersGraphics.ViewModels
         {
             var selectedItems = SelectedItems.ToList();
             var root = new XElement("Data");
-            root.Add(new XElement("DesignerItems", ObjectSerializer.SerializeDesignerItems(this)));
-            root.Add(new XElement("Connections", ObjectSerializer.SerializeConnections(this)));
+            root.Add(new XElement("DesignerItems", ObjectSerializer.SerializeDesignerItems(this, selectedItems)));
+            root.Add(new XElement("Connections", ObjectSerializer.SerializeConnections(this, selectedItems)));
             Clipboard.SetDataObject(root.ToString(), false);
         }
 
@@ -589,8 +710,8 @@ namespace boilersGraphics.ViewModels
             var connections = this.Items.OfType<ConnectorBaseViewModel>();
             var mainWindowVM = (App.Current.MainWindow.DataContext as MainWindowViewModel);
 
-            XElement designerItemsXML = new XElement("DesignerItems", ObjectSerializer.SerializeDesignerItems(this));
-            XElement connectionsXML = new XElement("Connections", ObjectSerializer.SerializeConnections(this));
+            XElement designerItemsXML = new XElement("DesignerItems", ObjectSerializer.SerializeDesignerItems(this, Items));
+            XElement connectionsXML = new XElement("Connections", ObjectSerializer.SerializeConnections(this, Items));
             XElement configurationXML = new XElement("Configuration",
                     new XElement("Width", Width),
                     new XElement("Height", Height),
@@ -636,8 +757,8 @@ namespace boilersGraphics.ViewModels
             var connections = this.Items.OfType<ConnectorBaseViewModel>();
             var mainWindowVM = (App.Current.MainWindow.DataContext as MainWindowViewModel);
 
-            XElement designerItemsXML = new XElement("DesignerItems", ObjectSerializer.SerializeDesignerItems(this));
-            XElement connectionsXML = new XElement("Connections", ObjectSerializer.SerializeConnections(this));
+            XElement designerItemsXML = new XElement("DesignerItems", ObjectSerializer.SerializeDesignerItems(this, Items));
+            XElement connectionsXML = new XElement("Connections", ObjectSerializer.SerializeConnections(this, Items));
             XElement configurationXML = new XElement("Configuration",
                     new XElement("Width", Width),
                     new XElement("Height", Height),
@@ -698,6 +819,7 @@ namespace boilersGraphics.ViewModels
             (App.Current.MainWindow.DataContext as MainWindowViewModel).SnapPower.Value = double.Parse(configuration.Element("SnapPower").Value);
 
             Items.Clear();
+            SelectedItems.Clear();
 
             ObjectDeserializer.ReadObjectFromXML(this, root);
         }
@@ -1463,7 +1585,7 @@ namespace boilersGraphics.ViewModels
 
             foreach (var connector in selectedConnectors)
             {
-                //DuplicateConnector(oldNewList, connector);
+                DuplicateConnector(oldNewList, connector);
             }
         }
 
@@ -1519,6 +1641,20 @@ namespace boilersGraphics.ViewModels
             }
         }
 
+        private void DuplicateConnector(List<Tuple<SelectableDesignerItemViewModelBase, SelectableDesignerItemViewModelBase>> oldNewList, ConnectorBaseViewModel connector, GroupItemViewModel groupItem = null)
+        {
+            var clone = connector.Clone() as ConnectorBaseViewModel;
+            clone.ZIndex.Value = Items.Count();
+            if (groupItem != null)
+            {
+                clone.ParentID = groupItem.ID;
+                clone.EnableForSelection.Value = false;
+                groupItem.AddGroup(clone);
+            }
+            Items.Add(clone);
+        }
+
+        [Obsolete]
         private void DuplicateConnector(IEnumerable<DesignerItemViewModelBase> connectedItems, List<Tuple<SelectableDesignerItemViewModelBase, SelectableDesignerItemViewModelBase>> oldNewList, ConnectorBaseViewModel connector, GroupItemViewModel groupItem = null)
         {
             var clone = connector.Clone() as ConnectorBaseViewModel;

@@ -156,6 +156,9 @@
   <data name="Command_Group" xml:space="preserve">
     <value>Group</value>
   </data>
+  <data name="Command_Load" xml:space="preserve">
+    <value>Load</value>
+  </data>
   <data name="Command_Overwrite" xml:space="preserve">
     <value>Overwrite</value>
   </data>

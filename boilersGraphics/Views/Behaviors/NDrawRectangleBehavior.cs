@@ -80,7 +80,10 @@ namespace boilersGraphics.Views.Behaviors
         private void AssociatedObject_MouseUp(object sender, MouseButtonEventArgs e)
         {
             // release mouse capture
-            if (AssociatedObject.IsMouseCaptured) AssociatedObject.ReleaseMouseCapture();
+            if (AssociatedObject.IsMouseCaptured)
+            {
+                AssociatedObject.ReleaseMouseCapture();
+            }
         }
     }
 }

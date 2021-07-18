@@ -71,7 +71,7 @@ namespace boilersGraphics.AttachedProperties
                             return (x as ConnectorBaseViewModel).EdgeThickness;
                         };
                     });
-                    if (edgeThicknesses.All(x => x == edgeThicknesses.First()))
+                    if (edgeThicknesses.Count() > 0 && edgeThicknesses.All(x => x == edgeThicknesses.First()))
                     {
                         owner.EdgeThickness.Value = edgeThicknesses.First();
                     }

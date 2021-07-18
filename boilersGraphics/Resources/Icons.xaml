@@ -102,4 +102,20 @@
         x:Key="Icon_BezierCurve"
         x:Shared="False"
         UriSource="pack://application:,,,/Assets/img/BezierCurve.png" />
+    <BitmapImage
+        x:Key="Icon_Union"
+        x:Shared="False"
+        UriSource="pack://application:,,,/Assets/img/union.png" />
+    <BitmapImage
+        x:Key="Icon_Intersect"
+        x:Shared="False"
+        UriSource="pack://application:,,,/Assets/img/intersect.png" />
+    <BitmapImage
+        x:Key="Icon_Xor"
+        x:Shared="False"
+        UriSource="pack://application:,,,/Assets/img/xor.png" />
+    <BitmapImage
+        x:Key="Icon_Exclude"
+        x:Shared="False"
+        UriSource="pack://application:,,,/Assets/img/exclude.png" />
 </ResourceDictionary>
