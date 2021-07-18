@@ -68,7 +68,10 @@ steps:
     #releaseNotesSource: 'file' # Optional. Options: file, input
     #releaseNotesFile: # Optional
     #releaseNotes: # Optional
-    assets: '$(Build.ArtifactStagingDirectory)\boilersGraphics_$(Build.BuildId).zip' # Optional
+    assets: 
+      - '$(Build.ArtifactStagingDirectory)\boilersGraphics_$(Build.BuildId).zip'
+      - '$(Build.ArtifactStagingDirectory)\Setup\bin\Release\setup.exe'
+      - '$(Build.ArtifactStagingDirectory)\Setup\bin\Release\Setup.msi'
     assetUploadMode: 'delete' # Optional. Options: delete, replace
     isDraft: false # Optional
     isPreRelease: false # Optional

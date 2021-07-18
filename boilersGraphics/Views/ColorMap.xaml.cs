@@ -29,6 +29,22 @@ namespace boilersGraphics.Views
 
             X = -(Thumb.Width / 2);
             Y = -(Thumb.Height / 2);
+            Image.Opacity = A / 255d;
+        }
+
+        public static readonly DependencyProperty AProperty = DependencyProperty.Register("A", typeof(byte), typeof(ColorMap), new FrameworkPropertyMetadata((byte)0, new PropertyChangedCallback(OnAChanged)));
+
+        private static void OnAChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var ctrl = d as ColorMap;
+            ctrl.Image.Opacity = (byte)e.NewValue / 255d;
+            ctrl.PickupColor();
+        }
+
+        public byte A
+        {
+            get { return (byte)GetValue(AProperty); }
+            set { SetValue(AProperty, value); }
         }
 
         public static readonly DependencyProperty SourceProperty = DependencyProperty.Register("Source", typeof(WriteableBitmap), typeof(ColorMap), new FrameworkPropertyMetadata(null, new PropertyChangedCallback(OnSourceChanged)));
@@ -172,7 +188,7 @@ namespace boilersGraphics.Views
                 byte g = *(p + y * step + x * 3 + 1);
                 byte r = *(p + y * step + x * 3 + 2);
 
-                Color = new Color() { A = 255, B = b, G = g, R = r };
+                Color = new Color() { A = this.A, B = b, G = g, R = r };
             }
         }
 

@@ -15,6 +15,11 @@ namespace boilersGraphics.Controls
 {
     public class DesignerCanvas : Canvas
     {
+        public static DesignerCanvas GetInstance()
+        {
+            return App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
+        }
+
         public DesignerCanvas()
         {
             this.AllowDrop = true;

@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:boilersGraphics.Views"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:converter="clr-namespace:boilersGraphics.Converters"
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
@@ -11,6 +12,8 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <converter:IntToStringConverter x:Key="IntToStringConverter" />
+        <converter:ColorToStringConverter x:Key="ColorToStringConverter" />
+        <converter:ToSolidColorBrushConverter x:Key="solidColorBrushConverter" />
     </UserControl.Resources>
     <DockPanel>
         <StackPanel DockPanel.Dock="Bottom"
@@ -36,6 +39,7 @@
                     <RowDefinition />
                     <RowDefinition />
                     <RowDefinition />
+                    <RowDefinition />
                 </Grid.RowDefinitions>
                 <Label Grid.Row="0" 
                        Grid.Column="0">キャンパスの幅</Label>
@@ -51,15 +55,67 @@
                          HorizontalAlignment="Stretch"
                          HorizontalContentAlignment="Right"
                          Text="{Binding EditTarget.Value.Height.Value, Converter={StaticResource IntToStringConverter}, UpdateSourceTrigger=PropertyChanged}" />
-                <CheckBox Grid.Row="2"
+                <Label Grid.Row="2"
+                       Grid.Column="0">キャンバスの背景色</Label>
+                <Grid Grid.Row="2"
+                      Grid.Column="1"
+                      Grid.ColumnSpan="2">
+                    <Grid.Background>
+                        <VisualBrush Stretch="None"
+                                 TileMode="Tile"
+                                 Viewport="0,0,16,16"
+                                 ViewportUnits="Absolute">
+                            <VisualBrush.Visual>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="8" />
+                                        <ColumnDefinition Width="8" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="8" />
+                                        <RowDefinition Height="8" />
+                                    </Grid.RowDefinitions>
+                                    <Rectangle Grid.Row="0"
+                                           Grid.Column="0"
+                                           Fill="#EEE" />
+                                    <Rectangle Grid.Row="0"
+                                           Grid.Column="1"
+                                           Fill="#AAA" />
+                                    <Rectangle Grid.Row="1"
+                                           Grid.Column="0"
+                                           Fill="#AAA" />
+                                    <Rectangle Grid.Row="1"
+                                           Grid.Column="1"
+                                           Fill="#EEE" />
+                                </Grid>
+                            </VisualBrush.Visual>
+                        </VisualBrush>
+                    </Grid.Background>
+                    <Button Command="{Binding ChangeCanvasBackgroundCommand}"
+                            Content="{Binding EditTarget.Value.CanvasBackground.Value, Converter={StaticResource ColorToStringConverter}}">
+                        <Button.Style>
+                            <Style TargetType="{x:Type Button}">
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="{Binding EditTarget.Value.CanvasBackground.Value, Converter={StaticResource ColorToStringConverter}}" />
+                                    </Trigger>
+                                    <Trigger Property="IsMouseOver" Value="False">
+                                        <Setter Property="Background" Value="{Binding EditTarget.Value.CanvasBackground.Value, Converter={StaticResource ColorToStringConverter}}" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                </Grid>
+                <CheckBox Grid.Row="3"
                           Grid.Column="0"
                           Grid.ColumnSpan="2"
                           x:Name="enablePointSnap"
                           Margin="5"
                           IsChecked="{Binding EditTarget.Value.EnablePointSnap.Value}">ポイントにスナップする</CheckBox>
-                <Label Grid.Row="3"
+                <Label Grid.Row="4"
                        Grid.Column="0">ポイントにスナップする範囲</Label>
-                <TextBox Grid.Row="3"
+                <TextBox Grid.Row="4"
                          Grid.Column="1"
                          HorizontalAlignment="Stretch"
                          HorizontalContentAlignment="Right"

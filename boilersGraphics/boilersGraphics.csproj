@@ -144,6 +144,7 @@
     <Compile Include="AttachedProperties\DragAndDropProps.cs" />
     <Compile Include="AttachedProperties\ItemConnectProps.cs" />
     <Compile Include="AttachedProperties\SelectionProps.cs" />
+    <Compile Include="Controls\Combine.cs" />
     <Compile Include="Controls\ControlPoint.cs" />
     <Compile Include="Controls\DesignerCanvas.cs" />
     <Compile Include="Controls\DoubleTextBox.cs" />
@@ -152,10 +153,12 @@
     <Compile Include="Controls\ResizeThumb.cs" />
     <Compile Include="Controls\RotateThumb.cs" />
     <Compile Include="Controls\SnapPoint.cs" />
+    <Compile Include="Converters\ColorToStringConverter.cs" />
     <Compile Include="Converters\DoubleToStringConverter.cs" />
     <Compile Include="Converters\ExtensionConverter.cs" />
     <Compile Include="Converters\IntToStringConverter.cs" />
     <Compile Include="Converters\ObservableCollectionToPathSegmentCollection.cs" />
+    <Compile Include="Converters\StringToByteConverter.cs" />
     <Compile Include="Converters\WindowStateToVisibilityConverter.cs" />
     <Compile Include="Exceptions\UnexpectedException.cs" />
     <Compile Include="Controls\ZoomBox.cs" />
@@ -170,8 +173,12 @@
     <Compile Include="Helpers\ColorExchange.cs" />
     <Compile Include="Helpers\DragObject.cs" />
     <Compile Include="Helpers\EventToCommand.cs" />
+    <Compile Include="Helpers\GeometryCreator.cs" />
     <Compile Include="Helpers\GroupTransformNotification.cs" />
     <Compile Include="Helpers\IEventArgsConverter.cs" />
+    <Compile Include="Helpers\ObjectDeserializer.cs" />
+    <Compile Include="Helpers\ObjectSerializer.cs" />
+    <Compile Include="Helpers\SnapAction.cs" />
     <Compile Include="Helpers\SnapPointDistincter.cs" />
     <Compile Include="Helpers\ToolBoxData.cs" />
     <Compile Include="Helpers\ToolItemData.cs" />
@@ -197,6 +204,7 @@
     </Compile>
     <Compile Include="ViewModels\BezierCurveViewModel.cs" />
     <Compile Include="ViewModels\ColorPickerViewModel.cs" />
+    <Compile Include="ViewModels\CombineGeometryViewModel.cs" />
     <Compile Include="ViewModels\ConnectorBaseViewModel.cs" />
     <Compile Include="Models\Corner.cs" />
     <Compile Include="ViewModels\ExportViewModel.cs" />
@@ -223,13 +231,6 @@
     <Compile Include="ViewModels\ToolBarViewModel.cs" />
     <Compile Include="Views\AdornedBy.cs" />
     <Compile Include="Views\Behaviors\AbstractAdorner.cs" />
-    <Compile Include="Views\Behaviors\CursorInfo.cs" />
-    <Compile Include="Views\Behaviors\DeselectBehavior.cs" />
-    <Compile Include="Views\Behaviors\AbstractDragAdorner.cs" />
-    <Compile Include="Views\Behaviors\AbstractDragStartBehavior.cs" />
-    <Compile Include="Views\Behaviors\DrawAbstractBehavior.cs" />
-    <Compile Include="Views\Behaviors\DropAcceptDescription.cs" />
-    <Compile Include="Views\Behaviors\CursorBehavior.cs" />
     <Compile Include="Views\Behaviors\LetterBehavior.cs" />
     <Compile Include="Views\Behaviors\LetterVerticalBehavior.cs" />
     <Compile Include="Views\Behaviors\NDrawBezierCurveBehavior.cs" />
@@ -239,14 +240,8 @@
     <Compile Include="Views\Behaviors\NDrawStraightLineBehavior.cs" />
     <Compile Include="Views\Behaviors\PictureBehavior.cs" />
     <Compile Include="Views\Behaviors\RectangleAdorner.cs" />
-    <Compile Include="Views\Behaviors\RectangleDragAdorner.cs" />
-    <Compile Include="Views\Behaviors\RectangleDragStartBehavior.cs" />
-    <Compile Include="Views\Behaviors\RectangleSelectBehavior.cs" />
     <Compile Include="Views\Behaviors\RubberbandBehavior.cs" />
     <Compile Include="Views\Behaviors\StraightLineAdorner.cs" />
-    <Compile Include="Views\Behaviors\StraightLineDragAdorner.cs" />
-    <Compile Include="Views\Behaviors\StraightLineDragStartBehavior.cs" />
-    <Compile Include="Views\Behaviors\StraightLineSelectBehavior.cs" />
     <Compile Include="Views\ColorMap.xaml.cs">
       <DependentUpon>ColorMap.xaml</DependentUpon>
     </Compile>
@@ -276,7 +271,6 @@
     <Compile Include="Views\Setting.xaml.cs">
       <DependentUpon>Setting.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\StraightLineResizeHandle.cs" />
     <Compile Include="Views\Triggers\InteractionRequestTrigger.cs" />
     <Compile Include="Views\Triggers\ResizeThumbDragDeltaEventTrigger.cs" />
     <Compile Include="Views\Triggers\WindowLoadedEventTrigger.cs" />
@@ -304,6 +298,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Resources\DesignerItems\CombineDesignerItemDataTemplate.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Resources\DesignerItems\PolygonDesignerItemDataTemplate.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -317,6 +315,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Resources\Styles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Styles\Combine.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -504,6 +506,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\img\BezierCurve.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\img\exclude.png" />
+    <Resource Include="Assets\img\intersect.png" />
+    <Resource Include="Assets\img\union.png" />
+    <Resource Include="Assets\img\xor.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

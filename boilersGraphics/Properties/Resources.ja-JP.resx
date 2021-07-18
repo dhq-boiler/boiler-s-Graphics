@@ -156,6 +156,9 @@
   <data name="Command_Group" xml:space="preserve">
     <value>グループ化</value>
   </data>
+  <data name="Command_Load" xml:space="preserve">
+    <value>開く</value>
+  </data>
   <data name="Command_Overwrite" xml:space="preserve">
     <value>上書き保存</value>
   </data>

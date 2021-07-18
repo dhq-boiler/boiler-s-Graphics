@@ -326,7 +326,7 @@
                                                     Width="{Binding Width}"
                                                     Height="{Binding Height}"
                                                     AllowDrop="True"
-                                                    Background="White" />
+                                                    Background="{Binding CanvasBackground.Value, Converter={StaticResource solidColorBrushConverter}}" />
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                 </ItemsControl>
@@ -414,16 +414,20 @@
                 </ScrollViewer.ContextMenu>
 
             </ScrollViewer>
-            <control:ZoomBox
-                x:Name="zoomBox"
-                Width="180"
-                Margin="0,5,25,0"
-                HorizontalAlignment="Right"
-                VerticalAlignment="Top"
-                ScrollViewer="{Binding ElementName=DesignerScrollViewer}"
-                Visibility="{Binding EnableMiniMap.Value, Converter={StaticResource BoolToVisibilityConverter}}"/>
-
-
+            <StackPanel Orientation="Vertical"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top">
+                <control:ZoomBox
+                    x:Name="zoomBox"
+                    Width="180"
+                    Margin="0,5,25,0"
+                    ScrollViewer="{Binding ElementName=DesignerScrollViewer}"
+                    Visibility="{Binding EnableMiniMap.Value, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                <control:Combine
+                    x:Name="combine"
+                    Width="180"
+                    Margin="0,5,25,0" />
+            </StackPanel>
         </Grid>
     </Border>
 </UserControl>

@@ -1,5 +1,6 @@
 ﻿using boilersGraphics.Controls;
 using boilersGraphics.Extensions;
+using boilersGraphics.Helpers;
 using boilersGraphics.Models;
 using boilersGraphics.ViewModels;
 using System;
@@ -22,10 +23,10 @@ namespace boilersGraphics.Adorners
         private Point? _dragEndPoint;
         private Pen _edgePen;
         private DesignerCanvas _designerCanvas;
-        private Dictionary<Point, Adorner> _adorners;
         private string _data;
         private readonly Point _startPoint;
         private ObservableCollection<Corner> _corners;
+        private SnapAction _snapAction;
 
         public PolygonAdorner(DesignerCanvas designerCanvas, Point? dragStartPoint, ObservableCollection<Corner> corners, string data, Point startPoint)
             : base(designerCanvas)
@@ -36,10 +37,10 @@ namespace boilersGraphics.Adorners
             var brush = new SolidColorBrush(parent.EdgeColors.First());
             brush.Opacity = 0.5;
             _edgePen = new Pen(brush, parent.EdgeThickness.Value.Value);
-            _adorners = new Dictionary<Point, Adorner>();
             _data = data;
             _startPoint = startPoint;
             _corners = corners;
+            _snapAction = new SnapAction();
         }
 
         protected override void OnMouseMove(MouseEventArgs e)
@@ -51,57 +52,11 @@ namespace boilersGraphics.Adorners
 
                 //ドラッグ終了座標を更新
                 _dragEndPoint = e.GetPosition(this);
+                var currentPosition = _dragEndPoint.Value;
+                _snapAction.OnMouseMove(ref currentPosition);
+                _dragEndPoint = currentPosition;
 
-                var mainWindowVM = (App.Current.MainWindow.DataContext as MainWindowViewModel);
-                var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-
-                var diagramVM = mainWindowVM.DiagramViewModel;
-                if (diagramVM.EnablePointSnap.Value)
-                {
-                    var snapPoints = diagramVM.SnapPoints;
-                    Point? snapped = null;
-                    foreach (var snapPoint in snapPoints)
-                    {
-                        if (_dragEndPoint.Value.X > snapPoint.X - mainWindowVM.SnapPower.Value
-                         && _dragEndPoint.Value.X < snapPoint.X + mainWindowVM.SnapPower.Value
-                         && _dragEndPoint.Value.Y > snapPoint.Y - mainWindowVM.SnapPower.Value
-                         && _dragEndPoint.Value.Y < snapPoint.Y + mainWindowVM.SnapPower.Value)
-                        {
-                            //スナップする座標を一時変数へ保存
-                            snapped = snapPoint;
-                        }
-                    }
-
-                    //スナップした場合
-                    if (snapped != null)
-                    {
-                        AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(designerCanvas);
-                        RemoveFromAdornerLayerAndDictionary(snapped, adornerLayer);
-
-                        //ドラッグ終了座標を一時変数で上書きしてスナップ
-                        _dragEndPoint = snapped;
-                        if (adornerLayer != null)
-                        {
-                            Trace.WriteLine($"Snap={snapped.Value}");
-                            if (!_adorners.ContainsKey(snapped.Value))
-                            {
-                                var adorner = new Adorners.SnapPointAdorner(designerCanvas, snapped.Value);
-                                if (adorner != null)
-                                {
-                                    adornerLayer.Add(adorner);
-
-                                    //ディクショナリに記憶する
-                                    _adorners.Add(snapped.Value, adorner);
-                                }
-                            }
-                        }
-                    }
-                    else //スナップしなかった場合
-                    {
-                        RemoveAllAdornerFromAdornerLayerAndDictionary(designerCanvas);
-                    }
-                }
-
+                (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.CurrentPoint = currentPosition;
                 (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = $"({_dragStartPoint.Value.X}, {_dragStartPoint.Value.Y}) - ({_dragEndPoint.Value.X}, {_dragEndPoint.Value.Y}) (w, h) = ({_dragEndPoint.Value.X - _dragStartPoint.Value.X}, {_dragEndPoint.Value.Y - _dragStartPoint.Value.Y})";
 
                 this.InvalidateVisual();
@@ -114,51 +69,12 @@ namespace boilersGraphics.Adorners
             e.Handled = true;
         }
 
-        private void RemoveAllAdornerFromAdornerLayerAndDictionary(DesignerCanvas designerCanvas)
-        {
-            AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(designerCanvas);
-            var removes = _adorners.ToList();
-
-            removes.ForEach(x =>
-            {
-                if (adornerLayer != null)
-                {
-                    adornerLayer.Remove(x.Value);
-                }
-                _adorners.Remove(x.Key);
-            });
-        }
-
-        private void RemoveFromAdornerLayerAndDictionary(Point? snapped, AdornerLayer adornerLayer)
-        {
-            var removes = _adorners.Where(x => x.Key != snapped)
-                                                       .ToList();
-            removes.ForEach(x =>
-            {
-                if (adornerLayer != null)
-                {
-                    adornerLayer.Remove(x.Value);
-                }
-                _adorners.Remove(x.Key);
-            });
-        }
-
         protected override void OnMouseUp(System.Windows.Input.MouseButtonEventArgs e)
         {
             // release mouse capture
             if (this.IsMouseCaptured) this.ReleaseMouseCapture();
 
-            // remove this adorner from adorner layer
-            AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(_designerCanvas);
-            if (adornerLayer != null)
-            {
-                adornerLayer.Remove(this);
-
-                foreach (var adorner in _adorners)
-                    adornerLayer.Remove(adorner.Value);
-
-                _adorners.Clear();
-            }
+            _snapAction.OnMouseUp(this);
 
             if (_dragStartPoint.HasValue && _dragEndPoint.HasValue)
             {

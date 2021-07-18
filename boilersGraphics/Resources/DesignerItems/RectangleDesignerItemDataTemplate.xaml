@@ -6,13 +6,10 @@
     xmlns:viewModel="clr-namespace:boilersGraphics.ViewModels">
     <convereter:ToSolidColorBrushConverter x:Key="solidColorBrushConverter" />
     <DataTemplate DataType="{x:Type viewModel:NRectangleViewModel}">
-        <Grid>
-            <Rectangle
-                Fill="{Binding FillColor, Converter={StaticResource solidColorBrushConverter}}"
-                IsHitTestVisible="False"
-                Stretch="Fill"
-                Stroke="{Binding EdgeColor, Converter={StaticResource solidColorBrushConverter}}"
-                StrokeThickness="{Binding EdgeThickness}" />
-        </Grid>
+        <Path Stroke="{Binding EdgeColor, Converter={StaticResource solidColorBrushConverter}}"
+              StrokeThickness="{Binding EdgeThickness}"
+              Stretch="Fill"
+              Fill="{Binding FillColor, Converter={StaticResource solidColorBrushConverter}}"
+              Data="{Binding PathGeometry.Value}" />
     </DataTemplate>
 </ResourceDictionary>

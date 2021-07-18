@@ -16,12 +16,12 @@ namespace boilersGraphics.ViewModels
 {
     internal class ColorPickerViewModel : BindableBase, IDialogAware, IDisposable
     {
-        private byte _A;
         private WriteableBitmap _WhiteBlackColumnMap;
         private WriteableBitmap _HueSelector;
         private WriteableBitmap _RedSelector;
         private WriteableBitmap _GreenSelector;
         private WriteableBitmap _BlueSelector;
+        private WriteableBitmap _ASelector;
         private bool _hsv2bgr;
         private bool _bgr2hsv;
         private CompositeDisposable _disposables = new CompositeDisposable();
@@ -85,6 +85,7 @@ namespace boilersGraphics.ViewModels
             R
                 .Subscribe(_ =>
                 {
+                    GenerateASelectorMat();
                     if (!_hsv2bgr)
                     {
                         _bgr2hsv = true;
@@ -99,6 +100,7 @@ namespace boilersGraphics.ViewModels
             G
                 .Subscribe(_ =>
                 {
+                    GenerateASelectorMat();
                     if (!_hsv2bgr)
                     {
                         _bgr2hsv = true;
@@ -113,6 +115,7 @@ namespace boilersGraphics.ViewModels
             B
                 .Subscribe(_ =>
                 {
+                    GenerateASelectorMat();
                     if (!_hsv2bgr)
                     {
                         _bgr2hsv = true;
@@ -143,6 +146,7 @@ namespace boilersGraphics.ViewModels
             GenerateRedSelectorMat();
             GenerateGreenSelectorMat();
             GenerateBlueSelectorMat();
+            GenerateASelectorMat();
         }
 
         private void GenerateRedSelectorMat()
@@ -217,6 +221,42 @@ namespace boilersGraphics.ViewModels
                 }
 
                 BlueSelector = WriteableBitmapConverter.ToWriteableBitmap(bgrMat);
+            }
+        }
+
+        private void GenerateASelectorMat()
+        {
+            using (var bgrMat = new Mat(10, 255, MatType.CV_8UC4))
+            {
+                unsafe
+                {
+                    byte* p = (byte*)bgrMat.Data.ToPointer();
+
+                    for (int y = 0; y < 10; ++y)
+                    {
+                        byte* py = p + y * bgrMat.Step();
+
+                        for (int x = 0; x < 255; ++x)
+                        {
+                            if ((y + x) % 2 == 0)
+                            {
+                                *(py + x * 4) = B.Value;
+                                *(py + x * 4 + 1) = G.Value;
+                                *(py + x * 4 + 2) = R.Value;
+                                *(py + x * 4 + 3) = (byte)x;
+                            }
+                            else
+                            {
+                                *(py + x * 4) = 255 / 2;
+                                *(py + x * 4 + 1) = 255 / 2;
+                                *(py + x * 4 + 2) = 255 / 2;
+                                *(py + x * 4 + 3) = (byte)x;
+                            }
+                        }
+                    }
+                }
+
+                ASelector = WriteableBitmapConverter.ToWriteableBitmap(bgrMat);
             }
         }
 
@@ -433,6 +473,12 @@ namespace boilersGraphics.ViewModels
             set { SetProperty(ref _BlueSelector, value); }
         }
 
+        public WriteableBitmap ASelector
+        {
+            get { return _ASelector; }
+            set { SetProperty(ref _ASelector, value); }
+        }
+
         /// <summary>
         /// 0 ≦ Hue ≦ 180
         /// </summary>
@@ -442,11 +488,7 @@ namespace boilersGraphics.ViewModels
 
         public ReactiveProperty<byte> Value { get; } = new ReactiveProperty<byte>();
 
-        public byte A
-        {
-            get { return _A; }
-            set { SetProperty(ref _A, value); }
-        }
+        public ReactiveProperty<byte> A { get; } = new ReactiveProperty<byte>();
 
         public ReactiveProperty<byte> R { get; } = new ReactiveProperty<byte>();
 
