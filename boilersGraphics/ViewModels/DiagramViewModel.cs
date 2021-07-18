@@ -490,8 +490,8 @@ namespace boilersGraphics.ViewModels
         {
             var selectedItems = SelectedItems.ToList();
             var root = new XElement("Data");
-            root.Add(new XElement("DesignerItems", ObjectSerializer.SerializeDesignerItems(this)));
-            root.Add(new XElement("Connections", ObjectSerializer.SerializeConnections(this)));
+            root.Add(new XElement("DesignerItems", ObjectSerializer.SerializeDesignerItems(this, selectedItems)));
+            root.Add(new XElement("Connections", ObjectSerializer.SerializeConnections(this, selectedItems)));
             Clipboard.SetDataObject(root.ToString(), false);
         }
 
@@ -690,8 +690,8 @@ namespace boilersGraphics.ViewModels
             var connections = this.Items.OfType<ConnectorBaseViewModel>();
             var mainWindowVM = (App.Current.MainWindow.DataContext as MainWindowViewModel);
 
-            XElement designerItemsXML = new XElement("DesignerItems", ObjectSerializer.SerializeDesignerItems(this));
-            XElement connectionsXML = new XElement("Connections", ObjectSerializer.SerializeConnections(this));
+            XElement designerItemsXML = new XElement("DesignerItems", ObjectSerializer.SerializeDesignerItems(this, Items));
+            XElement connectionsXML = new XElement("Connections", ObjectSerializer.SerializeConnections(this, Items));
             XElement configurationXML = new XElement("Configuration",
                     new XElement("Width", Width),
                     new XElement("Height", Height),
@@ -737,8 +737,8 @@ namespace boilersGraphics.ViewModels
             var connections = this.Items.OfType<ConnectorBaseViewModel>();
             var mainWindowVM = (App.Current.MainWindow.DataContext as MainWindowViewModel);
 
-            XElement designerItemsXML = new XElement("DesignerItems", ObjectSerializer.SerializeDesignerItems(this));
-            XElement connectionsXML = new XElement("Connections", ObjectSerializer.SerializeConnections(this));
+            XElement designerItemsXML = new XElement("DesignerItems", ObjectSerializer.SerializeDesignerItems(this, Items));
+            XElement connectionsXML = new XElement("Connections", ObjectSerializer.SerializeConnections(this, Items));
             XElement configurationXML = new XElement("Configuration",
                     new XElement("Width", Width),
                     new XElement("Height", Height),
