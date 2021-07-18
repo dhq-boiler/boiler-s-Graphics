@@ -358,8 +358,7 @@ namespace boilersGraphics.ViewModels
         {
             var picture = SelectedItems.OfType<PictureDesignerItemViewModel>().First();
             var other = SelectedItems.OfType<DesignerItemViewModelBase>().Last();
-            var pathGeometry = other.PathGeometry.Value;
-            //pathGeometry.Transform = new TranslateTransform(other.Left.Value - picture.Left.Value, other.Top.Value - picture.Top.Value);
+            var pathGeometry = GeometryCreator.CreateRectangle(other as NRectangleViewModel, picture.Left.Value, picture.Top.Value);
             picture.Clip.Value = pathGeometry;
             Items.Remove(other);
         }

@@ -30,5 +30,20 @@ namespace boilersGraphics.Helpers
             geometry.Freeze();
             return PathGeometry.CreateFromGeometry(geometry);
         }
+
+        public static PathGeometry CreateRectangle(NRectangleViewModel item, double offsetX, double offsetY)
+        {
+            var geometry = new StreamGeometry();
+            geometry.FillRule = FillRule.EvenOdd;
+            using (var ctx = geometry.Open())
+            {
+                ctx.BeginFigure(new Point(item.Left.Value - offsetX, item.Top.Value - offsetY), true, true);
+                ctx.LineTo(new Point(item.Left.Value - offsetX + item.Width.Value, item.Top.Value - offsetY), true, false);
+                ctx.LineTo(new Point(item.Left.Value - offsetX + item.Width.Value, item.Top.Value - offsetY + item.Height.Value), true, false);
+                ctx.LineTo(new Point(item.Left.Value - offsetX, item.Top.Value - offsetY + item.Height.Value), true, false);
+            }
+            geometry.Freeze();
+            return PathGeometry.CreateFromGeometry(geometry);
+        }
     }
 }
