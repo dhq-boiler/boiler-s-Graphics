@@ -718,12 +718,7 @@ namespace boilersGraphics.ViewModels
 
             XElement designerItemsXML = new XElement("DesignerItems", ObjectSerializer.SerializeDesignerItems(this, Items));
             XElement connectionsXML = new XElement("Connections", ObjectSerializer.SerializeConnections(this, Items));
-            XElement configurationXML = new XElement("Configuration",
-                    new XElement("Width", Width),
-                    new XElement("Height", Height),
-                    new XElement("EnablePointSnap", EnablePointSnap.Value),
-                    new XElement("SnapPower", mainWindowVM.SnapPower.Value)
-                );
+            XElement configurationXML = new XElement("Configuration", ObjectSerializer.SerializeConfiguration(this));
 
             XElement root = new XElement("boilersGraphics");
             root.Add(designerItemsXML);
@@ -765,12 +760,7 @@ namespace boilersGraphics.ViewModels
 
             XElement designerItemsXML = new XElement("DesignerItems", ObjectSerializer.SerializeDesignerItems(this, Items));
             XElement connectionsXML = new XElement("Connections", ObjectSerializer.SerializeConnections(this, Items));
-            XElement configurationXML = new XElement("Configuration",
-                    new XElement("Width", Width),
-                    new XElement("Height", Height),
-                    new XElement("EnablePointSnap", EnablePointSnap.Value),
-                    new XElement("SnapPower", mainWindowVM.SnapPower.Value)
-                );
+            XElement configurationXML = new XElement("Configuration", ObjectSerializer.SerializeConfiguration(this));
 
             XElement root = new XElement("boilersGraphics");
             root.Add(designerItemsXML);
@@ -821,6 +811,7 @@ namespace boilersGraphics.ViewModels
             var configuration = root.Element("Configuration");
             Width = int.Parse(configuration.Element("Width").Value);
             Height = int.Parse(configuration.Element("Height").Value);
+            CanvasBackground.Value = (Color)ColorConverter.ConvertFromString(configuration.Element("CanvasBackground").Value);
             EnablePointSnap.Value = bool.Parse(configuration.Element("EnablePointSnap").Value);
             (App.Current.MainWindow.DataContext as MainWindowViewModel).SnapPower.Value = double.Parse(configuration.Element("SnapPower").Value);
 
