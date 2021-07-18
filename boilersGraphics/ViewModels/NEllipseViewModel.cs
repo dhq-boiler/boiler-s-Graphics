@@ -1,4 +1,5 @@
-﻿using System;
+﻿using boilersGraphics.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -57,6 +58,7 @@ namespace boilersGraphics.ViewModels
             clone.EdgeThickness = EdgeThickness;
             clone.Matrix.Value = Matrix.Value;
             clone.RotationAngle.Value = RotationAngle.Value;
+            clone.PathGeometry.Value = GeometryCreator.CreateEllipse(clone);
             return clone;
         }
 

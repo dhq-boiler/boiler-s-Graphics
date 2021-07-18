@@ -1,4 +1,6 @@
 ﻿
+using boilersGraphics.Helpers;
+
 namespace boilersGraphics.ViewModels
 {
     public class NRectangleViewModel : DesignerItemViewModelBase
@@ -52,6 +54,7 @@ namespace boilersGraphics.ViewModels
             clone.EdgeThickness = EdgeThickness;
             clone.Matrix.Value = Matrix.Value;
             clone.RotationAngle.Value = RotationAngle.Value;
+            clone.PathGeometry.Value = GeometryCreator.CreateRectangle(clone);
             return clone;
         }
 
