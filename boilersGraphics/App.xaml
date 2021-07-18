@@ -9,6 +9,9 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Views/Theme.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/Styles.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/Icons.xaml" />
+                
                 <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/Styles/Shared.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/Styles/ScrollBar.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/Styles/Expander.xaml" />
@@ -18,9 +21,6 @@
                 <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/Styles/ZoomBox.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/Styles/Combine.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/Styles/DesignerItems.xaml" />
-                
-                <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/Styles.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/Icons.xaml" />
                 
                 <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/DesignerItems/GroupItemDataTemplate.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/DesignerItems/RectangleDesignerItemDataTemplate.xaml" />

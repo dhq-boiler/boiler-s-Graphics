@@ -505,6 +505,12 @@
   <ItemGroup>
     <Resource Include="Assets\img\BezierCurve.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\img\exclude.png" />
+    <Resource Include="Assets\img\intersect.png" />
+    <Resource Include="Assets\img\union.png" />
+    <Resource Include="Assets\img\xor.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>
