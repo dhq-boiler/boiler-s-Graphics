@@ -799,6 +799,7 @@ namespace boilersGraphics.ViewModels
             (App.Current.MainWindow.DataContext as MainWindowViewModel).SnapPower.Value = double.Parse(configuration.Element("SnapPower").Value);
 
             Items.Clear();
+            SelectedItems.Clear();
 
             ObjectDeserializer.ReadObjectFromXML(this, root);
         }
