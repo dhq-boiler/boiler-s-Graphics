@@ -397,7 +397,8 @@
                         VerticalAlignment="Center"
                         Maximum="255"
                         Minimum="0"
-                        Value="{Binding A.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        Value="{Binding A.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        BackgroundBitmapSource="{Binding ASelector}" />
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top">
                     <Label
