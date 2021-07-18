@@ -16,7 +16,6 @@ namespace boilersGraphics.ViewModels
 {
     internal class ColorPickerViewModel : BindableBase, IDialogAware, IDisposable
     {
-        private byte _A;
         private WriteableBitmap _WhiteBlackColumnMap;
         private WriteableBitmap _HueSelector;
         private WriteableBitmap _RedSelector;
@@ -442,11 +441,7 @@ namespace boilersGraphics.ViewModels
 
         public ReactiveProperty<byte> Value { get; } = new ReactiveProperty<byte>();
 
-        public byte A
-        {
-            get { return _A; }
-            set { SetProperty(ref _A, value); }
-        }
+        public ReactiveProperty<byte> A { get; } = new ReactiveProperty<byte>();
 
         public ReactiveProperty<byte> R { get; } = new ReactiveProperty<byte>();
 

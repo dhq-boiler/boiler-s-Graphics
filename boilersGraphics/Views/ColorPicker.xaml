@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:attached="clr-namespace:boilersGraphics.AttachedProperties"
     xmlns:control="clr-namespace:boilersGraphics.Controls"
+    xmlns:converter="clr-namespace:boilersGraphics.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:boilersGraphics.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -11,6 +12,7 @@
     prism:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
     <UserControl.Resources>
+        <converter:StringToByteConverter x:Key="StringToByteConverter" />
         <Style x:Key="SliderButtonStyle" TargetType="{x:Type RepeatButton}">
             <Setter Property="SnapsToDevicePixels" Value="true" />
             <Setter Property="OverridesDefaultStyle" Value="true" />
@@ -302,12 +304,50 @@
                 Saturation="{Binding Saturation.Value, Mode=TwoWay}"
                 Source="{Binding WhiteBlackColorMap}"
                 Color="{Binding Output.Value, Mode=OneWayToSource}"
-                Value="{Binding Value.Value, Mode=TwoWay}" />
+                Value="{Binding Value.Value, Mode=TwoWay}"
+                A="{Binding A.Value, Mode=OneWay}" />
         </DockPanel>
         <DockPanel Width="266">
             <Grid DockPanel.Dock="Top">
                 <Grid Width="256" Height="100" />
                 <Grid>
+                    <Rectangle
+                        Width="75"
+                        Height="75"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center">
+                        <Rectangle.Fill>
+                            <VisualBrush Stretch="None"
+                                 TileMode="Tile"
+                                 Viewport="0,0,16,16"
+                                 ViewportUnits="Absolute">
+                                <VisualBrush.Visual>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="8" />
+                                            <ColumnDefinition Width="8" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="8" />
+                                            <RowDefinition Height="8" />
+                                        </Grid.RowDefinitions>
+                                        <Rectangle Grid.Row="0"
+                                           Grid.Column="0"
+                                           Fill="#EEE" />
+                                        <Rectangle Grid.Row="0"
+                                           Grid.Column="1"
+                                           Fill="#AAA" />
+                                        <Rectangle Grid.Row="1"
+                                           Grid.Column="0"
+                                           Fill="#AAA" />
+                                        <Rectangle Grid.Row="1"
+                                           Grid.Column="1"
+                                           Fill="#EEE" />
+                                    </Grid>
+                                </VisualBrush.Visual>
+                            </VisualBrush>
+                        </Rectangle.Fill>
+                    </Rectangle>
                     <Rectangle
                         Width="75"
                         Height="75"
@@ -348,8 +388,16 @@
                         Foreground="White">
                         A
                     </Label>
-                    <TextBox DockPanel.Dock="Right" />
-                    <Rectangle Fill="Green" />
+                    <TextBox DockPanel.Dock="Right"
+                             Width="25"
+                             Text="{Binding A.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource StringToByteConverter}}"
+                             TextAlignment="Right" />
+                    <local:ColorSlider
+                        x:Name="A_Slider"
+                        VerticalAlignment="Center"
+                        Maximum="255"
+                        Minimum="0"
+                        Value="{Binding A.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top">
                     <Label

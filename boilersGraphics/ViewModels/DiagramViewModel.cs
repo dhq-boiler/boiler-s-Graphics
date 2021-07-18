@@ -352,6 +352,8 @@ namespace boilersGraphics.ViewModels
             EdgeThickness.Value = 1.0;
 
             CanvasBorderThickness = 1.0;
+
+            CanvasBackground.Value = Colors.White;
         }
 
         private void ExecuteClipCommand()
@@ -526,6 +528,7 @@ namespace boilersGraphics.ViewModels
             var setting = new Models.Setting();
             setting.Width.Value = this.Width;
             setting.Height.Value = this.Height;
+            setting.CanvasBackground.Value = this.CanvasBackground.Value;
             setting.EnablePointSnap.Value = this.EnablePointSnap.Value;
             setting.SnapPower.Value = (App.Current.MainWindow.DataContext as MainWindowViewModel).SnapPower.Value;
             dlgService.ShowDialog(nameof(Views.Setting), new DialogParameters() { { "Setting",  setting} }, ret => result = ret);
@@ -534,6 +537,7 @@ namespace boilersGraphics.ViewModels
                 var s = result.Parameters.GetValue<Models.Setting>("Setting");
                 Width = s.Width.Value;
                 Height = s.Height.Value;
+                CanvasBackground.Value = s.CanvasBackground.Value;
                 EnablePointSnap.Value = s.EnablePointSnap.Value;
                 (App.Current.MainWindow.DataContext as MainWindowViewModel).SnapPower.Value = s.SnapPower.Value;
             }
@@ -592,6 +596,8 @@ namespace boilersGraphics.ViewModels
         public ReactiveProperty<bool> EnableMiniMap { get; } = new ReactiveProperty<bool>();
 
         public ReactiveProperty<string> FileName { get; } = new ReactiveProperty<string>();
+
+        public ReactiveProperty<Color> CanvasBackground { get; } = new ReactiveProperty<Color>();
 
         public int Width
         {

@@ -153,10 +153,12 @@
     <Compile Include="Controls\ResizeThumb.cs" />
     <Compile Include="Controls\RotateThumb.cs" />
     <Compile Include="Controls\SnapPoint.cs" />
+    <Compile Include="Converters\ColorToStringConverter.cs" />
     <Compile Include="Converters\DoubleToStringConverter.cs" />
     <Compile Include="Converters\ExtensionConverter.cs" />
     <Compile Include="Converters\IntToStringConverter.cs" />
     <Compile Include="Converters\ObservableCollectionToPathSegmentCollection.cs" />
+    <Compile Include="Converters\StringToByteConverter.cs" />
     <Compile Include="Converters\WindowStateToVisibilityConverter.cs" />
     <Compile Include="Exceptions\UnexpectedException.cs" />
     <Compile Include="Controls\ZoomBox.cs" />
