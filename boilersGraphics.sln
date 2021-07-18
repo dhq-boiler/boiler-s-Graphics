@@ -9,9 +9,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "boilersGraphics.Test", "boi
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{91F75893-628A-4062-9BD7-24EA5033AB8A}"
 	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
 		azure-pipelines.yml = azure-pipelines.yml
 		README.md = README.md
 	EndProjectSection
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Setup", "Setup\Setup.vdproj", "{6130F5EB-22D2-4866-A25E-FCE113F5DCC8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +30,10 @@ Global
 		{8EDF4429-251A-416D-BB68-93F227191BCF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8EDF4429-251A-416D-BB68-93F227191BCF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8EDF4429-251A-416D-BB68-93F227191BCF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6130F5EB-22D2-4866-A25E-FCE113F5DCC8}.Debug|Any CPU.ActiveCfg = Debug
+		{6130F5EB-22D2-4866-A25E-FCE113F5DCC8}.Debug|Any CPU.Build.0 = Debug
+		{6130F5EB-22D2-4866-A25E-FCE113F5DCC8}.Release|Any CPU.ActiveCfg = Release
+		{6130F5EB-22D2-4866-A25E-FCE113F5DCC8}.Release|Any CPU.Build.0 = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
