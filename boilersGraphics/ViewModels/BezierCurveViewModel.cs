@@ -115,6 +115,7 @@ namespace boilersGraphics.ViewModels
             clone.Owner = Owner;
             clone.EdgeColor = EdgeColor;
             clone.EdgeThickness = EdgeThickness;
+            clone.PathGeometry.Value = GeometryCreator.CreateBezierCurve(clone);
 
             return clone;
         }

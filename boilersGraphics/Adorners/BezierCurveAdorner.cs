@@ -79,6 +79,7 @@ namespace boilersGraphics.Adorners
                 item.EdgeThickness = item.Owner.EdgeThickness.Value.Value;
                 item.ZIndex.Value = item.Owner.Items.Count;
                 item.IsSelected = true;
+                item.PathGeometry.Value = GeometryCreator.CreateBezierCurve(item);
                 item.Owner.DeselectAll();
                 ((AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel).AddItemCommand.Execute(item);
 

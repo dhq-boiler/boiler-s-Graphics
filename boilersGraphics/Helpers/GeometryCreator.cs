@@ -1,4 +1,5 @@
 ﻿using boilersGraphics.ViewModels;
+using Reactive.Bindings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,6 +42,18 @@ namespace boilersGraphics.Helpers
                 ctx.LineTo(new Point(item.Left.Value - offsetX + item.Width.Value, item.Top.Value - offsetY), true, false);
                 ctx.LineTo(new Point(item.Left.Value - offsetX + item.Width.Value, item.Top.Value - offsetY + item.Height.Value), true, false);
                 ctx.LineTo(new Point(item.Left.Value - offsetX, item.Top.Value - offsetY + item.Height.Value), true, false);
+            }
+            geometry.Freeze();
+            return PathGeometry.CreateFromGeometry(geometry);
+        }
+
+        public static PathGeometry CreateBezierCurve(BezierCurveViewModel item)
+        {
+            var geometry = new StreamGeometry();
+            using (var ctx = geometry.Open())
+            {
+                ctx.BeginFigure(item.Points[0], true, true);
+                ctx.BezierTo(item.ControlPoint1.Value, item.ControlPoint2.Value, item.Points[1], true, false);
             }
             geometry.Freeze();
             return PathGeometry.CreateFromGeometry(geometry);

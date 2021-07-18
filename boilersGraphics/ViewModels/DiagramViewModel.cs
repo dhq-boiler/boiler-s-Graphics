@@ -1564,7 +1564,7 @@ namespace boilersGraphics.ViewModels
 
             foreach (var connector in selectedConnectors)
             {
-                //DuplicateConnector(oldNewList, connector);
+                DuplicateConnector(oldNewList, connector);
             }
         }
 
@@ -1620,6 +1620,20 @@ namespace boilersGraphics.ViewModels
             }
         }
 
+        private void DuplicateConnector(List<Tuple<SelectableDesignerItemViewModelBase, SelectableDesignerItemViewModelBase>> oldNewList, ConnectorBaseViewModel connector, GroupItemViewModel groupItem = null)
+        {
+            var clone = connector.Clone() as ConnectorBaseViewModel;
+            clone.ZIndex.Value = Items.Count();
+            if (groupItem != null)
+            {
+                clone.ParentID = groupItem.ID;
+                clone.EnableForSelection.Value = false;
+                groupItem.AddGroup(clone);
+            }
+            Items.Add(clone);
+        }
+
+        [Obsolete]
         private void DuplicateConnector(IEnumerable<DesignerItemViewModelBase> connectedItems, List<Tuple<SelectableDesignerItemViewModelBase, SelectableDesignerItemViewModelBase>> oldNewList, ConnectorBaseViewModel connector, GroupItemViewModel groupItem = null)
         {
             var clone = connector.Clone() as ConnectorBaseViewModel;
