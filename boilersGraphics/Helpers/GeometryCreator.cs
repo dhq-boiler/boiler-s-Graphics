@@ -54,6 +54,8 @@ namespace boilersGraphics.Helpers
             var heightRatio = newItem.Sender.Height.Value / oldItem.Sender.Height.Value;
             Trace.WriteLine($"new width = {newItem.Sender.Width.Value} old width = {oldItem.Sender.Width.Value}");
             Trace.WriteLine($"new height = {newItem.Sender.Height.Value} old height = {oldItem.Sender.Height.Value}");
+            
+            //TODO Rectangleを構成する4点に widthRatio と heightRatio を掛ける
             var geometry = new StreamGeometry();
             geometry.FillRule = FillRule.EvenOdd;
             using (var ctx = geometry.Open())
