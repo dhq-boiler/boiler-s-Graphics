@@ -112,7 +112,7 @@
                 {
                 "Name" = "8:.NET Framework"
                 "Message" = "8:[VSDNETMSG]"
-                "FrameworkVersion" = "8:.NETFramework,Version=v4.7.2"
+                "FrameworkVersion" = "8:.NETFramework,Version=v4.8"
                 "AllowLaterVersions" = "11:FALSE"
                 "InstallUrl" = "8:http://go.microsoft.com/fwlink/?LinkId=863262"
                 }
@@ -208,7 +208,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:boiler's Graphics"
         "ProductCode" = "8:{3F90B401-9E60-4F38-975C-85EBBC4797AD}"
-        "PackageCode" = "8:{1CE3A469-7664-4ADF-ADF9-631778E43538}"
+        "PackageCode" = "8:{DBD0227D-00C8-4461-B365-BAEE30838311}"
         "UpgradeCode" = "8:{350CD330-D991-4642-A6AF-1435BB093103}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -757,7 +757,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_27A7FE29B3C1481F81C917BBB0FC15B3"
             {
-            "SourcePath" = "8:..\\boilersGraphics\\obj\\Release\\boilersGraphics.exe"
+            "SourcePath" = "8:..\\boilersGraphics\\obj\\Debug\\boilersGraphics.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_313A3D80D8614C45A60CEFEB24920022"
