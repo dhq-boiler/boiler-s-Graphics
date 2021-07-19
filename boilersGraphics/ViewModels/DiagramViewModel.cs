@@ -359,9 +359,18 @@ namespace boilersGraphics.ViewModels
         private void ExecuteClipCommand()
         {
             var picture = SelectedItems.OfType<PictureDesignerItemViewModel>().First();
+            var pictureRP = picture.ToReactiveProperty(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe); //戻り値が何故か {null} になる
             var other = SelectedItems.OfType<DesignerItemViewModelBase>().Last();
             var pathGeometry = GeometryCreator.CreateRectangle(other as NRectangleViewModel, picture.Left.Value, picture.Top.Value);
-            picture.Clip.Value = pathGeometry;
+            (pictureRP.Value.Sender as PictureDesignerItemViewModel).Clip.Value = pathGeometry;
+            (pictureRP.Value.Sender as PictureDesignerItemViewModel).ClipObject.Value = other;
+            pictureRP.Zip(pictureRP.Skip(1), (Old, New) => new { OldItem = Old, NewItem = New }).Subscribe(x =>
+            {
+                var _other = picture.ClipObject.Value;
+                var _pathGeometry = GeometryCreator.CreateRectangle(_other as NRectangleViewModel, picture.Left.Value, picture.Top.Value, x.OldItem, x.NewItem);
+                picture.Clip.Value = _pathGeometry;
+            })
+            .AddTo(_CompositeDisposable);
             Items.Remove(other);
         }
 

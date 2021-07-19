@@ -64,9 +64,9 @@ namespace boilersGraphics.ViewModels
             set { SetProperty(ref _MinHeight, value); }
         }
 
-        public ReactiveProperty<double> Width { get; } = new ReactiveProperty<double>();
+        public ReactiveProperty<double> Width { get; } = new ReactiveProperty<double>(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe);
 
-        public ReactiveProperty<double> Height { get; } = new ReactiveProperty<double>();
+        public ReactiveProperty<double> Height { get; } = new ReactiveProperty<double>(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe);
 
         public bool ShowConnectors
         {
@@ -84,9 +84,9 @@ namespace boilersGraphics.ViewModels
             }
         }
 
-        public ReactiveProperty<double> Left { get; } = new ReactiveProperty<double>();
+        public ReactiveProperty<double> Left { get; } = new ReactiveProperty<double>(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe);
 
-        public ReactiveProperty<double> Top { get; } = new ReactiveProperty<double>();
+        public ReactiveProperty<double> Top { get; } = new ReactiveProperty<double>(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe);
 
         public ReadOnlyReactiveProperty<double> Right { get; private set; }
 
@@ -109,22 +109,28 @@ namespace boilersGraphics.ViewModels
             MinHeight = 0;
 
             Left
-                .Subscribe(left => UpdateTransform())
+                .Zip(Left.Skip(1), (Old, New) => new { OldItem = Old, NewItem = New})
+                .Subscribe(x => UpdateTransform(nameof(Left), x.OldItem, x.NewItem))
                 .AddTo(_CompositeDisposable);
             Top
-                .Subscribe(top => UpdateTransform())
+                .Zip(Left.Skip(1), (Old, New) => new { OldItem = Old, NewItem = New })
+                .Subscribe(x => UpdateTransform(nameof(Top), x.OldItem, x.NewItem))
                 .AddTo(_CompositeDisposable);
             Width
-                .Subscribe(_ => UpdateTransform())
+                .Zip(Left.Skip(1), (Old, New) => new { OldItem = Old, NewItem = New })
+                .Subscribe(x => UpdateTransform(nameof(Width), x.OldItem, x.NewItem))
                 .AddTo(_CompositeDisposable);
             Height
-                .Subscribe(_ => UpdateTransform())
+                .Zip(Left.Skip(1), (Old, New) => new { OldItem = Old, NewItem = New })
+                .Subscribe(x => UpdateTransform(nameof(Height), x.OldItem, x.NewItem))
                 .AddTo(_CompositeDisposable);
             RotationAngle
-                .Subscribe(_ => UpdateTransform())
+                .Zip(Left.Skip(1), (Old, New) => new { OldItem = Old, NewItem = New })
+                .Subscribe(x => UpdateTransform(nameof(RotationAngle), x.OldItem, x.NewItem))
                 .AddTo(_CompositeDisposable);
             Matrix
-                .Subscribe(_ => UpdateTransform())
+                .Zip(Left.Skip(1), (Old, New) => new { OldItem = Old, NewItem = New })
+                .Subscribe(x => UpdateTransform(nameof(Matrix), x.OldItem, x.NewItem))
                 .AddTo(_CompositeDisposable);
             Right = Left.Select(x => x + Width.Value)
                         .ToReadOnlyReactiveProperty();
@@ -141,15 +147,21 @@ namespace boilersGraphics.ViewModels
             return disposable;
         }
 
-        public void UpdateTransform()
+        public void UpdateTransform(string propertyName, object oldValue, object newValue)
         {
             UpdateCenterPoint();
-            TransformObserversOnNext();
+            TransformObserversOnNext(propertyName, oldValue, newValue);
         }
 
-        public void TransformObserversOnNext()
+        public void TransformObserversOnNext(string propertyName, object oldValue, object newValue)
         {
-            _observers.ForEach(x => x.OnNext(new TransformNotification() { Sender = this }));
+            _observers.ForEach(x => x.OnNext(new TransformNotification() 
+            {
+                Sender = this,
+                PropertyName = propertyName,
+                OldValue = oldValue,
+                NewValue = newValue
+            }));
         }
 
         public override void OnNext(GroupTransformNotification value)

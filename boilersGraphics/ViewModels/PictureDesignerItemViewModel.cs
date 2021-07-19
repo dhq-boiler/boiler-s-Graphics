@@ -34,6 +34,8 @@ namespace boilersGraphics.ViewModels
 
         public ReactiveProperty<Geometry> Clip { get; set; } = new ReactiveProperty<Geometry>();
 
+        public ReactiveProperty<SelectableDesignerItemViewModelBase> ClipObject { get; set; } = new ReactiveProperty<SelectableDesignerItemViewModelBase>();
+
         public PictureDesignerItemViewModel(int id, DiagramViewModel parent, double left, double top)
             : base(id, parent, left, top)
         {

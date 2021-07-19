@@ -2,6 +2,7 @@
 using Reactive.Bindings;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -34,6 +35,25 @@ namespace boilersGraphics.Helpers
 
         public static PathGeometry CreateRectangle(NRectangleViewModel item, double offsetX, double offsetY)
         {
+            var geometry = new StreamGeometry();
+            geometry.FillRule = FillRule.EvenOdd;
+            using (var ctx = geometry.Open())
+            {
+                ctx.BeginFigure(new Point(item.Left.Value - offsetX, item.Top.Value - offsetY), true, true);
+                ctx.LineTo(new Point(item.Left.Value - offsetX + item.Width.Value, item.Top.Value - offsetY), true, false);
+                ctx.LineTo(new Point(item.Left.Value - offsetX + item.Width.Value, item.Top.Value - offsetY + item.Height.Value), true, false);
+                ctx.LineTo(new Point(item.Left.Value - offsetX, item.Top.Value - offsetY + item.Height.Value), true, false);
+            }
+            geometry.Freeze();
+            return PathGeometry.CreateFromGeometry(geometry);
+        }
+
+        public static PathGeometry CreateRectangle(NRectangleViewModel item, double offsetX, double offsetY, TransformNotification oldItem, TransformNotification newItem)
+        {
+            var widthRatio = newItem.Sender.Width.Value / oldItem.Sender.Width.Value;
+            var heightRatio = newItem.Sender.Height.Value / oldItem.Sender.Height.Value;
+            Trace.WriteLine($"new width = {newItem.Sender.Width.Value} old width = {oldItem.Sender.Width.Value}");
+            Trace.WriteLine($"new height = {newItem.Sender.Height.Value} old height = {oldItem.Sender.Height.Value}");
             var geometry = new StreamGeometry();
             geometry.FillRule = FillRule.EvenOdd;
             using (var ctx = geometry.Open())
