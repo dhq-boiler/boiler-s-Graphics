@@ -53,6 +53,18 @@ steps:
     #verbose: # Optional
     #quiet: # Optional
 
+# Copy files
+# Copy files from a source folder to a target folder using patterns matching file paths (not folder paths)
+- task: CopyFiles@2
+  inputs:
+    sourceFolder: '$(Build.ArtifactStagingDirectory)\Setup\bin\Release' # Optional
+    contents: '*' 
+    targetFolder: '$(Build.ArtifactStagingDirectory)'
+    #cleanTargetFolder: false # Optional
+    #overWrite: false # Optional
+    #flattenFolders: false # Optional
+    #preserveTimestamp: false # Optional
+
 # GitHub Release
 # Create, edit, or delete a GitHub release
 - task: GitHubRelease@0
@@ -68,10 +80,7 @@ steps:
     #releaseNotesSource: 'file' # Optional. Options: file, input
     #releaseNotesFile: # Optional
     #releaseNotes: # Optional
-    assets: 
-      - '$(Build.ArtifactStagingDirectory)\boilersGraphics_$(Build.BuildId).zip'
-      - '$(Build.ArtifactStagingDirectory)\Setup\bin\Release\setup.exe'
-      - '$(Build.ArtifactStagingDirectory)\Setup\bin\Release\Setup.msi'
+    assets: '$(Build.ArtifactStagingDirectory)\*.*'
     assetUploadMode: 'delete' # Optional. Options: delete, replace
     isDraft: false # Optional
     isPreRelease: false # Optional
