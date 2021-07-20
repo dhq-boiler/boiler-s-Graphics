@@ -90,6 +90,7 @@
     <Compile Include="MathTest.cs" />
     <Compile Include="OrderingTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReactivePropertyTest.cs" />
     <Compile Include="SelectedItemsTest.cs" />
   </ItemGroup>
   <ItemGroup>
