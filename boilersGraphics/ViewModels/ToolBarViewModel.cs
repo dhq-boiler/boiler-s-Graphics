@@ -29,7 +29,12 @@ namespace boilersGraphics.ViewModels
             this.dlgService = dialogService;
             ToolItems.Add(new ToolItemData("pointer", "pack://application:,,,/Assets/img/pointer.png", new DelegateCommand(() =>
             {
+                var deselectBehavior = new DeselectBehavior();
                 Behaviors.Clear();
+                if (!Behaviors.Contains(deselectBehavior))
+                {
+                    Behaviors.Add(deselectBehavior);
+                }
                 SelectOneToolItem("pointer");
             })));
             ToolItems.Add(new ToolItemData("rubberband", "pack://application:,,,/Assets/img/rubberband.png", new DelegateCommand(() =>
