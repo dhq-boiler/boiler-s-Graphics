@@ -346,14 +346,17 @@ namespace boilersGraphics.ViewModels
                 .Subscribe(_ => RaisePropertyChanged("FillColors"))
                 .AddTo(_CompositeDisposable);
 
+            InitialSetting();
+        }
+
+        private void InitialSetting()
+        {
             EdgeColors.Add(Colors.Black);
             FillColors.Add(Colors.Transparent);
-
             EdgeThickness.Value = 1.0;
-
-            CanvasBorderThickness = 1.0;
-
+            CanvasBorderThickness = 10.0;
             CanvasBackground.Value = Colors.White;
+            EnablePointSnap.Value = true;
         }
 
         private void ExecuteClipCommand()
