@@ -231,6 +231,7 @@
     <Compile Include="ViewModels\ToolBarViewModel.cs" />
     <Compile Include="Views\AdornedBy.cs" />
     <Compile Include="Views\Behaviors\AbstractAdorner.cs" />
+    <Compile Include="Views\Behaviors\DeselectBehavior.cs" />
     <Compile Include="Views\Behaviors\LetterBehavior.cs" />
     <Compile Include="Views\Behaviors\LetterVerticalBehavior.cs" />
     <Compile Include="Views\Behaviors\NDrawBezierCurveBehavior.cs" />
