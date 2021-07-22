@@ -27,8 +27,8 @@ namespace boilersGraphics.ViewModels
         {
             var clone = new StraightConnectorViewModel(Points[0], Points[1]);
             clone.Owner = Owner;
-            clone.EdgeColor = EdgeColor;
-            clone.EdgeThickness = EdgeThickness;
+            clone.EdgeColor.Value = EdgeColor.Value;
+            clone.EdgeThickness.Value = EdgeThickness.Value;
             clone.Points[0] = Points[0];
             clone.Points[1] = Points[1];
 

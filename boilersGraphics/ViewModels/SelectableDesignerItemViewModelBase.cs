@@ -55,6 +55,10 @@ namespace boilersGraphics.ViewModels
 
         public ReactiveProperty<int> ZIndex { get; } = new ReactiveProperty<int>();
 
+        public ReactiveProperty<Color> EdgeColor { get; } = new ReactiveProperty<Color>();
+
+        public ReactiveProperty<double> EdgeThickness { get; } = new ReactiveProperty<double>();
+
         public ReactiveProperty<PathGeometry> PathGeometry { get; set; } = new ReactiveProperty<PathGeometry>();
 
         public string Name { get; set; }

@@ -429,18 +429,27 @@ namespace boilersGraphics.ViewModels
 
         private void CombineAndAddItem(GeometryCombineMode mode)
         {
-            var item1 = SelectedItems.OfType<DesignerItemViewModelBase>().First();
-            var item2 = SelectedItems.OfType<DesignerItemViewModelBase>().Last();
+            var item1 = SelectedItems.OfType<SelectableDesignerItemViewModelBase>().First();
+            var item2 = SelectedItems.OfType<SelectableDesignerItemViewModelBase>().Last();
             var combine = new CombineGeometryViewModel();
             Items.Remove(item1);
             Items.Remove(item2);
-            combine.EdgeColor = item1.EdgeColor;
-            combine.EdgeThickness = item1.EdgeThickness;
-            combine.FillColor = item1.FillColor;
+            combine.EdgeColor.Value = item1.EdgeColor.Value;
+            combine.EdgeThickness.Value = item1.EdgeThickness.Value;
             combine.IsSelected = true;
             combine.Owner = this;
             combine.ZIndex.Value = Items.Count;
-            combine.PathGeometry.Value = Geometry.Combine(item1.PathGeometry.Value, item2.PathGeometry.Value, mode, null);
+            combine.PathGeometry.Value = GeometryCreator.CreateCombineGeometry(item1, item2);
+            if (combine.PathGeometry.Value == null)
+            {
+                combine.PathGeometry.Value = Geometry.Combine(item1.PathGeometry.Value, item2.PathGeometry.Value, mode, null);
+            }
+            //if (combine.PathGeometry.Value.ToString() == "F1" || combine.PathGeometry.Value.ToString().Count(x => x.ToString() == "M") >= 2)
+            //{
+            //    var a1 = item1 as StraightConnectorViewModel;
+            //    var a2 = item1 as BezierCurveViewModel;
+            //    combine.PathGeometry.Value = GeometryCombiner.Connect(item1.PathGeometry.Value, item2.PathGeometry.Value);
+            //}
             combine.Left.Value = combine.PathGeometry.Value.Bounds.Left;
             combine.Top.Value = combine.PathGeometry.Value.Bounds.Top;
             combine.Width.Value = combine.PathGeometry.Value.Bounds.Width;
@@ -1626,7 +1635,7 @@ namespace boilersGraphics.ViewModels
             {
                 var clone = item.Clone() as DesignerItemViewModelBase;
                 clone.ZIndex.Value = Items.Count();
-                clone.EdgeThickness = item.EdgeThickness;
+                clone.EdgeThickness.Value = item.EdgeThickness.Value;
                 if (parent != null)
                 {
                     clone.ParentID = parent.ID;

@@ -84,9 +84,9 @@ namespace boilersGraphics.Adorners
                 item.Top.Value = Math.Min(_dragStartPoint.Value.Y, _dragEndPoint.Value.Y);
                 item.Width.Value = Math.Max(_dragStartPoint.Value.X - _dragEndPoint.Value.X, _dragEndPoint.Value.X - _dragStartPoint.Value.X);
                 item.Height.Value = Math.Max(_dragStartPoint.Value.Y - _dragEndPoint.Value.Y, _dragEndPoint.Value.Y - _dragStartPoint.Value.Y);
-                item.EdgeColor = item.Owner.EdgeColors.First();
+                item.EdgeColor.Value = item.Owner.EdgeColors.First();
                 item.FillColor = item.Owner.FillColors.First();
-                item.EdgeThickness = item.Owner.EdgeThickness.Value.Value;
+                item.EdgeThickness.Value = item.Owner.EdgeThickness.Value.Value;
                 item.ZIndex.Value = item.Owner.Items.Count;
                 item.Data.Value = _data;
                 item.IsSelected = true;

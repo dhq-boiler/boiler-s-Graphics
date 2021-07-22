@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media;
 
 namespace boilersGraphics.ViewModels
 {
@@ -113,8 +114,8 @@ namespace boilersGraphics.ViewModels
         {
             var clone = new BezierCurveViewModel(Points[0], Points[1], ControlPoint1.Value, ControlPoint2.Value);
             clone.Owner = Owner;
-            clone.EdgeColor = EdgeColor;
-            clone.EdgeThickness = EdgeThickness;
+            clone.EdgeColor.Value = EdgeColor.Value;
+            clone.EdgeThickness.Value = EdgeThickness.Value;
             clone.PathGeometry.Value = GeometryCreator.CreateBezierCurve(clone);
 
             return clone;

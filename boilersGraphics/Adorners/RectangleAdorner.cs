@@ -76,9 +76,9 @@ namespace boilersGraphics.Adorners
                 item.Top.Value = Math.Min(_startPoint.Value.Y, _endPoint.Value.Y);
                 item.Width.Value = Math.Max(_startPoint.Value.X - _endPoint.Value.X, _endPoint.Value.X - _startPoint.Value.X);
                 item.Height.Value = Math.Max(_startPoint.Value.Y - _endPoint.Value.Y, _endPoint.Value.Y - _startPoint.Value.Y);
-                item.EdgeColor = item.Owner.EdgeColors.First();
+                item.EdgeColor.Value = item.Owner.EdgeColors.First();
                 item.FillColor = item.Owner.FillColors.First();
-                item.EdgeThickness = item.Owner.EdgeThickness.Value.Value;
+                item.EdgeThickness.Value = item.Owner.EdgeThickness.Value.Value;
                 item.ZIndex.Value = item.Owner.Items.Count;
                 item.PathGeometry.Value = GeometryCreator.CreateRectangle(item);
                 item.IsSelected = true;
