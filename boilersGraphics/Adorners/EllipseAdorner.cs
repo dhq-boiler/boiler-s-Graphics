@@ -119,8 +119,8 @@ namespace boilersGraphics.Adorners
 
                 Dilate(item);
 
-                item.EdgeColor = item.Owner.EdgeColors.First();
-                item.EdgeThickness = item.Owner.EdgeThickness.Value.Value;
+                item.EdgeColor.Value = item.Owner.EdgeColors.First();
+                item.EdgeThickness.Value = item.Owner.EdgeThickness.Value.Value;
                 item.FillColor = item.Owner.FillColors.First();
                 item.ZIndex.Value = item.Owner.Items.Count;
                 item.PathGeometry.Value = GeometryCreator.CreateEllipse(item);

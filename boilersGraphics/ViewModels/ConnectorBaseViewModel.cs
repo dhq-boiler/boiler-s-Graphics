@@ -13,8 +13,6 @@ namespace boilersGraphics.ViewModels
     public abstract class ConnectorBaseViewModel : SelectableDesignerItemViewModelBase, IObserver<TransformNotification>, ICloneable
     {
         private bool _IsHitTestVisible;
-        private Color _EdgeColor;
-        private double _EdgeThickness;
         private ObservableCollection<Point> _Points;
 
         public ConnectorBaseViewModel(int id, IDiagramViewModel parent) : base(id, parent)
@@ -25,17 +23,6 @@ namespace boilersGraphics.ViewModels
         public ConnectorBaseViewModel()
         {
             Init();
-        }
-
-        public Color EdgeColor
-        {
-            get { return _EdgeColor; }
-            set { SetProperty(ref _EdgeColor, value); }
-        }
-        public double EdgeThickness
-        {
-            get { return _EdgeThickness; }
-            set { SetProperty(ref _EdgeThickness, value); }
         }
 
 

@@ -53,30 +53,6 @@ steps:
     #verbose: # Optional
     #quiet: # Optional
 
-- task: CmdLine@2
-  inputs:
-    script: |
-     echo "Structure of work folder of this pipeline:"
-     tree $(Agent.WorkFolder)\1 /f
-     echo "Build.ArtifactStagingDirectory:"
-     echo "$(Build.ArtifactStagingDirectory)"
-     echo "Build.BinariesDirectory:"
-     echo "$(Build.BinariesDirectory)"
-     echo "Build.SourcesDirectory:"
-     echo "$(Build.SourcesDirectory)"
-
-# Copy files
-# Copy files from a source folder to a target folder using patterns matching file paths (not folder paths)
-- task: CopyFiles@2
-  inputs:
-    sourceFolder: '$(Build.ArtifactStagingDirectory)\Setup\Release' # Optional
-    contents: '*' 
-    targetFolder: '$(Build.ArtifactStagingDirectory)'
-    #cleanTargetFolder: false # Optional
-    #overWrite: false # Optional
-    #flattenFolders: false # Optional
-    #preserveTimestamp: false # Optional
-
 # GitHub Release
 # Create, edit, or delete a GitHub release
 - task: GitHubRelease@0
@@ -92,7 +68,7 @@ steps:
     #releaseNotesSource: 'file' # Optional. Options: file, input
     #releaseNotesFile: # Optional
     #releaseNotes: # Optional
-    assets: '$(Build.ArtifactStagingDirectory)\*.*'
+    assets: '$(Build.ArtifactStagingDirectory)\boilersGraphics_$(Build.BuildId).zip'
     assetUploadMode: 'delete' # Optional. Options: delete, replace
     isDraft: false # Optional
     isPreRelease: false # Optional

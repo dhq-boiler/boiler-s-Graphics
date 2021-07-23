@@ -2,8 +2,8 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:viewModel="clr-namespace:boilersGraphics.ViewModels">
     <DataTemplate DataType="{x:Type viewModel:PictureDesignerItemViewModel}">
-        <Border BorderBrush="{Binding EdgeColor, Converter={StaticResource solidColorBrushConverter}}"
-                BorderThickness="{Binding EdgeThickness}">
+        <Border BorderBrush="{Binding EdgeColor.Value, Converter={StaticResource solidColorBrushConverter}}"
+                BorderThickness="{Binding EdgeThickness.Value}">
             <Image IsHitTestVisible="False"
                    Source="{Binding FileName}"
                    Stretch="Fill"

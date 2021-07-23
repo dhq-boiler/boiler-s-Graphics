@@ -81,11 +81,11 @@ namespace boilersGraphics.ViewModels
                         DiagramViewModel.EdgeColors.Add(exchange.New.Value);
                         foreach (var item in DiagramViewModel.SelectedItems.OfType<DesignerItemViewModelBase>())
                         {
-                            item.EdgeColor = exchange.New.Value;
+                            item.EdgeColor.Value = exchange.New.Value;
                         }
                         foreach (var item in DiagramViewModel.SelectedItems.OfType<ConnectorBaseViewModel>())
                         {
-                            item.EdgeColor = exchange.New.Value;
+                            item.EdgeColor.Value = exchange.New.Value;
                         }
                     }
                 }
@@ -133,12 +133,12 @@ namespace boilersGraphics.ViewModels
                 {
                     foreach (var item in DiagramViewModel.SelectedItems.OfType<DesignerItemViewModelBase>())
                     {
-                        item.EdgeThickness = x.Value;
+                        item.EdgeThickness.Value = x.Value;
                     }
 
                     foreach (var item in DiagramViewModel.SelectedItems.OfType<ConnectorBaseViewModel>())
                     {
-                        item.EdgeThickness = x.Value;
+                        item.EdgeThickness.Value = x.Value;
                     }
                 }
             })

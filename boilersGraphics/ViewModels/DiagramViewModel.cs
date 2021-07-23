@@ -429,23 +429,90 @@ namespace boilersGraphics.ViewModels
 
         private void CombineAndAddItem(GeometryCombineMode mode)
         {
-            var item1 = SelectedItems.OfType<DesignerItemViewModelBase>().First();
-            var item2 = SelectedItems.OfType<DesignerItemViewModelBase>().Last();
+            var item1 = SelectedItems.OfType<SelectableDesignerItemViewModelBase>().First();
+            var item2 = SelectedItems.OfType<SelectableDesignerItemViewModelBase>().Last();
             var combine = new CombineGeometryViewModel();
             Items.Remove(item1);
             Items.Remove(item2);
-            combine.EdgeColor = item1.EdgeColor;
-            combine.EdgeThickness = item1.EdgeThickness;
-            combine.FillColor = item1.FillColor;
+            combine.EdgeColor.Value = item1.EdgeColor.Value;
+            combine.EdgeThickness.Value = item1.EdgeThickness.Value;
             combine.IsSelected = true;
             combine.Owner = this;
             combine.ZIndex.Value = Items.Count;
-            combine.PathGeometry.Value = Geometry.Combine(item1.PathGeometry.Value, item2.PathGeometry.Value, mode, null);
+            combine.PathGeometry.Value = GeometryCreator.CreateCombineGeometry(item1, item2);
+            if (combine.PathGeometry.Value == null)
+            {
+                var item1PathGeometry = item1.PathGeometry.Value;
+                var item2PathGeometry = item2.PathGeometry.Value;
+
+                if (item1.RotationAngle.Value != 0)
+                    item1PathGeometry = item1.RotatePathGeometry.Value;
+                if (item2.RotationAngle.Value != 0)
+                    item2PathGeometry = item2.RotatePathGeometry.Value;
+                
+                CastToLetterAndSetTransform(item1, item2, item1PathGeometry, item2PathGeometry);
+
+                combine.PathGeometry.Value = Geometry.Combine(item1PathGeometry, item2PathGeometry, mode, null);
+            }
             combine.Left.Value = combine.PathGeometry.Value.Bounds.Left;
             combine.Top.Value = combine.PathGeometry.Value.Bounds.Top;
             combine.Width.Value = combine.PathGeometry.Value.Bounds.Width;
             combine.Height.Value = combine.PathGeometry.Value.Bounds.Height;
             Items.Add(combine);
+        }
+
+        private static void CastToLetterAndSetTransform(SelectableDesignerItemViewModelBase item1, SelectableDesignerItemViewModelBase item2, PathGeometry item1PathGeometry, PathGeometry item2PathGeometry)
+        {
+            InternalCastToLetterAndSetTransform(item1, item1PathGeometry);
+            InternalCastToLetterVerticalAndSetTransform(item1, item1PathGeometry);
+            InternalCastToLetterAndSetTransform(item2, item2PathGeometry);
+            InternalCastToLetterVerticalAndSetTransform(item2, item2PathGeometry);
+            InternalCastToPolygonAndSetTransform(item1, item1PathGeometry);
+            InternalCastToPolygonAndSetTransform(item2, item2PathGeometry);
+        }
+
+        private static void InternalCastToPolygonAndSetTransform(SelectableDesignerItemViewModelBase item, PathGeometry itemPathGeometry)
+        {
+            if (item is NPolygonViewModel)
+            {
+                var item_ = item as NPolygonViewModel;
+                var scaleX = item_.Width.Value / itemPathGeometry.Bounds.Width;
+                var scaleY = item_.Height.Value / itemPathGeometry.Bounds.Height;
+                var transformGroup = new TransformGroup();
+                transformGroup.Children.Add(new ScaleTransform(scaleX, scaleY));
+                transformGroup.Children.Add(new TranslateTransform(item_.Left.Value, item_.Top.Value));
+                if (itemPathGeometry.Transform != null)
+                    transformGroup.Children.Add(itemPathGeometry.Transform);
+                itemPathGeometry.Transform = transformGroup;
+            }
+        }
+
+        private static void InternalCastToLetterVerticalAndSetTransform(SelectableDesignerItemViewModelBase item, PathGeometry itemPathGeometry)
+        {
+            if (item is LetterVerticalDesignerItemViewModel)
+            {
+                var item_ = item as LetterVerticalDesignerItemViewModel;
+                var transformGroup = new TransformGroup();
+                transformGroup.Children.Add(new TranslateTransform(item_.Left.Value, item_.Top.Value));
+                if (itemPathGeometry.Transform != null)
+                    transformGroup.Children.Add(itemPathGeometry.Transform);
+                itemPathGeometry.Transform = transformGroup;
+                item_.CloseLetterSettingDialog();
+            }
+        }
+
+        private static void InternalCastToLetterAndSetTransform(SelectableDesignerItemViewModelBase item, PathGeometry itemPathGeometry)
+        {
+            if (item is LetterDesignerItemViewModel)
+            {
+                var item_ = item as LetterDesignerItemViewModel;
+                var transformGroup = new TransformGroup();
+                transformGroup.Children.Add(new TranslateTransform(item_.Left.Value, item_.Top.Value));
+                if (itemPathGeometry.Transform != null)
+                    transformGroup.Children.Add(itemPathGeometry.Transform);
+                itemPathGeometry.Transform = transformGroup;
+                item_.CloseLetterSettingDialog();
+            }
         }
 
         private bool CanExecuteUnion()
@@ -1626,7 +1693,7 @@ namespace boilersGraphics.ViewModels
             {
                 var clone = item.Clone() as DesignerItemViewModelBase;
                 clone.ZIndex.Value = Items.Count();
-                clone.EdgeThickness = item.EdgeThickness;
+                clone.EdgeThickness.Value = item.EdgeThickness.Value;
                 if (parent != null)
                 {
                     clone.ParentID = parent.ID;

@@ -1,9 +1,11 @@
 ﻿using Reactive.Bindings;
+using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 
 namespace boilersGraphics.ViewModels
 {
@@ -41,9 +43,28 @@ namespace boilersGraphics.ViewModels
         private void Init()
         {
             this.ShowConnectors = false;
+            EnablePathGeometryUpdate.Value = true;
+            Data.Subscribe(_ =>
+            {
+                UpdatePathGeometryIfEnable();
+            })
+            .AddTo(_CompositeDisposable);
         }
 
         public ReactiveProperty<string> Data { get; set; } = new ReactiveProperty<string>();
+
+        public override PathGeometry CreateGeometry()
+        {
+            return System.Windows.Media.PathGeometry.CreateFromGeometry(Geometry.Parse(Data.Value));
+        }
+
+        public override PathGeometry CreateGeometry(double angle)
+        {
+            var geometry = Geometry.Parse(Data.Value);
+            var pathGeometry = System.Windows.Media.PathGeometry.CreateFromGeometry(geometry);
+            pathGeometry.Transform = new RotateTransform(angle);
+            return pathGeometry;
+        }
 
         #region IClonable
 
@@ -55,9 +76,9 @@ namespace boilersGraphics.ViewModels
             clone.Top.Value = Top.Value;
             clone.Width.Value = Width.Value;
             clone.Height.Value = Height.Value;
-            clone.EdgeColor = EdgeColor;
+            clone.EdgeColor.Value = EdgeColor.Value;
             clone.FillColor = FillColor;
-            clone.EdgeThickness = EdgeThickness;
+            clone.EdgeThickness.Value = EdgeThickness.Value;
             clone.Matrix.Value = Matrix.Value;
             clone.RotationAngle.Value = RotationAngle.Value;
             clone.Data.Value = Data.Value;

@@ -64,11 +64,11 @@ namespace boilersGraphics.AttachedProperties
                     {
                         if (x is DesignerItemViewModelBase)
                         {
-                            return (x as DesignerItemViewModelBase).EdgeThickness;
+                            return (x as DesignerItemViewModelBase).EdgeThickness.Value;
                         }
                         else
                         {
-                            return (x as ConnectorBaseViewModel).EdgeThickness;
+                            return (x as ConnectorBaseViewModel).EdgeThickness.Value;
                         };
                     });
                     if (edgeThicknesses.Count() > 0 && edgeThicknesses.All(x => x == edgeThicknesses.First()))
@@ -103,12 +103,12 @@ namespace boilersGraphics.AttachedProperties
                     Color fillColor = Colors.Transparent;
                     if (selectableDesignerItemViewModelBase is DesignerItemViewModelBase)
                     {
-                        edgeColor = (selectableDesignerItemViewModelBase as DesignerItemViewModelBase).EdgeColor;
+                        edgeColor = (selectableDesignerItemViewModelBase as DesignerItemViewModelBase).EdgeColor.Value;
                         fillColor = (selectableDesignerItemViewModelBase as DesignerItemViewModelBase).FillColor;
                     }
                     else if (selectableDesignerItemViewModelBase is ConnectorBaseViewModel)
                     {
-                        edgeColor = (selectableDesignerItemViewModelBase as ConnectorBaseViewModel).EdgeColor;
+                        edgeColor = (selectableDesignerItemViewModelBase as ConnectorBaseViewModel).EdgeColor.Value;
                     }
                     selectableDesignerItemViewModelBase.Owner.EdgeColors.Add(edgeColor);
                     selectableDesignerItemViewModelBase.Owner.FillColors.Add(fillColor);
@@ -118,11 +118,11 @@ namespace boilersGraphics.AttachedProperties
                     {
                         if (x is DesignerItemViewModelBase)
                         {
-                            return (x as DesignerItemViewModelBase).EdgeThickness;
+                            return (x as DesignerItemViewModelBase).EdgeThickness.Value;
                         }
                         else
                         {
-                            return (x as ConnectorBaseViewModel).EdgeThickness;
+                            return (x as ConnectorBaseViewModel).EdgeThickness.Value;
                         };
                     });
                     if (edgeThicknesses.All(x => x == edgeThicknesses.First()))
