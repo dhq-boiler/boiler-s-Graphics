@@ -25,9 +25,9 @@ namespace boilersGraphics.Helpers
                               new XElement("Height", item.Height.Value),
                               new XElement("ZIndex", item.ZIndex.Value),
                               new XElement("Matrix", item.Matrix.Value),
-                              new XElement("EdgeColor", item.EdgeColor),
+                              new XElement("EdgeColor", item.EdgeColor.Value),
                               new XElement("FillColor", item.FillColor),
-                              new XElement("EdgeThickness", item.EdgeThickness),
+                              new XElement("EdgeThickness", item.EdgeThickness.Value),
                               new XElement("PathGeometry", item.PathGeometry.Value)
                           ))
                     .Union(
@@ -43,9 +43,9 @@ namespace boilersGraphics.Helpers
                                     new XElement("Height", item.Height.Value),
                                     new XElement("ZIndex", item.ZIndex.Value),
                                     new XElement("Matrix", item.Matrix.Value),
-                                    new XElement("EdgeColor", item.EdgeColor),
+                                    new XElement("EdgeColor", item.EdgeColor.Value),
                                     new XElement("FillColor", item.FillColor),
-                                    new XElement("EdgeThickness", item.EdgeThickness),
+                                    new XElement("EdgeThickness", item.EdgeThickness.Value),
                                     new XElement("FileName", (item as PictureDesignerItemViewModel).FileName)
                         )
                     )
@@ -62,9 +62,9 @@ namespace boilersGraphics.Helpers
                                     new XElement("Height", item.Height.Value),
                                     new XElement("ZIndex", item.ZIndex.Value),
                                     new XElement("Matrix", item.Matrix.Value),
-                                    new XElement("EdgeColor", item.EdgeColor),
+                                    new XElement("EdgeColor", item.EdgeColor.Value),
                                     new XElement("FillColor", item.FillColor),
-                                    new XElement("EdgeThickness", item.EdgeThickness),
+                                    new XElement("EdgeThickness", item.EdgeThickness.Value),
                                     new XElement("LetterString", (item as LetterDesignerItemViewModel).LetterString),
                                     new XElement("SelectedFontFamily", (item as LetterDesignerItemViewModel).SelectedFontFamily),
                                     new XElement("IsBold", (item as LetterDesignerItemViewModel).IsBold),
@@ -87,9 +87,9 @@ namespace boilersGraphics.Helpers
                                     new XElement("Height", item.Height.Value),
                                     new XElement("ZIndex", item.ZIndex.Value),
                                     new XElement("Matrix", item.Matrix.Value),
-                                    new XElement("EdgeColor", item.EdgeColor),
+                                    new XElement("EdgeColor", item.EdgeColor.Value),
                                     new XElement("FillColor", item.FillColor),
-                                    new XElement("EdgeThickness", item.EdgeThickness),
+                                    new XElement("EdgeThickness", item.EdgeThickness.Value),
                                     new XElement("LetterString", (item as LetterVerticalDesignerItemViewModel).LetterString),
                                     new XElement("SelectedFontFamily", (item as LetterVerticalDesignerItemViewModel).SelectedFontFamily),
                                     new XElement("IsBold", (item as LetterVerticalDesignerItemViewModel).IsBold),
@@ -112,9 +112,9 @@ namespace boilersGraphics.Helpers
                                 new XElement("Height", item.Height.Value),
                                 new XElement("ZIndex", item.ZIndex.Value),
                                 new XElement("Matrix", item.Matrix.Value),
-                                new XElement("EdgeColor", item.EdgeColor),
+                                new XElement("EdgeColor", item.EdgeColor.Value),
                                 new XElement("FillColor", item.FillColor),
-                                new XElement("EdgeThickness", item.EdgeThickness),
+                                new XElement("EdgeThickness", item.EdgeThickness.Value),
                                 new XElement("PathGeometry", item.PathGeometry.Value),
                                 new XElement("Data", (item as NPolygonViewModel).Data.Value)
                             )
@@ -133,8 +133,8 @@ namespace boilersGraphics.Helpers
                                new XElement("BeginPoint", connection.Points[0]),
                                new XElement("EndPoint", connection.Points[1]),
                                new XElement("ZIndex", connection.ZIndex.Value),
-                               new XElement("EdgeColor", connection.EdgeColor),
-                               new XElement("EdgeThickness", connection.EdgeThickness),
+                               new XElement("EdgeColor", connection.EdgeColor.Value),
+                               new XElement("EdgeThickness", connection.EdgeThickness.Value),
                                new XElement("PathGeometry", connection.PathGeometry.Value)
                     ))
                     .Union(
@@ -147,8 +147,8 @@ namespace boilersGraphics.Helpers
                                     new XElement("BeginPoint", connection.Points[0]),
                                     new XElement("EndPoint", connection.Points[1]),
                                     new XElement("ZIndex", connection.ZIndex.Value),
-                                    new XElement("EdgeColor", connection.EdgeColor),
-                                    new XElement("EdgeThickness", connection.EdgeThickness),
+                                    new XElement("EdgeColor", connection.EdgeColor.Value),
+                                    new XElement("EdgeThickness", connection.EdgeThickness.Value),
                                     new XElement("ControlPoint1", (connection as BezierCurveViewModel).ControlPoint1.Value),
                                     new XElement("ControlPoint2", (connection as BezierCurveViewModel).ControlPoint2.Value),
                                     new XElement("PathGeometry", connection.PathGeometry.Value)
