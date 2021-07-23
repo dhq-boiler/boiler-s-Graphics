@@ -40,6 +40,7 @@ namespace boilersGraphics.Models
                 IsVisible.Value = !IsVisible.Value;
             })
             .AddTo(_disposable);
+            IsVisible.Value = true;
         }
     }
 }
