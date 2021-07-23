@@ -80,7 +80,7 @@
                     </VisualBrush>
                 </ScrollViewer.Background>
                 <ItemsControl ItemContainerStyleSelector="{x:Static selector:DesignerItemsControlItemStyleSelector.Instance}"
-                              ItemsSource="{Binding Items}"
+                              ItemsSource="{Binding AllItems}"
                               Background="Transparent"
                               BorderBrush="Black"
                               BorderThickness="{Binding CanvasBorderThickness}">
@@ -425,6 +425,10 @@
                     Visibility="{Binding EnableMiniMap.Value, Converter={StaticResource BoolToVisibilityConverter}}"/>
                 <control:Combine
                     x:Name="combine"
+                    Width="180"
+                    Margin="0,5,25,0" />
+                <control:Layers
+                    x:Name="layers"
                     Width="180"
                     Margin="0,5,25,0" />
             </StackPanel>

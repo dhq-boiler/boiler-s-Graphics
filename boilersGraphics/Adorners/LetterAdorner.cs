@@ -1,4 +1,5 @@
 ﻿using boilersGraphics.Controls;
+using boilersGraphics.Extensions;
 using boilersGraphics.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -67,7 +68,7 @@ namespace boilersGraphics.Adorners
                 itemBase.Height.Value = Math.Abs(_endPoint.Value.Y - _startPoint.Value.Y);
                 itemBase.IsSelected = true;
                 itemBase.Owner.DeselectAll();
-                itemBase.ZIndex.Value = itemBase.Owner.Items.Count;
+                itemBase.ZIndex.Value = itemBase.Owner.Layers.Items().Count();
                 ((AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel).AddItemCommand.Execute(itemBase);
 
                 _startPoint = null;

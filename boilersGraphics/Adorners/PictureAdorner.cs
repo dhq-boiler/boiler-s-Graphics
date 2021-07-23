@@ -86,7 +86,7 @@ namespace boilersGraphics.Adorners
                 itemBase.Height.Value = Math.Max(_startPoint.Value.Y - _endPoint.Value.Y, _endPoint.Value.Y - _startPoint.Value.Y);
                 itemBase.IsSelected = true;
                 itemBase.Owner.DeselectAll();
-                itemBase.ZIndex.Value = itemBase.Owner.Items.Count;
+                itemBase.ZIndex.Value = itemBase.Owner.Layers.Items().Count();
                 ((AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel).AddItemCommand.Execute(itemBase);
 
                 _startPoint = null;

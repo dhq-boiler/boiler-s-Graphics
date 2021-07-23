@@ -87,7 +87,7 @@ namespace boilersGraphics.Adorners
                 item.EdgeColor.Value = item.Owner.EdgeColors.First();
                 item.FillColor = item.Owner.FillColors.First();
                 item.EdgeThickness.Value = item.Owner.EdgeThickness.Value.Value;
-                item.ZIndex.Value = item.Owner.Items.Count;
+                item.ZIndex.Value = item.Owner.Layers.Items().Count();
                 item.Data.Value = _data;
                 item.IsSelected = true;
                 item.Owner.DeselectAll();

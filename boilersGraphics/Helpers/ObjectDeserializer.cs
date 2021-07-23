@@ -106,7 +106,7 @@ namespace boilersGraphics.Helpers
                 children.ToList().ForEach(x => groupItem.AddGroup(x));
             }
 
-            diagramViewModel.Items.AddRange(list.OrderBy(x => x.ZIndex.Value));
+            diagramViewModel.Layers.First().Items.AddRange(list.OrderBy(x => x.ZIndex.Value));
         }
     }
 }

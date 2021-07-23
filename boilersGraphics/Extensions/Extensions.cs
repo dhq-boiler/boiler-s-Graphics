@@ -1,5 +1,8 @@
-﻿using boilersGraphics.ViewModels;
+﻿using boilersGraphics.Models;
+using boilersGraphics.ViewModels;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Media;
@@ -226,6 +229,20 @@ namespace boilersGraphics.Extensions
 
                 yield return item;
             }
+        }
+
+        public static ObservableCollection<T> ToObservableCollection<T>(this IEnumerable<T> source)
+        {
+            if (source == null)
+            {
+                throw new ArgumentNullException("source");
+            }
+            return new ObservableCollection<T>(source);
+        }
+
+        public static IEnumerable<SelectableDesignerItemViewModelBase> Items(this ObservableCollection<Layer> layers)
+        {
+            return layers.SelectMany(x => x.Items);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using boilersGraphics.Controls;
+using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
 using boilersGraphics.ViewModels;
 using System;
@@ -122,7 +123,7 @@ namespace boilersGraphics.Adorners
                 item.EdgeColor.Value = item.Owner.EdgeColors.First();
                 item.EdgeThickness.Value = item.Owner.EdgeThickness.Value.Value;
                 item.FillColor = item.Owner.FillColors.First();
-                item.ZIndex.Value = item.Owner.Items.Count;
+                item.ZIndex.Value = item.Owner.Layers.Items().Count();
                 item.PathGeometry.Value = GeometryCreator.CreateEllipse(item);
                 item.IsSelected = true;
                 item.Owner.DeselectAll();

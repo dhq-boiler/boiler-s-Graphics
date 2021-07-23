@@ -149,6 +149,7 @@
     <Compile Include="Controls\DesignerCanvas.cs" />
     <Compile Include="Controls\DoubleTextBox.cs" />
     <Compile Include="Controls\DragThumb.cs" />
+    <Compile Include="Controls\Layers.cs" />
     <Compile Include="Controls\LineResizeHandle.cs" />
     <Compile Include="Controls\ResizeThumb.cs" />
     <Compile Include="Controls\RotateThumb.cs" />
@@ -191,6 +192,7 @@
     <Compile Include="Models\DraggingItem.cs" />
     <Compile Include="Models\Ellipse.cs" />
     <Compile Include="Models\FontFamilyEx.cs" />
+    <Compile Include="Models\Layer.cs" />
     <Compile Include="Models\Letter.cs" />
     <Compile Include="Models\Rectangle.cs" />
     <Compile Include="Models\RenderItem.cs" />
@@ -333,6 +335,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Resources\Styles\GroupBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Styles\Layers.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
