@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Media;
 
 namespace boilersGraphics.ViewModels
 {
@@ -75,6 +76,7 @@ namespace boilersGraphics.ViewModels
 
                 _lotateAngleOld = a;
             });
+            EnablePathGeometryUpdate.Value = false;
         }
 
         private void GroupTransformObserversOnNext(GroupTransformNotification notification)
@@ -85,6 +87,16 @@ namespace boilersGraphics.ViewModels
         public void AddGroup(SelectableDesignerItemViewModelBase viewModel)
         {
             viewModel.GroupDisposable = Subscribe(viewModel);
+        }
+
+        public override PathGeometry CreateGeometry()
+        {
+            return null;
+        }
+
+        public override PathGeometry CreateGeometry(double angle)
+        {
+            return null;
         }
 
         #region IObservable<GroupTransformNotification>

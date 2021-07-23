@@ -131,7 +131,22 @@ namespace boilersGraphics.ViewModels
         {
             UpdateCenterPoint();
             TransformObserversOnNext();
+            if (EnablePathGeometryUpdate.Value)
+            {
+                if (RotationAngle.Value == 0)
+                {
+                    PathGeometry.Value = CreateGeometry();
+                }
+                else
+                {
+                    RotatePathGeometry.Value = CreateGeometry(RotationAngle.Value);
+                }
+            }
         }
+
+        public abstract PathGeometry CreateGeometry();
+
+        public abstract PathGeometry CreateGeometry(double angle);
 
         public void TransformObserversOnNext()
         {

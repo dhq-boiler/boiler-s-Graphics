@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 
 namespace boilersGraphics.ViewModels
 {
@@ -39,7 +40,18 @@ namespace boilersGraphics.ViewModels
 
         private void Init()
         {
+            EnablePathGeometryUpdate.Value = false;
             this.ShowConnectors = false;
+        }
+
+        public override PathGeometry CreateGeometry()
+        {
+            throw new NotSupportedException("combine figures is not supported.");
+        }
+
+        public override PathGeometry CreateGeometry(double angle)
+        {
+            throw new NotSupportedException("combine figures is not supported.");
         }
 
         #region IClonable

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 
 namespace boilersGraphics.ViewModels
 {
@@ -41,9 +42,22 @@ namespace boilersGraphics.ViewModels
         private void Init()
         {
             this.ShowConnectors = false;
+            EnablePathGeometryUpdate.Value = true;
         }
 
         public ReactiveProperty<string> Data { get; set; } = new ReactiveProperty<string>();
+
+        public override PathGeometry CreateGeometry()
+        {
+            return System.Windows.Media.PathGeometry.CreateFromGeometry(Geometry.Parse(Data.Value));
+        }
+
+        public override PathGeometry CreateGeometry(double angle)
+        {
+            var geometry = Geometry.Parse(Data.Value);
+            geometry.Transform = new RotateTransform(angle);
+            return System.Windows.Media.PathGeometry.CreateFromGeometry(geometry);
+        }
 
         #region IClonable
 

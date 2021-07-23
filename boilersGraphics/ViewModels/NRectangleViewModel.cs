@@ -1,5 +1,6 @@
 ﻿
 using boilersGraphics.Helpers;
+using System.Windows.Media;
 
 namespace boilersGraphics.ViewModels
 {
@@ -37,6 +38,17 @@ namespace boilersGraphics.ViewModels
         private void Init()
         {
             this.ShowConnectors = false;
+            EnablePathGeometryUpdate.Value = true;
+        }
+
+        public override PathGeometry CreateGeometry()
+        {
+            return GeometryCreator.CreateRectangle(this);
+        }
+
+        public override PathGeometry CreateGeometry(double angle)
+        {
+            return GeometryCreator.CreateRectangle(this, angle);
         }
 
         #region IClonable
@@ -57,6 +69,7 @@ namespace boilersGraphics.ViewModels
             clone.PathGeometry.Value = GeometryCreator.CreateRectangle(clone);
             return clone;
         }
+
 
         #endregion //IClonable
     }

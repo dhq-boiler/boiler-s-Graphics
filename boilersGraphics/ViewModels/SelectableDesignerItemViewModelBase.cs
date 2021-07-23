@@ -61,6 +61,9 @@ namespace boilersGraphics.ViewModels
 
         public ReactiveProperty<PathGeometry> PathGeometry { get; set; } = new ReactiveProperty<PathGeometry>();
 
+        public ReactiveProperty<PathGeometry> RotatePathGeometry { get; set; } = new ReactiveProperty<PathGeometry>();
+
+        public ReactiveProperty<bool> EnablePathGeometryUpdate { get; set; } = new ReactiveProperty<bool>();
         public string Name { get; set; }
 
         public Guid ID { get; set; } = Guid.NewGuid();

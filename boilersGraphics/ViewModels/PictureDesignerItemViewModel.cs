@@ -48,6 +48,17 @@ namespace boilersGraphics.ViewModels
         private void Init()
         {
             this.ShowConnectors = false;
+            EnablePathGeometryUpdate.Value = false;
+        }
+
+        public override PathGeometry CreateGeometry()
+        {
+            throw new NotSupportedException("picture is not supported.");
+        }
+
+        public override PathGeometry CreateGeometry(double angle)
+        {
+            throw new NotSupportedException("picture is not supported.");
         }
 
         #region IClonable

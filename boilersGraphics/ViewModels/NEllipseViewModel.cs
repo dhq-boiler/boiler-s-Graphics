@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 
 namespace boilersGraphics.ViewModels
 {
@@ -41,6 +42,17 @@ namespace boilersGraphics.ViewModels
         private void Init()
         {
             this.ShowConnectors = false;
+            EnablePathGeometryUpdate.Value = true;
+        }
+
+        public override PathGeometry CreateGeometry()
+        {
+            return GeometryCreator.CreateEllipse(this);
+        }
+
+        public override PathGeometry CreateGeometry(double angle)
+        {
+            return GeometryCreator.CreateEllipse(this, angle);
         }
 
         #region IClonable

@@ -17,20 +17,25 @@ namespace boilersGraphics.Helpers
             return PathGeometry.CreateFromGeometry(new EllipseGeometry(new Point(item.Left.Value + item.Width.Value / 2, item.Top.Value + item.Height.Value / 2), item.Width.Value / 2, item.Height.Value / 2));
         }
 
+        public static PathGeometry CreateEllipse(NEllipseViewModel item, double angle)
+        {
+            var ellipse = new EllipseGeometry(new Point(item.Left.Value + item.Width.Value / 2, item.Top.Value + item.Height.Value / 2), item.Width.Value / 2, item.Height.Value / 2, new RotateTransform(angle, item.CenterPoint.Value.X, item.CenterPoint.Value.Y));
+            return PathGeometry.CreateFromGeometry(ellipse);
+        }
+
         public static PathGeometry CreateRectangle(NRectangleViewModel item)
         {
-            var geometry = new StreamGeometry();
-            geometry.FillRule = FillRule.EvenOdd;
-            using (var ctx = geometry.Open())
-            {
-                ctx.BeginFigure(new Point(item.Left.Value, item.Top.Value), true, true);
-                ctx.LineTo(new Point(item.Left.Value + item.Width.Value, item.Top.Value), true, false);
-                ctx.LineTo(new Point(item.Left.Value + item.Width.Value, item.Top.Value + item.Height.Value), true, false);
-                ctx.LineTo(new Point(item.Left.Value, item.Top.Value + item.Height.Value), true, false);
-                ctx.LineTo(new Point(item.Left.Value, item.Top.Value), true, false);
-            }
-            geometry.Freeze();
-            return PathGeometry.CreateFromGeometry(geometry);
+            return PathGeometry.CreateFromGeometry(new RectangleGeometry(new Rect(new Point(item.Left.Value, item.Top.Value), new Point(item.Left.Value + item.Width.Value, item.Top.Value + item.Height.Value))));
+        }
+
+        public static PathGeometry CreateRectangle(NRectangleViewModel item, double angle)
+        {
+            return PathGeometry.CreateFromGeometry(new RectangleGeometry(new Rect(new Point(item.Left.Value, item.Top.Value), new Point(item.Left.Value + item.Width.Value, item.Top.Value + item.Height.Value)), 0, 0, new RotateTransform(angle, item.CenterPoint.Value.X, item.CenterPoint.Value.Y)));
+        }
+
+        private static double CalcRadian(double degree)
+        {
+            return degree * Math.PI / 180;
         }
 
         public static PathGeometry CreateRectangle(NRectangleViewModel item, double offsetX, double offsetY)

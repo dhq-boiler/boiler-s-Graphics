@@ -442,14 +442,16 @@ namespace boilersGraphics.ViewModels
             combine.PathGeometry.Value = GeometryCreator.CreateCombineGeometry(item1, item2);
             if (combine.PathGeometry.Value == null)
             {
-                combine.PathGeometry.Value = Geometry.Combine(item1.PathGeometry.Value, item2.PathGeometry.Value, mode, null);
+                var item1PathGeometry = item1.PathGeometry.Value;
+                var item2PathGeometry = item2.PathGeometry.Value;
+
+                if (item1.RotationAngle.Value != 0)
+                    item1PathGeometry = item1.RotatePathGeometry.Value;
+                if (item2.RotationAngle.Value != 0)
+                    item2PathGeometry = item2.RotatePathGeometry.Value;
+
+                combine.PathGeometry.Value = Geometry.Combine(item1PathGeometry, item2PathGeometry, mode, null);
             }
-            //if (combine.PathGeometry.Value.ToString() == "F1" || combine.PathGeometry.Value.ToString().Count(x => x.ToString() == "M") >= 2)
-            //{
-            //    var a1 = item1 as StraightConnectorViewModel;
-            //    var a2 = item1 as BezierCurveViewModel;
-            //    combine.PathGeometry.Value = GeometryCombiner.Connect(item1.PathGeometry.Value, item2.PathGeometry.Value);
-            //}
             combine.Left.Value = combine.PathGeometry.Value.Bounds.Left;
             combine.Top.Value = combine.PathGeometry.Value.Bounds.Top;
             combine.Width.Value = combine.PathGeometry.Value.Bounds.Width;

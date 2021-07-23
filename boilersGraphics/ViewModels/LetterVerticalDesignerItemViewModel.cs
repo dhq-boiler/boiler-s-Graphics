@@ -127,6 +127,7 @@ namespace boilersGraphics.ViewModels
             this.ObserveProperty(x => x.AutoLineBreak)
                 .Subscribe(_ => RenderLetter())
                 .AddTo(_CompositeDisposable);
+            EnablePathGeometryUpdate.Value = true;
         }
 
         public void CloseLetterSettingDialog()
@@ -248,6 +249,17 @@ namespace boilersGraphics.ViewModels
                 PathGeometry.Value.AddGeometry(pg);
                 list.Add(pg);
             }
+        }
+
+        public override PathGeometry CreateGeometry()
+        {
+            RenderLetter();
+            return PathGeometry.Value;
+        }
+
+        public override PathGeometry CreateGeometry(double angle)
+        {
+            throw new NotSupportedException("Rotation is not supported.");
         }
 
         #region IClonable

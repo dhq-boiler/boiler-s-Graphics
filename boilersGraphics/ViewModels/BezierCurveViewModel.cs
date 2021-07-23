@@ -64,6 +64,7 @@ namespace boilersGraphics.ViewModels
                 }
             })
             .AddTo(_CompositeDisposable);
+            EnablePathGeometryUpdate.Value = false;
         }
 
         private void SetLeftTopOfControlLine1()
