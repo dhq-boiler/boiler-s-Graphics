@@ -467,6 +467,24 @@ namespace boilersGraphics.ViewModels
             InternalCastToLetterVerticalAndSetTransform(item1, item1PathGeometry);
             InternalCastToLetterAndSetTransform(item2, item2PathGeometry);
             InternalCastToLetterVerticalAndSetTransform(item2, item2PathGeometry);
+            InternalCastToPolygonAndSetTransform(item1, item1PathGeometry);
+            InternalCastToPolygonAndSetTransform(item2, item2PathGeometry);
+        }
+
+        private static void InternalCastToPolygonAndSetTransform(SelectableDesignerItemViewModelBase item, PathGeometry itemPathGeometry)
+        {
+            if (item is NPolygonViewModel)
+            {
+                var item_ = item as NPolygonViewModel;
+                var scaleX = item_.Width.Value / itemPathGeometry.Bounds.Width;
+                var scaleY = item_.Height.Value / itemPathGeometry.Bounds.Height;
+                var transformGroup = new TransformGroup();
+                transformGroup.Children.Add(new ScaleTransform(scaleX, scaleY));
+                transformGroup.Children.Add(new TranslateTransform(item_.Left.Value, item_.Top.Value));
+                if (itemPathGeometry.Transform != null)
+                    transformGroup.Children.Add(itemPathGeometry.Transform);
+                itemPathGeometry.Transform = transformGroup;
+            }
         }
 
         private static void InternalCastToLetterVerticalAndSetTransform(SelectableDesignerItemViewModelBase item, PathGeometry itemPathGeometry)

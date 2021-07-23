@@ -1,4 +1,5 @@
 ﻿using Reactive.Bindings;
+using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,6 +44,11 @@ namespace boilersGraphics.ViewModels
         {
             this.ShowConnectors = false;
             EnablePathGeometryUpdate.Value = true;
+            Data.Subscribe(_ =>
+            {
+                UpdatePathGeometryIfEnable();
+            })
+            .AddTo(_CompositeDisposable);
         }
 
         public ReactiveProperty<string> Data { get; set; } = new ReactiveProperty<string>();
@@ -55,8 +61,9 @@ namespace boilersGraphics.ViewModels
         public override PathGeometry CreateGeometry(double angle)
         {
             var geometry = Geometry.Parse(Data.Value);
-            geometry.Transform = new RotateTransform(angle);
-            return System.Windows.Media.PathGeometry.CreateFromGeometry(geometry);
+            var pathGeometry = System.Windows.Media.PathGeometry.CreateFromGeometry(geometry);
+            pathGeometry.Transform = new RotateTransform(angle);
+            return pathGeometry;
         }
 
         #region IClonable

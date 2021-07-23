@@ -131,6 +131,11 @@ namespace boilersGraphics.ViewModels
         {
             UpdateCenterPoint();
             TransformObserversOnNext();
+            UpdatePathGeometryIfEnable();
+        }
+
+        public void UpdatePathGeometryIfEnable()
+        {
             if (EnablePathGeometryUpdate.Value)
             {
                 if (RotationAngle.Value == 0)
