@@ -152,6 +152,10 @@ namespace boilersGraphics.ViewModels
                 else
                     WithoutLineBreak(glyphTypeface);
             }
+            else
+            {
+                PathGeometry.Value = new PathGeometry();
+            }
         }
 
         private void WithLineBreak(GlyphTypeface glyphTypeface)

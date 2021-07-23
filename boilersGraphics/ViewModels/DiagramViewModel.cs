@@ -449,6 +449,8 @@ namespace boilersGraphics.ViewModels
                     item1PathGeometry = item1.RotatePathGeometry.Value;
                 if (item2.RotationAngle.Value != 0)
                     item2PathGeometry = item2.RotatePathGeometry.Value;
+                
+                CastToLetterAndSetTransform(item1, item2, item1PathGeometry, item2PathGeometry);
 
                 combine.PathGeometry.Value = Geometry.Combine(item1PathGeometry, item2PathGeometry, mode, null);
             }
@@ -457,6 +459,42 @@ namespace boilersGraphics.ViewModels
             combine.Width.Value = combine.PathGeometry.Value.Bounds.Width;
             combine.Height.Value = combine.PathGeometry.Value.Bounds.Height;
             Items.Add(combine);
+        }
+
+        private static void CastToLetterAndSetTransform(SelectableDesignerItemViewModelBase item1, SelectableDesignerItemViewModelBase item2, PathGeometry item1PathGeometry, PathGeometry item2PathGeometry)
+        {
+            InternalCastToLetterAndSetTransform(item1, item1PathGeometry);
+            InternalCastToLetterVerticalAndSetTransform(item1, item1PathGeometry);
+            InternalCastToLetterAndSetTransform(item2, item2PathGeometry);
+            InternalCastToLetterVerticalAndSetTransform(item2, item2PathGeometry);
+        }
+
+        private static void InternalCastToLetterVerticalAndSetTransform(SelectableDesignerItemViewModelBase item, PathGeometry itemPathGeometry)
+        {
+            if (item is LetterVerticalDesignerItemViewModel)
+            {
+                var item_ = item as LetterVerticalDesignerItemViewModel;
+                var transformGroup = new TransformGroup();
+                transformGroup.Children.Add(new TranslateTransform(item_.Left.Value, item_.Top.Value));
+                if (itemPathGeometry.Transform != null)
+                    transformGroup.Children.Add(itemPathGeometry.Transform);
+                itemPathGeometry.Transform = transformGroup;
+                item_.CloseLetterSettingDialog();
+            }
+        }
+
+        private static void InternalCastToLetterAndSetTransform(SelectableDesignerItemViewModelBase item, PathGeometry itemPathGeometry)
+        {
+            if (item is LetterDesignerItemViewModel)
+            {
+                var item_ = item as LetterDesignerItemViewModel;
+                var transformGroup = new TransformGroup();
+                transformGroup.Children.Add(new TranslateTransform(item_.Left.Value, item_.Top.Value));
+                if (itemPathGeometry.Transform != null)
+                    transformGroup.Children.Add(itemPathGeometry.Transform);
+                itemPathGeometry.Transform = transformGroup;
+                item_.CloseLetterSettingDialog();
+            }
         }
 
         private bool CanExecuteUnion()

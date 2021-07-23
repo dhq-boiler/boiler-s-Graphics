@@ -154,6 +154,10 @@ namespace boilersGraphics.ViewModels
                 else
                     WithoutLineBreak(glyphTypeface);
             }
+            else
+            {
+                PathGeometry.Value = new PathGeometry();
+            }
         }
 
         private void WithLineBreak(GlyphTypeface glyphTypeface)
@@ -259,7 +263,10 @@ namespace boilersGraphics.ViewModels
 
         public override PathGeometry CreateGeometry(double angle)
         {
-            throw new NotSupportedException("Rotation is not supported.");
+            RenderLetter();
+            var rotatePathGeometry = PathGeometry.Value.Clone();
+            rotatePathGeometry.Transform = new RotateTransform(angle, this.CenterPoint.Value.X, this.CenterPoint.Value.Y);
+            return rotatePathGeometry;
         }
 
         #region IClonable
