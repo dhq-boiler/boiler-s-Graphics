@@ -18,7 +18,7 @@ namespace boilersGraphics.Models
         private CompositeDisposable _disposable = new CompositeDisposable();
         public static ObservableCollection<Layer> SelectedLayers { get; } = new ObservableCollection<Layer>();
 
-        public ReactiveProperty<bool> IsVisible { get; } = new ReactiveProperty<bool>();
+        public ReactivePropertySlim<bool> IsVisible { get; } = new ReactivePropertySlim<bool>();
 
         public ReactivePropertySlim<Bitmap> Appearance { get; } = new ReactivePropertySlim<Bitmap>();
 

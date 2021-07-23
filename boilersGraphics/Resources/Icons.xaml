@@ -118,4 +118,12 @@
         x:Key="Icon_Exclude"
         x:Shared="False"
         UriSource="pack://application:,,,/Assets/img/exclude.png" />
+    <BitmapImage
+        x:Key="Icon_Eye"
+        x:Shared="False"
+        UriSource="pack://application:,,,/Assets/img/Eye.png" />
+    <BitmapImage
+        x:Key="Icon_EyeSlash"
+        x:Shared="False"
+        UriSource="pack://application:,,,/Assets/img/EyeSlash.png" />
 </ResourceDictionary>
