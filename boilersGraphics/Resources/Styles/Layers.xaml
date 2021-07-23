@@ -2,7 +2,6 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:control="clr-namespace:boilersGraphics.Controls"
                     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-                    xmlns:helper="clr-namespace:boilersGraphics.Helpers"
                     xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase">
     <Style TargetType="{x:Type control:Layers}">
 
@@ -125,7 +124,6 @@
                     </Setter.Value>
                 </Setter>
             </Style>
-
         </Style.Resources>
 
         <Setter Property="SnapsToDevicePixels" Value="true" />
@@ -149,21 +147,19 @@
                                                 </Grid.ColumnDefinitions>
                                                 <Button Grid.Column="0"
                                                         Command="{Binding SwitchVisibilityCommand}">
-                                                    <Button.ContentTemplate>
-                                                        <DataTemplate>
+                                                    <Button.Template>
+                                                        <ControlTemplate TargetType="{x:Type Button}">
                                                             <Image Name="Eye" Source="{StaticResource Icon_Eye}" />
-                                                            <DataTemplate.Triggers>
-                                                                <DataTrigger Binding="{Binding IsVisible.Value}"
-                                                                             Value="True">
+                                                            <ControlTemplate.Triggers>
+                                                                <DataTrigger Binding="{Binding IsVisible.Value}" Value="True">
                                                                     <Setter TargetName="Eye" Property="Source" Value="{StaticResource Icon_Eye}" />
                                                                 </DataTrigger>
-                                                                <DataTrigger Binding="{Binding IsVisible.Value}"
-                                                                             Value="False">
+                                                                <DataTrigger Binding="{Binding IsVisible.Value}" Value="False">
                                                                     <Setter TargetName="Eye" Property="Source" Value="{StaticResource Icon_EyeSlash}" />
                                                                 </DataTrigger>
-                                                            </DataTemplate.Triggers>
-                                                        </DataTemplate>
-                                                    </Button.ContentTemplate>
+                                                            </ControlTemplate.Triggers>
+                                                        </ControlTemplate>
+                                                    </Button.Template>
                                                 </Button>
                                             </Grid>
                                         </DataTemplate>
