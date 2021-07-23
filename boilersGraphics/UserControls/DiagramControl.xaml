@@ -172,8 +172,8 @@
                                                 <Line
                                                 x:Name="straightline"
                                                 IsHitTestVisible="{Binding IsHitTestVisible}"
-                                                Stroke="{Binding EdgeColor, Converter={StaticResource solidColorBrushConverter}}"
-                                                StrokeThickness="{Binding EdgeThickness}"
+                                                Stroke="{Binding EdgeColor.Value, Converter={StaticResource solidColorBrushConverter}}"
+                                                StrokeThickness="{Binding EdgeThickness.Value}"
                                                 X1="{Binding Points[0].X}"
                                                 X2="{Binding Points[1].X}"
                                                 Y1="{Binding Points[0].Y}"
@@ -232,8 +232,8 @@
                                                       Canvas.Top="{Binding LeftTop.Value.Y}"
                                                       IsHitTestVisible="True"
                                                       Stretch="Fill"
-                                                      Stroke="{Binding EdgeColor, Converter={StaticResource solidColorBrushConverter}}"
-                                                      StrokeThickness="{Binding EdgeThickness}">
+                                                      Stroke="{Binding EdgeColor.Value, Converter={StaticResource solidColorBrushConverter}}"
+                                                      StrokeThickness="{Binding EdgeThickness.Value}">
                                                     <Path.Data>
                                                         <PathGeometry>
                                                             <PathFigure StartPoint="{Binding Points[0]}">

@@ -34,9 +34,9 @@ namespace boilersGraphics.Helpers
                 item.ParentID = Guid.Parse(designerItemElm.Element("ParentID").Value);
                 item.ZIndex.Value = Int32.Parse(designerItemElm.Element("ZIndex").Value);
                 item.Matrix.Value = new Matrix();
-                item.EdgeColor = (Color)ColorConverter.ConvertFromString(designerItemElm.Element("EdgeColor").Value);
+                item.EdgeColor.Value = (Color)ColorConverter.ConvertFromString(designerItemElm.Element("EdgeColor").Value);
                 item.FillColor = (Color)ColorConverter.ConvertFromString(designerItemElm.Element("FillColor").Value);
-                item.EdgeThickness = double.Parse(designerItemElm.Element("EdgeThickness").Value);
+                item.EdgeThickness.Value = double.Parse(designerItemElm.Element("EdgeThickness").Value);
                 item.PathGeometry.Value = PathGeometry.CreateFromGeometry(PathGeometry.Parse(designerItemElm.Element("PathGeometry").Value));
                 item.Owner = diagramViewModel;
                 if (item is PictureDesignerItemViewModel)
@@ -83,8 +83,8 @@ namespace boilersGraphics.Helpers
                 item.Points[0] = Point.Parse(connectorElm.Element("BeginPoint").Value);
                 item.Points[1] = Point.Parse(connectorElm.Element("EndPoint").Value);
                 item.ZIndex.Value = Int32.Parse(connectorElm.Element("ZIndex").Value);
-                item.EdgeColor = (Color)ColorConverter.ConvertFromString(connectorElm.Element("EdgeColor").Value);
-                item.EdgeThickness = double.Parse(connectorElm.Element("EdgeThickness").Value);
+                item.EdgeColor.Value = (Color)ColorConverter.ConvertFromString(connectorElm.Element("EdgeColor").Value);
+                item.EdgeThickness.Value = double.Parse(connectorElm.Element("EdgeThickness").Value);
                 item.PathGeometry.Value = PathGeometry.CreateFromGeometry(PathGeometry.Parse(connectorElm.Element("PathGeometry").Value));
                 item.Owner = diagramViewModel;
                 if (item is BezierCurveViewModel)

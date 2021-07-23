@@ -127,6 +127,7 @@ namespace boilersGraphics.ViewModels
             this.ObserveProperty(x => x.AutoLineBreak)
                 .Subscribe(_ => RenderLetter())
                 .AddTo(_CompositeDisposable);
+            EnablePathGeometryUpdate.Value = true;
         }
 
         public void CloseLetterSettingDialog()
@@ -152,6 +153,10 @@ namespace boilersGraphics.ViewModels
                     WithLineBreak(glyphTypeface);
                 else
                     WithoutLineBreak(glyphTypeface);
+            }
+            else
+            {
+                PathGeometry.Value = new PathGeometry();
             }
         }
 
@@ -250,6 +255,20 @@ namespace boilersGraphics.ViewModels
             }
         }
 
+        public override PathGeometry CreateGeometry()
+        {
+            RenderLetter();
+            return PathGeometry.Value;
+        }
+
+        public override PathGeometry CreateGeometry(double angle)
+        {
+            RenderLetter();
+            var rotatePathGeometry = PathGeometry.Value.Clone();
+            rotatePathGeometry.Transform = new RotateTransform(angle, this.CenterPoint.Value.X, this.CenterPoint.Value.Y);
+            return rotatePathGeometry;
+        }
+
         #region IClonable
 
         public override object Clone()
@@ -260,9 +279,9 @@ namespace boilersGraphics.ViewModels
             clone.Top.Value = Top.Value;
             clone.Width.Value = Width.Value;
             clone.Height.Value = Height.Value;
-            clone.EdgeColor = EdgeColor;
+            clone.EdgeColor.Value = EdgeColor.Value;
             clone.FillColor = FillColor;
-            clone.EdgeThickness = EdgeThickness;
+            clone.EdgeThickness.Value = EdgeThickness.Value;
             clone.Matrix.Value = Matrix.Value;
             clone.RotationAngle.Value = RotationAngle.Value;
             clone.LetterString = LetterString;

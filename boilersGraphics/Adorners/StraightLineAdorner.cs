@@ -69,10 +69,11 @@ namespace boilersGraphics.Adorners
             {
                 var item = new StraightConnectorViewModel(_startPoint.Value, _endPoint.Value);
                 item.Owner = (AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel;
-                item.EdgeColor = item.Owner.EdgeColors.First();
-                item.EdgeThickness = item.Owner.EdgeThickness.Value.Value;
+                item.EdgeColor.Value = item.Owner.EdgeColors.First();
+                item.EdgeThickness.Value = item.Owner.EdgeThickness.Value.Value;
                 item.ZIndex.Value = item.Owner.Items.Count;
                 item.IsSelected = true;
+                item.PathGeometry.Value = GeometryCreator.CreateLine(item);
                 item.Owner.DeselectAll();
                 ((AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel).AddItemCommand.Execute(item);
 

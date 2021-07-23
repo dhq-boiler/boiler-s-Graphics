@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 
 namespace boilersGraphics.ViewModels
 {
@@ -41,6 +42,17 @@ namespace boilersGraphics.ViewModels
         private void Init()
         {
             this.ShowConnectors = false;
+            EnablePathGeometryUpdate.Value = true;
+        }
+
+        public override PathGeometry CreateGeometry()
+        {
+            return GeometryCreator.CreateEllipse(this);
+        }
+
+        public override PathGeometry CreateGeometry(double angle)
+        {
+            return GeometryCreator.CreateEllipse(this, angle);
         }
 
         #region IClonable
@@ -53,9 +65,9 @@ namespace boilersGraphics.ViewModels
             clone.Top.Value = Top.Value;
             clone.Width.Value = Width.Value;
             clone.Height.Value = Height.Value;
-            clone.EdgeColor = EdgeColor;
+            clone.EdgeColor.Value = EdgeColor.Value;
             clone.FillColor = FillColor;
-            clone.EdgeThickness = EdgeThickness;
+            clone.EdgeThickness.Value = EdgeThickness.Value;
             clone.Matrix.Value = Matrix.Value;
             clone.RotationAngle.Value = RotationAngle.Value;
             clone.PathGeometry.Value = GeometryCreator.CreateEllipse(clone);
