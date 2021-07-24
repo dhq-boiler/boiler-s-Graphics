@@ -9,6 +9,7 @@ using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
@@ -39,7 +40,7 @@ namespace boilersGraphics.Models
         public ReactiveCommand SwitchVisibilityCommand { get; } = new ReactiveCommand();
         public ReactiveCommand SelectLayerCommand { get; } = new ReactiveCommand();
 
-        public ObservableCollection<LayerItem> Items { get; } = new ObservableCollection<LayerItem>();
+        public ReactiveCollection<LayerItem> Items { get; } = new ReactiveCollection<LayerItem>();
 
         public IObservable<PropertyPack<LayerItem, bool>> Observable
         {
@@ -203,7 +204,11 @@ namespace boilersGraphics.Models
         public void RemoveItem(SelectableDesignerItemViewModelBase item)
         {
             var layerItems = Items.Where(x => x.Item.Value == item);
-            layerItems.ToList().ForEach(x => Items.Remove(x));
+            layerItems.ToList().ForEach(x =>
+            {
+                var removed = Items.Remove(x);
+                Trace.WriteLine($"{x} removed from {Items} {removed}");
+            });
         }
 
         public void AddItem(SelectableDesignerItemViewModelBase item)

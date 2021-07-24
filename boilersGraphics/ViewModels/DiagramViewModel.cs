@@ -362,7 +362,14 @@ namespace boilersGraphics.ViewModels
             AllItems.ObserveAddChanged()
                     .Subscribe(x =>
                     {
-                        Debug.WriteLine(x);
+                        Debug.WriteLine($"Added {x} into AllItems");
+                    })
+                    .AddTo(_CompositeDisposable);
+
+            AllItems.ObserveRemoveChanged()
+                    .Subscribe(x =>
+                    {
+                        Debug.WriteLine($"Removed {x} from AllItems");
                     })
                     .AddTo(_CompositeDisposable);
         
@@ -671,7 +678,7 @@ namespace boilersGraphics.ViewModels
             Mediator.Instance.Register(this);
         }
 
-        public ObservableCollection<Layer> Layers { get; } = new ObservableCollection<Layer>();
+        public ReactiveCollection<Layer> Layers { get; } = new ReactiveCollection<Layer>();
 
         public ReactiveCollection<Layer> SelectedLayers { get; }
 
