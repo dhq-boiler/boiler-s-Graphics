@@ -142,7 +142,7 @@
                                         <DataTemplate>
                                             <Grid>
                                                 <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="50" />
+                                                    <ColumnDefinition Width="25" />
                                                     <ColumnDefinition Width="200" />
                                                 </Grid.ColumnDefinitions>
                                                 <Button Grid.Column="0"
