@@ -9,6 +9,7 @@ using System.Linq;
 using System.Reactive.Disposables;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace boilersGraphics.Models
 {
@@ -39,7 +40,7 @@ namespace boilersGraphics.Models
             {
                 IsVisible.Value = !IsVisible.Value;
             })
-                        .AddTo(_disposable);
+            .AddTo(_disposable);
             IsVisible.Value = true;
         }
 

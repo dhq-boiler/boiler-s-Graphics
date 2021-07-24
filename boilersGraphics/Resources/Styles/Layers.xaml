@@ -2,6 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:control="clr-namespace:boilersGraphics.Controls"
                     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+                    xmlns:helper="clr-namespace:boilersGraphics.Helpers"
                     xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase">
     <Style TargetType="{x:Type control:Layers}">
 
@@ -140,36 +141,69 @@
                                 <ItemsControl ItemsSource="{Binding Layers}">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
-                                            <Grid>
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="25" />
-                                                    <ColumnDefinition Width="200" />
-                                                </Grid.ColumnDefinitions>
-                                                <Button Grid.Column="0"
-                                                        Command="{Binding SwitchVisibilityCommand}">
-                                                    <Button.Template>
-                                                        <ControlTemplate TargetType="{x:Type Button}">
-                                                            <Image Name="Eye" Source="{StaticResource Icon_Eye}" />
-                                                            <ControlTemplate.Triggers>
-                                                                <DataTrigger Binding="{Binding IsVisible.Value}" Value="True">
-                                                                    <Setter TargetName="Eye" Property="Source" Value="{StaticResource Icon_Eye}" />
-                                                                </DataTrigger>
-                                                                <DataTrigger Binding="{Binding IsVisible.Value}" Value="False">
-                                                                    <Setter TargetName="Eye" Property="Source" Value="{StaticResource Icon_EyeSlash}" />
-                                                                </DataTrigger>
-                                                            </ControlTemplate.Triggers>
-                                                        </ControlTemplate>
-                                                    </Button.Template>
-                                                </Button>
-                                            </Grid>
+                                            <Border>
+                                                <Border.Style>
+                                                    <Style TargetType="Border">
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding IsSelected.Value}" Value="True">
+                                                                <Setter Property="BorderBrush" Value="Red" />
+                                                                <Setter Property="BorderThickness" Value="1" />
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding IsSelected.Value}" Value="False">
+                                                                <Setter Property="BorderBrush" Value="Black" />
+                                                                <Setter Property="BorderThickness" Value="1" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Border.Style>
+                                                <i:Interaction.Triggers>
+                                                    <i:EventTrigger EventName="MouseLeftButtonDown">
+                                                        <helper:EventToCommand Command="{Binding SelectLayerCommand}" PassEventArgsToCommand="True" />
+                                                    </i:EventTrigger>
+                                                </i:Interaction.Triggers>
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="25" />
+                                                        <ColumnDefinition Width="200" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <Button Grid.Column="0"
+                                                            VerticalAlignment="Center"
+                                                            Command="{Binding SwitchVisibilityCommand}">
+                                                        <Button.Template>
+                                                            <ControlTemplate TargetType="{x:Type Button}">
+                                                                <Image Name="Eye" Source="{StaticResource Icon_Eye}" />
+                                                                <ControlTemplate.Triggers>
+                                                                    <DataTrigger Binding="{Binding IsVisible.Value}" Value="True">
+                                                                        <Setter TargetName="Eye" Property="Source" Value="{StaticResource Icon_Eye}" />
+                                                                    </DataTrigger>
+                                                                    <DataTrigger Binding="{Binding IsVisible.Value}" Value="False">
+                                                                        <Setter TargetName="Eye" Property="Source" Value="{StaticResource Icon_EyeSlash}" />
+                                                                    </DataTrigger>
+                                                                </ControlTemplate.Triggers>
+                                                            </ControlTemplate>
+                                                        </Button.Template>
+                                                    </Button>
+                                                    <TextBlock Grid.Column="1"
+                                                               VerticalAlignment="Center"
+                                                               Text="{Binding Name.Value}" />
+                                                </Grid>
+                                            </Border>
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
                                 </ItemsControl>
                             </DockPanel>
                             <Expander.Header>
-                                <Grid>
+                                <DockPanel>
+                                    <Button DockPanel.Dock="Right"
+                                            Command="{Binding AddLayerCommand}">
+                                        <Button.Template>
+                                            <ControlTemplate TargetType="Button">
+                                                <TextBlock Text="+" />
+                                            </ControlTemplate>
+                                        </Button.Template>
+                                    </Button>
                                     <Label Content="レイヤー" />
-                                </Grid>
+                                </DockPanel>
                             </Expander.Header>
                         </Expander>
                     </Border>

@@ -88,6 +88,7 @@ namespace boilersGraphics.ViewModels
         public DelegateCommand<MouseEventArgs> MouseMoveCommand { get; private set; }
         public DelegateCommand<MouseEventArgs> MouseLeaveCommand { get; private set; }
         public DelegateCommand<MouseEventArgs> MouseEnterCommand { get; private set; }
+        public DelegateCommand AddLayerCommand { get; private set; }
 
         public double ScaleX { get; set; } = 1.0;
         public double ScaleY { get; set; } = 1.0;
@@ -282,6 +283,13 @@ namespace boilersGraphics.ViewModels
                 CopyCommand.RaiseCanExecuteChanged();
                 PasteCommand.RaiseCanExecuteChanged();
             });
+            AddLayerCommand = new DelegateCommand(() =>
+            {   
+                var layer = new Layer();
+                layer.IsVisible.Value = true;
+                layer.Name.Value = $"レイヤー{Layer.LayerCount++}";
+                Layers.Add(layer);
+            });
 
             Layers.ObserveElementObservableProperty(x => x.Observable)
                   .Subscribe(x =>
@@ -364,7 +372,10 @@ namespace boilersGraphics.ViewModels
             CanvasBorderThickness = 0.0;
             CanvasBackground.Value = Colors.White;
             EnablePointSnap.Value = true;
-            Layers.Add(new Layer());
+            var layer = new Layer();
+            layer.IsVisible.Value = true;
+            layer.Name.Value = $"レイヤー{Layer.LayerCount++}";
+            Layers.Add(layer);
         }
 
         private void ExecuteClipCommand()
