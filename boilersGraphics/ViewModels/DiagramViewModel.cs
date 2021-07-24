@@ -374,6 +374,7 @@ namespace boilersGraphics.ViewModels
             EnablePointSnap.Value = true;
             var layer = new Layer();
             layer.IsVisible.Value = true;
+            layer.IsSelected.Value = true;
             layer.Name.Value = $"レイヤー{Layer.LayerCount++}";
             Layers.Add(layer);
         }
