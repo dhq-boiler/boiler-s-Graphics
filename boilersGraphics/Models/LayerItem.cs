@@ -1,16 +1,24 @@
-﻿using boilersGraphics.ViewModels;
+﻿using boilersGraphics.Controls;
+using boilersGraphics.Extensions;
+using boilersGraphics.ViewModels;
+using boilersGraphics.Views;
 using Prism.Mvvm;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
+using System.Diagnostics;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace boilersGraphics.Models
 {
@@ -21,7 +29,7 @@ namespace boilersGraphics.Models
         public static int LayerItemCount { get; set; } = 1;
 
         public ReactivePropertySlim<bool> IsVisible { get; } = new ReactivePropertySlim<bool>();
-        public ReactivePropertySlim<Bitmap> Appearance { get; } = new ReactivePropertySlim<Bitmap>();
+        public ReactivePropertySlim<ImageSource> Appearance { get; } = new ReactivePropertySlim<ImageSource>();
         public ReactivePropertySlim<string> Name { get; } = new ReactivePropertySlim<string>();
         public ReactivePropertySlim<Layer> Owner { get; } = new ReactivePropertySlim<Layer>();
         public ReactiveCommand SwitchVisibilityCommand { get; } = new ReactiveCommand();
@@ -61,6 +69,14 @@ namespace boilersGraphics.Models
                 }
             })
             .AddTo(_disposable);
+            Item.Delay(TimeSpan.FromMilliseconds(500))
+                .ObserveOnDispatcher()
+                .Subscribe(x =>
+            {
+                Trace.WriteLine("Item change detected. run UpdateAppearance().");
+                UpdateAppearance(Item.Value);
+            })
+            .AddTo(_disposable);
             IsVisible.Value = true;
         }
 
@@ -69,6 +85,48 @@ namespace boilersGraphics.Models
             Init();
             Item.Value = item;
             Owner.Value = owner;
+        }
+
+        private void UpdateAppearance(SelectableDesignerItemViewModelBase item)
+        {
+            var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
+            var views = designerCanvas.GetCorrespondingViews<FrameworkElement>(item).Where(x => x.GetType() == item.GetViewType());
+            foreach (var view in views)
+            {
+                if (view != null)
+                {
+                    if (view.ActualWidth >= 1 && view.ActualHeight >= 1)
+                    {
+                        var rtb = new RenderTargetBitmap((int)view.ActualWidth, (int)view.ActualHeight, 96, 96, PixelFormats.Pbgra32);
+
+                        DrawingVisual visual = new DrawingVisual();
+                        using (DrawingContext context = visual.RenderOpen())
+                        {
+                            context.DrawRectangle(Brushes.White, null, new Rect(new Point(), new Size(view.ActualWidth, view.ActualHeight)));
+
+                            VisualBrush brush = new VisualBrush(view);
+                            context.DrawRectangle(brush, null, new Rect(new Point(), new Size(view.ActualWidth, view.ActualHeight)));
+                        }
+
+                        rtb.Render(visual);
+
+                        FormatConvertedBitmap newFormatedBitmapSource = new FormatConvertedBitmap();
+                        newFormatedBitmapSource.BeginInit();
+                        newFormatedBitmapSource.Source = rtb;
+                        newFormatedBitmapSource.DestinationFormat = PixelFormats.Bgr24;
+                        newFormatedBitmapSource.EndInit();
+
+                        var mat = OpenCvSharp.WpfExtensions.BitmapSourceConverter.ToMat(newFormatedBitmapSource);
+                        OpenCvSharp.Cv2.ImShow("DebugPrint_LayerItem", mat);
+
+                        Appearance.Value = rtb;
+                    }
+                }
+                else
+                {
+                    throw new Exception("view not found");
+                }
+            }
         }
 
         protected virtual void Dispose(bool disposing)

@@ -151,6 +151,7 @@
                                                             <Grid.ColumnDefinitions>
                                                                 <ColumnDefinition Width="Auto"/>
                                                                 <ColumnDefinition Width="Auto"/>
+                                                                <ColumnDefinition Width="Auto"/>
                                                                 <ColumnDefinition Width="*"/>
                                                             </Grid.ColumnDefinitions>
                                                             <Grid.RowDefinitions>
@@ -197,10 +198,18 @@
                                                                     </ControlTemplate>
                                                                 </ToggleButton.Template>
                                                             </ToggleButton>
-                                                            <Border Name="BackBorder" Grid.Column="2" Grid.Row="0" Padding="5,0,0,0" BorderThickness="0,0,0,1" BorderBrush="LightGray" Background="{TemplateBinding Panel.Background}">
+                                                            <Border Grid.Column="2"
+                                                                    BorderBrush="Black"
+                                                                    BorderThickness="1">
+                                                                <Image Width="25"
+                                                                       Height="25"
+                                                                       Source="{Binding Appearance.Value}"
+                                                                       RenderOptions.BitmapScalingMode="HighQuality" />
+                                                            </Border>
+                                                            <Border Name="BackBorder" Grid.Column="3" Grid.Row="0" Padding="5,0,0,0" BorderThickness="0,0,0,1" BorderBrush="LightGray" Background="{TemplateBinding Panel.Background}">
                                                                 <ContentPresenter Content="{TemplateBinding HeaderedContentControl.Header}" ContentTemplate="{TemplateBinding HeaderedContentControl.HeaderTemplate}" ContentStringFormat="{TemplateBinding HeaderedItemsControl.HeaderStringFormat}" ContentSource="Header" Name="PART_Header" HorizontalAlignment="Stretch"/>
                                                             </Border>
-                                                            <ItemsPresenter Name="ItemsHost" Grid.Column="2" Grid.Row="1"/>
+                                                            <ItemsPresenter Name="ItemsHost" Grid.Column="3" Grid.Row="1"/>
                                                         </Grid>
                                                         <ControlTemplate.Triggers>
                                                             <Trigger Property="HasItems" Value="False">

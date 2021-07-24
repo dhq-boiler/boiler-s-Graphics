@@ -13,6 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
+using System.Windows.Shapes;
 
 namespace boilersGraphics.ViewModels
 {
@@ -267,6 +268,11 @@ namespace boilersGraphics.ViewModels
             var rotatePathGeometry = PathGeometry.Value.Clone();
             rotatePathGeometry.Transform = new RotateTransform(angle, this.CenterPoint.Value.X, this.CenterPoint.Value.Y);
             return rotatePathGeometry;
+        }
+
+        public override Type GetViewType()
+        {
+            return typeof(Path);
         }
 
         #region IClonable

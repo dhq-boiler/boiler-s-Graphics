@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 
 namespace boilersGraphics.ViewModels
@@ -127,6 +128,11 @@ namespace boilersGraphics.ViewModels
         }
 
         #endregion IObservable<GroupTransformNotification>
+
+        public override Type GetViewType()
+        {
+            return typeof(DockPanel);
+        }
 
         #region IClonable
 

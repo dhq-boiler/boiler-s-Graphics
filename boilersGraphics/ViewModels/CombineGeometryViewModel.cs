@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using System.Windows.Shapes;
 
 namespace boilersGraphics.ViewModels
 {
@@ -52,6 +53,11 @@ namespace boilersGraphics.ViewModels
         public override PathGeometry CreateGeometry(double angle)
         {
             throw new NotSupportedException("combine figures is not supported.");
+        }
+
+        public override Type GetViewType()
+        {
+            return typeof(Path);
         }
 
         #region IClonable

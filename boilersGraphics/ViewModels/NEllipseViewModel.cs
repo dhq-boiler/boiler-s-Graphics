@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using System.Windows.Shapes;
 
 namespace boilersGraphics.ViewModels
 {
@@ -53,6 +54,10 @@ namespace boilersGraphics.ViewModels
         public override PathGeometry CreateGeometry(double angle)
         {
             return GeometryCreator.CreateEllipse(this, angle);
+        }
+        public override Type GetViewType()
+        {
+            return typeof(Path);
         }
 
         #region IClonable

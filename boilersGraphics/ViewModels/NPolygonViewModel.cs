@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using System.Windows.Shapes;
 
 namespace boilersGraphics.ViewModels
 {
@@ -64,6 +65,10 @@ namespace boilersGraphics.ViewModels
             var pathGeometry = System.Windows.Media.PathGeometry.CreateFromGeometry(geometry);
             pathGeometry.Transform = new RotateTransform(angle);
             return pathGeometry;
+        }
+        public override Type GetViewType()
+        {
+            return typeof(Path);
         }
 
         #region IClonable

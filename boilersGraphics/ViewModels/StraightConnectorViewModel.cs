@@ -1,6 +1,8 @@
 ﻿
+using System;
 using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Shapes;
 
 namespace boilersGraphics.ViewModels
 {
@@ -19,6 +21,11 @@ namespace boilersGraphics.ViewModels
         {
             Points.Add(p1);
             Points.Add(p2);
+        }
+
+        public override Type GetViewType()
+        {
+            return typeof(Line);
         }
 
         #region IClonable

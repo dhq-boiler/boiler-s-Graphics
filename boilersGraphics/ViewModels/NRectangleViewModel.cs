@@ -1,6 +1,8 @@
 ﻿
 using boilersGraphics.Helpers;
+using System;
 using System.Windows.Media;
+using System.Windows.Shapes;
 
 namespace boilersGraphics.ViewModels
 {
@@ -49,6 +51,11 @@ namespace boilersGraphics.ViewModels
         public override PathGeometry CreateGeometry(double angle)
         {
             return GeometryCreator.CreateRectangle(this, angle);
+        }
+
+        public override Type GetViewType()
+        {
+            return typeof(Path);
         }
 
         #region IClonable

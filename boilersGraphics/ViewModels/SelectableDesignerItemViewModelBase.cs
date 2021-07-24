@@ -2,6 +2,7 @@
 using Prism.Commands;
 using Prism.Mvvm;
 using Reactive.Bindings;
+using Reactive.Bindings.Extensions;
 using System;
 using System.Linq;
 using System.Reactive.Disposables;
@@ -105,6 +106,8 @@ namespace boilersGraphics.ViewModels
             EnableForSelection.Value = true;
         }
 
+        public abstract Type GetViewType();
+
         #region IObserver<GroupTransformNotification>
 
         public abstract void OnNext(GroupTransformNotification value);
@@ -125,7 +128,10 @@ namespace boilersGraphics.ViewModels
 
         public void Dispose()
         {
-            _CompositeDisposable.Dispose();
+            if (_CompositeDisposable != null)
+            {
+                _CompositeDisposable.Dispose();
+            }
             _CompositeDisposable = null;
         }
 
