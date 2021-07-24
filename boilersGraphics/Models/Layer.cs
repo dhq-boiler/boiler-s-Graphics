@@ -17,8 +17,10 @@ namespace boilersGraphics.Models
         public static ObservableCollection<Layer> SelectedLayers { get; } = new ObservableCollection<Layer>();
 
         public ReactivePropertySlim<bool> IsVisible { get; } = new ReactivePropertySlim<bool>();
-        
+
         public ReactivePropertySlim<bool> IsSelected { get; } = new ReactivePropertySlim<bool>();
+
+        public ReactivePropertySlim<bool> IsExpanded { get; } = new ReactivePropertySlim<bool>();
 
         public ReactivePropertySlim<string> Name { get; } = new ReactivePropertySlim<string>();
 
