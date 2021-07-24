@@ -20,17 +20,15 @@ namespace boilersGraphics.Models
 
         public ReactivePropertySlim<bool> IsVisible { get; } = new ReactivePropertySlim<bool>();
 
-        public ReactivePropertySlim<Bitmap> Appearance { get; } = new ReactivePropertySlim<Bitmap>();
-
         public ReactivePropertySlim<string> Name { get; } = new ReactivePropertySlim<string>();
 
         public ReactiveCommand SwitchVisibilityCommand { get; } = new ReactiveCommand();
 
-        public ObservableCollection<SelectableDesignerItemViewModelBase> Items { get; } = new ObservableCollection<SelectableDesignerItemViewModelBase>();
+        public ObservableCollection<LayerItem> Items { get; } = new ObservableCollection<LayerItem>();
 
-        public IObservable<PropertyPack<SelectableDesignerItemViewModelBase, bool>> Observable
+        public IObservable<PropertyPack<LayerItem, bool>> Observable
         {
-            get { return Items.ObserveElementProperty(x => x.IsSelected); }
+            get { return Items.ObserveElementObservableProperty(x => x.Observable); }
         }
 
         public Layer()
@@ -41,6 +39,12 @@ namespace boilersGraphics.Models
             })
             .AddTo(_disposable);
             IsVisible.Value = true;
+        }
+
+        public void RemoveItem(SelectableDesignerItemViewModelBase item)
+        {
+            var layerItems = Items.Where(x => x.Item.Value == item);
+            layerItems.ToList().ForEach(x => Items.Remove(x));
         }
     }
 }

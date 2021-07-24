@@ -242,7 +242,7 @@ namespace boilersGraphics.Extensions
 
         public static IEnumerable<SelectableDesignerItemViewModelBase> Items(this ObservableCollection<Layer> layers)
         {
-            return layers.SelectMany(x => x.Items);
+            return layers.SelectMany(x => x.Items).Select(x => x.Item.Value);
         }
     }
 }

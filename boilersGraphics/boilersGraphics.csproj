@@ -194,6 +194,7 @@
     <Compile Include="Models\Ellipse.cs" />
     <Compile Include="Models\FontFamilyEx.cs" />
     <Compile Include="Models\Layer.cs" />
+    <Compile Include="Models\LayerItem.cs" />
     <Compile Include="Models\Letter.cs" />
     <Compile Include="Models\Rectangle.cs" />
     <Compile Include="Models\RenderItem.cs" />
@@ -213,6 +214,7 @@
     <Compile Include="Models\Corner.cs" />
     <Compile Include="ViewModels\ExportViewModel.cs" />
     <Compile Include="ViewModels\GroupItemViewModel.cs" />
+    <Compile Include="ViewModels\ILetterDesignerItemViewModel.cs" />
     <Compile Include="ViewModels\LetterDesignerItemViewModel.cs" />
     <Compile Include="ViewModels\LetterVerticalSettingViewModel.cs" />
     <Compile Include="ViewModels\LetterSettingViewModel.cs" />

@@ -288,11 +288,11 @@ namespace boilersGraphics.ViewModels
                   {
                       if (x.Value.Value)
                       {
-                          SelectedItems.Add(x.Value.Instance);
+                          SelectedItems.Add(x.Value.Instance.Item.Value);
                       }
                       else
                       {
-                          SelectedItems.Remove(x.Value.Instance);
+                          SelectedItems.Remove(x.Value.Instance.Item.Value);
                       }
                   })
                   .AddTo(_CompositeDisposable);
@@ -305,7 +305,7 @@ namespace boilersGraphics.ViewModels
                   {
                       foreach (var xx in xs)
                       {
-                          if (xx.IsSelected) { SelectedItems.Remove(xx); }
+                          if (xx.Item.Value.IsSelected) { SelectedItems.Remove(xx.Item.Value); }
                       }
                   })
                   .AddTo(_CompositeDisposable);
@@ -349,6 +349,7 @@ namespace boilersGraphics.ViewModels
                 .AddTo(_CompositeDisposable);
 
             AllItems = Layers.SelectMany(x => x.Items)
+                             .Select(x => x.Item.Value)
                              .ToObservableCollection()
                              .ToReadOnlyReactiveCollection();
 
@@ -598,8 +599,7 @@ namespace boilersGraphics.ViewModels
         {
             var selectedItems = SelectedItems.ToList();
             var root = new XElement("Data");
-            root.Add(new XElement("DesignerItems", ObjectSerializer.SerializeDesignerItems(this, selectedItems)));
-            root.Add(new XElement("Connections", ObjectSerializer.SerializeConnections(this, selectedItems)));
+            root.Add(ObjectSerializer.ExtractItems(selectedItems));
             Clipboard.SetDataObject(root.ToString(), false);
         }
 
@@ -691,9 +691,9 @@ namespace boilersGraphics.ViewModels
 
         public void DeselectAll()
         {
-            foreach (var item in Layers.SelectMany(x => x.Items))
+            foreach (var layerItem in Layers.SelectMany(x => x.Items))
             {
-                item.IsSelected = false;
+                layerItem.Item.Value.IsSelected = false;
             }
         }
 
@@ -730,12 +730,12 @@ namespace boilersGraphics.ViewModels
         private void UpdateZIndex()
         {
             var items = (from item in Layers.SelectMany(x => x.Items)
-                         orderby item.ZIndex.Value ascending
+                         orderby item.Item.Value.ZIndex.Value ascending
                          select item).ToList();
 
             for (int i = 0; i < items.Count; ++i)
             {
-                items.ElementAt(i).ZIndex.Value = i;
+                items.ElementAt(i).Item.Value.ZIndex.Value = i;
             }
         }
 
@@ -744,13 +744,13 @@ namespace boilersGraphics.ViewModels
             if (item is GroupItemViewModel groupItem)
             {
                 var children = (from it in Layers.SelectMany(x => x.Items)
-                                where it.ParentID == groupItem.ID
+                                where it.Item.Value.ParentID == groupItem.ID
                                 select it).ToList();
 
                 foreach (var child in children)
                 {
-                    RemoveGroupMembers(child);
-                    Remove(child);
+                    RemoveGroupMembers(child.Item.Value);
+                    Remove(child.Item.Value);
                     child.Dispose();
                 }
             }
@@ -758,9 +758,9 @@ namespace boilersGraphics.ViewModels
 
         private void ExecuteClearSelectedItemsCommand(object parameter)
         {
-            foreach (SelectableDesignerItemViewModelBase item in Layers.SelectMany(x => x.Items))
+            foreach (LayerItem layerItem in Layers.SelectMany(x => x.Items))
             {
-                item.IsSelected = false;
+                layerItem.Item.Value.IsSelected = false;
             }
         }
 
@@ -787,12 +787,14 @@ namespace boilersGraphics.ViewModels
 
         private void Add(SelectableDesignerItemViewModelBase item)
         {
-            Layer.SelectedLayers.First().Items.Add(item);
+            var layerItem = new LayerItem();
+            layerItem.Item.Value = item;
+            Layer.SelectedLayers.First().Items.Add(layerItem);
         }
 
         private void Remove(SelectableDesignerItemViewModelBase item)
         {
-            Layers.ToList().ForEach(x => x.Items.Remove(item));
+            Layers.ToList().ForEach(x => x.RemoveItem(item));
         }
 
         #region Save
@@ -803,13 +805,11 @@ namespace boilersGraphics.ViewModels
             var connections = this.Layers.SelectMany(x => x.Items).OfType<ConnectorBaseViewModel>();
             var mainWindowVM = (App.Current.MainWindow.DataContext as MainWindowViewModel);
 
-            XElement designerItemsXML = new XElement("DesignerItems", ObjectSerializer.SerializeDesignerItems(this, Layers.SelectMany(x => x.Items)));
-            XElement connectionsXML = new XElement("Connections", ObjectSerializer.SerializeConnections(this, Layers.SelectMany(x => x.Items)));
+            XElement layersXML = new XElement("Layers", ObjectSerializer.SerializeLayers(Layers));
             XElement configurationXML = new XElement("Configuration", ObjectSerializer.SerializeConfiguration(this));
 
             XElement root = new XElement("boilersGraphics");
-            root.Add(designerItemsXML);
-            root.Add(connectionsXML);
+            root.Add(layersXML);
             root.Add(configurationXML);
 
             SaveFile(root);
@@ -845,13 +845,12 @@ namespace boilersGraphics.ViewModels
             var connections = this.Layers.SelectMany(x => x.Items).OfType<ConnectorBaseViewModel>();
             var mainWindowVM = (App.Current.MainWindow.DataContext as MainWindowViewModel);
 
-            XElement designerItemsXML = new XElement("DesignerItems", ObjectSerializer.SerializeDesignerItems(this, Layers.SelectMany(x => x.Items)));
-            XElement connectionsXML = new XElement("Connections", ObjectSerializer.SerializeConnections(this, Layers.SelectMany(x => x.Items)));
+
+            XElement layersXML = new XElement("Layers", ObjectSerializer.SerializeLayers(Layers));
             XElement configurationXML = new XElement("Configuration", ObjectSerializer.SerializeConfiguration(this));
 
             XElement root = new XElement("boilersGraphics");
-            root.Add(designerItemsXML);
-            root.Add(connectionsXML);
+            root.Add(layersXML);
             root.Add(configurationXML);
             Save(root);
         }
@@ -960,26 +959,26 @@ namespace boilersGraphics.ViewModels
             }
 
             var groupItems = from it in Layers.SelectMany(x => x.Items)
-                             where it.ParentID == groupItem.ID
+                             where it.Item.Value.ParentID == groupItem.ID
                              select it;
 
             var theMostForwardItem = (from it in groupItems
-                                      orderby it.ZIndex.Value descending
+                                      orderby it.Item.Value.ZIndex.Value descending
                                       select it).Take(1).SingleOrDefault();
 
             var sortList = (from it in Layers.SelectMany(x => x.Items)
-                            where it.ZIndex.Value < theMostForwardItem.ZIndex.Value && it.ID != groupItem.ID
-                            orderby it.ZIndex.Value descending
+                            where it.Item.Value.ZIndex.Value < theMostForwardItem.Item.Value.ZIndex.Value && it.Item.Value.ID != groupItem.ID
+                            orderby it.Item.Value.ZIndex.Value descending
                             select it).ToList();
 
             var swapItems = (from it in groupItems
-                             orderby it.ZIndex.Value descending
+                             orderby it.Item.Value.ZIndex.Value descending
                              select it).Skip(1);
 
             for (int i = 0; i < swapItems.Count(); ++i)
             {
                 var it = swapItems.ElementAt(i);
-                it.ZIndex.Value = theMostForwardItem.ZIndex.Value - i - 1;
+                it.Item.Value.ZIndex.Value = theMostForwardItem.Item.Value.ZIndex.Value - i - 1;
             }
 
             var swapItemsCount = swapItems.Count();
@@ -987,23 +986,23 @@ namespace boilersGraphics.ViewModels
             for (int i = 0, j = 0; i < sortList.Count(); ++i)
             {
                 var it = sortList.ElementAt(i);
-                if (it.ParentID == groupItem.ID)
+                if (it.Item.Value.ParentID == groupItem.ID)
                 {
                     j++;
                     continue;
                 }
-                it.ZIndex.Value = theMostForwardItem.ZIndex.Value - swapItemsCount - (i - j) - 1;
+                it.Item.Value.ZIndex.Value = theMostForwardItem.Item.Value.ZIndex.Value - swapItemsCount - (i - j) - 1;
             }
 
-            groupItem.ZIndex.Value = theMostForwardItem.ZIndex.Value + 1;
+            groupItem.ZIndex.Value = theMostForwardItem.Item.Value.ZIndex.Value + 1;
 
             var adds = from item in Layers.SelectMany(x => x.Items)
-                       where item.ID != groupItem.ID && item.ZIndex.Value >= groupItem.ZIndex.Value
+                       where item.Item.Value.ID != groupItem.ID && item.Item.Value.ZIndex.Value >= groupItem.ZIndex.Value
                        select item;
 
             foreach (var add in adds)
             {
-                add.ZIndex.Value += 1;
+                add.Item.Value.ZIndex.Value += 1;
             }
 
             groupItem.SelectItemCommand.Execute(true);
@@ -1026,14 +1025,14 @@ namespace boilersGraphics.ViewModels
             foreach (var groupRoot in groups.ToList())
             {
                 var children = from child in Layers.SelectMany(x => x.Items)
-                               where child.ParentID == groupRoot.ID
+                               where child.Item.Value.ParentID == groupRoot.ID
                                select child;
 
                 foreach (var child in children)
                 {
-                    child.GroupDisposable.Dispose();
-                    child.ParentID = Guid.Empty;
-                    child.EnableForSelection.Value = true;
+                    child.Item.Value.GroupDisposable.Dispose();
+                    child.Item.Value.ParentID = Guid.Empty;
+                    child.Item.Value.EnableForSelection.Value = true;
                 }
 
                 groupRoot.Dispose();
@@ -1043,12 +1042,12 @@ namespace boilersGraphics.ViewModels
                 var groupZIndex = groupRoot.ZIndex.Value;
 
                 var it = from item in Layers.SelectMany(x => x.Items)
-                         where item.ZIndex.Value > groupZIndex
+                         where item.Item.Value.ZIndex.Value > groupZIndex
                          select item;
 
                 foreach (var x in it)
                 {
-                    x.ZIndex.Value -= 1;
+                    x.Item.Value.ZIndex.Value -= 1;
                 }
             }
         }
@@ -1076,12 +1075,12 @@ namespace boilersGraphics.ViewModels
             {
                 int currentIndex = ordered.ElementAt(i).ZIndex.Value;
                 var next = (from x in Layers.SelectMany(x => x.Items)
-                            where x.ZIndex.Value == currentIndex + 1
+                            where x.Item.Value.ZIndex.Value == currentIndex + 1
                             select x).SingleOrDefault();
 
                 if (next == null) continue;
 
-                int newIndex = next.ParentID != Guid.Empty ? Layers.SelectMany(x => x.Items).Single(x => x.ID == next.ParentID).ZIndex.Value : Math.Min(count - 1 - i, currentIndex + 1);
+                int newIndex = next.Item.Value.ParentID != Guid.Empty ? Layers.SelectMany(x => x.Items).Single(x => x.Item.Value.ID == next.Item.Value.ParentID).Item.Value.ZIndex.Value : Math.Min(count - 1 - i, currentIndex + 1);
                 if (currentIndex != newIndex)
                 {
                     if (ordered.ElementAt(i) is GroupItemViewModel)
@@ -1089,8 +1088,8 @@ namespace boilersGraphics.ViewModels
                         ordered.ElementAt(i).ZIndex.Value = newIndex;
 
                         var children = from item in Layers.SelectMany(xx => xx.Items)
-                                       where item.ParentID == ordered.ElementAt(i).ID
-                                       orderby item.ZIndex.Value descending
+                                       where item.Item.Value.ParentID == ordered.ElementAt(i).ID
+                                       orderby item.Item.Value.ZIndex.Value descending
                                        select item;
 
                         int youngestChildrenZIndex = 0;
@@ -1098,17 +1097,17 @@ namespace boilersGraphics.ViewModels
                         for (int j = 0; j < children.Count(); ++j)
                         {
                             var child = children.ElementAt(j);
-                            youngestChildrenZIndex = child.ZIndex.Value = newIndex - j - 1;
+                            youngestChildrenZIndex = child.Item.Value.ZIndex.Value = newIndex - j - 1;
                         }
 
                         var younger = from item in Layers.SelectMany(xx => xx.Items)
-                                      where item.ID != ordered.ElementAt(i).ID && item.ParentID != ordered.ElementAt(i).ID
-                                      && item.ZIndex.Value <= ordered.ElementAt(i).ZIndex.Value && item.ZIndex.Value >= youngestChildrenZIndex
+                                      where item.Item.Value.ID != ordered.ElementAt(i).ID && item.Item.Value.ParentID != ordered.ElementAt(i).ID
+                                      && item.Item.Value.ZIndex.Value <= ordered.ElementAt(i).ZIndex.Value && item.Item.Value.ZIndex.Value >= youngestChildrenZIndex
                                       select item;
 
                         var x = from item in Layers.SelectMany(xx => xx.Items)
-                                where item.ID != ordered.ElementAt(i).ID && item.ParentID != ordered.ElementAt(i).ID
-                                && item.ZIndex.Value < youngestChildrenZIndex
+                                where item.Item.Value.ID != ordered.ElementAt(i).ID && item.Item.Value.ParentID != ordered.ElementAt(i).ID
+                                && item.Item.Value.ZIndex.Value < youngestChildrenZIndex
                                 select item;
 
                         var z = x.ToList();
@@ -1116,34 +1115,34 @@ namespace boilersGraphics.ViewModels
 
                         for (int j = 0; j < z.Count(); ++j)
                         {
-                            z.ElementAt(j).ZIndex.Value = j;
+                            z.ElementAt(j).Item.Value.ZIndex.Value = j;
                         }
                     }
                     else
                     {
                         ordered.ElementAt(i).ZIndex.Value = newIndex;
-                        var exists = Layers.SelectMany(x => x.Items).Where(item => item.ZIndex.Value == newIndex);
+                        var exists = Layers.SelectMany(x => x.Items).Where(item => item.Item.Value.ZIndex.Value == newIndex);
 
                         foreach (var item in exists)
                         {
-                            if (item != ordered.ElementAt(i))
+                            if (item.Item.Value != ordered.ElementAt(i))
                             {
-                                if (item is GroupItemViewModel)
+                                if (item.Item.Value is GroupItemViewModel)
                                 {
                                     var children = from it in Layers.SelectMany(x => x.Items)
-                                                   where it.ParentID == item.ID
+                                                   where it.Item.Value.ParentID == item.Item.Value.ID
                                                    select it;
 
                                     foreach (var child in children)
                                     {
-                                        child.ZIndex.Value -= 1;
+                                        child.Item.Value.ZIndex.Value -= 1;
                                     }
 
-                                    item.ZIndex.Value = currentIndex + children.Count();
+                                    item.Item.Value.ZIndex.Value = currentIndex + children.Count();
                                 }
                                 else
                                 {
-                                    item.ZIndex.Value = currentIndex;
+                                    item.Item.Value.ZIndex.Value = currentIndex;
                                 }
                                 break;
                             }
@@ -1165,22 +1164,22 @@ namespace boilersGraphics.ViewModels
             {
                 int currentIndex = ordered.ElementAt(i).ZIndex.Value;
                 var previous = (from x in Layers.SelectMany(x => x.Items)
-                                where x.ZIndex.Value == currentIndex - 1
+                                where x.Item.Value.ZIndex.Value == currentIndex - 1
                                 select x).SingleOrDefault();
 
                 if (previous == null) continue;
 
-                int newIndex = previous is GroupItemViewModel ? Layers.SelectMany(x => x.Items).Where(x => x.ParentID == previous.ID).Min(x => x.ZIndex.Value) : Math.Max(i, currentIndex - 1);
+                int newIndex = previous.Item.Value is GroupItemViewModel ? Layers.SelectMany(x => x.Items).Where(x => x.Item.Value.ParentID == previous.Item.Value.ID).Min(x => x.Item.Value.ZIndex.Value) : Math.Max(i, currentIndex - 1);
                 if (currentIndex != newIndex)
                 {
                     if (ordered.ElementAt(i) is GroupItemViewModel)
                     {
                         var children = (from item in Layers.SelectMany(xx => xx.Items)
-                                        where item.ParentID == ordered.ElementAt(i).ID
-                                        orderby item.ZIndex.Value descending
+                                        where item.Item.Value.ParentID == ordered.ElementAt(i).ID
+                                        orderby item.Item.Value.ZIndex.Value descending
                                         select item).ToList();
 
-                        if (children.Any(c => c.ZIndex.Value == 0)) continue;
+                        if (children.Any(c => c.Item.Value.ZIndex.Value == 0)) continue;
 
                         ordered.ElementAt(i).ZIndex.Value = newIndex;
 
@@ -1189,17 +1188,17 @@ namespace boilersGraphics.ViewModels
                         for (int j = 0; j < children.Count(); ++j)
                         {
                             var child = children.ElementAt(j);
-                            youngestChildrenZIndex = child.ZIndex.Value = newIndex - j - 1;
+                            youngestChildrenZIndex = child.Item.Value.ZIndex.Value = newIndex - j - 1;
                         }
 
                         var older = from item in Layers.SelectMany(xx => xx.Items)
-                                    where item.ID != ordered.ElementAt(i).ID && item.ParentID != ordered.ElementAt(i).ID
-                                    && item.ZIndex.Value <= ordered.ElementAt(i).ZIndex.Value && item.ZIndex.Value >= youngestChildrenZIndex
+                                    where item.Item.Value.ID != ordered.ElementAt(i).ID && item.Item.Value.ParentID != ordered.ElementAt(i).ID
+                                    && item.Item.Value.ZIndex.Value <= ordered.ElementAt(i).ZIndex.Value && item.Item.Value.ZIndex.Value >= youngestChildrenZIndex
                                     select item;
 
                         var x = from item in Layers.SelectMany(xx => xx.Items)
-                                where item.ID != ordered.ElementAt(i).ID && item.ParentID != ordered.ElementAt(i).ID
-                                && item.ZIndex.Value > ordered.ElementAt(i).ZIndex.Value
+                                where item.Item.Value.ID != ordered.ElementAt(i).ID && item.Item.Value.ParentID != ordered.ElementAt(i).ID
+                                && item.Item.Value.ZIndex.Value > ordered.ElementAt(i).ZIndex.Value
                                 select item;
 
                         var z = older.ToList();
@@ -1209,38 +1208,38 @@ namespace boilersGraphics.ViewModels
                         for (int j = 0; j < z.Count(); ++j)
                         {
                             var elm = z.ElementAt(j);
-                            elm.ZIndex.Value = Layers.SelectMany(xx => xx.Items).Count() - j - 1;
+                            elm.Item.Value.ZIndex.Value = Layers.SelectMany(xx => xx.Items).Count() - j - 1;
                         }
                     }
                     else
                     {
                         ordered.ElementAt(i).ZIndex.Value = newIndex;
-                        var exists = Layers.SelectMany(x => x.Items).Where(item => item.ZIndex.Value == newIndex);
+                        var exists = Layers.SelectMany(x => x.Items).Where(item => item.Item.Value.ZIndex.Value == newIndex);
 
                         foreach (var item in exists)
                         {
-                            if (item != ordered.ElementAt(i))
+                            if (item.Item.Value != ordered.ElementAt(i))
                             {
-                                if (item.ParentID != Guid.Empty)
+                                if (item.Item.Value.ParentID != Guid.Empty)
                                 {
                                     var children = from it in Layers.SelectMany(x => x.Items)
-                                                   where it.ParentID == item.ParentID
+                                                   where it.Item.Value.ParentID == item.Item.Value.ParentID
                                                    select it;
 
                                     foreach (var child in children)
                                     {
-                                        child.ZIndex.Value += 1;
+                                        child.Item.Value.ZIndex.Value += 1;
                                     }
 
                                     var parent = (from it in Layers.SelectMany(x => x.Items)
-                                                  where it.ID == item.ParentID
+                                                  where it.Item.Value.ID == item.Item.Value.ParentID
                                                   select it).Single();
 
-                                    parent.ZIndex.Value = children.Max(x => x.ZIndex.Value) + 1;
+                                    parent.Item.Value.ZIndex.Value = children.Max(x => x.Item.Value.ZIndex.Value) + 1;
                                 }
                                 else
                                 {
-                                    item.ZIndex.Value = currentIndex;
+                                    item.Item.Value.ZIndex.Value = currentIndex;
                                 }
                                 break;
                             }
@@ -1271,38 +1270,38 @@ namespace boilersGraphics.ViewModels
                     if (current is GroupItemViewModel)
                     {
                         var children = from item in Layers.SelectMany(x => x.Items)
-                                       where item.ParentID == current.ID
-                                       orderby item.ZIndex.Value descending
+                                       where item.Item.Value.ParentID == current.ID
+                                       orderby item.Item.Value.ZIndex.Value descending
                                        select item;
 
                         for (int j = 0; j < children.Count(); ++j)
                         {
                             var child = children.ElementAt(j);
-                            child.ZIndex.Value = current.ZIndex.Value - j - 1;
+                            child.Item.Value.ZIndex.Value = current.ZIndex.Value - j - 1;
                         }
 
-                        var minValue = children.Min(x => x.ZIndex.Value);
+                        var minValue = children.Min(x => x.Item.Value.ZIndex.Value);
 
                         var other = (from item in Layers.SelectMany(x => x.Items)
-                                     where item.ParentID != current.ID && item.ID != current.ID
-                                     orderby item.ZIndex.Value descending
+                                     where item.Item.Value.ParentID != current.ID && item.Item.Value.ID != current.ID
+                                     orderby item.Item.Value.ZIndex.Value descending
                                      select item).ToList();
 
                         for (int j = 0; j < other.Count(); ++j)
                         {
                             var item = other.ElementAt(j);
-                            item.ZIndex.Value = minValue - j - 1;
+                            item.Item.Value.ZIndex.Value = minValue - j - 1;
                         }
                     }
                     else
                     {
-                        var exists = Layers.SelectMany(x => x.Items).Where(item => item.ZIndex.Value <= newIndex && item.ZIndex.Value > oldCurrentIndex);
+                        var exists = Layers.SelectMany(x => x.Items).Where(item => item.Item.Value.ZIndex.Value <= newIndex && item.Item.Value.ZIndex.Value > oldCurrentIndex);
 
                         foreach (var item in exists)
                         {
-                            if (item != current)
+                            if (item.Item.Value != current)
                             {
-                                item.ZIndex.Value -= 1;
+                                item.Item.Value.ZIndex.Value -= 1;
                             }
                         }
                     }
@@ -1322,7 +1321,7 @@ namespace boilersGraphics.ViewModels
             {
                 var current = ordered.ElementAt(i);
                 int currentIndex = current.ZIndex.Value;
-                int newIndex = current is GroupItemViewModel ? Layers.SelectMany(x => x.Items).Where(x => x.ParentID == current.ID).Count() : 0;
+                int newIndex = current is GroupItemViewModel ? Layers.SelectMany(x => x.Items).Where(x => x.Item.Value.ParentID == current.ID).Count() : 0;
                 if (currentIndex != newIndex)
                 {
                     var oldCurrentIndex = current.ZIndex.Value;
@@ -1331,19 +1330,19 @@ namespace boilersGraphics.ViewModels
                     if (current is GroupItemViewModel)
                     {
                         var children = (from item in Layers.SelectMany(x => x.Items)
-                                        where item.ParentID == current.ID
-                                        orderby item.ZIndex.Value descending
+                                        where item.Item.Value.ParentID == current.ID
+                                        orderby item.Item.Value.ZIndex.Value descending
                                         select item).ToList();
 
                         for (int j = 0; j < children.Count(); ++j)
                         {
                             var child = children.ElementAt(j);
-                            child.ZIndex.Value = current.ZIndex.Value - j - 1;
+                            child.Item.Value.ZIndex.Value = current.ZIndex.Value - j - 1;
                         }
 
                         var other = (from item in Layers.SelectMany(x => x.Items)
-                                     where item.ParentID != current.ID && item.ID != current.ID
-                                     orderby item.ZIndex.Value descending
+                                     where item.Item.Value.ParentID != current.ID && item.Item.Value.ID != current.ID
+                                     orderby item.Item.Value.ZIndex.Value descending
                                      select item).ToList();
 
                         var maxValue = Layers.SelectMany(x => x.Items).Count() - 1;
@@ -1351,18 +1350,18 @@ namespace boilersGraphics.ViewModels
                         for (int j = 0; j < other.Count(); ++j)
                         {
                             var item = other.ElementAt(j);
-                            item.ZIndex.Value = maxValue - j;
+                            item.Item.Value.ZIndex.Value = maxValue - j;
                         }
                     }
                     else
                     {
-                        var exists = Layers.SelectMany(x => x.Items).Where(item => item.ZIndex.Value >= newIndex && item.ZIndex.Value < oldCurrentIndex);
+                        var exists = Layers.SelectMany(x => x.Items).Where(item => item.Item.Value.ZIndex.Value >= newIndex && item.Item.Value.ZIndex.Value < oldCurrentIndex);
 
                         foreach (var item in exists)
                         {
-                            if (item != current)
+                            if (item.Item.Value != current)
                             {
-                                item.ZIndex.Value += 1;
+                                item.Item.Value.ZIndex.Value += 1;
                             }
                         }
                     }
@@ -1566,7 +1565,7 @@ namespace boilersGraphics.ViewModels
         {
             return item is DesignerItemViewModelBase ? (item as DesignerItemViewModelBase).Left.Value
                 : item is ConnectorBaseViewModel ? Math.Min((item as ConnectorBaseViewModel).Points[0].X, (item as ConnectorBaseViewModel).Points[1].X)
-                : Layers.SelectMany(x => x.Items).Where(x => x.ParentID == (item as GroupItemViewModel).ID).Min(x => GetLeft(x));
+                : Layers.SelectMany(x => x.Items).Where(x => x.Item.Value.ParentID == (item as GroupItemViewModel).ID).Min(x => GetLeft(x.Item.Value));
         }
 
         private double GetHeight(SelectableDesignerItemViewModelBase item)
@@ -1592,14 +1591,14 @@ namespace boilersGraphics.ViewModels
         {
             return item is DesignerItemViewModelBase ? (item as DesignerItemViewModelBase).Top.Value
                 : item is ConnectorBaseViewModel ? Math.Min((item as ConnectorBaseViewModel).Points[0].Y, (item as ConnectorBaseViewModel).Points[1].Y)
-                : Layers.SelectMany(x => x.Items).Where(x => x.ParentID == (item as GroupItemViewModel).ID).Min(x => GetTop(x));
+                : Layers.SelectMany(x => x.Items).Where(x => x.Item.Value.ParentID == (item as GroupItemViewModel).ID).Min(x => GetTop(x.Item.Value));
         }
 
         #endregion //Alignment
 
         private void ExecuteSelectAllCommand()
         {
-            Layers.SelectMany(x => x.Items).ToList().ForEach(x => x.IsSelected = true);
+            Layers.SelectMany(x => x.Items).ToList().ForEach(x => x.Item.Value.IsSelected = true);
         }
 
         #region Uniform
@@ -1763,7 +1762,9 @@ namespace boilersGraphics.ViewModels
         {
             var list = new List<SelectableDesignerItemViewModelBase>();
             list.Add(item);
-            var children = Layers.SelectMany(x => x.Items).Where(x => x.ParentID == item.ID);
+            var children = Layers.SelectMany(x => x.Items)
+                                 .Where(x => x.Item.Value.ParentID == item.ID)
+                                 .Select(x => x.Item.Value);
             list.AddRange(children);
             return list;
         }

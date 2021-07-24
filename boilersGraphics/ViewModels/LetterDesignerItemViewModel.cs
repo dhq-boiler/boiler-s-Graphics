@@ -14,7 +14,7 @@ using System.Windows.Media;
 
 namespace boilersGraphics.ViewModels
 {
-    public class LetterDesignerItemViewModel : DesignerItemViewModelBase
+    public class LetterDesignerItemViewModel : DesignerItemViewModelBase, ILetterDesignerItemViewModel
     {
         private bool _LetterSettingDialogIsOpen = false;
         private string _LetterString = string.Empty;
