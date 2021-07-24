@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Reactive;
 using System.Reactive.Disposables;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,6 +18,7 @@ namespace boilersGraphics.Models
     {
         private CompositeDisposable _disposable = new CompositeDisposable();
         private bool disposedValue;
+        public static int LayerItemCount { get; set; } = 1;
 
         public ReactivePropertySlim<bool> IsVisible { get; } = new ReactivePropertySlim<bool>();
         public ReactivePropertySlim<Bitmap> Appearance { get; } = new ReactivePropertySlim<Bitmap>();
@@ -27,6 +29,11 @@ namespace boilersGraphics.Models
         public IObservable<bool> Observable
         {
             get { return Item.ObserveProperty(x => x.Value.IsSelected); }
+        }
+
+        public IObservable<SelectableDesignerItemViewModelBase> AllItemsObservable
+        {
+            get { return System.Reactive.Linq.Observable.Return(Item.Value); }
         }
 
         public LayerItem()

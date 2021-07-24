@@ -31,6 +31,10 @@ namespace boilersGraphics.Models
         {
             get { return Items.ObserveElementObservableProperty(x => x.Observable); }
         }
+        public IObservable<PropertyPack<LayerItem, SelectableDesignerItemViewModelBase>> AllItemsObservable
+        {
+            get { return Items.ObserveElementObservableProperty(x => x.AllItemsObservable); }
+        }
 
         public Layer()
         {
@@ -60,6 +64,14 @@ namespace boilersGraphics.Models
         {
             var layerItems = Items.Where(x => x.Item.Value == item);
             layerItems.ToList().ForEach(x => Items.Remove(x));
+        }
+
+        public void AddItem(SelectableDesignerItemViewModelBase item)
+        {
+            var layerItem = new LayerItem(item);
+            layerItem.IsVisible.Value = true;
+            layerItem.Name.Value = $"アイテム{LayerItem.LayerItemCount++}";
+            Items.Add(layerItem);
         }
     }
 }

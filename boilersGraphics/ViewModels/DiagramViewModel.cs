@@ -35,7 +35,6 @@ namespace boilersGraphics.ViewModels
     public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     {
         private IDialogService dlgService;
-        private ObservableCollection<SelectableDesignerItemViewModelBase> _items = new ObservableCollection<SelectableDesignerItemViewModelBase>();
         private Point _CurrentPoint;
         private ObservableCollection<Color> _EdgeColors = new ObservableCollection<Color>();
         private ObservableCollection<Color> _FillColors = new ObservableCollection<Color>();
@@ -356,12 +355,23 @@ namespace boilersGraphics.ViewModels
                 .Subscribe(_ => RaisePropertyChanged("FillColors"))
                 .AddTo(_CompositeDisposable);
 
-            AllItems = Layers.SelectMany(x => x.Items)
-                             .Select(x => x.Item.Value)
-                             .ToObservableCollection()
+            AllItems = Layers.ObserveElementObservableProperty(x => x.AllItemsObservable)
+                             .Select(x => x.Value.Value)
                              .ToReadOnlyReactiveCollection();
 
-            InitialSetting();
+            AllItems.ObserveAddChanged()
+                    .Subscribe(x =>
+                    {
+                        Debug.WriteLine(x);
+                    })
+                    .AddTo(_CompositeDisposable);
+        
+            SelectedLayers = Layers.ObserveElementProperty(x => x.IsSelected.Value)
+                                   .Where(x => x.Value == true)
+                                   .Select(x => x.Instance)
+                                   .ToReactiveCollection();
+
+        InitialSetting();
         }
 
         private void InitialSetting()
@@ -663,6 +673,8 @@ namespace boilersGraphics.ViewModels
 
         public ObservableCollection<Layer> Layers { get; } = new ObservableCollection<Layer>();
 
+        public ReactiveCollection<Layer> SelectedLayers { get; }
+
         public ReadOnlyReactiveCollection<SelectableDesignerItemViewModelBase> AllItems { get; }
 
         public ReactiveCollection<SelectableDesignerItemViewModelBase> SelectedItems { get; } = new ReactiveCollection<SelectableDesignerItemViewModelBase>();
@@ -715,7 +727,7 @@ namespace boilersGraphics.ViewModels
             {
                 SelectableDesignerItemViewModelBase item = (SelectableDesignerItemViewModelBase)parameter;
                 item.Owner = this;
-                _items.Add(item);
+                SelectedLayers.First().AddItem(item);
             }
         }
 
@@ -725,7 +737,7 @@ namespace boilersGraphics.ViewModels
             {
                 SelectableDesignerItemViewModelBase item = (SelectableDesignerItemViewModelBase)parameter;
                 RemoveGroupMembers(item);
-                _items.Remove(item);
+                Remove(item);
                 if (item is LetterDesignerItemViewModel)
                 {
                     (item as LetterDesignerItemViewModel).CloseLetterSettingDialog();
