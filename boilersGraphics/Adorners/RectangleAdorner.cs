@@ -82,6 +82,7 @@ namespace boilersGraphics.Adorners
                 item.ZIndex.Value = item.Owner.Layers.Items().Count();
                 item.PathGeometry.Value = GeometryCreator.CreateRectangle(item);
                 item.IsSelected = true;
+                item.IsVisible.Value = true;
                 item.Owner.DeselectAll();
                 ((AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel).AddItemCommand.Execute(item);
 

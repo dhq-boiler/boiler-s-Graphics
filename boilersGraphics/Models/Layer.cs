@@ -57,6 +57,11 @@ namespace boilersGraphics.Models
                 IsSelected.Value = true;
             })
             .AddTo(_disposable);
+            IsVisible.Subscribe(isVisible =>
+            {
+                Items.ToList().ForEach(x => x.IsVisible.Value = isVisible);
+            })
+            .AddTo(_disposable);
             IsVisible.Value = true;
         }
 

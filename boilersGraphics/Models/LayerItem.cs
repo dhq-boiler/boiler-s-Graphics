@@ -48,6 +48,14 @@ namespace boilersGraphics.Models
                 IsVisible.Value = !IsVisible.Value;
             })
             .AddTo(_disposable);
+            IsVisible.Subscribe(isVisible =>
+            {
+                if (Item.Value != null)
+                {
+                    Item.Value.IsVisible.Value = isVisible;
+                }
+            })
+            .AddTo(_disposable);
             IsVisible.Value = true;
         }
 
