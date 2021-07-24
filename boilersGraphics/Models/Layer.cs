@@ -61,7 +61,10 @@ namespace boilersGraphics.Models
             .AddTo(_disposable);
             IsVisible.Subscribe(isVisible =>
             {
-                Items.ToList().ForEach(x => x.IsVisible.Value = isVisible);
+                if (!isVisible)
+                {
+                    Items.ToList().ForEach(x => x.IsVisible.Value = isVisible);
+                }
             })
             .AddTo(_disposable);
             IsVisible.Value = true;
@@ -75,7 +78,7 @@ namespace boilersGraphics.Models
 
         public void AddItem(SelectableDesignerItemViewModelBase item)
         {
-            var layerItem = new LayerItem(item);
+            var layerItem = new LayerItem(item, this);
             layerItem.IsVisible.Value = true;
             layerItem.Name.Value = $"アイテム{LayerItem.LayerItemCount++}";
             Items.Add(layerItem);

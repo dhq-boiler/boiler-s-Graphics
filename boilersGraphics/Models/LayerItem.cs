@@ -23,6 +23,7 @@ namespace boilersGraphics.Models
         public ReactivePropertySlim<bool> IsVisible { get; } = new ReactivePropertySlim<bool>();
         public ReactivePropertySlim<Bitmap> Appearance { get; } = new ReactivePropertySlim<Bitmap>();
         public ReactivePropertySlim<string> Name { get; } = new ReactivePropertySlim<string>();
+        public ReactivePropertySlim<Layer> Owner { get; } = new ReactivePropertySlim<Layer>();
         public ReactiveCommand SwitchVisibilityCommand { get; } = new ReactiveCommand();
         public ReactivePropertySlim<SelectableDesignerItemViewModelBase> Item { get; } = new ReactivePropertySlim<SelectableDesignerItemViewModelBase>();
 
@@ -53,16 +54,21 @@ namespace boilersGraphics.Models
                 if (Item.Value != null)
                 {
                     Item.Value.IsVisible.Value = isVisible;
+                    if (isVisible && !Owner.Value.IsVisible.Value)
+                    {
+                        Owner.Value.IsVisible.Value = true;
+                    }
                 }
             })
             .AddTo(_disposable);
             IsVisible.Value = true;
         }
 
-        public LayerItem(SelectableDesignerItemViewModelBase item)
+        public LayerItem(SelectableDesignerItemViewModelBase item, Layer owner)
         {
             Init();
             Item.Value = item;
+            Owner.Value = owner;
         }
 
         protected virtual void Dispose(bool disposing)
