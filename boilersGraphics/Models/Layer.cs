@@ -1,5 +1,6 @@
 ﻿using boilersGraphics.Controls;
 using boilersGraphics.Extensions;
+using boilersGraphics.Helpers;
 using boilersGraphics.ViewModels;
 using boilersGraphics.Views;
 using Prism.Mvvm;
@@ -139,14 +140,7 @@ namespace boilersGraphics.Models
                 }
             }
 
-            FormatConvertedBitmap newFormatedBitmapSource = new FormatConvertedBitmap();
-            newFormatedBitmapSource.BeginInit();
-            newFormatedBitmapSource.Source = rtb;
-            newFormatedBitmapSource.DestinationFormat = PixelFormats.Bgr24;
-            newFormatedBitmapSource.EndInit();
-
-            var mat = OpenCvSharp.WpfExtensions.BitmapSourceConverter.ToMat(newFormatedBitmapSource);
-            OpenCvSharp.Cv2.ImShow("DebugPrint_Layer", mat);
+            OpenCvSharpHelper.ImShow("DebugPrint_Layer", rtb);
 
             Appearance.Value = rtb;
         }
