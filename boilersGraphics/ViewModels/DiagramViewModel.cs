@@ -371,7 +371,7 @@ namespace boilersGraphics.ViewModels
                                    .Select(x => x.Instance)
                                    .ToReactiveCollection();
 
-        InitialSetting();
+            InitialSetting();
         }
 
         private void InitialSetting()
