@@ -47,9 +47,9 @@ namespace boilersGraphics.ViewModels
             set { SetProperty(ref _IsSelected, value); }
         }
 
-        public ReactiveProperty<Matrix> Matrix { get; } = new ReactiveProperty<Matrix>(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe);
+        public ReactiveProperty<Matrix> Matrix { get; } = new ReactiveProperty<Matrix>(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe | ReactivePropertyMode.DistinctUntilChanged);
 
-        public ReactiveProperty<double> RotationAngle { get; } = new ReactiveProperty<double>(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe);
+        public ReactiveProperty<double> RotationAngle { get; } = new ReactiveProperty<double>(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe | ReactivePropertyMode.DistinctUntilChanged);
 
         public ReactiveProperty<bool> EnableForSelection { get; } = new ReactiveProperty<bool>();
 
