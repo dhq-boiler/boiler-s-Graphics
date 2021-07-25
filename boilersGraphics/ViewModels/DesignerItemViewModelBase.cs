@@ -99,23 +99,23 @@ namespace boilersGraphics.ViewModels
                 .Subscribe(x => UpdateTransform(nameof(Left), x.OldItem, x.NewItem))
                 .AddTo(_CompositeDisposable);
             Top
-                .Zip(Left.Skip(1), (Old, New) => new { OldItem = Old, NewItem = New })
+                .Zip(Top.Skip(1), (Old, New) => new { OldItem = Old, NewItem = New })
                 .Subscribe(x => UpdateTransform(nameof(Top), x.OldItem, x.NewItem))
                 .AddTo(_CompositeDisposable);
             Width
-                .Zip(Left.Skip(1), (Old, New) => new { OldItem = Old, NewItem = New })
+                .Zip(Width.Skip(1), (Old, New) => new { OldItem = Old, NewItem = New })
                 .Subscribe(x => UpdateTransform(nameof(Width), x.OldItem, x.NewItem))
                 .AddTo(_CompositeDisposable);
             Height
-                .Zip(Left.Skip(1), (Old, New) => new { OldItem = Old, NewItem = New })
+                .Zip(Height.Skip(1), (Old, New) => new { OldItem = Old, NewItem = New })
                 .Subscribe(x => UpdateTransform(nameof(Height), x.OldItem, x.NewItem))
                 .AddTo(_CompositeDisposable);
             RotationAngle
-                .Zip(Left.Skip(1), (Old, New) => new { OldItem = Old, NewItem = New })
+                .Zip(RotationAngle.Skip(1), (Old, New) => new { OldItem = Old, NewItem = New })
                 .Subscribe(x => UpdateTransform(nameof(RotationAngle), x.OldItem, x.NewItem))
                 .AddTo(_CompositeDisposable);
             Matrix
-                .Zip(Left.Skip(1), (Old, New) => new { OldItem = Old, NewItem = New })
+                .Zip(Matrix.Skip(1), (Old, New) => new { OldItem = Old, NewItem = New })
                 .Subscribe(x => UpdateTransform(nameof(Matrix), x.OldItem, x.NewItem))
                 .AddTo(_CompositeDisposable);
             Right = Left.Select(x => x + Width.Value)
