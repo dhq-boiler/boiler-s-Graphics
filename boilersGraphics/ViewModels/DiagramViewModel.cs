@@ -41,6 +41,7 @@ namespace boilersGraphics.ViewModels
         private double _CanvasBorderThickness;
         private bool _MiddleButtonIsPressed;
         private Point _MousePointerPosition;
+        private bool disposedValue;
 
         public DelegateCommand<object> AddItemCommand { get; private set; }
         public DelegateCommand<object> RemoveItemCommand { get; private set; }
@@ -86,12 +87,72 @@ namespace boilersGraphics.ViewModels
         public DelegateCommand<MouseEventArgs> MouseEnterCommand { get; private set; }
         public DelegateCommand AddLayerCommand { get; private set; }
 
+        #region Property
+
+        public ReactiveCollection<Layer> Layers { get; } = new ReactiveCollection<Layer>();
+
+        public ReactiveCollection<Layer> SelectedLayers { get; }
+
+        public ReadOnlyReactiveCollection<SelectableDesignerItemViewModelBase> AllItems { get; }
+
+        public ReactiveCollection<SelectableDesignerItemViewModelBase> SelectedItems { get; } = new ReactiveCollection<SelectableDesignerItemViewModelBase>();
+
+        public ReactiveProperty<double?> EdgeThickness { get; } = new ReactiveProperty<double?>();
+
+        public ReactiveProperty<bool> EnableMiniMap { get; } = new ReactiveProperty<bool>();
+
+        public ReactiveProperty<string> FileName { get; } = new ReactiveProperty<string>();
+
+        public ReactiveProperty<Color> CanvasBackground { get; } = new ReactiveProperty<Color>();
+
+        public ReactiveProperty<bool> EnablePointSnap { get; } = new ReactiveProperty<bool>();
+
+        public ObservableCollection<Color> EdgeColors
+        {
+            get { return _EdgeColors; }
+            set { SetProperty(ref _EdgeColors, value); }
+        }
+
+        public ObservableCollection<Color> FillColors
+        {
+            get { return _FillColors; }
+            set { SetProperty(ref _FillColors, value); }
+        }
+
+        public int Width
+        {
+            get { return _Width; }
+            set { SetProperty(ref _Width, value); }
+        }
+
+        public int Height
+        {
+            get { return _Height; }
+            set { SetProperty(ref _Height, value); }
+        }
+
+        /// <summary>
+        /// 現在ポインティングしている座標
+        /// ステータスバー上の座標インジケーターに使用される
+        /// </summary>
+        public Point CurrentPoint
+        {
+            get { return _CurrentPoint; }
+            set { SetProperty(ref _CurrentPoint, value); }
+        }
+        public double CanvasBorderThickness
+        {
+            get { return _CanvasBorderThickness; }
+            set { SetProperty(ref _CanvasBorderThickness, value); }
+        }
+
         public double ScaleX { get; set; } = 1.0;
         public double ScaleY { get; set; } = 1.0;
 
         public IEnumerable<Point> SnapPoints
         {
-            get {
+            get
+            {
                 var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
                 var resizeThumbs = designerCanvas.EnumerateChildOfType<SnapPoint>();
                 var sets = resizeThumbs
@@ -112,78 +173,7 @@ namespace boilersGraphics.ViewModels
             return sets.Select(x => x.Item2);
         }
 
-        private Point GetCenter(SnapPoint snapPoint)
-        {
-            var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-            var leftTop = snapPoint.TransformToAncestor(designerCanvas).Transform(new Point(0, 0));
-            switch (snapPoint.Tag)
-            {
-                case "左上":
-                    return new Point(leftTop.X + snapPoint.Width - 1, leftTop.Y + snapPoint.Height - 1);
-                case "右上":
-                    return new Point(leftTop.X, leftTop.Y + snapPoint.Height - 1);
-                case "左下":
-                    return new Point(leftTop.X + snapPoint.Width - 1, leftTop.Y);
-                case "右下":
-                    return new Point(leftTop.X, leftTop.Y);
-                case "左":
-                case "上":
-                case "右":
-                case "下":
-                    return new Point(leftTop.X, leftTop.Y);
-                case "始点":
-                case "終点":
-                case "制御点":
-                    return new Point(leftTop.X + snapPoint.Width / 2, leftTop.Y + snapPoint.Height / 2);
-                default:
-                    throw new Exception("ResizeThumb.Tag doesn't set");
-            }
-        }
-
-        [Conditional("DEBUG")]
-        private void DebugPrint(int width, int height, IEnumerable<Tuple<SnapPoint, Point>> sets)
-        {
-            var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-            var rtb = new RenderTargetBitmap((int)designerCanvas.ActualWidth, (int)designerCanvas.ActualHeight, 96, 96, PixelFormats.Pbgra32);
-
-            DrawingVisual visual = new DrawingVisual();
-            using (DrawingContext context = visual.RenderOpen())
-            {
-                VisualBrush brush = new VisualBrush(designerCanvas);
-                context.DrawRectangle(brush, null, new Rect(new Point(), new Size(designerCanvas.Width, designerCanvas.Height)));
-
-                Random rand = new Random();
-                foreach (var set in sets)
-                {
-                    context.DrawText(new FormattedText((string)set.Item1.Tag, CultureInfo.CurrentCulture, FlowDirection.LeftToRight, new Typeface("メイリオ"), 12, RandomBrush(rand), VisualTreeHelper.GetDpi(designerCanvas).PixelsPerDip), set.Item2);
-                    context.DrawEllipse(Brushes.Red, new Pen(Brushes.Red, 1), set.Item2, 2, 2);
-                }
-            }
-
-            rtb.Render(visual);
-
-            //OpenCvSharp.Cv2.ImShow()するためには src_depth != CV_16F && src_depth != CV_32S である必要があるから、予めBgr24に変換しておく
-            FormatConvertedBitmap newFormatedBitmapSource = new FormatConvertedBitmap();
-            newFormatedBitmapSource.BeginInit();
-            newFormatedBitmapSource.Source = rtb;
-            newFormatedBitmapSource.DestinationFormat = PixelFormats.Bgr24;
-            newFormatedBitmapSource.EndInit();
-
-            var mat = OpenCvSharp.WpfExtensions.BitmapSourceConverter.ToMat(newFormatedBitmapSource);
-            OpenCvSharp.Cv2.ImShow("DebugPrint", mat);
-        }
-
-        private Brush RandomBrush(Random rand)
-        {
-            var brush = new SolidColorBrush(Color.FromRgb((byte)rand.Next(), (byte)rand.Next(), (byte)rand.Next()));
-            return brush;
-        }
-
-        public double CanvasBorderThickness
-        {
-            get { return _CanvasBorderThickness; }
-            set { SetProperty(ref _CanvasBorderThickness, value); }
-        }
+        #endregion //Property
 
         public DiagramViewModel()
         {
@@ -376,6 +366,65 @@ namespace boilersGraphics.ViewModels
                                    .ToReactiveCollection();
 
             InitialSetting();
+        }
+
+        private Point GetCenter(SnapPoint snapPoint)
+        {
+            var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
+            var leftTop = snapPoint.TransformToAncestor(designerCanvas).Transform(new Point(0, 0));
+            switch (snapPoint.Tag)
+            {
+                case "左上":
+                    return new Point(leftTop.X + snapPoint.Width - 1, leftTop.Y + snapPoint.Height - 1);
+                case "右上":
+                    return new Point(leftTop.X, leftTop.Y + snapPoint.Height - 1);
+                case "左下":
+                    return new Point(leftTop.X + snapPoint.Width - 1, leftTop.Y);
+                case "右下":
+                    return new Point(leftTop.X, leftTop.Y);
+                case "左":
+                case "上":
+                case "右":
+                case "下":
+                    return new Point(leftTop.X, leftTop.Y);
+                case "始点":
+                case "終点":
+                case "制御点":
+                    return new Point(leftTop.X + snapPoint.Width / 2, leftTop.Y + snapPoint.Height / 2);
+                default:
+                    throw new Exception("ResizeThumb.Tag doesn't set");
+            }
+        }
+
+        [Conditional("DEBUG")]
+        private void DebugPrint(int width, int height, IEnumerable<Tuple<SnapPoint, Point>> sets)
+        {
+            var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
+            var rtb = new RenderTargetBitmap((int)designerCanvas.ActualWidth, (int)designerCanvas.ActualHeight, 96, 96, PixelFormats.Pbgra32);
+
+            DrawingVisual visual = new DrawingVisual();
+            using (DrawingContext context = visual.RenderOpen())
+            {
+                VisualBrush brush = new VisualBrush(designerCanvas);
+                context.DrawRectangle(brush, null, new Rect(new Point(), new Size(designerCanvas.Width, designerCanvas.Height)));
+
+                Random rand = new Random();
+                foreach (var set in sets)
+                {
+                    context.DrawText(new FormattedText((string)set.Item1.Tag, CultureInfo.CurrentCulture, FlowDirection.LeftToRight, new Typeface("メイリオ"), 12, RandomBrush(rand), VisualTreeHelper.GetDpi(designerCanvas).PixelsPerDip), set.Item2);
+                    context.DrawEllipse(Brushes.Red, new Pen(Brushes.Red, 1), set.Item2, 2, 2);
+                }
+            }
+
+            rtb.Render(visual);
+
+            OpenCvSharpHelper.ImShow("DebugPrint", rtb);
+        }
+
+        private Brush RandomBrush(Random rand)
+        {
+            var brush = new SolidColorBrush(Color.FromRgb((byte)rand.Next(), (byte)rand.Next(), (byte)rand.Next()));
+            return brush;
         }
 
         private void InitialSetting()
@@ -675,48 +724,6 @@ namespace boilersGraphics.ViewModels
 
             Mediator.Instance.Register(this);
         }
-
-        public ReactiveCollection<Layer> Layers { get; } = new ReactiveCollection<Layer>();
-
-        public ReactiveCollection<Layer> SelectedLayers { get; }
-
-        public ReadOnlyReactiveCollection<SelectableDesignerItemViewModelBase> AllItems { get; }
-
-        public ReactiveCollection<SelectableDesignerItemViewModelBase> SelectedItems { get; } = new ReactiveCollection<SelectableDesignerItemViewModelBase>();
-
-        public ObservableCollection<Color> EdgeColors
-        {
-            get { return _EdgeColors; }
-            set { SetProperty(ref _EdgeColors, value); }
-        }
-
-        public ObservableCollection<Color> FillColors
-        {
-            get { return _FillColors; }
-            set { SetProperty(ref _FillColors, value); }
-        }
-
-        public ReactiveProperty<double?> EdgeThickness { get; } = new ReactiveProperty<double?>();
-
-        public ReactiveProperty<bool> EnableMiniMap { get; } = new ReactiveProperty<bool>();
-
-        public ReactiveProperty<string> FileName { get; } = new ReactiveProperty<string>();
-
-        public ReactiveProperty<Color> CanvasBackground { get; } = new ReactiveProperty<Color>();
-
-        public int Width
-        {
-            get { return _Width; }
-            set { SetProperty(ref _Width, value); }
-        }
-
-        public int Height
-        {
-            get { return _Height; }
-            set { SetProperty(ref _Height, value); }
-        }
-
-        public ReactiveProperty<bool> EnablePointSnap { get; set; } = new ReactiveProperty<bool>();
 
         public void DeselectAll()
         {
@@ -1864,23 +1871,31 @@ namespace boilersGraphics.ViewModels
             return new Tuple<double, double>(x, y);
         }
 
-        /// <summary>
-        /// 現在ポインティングしている座標
-        /// ステータスバー上の座標インジケーターに使用される
-        /// </summary>
-        public Point CurrentPoint
+        protected virtual void Dispose(bool disposing)
         {
-            get { return _CurrentPoint; }
-            set { SetProperty(ref _CurrentPoint, value); }
-        }
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    Layers.Dispose();
+                    AllItems.Dispose();
+                    SelectedItems.Dispose();
+                    EdgeThickness.Dispose();
+                    EnableMiniMap.Dispose();
+                    FileName.Dispose();
+                    CanvasBackground.Dispose();
+                    EnablePointSnap.Dispose();
+                }
 
-        #region IDisposable
+                disposedValue = true;
+            }
+        }
 
         public void Dispose()
         {
-            _CompositeDisposable.Dispose();
+            // このコードを変更しないでください。クリーンアップ コードを 'Dispose(bool disposing)' メソッドに記述します
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
-
-        #endregion //IDisposable
     }
 }
