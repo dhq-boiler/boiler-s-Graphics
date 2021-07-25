@@ -149,7 +149,7 @@
                                                     <ControlTemplate TargetType="TreeViewItem">
                                                         <Grid>
                                                             <Grid.ColumnDefinitions>
-                                                                <ColumnDefinition Width="Auto"/>
+                                                                <ColumnDefinition Width="10"/>
                                                                 <ColumnDefinition Width="Auto"/>
                                                                 <ColumnDefinition Width="Auto"/>
                                                                 <ColumnDefinition Width="*"/>
@@ -158,58 +158,61 @@
                                                                 <RowDefinition Height="Auto" />
                                                                 <RowDefinition Height="Auto" />
                                                             </Grid.RowDefinitions>
-                                                            <Button Grid.Column="0" 
-                                                                    Command="{Binding SwitchVisibilityCommand}">
-                                                                <Button.Template>
-                                                                    <ControlTemplate TargetType="{x:Type Button}">
-                                                                        <Image Name="Eye" Source="{StaticResource Icon_Eye}"
+                                                            <StackPanel Grid.Column="0"
+                                                                        Grid.ColumnSpan="2"
+                                                                        Orientation="Horizontal">
+                                                                <Button Command="{Binding SwitchVisibilityCommand}">
+                                                                    <Button.Template>
+                                                                        <ControlTemplate TargetType="{x:Type Button}">
+                                                                            <Image Name="Eye" Source="{StaticResource Icon_Eye}"
                                                                                Width="25"
                                                                                Height="25" />
-                                                                        <ControlTemplate.Triggers>
-                                                                            <DataTrigger Binding="{Binding IsVisible.Value}" Value="True">
-                                                                                <Setter TargetName="Eye" Property="Source" Value="{StaticResource Icon_Eye}" />
-                                                                            </DataTrigger>
-                                                                            <DataTrigger Binding="{Binding IsVisible.Value}" Value="False">
-                                                                                <Setter TargetName="Eye" Property="Source" Value="{StaticResource Icon_EyeSlash}" />
-                                                                            </DataTrigger>
-                                                                        </ControlTemplate.Triggers>
-                                                                    </ControlTemplate>
-                                                                </Button.Template>
-                                                            </Button>
-                                                            <ToggleButton Name="Expander"
-                                                                          Grid.Column="1" Grid.Row="0"
-                                                                          IsChecked="{Binding RelativeSource={RelativeSource TemplatedParent},Path=IsExpanded,Mode=TwoWay}">
-                                                                <ToggleButton.Template>
-                                                                    <ControlTemplate TargetType="ToggleButton">
-                                                                        <Grid Width="16" Height="16" Background="Transparent">
-                                                                            <Path x:Name="ExpandOn" Margin="3" Stroke="#FF989898" Data="M5,0L5,10L10,5z"/>
-                                                                            <Path x:Name="ExpandOff" Margin="3" Fill="#FF989898" Stroke="#FF989898" Data="M3,10L10,10L10,3z"/>
-                                                                        </Grid>
-                                                                        <ControlTemplate.Triggers>
-                                                                            <Trigger Property="IsChecked" Value="False">
-                                                                                <Setter TargetName="ExpandOff" Property="Visibility" Value="Collapsed" />
-                                                                                <Setter TargetName="ExpandOn" Property="Visibility" Value="Visible" />
-                                                                            </Trigger>
-                                                                            <Trigger Property="IsChecked" Value="True">
-                                                                                <Setter TargetName="ExpandOff" Property="Visibility" Value="Visible" />
-                                                                                <Setter TargetName="ExpandOn" Property="Visibility" Value="Collapsed" />
-                                                                            </Trigger>
-                                                                        </ControlTemplate.Triggers>
-                                                                    </ControlTemplate>
-                                                                </ToggleButton.Template>
-                                                            </ToggleButton>
-                                                            <Border Grid.Column="2"
-                                                                    BorderBrush="Black"
-                                                                    BorderThickness="1">
-                                                                <Image Width="25"
-                                                                       Height="25"
-                                                                       Source="{Binding Appearance.Value}"
-                                                                       RenderOptions.BitmapScalingMode="HighQuality" />
-                                                            </Border>
-                                                            <Border Name="BackBorder" Grid.Column="3" Grid.Row="0" Padding="5,0,0,0" BorderThickness="0,0,0,1" BorderBrush="LightGray" Background="{TemplateBinding Panel.Background}">
-                                                                <ContentPresenter Content="{TemplateBinding HeaderedContentControl.Header}" ContentTemplate="{TemplateBinding HeaderedContentControl.HeaderTemplate}" ContentStringFormat="{TemplateBinding HeaderedItemsControl.HeaderStringFormat}" ContentSource="Header" Name="PART_Header" HorizontalAlignment="Stretch"/>
-                                                            </Border>
-                                                            <ItemsPresenter Name="ItemsHost" Grid.Column="3" Grid.Row="1"/>
+                                                                            <ControlTemplate.Triggers>
+                                                                                <DataTrigger Binding="{Binding IsVisible.Value}" Value="True">
+                                                                                    <Setter TargetName="Eye" Property="Source" Value="{StaticResource Icon_Eye}" />
+                                                                                </DataTrigger>
+                                                                                <DataTrigger Binding="{Binding IsVisible.Value}" Value="False">
+                                                                                    <Setter TargetName="Eye" Property="Source" Value="{StaticResource Icon_EyeSlash}" />
+                                                                                </DataTrigger>
+                                                                            </ControlTemplate.Triggers>
+                                                                        </ControlTemplate>
+                                                                    </Button.Template>
+                                                                </Button>
+                                                                <ToggleButton Name="Expander"
+                                                                              IsChecked="{Binding RelativeSource={RelativeSource TemplatedParent},Path=IsExpanded,Mode=TwoWay}">
+                                                                    <ToggleButton.Template>
+                                                                        <ControlTemplate TargetType="ToggleButton">
+                                                                            <Grid Width="16" Height="16" Background="Transparent">
+                                                                                <Path x:Name="ExpandOn" Margin="3" Stroke="#FF989898" Data="M5,0L5,10L10,5z"/>
+                                                                                <Path x:Name="ExpandOff" Margin="3" Fill="#FF989898" Stroke="#FF989898" Data="M3,10L10,10L10,3z"/>
+                                                                            </Grid>
+                                                                            <ControlTemplate.Triggers>
+                                                                                <Trigger Property="IsChecked" Value="False">
+                                                                                    <Setter TargetName="ExpandOff" Property="Visibility" Value="Collapsed" />
+                                                                                    <Setter TargetName="ExpandOn" Property="Visibility" Value="Visible" />
+                                                                                </Trigger>
+                                                                                <Trigger Property="IsChecked" Value="True">
+                                                                                    <Setter TargetName="ExpandOff" Property="Visibility" Value="Visible" />
+                                                                                    <Setter TargetName="ExpandOn" Property="Visibility" Value="Collapsed" />
+                                                                                </Trigger>
+                                                                            </ControlTemplate.Triggers>
+                                                                        </ControlTemplate>
+                                                                    </ToggleButton.Template>
+                                                                </ToggleButton>
+                                                                <Border BorderBrush="Black"
+                                                                        BorderThickness="1">
+                                                                    <Image Width="25"
+                                                                           Height="25"
+                                                                           Source="{Binding Appearance.Value}"
+                                                                           RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                </Border>
+                                                                <Border Name="BackBorder" Padding="5,0,0,0" BorderThickness="0,0,0,1" BorderBrush="LightGray" Background="{TemplateBinding Panel.Background}">
+                                                                    <ContentPresenter Content="{TemplateBinding HeaderedContentControl.Header}" ContentTemplate="{TemplateBinding HeaderedContentControl.HeaderTemplate}" ContentStringFormat="{TemplateBinding HeaderedItemsControl.HeaderStringFormat}" ContentSource="Header" Name="PART_Header" HorizontalAlignment="Stretch"/>
+                                                                </Border>
+                                                            </StackPanel>
+                                                            <ItemsPresenter Name="ItemsHost"
+                                                                            Grid.Column="1"
+                                                                            Grid.Row="1" />
                                                         </Grid>
                                                         <ControlTemplate.Triggers>
                                                             <Trigger Property="HasItems" Value="False">
@@ -231,7 +234,6 @@
                                     <TreeView.ItemTemplate>
                                         <HierarchicalDataTemplate ItemsSource="{Binding Items}">
                                             <StackPanel Orientation="Horizontal">
-                                                
                                                 <TextBlock VerticalAlignment="Center"
                                                                        Text="{Binding Name.Value}" />
                                             </StackPanel>
