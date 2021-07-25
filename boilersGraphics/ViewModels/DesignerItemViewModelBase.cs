@@ -215,10 +215,10 @@ namespace boilersGraphics.ViewModels
         public IDisposable Subscribe(IObserver<TransformNotification> observer)
         {
             _observers.Add(observer);
-            _observers.ToList().ForEach(x => x.OnNext(new TransformNotification()
+            observer.OnNext(new TransformNotification()
             {
                 Sender = this
-            }));
+            });
             return new DesignerItemViewModelBaseDisposable(this, observer);
         }
 
