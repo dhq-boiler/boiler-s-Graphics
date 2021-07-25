@@ -157,13 +157,13 @@ namespace boilersGraphics.ViewModels
         private void ChangeHitTestToDisable()
         {
             var diagramViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel;
-            diagramViewModel.Items.ToList().ForEach(x => x.IsHitTestVisible.Value = false);
+            diagramViewModel.AllItems.ToList().ForEach(x => x.IsHitTestVisible.Value = false);
         }
 
         private void ChangeHitTestToEnable()
         {
             var diagramViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel;
-            diagramViewModel.Items.ToList().ForEach(x => x.IsHitTestVisible.Value = true);
+            diagramViewModel.AllItems.ToList().ForEach(x => x.IsHitTestVisible.Value = true);
         }
 
         private void SelectOneToolItem(string toolName)
