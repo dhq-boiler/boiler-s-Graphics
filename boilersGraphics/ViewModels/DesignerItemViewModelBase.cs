@@ -161,13 +161,15 @@ namespace boilersGraphics.ViewModels
 
         public void TransformObserversOnNext(string propertyName, object oldValue, object newValue)
         {
-            _observers.ForEach(x => x.OnNext(new TransformNotification() 
+            var tn = new TransformNotification()
             {
                 Sender = this,
                 PropertyName = propertyName,
                 OldValue = oldValue,
                 NewValue = newValue
-            }));
+            };
+            this.TransformNortification.Value = tn;
+            _observers.ForEach(x => x.OnNext(tn));
         }
 
         public override void OnNext(GroupTransformNotification value)
@@ -210,6 +212,10 @@ namespace boilersGraphics.ViewModels
         public IDisposable Subscribe(IObserver<TransformNotification> observer)
         {
             _observers.Add(observer);
+            _observers.ToList().ForEach(x => x.OnNext(new TransformNotification()
+            {
+                Sender = this
+            }));
             return new DesignerItemViewModelBaseDisposable(this, observer);
         }
 
