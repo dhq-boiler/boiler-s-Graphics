@@ -4,8 +4,8 @@
     <DataTemplate DataType="{x:Type viewModel:PictureDesignerItemViewModel}">
         <Border BorderBrush="{Binding EdgeColor.Value, Converter={StaticResource solidColorBrushConverter}}"
                 BorderThickness="{Binding EdgeThickness.Value}">
-            <Image IsHitTestVisible="False"
-                   Source="{Binding FileName}"
+            <Image Source="{Binding FileName}"
+                   IsHitTestVisible="False"
                    Stretch="Fill"
                    Clip="{Binding Clip.Value}"
                    Tag="picture" />

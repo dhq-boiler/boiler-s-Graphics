@@ -4,6 +4,7 @@ using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Media;
@@ -50,9 +51,9 @@ namespace boilersGraphics.ViewModels
             set { SetProperty(ref _MinHeight, value); }
         }
 
-        public ReactiveProperty<double> Width { get; } = new ReactiveProperty<double>(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe);
+        public ReactiveProperty<double> Width { get; } = new ReactiveProperty<double>(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe | ReactivePropertyMode.DistinctUntilChanged);
 
-        public ReactiveProperty<double> Height { get; } = new ReactiveProperty<double>(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe);
+        public ReactiveProperty<double> Height { get; } = new ReactiveProperty<double>(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe | ReactivePropertyMode.DistinctUntilChanged);
 
         public bool ShowConnectors
         {
@@ -70,9 +71,9 @@ namespace boilersGraphics.ViewModels
             }
         }
 
-        public ReactiveProperty<double> Left { get; } = new ReactiveProperty<double>(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe);
+        public ReactiveProperty<double> Left { get; } = new ReactiveProperty<double>(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe | ReactivePropertyMode.DistinctUntilChanged);
 
-        public ReactiveProperty<double> Top { get; } = new ReactiveProperty<double>(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe);
+        public ReactiveProperty<double> Top { get; } = new ReactiveProperty<double>(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe | ReactivePropertyMode.DistinctUntilChanged);
 
         public ReadOnlyReactiveProperty<double> Right { get; private set; }
 
@@ -81,6 +82,8 @@ namespace boilersGraphics.ViewModels
         public ReactiveProperty<Point> CenterPoint { get; } = new ReactiveProperty<Point>();
 
         public ReactiveProperty<Point> RotatedCenterPoint { get; } = new ReactiveProperty<Point>();
+
+        public ReactiveProperty<TransformNotification> TransformNortification { get; } = new ReactiveProperty<TransformNotification>(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe | ReactivePropertyMode.DistinctUntilChanged);
 
         private void UpdateCenterPoint()
         {
@@ -99,23 +102,23 @@ namespace boilersGraphics.ViewModels
                 .Subscribe(x => UpdateTransform(nameof(Left), x.OldItem, x.NewItem))
                 .AddTo(_CompositeDisposable);
             Top
-                .Zip(Left.Skip(1), (Old, New) => new { OldItem = Old, NewItem = New })
+                .Zip(Top.Skip(1), (Old, New) => new { OldItem = Old, NewItem = New })
                 .Subscribe(x => UpdateTransform(nameof(Top), x.OldItem, x.NewItem))
                 .AddTo(_CompositeDisposable);
             Width
-                .Zip(Left.Skip(1), (Old, New) => new { OldItem = Old, NewItem = New })
+                .Zip(Width.Skip(1), (Old, New) => new { OldItem = Old, NewItem = New })
                 .Subscribe(x => UpdateTransform(nameof(Width), x.OldItem, x.NewItem))
                 .AddTo(_CompositeDisposable);
             Height
-                .Zip(Left.Skip(1), (Old, New) => new { OldItem = Old, NewItem = New })
+                .Zip(Height.Skip(1), (Old, New) => new { OldItem = Old, NewItem = New })
                 .Subscribe(x => UpdateTransform(nameof(Height), x.OldItem, x.NewItem))
                 .AddTo(_CompositeDisposable);
             RotationAngle
-                .Zip(Left.Skip(1), (Old, New) => new { OldItem = Old, NewItem = New })
+                .Zip(RotationAngle.Skip(1), (Old, New) => new { OldItem = Old, NewItem = New })
                 .Subscribe(x => UpdateTransform(nameof(RotationAngle), x.OldItem, x.NewItem))
                 .AddTo(_CompositeDisposable);
             Matrix
-                .Zip(Left.Skip(1), (Old, New) => new { OldItem = Old, NewItem = New })
+                .Zip(Matrix.Skip(1), (Old, New) => new { OldItem = Old, NewItem = New })
                 .Subscribe(x => UpdateTransform(nameof(Matrix), x.OldItem, x.NewItem))
                 .AddTo(_CompositeDisposable);
             Right = Left.Select(x => x + Width.Value)
@@ -161,13 +164,15 @@ namespace boilersGraphics.ViewModels
 
         public void TransformObserversOnNext(string propertyName, object oldValue, object newValue)
         {
-            _observers.ForEach(x => x.OnNext(new TransformNotification() 
+            var tn = new TransformNotification()
             {
                 Sender = this,
                 PropertyName = propertyName,
                 OldValue = oldValue,
                 NewValue = newValue
-            }));
+            };
+            this.TransformNortification.Value = tn;
+            _observers.ForEach(x => x.OnNext(tn));
         }
 
         public override void OnNext(GroupTransformNotification value)
@@ -210,6 +215,10 @@ namespace boilersGraphics.ViewModels
         public IDisposable Subscribe(IObserver<TransformNotification> observer)
         {
             _observers.Add(observer);
+            observer.OnNext(new TransformNotification()
+            {
+                Sender = this
+            });
             return new DesignerItemViewModelBaseDisposable(this, observer);
         }
 

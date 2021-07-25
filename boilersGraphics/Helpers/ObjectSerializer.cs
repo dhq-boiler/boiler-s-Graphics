@@ -123,8 +123,8 @@ namespace boilersGraphics.Helpers
                                new XElement("BeginPoint", connection.Points[0]),
                                new XElement("EndPoint", connection.Points[1]),
                                new XElement("ZIndex", connection.ZIndex.Value),
-                               new XElement("EdgeColor", connection.EdgeColor),
-                               new XElement("EdgeThickness", connection.EdgeThickness),
+                               new XElement("EdgeColor", connection.EdgeColor.Value),
+                               new XElement("EdgeThickness", connection.EdgeThickness.Value),
                                new XElement("PathGeometry", connection.PathGeometry.Value)
                     ))
                     .Union(
@@ -137,8 +137,8 @@ namespace boilersGraphics.Helpers
                                     new XElement("BeginPoint", connection.Points[0]),
                                     new XElement("EndPoint", connection.Points[1]),
                                     new XElement("ZIndex", connection.ZIndex.Value),
-                                    new XElement("EdgeColor", connection.EdgeColor),
-                                    new XElement("EdgeThickness", connection.EdgeThickness),
+                                    new XElement("EdgeColor", connection.EdgeColor.Value),
+                                    new XElement("EdgeThickness", connection.EdgeThickness.Value),
                                     new XElement("ControlPoint1", (connection as BezierCurveViewModel).ControlPoint1.Value),
                                     new XElement("ControlPoint2", (connection as BezierCurveViewModel).ControlPoint2.Value),
                                     new XElement("PathGeometry", connection.PathGeometry.Value)

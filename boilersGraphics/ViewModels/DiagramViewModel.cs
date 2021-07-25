@@ -399,15 +399,16 @@ namespace boilersGraphics.ViewModels
         private void ExecuteClipCommand()
         {
             var picture = SelectedItems.OfType<PictureDesignerItemViewModel>().First();
-            var pictureRP = picture.ToReactiveProperty(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe); //戻り値が何故か {null} になる
             var other = SelectedItems.OfType<DesignerItemViewModelBase>().Last();
             var pathGeometry = GeometryCreator.CreateRectangle(other as NRectangleViewModel, picture.Left.Value, picture.Top.Value);
-            (pictureRP.Value.Sender as PictureDesignerItemViewModel).Clip.Value = pathGeometry;
-            (pictureRP.Value.Sender as PictureDesignerItemViewModel).ClipObject.Value = other;
-            pictureRP.Zip(pictureRP.Skip(1), (Old, New) => new { OldItem = Old, NewItem = New }).Subscribe(x =>
+            (picture.TransformNortification.Value.Sender as PictureDesignerItemViewModel).Clip.Value = pathGeometry;
+            (picture.TransformNortification.Value.Sender as PictureDesignerItemViewModel).ClipObject.Value = other;
+            picture.TransformNortification.Zip(picture.TransformNortification.Skip(1), (Old, New) => new { OldItem = Old, NewItem = New })
+            .Where(x => x.NewItem.PropertyName == "Width" || x.NewItem.PropertyName == "Height")
+            .Subscribe(x =>
             {
                 var _other = picture.ClipObject.Value;
-                var _pathGeometry = GeometryCreator.CreateRectangle(_other as NRectangleViewModel, picture.Left.Value, picture.Top.Value, x.OldItem, x.NewItem);
+                var _pathGeometry = GeometryCreator.CreateRectangle(_other as NRectangleViewModel, picture.Left.Value, picture.Top.Value, x.NewItem.PropertyName, (double)x.NewItem.OldValue, (double)x.NewItem.NewValue);
                 picture.Clip.Value = _pathGeometry;
             })
             .AddTo(_CompositeDisposable);

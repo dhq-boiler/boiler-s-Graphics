@@ -7,10 +7,10 @@
     <convereter:ToSolidColorBrushConverter x:Key="solidColorBrushConverter" />
     <DataTemplate DataType="{x:Type viewModel:NPolygonViewModel}">
         <Path Fill="{Binding FillColor, Converter={StaticResource solidColorBrushConverter}}"
-                IsHitTestVisible="False"
-                Stretch="Fill"
-                Stroke="{Binding EdgeColor.Value, Converter={StaticResource solidColorBrushConverter}}"
-                StrokeThickness="{Binding EdgeThickness.Value}"
-                Data="{Binding Data.Value}" />
+              Stretch="Fill"
+              IsHitTestVisible="False"
+              Stroke="{Binding EdgeColor.Value, Converter={StaticResource solidColorBrushConverter}}"
+              StrokeThickness="{Binding EdgeThickness.Value}"
+              Data="{Binding Data.Value}" />
     </DataTemplate>
 </ResourceDictionary>

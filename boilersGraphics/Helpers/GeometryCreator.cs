@@ -55,22 +55,28 @@ namespace boilersGraphics.Helpers
             return PathGeometry.CreateFromGeometry(geometry);
         }
 
-        public static PathGeometry CreateRectangle(NRectangleViewModel item, double offsetX, double offsetY, TransformNotification oldItem, TransformNotification newItem)
+        public static PathGeometry CreateRectangle(NRectangleViewModel item, double offsetX, double offsetY, string propertyName, double oldItem, double newItem)
         {
-            var widthRatio = newItem.Sender.Width.Value / oldItem.Sender.Width.Value;
-            var heightRatio = newItem.Sender.Height.Value / oldItem.Sender.Height.Value;
-            Trace.WriteLine($"new width = {newItem.Sender.Width.Value} old width = {oldItem.Sender.Width.Value}");
-            Trace.WriteLine($"new height = {newItem.Sender.Height.Value} old height = {oldItem.Sender.Height.Value}");
+            double widthRatio = 1;
+            double heightRatio = 1;
+            if (propertyName == "Width")
+            {
+                widthRatio = newItem / oldItem;
+            }
+            else if (propertyName == "Height")
+            {
+                heightRatio = newItem / oldItem;
+            }
             
             //TODO Rectangleを構成する4点に widthRatio と heightRatio を掛ける
             var geometry = new StreamGeometry();
             geometry.FillRule = FillRule.EvenOdd;
             using (var ctx = geometry.Open())
             {
-                ctx.BeginFigure(new Point(item.Left.Value - offsetX, item.Top.Value - offsetY), true, true);
-                ctx.LineTo(new Point(item.Left.Value - offsetX + item.Width.Value, item.Top.Value - offsetY), true, false);
-                ctx.LineTo(new Point(item.Left.Value - offsetX + item.Width.Value, item.Top.Value - offsetY + item.Height.Value), true, false);
-                ctx.LineTo(new Point(item.Left.Value - offsetX, item.Top.Value - offsetY + item.Height.Value), true, false);
+                ctx.BeginFigure(new Point(widthRatio * (item.Left.Value - offsetX), heightRatio * (item.Top.Value - offsetY)), true, true);
+                ctx.LineTo(new Point(widthRatio * (item.Left.Value - offsetX + item.Width.Value), heightRatio * (item.Top.Value - offsetY)), true, false);
+                ctx.LineTo(new Point(widthRatio * (item.Left.Value - offsetX + item.Width.Value), heightRatio * (item.Top.Value - offsetY + item.Height.Value)), true, false);
+                ctx.LineTo(new Point(widthRatio * (item.Left.Value - offsetX), heightRatio * (item.Top.Value - offsetY + item.Height.Value)), true, false);
             }
             geometry.Freeze();
             return PathGeometry.CreateFromGeometry(geometry);

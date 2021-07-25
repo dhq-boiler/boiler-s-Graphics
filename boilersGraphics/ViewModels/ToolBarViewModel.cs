@@ -35,6 +35,7 @@ namespace boilersGraphics.ViewModels
                 {
                     Behaviors.Add(deselectBehavior);
                 }
+                ChangeHitTestToEnable();
                 SelectOneToolItem("pointer");
             })));
             ToolItems.Add(new ToolItemData("rubberband", "pack://application:,,,/Assets/img/rubberband.png", new DelegateCommand(() =>
@@ -45,6 +46,7 @@ namespace boilersGraphics.ViewModels
                 {
                     Behaviors.Add(behavior);
                 }
+                ChangeHitTestToEnable();
                 SelectOneToolItem("rubberband");
             })));
             ToolItems.Add(new ToolItemData("straightline", "pack://application:,,,/Assets/img/straightline.png", new DelegateCommand(() =>
@@ -55,6 +57,7 @@ namespace boilersGraphics.ViewModels
                 {
                     Behaviors.Add(behavior);
                 }
+                ChangeHitTestToDisable();
                 SelectOneToolItem("straightline");
             })));
             ToolItems.Add(new ToolItemData("rectangle", "pack://application:,,,/Assets/img/rectangle.png", new DelegateCommand(() =>
@@ -65,6 +68,7 @@ namespace boilersGraphics.ViewModels
                 {
                     Behaviors.Add(behavior);
                 }
+                ChangeHitTestToDisable();
                 SelectOneToolItem("rectangle");
             })));
             ToolItems.Add(new ToolItemData("ellipse", "pack://application:,,,/Assets/img/ellipse.png", new DelegateCommand(() =>
@@ -75,6 +79,7 @@ namespace boilersGraphics.ViewModels
                 {
                     Behaviors.Add(behavior);
                 }
+                ChangeHitTestToDisable();
                 SelectOneToolItem("ellipse");
             })));
             ToolItems.Add(new ToolItemData("picture", "pack://application:,,,/Assets/img/Picture.png", new DelegateCommand(() =>
@@ -91,6 +96,7 @@ namespace boilersGraphics.ViewModels
                     {
                         Behaviors.Add(behavior);
                     }
+                    ChangeHitTestToDisable();
                     SelectOneToolItem("picture");
                 }
             })));
@@ -102,6 +108,7 @@ namespace boilersGraphics.ViewModels
                 {
                     Behaviors.Add(behavior);
                 }
+                ChangeHitTestToDisable();
                 SelectOneToolItem("letter");
             })));
             ToolItems.Add(new ToolItemData("letter-vertical", "pack://application:,,,/Assets/img/A_Vertical.png", new DelegateCommand(() =>
@@ -112,6 +119,7 @@ namespace boilersGraphics.ViewModels
                 {
                     Behaviors.Add(behavior);
                 }
+                ChangeHitTestToDisable();
                 SelectOneToolItem("letter-vertical");
             })));
             ToolItems.Add(new ToolItemData("polygon", "pack://application:,,,/Assets/img/pentagon.png", new DelegateCommand(() =>
@@ -129,6 +137,7 @@ namespace boilersGraphics.ViewModels
                     {
                         Behaviors.Add(behavior);
                     }
+                    ChangeHitTestToDisable();
                     SelectOneToolItem("polygon");
                 }
             })));
@@ -140,8 +149,21 @@ namespace boilersGraphics.ViewModels
                 {
                     Behaviors.Add(behavior);
                 }
+                ChangeHitTestToDisable();
                 SelectOneToolItem("bezier");
             })));
+        }
+
+        private void ChangeHitTestToDisable()
+        {
+            var diagramViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel;
+            diagramViewModel.Items.ToList().ForEach(x => x.IsHitTestVisible.Value = false);
+        }
+
+        private void ChangeHitTestToEnable()
+        {
+            var diagramViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel;
+            diagramViewModel.Items.ToList().ForEach(x => x.IsHitTestVisible.Value = true);
         }
 
         private void SelectOneToolItem(string toolName)
