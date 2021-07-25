@@ -342,9 +342,22 @@ namespace boilersGraphics.ViewModels
                 .Subscribe(_ => RaisePropertyChanged("FillColors"))
                 .AddTo(_CompositeDisposable);
 
+            //TRY No.1 no compile error, no runtime error, but doesn't work properly when LayerItem removing
             AllItems = Layers.ObserveElementObservableProperty(x => x.AllItemsObservable)
                              .Select(x => x.Value.Value)
                              .ToReadOnlyReactiveCollection();
+
+            //TRY No.2 no compile error, no runtime error, but doesn't work properly when LayerItem adding and removing
+            //AllItems = Layers.SelectMany(x => x.Items)
+            //                 .ToObservable()
+            //                 .Select(x => x.Item.Value)
+            //                 .ToReadOnlyReactiveCollection();
+
+            //TRY No.3 no compile error, but ArgumentException('propertySelector') occured 
+            //AllItems = Layers.ObserveElementObservableProperty<Layer, ReactiveCollection<LayerItem>>(x => Observable.Return(x.Items))
+            //                 .SelectMany(x => x.Value)
+            //                 .Select(x => x.Item.Value)
+            //                 .ToReadOnlyReactiveCollection();
 
             AllItems.ObserveAddChanged()
                     .Subscribe(x =>
