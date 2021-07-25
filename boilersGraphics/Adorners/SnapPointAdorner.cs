@@ -26,7 +26,6 @@ namespace boilersGraphics.Adorners
         protected override void OnRender(DrawingContext drawingContext)
         {
             base.OnRender(drawingContext);
-            Trace.WriteLine($"SnapPointAdorner = {_point}");
             drawingContext.DrawEllipse(Brushes.Blue, new Pen(Brushes.Blue, 1), _point, 2, 2);
         }
     }
