@@ -95,6 +95,7 @@
                             <Setter Property="Width" Value="{Binding Width.Value}" />
                             <Setter Property="Height" Value="{Binding Height.Value}" />
                             <Setter Property="SnapsToDevicePixels" Value="True" />
+                            <Setter Property="IsHitTestVisible" Value="{Binding IsHitTestVisible.Value}" />
                             <Setter Property="ContentTemplate">
                                 <Setter.Value>
                                     <DataTemplate>
@@ -150,6 +151,7 @@
                             <Setter Property="Canvas.Left" Value="{Binding Area.Left}" />
                             <Setter Property="Panel.ZIndex" Value="{Binding ZIndex.Value}" />
                             <Setter Property="attached:SelectionProps.EnabledForSelection" Value="{Binding EnableForSelection.Value}" />
+                            <Setter Property="IsHitTestVisible" Value="{Binding IsHitTestVisible.Value}" />
                             <Setter Property="ContentTemplateSelector">
                                 <Setter.Value>
                                     <view:ItemsControlTemplateSelector>
