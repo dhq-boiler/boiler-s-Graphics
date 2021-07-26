@@ -49,7 +49,7 @@ namespace boilersGraphics.Controls
                 double dragDeltaVertical, dragDeltaHorizontal;
 
                 // only resize DesignerItems
-                var selectedDesignerItems = from item in designerItem.Owner.SelectedItems
+                var selectedDesignerItems = from item in designerItem.Owner.SelectedItems.Value
                                             where item is DesignerItemViewModelBase
                                             select item;
 

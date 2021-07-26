@@ -11,7 +11,7 @@ namespace boilersGraphics.ViewModels
         DelegateCommand<object> AddItemCommand { get; }
         DelegateCommand<object> RemoveItemCommand { get; }
         DelegateCommand<object> ClearSelectedItemsCommand { get; }
-        ReactiveCollection<SelectableDesignerItemViewModelBase> SelectedItems { get; }
+        ReadOnlyReactivePropertySlim<SelectableDesignerItemViewModelBase[]> SelectedItems { get; }
         ObservableCollection<Color> EdgeColors { get; }
         ObservableCollection<Color> FillColors { get; }
         ReactiveProperty<double?> EdgeThickness { get; }

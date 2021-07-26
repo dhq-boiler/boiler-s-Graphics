@@ -93,9 +93,10 @@ namespace boilersGraphics.ViewModels
 
         public ReactiveCollection<Layer> SelectedLayers { get; }
 
-        public ReadOnlyReactiveCollection<SelectableDesignerItemViewModelBase> AllItems { get; }
+        public ReadOnlyReactivePropertySlim<SelectableDesignerItemViewModelBase[]> AllItems { get; }
 
-        public ReactiveCollection<SelectableDesignerItemViewModelBase> SelectedItems { get; } = new ReactiveCollection<SelectableDesignerItemViewModelBase>();
+
+        public ReadOnlyReactivePropertySlim<SelectableDesignerItemViewModelBase[]> SelectedItems { get; }
 
         public ReactiveProperty<double?> EdgeThickness { get; } = new ReactiveProperty<double?>();
 
@@ -277,63 +278,6 @@ namespace boilersGraphics.ViewModels
                 Layers.Add(layer);
             });
 
-            Layers.ObserveElementObservableProperty(x => x.Observable)
-                  .Subscribe(x =>
-                  {
-                      if (x.Value.Value)
-                      {
-                          SelectedItems.Add(x.Value.Instance.Item.Value);
-                      }
-                      else
-                      {
-                          SelectedItems.Remove(x.Value.Instance.Item.Value);
-                      }
-                  })
-                  .AddTo(_CompositeDisposable);
-
-            Layers.SelectMany(x => x.Items)
-                  .ToObservableCollection()
-                  .ObserveRemoveChangedItems()
-                  .Merge(Layers.SelectMany(x => x.Items).ToObservableCollection().ObserveReplaceChangedItems().Select(y => y.OldItem))
-                  .Subscribe(xs =>
-                  {
-                      foreach (var xx in xs)
-                      {
-                          if (xx.Item.Value.IsSelected) { SelectedItems.Remove(xx.Item.Value); }
-                      }
-                  })
-                  .AddTo(_CompositeDisposable);
-
-            SelectedItems.CollectionChangedAsObservable()
-                .Subscribe(selectedItems =>
-                {
-                    GroupCommand.RaiseCanExecuteChanged();
-                    UngroupCommand.RaiseCanExecuteChanged();
-                    BringForwardCommand.RaiseCanExecuteChanged();
-                    SendBackwardCommand.RaiseCanExecuteChanged();
-                    BringForegroundCommand.RaiseCanExecuteChanged();
-                    SendBackgroundCommand.RaiseCanExecuteChanged();
-
-                    AlignTopCommand.RaiseCanExecuteChanged();
-                    AlignVerticalCenterCommand.RaiseCanExecuteChanged();
-                    AlignBottomCommand.RaiseCanExecuteChanged();
-                    AlignLeftCommand.RaiseCanExecuteChanged();
-                    AlignHorizontalCenterCommand.RaiseCanExecuteChanged();
-                    AlignRightCommand.RaiseCanExecuteChanged();
-                    DistributeHorizontalCommand.RaiseCanExecuteChanged();
-                    DistributeVerticalCommand.RaiseCanExecuteChanged();
-
-                    UniformWidthCommand.RaiseCanExecuteChanged();
-                    UniformHeightCommand.RaiseCanExecuteChanged();
-
-                    UnionCommand.RaiseCanExecuteChanged();
-                    IntersectCommand.RaiseCanExecuteChanged();
-                    XorCommand.RaiseCanExecuteChanged();
-                    ExcludeCommand.RaiseCanExecuteChanged();
-
-                    ClipCommand.RaiseCanExecuteChanged();
-                })
-                .AddTo(_CompositeDisposable);
 
             EdgeColors.CollectionChangedAsObservable()
                 .Subscribe(_ => RaisePropertyChanged("EdgeColors"))
@@ -342,37 +286,53 @@ namespace boilersGraphics.ViewModels
                 .Subscribe(_ => RaisePropertyChanged("FillColors"))
                 .AddTo(_CompositeDisposable);
 
-            //TRY No.1 no compile error, no runtime error, but doesn't work properly when LayerItem removing
-            AllItems = Layers.ObserveElementObservableProperty(x => x.AllItemsObservable)
-                             .Select(x => x.Value.Value)
-                             .ToReadOnlyReactiveCollection();
+            AllItems = Layers.CollectionChangedAsObservable()
+                             .Select(_ => Layers.Select(x => x.Items.ObserveElementObservableProperty(y => y.Item)).Merge())
+                             .Switch()
+                             .Select(_ => Layers.SelectMany(x => x.Items).Select(y => y.Item.Value).ToArray())
+                             .ToReadOnlyReactivePropertySlim(Array.Empty<SelectableDesignerItemViewModelBase>());
 
-            //TRY No.2 no compile error, no runtime error, but doesn't work properly when LayerItem adding and removing
-            //AllItems = Layers.SelectMany(x => x.Items)
-            //                 .ToObservable()
-            //                 .Select(x => x.Item.Value)
-            //                 .ToReadOnlyReactiveCollection();
+            AllItems.Subscribe(x =>
+            {
+                Trace.WriteLine($"{x.Length} items in AllItems.");
+                Trace.WriteLine(string.Join(", ", x.Select(y => y?.ToString() ?? "null")));
+            })
+            .AddTo(_CompositeDisposable);
 
-            //TRY No.3 no compile error, but ArgumentException('propertySelector') occured 
-            //AllItems = Layers.ObserveElementObservableProperty<Layer, ReactiveCollection<LayerItem>>(x => Observable.Return(x.Items))
-            //                 .SelectMany(x => x.Value)
-            //                 .Select(x => x.Item.Value)
-            //                 .ToReadOnlyReactiveCollection();
+            SelectedItems = Layers.CollectionChangedAsObservable()
+                                  .Select(_ => Layers.Select(x => x.Items.ObserveElementObservableProperty(y => y.Item)).Merge())
+                                  .Switch()
+                                  .Select(_ => Layers.SelectMany(x => x.Items).Select(y => y.Item.Value).Where(z => z.IsSelected == true).ToArray())
+                                  .ToReadOnlyReactivePropertySlim(Array.Empty<SelectableDesignerItemViewModelBase>());
 
-            AllItems.ObserveAddChanged()
-                    .Subscribe(x =>
-                    {
-                        Debug.WriteLine($"Added {x} into AllItems");
-                    })
-                    .AddTo(_CompositeDisposable);
+            SelectedItems.Subscribe(selectedItems =>
+            {
+                GroupCommand.RaiseCanExecuteChanged();
+                UngroupCommand.RaiseCanExecuteChanged();
+                BringForwardCommand.RaiseCanExecuteChanged();
+                SendBackwardCommand.RaiseCanExecuteChanged();
+                BringForegroundCommand.RaiseCanExecuteChanged();
+                SendBackgroundCommand.RaiseCanExecuteChanged();
 
-            AllItems.ObserveRemoveChanged()
-                    .Subscribe(x =>
-                    {
-                        Debug.WriteLine($"Removed {x} from AllItems");
-                    })
-                    .AddTo(_CompositeDisposable);
-        
+                AlignTopCommand.RaiseCanExecuteChanged();
+                AlignVerticalCenterCommand.RaiseCanExecuteChanged();
+                AlignBottomCommand.RaiseCanExecuteChanged();
+                AlignLeftCommand.RaiseCanExecuteChanged();
+                AlignHorizontalCenterCommand.RaiseCanExecuteChanged();
+                AlignRightCommand.RaiseCanExecuteChanged();
+                DistributeHorizontalCommand.RaiseCanExecuteChanged();
+                DistributeVerticalCommand.RaiseCanExecuteChanged();
+
+                UniformWidthCommand.RaiseCanExecuteChanged();
+                UniformHeightCommand.RaiseCanExecuteChanged();
+
+                UnionCommand.RaiseCanExecuteChanged();
+                IntersectCommand.RaiseCanExecuteChanged();
+                XorCommand.RaiseCanExecuteChanged();
+                ExcludeCommand.RaiseCanExecuteChanged();
+            })
+            .AddTo(_CompositeDisposable);
+
             SelectedLayers = Layers.ObserveElementProperty(x => x.IsSelected.Value)
                                    .Where(x => x.Value == true)
                                    .Select(x => x.Instance)
@@ -457,8 +417,8 @@ namespace boilersGraphics.ViewModels
 
         private void ExecuteClipCommand()
         {
-            var picture = SelectedItems.OfType<PictureDesignerItemViewModel>().First();
-            var other = SelectedItems.OfType<DesignerItemViewModelBase>().Last();
+            var picture = SelectedItems.Value.OfType<PictureDesignerItemViewModel>().First();
+            var other = SelectedItems.Value.OfType<DesignerItemViewModelBase>().Last();
             var pathGeometry = GeometryCreator.CreateRectangle(other as NRectangleViewModel, picture.Left.Value, picture.Top.Value);
             (picture.TransformNortification.Value.Sender as PictureDesignerItemViewModel).Clip.Value = pathGeometry;
             (picture.TransformNortification.Value.Sender as PictureDesignerItemViewModel).ClipObject.Value = other;
@@ -476,8 +436,8 @@ namespace boilersGraphics.ViewModels
 
         private bool CanExecuteClip()
         {
-            return SelectedItems.Count == 2 &&
-                   SelectedItems.First().GetType() == typeof(PictureDesignerItemViewModel);
+            return SelectedItems.Value.Count() == 2 &&
+                   SelectedItems.Value.First().GetType() == typeof(PictureDesignerItemViewModel);
         }
 
         private void ExecuteExcludeCommand()
@@ -487,7 +447,7 @@ namespace boilersGraphics.ViewModels
 
         private bool CanExecuteExclude()
         {
-            var countIsCorrent = SelectedItems.Count == 2;
+            var countIsCorrent = SelectedItems.Value.Count() == 2;
             if (countIsCorrent)
             {
                 var firstElementTypeIsCorrect = SelectedItems.ElementAt(0).GetType() != typeof(PictureDesignerItemViewModel);
@@ -504,7 +464,7 @@ namespace boilersGraphics.ViewModels
 
         private bool CanExecuteXor()
         {
-            var countIsCorrent = SelectedItems.Count == 2;
+            var countIsCorrent = SelectedItems.Value.Count() == 2;
             if (countIsCorrent)
             {
                 var firstElementTypeIsCorrect = SelectedItems.ElementAt(0).GetType() != typeof(PictureDesignerItemViewModel);
@@ -521,7 +481,7 @@ namespace boilersGraphics.ViewModels
 
         private bool CanExecuteIntersect()
         {
-            var countIsCorrent = SelectedItems.Count == 2;
+            var countIsCorrent = SelectedItems.Value.Count() == 2;
             if (countIsCorrent)
             {
                 var firstElementTypeIsCorrect = SelectedItems.ElementAt(0).GetType() != typeof(PictureDesignerItemViewModel);
@@ -538,8 +498,8 @@ namespace boilersGraphics.ViewModels
 
         private void CombineAndAddItem(GeometryCombineMode mode)
         {
-            var item1 = SelectedItems.OfType<SelectableDesignerItemViewModelBase>().First();
-            var item2 = SelectedItems.OfType<SelectableDesignerItemViewModelBase>().Last();
+            var item1 = SelectedItems.Value.OfType<SelectableDesignerItemViewModelBase>().First();
+            var item2 = SelectedItems.Value.OfType<SelectableDesignerItemViewModelBase>().Last();
             var combine = new CombineGeometryViewModel();
             Remove(item1);
             Remove(item2);
@@ -626,7 +586,7 @@ namespace boilersGraphics.ViewModels
 
         private bool CanExecuteUnion()
         {
-            var countIsCorrent = SelectedItems.Count == 2;
+            var countIsCorrent = SelectedItems.Value.Count() == 2;
             if (countIsCorrent)
             {
                 var firstElementTypeIsCorrect = SelectedItems.ElementAt(0).GetType() != typeof(PictureDesignerItemViewModel);
@@ -643,7 +603,7 @@ namespace boilersGraphics.ViewModels
 
         private bool CanExecuteCopy()
         {
-            return SelectedItems.Count > 0;
+            return SelectedItems.Value.Count() > 0;
         }
 
         private void ExecutePasteCommand()
@@ -677,7 +637,7 @@ namespace boilersGraphics.ViewModels
         {
             CopyToClipboard();
 
-            foreach (var selectedItem in SelectedItems.ToList())
+            foreach (var selectedItem in SelectedItems.Value.ToList())
             {
                 RemoveGroupMembers(selectedItem);
                 Remove(selectedItem);
@@ -686,7 +646,7 @@ namespace boilersGraphics.ViewModels
 
         private void CopyToClipboard()
         {
-            var selectedItems = SelectedItems.ToList();
+            var selectedItems = SelectedItems.Value.ToList();
             var root = new XElement("Data");
             root.Add(ObjectSerializer.ExtractItems(selectedItems));
             Clipboard.SetDataObject(root.ToString(), false);
@@ -694,7 +654,7 @@ namespace boilersGraphics.ViewModels
 
         private bool CanExecuteCut()
         {
-            return SelectedItems.Count > 0;
+            return SelectedItems.Value.Count() > 0;
         }
 
         private void ExecuteSettingCommand()
@@ -950,8 +910,14 @@ namespace boilersGraphics.ViewModels
             EnablePointSnap.Value = bool.Parse(configuration.Element("EnablePointSnap").Value);
             (App.Current.MainWindow.DataContext as MainWindowViewModel).SnapPower.Value = double.Parse(configuration.Element("SnapPower").Value);
 
-            Layers.ToList().ForEach(x => x.Items.Clear());
-            SelectedItems.Clear();
+            Layers.ToList().ForEach(x =>
+            {
+                x.Items.Clear();
+                x.Items.ToList().ForEach(y =>
+                {
+                    y.Item.Value.IsSelected = false;
+                });
+            });
 
             ObjectDeserializer.ReadObjectFromXML(this, root);
         }
@@ -986,7 +952,7 @@ namespace boilersGraphics.ViewModels
 
         private void ExecuteGroupItemsCommand()
         {
-            var items = from item in SelectedItems
+            var items = from item in SelectedItems.Value
                         where item.ParentID == Guid.Empty
                         select item;
 
@@ -1059,7 +1025,7 @@ namespace boilersGraphics.ViewModels
 
         private bool CanExecuteGroup()
         {
-            var items = from item in SelectedItems
+            var items = from item in SelectedItems.Value
                         where item.ParentID == Guid.Empty
                         select item;
             return items.Count() > 1;
@@ -1067,7 +1033,7 @@ namespace boilersGraphics.ViewModels
 
         private void ExecuteUngroupItemsCommand()
         {
-            var groups = from item in SelectedItems
+            var groups = from item in SelectedItems.Value
                          where item.ParentID == Guid.Empty
                          select item;
 
@@ -1103,7 +1069,7 @@ namespace boilersGraphics.ViewModels
 
         private bool CanExecuteUngroup()
         {
-            var items = from item in SelectedItems.OfType<GroupItemViewModel>()
+            var items = from item in SelectedItems.Value.OfType<GroupItemViewModel>()
                         select item;
             return items.Count() > 0;
         }
@@ -1114,7 +1080,7 @@ namespace boilersGraphics.ViewModels
 
         private void ExecuteBringForwardCommand()
         {
-            var ordered = from item in SelectedItems
+            var ordered = from item in SelectedItems.Value
                           orderby item.ZIndex.Value descending
                           select item;
 
@@ -1203,7 +1169,7 @@ namespace boilersGraphics.ViewModels
 
         private void ExecuteSendBackwardCommand()
         {
-            var ordered = from item in SelectedItems
+            var ordered = from item in SelectedItems.Value
                           orderby item.ZIndex.Value ascending
                           select item;
 
@@ -1300,7 +1266,7 @@ namespace boilersGraphics.ViewModels
 
         private void ExecuteBringForegroundCommand()
         {
-            var ordered = from item in SelectedItems
+            var ordered = from item in SelectedItems.Value
                           orderby item.ZIndex.Value descending
                           select item;
 
@@ -1360,7 +1326,7 @@ namespace boilersGraphics.ViewModels
 
         private void ExecuteSendBackgroundCommand()
         {
-            var ordered = from item in SelectedItems
+            var ordered = from item in SelectedItems.Value
                           orderby item.ZIndex.Value ascending
                           select item;
 
@@ -1420,7 +1386,7 @@ namespace boilersGraphics.ViewModels
 
         private bool CanExecuteOrder()
         {
-            return SelectedItems.Count() > 0;
+            return SelectedItems.Value.Count() > 0;
         }
 
         #endregion //Ordering
@@ -1429,12 +1395,12 @@ namespace boilersGraphics.ViewModels
 
         private void ExecuteAlignTopCommand()
         {
-            if (SelectedItems.Count() > 1)
+            if (SelectedItems.Value.Count() > 1)
             {
-                var first = SelectedItems.First();
+                var first = SelectedItems.Value.First();
                 double top = GetTop(first);
 
-                foreach (var item in SelectedItems)
+                foreach (var item in SelectedItems.Value)
                 {
                     double delta = top - GetTop(item);
                     SetTop(item, GetTop(item) + delta);
@@ -1444,12 +1410,12 @@ namespace boilersGraphics.ViewModels
 
         private void ExecuteAlignVerticalCenterCommand()
         {
-            if (SelectedItems.Count() > 1)
+            if (SelectedItems.Value.Count() > 1)
             {
-                var first = SelectedItems.First();
+                var first = SelectedItems.Value.First();
                 double bottom = GetTop(first) + GetHeight(first) / 2;
 
-                foreach (var item in SelectedItems)
+                foreach (var item in SelectedItems.Value)
                 {
                     double delta = bottom - (GetTop(item) + GetHeight(item) / 2);
                     SetTop(item, GetTop(item) + delta);
@@ -1459,12 +1425,12 @@ namespace boilersGraphics.ViewModels
 
         private void ExecuteAlignBottomCommand()
         {
-            if (SelectedItems.Count() > 1)
+            if (SelectedItems.Value.Count() > 1)
             {
-                var first = SelectedItems.First();
+                var first = SelectedItems.Value.First();
                 double bottom = GetTop(first) + GetHeight(first);
 
-                foreach (var item in SelectedItems)
+                foreach (var item in SelectedItems.Value)
                 {
                     double delta = bottom - (GetTop(item) + GetHeight(item));
                     SetTop(item, GetTop(item) + delta);
@@ -1474,12 +1440,12 @@ namespace boilersGraphics.ViewModels
 
         private void ExecuteAlignLeftCommand()
         {
-            if (SelectedItems.Count() > 1)
+            if (SelectedItems.Value.Count() > 1)
             {
-                var first = SelectedItems.First();
+                var first = SelectedItems.Value.First();
                 double left = GetLeft(first);
 
-                foreach (var item in SelectedItems)
+                foreach (var item in SelectedItems.Value)
                 {
                     double delta = left - GetLeft(item);
                     SetLeft(item, GetLeft(item) + delta);
@@ -1489,12 +1455,12 @@ namespace boilersGraphics.ViewModels
 
         private void ExecuteAlignHorizontalCenterCommand()
         {
-            if (SelectedItems.Count() > 1)
+            if (SelectedItems.Value.Count() > 1)
             {
-                var first = SelectedItems.First();
+                var first = SelectedItems.Value.First();
                 double center = GetLeft(first) + GetWidth(first) / 2;
 
-                foreach (var item in SelectedItems)
+                foreach (var item in SelectedItems.Value)
                 {
                     double delta = center - (GetLeft(item) + GetWidth(item) / 2);
                     SetLeft(item, GetLeft(item) + delta);
@@ -1504,12 +1470,12 @@ namespace boilersGraphics.ViewModels
 
         private void ExecuteAlignRightCommand()
         {
-            if (SelectedItems.Count() > 1)
+            if (SelectedItems.Value.Count() > 1)
             {
-                var first = SelectedItems.First();
+                var first = SelectedItems.Value.First();
                 double right = GetLeft(first) + GetWidth(first);
 
-                foreach (var item in SelectedItems)
+                foreach (var item in SelectedItems.Value)
                 {
                     double delta = right - (GetLeft(item) + GetWidth(item));
                     SetLeft(item, GetLeft(item) + delta);
@@ -1519,7 +1485,7 @@ namespace boilersGraphics.ViewModels
 
         private void ExecuteDistributeHorizontalCommand()
         {
-            var selectedItems = from item in SelectedItems
+            var selectedItems = from item in SelectedItems.Value
                                 let itemLeft = GetLeft(item)
                                 orderby itemLeft
                                 select item;
@@ -1551,7 +1517,7 @@ namespace boilersGraphics.ViewModels
 
         private void ExecuteDistributeVerticalCommand()
         {
-            var selectedItems = from item in SelectedItems
+            var selectedItems = from item in SelectedItems.Value
                                 let itemTop = GetTop(item)
                                 orderby itemTop
                                 select item;
@@ -1583,12 +1549,12 @@ namespace boilersGraphics.ViewModels
 
         private bool CanExecuteAlign()
         {
-            return SelectedItems.Count() > 1;
+            return SelectedItems.Value.Count() > 1;
         }
 
         private bool CanExecuteDistribute()
         {
-            return SelectedItems.Count() > 1;
+            return SelectedItems.Value.Count() > 1;
         }
 
         private double GetWidth(SelectableDesignerItemViewModelBase item)
@@ -1654,7 +1620,7 @@ namespace boilersGraphics.ViewModels
 
         private void ExecuteUniformWidthCommand()
         {
-            var selectedItems = SelectedItems.OfType<DesignerItemViewModelBase>();
+            var selectedItems = SelectedItems.Value.OfType<DesignerItemViewModelBase>();
             if (selectedItems.Count() > 1)
             {
                 var first = selectedItems.First();
@@ -1670,7 +1636,7 @@ namespace boilersGraphics.ViewModels
 
         private void ExecuteUniformHeightCommand()
         {
-            var selectedItems = SelectedItems.OfType<DesignerItemViewModelBase>();
+            var selectedItems = SelectedItems.Value.OfType<DesignerItemViewModelBase>();
             if (selectedItems.Count() > 1)
             {
                 var first = selectedItems.First();
@@ -1686,7 +1652,7 @@ namespace boilersGraphics.ViewModels
 
         private bool CanExecuteUniform()
         {
-            return SelectedItems.OfType<DesignerItemViewModelBase>().Count() > 1;
+            return SelectedItems.Value.OfType<DesignerItemViewModelBase>().Count() > 1;
         }
 
         #endregion //Uniform
@@ -1695,7 +1661,7 @@ namespace boilersGraphics.ViewModels
 
         private void ExecuteDuplicateCommand()
         {
-            DuplicateObjects(SelectedItems);
+            DuplicateObjects(SelectedItems.Value);
         }
 
         private void DuplicateObjects(IEnumerable<SelectableDesignerItemViewModelBase> items)
@@ -1802,7 +1768,7 @@ namespace boilersGraphics.ViewModels
 
         private bool CanExecuteDuplicate()
         {
-            return SelectedItems.Count() > 0;
+            return SelectedItems.Value.Count() > 0;
         }
 
         #endregion //Duplicate

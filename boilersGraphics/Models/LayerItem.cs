@@ -36,15 +36,6 @@ namespace boilersGraphics.Models
         public ReactiveCommand SwitchVisibilityCommand { get; } = new ReactiveCommand();
         public ReactivePropertySlim<SelectableDesignerItemViewModelBase> Item { get; } = new ReactivePropertySlim<SelectableDesignerItemViewModelBase>();
 
-        public IObservable<bool> Observable
-        {
-            get { return Item.ObserveProperty(x => x.Value.IsSelected); }
-        }
-
-        public IObservable<SelectableDesignerItemViewModelBase> AllItemsObservable
-        {
-            get { return System.Reactive.Linq.Observable.Return(Item.Value); }
-        }
 
         public LayerItem()
         {

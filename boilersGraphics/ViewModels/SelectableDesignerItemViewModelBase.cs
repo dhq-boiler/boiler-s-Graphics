@@ -4,6 +4,7 @@ using Prism.Mvvm;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Windows.Media;
@@ -33,9 +34,9 @@ namespace boilersGraphics.ViewModels
             Init();
         }
 
-        public ReactiveCollection<SelectableDesignerItemViewModelBase> SelectedItems
+        public SelectableDesignerItemViewModelBase[] SelectedItems
         {
-            get { return Owner.SelectedItems; }
+            get { return Owner.SelectedItems.Value; }
         }
 
         public IDiagramViewModel Owner { get; set; }
@@ -88,7 +89,7 @@ namespace boilersGraphics.ViewModels
         {
             if (newselect)
             {
-                foreach (var designerItemViewModelBase in Owner.SelectedItems.ToList())
+                foreach (var designerItemViewModelBase in Owner.SelectedItems.Value.ToList())
                 {
                     designerItemViewModelBase.IsSelected = false;
                 }

@@ -42,14 +42,6 @@ namespace boilersGraphics.Models
 
         public ReactiveCollection<LayerItem> Items { get; } = new ReactiveCollection<LayerItem>();
 
-        public IObservable<PropertyPack<LayerItem, bool>> Observable
-        {
-            get { return Items.ObserveElementObservableProperty(x => x.Observable); }
-        }
-        public IObservable<PropertyPack<LayerItem, SelectableDesignerItemViewModelBase>> AllItemsObservable
-        {
-            get { return Items.ObserveElementObservableProperty(x => x.AllItemsObservable); }
-        }
 
         public Layer()
         {
@@ -80,12 +72,12 @@ namespace boilersGraphics.Models
                 }
             })
             .AddTo(_disposable);
-            Items.ObserveElementProperty(x => x.Item)
+            Items.ObserveElementProperty(x => x.Item.Value)
                  .Delay(TimeSpan.FromMilliseconds(500))
                  .ObserveOnDispatcher()
                  .Subscribe(x =>
                  {
-                    UpdateAppearance(Items.Select(xx => xx.Item.Value));
+                     UpdateAppearance(Items.Select(xx => xx.Item.Value));
                  })
                  .AddTo(_disposable);
             IsVisible.Value = true;

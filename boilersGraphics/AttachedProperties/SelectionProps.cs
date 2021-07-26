@@ -60,7 +60,7 @@ namespace boilersGraphics.AttachedProperties
                     }
 
                     var owner = selectableDesignerItemViewModelBase.Owner;
-                    var edgeThicknesses = owner.SelectedItems.Select(x =>
+                    var edgeThicknesses = owner.SelectedItems.Value.Select(x =>
                     {
                         if (x is DesignerItemViewModelBase)
                         {
@@ -114,7 +114,7 @@ namespace boilersGraphics.AttachedProperties
                     selectableDesignerItemViewModelBase.Owner.FillColors.Add(fillColor);
 
                     var owner = selectableDesignerItemViewModelBase.Owner;
-                    var edgeThicknesses = owner.SelectedItems.Select(x =>
+                    var edgeThicknesses = owner.SelectedItems.Value.Select(x =>
                     {
                         if (x is DesignerItemViewModelBase)
                         {
@@ -125,7 +125,7 @@ namespace boilersGraphics.AttachedProperties
                             return (x as ConnectorBaseViewModel).EdgeThickness.Value;
                         };
                     });
-                    if (edgeThicknesses.All(x => x == edgeThicknesses.First()))
+                    if (edgeThicknesses.Count() > 0 && edgeThicknesses.All(x => x == edgeThicknesses.First()))
                     {
                         owner.EdgeThickness.Value = edgeThicknesses.First();
                     }

@@ -80,7 +80,7 @@
                     </VisualBrush>
                 </ScrollViewer.Background>
                 <ItemsControl ItemContainerStyleSelector="{x:Static selector:DesignerItemsControlItemStyleSelector.Instance}"
-                              ItemsSource="{Binding AllItems, UpdateSourceTrigger=PropertyChanged}"
+                              ItemsSource="{Binding AllItems.Value, UpdateSourceTrigger=PropertyChanged}"
                               Background="Transparent"
                               BorderBrush="Black"
                               BorderThickness="{Binding CanvasBorderThickness}">
