@@ -4,6 +4,7 @@
                     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
                     xmlns:helper="clr-namespace:boilersGraphics.Helpers"
                     xmlns:model="clr-namespace:boilersGraphics.Models"
+                    xmlns:converter="clr-namespace:boilersGraphics.Converters"
                     xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase">
     <Style TargetType="{x:Type control:Layers}">
 
@@ -126,6 +127,7 @@
                     </Setter.Value>
                 </Setter>
             </Style>
+            <converter:IsSelectedToBorderBrushConverter x:Key="IsSelectedToBorderBrushConverter" />
         </Style.Resources>
 
         <Setter Property="SnapsToDevicePixels" Value="true" />
@@ -199,7 +201,7 @@
                                                                         </ControlTemplate>
                                                                     </ToggleButton.Template>
                                                                 </ToggleButton>
-                                                                <Border BorderBrush="Black"
+                                                                <Border BorderBrush="{Binding IsSelected.Value, Converter={StaticResource IsSelectedToBorderBrushConverter}}"
                                                                         BorderThickness="1">
                                                                     <Image Width="25"
                                                                            Height="25"
