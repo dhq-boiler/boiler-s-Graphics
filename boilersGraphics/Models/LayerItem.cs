@@ -107,8 +107,6 @@ namespace boilersGraphics.Models
 
                         rtb.Render(visual);
 
-                        OpenCvSharpHelper.ImShow("DebugPrint_LayerItem", rtb);
-
                         Appearance.Value = rtb;
                     }
                 }
