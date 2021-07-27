@@ -111,13 +111,13 @@ namespace boilersGraphics.Adorners
 
                     if (rubberBand.Contains(itemBounds))
                     {
-                        item.IsSelected = true;
+                        item.IsSelected.Value = true;
                     }
                     else
                     {
                         if (!(Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
                         {
-                            item.IsSelected = false;
+                            item.IsSelected.Value = false;
                         }
                     }
                 }

@@ -78,7 +78,7 @@ namespace boilersGraphics.Adorners
                 item.EdgeColor.Value = item.Owner.EdgeColors.First();
                 item.EdgeThickness.Value = item.Owner.EdgeThickness.Value.Value;
                 item.ZIndex.Value = item.Owner.Layers.Items().Count();
-                item.IsSelected = true;
+                item.IsSelected.Value = true;
                 item.PathGeometry.Value = GeometryCreator.CreateBezierCurve(item);
                 item.IsVisible.Value = true;
                 item.Owner.DeselectAll();

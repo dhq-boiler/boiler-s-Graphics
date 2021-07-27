@@ -51,12 +51,12 @@ namespace boilersGraphics.AttachedProperties
                 {
                     if ((Keyboard.Modifiers & (ModifierKeys.Shift)) != ModifierKeys.None)
                     {
-                        selectableDesignerItemViewModelBase.IsSelected = !selectableDesignerItemViewModelBase.IsSelected;
+                        selectableDesignerItemViewModelBase.IsSelected.Value = !selectableDesignerItemViewModelBase.IsSelected.Value;
                     }
 
                     if ((Keyboard.Modifiers & (ModifierKeys.Control)) != ModifierKeys.None)
                     {
-                        selectableDesignerItemViewModelBase.IsSelected = !selectableDesignerItemViewModelBase.IsSelected;
+                        selectableDesignerItemViewModelBase.IsSelected.Value = !selectableDesignerItemViewModelBase.IsSelected.Value;
                     }
 
                     var owner = selectableDesignerItemViewModelBase.Owner;
@@ -86,7 +86,7 @@ namespace boilersGraphics.AttachedProperties
                     selectableDesignerItemViewModelBase.Owner.EdgeColors.Clear();
                     selectableDesignerItemViewModelBase.Owner.FillColors.Clear();
                     selectableDesignerItemViewModelBase.Owner.EdgeThickness.Value = double.NaN;
-                    selectableDesignerItemViewModelBase.IsSelected = true;
+                    selectableDesignerItemViewModelBase.IsSelected.Value = true;
 
                     if (selectableDesignerItemViewModelBase is DesignerItemViewModelBase)
                     {

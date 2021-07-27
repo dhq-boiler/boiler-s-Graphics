@@ -302,7 +302,7 @@ namespace boilersGraphics.ViewModels
             SelectedItems = Layers.CollectionChangedAsObservable()
                                   .Select(_ => Layers.Select(x => x.LayerItemsChangedAsObservable()).Merge())
                                   .Switch()
-                                  .Select(_ => Layers.SelectMany(x => x.Items).Select(y => y.Item.Value).Where(z => z.IsSelected == true).ToArray())
+                                  .Select(_ => Layers.SelectMany(x => x.Items).Select(y => y.Item.Value).Where(z => z.IsSelected.Value == true).ToArray())
                                   .ToReadOnlyReactivePropertySlim(Array.Empty<SelectableDesignerItemViewModelBase>());
 
             SelectedItems.Subscribe(selectedItems =>
@@ -505,7 +505,7 @@ namespace boilersGraphics.ViewModels
             Remove(item2);
             combine.EdgeColor.Value = item1.EdgeColor.Value;
             combine.EdgeThickness.Value = item1.EdgeThickness.Value;
-            combine.IsSelected = true;
+            combine.IsSelected.Value = true;
             combine.Owner = this;
             combine.ZIndex.Value = Layers.SelectMany(x => x.Items).Count();
             combine.PathGeometry.Value = GeometryCreator.CreateCombineGeometry(item1, item2);
@@ -702,7 +702,7 @@ namespace boilersGraphics.ViewModels
         {
             foreach (var layerItem in Layers.SelectMany(x => x.Items))
             {
-                layerItem.Item.Value.IsSelected = false;
+                layerItem.Item.Value.IsSelected.Value = false;
             }
         }
 
@@ -769,7 +769,7 @@ namespace boilersGraphics.ViewModels
         {
             foreach (LayerItem layerItem in Layers.SelectMany(x => x.Items))
             {
-                layerItem.Item.Value.IsSelected = false;
+                layerItem.Item.Value.IsSelected.Value = false;
             }
         }
 
@@ -915,7 +915,7 @@ namespace boilersGraphics.ViewModels
                 x.Items.Clear();
                 x.Items.ToList().ForEach(y =>
                 {
-                    y.Item.Value.IsSelected = false;
+                    y.Item.Value.IsSelected.Value = false;
                 });
             });
 
@@ -1613,7 +1613,7 @@ namespace boilersGraphics.ViewModels
 
         private void ExecuteSelectAllCommand()
         {
-            Layers.SelectMany(x => x.Items).ToList().ForEach(x => x.Item.Value.IsSelected = true);
+            Layers.SelectMany(x => x.Items).ToList().ForEach(x => x.Item.Value.IsSelected.Value = true);
         }
 
         #region Uniform

@@ -43,7 +43,7 @@ namespace boilersGraphics.Controls
         {
             var designerItem = this.DataContext as DesignerItemViewModelBase;
 
-            if (designerItem != null && designerItem.IsSelected)
+            if (designerItem != null && designerItem.IsSelected.Value)
             {
                 double minLeft, minTop, minDeltaHorizontal, minDeltaVertical;
                 double dragDeltaVertical, dragDeltaHorizontal;

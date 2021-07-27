@@ -112,6 +112,12 @@
                                                 </Style>
                                             </Grid.Style>
                                             <control:DragThumb x:Name="PART_DragThumb" Cursor="SizeAll" />
+                                            <!-- DEBUG -->
+                                            <TextBlock VerticalAlignment="Center"
+                                                       HorizontalAlignment="Center">
+                                                <Run Text="IsSelected.Value=" />
+                                                <Run Text="{Binding IsSelected.Value}" />
+                                            </TextBlock>
                                             <!--  PART_ResizeDecorator  -->
                                             <Control
                                             x:Name="PART_ResizeDecorator"
@@ -124,7 +130,7 @@
                                             Content="{TemplateBinding Content}" />
                                         </Grid>
                                         <DataTemplate.Triggers>
-                                            <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                                            <DataTrigger Binding="{Binding IsSelected.Value}" Value="True">
                                                 <Setter TargetName="PART_ResizeDecorator" Property="Visibility" Value="Visible" />
                                                 <Setter TargetName="selectedGrid" Property="Effect">
                                                     <Setter.Value>
@@ -136,7 +142,7 @@
                                                     </Setter.Value>
                                                 </Setter>
                                             </DataTrigger>
-                                            <DataTrigger Binding="{Binding IsSelected}" Value="False">
+                                            <DataTrigger Binding="{Binding IsSelected.Value}" Value="False">
                                                 <Setter TargetName="PART_ResizeDecorator" Property="Visibility" Value="Hidden" />
                                             </DataTrigger>
                                         </DataTemplate.Triggers>
@@ -211,7 +217,7 @@
                                                 Visibility="Hidden" />
                                             </Canvas>
                                             <DataTemplate.Triggers>
-                                                <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                                                <DataTrigger Binding="{Binding IsSelected.Value}" Value="True">
                                                     <Setter TargetName="PART_ResizeDecorator" Property="Visibility" Value="Visible" />
                                                 </DataTrigger>
                                             </DataTemplate.Triggers>
@@ -307,7 +313,7 @@
                                                 Visibility="Hidden" />
                                             </Canvas>
                                             <DataTemplate.Triggers>
-                                                <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                                                <DataTrigger Binding="{Binding IsSelected.Value}" Value="True">
                                                     <Setter TargetName="PART_ResizeDecorator" Property="Visibility" Value="Visible" />
                                                     <Setter TargetName="ControlPoint1" Property="Visibility" Value="Visible" />
                                                     <Setter TargetName="ControlPoint2" Property="Visibility" Value="Visible" />

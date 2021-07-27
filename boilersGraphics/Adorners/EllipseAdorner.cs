@@ -125,7 +125,7 @@ namespace boilersGraphics.Adorners
                 item.FillColor = item.Owner.FillColors.First();
                 item.ZIndex.Value = item.Owner.Layers.Items().Count();
                 item.PathGeometry.Value = GeometryCreator.CreateEllipse(item);
-                item.IsSelected = true;
+                item.IsSelected.Value = true;
                 item.IsVisible.Value = true;
                 item.Owner.DeselectAll();
                 ((AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel).AddItemCommand.Execute(item);

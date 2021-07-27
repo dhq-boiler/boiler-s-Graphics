@@ -89,7 +89,7 @@ namespace boilersGraphics.ViewModels
             this.ObserveProperty(x => x.IsSelected)
                 .Subscribe(isSelected =>
                 {
-                    if (isSelected)
+                    if (isSelected.Value)
                     {
                         if (!LetterSettingDialogIsOpen)
                         {

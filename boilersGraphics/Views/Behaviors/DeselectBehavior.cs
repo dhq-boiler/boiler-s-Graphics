@@ -44,7 +44,7 @@ namespace boilersGraphics.Views.Behaviors
                 if (vm != viewModel)
                 {
                     //非選択状態にする
-                    vm.IsSelected = false;
+                    vm.IsSelected.Value = false;
                 }
             }
         }

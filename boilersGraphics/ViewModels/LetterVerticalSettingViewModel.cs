@@ -50,7 +50,7 @@ namespace boilersGraphics.ViewModels
         {
             ViewModel.LetterSettingDialogClose -= ViewModel_LetterSettingDialogClose;
             ViewModel.LetterSettingDialogIsOpen = false;
-            ViewModel.IsSelected = false;
+            ViewModel.IsSelected.Value = false;
         }
 
         public void OnDialogOpened(IDialogParameters parameters)

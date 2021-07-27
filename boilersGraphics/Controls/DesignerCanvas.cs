@@ -87,7 +87,7 @@ namespace boilersGraphics.Controls
                 DesignerItemViewModelBase itemBase = (DesignerItemViewModelBase)Activator.CreateInstance(dragObject.ContentType);
                 itemBase.Left.Value = Math.Max(0, position.X - DesignerItemViewModelBase.DefaultWidth / 2);
                 itemBase.Top.Value = Math.Max(0, position.Y - DesignerItemViewModelBase.DefaultHeight / 2);
-                itemBase.IsSelected = true;
+                itemBase.IsSelected.Value = true;
                 (DataContext as IDiagramViewModel).AddItemCommand.Execute(itemBase);
             }
             e.Handled = true;

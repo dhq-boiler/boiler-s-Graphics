@@ -66,7 +66,7 @@ namespace boilersGraphics.Adorners
                 itemBase.Top.Value = Math.Max(0, _startPoint.Value.Y);
                 itemBase.Width.Value = Math.Abs(_endPoint.Value.X - _startPoint.Value.X);
                 itemBase.Height.Value = Math.Abs(_endPoint.Value.Y - _startPoint.Value.Y);
-                itemBase.IsSelected = true;
+                itemBase.IsSelected.Value = true;
                 itemBase.IsVisible.Value = true;
                 itemBase.Owner.DeselectAll();
                 itemBase.ZIndex.Value = itemBase.Owner.Layers.Items().Count();

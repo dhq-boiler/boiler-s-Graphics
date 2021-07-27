@@ -19,7 +19,6 @@ namespace boilersGraphics.ViewModels
 
     public abstract class SelectableDesignerItemViewModelBase : BindableBase, ISelectItems, IObserver<GroupTransformNotification>, IDisposable, ICloneable
     {
-        private bool _IsSelected;
         protected CompositeDisposable _CompositeDisposable = new CompositeDisposable();
 
         public SelectableDesignerItemViewModelBase(int id, IDiagramViewModel parent)
@@ -43,11 +42,7 @@ namespace boilersGraphics.ViewModels
         public DelegateCommand<object> SelectItemCommand { get; private set; }
         public int Id { get; set; }
 
-        public bool IsSelected
-        {
-            get { return _IsSelected; }
-            set { SetProperty(ref _IsSelected, value); }
-        }
+        public ReactivePropertySlim<bool> IsSelected { get; } = new ReactivePropertySlim<bool>();
 
         public ReactiveProperty<Matrix> Matrix { get; } = new ReactiveProperty<Matrix>(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe | ReactivePropertyMode.DistinctUntilChanged);
 
@@ -82,7 +77,7 @@ namespace boilersGraphics.ViewModels
 
         private void ExecuteSelectItemCommand(object param)
         {
-            SelectItem((bool)param, !IsSelected);
+            SelectItem((bool)param, !IsSelected.Value);
         }
 
         private void SelectItem(bool newselect, bool select)
@@ -91,11 +86,11 @@ namespace boilersGraphics.ViewModels
             {
                 foreach (var designerItemViewModelBase in Owner.SelectedItems.Value.ToList())
                 {
-                    designerItemViewModelBase.IsSelected = false;
+                    designerItemViewModelBase.IsSelected.Value = false;
                 }
             }
 
-            IsSelected = select;
+            IsSelected.Value = select;
         }
 
         public bool IsSameGroup(SelectableDesignerItemViewModelBase target)
@@ -105,7 +100,7 @@ namespace boilersGraphics.ViewModels
 
         private void Init()
         {
-            SelectItemCommand = new DelegateCommand<object>(p => SelectItem((bool)p, !IsSelected));
+            SelectItemCommand = new DelegateCommand<object>(p => SelectItem((bool)p, !IsSelected.Value));
 
             EnableForSelection.Value = true;
         }
