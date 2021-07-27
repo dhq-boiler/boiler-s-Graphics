@@ -146,6 +146,7 @@
                                     <TreeView.Resources>
                                         <Style TargetType="TreeViewItem">
                                             <Setter Property="IsExpanded" Value="{Binding IsExpanded.Value, Mode=TwoWay}" />
+                                            <Setter Property="IsSelected" Value="{Binding IsSelected.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                             <Setter Property="Template">
                                                 <Setter.Value>
                                                     <ControlTemplate TargetType="TreeViewItem">

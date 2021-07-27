@@ -30,7 +30,7 @@ namespace boilersGraphics.Models
         public static int LayerItemCount { get; set; } = 1;
 
         public ReactivePropertySlim<bool> IsVisible { get; } = new ReactivePropertySlim<bool>();
-        public ReadOnlyReactivePropertySlim<bool> IsSelected { get; set; }
+        public ReactiveProperty<bool> IsSelected { get; set; }
         public ReactivePropertySlim<ImageSource> Appearance { get; } = new ReactivePropertySlim<ImageSource>();
         public ReactivePropertySlim<string> Name { get; } = new ReactivePropertySlim<string>();
         public ReactivePropertySlim<Layer> Owner { get; } = new ReactivePropertySlim<Layer>();
@@ -72,8 +72,16 @@ namespace boilersGraphics.Models
             .AddTo(_disposable);
             IsSelected = Item.Where(x => x != null)
                              .Select(x => x.IsSelected.Value)
-                             .ToReadOnlyReactivePropertySlim()
-                             .AddTo(_disposable); ;
+                             .ToReactiveProperty()
+                             .AddTo(_disposable);
+            IsSelected.Subscribe(x =>
+            {
+                if (Item.Value != null)
+                {
+                    Item.Value.IsSelected.Value = x;
+                }
+            })
+            .AddTo(_disposable);
             IsVisible.Value = true;
         }
 
