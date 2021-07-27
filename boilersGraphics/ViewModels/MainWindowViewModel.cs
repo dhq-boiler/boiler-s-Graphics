@@ -129,7 +129,7 @@ namespace boilersGraphics.ViewModels
             });
             DiagramViewModel.EdgeThickness.Subscribe(x =>
             {
-                if (x.HasValue && DiagramViewModel.SelectedItems.Value != null)
+                if (x.HasValue && !double.IsNaN(x.Value) && DiagramViewModel.SelectedItems.Value != null)
                 {
                     foreach (var item in DiagramViewModel.SelectedItems.Value?.OfType<DesignerItemViewModelBase>())
                     {
