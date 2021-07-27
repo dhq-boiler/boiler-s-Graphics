@@ -9,8 +9,10 @@ using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
+using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Windows;
@@ -81,6 +83,13 @@ namespace boilersGraphics.Models
                  })
                  .AddTo(_disposable);
             IsVisible.Value = true;
+        }
+
+        public IObservable<Unit> LayerItemsChangedAsObservable()
+        {
+            return Items.ObserveElementObservableProperty(x => x.Item)
+                        .ToUnit()
+                        .Merge(Items.CollectionChangedAsObservable().Where(x => x.Action == NotifyCollectionChangedAction.Remove || x.Action == NotifyCollectionChangedAction.Reset).ToUnit());
         }
 
         private void UpdateAppearance(IEnumerable<SelectableDesignerItemViewModelBase> items)

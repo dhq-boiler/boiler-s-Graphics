@@ -287,7 +287,7 @@ namespace boilersGraphics.ViewModels
                 .AddTo(_CompositeDisposable);
 
             AllItems = Layers.CollectionChangedAsObservable()
-                             .Select(_ => Layers.Select(x => x.Items.ObserveElementObservableProperty(y => y.Item)).Merge())
+                             .Select(_ => Layers.Select(x => x.LayerItemsChangedAsObservable()).Merge())
                              .Switch()
                              .Select(_ => Layers.SelectMany(x => x.Items).Select(y => y.Item.Value).ToArray())
                              .ToReadOnlyReactivePropertySlim(Array.Empty<SelectableDesignerItemViewModelBase>());
@@ -300,7 +300,7 @@ namespace boilersGraphics.ViewModels
             .AddTo(_CompositeDisposable);
 
             SelectedItems = Layers.CollectionChangedAsObservable()
-                                  .Select(_ => Layers.Select(x => x.Items.ObserveElementObservableProperty(y => y.Item)).Merge())
+                                  .Select(_ => Layers.Select(x => x.LayerItemsChangedAsObservable()).Merge())
                                   .Switch()
                                   .Select(_ => Layers.SelectMany(x => x.Items).Select(y => y.Item.Value).Where(z => z.IsSelected == true).ToArray())
                                   .ToReadOnlyReactivePropertySlim(Array.Empty<SelectableDesignerItemViewModelBase>());
