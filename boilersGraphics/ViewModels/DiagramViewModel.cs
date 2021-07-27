@@ -307,6 +307,8 @@ namespace boilersGraphics.ViewModels
 
             SelectedItems.Subscribe(selectedItems =>
             {
+                Trace.WriteLine($"SelectedItems changed {string.Join(", ", selectedItems.Select(x => x?.ToString() ?? "null"))}");
+
                 GroupCommand.RaiseCanExecuteChanged();
                 UngroupCommand.RaiseCanExecuteChanged();
                 BringForwardCommand.RaiseCanExecuteChanged();
