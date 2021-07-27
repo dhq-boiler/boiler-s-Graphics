@@ -98,6 +98,10 @@ namespace boilersGraphics.Models
             double minX, maxX, minY, maxY;
             var width = GetWidth(items, out minX, out maxX);
             var height = GetHeight(items, out minY, out maxY);
+
+            if (width < 0 || height < 0)
+                return;
+
             var rtb = new RenderTargetBitmap((int)width, (int)height, 96, 96, PixelFormats.Pbgra32);
             
             DrawingVisual visual = InitializeBitmap(width, height);
