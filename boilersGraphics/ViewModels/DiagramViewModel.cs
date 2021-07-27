@@ -85,7 +85,6 @@ namespace boilersGraphics.ViewModels
         public DelegateCommand<MouseEventArgs> MouseMoveCommand { get; private set; }
         public DelegateCommand<MouseEventArgs> MouseLeaveCommand { get; private set; }
         public DelegateCommand<MouseEventArgs> MouseEnterCommand { get; private set; }
-        public DelegateCommand AddLayerCommand { get; private set; }
 
         #region Property
 
@@ -269,13 +268,6 @@ namespace boilersGraphics.ViewModels
                 CutCommand.RaiseCanExecuteChanged();
                 CopyCommand.RaiseCanExecuteChanged();
                 PasteCommand.RaiseCanExecuteChanged();
-            });
-            AddLayerCommand = new DelegateCommand(() =>
-            {   
-                var layer = new Layer();
-                layer.IsVisible.Value = true;
-                layer.Name.Value = $"レイヤー{Layer.LayerCount++}";
-                Layers.Add(layer);
             });
 
 

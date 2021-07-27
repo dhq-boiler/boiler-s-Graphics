@@ -437,7 +437,7 @@
                     x:Name="combine"
                     Width="180"
                     Margin="0,5,25,0" />
-                <control:Layers
+                <view:Layers
                     x:Name="layers"
                     Width="180"
                     Margin="0,5,25,0" />

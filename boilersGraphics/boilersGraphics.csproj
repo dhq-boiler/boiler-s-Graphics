@@ -218,6 +218,7 @@
     <Compile Include="ViewModels\ExportViewModel.cs" />
     <Compile Include="ViewModels\GroupItemViewModel.cs" />
     <Compile Include="ViewModels\ILetterDesignerItemViewModel.cs" />
+    <Compile Include="ViewModels\LayersViewModel.cs" />
     <Compile Include="ViewModels\LetterDesignerItemViewModel.cs" />
     <Compile Include="ViewModels\LetterVerticalSettingViewModel.cs" />
     <Compile Include="ViewModels\LetterSettingViewModel.cs" />
@@ -269,6 +270,9 @@
     </Compile>
     <Compile Include="Views\ItemsControlItemContainerStyleSelector.cs" />
     <Compile Include="Views\ItemsControlTemplateSelector.cs" />
+    <Compile Include="Views\Layers.xaml.cs">
+      <DependentUpon>Layers.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\LetterVerticalSetting.xaml.cs">
       <DependentUpon>LetterVerticalSetting.xaml</DependentUpon>
     </Compile>
@@ -393,6 +397,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Export.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Layers.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
