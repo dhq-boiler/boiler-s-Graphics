@@ -31,7 +31,8 @@ namespace boilersGraphics.ViewModels
 
         public LayersViewModel()
         {
-            Layers = (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.Layers.ToReadOnlyReactiveCollection();
+            var mainWindowVM = App.Current.MainWindow.DataContext as MainWindowViewModel;
+            Layers = mainWindowVM.DiagramViewModel.Layers.ToReadOnlyReactiveCollection();
             AddLayerCommand = new DelegateCommand(() =>
             {
                 var layer = new Layer();
