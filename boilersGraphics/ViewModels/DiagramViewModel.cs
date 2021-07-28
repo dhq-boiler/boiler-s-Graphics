@@ -14,6 +14,7 @@ using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
@@ -90,7 +91,7 @@ namespace boilersGraphics.ViewModels
 
         public ReactiveCollection<Layer> Layers { get; } = new ReactiveCollection<Layer>();
 
-        public ReactiveCollection<Layer> SelectedLayers { get; }
+        public ReadOnlyReactiveCollection<Layer> SelectedLayers { get; }
 
         public ReadOnlyReactivePropertySlim<SelectableDesignerItemViewModelBase[]> AllItems { get; }
 
@@ -327,11 +328,32 @@ namespace boilersGraphics.ViewModels
             })
             .AddTo(_CompositeDisposable);
 
-            SelectedLayers = Layers.ObserveElementProperty(x => x.IsSelected.Value)
-                                   .Where(x => x.Value == true)
-                                   .Select(x => x.Instance)
-                                   .ToReactiveCollection();
+            //SelectedLayers = Layers.ObserveElementProperty(x => x.IsSelected)
+            //                       .Where(x => x.Instance.IsSelected.Value == true)
+            //                       .Select(x => x.Instance)
+            //                       .ToReactiveCollection(); //not working
+            //SelectedLayers = Layers.CollectionChangedAsObservable()
+            //                       .Select(_ => Layers.CollectionChangedAsObservable().Where(x => x.Action == NotifyCollectionChangedAction.Remove || x.Action == NotifyCollectionChangedAction.Reset).ToUnit())
+            //                       .Switch()
+            //                       .Select(_ => Layers.Where(x => x.IsSelected.Value == true).ToArray())
+            //                       .ToReadOnlyReactivePropertySlim(Array.Empty<Layer>()); //not working
 
+            //SelectedLayers = Layers.ToObservable()
+            //                       .Where(x => x.IsSelected.Value == true)
+            //                       .ToReadOnlyReactiveCollection(); //not working
+
+            SelectedLayers = Layers.ObserveElementProperty(x => x.IsSelected)
+                                   .Where(x => x.Instance.IsSelected.Value == true)
+                                   .Select(x => x.Instance)
+                                   .ToReadOnlyReactiveCollection(); //not working
+
+            SelectedLayers.ToObservable()
+                          .Subscribe(x =>
+            {
+                Trace.WriteLine($"SelectedLayers changed {x.Name.Value}");
+            })
+            .AddTo(_CompositeDisposable);
+            
             InitialSetting();
         }
 

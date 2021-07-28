@@ -23,7 +23,7 @@ using System.Windows.Media.Imaging;
 
 namespace boilersGraphics.Models
 {
-    public class Layer : BindableBase
+    public class Layer : BindableBase, IObservable<LayerObservable>
     {
         private CompositeDisposable _disposable = new CompositeDisposable();
         public static int LayerCount { get; set; } = 1;
@@ -221,5 +221,35 @@ namespace boilersGraphics.Models
             layerItem.Name.Value = $"アイテム{LayerItem.LayerItemCount++}";
             Items.Add(layerItem);
         }
+
+        private List<IObserver<LayerObservable>> _observers = new List<IObserver<LayerObservable>>();
+
+        public IDisposable Subscribe(IObserver<LayerObservable> observer)
+        {
+            _observers.Add(observer);
+            observer.OnNext(new LayerObservable());
+            return new LayerDisposable(this, observer);
+        }
+
+        public class LayerDisposable : IDisposable
+        {
+            private Layer layer;
+            private IObserver<LayerObservable> observer;
+
+            public LayerDisposable(Layer layer, IObserver<LayerObservable> observer)
+            {
+                this.layer = layer;
+                this.observer = observer;
+            }
+
+            public void Dispose()
+            {
+                layer._observers.Remove(observer);
+            }
+        }
+    }
+
+    public class LayerObservable : BindableBase
+    {
     }
 }
