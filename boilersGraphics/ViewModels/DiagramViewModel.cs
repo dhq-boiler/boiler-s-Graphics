@@ -814,7 +814,7 @@ namespace boilersGraphics.ViewModels
         {
             var layerItem = new LayerItem();
             layerItem.Item.Value = item;
-            Layer.SelectedLayers.First().Items.Add(layerItem);
+            SelectedLayers.First().Items.Add(layerItem);
         }
 
         private void Remove(SelectableDesignerItemViewModelBase item)

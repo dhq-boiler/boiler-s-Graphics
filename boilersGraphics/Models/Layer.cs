@@ -27,7 +27,6 @@ namespace boilersGraphics.Models
     {
         private CompositeDisposable _disposable = new CompositeDisposable();
         public static int LayerCount { get; set; } = 1;
-        public static ObservableCollection<Layer> SelectedLayers { get; } = new ObservableCollection<Layer>();
        
         public ReactivePropertySlim<ImageSource> Appearance { get; } = new ReactivePropertySlim<ImageSource>();
 
