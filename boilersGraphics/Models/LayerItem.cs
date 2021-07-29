@@ -67,7 +67,7 @@ namespace boilersGraphics.Models
                 .ObserveOnDispatcher()
                 .Subscribe(x =>
             {
-                Trace.WriteLine("Item change detected. run UpdateAppearance().");
+                Trace.WriteLine("detected LayerItem changes. run LayerItem.UpdateAppearance().");
                 UpdateAppearance(Item.Value);
             })
             .AddTo(_disposable);
