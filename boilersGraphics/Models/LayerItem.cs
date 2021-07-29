@@ -38,8 +38,9 @@ namespace boilersGraphics.Models
         public ReactivePropertySlim<SelectableDesignerItemViewModelBase> Item { get; } = new ReactivePropertySlim<SelectableDesignerItemViewModelBase>();
 
 
-        public LayerItem()
+        public LayerItem(SelectableDesignerItemViewModelBase item)
         {
+            Item.Value = item;
             Init();
         }
 
@@ -87,9 +88,9 @@ namespace boilersGraphics.Models
 
         public LayerItem(SelectableDesignerItemViewModelBase item, Layer owner)
         {
-            Init();
             Item.Value = item;
             Owner.Value = owner;
+            Init();
         }
 
         private void UpdateAppearance(SelectableDesignerItemViewModelBase item)
