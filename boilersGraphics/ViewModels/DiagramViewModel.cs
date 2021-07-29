@@ -91,7 +91,7 @@ namespace boilersGraphics.ViewModels
 
         public ReactiveCollection<Layer> Layers { get; } = new ReactiveCollection<Layer>();
 
-        public ReadOnlyReactiveCollection<Layer> SelectedLayers { get; }
+        public ReadOnlyReactivePropertySlim<Layer[]> SelectedLayers { get; }
 
         public ReadOnlyReactivePropertySlim<SelectableDesignerItemViewModelBase[]> AllItems { get; }
 
@@ -328,29 +328,13 @@ namespace boilersGraphics.ViewModels
             })
             .AddTo(_CompositeDisposable);
 
-            //SelectedLayers = Layers.ObserveElementProperty(x => x.IsSelected)
-            //                       .Where(x => x.Instance.IsSelected.Value == true)
-            //                       .Select(x => x.Instance)
-            //                       .ToReactiveCollection(); //not working
-            //SelectedLayers = Layers.CollectionChangedAsObservable()
-            //                       .Select(_ => Layers.CollectionChangedAsObservable().Where(x => x.Action == NotifyCollectionChangedAction.Remove || x.Action == NotifyCollectionChangedAction.Reset).ToUnit())
-            //                       .Switch()
-            //                       .Select(_ => Layers.Where(x => x.IsSelected.Value == true).ToArray())
-            //                       .ToReadOnlyReactivePropertySlim(Array.Empty<Layer>()); //not working
+            SelectedLayers = Layers.ObserveElementObservableProperty(x => x.IsSelected)
+                                   .Select(_ => Layers.Where(x => x.IsSelected.Value == true).ToArray())
+                                   .ToReadOnlyReactivePropertySlim(Array.Empty<Layer>());
 
-            //SelectedLayers = Layers.ToObservable()
-            //                       .Where(x => x.IsSelected.Value == true)
-            //                       .ToReadOnlyReactiveCollection(); //not working
-
-            SelectedLayers = Layers.ObserveElementProperty(x => x.IsSelected)
-                                   .Where(x => x.Instance.IsSelected.Value == true)
-                                   .Select(x => x.Instance)
-                                   .ToReadOnlyReactiveCollection(); //not working
-
-            SelectedLayers.ToObservable()
-                          .Subscribe(x =>
+            SelectedLayers.Subscribe(x =>
             {
-                Trace.WriteLine($"SelectedLayers changed {x.Name.Value}");
+                Trace.WriteLine($"SelectedLayers changed {string.Join(", ", x.Select(x => x.ToString()))}");
             })
             .AddTo(_CompositeDisposable);
             
@@ -728,7 +712,7 @@ namespace boilersGraphics.ViewModels
             {
                 SelectableDesignerItemViewModelBase item = (SelectableDesignerItemViewModelBase)parameter;
                 item.Owner = this;
-                SelectedLayers.First().AddItem(item);
+                SelectedLayers.Value.First().AddItem(item);
             }
         }
 
@@ -813,7 +797,7 @@ namespace boilersGraphics.ViewModels
         private void Add(SelectableDesignerItemViewModelBase item)
         {
             var layerItem = new LayerItem(item);
-            SelectedLayers.First().Items.Add(layerItem);
+            SelectedLayers.Value.First().Items.Add(layerItem);
         }
 
         private void Remove(SelectableDesignerItemViewModelBase item)
