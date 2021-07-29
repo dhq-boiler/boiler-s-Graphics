@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -26,6 +27,8 @@ namespace boilersGraphics.ViewModels
 
         public DelegateCommand AddLayerCommand { get; }
 
+        public DelegateCommand RemoveLayerCommand { get; }
+
 
         public ReadOnlyReactiveCollection<Layer> Layers { get; }
 
@@ -39,6 +42,16 @@ namespace boilersGraphics.ViewModels
                 layer.IsVisible.Value = true;
                 layer.Name.Value = $"レイヤー{Layer.LayerCount++}";
                 (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.Layers.Add(layer);
+            });
+            RemoveLayerCommand = new DelegateCommand(() =>
+            {
+                var diagramViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel;
+                var layers = diagramViewModel.Layers;
+                var selectedLayers = diagramViewModel.SelectedLayers;
+                foreach (var remove in selectedLayers.Value.ToList())
+                {
+                    layers.Remove(remove);
+                }
             });
             SelectedItemChangedCommand.Subscribe(args =>
             {
