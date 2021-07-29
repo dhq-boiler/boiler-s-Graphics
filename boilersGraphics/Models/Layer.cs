@@ -230,6 +230,11 @@ namespace boilersGraphics.Models
             return new LayerDisposable(this, observer);
         }
 
+        public override string ToString()
+        {
+            return $"Name={Name.Value}, IsSelected={IsSelected.Value}";
+        }
+
         public class LayerDisposable : IDisposable
         {
             private Layer layer;
