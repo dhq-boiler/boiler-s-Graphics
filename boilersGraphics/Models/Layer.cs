@@ -100,6 +100,13 @@ namespace boilersGraphics.Models
                         .Merge(Items.CollectionChangedAsObservable().Where(x => x.Action == NotifyCollectionChangedAction.Remove || x.Action == NotifyCollectionChangedAction.Reset).ToUnit());
         }
 
+        public IObservable<Unit> SelectedLayerItemsChangedAsObservable()
+        {
+            return Items.ObserveElementObservableProperty(x => x.Item.Value.IsSelected)
+                        .ToUnit()
+                        .Merge(Items.CollectionChangedAsObservable().Where(x => x.Action == NotifyCollectionChangedAction.Remove || x.Action == NotifyCollectionChangedAction.Reset).ToUnit());
+        }
+
         private void UpdateAppearance(IEnumerable<SelectableDesignerItemViewModelBase> items)
         {
             var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
