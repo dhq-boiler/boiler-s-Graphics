@@ -403,7 +403,7 @@ namespace boilersGraphics.ViewModels
         private void InitialSetting()
         {
             EdgeColors.Add(Colors.Black);
-            FillColors.Add(Colors.Transparent);
+            FillColors.Add(Colors.White);
             EdgeThickness.Value = 1.0;
             CanvasBorderThickness = 0.0;
             CanvasBackground.Value = Colors.White;
