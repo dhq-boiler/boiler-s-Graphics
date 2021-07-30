@@ -174,9 +174,11 @@
                                                                     <Button Command="{Binding SwitchVisibilityCommand}">
                                                                         <Button.Template>
                                                                             <ControlTemplate TargetType="{x:Type Button}">
-                                                                                <Image Name="Eye" Source="{StaticResource Icon_Eye}"
-                                                                               Width="25"
-                                                                               Height="25" />
+                                                                                <Image Name="Eye"
+                                                                                       Source="{StaticResource Icon_Eye}"
+                                                                                       RenderOptions.BitmapScalingMode="HighQuality"
+                                                                                       Width="25"
+                                                                                       Height="25" />
                                                                                 <ControlTemplate.Triggers>
                                                                                     <DataTrigger Binding="{Binding IsVisible.Value}" Value="True">
                                                                                         <Setter TargetName="Eye" Property="Source" Value="{StaticResource Icon_Eye}" />
