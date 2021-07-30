@@ -67,6 +67,8 @@ namespace boilersGraphics.ViewModels
         
         public ReactiveProperty<bool> IsHitTestVisible { get; set; } = new ReactiveProperty<bool>();
 
+        public ReactivePropertySlim<Color> FillColor { get; } = new ReactivePropertySlim<Color>();
+
         public string Name { get; set; }
 
         public Guid ID { get; set; } = Guid.NewGuid();

@@ -63,8 +63,8 @@ namespace boilersGraphics.Helpers
                 list.Add(new XElement("Height", designerItem.Height.Value));
                 list.Add(new XElement("ZIndex", designerItem.ZIndex.Value));
                 list.Add(new XElement("Matrix", designerItem.Matrix.Value));
-                list.Add(new XElement("EdgeColor", designerItem.EdgeColor));
-                list.Add(new XElement("FillColor", designerItem.FillColor));
+                list.Add(new XElement("EdgeColor", designerItem.EdgeColor.Value));
+                list.Add(new XElement("FillColor", designerItem.FillColor.Value));
                 list.Add(new XElement("EdgeThickness", designerItem.EdgeThickness));
                 list.Add(new XElement("PathGeometry", designerItem.PathGeometry.Value));
                 if (designerItem is PictureDesignerItemViewModel)

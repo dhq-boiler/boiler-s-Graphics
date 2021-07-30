@@ -35,7 +35,7 @@ namespace boilersGraphics.Helpers
                 item.ZIndex.Value = Int32.Parse(designerItemElm.Element("ZIndex").Value);
                 item.Matrix.Value = new Matrix();
                 item.EdgeColor.Value = (Color)ColorConverter.ConvertFromString(designerItemElm.Element("EdgeColor").Value);
-                item.FillColor = (Color)ColorConverter.ConvertFromString(designerItemElm.Element("FillColor").Value);
+                item.FillColor.Value = (Color)ColorConverter.ConvertFromString(designerItemElm.Element("FillColor").Value);
                 item.EdgeThickness.Value = double.Parse(designerItemElm.Element("EdgeThickness").Value);
                 item.PathGeometry.Value = PathGeometry.CreateFromGeometry(PathGeometry.Parse(designerItemElm.Element("PathGeometry").Value));
                 item.Owner = diagramViewModel;

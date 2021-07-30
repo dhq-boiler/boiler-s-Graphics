@@ -104,7 +104,7 @@ namespace boilersGraphics.AttachedProperties
                     if (selectableDesignerItemViewModelBase is DesignerItemViewModelBase)
                     {
                         edgeColor = (selectableDesignerItemViewModelBase as DesignerItemViewModelBase).EdgeColor.Value;
-                        fillColor = (selectableDesignerItemViewModelBase as DesignerItemViewModelBase).FillColor;
+                        fillColor = (selectableDesignerItemViewModelBase as DesignerItemViewModelBase).FillColor.Value;
                     }
                     else if (selectableDesignerItemViewModelBase is ConnectorBaseViewModel)
                     {

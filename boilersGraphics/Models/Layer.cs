@@ -73,13 +73,21 @@ namespace boilersGraphics.Models
                 }
             })
             .AddTo(_disposable);
+
             Items.ObserveElementProperty(x => x.Item.Value)
+                 .ToUnit()
+                 .Merge(Items.ObserveElementObservableProperty(x => x.Item.Value.EdgeColor).ToUnit())
+                 .ToUnit()
+                 .Merge(Items.ObserveElementObservableProperty(x => x.Item.Value.EdgeThickness).ToUnit())
+                 .ToUnit()
+                 .Merge(Items.ObserveElementObservableProperty(x => x.Item.Value.FillColor).ToUnit())
                  .Delay(TimeSpan.FromMilliseconds(500))
                  .ObserveOnDispatcher()
                  .Subscribe(x =>
                  {
                      Trace.WriteLine("detected Layer changes. run Layer.UpdateAppearance().");
                      UpdateAppearance(Items.Select(xx => xx.Item.Value));
+                     Items.ToList().ForEach(x => x.UpdateAppearance(x.Item.Value));
                  })
                  .AddTo(_disposable);
             IsVisible.Value = true;

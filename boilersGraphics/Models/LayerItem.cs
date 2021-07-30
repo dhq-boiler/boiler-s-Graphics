@@ -63,14 +63,6 @@ namespace boilersGraphics.Models
                 }
             })
             .AddTo(_disposable);
-            Item.Delay(TimeSpan.FromMilliseconds(500))
-                .ObserveOnDispatcher()
-                .Subscribe(x =>
-            {
-                Trace.WriteLine("detected LayerItem changes. run LayerItem.UpdateAppearance().");
-                UpdateAppearance(Item.Value);
-            })
-            .AddTo(_disposable);
             IsSelected = Item.Where(x => x != null)
                              .Select(x => x.IsSelected.Value)
                              .ToReactiveProperty()
@@ -93,7 +85,7 @@ namespace boilersGraphics.Models
             Init();
         }
 
-        private void UpdateAppearance(SelectableDesignerItemViewModelBase item)
+        public void UpdateAppearance(SelectableDesignerItemViewModelBase item)
         {
             var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
             var views = designerCanvas.GetCorrespondingViews<FrameworkElement>(item).Where(x => x.GetType() == item.GetViewType());

@@ -122,7 +122,7 @@ namespace boilersGraphics.Adorners
 
                 item.EdgeColor.Value = item.Owner.EdgeColors.First();
                 item.EdgeThickness.Value = item.Owner.EdgeThickness.Value.Value;
-                item.FillColor = item.Owner.FillColors.First();
+                item.FillColor.Value = item.Owner.FillColors.First();
                 item.ZIndex.Value = item.Owner.Layers.Items().Count();
                 item.PathGeometry.Value = GeometryCreator.CreateEllipse(item);
                 item.IsSelected.Value = true;

@@ -1,5 +1,6 @@
 ﻿using boilersGraphics.Models;
 using boilersGraphics.ViewModels;
+using Reactive.Bindings;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

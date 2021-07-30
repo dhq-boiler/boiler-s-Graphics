@@ -114,7 +114,7 @@ namespace boilersGraphics.ViewModels
                         DiagramViewModel.FillColors.Add(exchange.New.Value);
                         foreach (var item in DiagramViewModel.SelectedItems.Value.OfType<DesignerItemViewModelBase>())
                         {
-                            item.FillColor = exchange.New.Value;
+                            item.FillColor.Value = exchange.New.Value;
                         }
                     }
                 }
