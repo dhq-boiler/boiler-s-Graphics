@@ -112,12 +112,6 @@
                                                 </Style>
                                             </Grid.Style>
                                             <control:DragThumb x:Name="PART_DragThumb" Cursor="SizeAll" />
-                                            <!-- DEBUG -->
-                                            <TextBlock VerticalAlignment="Center"
-                                                       HorizontalAlignment="Center">
-                                                <Run Text="IsSelected.Value=" />
-                                                <Run Text="{Binding IsSelected.Value}" />
-                                            </TextBlock>
                                             <!--  PART_ResizeDecorator  -->
                                             <Control
                                             x:Name="PART_ResizeDecorator"
