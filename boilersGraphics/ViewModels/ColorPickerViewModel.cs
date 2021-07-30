@@ -48,7 +48,7 @@ namespace boilersGraphics.ViewModels
             Hue
                 .Subscribe(_ =>
                 {
-                    GenerateHueSelectorMat();
+                    GenerateSaturationValueMat();
                     if (!_bgr2hsv)
                     {
                         _hsv2bgr = true;
@@ -61,7 +61,6 @@ namespace boilersGraphics.ViewModels
             Saturation
                 .Subscribe(_ =>
                 {
-                    GenerateSaturationValueMat();
                     if (!_bgr2hsv)
                     {
                         _hsv2bgr = true;
