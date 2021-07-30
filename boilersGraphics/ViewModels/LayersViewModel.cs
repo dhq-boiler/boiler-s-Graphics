@@ -21,7 +21,9 @@ namespace boilersGraphics.ViewModels
 
         public string Title => "レイヤー";
 
+#pragma warning disable CS0067
         public event Action<IDialogResult> RequestClose;
+#pragma warning restore CS0067
 
         public ReactiveCommand<RoutedPropertyChangedEventArgs<Object>> SelectedItemChangedCommand { get; } = new ReactiveCommand<RoutedPropertyChangedEventArgs<object>>();
 
