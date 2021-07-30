@@ -636,6 +636,26 @@ namespace boilersGraphics.ViewModels
         {
             CopyToClipboard();
 
+            if (SelectedLayers.Value.Count() > 0 && SelectedItems.Value.Count() > 0)
+            {
+                SelectedLayers.Value.ToList().ForEach(x =>
+                {
+                    foreach (var selectedItem in SelectedItems.Value)
+                    {
+                        x.RemoveItem(selectedItem);
+                        selectedItem.Dispose();
+                    }
+                });
+            }
+            else if (SelectedLayers.Value.Count() > 0)
+            {
+                //Copy Layer and LayerItem
+                foreach (var selectedLayer in SelectedLayers.Value)
+                {
+                    Layers.Remove(selectedLayer);
+                }
+            }
+
             foreach (var selectedItem in SelectedItems.Value.ToList())
             {
                 RemoveGroupMembers(selectedItem);
@@ -645,15 +665,25 @@ namespace boilersGraphics.ViewModels
 
         private void CopyToClipboard()
         {
-            var selectedItems = SelectedItems.Value.ToList();
-            var root = new XElement("Data");
-            root.Add(ObjectSerializer.ExtractItems(selectedItems));
-            Clipboard.SetDataObject(root.ToString(), false);
+            if (SelectedLayers.Value.Count() > 0 && SelectedItems.Value.Count() > 0)
+            {
+                //Copy only LayerItem
+                var root = ObjectSerializer.ExtractItems(SelectedItems.Value);
+                Clipboard.SetDataObject(root.ToString(), false);
+            }
+            else if (SelectedLayers.Value.Count() > 0)
+            {
+                //Copy Layer and LayerItem
+                var root = new XElement("Layers");
+                root.Add(ObjectSerializer.SerializeLayers(SelectedLayers.Value.ToObservableCollection()));
+                Clipboard.SetDataObject(root.ToString(), false);
+            }
         }
 
         private bool CanExecuteCut()
         {
-            return SelectedItems.Value.Count() > 0;
+            return (SelectedLayers.Value.Count() > 0 && SelectedItems.Value.Count() > 0)
+                || (SelectedLayers.Value.Count() > 0);
         }
 
         private void ExecuteSettingCommand()
