@@ -608,17 +608,18 @@ namespace boilersGraphics.ViewModels
         private void ExecutePasteCommand()
         {
             var obj = Clipboard.GetDataObject();
-            var str = obj.GetData(typeof(string)) as string;
-            var root = XElement.Parse(str);
+            var clipboardDTO = obj.GetData(typeof(ClipboardDTO)) as ClipboardDTO;
+            var root = XElement.Parse(clipboardDTO.Root);
             ObjectDeserializer.ReadObjectFromXML(this, root);
         }
 
         private bool CanExecutePaste()
         {
             var obj = Clipboard.GetDataObject();
-            if (obj.GetDataPresent(typeof(string)))
+            if (obj.GetDataPresent(typeof(ClipboardDTO)))
             {
-                var str = obj.GetData(typeof(string)) as string;
+                var clipboardDTO = obj.GetData(typeof(ClipboardDTO)) as ClipboardDTO;
+                var str = clipboardDTO.Root;
                 try
                 {
                     var root = XElement.Parse(str);
@@ -688,7 +689,7 @@ namespace boilersGraphics.ViewModels
                 var copyObj = new XElement("CopyObjects");
                 root.Add(copyObj);
                 copyObj.Add(ObjectSerializer.ExtractItems(Layers.SelectMany(x => x.Items).Where(x => x.IsSelected.Value)));
-                Clipboard.SetDataObject(root.ToString(), false);
+                Clipboard.SetDataObject(new ClipboardDTO(root.ToString()), false);
             }
             else if (SelectedLayers.Value.Count() > 0)
             {
@@ -698,7 +699,7 @@ namespace boilersGraphics.ViewModels
                 root.Add(copyObj);
                 copyObj.Add(new XElement("Layers"));
                 copyObj.Element("Layers").Add(ObjectSerializer.SerializeLayers(SelectedLayers.Value.ToObservableCollection()));
-                Clipboard.SetDataObject(root.ToString(), false);
+                Clipboard.SetDataObject(new ClipboardDTO(root.ToString()), false);
             }
         }
 
