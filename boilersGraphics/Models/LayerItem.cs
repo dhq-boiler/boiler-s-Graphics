@@ -23,16 +23,12 @@ using System.Windows.Media.Imaging;
 
 namespace boilersGraphics.Models
 {
-    public class LayerItem : BindableBase, IDisposable
+    public class LayerItem : LayerTreeViewItemBase, IDisposable
     {
         private CompositeDisposable _disposable = new CompositeDisposable();
         private bool disposedValue;
         public static int LayerItemCount { get; set; } = 1;
-
-        public ReactivePropertySlim<bool> IsVisible { get; } = new ReactivePropertySlim<bool>();
-        public ReactiveProperty<bool> IsSelected { get; set; }
         public ReactivePropertySlim<ImageSource> Appearance { get; } = new ReactivePropertySlim<ImageSource>();
-        public ReactivePropertySlim<string> Name { get; } = new ReactivePropertySlim<string>();
         public ReactivePropertySlim<Layer> Owner { get; } = new ReactivePropertySlim<Layer>();
         public ReactiveCommand SwitchVisibilityCommand { get; } = new ReactiveCommand();
         public ReactivePropertySlim<SelectableDesignerItemViewModelBase> Item { get; } = new ReactivePropertySlim<SelectableDesignerItemViewModelBase>();
@@ -56,9 +52,9 @@ namespace boilersGraphics.Models
                 if (Item.Value != null)
                 {
                     Item.Value.IsVisible.Value = isVisible;
-                    if (isVisible && !Owner.Value.IsVisible.Value)
+                    if (isVisible && !Parent.Value.IsVisible.Value)
                     {
-                        Owner.Value.IsVisible.Value = true;
+                        Parent.Value.IsVisible.Value = true;
                     }
                 }
             })
@@ -81,7 +77,7 @@ namespace boilersGraphics.Models
         public LayerItem(SelectableDesignerItemViewModelBase item, Layer owner)
         {
             Item.Value = item;
-            Owner.Value = owner;
+            Parent.Value = owner;
             Init();
         }
 
@@ -116,6 +112,11 @@ namespace boilersGraphics.Models
                     throw new Exception("view not found");
                 }
             }
+        }
+
+        public override string ToString()
+        {
+            return $"Name={Name.Value}, IsSelected={IsSelected.Value}, Parent={{{Parent.Value}}}";
         }
 
         protected virtual void Dispose(bool disposing)

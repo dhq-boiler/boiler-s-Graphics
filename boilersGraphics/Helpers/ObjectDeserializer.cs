@@ -55,7 +55,7 @@ namespace boilersGraphics.Helpers
                             var layerItemObj = new LayerItem(item, layerObj);
                             layerItemObj.IsVisible.Value = bool.Parse(layerItem.Element("IsVisible").Value);
                             layerItemObj.Name.Value = layerItem.Element("Name").Value;
-                            layerObj.Items.Add(layerItemObj);
+                            layerObj.Children.Add(layerItemObj);
                         }
                     }
 
@@ -75,7 +75,7 @@ namespace boilersGraphics.Helpers
                     var layerItemObj = new LayerItem(designerItemObj, layerObj);
                     layerItemObj.IsVisible.Value = bool.Parse(layerItem.Element("IsVisible").Value);
                     layerItemObj.Name.Value = layerItem.Element("Name").Value;
-                    layerObj.Items.Add(layerItemObj);
+                    layerObj.Children.Add(layerItemObj);
                 }
                 foreach (var layerItem in layerItems.Descendants("LayerItem"))
                 {
@@ -87,7 +87,7 @@ namespace boilersGraphics.Helpers
                     var layerItemObj = new LayerItem(connectorObj, layerObj);
                     layerItemObj.IsVisible.Value = bool.Parse(layerItem.Element("IsVisible").Value);
                     layerItemObj.Name.Value = layerItem.Element("Name").Value;
-                    layerObj.Items.Add(layerItemObj);
+                    layerObj.Children.Add(layerItemObj);
                 }
             }
         }

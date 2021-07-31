@@ -199,6 +199,7 @@
     <Compile Include="Models\FontFamilyEx.cs" />
     <Compile Include="Models\Layer.cs" />
     <Compile Include="Models\LayerItem.cs" />
+    <Compile Include="Models\LayerTreeViewItemBase.cs" />
     <Compile Include="Models\Letter.cs" />
     <Compile Include="Models\Rectangle.cs" />
     <Compile Include="Models\RenderItem.cs" />
@@ -245,6 +246,7 @@
     <Compile Include="Views\Behaviors\DeselectBehavior.cs" />
     <Compile Include="Views\Behaviors\LetterBehavior.cs" />
     <Compile Include="Views\Behaviors\LetterVerticalBehavior.cs" />
+    <Compile Include="Views\Behaviors\MoveableTreeViewBehavior.cs" />
     <Compile Include="Views\Behaviors\NDrawBezierCurveBehavior.cs" />
     <Compile Include="Views\Behaviors\NDrawEllipseBehavior.cs" />
     <Compile Include="Views\Behaviors\NDrawPolygonBehavior.cs" />

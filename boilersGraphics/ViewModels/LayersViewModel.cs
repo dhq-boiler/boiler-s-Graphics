@@ -1,4 +1,5 @@
 ﻿using boilersGraphics.Models;
+using boilersGraphics.Views.Behaviors;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
@@ -6,12 +7,14 @@ using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 
 namespace boilersGraphics.ViewModels
 {
@@ -30,6 +33,8 @@ namespace boilersGraphics.ViewModels
         public DelegateCommand AddLayerCommand { get; }
 
         public DelegateCommand RemoveLayerCommand { get; }
+
+        public ICommand DropCommand { get; }
 
 
         public ReadOnlyReactiveCollection<Layer> Layers { get; }
@@ -65,7 +70,7 @@ namespace boilersGraphics.ViewModels
                     layers.ToList().ForEach(x =>
                     {
                         x.IsSelected.Value = false;
-                        x.Items.ToList().ForEach(y =>
+                        x.Children.ToList().ForEach(y =>
                         {
                             y.IsSelected.Value = false;
                         });
@@ -78,7 +83,7 @@ namespace boilersGraphics.ViewModels
                     var selectedItem = newItem as LayerItem;
                     layers.ToList().ForEach(x =>
                     {
-                        if (x == selectedItem.Owner.Value)
+                        if (x == selectedItem.Parent.Value)
                         {
                             x.IsSelected.Value = true;
                         }
@@ -86,7 +91,7 @@ namespace boilersGraphics.ViewModels
                         {
                             x.IsSelected.Value = false;
                         }
-                        x.Items.ToList().ForEach(y =>
+                        x.Children.ToList().ForEach(y =>
                         {
                             y.IsSelected.Value = false;
                         });
@@ -95,6 +100,23 @@ namespace boilersGraphics.ViewModels
                 }
             })
             .AddTo(_disposables);
+            DropCommand = new DelegateCommand<DropArguments>(Drop);
+        }
+
+        private void Drop(DropArguments args)
+        {
+            switch (args.Type)
+            {
+                case MoveableTreeViewBehavior.InsertType.Before:
+                    Debug.WriteLine("Before");
+                    break;
+                case MoveableTreeViewBehavior.InsertType.After:
+                    Debug.WriteLine("After");
+                    break;
+                case MoveableTreeViewBehavior.InsertType.Children:
+                    Debug.WriteLine("Children");
+                    break;
+            }
         }
 
         public bool CanCloseDialog()

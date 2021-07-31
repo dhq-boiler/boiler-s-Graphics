@@ -29,11 +29,11 @@ namespace boilersGraphics.Helpers
 
         private static IEnumerable<XElement> ExtractLayerItemFromLayer(Layer layer)
         {
-            var layerItemsXML = from layerItem in layer.Items
+            var layerItemsXML = from layerItem in layer.Children
                                 select new XElement("LayerItem",
                                     new XElement("IsVisible", layerItem.IsVisible.Value),
                                     new XElement("Name", layerItem.Name.Value),
-                                    new XElement("Item", ExtractItem(layerItem.Item.Value))
+                                    new XElement("Item", ExtractItem((layerItem as LayerItem).Item.Value))
                                     );
             return layerItemsXML;
         }

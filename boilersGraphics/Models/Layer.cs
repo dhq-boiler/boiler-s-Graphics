@@ -23,25 +23,17 @@ using System.Windows.Media.Imaging;
 
 namespace boilersGraphics.Models
 {
-    public class Layer : BindableBase, IObservable<LayerObservable>
+    public class Layer : LayerTreeViewItemBase, IObservable<LayerObservable>
     {
         private CompositeDisposable _disposable = new CompositeDisposable();
         public static int LayerCount { get; set; } = 1;
        
         public ReactivePropertySlim<ImageSource> Appearance { get; } = new ReactivePropertySlim<ImageSource>();
 
-        public ReactivePropertySlim<bool> IsVisible { get; } = new ReactivePropertySlim<bool>();
-
-        public ReactivePropertySlim<bool> IsSelected { get; } = new ReactivePropertySlim<bool>();
-
-        public ReactivePropertySlim<bool> IsExpanded { get; } = new ReactivePropertySlim<bool>();
-
-        public ReactivePropertySlim<string> Name { get; } = new ReactivePropertySlim<string>();
-
         public ReactiveCommand SwitchVisibilityCommand { get; } = new ReactiveCommand();
         public ReactiveCommand SelectLayerCommand { get; } = new ReactiveCommand();
 
-        public ReactiveCollection<LayerItem> Items { get; } = new ReactiveCollection<LayerItem>();
+        //public ReactiveCollection<LayerItem> Items { get; } = new ReactiveCollection<LayerItem>();
 
 
         public Layer()
@@ -69,25 +61,25 @@ namespace boilersGraphics.Models
             {
                 if (!isVisible)
                 {
-                    Items.ToList().ForEach(x => x.IsVisible.Value = isVisible);
+                    Children.ToList().ForEach(x => x.IsVisible.Value = isVisible);
                 }
             })
             .AddTo(_disposable);
 
-            Items.ObserveElementProperty(x => x.Item.Value)
+            Children.ObserveElementProperty(x => (x as LayerItem).Item.Value)
                  .ToUnit()
-                 .Merge(Items.ObserveElementObservableProperty(x => x.Item.Value.EdgeColor).ToUnit())
+                 .Merge(Children.ObserveElementObservableProperty(x => (x as LayerItem).Item.Value.EdgeColor).ToUnit())
                  .ToUnit()
-                 .Merge(Items.ObserveElementObservableProperty(x => x.Item.Value.EdgeThickness).ToUnit())
+                 .Merge(Children.ObserveElementObservableProperty(x => (x as LayerItem).Item.Value.EdgeThickness).ToUnit())
                  .ToUnit()
-                 .Merge(Items.ObserveElementObservableProperty(x => x.Item.Value.FillColor).ToUnit())
+                 .Merge(Children.ObserveElementObservableProperty(x => (x as LayerItem).Item.Value.FillColor).ToUnit())
                  .Delay(TimeSpan.FromMilliseconds(500))
                  .ObserveOnDispatcher()
                  .Subscribe(x =>
                  {
                      Trace.WriteLine("detected Layer changes. run Layer.UpdateAppearance().");
-                     UpdateAppearance(Items.Select(xx => xx.Item.Value));
-                     Items.ToList().ForEach(x => x.UpdateAppearance(x.Item.Value));
+                     UpdateAppearance(Children.Select(xx => (xx as LayerItem).Item.Value));
+                     Children.ToList().ForEach(x => (x as LayerItem).UpdateAppearance((x as LayerItem).Item.Value));
                  })
                  .AddTo(_disposable);
             IsVisible.Value = true;
@@ -95,16 +87,16 @@ namespace boilersGraphics.Models
 
         public IObservable<Unit> LayerItemsChangedAsObservable()
         {
-            return Items.ObserveElementObservableProperty(x => x.Item)
+            return Children.ObserveElementObservableProperty(x => (x as LayerItem).Item)
                         .ToUnit()
-                        .Merge(Items.CollectionChangedAsObservable().Where(x => x.Action == NotifyCollectionChangedAction.Remove || x.Action == NotifyCollectionChangedAction.Reset).ToUnit());
+                        .Merge(Children.CollectionChangedAsObservable().Where(x => x.Action == NotifyCollectionChangedAction.Remove || x.Action == NotifyCollectionChangedAction.Reset).ToUnit());
         }
 
         public IObservable<Unit> SelectedLayerItemsChangedAsObservable()
         {
-            return Items.ObserveElementObservableProperty(x => x.Item.Value.IsSelected)
+            return Children.ObserveElementObservableProperty(x => (x as LayerItem).Item.Value.IsSelected)
                         .ToUnit()
-                        .Merge(Items.CollectionChangedAsObservable().Where(x => x.Action == NotifyCollectionChangedAction.Remove || x.Action == NotifyCollectionChangedAction.Reset).ToUnit());
+                        .Merge(Children.CollectionChangedAsObservable().Where(x => x.Action == NotifyCollectionChangedAction.Remove || x.Action == NotifyCollectionChangedAction.Reset).ToUnit());
         }
 
         private void UpdateAppearance(IEnumerable<SelectableDesignerItemViewModelBase> items)
@@ -221,11 +213,11 @@ namespace boilersGraphics.Models
 
         public void RemoveItem(SelectableDesignerItemViewModelBase item)
         {
-            var layerItems = Items.Where(x => x.Item.Value == item);
+            var layerItems = Children.Where(x => (x as LayerItem).Item.Value == item);
             layerItems.ToList().ForEach(x =>
             {
-                var removed = Items.Remove(x);
-                Trace.WriteLine($"{x} removed from {Items} {removed}");
+                var removed = Children.Remove(x);
+                Trace.WriteLine($"{x} removed from {Children} {removed}");
             });
         }
 
@@ -234,7 +226,8 @@ namespace boilersGraphics.Models
             var layerItem = new LayerItem(item, this);
             layerItem.IsVisible.Value = true;
             layerItem.Name.Value = $"アイテム{LayerItem.LayerItemCount++}";
-            Items.Add(layerItem);
+            layerItem.Parent.Value = this;
+            Children.Add(layerItem);
         }
 
         private List<IObserver<LayerObservable>> _observers = new List<IObserver<LayerObservable>>();
@@ -248,7 +241,7 @@ namespace boilersGraphics.Models
 
         public override string ToString()
         {
-            return $"Name={Name.Value}, IsSelected={IsSelected.Value}";
+            return $"Name={Name.Value}, IsSelected={IsSelected.Value}, Parent={{{Parent.Value}}}";
         }
 
         public class LayerDisposable : IDisposable

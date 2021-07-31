@@ -7,6 +7,7 @@
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:helper="clr-namespace:boilersGraphics.Helpers"
              xmlns:converter="clr-namespace:boilersGraphics.Converters"
+             xmlns:behavior="clr-namespace:boilersGraphics.Views.Behaviors"
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
@@ -151,6 +152,9 @@
                                                 <helper:EventToCommand Command="{Binding SelectedItemChangedCommand}" PassEventArgsToCommand="True" />
                                             </i:EventTrigger>
                                         </i:Interaction.Triggers>
+                                        <i:Interaction.Behaviors>
+                                            <behavior:MoveableTreeViewBehavior DropCommand="{Binding DropCommand}" />
+                                        </i:Interaction.Behaviors>
                                         <TreeView.Resources>
                                             <Style TargetType="TreeViewItem">
                                                 <Setter Property="IsExpanded" Value="{Binding IsExpanded.Value, Mode=TwoWay}" />
@@ -244,13 +248,23 @@
                                             </Style>
                                         </TreeView.Resources>
                                         <TreeView.ItemTemplate>
-                                            <HierarchicalDataTemplate ItemsSource="{Binding Items}">
-                                                <StackPanel Orientation="Horizontal">
-                                                    <TextBlock VerticalAlignment="Center"
-                                                                       Text="{Binding Name.Value}" />
-                                                </StackPanel>
+                                            <HierarchicalDataTemplate ItemsSource="{Binding Children}">
+                                                <Grid Background="{Binding Background.Value}">
+                                                    <StackPanel Orientation="Vertical">
+                                                        <Separator BorderThickness="1" BorderBrush="Black" Visibility="{Binding BeforeSeparatorVisibility.Value}" />
+                                                        <TextBlock VerticalAlignment="Center"
+                                                                           Text="{Binding Name.Value}" />
+                                                        <Separator BorderThickness="1" BorderBrush="Black" Visibility="{Binding AfterSeparatorVisibility.Value}" />
+                                                    </StackPanel>
+                                                </Grid>
                                             </HierarchicalDataTemplate>
                                         </TreeView.ItemTemplate>
+                                        <!--<TreeView.ItemContainerStyle>
+                                            <Style TargetType="{x:Type TreeViewItem}">
+                                                <Setter Property="IsExpanded" Value="{Binding Path=IsExpanded.Value,Mode=TwoWay}"/>
+                                                <Setter Property="IsSelected" Value="{Binding Path=IsSelected.Value,Mode=TwoWay}"/>
+                                            </Style>
+                                        </TreeView.ItemContainerStyle>-->
                                     </TreeView>
                                 </DockPanel>
                                 <Expander.Header>
