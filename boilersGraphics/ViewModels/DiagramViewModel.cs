@@ -655,12 +655,6 @@ namespace boilersGraphics.ViewModels
                     Layers.Remove(selectedLayer);
                 }
             }
-
-            foreach (var selectedItem in SelectedItems.Value.ToList())
-            {
-                RemoveGroupMembers(selectedItem);
-                Remove(selectedItem);
-            }
         }
 
         private void CopyToClipboard()
