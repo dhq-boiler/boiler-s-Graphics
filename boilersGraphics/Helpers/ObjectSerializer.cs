@@ -38,13 +38,17 @@ namespace boilersGraphics.Helpers
             return layerItemsXML;
         }
 
-        public static XElement ExtractItems(IEnumerable<SelectableDesignerItemViewModelBase> items)
+        public static XElement ExtractItems(IEnumerable<LayerItem> layerItems)
         {
-            var itemsXML = new XElement("Items",
-                from item in items
-                select ExtractItem(item)
+            var layerItemsXML = new XElement("LayerItems",
+                from layerItem in layerItems
+                select new XElement("LayerItem",
+                    new XElement("IsVisible", layerItem.IsVisible.Value),
+                    new XElement("Name", layerItem.Name.Value),
+                    new XElement("Item", ExtractItem(layerItem.Item.Value))
+                    )
                 );
-            return itemsXML;
+            return layerItemsXML;
         }
 
         public static XElement ExtractItem(SelectableDesignerItemViewModelBase item)
@@ -65,7 +69,7 @@ namespace boilersGraphics.Helpers
                 list.Add(new XElement("Matrix", designerItem.Matrix.Value));
                 list.Add(new XElement("EdgeColor", designerItem.EdgeColor.Value));
                 list.Add(new XElement("FillColor", designerItem.FillColor.Value));
-                list.Add(new XElement("EdgeThickness", designerItem.EdgeThickness));
+                list.Add(new XElement("EdgeThickness", designerItem.EdgeThickness.Value));
                 list.Add(new XElement("PathGeometry", designerItem.PathGeometry.Value));
                 if (designerItem is PictureDesignerItemViewModel)
                 {

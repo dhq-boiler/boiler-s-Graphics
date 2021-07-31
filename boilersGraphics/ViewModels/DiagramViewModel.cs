@@ -622,7 +622,29 @@ namespace boilersGraphics.ViewModels
                 try
                 {
                     var root = XElement.Parse(str);
-                    return root.Descendants("DesignerItems").Count() > 0 || root.Descendants("Connections").Count() > 0;
+                    var rootNameIsCopyObjects = root.Name == "boilersGraphics";
+                    var rootHasElements = root.HasElements;
+                    if (rootNameIsCopyObjects && rootHasElements)
+                    {
+                        var copyObjsEnumerable = root.Elements().Where(x => x.Name == "CopyObjects");
+                        var copyObjs = copyObjsEnumerable.FirstOrDefault();
+                        var rootHasCopyObjects = copyObjs != null;
+                        if (rootHasCopyObjects)
+                        {
+                            var copyObjsHasLayers = copyObjs.Elements().Where(x => x.Name == "Layers").Count() == 1;
+                            var copyObjsHasItems = copyObjs.Elements().Where(x => x.Name == "LayerItems").Count() == 1;
+                            if (copyObjsHasLayers)
+                            {
+                                var layers = copyObjs.Elements().Where(x => x.Name == "Layers").FirstOrDefault();
+                                return layers.Elements().Count() >= 1;
+                            }
+                            else if (copyObjsHasItems)
+                            {
+                                var items = copyObjs.Elements().Where(x => x.Name == "LayerItems").FirstOrDefault();
+                                return items.Elements().Count() >= 1;
+                            }
+                        }
+                    }
                 }
                 catch (XmlException)
                 {
@@ -662,14 +684,20 @@ namespace boilersGraphics.ViewModels
             if (SelectedLayers.Value.Count() > 0 && SelectedItems.Value.Count() > 0)
             {
                 //Copy only LayerItem
-                var root = ObjectSerializer.ExtractItems(SelectedItems.Value);
+                var root = new XElement("boilersGraphics");
+                var copyObj = new XElement("CopyObjects");
+                root.Add(copyObj);
+                copyObj.Add(ObjectSerializer.ExtractItems(Layers.SelectMany(x => x.Items).Where(x => x.IsSelected.Value)));
                 Clipboard.SetDataObject(root.ToString(), false);
             }
             else if (SelectedLayers.Value.Count() > 0)
             {
                 //Copy Layer and LayerItem
-                var root = new XElement("Layers");
-                root.Add(ObjectSerializer.SerializeLayers(SelectedLayers.Value.ToObservableCollection()));
+                var root = new XElement("boilersGraphics");
+                var copyObj = new XElement("CopyObjects");
+                root.Add(copyObj);
+                copyObj.Add(new XElement("Layers"));
+                copyObj.Element("Layers").Add(ObjectSerializer.SerializeLayers(SelectedLayers.Value.ToObservableCollection()));
                 Clipboard.SetDataObject(root.ToString(), false);
             }
         }
