@@ -281,7 +281,10 @@ namespace boilersGraphics.ViewModels
             AllItems = Layers.CollectionChangedAsObservable()
                              .Select(_ => Layers.Select(x => x.LayerItemsChangedAsObservable()).Merge())
                              .Switch()
-                             .Select(_ => Layers.SelectMany(x => x.Children).Select(y => (y as LayerItem).Item.Value).ToArray())
+                             .Select(_ => Layers.SelectRecursive<Layer, LayerTreeViewItemBase>(x => x.Children)
+                                                .Where(x => x.GetType() == typeof(LayerItem))
+                                                .Select(y => (y as LayerItem).Item.Value)
+                                                .ToArray())
                              .ToReadOnlyReactivePropertySlim(Array.Empty<SelectableDesignerItemViewModelBase>());
 
             AllItems.Subscribe(x =>
@@ -294,7 +297,11 @@ namespace boilersGraphics.ViewModels
             SelectedItems = Layers.CollectionChangedAsObservable()
                                   .Select(_ => Layers.Select(x => x.SelectedLayerItemsChangedAsObservable()).Merge())
                                   .Switch()
-                                  .Select(_ => Layers.SelectMany(x => x.Children).Select(y => (y as LayerItem).Item.Value).Where(z => z.IsSelected.Value == true).ToArray())
+                                  .Select(_ => Layers.SelectRecursive<Layer, LayerTreeViewItemBase>(x => x.Children)
+                                                     .Where(x => x.GetType() == typeof(LayerItem))
+                                                     .Select(y => (y as LayerItem).Item.Value)
+                                                     .Where(z => z.IsSelected.Value == true)
+                                                     .ToArray())
                                   .ToReadOnlyReactivePropertySlim(Array.Empty<SelectableDesignerItemViewModelBase>());
 
             SelectedItems.Subscribe(selectedItems =>
@@ -1013,9 +1020,9 @@ namespace boilersGraphics.ViewModels
 
         private void ExecuteGroupItemsCommand()
         {
-            var items = from item in SelectedItems.Value
+            var items = (from item in SelectedItems.Value
                         where item.ParentID == Guid.Empty
-                        select item;
+                        select item).ToList();
 
             var rect = GetBoundingRectangle(items);
 
@@ -1027,8 +1034,12 @@ namespace boilersGraphics.ViewModels
 
             AddItemCommand.Execute(groupItem);
 
+            var groupItemLayerItem = Layers.SelectMany(x => x.Children).First(x => (x as LayerItem).Item.Value == groupItem);
+
             foreach (var item in items)
             {
+                LayerItem layerItem = Layers.SelectMany(x => x.Children).First(x => (x as LayerItem).Item.Value == item) as LayerItem;
+                groupItemLayerItem.Children.Add(layerItem);
                 groupItem.AddGroup(item);
                 item.ParentID = groupItem.ID;
                 item.EnableForSelection.Value = false;
@@ -1081,7 +1092,19 @@ namespace boilersGraphics.ViewModels
                 (add as LayerItem).Item.Value.ZIndex.Value += 1;
             }
 
+            foreach (var item in items)
+            {
+                LayerItem layerItem = Layers.SelectMany(x => x.Children).First(x => (x as LayerItem).Item.Value == item) as LayerItem;
+                Remove(layerItem);
+            }
+
             groupItem.SelectItemCommand.Execute(true);
+        }
+
+        private void Remove(LayerItem layerItem)
+        {
+            var layer = Layers.SelectMany(x => x.Children).First(x => (x as LayerItem) == layerItem).Parent.Value;
+            layer.RemoveChildren(layerItem);
         }
 
         private bool CanExecuteGroup()

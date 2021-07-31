@@ -74,7 +74,7 @@ namespace boilersGraphics.Models
             IsVisible.Value = true;
         }
 
-        public LayerItem(SelectableDesignerItemViewModelBase item, Layer owner)
+        public LayerItem(SelectableDesignerItemViewModelBase item, LayerTreeViewItemBase owner)
         {
             Item.Value = item;
             Parent.Value = owner;

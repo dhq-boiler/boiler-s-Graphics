@@ -299,5 +299,18 @@ namespace boilersGraphics.Extensions
         {
             return obj.Descendants().OfType<T>();
         }
+
+        //https://stackoverflow.com/questions/41608665/linq-recursive-parent-child
+        public static IEnumerable<T2> SelectRecursive<T1, T2>(this IEnumerable<T1> source, Func<T2, IEnumerable<T2>> selector) where T1 : class where T2 : class
+        {
+            foreach (var parent in source)
+            {
+                yield return parent as T2;
+
+                var children = selector(parent as T2);
+                foreach (var child in SelectRecursive(children, selector))
+                    yield return child;
+            }
+        }
     }
 }
