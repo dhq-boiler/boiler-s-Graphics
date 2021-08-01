@@ -23,6 +23,7 @@ namespace boilersGraphics.Helpers
             var layerXML = new List<XElement>();
             layerXML.Add(new XElement("IsVisible", layer.IsVisible.Value));
             layerXML.Add(new XElement("Name", layer.Name.Value));
+            layerXML.Add(new XElement("Color", layer.Color.Value));
             layerXML.Add(new XElement("LayerItems", ExtractLayerItemFromLayer(layer)));
             return layerXML;
         }
@@ -33,6 +34,7 @@ namespace boilersGraphics.Helpers
                                 select new XElement("LayerItem",
                                     new XElement("IsVisible", layerItem.IsVisible.Value),
                                     new XElement("Name", layerItem.Name.Value),
+                                    new XElement("Color", layerItem.Color.Value),
                                     new XElement("Item", ExtractItem((layerItem as LayerItem).Item.Value))
                                     );
             return layerItemsXML;
@@ -45,6 +47,7 @@ namespace boilersGraphics.Helpers
                 select new XElement("LayerItem",
                     new XElement("IsVisible", layerItem.IsVisible.Value),
                     new XElement("Name", layerItem.Name.Value),
+                    new XElement("Color", layerItem.Color.Value),
                     new XElement("Item", ExtractItem(layerItem.Item.Value))
                     )
                 );

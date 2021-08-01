@@ -1,4 +1,5 @@
 ﻿using boilersGraphics.Extensions;
+using boilersGraphics.Helpers;
 using boilersGraphics.Models;
 using boilersGraphics.Views.Behaviors;
 using Prism.Commands;
@@ -46,6 +47,8 @@ namespace boilersGraphics.ViewModels
                 var layer = new Layer();
                 layer.IsVisible.Value = true;
                 layer.Name.Value = $"レイヤー{Layer.LayerCount++}";
+                Random rand = new Random();
+                layer.Color.Value = Randomizer.RandomColor(rand);
                 (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.Layers.Add(layer);
             });
             RemoveLayerCommand = new DelegateCommand(() =>

@@ -26,6 +26,8 @@ namespace boilersGraphics.Models
 
         public ReactivePropertySlim<bool> IsVisible { get; } = new ReactivePropertySlim<bool>();
 
+        public ReactivePropertySlim<Color> Color { get; } = new ReactivePropertySlim<Color>();
+
         public ReactivePropertySlim<Visibility> BeforeSeparatorVisibility { get; } = new ReactivePropertySlim<Visibility>(Visibility.Hidden);
 
         public ReactivePropertySlim<Visibility> AfterSeparatorVisibility { get; } = new ReactivePropertySlim<Visibility>(Visibility.Hidden);

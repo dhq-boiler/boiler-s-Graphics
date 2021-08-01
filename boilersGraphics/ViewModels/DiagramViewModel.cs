@@ -399,7 +399,7 @@ namespace boilersGraphics.ViewModels
                 Random rand = new Random();
                 foreach (var set in sets)
                 {
-                    context.DrawText(new FormattedText((string)set.Item1.Tag, CultureInfo.CurrentCulture, FlowDirection.LeftToRight, new Typeface("メイリオ"), 12, RandomBrush(rand), VisualTreeHelper.GetDpi(designerCanvas).PixelsPerDip), set.Item2);
+                    context.DrawText(new FormattedText((string)set.Item1.Tag, CultureInfo.CurrentCulture, FlowDirection.LeftToRight, new Typeface("メイリオ"), 12, Randomizer.RandomColorBrush(rand), VisualTreeHelper.GetDpi(designerCanvas).PixelsPerDip), set.Item2);
                     context.DrawEllipse(Brushes.Red, new Pen(Brushes.Red, 1), set.Item2, 2, 2);
                 }
             }
@@ -407,12 +407,6 @@ namespace boilersGraphics.ViewModels
             rtb.Render(visual);
 
             OpenCvSharpHelper.ImShow("DebugPrint", rtb);
-        }
-
-        private Brush RandomBrush(Random rand)
-        {
-            var brush = new SolidColorBrush(Color.FromRgb((byte)rand.Next(), (byte)rand.Next(), (byte)rand.Next()));
-            return brush;
         }
 
         private void InitialSetting()
@@ -427,6 +421,8 @@ namespace boilersGraphics.ViewModels
             layer.IsVisible.Value = true;
             layer.IsSelected.Value = true;
             layer.Name.Value = $"レイヤー{Layer.LayerCount++}";
+            Random rand = new Random();
+            layer.Color.Value = Randomizer.RandomColor(rand);
             Layers.Add(layer);
         }
 

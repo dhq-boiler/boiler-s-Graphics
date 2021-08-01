@@ -1,5 +1,6 @@
 ﻿using boilersGraphics.Controls;
 using boilersGraphics.Extensions;
+using boilersGraphics.Helpers;
 using boilersGraphics.ViewModels;
 using Prism.Mvvm;
 using Reactive.Bindings;
@@ -217,6 +218,8 @@ namespace boilersGraphics.Models
             var layerItem = new LayerItem(item, this, $"アイテム{LayerItem.LayerItemCount++}");
             layerItem.IsVisible.Value = true;
             layerItem.Parent.Value = this;
+            Random rand = new Random();
+            layerItem.Color.Value = Randomizer.RandomColor(rand);
             Children.Add(layerItem);
         }
 

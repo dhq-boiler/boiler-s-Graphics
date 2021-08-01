@@ -34,6 +34,7 @@ namespace boilersGraphics.Helpers
                 foreach (var layer in layers.Descendants("Layer"))
                 {
                     var layerObj = new Layer();
+                    layerObj.Color.Value = (Color)ColorConverter.ConvertFromString(layer.Element("Color").Value);
                     layerObj.IsVisible.Value = bool.Parse(layer.Element("IsVisible").Value);
                     layerObj.Name.Value = layer.Element("Name").Value;
 
@@ -53,6 +54,7 @@ namespace boilersGraphics.Helpers
                             }
                             var item = EitherNotNull(designerItemObj, connectorObj);
                             var layerItemObj = new LayerItem(item, layerObj, layerItem.Element("Name").Value);
+                            layerItemObj.Color.Value = (Color)ColorConverter.ConvertFromString(layerItem.Element("Color").Value);
                             layerItemObj.IsVisible.Value = bool.Parse(layerItem.Element("IsVisible").Value);
                             layerObj.Children.Add(layerItemObj);
                         }

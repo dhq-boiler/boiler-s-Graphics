@@ -132,6 +132,7 @@
             </Setter>
         </Style>
         <converter:IsSelectedToBorderBrushConverter x:Key="IsSelectedToBorderBrushConverter" />
+        <converter:ToSolidColorBrushConverter x:Key="ToSolidColorBrushConverter" />
     </UserControl.Resources>
     <UserControl.Style>
         <Style TargetType="{x:Type views:Layers}">
@@ -194,6 +195,8 @@
                                                                             </ControlTemplate>
                                                                         </Button.Template>
                                                                     </Button>
+                                                                    <Rectangle Width="5"
+                                                                               Fill="{Binding Color.Value, Converter={StaticResource ToSolidColorBrushConverter}}" />
                                                                     <ToggleButton Name="Expander"
                                                                               IsChecked="{Binding RelativeSource={RelativeSource TemplatedParent},Path=IsExpanded,Mode=TwoWay}">
                                                                         <ToggleButton.Template>
