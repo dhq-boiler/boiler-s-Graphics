@@ -65,15 +65,6 @@ namespace boilersGraphics.ViewModels
                 var layers = (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.Layers;
                 if (newItem.GetType() == typeof(Layer))
                 {
-                    //layers.ToList().ForEach(x =>
-                    //{
-                    //    x.IsSelected.Value = false;
-                    //    x.Children.ToList().ForEach(y =>
-                    //    {
-                    //        y.IsSelected.Value = false;
-                    //    });
-                    //});
-
                     layers.ToList().ForEach(x => x.IsSelected.Value = false);
 
                     var layerItems = layers.SelectRecursive<Layer, LayerTreeViewItemBase>(x => x.Children)
@@ -97,21 +88,6 @@ namespace boilersGraphics.ViewModels
                 else if (newItem.GetType() == typeof(LayerItem))
                 {
                     var selectedItem = newItem as LayerItem;
-                    //layers.ToList().ForEach(x =>
-                    //{
-                    //    if (x == selectedItem.Parent.Value)
-                    //    {
-                    //        x.IsSelected.Value = true;
-                    //    }
-                    //    else
-                    //    {
-                    //        x.IsSelected.Value = false;
-                    //    }
-                    //    x.Children.ToList().ForEach(y =>
-                    //    {
-                    //        y.IsSelected.Value = false;
-                    //    });
-                    //});
 
                     Layers.ToList().ForEach(x => x.IsSelected.Value = false);
 
