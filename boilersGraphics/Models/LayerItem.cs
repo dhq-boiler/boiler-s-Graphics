@@ -25,7 +25,6 @@ namespace boilersGraphics.Models
 {
     public class LayerItem : LayerTreeViewItemBase, IDisposable
     {
-        private CompositeDisposable _disposable = new CompositeDisposable();
         private bool disposedValue;
         public static int LayerItemCount { get; set; } = 1;
         public ReactivePropertySlim<ImageSource> Appearance { get; } = new ReactivePropertySlim<ImageSource>();
