@@ -1037,9 +1037,12 @@ namespace boilersGraphics.ViewModels
 
             var groupItemLayerItem = Layers.SelectMany(x => x.Children).First(x => (x as LayerItem).Item.Value == groupItem);
 
+            var list = new List<Tuple<LayerItem, LayerTreeViewItemBase>>();
+
             foreach (var item in items)
             {
                 LayerItem layerItem = Layers.SelectMany(x => x.Children).First(x => (x as LayerItem).Item.Value == item) as LayerItem;
+                list.Add(new Tuple<LayerItem, LayerTreeViewItemBase>(layerItem, layerItem.Parent.Value));
                 layerItem.Parent.Value = groupItemLayerItem;
                 groupItemLayerItem.Children.Add(layerItem);
                 groupItem.AddGroup(item);
@@ -1047,8 +1050,8 @@ namespace boilersGraphics.ViewModels
                 item.EnableForSelection.Value = false;
             }
 
-            var groupItems = from it in Layers.SelectMany(x => x.Children)
-                             where (it as LayerItem).Item.Value.ParentID == groupItem.ID
+            var groupItems = from it in Layers.SelectRecursive<Layer, LayerTreeViewItemBase>(x => x.Children)
+                             where it is LayerItem && (it as LayerItem).Item.Value.ParentID == groupItem.ID
                              select it;
 
             var theMostForwardItem = (from it in groupItems
@@ -1094,10 +1097,11 @@ namespace boilersGraphics.ViewModels
                 (add as LayerItem).Item.Value.ZIndex.Value += 1;
             }
 
-            foreach (var item in items)
+            foreach (var item in list)
             {
-                LayerItem layerItem = Layers.SelectMany(x => x.Children).First(x => (x as LayerItem).Item.Value == item) as LayerItem;
-                Remove(layerItem);
+                LayerItem layerItem = item.Item1;
+                LayerTreeViewItemBase parent = item.Item2;
+                parent.RemoveChildren(layerItem);
             }
 
             groupItem.SelectItemCommand.Execute(true);
@@ -1105,7 +1109,10 @@ namespace boilersGraphics.ViewModels
 
         private void Remove(LayerItem layerItem)
         {
-            var layer = Layers.SelectMany(x => x.Children).First(x => (x as LayerItem) == layerItem).Parent.Value;
+            var layer = Layers.SelectRecursive<Layer, LayerTreeViewItemBase>(x => x.Children)
+                              .Where(x => x is LayerItem)
+                              .First(x => (x as LayerItem) == layerItem)
+                              .Parent.Value;
             layer.RemoveChildren(layerItem);
         }
 
@@ -1125,9 +1132,9 @@ namespace boilersGraphics.ViewModels
 
             foreach (var groupRoot in groups.ToList())
             {
-                var children = from child in Layers.SelectRecursive<Layer, LayerTreeViewItemBase>(x => x.Children)
+                var children = (from child in Layers.SelectRecursive<Layer, LayerTreeViewItemBase>(x => x.Children)
                                where child is LayerItem && (child as LayerItem).Item.Value.ParentID == groupRoot.ID
-                               select child;
+                               select child).ToList();
 
                 foreach (var child in children)
                 {
@@ -1140,6 +1147,7 @@ namespace boilersGraphics.ViewModels
                                                    .First(x => (x as LayerItem).Item == (child as LayerItem).Item)
                                                    .Parent.Value
                                                    .Parent.Value;
+                    layerItem.Parent.Value.AddChildren(layerItem);
                 }
 
                 groupRoot.Dispose();
