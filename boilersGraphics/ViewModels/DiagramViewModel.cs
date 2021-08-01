@@ -1040,6 +1040,7 @@ namespace boilersGraphics.ViewModels
             foreach (var item in items)
             {
                 LayerItem layerItem = Layers.SelectMany(x => x.Children).First(x => (x as LayerItem).Item.Value == item) as LayerItem;
+                layerItem.Parent.Value = groupItemLayerItem;
                 groupItemLayerItem.Children.Add(layerItem);
                 groupItem.AddGroup(item);
                 item.ParentID = groupItem.ID;
