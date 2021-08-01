@@ -148,6 +148,7 @@ namespace boilersGraphics.ViewModels
 
         public double ScaleX { get; set; } = 1.0;
         public double ScaleY { get; set; } = 1.0;
+        public Version BGSXFileVersion { get; } = new Version(2, 1);
 
         public IEnumerable<Point> SnapPoints
         {
@@ -622,7 +623,7 @@ namespace boilersGraphics.ViewModels
             var obj = Clipboard.GetDataObject();
             var clipboardDTO = obj.GetData(typeof(ClipboardDTO)) as ClipboardDTO;
             var root = XElement.Parse(clipboardDTO.Root);
-            ObjectDeserializer.ReadObjectFromXML(this, root);
+            ObjectDeserializer.ReadCopyObjectsFromXML(this, root);
         }
 
         private bool CanExecutePaste()
@@ -872,16 +873,15 @@ namespace boilersGraphics.ViewModels
 
         #region Save
 
+
         private void ExecuteSaveCommand()
         {
-            var designerItems = this.Layers.SelectMany(x => x.Children).OfType<DesignerItemViewModelBase>();
-            var connections = this.Layers.SelectMany(x => x.Children).OfType<ConnectorBaseViewModel>();
-            var mainWindowVM = (App.Current.MainWindow.DataContext as MainWindowViewModel);
-
+            XElement versionXML = new XElement("Version", BGSXFileVersion.ToString());
             XElement layersXML = new XElement("Layers", ObjectSerializer.SerializeLayers(Layers));
             XElement configurationXML = new XElement("Configuration", ObjectSerializer.SerializeConfiguration(this));
 
             XElement root = new XElement("boilersGraphics");
+            root.Add(versionXML);
             root.Add(layersXML);
             root.Add(configurationXML);
 
@@ -914,15 +914,12 @@ namespace boilersGraphics.ViewModels
 
         private void ExecuteOverwriteCommand()
         {
-            var designerItems = this.Layers.SelectMany(x => x.Children).OfType<DesignerItemViewModelBase>();
-            var connections = this.Layers.SelectMany(x => x.Children).OfType<ConnectorBaseViewModel>();
-            var mainWindowVM = (App.Current.MainWindow.DataContext as MainWindowViewModel);
-
-
+            XElement versionXML = new XElement("Version", BGSXFileVersion.ToString());
             XElement layersXML = new XElement("Layers", ObjectSerializer.SerializeLayers(Layers));
             XElement configurationXML = new XElement("Configuration", ObjectSerializer.SerializeConfiguration(this));
 
             XElement root = new XElement("boilersGraphics");
+            root.Add(versionXML);
             root.Add(layersXML);
             root.Add(configurationXML);
             Save(root);
@@ -967,6 +964,13 @@ namespace boilersGraphics.ViewModels
                 return;
             }
 
+            var version = new Version(root.Element("Version").Value);
+            if (version > BGSXFileVersion)
+            {
+                MessageBox.Show("ファイルが新しすぎて開けません。");
+                return;
+            }
+
             var configuration = root.Element("Configuration");
             Width = int.Parse(configuration.Element("Width").Value);
             Height = int.Parse(configuration.Element("Height").Value);
@@ -974,16 +978,17 @@ namespace boilersGraphics.ViewModels
             EnablePointSnap.Value = bool.Parse(configuration.Element("EnablePointSnap").Value);
             (App.Current.MainWindow.DataContext as MainWindowViewModel).SnapPower.Value = double.Parse(configuration.Element("SnapPower").Value);
 
-            Layers.ToList().ForEach(x =>
-            {
-                x.Children.Clear();
-                x.Children.ToList().ForEach(y =>
-                {
-                    (y as LayerItem).Item.Value.IsSelected.Value = false;
-                });
-            });
+            //Layers.ToList().ForEach(x =>
+            //{
+            //    x.Children.Clear();
+            //    x.Children.ToList().ForEach(y =>
+            //    {
+            //        (y as LayerItem).Item.Value.IsSelected.Value = false;
+            //    });
+            //});
+            Layers.Clear();
 
-            ObjectDeserializer.ReadObjectFromXML(this, root);
+            ObjectDeserializer.ReadObjectsFromXML(this, root);
         }
 
         private XElement LoadSerializedDataFromFile()

@@ -1,6 +1,7 @@
 ﻿using boilersGraphics.Exceptions;
 using boilersGraphics.Models;
 using boilersGraphics.ViewModels;
+using Reactive.Bindings;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -20,7 +21,7 @@ namespace boilersGraphics.Helpers
             return (SelectableDesignerItemViewModelBase)Activator.CreateInstance(Assembly.GetExecutingAssembly().GetName().Name, className).Unwrap();
         }
 
-        public static void ReadObjectFromXML(DiagramViewModel diagramViewModel, XElement root)
+        public static void ReadCopyObjectsFromXML(DiagramViewModel diagramViewModel, XElement root)
         {
             var copyObjs = root.Elements().Where(x => x.Name == "CopyObjects").FirstOrDefault();
             if (copyObjs == null)
@@ -42,20 +43,7 @@ namespace boilersGraphics.Helpers
                     {
                         foreach (var layerItem in layerItemsInternal.Descendants("LayerItem"))
                         {
-                            DesignerItemViewModelBase designerItemObj = null;
-                            ConnectorBaseViewModel connectorObj = null;
-                            if (layerItem.Descendants("Item").First().Descendants("DesignerItem").Count() >= 1)
-                            {
-                                designerItemObj = ExtractDesignerItemViewModelBase(diagramViewModel, layerItem.Descendants("Item").First().Descendants("DesignerItem").First());
-                            }
-                            if (layerItem.Descendants("Item").First().Descendants("ConnectorItem").Count() >= 1)
-                            {
-                                connectorObj = ExtractConnectorBaseViewModel(diagramViewModel, layerItem.Descendants("Item").First().Descendants("ConnectorItem").First());
-                            }
-                            var item = EitherNotNull(designerItemObj, connectorObj);
-                            var layerItemObj = new LayerItem(item, layerObj, layerItem.Element("Name").Value);
-                            layerItemObj.Color.Value = (Color)ColorConverter.ConvertFromString(layerItem.Element("Color").Value);
-                            layerItemObj.IsVisible.Value = bool.Parse(layerItem.Element("IsVisible").Value);
+                            LayerItem layerItemObj = ReadLayerItemFromXML(diagramViewModel, layerObj, layerItem);
                             layerObj.Children.Add(layerItemObj);
                         }
                     }
@@ -89,6 +77,65 @@ namespace boilersGraphics.Helpers
                     layerObj.Children.Add(layerItemObj);
                 }
             }
+        }
+
+        public static void ReadObjectsFromXML(DiagramViewModel diagramViewModel, XElement root)
+        {
+            var layers = root.Elements().Where(x => x.Name == "Layers").FirstOrDefault();
+            if (layers != null)
+            {
+                foreach (var layer in layers.Descendants("Layer"))
+                {
+                    var layerObj = new Layer();
+                    layerObj.Color.Value = (Color)ColorConverter.ConvertFromString(layer.Element("Color").Value);
+                    layerObj.IsVisible.Value = bool.Parse(layer.Element("IsVisible").Value);
+                    layerObj.Name.Value = layer.Element("Name").Value;
+
+                    foreach (var layerItemsInternal in layer.Descendants("LayerItems"))
+                    {
+                        foreach (var layerItem in layerItemsInternal.Descendants("LayerItem"))
+                        {
+                            LayerItem layerItemObj = ReadLayerItemFromXML(diagramViewModel, layerObj, layerItem);
+                            layerObj.Children.Add(layerItemObj);
+                        }
+                    }
+
+                    diagramViewModel.Layers.Add(layerObj);
+                }
+            }
+            else
+            {
+                throw new UnexpectedException("Layers element not found.");
+            }
+        }
+
+        private static LayerItem ReadLayerItemFromXML(DiagramViewModel diagramViewModel, Layer layerObj, XElement layerItem)
+        {
+            if (layerItem == null)
+                return null;
+            DesignerItemViewModelBase designerItemObj = null;
+            ConnectorBaseViewModel connectorObj = null;
+            if (layerItem.Descendants("Item").First().Descendants("DesignerItem").Count() >= 1)
+            {
+                designerItemObj = ExtractDesignerItemViewModelBase(diagramViewModel, layerItem.Descendants("Item").First().Descendants("DesignerItem").First());
+            }
+            if (layerItem.Descendants("Item").First().Descendants("ConnectorItem").Count() >= 1)
+            {
+                connectorObj = ExtractConnectorBaseViewModel(diagramViewModel, layerItem.Descendants("Item").First().Descendants("ConnectorItem").First());
+            }
+            var item = EitherNotNull(designerItemObj, connectorObj);
+            var layerItemObj = new LayerItem(item, layerObj, layerItem.Element("Name").Value);
+            layerItemObj.Color.Value = (Color)ColorConverter.ConvertFromString(layerItem.Element("Color").Value);
+            layerItemObj.IsVisible.Value = bool.Parse(layerItem.Element("IsVisible").Value);
+            var children = layerItem.Elements("Children");
+            foreach (var c in (from child in children
+                               let li = ReadLayerItemFromXML(diagramViewModel, layerObj, child.Element("LayerItem"))
+                               where li != null
+                               select li))
+            {
+                layerItemObj.Children.Add(c);
+            }
+            return layerItemObj;
         }
 
         private static SelectableDesignerItemViewModelBase EitherNotNull(DesignerItemViewModelBase designerItemObj, ConnectorBaseViewModel connectorObj)

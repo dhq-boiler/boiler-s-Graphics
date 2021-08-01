@@ -31,12 +31,7 @@ namespace boilersGraphics.Helpers
         private static IEnumerable<XElement> ExtractLayerItemFromLayer(Layer layer)
         {
             var layerItemsXML = from layerItem in layer.Children
-                                select new XElement("LayerItem",
-                                    new XElement("IsVisible", layerItem.IsVisible.Value),
-                                    new XElement("Name", layerItem.Name.Value),
-                                    new XElement("Color", layerItem.Color.Value),
-                                    new XElement("Item", ExtractItem((layerItem as LayerItem).Item.Value))
-                                    );
+                                select ExtractLayerItem(layerItem as LayerItem);
             return layerItemsXML;
         }
 
@@ -44,14 +39,22 @@ namespace boilersGraphics.Helpers
         {
             var layerItemsXML = new XElement("LayerItems",
                 from layerItem in layerItems
-                select new XElement("LayerItem",
-                    new XElement("IsVisible", layerItem.IsVisible.Value),
-                    new XElement("Name", layerItem.Name.Value),
-                    new XElement("Color", layerItem.Color.Value),
-                    new XElement("Item", ExtractItem(layerItem.Item.Value))
-                    )
+                select ExtractLayerItem(layerItem)
                 );
             return layerItemsXML;
+        }
+
+        private static XElement ExtractLayerItem(LayerItem layerItem)
+        {
+            return new XElement("LayerItem",
+                                new XElement("IsVisible", layerItem.IsVisible.Value),
+                                new XElement("Name", layerItem.Name.Value),
+                                new XElement("Color", layerItem.Color.Value),
+                                new XElement("Item", ExtractItem(layerItem.Item.Value)),
+                                new XElement("Children", (from child in layerItem.Children
+                                                          select ExtractLayerItem(child as LayerItem))
+                                            )
+                                );
         }
 
         public static XElement ExtractItem(SelectableDesignerItemViewModelBase item)
