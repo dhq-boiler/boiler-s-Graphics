@@ -1125,15 +1125,21 @@ namespace boilersGraphics.ViewModels
 
             foreach (var groupRoot in groups.ToList())
             {
-                var children = from child in Layers.SelectMany(x => x.Children)
-                               where (child as LayerItem).Item.Value.ParentID == groupRoot.ID
+                var children = from child in Layers.SelectRecursive<Layer, LayerTreeViewItemBase>(x => x.Children)
+                               where child is LayerItem && (child as LayerItem).Item.Value.ParentID == groupRoot.ID
                                select child;
 
                 foreach (var child in children)
                 {
-                    (child as LayerItem).Item.Value.GroupDisposable.Dispose();
-                    (child as LayerItem).Item.Value.ParentID = Guid.Empty;
-                    (child as LayerItem).Item.Value.EnableForSelection.Value = true;
+                    var layerItem = child as LayerItem;
+                    layerItem.Item.Value.GroupDisposable.Dispose();
+                    layerItem.Item.Value.ParentID = Guid.Empty;
+                    layerItem.Item.Value.EnableForSelection.Value = true;
+                    layerItem.Parent.Value = Layers.SelectRecursive<Layer, LayerTreeViewItemBase>(x => x.Children)
+                                                   .Where(x => x is LayerItem)
+                                                   .First(x => (x as LayerItem).Item == (child as LayerItem).Item)
+                                                   .Parent.Value
+                                                   .Parent.Value;
                 }
 
                 groupRoot.Dispose();
