@@ -32,9 +32,6 @@ namespace boilersGraphics.Models
         public ReactiveCommand SwitchVisibilityCommand { get; } = new ReactiveCommand();
         public ReactiveCommand SelectLayerCommand { get; } = new ReactiveCommand();
 
-        //public ReactiveCollection<LayerItem> Items { get; } = new ReactiveCollection<LayerItem>();
-
-
         public Layer()
         {
             SwitchVisibilityCommand.Subscribe(_ =>
