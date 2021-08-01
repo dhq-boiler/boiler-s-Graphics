@@ -122,6 +122,12 @@
                                             HorizontalAlignment="Stretch"
                                             VerticalAlignment="Stretch"
                                             Content="{TemplateBinding Content}" />
+                                            <!-- DEBUG -->
+                                            <!--<TextBlock VerticalAlignment="Center"
+                                                       HorizontalAlignment="Center">
+                                                <Run Text="IsSelected.Value=" />
+                                                <Run Text="{Binding IsSelected.Value}" />
+                                            </TextBlock>-->
                                         </Grid>
                                         <DataTemplate.Triggers>
                                             <DataTrigger Binding="{Binding IsSelected.Value}" Value="True">
