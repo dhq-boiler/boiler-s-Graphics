@@ -1031,6 +1031,7 @@ namespace boilersGraphics.ViewModels
             groupItem.Height.Value = rect.Height;
             groupItem.Left.Value = rect.Left;
             groupItem.Top.Value = rect.Top;
+            groupItem.IsHitTestVisible.Value = (App.Current.MainWindow.DataContext as MainWindowViewModel).ToolBarViewModel.CurrentHitTestVisibleState.Value;
 
             AddItemCommand.Execute(groupItem);
 
