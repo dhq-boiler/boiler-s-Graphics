@@ -768,9 +768,11 @@ namespace boilersGraphics.ViewModels
 
         public void DeselectAll()
         {
-            foreach (var layerItem in Layers.SelectMany(x => x.Children))
+            foreach (var layerItem in Layers.SelectRecursive<Layer, LayerTreeViewItemBase>(x => x.Children)
+                                            .Where(x => x is LayerItem))
             {
                 (layerItem as LayerItem).Item.Value.IsSelected.Value = false;
+                (layerItem as LayerItem).IsSelected.Value = false;
             }
         }
 
@@ -864,9 +866,7 @@ namespace boilersGraphics.ViewModels
 
         private void Add(SelectableDesignerItemViewModelBase item)
         {
-            var layerItem = new LayerItem(item);
-            layerItem.Parent.Value = SelectedLayers.Value.First();
-            SelectedLayers.Value.First().Children.Add(layerItem);
+            SelectedLayers.Value.First().AddItem(item);
         }
 
         private void Remove(SelectableDesignerItemViewModelBase item)

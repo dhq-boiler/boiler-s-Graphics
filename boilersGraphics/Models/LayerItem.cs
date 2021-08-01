@@ -29,11 +29,10 @@ namespace boilersGraphics.Models
         private bool disposedValue;
         public static int LayerItemCount { get; set; } = 1;
         public ReactivePropertySlim<ImageSource> Appearance { get; } = new ReactivePropertySlim<ImageSource>();
-        public ReactivePropertySlim<Layer> Owner { get; } = new ReactivePropertySlim<Layer>();
         public ReactiveCommand SwitchVisibilityCommand { get; } = new ReactiveCommand();
         public ReactivePropertySlim<SelectableDesignerItemViewModelBase> Item { get; } = new ReactivePropertySlim<SelectableDesignerItemViewModelBase>();
 
-
+        [Obsolete]
         public LayerItem(SelectableDesignerItemViewModelBase item)
         {
             Item.Value = item;
@@ -66,18 +65,10 @@ namespace boilersGraphics.Models
                 }
             })
             .AddTo(_disposable);
-            IsSelected = Item.Where(x => x != null)
-                             .Select(x => x.IsSelected.Value)
+            IsSelected = this.ObserveProperty(x => x.Item.Value.IsSelected)
+                             .Select(x => x.Value)
                              .ToReactiveProperty()
                              .AddTo(_disposable);
-            IsSelected.Subscribe(x =>
-            {
-                if (Item.Value != null)
-                {
-                    Item.Value.IsSelected.Value = x;
-                }
-            })
-            .AddTo(_disposable);
             IsVisible.Value = true;
         }
 

@@ -252,8 +252,12 @@
                                                 <Grid Background="{Binding Background.Value}">
                                                     <StackPanel Orientation="Vertical">
                                                         <Separator BorderThickness="1" BorderBrush="Black" Visibility="{Binding BeforeSeparatorVisibility.Value}" />
-                                                        <TextBlock VerticalAlignment="Center"
-                                                                           Text="{Binding Name.Value}" />
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <TextBlock VerticalAlignment="Center"
+                                                                       Text="{Binding Name.Value}" />
+                                                            <!--<TextBlock VerticalAlignment="Center"
+                                                                       Text="{Binding IsSelected.Value}" />-->
+                                                        </StackPanel>
                                                         <Separator BorderThickness="1" BorderBrush="Black" Visibility="{Binding AfterSeparatorVisibility.Value}" />
                                                     </StackPanel>
                                                 </Grid>
