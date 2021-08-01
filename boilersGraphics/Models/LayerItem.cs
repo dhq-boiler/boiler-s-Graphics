@@ -1,23 +1,12 @@
 ﻿using boilersGraphics.Controls;
 using boilersGraphics.Extensions;
-using boilersGraphics.Helpers;
 using boilersGraphics.ViewModels;
-using boilersGraphics.Views;
-using Prism.Mvvm;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Reactive;
-using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
