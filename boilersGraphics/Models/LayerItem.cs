@@ -40,6 +40,13 @@ namespace boilersGraphics.Models
             Init();
         }
 
+        public LayerItem(SelectableDesignerItemViewModelBase item, LayerTreeViewItemBase owner)
+        {
+            Item.Value = item;
+            Parent.Value = owner;
+            Init();
+        }
+
         private void Init()
         {
             SwitchVisibilityCommand.Subscribe(_ =>
@@ -72,13 +79,6 @@ namespace boilersGraphics.Models
             })
             .AddTo(_disposable);
             IsVisible.Value = true;
-        }
-
-        public LayerItem(SelectableDesignerItemViewModelBase item, LayerTreeViewItemBase owner)
-        {
-            Item.Value = item;
-            Parent.Value = owner;
-            Init();
         }
 
         public void UpdateAppearance(SelectableDesignerItemViewModelBase item)
