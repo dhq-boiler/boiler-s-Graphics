@@ -257,6 +257,8 @@
                                                                        Text="{Binding Name.Value}" />
                                                             <!--<TextBlock VerticalAlignment="Center"
                                                                        Text="{Binding IsSelected.Value}" />-->
+                                                            <!--<TextBlock VerticalAlignment="Center"
+                                                                       Text="{Binding Parent.Value.Name.Value}" />-->
                                                         </StackPanel>
                                                         <Separator BorderThickness="1" BorderBrush="Black" Visibility="{Binding AfterSeparatorVisibility.Value}" />
                                                     </StackPanel>

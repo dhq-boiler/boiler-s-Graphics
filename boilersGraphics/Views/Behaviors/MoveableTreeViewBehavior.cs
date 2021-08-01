@@ -84,6 +84,8 @@ namespace boilersGraphics.Views.Behaviors
                 throw new UnexpectedException("must be left != null || right != null");
         }
 
+        private bool isDragOver = false;
+
         private void OnDragOver(object sender, DragEventArgs e)
         {
             ResetSeparator(_changedBlocks);
@@ -136,11 +138,16 @@ namespace boilersGraphics.Views.Behaviors
 
             if (!_changedBlocks.Contains(targetElementInfo))
                 _changedBlocks.Add(targetElementInfo);
+
+            isDragOver = true;
         }
 
         private void OnDrop(object sender, DragEventArgs e)
         {
             ResetSeparator(_changedBlocks);
+
+            if (!isDragOver)
+                return;
 
             if (!(sender is ItemsControl itemsControl))
                 return;
@@ -215,6 +222,7 @@ namespace boilersGraphics.Views.Behaviors
         private void OnPreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             _startPos = null;
+            isDragOver = false;
         }
 
         private void OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)

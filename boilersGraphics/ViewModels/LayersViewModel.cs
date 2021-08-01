@@ -115,6 +115,9 @@ namespace boilersGraphics.ViewModels
                     //        y.IsSelected.Value = false;
                     //    });
                     //});
+
+                    Layers.ToList().ForEach(x => x.IsSelected.Value = false);
+
                     var layerItems = layers.SelectRecursive<Layer, LayerTreeViewItemBase>(x => x.Children)
                                            .Where(x => x is LayerItem);
                     layerItems.ToList().ForEach(x =>
