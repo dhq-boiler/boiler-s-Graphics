@@ -39,8 +39,9 @@ namespace boilersGraphics.Models
             Init();
         }
 
-        public LayerItem(SelectableDesignerItemViewModelBase item, LayerTreeViewItemBase owner)
+        public LayerItem(SelectableDesignerItemViewModelBase item, LayerTreeViewItemBase owner, string name)
         {
+            Name.Value = name;
             Item.Value = item;
             Parent.Value = owner;
             Init();

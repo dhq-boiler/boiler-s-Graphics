@@ -25,7 +25,6 @@ namespace boilersGraphics.Models
 {
     public class Layer : LayerTreeViewItemBase, IObservable<LayerObservable>
     {
-        private CompositeDisposable _disposable = new CompositeDisposable();
         public static int LayerCount { get; set; } = 1;
        
         public ReactivePropertySlim<ImageSource> Appearance { get; } = new ReactivePropertySlim<ImageSource>();
@@ -223,9 +222,8 @@ namespace boilersGraphics.Models
 
         public void AddItem(SelectableDesignerItemViewModelBase item)
         {
-            var layerItem = new LayerItem(item, this);
+            var layerItem = new LayerItem(item, this, $"アイテム{LayerItem.LayerItemCount++}");
             layerItem.IsVisible.Value = true;
-            layerItem.Name.Value = $"アイテム{LayerItem.LayerItemCount++}";
             layerItem.Parent.Value = this;
             Children.Add(layerItem);
         }

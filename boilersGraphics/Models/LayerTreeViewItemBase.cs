@@ -1,8 +1,12 @@
-﻿using Prism.Mvvm;
+﻿using boilersGraphics.Exceptions;
+using Prism.Mvvm;
 using Reactive.Bindings;
+using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Reactive.Disposables;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -12,6 +16,8 @@ namespace boilersGraphics.Models
 {
     public class LayerTreeViewItemBase : BindableBase
     {
+        protected CompositeDisposable _disposable = new CompositeDisposable();
+
         public ReactivePropertySlim<LayerTreeViewItemBase> Parent { get; } = new ReactivePropertySlim<LayerTreeViewItemBase>();
 
         public ReactivePropertySlim<string> Name { get; } = new ReactivePropertySlim<string>();
@@ -29,6 +35,18 @@ namespace boilersGraphics.Models
         public ReactivePropertySlim<Visibility> AfterSeparatorVisibility { get; } = new ReactivePropertySlim<Visibility>(Visibility.Hidden);
 
         public ReactiveCollection<LayerTreeViewItemBase> Children { get; set; } = new ReactiveCollection<LayerTreeViewItemBase>();
+
+        public LayerTreeViewItemBase()
+        {
+            Parent.Subscribe(x =>
+            {
+                if (this is Layer && x is Layer)
+                    throw new UnexpectedException("Layers cannot have layers in their children");
+                if (x != null)
+                    Trace.WriteLine($"Set Parent Parent={{{x.Name.Value}}} Child={{{Name.Value}}}");
+            })
+            .AddTo(_disposable);
+        }
 
         public void SetParentToChildren(LayerTreeViewItemBase parent = null)
         {

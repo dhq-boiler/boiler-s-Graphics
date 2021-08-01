@@ -1,4 +1,5 @@
-﻿using boilersGraphics.Models;
+﻿using boilersGraphics.Extensions;
+using boilersGraphics.Models;
 using boilersGraphics.Views.Behaviors;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -67,23 +68,23 @@ namespace boilersGraphics.ViewModels
                 var layers = (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.Layers;
                 if (newItem.GetType() == typeof(Layer))
                 {
-                    layers.ToList().ForEach(x =>
+                    //layers.ToList().ForEach(x =>
+                    //{
+                    //    x.IsSelected.Value = false;
+                    //    x.Children.ToList().ForEach(y =>
+                    //    {
+                    //        y.IsSelected.Value = false;
+                    //    });
+                    //});
+
+                    layers.ToList().ForEach(x => x.IsSelected.Value = false);
+
+                    var layerItems = layers.SelectRecursive<Layer, LayerTreeViewItemBase>(x => x.Children)
+                                           .Where(x => x is LayerItem);
+
+                    layerItems.ToList().ForEach(x =>
                     {
-                        x.IsSelected.Value = false;
-                        x.Children.ToList().ForEach(y =>
-                        {
-                            y.IsSelected.Value = false;
-                        });
-                    });
-                    var selectedLayer = newItem as Layer;
-                    selectedLayer.IsSelected.Value = true;
-                }
-                else if (newItem.GetType() == typeof(LayerItem))
-                {
-                    var selectedItem = newItem as LayerItem;
-                    layers.ToList().ForEach(x =>
-                    {
-                        if (x == selectedItem.Parent.Value)
+                        if (x.HasAsAncestor(newItem as LayerTreeViewItemBase))
                         {
                             x.IsSelected.Value = true;
                         }
@@ -91,12 +92,45 @@ namespace boilersGraphics.ViewModels
                         {
                             x.IsSelected.Value = false;
                         }
-                        x.Children.ToList().ForEach(y =>
-                        {
-                            y.IsSelected.Value = false;
-                        });
+                    });
+
+                    var selectedLayer = newItem as Layer;
+                    selectedLayer.IsSelected.Value = true;
+                }
+                else if (newItem.GetType() == typeof(LayerItem))
+                {
+                    var selectedItem = newItem as LayerItem;
+                    //layers.ToList().ForEach(x =>
+                    //{
+                    //    if (x == selectedItem.Parent.Value)
+                    //    {
+                    //        x.IsSelected.Value = true;
+                    //    }
+                    //    else
+                    //    {
+                    //        x.IsSelected.Value = false;
+                    //    }
+                    //    x.Children.ToList().ForEach(y =>
+                    //    {
+                    //        y.IsSelected.Value = false;
+                    //    });
+                    //});
+                    var layerItems = layers.SelectRecursive<Layer, LayerTreeViewItemBase>(x => x.Children)
+                                           .Where(x => x is LayerItem);
+                    layerItems.ToList().ForEach(x =>
+                    {
+                        x.IsSelected.Value = false;
                     });
                     selectedItem.IsSelected.Value = true;
+
+                    LayerTreeViewItemBase temp = selectedItem;
+                    while (temp.Parent.Value != null)
+                    {
+                        if (temp is Layer)
+                            break;
+                        temp = temp.Parent.Value;
+                    }
+                    temp.IsSelected.Value = true;
                 }
             })
             .AddTo(_disposables);

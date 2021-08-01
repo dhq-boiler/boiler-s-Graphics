@@ -312,5 +312,17 @@ namespace boilersGraphics.Extensions
                     yield return child;
             }
         }
+
+        public static bool HasAsAncestor(this LayerTreeViewItemBase layerItem, LayerTreeViewItemBase ancestor)
+        {
+            LayerTreeViewItemBase temp = layerItem;
+            while (temp.Parent.Value != null)
+            {
+                if (temp == ancestor)
+                    return true;
+                temp = temp.Parent.Value;
+            }
+            return false;
+        }
     }
 }

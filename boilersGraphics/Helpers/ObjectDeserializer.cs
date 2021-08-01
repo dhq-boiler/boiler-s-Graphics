@@ -52,9 +52,8 @@ namespace boilersGraphics.Helpers
                                 connectorObj = ExtractConnectorBaseViewModel(diagramViewModel, layerItem.Descendants("Item").First().Descendants("ConnectorItem").First());
                             }
                             var item = EitherNotNull(designerItemObj, connectorObj);
-                            var layerItemObj = new LayerItem(item, layerObj);
+                            var layerItemObj = new LayerItem(item, layerObj, layerItem.Element("Name").Value);
                             layerItemObj.IsVisible.Value = bool.Parse(layerItem.Element("IsVisible").Value);
-                            layerItemObj.Name.Value = layerItem.Element("Name").Value;
                             layerObj.Children.Add(layerItemObj);
                         }
                     }
@@ -72,9 +71,8 @@ namespace boilersGraphics.Helpers
                     var designerItemObj = ExtractDesignerItemViewModelBase(diagramViewModel, layerItem.Descendants("Item").First().Descendants("DesignerItem").First());
                     if (designerItemObj == null)
                         continue;
-                    var layerItemObj = new LayerItem(designerItemObj, layerObj);
+                    var layerItemObj = new LayerItem(designerItemObj, layerObj, layerItem.Element("Name").Value);
                     layerItemObj.IsVisible.Value = bool.Parse(layerItem.Element("IsVisible").Value);
-                    layerItemObj.Name.Value = layerItem.Element("Name").Value;
                     layerObj.Children.Add(layerItemObj);
                 }
                 foreach (var layerItem in layerItems.Descendants("LayerItem"))
@@ -84,9 +82,8 @@ namespace boilersGraphics.Helpers
                     var connectorObj = ExtractConnectorBaseViewModel(diagramViewModel, layerItem.Descendants("Item").First().Descendants("ConnectorItem").First());
                     if (connectorObj == null)
                         continue;
-                    var layerItemObj = new LayerItem(connectorObj, layerObj);
+                    var layerItemObj = new LayerItem(connectorObj, layerObj, layerItem.Element("Name").Value);
                     layerItemObj.IsVisible.Value = bool.Parse(layerItem.Element("IsVisible").Value);
-                    layerItemObj.Name.Value = layerItem.Element("Name").Value;
                     layerObj.Children.Add(layerItemObj);
                 }
             }
