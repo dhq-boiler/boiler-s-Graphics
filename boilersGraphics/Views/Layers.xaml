@@ -256,8 +256,8 @@
                                                     <StackPanel Orientation="Vertical">
                                                         <Separator BorderThickness="1" BorderBrush="Black" Visibility="{Binding BeforeSeparatorVisibility.Value}" />
                                                         <StackPanel Orientation="Horizontal">
-                                                            <TextBlock VerticalAlignment="Center"
-                                                                       Text="{Binding Name.Value}" />
+                                                            <views:LabelTextBox VerticalAlignment="Center"
+                                                                                Text="{Binding Name.Value}" />
                                                             <!--<TextBlock VerticalAlignment="Center"
                                                                        Text="{Binding IsSelected.Value}" />-->
                                                             <!--<TextBlock VerticalAlignment="Center"
