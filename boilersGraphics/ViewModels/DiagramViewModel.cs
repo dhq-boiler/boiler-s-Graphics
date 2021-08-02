@@ -978,14 +978,6 @@ namespace boilersGraphics.ViewModels
             EnablePointSnap.Value = bool.Parse(configuration.Element("EnablePointSnap").Value);
             (App.Current.MainWindow.DataContext as MainWindowViewModel).SnapPower.Value = double.Parse(configuration.Element("SnapPower").Value);
 
-            //Layers.ToList().ForEach(x =>
-            //{
-            //    x.Children.Clear();
-            //    x.Children.ToList().ForEach(y =>
-            //    {
-            //        (y as LayerItem).Item.Value.IsSelected.Value = false;
-            //    });
-            //});
             Layers.Clear();
 
             ObjectDeserializer.ReadObjectsFromXML(this, root);
