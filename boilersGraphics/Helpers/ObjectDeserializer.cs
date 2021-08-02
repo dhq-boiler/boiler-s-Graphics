@@ -91,7 +91,7 @@ namespace boilersGraphics.Helpers
                     layerObj.IsVisible.Value = bool.Parse(layer.Element("IsVisible").Value);
                     layerObj.Name.Value = layer.Element("Name").Value;
 
-                    foreach (var layerItemsInternal in layer.Elements("LayerItems"))
+                    foreach (var layerItemsInternal in layer.Elements("Children"))
                     {
                         foreach (var layerItem in layerItemsInternal.Elements("LayerItem"))
                         {
@@ -127,11 +127,11 @@ namespace boilersGraphics.Helpers
             var layerItemObj = new LayerItem(item, layerObj, layerItem.Element("Name").Value);
             layerItemObj.Color.Value = (Color)ColorConverter.ConvertFromString(layerItem.Element("Color").Value);
             layerItemObj.IsVisible.Value = bool.Parse(layerItem.Element("IsVisible").Value);
-            var children = layerItem.Elements("Children");
-            foreach (var c in (from child in children
-                               let li = ReadLayerItemFromXML(diagramViewModel, layerObj, child.Element("LayerItem"))
-                               where li != null
-                               select li))
+            var children = layerItem.Elements("Children").Descendants("LayerItem");
+            var children_layerItems = (from child in children
+                                       let li = ReadLayerItemFromXML(diagramViewModel, layerObj, child)
+                                       select li);
+            foreach (var c in children_layerItems)
             {
                 layerItemObj.Children.Add(c);
             }
