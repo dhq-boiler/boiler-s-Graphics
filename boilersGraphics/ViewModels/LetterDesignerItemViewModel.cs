@@ -84,10 +84,10 @@ namespace boilersGraphics.ViewModels
         private void Init()
         {
             this.ShowConnectors = false;
-            this.ObserveProperty(x => x.IsSelected)
+            this.ObserveProperty(x => x.IsSelected.Value)
                 .Subscribe(isSelected =>
                 {
-                    if (isSelected.Value)
+                    if (isSelected)
                     {
                         if (!LetterSettingDialogIsOpen)
                         {
