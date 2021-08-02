@@ -24,7 +24,7 @@ namespace boilersGraphics.Helpers
             layerXML.Add(new XElement("IsVisible", layer.IsVisible.Value));
             layerXML.Add(new XElement("Name", layer.Name.Value));
             layerXML.Add(new XElement("Color", layer.Color.Value));
-            layerXML.Add(new XElement("LayerItems", ExtractLayerItemFromLayer(layer)));
+            layerXML.Add(new XElement("Children", ExtractLayerItemFromLayer(layer)));
             return layerXML;
         }
 

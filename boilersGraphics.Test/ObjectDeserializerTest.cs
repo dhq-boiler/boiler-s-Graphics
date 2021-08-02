@@ -24,7 +24,7 @@ namespace boilersGraphics.Test
         <IsVisible>true</IsVisible>
         <Name>レイヤー1</Name>
         <Color>#FF044CE6</Color>
-        <LayerItems>
+        <Children>
           <LayerItem>
             <IsVisible>true</IsVisible>
             <Name>アイテム6</Name>
@@ -95,7 +95,7 @@ namespace boilersGraphics.Test
               </LayerItem>
             </Children>
           </LayerItem>
-        </LayerItems>
+        </Children>
       </Layer>
     </Layers>
     <Configuration>
