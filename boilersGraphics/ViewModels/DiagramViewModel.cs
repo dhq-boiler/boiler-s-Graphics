@@ -964,11 +964,18 @@ namespace boilersGraphics.ViewModels
                 return;
             }
 
-            var version = new Version(root.Element("Version").Value);
-            if (version > BGSXFileVersion)
+            if (root.Element("Version") != null)
             {
-                MessageBox.Show("ファイルが新しすぎて開けません。");
-                return;
+                var version = new Version(root.Element("Version").Value);
+                if (version > BGSXFileVersion)
+                {
+                    MessageBox.Show("ファイルが新しすぎて開けません。");
+                    return;
+                }
+            }
+            else
+            {
+                Trace.WriteLine("強制読み込みモードでファイルを読み込みます。このモードはVersion要素が見つからない時に実施されます。");
             }
 
             var configuration = root.Element("Configuration");
