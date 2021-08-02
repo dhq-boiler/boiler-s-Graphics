@@ -440,7 +440,7 @@
                 <view:Layers
                     x:Name="layers"
                     Width="180"
-                    Height="350"
+                    MaxHeight="350"
                     Margin="0,5,25,0"
                     ScrollViewer.VerticalScrollBarVisibility="Auto" />
             </StackPanel>
