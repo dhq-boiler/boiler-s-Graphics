@@ -4,6 +4,7 @@ using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Reactive.Disposables;
 using System.Windows;
 using System.Windows.Media;
@@ -44,6 +45,15 @@ namespace boilersGraphics.Models
                     Trace.WriteLine($"Set Parent Parent={{{x.Name.Value}}} Child={{{Name.Value}}}");
             })
             .AddTo(_disposable);
+        }
+
+        public void ChildrenSwitchVisibility(bool isVisible)
+        {
+            Children.ToList().ForEach(x =>
+            {
+                x.IsVisible.Value = isVisible;
+                x.ChildrenSwitchVisibility(isVisible); 
+            });
         }
 
         public void SetParentToChildren(LayerTreeViewItemBase parent = null)

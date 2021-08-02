@@ -53,10 +53,7 @@ namespace boilersGraphics.Models
             .AddTo(_disposable);
             IsVisible.Subscribe(isVisible =>
             {
-                if (!isVisible)
-                {
-                    Children.ToList().ForEach(x => x.IsVisible.Value = isVisible);
-                }
+                ChildrenSwitchVisibility(isVisible);
             })
             .AddTo(_disposable);
 

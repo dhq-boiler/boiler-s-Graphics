@@ -46,14 +46,8 @@ namespace boilersGraphics.Models
             .AddTo(_disposable);
             IsVisible.Subscribe(isVisible =>
             {
-                if (Item.Value != null)
-                {
-                    Item.Value.IsVisible.Value = isVisible;
-                    if (isVisible && !Parent.Value.IsVisible.Value)
-                    {
-                        Parent.Value.IsVisible.Value = true;
-                    }
-                }
+                Item.Value.IsVisible.Value = isVisible;
+                ChildrenSwitchVisibility(isVisible);
             })
             .AddTo(_disposable);
             IsSelected = this.ObserveProperty(x => x.Item.Value.IsSelected)
