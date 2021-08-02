@@ -64,8 +64,8 @@ namespace boilersGraphics.ViewModels
             var tempIsSelected = new Dictionary<SelectableDesignerItemViewModelBase, bool>();
             foreach (var item in itemsControl.Items.Cast<SelectableDesignerItemViewModelBase>())
             {
-                tempIsSelected.Add(item, item.IsSelected);
-                item.IsSelected = false;
+                tempIsSelected.Add(item, item.IsSelected.Value);
+                item.IsSelected.Value = false;
             }
 
             var rtb = new RenderTargetBitmap((int)designerCanvas.ActualWidth, (int)designerCanvas.ActualHeight, 96, 96, PixelFormats.Pbgra32);
@@ -85,7 +85,7 @@ namespace boilersGraphics.ViewModels
                 bool outIsSelected;
                 if (tempIsSelected.TryGetValue(item, out outIsSelected))
                 {
-                    item.IsSelected = outIsSelected;
+                    item.IsSelected.Value = outIsSelected;
                 }
             }
 

@@ -506,13 +506,6 @@ namespace boilersGraphics.ViewModels
 
         public string Title => "カラーピッカー";
 
-        #region IDisposable
-
-        public void Dispose()
-        {
-            _disposables.Dispose();
-        }
-
         public bool CanCloseDialog()
         {
             return true;
@@ -525,6 +518,17 @@ namespace boilersGraphics.ViewModels
         public void OnDialogOpened(IDialogParameters parameters)
         {
             EditTarget = parameters.GetValue<ColorExchange>("ColorExchange");
+            A.Value = EditTarget.Old.A;
+            R.Value = EditTarget.Old.R;
+            G.Value = EditTarget.Old.G;
+            B.Value = EditTarget.Old.B;
+        }
+
+        #region IDisposable
+
+        public void Dispose()
+        {
+            _disposables.Dispose();
         }
 
         #endregion //IDisposable

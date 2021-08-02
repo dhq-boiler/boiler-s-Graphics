@@ -79,11 +79,11 @@ namespace boilersGraphics.ViewModels
                     {
                         DiagramViewModel.EdgeColors.Clear();
                         DiagramViewModel.EdgeColors.Add(exchange.New.Value);
-                        foreach (var item in DiagramViewModel.SelectedItems.OfType<DesignerItemViewModelBase>())
+                        foreach (var item in DiagramViewModel.SelectedItems.Value.OfType<DesignerItemViewModelBase>())
                         {
                             item.EdgeColor.Value = exchange.New.Value;
                         }
-                        foreach (var item in DiagramViewModel.SelectedItems.OfType<ConnectorBaseViewModel>())
+                        foreach (var item in DiagramViewModel.SelectedItems.Value.OfType<ConnectorBaseViewModel>())
                         {
                             item.EdgeColor.Value = exchange.New.Value;
                         }
@@ -112,9 +112,9 @@ namespace boilersGraphics.ViewModels
                     {
                         DiagramViewModel.FillColors.Clear();
                         DiagramViewModel.FillColors.Add(exchange.New.Value);
-                        foreach (var item in DiagramViewModel.SelectedItems.OfType<DesignerItemViewModelBase>())
+                        foreach (var item in DiagramViewModel.SelectedItems.Value.OfType<DesignerItemViewModelBase>())
                         {
-                            item.FillColor = exchange.New.Value;
+                            item.FillColor.Value = exchange.New.Value;
                         }
                     }
                 }
@@ -129,14 +129,14 @@ namespace boilersGraphics.ViewModels
             });
             DiagramViewModel.EdgeThickness.Subscribe(x =>
             {
-                if (x.HasValue)
+                if (x.HasValue && !double.IsNaN(x.Value) && DiagramViewModel.SelectedItems.Value != null)
                 {
-                    foreach (var item in DiagramViewModel.SelectedItems.OfType<DesignerItemViewModelBase>())
+                    foreach (var item in DiagramViewModel.SelectedItems.Value?.OfType<DesignerItemViewModelBase>())
                     {
                         item.EdgeThickness.Value = x.Value;
                     }
 
-                    foreach (var item in DiagramViewModel.SelectedItems.OfType<ConnectorBaseViewModel>())
+                    foreach (var item in DiagramViewModel.SelectedItems.Value?.OfType<ConnectorBaseViewModel>())
                     {
                         item.EdgeThickness.Value = x.Value;
                     }
@@ -181,7 +181,7 @@ namespace boilersGraphics.ViewModels
 
         private void ExecuteDeleteSelectedItemsCommand(object parameter)
         {
-            var itemsToRemove = DiagramViewModel.SelectedItems.ToList();
+            var itemsToRemove = DiagramViewModel.SelectedItems.Value.ToList();
             foreach (var selectedItem in itemsToRemove)
             {
                 DiagramViewModel.RemoveItemCommand.Execute(selectedItem);

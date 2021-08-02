@@ -17,7 +17,6 @@ namespace boilersGraphics.ViewModels
 
         private double _MinWidth;
         private double _MinHeight;
-        private Color _FillColor;
         public static readonly double DefaultWidth = 65d;
         public static readonly double DefaultHeight = 65d;
 
@@ -31,12 +30,6 @@ namespace boilersGraphics.ViewModels
         public DesignerItemViewModelBase() : base()
         {
             Init();
-        }
-
-        public Color FillColor
-        {
-            get { return _FillColor; }
-            set { SetProperty(ref _FillColor, value); }
         }
 
         public double MinWidth

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 
 namespace boilersGraphics.ViewModels
@@ -128,6 +129,11 @@ namespace boilersGraphics.ViewModels
 
         #endregion IObservable<GroupTransformNotification>
 
+        public override Type GetViewType()
+        {
+            return typeof(DockPanel);
+        }
+
         #region IClonable
 
         public override object Clone()
@@ -139,7 +145,7 @@ namespace boilersGraphics.ViewModels
             clone.Width.Value = Width.Value;
             clone.Height.Value = Height.Value;
             clone.EdgeColor.Value = EdgeColor.Value;
-            clone.FillColor = FillColor;
+            clone.FillColor.Value = FillColor.Value;
             clone.EdgeThickness.Value = EdgeThickness.Value;
             clone.Matrix.Value = Matrix.Value;
             clone.RotationAngle.Value = RotationAngle.Value;

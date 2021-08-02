@@ -71,9 +71,10 @@ namespace boilersGraphics.Adorners
                 item.Owner = (AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel;
                 item.EdgeColor.Value = item.Owner.EdgeColors.First();
                 item.EdgeThickness.Value = item.Owner.EdgeThickness.Value.Value;
-                item.ZIndex.Value = item.Owner.Items.Count;
-                item.IsSelected = true;
+                item.ZIndex.Value = item.Owner.Layers.Items().Count();
+                item.IsSelected.Value = true;
                 item.PathGeometry.Value = GeometryCreator.CreateLine(item);
+                item.IsVisible.Value = true;
                 item.Owner.DeselectAll();
                 ((AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel).AddItemCommand.Execute(item);
 

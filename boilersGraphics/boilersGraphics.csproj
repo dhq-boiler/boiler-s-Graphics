@@ -17,6 +17,7 @@
     <TargetFrameworkProfile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -149,6 +150,7 @@
     <Compile Include="Controls\DesignerCanvas.cs" />
     <Compile Include="Controls\DoubleTextBox.cs" />
     <Compile Include="Controls\DragThumb.cs" />
+    <Compile Include="Controls\Layers.cs" />
     <Compile Include="Controls\LineResizeHandle.cs" />
     <Compile Include="Controls\ResizeThumb.cs" />
     <Compile Include="Controls\RotateThumb.cs" />
@@ -157,6 +159,7 @@
     <Compile Include="Converters\DoubleToStringConverter.cs" />
     <Compile Include="Converters\ExtensionConverter.cs" />
     <Compile Include="Converters\IntToStringConverter.cs" />
+    <Compile Include="Converters\IsSelectedToBorderBrushConverter.cs" />
     <Compile Include="Converters\ObservableCollectionToPathSegmentCollection.cs" />
     <Compile Include="Converters\StringToByteConverter.cs" />
     <Compile Include="Converters\WindowStateToVisibilityConverter.cs" />
@@ -170,6 +173,7 @@
     <Compile Include="Converters\ToSolidColorBrushConverter.cs" />
     <Compile Include="Extensions\Extensions.cs" />
     <Compile Include="Helpers\BezierCurve.cs" />
+    <Compile Include="Helpers\ClipboardDTO.cs" />
     <Compile Include="Helpers\ColorExchange.cs" />
     <Compile Include="Helpers\DragObject.cs" />
     <Compile Include="Helpers\EventToCommand.cs" />
@@ -177,13 +181,18 @@
     <Compile Include="Helpers\GeometryCreator.cs" />
     <Compile Include="Helpers\GroupTransformNotification.cs" />
     <Compile Include="Helpers\IEventArgsConverter.cs" />
+    <Compile Include="Helpers\Measure.cs" />
+    <Compile Include="Helpers\Name.cs" />
     <Compile Include="Helpers\ObjectDeserializer.cs" />
     <Compile Include="Helpers\ObjectSerializer.cs" />
+    <Compile Include="Helpers\OpenCvSharpHelper.cs" />
+    <Compile Include="Helpers\Randomizer.cs" />
     <Compile Include="Helpers\SnapAction.cs" />
     <Compile Include="Helpers\SnapPointDistincter.cs" />
     <Compile Include="Helpers\ToolBoxData.cs" />
     <Compile Include="Helpers\ToolItemData.cs" />
     <Compile Include="Helpers\TransformNotification.cs" />
+    <Compile Include="Helpers\TriggerTracing.cs" />
     <Compile Include="Helpers\WeakINPCEventHandler.cs" />
     <Compile Include="Messenger\Mediator.cs" />
     <Compile Include="Messenger\MediatorMessageSinkAttribute.cs" />
@@ -191,6 +200,9 @@
     <Compile Include="Models\DraggingItem.cs" />
     <Compile Include="Models\Ellipse.cs" />
     <Compile Include="Models\FontFamilyEx.cs" />
+    <Compile Include="Models\Layer.cs" />
+    <Compile Include="Models\LayerItem.cs" />
+    <Compile Include="Models\LayerTreeViewItemBase.cs" />
     <Compile Include="Models\Letter.cs" />
     <Compile Include="Models\Rectangle.cs" />
     <Compile Include="Models\RenderItem.cs" />
@@ -210,6 +222,8 @@
     <Compile Include="Models\Corner.cs" />
     <Compile Include="ViewModels\ExportViewModel.cs" />
     <Compile Include="ViewModels\GroupItemViewModel.cs" />
+    <Compile Include="ViewModels\ILetterDesignerItemViewModel.cs" />
+    <Compile Include="ViewModels\LayersViewModel.cs" />
     <Compile Include="ViewModels\LetterDesignerItemViewModel.cs" />
     <Compile Include="ViewModels\LetterVerticalSettingViewModel.cs" />
     <Compile Include="ViewModels\LetterSettingViewModel.cs" />
@@ -235,6 +249,7 @@
     <Compile Include="Views\Behaviors\DeselectBehavior.cs" />
     <Compile Include="Views\Behaviors\LetterBehavior.cs" />
     <Compile Include="Views\Behaviors\LetterVerticalBehavior.cs" />
+    <Compile Include="Views\Behaviors\MoveableTreeViewBehavior.cs" />
     <Compile Include="Views\Behaviors\NDrawBezierCurveBehavior.cs" />
     <Compile Include="Views\Behaviors\NDrawEllipseBehavior.cs" />
     <Compile Include="Views\Behaviors\NDrawPolygonBehavior.cs" />
@@ -261,6 +276,12 @@
     </Compile>
     <Compile Include="Views\ItemsControlItemContainerStyleSelector.cs" />
     <Compile Include="Views\ItemsControlTemplateSelector.cs" />
+    <Compile Include="Views\LabelTextBox.xaml.cs">
+      <DependentUpon>LabelTextBox.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Layers.xaml.cs">
+      <DependentUpon>Layers.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\LetterVerticalSetting.xaml.cs">
       <DependentUpon>LetterVerticalSetting.xaml</DependentUpon>
     </Compile>
@@ -381,6 +402,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Export.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\LabelTextBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Layers.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -514,6 +543,10 @@
     <Resource Include="Assets\img\intersect.png" />
     <Resource Include="Assets\img\union.png" />
     <Resource Include="Assets\img\xor.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\img\Eye.png" />
+    <Resource Include="Assets\img\EyeSlash.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

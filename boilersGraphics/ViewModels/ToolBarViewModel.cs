@@ -14,6 +14,7 @@ using boilersGraphics.Views;
 using boilersGraphics.Models;
 using System.Windows.Media;
 using System.Windows;
+using Reactive.Bindings;
 
 namespace boilersGraphics.ViewModels
 {
@@ -23,6 +24,8 @@ namespace boilersGraphics.ViewModels
         public ObservableCollection<ToolItemData> ToolItems { get; } = new ObservableCollection<ToolItemData>();
 
         public BehaviorCollection Behaviors { get { return Interaction.GetBehaviors(App.Current.MainWindow.GetChildOfType<DesignerCanvas>()); } }
+
+        public ReactivePropertySlim<bool> CurrentHitTestVisibleState { get; } = new ReactivePropertySlim<bool>();
 
         public ToolBarViewModel(IDialogService dialogService)
         {
@@ -157,13 +160,15 @@ namespace boilersGraphics.ViewModels
         private void ChangeHitTestToDisable()
         {
             var diagramViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel;
-            diagramViewModel.Items.ToList().ForEach(x => x.IsHitTestVisible.Value = false);
+            diagramViewModel.AllItems.Value.ToList().ForEach(x => x.IsHitTestVisible.Value = false);
+            CurrentHitTestVisibleState.Value = false;
         }
 
         private void ChangeHitTestToEnable()
         {
             var diagramViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel;
-            diagramViewModel.Items.ToList().ForEach(x => x.IsHitTestVisible.Value = true);
+            diagramViewModel.AllItems.Value.ToList().ForEach(x => x.IsHitTestVisible.Value = true);
+            CurrentHitTestVisibleState.Value = true;
         }
 
         private void SelectOneToolItem(string toolName)

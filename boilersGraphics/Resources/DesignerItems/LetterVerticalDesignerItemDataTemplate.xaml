@@ -7,7 +7,7 @@
         <Path Stroke="{Binding EdgeColor.Value, Converter={StaticResource solidColorBrushConverter}}"
               StrokeThickness="{Binding EdgeThickness.Value}"
               IsHitTestVisible="False"
-              Fill="{Binding FillColor, Converter={StaticResource solidColorBrushConverter}}"
+              Fill="{Binding FillColor.Value, Converter={StaticResource solidColorBrushConverter}}"
               Data="{Binding PathGeometry.Value}">
         </Path>
     </DataTemplate>

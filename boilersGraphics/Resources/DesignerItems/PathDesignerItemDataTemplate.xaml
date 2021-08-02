@@ -5,7 +5,7 @@
         <Path Stroke="{Binding EdgeColor.Value}"
               StrokeThickness="{Binding EdgeThickness.Value}"
               IsHitTestVisible="False"
-              Fill="{Binding FillColor}"
+              Fill="{Binding FillColor.Value}"
               Data="{Binding Points}" />
     </DataTemplate>
 </ResourceDictionary>
