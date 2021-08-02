@@ -118,6 +118,7 @@ namespace boilersGraphics.Helpers
                     {
                         var item = ExtractDesignerItemViewModelBase(diagramViewModel, designerItem);
                         var layerItem = new LayerItem(item, layerObj, Name.GetNewLayerItemName());
+                        layerItem.Color.Value = Randomizer.RandomColor(rand);
                         layerObj.Children.Add(layerItem);
                     }
                 }
@@ -127,6 +128,7 @@ namespace boilersGraphics.Helpers
                     {
                         var item = ExtractConnectorBaseViewModel(diagramViewModel, connector);
                         var layerItem = new LayerItem(item, layerObj, Name.GetNewLayerItemName());
+                        layerItem.Color.Value = Randomizer.RandomColor(rand);
                         layerObj.Children.Add(layerItem);
                     }
                 }
