@@ -114,7 +114,7 @@ namespace boilersGraphics.Models
             var width = Measure.GetWidth(items, out minX, out maxX);
             var height = Measure.GetHeight(items, out minY, out maxY);
 
-            if (width < 0 || height < 0)
+            if (width <= 0 || height <= 0)
                 return;
 
             var rtb = new RenderTargetBitmap((int)width, (int)height, 96, 96, PixelFormats.Pbgra32);
