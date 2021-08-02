@@ -89,6 +89,7 @@
     <Compile Include="BoundaryTest.cs" />
     <Compile Include="GroupingTest.cs" />
     <Compile Include="MathTest.cs" />
+    <Compile Include="MeasureTest.cs" />
     <Compile Include="ObjectDeserializerTest.cs" />
     <Compile Include="OrderingTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -1,5 +1,6 @@
 ﻿using boilersGraphics.Controls;
 using boilersGraphics.Extensions;
+using boilersGraphics.Helpers;
 using boilersGraphics.ViewModels;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
@@ -66,8 +67,8 @@ namespace boilersGraphics.Models
         {
             var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
             double minX, maxX, minY, maxY;
-            var width = GetWidth(items, out minX, out maxX);
-            var height = GetHeight(items, out minY, out maxY);
+            var width = Measure.GetWidth(items, out minX, out maxX);
+            var height = Measure.GetHeight(items, out minY, out maxY);
 
             if (width < 0 || height < 0)
                 return;
@@ -133,50 +134,6 @@ namespace boilersGraphics.Models
                 context.DrawRectangle(Brushes.White, null, new Rect(new Point(), new Size(width, height)));
             }
             return visual;
-        }
-
-        private int GetWidth(IEnumerable<SelectableDesignerItemViewModelBase> items, out double minX, out double maxX)
-        {
-            minX = 0d;
-            maxX = 0d;
-            foreach (var item in items)
-            {
-                var desingerItem = item as DesignerItemViewModelBase;
-                var connectorItem = item as ConnectorBaseViewModel;
-                if (desingerItem != null)
-                {
-                    minX = Math.Min(Math.Min(minX, desingerItem.Left.Value), desingerItem.Right.Value);
-                    maxX = Math.Max(Math.Max(maxX, desingerItem.Left.Value), desingerItem.Right.Value);
-                }
-                if (connectorItem != null)
-                {
-                    minX = Math.Min(Math.Min(minX, connectorItem.Points[0].X), connectorItem.Points[1].X);
-                    maxX = Math.Max(Math.Max(maxX, connectorItem.Points[0].X), connectorItem.Points[1].X);
-                }
-            }
-            return (int)(maxX - minX);
-        }
-
-        private int GetHeight(IEnumerable<SelectableDesignerItemViewModelBase> items, out double minY, out double maxY)
-        {
-            minY = 0d;
-            maxY = 0d;
-            foreach (var item in items)
-            {
-                var desingerItem = item as DesignerItemViewModelBase;
-                var connectorItem = item as ConnectorBaseViewModel;
-                if (desingerItem != null)
-                {
-                    minY = Math.Min(Math.Min(minY, desingerItem.Top.Value), desingerItem.Bottom.Value);
-                    maxY = Math.Max(Math.Max(maxY, desingerItem.Top.Value), desingerItem.Bottom.Value);
-                }
-                if (connectorItem != null)
-                {
-                    minY = Math.Min(Math.Min(minY, connectorItem.Points[0].X), connectorItem.Points[1].X);
-                    maxY = Math.Max(Math.Max(maxY, connectorItem.Points[0].X), connectorItem.Points[1].X);
-                }
-            }
-            return (int)(maxY - minY);
         }
 
         public override string ToString()
