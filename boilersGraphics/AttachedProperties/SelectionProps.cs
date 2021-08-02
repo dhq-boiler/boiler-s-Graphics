@@ -1,4 +1,6 @@
-﻿using boilersGraphics.ViewModels;
+﻿using boilersGraphics.Extensions;
+using boilersGraphics.Models;
+using boilersGraphics.ViewModels;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
@@ -51,16 +53,24 @@ namespace boilersGraphics.AttachedProperties
                 {
                     if ((Keyboard.Modifiers & (ModifierKeys.Shift)) != ModifierKeys.None)
                     {
-                        selectableDesignerItemViewModelBase.IsSelected = !selectableDesignerItemViewModelBase.IsSelected;
+                        selectableDesignerItemViewModelBase.IsSelected.Value = !selectableDesignerItemViewModelBase.IsSelected.Value;
                     }
 
                     if ((Keyboard.Modifiers & (ModifierKeys.Control)) != ModifierKeys.None)
                     {
-                        selectableDesignerItemViewModelBase.IsSelected = !selectableDesignerItemViewModelBase.IsSelected;
+                        selectableDesignerItemViewModelBase.IsSelected.Value = !selectableDesignerItemViewModelBase.IsSelected.Value;
                     }
 
+                    var diagramVM = (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel;
+                    diagramVM.Layers.ToList().ForEach(x => x.IsSelected.Value = false);
+                    
+                    var layerItem = diagramVM.Layers.SelectRecursive<Layer, LayerTreeViewItemBase>(x => x.Children)
+                                                    .First(x => x is LayerItem && (x as LayerItem).Item.Value == selectableDesignerItemViewModelBase);
+                    layerItem.IsSelected.Value = true;
+                    diagramVM.Layers.Where(x => layerItem.HasAsAncestor(x)).ToList().ForEach(x => x.IsSelected.Value = true);
+
                     var owner = selectableDesignerItemViewModelBase.Owner;
-                    var edgeThicknesses = owner.SelectedItems.Select(x =>
+                    var edgeThicknesses = owner.SelectedItems.Value.Select(x =>
                     {
                         if (x is DesignerItemViewModelBase)
                         {
@@ -86,7 +96,13 @@ namespace boilersGraphics.AttachedProperties
                     selectableDesignerItemViewModelBase.Owner.EdgeColors.Clear();
                     selectableDesignerItemViewModelBase.Owner.FillColors.Clear();
                     selectableDesignerItemViewModelBase.Owner.EdgeThickness.Value = double.NaN;
-                    selectableDesignerItemViewModelBase.IsSelected = true;
+                    selectableDesignerItemViewModelBase.IsSelected.Value = true;
+                    var diagramVM = (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel;
+                    diagramVM.Layers.ToList().ForEach(x => x.IsSelected.Value = false);
+                    var layerItem = diagramVM.Layers.SelectRecursive<Layer, LayerTreeViewItemBase>(x => x.Children)
+                                                    .First(x => x is LayerItem && (x as LayerItem).Item.Value == selectableDesignerItemViewModelBase);
+                    layerItem.IsSelected.Value = true;
+                    diagramVM.Layers.Where(x => layerItem.HasAsAncestor(x)).ToList().ForEach(x => x.IsSelected.Value = true);
 
                     if (selectableDesignerItemViewModelBase is DesignerItemViewModelBase)
                     {
@@ -104,7 +120,7 @@ namespace boilersGraphics.AttachedProperties
                     if (selectableDesignerItemViewModelBase is DesignerItemViewModelBase)
                     {
                         edgeColor = (selectableDesignerItemViewModelBase as DesignerItemViewModelBase).EdgeColor.Value;
-                        fillColor = (selectableDesignerItemViewModelBase as DesignerItemViewModelBase).FillColor;
+                        fillColor = (selectableDesignerItemViewModelBase as DesignerItemViewModelBase).FillColor.Value;
                     }
                     else if (selectableDesignerItemViewModelBase is ConnectorBaseViewModel)
                     {
@@ -114,7 +130,7 @@ namespace boilersGraphics.AttachedProperties
                     selectableDesignerItemViewModelBase.Owner.FillColors.Add(fillColor);
 
                     var owner = selectableDesignerItemViewModelBase.Owner;
-                    var edgeThicknesses = owner.SelectedItems.Select(x =>
+                    var edgeThicknesses = owner.SelectedItems.Value.Select(x =>
                     {
                         if (x is DesignerItemViewModelBase)
                         {
@@ -125,7 +141,7 @@ namespace boilersGraphics.AttachedProperties
                             return (x as ConnectorBaseViewModel).EdgeThickness.Value;
                         };
                     });
-                    if (edgeThicknesses.All(x => x == edgeThicknesses.First()))
+                    if (edgeThicknesses.Count() > 0 && edgeThicknesses.All(x => x == edgeThicknesses.First()))
                     {
                         owner.EdgeThickness.Value = edgeThicknesses.First();
                     }

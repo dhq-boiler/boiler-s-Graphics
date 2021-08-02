@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using System.Windows.Shapes;
 
 namespace boilersGraphics.ViewModels
 {
@@ -65,6 +66,10 @@ namespace boilersGraphics.ViewModels
             pathGeometry.Transform = new RotateTransform(angle);
             return pathGeometry;
         }
+        public override Type GetViewType()
+        {
+            return typeof(Path);
+        }
 
         #region IClonable
 
@@ -77,7 +82,7 @@ namespace boilersGraphics.ViewModels
             clone.Width.Value = Width.Value;
             clone.Height.Value = Height.Value;
             clone.EdgeColor.Value = EdgeColor.Value;
-            clone.FillColor = FillColor;
+            clone.FillColor.Value = FillColor.Value;
             clone.EdgeThickness.Value = EdgeThickness.Value;
             clone.Matrix.Value = Matrix.Value;
             clone.RotationAngle.Value = RotationAngle.Value;

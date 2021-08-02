@@ -27,7 +27,7 @@ namespace boilersGraphics.Controls
         {
             DesignerItemViewModelBase designerItem = this.DataContext as DesignerItemViewModelBase;
 
-            if (designerItem != null && designerItem.IsSelected)
+            if (designerItem != null && designerItem.IsSelected.Value)
             {
                 (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "移動";
 

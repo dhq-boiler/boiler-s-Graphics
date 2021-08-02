@@ -80,7 +80,7 @@
                     </VisualBrush>
                 </ScrollViewer.Background>
                 <ItemsControl ItemContainerStyleSelector="{x:Static selector:DesignerItemsControlItemStyleSelector.Instance}"
-                              ItemsSource="{Binding Items}"
+                              ItemsSource="{Binding AllItems.Value, UpdateSourceTrigger=PropertyChanged}"
                               Background="Transparent"
                               BorderBrush="Black"
                               BorderThickness="{Binding CanvasBorderThickness}">
@@ -94,7 +94,9 @@
                             <Setter Property="attached:ItemConnectProps.EnabledForConnection" Value="True" />
                             <Setter Property="Width" Value="{Binding Width.Value}" />
                             <Setter Property="Height" Value="{Binding Height.Value}" />
+                            <Setter Property="Visibility" Value="{Binding IsVisible.Value, Converter={StaticResource BoolToVisibilityConverter}}" />
                             <Setter Property="SnapsToDevicePixels" Value="True" />
+                            <Setter Property="IsHitTestVisible" Value="{Binding IsHitTestVisible.Value}" />
                             <Setter Property="ContentTemplate">
                                 <Setter.Value>
                                     <DataTemplate>
@@ -120,9 +122,15 @@
                                             HorizontalAlignment="Stretch"
                                             VerticalAlignment="Stretch"
                                             Content="{TemplateBinding Content}" />
+                                            <!-- DEBUG -->
+                                            <!--<TextBlock VerticalAlignment="Center"
+                                                       HorizontalAlignment="Center">
+                                                <Run Text="IsSelected.Value=" />
+                                                <Run Text="{Binding IsSelected.Value}" />
+                                            </TextBlock>-->
                                         </Grid>
                                         <DataTemplate.Triggers>
-                                            <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                                            <DataTrigger Binding="{Binding IsSelected.Value}" Value="True">
                                                 <Setter TargetName="PART_ResizeDecorator" Property="Visibility" Value="Visible" />
                                                 <Setter TargetName="selectedGrid" Property="Effect">
                                                     <Setter.Value>
@@ -134,7 +142,7 @@
                                                     </Setter.Value>
                                                 </Setter>
                                             </DataTrigger>
-                                            <DataTrigger Binding="{Binding IsSelected}" Value="False">
+                                            <DataTrigger Binding="{Binding IsSelected.Value}" Value="False">
                                                 <Setter TargetName="PART_ResizeDecorator" Property="Visibility" Value="Hidden" />
                                             </DataTrigger>
                                         </DataTemplate.Triggers>
@@ -149,7 +157,9 @@
                             <Setter Property="Canvas.Top" Value="{Binding Area.Top}" />
                             <Setter Property="Canvas.Left" Value="{Binding Area.Left}" />
                             <Setter Property="Panel.ZIndex" Value="{Binding ZIndex.Value}" />
+                            <Setter Property="Visibility" Value="{Binding IsVisible.Value, Converter={StaticResource BoolToVisibilityConverter}}" />
                             <Setter Property="attached:SelectionProps.EnabledForSelection" Value="{Binding EnableForSelection.Value}" />
+                            <Setter Property="IsHitTestVisible" Value="{Binding IsHitTestVisible.Value}" />
                             <Setter Property="ContentTemplateSelector">
                                 <Setter.Value>
                                     <view:ItemsControlTemplateSelector>
@@ -207,7 +217,7 @@
                                                 Visibility="Hidden" />
                                             </Canvas>
                                             <DataTemplate.Triggers>
-                                                <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                                                <DataTrigger Binding="{Binding IsSelected.Value}" Value="True">
                                                     <Setter TargetName="PART_ResizeDecorator" Property="Visibility" Value="Visible" />
                                                 </DataTrigger>
                                             </DataTemplate.Triggers>
@@ -303,7 +313,7 @@
                                                 Visibility="Hidden" />
                                             </Canvas>
                                             <DataTemplate.Triggers>
-                                                <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                                                <DataTrigger Binding="{Binding IsSelected.Value}" Value="True">
                                                     <Setter TargetName="PART_ResizeDecorator" Property="Visibility" Value="Visible" />
                                                     <Setter TargetName="ControlPoint1" Property="Visibility" Value="Visible" />
                                                     <Setter TargetName="ControlPoint2" Property="Visibility" Value="Visible" />
@@ -427,6 +437,12 @@
                     x:Name="combine"
                     Width="180"
                     Margin="0,5,25,0" />
+                <view:Layers
+                    x:Name="layers"
+                    Width="180"
+                    MaxHeight="350"
+                    Margin="0,5,25,0"
+                    ScrollViewer.VerticalScrollBarVisibility="Auto" />
             </StackPanel>
         </Grid>
     </Border>

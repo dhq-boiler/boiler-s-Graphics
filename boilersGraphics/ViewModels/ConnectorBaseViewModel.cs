@@ -12,7 +12,6 @@ namespace boilersGraphics.ViewModels
 {
     public abstract class ConnectorBaseViewModel : SelectableDesignerItemViewModelBase, IObserver<TransformNotification>, ICloneable
     {
-        private bool _IsHitTestVisible;
         private ObservableCollection<Point> _Points;
 
         public ConnectorBaseViewModel(int id, IDiagramViewModel parent) : base(id, parent)
@@ -25,13 +24,6 @@ namespace boilersGraphics.ViewModels
             Init();
         }
 
-
-        public bool IsHitTestVisible
-        {
-            get { return _IsHitTestVisible; }
-            set { SetProperty(ref _IsHitTestVisible, value); }
-        }
-
         public ObservableCollection<Point> Points
         {
             get { return _Points; }
@@ -41,7 +33,6 @@ namespace boilersGraphics.ViewModels
         private void Init()
         {
             _Points = new ObservableCollection<Point>();
-            IsHitTestVisible = true;
             InitPathFinder();
         }
 

@@ -2,6 +2,7 @@
 using Reactive.Bindings;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -49,6 +50,33 @@ namespace boilersGraphics.Helpers
                 ctx.LineTo(new Point(item.Left.Value - offsetX + item.Width.Value, item.Top.Value - offsetY + item.Height.Value), true, false);
                 ctx.LineTo(new Point(item.Left.Value - offsetX, item.Top.Value - offsetY + item.Height.Value), true, false);
                 ctx.LineTo(new Point(item.Left.Value - offsetX, item.Top.Value - offsetY), true, false);
+            }
+            geometry.Freeze();
+            return PathGeometry.CreateFromGeometry(geometry);
+        }
+
+        public static PathGeometry CreateRectangle(NRectangleViewModel item, double offsetX, double offsetY, string propertyName, double oldItem, double newItem)
+        {
+            double widthRatio = 1;
+            double heightRatio = 1;
+            if (propertyName == "Width")
+            {
+                widthRatio = newItem / oldItem;
+            }
+            else if (propertyName == "Height")
+            {
+                heightRatio = newItem / oldItem;
+            }
+            
+            //TODO Rectangleを構成する4点に widthRatio と heightRatio を掛ける
+            var geometry = new StreamGeometry();
+            geometry.FillRule = FillRule.EvenOdd;
+            using (var ctx = geometry.Open())
+            {
+                ctx.BeginFigure(new Point(widthRatio * (item.Left.Value - offsetX), heightRatio * (item.Top.Value - offsetY)), true, true);
+                ctx.LineTo(new Point(widthRatio * (item.Left.Value - offsetX + item.Width.Value), heightRatio * (item.Top.Value - offsetY)), true, false);
+                ctx.LineTo(new Point(widthRatio * (item.Left.Value - offsetX + item.Width.Value), heightRatio * (item.Top.Value - offsetY + item.Height.Value)), true, false);
+                ctx.LineTo(new Point(widthRatio * (item.Left.Value - offsetX), heightRatio * (item.Top.Value - offsetY + item.Height.Value)), true, false);
             }
             geometry.Freeze();
             return PathGeometry.CreateFromGeometry(geometry);

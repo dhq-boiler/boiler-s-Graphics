@@ -2,7 +2,9 @@
 using Prism.Commands;
 using Prism.Mvvm;
 using Reactive.Bindings;
+using Reactive.Bindings.Extensions;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Windows.Media;
@@ -17,7 +19,6 @@ namespace boilersGraphics.ViewModels
 
     public abstract class SelectableDesignerItemViewModelBase : BindableBase, ISelectItems, IObserver<GroupTransformNotification>, IDisposable, ICloneable
     {
-        private bool _IsSelected;
         protected CompositeDisposable _CompositeDisposable = new CompositeDisposable();
 
         public SelectableDesignerItemViewModelBase(int id, IDiagramViewModel parent)
@@ -32,24 +33,20 @@ namespace boilersGraphics.ViewModels
             Init();
         }
 
-        public ReactiveCollection<SelectableDesignerItemViewModelBase> SelectedItems
+        public SelectableDesignerItemViewModelBase[] SelectedItems
         {
-            get { return Owner.SelectedItems; }
+            get { return Owner.SelectedItems.Value; }
         }
 
         public IDiagramViewModel Owner { get; set; }
         public DelegateCommand<object> SelectItemCommand { get; private set; }
         public int Id { get; set; }
 
-        public bool IsSelected
-        {
-            get { return _IsSelected; }
-            set { SetProperty(ref _IsSelected, value); }
-        }
+        public ReactivePropertySlim<bool> IsSelected { get; } = new ReactivePropertySlim<bool>();
 
-        public ReactiveProperty<Matrix> Matrix { get; } = new ReactiveProperty<Matrix>();
+        public ReactiveProperty<Matrix> Matrix { get; } = new ReactiveProperty<Matrix>(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe | ReactivePropertyMode.DistinctUntilChanged);
 
-        public ReactiveProperty<double> RotationAngle { get; } = new ReactiveProperty<double>();
+        public ReactiveProperty<double> RotationAngle { get; } = new ReactiveProperty<double>(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe | ReactivePropertyMode.DistinctUntilChanged);
 
         public ReactiveProperty<bool> EnableForSelection { get; } = new ReactiveProperty<bool>();
 
@@ -64,6 +61,14 @@ namespace boilersGraphics.ViewModels
         public ReactiveProperty<PathGeometry> RotatePathGeometry { get; set; } = new ReactiveProperty<PathGeometry>();
 
         public ReactiveProperty<bool> EnablePathGeometryUpdate { get; set; } = new ReactiveProperty<bool>();
+
+        public ReactivePropertySlim<bool> IsVisible { get; } = new ReactivePropertySlim<bool>();
+
+        
+        public ReactiveProperty<bool> IsHitTestVisible { get; set; } = new ReactiveProperty<bool>();
+
+        public ReactivePropertySlim<Color> FillColor { get; } = new ReactivePropertySlim<Color>();
+
         public string Name { get; set; }
 
         public Guid ID { get; set; } = Guid.NewGuid();
@@ -74,20 +79,20 @@ namespace boilersGraphics.ViewModels
 
         private void ExecuteSelectItemCommand(object param)
         {
-            SelectItem((bool)param, !IsSelected);
+            SelectItem((bool)param, !IsSelected.Value);
         }
 
         private void SelectItem(bool newselect, bool select)
         {
             if (newselect)
             {
-                foreach (var designerItemViewModelBase in Owner.SelectedItems.ToList())
+                foreach (var designerItemViewModelBase in Owner.SelectedItems.Value.ToList())
                 {
-                    designerItemViewModelBase.IsSelected = false;
+                    designerItemViewModelBase.IsSelected.Value = false;
                 }
             }
 
-            IsSelected = select;
+            IsSelected.Value = select;
         }
 
         public bool IsSameGroup(SelectableDesignerItemViewModelBase target)
@@ -97,10 +102,12 @@ namespace boilersGraphics.ViewModels
 
         private void Init()
         {
-            SelectItemCommand = new DelegateCommand<object>(p => SelectItem((bool)p, !IsSelected));
+            SelectItemCommand = new DelegateCommand<object>(p => SelectItem((bool)p, !IsSelected.Value));
 
             EnableForSelection.Value = true;
         }
+
+        public abstract Type GetViewType();
 
         #region IObserver<GroupTransformNotification>
 
@@ -122,7 +129,10 @@ namespace boilersGraphics.ViewModels
 
         public void Dispose()
         {
-            _CompositeDisposable.Dispose();
+            if (_CompositeDisposable != null)
+            {
+                _CompositeDisposable.Dispose();
+            }
             _CompositeDisposable = null;
         }
 

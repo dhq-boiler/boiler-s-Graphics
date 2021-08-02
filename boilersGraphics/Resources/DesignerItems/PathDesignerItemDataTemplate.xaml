@@ -4,7 +4,8 @@
     <DataTemplate DataType="{x:Type viewModel:PathDesignerItemViewModel}">
         <Path Stroke="{Binding EdgeColor.Value}"
               StrokeThickness="{Binding EdgeThickness.Value}"
-              Fill="{Binding FillColor}"
+              IsHitTestVisible="False"
+              Fill="{Binding FillColor.Value}"
               Data="{Binding Points}" />
     </DataTemplate>
 </ResourceDictionary>

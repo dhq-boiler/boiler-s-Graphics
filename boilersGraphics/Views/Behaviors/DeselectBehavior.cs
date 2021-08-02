@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Documents;
 using System.Windows.Input;
 
 namespace boilersGraphics.Views.Behaviors
@@ -27,8 +28,11 @@ namespace boilersGraphics.Views.Behaviors
 
         private void AssociatedObject_PreviewMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
+            var frameworkElement = e.OriginalSource as FrameworkElement;
+            if (frameworkElement == null)
+                frameworkElement = (e.OriginalSource as Run).Parent as FrameworkElement;
             //PreviewMouseDownイベントで得られる ViewModel を取得する
-            var viewModel = (e.OriginalSource as FrameworkElement).DataContext as SelectableDesignerItemViewModelBase;
+            var viewModel = frameworkElement.DataContext as SelectableDesignerItemViewModelBase;
             foreach (var item in this.AssociatedObject.Children)
             {
                 //LeftShift or RightShiftを押下している時は以降の処理しない
@@ -44,7 +48,7 @@ namespace boilersGraphics.Views.Behaviors
                 if (vm != viewModel)
                 {
                     //非選択状態にする
-                    vm.IsSelected = false;
+                    vm.IsSelected.Value = false;
                 }
             }
         }

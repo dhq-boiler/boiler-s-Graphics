@@ -1,6 +1,8 @@
 ﻿
 using boilersGraphics.Helpers;
+using System;
 using System.Windows.Media;
+using System.Windows.Shapes;
 
 namespace boilersGraphics.ViewModels
 {
@@ -51,6 +53,11 @@ namespace boilersGraphics.ViewModels
             return GeometryCreator.CreateRectangle(this, angle);
         }
 
+        public override Type GetViewType()
+        {
+            return typeof(Path);
+        }
+
         #region IClonable
 
         public override object Clone()
@@ -62,7 +69,7 @@ namespace boilersGraphics.ViewModels
             clone.Width.Value = Width.Value;
             clone.Height.Value = Height.Value;
             clone.EdgeColor.Value = EdgeColor.Value;
-            clone.FillColor = FillColor;
+            clone.FillColor.Value = FillColor.Value;
             clone.EdgeThickness.Value = EdgeThickness.Value;
             clone.Matrix.Value = Matrix.Value;
             clone.RotationAngle.Value = RotationAngle.Value;

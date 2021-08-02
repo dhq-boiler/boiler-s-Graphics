@@ -8,8 +8,9 @@
     <DataTemplate DataType="{x:Type viewModel:NRectangleViewModel}">
         <Path Stroke="{Binding EdgeColor.Value, Converter={StaticResource solidColorBrushConverter}}"
               StrokeThickness="{Binding EdgeThickness.Value}"
+              IsHitTestVisible="False"
               Stretch="Fill"
-              Fill="{Binding FillColor, Converter={StaticResource solidColorBrushConverter}}"
+              Fill="{Binding FillColor.Value, Converter={StaticResource solidColorBrushConverter}}"
               Data="{Binding PathGeometry.Value}" />
     </DataTemplate>
 </ResourceDictionary>

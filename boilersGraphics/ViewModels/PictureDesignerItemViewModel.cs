@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using System.Windows.Media;
 
 namespace boilersGraphics.ViewModels
@@ -34,6 +35,8 @@ namespace boilersGraphics.ViewModels
 
         public ReactiveProperty<Geometry> Clip { get; set; } = new ReactiveProperty<Geometry>();
 
+        public ReactiveProperty<SelectableDesignerItemViewModelBase> ClipObject { get; set; } = new ReactiveProperty<SelectableDesignerItemViewModelBase>();
+
         public PictureDesignerItemViewModel(int id, DiagramViewModel parent, double left, double top)
             : base(id, parent, left, top)
         {
@@ -61,6 +64,11 @@ namespace boilersGraphics.ViewModels
             throw new NotSupportedException("picture is not supported.");
         }
 
+        public override Type GetViewType()
+        {
+            return typeof(Image);
+        }
+
         #region IClonable
 
         public override object Clone()
@@ -72,7 +80,7 @@ namespace boilersGraphics.ViewModels
             clone.Width.Value = Width.Value;
             clone.Height.Value = Height.Value;
             clone.EdgeColor.Value = EdgeColor.Value;
-            clone.FillColor = FillColor;
+            clone.FillColor.Value = FillColor.Value;
             clone.EdgeThickness.Value = EdgeThickness.Value;
             clone.Matrix.Value = Matrix.Value;
             clone.RotationAngle.Value = RotationAngle.Value;

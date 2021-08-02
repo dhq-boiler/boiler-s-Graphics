@@ -13,10 +13,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
+using System.Windows.Shapes;
 
 namespace boilersGraphics.ViewModels
 {
-    public class LetterVerticalDesignerItemViewModel : DesignerItemViewModelBase
+    public class LetterVerticalDesignerItemViewModel : DesignerItemViewModelBase, ILetterDesignerItemViewModel
     {
         private bool _LetterSettingDialogIsOpen = false;
         private string _LetterString = string.Empty;
@@ -85,7 +86,7 @@ namespace boilersGraphics.ViewModels
         private void Init()
         {
             this.ShowConnectors = false;
-            this.ObserveProperty(x => x.IsSelected)
+            this.ObserveProperty(x => x.IsSelected.Value)
                 .Subscribe(isSelected =>
                 {
                     if (isSelected)
@@ -269,6 +270,11 @@ namespace boilersGraphics.ViewModels
             return rotatePathGeometry;
         }
 
+        public override Type GetViewType()
+        {
+            return typeof(Path);
+        }
+
         #region IClonable
 
         public override object Clone()
@@ -280,7 +286,7 @@ namespace boilersGraphics.ViewModels
             clone.Width.Value = Width.Value;
             clone.Height.Value = Height.Value;
             clone.EdgeColor.Value = EdgeColor.Value;
-            clone.FillColor = FillColor;
+            clone.FillColor.Value = FillColor.Value;
             clone.EdgeThickness.Value = EdgeThickness.Value;
             clone.Matrix.Value = Matrix.Value;
             clone.RotationAngle.Value = RotationAngle.Value;

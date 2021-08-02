@@ -6,7 +6,8 @@
     <DataTemplate DataType="{x:Type viewModel:LetterVerticalDesignerItemViewModel}">
         <Path Stroke="{Binding EdgeColor.Value, Converter={StaticResource solidColorBrushConverter}}"
               StrokeThickness="{Binding EdgeThickness.Value}"
-              Fill="{Binding FillColor, Converter={StaticResource solidColorBrushConverter}}"
+              IsHitTestVisible="False"
+              Fill="{Binding FillColor.Value, Converter={StaticResource solidColorBrushConverter}}"
               Data="{Binding PathGeometry.Value}">
         </Path>
     </DataTemplate>

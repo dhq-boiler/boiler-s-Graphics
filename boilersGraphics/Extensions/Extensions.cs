@@ -1,6 +1,11 @@
-﻿using boilersGraphics.ViewModels;
+﻿using boilersGraphics.Models;
+using boilersGraphics.ViewModels;
+using Reactive.Bindings;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Media;
 
@@ -226,6 +231,120 @@ namespace boilersGraphics.Extensions
 
                 yield return item;
             }
+        }
+
+        public static ObservableCollection<T> ToObservableCollection<T>(this IEnumerable<T> source)
+        {
+            if (source == null)
+            {
+                throw new ArgumentNullException("source");
+            }
+            return new ObservableCollection<T>(source);
+        }
+
+        public static IEnumerable<SelectableDesignerItemViewModelBase> Items(this ObservableCollection<Layer> layers)
+        {
+            return layers.SelectMany(x => x.Children).Select(x => (x as LayerItem).Item.Value);
+        }
+
+        public static T GetParent<T>(this DependencyObject obj)
+        {
+            var parent = VisualTreeHelper.GetParent(obj);
+            return parent switch
+            {
+                null => default,
+                T ret => ret,
+                _ => parent.GetParent<T>()
+            };
+        }
+
+        public static IEnumerable<DependencyObject> Children(this DependencyObject obj)
+        {
+            if (obj == null)
+                throw new ArgumentNullException("obj");
+
+            var count = VisualTreeHelper.GetChildrenCount(obj);
+            if (count == 0)
+                yield break;
+
+            for (var i = 0; i < count; i++)
+            {
+                var child = VisualTreeHelper.GetChild(obj, i);
+                yield return child;
+            }
+        }
+
+        public static IEnumerable<DependencyObject> Descendants(this DependencyObject obj)
+        {
+            if (obj == null)
+                throw new ArgumentNullException("obj");
+
+            foreach (var child in obj.Children())
+            {
+                yield return child;
+                foreach (var grandChild in child.Descendants())
+                    yield return grandChild;
+            }
+        }
+
+        public static IEnumerable<T> Children<T>(this DependencyObject obj)
+            where T : DependencyObject
+        {
+            return obj.Children().OfType<T>();
+        }
+
+        //--- 特定の型の子孫要素を取得
+        public static IEnumerable<T> Descendants<T>(this DependencyObject obj)
+            where T : DependencyObject
+        {
+            return obj.Descendants().OfType<T>();
+        }
+
+        //https://stackoverflow.com/questions/41608665/linq-recursive-parent-child
+        public static IEnumerable<T2> SelectRecursive<T1, T2>(this IEnumerable<T1> source, Func<T2, IEnumerable<T2>> selector) where T1 : class where T2 : class
+        {
+            foreach (var parent in source)
+            {
+                yield return parent as T2;
+
+                var children = selector(parent as T2);
+                foreach (var child in SelectRecursive(children, selector))
+                    yield return child;
+            }
+        }
+
+        public static bool HasAsAncestor(this LayerTreeViewItemBase layerItem, LayerTreeViewItemBase ancestor)
+        {
+            LayerTreeViewItemBase temp = layerItem;
+            while (temp.Parent.Value != null)
+            {
+                if (temp == ancestor)
+                    return true;
+                temp = temp.Parent.Value;
+            }
+            return false;
+        }
+
+        //http://stackoverflow.com/questions/7319952/how-to-get-listbox-itemspanel-in-code-behind
+        public static T GetVisualChild<T>(this DependencyObject parent) where T : Visual
+        {
+            T child = default(T);
+
+            int numVisuals = VisualTreeHelper.GetChildrenCount(parent);
+            for (int i = 0; i < numVisuals; i++)
+            {
+                Visual v = (Visual)VisualTreeHelper.GetChild(parent, i);
+                child = v as T;
+                if (child == null)
+                {
+                    child = GetVisualChild<T>(v);
+                }
+                if (child != null)
+                {
+                    break;
+                }
+            }
+            return child;
         }
     }
 }

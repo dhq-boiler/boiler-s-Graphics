@@ -1,4 +1,5 @@
-﻿using Prism.Commands;
+﻿using boilersGraphics.Models;
+using Prism.Commands;
 using Reactive.Bindings;
 using System.Collections.ObjectModel;
 using System.Windows.Media;
@@ -10,11 +11,11 @@ namespace boilersGraphics.ViewModels
         DelegateCommand<object> AddItemCommand { get; }
         DelegateCommand<object> RemoveItemCommand { get; }
         DelegateCommand<object> ClearSelectedItemsCommand { get; }
-        ReactiveCollection<SelectableDesignerItemViewModelBase> SelectedItems { get; }
+        ReadOnlyReactivePropertySlim<SelectableDesignerItemViewModelBase[]> SelectedItems { get; }
         ObservableCollection<Color> EdgeColors { get; }
         ObservableCollection<Color> FillColors { get; }
         ReactiveProperty<double?> EdgeThickness { get; }
-        ObservableCollection<SelectableDesignerItemViewModelBase> Items { get; }
+        ReactiveCollection<Layer> Layers { get; }
 
         void DeselectAll();
     }
