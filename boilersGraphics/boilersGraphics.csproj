@@ -182,6 +182,7 @@
     <Compile Include="Helpers\GroupTransformNotification.cs" />
     <Compile Include="Helpers\IEventArgsConverter.cs" />
     <Compile Include="Helpers\Measure.cs" />
+    <Compile Include="Helpers\Name.cs" />
     <Compile Include="Helpers\ObjectDeserializer.cs" />
     <Compile Include="Helpers\ObjectSerializer.cs" />
     <Compile Include="Helpers\OpenCvSharpHelper.cs" />

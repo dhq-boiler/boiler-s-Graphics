@@ -192,7 +192,7 @@ namespace boilersGraphics.Models
 
         public void AddItem(SelectableDesignerItemViewModelBase item)
         {
-            var layerItem = new LayerItem(item, this, $"アイテム{LayerItem.LayerItemCount++}");
+            var layerItem = new LayerItem(item, this, boilersGraphics.Helpers.Name.GetNewLayerItemName());
             layerItem.IsVisible.Value = true;
             layerItem.Parent.Value = this;
             Random rand = new Random();
