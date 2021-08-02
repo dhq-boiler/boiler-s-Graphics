@@ -134,6 +134,12 @@ namespace boilersGraphics.Helpers
             foreach (var c in children_layerItems)
             {
                 layerItemObj.Children.Add(c);
+
+                //グループの場合、子をグループに追加する
+                if (item is GroupItemViewModel groupItemVM)
+                {
+                    groupItemVM.AddGroup(c.Item.Value);
+                }
             }
             return layerItemObj;
         }
