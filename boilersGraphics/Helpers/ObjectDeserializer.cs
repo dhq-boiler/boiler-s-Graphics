@@ -13,7 +13,7 @@ using System.Xml.Linq;
 
 namespace boilersGraphics.Helpers
 {
-    class ObjectDeserializer
+    public class ObjectDeserializer
     {
         private static SelectableDesignerItemViewModelBase DeserializeInstance(XElement designerItemXML)
         {
