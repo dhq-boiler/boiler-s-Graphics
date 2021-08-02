@@ -105,7 +105,33 @@ namespace boilersGraphics.Helpers
             }
             else
             {
-                throw new UnexpectedException("Layers element not found.");
+                var layerObj = new Layer();
+                Random rand = new Random();
+                layerObj.Color.Value = Randomizer.RandomColor(rand);
+                layerObj.IsVisible.Value = true;
+                layerObj.Name.Value = Name.GetNewLayerName();
+
+                //読み込むファイルにLayers要素がない場合、初期レイヤーに全てのアイテムを突っ込む
+                foreach (var designerItems in root.Elements("DesignerItems"))
+                {
+                    foreach (var designerItem in designerItems.Elements("DesignerItem"))
+                    {
+                        var item = ExtractDesignerItemViewModelBase(diagramViewModel, designerItem);
+                        var layerItem = new LayerItem(item, layerObj, Name.GetNewLayerItemName());
+                        layerObj.Children.Add(layerItem);
+                    }
+                }
+                foreach (var connections in root.Elements("Connections"))
+                {
+                    foreach (var connector in connections.Elements("Connection"))
+                    {
+                        var item = ExtractConnectorBaseViewModel(diagramViewModel, connector);
+                        var layerItem = new LayerItem(item, layerObj, Name.GetNewLayerItemName());
+                        layerObj.Children.Add(layerItem);
+                    }
+                }
+
+                diagramViewModel.Layers.Add(layerObj);
             }
         }
 
