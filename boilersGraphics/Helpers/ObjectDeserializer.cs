@@ -84,16 +84,16 @@ namespace boilersGraphics.Helpers
             var layers = root.Elements().Where(x => x.Name == "Layers").FirstOrDefault();
             if (layers != null)
             {
-                foreach (var layer in layers.Descendants("Layer"))
+                foreach (var layer in layers.Elements("Layer"))
                 {
                     var layerObj = new Layer();
                     layerObj.Color.Value = (Color)ColorConverter.ConvertFromString(layer.Element("Color").Value);
                     layerObj.IsVisible.Value = bool.Parse(layer.Element("IsVisible").Value);
                     layerObj.Name.Value = layer.Element("Name").Value;
 
-                    foreach (var layerItemsInternal in layer.Descendants("LayerItems"))
+                    foreach (var layerItemsInternal in layer.Elements("LayerItems"))
                     {
-                        foreach (var layerItem in layerItemsInternal.Descendants("LayerItem"))
+                        foreach (var layerItem in layerItemsInternal.Elements("LayerItem"))
                         {
                             LayerItem layerItemObj = ReadLayerItemFromXML(diagramViewModel, layerObj, layerItem);
                             layerObj.Children.Add(layerItemObj);
