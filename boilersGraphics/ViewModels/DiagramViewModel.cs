@@ -985,6 +985,9 @@ namespace boilersGraphics.ViewModels
             EnablePointSnap.Value = bool.Parse(configuration.Element("EnablePointSnap").Value);
             (App.Current.MainWindow.DataContext as MainWindowViewModel).SnapPower.Value = double.Parse(configuration.Element("SnapPower").Value);
 
+            Layer.LayerCount = 1;
+            LayerItem.LayerItemCount = 1;
+
             Layers.Clear();
 
             ObjectDeserializer.ReadObjectsFromXML(this, root);
