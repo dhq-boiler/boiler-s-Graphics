@@ -11,11 +11,13 @@ using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
 using System.Reactive;
+using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 
 namespace boilersGraphics.Models
 {
@@ -66,7 +68,7 @@ namespace boilersGraphics.Models
                  .ToUnit()
                  .Merge(Children.ObserveElementObservableProperty(x => (x as LayerItem).Item.Value.FillColor).ToUnit())
                  .Delay(TimeSpan.FromMilliseconds(500))
-                 .ObserveOnDispatcher()
+                 .ObserveOn(new DispatcherScheduler(Dispatcher.CurrentDispatcher))
                  .Subscribe(x =>
                  {
                      Trace.WriteLine("detected Layer changes. run Layer.UpdateAppearance().");
