@@ -989,6 +989,8 @@ namespace boilersGraphics.ViewModels
             Layers.Clear();
 
             ObjectDeserializer.ReadObjectsFromXML(this, root);
+
+            Layers.First().IsSelected.Value = true;
         }
 
         private XElement LoadSerializedDataFromFile()
