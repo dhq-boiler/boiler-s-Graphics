@@ -6,23 +6,16 @@
              xmlns:local="clr-namespace:boilersGraphics.Views"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Button x:Name="button"
-            Height="24">
-        <Button.Template>
-            <ControlTemplate TargetType="{x:Type Button}">
-                <DockPanel LastChildFill="True">
-                    <Label x:Name="label"
-                           IsHitTestVisible="True"
-                           Content="{Binding Text, RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}}"
-                           Visibility="Visible" />
-                    <TextBox x:Name="textbox"
-                             LostFocus="textbox_LostFocus"
-                             PreviewKeyDown="textbox_PreviewKeyDown"
-                             VerticalContentAlignment="Center"
-                             Text="{Binding Text, Mode=TwoWay, RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}}"
-                             Visibility="Collapsed" />
-                </DockPanel>
-            </ControlTemplate>
-        </Button.Template>
-    </Button>
+    <DockPanel>
+        <TextBlock x:Name="LabelTextBox_internal_textblock"
+                   IsHitTestVisible="True"
+                   Text="{Binding Text, RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}}"
+                   Visibility="Visible" />
+        <TextBox x:Name="LabelTextBox_internal_textbox"
+                 LostFocus="textbox_LostFocus"
+                 PreviewKeyDown="textbox_PreviewKeyDown"
+                 VerticalContentAlignment="Center"
+                 Text="{Binding Text, Mode=TwoWay, RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}}"
+                 Visibility="Collapsed" />
+    </DockPanel>
 </UserControl>

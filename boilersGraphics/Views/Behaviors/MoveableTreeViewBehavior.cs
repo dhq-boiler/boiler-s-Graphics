@@ -215,6 +215,7 @@ namespace boilersGraphics.Views.Behaviors
                 return;
 
             DragDrop.DoDragDrop(treeView, treeView.SelectedItem, DragDropEffects.Move);
+            Trace.WriteLine($"Done DragDrop.DoDragDrop() in OnPreviewMouseMove()");
 
             _startPos = null;
         }
@@ -228,11 +229,14 @@ namespace boilersGraphics.Views.Behaviors
         private void OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (!(sender is ItemsControl itemsControl))
+            {
+                Trace.WriteLine("OnPreviewMouseLeftButtonDown() canceled.");
                 return;
+            }
 
             var pos = e.GetPosition(itemsControl);
             var hit = HitTest<FrameworkElement>(itemsControl, e.GetPosition);
-            if (hit.DataContext is LayerTreeViewItemBase)
+            if (hit != null && hit.DataContext is LayerTreeViewItemBase)
                 _startPos = itemsControl.PointToScreen(pos);
             else
                 _startPos = null;
