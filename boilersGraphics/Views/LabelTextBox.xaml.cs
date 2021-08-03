@@ -50,7 +50,7 @@ namespace boilersGraphics.Views
             TargetTextBox.Visibility = Visibility.Collapsed;
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        public void FocusTextBox()
         {
             TargetLabel.Visibility = Visibility.Collapsed;
             TargetTextBox.Visibility = Visibility.Visible;

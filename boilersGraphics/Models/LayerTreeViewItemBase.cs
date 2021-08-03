@@ -1,4 +1,6 @@
 ﻿using boilersGraphics.Exceptions;
+using boilersGraphics.Extensions;
+using boilersGraphics.Views;
 using Prism.Mvvm;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
@@ -7,6 +9,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 
 namespace boilersGraphics.Models
@@ -35,6 +38,10 @@ namespace boilersGraphics.Models
 
         public ReactiveCollection<LayerTreeViewItemBase> Children { get; set; } = new ReactiveCollection<LayerTreeViewItemBase>();
 
+        public ReactiveCollection<Control> LayerTreeViewItemContextMenu { get; } = new ReactiveCollection<Control>();
+
+        public ReactiveCommand ChangeNameCommand { get; } = new ReactiveCommand();
+
         public LayerTreeViewItemBase()
         {
             Parent.Subscribe(x =>
@@ -45,6 +52,17 @@ namespace boilersGraphics.Models
                     Trace.WriteLine($"Set Parent Parent={{{x.Name.Value}}} Child={{{Name.Value}}}");
             })
             .AddTo(_disposable);
+            ChangeNameCommand.Subscribe(_ =>
+            {
+                var labelTextBox = App.Current.MainWindow.GetCorrespondingViews<LabelTextBox>(this).First();
+                labelTextBox.FocusTextBox();
+            })
+            .AddTo(_disposable);
+            LayerTreeViewItemContextMenu.Add(new MenuItem()
+            {
+                Header = "名前の変更",
+                Command = ChangeNameCommand
+            });
         }
 
         public void ChildrenSwitchVisibility(bool isVisible)

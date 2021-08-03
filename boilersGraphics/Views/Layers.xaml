@@ -257,7 +257,11 @@
                                                         <Separator BorderThickness="1" BorderBrush="Black" Visibility="{Binding BeforeSeparatorVisibility.Value}" />
                                                         <StackPanel Orientation="Horizontal">
                                                             <views:LabelTextBox VerticalAlignment="Center"
-                                                                                Text="{Binding Name.Value}" />
+                                                                                Text="{Binding Name.Value}">
+                                                                <views:LabelTextBox.ContextMenu>
+                                                                    <ContextMenu ItemsSource="{Binding LayerTreeViewItemContextMenu}" />
+                                                                </views:LabelTextBox.ContextMenu>
+                                                            </views:LabelTextBox>
                                                             <!--<TextBlock VerticalAlignment="Center"
                                                                        Text="{Binding IsSelected.Value}" />-->
                                                             <!--<TextBlock VerticalAlignment="Center"
