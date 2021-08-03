@@ -174,23 +174,13 @@ namespace boilersGraphics.Views.Behaviors
             switch (_insertType)
             {
                 case InsertType.Before:
-                    LayerTreeViewItemBase parent = targetItem;
-                    if (targetItem is LayerItem)
-                    {
-                        parent = targetItem.Parent.Value;
-                    }
-                    parent.InsertBeforeChildren(sourceItem, targetItem);
-                    sourceItem.Parent.Value = parent;
+                    targetItemParent.InsertBeforeChildren(sourceItem, targetItem);
+                    sourceItem.Parent.Value = targetItemParent;
                     sourceItem.IsSelected.Value = true;
                     break;
                 case InsertType.After:
-                    parent = targetItem;
-                    if (targetItem is LayerItem)
-                    {
-                        parent = targetItem.Parent.Value;
-                    }
-                    parent.InsertAfterChildren(sourceItem, targetItem);
-                    sourceItem.Parent.Value = parent;
+                    targetItemParent.InsertAfterChildren(sourceItem, targetItem);
+                    sourceItem.Parent.Value = targetItemParent;
                     sourceItem.IsSelected.Value = true;
                     break;
                 case InsertType.Children:
