@@ -90,7 +90,7 @@ namespace boilersGraphics.Views.Behaviors
         {
             ResetSeparator(_changedBlocks);
 
-            if (!(sender is ItemsControl itemsControl) || !e.Data.GetDataPresent(typeof(LayerItem)))
+            if (!(sender is ItemsControl itemsControl) || !(e.Data.GetDataPresent(typeof(LayerItem)) || e.Data.GetDataPresent(typeof(Layer))))
                 return;
 
             DragScroll(itemsControl, e);
