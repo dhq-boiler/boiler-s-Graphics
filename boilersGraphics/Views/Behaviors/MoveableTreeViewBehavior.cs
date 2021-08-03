@@ -129,13 +129,13 @@ namespace boilersGraphics.Views.Behaviors
                 _insertType = InsertType.After;
                 targetElementInfo.AfterSeparatorVisibility.Value = Visibility.Visible;
             }
-            else if (targetElementInfo is LayerItem)
+            else if (targetElementInfo is LayerItem && sourceItem is LayerItem)
             {
                 targetElementInfo = targetElementInfo.Parent.Value;
                 _insertType = InsertType.Children;
                 targetElementInfo.Background.Value = Brushes.Gray;
             }
-            else if (targetElementInfo is Layer)
+            else if (targetElementInfo is Layer && sourceItem is LayerItem)
             {
                 _insertType = InsertType.Children;
                 targetElementInfo.Background.Value = Brushes.Gray;
