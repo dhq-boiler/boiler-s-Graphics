@@ -147,7 +147,8 @@
                         CornerRadius="1">
                             <Expander Background="Transparent" IsExpanded="True">
                                 <DockPanel>
-                                    <TreeView ItemsSource="{Binding Layers}">
+                                    <TreeView x:Name="LayersTreeView"
+                                              ItemsSource="{Binding Layers}">
                                         <i:Interaction.Triggers>
                                             <i:EventTrigger EventName="SelectedItemChanged">
                                                 <helper:EventToCommand Command="{Binding SelectedItemChangedCommand}" PassEventArgsToCommand="True" />
