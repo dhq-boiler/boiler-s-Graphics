@@ -95,6 +95,8 @@ namespace boilersGraphics.Views.Behaviors
 
             DragScroll(itemsControl, e);
 
+            Trace.WriteLine($"Begin OnDragOver()");
+
             var sourceItemLayerItem = (LayerTreeViewItemBase)e.Data.GetData(typeof(LayerItem));
             var sourceItemLayer = (LayerTreeViewItemBase)e.Data.GetData(typeof(Layer));
             var sourceItem = EitherNotNull(sourceItemLayer, sourceItemLayerItem);
@@ -102,7 +104,10 @@ namespace boilersGraphics.Views.Behaviors
 
             var parentGrid = targetElement?.GetParent<Grid>();
             if (parentGrid == null || !(targetElement.DataContext is LayerTreeViewItemBase targetElementInfo) || targetElementInfo == sourceItem)
+            {
+                Trace.WriteLine("OnDragOver() canceled.");
                 return;
+            }
 
             if (targetElementInfo.ContainsParent(sourceItem))
                 return;
