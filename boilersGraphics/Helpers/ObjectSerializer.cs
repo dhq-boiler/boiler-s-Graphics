@@ -11,14 +11,14 @@ namespace boilersGraphics.Helpers
 {
     class ObjectSerializer
     {
-        public static IEnumerable<XElement> SerializeLayers(ObservableCollection<Layer> layers)
+        public static IEnumerable<XElement> SerializeLayers(ObservableCollection<LayerTreeViewItemBase> layers)
         {
             var layersXML = from layer in layers
                             select new XElement("Layer", ExtractLayer(layer));
             return layersXML;
         }
 
-        private static IEnumerable<XElement> ExtractLayer(Layer layer)
+        private static IEnumerable<XElement> ExtractLayer(LayerTreeViewItemBase layer)
         {
             var layerXML = new List<XElement>();
             layerXML.Add(new XElement("IsVisible", layer.IsVisible.Value));
@@ -28,7 +28,7 @@ namespace boilersGraphics.Helpers
             return layerXML;
         }
 
-        private static IEnumerable<XElement> ExtractLayerItemFromLayer(Layer layer)
+        private static IEnumerable<XElement> ExtractLayerItemFromLayer(LayerTreeViewItemBase layer)
         {
             var layerItemsXML = from layerItem in layer.Children
                                 select ExtractLayerItem(layerItem as LayerItem);
@@ -124,7 +124,10 @@ namespace boilersGraphics.Helpers
 
         public static IEnumerable<XElement> SerializeConnections(DiagramViewModel dialogViewModel, IEnumerable<SelectableDesignerItemViewModelBase> items)
         {
-            return (from connection in items.WithPickupChildren(dialogViewModel.Layers.Items()).OfType<ConnectorBaseViewModel>()
+            return (from connection in items.WithPickupChildren(dialogViewModel.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                                                                                      .Where(x => x is LayerItem)
+                                                                                      .Select(x => (x as LayerItem).Item.Value)
+                                                               ).OfType<ConnectorBaseViewModel>()
                     where connection.GetType() != typeof(BezierCurveViewModel)
                     select new XElement("Connection",
                                new XElement("ID", connection.ID),
@@ -138,7 +141,10 @@ namespace boilersGraphics.Helpers
                                new XElement("PathGeometry", connection.PathGeometry.Value)
                     ))
                     .Union(
-                        from connection in items.WithPickupChildren(dialogViewModel.Layers.Items()).OfType<ConnectorBaseViewModel>()
+                        from connection in items.WithPickupChildren(dialogViewModel.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                                                                                      .Where(x => x is LayerItem)
+                                                                                      .Select(x => (x as LayerItem).Item.Value)
+                                                                   ).OfType<ConnectorBaseViewModel>()
                         where connection.GetType() == typeof(BezierCurveViewModel)
                         select new XElement("Connection",
                                     new XElement("ID", connection.ID),

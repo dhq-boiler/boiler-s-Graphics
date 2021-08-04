@@ -1,13 +1,18 @@
 ﻿using boilersGraphics.Exceptions;
 using boilersGraphics.Extensions;
+using boilersGraphics.Helpers;
+using boilersGraphics.ViewModels;
 using boilersGraphics.Views;
 using Prism.Mvvm;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
+using System.Reactive;
 using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -62,6 +67,40 @@ namespace boilersGraphics.Models
             {
                 Header = "名前の変更",
                 Command = ChangeNameCommand
+            });
+        }
+
+        public IObservable<Unit> LayerItemsChangedAsObservable()
+        {
+            return Children.ObserveElementObservableProperty(x => (x as LayerItem).Item)
+                        .ToUnit()
+                        .Merge(Children.CollectionChangedAsObservable().Where(x => x.Action == NotifyCollectionChangedAction.Remove || x.Action == NotifyCollectionChangedAction.Reset).ToUnit());
+        }
+
+        public IObservable<Unit> SelectedLayerItemsChangedAsObservable()
+        {
+            return Children.ObserveElementObservableProperty(x => (x as LayerItem).Item.Value.IsSelected)
+                        .ToUnit()
+                        .Merge(Children.CollectionChangedAsObservable().Where(x => x.Action == NotifyCollectionChangedAction.Remove || x.Action == NotifyCollectionChangedAction.Reset).ToUnit());
+        }
+
+        public void AddItem(SelectableDesignerItemViewModelBase item)
+        {
+            var layerItem = new LayerItem(item, this, boilersGraphics.Helpers.Name.GetNewLayerItemName());
+            layerItem.IsVisible.Value = true;
+            layerItem.Parent.Value = this;
+            Random rand = new Random();
+            layerItem.Color.Value = Randomizer.RandomColor(rand);
+            Children.Add(layerItem);
+        }
+
+        public void RemoveItem(SelectableDesignerItemViewModelBase item)
+        {
+            var layerItems = Children.Where(x => (x as LayerItem).Item.Value == item);
+            layerItems.ToList().ForEach(x =>
+            {
+                var removed = Children.Remove(x);
+                Trace.WriteLine($"{x} removed from {Children} {removed}");
             });
         }
 

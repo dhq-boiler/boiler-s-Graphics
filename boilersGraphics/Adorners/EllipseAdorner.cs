@@ -1,6 +1,7 @@
 ﻿using boilersGraphics.Controls;
 using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
+using boilersGraphics.Models;
 using boilersGraphics.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -123,7 +124,7 @@ namespace boilersGraphics.Adorners
                 item.EdgeColor.Value = item.Owner.EdgeColors.First();
                 item.EdgeThickness.Value = item.Owner.EdgeThickness.Value.Value;
                 item.FillColor.Value = item.Owner.FillColors.First();
-                item.ZIndex.Value = item.Owner.Layers.Items().Count();
+                item.ZIndex.Value = item.Owner.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).Count();
                 item.PathGeometry.Value = GeometryCreator.CreateEllipse(item);
                 item.IsSelected.Value = true;
                 item.IsVisible.Value = true;

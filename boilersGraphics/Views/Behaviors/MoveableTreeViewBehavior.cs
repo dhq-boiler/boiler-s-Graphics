@@ -1,6 +1,7 @@
 ﻿using boilersGraphics.Exceptions;
 using boilersGraphics.Extensions;
 using boilersGraphics.Models;
+using boilersGraphics.ViewModels;
 using Microsoft.Xaml.Behaviors;
 using System;
 using System.Collections.Generic;
@@ -170,6 +171,11 @@ namespace boilersGraphics.Views.Behaviors
 
             var sourceItemParent = sourceItem.Parent.Value;
             var targetItemParent = targetItem.Parent.Value;
+            var diagramVM = (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel;
+            if (sourceItemParent == diagramVM.RootLayer.Value)
+            {
+
+            }
             RemoveCurrentItem(sourceItemParent, sourceItem);
             switch (_insertType)
             {

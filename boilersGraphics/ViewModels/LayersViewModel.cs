@@ -36,7 +36,7 @@ namespace boilersGraphics.ViewModels
         public ICommand DropCommand { get; }
 
 
-        public ReadOnlyReactiveCollection<Layer> Layers { get; }
+        public ReadOnlyReactiveCollection<LayerTreeViewItemBase> Layers { get; }
 
         public LayersViewModel()
         {
@@ -70,7 +70,7 @@ namespace boilersGraphics.ViewModels
                 {
                     layers.ToList().ForEach(x => x.IsSelected.Value = false);
 
-                    var layerItems = layers.SelectRecursive<Layer, LayerTreeViewItemBase>(x => x.Children)
+                    var layerItems = layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
                                            .Where(x => x is LayerItem);
 
                     layerItems.ToList().ForEach(x =>
@@ -94,7 +94,7 @@ namespace boilersGraphics.ViewModels
 
                     Layers.ToList().ForEach(x => x.IsSelected.Value = false);
 
-                    var layerItems = layers.SelectRecursive<Layer, LayerTreeViewItemBase>(x => x.Children)
+                    var layerItems = layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
                                            .Where(x => x is LayerItem);
                     layerItems.ToList().ForEach(x =>
                     {

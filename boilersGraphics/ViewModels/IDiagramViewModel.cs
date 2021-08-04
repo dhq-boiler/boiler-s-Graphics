@@ -15,7 +15,7 @@ namespace boilersGraphics.ViewModels
         ObservableCollection<Color> EdgeColors { get; }
         ObservableCollection<Color> FillColors { get; }
         ReactiveProperty<double?> EdgeThickness { get; }
-        ReactiveCollection<Layer> Layers { get; }
+        ReactiveCollection<LayerTreeViewItemBase> Layers { get; }
 
         void DeselectAll();
     }

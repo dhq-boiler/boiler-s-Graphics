@@ -1,5 +1,6 @@
 ﻿using boilersGraphics.Controls;
 using boilersGraphics.Extensions;
+using boilersGraphics.Models;
 using boilersGraphics.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -100,7 +101,9 @@ namespace boilersGraphics.Adorners
             Rect rubberBand = new Rect(_startPoint.Value, _endPoint.Value);
             ItemsControl itemsControl = GetParent<ItemsControl>(typeof(ItemsControl), _designerCanvas);
 
-            foreach (SelectableDesignerItemViewModelBase item in vm.Layers.Items())
+            foreach (SelectableDesignerItemViewModelBase item in vm.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                                                                          .Where(x => x is LayerItem)
+                                                                          .Select(x => (x as LayerItem).Item.Value))
             {
                 if (item is SelectableDesignerItemViewModelBase)
                 {
