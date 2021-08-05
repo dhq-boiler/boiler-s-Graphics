@@ -90,13 +90,7 @@ namespace boilersGraphics.ViewModels
 
         public ReactivePropertySlim<LayerTreeViewItemBase> RootLayer { get; set; } = new ReactivePropertySlim<LayerTreeViewItemBase>(new LayerTreeViewItemBase());
 
-        public ReactiveCollection<LayerTreeViewItemBase> Layers
-        {
-            get
-            {
-                return RootLayer.Value.Children;
-            }
-        }
+        public ReactiveCollection<LayerTreeViewItemBase> Layers { get; }
 
         public ReadOnlyReactivePropertySlim<LayerTreeViewItemBase[]> SelectedLayers { get; }
 
@@ -285,6 +279,10 @@ namespace boilersGraphics.ViewModels
             FillColors.CollectionChangedAsObservable()
                 .Subscribe(_ => RaisePropertyChanged("FillColors"))
                 .AddTo(_CompositeDisposable);
+
+            Layers = RootLayer.Value.ObserveProperty(x => x.Children)
+                                    .ToReactiveProperty()
+                                    .Value;
 
             AllItems = Layers.CollectionChangedAsObservable()
                              .Select(_ => Layers.Select(x => x.LayerItemsChangedAsObservable()).Merge())
