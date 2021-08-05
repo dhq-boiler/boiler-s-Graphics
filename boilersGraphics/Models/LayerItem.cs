@@ -135,10 +135,12 @@ namespace boilersGraphics.Models
             return $"Name={Name.Value}, IsSelected={IsSelected.Value}, Parent={{{Parent.Value}}}";
         }
 
-        protected virtual void Dispose(bool disposing)
+        protected override void Dispose(bool disposing)
         {
             if (!disposedValue)
             {
+                base.Dispose(disposing);
+
                 if (disposing)
                 {
                     IsVisible.Dispose();
@@ -149,13 +151,6 @@ namespace boilersGraphics.Models
 
                 disposedValue = true;
             }
-        }
-
-        public void Dispose()
-        {
-            // このコードを変更しないでください。クリーンアップ コードを 'Dispose(bool disposing)' メソッドに記述します
-            Dispose(disposing: true);
-            GC.SuppressFinalize(this);
         }
     }
 }

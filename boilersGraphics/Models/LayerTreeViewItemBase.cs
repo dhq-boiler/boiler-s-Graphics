@@ -7,6 +7,7 @@ using Prism.Mvvm;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
@@ -19,7 +20,7 @@ using System.Windows.Media;
 
 namespace boilersGraphics.Models
 {
-    public class LayerTreeViewItemBase : BindableBase, IDisposable
+    public class LayerTreeViewItemBase : BindableBase, IDisposable, IObservable<LayerTreeViewItemBaseObservable>
     {
         protected CompositeDisposable _disposable = new CompositeDisposable();
         private bool disposedValue;
@@ -69,6 +70,11 @@ namespace boilersGraphics.Models
                 Header = "名前の変更",
                 Command = ChangeNameCommand
             });
+        }
+
+        public IObservable<Unit> LayerChangedAsObservable()
+        {
+            return this.Children.CollectionChangedAsObservable().Where(x => x.Action == NotifyCollectionChangedAction.Remove || x.Action == NotifyCollectionChangedAction.Reset).ToUnit();
         }
 
         public IObservable<Unit> LayerItemsChangedAsObservable()
@@ -201,5 +207,36 @@ namespace boilersGraphics.Models
             Dispose(disposing: true);
             GC.SuppressFinalize(this);
         }
+
+
+        private List<IObserver<LayerTreeViewItemBaseObservable>> _observers = new List<IObserver<LayerTreeViewItemBaseObservable>>();
+
+        public IDisposable Subscribe(IObserver<LayerTreeViewItemBaseObservable> observer)
+        {
+            _observers.Add(observer);
+            observer.OnNext(new LayerTreeViewItemBaseObservable());
+            return new LayerTreeViewItemBaseDisposable(this, observer);
+        }
+
+        public class LayerTreeViewItemBaseDisposable : IDisposable
+        {
+            private LayerTreeViewItemBase layer;
+            private IObserver<LayerTreeViewItemBaseObservable> observer;
+
+            public LayerTreeViewItemBaseDisposable(LayerTreeViewItemBase layer, IObserver<LayerTreeViewItemBaseObservable> observer)
+            {
+                this.layer = layer;
+                this.observer = observer;
+            }
+
+            public void Dispose()
+            {
+                layer._observers.Remove(observer);
+            }
+        }
+    }
+
+    public class LayerTreeViewItemBaseObservable : BindableBase
+    {
     }
 }

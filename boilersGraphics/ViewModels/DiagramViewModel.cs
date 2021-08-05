@@ -14,6 +14,7 @@ using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
@@ -280,9 +281,11 @@ namespace boilersGraphics.ViewModels
                 .Subscribe(_ => RaisePropertyChanged("FillColors"))
                 .AddTo(_CompositeDisposable);
 
-            Layers = RootLayer.Value.ObserveProperty(x => x.Children)
-                                    .ToReactiveProperty()
-                                    .Value;
+            Layers = RootLayer.Value.Children.CollectionChangedAsObservable()
+                           .Select(_ => RootLayer.Value.LayerChangedAsObservable())
+                           .Switch()
+                           .SelectMany(_ => RootLayer.Value.Children)
+                           .ToReactiveCollection();
 
             AllItems = Layers.CollectionChangedAsObservable()
                              .Select(_ => Layers.Select(x => x.LayerItemsChangedAsObservable()).Merge())
