@@ -994,6 +994,9 @@ namespace boilersGraphics.ViewModels
             Layer.LayerCount = 1;
             LayerItem.LayerItemCount = 1;
 
+            RootLayer.Dispose();
+            RootLayer = new ReactivePropertySlim<LayerTreeViewItemBase>(new LayerTreeViewItemBase());
+
             Layers.Clear();
 
             ObjectDeserializer.ReadObjectsFromXML(this, root);

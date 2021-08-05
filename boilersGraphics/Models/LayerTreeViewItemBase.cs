@@ -19,9 +19,10 @@ using System.Windows.Media;
 
 namespace boilersGraphics.Models
 {
-    public class LayerTreeViewItemBase : BindableBase
+    public class LayerTreeViewItemBase : BindableBase, IDisposable
     {
         protected CompositeDisposable _disposable = new CompositeDisposable();
+        private bool disposedValue;
 
         public ReactivePropertySlim<LayerTreeViewItemBase> Parent { get; } = new ReactivePropertySlim<LayerTreeViewItemBase>();
 
@@ -163,6 +164,42 @@ namespace boilersGraphics.Models
         public override string ToString()
         {
             return $"Name={Name.Value}, IsSelected={IsSelected.Value}, Parent={{{Parent.Value}}}";
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    foreach (var child in Children)
+                    {
+                        child.Dispose();
+                    }
+
+                    Parent.Dispose();
+                    Name.Dispose();
+                    Background.Dispose();
+                    IsExpanded.Dispose();
+                    IsSelected.Dispose();
+                    IsVisible.Dispose();
+                    Color.Dispose();
+                    BeforeSeparatorVisibility.Dispose();
+                    AfterSeparatorVisibility.Dispose();
+                    Children.Dispose();
+                    LayerTreeViewItemContextMenu.Dispose();
+                    ChangeNameCommand.Dispose();
+                }
+
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            // このコードを変更しないでください。クリーンアップ コードを 'Dispose(bool disposing)' メソッドに記述します
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }
