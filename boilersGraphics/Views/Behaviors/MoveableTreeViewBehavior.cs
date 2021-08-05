@@ -3,6 +3,7 @@ using boilersGraphics.Extensions;
 using boilersGraphics.Models;
 using boilersGraphics.ViewModels;
 using Microsoft.Xaml.Behaviors;
+using Reactive.Bindings;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -172,25 +173,26 @@ namespace boilersGraphics.Views.Behaviors
             var sourceItemParent = sourceItem.Parent.Value;
             var targetItemParent = targetItem.Parent.Value;
             var diagramVM = (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel;
+            ReactiveCollection<LayerTreeViewItemBase> children = targetItemParent.Children;
             if (sourceItemParent == diagramVM.RootLayer.Value)
             {
-
+                children = diagramVM.Layers;
             }
-            RemoveCurrentItem(sourceItemParent, sourceItem);
+            children.Remove(sourceItem);
             switch (_insertType)
             {
                 case InsertType.Before:
-                    targetItemParent.InsertBeforeChildren(sourceItem, targetItem);
+                    InsertBeforeChildren(children, sourceItem, targetItem);
                     sourceItem.Parent.Value = targetItemParent;
                     sourceItem.IsSelected.Value = true;
                     break;
                 case InsertType.After:
-                    targetItemParent.InsertAfterChildren(sourceItem, targetItem);
+                    InsertAfterChildren(children, sourceItem, targetItem);
                     sourceItem.Parent.Value = targetItemParent;
                     sourceItem.IsSelected.Value = true;
                     break;
                 case InsertType.Children:
-                    targetItem.AddChildren(sourceItem);
+                    AddChildren(children, sourceItem);
                     targetItem.IsExpanded.Value = true;
                     sourceItem.IsSelected.Value = true;
                     sourceItem.Parent.Value = targetItem;
@@ -203,6 +205,29 @@ namespace boilersGraphics.Views.Behaviors
                 Target = targetItem,
                 Type = _insertType
             });
+        }
+
+        private void InsertBeforeChildren(ReactiveCollection<LayerTreeViewItemBase> children, LayerTreeViewItemBase from, LayerTreeViewItemBase to)
+        {
+            var index = children.IndexOf(to);
+            if (index < 0)
+                return;
+
+            children.Insert(index, from);
+        }
+
+        private void InsertAfterChildren(ReactiveCollection<LayerTreeViewItemBase> children, LayerTreeViewItemBase from, LayerTreeViewItemBase to)
+        {
+            var index = children.IndexOf(to);
+            if (index < 0)
+                return;
+
+            children.Insert(index + 1, from);
+        }
+
+        private void AddChildren(ReactiveCollection<LayerTreeViewItemBase> children, LayerTreeViewItemBase to)
+        {
+            children.Add(to);
         }
 
         private void OnPreviewMouseMove(object sender, MouseEventArgs e)

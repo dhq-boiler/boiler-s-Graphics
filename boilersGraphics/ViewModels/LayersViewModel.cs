@@ -36,12 +36,12 @@ namespace boilersGraphics.ViewModels
         public ICommand DropCommand { get; }
 
 
-        public ReadOnlyReactiveCollection<LayerTreeViewItemBase> Layers { get; }
+        public ReactiveCollection<LayerTreeViewItemBase> Layers { get; }
 
         public LayersViewModel()
         {
             var mainWindowVM = App.Current.MainWindow.DataContext as MainWindowViewModel;
-            Layers = mainWindowVM.DiagramViewModel.Layers.ToReadOnlyReactiveCollection();
+            Layers = mainWindowVM.DiagramViewModel.Layers;
             AddLayerCommand = new DelegateCommand(() =>
             {
                 var layer = new Layer();
@@ -121,13 +121,16 @@ namespace boilersGraphics.ViewModels
             switch (args.Type)
             {
                 case MoveableTreeViewBehavior.InsertType.Before:
-                    Debug.WriteLine("Before");
+                    Trace.WriteLine("Before");
+                    Trace.WriteLine(string.Join(", ", Layers));
                     break;
                 case MoveableTreeViewBehavior.InsertType.After:
-                    Debug.WriteLine("After");
+                    Trace.WriteLine("After");
+                    Trace.WriteLine(string.Join(", ", Layers));
                     break;
                 case MoveableTreeViewBehavior.InsertType.Children:
-                    Debug.WriteLine("Children");
+                    Trace.WriteLine("Children");
+                    Trace.WriteLine(string.Join(", ", Layers));
                     break;
             }
         }
