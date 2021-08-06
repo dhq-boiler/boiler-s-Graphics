@@ -17,6 +17,7 @@ namespace boilersGraphics.Test
         [Test]
         public void XML文字列を読み取る()
         {
+            boilersGraphics.App.IsTest = true;
             string xml = @"<?xml version=""1.0"" encoding=""utf-8""?>
   <boilersGraphics>
     <Version>2.1</Version>
