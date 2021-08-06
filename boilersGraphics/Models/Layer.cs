@@ -42,6 +42,10 @@ namespace boilersGraphics.Models
 
             Children.ObserveElementProperty(x => (x as LayerItem).Item.Value)
                  .ToUnit()
+                 .Merge(Children.ObserveElementObservableProperty(x => x.IsSelected).ToUnit())
+                 .ToUnit()
+                 .Merge(Children.ObserveElementObservableProperty(x => x.IsVisible).ToUnit())
+                 .ToUnit()
                  .Merge(Children.ObserveElementObservableProperty(x => (x as LayerItem).Item.Value.EdgeColor).ToUnit())
                  .ToUnit()
                  .Merge(Children.ObserveElementObservableProperty(x => (x as LayerItem).Item.Value.EdgeThickness).ToUnit())
