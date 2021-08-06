@@ -31,7 +31,6 @@ boiler's Graphicsを動作させるには .NET Framework 4.8 が必要です。
 
 # Author
 
-* dhq_boiler
 * [@dhq_boiler](https://twitter.com/dhq_boiler)
 
 # License
