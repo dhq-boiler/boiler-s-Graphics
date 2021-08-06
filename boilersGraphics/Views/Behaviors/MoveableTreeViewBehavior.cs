@@ -173,7 +173,7 @@ namespace boilersGraphics.Views.Behaviors
             var sourceItemParent = sourceItem.Parent.Value;
             var targetItemParent = targetItem.Parent.Value;
             var diagramVM = (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel;
-            ReactiveCollection<LayerTreeViewItemBase> children = targetItemParent.Children;
+            ReactiveCollection<LayerTreeViewItemBase> children = sourceItemParent.Children;
             if (sourceItemParent == diagramVM.RootLayer.Value)
             {
                 children = diagramVM.Layers;
@@ -192,6 +192,7 @@ namespace boilersGraphics.Views.Behaviors
                     sourceItem.IsSelected.Value = true;
                     break;
                 case InsertType.Children:
+                    children = targetItem.Children;
                     AddChildren(children, sourceItem);
                     targetItem.IsExpanded.Value = true;
                     sourceItem.IsSelected.Value = true;
