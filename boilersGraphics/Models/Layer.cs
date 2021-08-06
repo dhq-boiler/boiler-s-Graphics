@@ -47,7 +47,7 @@ namespace boilersGraphics.Models
                  .Merge(Children.ObserveElementObservableProperty(x => (x as LayerItem).Item.Value.EdgeThickness).ToUnit())
                  .ToUnit()
                  .Merge(Children.ObserveElementObservableProperty(x => (x as LayerItem).Item.Value.FillColor).ToUnit())
-                 .Delay(TimeSpan.FromMilliseconds(500))
+                 .Delay(TimeSpan.FromMilliseconds(100))
                  .ObserveOn(new DispatcherScheduler(Dispatcher.CurrentDispatcher))
                  .Subscribe(x =>
                  {
