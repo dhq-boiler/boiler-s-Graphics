@@ -74,7 +74,10 @@ namespace boilersGraphics.Models
 
         public IObservable<Unit> LayerChangedAsObservable()
         {
-            return this.Children.CollectionChangedAsObservable().Where(x => x.Action == NotifyCollectionChangedAction.Remove || x.Action == NotifyCollectionChangedAction.Reset).ToUnit();
+            return this.Children.CollectionChangedAsObservable()
+                                .Where(x => x.Action == NotifyCollectionChangedAction.Remove || x.Action == NotifyCollectionChangedAction.Reset)
+                                .ToUnit()
+                                .Merge(this.Children.Select(x => x.LayerChangedAsObservable()).Merge());
         }
 
         public IObservable<Unit> LayerItemsChangedAsObservable()
