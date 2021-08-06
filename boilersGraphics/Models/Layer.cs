@@ -7,10 +7,8 @@ using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
-using System.Reactive;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Windows;
@@ -28,27 +26,12 @@ namespace boilersGraphics.Models
         public ReactivePropertySlim<ImageSource> Appearance { get; } = new ReactivePropertySlim<ImageSource>();
 
         public ReactiveCommand SwitchVisibilityCommand { get; } = new ReactiveCommand();
-        public ReactiveCommand SelectLayerCommand { get; } = new ReactiveCommand();
 
         public Layer()
         {
             SwitchVisibilityCommand.Subscribe(_ =>
             {
                 IsVisible.Value = !IsVisible.Value;
-            })
-            .AddTo(_disposable);
-            SelectLayerCommand.Subscribe(args =>
-            {
-                MouseEventArgs ea = args as MouseEventArgs;
-                if (!Keyboard.IsKeyDown(Key.LeftShift) && !Keyboard.IsKeyDown(Key.RightShift))
-                {
-                    var diagramVM = (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel;
-                    diagramVM.Layers.Where(x => x.IsSelected.Value == true)
-                                    .ToList()
-                                    .ForEach(x => x.IsSelected.Value = false);
-                }
-
-                IsSelected.Value = true;
             })
             .AddTo(_disposable);
             IsVisible.Subscribe(isVisible =>
@@ -64,7 +47,7 @@ namespace boilersGraphics.Models
                  .Merge(Children.ObserveElementObservableProperty(x => (x as LayerItem).Item.Value.EdgeThickness).ToUnit())
                  .ToUnit()
                  .Merge(Children.ObserveElementObservableProperty(x => (x as LayerItem).Item.Value.FillColor).ToUnit())
-                 .Delay(TimeSpan.FromMilliseconds(500))
+                 .Delay(TimeSpan.FromMilliseconds(100))
                  .ObserveOn(new DispatcherScheduler(Dispatcher.CurrentDispatcher))
                  .Subscribe(x =>
                  {
@@ -91,20 +74,6 @@ namespace boilersGraphics.Models
             {
                 return new List<SelectableDesignerItemViewModelBase>() { value };
             }
-        }
-
-        public IObservable<Unit> LayerItemsChangedAsObservable()
-        {
-            return Children.ObserveElementObservableProperty(x => (x as LayerItem).Item)
-                        .ToUnit()
-                        .Merge(Children.CollectionChangedAsObservable().Where(x => x.Action == NotifyCollectionChangedAction.Remove || x.Action == NotifyCollectionChangedAction.Reset).ToUnit());
-        }
-
-        public IObservable<Unit> SelectedLayerItemsChangedAsObservable()
-        {
-            return Children.ObserveElementObservableProperty(x => (x as LayerItem).Item.Value.IsSelected)
-                        .ToUnit()
-                        .Merge(Children.CollectionChangedAsObservable().Where(x => x.Action == NotifyCollectionChangedAction.Remove || x.Action == NotifyCollectionChangedAction.Reset).ToUnit());
         }
 
         private void UpdateAppearance(IEnumerable<SelectableDesignerItemViewModelBase> items)
@@ -178,27 +147,7 @@ namespace boilersGraphics.Models
                 context.DrawRectangle(Brushes.White, null, new Rect(new Point(), new Size(width, height)));
             }
             return visual;
-        }
-
-        public void RemoveItem(SelectableDesignerItemViewModelBase item)
-        {
-            var layerItems = Children.Where(x => (x as LayerItem).Item.Value == item);
-            layerItems.ToList().ForEach(x =>
-            {
-                var removed = Children.Remove(x);
-                Trace.WriteLine($"{x} removed from {Children} {removed}");
-            });
-        }
-
-        public void AddItem(SelectableDesignerItemViewModelBase item)
-        {
-            var layerItem = new LayerItem(item, this, boilersGraphics.Helpers.Name.GetNewLayerItemName());
-            layerItem.IsVisible.Value = true;
-            layerItem.Parent.Value = this;
-            Random rand = new Random();
-            layerItem.Color.Value = Randomizer.RandomColor(rand);
-            Children.Add(layerItem);
-        }
+        }        
 
         private List<IObserver<LayerObservable>> _observers = new List<IObserver<LayerObservable>>();
 

@@ -14,6 +14,7 @@ using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
@@ -88,12 +89,13 @@ namespace boilersGraphics.ViewModels
 
         #region Property
 
-        public ReactiveCollection<Layer> Layers { get; } = new ReactiveCollection<Layer>();
+        public ReactivePropertySlim<LayerTreeViewItemBase> RootLayer { get; set; } = new ReactivePropertySlim<LayerTreeViewItemBase>(new LayerTreeViewItemBase());
 
-        public ReadOnlyReactivePropertySlim<Layer[]> SelectedLayers { get; }
+        public ReactiveCollection<LayerTreeViewItemBase> Layers { get; }
+
+        public ReadOnlyReactivePropertySlim<LayerTreeViewItemBase[]> SelectedLayers { get; }
 
         public ReadOnlyReactivePropertySlim<SelectableDesignerItemViewModelBase[]> AllItems { get; }
-
 
         public ReadOnlyReactivePropertySlim<SelectableDesignerItemViewModelBase[]> SelectedItems { get; }
 
@@ -279,10 +281,16 @@ namespace boilersGraphics.ViewModels
                 .Subscribe(_ => RaisePropertyChanged("FillColors"))
                 .AddTo(_CompositeDisposable);
 
+            Layers = RootLayer.Value.Children.CollectionChangedAsObservable()
+                           .Select(_ => RootLayer.Value.LayerChangedAsObservable())
+                           .Switch()
+                           .SelectMany(_ => RootLayer.Value.Children)
+                           .ToReactiveCollection();
+
             AllItems = Layers.CollectionChangedAsObservable()
                              .Select(_ => Layers.Select(x => x.LayerItemsChangedAsObservable()).Merge())
                              .Switch()
-                             .Select(_ => Layers.SelectRecursive<Layer, LayerTreeViewItemBase>(x => x.Children)
+                             .Select(_ => Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
                                                 .Where(x => x.GetType() == typeof(LayerItem))
                                                 .Select(y => (y as LayerItem).Item.Value)
                                                 .ToArray())
@@ -298,7 +306,7 @@ namespace boilersGraphics.ViewModels
             SelectedItems = Layers.CollectionChangedAsObservable()
                                   .Select(_ => Layers.Select(x => x.SelectedLayerItemsChangedAsObservable()).Merge())
                                   .Switch()
-                                  .Select(_ => Layers.SelectRecursive<Layer, LayerTreeViewItemBase>(x => x.Children)
+                                  .Select(_ => Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
                                                      .Where(x => x.GetType() == typeof(LayerItem))
                                                      .Select(y => (y as LayerItem).Item.Value)
                                                      .Where(z => z.IsSelected.Value == true)
@@ -337,7 +345,7 @@ namespace boilersGraphics.ViewModels
 
             SelectedLayers = Layers.ObserveElementObservableProperty(x => x.IsSelected)
                                    .Select(_ => Layers.Where(x => x.IsSelected.Value == true).ToArray())
-                                   .ToReadOnlyReactivePropertySlim(Array.Empty<Layer>());
+                                   .ToReadOnlyReactivePropertySlim(Array.Empty<LayerTreeViewItemBase>());
 
             SelectedLayers.Subscribe(x =>
             {
@@ -348,9 +356,8 @@ namespace boilersGraphics.ViewModels
             Layers.ObserveAddChanged()
                   .Subscribe(x =>
             {
-                var dummy = new LayerTreeViewItemBase();
-                dummy.Children = new ReactiveCollection<LayerTreeViewItemBase>(Layers.Cast<LayerTreeViewItemBase>().ToObservable());
-                x.SetParentToChildren(dummy);
+                RootLayer.Value.Children = new ReactiveCollection<LayerTreeViewItemBase>(Layers.Cast<LayerTreeViewItemBase>().ToObservable());
+                x.SetParentToChildren(RootLayer.Value);
             })
             .AddTo(_CompositeDisposable);
             
@@ -765,7 +772,7 @@ namespace boilersGraphics.ViewModels
 
         public void DeselectAll()
         {
-            foreach (var layerItem in Layers.SelectRecursive<Layer, LayerTreeViewItemBase>(x => x.Children)
+            foreach (var layerItem in Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
                                             .Where(x => x is LayerItem))
             {
                 (layerItem as LayerItem).Item.Value.IsSelected.Value = false;
@@ -988,6 +995,9 @@ namespace boilersGraphics.ViewModels
             Layer.LayerCount = 1;
             LayerItem.LayerItemCount = 1;
 
+            RootLayer.Dispose();
+            RootLayer = new ReactivePropertySlim<LayerTreeViewItemBase>(new LayerTreeViewItemBase());
+
             Layers.Clear();
 
             ObjectDeserializer.ReadObjectsFromXML(this, root);
@@ -1055,7 +1065,7 @@ namespace boilersGraphics.ViewModels
                 item.EnableForSelection.Value = false;
             }
 
-            var groupItems = from it in Layers.SelectRecursive<Layer, LayerTreeViewItemBase>(x => x.Children)
+            var groupItems = from it in Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
                              where it is LayerItem && (it as LayerItem).Item.Value.ParentID == groupItem.ID
                              select it;
 
@@ -1114,7 +1124,7 @@ namespace boilersGraphics.ViewModels
 
         private void Remove(LayerItem layerItem)
         {
-            var layer = Layers.SelectRecursive<Layer, LayerTreeViewItemBase>(x => x.Children)
+            var layer = Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
                               .Where(x => x is LayerItem)
                               .First(x => (x as LayerItem) == layerItem)
                               .Parent.Value;
@@ -1137,7 +1147,7 @@ namespace boilersGraphics.ViewModels
 
             foreach (var groupRoot in groups.ToList())
             {
-                var children = (from child in Layers.SelectRecursive<Layer, LayerTreeViewItemBase>(x => x.Children)
+                var children = (from child in Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
                                where child is LayerItem && (child as LayerItem).Item.Value.ParentID == groupRoot.ID
                                select child).ToList();
 
@@ -1147,7 +1157,7 @@ namespace boilersGraphics.ViewModels
                     layerItem.Item.Value.GroupDisposable.Dispose();
                     layerItem.Item.Value.ParentID = Guid.Empty;
                     layerItem.Item.Value.EnableForSelection.Value = true;
-                    layerItem.Parent.Value = Layers.SelectRecursive<Layer, LayerTreeViewItemBase>(x => x.Children)
+                    layerItem.Parent.Value = Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
                                                    .Where(x => x is LayerItem)
                                                    .First(x => (x as LayerItem).Item == (child as LayerItem).Item)
                                                    .Parent.Value

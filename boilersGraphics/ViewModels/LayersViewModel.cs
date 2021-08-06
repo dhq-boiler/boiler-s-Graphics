@@ -36,17 +36,17 @@ namespace boilersGraphics.ViewModels
         public ICommand DropCommand { get; }
 
 
-        public ReadOnlyReactiveCollection<Layer> Layers { get; }
+        public ReactiveCollection<LayerTreeViewItemBase> Layers { get; }
 
         public LayersViewModel()
         {
             var mainWindowVM = App.Current.MainWindow.DataContext as MainWindowViewModel;
-            Layers = mainWindowVM.DiagramViewModel.Layers.ToReadOnlyReactiveCollection();
+            Layers = mainWindowVM.DiagramViewModel.Layers;
             AddLayerCommand = new DelegateCommand(() =>
             {
                 var layer = new Layer();
                 layer.IsVisible.Value = true;
-                layer.Name.Value = $"レイヤー{Layer.LayerCount++}";
+                layer.Name.Value = Name.GetNewLayerName();
                 Random rand = new Random();
                 layer.Color.Value = Randomizer.RandomColor(rand);
                 (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.Layers.Add(layer);
@@ -70,7 +70,7 @@ namespace boilersGraphics.ViewModels
                 {
                     layers.ToList().ForEach(x => x.IsSelected.Value = false);
 
-                    var layerItems = layers.SelectRecursive<Layer, LayerTreeViewItemBase>(x => x.Children)
+                    var layerItems = layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
                                            .Where(x => x is LayerItem);
 
                     layerItems.ToList().ForEach(x =>
@@ -94,7 +94,7 @@ namespace boilersGraphics.ViewModels
 
                     Layers.ToList().ForEach(x => x.IsSelected.Value = false);
 
-                    var layerItems = layers.SelectRecursive<Layer, LayerTreeViewItemBase>(x => x.Children)
+                    var layerItems = layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
                                            .Where(x => x is LayerItem);
                     layerItems.ToList().ForEach(x =>
                     {
@@ -121,13 +121,16 @@ namespace boilersGraphics.ViewModels
             switch (args.Type)
             {
                 case MoveableTreeViewBehavior.InsertType.Before:
-                    Debug.WriteLine("Before");
+                    Trace.WriteLine("Before");
+                    Trace.WriteLine(string.Join(", ", Layers));
                     break;
                 case MoveableTreeViewBehavior.InsertType.After:
-                    Debug.WriteLine("After");
+                    Trace.WriteLine("After");
+                    Trace.WriteLine(string.Join(", ", Layers));
                     break;
                 case MoveableTreeViewBehavior.InsertType.Children:
-                    Debug.WriteLine("Children");
+                    Trace.WriteLine("Children");
+                    Trace.WriteLine(string.Join(", ", Layers));
                     break;
             }
         }

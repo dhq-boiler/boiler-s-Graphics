@@ -1,7 +1,9 @@
 ﻿using boilersGraphics.Exceptions;
 using boilersGraphics.Extensions;
 using boilersGraphics.Models;
+using boilersGraphics.ViewModels;
 using Microsoft.Xaml.Behaviors;
+using Reactive.Bindings;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -90,10 +92,12 @@ namespace boilersGraphics.Views.Behaviors
         {
             ResetSeparator(_changedBlocks);
 
-            if (!(sender is ItemsControl itemsControl) || !e.Data.GetDataPresent(typeof(LayerItem)))
+            if (!(sender is ItemsControl itemsControl) || !(e.Data.GetDataPresent(typeof(LayerItem)) || e.Data.GetDataPresent(typeof(Layer))))
                 return;
 
             DragScroll(itemsControl, e);
+
+            Trace.WriteLine($"Begin OnDragOver()");
 
             var sourceItemLayerItem = (LayerTreeViewItemBase)e.Data.GetData(typeof(LayerItem));
             var sourceItemLayer = (LayerTreeViewItemBase)e.Data.GetData(typeof(Layer));
@@ -102,7 +106,10 @@ namespace boilersGraphics.Views.Behaviors
 
             var parentGrid = targetElement?.GetParent<Grid>();
             if (parentGrid == null || !(targetElement.DataContext is LayerTreeViewItemBase targetElementInfo) || targetElementInfo == sourceItem)
+            {
+                Trace.WriteLine("OnDragOver() canceled.");
                 return;
+            }
 
             if (targetElementInfo.ContainsParent(sourceItem))
                 return;
@@ -124,13 +131,13 @@ namespace boilersGraphics.Views.Behaviors
                 _insertType = InsertType.After;
                 targetElementInfo.AfterSeparatorVisibility.Value = Visibility.Visible;
             }
-            else if (targetElementInfo is LayerItem)
-            {
-                targetElementInfo = targetElementInfo.Parent.Value;
-                _insertType = InsertType.Children;
-                targetElementInfo.Background.Value = Brushes.Gray;
-            }
-            else if (targetElementInfo is Layer)
+            //else if (targetElementInfo is LayerItem && sourceItem is LayerItem)
+            //{
+            //    targetElementInfo = targetElementInfo.Parent.Value;
+            //    _insertType = InsertType.Children;
+            //    targetElementInfo.Background.Value = Brushes.Gray;
+            //}
+            else if (targetElementInfo is Layer && sourceItem is LayerItem)
             {
                 _insertType = InsertType.Children;
                 targetElementInfo.Background.Value = Brushes.Gray;
@@ -165,31 +172,36 @@ namespace boilersGraphics.Views.Behaviors
 
             var sourceItemParent = sourceItem.Parent.Value;
             var targetItemParent = targetItem.Parent.Value;
-            RemoveCurrentItem(sourceItemParent, sourceItem);
+            var diagramVM = (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel;
+            ReactiveCollection<LayerTreeViewItemBase> children = sourceItemParent.Children;
+            if (sourceItemParent == diagramVM.RootLayer.Value)
+            {
+                children = diagramVM.Layers;
+            }
+            children.Remove(sourceItem);
             switch (_insertType)
             {
                 case InsertType.Before:
-                    LayerTreeViewItemBase parent = targetItem;
-                    if (targetItem is LayerItem)
+                    if (sourceItemParent != diagramVM.RootLayer.Value)
                     {
-                        parent = targetItem.Parent.Value;
+                        children = targetItemParent.Children;
                     }
-                    parent.InsertBeforeChildren(sourceItem, targetItem);
-                    sourceItem.Parent.Value = parent;
+                    InsertBeforeChildren(children, sourceItem, targetItem);
+                    sourceItem.Parent.Value = targetItemParent;
                     sourceItem.IsSelected.Value = true;
                     break;
                 case InsertType.After:
-                    parent = targetItem;
-                    if (targetItem is LayerItem)
+                    if (sourceItemParent != diagramVM.RootLayer.Value)
                     {
-                        parent = targetItem.Parent.Value;
+                        children = targetItemParent.Children;
                     }
-                    parent.InsertAfterChildren(sourceItem, targetItem);
-                    sourceItem.Parent.Value = parent;
+                    InsertAfterChildren(children, sourceItem, targetItem);
+                    sourceItem.Parent.Value = targetItemParent;
                     sourceItem.IsSelected.Value = true;
                     break;
                 case InsertType.Children:
-                    targetItem.AddChildren(sourceItem);
+                    children = targetItem.Children;
+                    AddChildren(children, sourceItem);
                     targetItem.IsExpanded.Value = true;
                     sourceItem.IsSelected.Value = true;
                     sourceItem.Parent.Value = targetItem;
@@ -204,6 +216,29 @@ namespace boilersGraphics.Views.Behaviors
             });
         }
 
+        private void InsertBeforeChildren(ReactiveCollection<LayerTreeViewItemBase> children, LayerTreeViewItemBase from, LayerTreeViewItemBase to)
+        {
+            var index = children.IndexOf(to);
+            if (index < 0)
+                return;
+
+            children.Insert(index, from);
+        }
+
+        private void InsertAfterChildren(ReactiveCollection<LayerTreeViewItemBase> children, LayerTreeViewItemBase from, LayerTreeViewItemBase to)
+        {
+            var index = children.IndexOf(to);
+            if (index < 0)
+                return;
+
+            children.Insert(index + 1, from);
+        }
+
+        private void AddChildren(ReactiveCollection<LayerTreeViewItemBase> children, LayerTreeViewItemBase to)
+        {
+            children.Add(to);
+        }
+
         private void OnPreviewMouseMove(object sender, MouseEventArgs e)
         {
             if (!(sender is TreeView treeView) || treeView.SelectedItem == null || _startPos == null)
@@ -215,6 +250,7 @@ namespace boilersGraphics.Views.Behaviors
                 return;
 
             DragDrop.DoDragDrop(treeView, treeView.SelectedItem, DragDropEffects.Move);
+            Trace.WriteLine($"Done DragDrop.DoDragDrop() in OnPreviewMouseMove()");
 
             _startPos = null;
         }
@@ -228,11 +264,14 @@ namespace boilersGraphics.Views.Behaviors
         private void OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (!(sender is ItemsControl itemsControl))
+            {
+                Trace.WriteLine("OnPreviewMouseLeftButtonDown() canceled.");
                 return;
+            }
 
             var pos = e.GetPosition(itemsControl);
             var hit = HitTest<FrameworkElement>(itemsControl, e.GetPosition);
-            if (hit.DataContext is LayerTreeViewItemBase)
+            if (hit != null && hit.DataContext is LayerTreeViewItemBase)
                 _startPos = itemsControl.PointToScreen(pos);
             else
                 _startPos = null;

@@ -5,6 +5,7 @@ using boilersGraphics.Views;
 using Prism.Ioc;
 using Prism.Services.Dialogs;
 using Prism.Unity;
+using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.Generic;
@@ -69,6 +70,9 @@ namespace boilersGraphics.ViewModels
 
         public event EventHandler LetterSettingDialogClose;
 
+        public ReactiveCommand GotFocusCommand { get; } = new ReactiveCommand();
+        public ReactiveCommand LostFocusCommand { get; } = new ReactiveCommand();
+
         public LetterDesignerItemViewModel(int id, DiagramViewModel parent, double left, double top)
             : base(id, parent, left, top)
         {
@@ -83,28 +87,28 @@ namespace boilersGraphics.ViewModels
 
         private void Init()
         {
-            this.ShowConnectors = false;
-            this.ObserveProperty(x => x.IsSelected.Value)
-                .Subscribe(isSelected =>
+            GotFocusCommand.Subscribe(x =>
+            {
+                if (!LetterSettingDialogIsOpen)
                 {
-                    if (isSelected)
-                    {
-                        if (!LetterSettingDialogIsOpen)
-                        {
-                            var dialogService = new DialogService((App.Current as PrismApplication).Container as IContainerExtension);
-                            IDialogResult result = null;
-                            dialogService.Show(nameof(LetterSetting), new DialogParameters() { { "ViewModel", this } }, ret => result = ret);
-                            var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-                            designerCanvas.Focus();
-                            LetterSettingDialogIsOpen = true;
-                        }
-                    }
-                    else
-                    {
-                        CloseLetterSettingDialog();
-                    }
-                })
-                .AddTo(_CompositeDisposable);
+                    var dialogService = new DialogService((App.Current as PrismApplication).Container as IContainerExtension);
+                    IDialogResult result = null;
+                    dialogService.Show(nameof(LetterSetting), new DialogParameters() { { "ViewModel", this } }, ret => result = ret);
+                    var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
+                    designerCanvas.Focus();
+                    LetterSettingDialogIsOpen = true;
+                }
+            })
+            .AddTo(_CompositeDisposable);
+            LostFocusCommand.Subscribe(x =>
+            {
+                if (LetterSettingDialogIsOpen)
+                {
+                    CloseLetterSettingDialog();
+                }
+            })
+            .AddTo(_CompositeDisposable);
+            this.ShowConnectors = false;
             this.ObserveProperty(x => x.LetterString)
                 .Subscribe(_ => RenderLetter())
                 .AddTo(_CompositeDisposable);

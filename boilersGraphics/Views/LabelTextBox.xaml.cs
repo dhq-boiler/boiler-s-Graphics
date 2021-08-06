@@ -34,25 +34,25 @@ namespace boilersGraphics.Views
             set { SetValue(TextProperty, value); }
         }
 
-        public Label TargetLabel
+        public TextBlock TargetTextBlock
         {
-            get { return button.GetVisualChild<Label>(); }
+            get { return this.LabelTextBox_internal_textblock; }
         }
 
         public TextBox TargetTextBox
         {
-            get { return button.GetVisualChild<TextBox>(); }
+            get { return this.LabelTextBox_internal_textbox; }
         }
 
         private void textbox_LostFocus(object sender, RoutedEventArgs e)
         {
-            TargetLabel.Visibility = Visibility.Visible;
+            TargetTextBlock.Visibility = Visibility.Visible;
             TargetTextBox.Visibility = Visibility.Collapsed;
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        public void FocusTextBox()
         {
-            TargetLabel.Visibility = Visibility.Collapsed;
+            TargetTextBlock.Visibility = Visibility.Collapsed;
             TargetTextBox.Visibility = Visibility.Visible;
             TargetTextBox.Focus();
             TargetTextBox.SelectAll();
@@ -64,7 +64,7 @@ namespace boilersGraphics.Views
             {
                 case Key.Enter:
                 case Key.Escape:
-                    TargetLabel.Visibility = Visibility.Visible;
+                    TargetTextBlock.Visibility = Visibility.Visible;
                     TargetTextBox.Visibility = Visibility.Collapsed;
                     break;
             }

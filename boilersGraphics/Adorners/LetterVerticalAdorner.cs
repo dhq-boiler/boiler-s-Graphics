@@ -1,5 +1,6 @@
 ﻿using boilersGraphics.Controls;
 using boilersGraphics.Extensions;
+using boilersGraphics.Models;
 using boilersGraphics.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -69,7 +70,7 @@ namespace boilersGraphics.Adorners
                 itemBase.IsSelected.Value = true;
                 itemBase.IsVisible.Value = true;
                 itemBase.Owner.DeselectAll();
-                itemBase.ZIndex.Value = itemBase.Owner.Layers.Items().Count();
+                itemBase.ZIndex.Value = itemBase.Owner.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).Count();
                 ((AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel).AddItemCommand.Execute(itemBase);
 
                 _startPoint = null;
