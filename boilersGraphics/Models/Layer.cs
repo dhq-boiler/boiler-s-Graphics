@@ -36,6 +36,7 @@ namespace boilersGraphics.Models
             .AddTo(_disposable);
             IsVisible.Subscribe(isVisible =>
             {
+                ChildrenSwitchIsHitTestVisible(isVisible);
                 ChildrenSwitchVisibility(isVisible);
             })
             .AddTo(_disposable);

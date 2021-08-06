@@ -118,6 +118,19 @@ namespace boilersGraphics.Models
             });
         }
 
+        public void ChildrenSwitchIsHitTestVisible(bool isVisible)
+        {
+            Children.ToList().ForEach(x =>
+            {
+                if (x is LayerItem layerItem)
+                {
+                    layerItem.Item.Value.IsHitTestVisible.Value = isVisible;
+                    Trace.WriteLine($"{layerItem.Name.Value}.IsHitTestVisible={layerItem.Item.Value.IsHitTestVisible.Value}");
+                }
+                x.ChildrenSwitchIsHitTestVisible(isVisible);
+            });
+        }
+
         public void ChildrenSwitchVisibility(bool isVisible)
         {
             Children.ToList().ForEach(x =>

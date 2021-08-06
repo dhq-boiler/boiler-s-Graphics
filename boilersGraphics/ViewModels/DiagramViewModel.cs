@@ -1002,6 +1002,8 @@ namespace boilersGraphics.ViewModels
 
             ObjectDeserializer.ReadObjectsFromXML(this, root);
 
+            var layersViewModel = App.Current.MainWindow.GetChildOfType<Views.Layers>().DataContext as LayersViewModel;
+            layersViewModel.InitializeHitTestVisible();
             Layers.First().IsSelected.Value = true;
         }
 
