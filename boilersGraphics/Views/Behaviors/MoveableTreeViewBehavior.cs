@@ -131,12 +131,12 @@ namespace boilersGraphics.Views.Behaviors
                 _insertType = InsertType.After;
                 targetElementInfo.AfterSeparatorVisibility.Value = Visibility.Visible;
             }
-            else if (targetElementInfo is LayerItem && sourceItem is LayerItem)
-            {
-                targetElementInfo = targetElementInfo.Parent.Value;
-                _insertType = InsertType.Children;
-                targetElementInfo.Background.Value = Brushes.Gray;
-            }
+            //else if (targetElementInfo is LayerItem && sourceItem is LayerItem)
+            //{
+            //    targetElementInfo = targetElementInfo.Parent.Value;
+            //    _insertType = InsertType.Children;
+            //    targetElementInfo.Background.Value = Brushes.Gray;
+            //}
             else if (targetElementInfo is Layer && sourceItem is LayerItem)
             {
                 _insertType = InsertType.Children;
@@ -182,11 +182,19 @@ namespace boilersGraphics.Views.Behaviors
             switch (_insertType)
             {
                 case InsertType.Before:
+                    if (sourceItemParent != diagramVM.RootLayer.Value)
+                    {
+                        children = targetItemParent.Children;
+                    }
                     InsertBeforeChildren(children, sourceItem, targetItem);
                     sourceItem.Parent.Value = targetItemParent;
                     sourceItem.IsSelected.Value = true;
                     break;
                 case InsertType.After:
+                    if (sourceItemParent != diagramVM.RootLayer.Value)
+                    {
+                        children = targetItemParent.Children;
+                    }
                     InsertAfterChildren(children, sourceItem, targetItem);
                     sourceItem.Parent.Value = targetItemParent;
                     sourceItem.IsSelected.Value = true;
