@@ -26,27 +26,12 @@ namespace boilersGraphics.Models
         public ReactivePropertySlim<ImageSource> Appearance { get; } = new ReactivePropertySlim<ImageSource>();
 
         public ReactiveCommand SwitchVisibilityCommand { get; } = new ReactiveCommand();
-        public ReactiveCommand SelectLayerCommand { get; } = new ReactiveCommand();
 
         public Layer()
         {
             SwitchVisibilityCommand.Subscribe(_ =>
             {
                 IsVisible.Value = !IsVisible.Value;
-            })
-            .AddTo(_disposable);
-            SelectLayerCommand.Subscribe(args =>
-            {
-                MouseEventArgs ea = args as MouseEventArgs;
-                if (!Keyboard.IsKeyDown(Key.LeftShift) && !Keyboard.IsKeyDown(Key.RightShift))
-                {
-                    var diagramVM = (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel;
-                    diagramVM.Layers.Where(x => x.IsSelected.Value == true)
-                                    .ToList()
-                                    .ForEach(x => x.IsSelected.Value = false);
-                }
-
-                IsSelected.Value = true;
             })
             .AddTo(_disposable);
             IsVisible.Subscribe(isVisible =>
