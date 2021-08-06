@@ -17,6 +17,8 @@ namespace boilersGraphics
     /// </summary>
     public partial class App : PrismApplication
     {
+        public static bool IsTest { get; set; }
+
         protected override Window CreateShell()
         {
             var w = Container.Resolve<MainWindow>();

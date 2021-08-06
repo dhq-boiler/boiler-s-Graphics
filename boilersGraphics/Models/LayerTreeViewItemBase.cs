@@ -17,6 +17,7 @@ using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Threading;
 
 namespace boilersGraphics.Models
 {
@@ -65,11 +66,14 @@ namespace boilersGraphics.Models
                 labelTextBox.FocusTextBox();
             })
             .AddTo(_disposable);
-            LayerTreeViewItemContextMenu.Add(new MenuItem()
+            if (!App.IsTest)
             {
-                Header = "名前の変更",
-                Command = ChangeNameCommand
-            });
+                LayerTreeViewItemContextMenu.Add(new MenuItem()
+                {
+                    Header = "名前の変更",
+                    Command = ChangeNameCommand
+                });
+            }
         }
 
         public IObservable<Unit> LayerChangedAsObservable()
