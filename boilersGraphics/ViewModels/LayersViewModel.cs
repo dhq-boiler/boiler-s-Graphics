@@ -42,6 +42,7 @@ namespace boilersGraphics.ViewModels
         {
             var mainWindowVM = App.Current.MainWindow.DataContext as MainWindowViewModel;
             Layers = mainWindowVM.DiagramViewModel.Layers;
+            InitializeHitTestVisible();
             AddLayerCommand = new DelegateCommand(() =>
             {
                 var layer = new Layer();
@@ -68,7 +69,11 @@ namespace boilersGraphics.ViewModels
                 var layers = (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.Layers;
                 if (newItem.GetType() == typeof(Layer))
                 {
-                    layers.ToList().ForEach(x => x.IsSelected.Value = false);
+                    layers.ToList().ForEach(x =>
+                    {
+                        x.IsSelected.Value = false;
+                        x.ChildrenSwitchIsHitTestVisible(false);
+                    });
 
                     var layerItems = layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
                                            .Where(x => x is LayerItem);
@@ -87,6 +92,7 @@ namespace boilersGraphics.ViewModels
 
                     var selectedLayer = newItem as Layer;
                     selectedLayer.IsSelected.Value = true;
+                    selectedLayer.ChildrenSwitchIsHitTestVisible(true);
                 }
                 else if (newItem.GetType() == typeof(LayerItem))
                 {
@@ -114,6 +120,19 @@ namespace boilersGraphics.ViewModels
             })
             .AddTo(_disposables);
             DropCommand = new DelegateCommand<DropArguments>(Drop);
+        }
+
+        public void InitializeHitTestVisible()
+        {
+            var mainWindowVM = App.Current.MainWindow.DataContext as MainWindowViewModel;
+            Layers.ToList().ForEach(x =>
+            {
+                x.ChildrenSwitchIsHitTestVisible(false);
+            });
+            mainWindowVM.DiagramViewModel.SelectedLayers.Value.ToList().ForEach(x =>
+            {
+                x.ChildrenSwitchIsHitTestVisible(true);
+            });
         }
 
         private void Drop(DropArguments args)

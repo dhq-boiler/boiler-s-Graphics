@@ -132,15 +132,6 @@
                                         <DataTemplate.Triggers>
                                             <DataTrigger Binding="{Binding IsSelected.Value}" Value="True">
                                                 <Setter TargetName="PART_ResizeDecorator" Property="Visibility" Value="Visible" />
-                                                <Setter TargetName="selectedGrid" Property="Effect">
-                                                    <Setter.Value>
-                                                        <DropShadowEffect
-                                                        BlurRadius="30"
-                                                        Opacity="1.0"
-                                                        ShadowDepth="0"
-                                                        Color="Black" />
-                                                    </Setter.Value>
-                                                </Setter>
                                             </DataTrigger>
                                             <DataTrigger Binding="{Binding IsSelected.Value}" Value="False">
                                                 <Setter TargetName="PART_ResizeDecorator" Property="Visibility" Value="Hidden" />

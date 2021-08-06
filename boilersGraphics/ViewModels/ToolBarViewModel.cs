@@ -15,6 +15,7 @@ using boilersGraphics.Models;
 using System.Windows.Media;
 using System.Windows;
 using Reactive.Bindings;
+using System.Diagnostics;
 
 namespace boilersGraphics.ViewModels
 {
@@ -167,7 +168,14 @@ namespace boilersGraphics.ViewModels
         private void ChangeHitTestToEnable()
         {
             var diagramViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel;
-            diagramViewModel.AllItems.Value.ToList().ForEach(x => x.IsHitTestVisible.Value = true);
+            diagramViewModel.SelectedLayers.Value.ToList().ForEach(x => 
+                (x as Layer).Children.ToList().ForEach(y =>
+                {
+                    var layerItem = y as LayerItem;
+                    layerItem.Item.Value.IsHitTestVisible.Value = true;
+                    Trace.WriteLine($"{layerItem.Name.Value}.IsHitTestVisible={layerItem.Item.Value.IsHitTestVisible.Value}");
+                })
+            );
             CurrentHitTestVisibleState.Value = true;
         }
 
