@@ -97,6 +97,9 @@ namespace boilersGraphics.AttachedProperties
                     selectableDesignerItemViewModelBase.Owner.FillColors.Clear();
                     selectableDesignerItemViewModelBase.Owner.EdgeThickness.Value = double.NaN;
                     selectableDesignerItemViewModelBase.IsSelected.Value = true;
+                    var view = App.Current.MainWindow.GetCorrespondingViews<FrameworkElement>(selectableDesignerItemViewModelBase)
+                                                     .Where(x => x.GetType() == selectableDesignerItemViewModelBase.GetViewType()).First();
+                    view.Focus();
                     var diagramVM = (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel;
                     diagramVM.Layers.ToList().ForEach(x => x.IsSelected.Value = false);
                     var layerItem = diagramVM.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)

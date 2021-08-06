@@ -54,6 +54,11 @@ namespace boilersGraphics.Models
                              .Select(x => x.Value)
                              .ToReactiveProperty()
                              .AddTo(_disposable);
+            IsSelected.Subscribe(x =>
+            {
+                Item.Value.IsSelected.Value = x;
+            })
+            .AddTo(_disposable);
             IsVisible.Value = true;
         }
 
