@@ -258,7 +258,7 @@
                                                         <Separator BorderThickness="1" BorderBrush="Black" Visibility="{Binding BeforeSeparatorVisibility.Value}" />
                                                         <StackPanel Orientation="Horizontal">
                                                             <views:LabelTextBox VerticalAlignment="Center"
-                                                                                Text="{Binding Name.Value}">
+                                                                                Text="{Binding Name.Value, Mode=TwoWay}">
                                                                 <views:LabelTextBox.ContextMenu>
                                                                     <ContextMenu ItemsSource="{Binding LayerTreeViewItemContextMenu}" />
                                                                 </views:LabelTextBox.ContextMenu>
