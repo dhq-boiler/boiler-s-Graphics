@@ -37,6 +37,7 @@ namespace boilersGraphics.Views.Behaviors
                     item.Top.Value = setSnapPoint.Y;
                     item.Width.Value = 3;
                     item.Height.Value = 3;
+                    item.Opacity.Value = 0.5;
                     ((AssociatedObject as DesignerCanvas).DataContext as IDiagramViewModel).AddItemCommand.Execute(item);
 
                     e.Handled = true;

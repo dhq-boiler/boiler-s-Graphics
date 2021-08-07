@@ -17,6 +17,8 @@ namespace boilersGraphics.ViewModels
 
         public ReactivePropertySlim<double> Height { get; } = new ReactivePropertySlim<double>();
 
+        public ReactivePropertySlim<double> Opacity { get; } = new ReactivePropertySlim<double>();
+
         public override object Clone()
         {
             var clone = new SnapPointViewModel();
@@ -41,6 +43,7 @@ namespace boilersGraphics.ViewModels
             clone.Top.Value = Top.Value;
             clone.Width.Value = Width.Value;
             clone.Height.Value = Height.Value;
+            clone.Opacity.Value = Opacity.Value;
             return clone;
         }
 

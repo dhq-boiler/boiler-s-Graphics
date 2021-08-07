@@ -8,7 +8,15 @@
     <DataTemplate DataType="{x:Type viewModel:SnapPointViewModel}">
         <control:SnapPoint Width="{Binding Width.Value}"
                            Height="{Binding Height.Value}"
-                           Opacity="0"
-                           Tag="独立点" />
+                           Opacity="{Binding Opacity.Value}"
+                           Tag="独立点">
+            <control:SnapPoint.Template>
+                <ControlTemplate TargetType="control:SnapPoint">
+                    <Ellipse Width="3"
+                             Height="3"
+                             Fill="Blue" />
+                </ControlTemplate>
+            </control:SnapPoint.Template>
+        </control:SnapPoint>
     </DataTemplate>
 </ResourceDictionary>

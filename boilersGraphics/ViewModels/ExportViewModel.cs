@@ -65,7 +65,14 @@ namespace boilersGraphics.ViewModels
             foreach (var item in itemsControl.Items.Cast<SelectableDesignerItemViewModelBase>())
             {
                 tempIsSelected.Add(item, item.IsSelected.Value);
+                //一時的に選択状態を解除する
                 item.IsSelected.Value = false;
+            }
+
+            foreach (var snapPointVM in itemsControl.Items.OfType<SnapPointViewModel>())
+            {
+                //一時的に非表示にする
+                snapPointVM.Opacity.Value = 0;
             }
 
             var rtb = new RenderTargetBitmap((int)designerCanvas.ActualWidth, (int)designerCanvas.ActualHeight, 96, 96, PixelFormats.Pbgra32);
@@ -87,6 +94,12 @@ namespace boilersGraphics.ViewModels
                 {
                     item.IsSelected.Value = outIsSelected;
                 }
+            }
+
+            foreach (var snapPointVM in itemsControl.Items.OfType<SnapPointViewModel>())
+            {
+                //スナップポイントを半透明に復元する
+                snapPointVM.Opacity.Value = 0.5;
             }
 
             var generator = FileGenerator.Create(System.IO.Path.GetExtension(Path.Value));
