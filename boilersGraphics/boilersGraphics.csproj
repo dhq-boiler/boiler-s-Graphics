@@ -240,6 +240,7 @@
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\PolygonSettingViewModel.cs" />
     <Compile Include="ViewModels\SelectableDesignerItemViewModelBase.cs" />
+    <Compile Include="ViewModels\SetSnapPointViewModel.cs" />
     <Compile Include="ViewModels\SettingViewModel.cs" />
     <Compile Include="ViewModels\SnapPointViewModel.cs" />
     <Compile Include="ViewModels\StraightConnectorViewModel.cs" />
@@ -292,6 +293,9 @@
     </Compile>
     <Compile Include="Views\PolygonSetting.xaml.cs">
       <DependentUpon>PolygonSetting.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SetSnapPoint.xaml.cs">
+      <DependentUpon>SetSnapPoint.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Setting.xaml.cs">
       <DependentUpon>Setting.xaml</DependentUpon>
@@ -442,6 +446,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Views\PolygonSetting.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SetSnapPoint.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

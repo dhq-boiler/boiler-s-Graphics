@@ -2,6 +2,10 @@
 using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
 using boilersGraphics.ViewModels;
+using boilersGraphics.Views;
+using Prism.Ioc;
+using Prism.Services.Dialogs;
+using Prism.Unity;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
@@ -9,6 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
@@ -21,6 +26,8 @@ namespace boilersGraphics.Models
         public ReactivePropertySlim<ImageSource> Appearance { get; } = new ReactivePropertySlim<ImageSource>();
         public ReactiveCommand SwitchVisibilityCommand { get; } = new ReactiveCommand();
         public ReactivePropertySlim<SelectableDesignerItemViewModelBase> Item { get; } = new ReactivePropertySlim<SelectableDesignerItemViewModelBase>();
+        public ReactiveCommand MoveSnapPointCommand { get; } = new ReactiveCommand();
+
 
         [Obsolete]
         public LayerItem(SelectableDesignerItemViewModelBase item)
@@ -60,6 +67,38 @@ namespace boilersGraphics.Models
             })
             .AddTo(_disposable);
             IsVisible.Value = true;
+            if (!App.IsTest)
+            {
+                Item.Subscribe(x =>
+                {
+                    if (x is SnapPointViewModel)
+                    {
+                        LayerTreeViewItemContextMenu.Add(new MenuItem()
+                        {
+                            Header = "スナップポイントを移動",
+                            Command = MoveSnapPointCommand
+                        });
+                    }
+                })
+                .AddTo(_disposable);
+            }
+            MoveSnapPointCommand.Subscribe(x =>
+            {
+                var dialogService = new DialogService((App.Current as PrismApplication).Container as IContainerExtension);
+                IDialogResult result = null;
+                var snapPointVM = Item.Value as SnapPointViewModel;
+                Point point = new Point(snapPointVM.Left.Value, snapPointVM.Top.Value);
+                dialogService.ShowDialog(nameof(SetSnapPoint), new DialogParameters() { { "Point", point }, { "LayerItem", this } }, ret => result = ret);
+                if (result != null 
+                 && result.Parameters != null 
+                 && result.Parameters.ContainsKey("Point"))
+                {
+                    var newPoint = result.Parameters.GetValue<Point>("Point");
+                    snapPointVM.Left.Value = newPoint.X;
+                    snapPointVM.Top.Value = newPoint.Y;
+                }
+            })
+            .AddTo(_disposable);
         }
 
         public void UpdateAppearance(IEnumerable<SelectableDesignerItemViewModelBase> items)
