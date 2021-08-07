@@ -322,6 +322,7 @@
                             <Setter Property="Canvas.Top" Value="{Binding Top.Value}" />
                             <Setter Property="Canvas.Left" Value="{Binding Left.Value}" />
                             <Setter Property="Panel.ZIndex" Value="{Binding ZIndex.Value}" />
+                            <Setter Property="Visibility" Value="{Binding IsVisible.Value, Converter={StaticResource BoolToVisibilityConverter}}" />
                         </Style>
 
 

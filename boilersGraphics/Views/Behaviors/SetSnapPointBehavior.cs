@@ -38,6 +38,7 @@ namespace boilersGraphics.Views.Behaviors
                     item.Width.Value = 3;
                     item.Height.Value = 3;
                     item.Opacity.Value = 0.5;
+                    item.IsVisible.Value = true;
                     ((AssociatedObject as DesignerCanvas).DataContext as IDiagramViewModel).AddItemCommand.Execute(item);
 
                     e.Handled = true;
