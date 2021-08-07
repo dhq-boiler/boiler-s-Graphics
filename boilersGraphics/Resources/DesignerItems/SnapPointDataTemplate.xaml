@@ -1,0 +1,13 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:convereter="clr-namespace:boilersGraphics.Converters"
+    xmlns:local="clr-namespace:boilersGraphics.Resources.DesignerItems"
+    xmlns:control="clr-namespace:boilersGraphics.Controls"
+    xmlns:viewModel="clr-namespace:boilersGraphics.ViewModels">
+    <DataTemplate DataType="{x:Type viewModel:SnapPointViewModel}">
+        <control:SnapPoint Width="{Binding Width.Value}"
+                           Height="{Binding Height.Value}"
+                           Tag="独立点" />
+    </DataTemplate>
+</ResourceDictionary>

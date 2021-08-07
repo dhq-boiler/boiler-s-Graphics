@@ -241,6 +241,7 @@
     <Compile Include="ViewModels\PolygonSettingViewModel.cs" />
     <Compile Include="ViewModels\SelectableDesignerItemViewModelBase.cs" />
     <Compile Include="ViewModels\SettingViewModel.cs" />
+    <Compile Include="ViewModels\SnapPointViewModel.cs" />
     <Compile Include="ViewModels\StraightConnectorViewModel.cs" />
     <Compile Include="ViewModels\StraightLineViewModel.cs" />
     <Compile Include="ViewModels\ToolBarViewModel.cs" />
@@ -258,6 +259,7 @@
     <Compile Include="Views\Behaviors\PictureBehavior.cs" />
     <Compile Include="Views\Behaviors\RectangleAdorner.cs" />
     <Compile Include="Views\Behaviors\RubberbandBehavior.cs" />
+    <Compile Include="Views\Behaviors\SetSnapPointBehavior.cs" />
     <Compile Include="Views\Behaviors\StraightLineAdorner.cs" />
     <Compile Include="Views\ColorMap.xaml.cs">
       <DependentUpon>ColorMap.xaml</DependentUpon>
@@ -326,6 +328,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Resources\DesignerItems\PolygonDesignerItemDataTemplate.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\DesignerItems\SnapPointDataTemplate.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -547,6 +553,9 @@
   <ItemGroup>
     <Resource Include="Assets\img\Eye.png" />
     <Resource Include="Assets\img\EyeSlash.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\img\SnapPoint.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
