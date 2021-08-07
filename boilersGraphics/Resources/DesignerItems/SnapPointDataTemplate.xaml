@@ -8,6 +8,7 @@
     <DataTemplate DataType="{x:Type viewModel:SnapPointViewModel}">
         <control:SnapPoint Width="{Binding Width.Value}"
                            Height="{Binding Height.Value}"
+                           Opacity="0"
                            Tag="独立点" />
     </DataTemplate>
 </ResourceDictionary>
