@@ -1,0 +1,90 @@
+﻿using boilersGraphics.Models;
+using boilersGraphics.ViewModels;
+using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace boilersGraphics.Test
+{
+    [TestFixture]
+    public class ZIndexTest
+    {
+        [Test]
+        public void 同じレイヤーにアイテム３つ追加()
+        {
+            boilersGraphics.App.IsTest = true;
+            var diagramVM = new DiagramViewModel();
+            diagramVM.Layers.Clear();
+            var layer1 = new Layer();
+            layer1.Name.Value = "レイヤー1";
+            diagramVM.Layers.Add(layer1);
+            layer1.IsSelected.Value = true;
+
+            var item1 = new NRectangleViewModel();
+            diagramVM.AddItemCommand.Execute(item1);
+
+            var item2 = new NRectangleViewModel();
+            diagramVM.AddItemCommand.Execute(item2);
+
+            var item3 = new NRectangleViewModel();
+            diagramVM.AddItemCommand.Execute(item3);
+
+            Assert.That(diagramVM.SelectedLayers.Value.ToList(), Has.Count.EqualTo(1));
+            var layer = diagramVM.SelectedLayers.Value[0] as Layer;
+            Assert.That((layer.Children[0] as LayerItem).Item.Value.ZIndex.Value, Is.EqualTo(0));
+            Assert.That((layer.Children[1] as LayerItem).Item.Value.ZIndex.Value, Is.EqualTo(1));
+            Assert.That((layer.Children[2] as LayerItem).Item.Value.ZIndex.Value, Is.EqualTo(2));
+        }
+
+        [Test]
+        public void 異なるレイヤーにアイテム３つずつ追加()
+        {
+            boilersGraphics.App.IsTest = true;
+            var diagramVM = new DiagramViewModel();
+            diagramVM.Layers.Clear();
+            var layer1 = new Layer();
+            layer1.Name.Value = "レイヤー1";
+            diagramVM.Layers.Add(layer1);
+            layer1.IsSelected.Value = true; //レイヤー1を選択状態にする
+            var layer2 = new Layer();
+            layer2.Name.Value = "レイヤー2";
+            diagramVM.Layers.Add(layer2);
+
+            var item1 = new NRectangleViewModel();
+            diagramVM.AddItemCommand.Execute(item1);
+
+            var item2 = new NRectangleViewModel();
+            diagramVM.AddItemCommand.Execute(item2);
+
+            var item3 = new NRectangleViewModel();
+            diagramVM.AddItemCommand.Execute(item3);
+
+            Assert.That((diagramVM.Layers[0].Children[0] as LayerItem).Item.Value.ZIndex.Value, Is.EqualTo(0));
+            Assert.That((diagramVM.Layers[0].Children[1] as LayerItem).Item.Value.ZIndex.Value, Is.EqualTo(1));
+            Assert.That((diagramVM.Layers[0].Children[2] as LayerItem).Item.Value.ZIndex.Value, Is.EqualTo(2));
+
+            //レイヤー2のみを選択状態にする
+            layer1.IsSelected.Value = false;
+            layer2.IsSelected.Value = true;
+
+            var item4 = new NRectangleViewModel();
+            diagramVM.AddItemCommand.Execute(item4);
+
+            var item5 = new NRectangleViewModel();
+            diagramVM.AddItemCommand.Execute(item5);
+
+            var item6 = new NRectangleViewModel();
+            diagramVM.AddItemCommand.Execute(item6);
+
+            Assert.That((diagramVM.Layers[0].Children[0] as LayerItem).Item.Value.ZIndex.Value, Is.EqualTo(0));
+            Assert.That((diagramVM.Layers[0].Children[1] as LayerItem).Item.Value.ZIndex.Value, Is.EqualTo(1));
+            Assert.That((diagramVM.Layers[0].Children[2] as LayerItem).Item.Value.ZIndex.Value, Is.EqualTo(2));
+            Assert.That((diagramVM.Layers[1].Children[0] as LayerItem).Item.Value.ZIndex.Value, Is.EqualTo(3));
+            Assert.That((diagramVM.Layers[1].Children[1] as LayerItem).Item.Value.ZIndex.Value, Is.EqualTo(4));
+            Assert.That((diagramVM.Layers[1].Children[2] as LayerItem).Item.Value.ZIndex.Value, Is.EqualTo(5));
+        }
+    }
+}

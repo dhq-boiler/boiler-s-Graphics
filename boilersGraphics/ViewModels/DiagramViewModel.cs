@@ -783,9 +783,15 @@ namespace boilersGraphics.ViewModels
 
         private void ExecuteAddItemCommand(object parameter)
         {
-            if (parameter is SelectableDesignerItemViewModelBase)
+            if (parameter is SelectableDesignerItemViewModelBase item)
             {
-                SelectableDesignerItemViewModelBase item = (SelectableDesignerItemViewModelBase)parameter;
+                var targetLayer = SelectedLayers.Value.First();
+                var newZIndex = targetLayer.GetNewZIndex(Layers.TakeWhile(x => x != targetLayer));
+                Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                      .Where(x => x != targetLayer)
+                      .ToList()
+                      .ForEach(x => x.PushZIndex(newZIndex));
+                item.ZIndex.Value = newZIndex;
                 item.Owner = this;
                 SelectedLayers.Value.First().AddItem(item);
             }

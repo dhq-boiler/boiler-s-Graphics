@@ -254,6 +254,25 @@ namespace boilersGraphics.Models
                 layer._observers.Remove(observer);
             }
         }
+
+        public int GetNewZIndex(IEnumerable<LayerTreeViewItemBase> layers)
+        {
+            var layerItems = layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                                   .Where(x => x is LayerItem);
+            var zindexes = Children.Union(layerItems).Cast<LayerItem>().Select(x => x.Item.Value.ZIndex.Value);
+            if (zindexes.Count() == 0)
+                return 0;
+            return zindexes.Max() + 1;
+        }
+
+        public void PushZIndex(int newZIndex)
+        {
+            var targetChildren = Children.Cast<LayerItem>().Where(x => x.Item.Value.ZIndex.Value >= newZIndex);
+            foreach (var target in targetChildren)
+            {
+                target.Item.Value.ZIndex.Value++;
+            }
+        }
     }
 
     public class LayerTreeViewItemBaseObservable : BindableBase

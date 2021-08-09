@@ -176,7 +176,7 @@ namespace boilersGraphics.Models
 
         public override string ToString()
         {
-            return $"Name={Name.Value}, IsSelected={IsSelected.Value}, Parent={{{Parent.Value}}}";
+            return $"Name={Name.Value}, IsSelected={IsSelected.Value}, ZIndex={Item.Value.ZIndex.Value}, Parent={{{Parent.Value}}}";
         }
 
         protected override void Dispose(bool disposing)
