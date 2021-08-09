@@ -141,5 +141,59 @@ namespace boilersGraphics.Test
             Assert.That((diagramVM.Layers[1].Children[1] as LayerItem).Item.Value.ZIndex.Value, Is.EqualTo(4));
             Assert.That((diagramVM.Layers[1].Children[2] as LayerItem).Item.Value.ZIndex.Value, Is.EqualTo(5));
         }
+
+        [Test]
+        public void レイヤーの後にもう1つのレイヤーを追加()
+        {
+            boilersGraphics.App.IsTest = true;
+            var diagramVM = new DiagramViewModel();
+            diagramVM.Layers.Clear();
+            var layer1 = new Layer();
+            layer1.Name.Value = "レイヤー1";
+            diagramVM.Layers.Add(layer1);
+            layer1.IsSelected.Value = true; //レイヤー1を選択状態にする
+
+            var item1 = new NRectangleViewModel();
+            diagramVM.AddItemCommand.Execute(item1);
+
+            var item2 = new NRectangleViewModel();
+            diagramVM.AddItemCommand.Execute(item2);
+
+            var item3 = new NRectangleViewModel();
+            diagramVM.AddItemCommand.Execute(item3);
+
+            Assert.That((diagramVM.Layers[0].Children[0] as LayerItem).Item.Value.ZIndex.Value, Is.EqualTo(0));
+            Assert.That((diagramVM.Layers[0].Children[1] as LayerItem).Item.Value.ZIndex.Value, Is.EqualTo(1));
+            Assert.That((diagramVM.Layers[0].Children[2] as LayerItem).Item.Value.ZIndex.Value, Is.EqualTo(2));
+
+            var layer2 = new Layer();
+            layer2.Name.Value = "レイヤー2";
+            diagramVM.Layers.Add(layer2);
+
+            layer1.IsSelected.Value = false;
+            layer2.IsSelected.Value = true;
+
+            var item4 = new NRectangleViewModel();
+            diagramVM.AddItemCommand.Execute(item4);
+
+            var item5 = new NRectangleViewModel();
+            diagramVM.AddItemCommand.Execute(item5);
+
+            var item6 = new NRectangleViewModel();
+            diagramVM.AddItemCommand.Execute(item6);
+
+            diagramVM.Layers.Remove(layer2);
+            LayerTreeViewItemCollection.InsertAfterChildren(diagramVM.Layers, diagramVM.Layers, layer2, layer1);
+
+            Assert.That(diagramVM.Layers[0].Name.Value, Is.EqualTo("レイヤー1"));
+            Assert.That(diagramVM.Layers[1].Name.Value, Is.EqualTo("レイヤー2"));
+
+            Assert.That((diagramVM.Layers[0].Children[0] as LayerItem).Item.Value.ZIndex.Value, Is.EqualTo(0));
+            Assert.That((diagramVM.Layers[0].Children[1] as LayerItem).Item.Value.ZIndex.Value, Is.EqualTo(1));
+            Assert.That((diagramVM.Layers[0].Children[2] as LayerItem).Item.Value.ZIndex.Value, Is.EqualTo(2));
+            Assert.That((diagramVM.Layers[1].Children[0] as LayerItem).Item.Value.ZIndex.Value, Is.EqualTo(3));
+            Assert.That((diagramVM.Layers[1].Children[1] as LayerItem).Item.Value.ZIndex.Value, Is.EqualTo(4));
+            Assert.That((diagramVM.Layers[1].Children[2] as LayerItem).Item.Value.ZIndex.Value, Is.EqualTo(5));
+        }
     }
 }
