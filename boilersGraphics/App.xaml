@@ -31,6 +31,8 @@
                 <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/DesignerItems/EllipseDesignerItemDataTemplate.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/DesignerItems/PolygonDesignerItemDataTemplate.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/DesignerItems/CombineDesignerItemDataTemplate.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/DesignerItems/SnapPointDataTemplate.xaml" />
+                
             </ResourceDictionary.MergedDictionaries>
             <property:Resources x:Key="resources" />
         </ResourceDictionary>

@@ -156,6 +156,17 @@ namespace boilersGraphics.ViewModels
                 ChangeHitTestToDisable();
                 SelectOneToolItem("bezier");
             })));
+            ToolItems.Add(new ToolItemData("snappoint", "pack://application:,,,/Assets/img/SnapPoint.png", new DelegateCommand(() =>
+            {
+                var behavior = new SetSnapPointBehavior();
+                Behaviors.Clear();
+                if (!Behaviors.Contains(behavior))
+                {
+                    Behaviors.Add(behavior);
+                }
+                ChangeHitTestToDisable();
+                SelectOneToolItem("snappoint");
+            })));
         }
 
         private void ChangeHitTestToDisable()

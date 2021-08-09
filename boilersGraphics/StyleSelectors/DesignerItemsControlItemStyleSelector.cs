@@ -35,6 +35,11 @@ namespace boilersGraphics.StyleSelectors
                 return (Style)itemsControl.FindResource("connectorItemStyle");
             }
 
+            if (item is SnapPointViewModel)
+            {
+                return (Style)itemsControl.FindResource("snapPointItemStyle");
+            }
+
             return null;
         }
     }

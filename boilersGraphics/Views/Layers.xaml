@@ -221,6 +221,14 @@
                                                                     </ToggleButton>
                                                                     <Border BorderBrush="{Binding IsSelected.Value, Converter={StaticResource IsSelectedToBorderBrushConverter}}"
                                                                         BorderThickness="1">
+                                                                        <Border.ToolTip>
+                                                                            <ToolTip x:Name="Appearance_ToolTip">
+                                                                                <Image Width="100"
+                                                                                       Height="100"
+                                                                                       Source="{Binding Appearance.Value}"
+                                                                                       RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                            </ToolTip>
+                                                                        </Border.ToolTip>
                                                                         <Image Width="25"
                                                                            Height="25"
                                                                            Source="{Binding Appearance.Value}"

@@ -83,10 +83,18 @@ namespace boilersGraphics.ViewModels
                         if (x.HasAsAncestor(newItem as LayerTreeViewItemBase))
                         {
                             x.IsSelected.Value = true;
+                            if ((x as LayerItem).Item.Value is SnapPointViewModel snapPointVM)
+                            {
+                                snapPointVM.Opacity.Value = 1.0;
+                            }
                         }
                         else
                         {
                             x.IsSelected.Value = false;
+                            if ((x as LayerItem).Item.Value is SnapPointViewModel snapPointVM)
+                            {
+                                snapPointVM.Opacity.Value = 0.5;
+                            }
                         }
                     });
 
@@ -105,8 +113,16 @@ namespace boilersGraphics.ViewModels
                     layerItems.ToList().ForEach(x =>
                     {
                         x.IsSelected.Value = false;
+                        if ((x as LayerItem).Item.Value is SnapPointViewModel snapPointVM)
+                        {
+                            snapPointVM.Opacity.Value = 0.5;
+                        }
                     });
                     selectedItem.IsSelected.Value = true;
+                    if (selectedItem.Item.Value is SnapPointViewModel snapPointVM)
+                    {
+                        snapPointVM.Opacity.Value = 1.0;
+                    }
 
                     LayerTreeViewItemBase temp = selectedItem;
                     while (temp.Parent.Value != null)
