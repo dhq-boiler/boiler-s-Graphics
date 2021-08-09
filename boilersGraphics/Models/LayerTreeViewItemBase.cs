@@ -273,6 +273,19 @@ namespace boilersGraphics.Models
                 target.Item.Value.ZIndex.Value++;
             }
         }
+
+        public int SetZIndex(int foregroundZIndex)
+        {
+            if (this is LayerItem layerItem)
+                layerItem.Item.Value.ZIndex.Value = foregroundZIndex++;
+
+            int zindex = foregroundZIndex;
+            foreach (var child in Children)
+            {
+                zindex = child.SetZIndex(zindex);
+            }
+            return zindex;
+        }
     }
 
     public class LayerTreeViewItemBaseObservable : BindableBase
