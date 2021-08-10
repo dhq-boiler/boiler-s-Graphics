@@ -8,13 +8,23 @@
 
 ### 直線を描画する
 
+![draw_straight_line](https://user-images.githubusercontent.com/7916855/128829810-e9b51cd9-ac7a-4904-a93d-703a53df85dc.gif)
+
 ### 四角形を描画する
+
+![draw_rectangle](https://user-images.githubusercontent.com/7916855/128829838-3e35fdf2-649b-4ca8-9435-51bdca7380ff.gif)
 
 ### 円を描画する
 
+![draw_ellipse](https://user-images.githubusercontent.com/7916855/128829886-5a8dee3f-7015-40c2-af7c-4ad3247a8048.gif)
+
 ### 多角形を描画する
 
+![draw_polygon](https://user-images.githubusercontent.com/7916855/128829906-cd101656-9c0e-449d-b77e-409e291e4e7f.gif)
+
 ### ベジエ曲線を描画する
+
+![draw_bezier](https://user-images.githubusercontent.com/7916855/128829931-262a1055-1943-4f3c-a466-39101664dcd2.gif)
 
 ## 画像ファイルを埋め込む
 
