@@ -1491,7 +1491,9 @@ namespace boilersGraphics.ViewModels
             {
                 var current = ordered.ElementAt(i);
                 int currentIndex = current.ZIndex.Value;
-                int newIndex = current is GroupItemViewModel ? Layers.SelectMany(x => x.Children).Where(x => (x as LayerItem).Item.Value.ParentID == current.ID).Count() : 0;
+                int newIndex = current is GroupItemViewModel
+                             ? Layers.SelectMany(x => x.Children).Where(x => (x as LayerItem).Item.Value.ParentID == current.ID).Count()
+                             : SelectedLayers.Value.First().Children.Min(x => (x as LayerItem).Item.Value.ZIndex.Value);
                 if (currentIndex != newIndex)
                 {
                     var oldCurrentIndex = current.ZIndex.Value;
@@ -1537,6 +1539,8 @@ namespace boilersGraphics.ViewModels
                     }
                 }
             }
+
+            Sort(Layers);
         }
 
         private bool CanExecuteOrder()
