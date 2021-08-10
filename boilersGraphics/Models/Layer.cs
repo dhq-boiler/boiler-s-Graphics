@@ -19,7 +19,7 @@ using System.Windows.Threading;
 
 namespace boilersGraphics.Models
 {
-    public class Layer : LayerTreeViewItemBase, IObservable<LayerObservable>
+    public class Layer : LayerTreeViewItemBase, IObservable<LayerObservable>, IComparable<LayerTreeViewItemBase>, IComparable
     {
         public static int LayerCount { get; set; } = 1;
        
@@ -166,6 +166,27 @@ namespace boilersGraphics.Models
         public override string ToString()
         {
             return $"Name={Name.Value}, IsSelected={IsSelected.Value}, Parent={{{Parent.Value}}}";
+        }
+
+        public int CompareTo(LayerTreeViewItemBase other)
+        {
+            if (other == null)
+                return 1;
+            else
+                return Children.OfType<LayerItem>().Max(x => x.Item.Value.ZIndex.Value).CompareTo(other.OfType<LayerItem>().Max(x => x.Item.Value.ZIndex.Value));
+        }
+
+        public int CompareTo(object obj)
+        {
+            if (obj == null)
+                return 1;
+            else if (!(obj is LayerTreeViewItemBase other))
+                return 1;
+            else
+            {
+                int otherInt = other.Children.OfType<LayerItem>().Max(x => x.Item.Value.ZIndex.Value);
+                return Children.OfType<LayerItem>().Max(x => x.Item.Value.ZIndex.Value).CompareTo(otherInt);
+            }
         }
 
         public class LayerDisposable : IDisposable

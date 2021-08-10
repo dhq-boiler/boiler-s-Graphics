@@ -783,9 +783,15 @@ namespace boilersGraphics.ViewModels
 
         private void ExecuteAddItemCommand(object parameter)
         {
-            if (parameter is SelectableDesignerItemViewModelBase)
+            if (parameter is SelectableDesignerItemViewModelBase item)
             {
-                SelectableDesignerItemViewModelBase item = (SelectableDesignerItemViewModelBase)parameter;
+                var targetLayer = SelectedLayers.Value.First();
+                var newZIndex = targetLayer.GetNewZIndex(Layers.TakeWhile(x => x != targetLayer));
+                Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                      .Where(x => x != targetLayer)
+                      .ToList()
+                      .ForEach(x => x.PushZIndex(newZIndex));
+                item.ZIndex.Value = newZIndex;
                 item.Owner = this;
                 SelectedLayers.Value.First().AddItem(item);
             }
@@ -1207,13 +1213,18 @@ namespace boilersGraphics.ViewModels
             for (int i = 0; i < ordered.Count(); ++i)
             {
                 int currentIndex = ordered.ElementAt(i).ZIndex.Value;
+                if (SelectedLayers.Value.First().Children.Max(x => (x as LayerItem).Item.Value.ZIndex.Value) == currentIndex)
+                    continue; //レイヤー内の最大ZIndex値と同じだった場合はcontinueして次の選択アイテムへ
                 var next = (from x in Layers.SelectMany(x => x.Children)
                             where (x as LayerItem).Item.Value.ZIndex.Value == currentIndex + 1
                             select x).SingleOrDefault();
 
                 if (next == null) continue;
 
-                int newIndex = (next as LayerItem).Item.Value.ParentID != Guid.Empty ? (Layers.SelectMany(x => x.Children).Single(x => (x as LayerItem).Item.Value.ID == (next as LayerItem).Item.Value.ParentID) as LayerItem).Item.Value.ZIndex.Value : Math.Min(count - 1 - i, currentIndex + 1);
+                int newIndex = (next as LayerItem).Item.Value.ParentID != Guid.Empty 
+                             ? (Layers.SelectMany(x => x.Children)
+                                      .Single(x => (x as LayerItem).Item.Value.ID == (next as LayerItem).Item.Value.ParentID) as LayerItem).Item.Value.ZIndex.Value
+                             : Math.Min(count - 1 - i, currentIndex + 1);
                 if (currentIndex != newIndex)
                 {
                     if (ordered.ElementAt(i) is GroupItemViewModel)
@@ -1283,6 +1294,26 @@ namespace boilersGraphics.ViewModels
                     }
                 }
             }
+
+            Sort(Layers);
+        }
+
+        private void Sort(ReactiveCollection<LayerTreeViewItemBase> target)
+        {
+            var list = target.ToList();
+
+            foreach (var layer in list)
+            {
+                target.Remove(layer);
+            }
+
+            list.Sort();
+
+            foreach (var layer in list)
+            {
+                Sort(layer.Children);
+                target.Add(layer);
+            }
         }
 
         private void ExecuteSendBackwardCommand()
@@ -1296,6 +1327,8 @@ namespace boilersGraphics.ViewModels
             for (int i = 0; i < ordered.Count(); ++i)
             {
                 int currentIndex = ordered.ElementAt(i).ZIndex.Value;
+                if (SelectedLayers.Value.First().Children.Min(x => (x as LayerItem).Item.Value.ZIndex.Value) == currentIndex)
+                    continue; //レイヤー内の最小ZIndex値と同じだった場合はcontinueして次の選択アイテムへ
                 var previous = (from x in Layers.SelectMany(x => x.Children)
                                 where (x as LayerItem).Item.Value.ZIndex.Value == currentIndex - 1
                                 select x).SingleOrDefault();
@@ -1380,6 +1413,8 @@ namespace boilersGraphics.ViewModels
                     }
                 }
             }
+
+            Sort(Layers);
         }
 
         private void ExecuteBringForegroundCommand()
@@ -1394,7 +1429,7 @@ namespace boilersGraphics.ViewModels
             {
                 var current = ordered.ElementAt(i);
                 int currentIndex = current.ZIndex.Value;
-                int newIndex = Layers.SelectMany(x => x.Children).Count() - 1;
+                int newIndex = SelectedLayers.Value.SelectMany(x => x.Children).Count() - 1;
                 if (currentIndex != newIndex)
                 {
                     var oldCurrentIndex = current.ZIndex.Value;
@@ -1440,6 +1475,8 @@ namespace boilersGraphics.ViewModels
                     }
                 }
             }
+
+            Sort(Layers);
         }
 
         private void ExecuteSendBackgroundCommand()
@@ -1454,7 +1491,9 @@ namespace boilersGraphics.ViewModels
             {
                 var current = ordered.ElementAt(i);
                 int currentIndex = current.ZIndex.Value;
-                int newIndex = current is GroupItemViewModel ? Layers.SelectMany(x => x.Children).Where(x => (x as LayerItem).Item.Value.ParentID == current.ID).Count() : 0;
+                int newIndex = current is GroupItemViewModel
+                             ? Layers.SelectMany(x => x.Children).Where(x => (x as LayerItem).Item.Value.ParentID == current.ID).Count()
+                             : SelectedLayers.Value.First().Children.Min(x => (x as LayerItem).Item.Value.ZIndex.Value);
                 if (currentIndex != newIndex)
                 {
                     var oldCurrentIndex = current.ZIndex.Value;
@@ -1500,6 +1539,8 @@ namespace boilersGraphics.ViewModels
                     }
                 }
             }
+
+            Sort(Layers);
         }
 
         private bool CanExecuteOrder()

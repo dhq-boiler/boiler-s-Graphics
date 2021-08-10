@@ -1,5 +1,6 @@
 ﻿using boilersGraphics.Exceptions;
 using boilersGraphics.Extensions;
+using boilersGraphics.Helpers;
 using boilersGraphics.Models;
 using boilersGraphics.ViewModels;
 using Microsoft.Xaml.Behaviors;
@@ -186,7 +187,7 @@ namespace boilersGraphics.Views.Behaviors
                     {
                         children = targetItemParent.Children;
                     }
-                    InsertBeforeChildren(children, sourceItem, targetItem);
+                    LayerTreeViewItemCollection.InsertBeforeChildren(diagramVM.Layers, children, sourceItem, targetItem);
                     sourceItem.Parent.Value = targetItemParent;
                     sourceItem.IsSelected.Value = true;
                     break;
@@ -195,13 +196,13 @@ namespace boilersGraphics.Views.Behaviors
                     {
                         children = targetItemParent.Children;
                     }
-                    InsertAfterChildren(children, sourceItem, targetItem);
+                    LayerTreeViewItemCollection.InsertAfterChildren(diagramVM.Layers, children, sourceItem, targetItem);
                     sourceItem.Parent.Value = targetItemParent;
                     sourceItem.IsSelected.Value = true;
                     break;
                 case InsertType.Children:
                     children = targetItem.Children;
-                    AddChildren(children, sourceItem);
+                    LayerTreeViewItemCollection.AddChildren(diagramVM.Layers, children, sourceItem);
                     targetItem.IsExpanded.Value = true;
                     sourceItem.IsSelected.Value = true;
                     sourceItem.Parent.Value = targetItem;
@@ -214,29 +215,6 @@ namespace boilersGraphics.Views.Behaviors
                 Target = targetItem,
                 Type = _insertType
             });
-        }
-
-        private void InsertBeforeChildren(ReactiveCollection<LayerTreeViewItemBase> children, LayerTreeViewItemBase from, LayerTreeViewItemBase to)
-        {
-            var index = children.IndexOf(to);
-            if (index < 0)
-                return;
-
-            children.Insert(index, from);
-        }
-
-        private void InsertAfterChildren(ReactiveCollection<LayerTreeViewItemBase> children, LayerTreeViewItemBase from, LayerTreeViewItemBase to)
-        {
-            var index = children.IndexOf(to);
-            if (index < 0)
-                return;
-
-            children.Insert(index + 1, from);
-        }
-
-        private void AddChildren(ReactiveCollection<LayerTreeViewItemBase> children, LayerTreeViewItemBase to)
-        {
-            children.Add(to);
         }
 
         private void OnPreviewMouseMove(object sender, MouseEventArgs e)
