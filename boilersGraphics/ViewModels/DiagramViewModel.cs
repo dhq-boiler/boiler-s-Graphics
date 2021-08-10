@@ -1221,7 +1221,10 @@ namespace boilersGraphics.ViewModels
 
                 if (next == null) continue;
 
-                int newIndex = (next as LayerItem).Item.Value.ParentID != Guid.Empty ? (Layers.SelectMany(x => x.Children).Single(x => (x as LayerItem).Item.Value.ID == (next as LayerItem).Item.Value.ParentID) as LayerItem).Item.Value.ZIndex.Value : Math.Min(count - 1 - i, currentIndex + 1);
+                int newIndex = (next as LayerItem).Item.Value.ParentID != Guid.Empty 
+                             ? (Layers.SelectMany(x => x.Children)
+                                      .Single(x => (x as LayerItem).Item.Value.ID == (next as LayerItem).Item.Value.ParentID) as LayerItem).Item.Value.ZIndex.Value
+                             : Math.Min(count - 1 - i, currentIndex + 1);
                 if (currentIndex != newIndex)
                 {
                     if (ordered.ElementAt(i) is GroupItemViewModel)
