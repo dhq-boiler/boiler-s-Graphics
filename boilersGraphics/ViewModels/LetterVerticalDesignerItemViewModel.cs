@@ -95,7 +95,7 @@ namespace boilersGraphics.ViewModels
                 {
                     var dialogService = new DialogService((App.Current as PrismApplication).Container as IContainerExtension);
                     IDialogResult result = null;
-                    dialogService.Show(nameof(LetterSetting), new DialogParameters() { { "ViewModel", this } }, ret => result = ret);
+                    dialogService.Show(nameof(LetterVerticalSetting), new DialogParameters() { { "ViewModel", this } }, ret => result = ret);
                     var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
                     designerCanvas.Focus();
                     LetterSettingDialogIsOpen = true;
