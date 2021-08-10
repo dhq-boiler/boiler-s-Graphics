@@ -1425,7 +1425,7 @@ namespace boilersGraphics.ViewModels
             {
                 var current = ordered.ElementAt(i);
                 int currentIndex = current.ZIndex.Value;
-                int newIndex = Layers.SelectMany(x => x.Children).Count() - 1;
+                int newIndex = SelectedLayers.Value.SelectMany(x => x.Children).Count() - 1;
                 if (currentIndex != newIndex)
                 {
                     var oldCurrentIndex = current.ZIndex.Value;
@@ -1471,6 +1471,8 @@ namespace boilersGraphics.ViewModels
                     }
                 }
             }
+
+            Sort(Layers);
         }
 
         private void ExecuteSendBackgroundCommand()
