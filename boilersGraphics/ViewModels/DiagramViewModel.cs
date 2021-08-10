@@ -1213,6 +1213,8 @@ namespace boilersGraphics.ViewModels
             for (int i = 0; i < ordered.Count(); ++i)
             {
                 int currentIndex = ordered.ElementAt(i).ZIndex.Value;
+                if (SelectedLayers.Value.First().Children.Max(x => (x as LayerItem).Item.Value.ZIndex.Value) == currentIndex)
+                    continue; //レイヤー内の最大ZIndex値と同じだった場合はcontinueして次の選択アイテムへ
                 var next = (from x in Layers.SelectMany(x => x.Children)
                             where (x as LayerItem).Item.Value.ZIndex.Value == currentIndex + 1
                             select x).SingleOrDefault();

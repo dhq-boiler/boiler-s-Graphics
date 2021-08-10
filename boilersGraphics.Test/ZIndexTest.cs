@@ -244,5 +244,93 @@ namespace boilersGraphics.Test
             Assert.That((viewModel.Layers[0].Children[3] as LayerItem).Item.Value.ZIndex.Value, Is.EqualTo(3));
             Assert.That((viewModel.Layers[0].Children[4] as LayerItem).Item.Value.ZIndex.Value, Is.EqualTo(4));
         }
+
+        [Test]
+        public void 前面へ移動_レイヤー外()
+        {
+            boilersGraphics.App.IsTest = true;
+            var viewModel = new DiagramViewModel();
+            viewModel.Layers.Clear();
+
+            Layer layer1 = new Layer();
+            layer1.Name.Value = "レイヤー1";
+            viewModel.Layers.Add(layer1);
+
+            Layer layer2 = new Layer();
+            layer2.Name.Value = "レイヤー2";
+            viewModel.Layers.Add(layer2);
+
+            layer1.IsSelected.Value = true;
+
+            var r0 = new NRectangleViewModel();
+            var r1 = new NRectangleViewModel();
+            var r2 = new NRectangleViewModel();
+            var r3 = new NRectangleViewModel();
+            var r4 = new NRectangleViewModel();
+
+            viewModel.AddItemCommand.Execute(r0);
+            viewModel.AddItemCommand.Execute(r1);
+            viewModel.AddItemCommand.Execute(r2);
+            viewModel.AddItemCommand.Execute(r3);
+            viewModel.AddItemCommand.Execute(r4);
+
+            Assert.That(r0.ZIndex.Value, Is.EqualTo(0));
+            Assert.That(r1.ZIndex.Value, Is.EqualTo(1));
+            Assert.That(r2.ZIndex.Value, Is.EqualTo(2));
+            Assert.That(r3.ZIndex.Value, Is.EqualTo(3));
+            Assert.That(r4.ZIndex.Value, Is.EqualTo(4));
+
+            layer1.IsSelected.Value = false;
+            layer2.IsSelected.Value = true;
+
+            var r5 = new NRectangleViewModel();
+            var r6 = new NRectangleViewModel();
+            var r7 = new NRectangleViewModel();
+            var r8 = new NRectangleViewModel();
+            var r9 = new NRectangleViewModel();
+
+            viewModel.AddItemCommand.Execute(r5);
+            viewModel.AddItemCommand.Execute(r6);
+            viewModel.AddItemCommand.Execute(r7);
+            viewModel.AddItemCommand.Execute(r8);
+            viewModel.AddItemCommand.Execute(r9);
+
+            Assert.That(r5.ZIndex.Value, Is.EqualTo(5));
+            Assert.That(r6.ZIndex.Value, Is.EqualTo(6));
+            Assert.That(r7.ZIndex.Value, Is.EqualTo(7));
+            Assert.That(r8.ZIndex.Value, Is.EqualTo(8));
+            Assert.That(r9.ZIndex.Value, Is.EqualTo(9));
+
+            layer1.IsSelected.Value = true;
+            layer2.IsSelected.Value = false;
+
+            viewModel.Layers[0].Children[4].IsSelected.Value = true;
+            Assert.That(viewModel.SelectedItems.Value.ToList(), Has.Count.EqualTo(1));
+
+            viewModel.BringForwardCommand.Execute();
+
+            Assert.That(r0.ZIndex.Value, Is.EqualTo(0));
+            Assert.That(r1.ZIndex.Value, Is.EqualTo(1));
+            Assert.That(r2.ZIndex.Value, Is.EqualTo(2));
+            Assert.That(r3.ZIndex.Value, Is.EqualTo(3));
+            Assert.That(r4.ZIndex.Value, Is.EqualTo(4));
+            Assert.That(r5.ZIndex.Value, Is.EqualTo(5));
+            Assert.That(r6.ZIndex.Value, Is.EqualTo(6));
+            Assert.That(r7.ZIndex.Value, Is.EqualTo(7));
+            Assert.That(r8.ZIndex.Value, Is.EqualTo(8));
+            Assert.That(r9.ZIndex.Value, Is.EqualTo(9));
+
+            Assert.That((viewModel.Layers[0].Children[0] as LayerItem).Item.Value.ZIndex.Value, Is.EqualTo(0));
+            Assert.That((viewModel.Layers[0].Children[1] as LayerItem).Item.Value.ZIndex.Value, Is.EqualTo(1));
+            Assert.That((viewModel.Layers[0].Children[2] as LayerItem).Item.Value.ZIndex.Value, Is.EqualTo(2));
+            Assert.That((viewModel.Layers[0].Children[3] as LayerItem).Item.Value.ZIndex.Value, Is.EqualTo(3));
+            Assert.That((viewModel.Layers[0].Children[4] as LayerItem).Item.Value.ZIndex.Value, Is.EqualTo(4));
+
+            Assert.That((viewModel.Layers[1].Children[0] as LayerItem).Item.Value.ZIndex.Value, Is.EqualTo(5));
+            Assert.That((viewModel.Layers[1].Children[1] as LayerItem).Item.Value.ZIndex.Value, Is.EqualTo(6));
+            Assert.That((viewModel.Layers[1].Children[2] as LayerItem).Item.Value.ZIndex.Value, Is.EqualTo(7));
+            Assert.That((viewModel.Layers[1].Children[3] as LayerItem).Item.Value.ZIndex.Value, Is.EqualTo(8));
+            Assert.That((viewModel.Layers[1].Children[4] as LayerItem).Item.Value.ZIndex.Value, Is.EqualTo(9));
+        }
     }
 }
