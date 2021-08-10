@@ -1289,6 +1289,26 @@ namespace boilersGraphics.ViewModels
                     }
                 }
             }
+
+            Sort(Layers);
+        }
+
+        private void Sort(ReactiveCollection<LayerTreeViewItemBase> target)
+        {
+            var list = target.ToList();
+
+            foreach (var layer in list)
+            {
+                target.Remove(layer);
+            }
+
+            list.Sort();
+
+            foreach (var layer in list)
+            {
+                Sort(layer.Children);
+                target.Add(layer);
+            }
         }
 
         private void ExecuteSendBackwardCommand()

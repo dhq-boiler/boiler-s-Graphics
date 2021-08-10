@@ -19,7 +19,7 @@ using System.Windows.Media.Imaging;
 
 namespace boilersGraphics.Models
 {
-    public class LayerItem : LayerTreeViewItemBase, IDisposable
+    public class LayerItem : LayerTreeViewItemBase, IDisposable, IComparable<LayerTreeViewItemBase>, IComparable
     {
         private bool disposedValue;
         public static int LayerItemCount { get; set; } = 1;
@@ -195,6 +195,26 @@ namespace boilersGraphics.Models
 
                 disposedValue = true;
             }
+        }
+
+        public int CompareTo(LayerTreeViewItemBase other)
+        {
+            if (other == null)
+                return 1;
+            else if (!(other is LayerItem otherLayerItem))
+                return 1;
+            else
+                return Item.Value.ZIndex.Value.CompareTo(otherLayerItem.Item.Value.ZIndex.Value);
+        }
+
+        public int CompareTo(object obj)
+        {
+            if (obj == null)
+                return 1;
+            else if (!(obj is LayerItem otherLayerItem))
+                return 1;
+            else
+                return Item.Value.ZIndex.Value.CompareTo(otherLayerItem.Item.Value.ZIndex.Value);
         }
     }
 }
