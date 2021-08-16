@@ -167,14 +167,28 @@
 
 ### 開く
 
+メニュー > ファイル > 開く
+
+または
+
 ![open_file](https://user-images.githubusercontent.com/7916855/129572298-dd12d14d-e731-4925-923a-b92215c22fd5.png)
 
 ### 名前を付けて保存
 
+メニュー > ファイル > 名前を付けて保存
+
 ### 上書き保存
+
+メニュー > ファイル > 上書き保存
+
+または
 
 ![overwrite_file](https://user-images.githubusercontent.com/7916855/129572332-ed48adba-d4d5-4832-8421-9ff90f914dbe.png)
 
 ### エクスポート
+
+メニュー > ファイル > エクスポート
+
+または
 
 ![export](https://user-images.githubusercontent.com/7916855/129572363-cd29ea70-5d16-4273-88e4-9fc40e209026.png)
