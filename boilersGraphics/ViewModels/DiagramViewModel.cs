@@ -310,6 +310,7 @@ namespace boilersGraphics.ViewModels
                                                      .Where(x => x.GetType() == typeof(LayerItem))
                                                      .Select(y => (y as LayerItem).Item.Value)
                                                      .Where(z => z.IsSelected.Value == true)
+                                                     .OrderBy(z => z.SelectedOrder.Value)
                                                      .ToArray())
                                   .ToReadOnlyReactivePropertySlim(Array.Empty<SelectableDesignerItemViewModelBase>());
 
@@ -362,6 +363,13 @@ namespace boilersGraphics.ViewModels
             .AddTo(_CompositeDisposable);
             
             InitialSetting();
+        }
+
+        public LayerTreeViewItemBase GetLayerTreeViewItemBase(SelectableDesignerItemViewModelBase item)
+        {
+            return Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                         .Where(x => x is LayerItem)
+                         .First(x => (x as LayerItem).Item.Value == item);
         }
 
         private Point GetCenter(SnapPoint snapPoint)
@@ -426,6 +434,8 @@ namespace boilersGraphics.ViewModels
             CanvasBorderThickness = 0.0;
             CanvasBackground.Value = Colors.White;
             EnablePointSnap.Value = true;
+            Layer.LayerCount = 1;
+            LayerItem.LayerItemCount = 1;
             var layer = new Layer();
             layer.IsVisible.Value = true;
             layer.IsSelected.Value = true;
