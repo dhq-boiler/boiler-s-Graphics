@@ -109,31 +109,59 @@
 
 ### 最前面へ移動
 
+![move_to_frontmost](https://user-images.githubusercontent.com/7916855/129554426-936f737c-b060-413a-8dd5-fd1b3a16906a.gif)
+
 ### 前面へ移動
+
+![move_to_front](https://user-images.githubusercontent.com/7916855/129554448-7fe2e743-ef8f-42fd-8e19-8e4f047f0890.gif)
 
 ### 背面へ移動
 
+![move_to_back](https://user-images.githubusercontent.com/7916855/129554467-f16d3e5f-6634-434e-8604-5f62fd16ca66.gif)
+
 ### 最背面へ移動
+
+![move_to_backmost](https://user-images.githubusercontent.com/7916855/129554512-4ef9eca7-ffb6-4fc4-815e-a8b48fe0069d.gif)
 
 ### 上揃え
 
+![top_alignment](https://user-images.githubusercontent.com/7916855/129554549-a7281529-16c6-4e7c-9a75-12742941dca0.gif)
+
 ### 上下中央揃え
+
+![top_and_bottom_center_alignment](https://user-images.githubusercontent.com/7916855/129554582-80804673-6b1c-441c-9c10-71bfc07c32d8.gif)
 
 ### 下揃え
 
+![bottom_alignment](https://user-images.githubusercontent.com/7916855/129554606-5f3e100f-6ee4-4ef3-8814-7953ab2d9a5a.gif)
+
 ### 左揃え
+
+![left_alignment](https://user-images.githubusercontent.com/7916855/129554636-b1034326-f1a7-41b7-b73a-bb3286a85132.gif)
 
 ### 左右中央揃え
 
+![left_and_right_center_alignment](https://user-images.githubusercontent.com/7916855/129554677-1fbdd05f-99b7-4b96-b99a-5b6dcc4a1297.gif)
+
 ### 右揃え
+
+![right_alignment](https://user-images.githubusercontent.com/7916855/129554707-a15086a6-2379-43af-ad59-b6479e0a0278.gif)
 
 ### 左右に整列
 
+![distribute_horizontal](https://user-images.githubusercontent.com/7916855/129554739-23788ac8-c66e-4be0-9924-ae2f25070f49.gif)
+
 ### 上下に整列
+
+![distribute_vertical](https://user-images.githubusercontent.com/7916855/129554752-69d0a1c2-32d9-4c64-bf6c-c7bf7eb66d6d.gif)
 
 ### 幅を合わせる
 
+![uniform_width](https://user-images.githubusercontent.com/7916855/129554779-3bdb13c2-6063-4a18-a263-760ae297f8ae.gif)
+
 ### 高さを合わせる
+
+![uniform_height](https://user-images.githubusercontent.com/7916855/129554802-bd62ab9c-b380-4142-b99f-a9eeff045f92.gif)
 
 ## ファイル関連
 
