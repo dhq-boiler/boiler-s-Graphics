@@ -64,6 +64,15 @@ namespace boilersGraphics.Models
             IsSelected.Subscribe(x =>
             {
                 Item.Value.IsSelected.Value = x;
+                if (x)
+                {
+                    Item.Value.SelectedOrder.Value = SelectableDesignerItemViewModelBase.SelectedOrderCount++ + 1;
+                }
+                else
+                {
+                    Item.Value.SelectedOrder.Value = -1;
+                    SelectableDesignerItemViewModelBase.SelectedOrderCount--;
+                }
             })
             .AddTo(_disposable);
             IsVisible.Value = true;

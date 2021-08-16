@@ -61,6 +61,8 @@ namespace boilersGraphics.AttachedProperties
                         selectableDesignerItemViewModelBase.IsSelected.Value = !selectableDesignerItemViewModelBase.IsSelected.Value;
                     }
 
+                    selectableDesignerItemViewModelBase.SelectedOrder.Value = SelectableDesignerItemViewModelBase.SelectedOrderCount++ + 1;
+
                     var diagramVM = (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel;
                     diagramVM.Layers.ToList().ForEach(x => x.IsSelected.Value = false);
                     

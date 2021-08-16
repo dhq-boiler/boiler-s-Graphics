@@ -25,6 +25,10 @@ boiler's Graphicsを動作させるには .NET Framework 4.8 が必要です。
 
 なお、zipでのバイナリ配布は継続しますが、バージョン2.0から setup.exe によるインストール方法を提供する予定です。
 
+# How to use
+
+[How to use](https://github.com/dhq-boiler/boiler-s-Graphics/blob/develop/HowToUse.md)
+
 # Loadmap
 
 ![Loadmap](https://github.com/dhq-boiler/boiler-s-Graphics/blob/97708cbb626e733e6e65551a0799161a18df6b7a/WebComponents/boilersGraphics_loadmap.jpg)

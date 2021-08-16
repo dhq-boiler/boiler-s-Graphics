@@ -1,4 +1,5 @@
-﻿using boilersGraphics.ViewModels;
+﻿using boilersGraphics.Models;
+using boilersGraphics.ViewModels;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -11,68 +12,131 @@ namespace boilersGraphics.Test
     [TestFixture]
     public class SelectedItemsTest
     {
-        //[Test]
-        //public void Items1_Selected0()
-        //{
-        //    var viewModel = new DiagramViewModel();
-        //    var items = new SelectableDesignerItemViewModelBase[]
-        //    {
-        //        new NRectangleViewModel() { IsSelected = false }
-        //    };
-        //    items.ToList().ForEach(x => viewModel.Items.Add(x));
+        [Test]
+        public void アイテムは選択されていない()
+        {
+            boilersGraphics.App.IsTest = true;
+            var viewModel = new DiagramViewModel();
+            viewModel.Layers.Clear();
+            var layer1 = new Layer();
+            layer1.Name.Value = "レイヤー1";
+            viewModel.Layers.Add(layer1);
+            layer1.IsSelected.Value = true;
 
-        //    Assert.That(viewModel.SelectedItems, Has.Count.EqualTo(0));
-        //}
+            var item1 = new NRectangleViewModel();
+            viewModel.AddItemCommand.Execute(item1);
+            var item2 = new NRectangleViewModel();
+            viewModel.AddItemCommand.Execute(item2);
+            var item3 = new NRectangleViewModel();
+            viewModel.AddItemCommand.Execute(item3);
 
-        //[Test]
-        //public void Items1_Selected1()
-        //{
-        //    var viewModel = new DiagramViewModel();
-        //    var items = new SelectableDesignerItemViewModelBase[]
-        //    {
-        //        new NRectangleViewModel() { IsSelected = true }
-        //    };
-        //    items.ToList().ForEach(x => viewModel.Items.Add(x));
+            Assert.That(viewModel.SelectedItems.Value.ToList(), Has.Count.EqualTo(0));
+        }
 
-        //    Assert.That(viewModel.SelectedItems, Has.Count.EqualTo(1));
-        //}
+        [Test]
+        public void アイテム1つが選択されている()
+        {
+            boilersGraphics.App.IsTest = true;
+            var viewModel = new DiagramViewModel();
+            viewModel.Layers.Clear();
+            var layer1 = new Layer();
+            layer1.Name.Value = "レイヤー1";
+            viewModel.Layers.Add(layer1);
+            layer1.IsSelected.Value = true;
 
-        //[Test]
-        //public void Items1_Selected0_to_Item1_Selected1()
-        //{
-        //    var viewModel = new DiagramViewModel();
-        //    var items = new SelectableDesignerItemViewModelBase[]
-        //    {
-        //        new NRectangleViewModel() { IsSelected = false }
-        //    };
-        //    items.ToList().ForEach(x => viewModel.Items.Add(x));
+            var item1 = new NRectangleViewModel();
+            viewModel.AddItemCommand.Execute(item1);
+            var item2 = new NRectangleViewModel();
+            viewModel.AddItemCommand.Execute(item2);
+            var item3 = new NRectangleViewModel();
+            viewModel.AddItemCommand.Execute(item3);
 
-        //    Assert.That(viewModel.SelectedItems, Has.Count.EqualTo(0));
+            layer1.Children[0].IsSelected.Value = true;
 
-        //    items[0].IsSelected = true;
+            Assert.That(viewModel.SelectedItems.Value.ToList(), Has.Count.EqualTo(1));
+        }
 
-        //    Assert.That(viewModel.SelectedItems, Has.Count.EqualTo(1));
-        //}
+        [Test]
+        public void アイテム2つが選択されている()
+        {
+            boilersGraphics.App.IsTest = true;
+            var viewModel = new DiagramViewModel();
+            viewModel.Layers.Clear();
+            var layer1 = new Layer();
+            layer1.Name.Value = "レイヤー1";
+            viewModel.Layers.Add(layer1);
+            layer1.IsSelected.Value = true;
 
-        //[Test]
-        //public void Items1_Selected0_to_Item1_Selected1_to_Item1_Selected0()
-        //{
-        //    var viewModel = new DiagramViewModel();
-        //    var items = new SelectableDesignerItemViewModelBase[]
-        //    {
-        //        new NRectangleViewModel() { IsSelected = false }
-        //    };
-        //    items.ToList().ForEach(x => viewModel.Items.Add(x));
+            var item1 = new NRectangleViewModel();
+            viewModel.AddItemCommand.Execute(item1); //アイテム1
+            var item2 = new NRectangleViewModel();
+            viewModel.AddItemCommand.Execute(item2); //アイテム2
+            var item3 = new NRectangleViewModel();
+            viewModel.AddItemCommand.Execute(item3); //アイテム3
 
-        //    Assert.That(viewModel.SelectedItems, Has.Count.EqualTo(0));
+            layer1.Children[0].IsSelected.Value = true;
+            layer1.Children[1].IsSelected.Value = true;
 
-        //    items[0].IsSelected = true;
+            Assert.That(viewModel.SelectedItems.Value.ToList(), Has.Count.EqualTo(2));
+            var selectedItems = viewModel.SelectedItems.Value.ToList();
+            Assert.That(viewModel.GetLayerTreeViewItemBase(selectedItems[0]).Name.Value, Is.EqualTo("アイテム1"));
+            Assert.That(viewModel.GetLayerTreeViewItemBase(selectedItems[1]).Name.Value, Is.EqualTo("アイテム2"));
+        }
 
-        //    Assert.That(viewModel.SelectedItems, Has.Count.EqualTo(1));
+        [Test]
+        public void アイテム2つが選択されている_順序逆()
+        {
+            boilersGraphics.App.IsTest = true;
+            var viewModel = new DiagramViewModel();
+            viewModel.Layers.Clear();
+            var layer1 = new Layer();
+            layer1.Name.Value = "レイヤー1";
+            viewModel.Layers.Add(layer1);
+            layer1.IsSelected.Value = true;
 
-        //    items[0].IsSelected = false;
+            var item1 = new NRectangleViewModel();
+            viewModel.AddItemCommand.Execute(item1); //アイテム1
+            var item2 = new NRectangleViewModel();
+            viewModel.AddItemCommand.Execute(item2); //アイテム2
+            var item3 = new NRectangleViewModel();
+            viewModel.AddItemCommand.Execute(item3); //アイテム3
 
-        //    Assert.That(viewModel.SelectedItems, Has.Count.EqualTo(0));
-        //}
+            layer1.Children[1].IsSelected.Value = true;
+            layer1.Children[0].IsSelected.Value = true;
+
+            Assert.That(viewModel.SelectedItems.Value.ToList(), Has.Count.EqualTo(2));
+            var selectedItems = viewModel.SelectedItems.Value.ToList();
+            Assert.That(viewModel.GetLayerTreeViewItemBase(selectedItems[0]).Name.Value, Is.EqualTo("アイテム2"));
+            Assert.That(viewModel.GetLayerTreeViewItemBase(selectedItems[1]).Name.Value, Is.EqualTo("アイテム1"));
+        }
+
+        [Test]
+        public void アイテム3ついや2つが選択されている()
+        {
+            boilersGraphics.App.IsTest = true;
+            var viewModel = new DiagramViewModel();
+            viewModel.Layers.Clear();
+            var layer1 = new Layer();
+            layer1.Name.Value = "レイヤー1";
+            viewModel.Layers.Add(layer1);
+            layer1.IsSelected.Value = true;
+
+            var item1 = new NRectangleViewModel();
+            viewModel.AddItemCommand.Execute(item1); //アイテム1
+            var item2 = new NRectangleViewModel();
+            viewModel.AddItemCommand.Execute(item2); //アイテム2
+            var item3 = new NRectangleViewModel();
+            viewModel.AddItemCommand.Execute(item3); //アイテム3
+
+            layer1.Children[0].IsSelected.Value = true;
+            layer1.Children[1].IsSelected.Value = true;
+            layer1.Children[0].IsSelected.Value = false;
+            layer1.Children[2].IsSelected.Value = true;
+
+            Assert.That(viewModel.SelectedItems.Value.ToList(), Has.Count.EqualTo(2));
+            var selectedItems = viewModel.SelectedItems.Value.ToList();
+            Assert.That(viewModel.GetLayerTreeViewItemBase(selectedItems[0]).Name.Value, Is.EqualTo("アイテム2"));
+            Assert.That(viewModel.GetLayerTreeViewItemBase(selectedItems[1]).Name.Value, Is.EqualTo("アイテム3"));
+        }
     }
 }

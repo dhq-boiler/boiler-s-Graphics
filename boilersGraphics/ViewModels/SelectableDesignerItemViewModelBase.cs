@@ -21,6 +21,8 @@ namespace boilersGraphics.ViewModels
     {
         protected CompositeDisposable _CompositeDisposable = new CompositeDisposable();
 
+        public static int SelectedOrderCount { get; set; } = 0;
+
         public SelectableDesignerItemViewModelBase(int id, IDiagramViewModel parent)
         {
             this.Id = id;
@@ -43,6 +45,8 @@ namespace boilersGraphics.ViewModels
         public int Id { get; set; }
 
         public ReactivePropertySlim<bool> IsSelected { get; } = new ReactivePropertySlim<bool>();
+
+        public ReactivePropertySlim<int> SelectedOrder { get; } = new ReactivePropertySlim<int>();
 
         public ReactiveProperty<Matrix> Matrix { get; } = new ReactiveProperty<Matrix>(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe | ReactivePropertyMode.DistinctUntilChanged);
 
