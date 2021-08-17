@@ -60,6 +60,7 @@ namespace boilersGraphics.ViewModels
             var diagramControl = App.Current.MainWindow.GetChildOfType<DiagramControl>();
             var itemsControl = diagramControl.GetChildOfType<ItemsControl>();
             var designerCanvas = diagramControl.GetChildOfType<DesignerCanvas>();
+            var diagramViewModel = diagramControl.DataContext as DiagramViewModel;
 
             var tempIsSelected = new Dictionary<SelectableDesignerItemViewModelBase, bool>();
             foreach (var item in itemsControl.Items.Cast<SelectableDesignerItemViewModelBase>())
@@ -80,8 +81,19 @@ namespace boilersGraphics.ViewModels
             DrawingVisual visual = new DrawingVisual();
             using (DrawingContext context = visual.RenderOpen())
             {
-                VisualBrush brush = new VisualBrush(designerCanvas);
-                context.DrawRectangle(brush, null, new Rect(new Point(), new Size(designerCanvas.Width, designerCanvas.Height)));
+                foreach (var item in diagramViewModel.AllItems.Value.OfType<DesignerItemViewModelBase>())
+                {
+                    var view = diagramControl.GetCorrespondingViews<FrameworkElement>(item).First(x => x.GetType() == item.GetViewType());
+                    VisualBrush brush = new VisualBrush(view);
+                    context.DrawRectangle(brush, null, new Rect(new Point(item.Left.Value, item.Top.Value), new Size(item.Width.Value, item.Height.Value)));
+                }
+
+                foreach (var item in diagramViewModel.AllItems.Value.OfType<ConnectorBaseViewModel>())
+                {
+                    var view = diagramControl.GetCorrespondingViews<FrameworkElement>(item).First(x => x.GetType() == item.GetViewType());
+                    VisualBrush brush = new VisualBrush(view);
+                    context.DrawRectangle(brush, null, new Rect(item.LeftTop.Value, new Size(item.Width.Value, item.Height.Value)));
+                }
             }
 
             rtb.Render(visual);

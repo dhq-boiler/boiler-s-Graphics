@@ -3,8 +3,10 @@ using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -20,7 +22,6 @@ namespace boilersGraphics.ViewModels
 
         public ReactiveProperty<Point> ControlLine1LeftTop { get; set; } = new ReactiveProperty<Point>();
         public ReactiveProperty<Point> ControlLine2LeftTop { get; set; } = new ReactiveProperty<Point>();
-        public ReactiveProperty<Point> LeftTop { get; set; } = new ReactiveProperty<Point>();
 
         public BezierCurveViewModel(int id, IDiagramViewModel parent)
             : base(id, parent)
