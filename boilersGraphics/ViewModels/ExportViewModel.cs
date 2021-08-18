@@ -81,18 +81,20 @@ namespace boilersGraphics.ViewModels
             DrawingVisual visual = new DrawingVisual();
             using (DrawingContext context = visual.RenderOpen())
             {
-                foreach (var item in diagramViewModel.AllItems.Value.OfType<DesignerItemViewModelBase>())
+                foreach (var item in diagramViewModel.AllItems.Value.OrderBy(x => x.ZIndex.Value))
                 {
-                    var view = diagramControl.GetCorrespondingViews<FrameworkElement>(item).First(x => x.GetType() == item.GetViewType());
-                    VisualBrush brush = new VisualBrush(view);
-                    context.DrawRectangle(brush, null, new Rect(new Point(item.Left.Value, item.Top.Value), new Size(item.Width.Value, item.Height.Value)));
-                }
-
-                foreach (var item in diagramViewModel.AllItems.Value.OfType<ConnectorBaseViewModel>())
-                {
-                    var view = diagramControl.GetCorrespondingViews<FrameworkElement>(item).First(x => x.GetType() == item.GetViewType());
-                    VisualBrush brush = new VisualBrush(view);
-                    context.DrawRectangle(brush, null, new Rect(item.LeftTop.Value, new Size(item.Width.Value, item.Height.Value)));
+                    if (item is DesignerItemViewModelBase designerItem)
+                    {
+                        var view = diagramControl.GetCorrespondingViews<FrameworkElement>(item).First(x => x.GetType() == item.GetViewType());
+                        VisualBrush brush = new VisualBrush(view);
+                        context.DrawRectangle(brush, null, new Rect(new Point(designerItem.Left.Value, designerItem.Top.Value), new Size(designerItem.Width.Value, designerItem.Height.Value)));
+                    }
+                    else if (item is ConnectorBaseViewModel connector)
+                    {
+                        var view = diagramControl.GetCorrespondingViews<FrameworkElement>(item).First(x => x.GetType() == item.GetViewType());
+                        VisualBrush brush = new VisualBrush(view);
+                        context.DrawRectangle(brush, null, new Rect(connector.LeftTop.Value, new Size(connector.Width.Value, connector.Height.Value)));
+                    }
                 }
             }
 
