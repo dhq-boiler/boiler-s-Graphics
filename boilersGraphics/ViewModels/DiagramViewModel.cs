@@ -99,6 +99,8 @@ namespace boilersGraphics.ViewModels
 
         public ReadOnlyReactivePropertySlim<SelectableDesignerItemViewModelBase[]> SelectedItems { get; }
 
+        public ReactivePropertySlim<DesignerItemViewModelBase> BackgroundItem { get; } = new ReactivePropertySlim<DesignerItemViewModelBase>();
+
         public ReactiveProperty<double?> EdgeThickness { get; } = new ReactiveProperty<double?>();
 
         public ReactiveProperty<bool> EnableMiniMap { get; } = new ReactiveProperty<bool>();
@@ -178,7 +180,7 @@ namespace boilersGraphics.ViewModels
 
         #endregion //Property
 
-        public DiagramViewModel()
+        public DiagramViewModel(int width, int height)
         {
             AddItemCommand = new DelegateCommand<object>(p => ExecuteAddItemCommand(p));
             RemoveItemCommand = new DelegateCommand<object>(p => ExecuteRemoveItemCommand(p));
@@ -288,11 +290,13 @@ namespace boilersGraphics.ViewModels
                            .ToReactiveCollection();
 
             AllItems = Layers.CollectionChangedAsObservable()
-                             .Select(_ => Layers.Select(x => x.LayerItemsChangedAsObservable()).Merge())
+                             .Select(_ => Layers.Select(x => x.LayerItemsChangedAsObservable()).Merge()
+                                .Merge(this.ObserveProperty(y => y.BackgroundItem.Value).ToUnit()))
                              .Switch()
                              .Select(_ => Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
                                                 .Where(x => x.GetType() == typeof(LayerItem))
                                                 .Select(y => (y as LayerItem).Item.Value)
+                                                .Union(new SelectableDesignerItemViewModelBase[] { BackgroundItem.Value })
                                                 .ToArray())
                              .ToReadOnlyReactivePropertySlim(Array.Empty<SelectableDesignerItemViewModelBase>());
 
@@ -361,7 +365,10 @@ namespace boilersGraphics.ViewModels
                 x.SetParentToChildren(RootLayer.Value);
             })
             .AddTo(_CompositeDisposable);
-            
+
+            Width = width;
+            Height = height;
+
             InitialSetting();
         }
 
@@ -433,6 +440,18 @@ namespace boilersGraphics.ViewModels
             EdgeThickness.Value = 1.0;
             CanvasBorderThickness = 0.0;
             CanvasBackground.Value = Colors.White;
+            BackgroundItem.Value = new NRectangleViewModel();
+            BackgroundItem.Value.ZIndex.Value = 0;
+            BackgroundItem.Value.FillColor.Value = CanvasBackground.Value;
+            BackgroundItem.Value.Left.Value = 0;
+            BackgroundItem.Value.Top.Value = 0;
+            BackgroundItem.Value.Width.Value = Width;
+            BackgroundItem.Value.Height.Value = Height;
+            BackgroundItem.Value.Owner = this;
+            BackgroundItem.Value.EdgeColor.Value = Colors.Black;
+            BackgroundItem.Value.EdgeThickness.Value = 1;
+            BackgroundItem.Value.EnableForSelection.Value = false;
+            BackgroundItem.Value.IsVisible.Value = true;
             EnablePointSnap.Value = true;
             Layer.LayerCount = 1;
             LayerItem.LayerItemCount = 1;
@@ -756,6 +775,7 @@ namespace boilersGraphics.ViewModels
                 Width = s.Width.Value;
                 Height = s.Height.Value;
                 CanvasBackground.Value = s.CanvasBackground.Value;
+                BackgroundItem.Value.FillColor.Value = CanvasBackground.Value;
                 EnablePointSnap.Value = s.EnablePointSnap.Value;
                 (App.Current.MainWindow.DataContext as MainWindowViewModel).SnapPower.Value = s.SnapPower.Value;
             }
@@ -772,11 +792,9 @@ namespace boilersGraphics.ViewModels
         }
 
         public DiagramViewModel(IDialogService dlgService, int width, int height)
-            : this()
+            : this(width, height)
         {
             this.dlgService = dlgService;
-            Width = width;
-            Height = height;
 
             Mediator.Instance.Register(this);
         }

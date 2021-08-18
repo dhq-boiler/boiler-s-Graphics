@@ -334,7 +334,7 @@
                                                     Width="{Binding Width}"
                                                     Height="{Binding Height}"
                                                     AllowDrop="True"
-                                                    Background="{Binding CanvasBackground.Value, Converter={StaticResource solidColorBrushConverter}}" />
+                                                    Background="Transparent" />
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                 </ItemsControl>
