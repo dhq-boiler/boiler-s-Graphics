@@ -104,13 +104,17 @@ namespace boilersGraphics.ViewModels
         {
             if (Points.Count != 2)
                 throw new Exception("Points.Count == 2");
-            var tarray = new List<double> { 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0 };
-            var points = new List<Point>();
-            foreach (var t in tarray)
+            var minX = Math.Min(this.Points[0].X, this.Points[1].X);
+            var minY = Math.Min(this.Points[0].Y, this.Points[1].Y);
+            var points = new Point[] { this.Points[0], this.ControlPoint1.Value, this.ControlPoint2.Value, this.Points[1] };
+            var diffT = 1.0 / 64.0;
+            for (var t = diffT; t < 1.0; t += diffT)
             {
-                points.Add(BezierCurve.Evaluate(t, new List<Point>() { this.Points[0], this.ControlPoint1.Value, this.ControlPoint2.Value, this.Points[1] }));
+                var result = BezierCurve.Evaluate(t, points);
+                minX = Math.Min(minX, result.X);
+                minY = Math.Min(minY, result.Y);
             }
-            LeftTop.Value = new Point(points.Select(x => x.X).Min(), points.Select(x => x.Y).Min());
+            LeftTop.Value = new Point(minX, minY);
         }
 
         public override object Clone()
