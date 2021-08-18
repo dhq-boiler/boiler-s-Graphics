@@ -76,24 +76,23 @@ namespace boilersGraphics.ViewModels
                 snapPointVM.Opacity.Value = 0;
             }
 
-            var rtb = new RenderTargetBitmap((int)designerCanvas.ActualWidth, (int)designerCanvas.ActualHeight, 96, 96, PixelFormats.Pbgra32);
+            var rtb = new RenderTargetBitmap((int)diagramViewModel.Width, (int)diagramViewModel.Height, 96, 96, PixelFormats.Pbgra32);
 
             DrawingVisual visual = new DrawingVisual();
             using (DrawingContext context = visual.RenderOpen())
             {
+                //背景を描画
+                RenderDesignerItemViewModelBase(diagramControl, context, diagramViewModel.BackgroundItem.Value);
+                
                 foreach (var item in diagramViewModel.AllItems.Value.OrderBy(x => x.ZIndex.Value))
                 {
                     if (item is DesignerItemViewModelBase designerItem)
                     {
-                        var view = diagramControl.GetCorrespondingViews<FrameworkElement>(item).First(x => x.GetType() == item.GetViewType());
-                        VisualBrush brush = new VisualBrush(view);
-                        context.DrawRectangle(brush, null, new Rect(new Point(designerItem.Left.Value, designerItem.Top.Value), new Size(designerItem.Width.Value, designerItem.Height.Value)));
+                        RenderDesignerItemViewModelBase(diagramControl, context, designerItem);
                     }
                     else if (item is ConnectorBaseViewModel connector)
                     {
-                        var view = diagramControl.GetCorrespondingViews<FrameworkElement>(item).First(x => x.GetType() == item.GetViewType());
-                        VisualBrush brush = new VisualBrush(view);
-                        context.DrawRectangle(brush, null, new Rect(connector.LeftTop.Value, new Size(connector.Width.Value, connector.Height.Value)));
+                        RenderConnectorBaseViewModel(diagramControl, context, connector);
                     }
                 }
             }
@@ -122,6 +121,20 @@ namespace boilersGraphics.ViewModels
             generator.Save(Path.Value);
 
             OkClose();
+        }
+
+        private static void RenderConnectorBaseViewModel(DiagramControl diagramControl, DrawingContext context, ConnectorBaseViewModel connector)
+        {
+            var view = diagramControl.GetCorrespondingViews<FrameworkElement>(connector).First(x => x.GetType() == connector.GetViewType());
+            VisualBrush brush = new VisualBrush(view);
+            context.DrawRectangle(brush, null, new Rect(connector.LeftTop.Value, new Size(connector.Width.Value, connector.Height.Value)));
+        }
+
+        private static void RenderDesignerItemViewModelBase(DiagramControl diagramControl, DrawingContext context, DesignerItemViewModelBase designerItem)
+        {
+            var view = diagramControl.GetCorrespondingViews<FrameworkElement>(designerItem).First(x => x.GetType() == designerItem.GetViewType());
+            VisualBrush brush = new VisualBrush(view);
+            context.DrawRectangle(brush, null, new Rect(new Point(designerItem.Left.Value, designerItem.Top.Value), new Size(designerItem.Width.Value, designerItem.Height.Value)));
         }
 
         interface IFileGenerator
