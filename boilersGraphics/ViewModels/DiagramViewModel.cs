@@ -441,7 +441,7 @@ namespace boilersGraphics.ViewModels
             CanvasBorderThickness = 0.0;
             CanvasBackground.Value = Colors.White;
             BackgroundItem.Value = new NRectangleViewModel();
-            BackgroundItem.Value.ZIndex.Value = 0;
+            BackgroundItem.Value.ZIndex.Value = -1;
             BackgroundItem.Value.FillColor.Value = CanvasBackground.Value;
             BackgroundItem.Value.Left.Value = 0;
             BackgroundItem.Value.Top.Value = 0;
