@@ -440,7 +440,7 @@ namespace boilersGraphics.ViewModels
             EdgeThickness.Value = 1.0;
             CanvasBorderThickness = 0.0;
             CanvasBackground.Value = Colors.White;
-            BackgroundItem.Value = new NRectangleViewModel();
+            BackgroundItem.Value = new BackgroundViewModel();
             BackgroundItem.Value.ZIndex.Value = -1;
             BackgroundItem.Value.FillColor.Value = CanvasBackground.Value;
             BackgroundItem.Value.Left.Value = 0;
