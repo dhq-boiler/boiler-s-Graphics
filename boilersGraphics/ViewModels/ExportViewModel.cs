@@ -110,17 +110,8 @@ namespace boilersGraphics.ViewModels
                 //背景を描画
                 RenderBackgroundViewModel(context, backgroundItem);
 
-                foreach (var item in diagramViewModel.AllItems.Value.Except(new SelectableDesignerItemViewModelBase[] { backgroundItem }).OrderBy(x => x.ZIndex.Value))
-                {
-                    if (item is DesignerItemViewModelBase designerItem)
-                    {
-                        RenderDesignerItemViewModelBase(context, designerItem);
-                    }
-                    else if (item is ConnectorBaseViewModel connector)
-                    {
-                        RenderConnectorBaseViewModel(context, connector);
-                    }
-                }
+                VisualBrush brush = new VisualBrush(designerCanvas);
+                context.DrawRectangle(brush, null, new Rect(new Point(), new Size(designerCanvas.Width, designerCanvas.Height)));
             }
 
             rtb.Render(visual);
@@ -158,22 +149,6 @@ namespace boilersGraphics.ViewModels
                 //スナップポイントを半透明に復元する
                 snapPointVM.Opacity.Value = 0.5;
             }
-        }
-
-        private static void RenderConnectorBaseViewModel(DrawingContext context, ConnectorBaseViewModel connector)
-        {
-            var diagramControl = App.Current.MainWindow.GetChildOfType<DiagramControl>();
-            var view = diagramControl.GetCorrespondingViews<FrameworkElement>(connector).First(x => x.GetType() == connector.GetViewType());
-            VisualBrush brush = new VisualBrush(view);
-            context.DrawRectangle(brush, null, new Rect(connector.LeftTop.Value, new Size(connector.Width.Value, connector.Height.Value)));
-        }
-
-        private static void RenderDesignerItemViewModelBase(DrawingContext context, DesignerItemViewModelBase designerItem)
-        {
-            var diagramControl = App.Current.MainWindow.GetChildOfType<DiagramControl>();
-            var view = diagramControl.GetCorrespondingViews<FrameworkElement>(designerItem).First(x => x.GetType() == designerItem.GetViewType());
-            VisualBrush brush = new VisualBrush(view);
-            context.DrawRectangle(brush, null, new Rect(new Point(designerItem.Left.Value, designerItem.Top.Value), new Size(designerItem.Width.Value, designerItem.Height.Value)));
         }
 
         private static void RenderBackgroundViewModel(DrawingContext context, BackgroundViewModel background)
