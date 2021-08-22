@@ -82,17 +82,17 @@ namespace boilersGraphics.ViewModels
             using (DrawingContext context = visual.RenderOpen())
             {
                 //背景を描画
-                RenderDesignerItemViewModelBase(diagramControl, context, diagramViewModel.BackgroundItem.Value);
+                RenderDesignerItemViewModelBase(context, backgroundItem);
 
                 foreach (var item in diagramViewModel.AllItems.Value.Except(new SelectableDesignerItemViewModelBase[] { diagramViewModel.BackgroundItem.Value }).OrderBy(x => x.ZIndex.Value))
                 {
                     if (item is DesignerItemViewModelBase designerItem)
                     {
-                        RenderDesignerItemViewModelBase(diagramControl, context, designerItem);
+                        RenderDesignerItemViewModelBase(context, designerItem);
                     }
                     else if (item is ConnectorBaseViewModel connector)
                     {
-                        RenderConnectorBaseViewModel(diagramControl, context, connector);
+                        RenderConnectorBaseViewModel(context, connector);
                     }
                 }
             }
@@ -123,15 +123,17 @@ namespace boilersGraphics.ViewModels
             OkClose();
         }
 
-        private static void RenderConnectorBaseViewModel(DiagramControl diagramControl, DrawingContext context, ConnectorBaseViewModel connector)
+        private static void RenderConnectorBaseViewModel(DrawingContext context, ConnectorBaseViewModel connector)
         {
+            var diagramControl = App.Current.MainWindow.GetChildOfType<DiagramControl>();
             var view = diagramControl.GetCorrespondingViews<FrameworkElement>(connector).First(x => x.GetType() == connector.GetViewType());
             VisualBrush brush = new VisualBrush(view);
             context.DrawRectangle(brush, null, new Rect(connector.LeftTop.Value, new Size(connector.Width.Value, connector.Height.Value)));
         }
 
-        private static void RenderDesignerItemViewModelBase(DiagramControl diagramControl, DrawingContext context, DesignerItemViewModelBase designerItem)
+        private static void RenderDesignerItemViewModelBase(DrawingContext context, DesignerItemViewModelBase designerItem)
         {
+            var diagramControl = App.Current.MainWindow.GetChildOfType<DiagramControl>();
             var view = diagramControl.GetCorrespondingViews<FrameworkElement>(designerItem).First(x => x.GetType() == designerItem.GetViewType());
             VisualBrush brush = new VisualBrush(view);
             context.DrawRectangle(brush, null, new Rect(new Point(designerItem.Left.Value, designerItem.Top.Value), new Size(designerItem.Width.Value, designerItem.Height.Value)));
