@@ -48,28 +48,28 @@ namespace boilersGraphics.ViewModels
 
         public ReactivePropertySlim<int> SelectedOrder { get; } = new ReactivePropertySlim<int>();
 
-        public ReactiveProperty<Matrix> Matrix { get; } = new ReactiveProperty<Matrix>(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe | ReactivePropertyMode.DistinctUntilChanged);
+        public ReactivePropertySlim<Matrix> Matrix { get; } = new ReactivePropertySlim<Matrix>(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe | ReactivePropertyMode.DistinctUntilChanged);
 
-        public ReactiveProperty<double> RotationAngle { get; } = new ReactiveProperty<double>(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe | ReactivePropertyMode.DistinctUntilChanged);
+        public ReactivePropertySlim<double> RotationAngle { get; } = new ReactivePropertySlim<double>(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe | ReactivePropertyMode.DistinctUntilChanged);
 
-        public ReactiveProperty<bool> EnableForSelection { get; } = new ReactiveProperty<bool>();
+        public ReactivePropertySlim<bool> EnableForSelection { get; } = new ReactivePropertySlim<bool>();
 
-        public ReactiveProperty<int> ZIndex { get; } = new ReactiveProperty<int>();
+        public ReactivePropertySlim<int> ZIndex { get; } = new ReactivePropertySlim<int>();
 
-        public ReactiveProperty<Color> EdgeColor { get; } = new ReactiveProperty<Color>();
+        public ReactivePropertySlim<Color> EdgeColor { get; } = new ReactivePropertySlim<Color>();
 
-        public ReactiveProperty<double> EdgeThickness { get; } = new ReactiveProperty<double>();
+        public ReactivePropertySlim<double> EdgeThickness { get; } = new ReactivePropertySlim<double>();
 
-        public ReactiveProperty<PathGeometry> PathGeometry { get; set; } = new ReactiveProperty<PathGeometry>();
+        public ReactivePropertySlim<PathGeometry> PathGeometry { get; set; } = new ReactivePropertySlim<PathGeometry>();
 
-        public ReactiveProperty<PathGeometry> RotatePathGeometry { get; set; } = new ReactiveProperty<PathGeometry>();
+        public ReactivePropertySlim<PathGeometry> RotatePathGeometry { get; set; } = new ReactivePropertySlim<PathGeometry>();
 
-        public ReactiveProperty<bool> EnablePathGeometryUpdate { get; set; } = new ReactiveProperty<bool>();
+        public ReactivePropertySlim<bool> EnablePathGeometryUpdate { get; set; } = new ReactivePropertySlim<bool>();
 
         public ReactivePropertySlim<bool> IsVisible { get; } = new ReactivePropertySlim<bool>();
 
         
-        public ReactiveProperty<bool> IsHitTestVisible { get; set; } = new ReactiveProperty<bool>();
+        public ReactivePropertySlim<bool> IsHitTestVisible { get; set; } = new ReactivePropertySlim<bool>();
 
         public ReactivePropertySlim<Color> FillColor { get; } = new ReactivePropertySlim<Color>();
 

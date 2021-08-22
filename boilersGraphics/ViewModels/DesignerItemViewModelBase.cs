@@ -44,9 +44,9 @@ namespace boilersGraphics.ViewModels
             set { SetProperty(ref _MinHeight, value); }
         }
 
-        public ReactiveProperty<double> Width { get; } = new ReactiveProperty<double>(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe | ReactivePropertyMode.DistinctUntilChanged);
+        public ReactivePropertySlim<double> Width { get; } = new ReactivePropertySlim<double>(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe | ReactivePropertyMode.DistinctUntilChanged);
 
-        public ReactiveProperty<double> Height { get; } = new ReactiveProperty<double>(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe | ReactivePropertyMode.DistinctUntilChanged);
+        public ReactivePropertySlim<double> Height { get; } = new ReactivePropertySlim<double>(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe | ReactivePropertyMode.DistinctUntilChanged);
 
         public bool ShowConnectors
         {
@@ -64,19 +64,19 @@ namespace boilersGraphics.ViewModels
             }
         }
 
-        public ReactiveProperty<double> Left { get; } = new ReactiveProperty<double>(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe | ReactivePropertyMode.DistinctUntilChanged);
+        public ReactivePropertySlim<double> Left { get; } = new ReactivePropertySlim<double>(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe | ReactivePropertyMode.DistinctUntilChanged);
 
-        public ReactiveProperty<double> Top { get; } = new ReactiveProperty<double>(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe | ReactivePropertyMode.DistinctUntilChanged);
+        public ReactivePropertySlim<double> Top { get; } = new ReactivePropertySlim<double>(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe | ReactivePropertyMode.DistinctUntilChanged);
 
-        public ReadOnlyReactiveProperty<double> Right { get; private set; }
+        public ReadOnlyReactivePropertySlim<double> Right { get; private set; }
 
-        public ReadOnlyReactiveProperty<double> Bottom { get; private set; }
+        public ReadOnlyReactivePropertySlim<double> Bottom { get; private set; }
 
-        public ReactiveProperty<Point> CenterPoint { get; } = new ReactiveProperty<Point>();
+        public ReactivePropertySlim<Point> CenterPoint { get; } = new ReactivePropertySlim<Point>();
 
-        public ReactiveProperty<Point> RotatedCenterPoint { get; } = new ReactiveProperty<Point>();
+        public ReactivePropertySlim<Point> RotatedCenterPoint { get; } = new ReactivePropertySlim<Point>();
 
-        public ReactiveProperty<TransformNotification> TransformNortification { get; } = new ReactiveProperty<TransformNotification>(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe | ReactivePropertyMode.DistinctUntilChanged);
+        public ReactivePropertySlim<TransformNotification> TransformNortification { get; } = new ReactivePropertySlim<TransformNotification>(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe | ReactivePropertyMode.DistinctUntilChanged);
 
         private void UpdateCenterPoint()
         {
@@ -115,9 +115,9 @@ namespace boilersGraphics.ViewModels
                 .Subscribe(x => UpdateTransform(nameof(Matrix), x.OldItem, x.NewItem))
                 .AddTo(_CompositeDisposable);
             Right = Left.Select(x => x + Width.Value)
-                        .ToReadOnlyReactiveProperty();
+                        .ToReadOnlyReactivePropertySlim();
             Bottom = Top.Select(x => x + Height.Value)
-                        .ToReadOnlyReactiveProperty();
+                        .ToReadOnlyReactivePropertySlim();
 
             Matrix.Value = new Matrix();
         }
