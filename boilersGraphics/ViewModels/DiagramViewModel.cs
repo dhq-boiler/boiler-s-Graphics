@@ -99,7 +99,7 @@ namespace boilersGraphics.ViewModels
 
         public ReadOnlyReactivePropertySlim<SelectableDesignerItemViewModelBase[]> SelectedItems { get; }
 
-        public ReactivePropertySlim<DesignerItemViewModelBase> BackgroundItem { get; } = new ReactivePropertySlim<DesignerItemViewModelBase>();
+        public ReactivePropertySlim<BackgroundViewModel> BackgroundItem { get; } = new ReactivePropertySlim<BackgroundViewModel>();
 
         public ReactiveProperty<double?> EdgeThickness { get; } = new ReactiveProperty<double?>();
 
