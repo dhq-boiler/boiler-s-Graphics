@@ -83,8 +83,8 @@ namespace boilersGraphics.ViewModels
             {
                 //背景を描画
                 RenderDesignerItemViewModelBase(diagramControl, context, diagramViewModel.BackgroundItem.Value);
-                
-                foreach (var item in diagramViewModel.AllItems.Value.OrderBy(x => x.ZIndex.Value))
+
+                foreach (var item in diagramViewModel.AllItems.Value.Except(new SelectableDesignerItemViewModelBase[] { diagramViewModel.BackgroundItem.Value }).OrderBy(x => x.ZIndex.Value))
                 {
                     if (item is DesignerItemViewModelBase designerItem)
                     {
