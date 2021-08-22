@@ -449,7 +449,7 @@ namespace boilersGraphics.ViewModels
             BackgroundItem.Value.Height.Value = Height;
             BackgroundItem.Value.Owner = this;
             BackgroundItem.Value.EdgeColor.Value = Colors.Black;
-            BackgroundItem.Value.EdgeThickness.Value = 10; //バグ視認しやすさ重視で太くする
+            BackgroundItem.Value.EdgeThickness.Value = 1;
             BackgroundItem.Value.EnableForSelection.Value = false;
             BackgroundItem.Value.IsVisible.Value = true;
             EnablePointSnap.Value = true;

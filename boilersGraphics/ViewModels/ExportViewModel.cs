@@ -108,7 +108,7 @@ namespace boilersGraphics.ViewModels
             using (DrawingContext context = visual.RenderOpen())
             {
                 //背景を描画
-                RenderDesignerItemViewModelBase(context, backgroundItem);
+                RenderBackgroundViewModel(context, backgroundItem);
 
                 foreach (var item in diagramViewModel.AllItems.Value.Except(new SelectableDesignerItemViewModelBase[] { backgroundItem }).OrderBy(x => x.ZIndex.Value))
                 {
@@ -174,6 +174,15 @@ namespace boilersGraphics.ViewModels
             var view = diagramControl.GetCorrespondingViews<FrameworkElement>(designerItem).First(x => x.GetType() == designerItem.GetViewType());
             VisualBrush brush = new VisualBrush(view);
             context.DrawRectangle(brush, null, new Rect(new Point(designerItem.Left.Value, designerItem.Top.Value), new Size(designerItem.Width.Value, designerItem.Height.Value)));
+        }
+
+        private static void RenderBackgroundViewModel(DrawingContext context, BackgroundViewModel background)
+        {
+            var diagramControl = App.Current.MainWindow.GetChildOfType<DiagramControl>();
+            var view = diagramControl.GetCorrespondingViews<FrameworkElement>(background).First(x => x.GetType() == background.GetViewType());
+            VisualBrush brush = new VisualBrush(view);
+            view.UpdateLayout();
+            context.DrawRectangle(brush, null, new Rect(new Point(background.Left.Value, background.Top.Value), new Size(background.Width.Value, background.Height.Value)));
         }
 
         interface IFileGenerator
