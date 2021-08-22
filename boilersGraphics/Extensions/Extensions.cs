@@ -56,7 +56,7 @@ namespace boilersGraphics.Extensions
         public static IEnumerable<T> GetCorrespondingViews<T>(this FrameworkElement parent, object dataContext, bool parentInclude = false)
             where T : FrameworkElement
         {
-            if (parent.DataContext == dataContext)
+            if (parentInclude && parent.DataContext == dataContext)
             {
                 if (parent is T)
                     yield return parent as T;

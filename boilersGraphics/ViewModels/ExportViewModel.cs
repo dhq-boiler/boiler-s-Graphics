@@ -1,5 +1,6 @@
 ﻿using boilersGraphics.Controls;
 using boilersGraphics.Extensions;
+using boilersGraphics.Helpers;
 using boilersGraphics.UserControls;
 using Microsoft.Win32;
 using Prism.Mvvm;
@@ -47,7 +48,7 @@ namespace boilersGraphics.ViewModels
                            .Where(x => x != null)
                            .Select(x => x.Length > 0)
                            .ToReactiveCommand();
-            ExportCommand.Subscribe(_ => Export())
+            ExportCommand.Subscribe(_ => ExportProcess())
                          .AddTo(_disposables);
             CancelCommand = new ReactiveCommand();
             CancelCommand.Subscribe(_ => CancelClose())
@@ -55,13 +56,27 @@ namespace boilersGraphics.ViewModels
             Path.Value = "";
         }
 
-        private void Export()
+        private void ExportProcess()
+        {
+            Dictionary<SelectableDesignerItemViewModelBase, bool> tempIsSelected;
+
+            BeforeExport(out tempIsSelected);
+
+            Export();
+
+            AfterExport(tempIsSelected);
+
+            OkClose();
+        }
+
+        private void BeforeExport(out Dictionary<SelectableDesignerItemViewModelBase, bool> tempIsSelected)
         {
             var diagramControl = App.Current.MainWindow.GetChildOfType<DiagramControl>();
             var itemsControl = diagramControl.GetChildOfType<ItemsControl>();
-            var designerCanvas = diagramControl.GetChildOfType<DesignerCanvas>();
+            tempIsSelected = new Dictionary<SelectableDesignerItemViewModelBase, bool>();
+            var diagramViewModel = diagramControl.DataContext as DiagramViewModel;
+            var backgroundItem = diagramViewModel.BackgroundItem.Value;
 
-            var tempIsSelected = new Dictionary<SelectableDesignerItemViewModelBase, bool>();
             foreach (var item in itemsControl.Items.Cast<SelectableDesignerItemViewModelBase>())
             {
                 tempIsSelected.Add(item, item.IsSelected.Value);
@@ -75,16 +90,49 @@ namespace boilersGraphics.ViewModels
                 snapPointVM.Opacity.Value = 0;
             }
 
-            var rtb = new RenderTargetBitmap((int)designerCanvas.ActualWidth, (int)designerCanvas.ActualHeight, 96, 96, PixelFormats.Pbgra32);
+            //一時的に背景の境界線を消す
+            backgroundItem.EdgeThickness.Value = 0;
+        }
+
+        private void Export()
+        {
+            var diagramControl = App.Current.MainWindow.GetChildOfType<DiagramControl>();
+            var itemsControl = diagramControl.GetChildOfType<ItemsControl>();
+            var designerCanvas = diagramControl.GetChildOfType<DesignerCanvas>();
+            var diagramViewModel = diagramControl.DataContext as DiagramViewModel;
+            var backgroundItem = diagramViewModel.BackgroundItem.Value;
+
+            var rtb = new RenderTargetBitmap((int)diagramViewModel.Width, (int)diagramViewModel.Height, 96, 96, PixelFormats.Pbgra32);
 
             DrawingVisual visual = new DrawingVisual();
             using (DrawingContext context = visual.RenderOpen())
             {
+                //背景を描画
+                RenderBackgroundViewModel(context, backgroundItem);
+
                 VisualBrush brush = new VisualBrush(designerCanvas);
                 context.DrawRectangle(brush, null, new Rect(new Point(), new Size(designerCanvas.Width, designerCanvas.Height)));
             }
 
             rtb.Render(visual);
+
+            OpenCvSharpHelper.ImShow("test", rtb);
+
+            var generator = FileGenerator.Create(System.IO.Path.GetExtension(Path.Value));
+            generator.AddFrame(BitmapFrame.Create(rtb));
+            generator.SetQualityLevel(QualityLevel.Value);
+            generator.Save(Path.Value);
+        }
+
+        private void AfterExport(Dictionary<SelectableDesignerItemViewModelBase, bool> tempIsSelected)
+        {
+            var diagramControl = App.Current.MainWindow.GetChildOfType<DiagramControl>();
+            var itemsControl = diagramControl.GetChildOfType<ItemsControl>();
+            var diagramViewModel = diagramControl.DataContext as DiagramViewModel;
+            var backgroundItem = diagramViewModel.BackgroundItem.Value;
+
+            //背景の境界線を復元する
+            backgroundItem.EdgeThickness.Value = 1;
 
             //IsSelectedの復元
             foreach (var item in itemsControl.Items.Cast<SelectableDesignerItemViewModelBase>())
@@ -101,13 +149,15 @@ namespace boilersGraphics.ViewModels
                 //スナップポイントを半透明に復元する
                 snapPointVM.Opacity.Value = 0.5;
             }
+        }
 
-            var generator = FileGenerator.Create(System.IO.Path.GetExtension(Path.Value));
-            generator.AddFrame(BitmapFrame.Create(rtb));
-            generator.SetQualityLevel(QualityLevel.Value);
-            generator.Save(Path.Value);
-
-            OkClose();
+        private static void RenderBackgroundViewModel(DrawingContext context, BackgroundViewModel background)
+        {
+            var diagramControl = App.Current.MainWindow.GetChildOfType<DiagramControl>();
+            var view = diagramControl.GetCorrespondingViews<FrameworkElement>(background).First(x => x.GetType() == background.GetViewType());
+            VisualBrush brush = new VisualBrush(view);
+            view.UpdateLayout();
+            context.DrawRectangle(brush, null, new Rect(new Point(background.Left.Value, background.Top.Value), new Size(background.Width.Value, background.Height.Value)));
         }
 
         interface IFileGenerator
