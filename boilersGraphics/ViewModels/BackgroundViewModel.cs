@@ -8,7 +8,7 @@ using System.Windows.Shapes;
 
 namespace boilersGraphics.ViewModels
 {
-    class BackgroundViewModel : NRectangleViewModel
+    public class BackgroundViewModel : NRectangleViewModel
     {
         public override object Clone()
         {
