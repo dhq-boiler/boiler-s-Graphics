@@ -455,6 +455,9 @@ namespace boilersGraphics.ViewModels
             EnablePointSnap.Value = true;
             Layer.LayerCount = 1;
             LayerItem.LayerItemCount = 1;
+            RootLayer.Dispose();
+            RootLayer = new ReactivePropertySlim<LayerTreeViewItemBase>(new LayerTreeViewItemBase());
+            Layers.Clear();
             var layer = new Layer();
             layer.IsVisible.Value = true;
             layer.IsSelected.Value = true;
@@ -1027,13 +1030,7 @@ namespace boilersGraphics.ViewModels
             EnablePointSnap.Value = bool.Parse(configuration.Element("EnablePointSnap").Value);
             (App.Current.MainWindow.DataContext as MainWindowViewModel).SnapPower.Value = double.Parse(configuration.Element("SnapPower").Value);
 
-            Layer.LayerCount = 1;
-            LayerItem.LayerItemCount = 1;
-
-            RootLayer.Dispose();
-            RootLayer = new ReactivePropertySlim<LayerTreeViewItemBase>(new LayerTreeViewItemBase());
-
-            Layers.Clear();
+            InitialSetting();
 
             ObjectDeserializer.ReadObjectsFromXML(this, root);
 
