@@ -142,7 +142,6 @@
     <Compile Include="Adorners\RubberbandAdorner.cs" />
     <Compile Include="Adorners\SnapPointAdorner.cs" />
     <Compile Include="Adorners\StraightLineAdorner.cs" />
-    <Compile Include="AttachedProperties\DragAndDropProps.cs" />
     <Compile Include="AttachedProperties\ItemConnectProps.cs" />
     <Compile Include="AttachedProperties\SelectionProps.cs" />
     <Compile Include="Controls\Combine.cs" />
@@ -212,9 +211,6 @@
     <Compile Include="StyleSelectors\DesignerItemsControlItemStyleSelector.cs" />
     <Compile Include="UserControls\DiagramControl.xaml.cs">
       <DependentUpon>DiagramControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UserControls\ToolBoxControl.xaml.cs">
-      <DependentUpon>ToolBoxControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\BackgroundViewModel.cs" />
     <Compile Include="ViewModels\BezierCurveViewModel.cs" />
@@ -394,10 +390,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UserControls\DiagramControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UserControls\ToolBoxControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
