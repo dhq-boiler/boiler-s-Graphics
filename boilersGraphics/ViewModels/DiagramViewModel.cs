@@ -369,7 +369,7 @@ namespace boilersGraphics.ViewModels
             Width = width;
             Height = height;
 
-            InitialSetting();
+            InitialSetting(true);
         }
 
         public LayerTreeViewItemBase GetLayerTreeViewItemBase(SelectableDesignerItemViewModelBase item)
@@ -433,7 +433,7 @@ namespace boilersGraphics.ViewModels
             OpenCvSharpHelper.ImShow("DebugPrint", rtb);
         }
 
-        private void InitialSetting()
+        private void InitialSetting(bool addingLayer = false)
         {
             EdgeColors.Add(Colors.Black);
             FillColors.Add(Colors.White);
@@ -458,13 +458,16 @@ namespace boilersGraphics.ViewModels
             RootLayer.Dispose();
             RootLayer = new ReactivePropertySlim<LayerTreeViewItemBase>(new LayerTreeViewItemBase());
             Layers.Clear();
-            var layer = new Layer();
-            layer.IsVisible.Value = true;
-            layer.IsSelected.Value = true;
-            layer.Name.Value = Name.GetNewLayerName();
-            Random rand = new Random();
-            layer.Color.Value = Randomizer.RandomColor(rand);
-            Layers.Add(layer);
+            if (addingLayer)
+            {
+                var layer = new Layer();
+                layer.IsVisible.Value = true;
+                layer.IsSelected.Value = true;
+                layer.Name.Value = Name.GetNewLayerName();
+                Random rand = new Random();
+                layer.Color.Value = Randomizer.RandomColor(rand);
+                Layers.Add(layer);
+            }
         }
 
         private void ExecuteClipCommand()
@@ -1032,7 +1035,7 @@ namespace boilersGraphics.ViewModels
                 EnablePointSnap.Value = bool.Parse(configuration.Element("EnablePointSnap").Value);
                 (App.Current.MainWindow.DataContext as MainWindowViewModel).SnapPower.Value = double.Parse(configuration.Element("SnapPower").Value);
 
-                InitialSetting();
+                InitialSetting(false);
 
                 ObjectDeserializer.ReadObjectsFromXML(this, root);
             }
