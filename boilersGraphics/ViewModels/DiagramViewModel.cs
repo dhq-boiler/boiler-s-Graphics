@@ -784,6 +784,8 @@ namespace boilersGraphics.ViewModels
                 BackgroundItem.Value.FillColor.Value = CanvasBackground.Value;
                 EnablePointSnap.Value = s.EnablePointSnap.Value;
                 (App.Current.MainWindow.DataContext as MainWindowViewModel).SnapPower.Value = s.SnapPower.Value;
+                BackgroundItem.Value.Width.Value = Width;
+                BackgroundItem.Value.Height.Value = Height;
             }
         }
 
