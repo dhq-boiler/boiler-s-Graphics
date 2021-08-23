@@ -111,7 +111,8 @@ namespace boilersGraphics.ViewModels
                 RenderBackgroundViewModel(context, backgroundItem);
 
                 VisualBrush brush = new VisualBrush(designerCanvas);
-                context.DrawRectangle(brush, null, new Rect(new Point(), new Size(designerCanvas.Width, designerCanvas.Height)));
+                brush.Stretch = Stretch.None;
+                context.DrawRectangle(brush, null, new Rect(new Point(), new Size(designerCanvas.ActualWidth, designerCanvas.ActualHeight)));
             }
 
             rtb.Render(visual);
@@ -156,6 +157,7 @@ namespace boilersGraphics.ViewModels
             var diagramControl = App.Current.MainWindow.GetChildOfType<DiagramControl>();
             var view = diagramControl.GetCorrespondingViews<FrameworkElement>(background).First(x => x.GetType() == background.GetViewType());
             VisualBrush brush = new VisualBrush(view);
+            brush.Stretch = Stretch.None;
             view.UpdateLayout();
             context.DrawRectangle(brush, null, new Rect(new Point(background.Left.Value, background.Top.Value), new Size(background.Width.Value, background.Height.Value)));
         }
