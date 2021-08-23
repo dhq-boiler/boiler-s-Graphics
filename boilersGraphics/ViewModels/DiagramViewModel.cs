@@ -1023,16 +1023,25 @@ namespace boilersGraphics.ViewModels
                 Trace.WriteLine("強制読み込みモードでファイルを読み込みます。このモードはVersion要素が見つからない時に実施されます。");
             }
 
-            var configuration = root.Element("Configuration");
-            Width = int.Parse(configuration.Element("Width").Value);
-            Height = int.Parse(configuration.Element("Height").Value);
-            CanvasBackground.Value = (Color)ColorConverter.ConvertFromString(configuration.Element("CanvasBackground").Value);
-            EnablePointSnap.Value = bool.Parse(configuration.Element("EnablePointSnap").Value);
-            (App.Current.MainWindow.DataContext as MainWindowViewModel).SnapPower.Value = double.Parse(configuration.Element("SnapPower").Value);
+            try
+            {
+                var configuration = root.Element("Configuration");
+                Width = int.Parse(configuration.Element("Width").Value);
+                Height = int.Parse(configuration.Element("Height").Value);
+                CanvasBackground.Value = (Color)ColorConverter.ConvertFromString(configuration.Element("CanvasBackground").Value);
+                EnablePointSnap.Value = bool.Parse(configuration.Element("EnablePointSnap").Value);
+                (App.Current.MainWindow.DataContext as MainWindowViewModel).SnapPower.Value = double.Parse(configuration.Element("SnapPower").Value);
 
-            InitialSetting();
+                InitialSetting();
 
-            ObjectDeserializer.ReadObjectsFromXML(this, root);
+                ObjectDeserializer.ReadObjectsFromXML(this, root);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("このファイルは古すぎるか壊れているため開けません。", "読み込みエラー");
+                FileName.Value = "*";
+                return;
+            }
 
             var layersViewModel = App.Current.MainWindow.GetChildOfType<Views.Layers>().DataContext as LayersViewModel;
             layersViewModel.InitializeHitTestVisible();
