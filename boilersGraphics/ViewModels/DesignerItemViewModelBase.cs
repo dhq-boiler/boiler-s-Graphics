@@ -133,7 +133,23 @@ namespace boilersGraphics.ViewModels
         {
             UpdateCenterPoint();
             TransformObserversOnNext(propertyName, oldValue, newValue);
-            UpdatePathGeometryIfEnable();
+            UpdatePathGeometryInCase(propertyName);
+        }
+
+        private void UpdatePathGeometryInCase(string propertyName)
+        {
+            switch (propertyName)
+            {
+                case "Width":
+                case "Height":
+                case "RotationAngle":
+                case "Matrix":
+                    UpdatePathGeometryIfEnable();
+                    break;
+                default:
+                    //Left, Top : do nothing
+                    break;
+            }
         }
 
         public void UpdatePathGeometryIfEnable()
