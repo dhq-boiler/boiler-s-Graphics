@@ -31,6 +31,8 @@ namespace boilersGraphics.Controls
             {
                 (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "移動";
 
+                designerItem.IsDragging.Value = true;
+
                 double minLeft = double.MaxValue;
                 double minTop = double.MaxValue;
 

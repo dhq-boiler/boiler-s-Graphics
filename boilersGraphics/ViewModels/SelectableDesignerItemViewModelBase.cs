@@ -45,6 +45,7 @@ namespace boilersGraphics.ViewModels
         public int Id { get; set; }
 
         public ReactivePropertySlim<bool> IsSelected { get; } = new ReactivePropertySlim<bool>();
+        public ReactivePropertySlim<bool> IsDragging { get; } = new ReactivePropertySlim<bool>();
 
         public ReactivePropertySlim<int> SelectedOrder { get; } = new ReactivePropertySlim<int>();
 
