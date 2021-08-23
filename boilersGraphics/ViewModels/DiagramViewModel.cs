@@ -369,7 +369,7 @@ namespace boilersGraphics.ViewModels
             Width = width;
             Height = height;
 
-            InitialSetting();
+            InitialSetting(true);
         }
 
         public LayerTreeViewItemBase GetLayerTreeViewItemBase(SelectableDesignerItemViewModelBase item)
@@ -433,7 +433,7 @@ namespace boilersGraphics.ViewModels
             OpenCvSharpHelper.ImShow("DebugPrint", rtb);
         }
 
-        private void InitialSetting()
+        private void InitialSetting(bool addingLayer = false)
         {
             EdgeColors.Add(Colors.Black);
             FillColors.Add(Colors.White);
@@ -458,13 +458,16 @@ namespace boilersGraphics.ViewModels
             RootLayer.Dispose();
             RootLayer = new ReactivePropertySlim<LayerTreeViewItemBase>(new LayerTreeViewItemBase());
             Layers.Clear();
-            var layer = new Layer();
-            layer.IsVisible.Value = true;
-            layer.IsSelected.Value = true;
-            layer.Name.Value = Name.GetNewLayerName();
-            Random rand = new Random();
-            layer.Color.Value = Randomizer.RandomColor(rand);
-            Layers.Add(layer);
+            if (addingLayer)
+            {
+                var layer = new Layer();
+                layer.IsVisible.Value = true;
+                layer.IsSelected.Value = true;
+                layer.Name.Value = Name.GetNewLayerName();
+                Random rand = new Random();
+                layer.Color.Value = Randomizer.RandomColor(rand);
+                Layers.Add(layer);
+            }
         }
 
         private void ExecuteClipCommand()
@@ -781,6 +784,8 @@ namespace boilersGraphics.ViewModels
                 BackgroundItem.Value.FillColor.Value = CanvasBackground.Value;
                 EnablePointSnap.Value = s.EnablePointSnap.Value;
                 (App.Current.MainWindow.DataContext as MainWindowViewModel).SnapPower.Value = s.SnapPower.Value;
+                BackgroundItem.Value.Width.Value = Width;
+                BackgroundItem.Value.Height.Value = Height;
             }
         }
 
@@ -1023,16 +1028,25 @@ namespace boilersGraphics.ViewModels
                 Trace.WriteLine("強制読み込みモードでファイルを読み込みます。このモードはVersion要素が見つからない時に実施されます。");
             }
 
-            var configuration = root.Element("Configuration");
-            Width = int.Parse(configuration.Element("Width").Value);
-            Height = int.Parse(configuration.Element("Height").Value);
-            CanvasBackground.Value = (Color)ColorConverter.ConvertFromString(configuration.Element("CanvasBackground").Value);
-            EnablePointSnap.Value = bool.Parse(configuration.Element("EnablePointSnap").Value);
-            (App.Current.MainWindow.DataContext as MainWindowViewModel).SnapPower.Value = double.Parse(configuration.Element("SnapPower").Value);
+            try
+            {
+                var configuration = root.Element("Configuration");
+                Width = int.Parse(configuration.Element("Width").Value);
+                Height = int.Parse(configuration.Element("Height").Value);
+                CanvasBackground.Value = (Color)ColorConverter.ConvertFromString(configuration.Element("CanvasBackground").Value);
+                EnablePointSnap.Value = bool.Parse(configuration.Element("EnablePointSnap").Value);
+                (App.Current.MainWindow.DataContext as MainWindowViewModel).SnapPower.Value = double.Parse(configuration.Element("SnapPower").Value);
 
-            InitialSetting();
+                InitialSetting(false);
 
-            ObjectDeserializer.ReadObjectsFromXML(this, root);
+                ObjectDeserializer.ReadObjectsFromXML(this, root);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("このファイルは古すぎるか壊れているため開けません。", "読み込みエラー");
+                FileName.Value = "*";
+                return;
+            }
 
             var layersViewModel = App.Current.MainWindow.GetChildOfType<Views.Layers>().DataContext as LayersViewModel;
             layersViewModel.InitializeHitTestVisible();
