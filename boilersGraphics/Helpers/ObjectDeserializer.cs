@@ -157,6 +157,8 @@ namespace boilersGraphics.Helpers
                 snapPointObj = ExtractSnapPointViewModel(diagramViewModel, layerItem.Descendants("Item").First().Descendants("SnapPointItem").First());
             }
             var item = EitherNotNull(designerItemObj, EitherNotNull(connectorObj, snapPointObj));
+            if (item == null)
+                throw new UnexpectedException("All of them are null.");
             var layerItemObj = new LayerItem(item, layerObj, layerItem.Element("Name").Value);
             layerItemObj.Color.Value = (Color)ColorConverter.ConvertFromString(layerItem.Element("Color").Value);
             layerItemObj.IsVisible.Value = bool.Parse(layerItem.Element("IsVisible").Value);
@@ -180,13 +182,13 @@ namespace boilersGraphics.Helpers
         private static SelectableDesignerItemViewModelBase EitherNotNull(SelectableDesignerItemViewModelBase left, SelectableDesignerItemViewModelBase right)
         {
             if (left != null && right != null)
-                throw new UnexpectedException("Both are not null.");
+                return null;
             else if (left != null)
                 return left;
             else if (right != null)
                 return right;
             else
-                throw new UnexpectedException("Both are null.");
+                return null;
         }
 
         private static List<SelectableDesignerItemViewModelBase> ExtractItems(DiagramViewModel diagramViewModel, IEnumerable<XElement> designerItemsElm, IEnumerable<XElement> connectorsElm)
