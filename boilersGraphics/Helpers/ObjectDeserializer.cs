@@ -143,6 +143,7 @@ namespace boilersGraphics.Helpers
                 return null;
             DesignerItemViewModelBase designerItemObj = null;
             ConnectorBaseViewModel connectorObj = null;
+            SnapPointViewModel snapPointObj = null;
             if (layerItem.Descendants("Item").First().Descendants("DesignerItem").Count() >= 1)
             {
                 designerItemObj = ExtractDesignerItemViewModelBase(diagramViewModel, layerItem.Descendants("Item").First().Descendants("DesignerItem").First());
@@ -151,7 +152,13 @@ namespace boilersGraphics.Helpers
             {
                 connectorObj = ExtractConnectorBaseViewModel(diagramViewModel, layerItem.Descendants("Item").First().Descendants("ConnectorItem").First());
             }
-            var item = EitherNotNull(designerItemObj, connectorObj);
+            if (layerItem.Descendants("Item").First().Descendants("SnapPointItem").Count() >= 1)
+            {
+                snapPointObj = ExtractSnapPointViewModel(diagramViewModel, layerItem.Descendants("Item").First().Descendants("SnapPointItem").First());
+            }
+            var item = EitherNotNull(designerItemObj, EitherNotNull(connectorObj, snapPointObj));
+            if (item == null)
+                throw new UnexpectedException("All of them are null.");
             var layerItemObj = new LayerItem(item, layerObj, layerItem.Element("Name").Value);
             layerItemObj.Color.Value = (Color)ColorConverter.ConvertFromString(layerItem.Element("Color").Value);
             layerItemObj.IsVisible.Value = bool.Parse(layerItem.Element("IsVisible").Value);
@@ -172,16 +179,16 @@ namespace boilersGraphics.Helpers
             return layerItemObj;
         }
 
-        private static SelectableDesignerItemViewModelBase EitherNotNull(DesignerItemViewModelBase designerItemObj, ConnectorBaseViewModel connectorObj)
+        private static SelectableDesignerItemViewModelBase EitherNotNull(SelectableDesignerItemViewModelBase left, SelectableDesignerItemViewModelBase right)
         {
-            if (designerItemObj != null && connectorObj != null)
-                throw new UnexpectedException("Both are not null.");
-            else if (designerItemObj != null)
-                return designerItemObj;
-            else if (connectorObj != null)
-                return connectorObj;
+            if (left != null && right != null)
+                return null;
+            else if (left != null)
+                return left;
+            else if (right != null)
+                return right;
             else
-                throw new UnexpectedException("Both are null.");
+                return null;
         }
 
         private static List<SelectableDesignerItemViewModelBase> ExtractItems(DiagramViewModel diagramViewModel, IEnumerable<XElement> designerItemsElm, IEnumerable<XElement> connectorsElm)
@@ -209,6 +216,27 @@ namespace boilersGraphics.Helpers
             }
 
             return list;
+        }
+
+        private static SnapPointViewModel ExtractSnapPointViewModel(DiagramViewModel diagramViewModel, XElement snapPointElm)
+        {
+            if (!(DeserializeInstance(snapPointElm) is SnapPointViewModel item))
+                return null;
+            item.ID = Guid.Parse(snapPointElm.Element("ID").Value);
+            item.ParentID = Guid.Parse(snapPointElm.Element("ParentID").Value);
+            item.Left.Value = double.Parse(snapPointElm.Element("Left").Value);
+            item.Top.Value = double.Parse(snapPointElm.Element("Top").Value);
+            item.Width.Value = double.Parse(snapPointElm.Element("Width").Value);
+            item.Height.Value = double.Parse(snapPointElm.Element("Height").Value);
+            item.ZIndex.Value = Int32.Parse(snapPointElm.Element("ZIndex").Value);
+            item.Matrix.Value = new Matrix();
+            item.EdgeColor.Value = (Color)ColorConverter.ConvertFromString(snapPointElm.Element("EdgeColor").Value);
+            item.FillColor.Value = (Color)ColorConverter.ConvertFromString(snapPointElm.Element("FillColor").Value);
+            item.EdgeThickness.Value = double.Parse(snapPointElm.Element("EdgeThickness").Value);
+            item.PathGeometry.Value = PathGeometry.CreateFromGeometry(PathGeometry.Parse(snapPointElm.Element("PathGeometry").Value));
+            item.Opacity.Value = 0.5;
+            item.Owner = diagramViewModel;
+            return item;
         }
 
         private static ConnectorBaseViewModel ExtractConnectorBaseViewModel(DiagramViewModel diagramViewModel, XElement connectorElm)

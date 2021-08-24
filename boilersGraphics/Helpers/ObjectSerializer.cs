@@ -61,6 +61,7 @@ namespace boilersGraphics.Helpers
         {
             var designerItem = item as DesignerItemViewModelBase;
             var connectorItem = item as ConnectorBaseViewModel;
+            var snapPointItem = item as SnapPointViewModel;
             if (designerItem != null)
             {
                 var list = new List<XElement>();
@@ -117,6 +118,26 @@ namespace boilersGraphics.Helpers
                 }
                 var connectorItemXML = new XElement("ConnectorItem", list);
                 return connectorItemXML;
+            }
+            else if (snapPointItem != null)
+            {
+                var list = new List<XElement>();
+                list.Add(new XElement("ID", snapPointItem.ID));
+                list.Add(new XElement("ParentID", snapPointItem.ParentID));
+                list.Add(new XElement("Type", snapPointItem.GetType().FullName));
+                list.Add(new XElement("Left", snapPointItem.Left.Value));
+                list.Add(new XElement("Top", snapPointItem.Top.Value));
+                list.Add(new XElement("Width", snapPointItem.Width.Value));
+                list.Add(new XElement("Height", snapPointItem.Height.Value));
+                list.Add(new XElement("Opacity", snapPointItem.Opacity.Value));
+                list.Add(new XElement("ZIndex", snapPointItem.ZIndex.Value));
+                list.Add(new XElement("Matrix", snapPointItem.Matrix.Value));
+                list.Add(new XElement("EdgeColor", snapPointItem.EdgeColor.Value));
+                list.Add(new XElement("FillColor", snapPointItem.FillColor.Value));
+                list.Add(new XElement("EdgeThickness", snapPointItem.EdgeThickness.Value));
+                list.Add(new XElement("PathGeometry", snapPointItem.PathGeometry.Value));
+                var snappointItemXML = new XElement("SnapPointItem", list);
+                return snappointItemXML;
             }
             else
                 throw new Exception("Neither DesinerItem nor ConnectorItem");

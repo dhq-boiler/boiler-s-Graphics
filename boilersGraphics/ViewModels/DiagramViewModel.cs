@@ -369,7 +369,7 @@ namespace boilersGraphics.ViewModels
             Width = width;
             Height = height;
 
-            InitialSetting(true);
+            InitialSetting(true, true);
         }
 
         public LayerTreeViewItemBase GetLayerTreeViewItemBase(SelectableDesignerItemViewModelBase item)
@@ -433,13 +433,16 @@ namespace boilersGraphics.ViewModels
             OpenCvSharpHelper.ImShow("DebugPrint", rtb);
         }
 
-        private void InitialSetting(bool addingLayer = false)
+        private void InitialSetting(bool addingLayer = false, bool initCanvasBackground = false)
         {
             EdgeColors.Add(Colors.Black);
             FillColors.Add(Colors.White);
             EdgeThickness.Value = 1.0;
             CanvasBorderThickness = 0.0;
-            CanvasBackground.Value = Colors.White;
+            if (initCanvasBackground)
+            {
+                CanvasBackground.Value = Colors.White;
+            }
             BackgroundItem.Value = new BackgroundViewModel();
             BackgroundItem.Value.ZIndex.Value = -1;
             BackgroundItem.Value.FillColor.Value = CanvasBackground.Value;
@@ -1037,7 +1040,7 @@ namespace boilersGraphics.ViewModels
                 EnablePointSnap.Value = bool.Parse(configuration.Element("EnablePointSnap").Value);
                 (App.Current.MainWindow.DataContext as MainWindowViewModel).SnapPower.Value = double.Parse(configuration.Element("SnapPower").Value);
 
-                InitialSetting(false);
+                InitialSetting(false, false);
 
                 ObjectDeserializer.ReadObjectsFromXML(this, root);
             }
