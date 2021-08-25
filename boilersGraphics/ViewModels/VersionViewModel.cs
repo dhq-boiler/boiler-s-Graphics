@@ -11,6 +11,7 @@ using System.Reactive.Disposables;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace boilersGraphics.ViewModels
 {
@@ -44,6 +45,12 @@ namespace boilersGraphics.ViewModels
 
         private string LicenseReadToEnd()
         {
+            if (!File.Exists("LICENSE"))
+            {
+                MessageBox.Show("LICENSEが見つかりません。");
+                return string.Empty;
+            }
+
             using (var streamReader = new StreamReader(new FileStream("LICENSE", FileMode.Open)))
             {
                 return streamReader.ReadToEnd();
@@ -52,6 +59,12 @@ namespace boilersGraphics.ViewModels
 
         private string LicenseMdReadToEnd()
         {
+            if (!File.Exists("LICENSE.md"))
+            {
+                MessageBox.Show("LICENSE.mdが見つかりません。");
+                return string.Empty;
+            }
+
             using (var streamReader = new StreamReader(new FileStream("LICENSE.md", FileMode.Open)))
             {
                 return streamReader.ReadToEnd();
