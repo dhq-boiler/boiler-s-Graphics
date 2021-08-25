@@ -16,12 +16,15 @@
         </Style>
     </prism:Dialog.WindowStyle>
     <DockPanel>
-        <view:SelectableLabel DockPanel.Dock="Top"
-                              FontSize="30"
-                              Text="boiler's Graphics" />
-        <view:SelectableLabel DockPanel.Dock="Top"
-                              FontSize="20"
-                              Text="{Binding Version.Value}" />
+        <StackPanel Orientation="Vertical"
+                    DockPanel.Dock="Top">
+            <view:SelectableLabel FontSize="30"
+                                  Text="boiler's Graphics" />
+            <view:SelectableLabel FontSize="20"
+                                  Text="{Binding Version.Value}" />
+            <mdxam:MarkdownScrollViewer xml:space="preserve"
+                                        Markdown="{Binding License.Value}" />
+        </StackPanel>
         <StackPanel Orientation="Horizontal"
                     HorizontalAlignment="Right"
                     DockPanel.Dock="Bottom">

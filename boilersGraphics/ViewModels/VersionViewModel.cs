@@ -23,6 +23,8 @@ namespace boilersGraphics.ViewModels
 
         public ReactivePropertySlim<string> Version { get; } = new ReactivePropertySlim<string>();
 
+        public ReactivePropertySlim<string> License { get; } = new ReactivePropertySlim<string>();
+
         public ReactivePropertySlim<string> Markdown { get; } = new ReactivePropertySlim<string>();
 
         public ReactiveCommand OKCommand { get; } = new ReactiveCommand();
@@ -30,6 +32,7 @@ namespace boilersGraphics.ViewModels
         public VersionViewModel()
         {
             Version.Value = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion;
+            License.Value = LicenseReadToEnd();
             Markdown.Value = LicenseMdReadToEnd();
             OKCommand.Subscribe(() =>
             {
@@ -37,6 +40,14 @@ namespace boilersGraphics.ViewModels
                 RequestClose.Invoke(result);
             })
             .AddTo(_disposables);
+        }
+
+        private string LicenseReadToEnd()
+        {
+            using (var streamReader = new StreamReader(new FileStream("LICENSE", FileMode.Open)))
+            {
+                return streamReader.ReadToEnd();
+            }
         }
 
         private string LicenseMdReadToEnd()

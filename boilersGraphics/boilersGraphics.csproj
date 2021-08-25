@@ -501,6 +501,9 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.ja-JP.resx" />
+    <None Include="..\LICENSE">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="LICENSE.md">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
