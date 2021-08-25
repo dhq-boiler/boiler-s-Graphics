@@ -300,6 +300,9 @@
     <Compile Include="Views\PolygonSetting.xaml.cs">
       <DependentUpon>PolygonSetting.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\SelectableLabel.xaml.cs">
+      <DependentUpon>SelectableLabel.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\SetSnapPoint.xaml.cs">
       <DependentUpon>SetSnapPoint.xaml</DependentUpon>
     </Compile>
@@ -455,6 +458,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Views\PolygonSetting.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SelectableLabel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

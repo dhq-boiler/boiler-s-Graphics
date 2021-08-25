@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:boilersGraphics.Views"
              xmlns:mdxam="clr-namespace:MdXaml;assembly=MdXaml"
              xmlns:prism="http://prismlibrary.com/"
+             xmlns:view="clr-namespace:boilersGraphics.Views"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <prism:Dialog.WindowStyle>
@@ -15,11 +16,12 @@
         </Style>
     </prism:Dialog.WindowStyle>
     <DockPanel>
-        <Label DockPanel.Dock="Top"
-               FontSize="30">boiler's Graphics</Label>
-        <Label DockPanel.Dock="Top"
-               FontSize="20"
-               Content="{Binding Version.Value}" />
+        <view:SelectableLabel DockPanel.Dock="Top"
+                              FontSize="30"
+                              Text="boiler's Graphics" />
+        <view:SelectableLabel DockPanel.Dock="Top"
+                              FontSize="20"
+                              Text="{Binding Version.Value}" />
         <StackPanel Orientation="Horizontal"
                     HorizontalAlignment="Right"
                     DockPanel.Dock="Bottom">
