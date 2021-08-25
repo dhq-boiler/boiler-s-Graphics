@@ -47,8 +47,9 @@ namespace boilersGraphics.ViewModels
         {
             if (!File.Exists("LICENSE"))
             {
-                MessageBox.Show("LICENSEが見つかりません。");
-                return string.Empty;
+                var str = "LICENSEが見つかりません。";
+                MessageBox.Show(str);
+                return str;
             }
 
             using (var streamReader = new StreamReader(new FileStream("LICENSE", FileMode.Open)))
@@ -61,8 +62,9 @@ namespace boilersGraphics.ViewModels
         {
             if (!File.Exists("LICENSE.md"))
             {
-                MessageBox.Show("LICENSE.mdが見つかりません。");
-                return string.Empty;
+                var str = "LICENSE.mdが見つかりません。";
+                MessageBox.Show(str);
+                return str;
             }
 
             using (var streamReader = new StreamReader(new FileStream("LICENSE.md", FileMode.Open)))
