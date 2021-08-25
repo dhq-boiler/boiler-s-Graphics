@@ -127,6 +127,11 @@ namespace boilersGraphics.ViewModels
             {
                 DiagramViewModel.EnableMiniMap.Value = !DiagramViewModel.EnableMiniMap.Value;
             });
+            ShowVersionCommand = new DelegateCommand(() =>
+            {
+                IDialogResult result = null;
+                this.dlgService.ShowDialog(nameof(Views.Version), ret => result = ret);
+            });
             DiagramViewModel.EdgeThickness.Subscribe(x =>
             {
                 if (x.HasValue && !double.IsNaN(x.Value) && DiagramViewModel.SelectedItems.Value != null)
@@ -178,6 +183,8 @@ namespace boilersGraphics.ViewModels
         public DelegateCommand ExitApplicationCommand { get; }
 
         public DelegateCommand SwitchMiniMapCommand { get; }
+
+        public DelegateCommand ShowVersionCommand { get; }
 
         private void ExecuteDeleteSelectedItemsCommand(object parameter)
         {

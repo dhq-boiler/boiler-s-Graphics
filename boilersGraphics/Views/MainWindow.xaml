@@ -118,6 +118,9 @@
                                               Command="{Binding SwitchMiniMapCommand}" />
                                 </MenuItem>
                             </MenuItem>
+                            <MenuItem Header="ヘルプ(_H)">
+                                <MenuItem Header="boiler's Graphics のバージョン情報(_V)" Command="{Binding ShowVersionCommand}" />
+                            </MenuItem>
                         </Menu>
                         <StackPanel DockPanel.Dock="Right"
                                     Orientation="Horizontal"

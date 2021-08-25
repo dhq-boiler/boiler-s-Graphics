@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\GitVersion.MsBuild.5.7.0\build\GitVersion.MsBuild.props" Condition="Exists('..\packages\GitVersion.MsBuild.5.7.0\build\GitVersion.MsBuild.props')" />
   <Import Project="..\packages\OpenCvSharp4.runtime.win.4.5.2.20210404\build\net\OpenCvSharp4.runtime.win.props" Condition="Exists('..\packages\OpenCvSharp4.runtime.win.4.5.2.20210404\build\net\OpenCvSharp4.runtime.win.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -43,6 +44,12 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ICSharpCode.AvalonEdit, Version=5.0.3.0, Culture=neutral, PublicKeyToken=9cc39be672370310, processorArchitecture=MSIL">
+      <HintPath>..\packages\AvalonEdit.5.0.4\lib\Net40\ICSharpCode.AvalonEdit.dll</HintPath>
+    </Reference>
+    <Reference Include="MdXaml, Version=1.11.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MdXaml.1.11.0\lib\net45\MdXaml.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Xaml.Behaviors, Version=1.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Xaml.Behaviors.Wpf.1.1.31\lib\net45\Microsoft.Xaml.Behaviors.dll</HintPath>
     </Reference>
@@ -244,6 +251,7 @@
     <Compile Include="ViewModels\StraightConnectorViewModel.cs" />
     <Compile Include="ViewModels\StraightLineViewModel.cs" />
     <Compile Include="ViewModels\ToolBarViewModel.cs" />
+    <Compile Include="ViewModels\VersionViewModel.cs" />
     <Compile Include="Views\AdornedBy.cs" />
     <Compile Include="Views\Behaviors\AbstractAdorner.cs" />
     <Compile Include="Views\Behaviors\DeselectBehavior.cs" />
@@ -292,6 +300,9 @@
     <Compile Include="Views\PolygonSetting.xaml.cs">
       <DependentUpon>PolygonSetting.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\SelectableLabel.xaml.cs">
+      <DependentUpon>SelectableLabel.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\SetSnapPoint.xaml.cs">
       <DependentUpon>SetSnapPoint.xaml</DependentUpon>
     </Compile>
@@ -301,6 +312,9 @@
     <Compile Include="Views\Triggers\InteractionRequestTrigger.cs" />
     <Compile Include="Views\Triggers\ResizeThumbDragDeltaEventTrigger.cs" />
     <Compile Include="Views\Triggers\WindowLoadedEventTrigger.cs" />
+    <Compile Include="Views\Version.xaml.cs">
+      <DependentUpon>Version.xaml</DependentUpon>
+    </Compile>
     <Page Include="Resources\DesignerItems\GroupItemDataTemplate.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -447,6 +461,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\SelectableLabel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\SetSnapPoint.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -456,6 +474,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Theme.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Version.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -479,6 +501,12 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.ja-JP.resx" />
+    <None Include="..\LICENSE">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="LICENSE.md">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -573,5 +601,8 @@
       <ErrorText>このプロジェクトは、このコンピューター上にない NuGet パッケージを参照しています。それらのパッケージをダウンロードするには、[NuGet パッケージの復元] を使用します。詳細については、http://go.microsoft.com/fwlink/?LinkID=322105 を参照してください。見つからないファイルは {0} です。</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\OpenCvSharp4.runtime.win.4.5.2.20210404\build\net\OpenCvSharp4.runtime.win.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\OpenCvSharp4.runtime.win.4.5.2.20210404\build\net\OpenCvSharp4.runtime.win.props'))" />
+    <Error Condition="!Exists('..\packages\GitVersion.MsBuild.5.7.0\build\GitVersion.MsBuild.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\GitVersion.MsBuild.5.7.0\build\GitVersion.MsBuild.props'))" />
+    <Error Condition="!Exists('..\packages\GitVersion.MsBuild.5.7.0\build\GitVersion.MsBuild.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\GitVersion.MsBuild.5.7.0\build\GitVersion.MsBuild.targets'))" />
   </Target>
+  <Import Project="..\packages\GitVersion.MsBuild.5.7.0\build\GitVersion.MsBuild.targets" Condition="Exists('..\packages\GitVersion.MsBuild.5.7.0\build\GitVersion.MsBuild.targets')" />
 </Project>

@@ -152,7 +152,7 @@ namespace boilersGraphics.ViewModels
 
         public double ScaleX { get; set; } = 1.0;
         public double ScaleY { get; set; } = 1.0;
-        public Version BGSXFileVersion { get; } = new Version(2, 1);
+        public System.Version BGSXFileVersion { get; } = new System.Version(2, 1);
 
         public IEnumerable<Point> SnapPoints
         {
@@ -1019,7 +1019,7 @@ namespace boilersGraphics.ViewModels
 
             if (root.Element("Version") != null)
             {
-                var version = new Version(root.Element("Version").Value);
+                var version = new System.Version(root.Element("Version").Value);
                 if (version > BGSXFileVersion)
                 {
                     MessageBox.Show("ファイルが新しすぎて開けません。");

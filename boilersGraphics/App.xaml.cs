@@ -35,6 +35,7 @@ namespace boilersGraphics
             containerRegistry.RegisterDialog<PolygonSetting, ViewModels.PolygonSettingViewModel>();
             containerRegistry.RegisterDialog<Layers, ViewModels.LayersViewModel>();
             containerRegistry.RegisterDialog<SetSnapPoint, ViewModels.SetSnapPointViewModel>();
+            containerRegistry.RegisterDialog<Views.Version, ViewModels.VersionViewModel>();
         }
 
         public static string GetAppNameAndVersion()
