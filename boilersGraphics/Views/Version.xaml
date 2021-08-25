@@ -4,8 +4,16 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:boilersGraphics.Views"
+             xmlns:mdxam="clr-namespace:MdXaml;assembly=MdXaml"
+             xmlns:prism="http://prismlibrary.com/"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <prism:Dialog.WindowStyle>
+        <Style TargetType="Window">
+            <Setter Property="Width" Value="800" />
+            <Setter Property="Height" Value="800" />
+        </Style>
+    </prism:Dialog.WindowStyle>
     <DockPanel>
         <Label DockPanel.Dock="Top"
                FontSize="30">boiler's Graphics</Label>
@@ -21,6 +29,10 @@
                 OK
             </Button>
         </StackPanel>
-        <Grid />
+        <Label DockPanel.Dock="Top"
+               FontSize="20"
+               Content="Open Source Components / Libraries / Code" />
+        <mdxam:MarkdownScrollViewer xml:space="preserve"
+                                    Markdown="{Binding Markdown.Value}" />
     </DockPanel>
 </UserControl>

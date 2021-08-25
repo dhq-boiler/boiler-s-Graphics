@@ -5,6 +5,7 @@ using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reflection;
@@ -22,17 +23,28 @@ namespace boilersGraphics.ViewModels
 
         public ReactivePropertySlim<string> Version { get; } = new ReactivePropertySlim<string>();
 
+        public ReactivePropertySlim<string> Markdown { get; } = new ReactivePropertySlim<string>();
+
         public ReactiveCommand OKCommand { get; } = new ReactiveCommand();
 
         public VersionViewModel()
         {
             Version.Value = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion;
+            Markdown.Value = LicenseMdReadToEnd();
             OKCommand.Subscribe(() =>
             {
                 DialogResult result = new DialogResult(ButtonResult.OK);
                 RequestClose.Invoke(result);
             })
             .AddTo(_disposables);
+        }
+
+        private string LicenseMdReadToEnd()
+        {
+            using (var streamReader = new StreamReader(new FileStream("LICENSE.md", FileMode.Open)))
+            {
+                return streamReader.ReadToEnd();
+            }
         }
 
         public bool CanCloseDialog()
