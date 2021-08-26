@@ -41,7 +41,7 @@
         </StackPanel>
         <Label DockPanel.Dock="Top"
                FontSize="20"
-               Content="Open Source Components / Libraries / Code" />
+               Content="オープンソース コンポーネント / ライブラリ / コード" />
         <mdxam:MarkdownScrollViewer xml:space="preserve"
                                     Markdown="{Binding Markdown.Value}" />
     </DockPanel>
