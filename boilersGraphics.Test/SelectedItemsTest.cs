@@ -16,8 +16,7 @@ namespace boilersGraphics.Test
         public void アイテムは選択されていない()
         {
             boilersGraphics.App.IsTest = true;
-            var mainWindowViewModel = new MainWindowViewModel(null);
-            var viewModel = new DiagramViewModel(mainWindowViewModel, 1000, 1000);
+            var viewModel = new DiagramViewModel(1000, 1000);
             viewModel.Layers.Clear();
             var layer1 = new Layer();
             layer1.Name.Value = "レイヤー1";
@@ -38,8 +37,7 @@ namespace boilersGraphics.Test
         public void アイテム1つが選択されている()
         {
             boilersGraphics.App.IsTest = true;
-            var mainWindowViewModel = new MainWindowViewModel(null);
-            var viewModel = new DiagramViewModel(mainWindowViewModel, 1000, 1000);
+            var viewModel = new DiagramViewModel(1000, 1000);
             viewModel.Layers.Clear();
             var layer1 = new Layer();
             layer1.Name.Value = "レイヤー1";
@@ -62,8 +60,7 @@ namespace boilersGraphics.Test
         public void アイテム2つが選択されている()
         {
             boilersGraphics.App.IsTest = true;
-            var mainWindowViewModel = new MainWindowViewModel(null);
-            var viewModel = new DiagramViewModel(mainWindowViewModel, 1000, 1000);
+            var viewModel = new DiagramViewModel(1000, 1000);
             viewModel.Layers.Clear();
             var layer1 = new Layer();
             layer1.Name.Value = "レイヤー1";
@@ -90,8 +87,7 @@ namespace boilersGraphics.Test
         public void アイテム2つが選択されている_順序逆()
         {
             boilersGraphics.App.IsTest = true;
-            var mainWindowViewModel = new MainWindowViewModel(null);
-            var viewModel = new DiagramViewModel(mainWindowViewModel, 1000, 1000);
+            var viewModel = new DiagramViewModel(1000, 1000);
             viewModel.Layers.Clear();
             var layer1 = new Layer();
             layer1.Name.Value = "レイヤー1";
@@ -118,8 +114,7 @@ namespace boilersGraphics.Test
         public void アイテム3ついや2つが選択されている()
         {
             boilersGraphics.App.IsTest = true;
-            var mainWindowViewModel = new MainWindowViewModel(null);
-            var viewModel = new DiagramViewModel(mainWindowViewModel, 1000, 1000);
+            var viewModel = new DiagramViewModel(1000, 1000);
             viewModel.Layers.Clear();
             var layer1 = new Layer();
             layer1.Name.Value = "レイヤー1";
