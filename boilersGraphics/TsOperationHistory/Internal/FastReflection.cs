@@ -17,13 +17,25 @@ namespace TsOperationHistory.Internal
 
         private static IMultiLayerAccessor MakeAccessor(object _object, string propertyName)
         {
+            propertyName = propertyName.Replace("[", ".[");
             List<IAccessor> list = new List<IAccessor>();
             IAccessor accessor = null;
             object obj = _object;
             foreach (var propertyNameSplit in propertyName.Split('.'))
             {
-                accessor = NewMethod(obj, propertyNameSplit);
-                obj = accessor.GetValue(obj);
+                var p = propertyNameSplit;
+                if (p.First() == '[')
+                {
+                    p = "Item";
+                    var index = int.Parse(propertyNameSplit.Replace("[", "").Replace("]", ""));
+                    accessor = NewMethod(obj, p, index);
+                    obj = accessor.GetValue(obj, index);
+                }
+                else
+                {
+                    accessor = NewMethod(obj, p);
+                    obj = accessor.GetValue(obj);
+                }
                 list.Add(accessor);
             }
             return new MultiPropertyAccessor(list);
@@ -58,6 +70,35 @@ namespace TsOperationHistory.Internal
             return (IAccessor)Activator.CreateInstance(accessorType, getter, setter);
         }
 
+        private static IAccessor NewMethod(object _object, string propertyNameSplit, int index)
+        {
+            var propertyInfo = _object.GetType().GetProperty(propertyNameSplit,
+                                BindingFlags.NonPublic |
+                                BindingFlags.Public |
+                                BindingFlags.Instance);
+
+            if (propertyInfo == null)
+                return null;
+
+            if (_object.GetType().IsClass == false)
+            {
+                return new StructAccessor(propertyInfo, PublicOnly);
+            }
+
+            var getInfo = propertyInfo.GetGetMethod(PublicOnly is false);
+            var setInfo = propertyInfo.GetSetMethod(PublicOnly is false);
+
+            var getterDelegateType = typeof(Func<,,>).MakeGenericType(propertyInfo.DeclaringType, typeof(int), propertyInfo.PropertyType);
+            var getter = getInfo != null ? Delegate.CreateDelegate(getterDelegateType, getInfo) : null;
+
+            var setterDelegateType = typeof(Action<,,>).MakeGenericType(propertyInfo.DeclaringType, typeof(int), propertyInfo.PropertyType);
+            var setter = setInfo != null ? Delegate.CreateDelegate(setterDelegateType, setInfo) : null;
+
+            var accessorType = typeof(IndexerAccessor<,>).MakeGenericType(propertyInfo.DeclaringType, propertyInfo.PropertyType);
+
+            return (IAccessor)Activator.CreateInstance(accessorType, getter, setter);
+        }
+
         private static IAccessor GetAccessor(object _object, string propertyName)
         {
             var accessors = Cache.GetOrAdd(_object.GetType(), x => new ConcurrentDictionary<string, IAccessor>());
@@ -66,12 +107,30 @@ namespace TsOperationHistory.Internal
 
         public static void SetProperty(object _object, string property, object value)
         {
-            GetAccessor(_object,property).SetValue(_object,value);
+            if (property.Contains("["))
+            {
+                var sub = property.Substring(property.IndexOf('[') + 1, property.IndexOf(']') - property.IndexOf('[') - 1);
+                var index = int.Parse(sub);
+                GetAccessor(_object, property).SetValue(_object, index, value);
+            }
+            else
+            {
+                GetAccessor(_object, property).SetValue(_object, value);
+            }
         }
 
         public static object GetProperty(object _object , string property)
         {
-            return GetAccessor(_object, property).GetValue( _object);
+            if (property.Contains("["))
+            {
+                var sub = property.Substring(property.IndexOf('[') + 1, property.IndexOf(']') - property.IndexOf('[') - 1);
+                var index = int.Parse(sub);
+                return GetAccessor(_object, property).GetValue(_object, index);
+            }
+            else
+            {
+                return GetAccessor(_object, property).GetValue(_object);
+            }
         }
 
         public static Type GetPropertyType(object _object, string property)

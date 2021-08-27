@@ -9,7 +9,11 @@ namespace TsOperationHistory.Internal
     {
         object GetValue(object target);
 
+        object GetValue(object target, int index);
+
         void SetValue(object target, object value);
+
+        void SetValue(object target, int index, object value);
 
         bool HasGetter { get; }
         bool HasSetter { get; }
@@ -47,6 +51,23 @@ namespace TsOperationHistory.Internal
             return obj;
         }
 
+        public object GetValue(object target, int index)
+        {
+            object obj = target;
+            foreach (var chain in AccessorChain)
+            {
+                if (chain != AccessorChain.Last())
+                {
+                    obj = chain.GetValue(obj);
+                }
+                else
+                {
+                    obj = chain.GetValue(obj, index);
+                }
+            }
+            return obj;
+        }
+
         public void SetValue(object target, object value)
         {
             object obj = target;
@@ -61,6 +82,21 @@ namespace TsOperationHistory.Internal
                 accessor = chain;
             }
             accessor.SetValue(obj, value);
+        }
+
+        public void SetValue(object target, int index, object value)
+        {
+            object obj = target;
+            IAccessor accessor = null;
+            foreach (var chain in AccessorChain)
+            {
+                if (chain != AccessorChain.Last())
+                {
+                    obj = chain.GetValue(obj);
+                }
+                accessor = chain;
+            }
+            accessor.SetValue(obj, index, value);
         }
     }
 
@@ -78,14 +114,64 @@ namespace TsOperationHistory.Internal
         public object GetValue(object target)
         {
             if (_getter != null)
-                return _getter((TTarget) target);
+                return _getter((TTarget)target);
+
+            return default;
+        }
+
+        public object GetValue(object target, int index)
+        {
+            throw new NotSupportedException();
+        }
+
+        public void SetValue(object target, object value)
+        {
+            _setter?.Invoke((TTarget)target, (TProperty)value);
+        }
+
+        public void SetValue(object target, int index, object value)
+        {
+            throw new NotSupportedException();
+        }
+
+        public bool HasGetter => (_getter != null);
+        public bool HasSetter => (_setter != null);
+
+        public Type PropertyType { get; } = typeof(TProperty);
+    }
+
+    internal sealed class IndexerAccessor<TTarget, TProperty> : IAccessor
+    {
+        private readonly Func<TTarget, int, TProperty> _getter;
+        private readonly Action<TTarget, int, TProperty> _setter;
+
+        public IndexerAccessor(Func<TTarget, int, TProperty> getter, Action<TTarget, int, TProperty> setter)
+        {
+            _getter = getter;
+            _setter = setter;
+        }
+
+        public object GetValue(object target)
+        {
+            throw new NotSupportedException();
+        }
+
+        public object GetValue(object target, int index)
+        {
+            if (_getter != null)
+                return _getter((TTarget)target, index);
 
             return default;
         }
 
         public void SetValue(object target, object value)
         {
-            _setter?.Invoke((TTarget)target, (TProperty)value);
+            throw new NotSupportedException();
+        }
+
+        public void SetValue(object target, int index, object value)
+        {
+            _setter?.Invoke((TTarget)target, index, (TProperty)value);
         }
 
         public bool HasGetter => (_getter != null);
@@ -114,6 +200,16 @@ namespace TsOperationHistory.Internal
         public void SetValue(object target, object value)
         {
             _propertyInfo.SetValue(target,value);
+        }
+
+        public object GetValue(object target, int index)
+        {
+            throw new NotSupportedException();
+        }
+
+        public void SetValue(object target, int index, object value)
+        {
+            throw new NotSupportedException();
         }
 
         public bool HasGetter { get; }
