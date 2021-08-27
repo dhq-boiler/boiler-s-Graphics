@@ -17,7 +17,8 @@ namespace boilersGraphics.Test
         public void 同じレイヤーにアイテム３つ追加()
         {
             boilersGraphics.App.IsTest = true;
-            var diagramVM = new DiagramViewModel(1000, 1000);
+            var mainWindowViewModel = new MainWindowViewModel(null);
+            var diagramVM = new DiagramViewModel(mainWindowViewModel, 1000, 1000);
             diagramVM.Layers.Clear();
             var layer1 = new Layer();
             layer1.Name.Value = "レイヤー1";
@@ -44,7 +45,8 @@ namespace boilersGraphics.Test
         public void 異なるレイヤーにアイテム３つずつ追加()
         {
             boilersGraphics.App.IsTest = true;
-            var diagramVM = new DiagramViewModel(1000, 1000);
+            var mainWindowViewModel = new MainWindowViewModel(null);
+            var diagramVM = new DiagramViewModel(mainWindowViewModel, 1000, 1000);
             diagramVM.Layers.Clear();
             var layer1 = new Layer();
             layer1.Name.Value = "レイヤー1";
@@ -92,7 +94,8 @@ namespace boilersGraphics.Test
         public void レイヤーの手前にもう1つのレイヤーを追加()
         {
             boilersGraphics.App.IsTest = true;
-            var diagramVM = new DiagramViewModel(1000, 1000);
+            var mainWindowViewModel = new MainWindowViewModel(null);
+            var diagramVM = new DiagramViewModel(mainWindowViewModel, 1000, 1000);
             diagramVM.Layers.Clear();
             var layer1 = new Layer();
             layer1.Name.Value = "レイヤー1";
@@ -146,7 +149,8 @@ namespace boilersGraphics.Test
         public void レイヤーの後にもう1つのレイヤーを追加()
         {
             boilersGraphics.App.IsTest = true;
-            var diagramVM = new DiagramViewModel(1000, 1000);
+            var mainWindowViewModel = new MainWindowViewModel(null);
+            var diagramVM = new DiagramViewModel(mainWindowViewModel, 1000, 1000);
             diagramVM.Layers.Clear();
             var layer1 = new Layer();
             layer1.Name.Value = "レイヤー1";
@@ -200,7 +204,8 @@ namespace boilersGraphics.Test
         public void 前面へ移動()
         {
             boilersGraphics.App.IsTest = true;
-            var viewModel = new DiagramViewModel(1000, 1000);
+            var mainWindowViewModel = new MainWindowViewModel(null);
+            var viewModel = new DiagramViewModel(mainWindowViewModel, 1000, 1000);
             viewModel.Layers.Clear();
 
             Layer layer1 = new Layer();
@@ -249,7 +254,8 @@ namespace boilersGraphics.Test
         public void 前面へ移動_レイヤー外()
         {
             boilersGraphics.App.IsTest = true;
-            var viewModel = new DiagramViewModel(1000, 1000);
+            var mainWindowViewModel = new MainWindowViewModel(null);
+            var viewModel = new DiagramViewModel(mainWindowViewModel, 1000, 1000);
             viewModel.Layers.Clear();
 
             Layer layer1 = new Layer();
@@ -337,7 +343,8 @@ namespace boilersGraphics.Test
         public void 最前面へ移動()
         {
             boilersGraphics.App.IsTest = true;
-            var viewModel = new DiagramViewModel(1000, 1000);
+            var mainWindowViewModel = new MainWindowViewModel(null);
+            var viewModel = new DiagramViewModel(mainWindowViewModel, 1000, 1000);
             viewModel.Layers.Clear();
 
             Layer layer1 = new Layer();
@@ -426,7 +433,8 @@ namespace boilersGraphics.Test
         public void 背面へ移動()
         {
             boilersGraphics.App.IsTest = true;
-            var viewModel = new DiagramViewModel(1000, 1000);
+            var mainWindowViewModel = new MainWindowViewModel(null);
+            var viewModel = new DiagramViewModel(mainWindowViewModel, 1000, 1000);
             viewModel.Layers.Clear();
 
             Layer layer1 = new Layer();
@@ -515,7 +523,8 @@ namespace boilersGraphics.Test
         public void 背面へ移動_レイヤー外()
         {
             boilersGraphics.App.IsTest = true;
-            var viewModel = new DiagramViewModel(1000, 1000);
+            var mainWindowViewModel = new MainWindowViewModel(null);
+            var viewModel = new DiagramViewModel(mainWindowViewModel, 1000, 1000);
             viewModel.Layers.Clear();
 
             Layer layer1 = new Layer();
@@ -604,7 +613,8 @@ namespace boilersGraphics.Test
         public void 最背面へ移動()
         {
             boilersGraphics.App.IsTest = true;
-            var viewModel = new DiagramViewModel(1000, 1000);
+            var mainWindowViewModel = new MainWindowViewModel(null);
+            var viewModel = new DiagramViewModel(mainWindowViewModel, 1000, 1000);
             viewModel.Layers.Clear();
 
             Layer layer1 = new Layer();

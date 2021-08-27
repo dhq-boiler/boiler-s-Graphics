@@ -216,6 +216,25 @@
     <Compile Include="Models\Setting.cs" />
     <Compile Include="Models\StraightLine.cs" />
     <Compile Include="StyleSelectors\DesignerItemsControlItemStyleSelector.cs" />
+    <Compile Include="TsOperationHistory\CompositeOperation.cs" />
+    <Compile Include="TsOperationHistory\DelegateOperation.cs" />
+    <Compile Include="TsOperationHistory\Extensions\OperationControllerExtensions.cs" />
+    <Compile Include="TsOperationHistory\Extensions\OperationControllerServiceExtensions.cs" />
+    <Compile Include="TsOperationHistory\Extensions\OperationExtensions.cs" />
+    <Compile Include="TsOperationHistory\Interfaces.cs" />
+    <Compile Include="TsOperationHistory\Internal\CapacityStack.cs" />
+    <Compile Include="TsOperationHistory\Internal\Disposer.cs" />
+    <Compile Include="TsOperationHistory\Internal\ErrorMessages.cs" />
+    <Compile Include="TsOperationHistory\Internal\FastReflection.cs" />
+    <Compile Include="TsOperationHistory\Internal\PropertyAccesser.cs" />
+    <Compile Include="TsOperationHistory\Internal\ThrottleMergeJudge.cs" />
+    <Compile Include="TsOperationHistory\Internal\UndoStack.cs" />
+    <Compile Include="TsOperationHistory\ListOperation.cs" />
+    <Compile Include="TsOperationHistory\MergeableOperation.cs" />
+    <Compile Include="TsOperationHistory\OperationBuilder.cs" />
+    <Compile Include="TsOperationHistory\OperationBuilderInternal.cs" />
+    <Compile Include="TsOperationHistory\OperationController.cs" />
+    <Compile Include="TsOperationHistory\OperationRecorder.cs" />
     <Compile Include="UserControls\DiagramControl.xaml.cs">
       <DependentUpon>DiagramControl.xaml</DependentUpon>
     </Compile>

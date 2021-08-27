@@ -95,6 +95,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReactivePropertyTest.cs" />
     <Compile Include="SelectedItemsTest.cs" />
+    <Compile Include="TsOperationHistory.Test\Foundations.cs" />
+    <Compile Include="TsOperationHistory.Test\UnitTest.cs" />
     <Compile Include="ZIndexTest.cs" />
   </ItemGroup>
   <ItemGroup>
