@@ -14,6 +14,7 @@ using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Input;
+using TsOperationHistory.Extensions;
 
 namespace boilersGraphics.ViewModels
 {
@@ -50,7 +51,7 @@ namespace boilersGraphics.ViewModels
                 layer.Name.Value = Name.GetNewLayerName();
                 Random rand = new Random();
                 layer.Color.Value = Randomizer.RandomColor(rand);
-                (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.Layers.Add(layer);
+                (App.Current.MainWindow.DataContext as MainWindowViewModel).Controller.ExecuteAdd((App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.Layers, layer);
             });
             RemoveLayerCommand = new DelegateCommand(() =>
             {
@@ -59,7 +60,7 @@ namespace boilersGraphics.ViewModels
                 var selectedLayers = diagramViewModel.SelectedLayers;
                 foreach (var remove in selectedLayers.Value.ToList())
                 {
-                    layers.Remove(remove);
+                    (App.Current.MainWindow.DataContext as MainWindowViewModel).Controller.ExecuteRemove(layers, remove);
                 }
             });
             SelectedItemChangedCommand.Subscribe(args =>
