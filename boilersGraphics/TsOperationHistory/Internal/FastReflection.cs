@@ -15,12 +15,26 @@ namespace TsOperationHistory.Internal
 
         public static bool PublicOnly { get; set; } = true;
 
-        private static IAccessor MakeAccessor(object _object, string propertyName)
+        private static IMultiLayerAccessor MakeAccessor(object _object, string propertyName)
         {
-            var propertyInfo = _object.GetType().GetProperty(propertyName,
-                BindingFlags.NonPublic | 
-                BindingFlags.Public |
-                BindingFlags.Instance);
+            List<IAccessor> list = new List<IAccessor>();
+            IAccessor accessor = null;
+            object obj = _object;
+            foreach (var propertyNameSplit in propertyName.Split('.'))
+            {
+                accessor = NewMethod(obj, propertyNameSplit);
+                obj = accessor.GetValue(obj);
+                list.Add(accessor);
+            }
+            return new MultiPropertyAccessor(list);
+        }
+
+        private static IAccessor NewMethod(object _object, string propertyNameSplit)
+        {
+            var propertyInfo = _object.GetType().GetProperty(propertyNameSplit,
+                                BindingFlags.NonPublic |
+                                BindingFlags.Public |
+                                BindingFlags.Instance);
 
             if (propertyInfo == null)
                 return null;
@@ -37,7 +51,7 @@ namespace TsOperationHistory.Internal
             var getter = getInfo != null ? Delegate.CreateDelegate(getterDelegateType, getInfo) : null;
 
             var setterDelegateType = typeof(Action<,>).MakeGenericType(propertyInfo.DeclaringType, propertyInfo.PropertyType);
-            var setter = setInfo != null? Delegate.CreateDelegate(setterDelegateType, setInfo) : null;
+            var setter = setInfo != null ? Delegate.CreateDelegate(setterDelegateType, setInfo) : null;
 
             var accessorType = typeof(PropertyAccessor<,>).MakeGenericType(propertyInfo.DeclaringType, propertyInfo.PropertyType);
 

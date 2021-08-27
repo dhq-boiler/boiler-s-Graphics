@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace TsOperationHistory.Internal
@@ -13,6 +15,53 @@ namespace TsOperationHistory.Internal
         bool HasSetter { get; }
 
         Type PropertyType { get; }
+    }
+
+    internal interface IMultiLayerAccessor : IAccessor
+    {
+        List<IAccessor> AccessorChain { get; }
+    }
+
+    internal sealed class MultiPropertyAccessor : IMultiLayerAccessor
+    {
+        public List<IAccessor> AccessorChain { get; } = new List<IAccessor>();
+
+        public bool HasGetter => AccessorChain.All(x => x.HasGetter);
+
+        public bool HasSetter => AccessorChain.All(x => x.HasSetter);
+
+        public Type PropertyType => AccessorChain.Last().PropertyType;
+
+        public MultiPropertyAccessor(IEnumerable<IAccessor> accessors)
+        {
+            AccessorChain.AddRange(accessors);
+        }
+
+        public object GetValue(object target)
+        {
+            object obj = target;
+            foreach (var chain in AccessorChain)
+            {
+                obj = chain.GetValue(obj);
+            }
+            return obj;
+        }
+
+        public void SetValue(object target, object value)
+        {
+            object obj = target;
+            IAccessor accessor = null;
+            foreach (var chain in AccessorChain)
+            {
+                var temp = chain.GetValue(obj);
+                if (chain != AccessorChain.Last())
+                {
+                    obj = temp;
+                }
+                accessor = chain;
+            }
+            accessor.SetValue(obj, value);
+        }
     }
 
     internal sealed class PropertyAccessor<TTarget, TProperty> : IAccessor
