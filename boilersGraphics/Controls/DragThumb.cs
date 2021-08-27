@@ -6,14 +6,24 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
+using TsOperationHistory;
+using TsOperationHistory.Extensions;
 
 namespace boilersGraphics.Controls
 {
     public class DragThumb : Thumb
     {
+        public OperationRecorder Recorder { get; } = new OperationRecorder((App.Current.MainWindow.DataContext as MainWindowViewModel).Controller);
+
         public DragThumb()
         {
             base.DragDelta += new DragDeltaEventHandler(DragThumb_DragDelta);
+        }
+
+        protected override void OnMouseDown(MouseButtonEventArgs e)
+        {
+            base.OnMouseDown(e);
+            Recorder.BeginRecode();
         }
 
         protected override void OnMouseUp(MouseButtonEventArgs e)
@@ -21,6 +31,7 @@ namespace boilersGraphics.Controls
             base.OnMouseUp(e);
             (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "";
             (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = "";
+            Recorder.EndRecode("DragThumb.DragThumb_DragDelta() completed");
         }
 
         private void DragThumb_DragDelta(object sender, DragDeltaEventArgs e)
@@ -64,14 +75,14 @@ namespace boilersGraphics.Controls
                     {
                         var dragDelta = new Point(e.HorizontalChange, e.VerticalChange);
                         dragDelta = matrixTransform.Transform(dragDelta);
-                        item.Left.Value = left + dragDelta.X;
-                        item.Top.Value = top + dragDelta.Y;
+                        Recorder.Current.ExecuteSetProperty(item, "Left.Value", left + dragDelta.X);
+                        Recorder.Current.ExecuteSetProperty(item, "Top.Value", top + dragDelta.Y);
                         (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = $"(x, y) = ({item.Left.Value}, {item.Top.Value}) (x+, y+) = ({dragDelta.X}, {dragDelta.Y})";
                     }
                     else
                     {
-                        item.Left.Value = left + deltaHorizontal;
-                        item.Top.Value = top + deltaVertical;
+                        Recorder.Current.ExecuteSetProperty(item, "Left.Value", left + deltaHorizontal);
+                        Recorder.Current.ExecuteSetProperty(item, "Top.Value", top + deltaVertical);
                         (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = $"(x, y) = ({item.Left.Value}, {item.Top.Value}) (x+, y+) = ({deltaHorizontal}, {deltaVertical})";
                     }
                 }
