@@ -18,6 +18,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Threading;
+using TsOperationHistory.Extensions;
 
 namespace boilersGraphics.Models
 {
@@ -105,7 +106,7 @@ namespace boilersGraphics.Models
             layerItem.Parent.Value = this;
             Random rand = new Random();
             layerItem.Color.Value = Randomizer.RandomColor(rand);
-            Children.Add(layerItem);
+            (App.Current.MainWindow.DataContext as MainWindowViewModel).Controller.ExecuteAdd(Children, layerItem);
         }
 
         public void RemoveItem(SelectableDesignerItemViewModelBase item)
@@ -113,8 +114,8 @@ namespace boilersGraphics.Models
             var layerItems = Children.Where(x => (x as LayerItem).Item.Value == item);
             layerItems.ToList().ForEach(x =>
             {
-                var removed = Children.Remove(x);
-                Trace.WriteLine($"{x} removed from {Children} {removed}");
+                (App.Current.MainWindow.DataContext as MainWindowViewModel).Controller.ExecuteRemove(Children, x);
+                Trace.WriteLine($"{x} removed from {Children}");
             });
         }
 

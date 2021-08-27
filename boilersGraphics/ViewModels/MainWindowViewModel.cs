@@ -9,6 +9,7 @@ using System;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Windows;
+using TsOperationHistory;
 
 namespace boilersGraphics.ViewModels
 {
@@ -173,6 +174,8 @@ namespace boilersGraphics.ViewModels
         public ReactiveCollection<double> EdgeThicknessOptions { get; } = new ReactiveCollection<double>();
 
         public ReactiveProperty<string> Title { get; } = new ReactiveProperty<string>();
+
+        public IOperationController Controller { get; } = new OperationController();
 
         public DelegateCommand<object> DeleteSelectedItemsCommand { get; private set; }
 
