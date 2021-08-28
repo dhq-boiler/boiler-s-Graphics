@@ -137,12 +137,7 @@ namespace boilersGraphics.ViewModels
             {
                 if (x.HasValue && !double.IsNaN(x.Value) && DiagramViewModel.SelectedItems.Value != null)
                 {
-                    foreach (var item in DiagramViewModel.SelectedItems.Value?.OfType<DesignerItemViewModelBase>())
-                    {
-                        item.EdgeThickness.Value = x.Value;
-                    }
-
-                    foreach (var item in DiagramViewModel.SelectedItems.Value?.OfType<ConnectorBaseViewModel>())
+                    foreach (var item in DiagramViewModel.SelectedItems.Value?.OfType<SelectableDesignerItemViewModelBase>())
                     {
                         item.EdgeThickness.Value = x.Value;
                     }
