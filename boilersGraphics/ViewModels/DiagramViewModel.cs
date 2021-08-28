@@ -485,6 +485,7 @@ namespace boilersGraphics.ViewModels
         private void ExecuteUndoCommand()
         {
             mainWindowViewModel.Controller.Undo();
+            UndoCommand.RaiseCanExecuteChanged();
         }
 
         private bool CanExecuteUndo()
