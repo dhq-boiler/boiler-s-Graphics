@@ -453,7 +453,7 @@ namespace boilersGraphics.ViewModels
             {
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "CanvasBackground.Value", Colors.White);
             }
-            BackgroundItem.Value = new BackgroundViewModel();
+            mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value", new BackgroundViewModel());
             mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.ZIndex.Value", -1);
             mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.FillColor.Value", CanvasBackground.Value);
             mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.Left.Value", 0d);
