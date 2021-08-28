@@ -28,12 +28,17 @@ namespace TsOperationHistory.Internal
                 {
                     p = "Item";
                     var index = int.Parse(propertyNameSplit.Replace("[", "").Replace("]", ""));
-                    accessor = NewMethod(obj, p, index);
+                    accessor = CreateIAccessorWithIndex(obj, p, index);
                     obj = accessor.GetValue(obj, index);
+                }
+                else if (_object is Type)
+                {
+                    accessor = CreateIAccessorWithType(obj, p);
+                    obj = accessor.GetValue(obj);
                 }
                 else
                 {
-                    accessor = NewMethod(obj, p);
+                    accessor = CreateIAccessor(obj, p);
                     obj = accessor.GetValue(obj);
                 }
                 list.Add(accessor);
@@ -41,7 +46,7 @@ namespace TsOperationHistory.Internal
             return new MultiPropertyAccessor(list);
         }
 
-        private static IAccessor NewMethod(object _object, string propertyNameSplit)
+        private static IAccessor CreateIAccessor(object _object, string propertyNameSplit)
         {
             var propertyInfo = _object.GetType().GetProperty(propertyNameSplit,
                                 BindingFlags.NonPublic |
@@ -69,8 +74,36 @@ namespace TsOperationHistory.Internal
 
             return (IAccessor)Activator.CreateInstance(accessorType, getter, setter);
         }
+        private static IAccessor CreateIAccessorWithType(object _object, string propertyNameSplit)
+        {
+            var propertyInfo = (_object as Type).GetProperty(propertyNameSplit,
+                                BindingFlags.NonPublic |
+                                BindingFlags.Public |
+                                BindingFlags.Static);
 
-        private static IAccessor NewMethod(object _object, string propertyNameSplit, int index)
+            if (propertyInfo == null)
+                return null;
+
+            if ((_object as Type).IsClass == false)
+            {
+                return new StructAccessor(propertyInfo, PublicOnly);
+            }
+
+            var getInfo = propertyInfo.GetGetMethod(PublicOnly is false);
+            var setInfo = propertyInfo.GetSetMethod(PublicOnly is false);
+
+            var getterDelegateType = typeof(Func<,>).MakeGenericType(propertyInfo.DeclaringType, propertyInfo.PropertyType);
+            var getter = getInfo != null ? Delegate.CreateDelegate(getterDelegateType, getInfo) : null;
+
+            var setterDelegateType = typeof(Action<,>).MakeGenericType(propertyInfo.DeclaringType, propertyInfo.PropertyType);
+            var setter = setInfo != null ? Delegate.CreateDelegate(setterDelegateType, setInfo) : null;
+
+            var accessorType = typeof(PropertyAccessor<,>).MakeGenericType(propertyInfo.DeclaringType, propertyInfo.PropertyType);
+
+            return (IAccessor)Activator.CreateInstance(accessorType, getter, setter);
+        }
+
+        private static IAccessor CreateIAccessorWithIndex(object _object, string propertyNameSplit, int index)
         {
             var propertyInfo = _object.GetType().GetProperty(propertyNameSplit,
                                 BindingFlags.NonPublic |

@@ -81,7 +81,8 @@ namespace TsOperationHistory.Extensions
         /// </summary>
         public static IMergeableOperation GenerateSetPropertyOperation<TProperty>(this object @this, string propertyName, TProperty newValue, TimeSpan timeSpan)
         {
-            var oldValue = (TProperty)FastReflection.GetProperty(@this, propertyName);
+            var nullableObj = FastReflection.GetProperty(@this, propertyName);
+            TProperty oldValue = nullableObj != null ? (TProperty)nullableObj : default(TProperty);
 
             return GenerateAutoMergeOperation(@this, propertyName, newValue, oldValue, $"{@this.GetHashCode()}.{propertyName}", timeSpan);
         }

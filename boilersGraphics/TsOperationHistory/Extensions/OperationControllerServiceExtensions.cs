@@ -63,6 +63,14 @@ namespace TsOperationHistory.Extensions
             controller.Execute(operation);
         }
 
+        public static void ExecuteSetProperty<T, TProperty>(this IOperationController controller, Type clazz, string propertyName, TProperty value)
+        {
+            var operation = clazz.GenerateSetPropertyOperation(propertyName, value)
+                                 .Merge(controller);
+
+            controller.Execute(operation);
+        }
+
         public static IDisposable BindPropertyChanged<T>(this IOperationController controller , INotifyPropertyChanged owner, string propertyName , bool autoMerge = true)
         {
             var prevValue = FastReflection.GetProperty<T>(owner, propertyName);
