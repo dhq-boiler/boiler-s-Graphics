@@ -93,10 +93,10 @@ namespace TsOperationHistory.Internal
             var setInfo = propertyInfo.GetSetMethod(PublicOnly is false);
 
             var getterDelegateType = typeof(Func<,>).MakeGenericType(propertyInfo.DeclaringType, propertyInfo.PropertyType);
-            var getter = getInfo != null ? Delegate.CreateDelegate(getterDelegateType, getInfo) : null;
+            var getter = getInfo != null ? Delegate.CreateDelegate(getterDelegateType, getInfo) : null; //System.ArgumentException: 'ターゲット メソッドとデリゲート型との間に、シグネチャまたはセキュリティ透過性の互換性がないため、ターゲット メソッドにバインドできません。'
 
             var setterDelegateType = typeof(Action<,>).MakeGenericType(propertyInfo.DeclaringType, propertyInfo.PropertyType);
-            var setter = setInfo != null ? Delegate.CreateDelegate(setterDelegateType, setInfo) : null;
+            var setter = setInfo != null ? Delegate.CreateDelegate(setterDelegateType, setInfo) : null; //System.ArgumentException: 'ターゲット メソッドとデリゲート型との間に、シグネチャまたはセキュリティ透過性の互換性がないため、ターゲット メソッドにバインドできません。'
 
             var accessorType = typeof(PropertyAccessor<,>).MakeGenericType(propertyInfo.DeclaringType, propertyInfo.PropertyType);
 
