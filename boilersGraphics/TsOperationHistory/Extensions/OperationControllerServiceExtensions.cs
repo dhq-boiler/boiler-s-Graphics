@@ -63,9 +63,9 @@ namespace TsOperationHistory.Extensions
             controller.Execute(operation);
         }
 
-        public static void ExecuteSetProperty<T, TProperty>(this IOperationController controller, Type clazz, string propertyName, TProperty value)
+        public static void ExecuteSetProperty<T, TProperty>(this IOperationController controller, Type @class, string propertyName, TProperty value)
         {
-            var operation = clazz.GenerateSetPropertyOperation(propertyName, value)
+            var operation = @class.GenerateSetPropertyOperation(propertyName, value)
                                  .Merge(controller);
 
             controller.Execute(operation);
