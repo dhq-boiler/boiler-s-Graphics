@@ -151,6 +151,8 @@ namespace boilersGraphics.ViewModels
             .AddTo(_CompositeDisposable);
 
             SnapPower.Value = 10;
+
+            DiagramViewModel.Initialize();
         }
 
         public DiagramViewModel DiagramViewModel

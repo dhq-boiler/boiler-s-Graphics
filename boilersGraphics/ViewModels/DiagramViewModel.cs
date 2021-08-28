@@ -378,8 +378,17 @@ namespace boilersGraphics.ViewModels
 
             Width = width;
             Height = height;
+        }
+
+        public void Initialize()
+        {
+            mainWindowViewModel.Recorder.BeginRecode();
 
             InitialSetting(mainWindowViewModel, true, true);
+            
+            mainWindowViewModel.Recorder.EndRecode("InitialSetting() complete");
+            
+            mainWindowViewModel.Controller.Flush();
         }
 
         public LayerTreeViewItemBase GetLayerTreeViewItemBase(SelectableDesignerItemViewModelBase item)
