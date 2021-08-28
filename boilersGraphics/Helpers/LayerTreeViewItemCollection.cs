@@ -1,10 +1,12 @@
 ﻿using boilersGraphics.Models;
+using boilersGraphics.ViewModels;
 using Reactive.Bindings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TsOperationHistory.Extensions;
 
 namespace boilersGraphics.Helpers
 {
@@ -12,27 +14,30 @@ namespace boilersGraphics.Helpers
     {
         public static void InsertBeforeChildren(ReactiveCollection<LayerTreeViewItemBase> layers, ReactiveCollection<LayerTreeViewItemBase> children, LayerTreeViewItemBase from, LayerTreeViewItemBase to)
         {
+            var mainWindowViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel);
             var index = children.IndexOf(to);
             if (index < 0)
                 return;
 
-            children.Insert(index, from);
+            mainWindowViewModel.Recorder.Current.ExecuteInsert(children, from, index);
             Rearrangement(layers);
         }
 
         public static void InsertAfterChildren(ReactiveCollection<LayerTreeViewItemBase> layers, ReactiveCollection<LayerTreeViewItemBase> children, LayerTreeViewItemBase from, LayerTreeViewItemBase to)
         {
+            var mainWindowViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel);
             var index = children.IndexOf(to);
             if (index < 0)
                 return;
 
-            children.Insert(index + 1, from);
+            mainWindowViewModel.Recorder.Current.ExecuteInsert(children, from, index + 1);
             Rearrangement(layers);
         }
 
         public static void AddChildren(ReactiveCollection<LayerTreeViewItemBase> layers, ReactiveCollection<LayerTreeViewItemBase> children, LayerTreeViewItemBase to)
         {
-            children.Add(to);
+            var mainWindowViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel);
+            mainWindowViewModel.Recorder.Current.ExecuteAdd(children, to);
             Rearrangement(layers);
         }
 

@@ -15,6 +15,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using TsOperationHistory.Extensions;
 
 namespace boilersGraphics.Views.Behaviors
 {
@@ -160,6 +161,9 @@ namespace boilersGraphics.Views.Behaviors
             if (!(sender is ItemsControl itemsControl))
                 return;
 
+            var mainWindowViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel);
+            mainWindowViewModel.Recorder.BeginRecode();
+
             var sourceItemLayerItem = (LayerTreeViewItemBase)e.Data.GetData(typeof(LayerItem));
             var sourceItemLayer = (LayerTreeViewItemBase)e.Data.GetData(typeof(Layer));
             var sourceItem = EitherNotNull(sourceItemLayer, sourceItemLayerItem);
@@ -179,7 +183,7 @@ namespace boilersGraphics.Views.Behaviors
             {
                 children = diagramVM.Layers;
             }
-            children.Remove(sourceItem);
+            mainWindowViewModel.Recorder.Current.ExecuteRemove(children, sourceItem);
             switch (_insertType)
             {
                 case InsertType.Before:
@@ -208,6 +212,8 @@ namespace boilersGraphics.Views.Behaviors
                     sourceItem.Parent.Value = targetItem;
                     break;
             }
+
+            mainWindowViewModel.Recorder.EndRecode("MoveableTreeViewBehavior.OnDrop() complete");
 
             DropCommand?.Execute(new DropArguments
             {

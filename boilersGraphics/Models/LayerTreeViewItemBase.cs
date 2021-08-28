@@ -277,8 +277,11 @@ namespace boilersGraphics.Models
 
         public int SetZIndex(int foregroundZIndex)
         {
+            var mainWindowViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel);
             if (this is LayerItem layerItem)
-                layerItem.Item.Value.ZIndex.Value = foregroundZIndex++;
+            {
+                mainWindowViewModel.Recorder.Current.ExecuteSetProperty(layerItem.Item.Value, "ZIndex.Value", foregroundZIndex++);
+            }
 
             int zindex = foregroundZIndex;
             foreach (var child in Children)
