@@ -484,12 +484,12 @@ namespace boilersGraphics.ViewModels
         }
         private void ExecuteUndoCommand()
         {
-            (App.Current.MainWindow.DataContext as MainWindowViewModel).Controller.Undo();
+            mainWindowViewModel.Controller.Undo();
         }
 
         private bool CanExecuteUndo()
         {
-            return (App.Current.MainWindow.DataContext as MainWindowViewModel).Controller.CanUndo;
+            return mainWindowViewModel.Controller.CanUndo;
         }
 
 
