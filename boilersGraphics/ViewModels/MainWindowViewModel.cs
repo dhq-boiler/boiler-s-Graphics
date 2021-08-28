@@ -27,7 +27,7 @@ namespace boilersGraphics.ViewModels
 
             Recorder = new OperationRecorder(Controller);
 
-            DiagramViewModel = new DiagramViewModel(this.dlgService, 1000, 1000);
+            DiagramViewModel = new DiagramViewModel(this, this.dlgService, 1000, 1000);
             _CompositeDisposable.Add(DiagramViewModel);
             ToolBarViewModel = new ToolBarViewModel(dialogService);
 

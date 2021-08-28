@@ -27,6 +27,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Xml;
 using System.Xml.Linq;
+using TsOperationHistory.Extensions;
 
 namespace boilersGraphics.ViewModels
 {
@@ -181,7 +182,7 @@ namespace boilersGraphics.ViewModels
 
         #endregion //Property
 
-        public DiagramViewModel(int width, int height)
+        public DiagramViewModel(MainWindowViewModel mainWindowViewModel, int width, int height)
         {
             AddItemCommand = new DelegateCommand<object>(p => ExecuteAddItemCommand(p));
             RemoveItemCommand = new DelegateCommand<object>(p => ExecuteRemoveItemCommand(p));
@@ -371,7 +372,7 @@ namespace boilersGraphics.ViewModels
             Width = width;
             Height = height;
 
-            InitialSetting(true, true);
+            InitialSetting(mainWindowViewModel, true, true);
         }
 
         public LayerTreeViewItemBase GetLayerTreeViewItemBase(SelectableDesignerItemViewModelBase item)
@@ -435,34 +436,34 @@ namespace boilersGraphics.ViewModels
             OpenCvSharpHelper.ImShow("DebugPrint", rtb);
         }
 
-        private void InitialSetting(bool addingLayer = false, bool initCanvasBackground = false)
+        private void InitialSetting(MainWindowViewModel mainwindowViewModel, bool addingLayer = false, bool initCanvasBackground = false)
         {
-            EdgeColors.Add(Colors.Black);
-            FillColors.Add(Colors.White);
-            EdgeThickness.Value = 1.0;
-            CanvasBorderThickness = 0.0;
+            mainwindowViewModel.Recorder.Current.ExecuteAdd(EdgeColors, Colors.Black);
+            mainwindowViewModel.Recorder.Current.ExecuteAdd(FillColors, Colors.White);
+            mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "EdgeThickness.Value", 1.0);
+            mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "CanvasBorderThickness", 0.0);
             if (initCanvasBackground)
             {
-                CanvasBackground.Value = Colors.White;
+                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "CanvasBackground.Value", Colors.White);
             }
             BackgroundItem.Value = new BackgroundViewModel();
-            BackgroundItem.Value.ZIndex.Value = -1;
-            BackgroundItem.Value.FillColor.Value = CanvasBackground.Value;
-            BackgroundItem.Value.Left.Value = 0;
-            BackgroundItem.Value.Top.Value = 0;
-            BackgroundItem.Value.Width.Value = Width;
-            BackgroundItem.Value.Height.Value = Height;
-            BackgroundItem.Value.Owner = this;
-            BackgroundItem.Value.EdgeColor.Value = Colors.Black;
-            BackgroundItem.Value.EdgeThickness.Value = 1;
-            BackgroundItem.Value.EnableForSelection.Value = false;
-            BackgroundItem.Value.IsVisible.Value = true;
-            EnablePointSnap.Value = true;
-            Layer.LayerCount = 1;
-            LayerItem.LayerItemCount = 1;
+            mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.ZIndex.Value", -1);
+            mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.FillColor.Value", CanvasBackground.Value);
+            mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.Left.Value", 0d);
+            mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.Top.Value", 0d);
+            mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.Width.Value", (double)Width);
+            mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.Height.Value", (double)Height);
+            mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.Owner", this);
+            mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.EdgeColor.Value", Colors.Black);
+            mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.EdgeThickness.Value", 1d);
+            mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.EnableForSelection.Value", false);
+            mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.IsVisible.Value", true);
+            mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "EnablePointSnap.Value", true);
+            mainwindowViewModel.Recorder.Current.ExecuteSetProperty(typeof(Layer), "LayerCount", 1);
+            mainwindowViewModel.Recorder.Current.ExecuteSetProperty(typeof(LayerItem), "LayerItemCount", 1);
             RootLayer.Dispose();
             RootLayer = new ReactivePropertySlim<LayerTreeViewItemBase>(new LayerTreeViewItemBase());
-            Layers.Clear();
+            Layers.ToClearOperation().ExecuteTo(mainwindowViewModel.Recorder.Current);
             if (addingLayer)
             {
                 var layer = new Layer();
@@ -471,7 +472,7 @@ namespace boilersGraphics.ViewModels
                 layer.Name.Value = Name.GetNewLayerName();
                 Random rand = new Random();
                 layer.Color.Value = Randomizer.RandomColor(rand);
-                Layers.Add(layer);
+                mainwindowViewModel.Recorder.Current.ExecuteAdd(Layers, layer);
             }
         }
         private void ExecuteUndoCommand()
@@ -814,8 +815,8 @@ namespace boilersGraphics.ViewModels
             }
         }
 
-        public DiagramViewModel(IDialogService dlgService, int width, int height)
-            : this(width, height)
+        public DiagramViewModel(MainWindowViewModel mainWindowViewModel, IDialogService dlgService, int width, int height)
+            : this(mainWindowViewModel, width, height)
         {
             this.dlgService = dlgService;
 
@@ -1043,16 +1044,19 @@ namespace boilersGraphics.ViewModels
                 Trace.WriteLine("強制読み込みモードでファイルを読み込みます。このモードはVersion要素が見つからない時に実施されます。");
             }
 
+            var mainwindowViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel);
+            mainwindowViewModel.Recorder.BeginRecode();
+
             try
             {
                 var configuration = root.Element("Configuration");
-                Width = int.Parse(configuration.Element("Width").Value);
-                Height = int.Parse(configuration.Element("Height").Value);
-                CanvasBackground.Value = (Color)ColorConverter.ConvertFromString(configuration.Element("CanvasBackground").Value);
-                EnablePointSnap.Value = bool.Parse(configuration.Element("EnablePointSnap").Value);
-                (App.Current.MainWindow.DataContext as MainWindowViewModel).SnapPower.Value = double.Parse(configuration.Element("SnapPower").Value);
+                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "Width", int.Parse(configuration.Element("Width").Value));
+                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "Height", int.Parse(configuration.Element("Height").Value));
+                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "CanvasBackground.Value", (Color)ColorConverter.ConvertFromString(configuration.Element("CanvasBackground").Value));
+                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "EnablePointSnap.Value", bool.Parse(configuration.Element("EnablePointSnap").Value));
+                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(mainwindowViewModel, "SnapPower.Value", double.Parse(configuration.Element("SnapPower").Value));
 
-                InitialSetting(false, false);
+                InitialSetting(mainwindowViewModel, false, false);
 
                 ObjectDeserializer.ReadObjectsFromXML(this, root);
             }
@@ -1062,6 +1066,8 @@ namespace boilersGraphics.ViewModels
                 FileName.Value = "*";
                 return;
             }
+
+            (App.Current.MainWindow.DataContext as MainWindowViewModel).Recorder.EndRecode("ExecuteLoadCommand complete");
 
             var layersViewModel = App.Current.MainWindow.GetChildOfType<Views.Layers>().DataContext as LayersViewModel;
             layersViewModel.InitializeHitTestVisible();
