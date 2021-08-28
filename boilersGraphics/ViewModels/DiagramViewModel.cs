@@ -1052,11 +1052,12 @@ namespace boilersGraphics.ViewModels
                 Trace.WriteLine("強制読み込みモードでファイルを読み込みます。このモードはVersion要素が見つからない時に実施されます。");
             }
 
-            var mainwindowViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel);
-            mainwindowViewModel.Recorder.BeginRecode();
 
+            var mainwindowViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel);
             try
             {
+                mainwindowViewModel.Recorder.BeginRecode();
+
                 var configuration = root.Element("Configuration");
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "Width", int.Parse(configuration.Element("Width").Value));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "Height", int.Parse(configuration.Element("Height").Value));
@@ -1074,8 +1075,10 @@ namespace boilersGraphics.ViewModels
                 FileName.Value = "*";
                 return;
             }
-
-            (App.Current.MainWindow.DataContext as MainWindowViewModel).Recorder.EndRecode("ExecuteLoadCommand complete");
+            finally
+            {
+                mainwindowViewModel.Recorder.EndRecode("ExecuteLoadCommand complete");
+            }
 
             var layersViewModel = App.Current.MainWindow.GetChildOfType<Views.Layers>().DataContext as LayersViewModel;
             layersViewModel.InitializeHitTestVisible();
