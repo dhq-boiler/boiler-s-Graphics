@@ -1859,6 +1859,8 @@ namespace boilersGraphics.ViewModels
 
         private void ExecuteUniformWidthCommand()
         {
+            mainWindowViewModel.Recorder.BeginRecode();
+
             var selectedItems = SelectedItems.Value.OfType<DesignerItemViewModelBase>();
             if (selectedItems.Count() > 1)
             {
@@ -1868,13 +1870,17 @@ namespace boilersGraphics.ViewModels
                 foreach (var item in selectedItems)
                 {
                     double delta = width - item.Width.Value;
-                    item.Width.Value += delta;
+                    mainWindowViewModel.Recorder.Current.ExecuteSetProperty(item, "Width.Value", item.Width.Value + delta);
                 }
             }
+
+            mainWindowViewModel.Recorder.EndRecode("ExecuteUniformWidthCommand() complete");
         }
 
         private void ExecuteUniformHeightCommand()
         {
+            mainWindowViewModel.Recorder.BeginRecode();
+
             var selectedItems = SelectedItems.Value.OfType<DesignerItemViewModelBase>();
             if (selectedItems.Count() > 1)
             {
@@ -1884,9 +1890,11 @@ namespace boilersGraphics.ViewModels
                 foreach (var item in selectedItems)
                 {
                     double delta = height - item.Height.Value;
-                    item.Height.Value += delta;
+                    mainWindowViewModel.Recorder.Current.ExecuteSetProperty(item, "Height.Value", item.Height.Value + delta);
                 }
             }
+
+            mainWindowViewModel.Recorder.EndRecode("ExecuteUniformHeightCommand() complete");
         }
 
         private bool CanExecuteUniform()
