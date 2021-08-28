@@ -22,7 +22,6 @@ namespace boilersGraphics.Models
     public class LayerItem : LayerTreeViewItemBase, IDisposable, IComparable<LayerTreeViewItemBase>, IComparable
     {
         private bool disposedValue;
-        public static int LayerItemCount { get; set; } = 1;
         public ReactivePropertySlim<ImageSource> Appearance { get; } = new ReactivePropertySlim<ImageSource>();
         public ReactiveCommand SwitchVisibilityCommand { get; } = new ReactiveCommand();
         public ReactivePropertySlim<SelectableDesignerItemViewModelBase> Item { get; } = new ReactivePropertySlim<SelectableDesignerItemViewModelBase>();

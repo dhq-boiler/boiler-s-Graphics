@@ -20,9 +20,7 @@ using System.Windows.Threading;
 namespace boilersGraphics.Models
 {
     public class Layer : LayerTreeViewItemBase, IObservable<LayerObservable>, IComparable<LayerTreeViewItemBase>, IComparable
-    {
-        public static int LayerCount { get; set; } = 1;
-       
+    {       
         public ReactivePropertySlim<ImageSource> Appearance { get; } = new ReactivePropertySlim<ImageSource>();
 
         public ReactiveCommand SwitchVisibilityCommand { get; } = new ReactiveCommand();

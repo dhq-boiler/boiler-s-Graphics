@@ -33,6 +33,7 @@ namespace boilersGraphics.ViewModels
 {
     public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     {
+        private MainWindowViewModel mainWindowViewModel;
         private IDialogService dlgService;
         private Point _CurrentPoint;
         private ObservableCollection<Color> _EdgeColors = new ObservableCollection<Color>();
@@ -156,6 +157,10 @@ namespace boilersGraphics.ViewModels
         public double ScaleY { get; set; } = 1.0;
         public System.Version BGSXFileVersion { get; } = new System.Version(2, 1);
 
+        public int LayerCount { get; set; } = 1;
+
+        public int LayerItemCount { get; set; } = 1;
+
         public IEnumerable<Point> SnapPoints
         {
             get
@@ -184,6 +189,8 @@ namespace boilersGraphics.ViewModels
 
         public DiagramViewModel(MainWindowViewModel mainWindowViewModel, int width, int height)
         {
+            this.mainWindowViewModel = mainWindowViewModel;
+
             AddItemCommand = new DelegateCommand<object>(p => ExecuteAddItemCommand(p));
             RemoveItemCommand = new DelegateCommand<object>(p => ExecuteRemoveItemCommand(p));
             ClearSelectedItemsCommand = new DelegateCommand<object>(p => ExecuteClearSelectedItemsCommand(p));
@@ -459,8 +466,8 @@ namespace boilersGraphics.ViewModels
             mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.EnableForSelection.Value", false);
             mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.IsVisible.Value", true);
             mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "EnablePointSnap.Value", true);
-            mainwindowViewModel.Recorder.Current.ExecuteSetProperty(typeof(Layer), "LayerCount", 1);
-            mainwindowViewModel.Recorder.Current.ExecuteSetProperty(typeof(LayerItem), "LayerItemCount", 1);
+            mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "LayerCount", 1);
+            mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "LayerItemCount", 1);
             RootLayer.Dispose();
             RootLayer = new ReactivePropertySlim<LayerTreeViewItemBase>(new LayerTreeViewItemBase());
             Layers.ToClearOperation().ExecuteTo(mainwindowViewModel.Recorder.Current);
@@ -469,7 +476,7 @@ namespace boilersGraphics.ViewModels
                 var layer = new Layer();
                 layer.IsVisible.Value = true;
                 layer.IsSelected.Value = true;
-                layer.Name.Value = Name.GetNewLayerName();
+                layer.Name.Value = Name.GetNewLayerName(this);
                 Random rand = new Random();
                 layer.Color.Value = Randomizer.RandomColor(rand);
                 mainwindowViewModel.Recorder.Current.ExecuteAdd(Layers, layer);
@@ -845,7 +852,7 @@ namespace boilersGraphics.ViewModels
                       .ForEach(x => x.PushZIndex(newZIndex));
                 item.ZIndex.Value = newZIndex;
                 item.Owner = this;
-                SelectedLayers.Value.First().AddItem(item);
+                SelectedLayers.Value.First().AddItem(mainWindowViewModel, this, item);
             }
         }
 
@@ -929,7 +936,7 @@ namespace boilersGraphics.ViewModels
 
         private void Add(SelectableDesignerItemViewModelBase item)
         {
-            SelectedLayers.Value.First().AddItem(item);
+            SelectedLayers.Value.First().AddItem(mainWindowViewModel, this, item);
         }
 
         private void Remove(SelectableDesignerItemViewModelBase item)

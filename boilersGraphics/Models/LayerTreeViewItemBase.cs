@@ -99,14 +99,14 @@ namespace boilersGraphics.Models
                         .Merge(Children.CollectionChangedAsObservable().Where(x => x.Action == NotifyCollectionChangedAction.Remove || x.Action == NotifyCollectionChangedAction.Reset).ToUnit());
         }
 
-        public void AddItem(SelectableDesignerItemViewModelBase item)
+        public void AddItem(MainWindowViewModel mainWindowViewModel, DiagramViewModel diagramViewModel, SelectableDesignerItemViewModelBase item)
         {
-            var layerItem = new LayerItem(item, this, boilersGraphics.Helpers.Name.GetNewLayerItemName());
+            var layerItem = new LayerItem(item, this, boilersGraphics.Helpers.Name.GetNewLayerItemName(diagramViewModel));
             layerItem.IsVisible.Value = true;
             layerItem.Parent.Value = this;
             Random rand = new Random();
             layerItem.Color.Value = Randomizer.RandomColor(rand);
-            (App.Current.MainWindow.DataContext as MainWindowViewModel).Controller.ExecuteAdd(Children, layerItem);
+            mainWindowViewModel.Controller.ExecuteAdd(Children, layerItem);
         }
 
         public void RemoveItem(SelectableDesignerItemViewModelBase item)

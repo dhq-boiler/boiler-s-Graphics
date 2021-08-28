@@ -48,7 +48,7 @@ namespace boilersGraphics.ViewModels
             {
                 var layer = new Layer();
                 layer.IsVisible.Value = true;
-                layer.Name.Value = Name.GetNewLayerName();
+                layer.Name.Value = Name.GetNewLayerName(mainWindowVM.DiagramViewModel);
                 Random rand = new Random();
                 layer.Color.Value = Randomizer.RandomColor(rand);
                 (App.Current.MainWindow.DataContext as MainWindowViewModel).Controller.ExecuteAdd((App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.Layers, layer);
