@@ -1636,6 +1636,8 @@ namespace boilersGraphics.ViewModels
         {
             if (SelectedItems.Value.Count() > 1)
             {
+                mainWindowViewModel.Recorder.BeginRecode();
+
                 var first = SelectedItems.Value.First();
                 double top = GetTop(first);
 
@@ -1644,6 +1646,8 @@ namespace boilersGraphics.ViewModels
                     double delta = top - GetTop(item);
                     SetTop(item, GetTop(item) + delta);
                 }
+
+                mainWindowViewModel.Recorder.EndRecode("ExecuteAlignTopCommand() complete");
             }
         }
 
@@ -1651,6 +1655,8 @@ namespace boilersGraphics.ViewModels
         {
             if (SelectedItems.Value.Count() > 1)
             {
+                mainWindowViewModel.Recorder.BeginRecode();
+
                 var first = SelectedItems.Value.First();
                 double bottom = GetTop(first) + GetHeight(first) / 2;
 
@@ -1659,6 +1665,8 @@ namespace boilersGraphics.ViewModels
                     double delta = bottom - (GetTop(item) + GetHeight(item) / 2);
                     SetTop(item, GetTop(item) + delta);
                 }
+
+                mainWindowViewModel.Recorder.EndRecode("ExecuteAlignVerticalCenterCommand() complete");
             }
         }
 
@@ -1666,6 +1674,8 @@ namespace boilersGraphics.ViewModels
         {
             if (SelectedItems.Value.Count() > 1)
             {
+                mainWindowViewModel.Recorder.BeginRecode();
+
                 var first = SelectedItems.Value.First();
                 double bottom = GetTop(first) + GetHeight(first);
 
@@ -1674,6 +1684,8 @@ namespace boilersGraphics.ViewModels
                     double delta = bottom - (GetTop(item) + GetHeight(item));
                     SetTop(item, GetTop(item) + delta);
                 }
+
+                mainWindowViewModel.Recorder.EndRecode("ExecuteAlignBottomCommand() complete");
             }
         }
 
@@ -1681,6 +1693,8 @@ namespace boilersGraphics.ViewModels
         {
             if (SelectedItems.Value.Count() > 1)
             {
+                mainWindowViewModel.Recorder.BeginRecode();
+
                 var first = SelectedItems.Value.First();
                 double left = GetLeft(first);
 
@@ -1689,6 +1703,8 @@ namespace boilersGraphics.ViewModels
                     double delta = left - GetLeft(item);
                     SetLeft(item, GetLeft(item) + delta);
                 }
+
+                mainWindowViewModel.Recorder.EndRecode("ExecuteAlignLeftCommand() complete");
             }
         }
 
@@ -1696,6 +1712,8 @@ namespace boilersGraphics.ViewModels
         {
             if (SelectedItems.Value.Count() > 1)
             {
+                mainWindowViewModel.Recorder.BeginRecode();
+
                 var first = SelectedItems.Value.First();
                 double center = GetLeft(first) + GetWidth(first) / 2;
 
@@ -1704,6 +1722,8 @@ namespace boilersGraphics.ViewModels
                     double delta = center - (GetLeft(item) + GetWidth(item) / 2);
                     SetLeft(item, GetLeft(item) + delta);
                 }
+
+                mainWindowViewModel.Recorder.EndRecode("ExecuteAlignHorizontalCenterCommand() complete");
             }
         }
 
@@ -1711,6 +1731,8 @@ namespace boilersGraphics.ViewModels
         {
             if (SelectedItems.Value.Count() > 1)
             {
+                mainWindowViewModel.Recorder.BeginRecode();
+
                 var first = SelectedItems.Value.First();
                 double right = GetLeft(first) + GetWidth(first);
 
@@ -1719,6 +1741,8 @@ namespace boilersGraphics.ViewModels
                     double delta = right - (GetLeft(item) + GetWidth(item));
                     SetLeft(item, GetLeft(item) + delta);
                 }
+
+                mainWindowViewModel.Recorder.EndRecode("ExecuteAlignRightCommand() complete");
             }
         }
 
@@ -1731,6 +1755,8 @@ namespace boilersGraphics.ViewModels
 
             if (selectedItems.Count() > 1)
             {
+                mainWindowViewModel.Recorder.BeginRecode();
+
                 double left = double.MaxValue;
                 double right = double.MinValue;
                 double sumWidth = 0;
@@ -1751,6 +1777,8 @@ namespace boilersGraphics.ViewModels
                     SetLeft(item, GetLeft(item) + delta);
                     offset = offset + GetWidth(item) + distance;
                 }
+
+                mainWindowViewModel.Recorder.EndRecode("ExecuteDistributeHorizontalCommand() complete");
             }
         }
 
@@ -1763,6 +1791,8 @@ namespace boilersGraphics.ViewModels
 
             if (selectedItems.Count() > 1)
             {
+                mainWindowViewModel.Recorder.BeginRecode();
+
                 double top = double.MaxValue;
                 double bottom = double.MinValue;
                 double sumHeight = 0;
@@ -1783,6 +1813,8 @@ namespace boilersGraphics.ViewModels
                     SetTop(item, GetTop(item) + delta);
                     offset = offset + GetHeight(item) + distance;
                 }
+
+                mainWindowViewModel.Recorder.EndRecode("ExecuteDistributeVerticalCommand() complete");
             }
         }
 
@@ -1807,7 +1839,7 @@ namespace boilersGraphics.ViewModels
         {
             if (item is DesignerItemViewModelBase di)
             {
-                di.Left.Value = value;
+                mainWindowViewModel.Recorder.Current.ExecuteSetProperty(di, "Left.Value", value);
             }
             else if (item is ConnectorBaseViewModel connector)
             {
@@ -1833,7 +1865,7 @@ namespace boilersGraphics.ViewModels
         {
             if (item is DesignerItemViewModelBase di)
             {
-                di.Top.Value = value;
+                mainWindowViewModel.Recorder.Current.ExecuteSetProperty(di, "Top.Value", value);
             }
             else if (item is ConnectorBaseViewModel connector)
             {
