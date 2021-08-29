@@ -81,7 +81,7 @@ namespace boilersGraphics.ViewModels
 
         public Guid ParentID { get; set; }
 
-        public IDisposable GroupDisposable { get; internal set; }
+        public IDisposable GroupDisposable { get; set; }
 
         private void ExecuteSelectItemCommand(object param)
         {

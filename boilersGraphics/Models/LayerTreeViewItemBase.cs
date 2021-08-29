@@ -110,12 +110,12 @@ namespace boilersGraphics.Models
             mainWindowViewModel.Controller.ExecuteAdd(Children, layerItem);
         }
 
-        public void RemoveItem(SelectableDesignerItemViewModelBase item)
+        public void RemoveItem(MainWindowViewModel mainWindowViewModel, SelectableDesignerItemViewModelBase item)
         {
             var layerItems = Children.Where(x => (x as LayerItem).Item.Value == item);
             layerItems.ToList().ForEach(x =>
             {
-                (App.Current.MainWindow.DataContext as MainWindowViewModel).Controller.ExecuteRemove(Children, x);
+                mainWindowViewModel.Controller.ExecuteRemove(Children, x);
                 Trace.WriteLine($"{x} removed from {Children}");
             });
         }

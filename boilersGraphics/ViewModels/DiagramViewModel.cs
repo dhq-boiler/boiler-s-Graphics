@@ -753,7 +753,7 @@ namespace boilersGraphics.ViewModels
                 {
                     foreach (var selectedItem in SelectedItems.Value)
                     {
-                        x.RemoveItem(selectedItem);
+                        x.RemoveItem(MainWindowVM, selectedItem);
                         selectedItem.Dispose();
                     }
                 });
@@ -950,7 +950,7 @@ namespace boilersGraphics.ViewModels
 
         private void Remove(SelectableDesignerItemViewModelBase item)
         {
-            Layers.ToList().ForEach(x => x.RemoveItem(item));
+            Layers.ToList().ForEach(x => x.RemoveItem(MainWindowVM, item));
         }
 
         #region Save
@@ -1123,9 +1123,7 @@ namespace boilersGraphics.ViewModels
 
         private void ExecuteGroupItemsCommand()
         {
-            var items = (from item in SelectedItems.Value
-                        where item.ParentID == Guid.Empty
-                        select item).ToList();
+            var items = SelectedItems.Value.Where(x => Guid.Equals(x.ParentID, Guid.Empty)).ToList();
 
             var rect = GetBoundingRectangle(items);
 
@@ -1134,7 +1132,7 @@ namespace boilersGraphics.ViewModels
             groupItem.Height.Value = rect.Height;
             groupItem.Left.Value = rect.Left;
             groupItem.Top.Value = rect.Top;
-            groupItem.IsHitTestVisible.Value = (App.Current.MainWindow.DataContext as MainWindowViewModel).ToolBarViewModel.CurrentHitTestVisibleState.Value;
+            groupItem.IsHitTestVisible.Value = MainWindowVM.ToolBarViewModel.CurrentHitTestVisibleState.Value;
 
             AddItemCommand.Execute(groupItem);
 
@@ -1162,7 +1160,9 @@ namespace boilersGraphics.ViewModels
                                       select it).Take(1).SingleOrDefault();
 
             var sortList = (from it in Layers.SelectMany(x => x.Children)
-                            where (it as LayerItem).Item.Value.ZIndex.Value < (theMostForwardItem as LayerItem).Item.Value.ZIndex.Value && (it as LayerItem).Item.Value.ID != groupItem.ID
+                            let li = it as LayerItem
+                            let tmfi = theMostForwardItem as LayerItem
+                            where li.Item.Value.ZIndex.Value < tmfi.Item.Value.ZIndex.Value && li.Item.Value.ID != groupItem.ID
                             orderby (it as LayerItem).Item.Value.ZIndex.Value descending
                             select it).ToList();
 

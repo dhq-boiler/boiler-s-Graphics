@@ -1,80 +1,72 @@
-﻿using boilersGraphics.ViewModels;
+﻿using boilersGraphics.Models;
+using boilersGraphics.ViewModels;
 using NUnit.Framework;
 using System.Linq;
+using System.Reactive.Linq;
 
 namespace boilersGraphics.Test
 {
     [TestFixture]
     public class GroupingTest
     {
-        //[Test]
-        //public void Group_Duplicate_Ungroup_Group()
-        //{
-        //    var viewModel = new DiagramViewModel();
-        //    var r0 = new NRectangleViewModel();
-        //    var r1 = new NRectangleViewModel();
-        //    var r2 = new NRectangleViewModel();
+        [Test]
+        public void Group_Move()
+        {
+            boilersGraphics.App.IsTest = true;
+            var mainWindowViewModel = new MainWindowViewModel(null);
+            var diagramVM = new DiagramViewModel(mainWindowViewModel, 1000, 1000);
+            diagramVM.Layers.Clear();
+            var layer1 = new Layer();
+            layer1.Name.Value = "レイヤー1";
+            diagramVM.Layers.Add(layer1);
+            layer1.IsSelected.Value = true; //レイヤー1を選択状態にする
 
-        //    r0.ZIndex.Value = 0;
-        //    r1.ZIndex.Value = 1;
-        //    r2.ZIndex.Value = 2;
+            var item1 = new NRectangleViewModel();
+            item1.Left.Value = 10;
+            item1.Top.Value = 10;
+            item1.Width.Value = 10;
+            item1.Height.Value = 10;
+            diagramVM.AddItemCommand.Execute(item1);
 
-        //    viewModel.Items.Add(r0);
-        //    viewModel.Items.Add(r1);
-        //    viewModel.Items.Add(r2);
+            var item2 = new NRectangleViewModel();
+            item2.Left.Value = 20;
+            item2.Top.Value = 20;
+            item2.Width.Value = 10;
+            item2.Height.Value = 10;
+            diagramVM.AddItemCommand.Execute(item2);
 
-        //    r0.IsSelected = true;
-        //    r1.IsSelected = true;
-        //    r2.IsSelected = true;
+            var item3 = new NRectangleViewModel();
+            item3.Left.Value = 30;
+            item3.Top.Value = 30;
+            item3.Width.Value = 10;
+            item3.Height.Value = 10;
+            diagramVM.AddItemCommand.Execute(item3);
 
-        //    viewModel.GroupCommand.Execute();
+            diagramVM.Layers[0].Children[0].IsSelected.Value = true;
+            diagramVM.Layers[0].Children[1].IsSelected.Value = true;
+            diagramVM.Layers[0].Children[2].IsSelected.Value = true;
 
-        //    var group = viewModel.Items.Last();
-        //    Assert.That(group, Is.TypeOf<GroupItemViewModel>());
-        //    Assert.That(group.ZIndex.Value, Is.EqualTo(3));
+            diagramVM.GroupCommand.Execute();
 
-        //    group.IsSelected = true;
+            var group = diagramVM.AllItems.Value.First(x => x is GroupItemViewModel) as GroupItemViewModel;
+            Assert.That(group, Is.TypeOf<GroupItemViewModel>());
 
-        //    viewModel.DuplicateCommand.Execute();
+            group.IsSelected.Value = true;
+            group.Left.Value += 10;
+            group.Top.Value += 10;
 
-        //    var secondGroup = viewModel.Items.Last();
-        //    Assert.That(secondGroup, Is.TypeOf<GroupItemViewModel>());
-        //    Assert.That(secondGroup.ZIndex.Value, Is.EqualTo(7));
+            diagramVM.Layers[0].Children[0].IsSelected.Value = true;
 
-        //    var secondGroupMembers = (from item in viewModel.Items
-        //                              where item.ParentID == secondGroup.ID
-        //                              select item).ToList();
-        //    Assert.That(secondGroupMembers, Has.Count.EqualTo(3));
-        //    Assert.That(secondGroupMembers.ElementAt(0).ZIndex.Value, Is.EqualTo(4));
-        //    Assert.That(secondGroupMembers.ElementAt(1).ZIndex.Value, Is.EqualTo(5));
-        //    Assert.That(secondGroupMembers.ElementAt(2).ZIndex.Value, Is.EqualTo(6));
+            diagramVM.UngroupCommand.Execute();
 
-        //    group.IsSelected = false;
-        //    secondGroup.IsSelected = true;
+            Assert.That(item1.Left.Value, Is.EqualTo(20));
+            Assert.That(item1.Top.Value, Is.EqualTo(20));
 
-        //    viewModel.UngroupCommand.Execute();
+            Assert.That(item2.Left.Value, Is.EqualTo(30));
+            Assert.That(item2.Top.Value, Is.EqualTo(30));
 
-        //    Assert.That(viewModel.Items, Has.Count.EqualTo(7));
-        //    Assert.That(viewModel.Items.ElementAt(4).ZIndex.Value, Is.EqualTo(4));
-        //    Assert.That(viewModel.Items.ElementAt(5).ZIndex.Value, Is.EqualTo(5));
-        //    Assert.That(viewModel.Items.ElementAt(6).ZIndex.Value, Is.EqualTo(6));
-
-        //    secondGroupMembers.ForEach(x => x.IsSelected = true);
-
-        //    viewModel.GroupCommand.Execute();
-
-        //    secondGroup = viewModel.Items.Last();
-        //    Assert.That(secondGroup, Is.TypeOf<GroupItemViewModel>());
-
-        //    Assert.That(r0.ZIndex.Value, Is.EqualTo(0));
-        //    Assert.That(r1.ZIndex.Value, Is.EqualTo(1));
-        //    Assert.That(r2.ZIndex.Value, Is.EqualTo(2));
-        //    Assert.That(group.ZIndex.Value, Is.EqualTo(3));
-
-        //    Assert.That(secondGroupMembers.ElementAt(0).ZIndex.Value, Is.EqualTo(4));
-        //    Assert.That(secondGroupMembers.ElementAt(1).ZIndex.Value, Is.EqualTo(5));
-        //    Assert.That(secondGroupMembers.ElementAt(2).ZIndex.Value, Is.EqualTo(6));
-        //    Assert.That(secondGroup.ZIndex.Value, Is.EqualTo(7));
-        //}
+            Assert.That(item3.Left.Value, Is.EqualTo(40));
+            Assert.That(item3.Top.Value, Is.EqualTo(40));
+        }
     }
 }
