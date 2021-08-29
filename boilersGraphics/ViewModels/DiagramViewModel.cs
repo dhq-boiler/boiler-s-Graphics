@@ -82,6 +82,7 @@ namespace boilersGraphics.ViewModels
         public DelegateCommand ExcludeCommand { get; private set; }
         public DelegateCommand ClipCommand { get; private set; }
         public DelegateCommand UndoCommand { get; private set; }
+        public DelegateCommand RedoCommand { get; private set; }
         public DelegateCommand<MouseWheelEventArgs> MouseWheelCommand { get; private set; }
         public DelegateCommand<MouseEventArgs> PreviewMouseDownCommand { get; private set; }
         public DelegateCommand<MouseEventArgs> PreviewMouseUpCommand { get; private set; }
@@ -226,6 +227,7 @@ namespace boilersGraphics.ViewModels
             ExcludeCommand = new DelegateCommand(() => ExecuteExcludeCommand(), () => CanExecuteExclude());
             ClipCommand = new DelegateCommand(() => ExecuteClipCommand(), () => CanExecuteClip());
             UndoCommand = new DelegateCommand(() => ExecuteUndoCommand(), () => CanExecuteUndo());
+            RedoCommand = new DelegateCommand(() => ExecuteRedoCommand(), () => CanExecuteRedo());
             MouseWheelCommand = new DelegateCommand<MouseWheelEventArgs>(args =>
             {
                 var diagramControl = App.Current.MainWindow.GetChildOfType<DiagramControl>();
@@ -490,10 +492,23 @@ namespace boilersGraphics.ViewModels
                 mainwindowViewModel.Recorder.Current.ExecuteAdd(Layers, layer);
             }
         }
+
+        private void ExecuteRedoCommand()
+        {
+            MainWindowVM.Controller.Redo();
+            RedoCommand.RaiseCanExecuteChanged();
+        }
+
+        private bool CanExecuteRedo()
+        {
+            return MainWindowVM.Controller.CanRedo;
+        }
+
         private void ExecuteUndoCommand()
         {
             MainWindowVM.Controller.Undo();
             UndoCommand.RaiseCanExecuteChanged();
+            RedoCommand.RaiseCanExecuteChanged();
         }
 
         private bool CanExecuteUndo()
