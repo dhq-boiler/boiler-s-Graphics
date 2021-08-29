@@ -33,12 +33,10 @@ namespace boilersGraphics.AttachedProperties
             if ((bool)e.NewValue)
             {
                 fe.PreviewMouseLeftButtonDown += Fe_PreviewMouseLeftButtonDown;
-                fe.PreviewMouseLeftButtonUp += Fe_PreviewMouseLeftButtonUp;
             }
             else
             {
                 fe.PreviewMouseLeftButtonDown -= Fe_PreviewMouseLeftButtonDown;
-                fe.PreviewMouseLeftButtonUp -= Fe_PreviewMouseLeftButtonUp;
             }
         }
 
@@ -46,14 +44,6 @@ namespace boilersGraphics.AttachedProperties
 
         private static void Fe_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            (((FrameworkElement)sender).DataContext as SelectableDesignerItemViewModelBase).IsDragging.Value = false;
-        }
-
-        private static void Fe_PreviewMouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            if ((((FrameworkElement)sender).DataContext as SelectableDesignerItemViewModelBase).IsDragging.Value)
-                return;
-
             SelectableDesignerItemViewModelBase selectableDesignerItemViewModelBase =
                 (SelectableDesignerItemViewModelBase)((FrameworkElement)sender).DataContext;
 
