@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Windows.Media;
+using TsOperationHistory;
 
 namespace boilersGraphics.ViewModels
 {
@@ -17,7 +18,7 @@ namespace boilersGraphics.ViewModels
     }
 
 
-    public abstract class SelectableDesignerItemViewModelBase : BindableBase, ISelectItems, IObserver<GroupTransformNotification>, IDisposable, ICloneable
+    public abstract class SelectableDesignerItemViewModelBase : BindableBase, ISelectItems, IObserver<GroupTransformNotification>, IDisposable, ICloneable, IRestore
     {
         protected CompositeDisposable _CompositeDisposable = new CompositeDisposable();
 
@@ -148,5 +149,10 @@ namespace boilersGraphics.ViewModels
         public abstract object Clone();
 
         #endregion //IClonable
+
+        public void Restore(Action restorePropertiesAction)
+        {
+            restorePropertiesAction.Invoke();
+        }
     }
 }

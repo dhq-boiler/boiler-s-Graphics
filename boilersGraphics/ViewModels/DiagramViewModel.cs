@@ -1242,18 +1242,22 @@ namespace boilersGraphics.ViewModels
                 foreach (var child in children)
                 {
                     var layerItem = child as LayerItem;
-                    layerItem.Item.Value.GroupDisposable.Dispose();
-                    layerItem.Item.Value.ParentID = Guid.Empty;
-                    layerItem.Item.Value.EnableForSelection.Value = true;
-                    layerItem.Parent.Value = Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
-                                                   .Where(x => x is LayerItem)
-                                                   .First(x => (x as LayerItem).Item == (child as LayerItem).Item)
-                                                   .Parent.Value
-                                                   .Parent.Value;
+                    MainWindowVM.Recorder.Current.ExecuteDispose(layerItem.Item.Value.GroupDisposable, () => layerItem.Item.Value.GroupDisposable = layerItem.Parent.Value.Subscribe());
+                    MainWindowVM.Recorder.Current.ExecuteSetProperty(layerItem.Item.Value, "ParentID", Guid.Empty);
+                    MainWindowVM.Recorder.Current.ExecuteSetProperty(layerItem.Item.Value, "EnableForSelection.Value", true);
+                    MainWindowVM.Recorder.Current.ExecuteSetProperty(layerItem, "Parent.Value", Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                                                                                                      .Where(x => x is LayerItem)
+                                                                                                      .First(x => (x as LayerItem).Item == (child as LayerItem).Item)
+                                                                                                      .Parent.Value
+                                                                                                      .Parent.Value);
                     layerItem.Parent.Value.AddChildren(MainWindowVM.Recorder, layerItem);
                 }
 
-                groupRoot.Dispose();
+                MainWindowVM.Recorder.Current.ExecuteDispose(groupRoot, () =>
+                {
+                    var array = SelectedItems.Value.Where(x => x.ParentID == Guid.Empty).Where(x => x == groupRoot).ToList();
+                    array[0] = (GroupItemViewModel)groupRoot.Clone();
+                });
 
                 Remove(groupRoot);
 
@@ -1265,7 +1269,7 @@ namespace boilersGraphics.ViewModels
 
                 foreach (var x in it)
                 {
-                    (x as LayerItem).Item.Value.ZIndex.Value -= 1;
+                    MainWindowVM.Recorder.Current.ExecuteSetProperty((x as LayerItem).Item.Value, "ZIndex.Value", (x as LayerItem).Item.Value.ZIndex.Value - 1);
                 }
             }
         }
