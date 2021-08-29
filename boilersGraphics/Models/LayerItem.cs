@@ -111,6 +111,8 @@ namespace boilersGraphics.Models
 
         public void UpdateAppearance(IEnumerable<SelectableDesignerItemViewModelBase> items)
         {
+            if (items.Count() == 0) return;
+
             var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
             double minX, maxX, minY, maxY;
             var width = Measure.GetWidth(items, out minX, out maxX);

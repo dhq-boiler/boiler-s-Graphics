@@ -46,6 +46,10 @@ namespace boilersGraphics.Test
             diagramVM.Layers[0].Children[1].IsSelected.Value = true;
             diagramVM.Layers[0].Children[2].IsSelected.Value = true;
 
+            Assert.That(item1.ZIndex.Value, Is.EqualTo(0));
+            Assert.That(item2.ZIndex.Value, Is.EqualTo(1));
+            Assert.That(item3.ZIndex.Value, Is.EqualTo(2));
+
             diagramVM.GroupCommand.Execute();
 
             var group = diagramVM.AllItems.Value.First(x => x is GroupItemViewModel) as GroupItemViewModel;
@@ -55,9 +59,18 @@ namespace boilersGraphics.Test
             group.Left.Value += 10;
             group.Top.Value += 10;
 
+            Assert.That(item1.ZIndex.Value, Is.EqualTo(0));
+            Assert.That(item2.ZIndex.Value, Is.EqualTo(1));
+            Assert.That(item3.ZIndex.Value, Is.EqualTo(2));
+            Assert.That(group.ZIndex.Value, Is.EqualTo(3));
+
             diagramVM.Layers[0].Children[0].IsSelected.Value = true;
 
             diagramVM.UngroupCommand.Execute();
+
+            Assert.That(item1.ZIndex.Value, Is.EqualTo(0));
+            Assert.That(item2.ZIndex.Value, Is.EqualTo(1));
+            Assert.That(item3.ZIndex.Value, Is.EqualTo(2));
 
             Assert.That(item1.Left.Value, Is.EqualTo(20));
             Assert.That(item1.Top.Value, Is.EqualTo(20));

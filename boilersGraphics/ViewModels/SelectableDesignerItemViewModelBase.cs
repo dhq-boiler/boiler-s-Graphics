@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Disposables;
+using System.Threading;
 using System.Windows.Media;
 using TsOperationHistory;
 
@@ -152,6 +153,38 @@ namespace boilersGraphics.ViewModels
         public void Restore(Action restorePropertiesAction)
         {
             restorePropertiesAction.Invoke();
+        }
+
+        public void Swap(SelectableDesignerItemViewModelBase other)
+        {
+            if (GetType() != other.GetType())
+                throw new InvalidOperationException("GetType() != other.GetType()");
+            SwapInternal_SwapProperties(this, other);
+            SwapInternal_SwapFields(this, other);
+        }
+
+        private static void SwapInternal_SwapFields<T>(T left, T right)
+        {
+            var fieldInfos = typeof(T).GetFields(System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Public);
+
+            foreach (var fieldInfo in fieldInfos)
+            {
+                var temp = fieldInfo.GetValue(left);
+                fieldInfo.SetValue(left, fieldInfo.GetValue(right));
+                fieldInfo.SetValue(right, temp);
+            }
+        }
+
+        private static void SwapInternal_SwapProperties<T>(T left, T right)
+        {
+            var propertyInfos = typeof(T).GetProperties(System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Public);
+
+            foreach (var propertyInfo in propertyInfos)
+            {
+                var temp = propertyInfo.GetValue(left);
+                propertyInfo.SetValue(left, propertyInfo.GetValue(right));
+                propertyInfo.SetValue(right, temp);
+            }
         }
     }
 }

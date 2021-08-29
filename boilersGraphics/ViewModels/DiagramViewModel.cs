@@ -1123,6 +1123,8 @@ namespace boilersGraphics.ViewModels
 
         private void ExecuteGroupItemsCommand()
         {
+            MainWindowVM.Recorder.BeginRecode();
+
             var items = SelectedItems.Value.Where(x => Guid.Equals(x.ParentID, Guid.Empty)).ToList();
 
             var rect = GetBoundingRectangle(items);
@@ -1151,55 +1153,6 @@ namespace boilersGraphics.ViewModels
                 MainWindowVM.Recorder.Current.ExecuteSetProperty(item, "EnableForSelection.Value", false);
             }
 
-            var groupItems = from it in Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
-                             where it is LayerItem && (it as LayerItem).Item.Value.ParentID == groupItem.ID
-                             select it;
-
-            var theMostForwardItem = (from it in groupItems
-                                      orderby (it as LayerItem).Item.Value.ZIndex.Value descending
-                                      select it).Take(1).SingleOrDefault();
-
-            var sortList = (from it in Layers.SelectMany(x => x.Children)
-                            let li = it as LayerItem
-                            let tmfi = theMostForwardItem as LayerItem
-                            where li.Item.Value.ZIndex.Value < tmfi.Item.Value.ZIndex.Value && li.Item.Value.ID != groupItem.ID
-                            orderby (it as LayerItem).Item.Value.ZIndex.Value descending
-                            select it).ToList();
-
-            var swapItems = (from it in groupItems
-                             orderby (it as LayerItem).Item.Value.ZIndex.Value descending
-                             select it).Skip(1);
-
-            for (int i = 0; i < swapItems.Count(); ++i)
-            {
-                var it = swapItems.ElementAt(i);
-                MainWindowVM.Recorder.Current.ExecuteSetProperty((it as LayerItem).Item.Value, "ZIndex.Value", (theMostForwardItem as LayerItem).Item.Value.ZIndex.Value - i - 1);
-            }
-
-            var swapItemsCount = swapItems.Count();
-
-            for (int i = 0, j = 0; i < sortList.Count(); ++i)
-            {
-                var it = sortList.ElementAt(i);
-                if ((it as LayerItem).Item.Value.ParentID == groupItem.ID)
-                {
-                    j++;
-                    continue;
-                }
-                MainWindowVM.Recorder.Current.ExecuteSetProperty((it as LayerItem).Item.Value, "ZIndex.Value", (theMostForwardItem as LayerItem).Item.Value.ZIndex.Value - swapItemsCount - (i - j) - 1);
-            }
-
-            MainWindowVM.Recorder.Current.ExecuteSetProperty(groupItem, "ZIndex.Value", (theMostForwardItem as LayerItem).Item.Value.ZIndex.Value + 1);
-
-            var adds = from item in Layers.SelectMany(x => x.Children)
-                       where (item as LayerItem).Item.Value.ID != groupItem.ID && (item as LayerItem).Item.Value.ZIndex.Value >= groupItem.ZIndex.Value
-                       select item;
-
-            foreach (var add in adds)
-            {
-                MainWindowVM.Recorder.Current.ExecuteSetProperty((add as LayerItem).Item.Value, "ZIndex.Value", (add as LayerItem).Item.Value.ZIndex.Value + 1);
-            }
-
             foreach (var item in list)
             {
                 LayerItem layerItem = item.Item1;
@@ -1208,6 +1161,8 @@ namespace boilersGraphics.ViewModels
             }
 
             groupItem.SelectItemCommand.Execute(true);
+
+            MainWindowVM.Recorder.EndRecode("ExecuteGroupItemsCommand() complete");
         }
 
         private void Remove(LayerItem layerItem)
@@ -1229,6 +1184,8 @@ namespace boilersGraphics.ViewModels
 
         private void ExecuteUngroupItemsCommand()
         {
+            MainWindowVM.Recorder.BeginRecode();
+
             var groups = from item in SelectedItems.Value
                          where item.ParentID == Guid.Empty
                          select item;
@@ -1239,10 +1196,12 @@ namespace boilersGraphics.ViewModels
                                where child is LayerItem && (child as LayerItem).Item.Value.ParentID == groupRoot.ID
                                select child).ToList();
 
+                var group = groupRoot as GroupItemViewModel;
+
                 foreach (var child in children)
                 {
                     var layerItem = child as LayerItem;
-                    MainWindowVM.Recorder.Current.ExecuteDispose(layerItem.Item.Value.GroupDisposable, () => layerItem.Item.Value.GroupDisposable = layerItem.Parent.Value.Subscribe());
+                    MainWindowVM.Recorder.Current.ExecuteDispose(layerItem.Item.Value.GroupDisposable, () => group.GroupDisposable = group.Subscribe(layerItem.Item.Value));
                     MainWindowVM.Recorder.Current.ExecuteSetProperty(layerItem.Item.Value, "ParentID", Guid.Empty);
                     MainWindowVM.Recorder.Current.ExecuteSetProperty(layerItem.Item.Value, "EnableForSelection.Value", true);
                     MainWindowVM.Recorder.Current.ExecuteSetProperty(layerItem, "Parent.Value", Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
@@ -1253,10 +1212,11 @@ namespace boilersGraphics.ViewModels
                     layerItem.Parent.Value.AddChildren(MainWindowVM.Recorder, layerItem);
                 }
 
+                var clone = (GroupItemViewModel)groupRoot.Clone();
+
                 MainWindowVM.Recorder.Current.ExecuteDispose(groupRoot, () =>
                 {
-                    var array = SelectedItems.Value.Where(x => x.ParentID == Guid.Empty).Where(x => x == groupRoot).ToList();
-                    array[0] = (GroupItemViewModel)groupRoot.Clone();
+                    groupRoot.Swap(clone);
                 });
 
                 Remove(groupRoot);
@@ -1272,6 +1232,8 @@ namespace boilersGraphics.ViewModels
                     MainWindowVM.Recorder.Current.ExecuteSetProperty((x as LayerItem).Item.Value, "ZIndex.Value", (x as LayerItem).Item.Value.ZIndex.Value - 1);
                 }
             }
+
+            MainWindowVM.Recorder.EndRecode("ExecuteUngroupItemsCommand() complete");
         }
 
         private bool CanExecuteUngroup()
