@@ -56,12 +56,15 @@ namespace TsOperationHistory.Test
 
         public void Restore(Action restorePropertiesAction)
         {
+            if (!disposedValue) return;
+
             disposedValue = false;
             _name = string.Empty;
             _age = 0;
             _children = new ObservableCollection<Person>();
 
             restorePropertiesAction.Invoke();
+            GC.ReRegisterForFinalize(this);
         }
     }
 
