@@ -173,7 +173,7 @@ namespace boilersGraphics.Helpers
                 //グループの場合、子をグループに追加する
                 if (item is GroupItemViewModel groupItemVM)
                 {
-                    groupItemVM.AddGroup(c.Item.Value);
+                    groupItemVM.AddGroup(diagramViewModel.MainWindowVM.Recorder, c.Item.Value);
                 }
             }
             return layerItemObj;
@@ -212,7 +212,7 @@ namespace boilersGraphics.Helpers
                                where item.ParentID == groupItem.ID
                                select item;
 
-                children.ToList().ForEach(x => groupItem.AddGroup(x));
+                children.ToList().ForEach(x => groupItem.AddGroup(diagramViewModel.MainWindowVM.Recorder, x));
             }
 
             return list;

@@ -271,11 +271,6 @@ namespace boilersGraphics.Views.Behaviors
             return last;
         }
 
-        private static void RemoveCurrentItem(LayerTreeViewItemBase sourceItemParent, LayerTreeViewItemBase sourceItem)
-        {
-            sourceItemParent.RemoveChildren(sourceItem);
-        }
-
         private static void ResetSeparator(ICollection<LayerTreeViewItemBase> collection)
         {
             var list = collection.ToList();

@@ -172,14 +172,14 @@ namespace boilersGraphics.Models
             Children.Insert(index + 1, from);
         }
 
-        public void AddChildren(LayerTreeViewItemBase infoBase)
+        public void AddChildren(OperationRecorder recorder, LayerTreeViewItemBase infoBase)
         {
-            Children.Add(infoBase);
+            recorder.Current.ExecuteAdd(Children, infoBase);
         }
 
-        public void RemoveChildren(LayerTreeViewItemBase infoBase)
+        public void RemoveChildren(OperationRecorder recorder, LayerTreeViewItemBase infoBase)
         {
-            Children.Remove(infoBase);
+            recorder.Current.ExecuteRemove(Children, infoBase);
         }
 
         public bool ContainsParent(LayerTreeViewItemBase infoBase)

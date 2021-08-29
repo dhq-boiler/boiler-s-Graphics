@@ -32,7 +32,7 @@ namespace boilersGraphics.ViewModels
 {
     public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     {
-        private MainWindowViewModel mainWindowViewModel;
+        public MainWindowViewModel MainWindowVM { get; private set; }
         private IDialogService dlgService;
         private Point _CurrentPoint;
         private ObservableCollection<Color> _EdgeColors = new ObservableCollection<Color>();
@@ -188,7 +188,7 @@ namespace boilersGraphics.ViewModels
 
         public DiagramViewModel(MainWindowViewModel mainWindowViewModel, int width, int height)
         {
-            this.mainWindowViewModel = mainWindowViewModel;
+            MainWindowVM = mainWindowViewModel;
 
             AddItemCommand = new DelegateCommand<object>(p => ExecuteAddItemCommand(p));
             RemoveItemCommand = new DelegateCommand<object>(p => ExecuteRemoveItemCommand(p));
@@ -381,13 +381,13 @@ namespace boilersGraphics.ViewModels
 
         public void Initialize()
         {
-            mainWindowViewModel.Recorder.BeginRecode();
+            MainWindowVM.Recorder.BeginRecode();
 
-            InitialSetting(mainWindowViewModel, true, true);
+            InitialSetting(MainWindowVM, true, true);
             
-            mainWindowViewModel.Recorder.EndRecode("InitialSetting() complete");
+            MainWindowVM.Recorder.EndRecode("InitialSetting() complete");
             
-            mainWindowViewModel.Controller.Flush();
+            MainWindowVM.Controller.Flush();
         }
 
         public LayerTreeViewItemBase GetLayerTreeViewItemBase(SelectableDesignerItemViewModelBase item)
@@ -492,13 +492,13 @@ namespace boilersGraphics.ViewModels
         }
         private void ExecuteUndoCommand()
         {
-            mainWindowViewModel.Controller.Undo();
+            MainWindowVM.Controller.Undo();
             UndoCommand.RaiseCanExecuteChanged();
         }
 
         private bool CanExecuteUndo()
         {
-            return mainWindowViewModel.Controller.CanUndo;
+            return MainWindowVM.Controller.CanUndo;
         }
 
 
@@ -831,8 +831,8 @@ namespace boilersGraphics.ViewModels
             }
         }
 
-        public DiagramViewModel(MainWindowViewModel mainWindowViewModel, IDialogService dlgService, int width, int height)
-            : this(mainWindowViewModel, width, height)
+        public DiagramViewModel(MainWindowViewModel MainWindowVM, IDialogService dlgService, int width, int height)
+            : this(MainWindowVM, width, height)
         {
             this.dlgService = dlgService;
 
@@ -858,10 +858,10 @@ namespace boilersGraphics.ViewModels
                 Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
                       .Where(x => x != targetLayer)
                       .ToList()
-                      .ForEach(x => x.PushZIndex(mainWindowViewModel.Recorder, newZIndex));
+                      .ForEach(x => x.PushZIndex(MainWindowVM.Recorder, newZIndex));
                 item.ZIndex.Value = newZIndex;
                 item.Owner = this;
-                SelectedLayers.Value.First().AddItem(mainWindowViewModel, this, item);
+                SelectedLayers.Value.First().AddItem(MainWindowVM, this, item);
             }
         }
 
@@ -945,7 +945,7 @@ namespace boilersGraphics.ViewModels
 
         private void Add(SelectableDesignerItemViewModelBase item)
         {
-            SelectedLayers.Value.First().AddItem(mainWindowViewModel, this, item);
+            SelectedLayers.Value.First().AddItem(MainWindowVM, this, item);
         }
 
         private void Remove(SelectableDesignerItemViewModelBase item)
@@ -1146,11 +1146,11 @@ namespace boilersGraphics.ViewModels
             {
                 LayerItem layerItem = Layers.SelectMany(x => x.Children).First(x => (x as LayerItem).Item.Value == item) as LayerItem;
                 list.Add(new Tuple<LayerItem, LayerTreeViewItemBase>(layerItem, layerItem.Parent.Value));
-                layerItem.Parent.Value = groupItemLayerItem;
-                groupItemLayerItem.Children.Add(layerItem);
-                groupItem.AddGroup(item);
-                item.ParentID = groupItem.ID;
-                item.EnableForSelection.Value = false;
+                MainWindowVM.Recorder.Current.ExecuteSetProperty(layerItem, "Parent.Value", groupItemLayerItem);
+                MainWindowVM.Recorder.Current.ExecuteAdd(groupItemLayerItem.Children, layerItem);
+                groupItem.AddGroup(MainWindowVM.Recorder, item);
+                MainWindowVM.Recorder.Current.ExecuteSetProperty(item, "ParentID", groupItem.ID);
+                MainWindowVM.Recorder.Current.ExecuteSetProperty(item, "EnableForSelection.Value", false);
             }
 
             var groupItems = from it in Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
@@ -1173,7 +1173,7 @@ namespace boilersGraphics.ViewModels
             for (int i = 0; i < swapItems.Count(); ++i)
             {
                 var it = swapItems.ElementAt(i);
-                (it as LayerItem).Item.Value.ZIndex.Value = (theMostForwardItem as LayerItem).Item.Value.ZIndex.Value - i - 1;
+                MainWindowVM.Recorder.Current.ExecuteSetProperty((it as LayerItem).Item.Value, "ZIndex.Value", (theMostForwardItem as LayerItem).Item.Value.ZIndex.Value - i - 1);
             }
 
             var swapItemsCount = swapItems.Count();
@@ -1186,10 +1186,10 @@ namespace boilersGraphics.ViewModels
                     j++;
                     continue;
                 }
-                (it as LayerItem).Item.Value.ZIndex.Value = (theMostForwardItem as LayerItem).Item.Value.ZIndex.Value - swapItemsCount - (i - j) - 1;
+                MainWindowVM.Recorder.Current.ExecuteSetProperty((it as LayerItem).Item.Value, "ZIndex.Value", (theMostForwardItem as LayerItem).Item.Value.ZIndex.Value - swapItemsCount - (i - j) - 1);
             }
 
-            groupItem.ZIndex.Value = (theMostForwardItem as LayerItem).Item.Value.ZIndex.Value + 1;
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(groupItem, "ZIndex.Value", (theMostForwardItem as LayerItem).Item.Value.ZIndex.Value + 1);
 
             var adds = from item in Layers.SelectMany(x => x.Children)
                        where (item as LayerItem).Item.Value.ID != groupItem.ID && (item as LayerItem).Item.Value.ZIndex.Value >= groupItem.ZIndex.Value
@@ -1197,14 +1197,14 @@ namespace boilersGraphics.ViewModels
 
             foreach (var add in adds)
             {
-                (add as LayerItem).Item.Value.ZIndex.Value += 1;
+                MainWindowVM.Recorder.Current.ExecuteSetProperty((add as LayerItem).Item.Value, "ZIndex.Value", (add as LayerItem).Item.Value.ZIndex.Value + 1);
             }
 
             foreach (var item in list)
             {
                 LayerItem layerItem = item.Item1;
                 LayerTreeViewItemBase parent = item.Item2;
-                parent.RemoveChildren(layerItem);
+                parent.RemoveChildren(MainWindowVM.Recorder, layerItem);
             }
 
             groupItem.SelectItemCommand.Execute(true);
@@ -1216,7 +1216,7 @@ namespace boilersGraphics.ViewModels
                               .Where(x => x is LayerItem)
                               .First(x => (x as LayerItem) == layerItem)
                               .Parent.Value;
-            layer.RemoveChildren(layerItem);
+            layer.RemoveChildren(MainWindowVM.Recorder, layerItem);
         }
 
         private bool CanExecuteGroup()
@@ -1250,7 +1250,7 @@ namespace boilersGraphics.ViewModels
                                                    .First(x => (x as LayerItem).Item == (child as LayerItem).Item)
                                                    .Parent.Value
                                                    .Parent.Value;
-                    layerItem.Parent.Value.AddChildren(layerItem);
+                    layerItem.Parent.Value.AddChildren(MainWindowVM.Recorder, layerItem);
                 }
 
                 groupRoot.Dispose();
@@ -1283,7 +1283,7 @@ namespace boilersGraphics.ViewModels
 
         private void ExecuteBringForwardCommand()
         {
-            mainWindowViewModel.Recorder.BeginRecode();
+            MainWindowVM.Recorder.BeginRecode();
 
             var ordered = from item in SelectedItems.Value
                           orderby item.ZIndex.Value descending
@@ -1310,7 +1310,7 @@ namespace boilersGraphics.ViewModels
                 {
                     if (ordered.ElementAt(i) is GroupItemViewModel)
                     {
-                        mainWindowViewModel.Recorder.Current.ExecuteSetProperty(ordered.ElementAt(i), "ZIndex.Value", newIndex);
+                        MainWindowVM.Recorder.Current.ExecuteSetProperty(ordered.ElementAt(i), "ZIndex.Value", newIndex);
 
                         var children = from item in Layers.SelectMany(xx => xx.Children)
                                        where (item as LayerItem).Item.Value.ParentID == ordered.ElementAt(i).ID
@@ -1323,7 +1323,7 @@ namespace boilersGraphics.ViewModels
                         {
                             var child = children.ElementAt(j);
                             youngestChildrenZIndex = newIndex - j - 1;
-                            mainWindowViewModel.Recorder.Current.ExecuteSetProperty((child as LayerItem).Item.Value, "ZIndex.Value", newIndex - j - 1);
+                            MainWindowVM.Recorder.Current.ExecuteSetProperty((child as LayerItem).Item.Value, "ZIndex.Value", newIndex - j - 1);
                         }
 
                         var younger = from item in Layers.SelectMany(xx => xx.Children)
@@ -1341,12 +1341,12 @@ namespace boilersGraphics.ViewModels
 
                         for (int j = 0; j < z.Count(); ++j)
                         {
-                            mainWindowViewModel.Recorder.Current.ExecuteSetProperty((z.ElementAt(j) as LayerItem).Item.Value, "ZIndex.Value", j);
+                            MainWindowVM.Recorder.Current.ExecuteSetProperty((z.ElementAt(j) as LayerItem).Item.Value, "ZIndex.Value", j);
                         }
                     }
                     else
                     {
-                        mainWindowViewModel.Recorder.Current.ExecuteSetProperty(ordered.ElementAt(i), "ZIndex.Value", newIndex);
+                        MainWindowVM.Recorder.Current.ExecuteSetProperty(ordered.ElementAt(i), "ZIndex.Value", newIndex);
                         var exists = Layers.SelectMany(x => x.Children).Where(item => (item as LayerItem).Item.Value.ZIndex.Value == newIndex);
 
                         foreach (var item in exists)
@@ -1361,14 +1361,14 @@ namespace boilersGraphics.ViewModels
 
                                     foreach (var child in children)
                                     {
-                                        mainWindowViewModel.Recorder.Current.ExecuteSetProperty((child as LayerItem).Item.Value, "ZIndex.Value", (child as LayerItem).Item.Value.ZIndex.Value - 1);
+                                        MainWindowVM.Recorder.Current.ExecuteSetProperty((child as LayerItem).Item.Value, "ZIndex.Value", (child as LayerItem).Item.Value.ZIndex.Value - 1);
                                     }
 
-                                    mainWindowViewModel.Recorder.Current.ExecuteSetProperty((item as LayerItem).Item.Value, "ZIndex.Value", currentIndex + children.Count());
+                                    MainWindowVM.Recorder.Current.ExecuteSetProperty((item as LayerItem).Item.Value, "ZIndex.Value", currentIndex + children.Count());
                                 }
                                 else
                                 {
-                                    mainWindowViewModel.Recorder.Current.ExecuteSetProperty((item as LayerItem).Item.Value, "ZIndex.Value", currentIndex);
+                                    MainWindowVM.Recorder.Current.ExecuteSetProperty((item as LayerItem).Item.Value, "ZIndex.Value", currentIndex);
                                 }
                                 break;
                             }
@@ -1379,12 +1379,12 @@ namespace boilersGraphics.ViewModels
 
             Sort(Layers);
 
-            mainWindowViewModel.Recorder.EndRecode("ExecuteBringForwardCommand() complete");
+            MainWindowVM.Recorder.EndRecode("ExecuteBringForwardCommand() complete");
         }
 
         private void ExecuteSendBackwardCommand()
         {
-            mainWindowViewModel.Recorder.BeginRecode();
+            MainWindowVM.Recorder.BeginRecode();
 
             var ordered = from item in SelectedItems.Value
                           orderby item.ZIndex.Value ascending
@@ -1415,7 +1415,7 @@ namespace boilersGraphics.ViewModels
 
                         if (children.Any(c => (c as LayerItem).Item.Value.ZIndex.Value == 0)) continue;
 
-                        mainWindowViewModel.Recorder.Current.ExecuteSetProperty(ordered.ElementAt(i), "ZIndex.Value", newIndex);
+                        MainWindowVM.Recorder.Current.ExecuteSetProperty(ordered.ElementAt(i), "ZIndex.Value", newIndex);
 
                         int youngestChildrenZIndex = 0;
 
@@ -1423,7 +1423,7 @@ namespace boilersGraphics.ViewModels
                         {
                             var child = children.ElementAt(j);
                             youngestChildrenZIndex = newIndex - j - 1;
-                            mainWindowViewModel.Recorder.Current.ExecuteSetProperty((child as LayerItem).Item.Value, "ZIndex.Value", newIndex - j - 1);
+                            MainWindowVM.Recorder.Current.ExecuteSetProperty((child as LayerItem).Item.Value, "ZIndex.Value", newIndex - j - 1);
                         }
 
                         var older = from item in Layers.SelectMany(xx => xx.Children)
@@ -1443,12 +1443,12 @@ namespace boilersGraphics.ViewModels
                         for (int j = 0; j < z.Count(); ++j)
                         {
                             var elm = z.ElementAt(j);
-                            mainWindowViewModel.Recorder.Current.ExecuteSetProperty((elm as LayerItem).Item.Value, "ZIndex.Value", Layers.SelectMany(xx => xx.Children).Count() - j - 1);
+                            MainWindowVM.Recorder.Current.ExecuteSetProperty((elm as LayerItem).Item.Value, "ZIndex.Value", Layers.SelectMany(xx => xx.Children).Count() - j - 1);
                         }
                     }
                     else
                     {
-                        mainWindowViewModel.Recorder.Current.ExecuteSetProperty(ordered.ElementAt(i), "ZIndex.Value", newIndex);
+                        MainWindowVM.Recorder.Current.ExecuteSetProperty(ordered.ElementAt(i), "ZIndex.Value", newIndex);
                         var exists = Layers.SelectMany(x => x.Children).Where(item => (item as LayerItem).Item.Value.ZIndex.Value == newIndex);
 
                         foreach (var item in exists)
@@ -1463,7 +1463,7 @@ namespace boilersGraphics.ViewModels
 
                                     foreach (var child in children)
                                     {
-                                        mainWindowViewModel.Recorder.Current.ExecuteSetProperty((child as LayerItem).Item.Value, "ZIndex.Value", (child as LayerItem).Item.Value.ZIndex.Value + 1);
+                                        MainWindowVM.Recorder.Current.ExecuteSetProperty((child as LayerItem).Item.Value, "ZIndex.Value", (child as LayerItem).Item.Value.ZIndex.Value + 1);
                                     }
 
                                     var parent = (from it in Layers.SelectMany(x => x.Children)
@@ -1471,11 +1471,11 @@ namespace boilersGraphics.ViewModels
                                                   select it).Single();
 
                                     (parent as LayerItem).Item.Value.ZIndex.Value = children.Max(x => (x as LayerItem).Item.Value.ZIndex.Value) + 1;
-                                    mainWindowViewModel.Recorder.Current.ExecuteSetProperty((parent as LayerItem).Item.Value, "ZIndex.Value", children.Max(x => (x as LayerItem).Item.Value.ZIndex.Value) + 1);
+                                    MainWindowVM.Recorder.Current.ExecuteSetProperty((parent as LayerItem).Item.Value, "ZIndex.Value", children.Max(x => (x as LayerItem).Item.Value.ZIndex.Value) + 1);
                                 }
                                 else
                                 {
-                                    mainWindowViewModel.Recorder.Current.ExecuteSetProperty((item as LayerItem).Item.Value, "ZIndex.Value", currentIndex);
+                                    MainWindowVM.Recorder.Current.ExecuteSetProperty((item as LayerItem).Item.Value, "ZIndex.Value", currentIndex);
                                 }
                                 break;
                             }
@@ -1486,12 +1486,12 @@ namespace boilersGraphics.ViewModels
 
             Sort(Layers);
 
-            mainWindowViewModel.Recorder.EndRecode("ExecuteSendBackwardCommand() complete");
+            MainWindowVM.Recorder.EndRecode("ExecuteSendBackwardCommand() complete");
         }
 
         private void ExecuteBringForegroundCommand()
         {
-            mainWindowViewModel.Recorder.BeginRecode();
+            MainWindowVM.Recorder.BeginRecode();
 
             var ordered = from item in SelectedItems.Value
                           orderby item.ZIndex.Value descending
@@ -1507,7 +1507,7 @@ namespace boilersGraphics.ViewModels
                 if (currentIndex != newIndex)
                 {
                     var oldCurrentIndex = current.ZIndex.Value;
-                    mainWindowViewModel.Recorder.Current.ExecuteSetProperty(current, "ZIndex.Value", newIndex);
+                    MainWindowVM.Recorder.Current.ExecuteSetProperty(current, "ZIndex.Value", newIndex);
 
                     if (current is GroupItemViewModel)
                     {
@@ -1519,7 +1519,7 @@ namespace boilersGraphics.ViewModels
                         for (int j = 0; j < children.Count(); ++j)
                         {
                             var child = children.ElementAt(j);
-                            mainWindowViewModel.Recorder.Current.ExecuteSetProperty((child as LayerItem).Item.Value, "ZIndex.Value", current.ZIndex.Value - j - 1);
+                            MainWindowVM.Recorder.Current.ExecuteSetProperty((child as LayerItem).Item.Value, "ZIndex.Value", current.ZIndex.Value - j - 1);
                         }
 
                         var minValue = children.Min(x => (x as LayerItem).Item.Value.ZIndex.Value);
@@ -1532,7 +1532,7 @@ namespace boilersGraphics.ViewModels
                         for (int j = 0; j < other.Count(); ++j)
                         {
                             var item = other.ElementAt(j);
-                            mainWindowViewModel.Recorder.Current.ExecuteSetProperty((item as LayerItem).Item.Value, "ZIndex.Value", minValue - j - 1);
+                            MainWindowVM.Recorder.Current.ExecuteSetProperty((item as LayerItem).Item.Value, "ZIndex.Value", minValue - j - 1);
                         }
                     }
                     else
@@ -1543,7 +1543,7 @@ namespace boilersGraphics.ViewModels
                         {
                             if ((item as LayerItem).Item.Value != current)
                             {
-                                mainWindowViewModel.Recorder.Current.ExecuteSetProperty((item as LayerItem).Item.Value, "ZIndex.Value", (item as LayerItem).Item.Value.ZIndex.Value - 1);
+                                MainWindowVM.Recorder.Current.ExecuteSetProperty((item as LayerItem).Item.Value, "ZIndex.Value", (item as LayerItem).Item.Value.ZIndex.Value - 1);
                             }
                         }
                     }
@@ -1552,12 +1552,12 @@ namespace boilersGraphics.ViewModels
 
             Sort(Layers);
 
-            mainWindowViewModel.Recorder.EndRecode("ExecuteBringForegroundCommand() complete");
+            MainWindowVM.Recorder.EndRecode("ExecuteBringForegroundCommand() complete");
         }
 
         private void ExecuteSendBackgroundCommand()
         {
-            mainWindowViewModel.Recorder.BeginRecode();
+            MainWindowVM.Recorder.BeginRecode();
 
             var ordered = from item in SelectedItems.Value
                           orderby item.ZIndex.Value ascending
@@ -1575,7 +1575,7 @@ namespace boilersGraphics.ViewModels
                 if (currentIndex != newIndex)
                 {
                     var oldCurrentIndex = current.ZIndex.Value;
-                    mainWindowViewModel.Recorder.Current.ExecuteSetProperty(current, "ZIndex.Value", newIndex);
+                    MainWindowVM.Recorder.Current.ExecuteSetProperty(current, "ZIndex.Value", newIndex);
 
                     if (current is GroupItemViewModel)
                     {
@@ -1587,7 +1587,7 @@ namespace boilersGraphics.ViewModels
                         for (int j = 0; j < children.Count(); ++j)
                         {
                             var child = children.ElementAt(j);
-                            mainWindowViewModel.Recorder.Current.ExecuteSetProperty((child as LayerItem).Item.Value, "ZIndex.Value", current.ZIndex.Value - j - 1);
+                            MainWindowVM.Recorder.Current.ExecuteSetProperty((child as LayerItem).Item.Value, "ZIndex.Value", current.ZIndex.Value - j - 1);
                         }
 
                         var other = (from item in Layers.SelectMany(x => x.Children)
@@ -1600,7 +1600,7 @@ namespace boilersGraphics.ViewModels
                         for (int j = 0; j < other.Count(); ++j)
                         {
                             var item = other.ElementAt(j);
-                            mainWindowViewModel.Recorder.Current.ExecuteSetProperty((item as LayerItem).Item.Value, "ZIndex.Value", maxValue - j);
+                            MainWindowVM.Recorder.Current.ExecuteSetProperty((item as LayerItem).Item.Value, "ZIndex.Value", maxValue - j);
                         }
                     }
                     else
@@ -1611,7 +1611,7 @@ namespace boilersGraphics.ViewModels
                         {
                             if ((item as LayerItem).Item.Value != current)
                             {
-                                mainWindowViewModel.Recorder.Current.ExecuteSetProperty((item as LayerItem).Item.Value, "ZIndex.Value", (item as LayerItem).Item.Value.ZIndex.Value + 1);
+                                MainWindowVM.Recorder.Current.ExecuteSetProperty((item as LayerItem).Item.Value, "ZIndex.Value", (item as LayerItem).Item.Value.ZIndex.Value + 1);
                             }
                         }
                     }
@@ -1620,7 +1620,7 @@ namespace boilersGraphics.ViewModels
 
             Sort(Layers);
 
-            mainWindowViewModel.Recorder.EndRecode("ExecuteSendBackgroundCommand() complete");
+            MainWindowVM.Recorder.EndRecode("ExecuteSendBackgroundCommand() complete");
         }
 
         private void Sort(ReactiveCollection<LayerTreeViewItemBase> target)
@@ -1654,7 +1654,7 @@ namespace boilersGraphics.ViewModels
         {
             if (SelectedItems.Value.Count() > 1)
             {
-                mainWindowViewModel.Recorder.BeginRecode();
+                MainWindowVM.Recorder.BeginRecode();
 
                 var first = SelectedItems.Value.First();
                 double top = GetTop(first);
@@ -1665,7 +1665,7 @@ namespace boilersGraphics.ViewModels
                     SetTop(item, GetTop(item) + delta);
                 }
 
-                mainWindowViewModel.Recorder.EndRecode("ExecuteAlignTopCommand() complete");
+                MainWindowVM.Recorder.EndRecode("ExecuteAlignTopCommand() complete");
             }
         }
 
@@ -1673,7 +1673,7 @@ namespace boilersGraphics.ViewModels
         {
             if (SelectedItems.Value.Count() > 1)
             {
-                mainWindowViewModel.Recorder.BeginRecode();
+                MainWindowVM.Recorder.BeginRecode();
 
                 var first = SelectedItems.Value.First();
                 double bottom = GetTop(first) + GetHeight(first) / 2;
@@ -1684,7 +1684,7 @@ namespace boilersGraphics.ViewModels
                     SetTop(item, GetTop(item) + delta);
                 }
 
-                mainWindowViewModel.Recorder.EndRecode("ExecuteAlignVerticalCenterCommand() complete");
+                MainWindowVM.Recorder.EndRecode("ExecuteAlignVerticalCenterCommand() complete");
             }
         }
 
@@ -1692,7 +1692,7 @@ namespace boilersGraphics.ViewModels
         {
             if (SelectedItems.Value.Count() > 1)
             {
-                mainWindowViewModel.Recorder.BeginRecode();
+                MainWindowVM.Recorder.BeginRecode();
 
                 var first = SelectedItems.Value.First();
                 double bottom = GetTop(first) + GetHeight(first);
@@ -1703,7 +1703,7 @@ namespace boilersGraphics.ViewModels
                     SetTop(item, GetTop(item) + delta);
                 }
 
-                mainWindowViewModel.Recorder.EndRecode("ExecuteAlignBottomCommand() complete");
+                MainWindowVM.Recorder.EndRecode("ExecuteAlignBottomCommand() complete");
             }
         }
 
@@ -1711,7 +1711,7 @@ namespace boilersGraphics.ViewModels
         {
             if (SelectedItems.Value.Count() > 1)
             {
-                mainWindowViewModel.Recorder.BeginRecode();
+                MainWindowVM.Recorder.BeginRecode();
 
                 var first = SelectedItems.Value.First();
                 double left = GetLeft(first);
@@ -1722,7 +1722,7 @@ namespace boilersGraphics.ViewModels
                     SetLeft(item, GetLeft(item) + delta);
                 }
 
-                mainWindowViewModel.Recorder.EndRecode("ExecuteAlignLeftCommand() complete");
+                MainWindowVM.Recorder.EndRecode("ExecuteAlignLeftCommand() complete");
             }
         }
 
@@ -1730,7 +1730,7 @@ namespace boilersGraphics.ViewModels
         {
             if (SelectedItems.Value.Count() > 1)
             {
-                mainWindowViewModel.Recorder.BeginRecode();
+                MainWindowVM.Recorder.BeginRecode();
 
                 var first = SelectedItems.Value.First();
                 double center = GetLeft(first) + GetWidth(first) / 2;
@@ -1741,7 +1741,7 @@ namespace boilersGraphics.ViewModels
                     SetLeft(item, GetLeft(item) + delta);
                 }
 
-                mainWindowViewModel.Recorder.EndRecode("ExecuteAlignHorizontalCenterCommand() complete");
+                MainWindowVM.Recorder.EndRecode("ExecuteAlignHorizontalCenterCommand() complete");
             }
         }
 
@@ -1749,7 +1749,7 @@ namespace boilersGraphics.ViewModels
         {
             if (SelectedItems.Value.Count() > 1)
             {
-                mainWindowViewModel.Recorder.BeginRecode();
+                MainWindowVM.Recorder.BeginRecode();
 
                 var first = SelectedItems.Value.First();
                 double right = GetLeft(first) + GetWidth(first);
@@ -1760,7 +1760,7 @@ namespace boilersGraphics.ViewModels
                     SetLeft(item, GetLeft(item) + delta);
                 }
 
-                mainWindowViewModel.Recorder.EndRecode("ExecuteAlignRightCommand() complete");
+                MainWindowVM.Recorder.EndRecode("ExecuteAlignRightCommand() complete");
             }
         }
 
@@ -1773,7 +1773,7 @@ namespace boilersGraphics.ViewModels
 
             if (selectedItems.Count() > 1)
             {
-                mainWindowViewModel.Recorder.BeginRecode();
+                MainWindowVM.Recorder.BeginRecode();
 
                 double left = double.MaxValue;
                 double right = double.MinValue;
@@ -1796,7 +1796,7 @@ namespace boilersGraphics.ViewModels
                     offset = offset + GetWidth(item) + distance;
                 }
 
-                mainWindowViewModel.Recorder.EndRecode("ExecuteDistributeHorizontalCommand() complete");
+                MainWindowVM.Recorder.EndRecode("ExecuteDistributeHorizontalCommand() complete");
             }
         }
 
@@ -1809,7 +1809,7 @@ namespace boilersGraphics.ViewModels
 
             if (selectedItems.Count() > 1)
             {
-                mainWindowViewModel.Recorder.BeginRecode();
+                MainWindowVM.Recorder.BeginRecode();
 
                 double top = double.MaxValue;
                 double bottom = double.MinValue;
@@ -1832,7 +1832,7 @@ namespace boilersGraphics.ViewModels
                     offset = offset + GetHeight(item) + distance;
                 }
 
-                mainWindowViewModel.Recorder.EndRecode("ExecuteDistributeVerticalCommand() complete");
+                MainWindowVM.Recorder.EndRecode("ExecuteDistributeVerticalCommand() complete");
             }
         }
 
@@ -1857,7 +1857,7 @@ namespace boilersGraphics.ViewModels
         {
             if (item is DesignerItemViewModelBase di)
             {
-                mainWindowViewModel.Recorder.Current.ExecuteSetProperty(di, "Left.Value", value);
+                MainWindowVM.Recorder.Current.ExecuteSetProperty(di, "Left.Value", value);
             }
             else if (item is ConnectorBaseViewModel connector)
             {
@@ -1883,7 +1883,7 @@ namespace boilersGraphics.ViewModels
         {
             if (item is DesignerItemViewModelBase di)
             {
-                mainWindowViewModel.Recorder.Current.ExecuteSetProperty(di, "Top.Value", value);
+                MainWindowVM.Recorder.Current.ExecuteSetProperty(di, "Top.Value", value);
             }
             else if (item is ConnectorBaseViewModel connector)
             {
@@ -1909,7 +1909,7 @@ namespace boilersGraphics.ViewModels
 
         private void ExecuteUniformWidthCommand()
         {
-            mainWindowViewModel.Recorder.BeginRecode();
+            MainWindowVM.Recorder.BeginRecode();
 
             var selectedItems = SelectedItems.Value.OfType<DesignerItemViewModelBase>();
             if (selectedItems.Count() > 1)
@@ -1920,16 +1920,16 @@ namespace boilersGraphics.ViewModels
                 foreach (var item in selectedItems)
                 {
                     double delta = width - item.Width.Value;
-                    mainWindowViewModel.Recorder.Current.ExecuteSetProperty(item, "Width.Value", item.Width.Value + delta);
+                    MainWindowVM.Recorder.Current.ExecuteSetProperty(item, "Width.Value", item.Width.Value + delta);
                 }
             }
 
-            mainWindowViewModel.Recorder.EndRecode("ExecuteUniformWidthCommand() complete");
+            MainWindowVM.Recorder.EndRecode("ExecuteUniformWidthCommand() complete");
         }
 
         private void ExecuteUniformHeightCommand()
         {
-            mainWindowViewModel.Recorder.BeginRecode();
+            MainWindowVM.Recorder.BeginRecode();
 
             var selectedItems = SelectedItems.Value.OfType<DesignerItemViewModelBase>();
             if (selectedItems.Count() > 1)
@@ -1940,11 +1940,11 @@ namespace boilersGraphics.ViewModels
                 foreach (var item in selectedItems)
                 {
                     double delta = height - item.Height.Value;
-                    mainWindowViewModel.Recorder.Current.ExecuteSetProperty(item, "Height.Value", item.Height.Value + delta);
+                    MainWindowVM.Recorder.Current.ExecuteSetProperty(item, "Height.Value", item.Height.Value + delta);
                 }
             }
 
-            mainWindowViewModel.Recorder.EndRecode("ExecuteUniformHeightCommand() complete");
+            MainWindowVM.Recorder.EndRecode("ExecuteUniformHeightCommand() complete");
         }
 
         private bool CanExecuteUniform()
@@ -1993,7 +1993,7 @@ namespace boilersGraphics.ViewModels
                 {
                     cloneGroup.ParentID = parent.ID;
                     cloneGroup.EnableForSelection.Value = false;
-                    parent.AddGroup(cloneGroup);
+                    parent.AddGroup(MainWindowVM.Recorder, cloneGroup);
                 }
 
                 var children = from it in Layers.SelectMany(x => x.Children).OfType<DesignerItemViewModelBase>()
@@ -2029,7 +2029,7 @@ namespace boilersGraphics.ViewModels
                 {
                     clone.ParentID = parent.ID;
                     clone.EnableForSelection.Value = false;
-                    parent.AddGroup(clone);
+                    parent.AddGroup(MainWindowVM.Recorder, clone);
                 }
                 oldNewList.Add(new Tuple<SelectableDesignerItemViewModelBase, SelectableDesignerItemViewModelBase>(item, clone));
                 Add(clone);
@@ -2044,7 +2044,7 @@ namespace boilersGraphics.ViewModels
             {
                 clone.ParentID = groupItem.ID;
                 clone.EnableForSelection.Value = false;
-                groupItem.AddGroup(clone);
+                groupItem.AddGroup(MainWindowVM.Recorder, clone);
             }
             Add(clone);
         }
@@ -2058,7 +2058,7 @@ namespace boilersGraphics.ViewModels
             {
                 clone.ParentID = groupItem.ID;
                 clone.EnableForSelection.Value = false;
-                groupItem.AddGroup(clone);
+                groupItem.AddGroup(MainWindowVM.Recorder, clone);
             }
             Add(clone);
         }
