@@ -858,7 +858,7 @@ namespace boilersGraphics.ViewModels
                 Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
                       .Where(x => x != targetLayer)
                       .ToList()
-                      .ForEach(x => x.PushZIndex(newZIndex));
+                      .ForEach(x => x.PushZIndex(mainWindowViewModel.Recorder, newZIndex));
                 item.ZIndex.Value = newZIndex;
                 item.Owner = this;
                 SelectedLayers.Value.First().AddItem(mainWindowViewModel, this, item);

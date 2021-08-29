@@ -191,7 +191,7 @@ namespace boilersGraphics.Views.Behaviors
                     {
                         children = targetItemParent.Children;
                     }
-                    LayerTreeViewItemCollection.InsertBeforeChildren(mainWindowViewModel, diagramVM.Layers, children, sourceItem, targetItem);
+                    LayerTreeViewItemCollection.InsertBeforeChildren(mainWindowViewModel.Recorder, diagramVM.Layers, children, sourceItem, targetItem);
                     sourceItem.Parent.Value = targetItemParent;
                     sourceItem.IsSelected.Value = true;
                     break;
@@ -200,13 +200,13 @@ namespace boilersGraphics.Views.Behaviors
                     {
                         children = targetItemParent.Children;
                     }
-                    LayerTreeViewItemCollection.InsertAfterChildren(mainWindowViewModel, diagramVM.Layers, children, sourceItem, targetItem);
+                    LayerTreeViewItemCollection.InsertAfterChildren(mainWindowViewModel.Recorder, diagramVM.Layers, children, sourceItem, targetItem);
                     sourceItem.Parent.Value = targetItemParent;
                     sourceItem.IsSelected.Value = true;
                     break;
                 case InsertType.Children:
                     children = targetItem.Children;
-                    LayerTreeViewItemCollection.AddChildren(mainWindowViewModel, diagramVM.Layers, children, sourceItem);
+                    LayerTreeViewItemCollection.AddChildren(mainWindowViewModel.Recorder, diagramVM.Layers, children, sourceItem);
                     targetItem.IsExpanded.Value = true;
                     sourceItem.IsSelected.Value = true;
                     sourceItem.Parent.Value = targetItem;

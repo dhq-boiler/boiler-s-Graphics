@@ -18,6 +18,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Threading;
+using TsOperationHistory;
 using TsOperationHistory.Extensions;
 
 namespace boilersGraphics.Models
@@ -266,26 +267,26 @@ namespace boilersGraphics.Models
             return zindexes.Max() + 1;
         }
 
-        public void PushZIndex(int newZIndex)
+        public void PushZIndex(OperationRecorder recorder, int newZIndex)
         {
             var targetChildren = Children.Cast<LayerItem>().Where(x => x.Item.Value.ZIndex.Value >= newZIndex);
             foreach (var target in targetChildren)
             {
-                target.Item.Value.ZIndex.Value++;
+                recorder.Current.ExecuteSetProperty(target.Item.Value, "ZIndex.Value", target.Item.Value.ZIndex.Value + 1);
             }
         }
 
-        public int SetZIndex(MainWindowViewModel mainWindowViewModel, int foregroundZIndex)
+        public int SetZIndex(OperationRecorder recorder, int foregroundZIndex)
         {
             if (this is LayerItem layerItem)
             {
-                mainWindowViewModel.Recorder.Current.ExecuteSetProperty(layerItem.Item.Value, "ZIndex.Value", foregroundZIndex++);
+                recorder.Current.ExecuteSetProperty(layerItem.Item.Value, "ZIndex.Value", foregroundZIndex++);
             }
 
             int zindex = foregroundZIndex;
             foreach (var child in Children)
             {
-                zindex = child.SetZIndex(mainWindowViewModel, zindex);
+                zindex = child.SetZIndex(recorder, zindex);
             }
             return zindex;
         }
