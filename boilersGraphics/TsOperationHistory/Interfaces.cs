@@ -224,6 +224,11 @@ namespace TsOperationHistory
         bool IsOperating { get; }
     }
 
+    public interface IRestore
+    {
+        void Restore(Action restorePropertiesAction);
+    }
+
     public enum OperationStackChangedEvent
     {
         Undo,

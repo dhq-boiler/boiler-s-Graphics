@@ -66,6 +66,11 @@ namespace TsOperationHistory.Extensions
             return controller.Execute(@this);
         }
 
+        public static IOperation ExecuteDispose<T>(this T @this, Action regenerateAction) where T : IDisposable
+        {
+            return new DisposeOperation<T>(@this, regenerateAction);
+        }
+
         /// <summary>
         /// オペレーションを列挙子として結合する
         /// </summary>

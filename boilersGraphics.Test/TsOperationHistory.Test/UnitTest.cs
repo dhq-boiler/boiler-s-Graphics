@@ -6,7 +6,7 @@ using TsOperationHistory.Extensions;
 
 namespace TsOperationHistory.Test
 {
-    internal class Person : Bindable
+    internal class Person : Bindable, IDisposable, IRestore
     {
         private string _name;
 
@@ -25,14 +25,46 @@ namespace TsOperationHistory.Test
         }
 
         private ObservableCollection<Person> _children = new ObservableCollection<Person>();
+        private bool disposedValue;
 
         public ObservableCollection<Person> Children
         {
             get => _children;
             set => SetProperty(ref _children, value);
         }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                }
+
+                _name = null;
+                _children = null;
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            // このコードを変更しないでください。クリーンアップ コードを 'Dispose(bool disposing)' メソッドに記述します
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        }
+
+        public void Restore(Action restorePropertiesAction)
+        {
+            disposedValue = false;
+            _name = string.Empty;
+            _age = 0;
+            _children = new ObservableCollection<Person>();
+
+            restorePropertiesAction.Invoke();
+        }
     }
-    
+
     [TestFixture]
     public class UnitTest
     {
@@ -242,6 +274,34 @@ namespace TsOperationHistory.Test
             Assert.AreEqual("Changed",person.Name);
             Assert.AreEqual(14,person.Age);
             Assert.That(person.Children.Count, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void DisposeTest()
+        {
+            IOperationController controller = new OperationController();
+            var person = new Person()
+            {
+                Name = "Venus",
+            };
+
+            controller.Execute(person.GenerateSetPropertyOperation(x => x.Name, "Yamada"));
+            Assert.AreEqual("Yamada", person.Name);
+
+            controller.Execute(person.GenerateSetPropertyOperation(x => x.Name, "Tanaka"));
+            Assert.AreEqual("Tanaka", person.Name);
+
+            controller.ExecuteDispose(person, () => person.Restore(() => person.Name = "Tanaka"));
+            Assert.That(person.Name, Is.Null);
+
+            controller.Undo();
+            Assert.AreEqual("Tanaka", person.Name);
+
+            controller.Undo();
+            Assert.AreEqual("Yamada", person.Name);
+
+            controller.Undo();
+            Assert.AreEqual("Venus", person.Name);
         }
     }
 }

@@ -224,4 +224,38 @@ namespace TsOperationHistory
                 postOperation.MergeJudge);
         }
     }
+
+    public class DisposeOperation<T> : IOperation, IOperationWithEvent where T : IDisposable
+    {
+        public T Disposing;
+        public Action RegenerateAction;
+
+        public event Action OnExecuted;
+        public event Action OnPreviewExecuted;
+
+        public DisposeOperation(
+            T disposing,
+            Action regenerateAction)
+        {
+            Debug.Assert(regenerateAction != null);
+            Disposing = disposing;
+            RegenerateAction = regenerateAction;
+        }
+
+        public string Message { get; set; }
+
+        public void RollForward()
+        {
+            OnPreviewExecuted?.Invoke();
+            Disposing.Dispose();
+            OnExecuted?.Invoke();
+        }
+
+        public void Rollback()
+        {
+            OnPreviewExecuted?.Invoke();
+            RegenerateAction.Invoke();
+            OnExecuted?.Invoke();
+        }
+    }
 }

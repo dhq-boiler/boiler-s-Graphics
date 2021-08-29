@@ -12,36 +12,33 @@ namespace boilersGraphics.Helpers
 {
     public static class LayerTreeViewItemCollection
     {
-        public static void InsertBeforeChildren(ReactiveCollection<LayerTreeViewItemBase> layers, ReactiveCollection<LayerTreeViewItemBase> children, LayerTreeViewItemBase from, LayerTreeViewItemBase to)
+        public static void InsertBeforeChildren(MainWindowViewModel mainWindowViewModel, ReactiveCollection<LayerTreeViewItemBase> layers, ReactiveCollection<LayerTreeViewItemBase> children, LayerTreeViewItemBase from, LayerTreeViewItemBase to)
         {
-            var mainWindowViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel);
             var index = children.IndexOf(to);
             if (index < 0)
                 return;
 
             mainWindowViewModel.Recorder.Current.ExecuteInsert(children, from, index);
-            Rearrangement(layers);
+            Rearrangement(mainWindowViewModel, layers);
         }
 
-        public static void InsertAfterChildren(ReactiveCollection<LayerTreeViewItemBase> layers, ReactiveCollection<LayerTreeViewItemBase> children, LayerTreeViewItemBase from, LayerTreeViewItemBase to)
+        public static void InsertAfterChildren(MainWindowViewModel mainWindowViewModel, ReactiveCollection<LayerTreeViewItemBase> layers, ReactiveCollection<LayerTreeViewItemBase> children, LayerTreeViewItemBase from, LayerTreeViewItemBase to)
         {
-            var mainWindowViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel);
             var index = children.IndexOf(to);
             if (index < 0)
                 return;
 
             mainWindowViewModel.Recorder.Current.ExecuteInsert(children, from, index + 1);
-            Rearrangement(layers);
+            Rearrangement(mainWindowViewModel, layers);
         }
 
-        public static void AddChildren(ReactiveCollection<LayerTreeViewItemBase> layers, ReactiveCollection<LayerTreeViewItemBase> children, LayerTreeViewItemBase to)
+        public static void AddChildren(MainWindowViewModel mainWindowViewModel, ReactiveCollection<LayerTreeViewItemBase> layers, ReactiveCollection<LayerTreeViewItemBase> children, LayerTreeViewItemBase to)
         {
-            var mainWindowViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel);
             mainWindowViewModel.Recorder.Current.ExecuteAdd(children, to);
-            Rearrangement(layers);
+            Rearrangement(mainWindowViewModel, layers);
         }
 
-        private static void Rearrangement(ReactiveCollection<LayerTreeViewItemBase> layers)
+        private static void Rearrangement(MainWindowViewModel mainWindowViewModel, ReactiveCollection<LayerTreeViewItemBase> layers)
         {
             var queue = new Queue<LayerTreeViewItemBase>(layers);
             LayerTreeViewItemBase item = null;
@@ -49,7 +46,7 @@ namespace boilersGraphics.Helpers
             while (queue.Count() > 0)
             {
                 item = queue.Dequeue();
-                zindex = item.SetZIndex(zindex);
+                zindex = item.SetZIndex(mainWindowViewModel, zindex);
             }
         }
     }

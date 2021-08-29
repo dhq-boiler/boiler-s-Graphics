@@ -275,9 +275,8 @@ namespace boilersGraphics.Models
             }
         }
 
-        public int SetZIndex(int foregroundZIndex)
+        public int SetZIndex(MainWindowViewModel mainWindowViewModel, int foregroundZIndex)
         {
-            var mainWindowViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel);
             if (this is LayerItem layerItem)
             {
                 mainWindowViewModel.Recorder.Current.ExecuteSetProperty(layerItem.Item.Value, "ZIndex.Value", foregroundZIndex++);
@@ -286,7 +285,7 @@ namespace boilersGraphics.Models
             int zindex = foregroundZIndex;
             foreach (var child in Children)
             {
-                zindex = child.SetZIndex(zindex);
+                zindex = child.SetZIndex(mainWindowViewModel, zindex);
             }
             return zindex;
         }

@@ -132,7 +132,7 @@ namespace boilersGraphics.Test
             diagramVM.AddItemCommand.Execute(item6);
 
             diagramVM.Layers.Remove(layer2);
-            LayerTreeViewItemCollection.InsertBeforeChildren(diagramVM.Layers, diagramVM.Layers, layer2, layer1);
+            LayerTreeViewItemCollection.InsertBeforeChildren(mainWindowViewModel, diagramVM.Layers, diagramVM.Layers, layer2, layer1);
 
             Assert.That(diagramVM.Layers[0].Name.Value, Is.EqualTo("レイヤー2"));
             Assert.That(diagramVM.Layers[1].Name.Value, Is.EqualTo("レイヤー1"));
@@ -187,7 +187,7 @@ namespace boilersGraphics.Test
             diagramVM.AddItemCommand.Execute(item6);
 
             diagramVM.Layers.Remove(layer2);
-            LayerTreeViewItemCollection.InsertAfterChildren(diagramVM.Layers, diagramVM.Layers, layer2, layer1);
+            LayerTreeViewItemCollection.InsertAfterChildren(mainWindowViewModel, diagramVM.Layers, diagramVM.Layers, layer2, layer1);
 
             Assert.That(diagramVM.Layers[0].Name.Value, Is.EqualTo("レイヤー1"));
             Assert.That(diagramVM.Layers[1].Name.Value, Is.EqualTo("レイヤー2"));

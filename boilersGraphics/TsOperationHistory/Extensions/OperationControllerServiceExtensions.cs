@@ -71,6 +71,13 @@ namespace TsOperationHistory.Extensions
             controller.Execute(operation);
         }
 
+        public static void ExecuteDispose<T>(this IOperationController controller, T disposing, Action regenerateAction) where T : IDisposable
+        {
+            var operation = disposing.ExecuteDispose(regenerateAction);
+
+            controller.Execute(operation);
+        }
+
         public static IDisposable BindPropertyChanged<T>(this IOperationController controller , INotifyPropertyChanged owner, string propertyName , bool autoMerge = true)
         {
             var prevValue = FastReflection.GetProperty<T>(owner, propertyName);
