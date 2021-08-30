@@ -107,7 +107,7 @@ namespace boilersGraphics.Models
             layerItem.Parent.Value = this;
             Random rand = new Random();
             layerItem.Color.Value = Randomizer.RandomColor(rand);
-            mainWindowViewModel.Controller.ExecuteAdd(Children, layerItem);
+            mainWindowViewModel.Recorder.Current.ExecuteAdd(Children, layerItem);
         }
 
         public void RemoveItem(MainWindowViewModel mainWindowViewModel, SelectableDesignerItemViewModelBase item)
@@ -115,7 +115,7 @@ namespace boilersGraphics.Models
             var layerItems = Children.Where(x => (x as LayerItem).Item.Value == item);
             layerItems.ToList().ForEach(x =>
             {
-                mainWindowViewModel.Controller.ExecuteRemove(Children, x);
+                mainWindowViewModel.Recorder.Current.ExecuteRemove(Children, x);
                 Trace.WriteLine($"{x} removed from {Children}");
             });
         }
