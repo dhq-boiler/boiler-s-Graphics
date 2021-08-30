@@ -10,6 +10,7 @@ using System.Reactive.Disposables;
 using System.Threading;
 using System.Windows.Media;
 using TsOperationHistory;
+using TsOperationHistory.Extensions;
 
 namespace boilersGraphics.ViewModels
 {
@@ -94,11 +95,11 @@ namespace boilersGraphics.ViewModels
             {
                 foreach (var designerItemViewModelBase in Owner.SelectedItems.Value.ToList())
                 {
-                    designerItemViewModelBase.IsSelected.Value = false;
+                    Owner.MainWindowVM.Recorder.Current.ExecuteSetProperty(designerItemViewModelBase, "IsSelected.Value", false);
                 }
             }
 
-            IsSelected.Value = select;
+            Owner.MainWindowVM.Recorder.Current.ExecuteSetProperty(this, "IsSelected.Value", select);
         }
 
         public bool IsSameGroup(SelectableDesignerItemViewModelBase target)
