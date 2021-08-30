@@ -8,6 +8,7 @@ namespace boilersGraphics.ViewModels
 {
     public interface IDiagramViewModel
     {
+        MainWindowViewModel MainWindowVM { get; }
         DelegateCommand<object> AddItemCommand { get; }
         DelegateCommand<object> RemoveItemCommand { get; }
         DelegateCommand<object> ClearSelectedItemsCommand { get; }

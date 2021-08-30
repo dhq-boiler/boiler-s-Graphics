@@ -59,6 +59,12 @@
         <KeyBinding Key="V"
                     Modifiers="Ctrl"
                     Command="{Binding DiagramViewModel.PasteCommand}" />
+        <KeyBinding Key="Z"
+                    Modifiers="Ctrl"
+                    Command="{Binding DiagramViewModel.UndoCommand}" />
+        <KeyBinding Key="Y"
+                    Modifiers="Ctrl"
+                    Command="{Binding DiagramViewModel.RedoCommand}" />
     </Window.InputBindings>
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="{x:Static SystemParameters.CaptionHeight}"
@@ -106,6 +112,8 @@
                                 <MenuItem Header="切り取り(_T)" Command="{Binding DiagramViewModel.CutCommand}" InputGestureText="Ctrl+X" />
                                 <MenuItem Header="コピー(_C)" Command="{Binding DiagramViewModel.CopyCommand}" InputGestureText="Ctrl+C" />
                                 <MenuItem Header="貼り付け(_P)" Command="{Binding DiagramViewModel.PasteCommand}" InputGestureText="Ctrl+V"/>
+                                <MenuItem Header="元に戻す(_U)" Command="{Binding DiagramViewModel.UndoCommand}" InputGestureText="Ctrl+Z" />
+                                <MenuItem Header="やり直し(_R)" Command="{Binding DiagramViewModel.RedoCommand}" InputGestureText="Ctrl+Y" />
                             </MenuItem>
                             <MenuItem Header="キャンパス(_C)">
                                 <MenuItem Header="クリップを設定" Command="{Binding DiagramViewModel.ClipCommand}" />

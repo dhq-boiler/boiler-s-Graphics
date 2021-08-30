@@ -9,12 +9,15 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Documents;
 using System.Windows.Input;
+using TsOperationHistory;
+using TsOperationHistory.Extensions;
 
 namespace boilersGraphics.Controls
 {
     public class LineResizeHandle : SnapPoint
     {
         private SnapAction snapAction;
+        public OperationRecorder Recorder { get; } = new OperationRecorder((App.Current.MainWindow.DataContext as MainWindowViewModel).Controller);
 
         public LineResizeHandle()
         {
@@ -46,6 +49,8 @@ namespace boilersGraphics.Controls
             BeginDragPoint = e.GetPosition(this);
 
             (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "変形";
+
+            Recorder.BeginRecode();
         }
 
         protected override void OnMouseMove(MouseEventArgs e)
@@ -64,7 +69,7 @@ namespace boilersGraphics.Controls
 
                 snapAction.OnMouseMove(ref point);
 
-                vm.Points[TargetPointIndex] = point;
+                Recorder.Current.ExecuteSetProperty(vm, $"Points[{TargetPointIndex}]", point);
 
                 var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
                 if ((string)Tag == "始点")
@@ -90,6 +95,8 @@ namespace boilersGraphics.Controls
 
             (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "";
             (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = "";
+
+            Recorder.EndRecode("LineResizeHandle.OnMouseMove() completed");
         }
     }
 }

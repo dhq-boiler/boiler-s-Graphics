@@ -109,7 +109,7 @@ namespace boilersGraphics.Helpers
                 Random rand = new Random();
                 layerObj.Color.Value = Randomizer.RandomColor(rand);
                 layerObj.IsVisible.Value = true;
-                layerObj.Name.Value = Name.GetNewLayerName();
+                layerObj.Name.Value = Name.GetNewLayerName(diagramViewModel);
 
                 //読み込むファイルにLayers要素がない場合、初期レイヤーに全てのアイテムを突っ込む
                 foreach (var designerItems in root.Elements("DesignerItems"))
@@ -117,7 +117,7 @@ namespace boilersGraphics.Helpers
                     foreach (var designerItem in designerItems.Elements("DesignerItem"))
                     {
                         var item = ExtractDesignerItemViewModelBase(diagramViewModel, designerItem);
-                        var layerItem = new LayerItem(item, layerObj, Name.GetNewLayerItemName());
+                        var layerItem = new LayerItem(item, layerObj, Name.GetNewLayerItemName(diagramViewModel));
                         layerItem.Color.Value = Randomizer.RandomColor(rand);
                         layerObj.Children.Add(layerItem);
                     }
@@ -127,7 +127,7 @@ namespace boilersGraphics.Helpers
                     foreach (var connector in connections.Elements("Connection"))
                     {
                         var item = ExtractConnectorBaseViewModel(diagramViewModel, connector);
-                        var layerItem = new LayerItem(item, layerObj, Name.GetNewLayerItemName());
+                        var layerItem = new LayerItem(item, layerObj, Name.GetNewLayerItemName(diagramViewModel));
                         layerItem.Color.Value = Randomizer.RandomColor(rand);
                         layerObj.Children.Add(layerItem);
                     }
@@ -173,7 +173,7 @@ namespace boilersGraphics.Helpers
                 //グループの場合、子をグループに追加する
                 if (item is GroupItemViewModel groupItemVM)
                 {
-                    groupItemVM.AddGroup(c.Item.Value);
+                    groupItemVM.AddGroup(diagramViewModel.MainWindowVM.Recorder, c.Item.Value);
                 }
             }
             return layerItemObj;
@@ -212,7 +212,7 @@ namespace boilersGraphics.Helpers
                                where item.ParentID == groupItem.ID
                                select item;
 
-                children.ToList().ForEach(x => groupItem.AddGroup(x));
+                children.ToList().ForEach(x => groupItem.AddGroup(diagramViewModel.MainWindowVM.Recorder, x));
             }
 
             return list;

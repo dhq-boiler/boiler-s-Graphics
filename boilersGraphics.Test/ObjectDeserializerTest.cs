@@ -109,7 +109,8 @@ namespace boilersGraphics.Test
     </Configuration>
   </boilersGraphics>";
 
-            var diagramVM = new DiagramViewModel(1000, 1000);
+            var mainWindowViewModel = new MainWindowViewModel(null);
+            var diagramVM = new DiagramViewModel(mainWindowViewModel, 1000, 1000);
             var root = XElement.Parse(xml);
             diagramVM.Layers.Clear();
             ObjectDeserializer.ReadObjectsFromXML(diagramVM, root);

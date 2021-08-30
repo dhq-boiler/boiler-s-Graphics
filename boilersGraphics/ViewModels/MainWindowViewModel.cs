@@ -9,6 +9,8 @@ using System;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Windows;
+using TsOperationHistory;
+using TsOperationHistory.Extensions;
 
 namespace boilersGraphics.ViewModels
 {
@@ -23,7 +25,9 @@ namespace boilersGraphics.ViewModels
         {
             this.dlgService = dialogService;
 
-            DiagramViewModel = new DiagramViewModel(this.dlgService, 1000, 1000);
+            Recorder = new OperationRecorder(Controller);
+
+            DiagramViewModel = new DiagramViewModel(this, this.dlgService, 1000, 1000);
             _CompositeDisposable.Add(DiagramViewModel);
             ToolBarViewModel = new ToolBarViewModel(dialogService);
 
@@ -77,16 +81,14 @@ namespace boilersGraphics.ViewModels
                     var exchange = result.Parameters.GetValue<ColorExchange>("ColorExchange");
                     if (exchange != null)
                     {
-                        DiagramViewModel.EdgeColors.Clear();
-                        DiagramViewModel.EdgeColors.Add(exchange.New.Value);
-                        foreach (var item in DiagramViewModel.SelectedItems.Value.OfType<DesignerItemViewModelBase>())
+                        Recorder.BeginRecode();
+                        DiagramViewModel.EdgeColors.ToClearOperation().ExecuteTo(Recorder.Current);
+                        DiagramViewModel.EdgeColors.ToAddOperation(exchange.New.Value).ExecuteTo(Recorder.Current);
+                        foreach (var item in DiagramViewModel.SelectedItems.Value.OfType<SelectableDesignerItemViewModelBase>())
                         {
-                            item.EdgeColor.Value = exchange.New.Value;
+                            Recorder.Current.ExecuteSetProperty(item, "EdgeColor.Value", exchange.New.Value);
                         }
-                        foreach (var item in DiagramViewModel.SelectedItems.Value.OfType<ConnectorBaseViewModel>())
-                        {
-                            item.EdgeColor.Value = exchange.New.Value;
-                        }
+                        Recorder.EndRecode("SelectColorCommand complete");
                     }
                 }
             });
@@ -110,12 +112,14 @@ namespace boilersGraphics.ViewModels
                     var exchange = result.Parameters.GetValue<ColorExchange>("ColorExchange");
                     if (exchange != null)
                     {
-                        DiagramViewModel.FillColors.Clear();
-                        DiagramViewModel.FillColors.Add(exchange.New.Value);
+                        Recorder.BeginRecode();
+                        DiagramViewModel.FillColors.ToClearOperation().ExecuteTo(Recorder.Current);
+                        DiagramViewModel.FillColors.ToAddOperation(exchange.New.Value).ExecuteTo(Recorder.Current);
                         foreach (var item in DiagramViewModel.SelectedItems.Value.OfType<DesignerItemViewModelBase>())
                         {
-                            item.FillColor.Value = exchange.New.Value;
+                            Recorder.Current.ExecuteSetProperty(item, "FillColor.Value", exchange.New.Value);
                         }
+                        Recorder.EndRecode("SelectFillColorCommand complete");
                     }
                 }
             });
@@ -136,20 +140,19 @@ namespace boilersGraphics.ViewModels
             {
                 if (x.HasValue && !double.IsNaN(x.Value) && DiagramViewModel.SelectedItems.Value != null)
                 {
-                    foreach (var item in DiagramViewModel.SelectedItems.Value?.OfType<DesignerItemViewModelBase>())
+                    Recorder.BeginRecode();
+                    foreach (var item in DiagramViewModel.SelectedItems.Value?.OfType<SelectableDesignerItemViewModelBase>())
                     {
-                        item.EdgeThickness.Value = x.Value;
+                        Recorder.Current.ExecuteSetProperty(item, "EdgeThickness.Value", x.Value);
                     }
-
-                    foreach (var item in DiagramViewModel.SelectedItems.Value?.OfType<ConnectorBaseViewModel>())
-                    {
-                        item.EdgeThickness.Value = x.Value;
-                    }
+                    Recorder.EndRecode("DiagramViewModel.EdgeThickness.Subscribe() complete");
                 }
             })
             .AddTo(_CompositeDisposable);
 
             SnapPower.Value = 10;
+
+            DiagramViewModel.Initialize();
         }
 
         public DiagramViewModel DiagramViewModel
@@ -173,6 +176,10 @@ namespace boilersGraphics.ViewModels
         public ReactiveCollection<double> EdgeThicknessOptions { get; } = new ReactiveCollection<double>();
 
         public ReactiveProperty<string> Title { get; } = new ReactiveProperty<string>();
+
+        public IOperationController Controller { get; } = new OperationController();
+
+        public OperationRecorder Recorder { get; }
 
         public DelegateCommand<object> DeleteSelectedItemsCommand { get; private set; }
 
