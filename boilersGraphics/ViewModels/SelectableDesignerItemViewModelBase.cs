@@ -7,7 +7,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Disposables;
+using System.Threading;
 using System.Windows.Media;
+using TsOperationHistory;
+using TsOperationHistory.Extensions;
 
 namespace boilersGraphics.ViewModels
 {
@@ -17,7 +20,7 @@ namespace boilersGraphics.ViewModels
     }
 
 
-    public abstract class SelectableDesignerItemViewModelBase : BindableBase, ISelectItems, IObserver<GroupTransformNotification>, IDisposable, ICloneable
+    public abstract class SelectableDesignerItemViewModelBase : BindableBase, ISelectItems, IObserver<GroupTransformNotification>, IDisposable, ICloneable, IRestore
     {
         protected CompositeDisposable _CompositeDisposable = new CompositeDisposable();
 
@@ -45,7 +48,6 @@ namespace boilersGraphics.ViewModels
         public int Id { get; set; }
 
         public ReactivePropertySlim<bool> IsSelected { get; } = new ReactivePropertySlim<bool>();
-        public ReactivePropertySlim<bool> IsDragging { get; } = new ReactivePropertySlim<bool>();
 
         public ReactivePropertySlim<int> SelectedOrder { get; } = new ReactivePropertySlim<int>();
 
@@ -80,7 +82,7 @@ namespace boilersGraphics.ViewModels
 
         public Guid ParentID { get; set; }
 
-        public IDisposable GroupDisposable { get; internal set; }
+        public IDisposable GroupDisposable { get; set; }
 
         private void ExecuteSelectItemCommand(object param)
         {
@@ -93,11 +95,11 @@ namespace boilersGraphics.ViewModels
             {
                 foreach (var designerItemViewModelBase in Owner.SelectedItems.Value.ToList())
                 {
-                    designerItemViewModelBase.IsSelected.Value = false;
+                    Owner.MainWindowVM.Recorder.Current.ExecuteSetProperty(designerItemViewModelBase, "IsSelected.Value", false);
                 }
             }
 
-            IsSelected.Value = select;
+            Owner.MainWindowVM.Recorder.Current.ExecuteSetProperty(this, "IsSelected.Value", select);
         }
 
         public bool IsSameGroup(SelectableDesignerItemViewModelBase target)
@@ -148,5 +150,42 @@ namespace boilersGraphics.ViewModels
         public abstract object Clone();
 
         #endregion //IClonable
+
+        public void Restore(Action restorePropertiesAction)
+        {
+            restorePropertiesAction.Invoke();
+        }
+
+        public void Swap(SelectableDesignerItemViewModelBase other)
+        {
+            if (GetType() != other.GetType())
+                throw new InvalidOperationException("GetType() != other.GetType()");
+            SwapInternal_SwapProperties(this, other);
+            SwapInternal_SwapFields(this, other);
+        }
+
+        private static void SwapInternal_SwapFields<T>(T left, T right)
+        {
+            var fieldInfos = typeof(T).GetFields(System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Public);
+
+            foreach (var fieldInfo in fieldInfos)
+            {
+                var temp = fieldInfo.GetValue(left);
+                fieldInfo.SetValue(left, fieldInfo.GetValue(right));
+                fieldInfo.SetValue(right, temp);
+            }
+        }
+
+        private static void SwapInternal_SwapProperties<T>(T left, T right)
+        {
+            var propertyInfos = typeof(T).GetProperties(System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Public);
+
+            foreach (var propertyInfo in propertyInfos)
+            {
+                var temp = propertyInfo.GetValue(left);
+                propertyInfo.SetValue(left, propertyInfo.GetValue(right));
+                propertyInfo.SetValue(right, temp);
+            }
+        }
     }
 }

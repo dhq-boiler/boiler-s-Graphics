@@ -1,42 +1,45 @@
 ﻿using boilersGraphics.Models;
+using boilersGraphics.ViewModels;
 using Reactive.Bindings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TsOperationHistory;
+using TsOperationHistory.Extensions;
 
 namespace boilersGraphics.Helpers
 {
     public static class LayerTreeViewItemCollection
     {
-        public static void InsertBeforeChildren(ReactiveCollection<LayerTreeViewItemBase> layers, ReactiveCollection<LayerTreeViewItemBase> children, LayerTreeViewItemBase from, LayerTreeViewItemBase to)
+        public static void InsertBeforeChildren(OperationRecorder recorder, ReactiveCollection<LayerTreeViewItemBase> layers, ReactiveCollection<LayerTreeViewItemBase> children, LayerTreeViewItemBase from, LayerTreeViewItemBase to)
         {
             var index = children.IndexOf(to);
             if (index < 0)
                 return;
 
-            children.Insert(index, from);
-            Rearrangement(layers);
+            recorder.Current.ExecuteInsert(children, from, index);
+            Rearrangement(recorder, layers);
         }
 
-        public static void InsertAfterChildren(ReactiveCollection<LayerTreeViewItemBase> layers, ReactiveCollection<LayerTreeViewItemBase> children, LayerTreeViewItemBase from, LayerTreeViewItemBase to)
+        public static void InsertAfterChildren(OperationRecorder recorder, ReactiveCollection<LayerTreeViewItemBase> layers, ReactiveCollection<LayerTreeViewItemBase> children, LayerTreeViewItemBase from, LayerTreeViewItemBase to)
         {
             var index = children.IndexOf(to);
             if (index < 0)
                 return;
 
-            children.Insert(index + 1, from);
-            Rearrangement(layers);
+            recorder.Current.ExecuteInsert(children, from, index + 1);
+            Rearrangement(recorder, layers);
         }
 
-        public static void AddChildren(ReactiveCollection<LayerTreeViewItemBase> layers, ReactiveCollection<LayerTreeViewItemBase> children, LayerTreeViewItemBase to)
+        public static void AddChildren(OperationRecorder recorder, ReactiveCollection<LayerTreeViewItemBase> layers, ReactiveCollection<LayerTreeViewItemBase> children, LayerTreeViewItemBase to)
         {
-            children.Add(to);
-            Rearrangement(layers);
+            recorder.Current.ExecuteAdd(children, to);
+            Rearrangement(recorder, layers);
         }
 
-        private static void Rearrangement(ReactiveCollection<LayerTreeViewItemBase> layers)
+        private static void Rearrangement(OperationRecorder recorder, ReactiveCollection<LayerTreeViewItemBase> layers)
         {
             var queue = new Queue<LayerTreeViewItemBase>(layers);
             LayerTreeViewItemBase item = null;
@@ -44,7 +47,7 @@ namespace boilersGraphics.Helpers
             while (queue.Count() > 0)
             {
                 item = queue.Dequeue();
-                zindex = item.SetZIndex(zindex);
+                zindex = item.SetZIndex(recorder, zindex);
             }
         }
     }

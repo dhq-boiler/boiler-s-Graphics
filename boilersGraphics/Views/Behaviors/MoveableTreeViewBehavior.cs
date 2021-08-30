@@ -15,6 +15,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using TsOperationHistory.Extensions;
 
 namespace boilersGraphics.Views.Behaviors
 {
@@ -160,6 +161,9 @@ namespace boilersGraphics.Views.Behaviors
             if (!(sender is ItemsControl itemsControl))
                 return;
 
+            var mainWindowViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel);
+            mainWindowViewModel.Recorder.BeginRecode();
+
             var sourceItemLayerItem = (LayerTreeViewItemBase)e.Data.GetData(typeof(LayerItem));
             var sourceItemLayer = (LayerTreeViewItemBase)e.Data.GetData(typeof(Layer));
             var sourceItem = EitherNotNull(sourceItemLayer, sourceItemLayerItem);
@@ -179,7 +183,7 @@ namespace boilersGraphics.Views.Behaviors
             {
                 children = diagramVM.Layers;
             }
-            children.Remove(sourceItem);
+            mainWindowViewModel.Recorder.Current.ExecuteRemove(children, sourceItem);
             switch (_insertType)
             {
                 case InsertType.Before:
@@ -187,7 +191,7 @@ namespace boilersGraphics.Views.Behaviors
                     {
                         children = targetItemParent.Children;
                     }
-                    LayerTreeViewItemCollection.InsertBeforeChildren(diagramVM.Layers, children, sourceItem, targetItem);
+                    LayerTreeViewItemCollection.InsertBeforeChildren(mainWindowViewModel.Recorder, diagramVM.Layers, children, sourceItem, targetItem);
                     sourceItem.Parent.Value = targetItemParent;
                     sourceItem.IsSelected.Value = true;
                     break;
@@ -196,18 +200,20 @@ namespace boilersGraphics.Views.Behaviors
                     {
                         children = targetItemParent.Children;
                     }
-                    LayerTreeViewItemCollection.InsertAfterChildren(diagramVM.Layers, children, sourceItem, targetItem);
+                    LayerTreeViewItemCollection.InsertAfterChildren(mainWindowViewModel.Recorder, diagramVM.Layers, children, sourceItem, targetItem);
                     sourceItem.Parent.Value = targetItemParent;
                     sourceItem.IsSelected.Value = true;
                     break;
                 case InsertType.Children:
                     children = targetItem.Children;
-                    LayerTreeViewItemCollection.AddChildren(diagramVM.Layers, children, sourceItem);
+                    LayerTreeViewItemCollection.AddChildren(mainWindowViewModel.Recorder, diagramVM.Layers, children, sourceItem);
                     targetItem.IsExpanded.Value = true;
                     sourceItem.IsSelected.Value = true;
                     sourceItem.Parent.Value = targetItem;
                     break;
             }
+
+            mainWindowViewModel.Recorder.EndRecode("MoveableTreeViewBehavior.OnDrop() complete");
 
             DropCommand?.Execute(new DropArguments
             {
@@ -263,11 +269,6 @@ namespace boilersGraphics.Views.Behaviors
             var targetParent = infoBase.Parent.Value;
             var last = targetParent?.Children.LastOrDefault();
             return last;
-        }
-
-        private static void RemoveCurrentItem(LayerTreeViewItemBase sourceItemParent, LayerTreeViewItemBase sourceItem)
-        {
-            sourceItemParent.RemoveChildren(sourceItem);
         }
 
         private static void ResetSeparator(ICollection<LayerTreeViewItemBase> collection)

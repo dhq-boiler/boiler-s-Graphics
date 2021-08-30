@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using TsOperationHistory;
+using TsOperationHistory.Extensions;
 
 namespace boilersGraphics.ViewModels
 {
@@ -85,9 +87,9 @@ namespace boilersGraphics.ViewModels
             observers.ForEach(x => x.OnNext(notification));
         }
 
-        public void AddGroup(SelectableDesignerItemViewModelBase viewModel)
+        public void AddGroup(OperationRecorder recorder, SelectableDesignerItemViewModelBase viewModel)
         {
-            viewModel.GroupDisposable = Subscribe(viewModel);
+            recorder.Current.ExecuteSetProperty(viewModel, "GroupDisposable", Subscribe(viewModel));
         }
 
         public override PathGeometry CreateGeometry()
