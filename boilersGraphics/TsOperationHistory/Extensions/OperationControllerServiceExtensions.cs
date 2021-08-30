@@ -54,7 +54,7 @@ namespace TsOperationHistory.Extensions
             controller.Execute(operation);
         }
 
-        public static void ExecuteSetProperty<T,TProperty>(this IOperationController controller, T owner , string propertyName , TProperty value)
+        public static void ExecuteSetProperty<T, TProperty>(this IOperationController controller, T owner, string propertyName, TProperty value)
         {
             var operation = owner
                 .GenerateSetPropertyOperation(propertyName, value)
