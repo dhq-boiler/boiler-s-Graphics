@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using TsOperationHistory.Extensions;
 
@@ -32,11 +33,13 @@ namespace TsOperationHistory
 
         public void BeginRecode()
         {
+            Trace.WriteLine("BeginRecord()");
             _stack.Push(new OperationController(1024));
         }
 
         public void EndRecode( string message )
         {
+            Trace.WriteLine($"EndRecord({message})");
             var controller = _stack.Pop();
             var operation = controller.Operations.ToCompositeOperation();
             operation.Message = message;
