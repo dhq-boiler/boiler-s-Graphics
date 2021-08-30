@@ -600,17 +600,19 @@ namespace boilersGraphics.ViewModels
 
         private void CombineAndAddItem(GeometryCombineMode mode)
         {
+            MainWindowVM.Recorder.BeginRecode();
+
             var item1 = SelectedItems.Value.OfType<SelectableDesignerItemViewModelBase>().First();
             var item2 = SelectedItems.Value.OfType<SelectableDesignerItemViewModelBase>().Last();
             var combine = new CombineGeometryViewModel();
             Remove(item1);
             Remove(item2);
-            combine.EdgeColor.Value = item1.EdgeColor.Value;
-            combine.EdgeThickness.Value = item1.EdgeThickness.Value;
-            combine.IsSelected.Value = true;
-            combine.Owner = this;
-            combine.ZIndex.Value = Layers.SelectMany(x => x.Children).Count();
-            combine.PathGeometry.Value = GeometryCreator.CreateCombineGeometry(item1, item2);
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "EdgeColor.Value", item1.EdgeColor.Value);
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "EdgeThickness.Value", item1.EdgeThickness.Value);
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "IsSelected.Value", true);
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "Owner", this);
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "ZIndex.Value", Layers.SelectMany(x => x.Children).Count());
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "PathGeometry.Value", GeometryCreator.CreateCombineGeometry(item1, item2));
             if (combine.PathGeometry.Value == null)
             {
                 var item1PathGeometry = item1.PathGeometry.Value;
@@ -623,16 +625,18 @@ namespace boilersGraphics.ViewModels
                 
                 CastToLetterAndSetTransform(item1, item2, item1PathGeometry, item2PathGeometry);
 
-                combine.PathGeometry.Value = Geometry.Combine(item1PathGeometry, item2PathGeometry, mode, null);
+                MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "PathGeometry.Value", Geometry.Combine(item1PathGeometry, item2PathGeometry, mode, null));
             }
-            combine.Left.Value = combine.PathGeometry.Value.Bounds.Left;
-            combine.Top.Value = combine.PathGeometry.Value.Bounds.Top;
-            combine.Width.Value = combine.PathGeometry.Value.Bounds.Width;
-            combine.Height.Value = combine.PathGeometry.Value.Bounds.Height;
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "Left.Value", combine.PathGeometry.Value.Bounds.Left);
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "Top.Value", combine.PathGeometry.Value.Bounds.Top);
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "Width.Value", combine.PathGeometry.Value.Bounds.Width);
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "Height.Value", combine.PathGeometry.Value.Bounds.Height);
             Add(combine);
+
+            MainWindowVM.Recorder.EndRecode("CombineAndAddItem() complete");
         }
 
-        private static void CastToLetterAndSetTransform(SelectableDesignerItemViewModelBase item1, SelectableDesignerItemViewModelBase item2, PathGeometry item1PathGeometry, PathGeometry item2PathGeometry)
+        private void CastToLetterAndSetTransform(SelectableDesignerItemViewModelBase item1, SelectableDesignerItemViewModelBase item2, PathGeometry item1PathGeometry, PathGeometry item2PathGeometry)
         {
             InternalCastToLetterAndSetTransform(item1, item1PathGeometry);
             InternalCastToLetterVerticalAndSetTransform(item1, item1PathGeometry);
@@ -642,7 +646,7 @@ namespace boilersGraphics.ViewModels
             InternalCastToPolygonAndSetTransform(item2, item2PathGeometry);
         }
 
-        private static void InternalCastToPolygonAndSetTransform(SelectableDesignerItemViewModelBase item, PathGeometry itemPathGeometry)
+        private void InternalCastToPolygonAndSetTransform(SelectableDesignerItemViewModelBase item, PathGeometry itemPathGeometry)
         {
             if (item is NPolygonViewModel)
             {
@@ -654,11 +658,11 @@ namespace boilersGraphics.ViewModels
                 transformGroup.Children.Add(new TranslateTransform(item_.Left.Value, item_.Top.Value));
                 if (itemPathGeometry.Transform != null)
                     transformGroup.Children.Add(itemPathGeometry.Transform);
-                itemPathGeometry.Transform = transformGroup;
+                MainWindowVM.Recorder.Current.ExecuteSetPropertyWithEnforcePropertyType<PathGeometry, Transform>(itemPathGeometry, "Transform", transformGroup);
             }
         }
 
-        private static void InternalCastToLetterVerticalAndSetTransform(SelectableDesignerItemViewModelBase item, PathGeometry itemPathGeometry)
+        private void InternalCastToLetterVerticalAndSetTransform(SelectableDesignerItemViewModelBase item, PathGeometry itemPathGeometry)
         {
             if (item is LetterVerticalDesignerItemViewModel)
             {
@@ -667,12 +671,12 @@ namespace boilersGraphics.ViewModels
                 transformGroup.Children.Add(new TranslateTransform(item_.Left.Value, item_.Top.Value));
                 if (itemPathGeometry.Transform != null)
                     transformGroup.Children.Add(itemPathGeometry.Transform);
-                itemPathGeometry.Transform = transformGroup;
+                MainWindowVM.Recorder.Current.ExecuteSetPropertyWithEnforcePropertyType<PathGeometry, Transform>(itemPathGeometry, "Transform", transformGroup);
                 item_.CloseLetterSettingDialog();
             }
         }
 
-        private static void InternalCastToLetterAndSetTransform(SelectableDesignerItemViewModelBase item, PathGeometry itemPathGeometry)
+        private void InternalCastToLetterAndSetTransform(SelectableDesignerItemViewModelBase item, PathGeometry itemPathGeometry)
         {
             if (item is LetterDesignerItemViewModel)
             {
@@ -681,7 +685,7 @@ namespace boilersGraphics.ViewModels
                 transformGroup.Children.Add(new TranslateTransform(item_.Left.Value, item_.Top.Value));
                 if (itemPathGeometry.Transform != null)
                     transformGroup.Children.Add(itemPathGeometry.Transform);
-                itemPathGeometry.Transform = transformGroup;
+                MainWindowVM.Recorder.Current.ExecuteSetPropertyWithEnforcePropertyType<PathGeometry, Transform>(itemPathGeometry, "Transform", transformGroup);
                 item_.CloseLetterSettingDialog();
             }
         }
