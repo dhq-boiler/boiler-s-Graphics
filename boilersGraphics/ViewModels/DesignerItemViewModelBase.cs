@@ -140,6 +140,8 @@ namespace boilersGraphics.ViewModels
         {
             switch (propertyName)
             {
+                case "Left":
+                case "Top":
                 case "Width":
                 case "Height":
                 case "RotationAngle":
@@ -147,7 +149,6 @@ namespace boilersGraphics.ViewModels
                     UpdatePathGeometryIfEnable();
                     break;
                 default:
-                    //Left, Top : do nothing
                     break;
             }
         }
