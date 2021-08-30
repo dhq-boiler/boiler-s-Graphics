@@ -63,6 +63,15 @@ namespace TsOperationHistory.Extensions
             controller.Execute(operation);
         }
 
+        public static void ExecuteSetPropertyWithEnforcePropertyType<T, TProperty>(this IOperationController controller, T owner, string propertyName, object value)
+        {
+            var operation = owner
+                .GenerateSetPropertyOperation<TProperty>(propertyName, (TProperty)value)
+                .Merge(controller);
+
+            controller.Execute(operation);
+        }
+
         public static void ExecuteSetProperty<T, TProperty>(this IOperationController controller, Type @class, string propertyName, TProperty value)
         {
             var operation = @class.GenerateSetPropertyOperation(propertyName, value)
