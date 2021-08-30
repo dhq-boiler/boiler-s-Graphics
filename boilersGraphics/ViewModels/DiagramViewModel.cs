@@ -1224,6 +1224,7 @@ namespace boilersGraphics.ViewModels
                                                                                                       .First(x => (x as LayerItem).Item == (child as LayerItem).Item)
                                                                                                       .Parent.Value
                                                                                                       .Parent.Value);
+                    MainWindowVM.Recorder.Current.ExecuteSetProperty(layerItem, "IsSelected.Value", true);
                     layerItem.Parent.Value.AddChildren(MainWindowVM.Recorder, layerItem);
                 }
 
