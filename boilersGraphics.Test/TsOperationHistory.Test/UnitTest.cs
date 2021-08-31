@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using Reactive.Bindings;
 using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
@@ -24,6 +25,8 @@ namespace TsOperationHistory.Test
             set => SetProperty(ref _age, value);
         }
 
+        public ReactivePropertySlim<string> RP { get; set; } = new ReactivePropertySlim<string>();
+
         private ObservableCollection<Person> _children = new ObservableCollection<Person>();
         private bool disposedValue;
 
@@ -39,10 +42,12 @@ namespace TsOperationHistory.Test
             {
                 if (disposing)
                 {
+                    RP.Dispose();
                 }
 
                 _name = null;
                 _children = null;
+                RP = null;
                 disposedValue = true;
             }
         }
@@ -62,6 +67,7 @@ namespace TsOperationHistory.Test
             _name = string.Empty;
             _age = 0;
             _children = new ObservableCollection<Person>();
+            RP = new ReactivePropertySlim<string>();
 
             restorePropertiesAction.Invoke();
             GC.ReRegisterForFinalize(this);
@@ -305,6 +311,37 @@ namespace TsOperationHistory.Test
 
             controller.Undo();
             Assert.AreEqual("Venus", person.Name);
+        }
+
+        [Test]
+        public async Task MultiLayeredPropertyTest()
+        {
+            IOperationController controller = new OperationController();
+            var person = new Person();
+            person.RP.Value = "Value1";
+
+            // デフォルトのマージ時間を 70msに設定
+            Operation.DefaultMergeSpan = TimeSpan.FromMilliseconds(70);
+
+            //75ms 待つ
+            await Task.Delay(75);
+
+            controller.ExecuteSetProperty(person, "RP.Value", "Value2");
+            Assert.AreEqual("Value2", person.RP.Value);
+
+            //75ms 待つ
+            await Task.Delay(75);
+
+            controller.ExecuteSetProperty(person, "RP.Value", "Value3");
+            Assert.AreEqual("Value3", person.RP.Value);
+
+            controller.Undo();
+            Assert.AreEqual("Value2", person.RP.Value);
+
+            controller.Undo();
+            Assert.AreEqual("Value1", person.RP.Value);
+
+            Assert.That(controller.CanUndo, Is.False);
         }
     }
 }
