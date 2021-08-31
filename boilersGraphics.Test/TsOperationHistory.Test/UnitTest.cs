@@ -343,5 +343,28 @@ namespace TsOperationHistory.Test
 
             Assert.That(controller.CanUndo, Is.False);
         }
+
+        [Test]
+        public void MultiLayeredPropertyTest2()
+        {
+            IOperationController controller = new OperationController();
+            var person = new Person();
+            person.RP.Value = "Value1";
+
+            using (var watcher = controller.BindPropertyChanged<string>(person, "RP.Value", false))
+            {
+                person.RP.Value = "Value2";
+
+                person.RP.Value = "Value3";
+
+                controller.Undo();
+                Assert.AreEqual("Value2", person.RP.Value);
+
+                controller.Undo();
+                Assert.AreEqual("Value1", person.RP.Value);
+            }
+
+            Assert.That(controller.CanUndo, Is.False);
+        }
     }
 }
