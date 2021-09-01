@@ -16,17 +16,29 @@ namespace boilersGraphics.Views.Behaviors
     {
         protected override void OnAttached()
         {
+            this.AssociatedObject.StylusDown += AssociatedObject_StylusDown;
             this.AssociatedObject.MouseDown += AssociatedObject_PreviewMouseDown;
             base.OnAttached();
         }
 
         protected override void OnDetaching()
         {
+            this.AssociatedObject.StylusDown -= AssociatedObject_StylusDown;
             this.AssociatedObject.MouseDown -= AssociatedObject_PreviewMouseDown;
             base.OnDetaching();
         }
 
+        private void AssociatedObject_StylusDown(object sender, StylusDownEventArgs e)
+        {
+            Internal_PreviewMouseDown(e);
+        }
+
         private void AssociatedObject_PreviewMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            Internal_PreviewMouseDown(e);
+        }
+
+        private void Internal_PreviewMouseDown(InputEventArgs e)
         {
             var frameworkElement = e.OriginalSource as FrameworkElement;
             if (frameworkElement == null)
@@ -41,7 +53,7 @@ namespace boilersGraphics.Views.Behaviors
                     return;
                 }
 
-                var vm = ((item as FrameworkElement).DataContext as SelectableDesignerItemViewModelBase);
+                var vm = (item as FrameworkElement).DataContext as SelectableDesignerItemViewModelBase;
 
                 //item の ViewModel がPreviewMouseDownイベントで得られる ViewModel と異なる場合
                 //即ち、選択外の ViewModelの場合
