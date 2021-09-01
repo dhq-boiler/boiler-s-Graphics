@@ -67,6 +67,9 @@ namespace boilersGraphics.Views.Behaviors
 
         private void AssociatedObject_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
+            if (e.StylusDevice != null)
+                return;
+
             if (e.LeftButton == MouseButtonState.Pressed)
             {
                 if (e.Source == AssociatedObject)
