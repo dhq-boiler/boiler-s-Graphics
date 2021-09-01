@@ -90,6 +90,9 @@ namespace boilersGraphics.Views.Behaviors
 
         private void AssociatedObject_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
         {
+            if (e.StylusDevice != null)
+                return;
+
             var canvas = AssociatedObject as DesignerCanvas;
             Point current = e.GetPosition(canvas);
             snapAction.OnMouseMove(ref current);

@@ -60,6 +60,9 @@ namespace boilersGraphics.Views.Behaviors
 
         private void AssociatedObject_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
         {
+            if (e.StylusDevice != null)
+                return;
+
             var canvas = AssociatedObject as DesignerCanvas;
             if (e.LeftButton != MouseButtonState.Pressed)
                 _pictureDrawingStartPoint = null;
