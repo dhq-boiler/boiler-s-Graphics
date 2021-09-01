@@ -7,9 +7,10 @@
     <convereter:ToSolidColorBrushConverter x:Key="solidColorBrushConverter" />
     <DataTemplate DataType="{x:Type viewModel:CombineGeometryViewModel}">
         <Path Fill="{Binding FillColor.Value, Converter={StaticResource solidColorBrushConverter}}"
-                Stretch="Fill"
-                Stroke="{Binding EdgeColor.Value, Converter={StaticResource solidColorBrushConverter}}"
-                StrokeThickness="{Binding EdgeThickness.Value}"
-                Data="{Binding PathGeometry.Value}" />
+              IsHitTestVisible="False"
+              Stretch="Fill"
+              Stroke="{Binding EdgeColor.Value, Converter={StaticResource solidColorBrushConverter}}"
+              StrokeThickness="{Binding EdgeThickness.Value}"
+              Data="{Binding PathGeometry.Value}" />
     </DataTemplate>
 </ResourceDictionary>

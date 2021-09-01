@@ -612,6 +612,7 @@ namespace boilersGraphics.ViewModels
             MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "IsSelected.Value", true);
             MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "Owner", this);
             MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "ZIndex.Value", Layers.SelectMany(x => x.Children).Count());
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "IsHitTestVisible.Value", MainWindowVM.ToolBarViewModel.CurrentHitTestVisibleState.Value);
             MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "PathGeometry.Value", GeometryCreator.CreateCombineGeometry(item1, item2));
             if (combine.PathGeometry.Value == null)
             {

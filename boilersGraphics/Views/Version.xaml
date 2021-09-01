@@ -28,7 +28,8 @@
             </StackPanel>
             <Label Content="ライセンス" />
             <mdxam:MarkdownScrollViewer xml:space="preserve"
-                                        Markdown="{Binding License.Value}" />
+                                        Markdown="{Binding License.Value}"
+                                        ScrollViewer.VerticalScrollBarVisibility="Hidden" />
         </StackPanel>
         <StackPanel Orientation="Horizontal"
                     HorizontalAlignment="Right"

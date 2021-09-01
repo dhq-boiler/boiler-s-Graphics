@@ -33,6 +33,9 @@ namespace boilersGraphics.Views.Behaviors
 
         protected override void OnAttached()
         {
+            this.AssociatedObject.StylusDown += AssociatedObject_StylusDown;
+            this.AssociatedObject.StylusMove += AssociatedObject_StylusMove;
+            this.AssociatedObject.TouchDown += AssociatedObject_TouchDown;
             this.AssociatedObject.MouseDown += AssociatedObject_MouseDown;
             this.AssociatedObject.MouseMove += AssociatedObject_MouseMove;
             this.AssociatedObject.MouseUp += AssociatedObject_MouseUp;
@@ -41,14 +44,38 @@ namespace boilersGraphics.Views.Behaviors
 
         protected override void OnDetaching()
         {
+            this.AssociatedObject.StylusDown -= AssociatedObject_StylusDown;
+            this.AssociatedObject.StylusMove -= AssociatedObject_StylusMove;
+            this.AssociatedObject.TouchDown -= AssociatedObject_TouchDown;
             this.AssociatedObject.MouseDown -= AssociatedObject_MouseDown;
             this.AssociatedObject.MouseMove -= AssociatedObject_MouseMove;
             this.AssociatedObject.MouseUp -= AssociatedObject_MouseUp;
             base.OnDetaching();
         }
 
+        private void AssociatedObject_StylusDown(object sender, StylusDownEventArgs e)
+        {
+            if (e.Source == AssociatedObject)
+            {
+                _pictureDrawingStartPoint = e.GetPosition(AssociatedObject);
+                e.Handled = true;
+            }
+        }
+
+        private void AssociatedObject_TouchDown(object sender, TouchEventArgs e)
+        {
+            if (e.Source == AssociatedObject)
+            {
+                var touchPoint = e.GetTouchPoint(AssociatedObject);
+                _pictureDrawingStartPoint = touchPoint.Position;
+            }
+        }
+
         private void AssociatedObject_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
         {
+            if (e.StylusDevice != null)
+                return;
+
             var canvas = AssociatedObject as DesignerCanvas;
             Point current = e.GetPosition(canvas);
             snapAction.OnMouseMove(ref current);
@@ -70,6 +97,32 @@ namespace boilersGraphics.Views.Behaviors
                 }
             }
             e.Handled = true;
+        }
+
+        private void AssociatedObject_StylusMove(object sender, StylusEventArgs e)
+        {
+            var canvas = AssociatedObject as DesignerCanvas;
+            Point current = e.GetPosition(canvas);
+            snapAction.OnMouseMove(ref current);
+
+            if (e.InAir)
+                _pictureDrawingStartPoint = null;
+
+            if (_pictureDrawingStartPoint.HasValue)
+            {
+                _pictureDrawingStartPoint = current;
+                (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "描画";
+
+                AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(canvas);
+                if (adornerLayer != null)
+                {
+                    PictureAdorner adorner = new PictureAdorner(canvas, _pictureDrawingStartPoint, _filename, _Width, _Height);
+                    if (adorner != null)
+                    {
+                        adornerLayer.Add(adorner);
+                    }
+                }
+            }
         }
 
         private void AssociatedObject_MouseUp(object sender, MouseButtonEventArgs e)

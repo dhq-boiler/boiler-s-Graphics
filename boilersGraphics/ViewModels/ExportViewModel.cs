@@ -59,23 +59,25 @@ namespace boilersGraphics.ViewModels
         private void ExportProcess()
         {
             Dictionary<SelectableDesignerItemViewModelBase, bool> tempIsSelected;
+            Transform tempLayoutTransform;
 
-            BeforeExport(out tempIsSelected);
+            BeforeExport(out tempIsSelected, out tempLayoutTransform);
 
             Export();
 
-            AfterExport(tempIsSelected);
+            AfterExport(tempIsSelected, tempLayoutTransform);
 
             OkClose();
         }
 
-        private void BeforeExport(out Dictionary<SelectableDesignerItemViewModelBase, bool> tempIsSelected)
+        private void BeforeExport(out Dictionary<SelectableDesignerItemViewModelBase, bool> tempIsSelected, out Transform tempLayoutTransform)
         {
             var diagramControl = App.Current.MainWindow.GetChildOfType<DiagramControl>();
             var itemsControl = diagramControl.GetChildOfType<ItemsControl>();
             tempIsSelected = new Dictionary<SelectableDesignerItemViewModelBase, bool>();
             var diagramViewModel = diagramControl.DataContext as DiagramViewModel;
             var backgroundItem = diagramViewModel.BackgroundItem.Value;
+            var designerCanvas = diagramControl.GetChildOfType<DesignerCanvas>();
 
             foreach (var item in itemsControl.Items.Cast<SelectableDesignerItemViewModelBase>())
             {
@@ -92,6 +94,9 @@ namespace boilersGraphics.ViewModels
 
             //一時的に背景の境界線を消す
             backgroundItem.EdgeThickness.Value = 0;
+
+            tempLayoutTransform = designerCanvas.LayoutTransform;
+            designerCanvas.LayoutTransform = new MatrixTransform();
         }
 
         private void Export()
@@ -125,12 +130,13 @@ namespace boilersGraphics.ViewModels
             generator.Save(Path.Value);
         }
 
-        private void AfterExport(Dictionary<SelectableDesignerItemViewModelBase, bool> tempIsSelected)
+        private void AfterExport(Dictionary<SelectableDesignerItemViewModelBase, bool> tempIsSelected, Transform tempLayoutTransform)
         {
             var diagramControl = App.Current.MainWindow.GetChildOfType<DiagramControl>();
             var itemsControl = diagramControl.GetChildOfType<ItemsControl>();
             var diagramViewModel = diagramControl.DataContext as DiagramViewModel;
             var backgroundItem = diagramViewModel.BackgroundItem.Value;
+            var designerCanvas = diagramControl.GetChildOfType<DesignerCanvas>();
 
             //背景の境界線を復元する
             backgroundItem.EdgeThickness.Value = 1;
@@ -150,6 +156,8 @@ namespace boilersGraphics.ViewModels
                 //スナップポイントを半透明に復元する
                 snapPointVM.Opacity.Value = 0.5;
             }
+
+            designerCanvas.LayoutTransform = tempLayoutTransform;
         }
 
         private static void RenderBackgroundViewModel(DrawingContext context, BackgroundViewModel background)
