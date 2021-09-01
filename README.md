@@ -2,6 +2,7 @@
 
 [![Build Status](https://dev.azure.com/dhq-boiler/boiler_s%20Graphics/_apis/build/status/dhq-boiler.boiler-s-Graphics?branchName=master)](https://dev.azure.com/dhq-boiler/boiler_s%20Graphics/_build/latest?definitionId=4&branchName=master)
 ![Azure DevOps coverage](https://img.shields.io/azure-devops/coverage/dhq-boiler/boiler_s%2520Graphics/4)
+![GitHub](https://img.shields.io/github/license/dhq-boiler/boiler-s-Graphics)
 
 boiler's Graphics はベクターグラフィックスドローイングツールです。C# + Windows Presentation Foundation(WPF)で作っています。単純な図形やビットマップなどを描画して、あなたの望むがままのキャンバスを描くことができます。
 
