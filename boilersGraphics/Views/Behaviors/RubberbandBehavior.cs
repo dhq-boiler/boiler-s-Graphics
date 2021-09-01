@@ -19,6 +19,9 @@ namespace boilersGraphics.Views.Behaviors
 
         protected override void OnAttached()
         {
+            this.AssociatedObject.StylusDown += AssociatedObject_StylusDown;
+            this.AssociatedObject.StylusMove += AssociatedObject_StylusMove;
+            this.AssociatedObject.TouchDown += AssociatedObject_TouchDown;
             this.AssociatedObject.MouseDown += AssociatedObject_MouseDown;
             this.AssociatedObject.MouseMove += AssociatedObject_MouseMove;
             base.OnAttached();
@@ -26,6 +29,9 @@ namespace boilersGraphics.Views.Behaviors
 
         protected override void OnDetaching()
         {
+            this.AssociatedObject.StylusDown -= AssociatedObject_StylusDown;
+            this.AssociatedObject.StylusMove -= AssociatedObject_StylusMove;
+            this.AssociatedObject.TouchDown -= AssociatedObject_TouchDown;
             this.AssociatedObject.MouseDown -= AssociatedObject_MouseDown;
             this.AssociatedObject.MouseMove -= AssociatedObject_MouseMove;
             base.OnDetaching();
@@ -54,6 +60,61 @@ namespace boilersGraphics.Views.Behaviors
                 }
             }
             e.Handled = true;
+        }
+
+        private void AssociatedObject_StylusMove(object sender, StylusEventArgs e)
+        {
+            var canvas = AssociatedObject as DesignerCanvas;
+
+            if (e.InAir)
+                _rubberbandSelectionStartPoint = null;
+
+            if (_rubberbandSelectionStartPoint.HasValue)
+            {
+                AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(canvas);
+                if (adornerLayer != null)
+                {
+                    RubberbandAdorner adorner = new RubberbandAdorner(canvas, _rubberbandSelectionStartPoint);
+                    if (adorner != null)
+                    {
+                        adornerLayer.Add(adorner);
+                    }
+                }
+            }
+        }
+
+        private void AssociatedObject_StylusDown(object sender, StylusDownEventArgs e)
+        {
+            if (e.Source == AssociatedObject)
+            {
+                _rubberbandSelectionStartPoint = e.GetPosition(AssociatedObject);
+
+                (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "範囲選択";
+
+                IDiagramViewModel vm = (AssociatedObject.DataContext as IDiagramViewModel);
+                if (!(Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
+                {
+                    vm.ClearSelectedItemsCommand.Execute(null);
+                }
+                e.Handled = true;
+            }
+        }
+
+        private void AssociatedObject_TouchDown(object sender, TouchEventArgs e)
+        {
+            if (e.Source == AssociatedObject)
+            {
+                var touchPoint = e.GetTouchPoint(AssociatedObject);
+                _rubberbandSelectionStartPoint = touchPoint.Position;
+
+                (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "範囲選択";
+
+                IDiagramViewModel vm = (AssociatedObject.DataContext as IDiagramViewModel);
+                if (!(Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
+                {
+                    vm.ClearSelectedItemsCommand.Execute(null);
+                }
+            }
         }
 
         private void AssociatedObject_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
