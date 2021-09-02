@@ -28,9 +28,17 @@ steps:
     configuration: '$(buildConfiguration)'
 
 - task: CmdLine@2
+  displayName: "NUnit & OpenCover"
   inputs:
-    script: |
-      packages\NUnit.ConsoleRunner.3.12.0\tools\nunit3-console.exe boilersGraphics.Test\bin\Release\boilersGraphics.Test.dll
+    script: >
+      $(openCover)
+      -register:Path64
+      -target:"$(nunitConsole)"
+      -targetargs:"boilersGraphics.Test.dll"
+      -targetdir:"boilersGraphics.Test\bin\$(buildConfiguration)"
+      -returntargetcode
+      -output:"coverage.xml"
+      -filter:"+[SavannahXmlLib]*"
 
 - task: PublishTestResults@2
   displayName: "Publish unit test result"
@@ -39,6 +47,19 @@ steps:
     testResultsFormat: 'NUnit'
     testResultsFiles: '**/TestResult.xml'
     failTaskOnFailedTests: false
+
+- task: reportgenerator@4
+  condition: always()
+  inputs:
+    reports: '**\coverage.xml'
+    targetdir: 'coveragereport'
+
+- task: PublishCodeCoverageResults@1
+  condition: always()
+  inputs:
+    codeCoverageTool: 'Cobertura'
+    summaryFileLocation: 'coveragereport\Cobertura.xml'
+    reportDirectory: 'coveragereport\'
 
 # Archive files
 # Compress files into .7z, .tar.gz, or .zip
