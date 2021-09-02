@@ -39,7 +39,7 @@ steps:
       -targetdir:"boilersGraphics.Test\bin\$(buildConfiguration)"
       -returntargetcode
       -output:"coverage.xml"
-      -filter:"+[boilersGraphics.Test]* +[TsOperationHistory.Test]*"
+      -filter:"+[boilersGraphics]* +[TsOperationHistory]*"
 
 - task: PublishTestResults@2
   displayName: "Publish unit test result"
