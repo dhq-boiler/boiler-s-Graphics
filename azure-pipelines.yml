@@ -31,7 +31,7 @@ steps:
   displayName: "NUnit & OpenCover"
   inputs:
     script: >
-      $(openCover)
+      packages\OpenCover.4.7.1221\tools\OpenCover.Console.exe
       -register:Path64
       -target:"$(nunitConsole)"
       -targetargs:"boilersGraphics.Test.dll"
