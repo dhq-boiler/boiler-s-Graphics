@@ -8,7 +8,7 @@ using System.Windows.Data;
 
 namespace boilersGraphics.Converters
 {
-    class StringToByteConverter : IValueConverter
+    public class StringToByteConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

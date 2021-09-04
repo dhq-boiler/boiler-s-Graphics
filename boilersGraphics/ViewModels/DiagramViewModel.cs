@@ -881,7 +881,7 @@ namespace boilersGraphics.ViewModels
                       .ForEach(x => x.PushZIndex(MainWindowVM.Recorder, newZIndex));
                 item.ZIndex.Value = newZIndex;
                 item.Owner = this;
-                SelectedLayers.Value.First().AddItem(MainWindowVM, this, item);
+                Add(item);
             }
         }
 

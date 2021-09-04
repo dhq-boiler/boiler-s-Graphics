@@ -9,7 +9,7 @@ using System.Windows.Media;
 
 namespace boilersGraphics.Converters
 {
-    internal class ToSolidColorBrushConverter : IValueConverter
+    public class ToSolidColorBrushConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
