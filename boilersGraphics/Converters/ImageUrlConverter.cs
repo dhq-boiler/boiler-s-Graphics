@@ -9,6 +9,7 @@ using System.Windows.Media.Imaging;
 
 namespace boilersGraphics.Converters
 {
+    [Obsolete]
     [ValueConversion(typeof(string), typeof(ImageSource))]
     public class ImageUrlConverter : IValueConverter
     {
