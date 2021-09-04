@@ -57,5 +57,19 @@ namespace boilersGraphics.Test
             Assert.That(converter.ConvertBack("0.00001", typeof(string), null, null), Is.EqualTo(0.00001));
             Assert.That(converter.ConvertBack("0.0001*", typeof(string), null, null), Is.EqualTo(0));
         }
+
+        [Test]
+        public void ExtensionConverter_Convert()
+        {
+            var converter = new ExtensionConverter();
+            Assert.That(converter.Convert(@"Z:\Git\boilersGraphics\boilersGraphics.Test\ConverterTest.cs", typeof(string), null, null), Is.EqualTo(".cs"));
+        }
+
+        [Test]
+        public void ExtensionConverter_ConvertBack()
+        {
+            var converter = new ExtensionConverter();
+            Assert.That(() => converter.ConvertBack(string.Empty, typeof(string), null, null), Throws.InstanceOf<NotImplementedException>());
+        }
     }
 }
