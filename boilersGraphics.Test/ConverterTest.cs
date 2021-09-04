@@ -107,5 +107,20 @@ namespace boilersGraphics.Test
             var converter = new IsSelectedToBorderBrushConverter();
             Assert.That(() => converter.ConvertBack(Brushes.Red, typeof(Brush), null, null), Throws.InstanceOf<NotImplementedException>());
         }
+
+        [Test]
+        public void ShiftCoordinateConverter_Convert()
+        {
+            var converter = new ShiftCoordinateConverter();
+            Assert.That(converter.Convert(1d, typeof(double), 2d, null), Is.EqualTo(0d));
+            Assert.That(converter.Convert(100d, typeof(double), 1d, null), Is.EqualTo(99.5d));
+        }
+
+        [Test]
+        public void ShiftCoordinateConverter_ConvertBack()
+        {
+            var converter = new ShiftCoordinateConverter();
+            Assert.That(() => converter.ConvertBack(0d, typeof(double), null, null), Throws.InstanceOf<NotImplementedException>());
+        }
     }
 }

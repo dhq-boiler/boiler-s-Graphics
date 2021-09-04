@@ -8,7 +8,7 @@ using System.Windows.Data;
 
 namespace boilersGraphics.Converters
 {
-    internal class ShiftCoordinateConverter : IValueConverter
+    public class ShiftCoordinateConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
