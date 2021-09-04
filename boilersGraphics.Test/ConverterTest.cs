@@ -122,5 +122,20 @@ namespace boilersGraphics.Test
             var converter = new ShiftCoordinateConverter();
             Assert.That(() => converter.ConvertBack(0d, typeof(double), null, null), Throws.InstanceOf<NotImplementedException>());
         }
+
+        [Test]
+        public void StringToByteConverter_Convert()
+        {
+            var converter = new StringToByteConverter();
+            Assert.That(converter.Convert("1", typeof(string), null, null), Is.EqualTo(1));
+        }
+
+        [Test]
+        public void StringToByteConverter_ConvertBack()
+        {
+            var converter = new StringToByteConverter();
+            byte val = 1;
+            Assert.That(() => converter.ConvertBack(val, typeof(byte), null, null), Is.EqualTo("1"));
+        }
     }
 }
