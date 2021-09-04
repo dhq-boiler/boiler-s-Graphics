@@ -9,7 +9,7 @@ using System.Windows.Media;
 
 namespace boilersGraphics.Converters
 {
-    class ColorToStringConverter : IValueConverter
+    public class ColorToStringConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
