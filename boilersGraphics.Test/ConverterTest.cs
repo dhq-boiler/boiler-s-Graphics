@@ -71,5 +71,26 @@ namespace boilersGraphics.Test
             var converter = new ExtensionConverter();
             Assert.That(() => converter.ConvertBack(string.Empty, typeof(string), null, null), Throws.InstanceOf<NotImplementedException>());
         }
+
+        [Test]
+        public void IntToStringConverter_Convert()
+        {
+            var converter = new IntToStringConverter();
+            Assert.That(converter.Convert(1, typeof(int), null, null), Is.EqualTo("1"));
+            Assert.That(converter.Convert(int.MaxValue, typeof(int), null, null), Is.EqualTo("2147483647"));
+            Assert.That(converter.Convert(int.MinValue, typeof(int), null, null), Is.EqualTo("-2147483648"));
+        }
+
+        [Test]
+        public void IntToStringConverter_ConvertBack()
+        {
+            var converter = new IntToStringConverter();
+            Assert.That(converter.ConvertBack("", typeof(string), null, null), Is.EqualTo(0));
+            Assert.That(converter.ConvertBack("1", typeof(string), null, null), Is.EqualTo(1));
+            Assert.That(converter.ConvertBack("2147483647", typeof(string), null, null), Is.EqualTo(2147483647));
+            Assert.That(converter.ConvertBack("-2147483648", typeof(string), null, null), Is.EqualTo(-2147483648));
+            Assert.That(converter.ConvertBack(" ", typeof(string), null, null), Is.EqualTo(0));
+            Assert.That(converter.ConvertBack("*", typeof(string), null, null), Is.EqualTo(0));
+        }
     }
 }
