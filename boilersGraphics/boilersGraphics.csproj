@@ -171,7 +171,6 @@
     <Compile Include="Converters\WindowStateToVisibilityConverter.cs" />
     <Compile Include="Exceptions\UnexpectedException.cs" />
     <Compile Include="Controls\ZoomBox.cs" />
-    <Compile Include="Converters\ImageUrlConverter.cs" />
     <Compile Include="Converters\PointsToAngleConverter.cs" />
     <Compile Include="Converters\ShiftCoordinateConverter.cs" />
     <Compile Include="Converters\StrokeColorConverter.cs" />
