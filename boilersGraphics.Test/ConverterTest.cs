@@ -157,5 +157,21 @@ namespace boilersGraphics.Test
             var converter = new StrokeColorConverter();
             Assert.That(() => converter.ConvertBack(new SolidColorBrush(Colors.Transparent), typeof(SolidColorBrush), null, null), Throws.InstanceOf<NotImplementedException>());
         }
+
+        [Test]
+        public void ToSolidColorBrushConverter_Convert()
+        {
+            var converter = new ToSolidColorBrushConverter();
+            Assert.That(converter.Convert(Colors.Transparent, typeof(Color), null, null), Has.Property("Color").EqualTo(Colors.Transparent));
+            Assert.That(converter.Convert(Colors.Black, typeof(Color), null, null), Has.Property("Color").EqualTo(Colors.Black));
+            Assert.That(converter.Convert(Colors.White, typeof(Color), null, null), Has.Property("Color").EqualTo(Colors.White));
+        }
+
+        [Test]
+        public void ToSolidColorBrushConverter_ConvertBack()
+        {
+            var converter = new ToSolidColorBrushConverter();
+            Assert.That(() => converter.ConvertBack(new SolidColorBrush(Colors.Transparent), typeof(SolidColorBrush), null, null), Throws.InstanceOf<NotImplementedException>());
+        }
     }
 }
