@@ -2,6 +2,7 @@
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -136,6 +137,25 @@ namespace boilersGraphics.Test
             var converter = new StringToByteConverter();
             byte val = 1;
             Assert.That(() => converter.ConvertBack(val, typeof(byte), null, null), Is.EqualTo("1"));
+        }
+
+        [Test]
+        public void StrokeColorConverter_Convert()
+        {
+            var converter = new StrokeColorConverter();
+            ObservableCollection<Color> collection = new ObservableCollection<Color>();
+            Assert.That(converter.Convert(collection, typeof(ObservableCollection<Color>), null, null), Has.Property("Color").EqualTo(Colors.Transparent));
+            collection.Add(Colors.Red);
+            Assert.That(converter.Convert(collection, typeof(ObservableCollection<Color>), null, null), Has.Property("Color").EqualTo(Colors.Red));
+            collection.Add(Colors.Blue);
+            Assert.That(converter.Convert(collection, typeof(ObservableCollection<Color>), null, null), Has.Property("Color").EqualTo(Colors.Transparent));
+        }
+
+        [Test]
+        public void StrokeColorConverter_ConvertBack()
+        {
+            var converter = new StrokeColorConverter();
+            Assert.That(() => converter.ConvertBack(new SolidColorBrush(Colors.Transparent), typeof(SolidColorBrush), null, null), Throws.InstanceOf<NotImplementedException>());
         }
     }
 }

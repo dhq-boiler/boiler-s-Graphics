@@ -11,7 +11,7 @@ using System.Windows.Media;
 
 namespace boilersGraphics.Converters
 {
-    internal class StrokeColorConverter : IValueConverter
+    public class StrokeColorConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
