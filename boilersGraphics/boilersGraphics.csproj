@@ -166,7 +166,6 @@
     <Compile Include="Converters\ExtensionConverter.cs" />
     <Compile Include="Converters\IntToStringConverter.cs" />
     <Compile Include="Converters\IsSelectedToBorderBrushConverter.cs" />
-    <Compile Include="Converters\ObservableCollectionToPathSegmentCollection.cs" />
     <Compile Include="Converters\StringToByteConverter.cs" />
     <Compile Include="Converters\WindowStateToVisibilityConverter.cs" />
     <Compile Include="Exceptions\UnexpectedException.cs" />
