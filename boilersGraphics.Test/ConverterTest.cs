@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
 
@@ -172,6 +173,26 @@ namespace boilersGraphics.Test
         {
             var converter = new ToSolidColorBrushConverter();
             Assert.That(() => converter.ConvertBack(new SolidColorBrush(Colors.Transparent), typeof(SolidColorBrush), null, null), Throws.InstanceOf<NotImplementedException>());
+        }
+
+        [Test]
+        public void WindowStateToVisibilityConverter_Convert()
+        {
+            var converter = new WindowStateToVisibilityConverter();
+            Assert.That(converter.Convert(WindowState.Maximized, typeof(WindowState), "元に戻す", null), Is.EqualTo(Visibility.Visible));
+            Assert.That(converter.Convert(WindowState.Minimized, typeof(WindowState), "元に戻す", null), Is.EqualTo(Visibility.Visible));
+            Assert.That(converter.Convert(WindowState.Normal, typeof(WindowState), "元に戻す", null), Is.EqualTo(Visibility.Collapsed));
+            Assert.That(converter.Convert(WindowState.Maximized, typeof(WindowState), "最大化", null), Is.EqualTo(Visibility.Collapsed));
+            Assert.That(converter.Convert(WindowState.Minimized, typeof(WindowState), "最大化", null), Is.EqualTo(Visibility.Visible));
+            Assert.That(converter.Convert(WindowState.Normal, typeof(WindowState), "最大化", null), Is.EqualTo(Visibility.Visible));
+            Assert.That(() => converter.Convert(WindowState.Normal, typeof(WindowState), "ANYSTRING", null), Throws.InstanceOf<Exception>());
+        }
+
+        [Test]
+        public void WindowStateToVisibilityConverter_ConvertBack()
+        {
+            var converter = new WindowStateToVisibilityConverter();
+            Assert.That(() => converter.ConvertBack(Visibility.Visible, typeof(Visibility), null, null), Throws.InstanceOf<NotImplementedException>());
         }
     }
 }

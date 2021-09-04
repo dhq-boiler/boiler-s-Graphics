@@ -9,34 +9,31 @@ using System.Windows.Data;
 
 namespace boilersGraphics.Converters
 {
-    class WindowStateToVisibilityConverter : IValueConverter
+    public class WindowStateToVisibilityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
+            var state = (WindowState)value;
             if (parameter.ToString() == "元に戻す")
             {
-                switch ((WindowState)value)
+                if (state == WindowState.Maximized || state == WindowState.Minimized)
                 {
-                    case WindowState.Maximized:
-                    case WindowState.Minimized:
-                        return Visibility.Visible;
-                    case WindowState.Normal:
-                        return Visibility.Collapsed;
-                    default:
-                        throw new NotSupportedException();
+                    return Visibility.Visible;
+                }
+                else
+                {
+                    return Visibility.Collapsed;
                 }
             }
             else if (parameter.ToString() == "最大化")
             {
-                switch ((WindowState)value)
+                if (state == WindowState.Maximized)
                 {
-                    case WindowState.Maximized:
-                        return Visibility.Collapsed;
-                    case WindowState.Normal:
-                    case WindowState.Minimized:
-                        return Visibility.Visible;
-                    default:
-                        throw new NotSupportedException();
+                    return Visibility.Collapsed;
+                }
+                else
+                {
+                    return Visibility.Visible;
                 }
             }
             else
