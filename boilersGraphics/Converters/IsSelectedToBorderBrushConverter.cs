@@ -10,7 +10,7 @@ using System.Windows.Media;
 
 namespace boilersGraphics.Converters
 {
-    class IsSelectedToBorderBrushConverter : IValueConverter
+    public class IsSelectedToBorderBrushConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

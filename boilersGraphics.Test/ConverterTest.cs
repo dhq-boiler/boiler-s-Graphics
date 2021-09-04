@@ -92,5 +92,20 @@ namespace boilersGraphics.Test
             Assert.That(converter.ConvertBack(" ", typeof(string), null, null), Is.EqualTo(0));
             Assert.That(converter.ConvertBack("*", typeof(string), null, null), Is.EqualTo(0));
         }
+
+        [Test]
+        public void IsSelectedToBorderBrushConverter_Convert()
+        {
+            var converter = new IsSelectedToBorderBrushConverter();
+            Assert.That(converter.Convert(true, typeof(bool), null, null), Is.EqualTo(Brushes.Red));
+            Assert.That(converter.Convert(false, typeof(bool), null, null), Is.EqualTo(Brushes.Black));
+        }
+
+        [Test]
+        public void IsSelectedToBorderBrushConverter_ConvertBack()
+        {
+            var converter = new IsSelectedToBorderBrushConverter();
+            Assert.That(() => converter.ConvertBack(Brushes.Red, typeof(Brush), null, null), Throws.InstanceOf<NotImplementedException>());
+        }
     }
 }
