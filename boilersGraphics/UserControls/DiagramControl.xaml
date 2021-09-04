@@ -21,7 +21,6 @@
     mc:Ignorable="d">
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
-        <converter:PointsToAngleConverter x:Key="PointsToAngleConverter" />
     </UserControl.Resources>
     <Border BorderBrush="LightGray" BorderThickness="1">
         <Grid>
@@ -179,29 +178,6 @@
                                                 X2="{Binding Points[1].X}"
                                                 Y1="{Binding Points[0].Y}"
                                                 Y2="{Binding Points[1].Y}" />
-                                                <!--<Path
-                                                x:Name="arrow"
-                                                Canvas.Left="{Binding EndPoint.X}"
-                                                Canvas.Top="{Binding EndPoint.Y}"
-                                                Width="10"
-                                                Height="10"
-                                                HorizontalAlignment="Left"
-                                                VerticalAlignment="Top"
-                                                Data="M0,10 L5,0 10,10 z"
-                                                Fill="{Binding EdgeColor, Converter={StaticResource solidColorBrushConverter}}"
-                                                IsHitTestVisible="{Binding IsHitTestVisible}"
-                                                RenderTransformOrigin="0,0"
-                                                Stretch="Fill"
-                                                Stroke="{Binding EdgeColor, Converter={StaticResource solidColorBrushConverter}}"
-                                                Visibility="{Binding Path=IsFullConnection, Converter={StaticResource BoolToVisibilityConverter}}">
-                                                    <Path.RenderTransform>
-                                                        <TransformGroup>
-                                                            <TranslateTransform X="-5" />
-                                                            <RotateTransform x:Name="rot" Angle="{Binding ConnectionPoints, Converter={StaticResource PointsToAngleConverter}}" />
-                                                        </TransformGroup>
-                                                    </Path.RenderTransform>
-                                                </Path>-->
-                                                <!--  PART_ResizeDecorator  -->
                                                 <Control
                                                 x:Name="PART_ResizeDecorator"
                                                 Template="{StaticResource StraightLineResizeDecoratorTemplate}"
