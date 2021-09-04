@@ -9,6 +9,7 @@ using System.Windows.Media;
 
 namespace boilersGraphics.Converters
 {
+    [Obsolete]
     [ValueConversion(typeof(List<Point>), typeof(PathSegmentCollection))]
     public class ConnectionPathConverter : IValueConverter
     {
