@@ -547,7 +547,7 @@ namespace boilersGraphics.ViewModels
             CombineAndAddItem(GeometryCombineMode.Exclude);
         }
 
-        private bool CanExecuteExclude()
+        public bool CanExecuteExclude()
         {
             var countIsCorrent = SelectedItems.Value.Count() == 2;
             if (countIsCorrent)
