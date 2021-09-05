@@ -34,11 +34,6 @@ namespace boilersGraphics.Helpers
             return PathGeometry.CreateFromGeometry(new RectangleGeometry(new Rect(new Point(item.Left.Value, item.Top.Value), new Point(item.Left.Value + item.Width.Value, item.Top.Value + item.Height.Value)), 0, 0, new RotateTransform(angle, item.CenterPoint.Value.X, item.CenterPoint.Value.Y)));
         }
 
-        private static double CalcRadian(double degree)
-        {
-            return degree * Math.PI / 180;
-        }
-
         public static PathGeometry CreateRectangle(NRectangleViewModel item, double offsetX, double offsetY)
         {
             var geometry = new StreamGeometry();
