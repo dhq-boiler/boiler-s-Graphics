@@ -703,5 +703,173 @@ namespace boilersGraphics.Test
 
             Assert.That(viewModel.CanExecuteXor(), Is.True);
         }
+
+        [Test]
+        public void ExecuteUnion()
+        {
+            boilersGraphics.App.IsTest = true;
+            var mainWindowVM = new MainWindowViewModel(null);
+            var viewModel = new DiagramViewModel(mainWindowVM, 1000, 1000);
+
+            viewModel.Layers.Clear();
+            var layer1 = new Layer();
+            layer1.Name.Value = "レイヤー1";
+            viewModel.Layers.Add(layer1);
+            layer1.IsSelected.Value = true;
+
+            var item1 = new NRectangleViewModel();
+            item1.Left.Value = 10;
+            item1.Top.Value = 10;
+            item1.Width.Value = 20;
+            item1.Height.Value = 20;
+            viewModel.AddItemCommand.Execute(item1);
+
+            var item2 = new PictureDesignerItemViewModel();
+            viewModel.AddItemCommand.Execute(item2);
+
+            var item3 = new PictureDesignerItemViewModel();
+            viewModel.AddItemCommand.Execute(item3);
+
+            var item4 = new NRectangleViewModel();
+            item4.Left.Value = 20;
+            item4.Top.Value = 20;
+            item4.Width.Value = 20;
+            item4.Height.Value = 20;
+            viewModel.AddItemCommand.Execute(item4);
+
+            viewModel.Layers[0].Children[0].IsSelected.Value = true;
+            viewModel.Layers[0].Children[1].IsSelected.Value = false;
+            viewModel.Layers[0].Children[2].IsSelected.Value = false;
+            viewModel.Layers[0].Children[3].IsSelected.Value = true;
+
+            viewModel.UnionCommand.Execute();
+            Assert.That(viewModel.AllItems.Value.Where(x => x != null).Last(), Is.InstanceOf<CombineGeometryViewModel>());
+        }
+
+        [Test]
+        public void ExecuteIntersect()
+        {
+            boilersGraphics.App.IsTest = true;
+            var mainWindowVM = new MainWindowViewModel(null);
+            var viewModel = new DiagramViewModel(mainWindowVM, 1000, 1000);
+
+            viewModel.Layers.Clear();
+            var layer1 = new Layer();
+            layer1.Name.Value = "レイヤー1";
+            viewModel.Layers.Add(layer1);
+            layer1.IsSelected.Value = true;
+
+            var item1 = new NRectangleViewModel();
+            item1.Left.Value = 10;
+            item1.Top.Value = 10;
+            item1.Width.Value = 20;
+            item1.Height.Value = 20;
+            viewModel.AddItemCommand.Execute(item1);
+
+            var item2 = new PictureDesignerItemViewModel();
+            viewModel.AddItemCommand.Execute(item2);
+
+            var item3 = new PictureDesignerItemViewModel();
+            viewModel.AddItemCommand.Execute(item3);
+
+            var item4 = new NRectangleViewModel();
+            item4.Left.Value = 20;
+            item4.Top.Value = 20;
+            item4.Width.Value = 20;
+            item4.Height.Value = 20;
+            viewModel.AddItemCommand.Execute(item4);
+
+            viewModel.Layers[0].Children[0].IsSelected.Value = true;
+            viewModel.Layers[0].Children[1].IsSelected.Value = false;
+            viewModel.Layers[0].Children[2].IsSelected.Value = false;
+            viewModel.Layers[0].Children[3].IsSelected.Value = true;
+
+            viewModel.IntersectCommand.Execute();
+            Assert.That(viewModel.AllItems.Value.Where(x => x != null).Last(), Is.InstanceOf<CombineGeometryViewModel>());
+        }
+
+        [Test]
+        public void ExecuteXor()
+        {
+            boilersGraphics.App.IsTest = true;
+            var mainWindowVM = new MainWindowViewModel(null);
+            var viewModel = new DiagramViewModel(mainWindowVM, 1000, 1000);
+
+            viewModel.Layers.Clear();
+            var layer1 = new Layer();
+            layer1.Name.Value = "レイヤー1";
+            viewModel.Layers.Add(layer1);
+            layer1.IsSelected.Value = true;
+
+            var item1 = new NRectangleViewModel();
+            item1.Left.Value = 10;
+            item1.Top.Value = 10;
+            item1.Width.Value = 20;
+            item1.Height.Value = 20;
+            viewModel.AddItemCommand.Execute(item1);
+
+            var item2 = new PictureDesignerItemViewModel();
+            viewModel.AddItemCommand.Execute(item2);
+
+            var item3 = new PictureDesignerItemViewModel();
+            viewModel.AddItemCommand.Execute(item3);
+
+            var item4 = new NRectangleViewModel();
+            item4.Left.Value = 20;
+            item4.Top.Value = 20;
+            item4.Width.Value = 20;
+            item4.Height.Value = 20;
+            viewModel.AddItemCommand.Execute(item4);
+
+            viewModel.Layers[0].Children[0].IsSelected.Value = true;
+            viewModel.Layers[0].Children[1].IsSelected.Value = false;
+            viewModel.Layers[0].Children[2].IsSelected.Value = false;
+            viewModel.Layers[0].Children[3].IsSelected.Value = true;
+
+            viewModel.XorCommand.Execute();
+            Assert.That(viewModel.AllItems.Value.Where(x => x != null).Last(), Is.InstanceOf<CombineGeometryViewModel>());
+        }
+
+        [Test]
+        public void ExecuteExclude()
+        {
+            boilersGraphics.App.IsTest = true;
+            var mainWindowVM = new MainWindowViewModel(null);
+            var viewModel = new DiagramViewModel(mainWindowVM, 1000, 1000);
+
+            viewModel.Layers.Clear();
+            var layer1 = new Layer();
+            layer1.Name.Value = "レイヤー1";
+            viewModel.Layers.Add(layer1);
+            layer1.IsSelected.Value = true;
+
+            var item1 = new NRectangleViewModel();
+            item1.Left.Value = 10;
+            item1.Top.Value = 10;
+            item1.Width.Value = 20;
+            item1.Height.Value = 20;
+            viewModel.AddItemCommand.Execute(item1);
+
+            var item2 = new PictureDesignerItemViewModel();
+            viewModel.AddItemCommand.Execute(item2);
+
+            var item3 = new PictureDesignerItemViewModel();
+            viewModel.AddItemCommand.Execute(item3);
+
+            var item4 = new NRectangleViewModel();
+            item4.Left.Value = 20;
+            item4.Top.Value = 20;
+            item4.Width.Value = 20;
+            item4.Height.Value = 20;
+            viewModel.AddItemCommand.Execute(item4);
+
+            viewModel.Layers[0].Children[0].IsSelected.Value = true;
+            viewModel.Layers[0].Children[1].IsSelected.Value = false;
+            viewModel.Layers[0].Children[2].IsSelected.Value = false;
+            viewModel.Layers[0].Children[3].IsSelected.Value = true;
+
+            viewModel.ExcludeCommand.Execute();
+            Assert.That(viewModel.AllItems.Value.Where(x => x != null).Last(), Is.InstanceOf<CombineGeometryViewModel>());
+        }
     }
 }

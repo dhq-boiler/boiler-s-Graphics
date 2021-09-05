@@ -8,7 +8,7 @@ using System.Windows.Shapes;
 
 namespace boilersGraphics.ViewModels
 {
-    class CombineGeometryViewModel : DesignerItemViewModelBase
+    public class CombineGeometryViewModel : DesignerItemViewModelBase
     {
         public CombineGeometryViewModel()
             : base()
