@@ -721,7 +721,7 @@ namespace boilersGraphics.ViewModels
             ObjectDeserializer.ReadCopyObjectsFromXML(this, root);
         }
 
-        private bool CanExecutePaste()
+        public bool CanExecutePaste()
         {
             var obj = Clipboard.GetDataObject();
             if (obj.GetDataPresent(typeof(ClipboardDTO)))
