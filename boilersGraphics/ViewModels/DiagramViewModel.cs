@@ -811,7 +811,7 @@ namespace boilersGraphics.ViewModels
             }
         }
 
-        private bool CanExecuteCut()
+        public bool CanExecuteCut()
         {
             return (SelectedLayers.Value.Count() > 0 && SelectedItems.Value.Count() > 0)
                 || (SelectedLayers.Value.Count() > 0);
@@ -2050,7 +2050,7 @@ namespace boilersGraphics.ViewModels
             Add(clone);
         }
 
-        private bool CanExecuteDuplicate()
+        public bool CanExecuteDuplicate()
         {
             return SelectedItems.Value.Count() > 0;
         }
