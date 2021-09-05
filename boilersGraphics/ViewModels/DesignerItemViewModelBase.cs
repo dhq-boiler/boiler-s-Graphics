@@ -114,9 +114,9 @@ namespace boilersGraphics.ViewModels
                 .Zip(Matrix.Skip(1), (Old, New) => new { OldItem = Old, NewItem = New })
                 .Subscribe(x => UpdateTransform(nameof(Matrix), x.OldItem, x.NewItem))
                 .AddTo(_CompositeDisposable);
-            Right = Left.Select(x => x + Width.Value)
+            Right = Left.CombineLatest(Width, (a, b) => a + b)
                         .ToReadOnlyReactivePropertySlim();
-            Bottom = Top.Select(x => x + Height.Value)
+            Bottom = Top.CombineLatest(Height, (a, b) => a + b)
                         .ToReadOnlyReactivePropertySlim();
 
             Matrix.Value = new Matrix();
