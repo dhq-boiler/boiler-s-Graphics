@@ -981,5 +981,60 @@ namespace boilersGraphics.Test
             Assert.That(item4.Right.Value, Is.EqualTo(30));
             Assert.That(item4.Bottom.Value, Is.EqualTo(40));
         }
+
+        [Test]
+        public void ExecuteAlignRight()
+        {
+            boilersGraphics.App.IsTest = true;
+            var mainWindowVM = new MainWindowViewModel(null);
+            var viewModel = new DiagramViewModel(mainWindowVM, 1000, 1000);
+
+            viewModel.Layers.Clear();
+            var layer1 = new Layer();
+            layer1.Name.Value = "レイヤー1";
+            viewModel.Layers.Add(layer1);
+            layer1.IsSelected.Value = true;
+
+            var item1 = new NRectangleViewModel();
+            item1.Left.Value = 10;
+            item1.Top.Value = 10;
+            item1.Width.Value = 20;
+            item1.Height.Value = 20;
+            viewModel.AddItemCommand.Execute(item1);
+
+            var item2 = new PictureDesignerItemViewModel();
+            viewModel.AddItemCommand.Execute(item2);
+
+            var item3 = new PictureDesignerItemViewModel();
+            viewModel.AddItemCommand.Execute(item3);
+
+            var item4 = new NRectangleViewModel();
+            item4.Left.Value = 20;
+            item4.Top.Value = 20;
+            item4.Width.Value = 20;
+            item4.Height.Value = 20;
+            viewModel.AddItemCommand.Execute(item4);
+
+            viewModel.Layers[0].Children[0].IsSelected.Value = true;
+            viewModel.Layers[0].Children[1].IsSelected.Value = false;
+            viewModel.Layers[0].Children[2].IsSelected.Value = false;
+            viewModel.Layers[0].Children[3].IsSelected.Value = true;
+
+            viewModel.AlignRightCommand.Execute();
+
+            Assert.That(item1.Left.Value, Is.EqualTo(10));
+            Assert.That(item1.Top.Value, Is.EqualTo(10));
+            Assert.That(item1.Width.Value, Is.EqualTo(20));
+            Assert.That(item1.Height.Value, Is.EqualTo(20));
+            Assert.That(item1.Right.Value, Is.EqualTo(30));
+            Assert.That(item1.Bottom.Value, Is.EqualTo(30));
+
+            Assert.That(item4.Left.Value, Is.EqualTo(10));
+            Assert.That(item4.Top.Value, Is.EqualTo(20));
+            Assert.That(item4.Width.Value, Is.EqualTo(20));
+            Assert.That(item4.Height.Value, Is.EqualTo(20));
+            Assert.That(item4.Right.Value, Is.EqualTo(30));
+            Assert.That(item4.Bottom.Value, Is.EqualTo(40));
+        }
     }
 }
