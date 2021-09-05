@@ -11,7 +11,7 @@ using System.Windows.Media;
 
 namespace boilersGraphics.Helpers
 {
-    class GeometryCreator
+    public static class GeometryCreator
     {
         public static PathGeometry CreateEllipse(NEllipseViewModel item)
         {
