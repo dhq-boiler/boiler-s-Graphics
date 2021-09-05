@@ -167,6 +167,18 @@ namespace boilersGraphics.ViewModels
                 ChangeHitTestToDisable();
                 SelectOneToolItem("snappoint");
             })));
+            ToolItems.Add(new ToolItemData("brush", null, new DelegateCommand(() =>
+            {
+                var behavior = new BrushBehavior();
+                Behaviors.Clear();
+                if (!Behaviors.Contains(behavior))
+                {
+                    Behaviors.Add(behavior);
+                }
+                ChangeHitTestToDisable();
+                SelectOneToolItem("brush");
+
+            })));
         }
 
         private void ChangeHitTestToDisable()

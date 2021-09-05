@@ -29,6 +29,7 @@
                 <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/DesignerItems/PathDesignerItemDataTemplate.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/DesignerItems/LetterDesignerItemDataTemplate.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/DesignerItems/LetterVerticalDesignerItemDataTemplate.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/DesignerItems/BrushDesignerItemDataTemplate.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/DesignerItems/EllipseDesignerItemDataTemplate.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/DesignerItems/PolygonDesignerItemDataTemplate.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/DesignerItems/CombineDesignerItemDataTemplate.xaml" />

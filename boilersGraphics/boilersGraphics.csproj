@@ -236,6 +236,7 @@
     </Compile>
     <Compile Include="ViewModels\BackgroundViewModel.cs" />
     <Compile Include="ViewModels\BezierCurveViewModel.cs" />
+    <Compile Include="ViewModels\BrushViewModel.cs" />
     <Compile Include="ViewModels\ColorPickerViewModel.cs" />
     <Compile Include="ViewModels\CombineGeometryViewModel.cs" />
     <Compile Include="ViewModels\ConnectorBaseViewModel.cs" />
@@ -269,6 +270,7 @@
     <Compile Include="ViewModels\VersionViewModel.cs" />
     <Compile Include="Views\AdornedBy.cs" />
     <Compile Include="Views\Behaviors\AbstractAdorner.cs" />
+    <Compile Include="Views\Behaviors\BrushBehavior.cs" />
     <Compile Include="Views\Behaviors\DeselectBehavior.cs" />
     <Compile Include="Views\Behaviors\LetterBehavior.cs" />
     <Compile Include="Views\Behaviors\LetterVerticalBehavior.cs" />
@@ -330,6 +332,10 @@
     <Compile Include="Views\Version.xaml.cs">
       <DependentUpon>Version.xaml</DependentUpon>
     </Compile>
+    <Page Include="Resources\DesignerItems\BrushDesignerItemDataTemplate.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Resources\DesignerItems\GroupItemDataTemplate.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
