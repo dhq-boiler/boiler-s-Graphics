@@ -1934,7 +1934,7 @@ namespace boilersGraphics.ViewModels
             MainWindowVM.Recorder.EndRecode("ExecuteUniformHeightCommand() complete");
         }
 
-        private bool CanExecuteUniform()
+        public bool CanExecuteUniform()
         {
             return SelectedItems.Value.OfType<DesignerItemViewModelBase>().Count() > 1;
         }
