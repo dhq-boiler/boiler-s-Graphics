@@ -88,6 +88,7 @@
   <ItemGroup>
     <Compile Include="BoundaryTest.cs" />
     <Compile Include="ConverterTest.cs" />
+    <Compile Include="DiagramViewModelTest.cs" />
     <Compile Include="GroupingTest.cs" />
     <Compile Include="MathTest.cs" />
     <Compile Include="MeasureTest.cs" />

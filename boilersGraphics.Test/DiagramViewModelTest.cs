@@ -1,16 +1,10 @@
 ﻿using boilersGraphics.Helpers;
 using boilersGraphics.Models;
 using boilersGraphics.ViewModels;
-using Moq;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 using System.Windows;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Xml.Linq;
 
@@ -377,7 +371,7 @@ namespace boilersGraphics.Test
         }
 
 
-        [Test, RequiresSTA]
+        [Test, RequiresThread(ApartmentState.STA)]
         public void CanExecutePaste_False()
         {
             boilersGraphics.App.IsTest = true;
@@ -393,7 +387,7 @@ namespace boilersGraphics.Test
             Assert.That(viewModel.CanExecutePaste(), Is.False);
         }
 
-        [Test, RequiresSTA]
+        [Test, RequiresThread(ApartmentState.STA)]
         public void CanExecutePaste_True()
         {
             boilersGraphics.App.IsTest = true;
@@ -424,7 +418,7 @@ namespace boilersGraphics.Test
             Assert.That(viewModel.CanExecutePaste(), Is.True);
         }
 
-        [Test, RequiresSTA]
+        [Test, RequiresThread(ApartmentState.STA)]
         public void CanExecutePaste_False_RootElementMissing()
         {
             boilersGraphics.App.IsTest = true;
@@ -445,7 +439,7 @@ namespace boilersGraphics.Test
             Assert.That(viewModel.CanExecutePaste(), Is.False);
         }
 
-        [Test, RequiresSTA]
+        [Test, RequiresThread(ApartmentState.STA)]
         public void CanExecutePaste_False_RootDoesnothaveCopyObjects()
         {
             boilersGraphics.App.IsTest = true;
@@ -465,7 +459,7 @@ namespace boilersGraphics.Test
             Assert.That(viewModel.CanExecutePaste(), Is.False);
         }
 
-        [Test, RequiresSTA]
+        [Test, RequiresThread(ApartmentState.STA)]
         public void CanExecutePaste_True_Layers()
         {
             boilersGraphics.App.IsTest = true;
@@ -482,7 +476,7 @@ namespace boilersGraphics.Test
             Assert.That(viewModel.CanExecutePaste(), Is.True);
         }
 
-        [Test, RequiresSTA]
+        [Test, RequiresThread(ApartmentState.STA)]
         public void CanExecutePaste_False_XmlException()
         {
             boilersGraphics.App.IsTest = true;
@@ -501,7 +495,7 @@ namespace boilersGraphics.Test
             Assert.That(viewModel.CanExecutePaste(), Is.False);
         }
 
-        [Test, RequiresSTA]
+        [Test, RequiresThread(ApartmentState.STA)]
         public void CanExecutePaste_False_CopyObjectsDontHaveAnyElement()
         {
             boilersGraphics.App.IsTest = true;
