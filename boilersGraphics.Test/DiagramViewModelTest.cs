@@ -521,5 +521,37 @@ namespace boilersGraphics.Test
 
             Assert.That(viewModel.CanExecutePaste(), Is.False);
         }
+
+        [Test]
+        public void CanExecuteRedo()
+        {
+            boilersGraphics.App.IsTest = true;
+            var mainWindowVM = new MainWindowViewModel(null);
+            var viewModel = new DiagramViewModel(mainWindowVM, 1000, 1000);
+
+            viewModel.Layers.Clear();
+            var layer1 = new Layer();
+            layer1.Name.Value = "レイヤー1";
+            viewModel.Layers.Add(layer1);
+            layer1.IsSelected.Value = true;
+
+            Assert.That(viewModel.CanExecuteRedo(), Is.EqualTo(false));
+        }
+
+        [Test]
+        public void CanExecuteUndo()
+        {
+            boilersGraphics.App.IsTest = true;
+            var mainWindowVM = new MainWindowViewModel(null);
+            var viewModel = new DiagramViewModel(mainWindowVM, 1000, 1000);
+
+            viewModel.Layers.Clear();
+            var layer1 = new Layer();
+            layer1.Name.Value = "レイヤー1";
+            viewModel.Layers.Add(layer1);
+            layer1.IsSelected.Value = true;
+
+            Assert.That(viewModel.CanExecuteUndo(), Is.EqualTo(false));
+        }
     }
 }

@@ -499,7 +499,7 @@ namespace boilersGraphics.ViewModels
             RedoCommand.RaiseCanExecuteChanged();
         }
 
-        private bool CanExecuteRedo()
+        public bool CanExecuteRedo()
         {
             return MainWindowVM.Controller.CanRedo;
         }
@@ -511,7 +511,7 @@ namespace boilersGraphics.ViewModels
             RedoCommand.RaiseCanExecuteChanged();
         }
 
-        private bool CanExecuteUndo()
+        public bool CanExecuteUndo()
         {
             return MainWindowVM.Controller.CanUndo;
         }
