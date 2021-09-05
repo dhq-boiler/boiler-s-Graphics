@@ -823,6 +823,17 @@ namespace boilersGraphics.ViewModels
             var setting = new Models.Setting();
             setting.Width.Value = this.Width;
             setting.Height.Value = this.Height;
+            Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                                                     .Where(x => x.GetType() == typeof(LayerItem))
+                                                     .Select(y => (y as LayerItem).Item.Value)
+                                                     .Where(z => z is BrushViewModel)
+                                                     .Cast<BrushViewModel>()
+                                                     .ToList()
+                                                     .ForEach(z =>
+                                                     {
+                                                         z.Width.Value = this.Width;
+                                                         z.Height.Value = this.Height;
+                                                     });
             setting.CanvasBackground.Value = this.CanvasBackground.Value;
             setting.EnablePointSnap.Value = this.EnablePointSnap.Value;
             setting.SnapPower.Value = (App.Current.MainWindow.DataContext as MainWindowViewModel).SnapPower.Value;
