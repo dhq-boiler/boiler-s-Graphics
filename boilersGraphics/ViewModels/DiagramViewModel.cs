@@ -499,7 +499,7 @@ namespace boilersGraphics.ViewModels
             RedoCommand.RaiseCanExecuteChanged();
         }
 
-        private bool CanExecuteRedo()
+        public bool CanExecuteRedo()
         {
             return MainWindowVM.Controller.CanRedo;
         }
@@ -511,7 +511,7 @@ namespace boilersGraphics.ViewModels
             RedoCommand.RaiseCanExecuteChanged();
         }
 
-        private bool CanExecuteUndo()
+        public bool CanExecuteUndo()
         {
             return MainWindowVM.Controller.CanUndo;
         }
@@ -536,7 +536,7 @@ namespace boilersGraphics.ViewModels
             Remove(other);
         }
 
-        private bool CanExecuteClip()
+        public bool CanExecuteClip()
         {
             return SelectedItems.Value.Count() == 2 &&
                    SelectedItems.Value.First().GetType() == typeof(PictureDesignerItemViewModel);
@@ -547,7 +547,7 @@ namespace boilersGraphics.ViewModels
             CombineAndAddItem(GeometryCombineMode.Exclude);
         }
 
-        private bool CanExecuteExclude()
+        public bool CanExecuteExclude()
         {
             var countIsCorrent = SelectedItems.Value.Count() == 2;
             if (countIsCorrent)
@@ -564,7 +564,7 @@ namespace boilersGraphics.ViewModels
             CombineAndAddItem(GeometryCombineMode.Xor);
         }
 
-        private bool CanExecuteXor()
+        public bool CanExecuteXor()
         {
             var countIsCorrent = SelectedItems.Value.Count() == 2;
             if (countIsCorrent)
@@ -581,7 +581,7 @@ namespace boilersGraphics.ViewModels
             CombineAndAddItem(GeometryCombineMode.Intersect);
         }
 
-        private bool CanExecuteIntersect()
+        public bool CanExecuteIntersect()
         {
             var countIsCorrent = SelectedItems.Value.Count() == 2;
             if (countIsCorrent)
@@ -691,7 +691,7 @@ namespace boilersGraphics.ViewModels
             }
         }
 
-        private bool CanExecuteUnion()
+        public bool CanExecuteUnion()
         {
             var countIsCorrent = SelectedItems.Value.Count() == 2;
             if (countIsCorrent)
@@ -708,7 +708,7 @@ namespace boilersGraphics.ViewModels
             CopyToClipboard();
         }
 
-        private bool CanExecuteCopy()
+        public bool CanExecuteCopy()
         {
             return SelectedItems.Value.Count() > 0;
         }
@@ -721,7 +721,7 @@ namespace boilersGraphics.ViewModels
             ObjectDeserializer.ReadCopyObjectsFromXML(this, root);
         }
 
-        private bool CanExecutePaste()
+        public bool CanExecutePaste()
         {
             var obj = Clipboard.GetDataObject();
             if (obj.GetDataPresent(typeof(ClipboardDTO)))
@@ -811,7 +811,7 @@ namespace boilersGraphics.ViewModels
             }
         }
 
-        private bool CanExecuteCut()
+        public bool CanExecuteCut()
         {
             return (SelectedLayers.Value.Count() > 0 && SelectedItems.Value.Count() > 0)
                 || (SelectedLayers.Value.Count() > 0);
@@ -1194,7 +1194,7 @@ namespace boilersGraphics.ViewModels
             layer.RemoveChildren(MainWindowVM.Recorder, layerItem);
         }
 
-        private bool CanExecuteGroup()
+        public bool CanExecuteGroup()
         {
             var items = from item in SelectedItems.Value
                         where item.ParentID == Guid.Empty
@@ -1257,7 +1257,7 @@ namespace boilersGraphics.ViewModels
             MainWindowVM.Recorder.EndRecode("ExecuteUngroupItemsCommand() complete");
         }
 
-        private bool CanExecuteUngroup()
+        public bool CanExecuteUngroup()
         {
             var items = from item in SelectedItems.Value.OfType<GroupItemViewModel>()
                         select item;
@@ -1628,7 +1628,7 @@ namespace boilersGraphics.ViewModels
             }
         }
 
-        private bool CanExecuteOrder()
+        public bool CanExecuteOrder()
         {
             return SelectedItems.Value.Count() > 0;
         }
@@ -1823,12 +1823,12 @@ namespace boilersGraphics.ViewModels
             }
         }
 
-        private bool CanExecuteAlign()
+        public bool CanExecuteAlign()
         {
             return SelectedItems.Value.Count() > 1;
         }
 
-        private bool CanExecuteDistribute()
+        public bool CanExecuteDistribute()
         {
             return SelectedItems.Value.Count() > 1;
         }
@@ -1934,7 +1934,7 @@ namespace boilersGraphics.ViewModels
             MainWindowVM.Recorder.EndRecode("ExecuteUniformHeightCommand() complete");
         }
 
-        private bool CanExecuteUniform()
+        public bool CanExecuteUniform()
         {
             return SelectedItems.Value.OfType<DesignerItemViewModelBase>().Count() > 1;
         }
@@ -2050,7 +2050,7 @@ namespace boilersGraphics.ViewModels
             Add(clone);
         }
 
-        private bool CanExecuteDuplicate()
+        public bool CanExecuteDuplicate()
         {
             return SelectedItems.Value.Count() > 0;
         }
