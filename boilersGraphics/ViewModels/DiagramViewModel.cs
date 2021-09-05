@@ -1823,7 +1823,7 @@ namespace boilersGraphics.ViewModels
             }
         }
 
-        private bool CanExecuteAlign()
+        public bool CanExecuteAlign()
         {
             return SelectedItems.Value.Count() > 1;
         }
