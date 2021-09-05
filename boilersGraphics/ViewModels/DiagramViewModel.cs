@@ -536,7 +536,7 @@ namespace boilersGraphics.ViewModels
             Remove(other);
         }
 
-        private bool CanExecuteClip()
+        public bool CanExecuteClip()
         {
             return SelectedItems.Value.Count() == 2 &&
                    SelectedItems.Value.First().GetType() == typeof(PictureDesignerItemViewModel);
@@ -1828,7 +1828,7 @@ namespace boilersGraphics.ViewModels
             return SelectedItems.Value.Count() > 1;
         }
 
-        private bool CanExecuteDistribute()
+        public bool CanExecuteDistribute()
         {
             return SelectedItems.Value.Count() > 1;
         }
