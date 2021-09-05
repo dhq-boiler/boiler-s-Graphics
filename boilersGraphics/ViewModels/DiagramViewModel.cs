@@ -564,7 +564,7 @@ namespace boilersGraphics.ViewModels
             CombineAndAddItem(GeometryCombineMode.Xor);
         }
 
-        private bool CanExecuteXor()
+        public bool CanExecuteXor()
         {
             var countIsCorrent = SelectedItems.Value.Count() == 2;
             if (countIsCorrent)
@@ -691,7 +691,7 @@ namespace boilersGraphics.ViewModels
             }
         }
 
-        private bool CanExecuteUnion()
+        public bool CanExecuteUnion()
         {
             var countIsCorrent = SelectedItems.Value.Count() == 2;
             if (countIsCorrent)
