@@ -708,7 +708,7 @@ namespace boilersGraphics.ViewModels
             CopyToClipboard();
         }
 
-        private bool CanExecuteCopy()
+        public bool CanExecuteCopy()
         {
             return SelectedItems.Value.Count() > 0;
         }
