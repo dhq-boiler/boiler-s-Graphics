@@ -581,7 +581,7 @@ namespace boilersGraphics.ViewModels
             CombineAndAddItem(GeometryCombineMode.Intersect);
         }
 
-        private bool CanExecuteIntersect()
+        public bool CanExecuteIntersect()
         {
             var countIsCorrent = SelectedItems.Value.Count() == 2;
             if (countIsCorrent)
@@ -1194,7 +1194,7 @@ namespace boilersGraphics.ViewModels
             layer.RemoveChildren(MainWindowVM.Recorder, layerItem);
         }
 
-        private bool CanExecuteGroup()
+        public bool CanExecuteGroup()
         {
             var items = from item in SelectedItems.Value
                         where item.ParentID == Guid.Empty
@@ -1628,7 +1628,7 @@ namespace boilersGraphics.ViewModels
             }
         }
 
-        private bool CanExecuteOrder()
+        public bool CanExecuteOrder()
         {
             return SelectedItems.Value.Count() > 0;
         }
