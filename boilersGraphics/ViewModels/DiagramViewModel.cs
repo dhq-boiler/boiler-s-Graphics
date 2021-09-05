@@ -1257,7 +1257,7 @@ namespace boilersGraphics.ViewModels
             MainWindowVM.Recorder.EndRecode("ExecuteUngroupItemsCommand() complete");
         }
 
-        private bool CanExecuteUngroup()
+        public bool CanExecuteUngroup()
         {
             var items = from item in SelectedItems.Value.OfType<GroupItemViewModel>()
                         select item;
