@@ -23,6 +23,7 @@ namespace boilersGraphics.Views.Behaviors
             this.AssociatedObject.MouseDown += AssociatedObject_MouseDown;
             this.AssociatedObject.MouseMove += AssociatedObject_MouseMove;
             this.AssociatedObject.MouseUp += AssociatedObject_MouseUp;
+            this.AssociatedObject.TouchUp += AssociatedObject_TouchUp;
             base.OnAttached();
         }
 
@@ -34,6 +35,7 @@ namespace boilersGraphics.Views.Behaviors
             this.AssociatedObject.MouseDown -= AssociatedObject_MouseDown;
             this.AssociatedObject.MouseMove -= AssociatedObject_MouseMove;
             this.AssociatedObject.MouseUp -= AssociatedObject_MouseUp;
+            this.AssociatedObject.TouchUp -= AssociatedObject_TouchUp;
             base.OnDetaching();
         }
 
@@ -143,8 +145,16 @@ namespace boilersGraphics.Views.Behaviors
         {
             // release mouse capture
             if (AssociatedObject.IsMouseCaptured) AssociatedObject.ReleaseMouseCapture();
+            // release stylus capture
+            if (AssociatedObject.IsStylusCaptured) AssociatedObject.ReleaseStylusCapture();
 
             currentBrush = null;
+        }
+
+        private void AssociatedObject_TouchUp(object sender, TouchEventArgs e)
+        {
+            // release touch capture
+            if (e.TouchDevice.Captured != null) AssociatedObject.ReleaseTouchCapture(e.TouchDevice);
         }
     }
 }
