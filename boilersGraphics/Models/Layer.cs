@@ -128,6 +128,7 @@ namespace boilersGraphics.Models
                                 diffY = Math.Min(connectorItem.Points[0].Y, connectorItem.Points[1].Y);
                             }
                             VisualBrush brush = new VisualBrush(view);
+                            brush.Stretch = Stretch.None;
                             context.DrawRectangle(brush, null, new Rect(new Point(diffX, diffY), new Size(view.ActualWidth, view.ActualHeight)));
                         }
 
