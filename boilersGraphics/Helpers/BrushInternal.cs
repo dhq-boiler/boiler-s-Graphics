@@ -19,25 +19,22 @@ namespace boilersGraphics.Helpers
     {
         public static void AddNewBrushViewModel(DesignerCanvas AssociatedObject, ref BrushViewModel currentBrush, Point point)
         {
-            var item = new BrushViewModel();
-            item.Owner = (AssociatedObject as DesignerCanvas).DataContext as IDiagramViewModel;
-            item.Left.Value = 0;
-            item.Top.Value = 0;
-            item.Width.Value = item.Owner.Width;
-            item.Height.Value = item.Owner.Height;
-            item.FillColor.Value = item.Owner.FillColors.First();
-            item.EdgeColor.Value = item.Owner.EdgeColors.First();
-            item.EdgeThickness.Value = item.Owner.EdgeThickness.Value.Value;
-            item.ZIndex.Value = item.Owner.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).Count();
-            item.Thickness.Value = new Thickness(10);
-            item.PathGeometry.Value = GeometryCreator.CreateEllipse(point.X, point.Y, item.Thickness.Value);
-            item.IsSelected.Value = true;
-            item.IsVisible.Value = true;
-            item.CanDrag.Value = false;
-            item.Owner.DeselectAll();
-            ((AssociatedObject as DesignerCanvas).DataContext as IDiagramViewModel).AddItemCommand.Execute(item);
-            item.SetupTimedMethod();
-            currentBrush = item;
+            currentBrush.Owner = (AssociatedObject as DesignerCanvas).DataContext as IDiagramViewModel;
+            currentBrush.Left.Value = 0;
+            currentBrush.Top.Value = 0;
+            currentBrush.Width.Value = currentBrush.Owner.Width;
+            currentBrush.Height.Value = currentBrush.Owner.Height;
+            currentBrush.FillColor.Value = currentBrush.Owner.FillColors.First();
+            currentBrush.EdgeColor.Value = currentBrush.Owner.EdgeColors.First();
+            currentBrush.EdgeThickness.Value = currentBrush.Owner.EdgeThickness.Value.Value;
+            currentBrush.ZIndex.Value = currentBrush.Owner.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).Count();
+            currentBrush.PathGeometry.Value = GeometryCreator.CreateEllipse(point.X, point.Y, currentBrush.Thickness.Value);
+            currentBrush.IsSelected.Value = true;
+            currentBrush.IsVisible.Value = true;
+            currentBrush.CanDrag.Value = false;
+            currentBrush.Owner.DeselectAll();
+            ((AssociatedObject as DesignerCanvas).DataContext as IDiagramViewModel).AddItemCommand.Execute(currentBrush);
+            currentBrush.SetupTimedMethod();
         }
 
         public static void Draw(ref BrushViewModel currentBrush, Point point, IEnumerable<FrameworkElement> views)

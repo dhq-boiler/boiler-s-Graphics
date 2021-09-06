@@ -50,15 +50,7 @@ namespace boilersGraphics.ViewModels
         {
             GotFocusCommand.Subscribe(x =>
             {
-                if (!ThicknessDialogIsOpen.Value)
-                {
-                    var dialogService = new DialogService((App.Current as PrismApplication).Container as IContainerExtension);
-                    IDialogResult result = null;
-                    dialogService.Show(nameof(Thickness), new DialogParameters() { { "ViewModel", this } }, ret => result = ret);
-                    var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-                    designerCanvas.Focus();
-                    ThicknessDialogIsOpen.Value = true;
-                }
+                OpenThicknessDialog();
             })
             .AddTo(_CompositeDisposable);
             LostFocusCommand.Subscribe(x =>
@@ -71,7 +63,20 @@ namespace boilersGraphics.ViewModels
             .AddTo(_CompositeDisposable);
         }
 
-        private void CloseThicknessDialog()
+        public void OpenThicknessDialog()
+        {
+            if (!ThicknessDialogIsOpen.Value)
+            {
+                var dialogService = new DialogService((App.Current as PrismApplication).Container as IContainerExtension);
+                IDialogResult result = null;
+                dialogService.Show(nameof(Thickness), new DialogParameters() { { "ViewModel", this } }, ret => result = ret);
+                var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
+                designerCanvas.Focus();
+                ThicknessDialogIsOpen.Value = true;
+            }
+        }
+
+        public void CloseThicknessDialog()
         {
             ThicknessDialogClose?.Invoke(this, new EventArgs());
             ThicknessDialogIsOpen.Value = false;

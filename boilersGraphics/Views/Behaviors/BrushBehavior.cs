@@ -13,15 +13,16 @@ namespace boilersGraphics.Views.Behaviors
         private BrushViewModel currentBrush;
         private IDialogService dlgService;
 
+        public BrushViewModel CurrentBrush { get { return currentBrush; } }
+
         public BrushBehavior(IDialogService dlgService)
         {
             this.dlgService = dlgService;
+            currentBrush = new BrushViewModel();
         }
 
         protected override void OnAttached()
         {
-            //this.AssociatedObject.GotFocus += AssociatedObject_GotFocus;
-            //this.AssociatedObject.LostFocus += AssociatedObject_LostFocus;
             this.AssociatedObject.StylusDown += AssociatedObject_StylusDown;
             this.AssociatedObject.StylusMove += AssociatedObject_StylusMove;
             this.AssociatedObject.TouchDown += AssociatedObject_TouchDown;
@@ -34,8 +35,6 @@ namespace boilersGraphics.Views.Behaviors
 
         protected override void OnDetaching()
         {
-            //this.AssociatedObject.GotFocus -= AssociatedObject_GotFocus;
-            //this.AssociatedObject.LostFocus -= AssociatedObject_LostFocus;
             this.AssociatedObject.StylusDown -= AssociatedObject_StylusDown;
             this.AssociatedObject.StylusMove -= AssociatedObject_StylusMove;
             this.AssociatedObject.TouchDown -= AssociatedObject_TouchDown;
@@ -48,53 +47,90 @@ namespace boilersGraphics.Views.Behaviors
 
         public event EventHandler ThicknessDialogClose;
 
-        //private void AssociatedObject_GotFocus(object sender, System.Windows.RoutedEventArgs e)
-        //{
-        //    dlgService.Show(nameof(Thickness), new DialogParameters() { { "Behavior", this } }, null);
-        //}
-
-        //private void AssociatedObject_LostFocus(object sender, System.Windows.RoutedEventArgs e)
-        //{
-        //    ThicknessDialogClose?.Invoke(this, new EventArgs());
-        //}
+        private bool downFlag = false;
 
         private void AssociatedObject_StylusDown(object sender, StylusDownEventArgs e)
         {
+            if (downFlag)
+                return;
+
             if (e.Source == AssociatedObject)
             {
+                if (!(Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
+                {
+                    currentBrush.CloseThicknessDialog();
+                    currentBrush = null;
+                }
                 e.StylusDevice.Capture(AssociatedObject);
                 var point = e.GetPosition(AssociatedObject);
+                if (currentBrush == null)
+                {
+                    currentBrush = new BrushViewModel();
+                    currentBrush.Thickness.Value = new System.Windows.Thickness(1);
+                    currentBrush.OpenThicknessDialog();
+                }
                 BrushInternal.Down(AssociatedObject, ref currentBrush, e, point);
+                downFlag = true;
                 e.Handled = true;
             }
         }
 
         private void AssociatedObject_TouchDown(object sender, TouchEventArgs e)
         {
+            if (downFlag)
+                return;
+
             if (e.Source == AssociatedObject)
             {
+                if (!(Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
+                {
+                    currentBrush.CloseThicknessDialog();
+                    currentBrush = null;
+                }
                 e.TouchDevice.Capture(AssociatedObject);
                 var touchPoint = e.GetTouchPoint(AssociatedObject);
                 var point = touchPoint.Position;
+                if (currentBrush == null)
+                {
+                    currentBrush = new BrushViewModel();
+                    currentBrush.Thickness.Value = new System.Windows.Thickness(1);
+                    currentBrush.OpenThicknessDialog();
+                }
                 BrushInternal.Down(AssociatedObject, ref currentBrush, e, point);
+                downFlag = true;
             }
         }
 
         private void AssociatedObject_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
+            if (downFlag)
+                return;
+
             if (e.LeftButton == MouseButtonState.Pressed)
             {
                 if (e.Source == AssociatedObject)
                 {
+                    if (!(Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
+                    {
+                        currentBrush.CloseThicknessDialog();
+                        currentBrush = null;
+                    }
                     var point = e.GetPosition(AssociatedObject);
+                    if (currentBrush == null)
+                    {
+                        currentBrush = new BrushViewModel();
+                        currentBrush.Thickness.Value = new System.Windows.Thickness(1);
+                        currentBrush.OpenThicknessDialog();
+                    }
                     BrushInternal.Down(AssociatedObject, ref currentBrush, e, point);
+                    downFlag = true;
                 }
             }
         }
 
         private void AssociatedObject_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
         {
-            if (currentBrush == null)
+            if (!downFlag)
                 return;
 
             if (e.StylusDevice != null)
@@ -106,7 +142,7 @@ namespace boilersGraphics.Views.Behaviors
 
         private void AssociatedObject_StylusMove(object sender, StylusEventArgs e)
         {
-            if (currentBrush == null)
+            if (!downFlag)
                 return;
 
             var point = e.GetPosition(AssociatedObject);
@@ -120,7 +156,7 @@ namespace boilersGraphics.Views.Behaviors
             // release stylus capture
             if (AssociatedObject.IsStylusCaptured) AssociatedObject.ReleaseStylusCapture();
 
-            currentBrush = null;
+            downFlag = false;
         }
 
         private void AssociatedObject_TouchUp(object sender, TouchEventArgs e)

@@ -170,6 +170,7 @@ namespace boilersGraphics.ViewModels
             ToolItems.Add(new ToolItemData("brush", null, new DelegateCommand(() =>
             {
                 var behavior = new BrushBehavior(dlgService);
+                behavior.CurrentBrush.OpenThicknessDialog();
                 Behaviors.Clear();
                 if (!Behaviors.Contains(behavior))
                 {
