@@ -8,9 +8,7 @@
              xmlns:converter="clr-namespace:boilersGraphics.Converters"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800"
-             Width="auto"
-             Height="auto">
+             d:DesignHeight="420" d:DesignWidth="400">
     <UserControl.Resources>
         <converter:ThicknessToDoubleConverter x:Key="ThicknessToDouble" />
         <converter:QuadConverter x:Key="Quad" />
@@ -27,9 +25,12 @@
                     IsSnapToTickEnabled="True"
                     Value="{Binding Thickness.Value, Mode=TwoWay, Converter={StaticResource ThicknessToDouble}}" />
         </DockPanel>
-        <Ellipse StrokeThickness="0"
-                 Fill="Black"
-                 Width="{Binding ElementName=slider, Path=Value, Converter={StaticResource Quad}}"
-                 Height="{Binding ElementName=slider, Path=Value, Converter={StaticResource Quad}}" />
+        <DockPanel Width="400"
+                   Height="400">
+            <Ellipse StrokeThickness="0"
+                     Fill="Black"
+                     Width="{Binding ElementName=slider, Path=Value, Converter={StaticResource Quad}}"
+                     Height="{Binding ElementName=slider, Path=Value, Converter={StaticResource Quad}}" />
+        </DockPanel>
     </DockPanel>
 </UserControl>
