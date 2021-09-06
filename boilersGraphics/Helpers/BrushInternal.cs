@@ -63,11 +63,11 @@ namespace boilersGraphics.Helpers
                 {
                     if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
                     {
-                        BrushInternal.AddNewBrushViewModel(AssociatedObject, ref currentBrush, point);
+                        BrushInternal.Draw(ref currentBrush, point, views);
                     }
                     else
                     {
-                        BrushInternal.Draw(ref currentBrush, point, views);
+                        BrushInternal.AddNewBrushViewModel(AssociatedObject, ref currentBrush, point);
                     }
                     e.Handled = true;
                 }
@@ -93,7 +93,14 @@ namespace boilersGraphics.Helpers
                 }
                 else
                 {
-                    BrushInternal.Draw(ref currentBrush, point, views);
+                    if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
+                    {
+                        BrushInternal.Draw(ref currentBrush, point, views);
+                    }
+                    else
+                    {
+                        BrushInternal.AddNewBrushViewModel(AssociatedObject, ref currentBrush, point);
+                    }
                     e.Handled = true;
                 }
             }
@@ -118,7 +125,14 @@ namespace boilersGraphics.Helpers
                 }
                 else
                 {
-                    BrushInternal.Draw(ref currentBrush, point, views);
+                    if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
+                    {
+                        BrushInternal.Draw(ref currentBrush, point, views);
+                    }
+                    else
+                    {
+                        BrushInternal.AddNewBrushViewModel(AssociatedObject, ref currentBrush, point);
+                    }
                     e.Handled = true;
                 }
             }
