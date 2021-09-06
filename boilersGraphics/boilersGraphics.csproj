@@ -175,6 +175,7 @@
     <Compile Include="Converters\ToSolidColorBrushConverter.cs" />
     <Compile Include="Extensions\Extensions.cs" />
     <Compile Include="Helpers\BezierCurve.cs" />
+    <Compile Include="Helpers\BrushInternal.cs" />
     <Compile Include="Helpers\ClipboardDTO.cs" />
     <Compile Include="Helpers\ColorExchange.cs" />
     <Compile Include="Helpers\DragObject.cs" />

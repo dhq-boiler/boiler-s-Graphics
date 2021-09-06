@@ -4,6 +4,7 @@ using boilersGraphics.Helpers;
 using boilersGraphics.Models;
 using boilersGraphics.ViewModels;
 using Microsoft.Xaml.Behaviors;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
@@ -45,22 +46,7 @@ namespace boilersGraphics.Views.Behaviors
             {
                 e.StylusDevice.Capture(AssociatedObject);
                 var point = e.GetPosition(AssociatedObject);
-                var item = new BrushViewModel();
-                item.Owner = (AssociatedObject as DesignerCanvas).DataContext as IDiagramViewModel;
-                item.Left.Value = 0;
-                item.Top.Value = 0;
-                item.Width.Value = item.Owner.Width;
-                item.Height.Value = item.Owner.Height;
-                item.FillColor.Value = item.Owner.FillColors.First();
-                item.EdgeColor.Value = item.Owner.EdgeColors.First();
-                item.EdgeThickness.Value = item.Owner.EdgeThickness.Value.Value;
-                item.ZIndex.Value = item.Owner.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).Count();
-                item.PathGeometry.Value = GeometryCreator.CreateEllipse(point.X, point.Y, new Thickness(10));
-                item.IsSelected.Value = true;
-                item.IsVisible.Value = true;
-                item.Owner.DeselectAll();
-                ((AssociatedObject as DesignerCanvas).DataContext as IDiagramViewModel).AddItemCommand.Execute(item);
-                currentBrush = item;
+                BrushInternal.Down(AssociatedObject, ref currentBrush, e, point);
                 e.Handled = true;
             }
         }
@@ -72,22 +58,7 @@ namespace boilersGraphics.Views.Behaviors
                 e.TouchDevice.Capture(AssociatedObject);
                 var touchPoint = e.GetTouchPoint(AssociatedObject);
                 var point = touchPoint.Position;
-                var item = new BrushViewModel();
-                item.Owner = (AssociatedObject as DesignerCanvas).DataContext as IDiagramViewModel;
-                item.Left.Value = 0;
-                item.Top.Value = 0;
-                item.Width.Value = item.Owner.Width;
-                item.Height.Value = item.Owner.Height;
-                item.FillColor.Value = item.Owner.FillColors.First();
-                item.EdgeColor.Value = item.Owner.EdgeColors.First();
-                item.EdgeThickness.Value = item.Owner.EdgeThickness.Value.Value;
-                item.ZIndex.Value = item.Owner.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).Count();
-                item.PathGeometry.Value = GeometryCreator.CreateEllipse(point.X, point.Y, new Thickness(10));
-                item.IsSelected.Value = true;
-                item.IsVisible.Value = true;
-                item.Owner.DeselectAll();
-                ((AssociatedObject as DesignerCanvas).DataContext as IDiagramViewModel).AddItemCommand.Execute(item);
-                currentBrush = item;
+                BrushInternal.Down(AssociatedObject, ref currentBrush, e, point);
             }
         }
 
@@ -97,25 +68,8 @@ namespace boilersGraphics.Views.Behaviors
             {
                 if (e.Source == AssociatedObject)
                 {
-                    e.MouseDevice.Capture(AssociatedObject);
                     var point = e.GetPosition(AssociatedObject);
-                    var item = new BrushViewModel();
-                    item.Owner = (AssociatedObject as DesignerCanvas).DataContext as IDiagramViewModel;
-                    item.Left.Value = 0;
-                    item.Top.Value = 0;
-                    item.Width.Value = item.Owner.Width;
-                    item.Height.Value = item.Owner.Height;
-                    item.FillColor.Value = item.Owner.FillColors.First();
-                    item.EdgeColor.Value = item.Owner.EdgeColors.First();
-                    item.EdgeThickness.Value = item.Owner.EdgeThickness.Value.Value;
-                    item.ZIndex.Value = item.Owner.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).Count();
-                    item.PathGeometry.Value = GeometryCreator.CreateEllipse(point.X, point.Y, new Thickness(10));
-                    item.IsSelected.Value = true;
-                    item.IsVisible.Value = true;
-                    item.Owner.DeselectAll();
-                    ((AssociatedObject as DesignerCanvas).DataContext as IDiagramViewModel).AddItemCommand.Execute(item);
-                    currentBrush = item;
-                    e.Handled = true;
+                    BrushInternal.Down(AssociatedObject, ref currentBrush, e, point);
                 }
             }
         }
@@ -129,7 +83,7 @@ namespace boilersGraphics.Views.Behaviors
                 return;
 
             var point = e.GetPosition(AssociatedObject);
-            currentBrush.PathGeometry.Value = Geometry.Combine(currentBrush.PathGeometry.Value, GeometryCreator.CreateEllipse(point.X, point.Y, new Thickness(10)), GeometryCombineMode.Union, null);
+            BrushInternal.Draw(ref currentBrush, point);
         }
 
         private void AssociatedObject_StylusMove(object sender, StylusEventArgs e)
@@ -138,7 +92,7 @@ namespace boilersGraphics.Views.Behaviors
                 return;
 
             var point = e.GetPosition(AssociatedObject);
-            currentBrush.PathGeometry.Value = Geometry.Combine(currentBrush.PathGeometry.Value, GeometryCreator.CreateEllipse(point.X, point.Y, new Thickness(10)), GeometryCombineMode.Union, null);
+            BrushInternal.Draw(ref currentBrush, point);
         }
 
         private void AssociatedObject_MouseUp(object sender, MouseButtonEventArgs e)
