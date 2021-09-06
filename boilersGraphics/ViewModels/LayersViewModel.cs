@@ -107,13 +107,19 @@ namespace boilersGraphics.ViewModels
                 {
                     var selectedItem = newItem as LayerItem;
 
-                    Layers.ToList().ForEach(x => x.IsSelected.Value = false);
+                    if (!Keyboard.IsKeyDown(Key.LeftCtrl) && !Keyboard.IsKeyDown(Key.RightCtrl))
+                    {
+                        Layers.ToList().ForEach(x => x.IsSelected.Value = false);
+                    }
 
                     var layerItems = layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
                                            .Where(x => x is LayerItem);
                     layerItems.ToList().ForEach(x =>
                     {
-                        x.IsSelected.Value = false;
+                        if (!Keyboard.IsKeyDown(Key.LeftCtrl) && !Keyboard.IsKeyDown(Key.RightCtrl))
+                        {
+                            x.IsSelected.Value = false;
+                        }
                         if ((x as LayerItem).Item.Value is SnapPointViewModel snapPointVM)
                         {
                             snapPointVM.Opacity.Value = 0.5;
