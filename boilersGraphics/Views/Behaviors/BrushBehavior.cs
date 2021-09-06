@@ -2,16 +2,26 @@
 using boilersGraphics.Helpers;
 using boilersGraphics.ViewModels;
 using Microsoft.Xaml.Behaviors;
+using Prism.Services.Dialogs;
+using System;
 using System.Windows.Input;
 
 namespace boilersGraphics.Views.Behaviors
 {
-    internal class BrushBehavior : Behavior<DesignerCanvas>
+    public class BrushBehavior : Behavior<DesignerCanvas>
     {
         private BrushViewModel currentBrush;
+        private IDialogService dlgService;
+
+        public BrushBehavior(IDialogService dlgService)
+        {
+            this.dlgService = dlgService;
+        }
 
         protected override void OnAttached()
         {
+            //this.AssociatedObject.GotFocus += AssociatedObject_GotFocus;
+            //this.AssociatedObject.LostFocus += AssociatedObject_LostFocus;
             this.AssociatedObject.StylusDown += AssociatedObject_StylusDown;
             this.AssociatedObject.StylusMove += AssociatedObject_StylusMove;
             this.AssociatedObject.TouchDown += AssociatedObject_TouchDown;
@@ -24,6 +34,8 @@ namespace boilersGraphics.Views.Behaviors
 
         protected override void OnDetaching()
         {
+            //this.AssociatedObject.GotFocus -= AssociatedObject_GotFocus;
+            //this.AssociatedObject.LostFocus -= AssociatedObject_LostFocus;
             this.AssociatedObject.StylusDown -= AssociatedObject_StylusDown;
             this.AssociatedObject.StylusMove -= AssociatedObject_StylusMove;
             this.AssociatedObject.TouchDown -= AssociatedObject_TouchDown;
@@ -33,6 +45,18 @@ namespace boilersGraphics.Views.Behaviors
             this.AssociatedObject.TouchUp -= AssociatedObject_TouchUp;
             base.OnDetaching();
         }
+
+        public event EventHandler ThicknessDialogClose;
+
+        //private void AssociatedObject_GotFocus(object sender, System.Windows.RoutedEventArgs e)
+        //{
+        //    dlgService.Show(nameof(Thickness), new DialogParameters() { { "Behavior", this } }, null);
+        //}
+
+        //private void AssociatedObject_LostFocus(object sender, System.Windows.RoutedEventArgs e)
+        //{
+        //    ThicknessDialogClose?.Invoke(this, new EventArgs());
+        //}
 
         private void AssociatedObject_StylusDown(object sender, StylusDownEventArgs e)
         {

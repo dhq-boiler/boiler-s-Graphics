@@ -169,7 +169,7 @@ namespace boilersGraphics.ViewModels
             })));
             ToolItems.Add(new ToolItemData("brush", null, new DelegateCommand(() =>
             {
-                var behavior = new BrushBehavior();
+                var behavior = new BrushBehavior(dlgService);
                 Behaviors.Clear();
                 if (!Behaviors.Contains(behavior))
                 {

@@ -74,6 +74,8 @@ namespace boilersGraphics.ViewModels
         
         public ReactivePropertySlim<bool> IsHitTestVisible { get; set; } = new ReactivePropertySlim<bool>();
 
+        public ReactivePropertySlim<bool> CanDrag { get; set; } = new ReactivePropertySlim<bool>(true);
+
         public ReactivePropertySlim<Color> FillColor { get; } = new ReactivePropertySlim<Color>();
 
         public string Name { get; set; }

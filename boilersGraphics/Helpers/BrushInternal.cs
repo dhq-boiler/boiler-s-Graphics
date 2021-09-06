@@ -2,14 +2,16 @@
 using boilersGraphics.Extensions;
 using boilersGraphics.Models;
 using boilersGraphics.ViewModels;
+using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Reactive.Concurrency;
+using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Threading;
 
 namespace boilersGraphics.Helpers
 {
@@ -27,24 +29,27 @@ namespace boilersGraphics.Helpers
             item.EdgeColor.Value = item.Owner.EdgeColors.First();
             item.EdgeThickness.Value = item.Owner.EdgeThickness.Value.Value;
             item.ZIndex.Value = item.Owner.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).Count();
-            item.PathGeometry.Value = GeometryCreator.CreateEllipse(point.X, point.Y, new Thickness(10));
+            item.Thickness.Value = new Thickness(10);
+            item.PathGeometry.Value = GeometryCreator.CreateEllipse(point.X, point.Y, item.Thickness.Value);
             item.IsSelected.Value = true;
             item.IsVisible.Value = true;
+            item.CanDrag.Value = false;
             item.Owner.DeselectAll();
             ((AssociatedObject as DesignerCanvas).DataContext as IDiagramViewModel).AddItemCommand.Execute(item);
+            item.SetupTimedMethod();
             currentBrush = item;
         }
 
         public static void Draw(ref BrushViewModel currentBrush, Point point, IEnumerable<FrameworkElement> views)
         {
             var item = views.First().DataContext as BrushViewModel;
-            item.PathGeometry.Value = Geometry.Combine(item.PathGeometry.Value, GeometryCreator.CreateEllipse(point.X, point.Y, new Thickness(10)), GeometryCombineMode.Union, null);
+            item.PathGeometry.Value = Geometry.Combine(item.PathGeometry.Value, GeometryCreator.CreateEllipse(point.X, point.Y, item.Thickness.Value), GeometryCombineMode.Union, null);
             currentBrush = item;
         }
 
         public static void Draw(ref BrushViewModel currentBrush, Point point)
         {
-            currentBrush.PathGeometry.Value = Geometry.Combine(currentBrush.PathGeometry.Value, GeometryCreator.CreateEllipse(point.X, point.Y, new Thickness(10)), GeometryCombineMode.Union, null);
+            currentBrush.PathGeometry.Value = Geometry.Combine(currentBrush.PathGeometry.Value, GeometryCreator.CreateEllipse(point.X, point.Y, currentBrush.Thickness.Value), GeometryCombineMode.Union, null);
         }
 
         public static void Down(DesignerCanvas AssociatedObject, ref BrushViewModel currentBrush, MouseButtonEventArgs e, Point point)

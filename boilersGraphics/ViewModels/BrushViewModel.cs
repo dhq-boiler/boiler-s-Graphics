@@ -1,11 +1,82 @@
-﻿using System;
+﻿using boilersGraphics.Controls;
+using boilersGraphics.Extensions;
+using Prism.Ioc;
+using Prism.Services.Dialogs;
+using Prism.Unity;
+using Reactive.Bindings;
+using Reactive.Bindings.Extensions;
+using System;
+using System.Linq;
+using System.Reactive.Concurrency;
+using System.Reactive.Linq;
+using System.Windows;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace boilersGraphics.ViewModels
 {
     public class BrushViewModel : DesignerItemViewModelBase
     {
+        public ReactiveCommand GotFocusCommand { get; } = new ReactiveCommand();
+        public ReactiveCommand LostFocusCommand { get; } = new ReactiveCommand();
+
+        public ReactivePropertySlim<Thickness> Thickness { get; } = new ReactivePropertySlim<Thickness>();
+
+        public ReactivePropertySlim<bool> ThicknessDialogIsOpen { get; } = new ReactivePropertySlim<bool>();
+
+        public event EventHandler ThicknessDialogClose;
+
+        public BrushViewModel()
+            : base()
+        {
+            Init();
+        }
+
+        public void SetupTimedMethod()
+        {
+            Observable.Return(this)
+                      .Delay(TimeSpan.FromMilliseconds(100))
+                      .ObserveOn(new DispatcherScheduler(Dispatcher.CurrentDispatcher))
+                      .Subscribe(x =>
+                      {
+                          var views = App.Current.MainWindow.GetChildOfType<DesignerCanvas>().GetCorrespondingViews<FrameworkElement>(this).Where(x => x.GetType() == GetViewType());
+                          views.First().Focus();
+                      })
+                      .AddTo(_CompositeDisposable);
+        }
+
+        private void Init()
+        {
+            GotFocusCommand.Subscribe(x =>
+            {
+                if (!ThicknessDialogIsOpen.Value)
+                {
+                    var dialogService = new DialogService((App.Current as PrismApplication).Container as IContainerExtension);
+                    IDialogResult result = null;
+                    dialogService.Show(nameof(Thickness), new DialogParameters() { { "ViewModel", this } }, ret => result = ret);
+                    var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
+                    designerCanvas.Focus();
+                    ThicknessDialogIsOpen.Value = true;
+                }
+            })
+            .AddTo(_CompositeDisposable);
+            LostFocusCommand.Subscribe(x =>
+            {
+                if (ThicknessDialogIsOpen.Value)
+                {
+                    CloseThicknessDialog();
+                }
+            })
+            .AddTo(_CompositeDisposable);
+        }
+
+        private void CloseThicknessDialog()
+        {
+            ThicknessDialogClose?.Invoke(this, new EventArgs());
+            ThicknessDialogIsOpen.Value = false;
+        }
+
         public override object Clone()
         {
             var clone = new BrushViewModel();

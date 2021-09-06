@@ -3,7 +3,9 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:convereter="clr-namespace:boilersGraphics.Converters"
     xmlns:local="clr-namespace:boilersGraphics.Resources.DesignerItems"
-    xmlns:viewModel="clr-namespace:boilersGraphics.ViewModels">
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:viewModel="clr-namespace:boilersGraphics.ViewModels"
+    xmlns:helper="clr-namespace:boilersGraphics.Helpers">
     <convereter:ToSolidColorBrushConverter x:Key="solidColorBrushConverter" />
     <DataTemplate DataType="{x:Type viewModel:BrushViewModel}">
         <Path Stroke="{Binding EdgeColor.Value, Converter={StaticResource solidColorBrushConverter}}"
@@ -11,6 +13,16 @@
               IsHitTestVisible="False"
               Stretch="None"
               Fill="{Binding FillColor.Value, Converter={StaticResource solidColorBrushConverter}}"
-              Data="{Binding PathGeometry.Value}" />
+              Data="{Binding PathGeometry.Value}"
+              Focusable="True">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="GotFocus">
+                    <helper:EventToCommand Command="{Binding GotFocusCommand}" />
+                </i:EventTrigger>
+                <i:EventTrigger EventName="LostFocus">
+                    <helper:EventToCommand Command="{Binding LostFocusCommand}" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </Path>
     </DataTemplate>
 </ResourceDictionary>
