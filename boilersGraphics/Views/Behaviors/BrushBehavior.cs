@@ -1,14 +1,8 @@
 ﻿using boilersGraphics.Controls;
-using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
-using boilersGraphics.Models;
 using boilersGraphics.ViewModels;
 using Microsoft.Xaml.Behaviors;
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media;
 
 namespace boilersGraphics.Views.Behaviors
 {
