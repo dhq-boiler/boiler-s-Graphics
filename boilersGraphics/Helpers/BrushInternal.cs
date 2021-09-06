@@ -61,7 +61,14 @@ namespace boilersGraphics.Helpers
                 }
                 else
                 {
-                    BrushInternal.Draw(ref currentBrush, point, views);
+                    if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
+                    {
+                        BrushInternal.AddNewBrushViewModel(AssociatedObject, ref currentBrush, point);
+                    }
+                    else
+                    {
+                        BrushInternal.Draw(ref currentBrush, point, views);
+                    }
                     e.Handled = true;
                 }
             }
