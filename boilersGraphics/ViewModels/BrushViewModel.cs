@@ -41,7 +41,7 @@ namespace boilersGraphics.ViewModels
                       .Subscribe(x =>
                       {
                           var views = App.Current.MainWindow.GetChildOfType<DesignerCanvas>().GetCorrespondingViews<FrameworkElement>(this).Where(x => x.GetType() == GetViewType());
-                          views.First().Focus();
+                          views.FirstOrDefault()?.Focus();
                       })
                       .AddTo(_CompositeDisposable);
         }
