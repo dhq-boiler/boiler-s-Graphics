@@ -18,7 +18,7 @@ namespace boilersGraphics.Views.Behaviors
         public BrushBehavior(IDialogService dlgService)
         {
             this.dlgService = dlgService;
-            currentBrush = new BrushViewModel();
+            currentBrush = BrushViewModel.CreateInstance();
         }
 
         protected override void OnAttached()
@@ -63,8 +63,7 @@ namespace boilersGraphics.Views.Behaviors
                 var point = e.GetPosition(AssociatedObject);
                 if (currentBrush == null)
                 {
-                    currentBrush = new BrushViewModel();
-                    currentBrush.Thickness.Value = new System.Windows.Thickness(1);
+                    currentBrush = BrushViewModel.CreateInstance();
                     currentBrush.OpenThicknessDialog();
                 }
                 BrushInternal.Down(AssociatedObject, ref currentBrush, e, point);
@@ -90,8 +89,7 @@ namespace boilersGraphics.Views.Behaviors
                 var point = touchPoint.Position;
                 if (currentBrush == null)
                 {
-                    currentBrush = new BrushViewModel();
-                    currentBrush.Thickness.Value = new System.Windows.Thickness(1);
+                    currentBrush = BrushViewModel.CreateInstance();
                     currentBrush.OpenThicknessDialog();
                 }
                 BrushInternal.Down(AssociatedObject, ref currentBrush, e, point);
@@ -116,8 +114,7 @@ namespace boilersGraphics.Views.Behaviors
                     var point = e.GetPosition(AssociatedObject);
                     if (currentBrush == null)
                     {
-                        currentBrush = new BrushViewModel();
-                        currentBrush.Thickness.Value = new System.Windows.Thickness(1);
+                        currentBrush = BrushViewModel.CreateInstance();
                         currentBrush.OpenThicknessDialog();
                     }
                     BrushInternal.Down(AssociatedObject, ref currentBrush, e, point);

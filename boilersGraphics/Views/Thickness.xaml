@@ -23,7 +23,7 @@
                     TickFrequency="1"
                     TickPlacement="BottomRight"
                     IsSnapToTickEnabled="True"
-                    Value="{Binding Thickness.Value, Mode=TwoWay, Converter={StaticResource ThicknessToDouble}}" />
+                    Value="{Binding ViewModel.Value.Thickness.Value, Mode=TwoWay, Converter={StaticResource ThicknessToDouble}, UpdateSourceTrigger=PropertyChanged}" />
         </DockPanel>
         <DockPanel Width="400"
                    Height="400">

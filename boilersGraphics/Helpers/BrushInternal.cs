@@ -2,16 +2,12 @@
 using boilersGraphics.Extensions;
 using boilersGraphics.Models;
 using boilersGraphics.ViewModels;
-using Reactive.Bindings.Extensions;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Threading;
 
 namespace boilersGraphics.Helpers
 {
@@ -59,17 +55,19 @@ namespace boilersGraphics.Helpers
                 if (!views.Any())
                 {
                     e.MouseDevice.Capture(AssociatedObject);
-                    BrushInternal.AddNewBrushViewModel(AssociatedObject, ref currentBrush, point);
+                    currentBrush = BrushViewModel.CreateInstance();
+                    AddNewBrushViewModel(AssociatedObject, ref currentBrush, point);
                 }
                 else
                 {
                     if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
                     {
-                        BrushInternal.Draw(ref currentBrush, point, views);
+                        Draw(ref currentBrush, point, views);
                     }
                     else
                     {
-                        BrushInternal.AddNewBrushViewModel(AssociatedObject, ref currentBrush, point);
+                        currentBrush = BrushViewModel.CreateInstance();
+                        AddNewBrushViewModel(AssociatedObject, ref currentBrush, point);
                     }
                     e.Handled = true;
                 }
@@ -77,7 +75,8 @@ namespace boilersGraphics.Helpers
             else
             {
                 e.MouseDevice.Capture(AssociatedObject);
-                BrushInternal.AddNewBrushViewModel(AssociatedObject, ref currentBrush, point);
+                currentBrush = BrushViewModel.CreateInstance();
+                AddNewBrushViewModel(AssociatedObject, ref currentBrush, point);
             }
         }
 
@@ -91,7 +90,7 @@ namespace boilersGraphics.Helpers
                 if (!views.Any())
                 {
                     e.StylusDevice.Capture(AssociatedObject);
-                    BrushInternal.AddNewBrushViewModel(AssociatedObject, ref currentBrush, point);
+                    AddNewBrushViewModel(AssociatedObject, ref currentBrush, point);
                 }
                 else
                 {
@@ -101,7 +100,7 @@ namespace boilersGraphics.Helpers
                     }
                     else
                     {
-                        BrushInternal.AddNewBrushViewModel(AssociatedObject, ref currentBrush, point);
+                        AddNewBrushViewModel(AssociatedObject, ref currentBrush, point);
                     }
                     e.Handled = true;
                 }
@@ -109,7 +108,7 @@ namespace boilersGraphics.Helpers
             else
             {
                 e.StylusDevice.Capture(AssociatedObject);
-                BrushInternal.AddNewBrushViewModel(AssociatedObject, ref currentBrush, point);
+                AddNewBrushViewModel(AssociatedObject, ref currentBrush, point);
             }
         }
 
@@ -123,17 +122,17 @@ namespace boilersGraphics.Helpers
                 if (!views.Any())
                 {
                     e.TouchDevice.Capture(AssociatedObject);
-                    BrushInternal.AddNewBrushViewModel(AssociatedObject, ref currentBrush, point);
+                    AddNewBrushViewModel(AssociatedObject, ref currentBrush, point);
                 }
                 else
                 {
                     if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
                     {
-                        BrushInternal.Draw(ref currentBrush, point, views);
+                        Draw(ref currentBrush, point, views);
                     }
                     else
                     {
-                        BrushInternal.AddNewBrushViewModel(AssociatedObject, ref currentBrush, point);
+                        AddNewBrushViewModel(AssociatedObject, ref currentBrush, point);
                     }
                     e.Handled = true;
                 }
@@ -141,7 +140,7 @@ namespace boilersGraphics.Helpers
             else
             {
                 e.TouchDevice.Capture(AssociatedObject);
-                BrushInternal.AddNewBrushViewModel(AssociatedObject, ref currentBrush, point);
+                AddNewBrushViewModel(AssociatedObject, ref currentBrush, point);
             }
         }
     }

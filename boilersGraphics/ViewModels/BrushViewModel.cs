@@ -6,6 +6,7 @@ using Prism.Unity;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
@@ -18,6 +19,10 @@ namespace boilersGraphics.ViewModels
 {
     public class BrushViewModel : DesignerItemViewModelBase
     {
+        private static List<BrushViewModel> list = new List<BrushViewModel>();
+
+        public static Thickness RetainedValue { get; private set; } = new Thickness(1);
+
         public ReactiveCommand GotFocusCommand { get; } = new ReactiveCommand();
         public ReactiveCommand LostFocusCommand { get; } = new ReactiveCommand();
 
@@ -27,7 +32,14 @@ namespace boilersGraphics.ViewModels
 
         public event EventHandler ThicknessDialogClose;
 
-        public BrushViewModel()
+        public static BrushViewModel CreateInstance()
+        {
+            var obj = new BrushViewModel();
+            obj.Thickness.Value = RetainedValue;
+            return obj;
+        }
+
+        protected BrushViewModel()
             : base()
         {
             Init();
@@ -48,6 +60,11 @@ namespace boilersGraphics.ViewModels
 
         private void Init()
         {
+            Thickness.Subscribe(x =>
+            {
+                list.ForEach(y => y.Thickness.Value = x);
+            })
+            .AddTo(_CompositeDisposable);
             GotFocusCommand.Subscribe(x =>
             {
                 OpenThicknessDialog();
@@ -55,18 +72,20 @@ namespace boilersGraphics.ViewModels
             .AddTo(_CompositeDisposable);
             LostFocusCommand.Subscribe(x =>
             {
-                if (ThicknessDialogIsOpen.Value)
-                {
-                    CloseThicknessDialog();
-                }
+                CloseThicknessDialog();
             })
             .AddTo(_CompositeDisposable);
         }
 
         public void OpenThicknessDialog()
         {
+            list.Except(new BrushViewModel[] { this }).ToList().ForEach(x => x.CloseThicknessDialog());
+
             if (!ThicknessDialogIsOpen.Value)
             {
+                if (RetainedValue != null)
+                    Thickness.Value = RetainedValue;
+                list.Add(this);
                 var dialogService = new DialogService((App.Current as PrismApplication).Container as IContainerExtension);
                 IDialogResult result = null;
                 dialogService.Show(nameof(Thickness), new DialogParameters() { { "ViewModel", this } }, ret => result = ret);
@@ -78,7 +97,11 @@ namespace boilersGraphics.ViewModels
 
         public void CloseThicknessDialog()
         {
+            if (!ThicknessDialogIsOpen.Value)
+                return;
+            RetainedValue = Thickness.Value;
             ThicknessDialogClose?.Invoke(this, new EventArgs());
+            list.Remove(this);
             ThicknessDialogIsOpen.Value = false;
         }
 
