@@ -45,8 +45,6 @@ namespace boilersGraphics.Views.Behaviors
             base.OnDetaching();
         }
 
-        public event EventHandler ThicknessDialogClose;
-
         private bool downFlag = false;
 
         private void AssociatedObject_StylusDown(object sender, StylusDownEventArgs e)
