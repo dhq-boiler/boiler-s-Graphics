@@ -130,6 +130,21 @@ namespace boilersGraphics.ViewModels
                     {
                         snapPointVM.Opacity.Value = 1.0;
                     }
+                    if (selectedItem.Item.Value is DesignerItemViewModelBase designerItem)
+                    {
+                        if (layerItems.Where(x => x.IsSelected.Value == true).Count() > 1)
+                        {
+                            (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.EdgeColors.Clear();
+                            (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.FillColors.Clear();
+                        }
+                        else
+                        {
+                            (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.EdgeColors.Clear();
+                            (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.FillColors.Clear();
+                            (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.EdgeColors.Add(designerItem.EdgeColor.Value);
+                            (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.FillColors.Add(designerItem.FillColor.Value);
+                        }
+                    }
 
                     LayerTreeViewItemBase temp = selectedItem;
                     while (temp.Parent.Value != null)
