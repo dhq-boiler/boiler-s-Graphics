@@ -178,7 +178,6 @@ namespace boilersGraphics.ViewModels
                 }
                 ChangeHitTestToDisable();
                 SelectOneToolItem("brush");
-
             })));
         }
 
