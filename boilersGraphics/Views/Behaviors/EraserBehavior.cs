@@ -91,6 +91,9 @@ namespace boilersGraphics.Views.Behaviors
             if (!downFlag)
                 return;
 
+            if (currentBrush == null)
+                return;
+
             if (e.StylusDevice != null)
                 return;
 
@@ -101,6 +104,9 @@ namespace boilersGraphics.Views.Behaviors
         private void AssociatedObject_StylusMove(object sender, StylusEventArgs e)
         {
             if (!downFlag)
+                return;
+
+            if (currentBrush == null)
                 return;
 
             var point = e.GetPosition(AssociatedObject);

@@ -70,11 +70,6 @@ namespace boilersGraphics.ViewModels
                 OpenThicknessDialog();
             })
             .AddTo(_CompositeDisposable);
-            LostFocusCommand.Subscribe(x =>
-            {
-                CloseThicknessDialog();
-            })
-            .AddTo(_CompositeDisposable);
         }
 
         public void OpenThicknessDialog()
