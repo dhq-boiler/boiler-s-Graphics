@@ -179,6 +179,17 @@ namespace boilersGraphics.ViewModels
                 ChangeHitTestToDisable();
                 SelectOneToolItem("brush");
             })));
+            ToolItems.Add(new ToolItemData("eraser", "pack://application:,,,/Assets/img/eraser.png", new DelegateCommand(() =>
+            {
+                var behavior = new EraserBehavior();
+                Behaviors.Clear();
+                if (!Behaviors.Contains(behavior))
+                {
+                    Behaviors.Add(behavior);
+                }
+                ChangeHitTestToDisable();
+                SelectOneToolItem("eraser");
+            })));
         }
 
         private void ChangeHitTestToDisable()

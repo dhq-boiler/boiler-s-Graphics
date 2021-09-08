@@ -177,6 +177,7 @@
     <Compile Include="Converters\ToSolidColorBrushConverter.cs" />
     <Compile Include="Extensions\Extensions.cs" />
     <Compile Include="Helpers\BezierCurve.cs" />
+    <Compile Include="Helpers\EraserInternal.cs" />
     <Compile Include="Helpers\BrushInternal.cs" />
     <Compile Include="Helpers\ClipboardDTO.cs" />
     <Compile Include="Helpers\ColorExchange.cs" />
@@ -274,6 +275,7 @@
     <Compile Include="ViewModels\VersionViewModel.cs" />
     <Compile Include="Views\AdornedBy.cs" />
     <Compile Include="Views\Behaviors\AbstractAdorner.cs" />
+    <Compile Include="Views\Behaviors\EraserBehavior.cs" />
     <Compile Include="Views\Behaviors\BrushBehavior.cs" />
     <Compile Include="Views\Behaviors\DeselectBehavior.cs" />
     <Compile Include="Views\Behaviors\LetterBehavior.cs" />
@@ -625,6 +627,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\img\brush.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\img\eraser.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
