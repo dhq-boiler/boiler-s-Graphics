@@ -1,21 +1,20 @@
 ﻿using boilersGraphics.Controls;
 using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
+using boilersGraphics.Models;
+using boilersGraphics.Views;
 using boilersGraphics.Views.Behaviors;
 using Microsoft.Win32;
-using Prism.Commands;
-using System.Collections.ObjectModel;
-using System.Linq;
 using Microsoft.Xaml.Behaviors;
-using System.IO;
-using System.Windows.Media.Imaging;
+using Prism.Commands;
 using Prism.Services.Dialogs;
-using boilersGraphics.Views;
-using boilersGraphics.Models;
-using System.Windows.Media;
-using System.Windows;
 using Reactive.Bindings;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Windows;
+using System.Windows.Media.Imaging;
 
 namespace boilersGraphics.ViewModels
 {

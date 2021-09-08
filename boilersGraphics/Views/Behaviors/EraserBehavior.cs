@@ -2,8 +2,6 @@
 using boilersGraphics.Helpers;
 using boilersGraphics.ViewModels;
 using Microsoft.Xaml.Behaviors;
-using Prism.Services.Dialogs;
-using System;
 using System.Windows.Input;
 
 namespace boilersGraphics.Views.Behaviors
