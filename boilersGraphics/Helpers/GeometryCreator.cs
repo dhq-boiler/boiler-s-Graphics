@@ -18,6 +18,11 @@ namespace boilersGraphics.Helpers
             return PathGeometry.CreateFromGeometry(new EllipseGeometry(new Point(item.Left.Value + item.Width.Value / 2, item.Top.Value + item.Height.Value / 2), item.Width.Value / 2, item.Height.Value / 2));
         }
 
+        public static PathGeometry CreateEllipse(double centerX, double centerY, Thickness thickness)
+        {
+            return PathGeometry.CreateFromGeometry(new EllipseGeometry(new Point(centerX - thickness.Left, centerY - thickness.Top), thickness.Left + thickness.Right, thickness.Top + thickness.Bottom));
+        }
+
         public static PathGeometry CreateEllipse(NEllipseViewModel item, double angle)
         {
             var ellipse = new EllipseGeometry(new Point(item.Left.Value + item.Width.Value / 2, item.Top.Value + item.Height.Value / 2), item.Width.Value / 2, item.Height.Value / 2, new RotateTransform(angle, item.CenterPoint.Value.X, item.CenterPoint.Value.Y));

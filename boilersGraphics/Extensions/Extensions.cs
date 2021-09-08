@@ -1,4 +1,4 @@
-﻿using boilersGraphics.Models;
+using boilersGraphics.Models;
 using boilersGraphics.ViewModels;
 using Reactive.Bindings;
 using System;
@@ -80,7 +80,33 @@ namespace boilersGraphics.Extensions
                     yield return result2;
             }
         }
-
+        
+        public static IEnumerable<FrameworkElement> GetViewsHavingDataContext(this FrameworkElement parent, bool parentInclude = false)
+        {
+            if (parentInclude && !(parent.DataContext is null))
+            {
+                if (parent is FrameworkElement)
+                    yield return parent as FrameworkElement;
+            }
+            
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
+            {
+                var child = VisualTreeHelper.GetChild(parent, i);
+                var result = (child as IEnumerable<FrameworkElement>) ?? EnumerateChildOfType<FrameworkElement>(child);
+                if (result != null)
+                {
+                    foreach (var item in result)
+                    {
+                        if (item != null && !(item.DataContext is null))
+                            yield return item;
+                    }
+                }
+                var result2 = (child as FrameworkElement) ?? GetChildOfType<FrameworkElement>(child);
+                if (result2 != null && !(result2.DataContext is null))
+                    yield return result2;
+            }
+        }
+        
         public static T GetParentOfType<T>(this DependencyObject obj)
             where T : DependencyObject
         {

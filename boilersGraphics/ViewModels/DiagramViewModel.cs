@@ -614,7 +614,7 @@ namespace boilersGraphics.ViewModels
             MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "ZIndex.Value", Layers.SelectMany(x => x.Children).Count());
             MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "IsHitTestVisible.Value", MainWindowVM.ToolBarViewModel.CurrentHitTestVisibleState.Value);
             MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "PathGeometry.Value", GeometryCreator.CreateCombineGeometry(item1, item2));
-            if (combine.PathGeometry.Value == null)
+            if (combine.PathGeometry.Value == null || combine.PathGeometry.Value.Figures.Count() == 0)
             {
                 var item1PathGeometry = item1.PathGeometry.Value;
                 var item2PathGeometry = item2.PathGeometry.Value;
@@ -823,6 +823,17 @@ namespace boilersGraphics.ViewModels
             var setting = new Models.Setting();
             setting.Width.Value = this.Width;
             setting.Height.Value = this.Height;
+            Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                                                     .Where(x => x.GetType() == typeof(LayerItem))
+                                                     .Select(y => (y as LayerItem).Item.Value)
+                                                     .Where(z => z is BrushViewModel)
+                                                     .Cast<BrushViewModel>()
+                                                     .ToList()
+                                                     .ForEach(z =>
+                                                     {
+                                                         z.Width.Value = this.Width;
+                                                         z.Height.Value = this.Height;
+                                                     });
             setting.CanvasBackground.Value = this.CanvasBackground.Value;
             setting.EnablePointSnap.Value = this.EnablePointSnap.Value;
             setting.SnapPower.Value = (App.Current.MainWindow.DataContext as MainWindowViewModel).SnapPower.Value;

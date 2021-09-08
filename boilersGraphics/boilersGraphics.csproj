@@ -162,7 +162,9 @@
     <Compile Include="Controls\RotateThumb.cs" />
     <Compile Include="Controls\SnapPoint.cs" />
     <Compile Include="Converters\ColorToStringConverter.cs" />
+    <Compile Include="Converters\QuadConverter.cs" />
     <Compile Include="Converters\DoubleToStringConverter.cs" />
+    <Compile Include="Converters\ThicknessToDoubleConverter.cs" />
     <Compile Include="Converters\ExtensionConverter.cs" />
     <Compile Include="Converters\IntToStringConverter.cs" />
     <Compile Include="Converters\IsSelectedToBorderBrushConverter.cs" />
@@ -175,6 +177,8 @@
     <Compile Include="Converters\ToSolidColorBrushConverter.cs" />
     <Compile Include="Extensions\Extensions.cs" />
     <Compile Include="Helpers\BezierCurve.cs" />
+    <Compile Include="Helpers\EraserInternal.cs" />
+    <Compile Include="Helpers\BrushInternal.cs" />
     <Compile Include="Helpers\ClipboardDTO.cs" />
     <Compile Include="Helpers\ColorExchange.cs" />
     <Compile Include="Helpers\DragObject.cs" />
@@ -236,6 +240,7 @@
     </Compile>
     <Compile Include="ViewModels\BackgroundViewModel.cs" />
     <Compile Include="ViewModels\BezierCurveViewModel.cs" />
+    <Compile Include="ViewModels\BrushViewModel.cs" />
     <Compile Include="ViewModels\ColorPickerViewModel.cs" />
     <Compile Include="ViewModels\CombineGeometryViewModel.cs" />
     <Compile Include="ViewModels\ConnectorBaseViewModel.cs" />
@@ -265,10 +270,13 @@
     <Compile Include="ViewModels\SnapPointViewModel.cs" />
     <Compile Include="ViewModels\StraightConnectorViewModel.cs" />
     <Compile Include="ViewModels\StraightLineViewModel.cs" />
+    <Compile Include="ViewModels\ThicknessViewModel.cs" />
     <Compile Include="ViewModels\ToolBarViewModel.cs" />
     <Compile Include="ViewModels\VersionViewModel.cs" />
     <Compile Include="Views\AdornedBy.cs" />
     <Compile Include="Views\Behaviors\AbstractAdorner.cs" />
+    <Compile Include="Views\Behaviors\EraserBehavior.cs" />
+    <Compile Include="Views\Behaviors\BrushBehavior.cs" />
     <Compile Include="Views\Behaviors\DeselectBehavior.cs" />
     <Compile Include="Views\Behaviors\LetterBehavior.cs" />
     <Compile Include="Views\Behaviors\LetterVerticalBehavior.cs" />
@@ -324,12 +332,19 @@
     <Compile Include="Views\Setting.xaml.cs">
       <DependentUpon>Setting.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Thickness.xaml.cs">
+      <DependentUpon>Thickness.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Triggers\InteractionRequestTrigger.cs" />
     <Compile Include="Views\Triggers\ResizeThumbDragDeltaEventTrigger.cs" />
     <Compile Include="Views\Triggers\WindowLoadedEventTrigger.cs" />
     <Compile Include="Views\Version.xaml.cs">
       <DependentUpon>Version.xaml</DependentUpon>
     </Compile>
+    <Page Include="Resources\DesignerItems\BrushDesignerItemDataTemplate.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Resources\DesignerItems\GroupItemDataTemplate.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -492,6 +507,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Thickness.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Version.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -605,6 +624,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\img\SnapPoint.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\img\brush.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\img\eraser.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

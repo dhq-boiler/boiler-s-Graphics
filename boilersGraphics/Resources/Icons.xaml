@@ -130,4 +130,12 @@
         x:Key="Icon_SnapPoint"
         x:Shared="False"
         UriSource="pack://application:,,,/Assets/img/SnapPoint.png" />
+    <BitmapImage
+        x:Key="Icon_Brush"
+        x:Shared="False"
+        UriSource="pack://application:,,,/Assets/img/brush.png" />
+    <BitmapImage
+        x:Key="Icon_Eraser"
+        x:Shared="False"
+        UriSource="pack://application:,,,/Assets/img/eraser.png" />
 </ResourceDictionary>
