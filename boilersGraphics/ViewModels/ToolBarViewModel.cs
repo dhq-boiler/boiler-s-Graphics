@@ -167,7 +167,7 @@ namespace boilersGraphics.ViewModels
                 ChangeHitTestToDisable();
                 SelectOneToolItem("snappoint");
             })));
-            ToolItems.Add(new ToolItemData("brush", null, new DelegateCommand(() =>
+            ToolItems.Add(new ToolItemData("brush", "pack://application:,,,/Assets/img/brush.png", new DelegateCommand(() =>
             {
                 var behavior = new BrushBehavior(dlgService);
                 behavior.CurrentBrush.OpenThicknessDialog();

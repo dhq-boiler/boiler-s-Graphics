@@ -623,6 +623,9 @@
   <ItemGroup>
     <Resource Include="Assets\img\SnapPoint.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\img\brush.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>
