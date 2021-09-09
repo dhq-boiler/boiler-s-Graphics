@@ -46,6 +46,9 @@
                     <i:EventTrigger EventName="MouseEnter">
                         <helper:EventToCommand Command="{Binding MouseEnterCommand}" PassEventArgsToCommand="True" />
                     </i:EventTrigger>
+                    <i:EventTrigger EventName="PreviewKeyDown">
+                        <helper:EventToCommand Command="{Binding PreviewKeyDownCommand}" PassEventArgsToCommand="True" />
+                    </i:EventTrigger>
                 </i:Interaction.Triggers>
                 <ScrollViewer.Background>
                     <VisualBrush Stretch="None"

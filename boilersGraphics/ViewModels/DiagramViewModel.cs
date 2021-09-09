@@ -89,6 +89,7 @@ namespace boilersGraphics.ViewModels
         public DelegateCommand<MouseEventArgs> MouseMoveCommand { get; private set; }
         public DelegateCommand<MouseEventArgs> MouseLeaveCommand { get; private set; }
         public DelegateCommand<MouseEventArgs> MouseEnterCommand { get; private set; }
+        public DelegateCommand<KeyEventArgs> PreviewKeyDownCommand { get; private set; }
 
         #region Property
 
@@ -279,6 +280,28 @@ namespace boilersGraphics.ViewModels
                     ReleaseMiddleButton(args);
                 }
             });
+            PreviewKeyDownCommand = new DelegateCommand<KeyEventArgs>(args =>
+            {
+                switch (args.Key)
+                {
+                    case Key.Left:
+                        MoveSelectedItems(-1, 0);
+                        args.Handled = true;
+                        break;
+                    case Key.Up:
+                        MoveSelectedItems(0, -1);
+                        args.Handled = true;
+                        break;
+                    case Key.Right:
+                        MoveSelectedItems(1, 0);
+                        args.Handled = true;
+                        break;
+                    case Key.Down:
+                        MoveSelectedItems(0, 1);
+                        args.Handled = true;
+                        break;
+                }
+            });
             EditMenuOpenedCommand = new DelegateCommand(() =>
             {
                 CutCommand.RaiseCanExecuteChanged();
@@ -379,6 +402,17 @@ namespace boilersGraphics.ViewModels
 
             Width = width;
             Height = height;
+        }
+
+        private void MoveSelectedItems(int horizontalDiff, int verticalDiff)
+        {
+            MainWindowVM.Recorder.BeginRecode();
+            SelectedItems.Value.OfType<DesignerItemViewModelBase>().ToList().ForEach(x =>
+            {
+                MainWindowVM.Recorder.Current.ExecuteSetProperty(x, "Left.Value", x.Left.Value + horizontalDiff);
+                MainWindowVM.Recorder.Current.ExecuteSetProperty(x, "Top.Value", x.Top.Value + verticalDiff);
+            });
+            MainWindowVM.Recorder.EndRecode("MoveSelectedItems()");
         }
 
         public void Initialize()
