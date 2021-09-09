@@ -125,7 +125,7 @@ namespace boilersGraphics.ViewModels
                 ChangeHitTestToDisable();
                 SelectOneToolItem("letter-vertical");
             })));
-            ToolItems.Add(new ToolItemData("polygon", "pack://application:,,,/Assets/img/pentagon.png", new DelegateCommand(() =>
+            ToolItems.Add(new ToolItemData("polygon", "pack://application:,,,/Assets/img/polygon.png", new DelegateCommand(() =>
             {
                 IDialogResult result = null;
                 this.dlgService.ShowDialog(nameof(PolygonSetting), ret => result = ret);

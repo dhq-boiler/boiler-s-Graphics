@@ -631,6 +631,9 @@
   <ItemGroup>
     <Resource Include="Assets\img\eraser.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\img\polygon.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>
