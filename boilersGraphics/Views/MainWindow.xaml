@@ -1242,7 +1242,8 @@
                             Padding="3"
                             Command="{Binding Command}"
                             IsChecked="{Binding IsChecked}">
-                            <Image Source="{Binding ImageUrl}" />
+                            <Image Source="{Binding ImageUrl}"
+                                   RenderOptions.BitmapScalingMode="HighQuality" />
                         </ToggleButton>
                     </DataTemplate>
                 </ToolBar.ItemTemplate>
