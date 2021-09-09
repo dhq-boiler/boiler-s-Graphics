@@ -8,6 +8,7 @@ using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+using TsOperationHistory.Extensions;
 
 namespace boilersGraphics.Helpers
 {
@@ -33,19 +34,19 @@ namespace boilersGraphics.Helpers
             currentBrush.SetupTimedMethod();
         }
 
-        public static void Draw(ref BrushViewModel currentBrush, Point point, IEnumerable<FrameworkElement> views)
+        public static void Draw(MainWindowViewModel mainWindowViewModel, ref BrushViewModel currentBrush, Point point, IEnumerable<FrameworkElement> views)
         {
             var item = views.First().DataContext as BrushViewModel;
-            item.PathGeometry.Value = Geometry.Combine(item.PathGeometry.Value, GeometryCreator.CreateEllipse(point.X, point.Y, item.Thickness.Value), GeometryCombineMode.Union, null);
+            mainWindowViewModel.Recorder.Current.ExecuteSetProperty(item, "PathGeometry.Value", Geometry.Combine(item.PathGeometry.Value, GeometryCreator.CreateEllipse(point.X, point.Y, item.Thickness.Value), GeometryCombineMode.Union, null));
             currentBrush = item;
         }
 
-        public static void Draw(ref BrushViewModel currentBrush, Point point)
+        public static void Draw(MainWindowViewModel mainWindowViewModel, ref BrushViewModel currentBrush, Point point)
         {
-            currentBrush.PathGeometry.Value = Geometry.Combine(currentBrush.PathGeometry.Value, GeometryCreator.CreateEllipse(point.X, point.Y, currentBrush.Thickness.Value), GeometryCombineMode.Union, null);
+            mainWindowViewModel.Recorder.Current.ExecuteSetProperty(currentBrush, "PathGeometry.Value", Geometry.Combine(currentBrush.PathGeometry.Value, GeometryCreator.CreateEllipse(point.X, point.Y, currentBrush.Thickness.Value), GeometryCombineMode.Union, null));
         }
 
-        public static void Down(DesignerCanvas AssociatedObject, ref BrushViewModel currentBrush, MouseButtonEventArgs e, Point point)
+        public static void Down(MainWindowViewModel mainWindowViewModel, DesignerCanvas AssociatedObject, ref BrushViewModel currentBrush, MouseButtonEventArgs e, Point point)
         {
             var selectedDataContext = (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.AllItems.Value.Where(x => x.IsSelected.Value == true).Select(x => x);
             var input = AssociatedObject.InputHitTest(point);
@@ -62,7 +63,7 @@ namespace boilersGraphics.Helpers
                 {
                     if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
                     {
-                        Draw(ref currentBrush, point, views);
+                        Draw(mainWindowViewModel, ref currentBrush, point, views);
                     }
                     else
                     {
@@ -80,7 +81,7 @@ namespace boilersGraphics.Helpers
             }
         }
 
-        public static void Down(DesignerCanvas AssociatedObject, ref BrushViewModel currentBrush, StylusDownEventArgs e, Point point)
+        public static void Down(MainWindowViewModel mainWindowViewModel, DesignerCanvas AssociatedObject, ref BrushViewModel currentBrush, StylusDownEventArgs e, Point point)
         {
             var selectedDataContext = (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.AllItems.Value.Where(x => x.IsSelected.Value == true).Select(x => x);
             var input = AssociatedObject.InputHitTest(point);
@@ -96,7 +97,7 @@ namespace boilersGraphics.Helpers
                 {
                     if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
                     {
-                        BrushInternal.Draw(ref currentBrush, point, views);
+                        BrushInternal.Draw(mainWindowViewModel, ref currentBrush, point, views);
                     }
                     else
                     {
@@ -112,7 +113,7 @@ namespace boilersGraphics.Helpers
             }
         }
 
-        public static void Down(DesignerCanvas AssociatedObject, ref BrushViewModel currentBrush, TouchEventArgs e, Point point)
+        public static void Down(MainWindowViewModel mainWindowViewModel, DesignerCanvas AssociatedObject, ref BrushViewModel currentBrush, TouchEventArgs e, Point point)
         {
             var selectedDataContext = (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.AllItems.Value.Where(x => x.IsSelected.Value == true).Select(x => x);
             var input = AssociatedObject.InputHitTest(point);
@@ -128,7 +129,7 @@ namespace boilersGraphics.Helpers
                 {
                     if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
                     {
-                        Draw(ref currentBrush, point, views);
+                        Draw(mainWindowViewModel, ref currentBrush, point, views);
                     }
                     else
                     {

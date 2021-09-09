@@ -47,9 +47,11 @@ namespace boilersGraphics.Views.Behaviors
 
             if (e.Source == AssociatedObject)
             {
+                (AssociatedObject.DataContext as DiagramViewModel).MainWindowVM.Recorder.BeginRecode();
+
                 e.StylusDevice.Capture(AssociatedObject);
                 var point = e.GetPosition(AssociatedObject);
-                EraserInternal.Down(AssociatedObject, ref currentBrush, e, point);
+                EraserInternal.Down((AssociatedObject.DataContext as DiagramViewModel).MainWindowVM, AssociatedObject, ref currentBrush, e, point);
                 downFlag = true;
                 e.Handled = true;
             }
@@ -62,10 +64,12 @@ namespace boilersGraphics.Views.Behaviors
 
             if (e.Source == AssociatedObject)
             {
+                (AssociatedObject.DataContext as DiagramViewModel).MainWindowVM.Recorder.BeginRecode();
+
                 e.TouchDevice.Capture(AssociatedObject);
                 var touchPoint = e.GetTouchPoint(AssociatedObject);
                 var point = touchPoint.Position;
-                EraserInternal.Down(AssociatedObject, ref currentBrush, e, point);
+                EraserInternal.Down((AssociatedObject.DataContext as DiagramViewModel).MainWindowVM, AssociatedObject, ref currentBrush, e, point);
                 downFlag = true;
             }
         }
@@ -79,8 +83,10 @@ namespace boilersGraphics.Views.Behaviors
             {
                 if (e.Source == AssociatedObject)
                 {
+                    (AssociatedObject.DataContext as DiagramViewModel).MainWindowVM.Recorder.BeginRecode();
+
                     var point = e.GetPosition(AssociatedObject);
-                    EraserInternal.Down(AssociatedObject, ref currentBrush, e, point);
+                    EraserInternal.Down((AssociatedObject.DataContext as DiagramViewModel).MainWindowVM, AssociatedObject, ref currentBrush, e, point);
                     downFlag = true;
                 }
             }
@@ -98,7 +104,7 @@ namespace boilersGraphics.Views.Behaviors
                 return;
 
             var point = e.GetPosition(AssociatedObject);
-            EraserInternal.Erase(ref currentBrush, point);
+            EraserInternal.Erase((AssociatedObject.DataContext as DiagramViewModel).MainWindowVM, ref currentBrush, point);
         }
 
         private void AssociatedObject_StylusMove(object sender, StylusEventArgs e)
@@ -110,11 +116,16 @@ namespace boilersGraphics.Views.Behaviors
                 return;
 
             var point = e.GetPosition(AssociatedObject);
-            EraserInternal.Erase(ref currentBrush, point);
+            EraserInternal.Erase((AssociatedObject.DataContext as DiagramViewModel).MainWindowVM, ref currentBrush, point);
         }
 
         private void AssociatedObject_MouseUp(object sender, MouseButtonEventArgs e)
         {
+            if (!downFlag)
+                return;
+
+            (AssociatedObject.DataContext as DiagramViewModel).MainWindowVM.Recorder.EndRecode("AssociatedObject_MouseUp()");
+
             // release mouse capture
             if (AssociatedObject.IsMouseCaptured) AssociatedObject.ReleaseMouseCapture();
             // release stylus capture
@@ -125,8 +136,15 @@ namespace boilersGraphics.Views.Behaviors
 
         private void AssociatedObject_TouchUp(object sender, TouchEventArgs e)
         {
+            if (!downFlag)
+                return;
+
+            (AssociatedObject.DataContext as DiagramViewModel).MainWindowVM.Recorder.EndRecode("AssociatedObject_TouchUp()");
+
             // release touch capture
             if (e.TouchDevice.Captured != null) AssociatedObject.ReleaseTouchCapture(e.TouchDevice);
+
+            downFlag = false;
         }
     }
 }

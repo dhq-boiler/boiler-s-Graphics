@@ -53,6 +53,8 @@ namespace boilersGraphics.Views.Behaviors
 
             if (e.Source == AssociatedObject)
             {
+                (AssociatedObject.DataContext as DiagramViewModel).MainWindowVM.Recorder.BeginRecode();
+
                 if (!(Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
                 {
                     currentBrush.CloseThicknessDialog();
@@ -65,7 +67,7 @@ namespace boilersGraphics.Views.Behaviors
                     currentBrush = BrushViewModel.CreateInstance();
                     currentBrush.OpenThicknessDialog();
                 }
-                BrushInternal.Down(AssociatedObject, ref currentBrush, e, point);
+                BrushInternal.Down((AssociatedObject.DataContext as DiagramViewModel).MainWindowVM, AssociatedObject, ref currentBrush, e, point);
                 downFlag = true;
                 e.Handled = true;
             }
@@ -78,6 +80,8 @@ namespace boilersGraphics.Views.Behaviors
 
             if (e.Source == AssociatedObject)
             {
+                (AssociatedObject.DataContext as DiagramViewModel).MainWindowVM.Recorder.BeginRecode();
+
                 if (!(Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
                 {
                     currentBrush.CloseThicknessDialog();
@@ -91,7 +95,7 @@ namespace boilersGraphics.Views.Behaviors
                     currentBrush = BrushViewModel.CreateInstance();
                     currentBrush.OpenThicknessDialog();
                 }
-                BrushInternal.Down(AssociatedObject, ref currentBrush, e, point);
+                BrushInternal.Down((AssociatedObject.DataContext as DiagramViewModel).MainWindowVM, AssociatedObject, ref currentBrush, e, point);
                 downFlag = true;
             }
         }
@@ -103,6 +107,8 @@ namespace boilersGraphics.Views.Behaviors
 
             if (e.LeftButton == MouseButtonState.Pressed)
             {
+                (AssociatedObject.DataContext as DiagramViewModel).MainWindowVM.Recorder.BeginRecode();
+
                 if (e.Source == AssociatedObject)
                 {
                     if (!(Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
@@ -116,7 +122,7 @@ namespace boilersGraphics.Views.Behaviors
                         currentBrush = BrushViewModel.CreateInstance();
                         currentBrush.OpenThicknessDialog();
                     }
-                    BrushInternal.Down(AssociatedObject, ref currentBrush, e, point);
+                    BrushInternal.Down((AssociatedObject.DataContext as DiagramViewModel).MainWindowVM, AssociatedObject, ref currentBrush, e, point);
                     downFlag = true;
                 }
             }
@@ -131,7 +137,7 @@ namespace boilersGraphics.Views.Behaviors
                 return;
 
             var point = e.GetPosition(AssociatedObject);
-            BrushInternal.Draw(ref currentBrush, point);
+            BrushInternal.Draw((AssociatedObject.DataContext as DiagramViewModel).MainWindowVM, ref currentBrush, point);
         }
 
         private void AssociatedObject_StylusMove(object sender, StylusEventArgs e)
@@ -140,11 +146,16 @@ namespace boilersGraphics.Views.Behaviors
                 return;
 
             var point = e.GetPosition(AssociatedObject);
-            BrushInternal.Draw(ref currentBrush, point);
+            BrushInternal.Draw((AssociatedObject.DataContext as DiagramViewModel).MainWindowVM, ref currentBrush, point);
         }
 
         private void AssociatedObject_MouseUp(object sender, MouseButtonEventArgs e)
         {
+            if (!downFlag)
+                return;
+
+            (AssociatedObject.DataContext as DiagramViewModel).MainWindowVM.Recorder.EndRecode("AssociatedObject_MouseUp()");
+
             // release mouse capture
             if (AssociatedObject.IsMouseCaptured) AssociatedObject.ReleaseMouseCapture();
             // release stylus capture
@@ -155,8 +166,15 @@ namespace boilersGraphics.Views.Behaviors
 
         private void AssociatedObject_TouchUp(object sender, TouchEventArgs e)
         {
+            if (!downFlag)
+                return;
+
+            (AssociatedObject.DataContext as DiagramViewModel).MainWindowVM.Recorder.EndRecode("AssociatedObject_TouchUp()");
+
             // release touch capture
             if (e.TouchDevice.Captured != null) AssociatedObject.ReleaseTouchCapture(e.TouchDevice);
+
+            downFlag = false;
         }
     }
 }
