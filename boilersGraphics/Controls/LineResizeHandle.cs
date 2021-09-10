@@ -46,7 +46,10 @@ namespace boilersGraphics.Controls
         {
             base.OnMouseDown(e);
 
-            BeginDragPoint = e.GetPosition(this);
+            BeginDragPoint = e.GetPosition(App.Current.MainWindow.GetChildOfType<DesignerCanvas>());
+
+            var vm = DataContext as ConnectorBaseViewModel ?? (DataContext as SnapPointViewModel).Parent.Value as ConnectorBaseViewModel;
+            Point point = vm.Points[TargetPointIndex];
 
             (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "変形";
 
@@ -59,15 +62,14 @@ namespace boilersGraphics.Controls
 
             if (BeginDragPoint.HasValue)
             {
-                Point currentPosition = Mouse.GetPosition(this);
-                double diffX = currentPosition.X - BeginDragPoint.Value.X;
-                double diffY = currentPosition.Y - BeginDragPoint.Value.Y;
+                var snapPointVM = DataContext as SnapPointViewModel;
                 var vm = DataContext as ConnectorBaseViewModel ?? (DataContext as SnapPointViewModel).Parent.Value as ConnectorBaseViewModel;
-                Point point = vm.Points[TargetPointIndex];
-                Trace.Write($"LineResizeHandle.OnMouseMove() before:{point}");
-                point.X += diffX;
-                point.Y += diffY;
-                Trace.WriteLine($" after:{point}");
+
+                Point currentPosition = Mouse.GetPosition(App.Current.MainWindow.GetChildOfType<DesignerCanvas>());
+
+                Point point = currentPosition;
+                snapPointVM.Left.Value = currentPosition.X;
+                snapPointVM.Top.Value = currentPosition.Y;
 
                 snapAction.OnMouseMove(ref point);
 
