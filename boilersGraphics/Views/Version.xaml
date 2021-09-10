@@ -1,15 +1,16 @@
 ﻿<UserControl x:Class="boilersGraphics.Views.Version"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:boilersGraphics.Views"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:mdxam="clr-namespace:MdXaml;assembly=MdXaml"
              xmlns:prism="http://prismlibrary.com/"
              xmlns:view="clr-namespace:boilersGraphics.Views"
+             d:DesignHeight="450"
+             d:DesignWidth="800"
              prism:ViewModelLocator.AutoWireViewModel="True"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             mc:Ignorable="d">
     <prism:Dialog.WindowStyle>
         <Style TargetType="Window">
             <Setter Property="Width" Value="820" />
@@ -17,33 +18,29 @@
         </Style>
     </prism:Dialog.WindowStyle>
     <DockPanel>
-        <StackPanel Orientation="Vertical"
-                    DockPanel.Dock="Top">
-            <view:SelectableLabel FontSize="30"
-                                  Text="boiler's Graphics" />
+        <StackPanel DockPanel.Dock="Top" Orientation="Vertical">
+            <view:SelectableLabel FontSize="30" Text="boiler's Graphics" />
             <StackPanel Orientation="Horizontal">
                 <Label Content="バージョン" />
-                <view:SelectableLabel FontSize="20"
-                                      Text="{Binding Version.Value}" />
+                <view:SelectableLabel FontSize="20" Text="{Binding Version.Value}" />
             </StackPanel>
             <Label Content="ライセンス" />
             <mdxam:MarkdownScrollViewer xml:space="preserve"
                                         Markdown="{Binding License.Value}"
                                         ScrollViewer.VerticalScrollBarVisibility="Hidden" />
         </StackPanel>
-        <StackPanel Orientation="Horizontal"
-                    HorizontalAlignment="Right"
-                    DockPanel.Dock="Bottom">
+        <StackPanel HorizontalAlignment="Right"
+                    DockPanel.Dock="Bottom"
+                    Orientation="Horizontal">
             <Button Width="75"
                     Margin="5"
                     Command="{Binding OKCommand}">
                 OK
             </Button>
         </StackPanel>
-        <Label DockPanel.Dock="Top"
-               FontSize="20"
-               Content="オープンソース コンポーネント / ライブラリ / コード" />
-        <mdxam:MarkdownScrollViewer xml:space="preserve"
-                                    Markdown="{Binding Markdown.Value}" />
+        <Label Content="オープンソース コンポーネント / ライブラリ / コード"
+               DockPanel.Dock="Top"
+               FontSize="20" />
+        <mdxam:MarkdownScrollViewer xml:space="preserve" Markdown="{Binding Markdown.Value}" />
     </DockPanel>
 </UserControl>

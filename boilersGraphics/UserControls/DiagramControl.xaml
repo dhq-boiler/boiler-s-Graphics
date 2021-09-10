@@ -1,24 +1,23 @@
-﻿<UserControl
-    x:Class="boilersGraphics.UserControls.DiagramControl"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:attached="clr-namespace:boilersGraphics.AttachedProperties"
-    xmlns:behavior="clr-namespace:boilersGraphics.Views.Behaviors"
-    xmlns:control="clr-namespace:boilersGraphics.Controls"
-    xmlns:converter="clr-namespace:boilersGraphics.Converters"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:boilersGraphics="clr-namespace:boilersGraphics"
-    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-    xmlns:local="clr-namespace:boilersGraphics.UserControls"
-    xmlns:helper="clr-namespace:boilersGraphics.Helpers"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:selector="clr-namespace:boilersGraphics.StyleSelectors"
-    xmlns:view="clr-namespace:boilersGraphics.Views"
-    xmlns:viewModel="clr-namespace:boilersGraphics.ViewModels"
-    d:DesignHeight="450"
-    d:DesignWidth="800"
-    Loaded="DesignerCanvas_Loaded"
-    mc:Ignorable="d">
+﻿<UserControl x:Class="boilersGraphics.UserControls.DiagramControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:attached="clr-namespace:boilersGraphics.AttachedProperties"
+             xmlns:behavior="clr-namespace:boilersGraphics.Views.Behaviors"
+             xmlns:boilersGraphics="clr-namespace:boilersGraphics"
+             xmlns:control="clr-namespace:boilersGraphics.Controls"
+             xmlns:converter="clr-namespace:boilersGraphics.Converters"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:helper="clr-namespace:boilersGraphics.Helpers"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:local="clr-namespace:boilersGraphics.UserControls"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:selector="clr-namespace:boilersGraphics.StyleSelectors"
+             xmlns:view="clr-namespace:boilersGraphics.Views"
+             xmlns:viewModel="clr-namespace:boilersGraphics.ViewModels"
+             d:DesignHeight="450"
+             d:DesignWidth="800"
+             Loaded="DesignerCanvas_Loaded"
+             mc:Ignorable="d">
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
     </UserControl.Resources>
@@ -81,11 +80,11 @@
                         </VisualBrush.Visual>
                     </VisualBrush>
                 </ScrollViewer.Background>
-                <ItemsControl ItemContainerStyleSelector="{x:Static selector:DesignerItemsControlItemStyleSelector.Instance}"
-                              ItemsSource="{Binding AllItems.Value, UpdateSourceTrigger=PropertyChanged}"
-                              Background="Transparent"
+                <ItemsControl Background="Transparent"
                               BorderBrush="Black"
-                              BorderThickness="{Binding CanvasBorderThickness}">
+                              BorderThickness="{Binding CanvasBorderThickness}"
+                              ItemContainerStyleSelector="{x:Static selector:DesignerItemsControlItemStyleSelector.Instance}"
+                              ItemsSource="{Binding AllItems.Value, UpdateSourceTrigger=PropertyChanged}">
                     <ItemsControl.Resources>
 
                         <Style x:Key="designerItemStyle" TargetType="{x:Type ContentPresenter}">
@@ -115,16 +114,14 @@
                                             </Grid.Style>
                                             <control:DragThumb x:Name="PART_DragThumb" Cursor="SizeAll" />
                                             <!--  PART_ResizeDecorator  -->
-                                            <Control
-                                            x:Name="PART_ResizeDecorator"
-                                            Template="{StaticResource ResizeDecoratorTemplate}"
-                                            Visibility="Collapsed" />
-                                            <ContentPresenter
-                                            x:Name="PART_ContentPresenter"
-                                            HorizontalAlignment="Stretch"
-                                            VerticalAlignment="Stretch"
-                                            Content="{TemplateBinding Content}" />
-                                            <!-- DEBUG -->
+                                            <Control x:Name="PART_ResizeDecorator"
+                                                     Template="{StaticResource ResizeDecoratorTemplate}"
+                                                     Visibility="Collapsed" />
+                                            <ContentPresenter x:Name="PART_ContentPresenter"
+                                                              HorizontalAlignment="Stretch"
+                                                              VerticalAlignment="Stretch"
+                                                              Content="{TemplateBinding Content}" />
+                                            <!--  DEBUG  -->
                                             <!--<TextBlock VerticalAlignment="Center"
                                                        HorizontalAlignment="Center">
                                                 <Run Text="IsSelected.Value=" />
@@ -157,11 +154,10 @@
                                 <Setter.Value>
                                     <view:ItemsControlTemplateSelector>
                                         <DataTemplate DataType="{x:Type viewModel:StraightConnectorViewModel}">
-                                            <Canvas
-                                            x:Name="selectedGrid"
-                                            Margin="0"
-                                            HorizontalAlignment="Stretch"
-                                            VerticalAlignment="Stretch">
+                                            <Canvas x:Name="selectedGrid"
+                                                    Margin="0"
+                                                    HorizontalAlignment="Stretch"
+                                                    VerticalAlignment="Stretch">
                                                 <Canvas.Style>
                                                     <Style TargetType="{x:Type Canvas}">
                                                         <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
@@ -172,25 +168,22 @@
                                                         </Setter>
                                                     </Style>
                                                 </Canvas.Style>
-                                                <Line
-                                                x:Name="straightline"
-                                                IsHitTestVisible="{Binding IsHitTestVisible.Value}"
-                                                Stroke="{Binding EdgeColor.Value, Converter={StaticResource solidColorBrushConverter}}"
-                                                StrokeThickness="{Binding EdgeThickness.Value}"
-                                                X1="{Binding Points[0].X}"
-                                                X2="{Binding Points[1].X}"
-                                                Y1="{Binding Points[0].Y}"
-                                                Y2="{Binding Points[1].Y}" />
-                                                <Control x:Name="PART_ResizeDecorator"
-                                                         Template="{StaticResource StraightLineResizeDecoratorTemplate}" />
+                                                <Line x:Name="straightline"
+                                                      IsHitTestVisible="{Binding IsHitTestVisible.Value}"
+                                                      Stroke="{Binding EdgeColor.Value, Converter={StaticResource solidColorBrushConverter}}"
+                                                      StrokeThickness="{Binding EdgeThickness.Value}"
+                                                      X1="{Binding Points[0].X}"
+                                                      X2="{Binding Points[1].X}"
+                                                      Y1="{Binding Points[0].Y}"
+                                                      Y2="{Binding Points[1].Y}" />
+                                                <Control x:Name="PART_ResizeDecorator" Template="{StaticResource StraightLineResizeDecoratorTemplate}" />
                                             </Canvas>
                                         </DataTemplate>
                                         <DataTemplate DataType="{x:Type viewModel:BezierCurveViewModel}">
-                                            <Canvas
-                                            x:Name="selectedGrid"
-                                            Margin="0"
-                                            HorizontalAlignment="Stretch"
-                                            VerticalAlignment="Stretch">
+                                            <Canvas x:Name="selectedGrid"
+                                                    Margin="0"
+                                                    HorizontalAlignment="Stretch"
+                                                    VerticalAlignment="Stretch">
                                                 <Canvas.Style>
                                                     <Style TargetType="{x:Type Canvas}">
                                                         <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
@@ -223,8 +216,8 @@
                                                       IsHitTestVisible="True"
                                                       Stretch="Fill"
                                                       Stroke="SkyBlue"
-                                                      StrokeThickness="2"
                                                       StrokeDashArray="2 2"
+                                                      StrokeThickness="2"
                                                       Visibility="Hidden">
                                                     <Path.Data>
                                                         <PathGeometry>
@@ -240,8 +233,8 @@
                                                       IsHitTestVisible="True"
                                                       Stretch="Fill"
                                                       Stroke="SkyBlue"
-                                                      StrokeThickness="2"
                                                       StrokeDashArray="2 2"
+                                                      StrokeThickness="2"
                                                       Visibility="Hidden">
                                                     <Path.Data>
                                                         <PathGeometry>
@@ -252,27 +245,25 @@
                                                     </Path.Data>
                                                 </Path>
                                                 <control:ControlPoint x:Name="ControlPoint1"
+                                                                      Canvas.Left="{Binding ControlPoint1.Value.X}"
+                                                                      Canvas.Top="{Binding ControlPoint1.Value.Y}"
                                                                       Width="5"
                                                                       Height="5"
                                                                       Background="Red"
-                                                                      Canvas.Left="{Binding ControlPoint1.Value.X}"
-                                                                      Canvas.Top="{Binding ControlPoint1.Value.Y}"
                                                                       Point="{Binding ControlPoint1.Value, Mode=TwoWay}"
                                                                       Tag="制御点"
                                                                       Visibility="Hidden" />
                                                 <control:ControlPoint x:Name="ControlPoint2"
+                                                                      Canvas.Left="{Binding ControlPoint2.Value.X}"
+                                                                      Canvas.Top="{Binding ControlPoint2.Value.Y}"
                                                                       Width="5"
                                                                       Height="5"
                                                                       Background="Red"
-                                                                      Canvas.Left="{Binding ControlPoint2.Value.X}"
-                                                                      Canvas.Top="{Binding ControlPoint2.Value.Y}"
                                                                       Point="{Binding ControlPoint2.Value, Mode=TwoWay}"
                                                                       Tag="制御点"
                                                                       Visibility="Hidden" />
                                                 <!--  PART_ResizeDecorator  -->
-                                                <Control
-                                                x:Name="PART_ResizeDecorator"
-                                                Template="{StaticResource BezierCurveResizeDecoratorTemplate}" />
+                                                <Control x:Name="PART_ResizeDecorator" Template="{StaticResource BezierCurveResizeDecoratorTemplate}" />
                                             </Canvas>
                                             <DataTemplate.Triggers>
                                                 <DataTrigger Binding="{Binding IsSelected.Value}" Value="True">
@@ -392,25 +383,22 @@
                 </ScrollViewer.ContextMenu>
 
             </ScrollViewer>
-            <StackPanel Orientation="Vertical"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Top">
-                <control:ZoomBox
-                    x:Name="zoomBox"
-                    Width="180"
-                    Margin="0,5,25,0"
-                    ScrollViewer="{Binding ElementName=DesignerScrollViewer}"
-                    Visibility="{Binding EnableMiniMap.Value, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                <control:Combine
-                    x:Name="combine"
-                    Width="180"
-                    Margin="0,5,25,0" />
-                <view:Layers
-                    x:Name="layers"
-                    Width="180"
-                    MaxHeight="350"
-                    Margin="0,5,25,0"
-                    ScrollViewer.VerticalScrollBarVisibility="Auto" />
+            <StackPanel HorizontalAlignment="Right"
+                        VerticalAlignment="Top"
+                        Orientation="Vertical">
+                <control:ZoomBox x:Name="zoomBox"
+                                 Width="180"
+                                 Margin="0,5,25,0"
+                                 ScrollViewer="{Binding ElementName=DesignerScrollViewer}"
+                                 Visibility="{Binding EnableMiniMap.Value, Converter={StaticResource BoolToVisibilityConverter}}" />
+                <control:Combine x:Name="combine"
+                                 Width="180"
+                                 Margin="0,5,25,0" />
+                <view:Layers x:Name="layers"
+                             Width="180"
+                             MaxHeight="350"
+                             Margin="0,5,25,0"
+                             ScrollViewer.VerticalScrollBarVisibility="Auto" />
             </StackPanel>
         </Grid>
     </Border>
