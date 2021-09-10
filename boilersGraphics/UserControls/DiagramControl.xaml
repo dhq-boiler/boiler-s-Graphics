@@ -174,23 +174,16 @@
                                                 </Canvas.Style>
                                                 <Line
                                                 x:Name="straightline"
-                                                IsHitTestVisible="{Binding IsHitTestVisible}"
+                                                IsHitTestVisible="{Binding IsHitTestVisible.Value}"
                                                 Stroke="{Binding EdgeColor.Value, Converter={StaticResource solidColorBrushConverter}}"
                                                 StrokeThickness="{Binding EdgeThickness.Value}"
                                                 X1="{Binding Points[0].X}"
                                                 X2="{Binding Points[1].X}"
                                                 Y1="{Binding Points[0].Y}"
                                                 Y2="{Binding Points[1].Y}" />
-                                                <Control
-                                                x:Name="PART_ResizeDecorator"
-                                                Template="{StaticResource StraightLineResizeDecoratorTemplate}"
-                                                Visibility="Hidden" />
+                                                <Control x:Name="PART_ResizeDecorator"
+                                                         Template="{StaticResource StraightLineResizeDecoratorTemplate}" />
                                             </Canvas>
-                                            <DataTemplate.Triggers>
-                                                <DataTrigger Binding="{Binding IsSelected.Value}" Value="True">
-                                                    <Setter TargetName="PART_ResizeDecorator" Property="Visibility" Value="Visible" />
-                                                </DataTrigger>
-                                            </DataTemplate.Triggers>
                                         </DataTemplate>
                                         <DataTemplate DataType="{x:Type viewModel:BezierCurveViewModel}">
                                             <Canvas

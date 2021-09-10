@@ -62,10 +62,12 @@ namespace boilersGraphics.Controls
                 Point currentPosition = Mouse.GetPosition(this);
                 double diffX = currentPosition.X - BeginDragPoint.Value.X;
                 double diffY = currentPosition.Y - BeginDragPoint.Value.Y;
-                var vm = DataContext as ConnectorBaseViewModel;
+                var vm = DataContext as ConnectorBaseViewModel ?? (DataContext as SnapPointViewModel).Parent.Value as ConnectorBaseViewModel;
                 Point point = vm.Points[TargetPointIndex];
+                Trace.Write($"LineResizeHandle.OnMouseMove() before:{point}");
                 point.X += diffX;
                 point.Y += diffY;
+                Trace.WriteLine($" after:{point}");
 
                 snapAction.OnMouseMove(ref point);
 

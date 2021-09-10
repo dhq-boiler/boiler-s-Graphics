@@ -107,6 +107,8 @@ namespace boilersGraphics.Adorners
             {
                 if (item is SelectableDesignerItemViewModelBase)
                 {
+                    UpdateSelectionStraightConnector(rubberBand, itemsControl, item);
+
                     DependencyObject container = itemsControl.ItemContainerGenerator.ContainerFromItem(item);
 
                     Rect itemRect = VisualTreeHelper.GetDescendantBounds((Visual)container);
@@ -123,6 +125,37 @@ namespace boilersGraphics.Adorners
                             item.IsSelected.Value = false;
                         }
                     }
+                }
+            }
+        }
+
+        private void UpdateSelectionStraightConnector(Rect rubberBand, ItemsControl itemsControl, SelectableDesignerItemViewModelBase item)
+        {
+            if (item is StraightConnectorViewModel straightConnector)
+            {
+                var vm = straightConnector.SnapPoint0VM.Value;
+                UpdateSelectionSnapPoint(rubberBand, vm);
+                vm = straightConnector.SnapPoint1VM.Value;
+                UpdateSelectionSnapPoint(rubberBand, vm);
+            }
+        }
+
+        private void UpdateSelectionSnapPoint(Rect rubberBand, SnapPointViewModel vm)
+        {
+            LineResizeHandle container = App.Current.MainWindow.GetChildOfType<DesignerCanvas>().GetCorrespondingViews<LineResizeHandle>(vm).First();
+
+            Rect itemRect = VisualTreeHelper.GetDescendantBounds((Visual)container);
+            Rect itemBounds = ((Visual)container).TransformToAncestor(_designerCanvas).TransformBounds(itemRect);
+
+            if (rubberBand.Contains(itemBounds))
+            {
+                vm.IsSelected.Value = true;
+            }
+            else
+            {
+                if (!(Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
+                {
+                    vm.IsSelected.Value = false;
                 }
             }
         }

@@ -1,6 +1,8 @@
 ﻿
+using Reactive.Bindings;
 using System;
 using System.Collections.Generic;
+using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Shapes;
 
@@ -8,6 +10,9 @@ namespace boilersGraphics.ViewModels
 {
     public class StraightConnectorViewModel : ConnectorBaseViewModel
     {
+        public ReadOnlyReactivePropertySlim<SnapPointViewModel> SnapPoint0VM { get; }
+        public ReadOnlyReactivePropertySlim<SnapPointViewModel> SnapPoint1VM { get; }
+
         public StraightConnectorViewModel(int id, IDiagramViewModel parent)
             : base(id, parent)
         { }
@@ -21,6 +26,12 @@ namespace boilersGraphics.ViewModels
         {
             Points.Add(p1);
             Points.Add(p2);
+            SnapPoint0VM = Observable.Return(Points[0])
+                                     .Select(x => new SnapPointViewModel(this, 0, (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel, x.X, x.Y, 3, 3))
+                                     .ToReadOnlyReactivePropertySlim();
+            SnapPoint1VM = Observable.Return(Points[1])
+                                     .Select(x => new SnapPointViewModel(this, 1, (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel, x.X, x.Y, 3, 3))
+                                     .ToReadOnlyReactivePropertySlim();
         }
 
         public override Type GetViewType()

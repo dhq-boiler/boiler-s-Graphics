@@ -343,11 +343,30 @@ namespace boilersGraphics.ViewModels
 
             SelectedItems = Layers.CollectionChangedAsObservable()
                                   .Select(_ => Layers.Select(x => x.SelectedLayerItemsChangedAsObservable()).Merge())
+                                  .Merge()
+                                  .Select(_ => Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                                                     .Where(x => x.GetType() == typeof(LayerItem))
+                                                     .Select(y => (y as LayerItem).Item.Value)
+                                                     .OfType<StraightConnectorViewModel>()
+                                                     .SelectMany(x => new List<SnapPointViewModel>() { x.SnapPoint0VM.Value, x.SnapPoint1VM.Value })
+                                               .ToObservableCollection()
+                                               .ObserveElementProperty(x => x.IsSelected.Value).ToUnit())                       
                                   .Switch()
                                   .Select(_ => Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
                                                      .Where(x => x.GetType() == typeof(LayerItem))
                                                      .Select(y => (y as LayerItem).Item.Value)
+                                                     .Except(Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                                                                  .Where(x => x.GetType() == typeof(LayerItem))
+                                                                  .Select(y => (y as LayerItem).Item.Value)
+                                                                  .OfType<StraightConnectorViewModel>())
                                                      .Where(z => z.IsSelected.Value == true)
+                                                     .Union(Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                                                                  .Where(x => x.GetType() == typeof(LayerItem))
+                                                                  .Select(y => (y as LayerItem).Item.Value)
+                                                                  .OfType<StraightConnectorViewModel>()
+                                                                  .SelectMany(x => new List<SnapPointViewModel>() { x.SnapPoint0VM.Value, x.SnapPoint1VM.Value })
+                                                                  .Where(y => y.IsSelected.Value == true)
+                                                            )
                                                      .OrderBy(z => z.SelectedOrder.Value)
                                                      .ToArray())
                                   .ToReadOnlyReactivePropertySlim(Array.Empty<SelectableDesignerItemViewModelBase>());
@@ -408,6 +427,11 @@ namespace boilersGraphics.ViewModels
         {
             MainWindowVM.Recorder.BeginRecode();
             SelectedItems.Value.OfType<DesignerItemViewModelBase>().ToList().ForEach(x =>
+            {
+                MainWindowVM.Recorder.Current.ExecuteSetProperty(x, "Left.Value", x.Left.Value + horizontalDiff);
+                MainWindowVM.Recorder.Current.ExecuteSetProperty(x, "Top.Value", x.Top.Value + verticalDiff);
+            });
+            SelectedItems.Value.OfType<SnapPointViewModel>().ToList().ForEach(x =>
             {
                 MainWindowVM.Recorder.Current.ExecuteSetProperty(x, "Left.Value", x.Left.Value + horizontalDiff);
                 MainWindowVM.Recorder.Current.ExecuteSetProperty(x, "Top.Value", x.Top.Value + verticalDiff);
