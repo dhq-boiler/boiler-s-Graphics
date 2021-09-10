@@ -131,11 +131,11 @@ namespace boilersGraphics.Adorners
 
         private void UpdateSelectionStraightConnector(Rect rubberBand, ItemsControl itemsControl, SelectableDesignerItemViewModelBase item)
         {
-            if (item is StraightConnectorViewModel straightConnector)
+            if (item is ConnectorBaseViewModel connector)
             {
-                var vm = straightConnector.SnapPoint0VM.Value;
+                var vm = connector.SnapPoint0VM.Value;
                 UpdateSelectionSnapPoint(rubberBand, vm);
-                vm = straightConnector.SnapPoint1VM.Value;
+                vm = connector.SnapPoint1VM.Value;
                 UpdateSelectionSnapPoint(rubberBand, vm);
             }
         }

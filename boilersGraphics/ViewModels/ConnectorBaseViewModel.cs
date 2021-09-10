@@ -37,6 +37,8 @@ namespace boilersGraphics.ViewModels
             get { return _Points; }
             set { SetProperty(ref _Points, value); }
         }
+        public ReadOnlyReactivePropertySlim<SnapPointViewModel> SnapPoint0VM { get; protected set; }
+        public ReadOnlyReactivePropertySlim<SnapPointViewModel> SnapPoint1VM { get; protected set; }
 
         private void Init()
         {

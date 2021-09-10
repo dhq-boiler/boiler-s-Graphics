@@ -82,6 +82,10 @@ namespace boilersGraphics.Adorners
                 item.IsSelected.Value = true;
                 item.PathGeometry.Value = GeometryCreator.CreateBezierCurve(item);
                 item.IsVisible.Value = true;
+                item.SnapPoint0VM.Value.IsSelected.Value = true;
+                item.SnapPoint1VM.Value.IsSelected.Value = true;
+                item.SnapPoint0VM.Value.IsHitTestVisible.Value = true;
+                item.SnapPoint1VM.Value.IsHitTestVisible.Value = true;
                 item.Owner.DeselectAll();
                 ((AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel).AddItemCommand.Execute(item);
 

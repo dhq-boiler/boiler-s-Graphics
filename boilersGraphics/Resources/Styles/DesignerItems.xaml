@@ -116,24 +116,60 @@
         <Canvas Opacity="0.7" SnapsToDevicePixels="true">
             <control:LineResizeHandle
                 x:Name="ResizeHandle_BeginPoint"
-                Canvas.Left="{Binding Points[0].X, Converter={StaticResource shiftCoordinateConverter}, ConverterParameter=7}"
-                Canvas.Top="{Binding Points[0].Y, Converter={StaticResource shiftCoordinateConverter}, ConverterParameter=7}"
+                Canvas.Left="{Binding Left.Value, Converter={StaticResource shiftCoordinateConverter}, ConverterParameter=7}"
+                Canvas.Top="{Binding Top.Value, Converter={StaticResource shiftCoordinateConverter}, ConverterParameter=7}"
                 Width="7"
                 Height="7"
                 TargetPointIndex="0"
                 OppositeHandle="{Binding ElementName=ResizeHandle_EndPoint}"
-                Template="{StaticResource ResizeHandle_ResizeHandleTemplate}"
-                Tag="始点" />
+                Tag="始点"
+                DataContext="{Binding SnapPoint0VM.Value}">
+                <control:LineResizeHandle.Template>
+                    <ControlTemplate TargetType="{x:Type control:LineResizeHandle}">
+                        <Rectangle x:Name="ResizeHandleThumb"
+                                   Width="7"
+                                   Height="7"
+                                   Margin="-3"
+                                   Fill="White"
+                                   IsHitTestVisible="{Binding IsHitTestVisible.Value}"
+                                   Stroke="DimGray"
+                                   Visibility="Hidden" />
+                        <ControlTemplate.Triggers>
+                            <DataTrigger Binding="{Binding IsSelected.Value}" Value="True">
+                                <Setter TargetName="ResizeHandleThumb" Property="Visibility" Value="Visible" />
+                            </DataTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </control:LineResizeHandle.Template>
+            </control:LineResizeHandle>
             <control:LineResizeHandle
                 x:Name="ResizeHandle_EndPoint"
-                Canvas.Left="{Binding Points[1].X, Converter={StaticResource shiftCoordinateConverter}, ConverterParameter=7}"
-                Canvas.Top="{Binding Points[1].Y, Converter={StaticResource shiftCoordinateConverter}, ConverterParameter=7}"
+                Canvas.Left="{Binding Left.Value, Converter={StaticResource shiftCoordinateConverter}, ConverterParameter=7}"
+                Canvas.Top="{Binding Top.Value, Converter={StaticResource shiftCoordinateConverter}, ConverterParameter=7}"
                 Width="7"
                 Height="7"
                 TargetPointIndex="1"
                 OppositeHandle="{Binding ElementName=ResizeHandle_BeginPoint}"
-                Template="{StaticResource ResizeHandle_ResizeHandleTemplate}"
-                Tag="終点" />
+                Tag="終点"
+                DataContext="{Binding SnapPoint1VM.Value}">
+                <control:LineResizeHandle.Template>
+                    <ControlTemplate TargetType="{x:Type control:LineResizeHandle}">
+                        <Rectangle x:Name="ResizeHandleThumb"
+                                   Width="7"
+                                   Height="7"
+                                   Margin="-3"
+                                   Fill="White"
+                                   IsHitTestVisible="{Binding IsHitTestVisible.Value}"
+                                   Stroke="DimGray"
+                                   Visibility="Hidden" />
+                        <ControlTemplate.Triggers>
+                            <DataTrigger Binding="{Binding IsSelected.Value}" Value="True">
+                                <Setter TargetName="ResizeHandleThumb" Property="Visibility" Value="Visible" />
+                            </DataTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </control:LineResizeHandle.Template>
+            </control:LineResizeHandle>
         </Canvas>
     </ControlTemplate>
 

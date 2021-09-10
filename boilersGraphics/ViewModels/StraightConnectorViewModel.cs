@@ -10,9 +10,6 @@ namespace boilersGraphics.ViewModels
 {
     public class StraightConnectorViewModel : ConnectorBaseViewModel
     {
-        public ReadOnlyReactivePropertySlim<SnapPointViewModel> SnapPoint0VM { get; }
-        public ReadOnlyReactivePropertySlim<SnapPointViewModel> SnapPoint1VM { get; }
-
         public StraightConnectorViewModel(int id, IDiagramViewModel parent)
             : base(id, parent)
         { }

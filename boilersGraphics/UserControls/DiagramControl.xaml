@@ -272,12 +272,10 @@
                                                 <!--  PART_ResizeDecorator  -->
                                                 <Control
                                                 x:Name="PART_ResizeDecorator"
-                                                Template="{StaticResource BezierCurveResizeDecoratorTemplate}"
-                                                Visibility="Hidden" />
+                                                Template="{StaticResource BezierCurveResizeDecoratorTemplate}" />
                                             </Canvas>
                                             <DataTemplate.Triggers>
                                                 <DataTrigger Binding="{Binding IsSelected.Value}" Value="True">
-                                                    <Setter TargetName="PART_ResizeDecorator" Property="Visibility" Value="Visible" />
                                                     <Setter TargetName="ControlPoint1" Property="Visibility" Value="Visible" />
                                                     <Setter TargetName="ControlPoint2" Property="Visibility" Value="Visible" />
                                                     <Setter TargetName="ControlLine1" Property="Visibility" Value="Visible" />
