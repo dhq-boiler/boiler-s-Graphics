@@ -1251,6 +1251,8 @@
         </StatusBar>
 
         <!--  Diagram Control  -->
-        <usercontrol:DiagramControl Margin="3,1,0,0" DataContext="{Binding DiagramViewModel}" />
+        <usercontrol:DiagramControl x:Name="DiagramControl"
+                                    Margin="3,1,0,0"
+                                    DataContext="{Binding DiagramViewModel}" />
     </DockPanel>
 </Window>
