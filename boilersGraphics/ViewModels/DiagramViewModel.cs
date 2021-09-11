@@ -959,6 +959,10 @@ namespace boilersGraphics.ViewModels
             if (parameter is SelectableDesignerItemViewModelBase)
             {
                 SelectableDesignerItemViewModelBase item = (SelectableDesignerItemViewModelBase)parameter;
+                if (item is SnapPointViewModel snapPoint)
+                {
+                    item = snapPoint.Parent.Value;
+                }
                 RemoveGroupMembers(item);
                 Remove(item);
                 if (item is LetterDesignerItemViewModel)
