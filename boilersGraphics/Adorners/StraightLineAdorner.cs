@@ -68,8 +68,9 @@ namespace boilersGraphics.Adorners
 
             if (_startPoint.HasValue && _endPoint.HasValue)
             {
-                var item = new StraightConnectorViewModel(_startPoint.Value, _endPoint.Value);
-                item.Owner = (AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel;
+                var viewModel = (AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel;
+                var item = new StraightConnectorViewModel(viewModel, _startPoint.Value, _endPoint.Value);
+                item.Owner = viewModel;
                 item.EdgeColor.Value = item.Owner.EdgeColors.First();
                 item.EdgeThickness.Value = item.Owner.EdgeThickness.Value.Value;
                 item.ZIndex.Value = item.Owner.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).Count();
