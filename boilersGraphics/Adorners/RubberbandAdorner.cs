@@ -107,22 +107,30 @@ namespace boilersGraphics.Adorners
             {
                 if (item is SelectableDesignerItemViewModelBase)
                 {
-                    UpdateSelectionStraightConnector(rubberBand, itemsControl, item);
-
-                    DependencyObject container = itemsControl.ItemContainerGenerator.ContainerFromItem(item);
-
-                    Rect itemRect = VisualTreeHelper.GetDescendantBounds((Visual)container);
-                    Rect itemBounds = ((Visual)container).TransformToAncestor(_designerCanvas).TransformBounds(itemRect);
-
-                    if (rubberBand.Contains(itemBounds))
+                    if (item is ConnectorBaseViewModel connector)
                     {
-                        item.IsSelected.Value = true;
+                        var snapPointVM = connector.SnapPoint0VM.Value;
+                        UpdateSelectionSnapPoint(rubberBand, snapPointVM);
+                        snapPointVM = connector.SnapPoint1VM.Value;
+                        UpdateSelectionSnapPoint(rubberBand, snapPointVM);
                     }
                     else
                     {
-                        if (!(Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
+                        DependencyObject container = itemsControl.ItemContainerGenerator.ContainerFromItem(item);
+
+                        Rect itemRect = VisualTreeHelper.GetDescendantBounds((Visual)container);
+                        Rect itemBounds = ((Visual)container).TransformToAncestor(_designerCanvas).TransformBounds(itemRect);
+
+                        if (rubberBand.Contains(itemBounds))
                         {
-                            item.IsSelected.Value = false;
+                            item.IsSelected.Value = true;
+                        }
+                        else
+                        {
+                            if (!(Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
+                            {
+                                item.IsSelected.Value = false;
+                            }
                         }
                     }
                 }

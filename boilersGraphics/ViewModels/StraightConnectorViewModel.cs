@@ -1,5 +1,6 @@
 ﻿
 using Reactive.Bindings;
+using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Reactive.Linq;
@@ -29,6 +30,15 @@ namespace boilersGraphics.ViewModels
             SnapPoint1VM = Observable.Return(Points[1])
                                      .Select(x => new SnapPointViewModel(this, 1, (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel, x.X, x.Y, 3, 3))
                                      .ToReadOnlyReactivePropertySlim();
+            IsSelected.Subscribe(x =>
+            {
+                if (!x)
+                {
+                    SnapPoint0VM.Value.IsSelected.Value = false;
+                    SnapPoint1VM.Value.IsSelected.Value = false;
+                }
+            })
+            .AddTo(_CompositeDisposable);
         }
 
         public override Type GetViewType()

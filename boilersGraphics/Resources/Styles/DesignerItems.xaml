@@ -70,9 +70,6 @@
                             <DataTrigger Binding="{Binding IsSelected.Value}" Value="True">
                                 <Setter TargetName="ResizeHandleThumb" Property="Visibility" Value="Visible" />
                             </DataTrigger>
-                            <DataTrigger Binding="{Binding DataContext.IsSelected.Value, RelativeSource={RelativeSource AncestorType=Canvas}}" Value="True">
-                                <Setter TargetName="ResizeHandleThumb" Property="Visibility" Value="Visible" />
-                            </DataTrigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </control:LineResizeHandle.Template>
@@ -98,9 +95,6 @@
                                    Visibility="Hidden" />
                         <ControlTemplate.Triggers>
                             <DataTrigger Binding="{Binding IsSelected.Value}" Value="True">
-                                <Setter TargetName="ResizeHandleThumb" Property="Visibility" Value="Visible" />
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding DataContext.IsSelected.Value, RelativeSource={RelativeSource AncestorType=Canvas}}" Value="True">
                                 <Setter TargetName="ResizeHandleThumb" Property="Visibility" Value="Visible" />
                             </DataTrigger>
                         </ControlTemplate.Triggers>

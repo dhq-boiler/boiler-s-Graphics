@@ -29,7 +29,7 @@ namespace boilersGraphics.ViewModels
             IsSelected.Subscribe(x =>
             {
                 if (x)
-                    parent.IsSelected.Value = x;
+                    parent.IsSelected.Value = true;
             })
             .AddTo(_CompositeDisposable);
             Left.Subscribe(x =>
