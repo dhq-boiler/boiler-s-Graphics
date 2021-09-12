@@ -70,8 +70,8 @@ namespace boilersGraphics.Controls
                 Point currentPosition = Mouse.GetPosition(App.Current.MainWindow.GetChildOfType<DesignerCanvas>());
 
                 Point point = currentPosition;
-                snapPointVM.Left.Value = currentPosition.X;
-                snapPointVM.Top.Value = currentPosition.Y;
+                Recorder.Current.ExecuteSetProperty(snapPointVM, "Left.Value", currentPosition.X);
+                Recorder.Current.ExecuteSetProperty(snapPointVM, "Top.Value", currentPosition.Y);
 
                 snapAction.OnMouseMove(ref point);
 
