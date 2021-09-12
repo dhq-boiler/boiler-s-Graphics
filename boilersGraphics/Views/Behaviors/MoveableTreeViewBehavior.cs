@@ -213,7 +213,7 @@ namespace boilersGraphics.Views.Behaviors
                     break;
             }
 
-            mainWindowViewModel.Recorder.EndRecode("MoveableTreeViewBehavior.OnDrop() complete");
+            mainWindowViewModel.Recorder.EndRecode();
 
             DropCommand?.Execute(new DropArguments
             {

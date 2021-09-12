@@ -154,7 +154,7 @@ namespace boilersGraphics.Views.Behaviors
             if (!downFlag)
                 return;
 
-            (AssociatedObject.DataContext as DiagramViewModel).MainWindowVM.Recorder.EndRecode("AssociatedObject_MouseUp()");
+            (AssociatedObject.DataContext as DiagramViewModel).MainWindowVM.Recorder.EndRecode();
 
             // release mouse capture
             if (AssociatedObject.IsMouseCaptured) AssociatedObject.ReleaseMouseCapture();
@@ -169,7 +169,7 @@ namespace boilersGraphics.Views.Behaviors
             if (!downFlag)
                 return;
 
-            (AssociatedObject.DataContext as DiagramViewModel).MainWindowVM.Recorder.EndRecode("AssociatedObject_TouchUp()");
+            (AssociatedObject.DataContext as DiagramViewModel).MainWindowVM.Recorder.EndRecode();
 
             // release touch capture
             if (e.TouchDevice.Captured != null) AssociatedObject.ReleaseTouchCapture(e.TouchDevice);

@@ -436,7 +436,7 @@ namespace boilersGraphics.ViewModels
                 MainWindowVM.Recorder.Current.ExecuteSetProperty(x, "Left.Value", x.Left.Value + horizontalDiff);
                 MainWindowVM.Recorder.Current.ExecuteSetProperty(x, "Top.Value", x.Top.Value + verticalDiff);
             });
-            MainWindowVM.Recorder.EndRecode("MoveSelectedItems()");
+            MainWindowVM.Recorder.EndRecode();
         }
 
         public void Initialize()
@@ -445,7 +445,7 @@ namespace boilersGraphics.ViewModels
 
             InitialSetting(MainWindowVM, true, true);
             
-            MainWindowVM.Recorder.EndRecode("InitialSetting() complete");
+            MainWindowVM.Recorder.EndRecode();
             
             MainWindowVM.Controller.Flush();
         }
@@ -692,7 +692,7 @@ namespace boilersGraphics.ViewModels
             MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "Height.Value", combine.PathGeometry.Value.Bounds.Height);
             Add(combine);
 
-            MainWindowVM.Recorder.EndRecode("CombineAndAddItem() complete");
+            MainWindowVM.Recorder.EndRecode();
         }
 
         private void CastToLetterAndSetTransform(SelectableDesignerItemViewModelBase item1, SelectableDesignerItemViewModelBase item2, PathGeometry item1PathGeometry, PathGeometry item2PathGeometry)
@@ -1178,7 +1178,7 @@ namespace boilersGraphics.ViewModels
             }
             finally
             {
-                mainwindowViewModel.Recorder.EndRecode("ExecuteLoadCommand complete");
+                mainwindowViewModel.Recorder.EndRecode();
             }
 
             var layersViewModel = App.Current.MainWindow.GetChildOfType<Views.Layers>().DataContext as LayersViewModel;
@@ -1255,7 +1255,7 @@ namespace boilersGraphics.ViewModels
 
             groupItem.SelectItemCommand.Execute(true);
 
-            MainWindowVM.Recorder.EndRecode("ExecuteGroupItemsCommand() complete");
+            MainWindowVM.Recorder.EndRecode();
         }
 
         private void Remove(LayerItem layerItem)
@@ -1327,7 +1327,7 @@ namespace boilersGraphics.ViewModels
                 }
             }
 
-            MainWindowVM.Recorder.EndRecode("ExecuteUngroupItemsCommand() complete");
+            MainWindowVM.Recorder.EndRecode();
         }
 
         public bool CanExecuteUngroup()
@@ -1439,7 +1439,7 @@ namespace boilersGraphics.ViewModels
 
             Sort(Layers);
 
-            MainWindowVM.Recorder.EndRecode("ExecuteBringForwardCommand() complete");
+            MainWindowVM.Recorder.EndRecode();
         }
 
         private void ExecuteSendBackwardCommand()
@@ -1546,7 +1546,7 @@ namespace boilersGraphics.ViewModels
 
             Sort(Layers);
 
-            MainWindowVM.Recorder.EndRecode("ExecuteSendBackwardCommand() complete");
+            MainWindowVM.Recorder.EndRecode();
         }
 
         private void ExecuteBringForegroundCommand()
@@ -1612,7 +1612,7 @@ namespace boilersGraphics.ViewModels
 
             Sort(Layers);
 
-            MainWindowVM.Recorder.EndRecode("ExecuteBringForegroundCommand() complete");
+            MainWindowVM.Recorder.EndRecode();
         }
 
         private void ExecuteSendBackgroundCommand()
@@ -1680,7 +1680,7 @@ namespace boilersGraphics.ViewModels
 
             Sort(Layers);
 
-            MainWindowVM.Recorder.EndRecode("ExecuteSendBackgroundCommand() complete");
+            MainWindowVM.Recorder.EndRecode();
         }
 
         private void Sort(ReactiveCollection<LayerTreeViewItemBase> target)
@@ -1725,7 +1725,7 @@ namespace boilersGraphics.ViewModels
                     SetTop(item, GetTop(item) + delta);
                 }
 
-                MainWindowVM.Recorder.EndRecode("ExecuteAlignTopCommand() complete");
+                MainWindowVM.Recorder.EndRecode();
             }
         }
 
@@ -1744,7 +1744,7 @@ namespace boilersGraphics.ViewModels
                     SetTop(item, GetTop(item) + delta);
                 }
 
-                MainWindowVM.Recorder.EndRecode("ExecuteAlignVerticalCenterCommand() complete");
+                MainWindowVM.Recorder.EndRecode();
             }
         }
 
@@ -1763,7 +1763,7 @@ namespace boilersGraphics.ViewModels
                     SetTop(item, GetTop(item) + delta);
                 }
 
-                MainWindowVM.Recorder.EndRecode("ExecuteAlignBottomCommand() complete");
+                MainWindowVM.Recorder.EndRecode();
             }
         }
 
@@ -1782,7 +1782,7 @@ namespace boilersGraphics.ViewModels
                     SetLeft(item, GetLeft(item) + delta);
                 }
 
-                MainWindowVM.Recorder.EndRecode("ExecuteAlignLeftCommand() complete");
+                MainWindowVM.Recorder.EndRecode();
             }
         }
 
@@ -1801,7 +1801,7 @@ namespace boilersGraphics.ViewModels
                     SetLeft(item, GetLeft(item) + delta);
                 }
 
-                MainWindowVM.Recorder.EndRecode("ExecuteAlignHorizontalCenterCommand() complete");
+                MainWindowVM.Recorder.EndRecode();
             }
         }
 
@@ -1820,7 +1820,7 @@ namespace boilersGraphics.ViewModels
                     SetLeft(item, GetLeft(item) + delta);
                 }
 
-                MainWindowVM.Recorder.EndRecode("ExecuteAlignRightCommand() complete");
+                MainWindowVM.Recorder.EndRecode();
             }
         }
 
@@ -1856,7 +1856,7 @@ namespace boilersGraphics.ViewModels
                     offset = offset + GetWidth(item) + distance;
                 }
 
-                MainWindowVM.Recorder.EndRecode("ExecuteDistributeHorizontalCommand() complete");
+                MainWindowVM.Recorder.EndRecode();
             }
         }
 
@@ -1892,7 +1892,7 @@ namespace boilersGraphics.ViewModels
                     offset = offset + GetHeight(item) + distance;
                 }
 
-                MainWindowVM.Recorder.EndRecode("ExecuteDistributeVerticalCommand() complete");
+                MainWindowVM.Recorder.EndRecode();
             }
         }
 
@@ -1984,7 +1984,7 @@ namespace boilersGraphics.ViewModels
                 }
             }
 
-            MainWindowVM.Recorder.EndRecode("ExecuteUniformWidthCommand() complete");
+            MainWindowVM.Recorder.EndRecode();
         }
 
         private void ExecuteUniformHeightCommand()
@@ -2004,7 +2004,7 @@ namespace boilersGraphics.ViewModels
                 }
             }
 
-            MainWindowVM.Recorder.EndRecode("ExecuteUniformHeightCommand() complete");
+            MainWindowVM.Recorder.EndRecode();
         }
 
         public bool CanExecuteUniform()

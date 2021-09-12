@@ -102,7 +102,7 @@ namespace boilersGraphics.Controls
             (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "";
             (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = "";
 
-            Recorder.EndRecode("LineResizeHandle.OnMouseMove() completed");
+            Recorder.EndRecode();
         }
     }
 }
