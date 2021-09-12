@@ -194,6 +194,7 @@
     <Compile Include="Helpers\ObjectSerializer.cs" />
     <Compile Include="Helpers\OpenCvSharpHelper.cs" />
     <Compile Include="Helpers\Randomizer.cs" />
+    <Compile Include="Helpers\Reflections.cs" />
     <Compile Include="Helpers\SnapAction.cs" />
     <Compile Include="Helpers\SnapPointDistincter.cs" />
     <Compile Include="Helpers\ToolBoxData.cs" />

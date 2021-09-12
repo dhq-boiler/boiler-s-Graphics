@@ -2,10 +2,10 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:viewModel="clr-namespace:boilersGraphics.ViewModels">
     <DataTemplate DataType="{x:Type viewModel:PathDesignerItemViewModel}">
-        <Path Stroke="{Binding EdgeColor.Value}"
-              StrokeThickness="{Binding EdgeThickness.Value}"
-              IsHitTestVisible="False"
+        <Path Data="{Binding Points}"
               Fill="{Binding FillColor.Value}"
-              Data="{Binding Points}" />
+              IsHitTestVisible="False"
+              Stroke="{Binding EdgeColor.Value}"
+              StrokeThickness="{Binding EdgeThickness.Value}" />
     </DataTemplate>
 </ResourceDictionary>

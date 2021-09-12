@@ -1,6 +1,8 @@
 ﻿
+using Reactive.Bindings;
+using Reactive.Bindings.Extensions;
 using System;
-using System.Collections.Generic;
+using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Shapes;
 
@@ -21,6 +23,26 @@ namespace boilersGraphics.ViewModels
         {
             Points.Add(p1);
             Points.Add(p2);
+            SnapPoint0VM = Observable.Return(Points[0])
+                                     .Select(x => new SnapPointViewModel(this, 0, (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel, x.X, x.Y, 3, 3))
+                                     .ToReadOnlyReactivePropertySlim();
+            SnapPoint1VM = Observable.Return(Points[1])
+                                     .Select(x => new SnapPointViewModel(this, 1, (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel, x.X, x.Y, 3, 3))
+                                     .ToReadOnlyReactivePropertySlim();
+            IsSelected.Subscribe(x =>
+            {
+                if (x)
+                {
+                    SnapPoint0VM.Value.IsSelected.Value = true;
+                    SnapPoint1VM.Value.IsSelected.Value = true;
+                }
+                if (!x)
+                {
+                    SnapPoint0VM.Value.IsSelected.Value = false;
+                    SnapPoint1VM.Value.IsSelected.Value = false;
+                }
+            })
+            .AddTo(_CompositeDisposable);
         }
 
         public override Type GetViewType()

@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using boilersGraphics.Helpers;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using TsOperationHistory.Extensions;
 
 namespace TsOperationHistory
@@ -31,15 +33,18 @@ namespace TsOperationHistory
             _root = controller;
         }
 
-        public void BeginRecode()
+        public void BeginRecode([CallerMemberName] string callerMemberName = "")
         {
-            Trace.WriteLine("BeginRecord()");
+            string className = Reflections.NameOfCallingClass();
+            Trace.WriteLine($"{className}.{callerMemberName}() => BeginRecode()");
             _stack.Push(new OperationController(1024));
         }
 
-        public void EndRecode( string message )
+        public void EndRecode([CallerMemberName] string callerMemberName = "")
         {
-            Trace.WriteLine($"EndRecord({message})");
+            string className = Reflections.NameOfCallingClass();
+            string message = $"{className}.{callerMemberName}() => EndRecode()";
+            Trace.WriteLine(message);
             var controller = _stack.Pop();
             var operation = controller.Operations.ToCompositeOperation();
             operation.Message = message;

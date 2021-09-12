@@ -88,7 +88,7 @@ namespace boilersGraphics.ViewModels
                         {
                             Recorder.Current.ExecuteSetProperty(item, "EdgeColor.Value", exchange.New.Value);
                         }
-                        Recorder.EndRecode("SelectColorCommand complete");
+                        Recorder.EndRecode();
                     }
                 }
             });
@@ -119,7 +119,7 @@ namespace boilersGraphics.ViewModels
                         {
                             Recorder.Current.ExecuteSetProperty(item, "FillColor.Value", exchange.New.Value);
                         }
-                        Recorder.EndRecode("SelectFillColorCommand complete");
+                        Recorder.EndRecode();
                     }
                 }
             });
@@ -145,7 +145,7 @@ namespace boilersGraphics.ViewModels
                     {
                         Recorder.Current.ExecuteSetProperty(item, "EdgeThickness.Value", x.Value);
                     }
-                    Recorder.EndRecode("DiagramViewModel.EdgeThickness.Subscribe() complete");
+                    Recorder.EndRecode();
                 }
             })
             .AddTo(_CompositeDisposable);

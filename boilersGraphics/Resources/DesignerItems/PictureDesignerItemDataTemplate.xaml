@@ -2,12 +2,11 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:viewModel="clr-namespace:boilersGraphics.ViewModels">
     <DataTemplate DataType="{x:Type viewModel:PictureDesignerItemViewModel}">
-        <Border BorderBrush="{Binding EdgeColor.Value, Converter={StaticResource solidColorBrushConverter}}"
-                BorderThickness="{Binding EdgeThickness.Value}">
-            <Image Source="{Binding FileName}"
+        <Border BorderBrush="{Binding EdgeColor.Value, Converter={StaticResource solidColorBrushConverter}}" BorderThickness="{Binding EdgeThickness.Value}">
+            <Image Clip="{Binding Clip.Value}"
                    IsHitTestVisible="False"
+                   Source="{Binding FileName}"
                    Stretch="Fill"
-                   Clip="{Binding Clip.Value}"
                    Tag="picture" />
         </Border>
     </DataTemplate>

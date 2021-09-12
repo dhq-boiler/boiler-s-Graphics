@@ -270,7 +270,7 @@ namespace TsOperationHistory.Test
                 recorder.Current.ExecuteSetProperty(person , nameof(Person.Name) , "Changed");
             }
             // 操作の記録完了
-            recorder.EndRecode("Fixed");
+            recorder.EndRecode();
             
             // 1回のUndoでレコード前のデータが復元される
             controller.Undo();

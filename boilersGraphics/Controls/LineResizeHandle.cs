@@ -1,13 +1,7 @@
 ﻿using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
 using boilersGraphics.ViewModels;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Documents;
 using System.Windows.Input;
 using TsOperationHistory;
 using TsOperationHistory.Extensions;
@@ -46,7 +40,10 @@ namespace boilersGraphics.Controls
         {
             base.OnMouseDown(e);
 
-            BeginDragPoint = e.GetPosition(this);
+            BeginDragPoint = e.GetPosition(App.Current.MainWindow.GetChildOfType<DesignerCanvas>());
+
+            var vm = DataContext as ConnectorBaseViewModel ?? (DataContext as SnapPointViewModel).Parent.Value as ConnectorBaseViewModel;
+            Point point = vm.Points[TargetPointIndex];
 
             (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "変形";
 
@@ -59,17 +56,20 @@ namespace boilersGraphics.Controls
 
             if (BeginDragPoint.HasValue)
             {
-                Point currentPosition = Mouse.GetPosition(this);
-                double diffX = currentPosition.X - BeginDragPoint.Value.X;
-                double diffY = currentPosition.Y - BeginDragPoint.Value.Y;
-                var vm = DataContext as ConnectorBaseViewModel;
-                Point point = vm.Points[TargetPointIndex];
-                point.X += diffX;
-                point.Y += diffY;
+                var snapPointVM = DataContext as SnapPointViewModel;
+                var connectorVM = DataContext as ConnectorBaseViewModel ?? (DataContext as SnapPointViewModel).Parent.Value as ConnectorBaseViewModel;
+
+                snapPointVM.IsSelected.Value = true;
+
+                Point currentPosition = Mouse.GetPosition(App.Current.MainWindow.GetChildOfType<DesignerCanvas>());
+
+                Point point = currentPosition;
+                Recorder.Current.ExecuteSetProperty(snapPointVM, "Left.Value", currentPosition.X);
+                Recorder.Current.ExecuteSetProperty(snapPointVM, "Top.Value", currentPosition.Y);
 
                 snapAction.OnMouseMove(ref point);
 
-                Recorder.Current.ExecuteSetProperty(vm, $"Points[{TargetPointIndex}]", point);
+                Recorder.Current.ExecuteSetProperty(connectorVM, $"Points[{TargetPointIndex}]", point);
 
                 var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
                 if ((string)Tag == "始点")
@@ -96,7 +96,7 @@ namespace boilersGraphics.Controls
             (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "";
             (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = "";
 
-            Recorder.EndRecode("LineResizeHandle.OnMouseMove() completed");
+            Recorder.EndRecode();
         }
     }
 }

@@ -2,23 +2,21 @@
 
     <ControlTemplate x:Key="infoButtonTemplate" TargetType="Button">
         <Grid x:Name="grid" Opacity="0.5">
-            <Ellipse
-                Width="16"
-                Height="16"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                Fill="White"
-                Stroke="Black"
-                StrokeThickness="2" />
-            <Label
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                HorizontalContentAlignment="Center"
-                VerticalContentAlignment="Center"
-                Content="i"
-                FontSize="12"
-                FontStyle="Italic"
-                FontWeight="Bold" />
+            <Ellipse Width="16"
+                     Height="16"
+                     HorizontalAlignment="Center"
+                     VerticalAlignment="Center"
+                     Fill="White"
+                     Stroke="Black"
+                     StrokeThickness="2" />
+            <Label HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   HorizontalContentAlignment="Center"
+                   VerticalContentAlignment="Center"
+                   Content="i"
+                   FontSize="12"
+                   FontStyle="Italic"
+                   FontWeight="Bold" />
         </Grid>
 
         <ControlTemplate.Triggers>
