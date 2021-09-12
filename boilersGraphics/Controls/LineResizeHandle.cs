@@ -63,7 +63,7 @@ namespace boilersGraphics.Controls
             if (BeginDragPoint.HasValue)
             {
                 var snapPointVM = DataContext as SnapPointViewModel;
-                var vm = DataContext as ConnectorBaseViewModel ?? (DataContext as SnapPointViewModel).Parent.Value as ConnectorBaseViewModel;
+                var connectorVM = DataContext as ConnectorBaseViewModel ?? (DataContext as SnapPointViewModel).Parent.Value as ConnectorBaseViewModel;
 
                 Point currentPosition = Mouse.GetPosition(App.Current.MainWindow.GetChildOfType<DesignerCanvas>());
 
@@ -73,7 +73,7 @@ namespace boilersGraphics.Controls
 
                 snapAction.OnMouseMove(ref point);
 
-                Recorder.Current.ExecuteSetProperty(vm, $"Points[{TargetPointIndex}]", point);
+                Recorder.Current.ExecuteSetProperty(connectorVM, $"Points[{TargetPointIndex}]", point);
 
                 var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
                 if ((string)Tag == "始点")
