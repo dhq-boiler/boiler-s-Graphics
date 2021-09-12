@@ -65,6 +65,8 @@ namespace boilersGraphics.Controls
                 var snapPointVM = DataContext as SnapPointViewModel;
                 var connectorVM = DataContext as ConnectorBaseViewModel ?? (DataContext as SnapPointViewModel).Parent.Value as ConnectorBaseViewModel;
 
+                snapPointVM.IsSelected.Value = true;
+
                 Point currentPosition = Mouse.GetPosition(App.Current.MainWindow.GetChildOfType<DesignerCanvas>());
 
                 Point point = currentPosition;
