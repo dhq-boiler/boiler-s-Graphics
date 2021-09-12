@@ -1,13 +1,7 @@
 ﻿using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
 using boilersGraphics.ViewModels;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Documents;
 using System.Windows.Input;
 using TsOperationHistory;
 using TsOperationHistory.Extensions;
