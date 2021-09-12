@@ -32,6 +32,11 @@ namespace boilersGraphics.ViewModels
                                      .ToReadOnlyReactivePropertySlim();
             IsSelected.Subscribe(x =>
             {
+                if (x)
+                {
+                    SnapPoint0VM.Value.IsSelected.Value = true;
+                    SnapPoint1VM.Value.IsSelected.Value = true;
+                }
                 if (!x)
                 {
                     SnapPoint0VM.Value.IsSelected.Value = false;
