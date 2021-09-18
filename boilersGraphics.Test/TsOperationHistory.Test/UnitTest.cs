@@ -11,6 +11,12 @@ namespace TsOperationHistory.Test
     {
         private string _name;
 
+        public Person()
+        {
+        }
+
+        public static string StaticValue { get; set; }
+
         public string Name
         {
             get => _name;
@@ -89,19 +95,49 @@ namespace TsOperationHistory.Test
                 Name = "Venus",
             };
 
-            controller.Execute(person.GenerateSetPropertyOperation(x=>x.Name , "Yamada"));
-            Assert.AreEqual("Yamada",person.Name);
+            controller.Execute(person.GenerateSetPropertyOperation(x => x.Name, "Yamada"));
+            Assert.AreEqual("Yamada", person.Name);
 
-            controller.Execute(person.GenerateSetPropertyOperation(x=>x.Name , "Tanaka"));
-            Assert.AreEqual("Tanaka",person.Name);
-            
-            controller.Undo();
-            Assert.AreEqual("Yamada",person.Name);
+            controller.Execute(person.GenerateSetPropertyOperation(x => x.Name, "Tanaka"));
+            Assert.AreEqual("Tanaka", person.Name);
 
             controller.Undo();
-            Assert.AreEqual("Venus",person.Name);
+            Assert.AreEqual("Yamada", person.Name);
+
+            controller.Undo();
+            Assert.AreEqual("Venus", person.Name);
         }
-        
+
+        /// <summary>
+        /// スタティックプロパティのUndoRedoのテスト
+        /// </summary>
+        [Test]
+        public async Task StaticPropertyTest()
+        {
+            IOperationController controller = new OperationController();
+
+            // デフォルトのマージ時間を 70msに設定
+            Operation.DefaultMergeSpan = TimeSpan.FromMilliseconds(70);
+
+            Person.StaticValue = "Geso";
+
+            controller.ExecuteSetStaticProperty(typeof(Person), "StaticValue", "ika");
+            Assert.AreEqual("ika", Person.StaticValue);
+
+            await Task.Delay(75);
+
+            controller.ExecuteSetStaticProperty(typeof(Person), "StaticValue", "tako");
+            Assert.AreEqual("tako", Person.StaticValue);
+
+            await Task.Delay(75);
+
+            controller.Undo();
+            Assert.AreEqual("ika", Person.StaticValue);
+
+            controller.Undo();
+            Assert.AreEqual("Geso", Person.StaticValue);
+        }
+
         /// <summary>
         /// Operationの自動結合テスト
         /// </summary>

@@ -34,7 +34,7 @@ namespace TsOperationHistory.Internal
                 else if (_object is Type)
                 {
                     accessor = CreateIAccessorWithType(obj, p);
-                    obj = accessor.GetValue(obj);
+                    obj = accessor.GetValue();
                 }
                 else
                 {
@@ -74,6 +74,7 @@ namespace TsOperationHistory.Internal
 
             return (IAccessor)Activator.CreateInstance(accessorType, getter, setter);
         }
+
         private static IAccessor CreateIAccessorWithType(object _object, string propertyNameSplit)
         {
             var propertyInfo = (_object as Type).GetProperty(propertyNameSplit,
@@ -92,13 +93,13 @@ namespace TsOperationHistory.Internal
             var getInfo = propertyInfo.GetGetMethod(PublicOnly is false);
             var setInfo = propertyInfo.GetSetMethod(PublicOnly is false);
 
-            var getterDelegateType = typeof(Func<,>).MakeGenericType(propertyInfo.DeclaringType, propertyInfo.PropertyType);
-            var getter = getInfo != null ? Delegate.CreateDelegate(getterDelegateType, getInfo) : null; //System.ArgumentException: 'ターゲット メソッドとデリゲート型との間に、シグネチャまたはセキュリティ透過性の互換性がないため、ターゲット メソッドにバインドできません。'
+            var getterDelegateType = typeof(Func<>).MakeGenericType(propertyInfo.PropertyType);
+            var getter = getInfo != null ? Delegate.CreateDelegate(getterDelegateType, getInfo) : null;
 
-            var setterDelegateType = typeof(Action<,>).MakeGenericType(propertyInfo.DeclaringType, propertyInfo.PropertyType);
-            var setter = setInfo != null ? Delegate.CreateDelegate(setterDelegateType, setInfo) : null; //System.ArgumentException: 'ターゲット メソッドとデリゲート型との間に、シグネチャまたはセキュリティ透過性の互換性がないため、ターゲット メソッドにバインドできません。'
+            var setterDelegateType = typeof(Action<>).MakeGenericType(propertyInfo.PropertyType);
+            var setter = setInfo != null ? Delegate.CreateDelegate(setterDelegateType, setInfo) : null;
 
-            var accessorType = typeof(PropertyAccessor<,>).MakeGenericType(propertyInfo.DeclaringType, propertyInfo.PropertyType);
+            var accessorType = typeof(StaticPropertyAccessor<,>).MakeGenericType(propertyInfo.DeclaringType, propertyInfo.PropertyType);
 
             return (IAccessor)Activator.CreateInstance(accessorType, getter, setter);
         }
@@ -138,6 +139,12 @@ namespace TsOperationHistory.Internal
             return accessors.GetOrAdd(propertyName, x => MakeAccessor(_object, propertyName));
         }
 
+        private static IAccessor GetStaticAccessor(Type @class, string propertyName)
+        {
+            var accessors = Cache.GetOrAdd(@class, x => new ConcurrentDictionary<string, IAccessor>());
+            return accessors.GetOrAdd(propertyName, x => MakeAccessor(@class, propertyName));
+        }
+
         public static void SetProperty(object _object, string property, object value)
         {
             if (property.Contains("["))
@@ -152,6 +159,11 @@ namespace TsOperationHistory.Internal
             }
         }
 
+        public static void SetStaticProperty<TProperty>(Type @class, string propertyName, TProperty x)
+        {
+            GetStaticAccessor(@class, propertyName).SetValue(x);
+        }
+
         public static object GetProperty(object _object , string property)
         {
             if (property.Contains("["))
@@ -164,6 +176,11 @@ namespace TsOperationHistory.Internal
             {
                 return GetAccessor(_object, property).GetValue(_object);
             }
+        }
+
+        public static object GetStaticProperty(Type @class, string property)
+        {
+            return GetStaticAccessor(@class, property).GetValue();
         }
 
         public static Type GetPropertyType(object _object, string property)
