@@ -275,7 +275,6 @@
     <Compile Include="ViewModels\ToolBarViewModel.cs" />
     <Compile Include="ViewModels\VersionViewModel.cs" />
     <Compile Include="Views\AdornedBy.cs" />
-    <Compile Include="Views\Behaviors\AbstractAdorner.cs" />
     <Compile Include="Views\Behaviors\EraserBehavior.cs" />
     <Compile Include="Views\Behaviors\BrushBehavior.cs" />
     <Compile Include="Views\Behaviors\DeselectBehavior.cs" />
@@ -288,10 +287,8 @@
     <Compile Include="Views\Behaviors\NDrawRectangleBehavior.cs" />
     <Compile Include="Views\Behaviors\NDrawStraightLineBehavior.cs" />
     <Compile Include="Views\Behaviors\PictureBehavior.cs" />
-    <Compile Include="Views\Behaviors\RectangleAdorner.cs" />
     <Compile Include="Views\Behaviors\RubberbandBehavior.cs" />
     <Compile Include="Views\Behaviors\SetSnapPointBehavior.cs" />
-    <Compile Include="Views\Behaviors\StraightLineAdorner.cs" />
     <Compile Include="Views\ColorMap.xaml.cs">
       <DependentUpon>ColorMap.xaml</DependentUpon>
     </Compile>
