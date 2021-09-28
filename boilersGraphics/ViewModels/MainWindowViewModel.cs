@@ -32,6 +32,7 @@ namespace boilersGraphics.ViewModels
             ToolBarViewModel = new ToolBarViewModel(dialogService);
 
             DiagramViewModel.EnableMiniMap.Value = true;
+            DiagramViewModel.EnableBrushThickness.Value = true;
 
             DiagramViewModel.FileName.Subscribe(x =>
             {
@@ -131,6 +132,14 @@ namespace boilersGraphics.ViewModels
             {
                 DiagramViewModel.EnableMiniMap.Value = !DiagramViewModel.EnableMiniMap.Value;
             });
+            SwitchBrushThicknessCommand = new DelegateCommand(() =>
+            {
+                DiagramViewModel.EnableBrushThickness.Value = !DiagramViewModel.EnableBrushThickness.Value;
+                if (!DiagramViewModel.EnableBrushThickness.Value)
+                {
+                    BrushViewModel.CloseAllThicknessDialog();
+                }
+            });
             ShowVersionCommand = new DelegateCommand(() =>
             {
                 IDialogResult result = null;
@@ -190,6 +199,8 @@ namespace boilersGraphics.ViewModels
         public DelegateCommand ExitApplicationCommand { get; }
 
         public DelegateCommand SwitchMiniMapCommand { get; }
+
+        public DelegateCommand SwitchBrushThicknessCommand { get; }
 
         public DelegateCommand ShowVersionCommand { get; }
 

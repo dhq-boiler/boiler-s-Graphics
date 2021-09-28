@@ -10,6 +10,14 @@
              d:DesignWidth="400"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d">
+    <prism:Dialog.WindowStyle>
+        <Style TargetType="Window">
+            <Setter Property="Left" Value="{Binding Left.Value}" />
+            <Setter Property="Top" Value="{Binding Top.Value}" />
+            <Setter Property="prism:Dialog.WindowStartupLocation" Value="Manual" />
+            <Setter Property="SizeToContent" Value="WidthAndHeight" />
+        </Style>
+    </prism:Dialog.WindowStyle>
     <UserControl.Resources>
         <converter:ThicknessToDoubleConverter x:Key="ThicknessToDouble" />
         <converter:QuadConverter x:Key="Quad" />
