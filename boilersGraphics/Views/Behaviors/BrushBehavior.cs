@@ -58,6 +58,7 @@ namespace boilersGraphics.Views.Behaviors
                 if (!(Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
                 {
                     currentBrush.CloseThicknessDialog();
+                    currentBrush.Dispose();
                     currentBrush = null;
                 }
                 e.StylusDevice.Capture(AssociatedObject);
@@ -85,6 +86,7 @@ namespace boilersGraphics.Views.Behaviors
                 if (!(Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
                 {
                     currentBrush.CloseThicknessDialog();
+                    currentBrush.Dispose();
                     currentBrush = null;
                 }
                 e.TouchDevice.Capture(AssociatedObject);
@@ -114,6 +116,7 @@ namespace boilersGraphics.Views.Behaviors
                     if (!(Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
                     {
                         currentBrush.CloseThicknessDialog();
+                        currentBrush.Dispose();
                         currentBrush = null;
                     }
                     var point = e.GetPosition(AssociatedObject);
