@@ -8,11 +8,12 @@ using System.Windows.Data;
 
 namespace boilersGraphics.Converters
 {
-    class Plus2Converter : IValueConverter
+    public class QuadConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return (int)value + 2;
+            var d = (double)value;
+            return d * 4;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

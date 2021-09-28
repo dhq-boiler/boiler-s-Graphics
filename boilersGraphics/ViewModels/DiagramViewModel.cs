@@ -89,6 +89,7 @@ namespace boilersGraphics.ViewModels
         public DelegateCommand<MouseEventArgs> MouseMoveCommand { get; private set; }
         public DelegateCommand<MouseEventArgs> MouseLeaveCommand { get; private set; }
         public DelegateCommand<MouseEventArgs> MouseEnterCommand { get; private set; }
+        public DelegateCommand<KeyEventArgs> PreviewKeyDownCommand { get; private set; }
 
         #region Property
 
@@ -279,6 +280,28 @@ namespace boilersGraphics.ViewModels
                     ReleaseMiddleButton(args);
                 }
             });
+            PreviewKeyDownCommand = new DelegateCommand<KeyEventArgs>(args =>
+            {
+                switch (args.Key)
+                {
+                    case Key.Left:
+                        MoveSelectedItems(-1, 0);
+                        args.Handled = true;
+                        break;
+                    case Key.Up:
+                        MoveSelectedItems(0, -1);
+                        args.Handled = true;
+                        break;
+                    case Key.Right:
+                        MoveSelectedItems(1, 0);
+                        args.Handled = true;
+                        break;
+                    case Key.Down:
+                        MoveSelectedItems(0, 1);
+                        args.Handled = true;
+                        break;
+                }
+            });
             EditMenuOpenedCommand = new DelegateCommand(() =>
             {
                 CutCommand.RaiseCanExecuteChanged();
@@ -319,11 +342,29 @@ namespace boilersGraphics.ViewModels
             .AddTo(_CompositeDisposable);
 
             SelectedItems = Layers.CollectionChangedAsObservable()
-                                  .Select(_ => Layers.Select(x => x.SelectedLayerItemsChangedAsObservable()).Merge())
+                                  .Select(_ => Layers.Select(x => x.SelectedLayerItemsChangedAsObservable()).Merge()
+                                      .Merge(Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                                                   .Where(x => x.GetType() == typeof(LayerItem))
+                                                   .Select(y => (y as LayerItem).Item.Value)
+                                                   .OfType<ConnectorBaseViewModel>()
+                                                   .SelectMany(x => new List<SnapPointViewModel>() { x.SnapPoint0VM.Value, x.SnapPoint1VM.Value })
+                                                   .ToObservableCollection()
+                                                   .ObserveElementProperty(x => x.IsSelected.Value)
+                                                   .ToUnit()))
                                   .Switch()
                                   .Select(_ => Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
                                                      .Where(x => x.GetType() == typeof(LayerItem))
                                                      .Select(y => (y as LayerItem).Item.Value)
+                                                     .Except(Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                                                                   .Where(x => x.GetType() == typeof(LayerItem))
+                                                                   .Select(y => (y as LayerItem).Item.Value)
+                                                                   .OfType<ConnectorBaseViewModel>())
+                                                     .Union(Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                                                                  .Where(x => x.GetType() == typeof(LayerItem))
+                                                                  .Select(y => (y as LayerItem).Item.Value)
+                                                                  .OfType<ConnectorBaseViewModel>()
+                                                                  .SelectMany(x => new List<SnapPointViewModel>() { x.SnapPoint0VM.Value, x.SnapPoint1VM.Value })
+                                                            )
                                                      .Where(z => z.IsSelected.Value == true)
                                                      .OrderBy(z => z.SelectedOrder.Value)
                                                      .ToArray())
@@ -381,13 +422,29 @@ namespace boilersGraphics.ViewModels
             Height = height;
         }
 
+        private void MoveSelectedItems(int horizontalDiff, int verticalDiff)
+        {
+            MainWindowVM.Recorder.BeginRecode();
+            SelectedItems.Value.OfType<DesignerItemViewModelBase>().ToList().ForEach(x =>
+            {
+                MainWindowVM.Recorder.Current.ExecuteSetProperty(x, "Left.Value", x.Left.Value + horizontalDiff);
+                MainWindowVM.Recorder.Current.ExecuteSetProperty(x, "Top.Value", x.Top.Value + verticalDiff);
+            });
+            SelectedItems.Value.OfType<SnapPointViewModel>().ToList().ForEach(x =>
+            {
+                MainWindowVM.Recorder.Current.ExecuteSetProperty(x, "Left.Value", x.Left.Value + horizontalDiff);
+                MainWindowVM.Recorder.Current.ExecuteSetProperty(x, "Top.Value", x.Top.Value + verticalDiff);
+            });
+            MainWindowVM.Recorder.EndRecode();
+        }
+
         public void Initialize()
         {
             MainWindowVM.Recorder.BeginRecode();
 
             InitialSetting(MainWindowVM, true, true);
             
-            MainWindowVM.Recorder.EndRecode("InitialSetting() complete");
+            MainWindowVM.Recorder.EndRecode();
             
             MainWindowVM.Controller.Flush();
         }
@@ -614,7 +671,7 @@ namespace boilersGraphics.ViewModels
             MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "ZIndex.Value", Layers.SelectMany(x => x.Children).Count());
             MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "IsHitTestVisible.Value", MainWindowVM.ToolBarViewModel.CurrentHitTestVisibleState.Value);
             MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "PathGeometry.Value", GeometryCreator.CreateCombineGeometry(item1, item2));
-            if (combine.PathGeometry.Value == null)
+            if (combine.PathGeometry.Value == null || combine.PathGeometry.Value.Figures.Count() == 0)
             {
                 var item1PathGeometry = item1.PathGeometry.Value;
                 var item2PathGeometry = item2.PathGeometry.Value;
@@ -634,7 +691,7 @@ namespace boilersGraphics.ViewModels
             MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "Height.Value", combine.PathGeometry.Value.Bounds.Height);
             Add(combine);
 
-            MainWindowVM.Recorder.EndRecode("CombineAndAddItem() complete");
+            MainWindowVM.Recorder.EndRecode();
         }
 
         private void CastToLetterAndSetTransform(SelectableDesignerItemViewModelBase item1, SelectableDesignerItemViewModelBase item2, PathGeometry item1PathGeometry, PathGeometry item2PathGeometry)
@@ -823,6 +880,17 @@ namespace boilersGraphics.ViewModels
             var setting = new Models.Setting();
             setting.Width.Value = this.Width;
             setting.Height.Value = this.Height;
+            Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                                                     .Where(x => x.GetType() == typeof(LayerItem))
+                                                     .Select(y => (y as LayerItem).Item.Value)
+                                                     .Where(z => z is BrushViewModel)
+                                                     .Cast<BrushViewModel>()
+                                                     .ToList()
+                                                     .ForEach(z =>
+                                                     {
+                                                         z.Width.Value = this.Width;
+                                                         z.Height.Value = this.Height;
+                                                     });
             setting.CanvasBackground.Value = this.CanvasBackground.Value;
             setting.EnablePointSnap.Value = this.EnablePointSnap.Value;
             setting.SnapPower.Value = (App.Current.MainWindow.DataContext as MainWindowViewModel).SnapPower.Value;
@@ -890,6 +958,10 @@ namespace boilersGraphics.ViewModels
             if (parameter is SelectableDesignerItemViewModelBase)
             {
                 SelectableDesignerItemViewModelBase item = (SelectableDesignerItemViewModelBase)parameter;
+                if (item is SnapPointViewModel snapPoint)
+                {
+                    item = snapPoint.Parent.Value;
+                }
                 RemoveGroupMembers(item);
                 Remove(item);
                 if (item is LetterDesignerItemViewModel)
@@ -1105,7 +1177,7 @@ namespace boilersGraphics.ViewModels
             }
             finally
             {
-                mainwindowViewModel.Recorder.EndRecode("ExecuteLoadCommand complete");
+                mainwindowViewModel.Recorder.EndRecode();
             }
 
             var layersViewModel = App.Current.MainWindow.GetChildOfType<Views.Layers>().DataContext as LayersViewModel;
@@ -1182,7 +1254,7 @@ namespace boilersGraphics.ViewModels
 
             groupItem.SelectItemCommand.Execute(true);
 
-            MainWindowVM.Recorder.EndRecode("ExecuteGroupItemsCommand() complete");
+            MainWindowVM.Recorder.EndRecode();
         }
 
         private void Remove(LayerItem layerItem)
@@ -1254,7 +1326,7 @@ namespace boilersGraphics.ViewModels
                 }
             }
 
-            MainWindowVM.Recorder.EndRecode("ExecuteUngroupItemsCommand() complete");
+            MainWindowVM.Recorder.EndRecode();
         }
 
         public bool CanExecuteUngroup()
@@ -1366,7 +1438,7 @@ namespace boilersGraphics.ViewModels
 
             Sort(Layers);
 
-            MainWindowVM.Recorder.EndRecode("ExecuteBringForwardCommand() complete");
+            MainWindowVM.Recorder.EndRecode();
         }
 
         private void ExecuteSendBackwardCommand()
@@ -1473,7 +1545,7 @@ namespace boilersGraphics.ViewModels
 
             Sort(Layers);
 
-            MainWindowVM.Recorder.EndRecode("ExecuteSendBackwardCommand() complete");
+            MainWindowVM.Recorder.EndRecode();
         }
 
         private void ExecuteBringForegroundCommand()
@@ -1539,7 +1611,7 @@ namespace boilersGraphics.ViewModels
 
             Sort(Layers);
 
-            MainWindowVM.Recorder.EndRecode("ExecuteBringForegroundCommand() complete");
+            MainWindowVM.Recorder.EndRecode();
         }
 
         private void ExecuteSendBackgroundCommand()
@@ -1607,7 +1679,7 @@ namespace boilersGraphics.ViewModels
 
             Sort(Layers);
 
-            MainWindowVM.Recorder.EndRecode("ExecuteSendBackgroundCommand() complete");
+            MainWindowVM.Recorder.EndRecode();
         }
 
         private void Sort(ReactiveCollection<LayerTreeViewItemBase> target)
@@ -1652,7 +1724,7 @@ namespace boilersGraphics.ViewModels
                     SetTop(item, GetTop(item) + delta);
                 }
 
-                MainWindowVM.Recorder.EndRecode("ExecuteAlignTopCommand() complete");
+                MainWindowVM.Recorder.EndRecode();
             }
         }
 
@@ -1671,7 +1743,7 @@ namespace boilersGraphics.ViewModels
                     SetTop(item, GetTop(item) + delta);
                 }
 
-                MainWindowVM.Recorder.EndRecode("ExecuteAlignVerticalCenterCommand() complete");
+                MainWindowVM.Recorder.EndRecode();
             }
         }
 
@@ -1690,7 +1762,7 @@ namespace boilersGraphics.ViewModels
                     SetTop(item, GetTop(item) + delta);
                 }
 
-                MainWindowVM.Recorder.EndRecode("ExecuteAlignBottomCommand() complete");
+                MainWindowVM.Recorder.EndRecode();
             }
         }
 
@@ -1709,7 +1781,7 @@ namespace boilersGraphics.ViewModels
                     SetLeft(item, GetLeft(item) + delta);
                 }
 
-                MainWindowVM.Recorder.EndRecode("ExecuteAlignLeftCommand() complete");
+                MainWindowVM.Recorder.EndRecode();
             }
         }
 
@@ -1728,7 +1800,7 @@ namespace boilersGraphics.ViewModels
                     SetLeft(item, GetLeft(item) + delta);
                 }
 
-                MainWindowVM.Recorder.EndRecode("ExecuteAlignHorizontalCenterCommand() complete");
+                MainWindowVM.Recorder.EndRecode();
             }
         }
 
@@ -1747,7 +1819,7 @@ namespace boilersGraphics.ViewModels
                     SetLeft(item, GetLeft(item) + delta);
                 }
 
-                MainWindowVM.Recorder.EndRecode("ExecuteAlignRightCommand() complete");
+                MainWindowVM.Recorder.EndRecode();
             }
         }
 
@@ -1783,7 +1855,7 @@ namespace boilersGraphics.ViewModels
                     offset = offset + GetWidth(item) + distance;
                 }
 
-                MainWindowVM.Recorder.EndRecode("ExecuteDistributeHorizontalCommand() complete");
+                MainWindowVM.Recorder.EndRecode();
             }
         }
 
@@ -1819,7 +1891,7 @@ namespace boilersGraphics.ViewModels
                     offset = offset + GetHeight(item) + distance;
                 }
 
-                MainWindowVM.Recorder.EndRecode("ExecuteDistributeVerticalCommand() complete");
+                MainWindowVM.Recorder.EndRecode();
             }
         }
 
@@ -1911,7 +1983,7 @@ namespace boilersGraphics.ViewModels
                 }
             }
 
-            MainWindowVM.Recorder.EndRecode("ExecuteUniformWidthCommand() complete");
+            MainWindowVM.Recorder.EndRecode();
         }
 
         private void ExecuteUniformHeightCommand()
@@ -1931,7 +2003,7 @@ namespace boilersGraphics.ViewModels
                 }
             }
 
-            MainWindowVM.Recorder.EndRecode("ExecuteUniformHeightCommand() complete");
+            MainWindowVM.Recorder.EndRecode();
         }
 
         public bool CanExecuteUniform()

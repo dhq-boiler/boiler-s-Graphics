@@ -11,9 +11,13 @@ namespace TsOperationHistory.Internal
 
         object GetValue(object target, int index);
 
+        object GetValue();
+
         void SetValue(object target, object value);
 
         void SetValue(object target, int index, object value);
+
+        void SetValue(object value);
 
         bool HasGetter { get; }
         bool HasSetter { get; }
@@ -68,6 +72,11 @@ namespace TsOperationHistory.Internal
             return obj;
         }
 
+        public object GetValue()
+        {
+            return AccessorChain.First().GetValue();
+        }
+
         public void SetValue(object target, object value)
         {
             object obj = target;
@@ -98,6 +107,11 @@ namespace TsOperationHistory.Internal
             }
             accessor.SetValue(obj, index, value);
         }
+
+        public void SetValue(object value)
+        {
+            AccessorChain.First().SetValue(value);
+        }
     }
 
     internal sealed class PropertyAccessor<TTarget, TProperty> : IAccessor
@@ -124,12 +138,22 @@ namespace TsOperationHistory.Internal
             throw new NotSupportedException();
         }
 
+        public object GetValue()
+        {
+            throw new NotSupportedException();
+        }
+
         public void SetValue(object target, object value)
         {
             _setter?.Invoke((TTarget)target, (TProperty)value);
         }
 
         public void SetValue(object target, int index, object value)
+        {
+            throw new NotSupportedException();
+        }
+
+        public void SetValue(object value)
         {
             throw new NotSupportedException();
         }
@@ -164,6 +188,11 @@ namespace TsOperationHistory.Internal
             return default;
         }
 
+        public object GetValue()
+        {
+            throw new NotSupportedException();
+        }
+
         public void SetValue(object target, object value)
         {
             throw new NotSupportedException();
@@ -172,6 +201,11 @@ namespace TsOperationHistory.Internal
         public void SetValue(object target, int index, object value)
         {
             _setter?.Invoke((TTarget)target, index, (TProperty)value);
+        }
+
+        public void SetValue(object value)
+        {
+            throw new NotSupportedException();
         }
 
         public bool HasGetter => (_getter != null);
@@ -207,7 +241,17 @@ namespace TsOperationHistory.Internal
             throw new NotSupportedException();
         }
 
+        public object GetValue()
+        {
+            throw new NotSupportedException();
+        }
+
         public void SetValue(object target, int index, object value)
+        {
+            throw new NotSupportedException();
+        }
+
+        public void SetValue(object value)
         {
             throw new NotSupportedException();
         }
@@ -217,5 +261,52 @@ namespace TsOperationHistory.Internal
         public bool HasSetter { get; }
 
         public Type PropertyType { get; }
+    }
+
+    internal sealed class StaticPropertyAccessor<TTarget, TProperty> : IAccessor
+    {
+        private readonly Func<TProperty> _getter;
+        private readonly Action<TProperty> _setter;
+
+        public StaticPropertyAccessor(Func<TProperty> getter, Action<TProperty> setter)
+        {
+            _getter = getter;
+            _setter = setter;
+        }
+
+        public object GetValue(object target)
+        {
+            throw new NotSupportedException();
+        }
+
+        public object GetValue(object target, int index)
+        {
+            throw new NotSupportedException();
+        }
+
+        public object GetValue()
+        {
+            return _getter();
+        }
+
+        public void SetValue(object target, object value)
+        {
+            throw new NotSupportedException();
+        }
+
+        public void SetValue(object target, int index, object value)
+        {
+            throw new NotSupportedException();
+        }
+
+        public void SetValue(object value)
+        {
+            _setter((TProperty)value);
+        }
+
+        public bool HasGetter => (_getter != null);
+        public bool HasSetter => (_setter != null);
+
+        public Type PropertyType { get; } = typeof(TProperty);
     }
 }

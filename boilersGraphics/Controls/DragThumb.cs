@@ -31,12 +31,15 @@ namespace boilersGraphics.Controls
             base.OnMouseUp(e);
             (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "";
             (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = "";
-            Recorder.EndRecode("DragThumb.DragThumb_DragDelta() completed");
+            Recorder.EndRecode();
         }
 
         private void DragThumb_DragDelta(object sender, DragDeltaEventArgs e)
         {
             DesignerItemViewModelBase designerItem = this.DataContext as DesignerItemViewModelBase;
+
+            if (!designerItem.CanDrag.Value)
+                return;
 
             if (designerItem != null && designerItem.IsSelected.Value)
             {

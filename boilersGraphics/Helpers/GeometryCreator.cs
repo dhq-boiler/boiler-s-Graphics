@@ -11,11 +11,16 @@ using System.Windows.Media;
 
 namespace boilersGraphics.Helpers
 {
-    class GeometryCreator
+    public static class GeometryCreator
     {
         public static PathGeometry CreateEllipse(NEllipseViewModel item)
         {
             return PathGeometry.CreateFromGeometry(new EllipseGeometry(new Point(item.Left.Value + item.Width.Value / 2, item.Top.Value + item.Height.Value / 2), item.Width.Value / 2, item.Height.Value / 2));
+        }
+
+        public static PathGeometry CreateEllipse(double centerX, double centerY, Thickness thickness)
+        {
+            return PathGeometry.CreateFromGeometry(new EllipseGeometry(new Point(centerX - thickness.Left, centerY - thickness.Top), thickness.Left + thickness.Right, thickness.Top + thickness.Bottom));
         }
 
         public static PathGeometry CreateEllipse(NEllipseViewModel item, double angle)
@@ -32,11 +37,6 @@ namespace boilersGraphics.Helpers
         public static PathGeometry CreateRectangle(NRectangleViewModel item, double angle)
         {
             return PathGeometry.CreateFromGeometry(new RectangleGeometry(new Rect(new Point(item.Left.Value, item.Top.Value), new Point(item.Left.Value + item.Width.Value, item.Top.Value + item.Height.Value)), 0, 0, new RotateTransform(angle, item.CenterPoint.Value.X, item.CenterPoint.Value.Y)));
-        }
-
-        private static double CalcRadian(double degree)
-        {
-            return degree * Math.PI / 180;
         }
 
         public static PathGeometry CreateRectangle(NRectangleViewModel item, double offsetX, double offsetY)

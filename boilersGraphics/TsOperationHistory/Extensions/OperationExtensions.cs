@@ -92,9 +92,22 @@ namespace TsOperationHistory.Extensions
             return GenerateAutoMergeOperation(@this, propertyName, newValue, oldValue, $"{@this.GetHashCode()}.{propertyName}", timeSpan);
         }
 
+        public static IMergeableOperation GenerateSetStaticPropertyOperation<TProperty>(this Type @class, string propertyName, TProperty newValue, TimeSpan timeSpan)
+        {
+            var nullableObj = FastReflection.GetStaticProperty(@class, propertyName);
+            TProperty oldValue = nullableObj != null ? (TProperty)nullableObj : default(TProperty);
+
+            return GenerateAutoMergeOperation(@class, propertyName, newValue, oldValue, $"{@class.GetHashCode()}.{propertyName}", timeSpan);
+        }
+
         public static IMergeableOperation GenerateSetPropertyOperation<TProperty>(this object @this, string propertyName, TProperty newValue)
         {
             return GenerateSetPropertyOperation(@this, propertyName, newValue, Operation.DefaultMergeSpan);
+        }
+
+        public static IMergeableOperation GenerateSetStaticPropertyOperation<TProperty>(this Type @class, string propertyName, TProperty newValue)
+        {
+            return GenerateSetStaticPropertyOperation(@class, propertyName, newValue, Operation.DefaultMergeSpan);
         }
 
         public static IMergeableOperation GenerateSetPropertyOperation<T, TProperty>(this T @this, Expression<Func<T, TProperty>> selector, TProperty newValue)
@@ -117,6 +130,14 @@ namespace TsOperationHistory.Extensions
         {
             return new MergeableOperation<TProperty>(
                 x => { FastReflection.SetProperty(@this, propertyName, x); },
+                newValue,
+                oldValue, new ThrottleMergeJudge<TMergeKey>(mergeKey, timeSpan));
+        }
+
+        public static IMergeableOperation GenerateAutoMergeOperation<TProperty, TMergeKey>(this Type @class, string propertyName, TProperty newValue, TProperty oldValue, TMergeKey mergeKey, TimeSpan timeSpan)
+        {
+            return new MergeableOperation<TProperty>(
+                x => { FastReflection.SetStaticProperty(@class, propertyName, x); },
                 newValue,
                 oldValue, new ThrottleMergeJudge<TMergeKey>(mergeKey, timeSpan));
         }

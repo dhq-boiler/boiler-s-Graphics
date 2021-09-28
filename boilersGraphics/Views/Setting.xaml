@@ -1,32 +1,37 @@
 ﻿<UserControl x:Class="boilersGraphics.Views.Setting"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:boilersGraphics.Views"
-             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:converter="clr-namespace:boilersGraphics.Converters"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:local="clr-namespace:boilersGraphics.Views"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:prism="http://prismlibrary.com/"
+             d:DesignHeight="450"
+             d:DesignWidth="800"
              prism:ViewModelLocator.AutoWireViewModel="True"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             mc:Ignorable="d">
     <UserControl.Resources>
         <converter:IntToStringConverter x:Key="IntToStringConverter" />
         <converter:ColorToStringConverter x:Key="ColorToStringConverter" />
         <converter:ToSolidColorBrushConverter x:Key="solidColorBrushConverter" />
     </UserControl.Resources>
     <DockPanel>
-        <StackPanel DockPanel.Dock="Bottom"
-                    HorizontalAlignment="Right"
+        <StackPanel HorizontalAlignment="Right"
+                    DockPanel.Dock="Bottom"
                     Orientation="Horizontal">
-            <Button Command="{Binding OkCommand.Value}"
-                    Width="100"
+            <Button Width="100"
                     Height="25"
-                    Margin="5">OK</Button>
-            <Button Command="{Binding CancelCommand}"
-                    Width="100"
+                    Margin="5"
+                    Command="{Binding OkCommand.Value}">
+                OK
+            </Button>
+            <Button Width="100"
                     Height="25"
-                    Margin="5">キャンセル</Button>
+                    Margin="5"
+                    Command="{Binding CancelCommand}">
+                キャンセル
+            </Button>
         </StackPanel>
         <StackPanel Orientation="Vertical">
             <Grid>
@@ -41,30 +46,27 @@
                     <RowDefinition />
                     <RowDefinition />
                 </Grid.RowDefinitions>
-                <Label Grid.Row="0" 
-                       Grid.Column="0">キャンパスの幅</Label>
-                <TextBox Grid.Row="0" 
+                <Label Grid.Row="0" Grid.Column="0">キャンパスの幅</Label>
+                <TextBox Grid.Row="0"
                          Grid.Column="1"
                          HorizontalAlignment="Stretch"
                          HorizontalContentAlignment="Right"
                          Text="{Binding EditTarget.Value.Width.Value, Converter={StaticResource IntToStringConverter}, UpdateSourceTrigger=PropertyChanged}" />
-                <Label Grid.Row="1"
-                       Grid.Column="0">キャンパスの高さ</Label>
+                <Label Grid.Row="1" Grid.Column="0">キャンパスの高さ</Label>
                 <TextBox Grid.Row="1"
                          Grid.Column="1"
                          HorizontalAlignment="Stretch"
                          HorizontalContentAlignment="Right"
                          Text="{Binding EditTarget.Value.Height.Value, Converter={StaticResource IntToStringConverter}, UpdateSourceTrigger=PropertyChanged}" />
-                <Label Grid.Row="2"
-                       Grid.Column="0">キャンバスの背景色</Label>
+                <Label Grid.Row="2" Grid.Column="0">キャンバスの背景色</Label>
                 <Grid Grid.Row="2"
                       Grid.Column="1"
                       Grid.ColumnSpan="2">
                     <Grid.Background>
                         <VisualBrush Stretch="None"
-                                 TileMode="Tile"
-                                 Viewport="0,0,16,16"
-                                 ViewportUnits="Absolute">
+                                     TileMode="Tile"
+                                     Viewport="0,0,16,16"
+                                     ViewportUnits="Absolute">
                             <VisualBrush.Visual>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
@@ -76,23 +78,22 @@
                                         <RowDefinition Height="8" />
                                     </Grid.RowDefinitions>
                                     <Rectangle Grid.Row="0"
-                                           Grid.Column="0"
-                                           Fill="#EEE" />
+                                               Grid.Column="0"
+                                               Fill="#EEE" />
                                     <Rectangle Grid.Row="0"
-                                           Grid.Column="1"
-                                           Fill="#AAA" />
+                                               Grid.Column="1"
+                                               Fill="#AAA" />
                                     <Rectangle Grid.Row="1"
-                                           Grid.Column="0"
-                                           Fill="#AAA" />
+                                               Grid.Column="0"
+                                               Fill="#AAA" />
                                     <Rectangle Grid.Row="1"
-                                           Grid.Column="1"
-                                           Fill="#EEE" />
+                                               Grid.Column="1"
+                                               Fill="#EEE" />
                                 </Grid>
                             </VisualBrush.Visual>
                         </VisualBrush>
                     </Grid.Background>
-                    <Button Command="{Binding ChangeCanvasBackgroundCommand}"
-                            Content="{Binding EditTarget.Value.CanvasBackground.Value, Converter={StaticResource ColorToStringConverter}}">
+                    <Button Command="{Binding ChangeCanvasBackgroundCommand}" Content="{Binding EditTarget.Value.CanvasBackground.Value, Converter={StaticResource ColorToStringConverter}}">
                         <Button.Style>
                             <Style TargetType="{x:Type Button}">
                                 <Style.Triggers>
@@ -107,14 +108,15 @@
                         </Button.Style>
                     </Button>
                 </Grid>
-                <CheckBox Grid.Row="3"
+                <CheckBox x:Name="enablePointSnap"
+                          Grid.Row="3"
                           Grid.Column="0"
                           Grid.ColumnSpan="2"
-                          x:Name="enablePointSnap"
                           Margin="5"
-                          IsChecked="{Binding EditTarget.Value.EnablePointSnap.Value}">ポイントにスナップする</CheckBox>
-                <Label Grid.Row="4"
-                       Grid.Column="0">ポイントにスナップする範囲</Label>
+                          IsChecked="{Binding EditTarget.Value.EnablePointSnap.Value}">
+                    ポイントにスナップする
+                </CheckBox>
+                <Label Grid.Row="4" Grid.Column="0">ポイントにスナップする範囲</Label>
                 <TextBox Grid.Row="4"
                          Grid.Column="1"
                          HorizontalAlignment="Stretch"
@@ -136,10 +138,8 @@
                     </TextBox.Style>
                 </TextBox>
             </Grid>
-            <StackPanel Orientation="Horizontal">
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-            </StackPanel>
+            <StackPanel Orientation="Horizontal" />
+            <StackPanel Orientation="Horizontal" />
         </StackPanel>
     </DockPanel>
 </UserControl>

@@ -81,6 +81,8 @@ namespace boilersGraphics.Models
 
         private void UpdateAppearance(IEnumerable<SelectableDesignerItemViewModelBase> items)
         {
+            if (items.Count() == 0)
+                return;
             var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
             double minX, maxX, minY, maxY;
             var width = Measure.GetWidth(items, out minX, out maxX);
@@ -128,6 +130,7 @@ namespace boilersGraphics.Models
                                 diffY = Math.Min(connectorItem.Points[0].Y, connectorItem.Points[1].Y);
                             }
                             VisualBrush brush = new VisualBrush(view);
+                            brush.Stretch = Stretch.None;
                             context.DrawRectangle(brush, null, new Rect(new Point(diffX, diffY), new Size(view.ActualWidth, view.ActualHeight)));
                         }
 

@@ -1,21 +1,20 @@
 ﻿using boilersGraphics.Controls;
 using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
+using boilersGraphics.Models;
+using boilersGraphics.Views;
 using boilersGraphics.Views.Behaviors;
 using Microsoft.Win32;
-using Prism.Commands;
-using System.Collections.ObjectModel;
-using System.Linq;
 using Microsoft.Xaml.Behaviors;
-using System.IO;
-using System.Windows.Media.Imaging;
+using Prism.Commands;
 using Prism.Services.Dialogs;
-using boilersGraphics.Views;
-using boilersGraphics.Models;
-using System.Windows.Media;
-using System.Windows;
 using Reactive.Bindings;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Windows;
+using System.Windows.Media.Imaging;
 
 namespace boilersGraphics.ViewModels
 {
@@ -126,7 +125,7 @@ namespace boilersGraphics.ViewModels
                 ChangeHitTestToDisable();
                 SelectOneToolItem("letter-vertical");
             })));
-            ToolItems.Add(new ToolItemData("polygon", "pack://application:,,,/Assets/img/pentagon.png", new DelegateCommand(() =>
+            ToolItems.Add(new ToolItemData("polygon", "pack://application:,,,/Assets/img/polygon.png", new DelegateCommand(() =>
             {
                 IDialogResult result = null;
                 this.dlgService.ShowDialog(nameof(PolygonSetting), ret => result = ret);
@@ -166,6 +165,29 @@ namespace boilersGraphics.ViewModels
                 }
                 ChangeHitTestToDisable();
                 SelectOneToolItem("snappoint");
+            })));
+            ToolItems.Add(new ToolItemData("brush", "pack://application:,,,/Assets/img/brush.png", new DelegateCommand(() =>
+            {
+                var behavior = new BrushBehavior(dlgService);
+                behavior.CurrentBrush.OpenThicknessDialog();
+                Behaviors.Clear();
+                if (!Behaviors.Contains(behavior))
+                {
+                    Behaviors.Add(behavior);
+                }
+                ChangeHitTestToDisable();
+                SelectOneToolItem("brush");
+            })));
+            ToolItems.Add(new ToolItemData("eraser", "pack://application:,,,/Assets/img/eraser.png", new DelegateCommand(() =>
+            {
+                var behavior = new EraserBehavior();
+                Behaviors.Clear();
+                if (!Behaviors.Contains(behavior))
+                {
+                    Behaviors.Add(behavior);
+                }
+                ChangeHitTestToDisable();
+                SelectOneToolItem("eraser");
             })));
         }
 

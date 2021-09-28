@@ -74,14 +74,20 @@ namespace boilersGraphics.AttachedProperties
                     var owner = selectableDesignerItemViewModelBase.Owner;
                     var edgeThicknesses = owner.SelectedItems.Value.Select(x =>
                     {
-                        if (x is DesignerItemViewModelBase)
+                        if (x is DesignerItemViewModelBase d)
                         {
-                            return (x as DesignerItemViewModelBase).EdgeThickness.Value;
+                            return d.EdgeThickness.Value;
+                        }
+                        else if (x is ConnectorBaseViewModel c)
+                        {
+                            return c.EdgeThickness.Value;
+                        }
+                        else if (x is SnapPointViewModel s)
+                        {
+                            return s.Parent.Value.EdgeThickness.Value;
                         }
                         else
-                        {
-                            return (x as ConnectorBaseViewModel).EdgeThickness.Value;
-                        };
+                            return double.NaN;
                     });
                     if (edgeThicknesses.Count() > 0 && edgeThicknesses.All(x => x == edgeThicknesses.First()))
                     {
@@ -137,15 +143,21 @@ namespace boilersGraphics.AttachedProperties
                     var owner = selectableDesignerItemViewModelBase.Owner;
                     var edgeThicknesses = owner.SelectedItems.Value.Select(x =>
                     {
-                        if (x is DesignerItemViewModelBase)
+                        if (x is DesignerItemViewModelBase d)
                         {
-                            return (x as DesignerItemViewModelBase).EdgeThickness.Value;
+                            return d.EdgeThickness.Value;
                         }
-                        else
+                        else if (x is ConnectorBaseViewModel c)
                         {
-                            return (x as ConnectorBaseViewModel).EdgeThickness.Value;
-                        };
-                    });
+                            return c.EdgeThickness.Value;
+                        }
+                        else if (x is SnapPointViewModel s)
+                        {
+                            return s.Parent.Value.EdgeThickness.Value;
+                        }
+                        return 0d;
+                    })
+                    .Where(x => x != double.NaN);
                     if (edgeThicknesses.Count() > 0 && edgeThicknesses.All(x => x == edgeThicknesses.First()))
                     {
                         owner.EdgeThickness.Value = edgeThicknesses.First();

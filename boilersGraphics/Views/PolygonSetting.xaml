@@ -1,17 +1,18 @@
 ﻿<UserControl x:Class="boilersGraphics.Views.PolygonSetting"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:boilersGraphics.Views"
-             xmlns:prism="http://prismlibrary.com/"
              xmlns:control="clr-namespace:boilersGraphics.Controls"
              xmlns:converter="clr-namespace:boilersGraphics.Converters"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:helper="clr-namespace:boilersGraphics.Helpers"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:local="clr-namespace:boilersGraphics.Views"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:prism="http://prismlibrary.com/"
+             d:DesignHeight="450"
+             d:DesignWidth="800"
              prism:ViewModelLocator.AutoWireViewModel="True"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             mc:Ignorable="d">
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="KeyDown">
             <helper:EventToCommand Command="{Binding KeyDownCommand}" PassEventArgsToCommand="True" />
@@ -22,31 +23,27 @@
     </UserControl.Resources>
     <DockPanel>
         <DockPanel DockPanel.Dock="Right">
-            <StackPanel Orientation="Horizontal"
-                        DockPanel.Dock="Top">
+            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
                 <Label Content="始点X" />
-                <control:DoubleTextBox DoubleText="{Binding StartPointX.Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DoubleToStringConverter}}"
-                         Width="50" />
+                <control:DoubleTextBox Width="50" DoubleText="{Binding StartPointX.Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DoubleToStringConverter}}" />
                 <Label Content="始点Y" />
-                <control:DoubleTextBox DoubleText="{Binding StartPointY.Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DoubleToStringConverter}}"
-                         Width="50" />
+                <control:DoubleTextBox Width="50" DoubleText="{Binding StartPointY.Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DoubleToStringConverter}}" />
             </StackPanel>
-            <StackPanel Orientation="Horizontal"
+            <StackPanel HorizontalAlignment="Right"
                         DockPanel.Dock="Bottom"
-                        HorizontalAlignment="Right">
-                <Button Content="追加"
+                        Orientation="Horizontal">
+                <Button Width="75"
+                        Height="25"
+                        Margin="5"
                         Command="{Binding AddCornerCommand}"
-                        Width="75"
+                        Content="追加" />
+                <Button Width="75"
                         Height="25"
-                        Margin="5" />
-                <Button Content="描画"
+                        Margin="5"
                         Command="{Binding DrawCommand}"
-                        Width="75"
-                        Height="25"
-                        Margin="5" />
+                        Content="描画" />
             </StackPanel>
-            <ItemsControl ItemsSource="{Binding Corners}"
-                          DockPanel.Dock="Top">
+            <ItemsControl DockPanel.Dock="Top" ItemsSource="{Binding Corners}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
@@ -59,16 +56,16 @@
                                 </Label.Content>
                             </Label>
                             <Label Content="角度(°)" />
-                            <control:DoubleTextBox DoubleText="{Binding Angle.Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DoubleToStringConverter}}"
-                                     HorizontalContentAlignment="Right"
-                                     Width="50" />
+                            <control:DoubleTextBox Width="50"
+                                                   HorizontalContentAlignment="Right"
+                                                   DoubleText="{Binding Angle.Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DoubleToStringConverter}}" />
                             <Label Content="半径" />
-                            <control:DoubleTextBox DoubleText="{Binding Radius.Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DoubleToStringConverter}}"
-                                     HorizontalContentAlignment="Right"
-                                     Width="50" />
-                            <Button Content="削除"
-                                    Command="{Binding DataContext.RemoveCornerCommand, RelativeSource={RelativeSource AncestorType=local:PolygonSetting}}"
-                                    CommandParameter="{Binding}" />
+                            <control:DoubleTextBox Width="50"
+                                                   HorizontalContentAlignment="Right"
+                                                   DoubleText="{Binding Radius.Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DoubleToStringConverter}}" />
+                            <Button Command="{Binding DataContext.RemoveCornerCommand, RelativeSource={RelativeSource AncestorType=local:PolygonSetting}}"
+                                    CommandParameter="{Binding}"
+                                    Content="削除" />
                             <Label Content="{Binding Point.Value}" />
                         </StackPanel>
                     </DataTemplate>
@@ -77,12 +74,11 @@
         </DockPanel>
         <Path Width="100"
               Height="100"
-              Fill="Black"
-              Stroke="Black"
-              StrokeThickness="1"
               ClipToBounds="False"
+              Data="{Binding Data.Value, UpdateSourceTrigger=PropertyChanged}"
+              Fill="Black"
               Stretch="Fill"
-              Data="{Binding Data.Value, UpdateSourceTrigger=PropertyChanged}">
-        </Path>
+              Stroke="Black"
+              StrokeThickness="1" />
     </DockPanel>
 </UserControl>

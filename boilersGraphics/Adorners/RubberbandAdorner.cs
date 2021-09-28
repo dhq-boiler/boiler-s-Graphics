@@ -3,10 +3,7 @@ using boilersGraphics.Extensions;
 using boilersGraphics.Models;
 using boilersGraphics.ViewModels;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -107,22 +104,63 @@ namespace boilersGraphics.Adorners
             {
                 if (item is SelectableDesignerItemViewModelBase)
                 {
-                    DependencyObject container = itemsControl.ItemContainerGenerator.ContainerFromItem(item);
-
-                    Rect itemRect = VisualTreeHelper.GetDescendantBounds((Visual)container);
-                    Rect itemBounds = ((Visual)container).TransformToAncestor(_designerCanvas).TransformBounds(itemRect);
-
-                    if (rubberBand.Contains(itemBounds))
+                    if (item is ConnectorBaseViewModel connector)
                     {
-                        item.IsSelected.Value = true;
+                        var snapPointVM = connector.SnapPoint0VM.Value;
+                        UpdateSelectionSnapPoint(rubberBand, snapPointVM);
+                        snapPointVM = connector.SnapPoint1VM.Value;
+                        UpdateSelectionSnapPoint(rubberBand, snapPointVM);
                     }
                     else
                     {
-                        if (!(Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
+                        DependencyObject container = itemsControl.ItemContainerGenerator.ContainerFromItem(item);
+
+                        Rect itemRect = VisualTreeHelper.GetDescendantBounds((Visual)container);
+                        Rect itemBounds = ((Visual)container).TransformToAncestor(_designerCanvas).TransformBounds(itemRect);
+
+                        if (rubberBand.Contains(itemBounds))
                         {
-                            item.IsSelected.Value = false;
+                            item.IsSelected.Value = true;
+                        }
+                        else
+                        {
+                            if (!(Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
+                            {
+                                item.IsSelected.Value = false;
+                            }
                         }
                     }
+                }
+            }
+        }
+
+        private void UpdateSelectionStraightConnector(Rect rubberBand, ItemsControl itemsControl, SelectableDesignerItemViewModelBase item)
+        {
+            if (item is ConnectorBaseViewModel connector)
+            {
+                var vm = connector.SnapPoint0VM.Value;
+                UpdateSelectionSnapPoint(rubberBand, vm);
+                vm = connector.SnapPoint1VM.Value;
+                UpdateSelectionSnapPoint(rubberBand, vm);
+            }
+        }
+
+        private void UpdateSelectionSnapPoint(Rect rubberBand, SnapPointViewModel vm)
+        {
+            LineResizeHandle container = App.Current.MainWindow.GetChildOfType<DesignerCanvas>().GetCorrespondingViews<LineResizeHandle>(vm).First();
+
+            Rect itemRect = VisualTreeHelper.GetDescendantBounds((Visual)container);
+            Rect itemBounds = ((Visual)container).TransformToAncestor(_designerCanvas).TransformBounds(itemRect);
+
+            if (rubberBand.Contains(itemBounds))
+            {
+                vm.IsSelected.Value = true;
+            }
+            else
+            {
+                if (!(Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
+                {
+                    vm.IsSelected.Value = false;
                 }
             }
         }

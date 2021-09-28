@@ -107,13 +107,19 @@ namespace boilersGraphics.ViewModels
                 {
                     var selectedItem = newItem as LayerItem;
 
-                    Layers.ToList().ForEach(x => x.IsSelected.Value = false);
+                    if (!Keyboard.IsKeyDown(Key.LeftCtrl) && !Keyboard.IsKeyDown(Key.RightCtrl))
+                    {
+                        Layers.ToList().ForEach(x => x.IsSelected.Value = false);
+                    }
 
                     var layerItems = layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
                                            .Where(x => x is LayerItem);
                     layerItems.ToList().ForEach(x =>
                     {
-                        x.IsSelected.Value = false;
+                        if (!Keyboard.IsKeyDown(Key.LeftCtrl) && !Keyboard.IsKeyDown(Key.RightCtrl))
+                        {
+                            x.IsSelected.Value = false;
+                        }
                         if ((x as LayerItem).Item.Value is SnapPointViewModel snapPointVM)
                         {
                             snapPointVM.Opacity.Value = 0.5;
@@ -123,6 +129,21 @@ namespace boilersGraphics.ViewModels
                     if (selectedItem.Item.Value is SnapPointViewModel snapPointVM)
                     {
                         snapPointVM.Opacity.Value = 1.0;
+                    }
+                    if (selectedItem.Item.Value is DesignerItemViewModelBase designerItem)
+                    {
+                        if (layerItems.Where(x => x.IsSelected.Value == true).Count() > 1)
+                        {
+                            (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.EdgeColors.Clear();
+                            (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.FillColors.Clear();
+                        }
+                        else
+                        {
+                            (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.EdgeColors.Clear();
+                            (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.FillColors.Clear();
+                            (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.EdgeColors.Add(designerItem.EdgeColor.Value);
+                            (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.FillColors.Add(designerItem.FillColor.Value);
+                        }
                     }
 
                     LayerTreeViewItemBase temp = selectedItem;
