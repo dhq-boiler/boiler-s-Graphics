@@ -76,6 +76,9 @@ namespace boilersGraphics.ViewModels
         {
             list.Except(new BrushViewModel[] { this }).ToList().ForEach(x => x.CloseThicknessDialog());
 
+            if (!(App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.EnableBrushThickness.Value)
+                return;
+
             if (!ThicknessDialogIsOpen.Value)
             {
                 if (RetainedValue != null)
@@ -98,6 +101,11 @@ namespace boilersGraphics.ViewModels
             ThicknessDialogClose?.Invoke(this, new EventArgs());
             list.Remove(this);
             ThicknessDialogIsOpen.Value = false;
+        }
+
+        public static void CloseAllThicknessDialog()
+        {
+            list.ToList().ForEach(x => x.CloseThicknessDialog());
         }
 
         public override object Clone()

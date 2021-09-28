@@ -147,6 +147,9 @@
                                     <MenuItem Command="{Binding SwitchMiniMapCommand}"
                                               Header="ミニマップ"
                                               IsChecked="{Binding DiagramViewModel.EnableMiniMap.Value, Mode=TwoWay}" />
+                                    <MenuItem Command="{Binding SwitchBrushThicknessCommand}"
+                                              Header="ブラシの太さ"
+                                              IsChecked="{Binding DiagramViewModel.EnableBrushThickness.Value, Mode=TwoWay}" />
                                 </MenuItem>
                             </MenuItem>
                             <MenuItem Header="ヘルプ(_H)">

@@ -109,6 +109,8 @@ namespace boilersGraphics.ViewModels
 
         public ReactiveProperty<bool> EnableMiniMap { get; } = new ReactiveProperty<bool>();
 
+        public ReactiveProperty<bool> EnableBrushThickness { get; } = new ReactiveProperty<bool>();
+
         public ReactiveProperty<string> FileName { get; } = new ReactiveProperty<string>();
 
         public ReactiveProperty<Color> CanvasBackground { get; } = new ReactiveProperty<Color>();
