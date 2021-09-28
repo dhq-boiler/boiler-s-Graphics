@@ -119,6 +119,7 @@ namespace boilersGraphics.Views.Behaviors
                         currentBrush.Dispose();
                         currentBrush = null;
                     }
+                    e.MouseDevice.Capture(AssociatedObject);
                     var point = e.GetPosition(AssociatedObject);
                     if (currentBrush == null)
                     {
