@@ -65,6 +65,7 @@ steps:
 # Archive files
 # Compress files into .7z, .tar.gz, or .zip
 - task: ArchiveFiles@2
+  condition: always()
   inputs:
     rootFolderOrFile: '$(System.DefaultWorkingDirectory)\boilersGraphics\bin\Release' 
     includeRootFolder: false
@@ -78,6 +79,7 @@ steps:
 # GitHub Release
 # Create, edit, or delete a GitHub release
 - task: GitHubRelease@0
+  condition: always()
   inputs:
     gitHubConnection: dhq-boiler-azure-devops
     repositoryName: '$(Build.Repository.Name)' 
