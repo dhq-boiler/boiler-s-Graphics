@@ -95,9 +95,21 @@ namespace boilersGraphics.Models
 
         public IObservable<Unit> SelectedLayerItemsChangedAsObservable()
         {
-            return Children.ObserveElementObservableProperty(x => (x as LayerItem).Item.Value.IsSelected)
-                        .ToUnit()
-                        .Merge(Children.CollectionChangedAsObservable().Where(x => x.Action == NotifyCollectionChangedAction.Remove || x.Action == NotifyCollectionChangedAction.Reset).ToUnit());
+            var ox1 = Children
+                .ObserveElementObservableProperty(x => (x as LayerItem).Item.Value.IsSelected)
+                .ToUnit()
+                .Merge(Children.CollectionChangedAsObservable().Where(x => x.Action == NotifyCollectionChangedAction.Remove || x.Action == NotifyCollectionChangedAction.Reset).ToUnit());
+
+            var ox2 = Children.CollectionChangedAsObservable()
+                    .Select(_ => Children.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                        .OfType<LayerItem>()
+                        .Select(x => x.Item.Value)
+                        .OfType<ConnectorBaseViewModel>()
+                        .SelectMany(x => new[] { x.SnapPoint0VM.Value, x.SnapPoint1VM.Value })
+                        .Select(x => x.IsSelected.ToUnit())
+                        .Merge())
+                    .Switch();
+            return ox1.Merge(ox2);
         }
 
         public void AddItem(MainWindowViewModel mainWindowViewModel, DiagramViewModel diagramViewModel, SelectableDesignerItemViewModelBase item)

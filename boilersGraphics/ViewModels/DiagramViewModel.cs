@@ -343,34 +343,33 @@ namespace boilersGraphics.ViewModels
             })
             .AddTo(_CompositeDisposable);
 
-            SelectedItems = Layers.CollectionChangedAsObservable()
-                                  .Select(_ => Layers.Select(x => x.SelectedLayerItemsChangedAsObservable()).Merge()
-                                      .Merge(Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
-                                                   .Where(x => x.GetType() == typeof(LayerItem))
-                                                   .Select(y => (y as LayerItem).Item.Value)
-                                                   .OfType<ConnectorBaseViewModel>()
-                                                   .SelectMany(x => new List<SnapPointViewModel>() { x.SnapPoint0VM.Value, x.SnapPoint1VM.Value })
-                                                   .ToObservableCollection()
-                                                   .ObserveElementProperty(x => x.IsSelected.Value)
-                                                   .ToUnit()))
-                                  .Switch()
-                                  .Select(_ => Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
-                                                     .Where(x => x.GetType() == typeof(LayerItem))
-                                                     .Select(y => (y as LayerItem).Item.Value)
-                                                     .Except(Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
-                                                                   .Where(x => x.GetType() == typeof(LayerItem))
-                                                                   .Select(y => (y as LayerItem).Item.Value)
-                                                                   .OfType<ConnectorBaseViewModel>())
-                                                     .Union(Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
-                                                                  .Where(x => x.GetType() == typeof(LayerItem))
-                                                                  .Select(y => (y as LayerItem).Item.Value)
-                                                                  .OfType<ConnectorBaseViewModel>()
-                                                                  .SelectMany(x => new List<SnapPointViewModel>() { x.SnapPoint0VM.Value, x.SnapPoint1VM.Value })
-                                                            )
-                                                     .Where(z => z.IsSelected.Value == true)
-                                                     .OrderBy(z => z.SelectedOrder.Value)
-                                                     .ToArray())
-                                  .ToReadOnlyReactivePropertySlim(Array.Empty<SelectableDesignerItemViewModelBase>());
+            SelectedItems = Layers
+                .CollectionChangedAsObservable()
+                .Select(_ =>
+                    Layers
+                        .Select(x => x.SelectedLayerItemsChangedAsObservable())
+                        .Merge()
+                )
+                .Switch()
+                .Do(x => Debug.WriteLine("SelectedItems updated"))
+                .Select(_ => Layers
+                    .SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                    .Where(x => x is LayerItem)
+                    .Select(y => (y as LayerItem).Item.Value)
+                    .Except(Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                        .Where(x => x.GetType() == typeof(LayerItem))
+                        .Select(y => (y as LayerItem).Item.Value)
+                        .OfType<ConnectorBaseViewModel>())
+                    .Union(Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                        .Where(x => x.GetType() == typeof(LayerItem))
+                        .Select(y => (y as LayerItem).Item.Value)
+                        .OfType<ConnectorBaseViewModel>()
+                        .SelectMany(x => new[] { x.SnapPoint0VM.Value, x.SnapPoint1VM.Value }.Where(y => y.IsSelected.Value))
+                    )
+                    .Where(z => z.IsSelected.Value == true)
+                    .OrderBy(z => z.SelectedOrder.Value)
+                    .ToArray()
+                ).ToReadOnlyReactivePropertySlim(Array.Empty<SelectableDesignerItemViewModelBase>());
 
             SelectedItems.Subscribe(selectedItems =>
             {
