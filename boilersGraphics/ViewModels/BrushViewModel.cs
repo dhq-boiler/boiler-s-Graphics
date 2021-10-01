@@ -39,9 +39,10 @@ namespace boilersGraphics.ViewModels
             return obj;
         }
 
-        protected BrushViewModel()
+        public BrushViewModel()
             : base()
         {
+            Thickness.Value = RetainedValue;
             Init();
         }
 
