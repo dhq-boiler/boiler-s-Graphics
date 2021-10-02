@@ -68,7 +68,7 @@ namespace boilersGraphics.Views.Behaviors
                     currentBrush = BrushViewModel.CreateInstance();
                     currentBrush.OpenThicknessDialog();
                 }
-                BrushInternal.Down((AssociatedObject.DataContext as DiagramViewModel).MainWindowVM, AssociatedObject, ref currentBrush, e, point);
+                BrushInternal.Down((AssociatedObject.DataContext as DiagramViewModel).MainWindowVM, AssociatedObject, ref currentBrush, () => e.StylusDevice.Capture(AssociatedObject), e, point);
                 downFlag = true;
                 e.Handled = true;
             }
@@ -97,7 +97,7 @@ namespace boilersGraphics.Views.Behaviors
                     currentBrush = BrushViewModel.CreateInstance();
                     currentBrush.OpenThicknessDialog();
                 }
-                BrushInternal.Down((AssociatedObject.DataContext as DiagramViewModel).MainWindowVM, AssociatedObject, ref currentBrush, e, point);
+                BrushInternal.Down((AssociatedObject.DataContext as DiagramViewModel).MainWindowVM, AssociatedObject, ref currentBrush, () => e.TouchDevice.Capture(AssociatedObject), e, point);
                 downFlag = true;
             }
         }
@@ -126,7 +126,7 @@ namespace boilersGraphics.Views.Behaviors
                         currentBrush = BrushViewModel.CreateInstance();
                         currentBrush.OpenThicknessDialog();
                     }
-                    BrushInternal.Down((AssociatedObject.DataContext as DiagramViewModel).MainWindowVM, AssociatedObject, ref currentBrush, e, point);
+                    BrushInternal.Down((AssociatedObject.DataContext as DiagramViewModel).MainWindowVM, AssociatedObject, ref currentBrush, () => e.MouseDevice.Capture(AssociatedObject), e, point);
                     downFlag = true;
                 }
             }
