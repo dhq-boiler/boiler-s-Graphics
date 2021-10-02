@@ -48,7 +48,7 @@ namespace boilersGraphics.Helpers
 
         public static void Down(MainWindowViewModel mainWindowViewModel, DesignerCanvas AssociatedObject, ref BrushViewModel currentBrush, MouseButtonEventArgs e, Point point)
         {
-            var selectedDataContext = (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.AllItems.Value.Where(x => x.IsSelected.Value == true).Select(x => x);
+            var selectedDataContext = mainWindowViewModel.DiagramViewModel.AllItems.Value.Where(x => x.IsSelected.Value == true).Select(x => x);
             var input = AssociatedObject.InputHitTest(point);
             if (selectedDataContext.Count() > 0)
             {
@@ -83,7 +83,7 @@ namespace boilersGraphics.Helpers
 
         public static void Down(MainWindowViewModel mainWindowViewModel, DesignerCanvas AssociatedObject, ref BrushViewModel currentBrush, StylusDownEventArgs e, Point point)
         {
-            var selectedDataContext = (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.AllItems.Value.Where(x => x.IsSelected.Value == true).Select(x => x);
+            var selectedDataContext = mainWindowViewModel.DiagramViewModel.AllItems.Value.Where(x => x.IsSelected.Value == true).Select(x => x);
             var input = AssociatedObject.InputHitTest(point);
             if (selectedDataContext.Count() > 0)
             {
@@ -115,7 +115,7 @@ namespace boilersGraphics.Helpers
 
         public static void Down(MainWindowViewModel mainWindowViewModel, DesignerCanvas AssociatedObject, ref BrushViewModel currentBrush, TouchEventArgs e, Point point)
         {
-            var selectedDataContext = (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.AllItems.Value.Where(x => x.IsSelected.Value == true).Select(x => x);
+            var selectedDataContext = mainWindowViewModel.DiagramViewModel.AllItems.Value.Where(x => x.IsSelected.Value == true).Select(x => x);
             var input = AssociatedObject.InputHitTest(point);
             if (selectedDataContext.Count() > 0)
             {
