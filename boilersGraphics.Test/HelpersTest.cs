@@ -54,10 +54,13 @@ namespace boilersGraphics.Test
         [Test, RequiresThread(System.Threading.ApartmentState.STA)]
         public void BrushInternal_AddNewBrushViewModel()
         {
-            var diagramViewModel = new DiagramViewModel(new MainWindowViewModel(null), 100, 100);
+            var mainWindowViewModel = new MainWindowViewModel(null);
+            var diagramViewModel = mainWindowViewModel.DiagramViewModel;
             var desingerCanvas = new DesignerCanvas();
             desingerCanvas.DataContext = diagramViewModel;
+            diagramViewModel.FillColors.Clear();
             diagramViewModel.FillColors.Add(Colors.Red);
+            diagramViewModel.EdgeColors.Clear();
             diagramViewModel.EdgeColors.Add(Colors.Transparent);
             diagramViewModel.EdgeThickness.Value = 1.0;
             diagramViewModel.Layers.Clear();
@@ -70,8 +73,8 @@ namespace boilersGraphics.Test
 
             BrushInternal.AddNewBrushViewModel(desingerCanvas, ref vm, new System.Windows.Point() { X = 100, Y = 100 });
 
-            Assert.That(vm.Width.Value, Is.EqualTo(100));
-            Assert.That(vm.Height.Value, Is.EqualTo(100));
+            Assert.That(vm.Width.Value, Is.EqualTo(1000));
+            Assert.That(vm.Height.Value, Is.EqualTo(1000));
             Assert.That(vm.EdgeColor.Value, Is.EqualTo(Colors.Transparent));
             Assert.That(vm.FillColor.Value, Is.EqualTo(Colors.Red));
         }
@@ -80,7 +83,7 @@ namespace boilersGraphics.Test
         public void BrushInternal_Draw()
         {
             var mainWindowViewModel = new MainWindowViewModel(null);
-            var diagramViewModel = new DiagramViewModel(mainWindowViewModel, 100, 100);
+            var diagramViewModel = mainWindowViewModel.DiagramViewModel;
             var desingerCanvas = new DesignerCanvas();
             desingerCanvas.DataContext = diagramViewModel;
             diagramViewModel.FillColors.Add(Colors.Red);
@@ -105,7 +108,7 @@ namespace boilersGraphics.Test
         public void BrushInternal_Down()
         {
             var mainWindowViewModel = new MainWindowViewModel(null);
-            var diagramViewModel = new DiagramViewModel(mainWindowViewModel, 100, 100);
+            var diagramViewModel = mainWindowViewModel.DiagramViewModel;
             var designerCanvas = new DesignerCanvas();
             designerCanvas.DataContext = diagramViewModel;
             diagramViewModel.FillColors.Add(Colors.Red);
@@ -128,7 +131,7 @@ namespace boilersGraphics.Test
         public void BrushInternal_Down_2回目()
         {
             var mainWindowViewModel = new MainWindowViewModel(null);
-            var diagramViewModel = new DiagramViewModel(mainWindowViewModel, 100, 100);
+            var diagramViewModel = mainWindowViewModel.DiagramViewModel;
             var designerCanvas = new DesignerCanvas();
             designerCanvas.DataContext = diagramViewModel;
             diagramViewModel.FillColors.Add(Colors.Red);
@@ -153,13 +156,11 @@ namespace boilersGraphics.Test
             Assert.That(vm.PathGeometry.Value.ToString(), Is.EqualTo("M101,99C101,100.104569499662 100.104569499662,101 99,101 97.8954305003384,101 97,100.104569499662 97,99 97,97.8954305003384 97.8954305003384,97 99,97 100.104569499662,97 101,97.8954305003384 101,99z"));
         }
 
-        //
-
         [Test, RequiresThread(System.Threading.ApartmentState.STA)]
         public void EraserInternal_Erase()
         {
             var mainWindowViewModel = new MainWindowViewModel(null);
-            var diagramViewModel = new DiagramViewModel(mainWindowViewModel, 100, 100);
+            var diagramViewModel = mainWindowViewModel.DiagramViewModel;
             var desingerCanvas = new DesignerCanvas();
             desingerCanvas.DataContext = diagramViewModel;
             diagramViewModel.FillColors.Add(Colors.Red);
