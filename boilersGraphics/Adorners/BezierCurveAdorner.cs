@@ -16,7 +16,7 @@ using System.Windows.Media;
 
 namespace boilersGraphics.Adorners
 {
-    class BezierCurveAdorner : Adorner
+    public class BezierCurveAdorner : Adorner
     {
         private DesignerCanvas _designerCanvas;
         private Point? _startPoint;

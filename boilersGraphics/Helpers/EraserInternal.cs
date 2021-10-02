@@ -25,44 +25,14 @@ namespace boilersGraphics.Helpers
             mainWindowViewModel.Recorder.Current.ExecuteSetProperty(currentBrush, "PathGeometry.Value", Geometry.Combine(currentBrush.PathGeometry.Value, GeometryCreator.CreateEllipse(point.X, point.Y, currentBrush.Thickness.Value), GeometryCombineMode.Exclude, null));
         }
 
-        public static void Down(MainWindowViewModel mainWindowViewModel, DesignerCanvas AssociatedObject, ref BrushViewModel currentBrush, MouseButtonEventArgs e, Point point)
+        public static void Down(MainWindowViewModel mainWindowViewModel, DesignerCanvas AssociatedObject, ref BrushViewModel currentBrush, RoutedEventArgs e, Point point)
         {
-            var selectedDataContext = (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.AllItems.Value.Where(x => x.IsSelected.Value == true).Select(x => x);
-            var input = AssociatedObject.InputHitTest(point);
+            var selectedDataContext = mainWindowViewModel.DiagramViewModel.AllItems.Value.Where(x => x.IsSelected.Value == true).Select(x => x);
             if (selectedDataContext.Count() > 0)
             {
-                var views = App.Current.MainWindow.GetChildOfType<DesignerCanvas>().GetCorrespondingViews<FrameworkElement>(selectedDataContext.First()).Where(x => x.GetType() == selectedDataContext.First().GetViewType());
-                if (views.Any())
-                {
-                    Erase(mainWindowViewModel, ref currentBrush, point, views);
-                    e.Handled = true;
-                }
-            }
-        }
-
-        public static void Down(MainWindowViewModel mainWindowViewModel, DesignerCanvas AssociatedObject, ref BrushViewModel currentBrush, StylusDownEventArgs e, Point point)
-        {
-            var selectedDataContext = (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.AllItems.Value.Where(x => x.IsSelected.Value == true).Select(x => x);
-            var input = AssociatedObject.InputHitTest(point);
-            if (selectedDataContext.Count() > 0)
-            {
-                var views = App.Current.MainWindow.GetChildOfType<DesignerCanvas>().GetCorrespondingViews<FrameworkElement>(selectedDataContext.First()).Where(x => x.GetType() == selectedDataContext.First().GetViewType());
-                if (views.Any())
-                {
-                    Erase(mainWindowViewModel, ref currentBrush, point, views);
-                    e.Handled = true;
-                }
-            }
-        }
-
-        public static void Down(MainWindowViewModel mainWindowViewModel, DesignerCanvas AssociatedObject, ref BrushViewModel currentBrush, TouchEventArgs e, Point point)
-        {
-            var selectedDataContext = (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.AllItems.Value.Where(x => x.IsSelected.Value == true).Select(x => x);
-            var input = AssociatedObject.InputHitTest(point);
-            if (selectedDataContext.Count() > 0)
-            {
-                var views = App.Current.MainWindow.GetChildOfType<DesignerCanvas>().GetCorrespondingViews<FrameworkElement>(selectedDataContext.First()).Where(x => x.GetType() == selectedDataContext.First().GetViewType());
-                if (views.Any())
+                var views = AssociatedObject.GetCorrespondingViews<FrameworkElement>(selectedDataContext.First());
+                var filtered = views.Where(x => x.GetType() == selectedDataContext.First().GetViewType());
+                if (filtered.Any())
                 {
                     Erase(mainWindowViewModel, ref currentBrush, point, views);
                     e.Handled = true;

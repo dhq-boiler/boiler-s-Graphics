@@ -87,7 +87,10 @@ namespace boilersGraphics.ViewModels
                         DiagramViewModel.EdgeColors.ToAddOperation(exchange.New.Value).ExecuteTo(Recorder.Current);
                         foreach (var item in DiagramViewModel.SelectedItems.Value.OfType<SelectableDesignerItemViewModelBase>())
                         {
-                            Recorder.Current.ExecuteSetProperty(item, "EdgeColor.Value", exchange.New.Value);
+                            if (item is SnapPointViewModel snapPoint)
+                                Recorder.Current.ExecuteSetProperty(snapPoint.Parent.Value, "EdgeColor.Value", exchange.New.Value);
+                            else
+                                Recorder.Current.ExecuteSetProperty(item, "EdgeColor.Value", exchange.New.Value);
                         }
                         Recorder.EndRecode();
                     }
@@ -152,7 +155,10 @@ namespace boilersGraphics.ViewModels
                     Recorder.BeginRecode();
                     foreach (var item in DiagramViewModel.SelectedItems.Value?.OfType<SelectableDesignerItemViewModelBase>())
                     {
-                        Recorder.Current.ExecuteSetProperty(item, "EdgeThickness.Value", x.Value);
+                        if (item is SnapPointViewModel snapPoint)
+                            Recorder.Current.ExecuteSetProperty(snapPoint.Parent.Value, "EdgeThickness.Value", x.Value);
+                        else
+                            Recorder.Current.ExecuteSetProperty(item, "EdgeThickness.Value", x.Value);
                     }
                     Recorder.EndRecode();
                 }

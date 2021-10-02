@@ -86,6 +86,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AdornerTest.cs" />
     <Compile Include="BoundaryTest.cs" />
     <Compile Include="ConverterTest.cs" />
     <Compile Include="DiagramViewModelTest.cs" />
@@ -93,6 +94,10 @@
     <Compile Include="HelpersTest.cs" />
     <Compile Include="MathTest.cs" />
     <Compile Include="MeasureTest.cs" />
+    <Compile Include="Microsoft.VisualStudio.TestTools.UnitTesting\Helper.cs" />
+    <Compile Include="Microsoft.VisualStudio.TestTools.UnitTesting\PrivateObject.cs" />
+    <Compile Include="Microsoft.VisualStudio.TestTools.UnitTesting\PrivateType.cs" />
+    <Compile Include="Microsoft.VisualStudio.TestTools.UnitTesting\RuntimeTypeHelper.cs" />
     <Compile Include="ObjectDeserializerTest.cs" />
     <Compile Include="OrderingTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

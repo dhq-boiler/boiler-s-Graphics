@@ -2,6 +2,7 @@
 using boilersGraphics.Extensions;
 using boilersGraphics.Models;
 using boilersGraphics.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
@@ -46,16 +47,15 @@ namespace boilersGraphics.Helpers
             mainWindowViewModel.Recorder.Current.ExecuteSetProperty(currentBrush, "PathGeometry.Value", Geometry.Combine(currentBrush.PathGeometry.Value, GeometryCreator.CreateEllipse(point.X, point.Y, currentBrush.Thickness.Value), GeometryCombineMode.Union, null));
         }
 
-        public static void Down(MainWindowViewModel mainWindowViewModel, DesignerCanvas AssociatedObject, ref BrushViewModel currentBrush, MouseButtonEventArgs e, Point point)
+        public static void Down(MainWindowViewModel mainWindowViewModel, DesignerCanvas AssociatedObject, ref BrushViewModel currentBrush, Action captureAction, RoutedEventArgs e, Point point)
         {
-            var selectedDataContext = (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.AllItems.Value.Where(x => x.IsSelected.Value == true).Select(x => x);
-            var input = AssociatedObject.InputHitTest(point);
+            var selectedDataContext = mainWindowViewModel.DiagramViewModel.AllItems.Value.Where(x => x.IsSelected.Value == true).Select(x => x);
             if (selectedDataContext.Count() > 0)
             {
-                var views = App.Current.MainWindow.GetChildOfType<DesignerCanvas>().GetCorrespondingViews<FrameworkElement>(selectedDataContext.First()).Where(x => x.GetType() == selectedDataContext.First().GetViewType());
+                var views = AssociatedObject.GetCorrespondingViews<FrameworkElement>(selectedDataContext.First()).Where(x => x.GetType() == selectedDataContext.First().GetViewType());
                 if (!views.Any())
                 {
-                    e.MouseDevice.Capture(AssociatedObject);
+                    captureAction.Invoke();
                     currentBrush = BrushViewModel.CreateInstance();
                     AddNewBrushViewModel(AssociatedObject, ref currentBrush, point);
                 }
@@ -75,72 +75,8 @@ namespace boilersGraphics.Helpers
             }
             else
             {
-                e.MouseDevice.Capture(AssociatedObject);
+                captureAction.Invoke();
                 currentBrush = BrushViewModel.CreateInstance();
-                AddNewBrushViewModel(AssociatedObject, ref currentBrush, point);
-            }
-        }
-
-        public static void Down(MainWindowViewModel mainWindowViewModel, DesignerCanvas AssociatedObject, ref BrushViewModel currentBrush, StylusDownEventArgs e, Point point)
-        {
-            var selectedDataContext = (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.AllItems.Value.Where(x => x.IsSelected.Value == true).Select(x => x);
-            var input = AssociatedObject.InputHitTest(point);
-            if (selectedDataContext.Count() > 0)
-            {
-                var views = App.Current.MainWindow.GetChildOfType<DesignerCanvas>().GetCorrespondingViews<FrameworkElement>(selectedDataContext.First()).Where(x => x.GetType() == selectedDataContext.First().GetViewType());
-                if (!views.Any())
-                {
-                    e.StylusDevice.Capture(AssociatedObject);
-                    AddNewBrushViewModel(AssociatedObject, ref currentBrush, point);
-                }
-                else
-                {
-                    if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
-                    {
-                        BrushInternal.Draw(mainWindowViewModel, ref currentBrush, point, views);
-                    }
-                    else
-                    {
-                        AddNewBrushViewModel(AssociatedObject, ref currentBrush, point);
-                    }
-                    e.Handled = true;
-                }
-            }
-            else
-            {
-                e.StylusDevice.Capture(AssociatedObject);
-                AddNewBrushViewModel(AssociatedObject, ref currentBrush, point);
-            }
-        }
-
-        public static void Down(MainWindowViewModel mainWindowViewModel, DesignerCanvas AssociatedObject, ref BrushViewModel currentBrush, TouchEventArgs e, Point point)
-        {
-            var selectedDataContext = (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.AllItems.Value.Where(x => x.IsSelected.Value == true).Select(x => x);
-            var input = AssociatedObject.InputHitTest(point);
-            if (selectedDataContext.Count() > 0)
-            {
-                var views = App.Current.MainWindow.GetChildOfType<DesignerCanvas>().GetCorrespondingViews<FrameworkElement>(selectedDataContext.First()).Where(x => x.GetType() == selectedDataContext.First().GetViewType());
-                if (!views.Any())
-                {
-                    e.TouchDevice.Capture(AssociatedObject);
-                    AddNewBrushViewModel(AssociatedObject, ref currentBrush, point);
-                }
-                else
-                {
-                    if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
-                    {
-                        Draw(mainWindowViewModel, ref currentBrush, point, views);
-                    }
-                    else
-                    {
-                        AddNewBrushViewModel(AssociatedObject, ref currentBrush, point);
-                    }
-                    e.Handled = true;
-                }
-            }
-            else
-            {
-                e.TouchDevice.Capture(AssociatedObject);
                 AddNewBrushViewModel(AssociatedObject, ref currentBrush, point);
             }
         }
