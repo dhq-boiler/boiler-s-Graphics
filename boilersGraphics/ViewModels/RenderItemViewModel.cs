@@ -9,34 +9,34 @@ namespace boilersGraphics.ViewModels
     {
         public RenderItem Model { get; set; }
 
-        public ReactiveProperty<double> X { get; set; }
+        public ReadOnlyReactivePropertySlim<double> X { get; set; }
 
-        public ReactiveProperty<double> Y { get; set; }
+        public ReadOnlyReactivePropertySlim<double> Y { get; set; }
 
-        public ReactiveProperty<double> Width { get; set; }
+        public ReadOnlyReactivePropertySlim<double> Width { get; set; }
 
-        public ReactiveProperty<double> Height { get; set; }
+        public ReadOnlyReactivePropertySlim<double> Height { get; set; }
 
-        public ReactiveProperty<bool> IsSelected { get; set; }
+        public ReadOnlyReactivePropertySlim<bool> IsSelected { get; set; }
 
         public RenderItemViewModel(RenderItem model)
         {
             Model = model;
             X = Model
                 .ObserveProperty(x => x.X)
-                .ToReactiveProperty();
+                .ToReadOnlyReactivePropertySlim();
             Y = Model
                 .ObserveProperty(x => x.Y)
-                .ToReactiveProperty();
+                .ToReadOnlyReactivePropertySlim();
             Width = Model
                 .ObserveProperty(x => x.Width)
-                .ToReactiveProperty();
+                .ToReadOnlyReactivePropertySlim();
             Height = Model
                 .ObserveProperty(x => x.Height)
-                .ToReactiveProperty();
+                .ToReadOnlyReactivePropertySlim();
             IsSelected = Model
                 .ObserveProperty(x => x.IsSelected)
-                .ToReactiveProperty();
+                .ToReadOnlyReactivePropertySlim();
         }
     }
 }

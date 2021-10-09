@@ -7,24 +7,24 @@ namespace boilersGraphics.ViewModels
 {
     internal class StraightLineViewModel : RenderItemViewModel
     {
-        public ReactiveProperty<double> X2 { get; set; }
+        public ReadOnlyReactivePropertySlim<double> X2 { get; set; }
 
-        public ReactiveProperty<double> Y2 { get; set; }
+        public ReadOnlyReactivePropertySlim<double> Y2 { get; set; }
 
-        public ReactiveProperty<Brush> Brush { get; set; }
+        public ReadOnlyReactivePropertySlim<Brush> Brush { get; set; }
 
         public StraightLineViewModel(StraightLine model)
             : base(model)
         {
             X2 = model
                 .ObserveProperty(x => x.X2)
-                .ToReactiveProperty();
+                .ToReadOnlyReactivePropertySlim();
             Y2 = model
                 .ObserveProperty(x => x.Y2)
-                .ToReactiveProperty();
+                .ToReadOnlyReactivePropertySlim();
             Brush = model
                 .ObserveProperty(x => x.Brush)
-                .ToReactiveProperty();
+                .ToReadOnlyReactivePropertySlim();
         }
     }
 }

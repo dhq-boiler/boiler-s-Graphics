@@ -6,13 +6,13 @@ namespace boilersGraphics.Models
 {
     public class Corner : BindableBase
     {
-        public ReactiveProperty<int> Number { get; set; } = new ReactiveProperty<int>();
+        public ReactivePropertySlim<int> Number { get; set; } = new ReactivePropertySlim<int>();
 
-        public ReactiveProperty<double> Radius { get; set; } = new ReactiveProperty<double>();
+        public ReactivePropertySlim<double> Radius { get; set; } = new ReactivePropertySlim<double>();
 
-        public ReactiveProperty<double> Angle { get; set; } = new ReactiveProperty<double>();
+        public ReactivePropertySlim<double> Angle { get; set; } = new ReactivePropertySlim<double>();
 
-        public ReactiveProperty<Point> Point { get; set; } = new ReactiveProperty<Point>();
+        public ReactivePropertySlim<Point> Point { get; set; } = new ReactivePropertySlim<Point>();
 
         public override bool Equals(object obj)
         {

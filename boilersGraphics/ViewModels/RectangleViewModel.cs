@@ -7,19 +7,19 @@ namespace boilersGraphics.ViewModels
 {
     internal class RectangleViewModel : RenderItemViewModel
     {
-        public ReactiveProperty<Brush> Stroke { get; set; }
+        public ReadOnlyReactivePropertySlim<Brush> Stroke { get; set; }
 
-        public ReactiveProperty<Brush> Fill { get; set; }
+        public ReadOnlyReactivePropertySlim<Brush> Fill { get; set; }
 
         public RectangleViewModel(Rectangle model)
             : base(model)
         {
             Stroke = model
                 .ObserveProperty(x => x.Stroke)
-                .ToReactiveProperty();
+                .ToReadOnlyReactivePropertySlim();
             Fill = model
                 .ObserveProperty(x => x.Fill)
-                .ToReactiveProperty();
+                .ToReadOnlyReactivePropertySlim();
         }
     }
 }

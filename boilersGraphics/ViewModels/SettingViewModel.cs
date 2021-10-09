@@ -21,11 +21,11 @@ namespace boilersGraphics.ViewModels
         private bool disposedValue;
         private CompositeDisposable _disposables = new CompositeDisposable();
 
-        public ReactiveProperty<ReactiveCommand> OkCommand { get; set; } = new ReactiveProperty<ReactiveCommand>();
+        public ReactivePropertySlim<ReactiveCommand> OkCommand { get; set; } = new ReactivePropertySlim<ReactiveCommand>();
         public ReactiveCommand CancelCommand { get; set; }
         public ReactiveCommand ChangeCanvasBackgroundCommand { get; set; } = new ReactiveCommand();
 
-        public ReactiveProperty<Models.Setting> EditTarget { get; set; } = new ReactiveProperty<Models.Setting>();
+        public ReactivePropertySlim<Models.Setting> EditTarget { get; set; } = new ReactivePropertySlim<Models.Setting>();
 
         public SettingViewModel(IDialogService dialogService)
         {

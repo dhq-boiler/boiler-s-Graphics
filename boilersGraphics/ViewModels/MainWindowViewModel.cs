@@ -182,15 +182,15 @@ namespace boilersGraphics.ViewModels
             set { SetProperty(ref _ToolBarViewModel, value); }
         }
 
-        public ReactiveProperty<string> CurrentOperation { get; } = new ReactiveProperty<string>();
+        public ReactivePropertySlim<string> CurrentOperation { get; } = new ReactivePropertySlim<string>();
 
-        public ReactiveProperty<string> Details { get; } = new ReactiveProperty<string>();
+        public ReactivePropertySlim<string> Details { get; } = new ReactivePropertySlim<string>();
 
-        public ReactiveProperty<double> SnapPower { get; } = new ReactiveProperty<double>();
+        public ReactivePropertySlim<double> SnapPower { get; } = new ReactivePropertySlim<double>();
 
         public ReactiveCollection<double> EdgeThicknessOptions { get; } = new ReactiveCollection<double>();
 
-        public ReactiveProperty<string> Title { get; } = new ReactiveProperty<string>();
+        public ReactivePropertySlim<string> Title { get; } = new ReactivePropertySlim<string>();
 
         public IOperationController Controller { get; } = new OperationController();
 

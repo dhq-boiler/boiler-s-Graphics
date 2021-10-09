@@ -11,10 +11,10 @@ namespace boilersGraphics.Models
 {
     class Setting : BindableBase
     {
-        public ReactiveProperty<int> Width { get; set; } = new ReactiveProperty<int>();
-        public ReactiveProperty<int> Height { get; set; } = new ReactiveProperty<int>();
-        public ReactiveProperty<Color> CanvasBackground { get; set; } = new ReactiveProperty<Color>();
-        public ReactiveProperty<bool> EnablePointSnap { get; set; } = new ReactiveProperty<bool>();
-        public ReactiveProperty<double> SnapPower { get; set; } = new ReactiveProperty<double>();
+        public ReactivePropertySlim<int> Width { get; set; } = new ReactivePropertySlim<int>();
+        public ReactivePropertySlim<int> Height { get; set; } = new ReactivePropertySlim<int>();
+        public ReactivePropertySlim<Color> CanvasBackground { get; set; } = new ReactivePropertySlim<Color>();
+        public ReactivePropertySlim<bool> EnablePointSnap { get; set; } = new ReactivePropertySlim<bool>();
+        public ReactivePropertySlim<double> SnapPower { get; set; } = new ReactivePropertySlim<double>();
     }
 }

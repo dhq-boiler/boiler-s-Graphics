@@ -482,23 +482,23 @@ namespace boilersGraphics.ViewModels
         /// <summary>
         /// 0 ≦ Hue ≦ 180
         /// </summary>
-        public ReactiveProperty<byte> Hue { get; } = new ReactiveProperty<byte>();
+        public ReactivePropertySlim<byte> Hue { get; } = new ReactivePropertySlim<byte>();
 
-        public ReactiveProperty<byte> Saturation { get; } = new ReactiveProperty<byte>();
+        public ReactivePropertySlim<byte> Saturation { get; } = new ReactivePropertySlim<byte>();
 
-        public ReactiveProperty<byte> Value { get; } = new ReactiveProperty<byte>();
+        public ReactivePropertySlim<byte> Value { get; } = new ReactivePropertySlim<byte>();
 
-        public ReactiveProperty<byte> A { get; } = new ReactiveProperty<byte>();
+        public ReactivePropertySlim<byte> A { get; } = new ReactivePropertySlim<byte>();
 
-        public ReactiveProperty<byte> R { get; } = new ReactiveProperty<byte>();
+        public ReactivePropertySlim<byte> R { get; } = new ReactivePropertySlim<byte>();
 
-        public ReactiveProperty<byte> G { get; } = new ReactiveProperty<byte>();
+        public ReactivePropertySlim<byte> G { get; } = new ReactivePropertySlim<byte>();
 
-        public ReactiveProperty<byte> B { get; } = new ReactiveProperty<byte>();
+        public ReactivePropertySlim<byte> B { get; } = new ReactivePropertySlim<byte>();
 
-        public ReactiveProperty<Color> Color { get; } = new ReactiveProperty<Color>();
+        public ReactivePropertySlim<Color> Color { get; } = new ReactivePropertySlim<Color>();
 
-        public ReactiveProperty<Color> Output { get; } = new ReactiveProperty<Color>();
+        public ReactivePropertySlim<Color> Output { get; } = new ReactivePropertySlim<Color>();
 
         public ReactiveCommand OkCommand { get; }
 

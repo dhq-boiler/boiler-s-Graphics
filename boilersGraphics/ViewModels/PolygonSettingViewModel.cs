@@ -28,14 +28,14 @@ namespace boilersGraphics.ViewModels
 
         public event Action<IDialogResult> RequestClose;
 
-        public ReactiveProperty<string> Data { get; private set; } = new ReactiveProperty<string>();
-        public ReactiveProperty<double> StartPointX { get; private set; } = new ReactiveProperty<double>();
-        public ReactiveProperty<double> StartPointY { get; private set; } = new ReactiveProperty<double>();
+        public ReactivePropertySlim<string> Data { get; private set; } = new ReactivePropertySlim<string>();
+        public ReactivePropertySlim<double> StartPointX { get; private set; } = new ReactivePropertySlim<double>();
+        public ReactivePropertySlim<double> StartPointY { get; private set; } = new ReactivePropertySlim<double>();
 
-        public ReactiveProperty<Point> StartPoint { get; private set; } = new ReactiveProperty<Point>();
+        public ReactivePropertySlim<Point> StartPoint { get; private set; } = new ReactivePropertySlim<Point>();
         public ObservableCollection<Corner> Corners { get; private set; } = new ObservableCollection<Corner>();
 
-        public ReactiveProperty<bool> IsClosed { get; private set; } = new ReactiveProperty<bool>();
+        public ReactivePropertySlim<bool> IsClosed { get; private set; } = new ReactivePropertySlim<bool>();
 
         public ReactiveCommand AddCornerCommand { get; } = new ReactiveCommand();
 

@@ -27,9 +27,9 @@ namespace boilersGraphics.ViewModels
         private bool disposedValue;
         private CompositeDisposable _disposables = new CompositeDisposable();
 
-        public ReactiveProperty<string> Path { get; set; } = new ReactiveProperty<string>();
+        public ReactivePropertySlim<string> Path { get; set; } = new ReactivePropertySlim<string>();
 
-        public ReactiveProperty<int> QualityLevel { get; set; } = new ReactiveProperty<int>(100);
+        public ReactivePropertySlim<int> QualityLevel { get; set; } = new ReactivePropertySlim<int>(100);
 
         public ReactiveCommand PathFinderCommand { get; set; }
 

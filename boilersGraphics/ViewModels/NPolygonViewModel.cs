@@ -52,7 +52,7 @@ namespace boilersGraphics.ViewModels
             .AddTo(_CompositeDisposable);
         }
 
-        public ReactiveProperty<string> Data { get; set; } = new ReactiveProperty<string>();
+        public ReactivePropertySlim<string> Data { get; set; } = new ReactivePropertySlim<string>();
 
         public override PathGeometry CreateGeometry()
         {

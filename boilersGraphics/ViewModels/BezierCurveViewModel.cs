@@ -17,11 +17,11 @@ namespace boilersGraphics.ViewModels
 {
     public class BezierCurveViewModel : ConnectorBaseViewModel
     {
-        public ReactiveProperty<Point> ControlPoint1 { get; set; } = new ReactiveProperty<Point>();
-        public ReactiveProperty<Point> ControlPoint2 { get; set; } = new ReactiveProperty<Point>();
+        public ReactivePropertySlim<Point> ControlPoint1 { get; set; } = new ReactivePropertySlim<Point>();
+        public ReactivePropertySlim<Point> ControlPoint2 { get; set; } = new ReactivePropertySlim<Point>();
 
-        public ReactiveProperty<Point> ControlLine1LeftTop { get; set; } = new ReactiveProperty<Point>();
-        public ReactiveProperty<Point> ControlLine2LeftTop { get; set; } = new ReactiveProperty<Point>();
+        public ReactivePropertySlim<Point> ControlLine1LeftTop { get; set; } = new ReactivePropertySlim<Point>();
+        public ReactivePropertySlim<Point> ControlLine2LeftTop { get; set; } = new ReactivePropertySlim<Point>();
 
         public BezierCurveViewModel(int id, IDiagramViewModel parent)
             : base(id, parent)
