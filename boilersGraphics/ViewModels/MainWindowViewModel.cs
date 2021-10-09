@@ -21,8 +21,11 @@ namespace boilersGraphics.ViewModels
         private CompositeDisposable _CompositeDisposable = new CompositeDisposable();
         private IDialogService dlgService = null;
 
+        public static MainWindowViewModel Instance { get; set; }
+
         public MainWindowViewModel(IDialogService dialogService)
         {
+            Instance = this;
             this.dlgService = dialogService;
 
             Recorder = new OperationRecorder(Controller);
@@ -224,6 +227,7 @@ namespace boilersGraphics.ViewModels
         public void Dispose()
         {
             _CompositeDisposable.Dispose();
+            Instance = null;
         }
 
         #endregion //IDisposable
