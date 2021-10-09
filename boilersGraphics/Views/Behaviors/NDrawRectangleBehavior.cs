@@ -8,7 +8,7 @@ using System.Windows.Input;
 
 namespace boilersGraphics.Views.Behaviors
 {
-    internal class NDrawRectangleBehavior : Behavior<DesignerCanvas>
+    public class NDrawRectangleBehavior : Behavior<DesignerCanvas>
     {
         private Point? _rectangleStartPoint;
         private SnapAction snapAction;

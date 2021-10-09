@@ -8,7 +8,7 @@ using System.Windows.Input;
 
 namespace boilersGraphics.Views.Behaviors
 {
-    internal class NDrawEllipseBehavior : Behavior<DesignerCanvas>
+    public class NDrawEllipseBehavior : Behavior<DesignerCanvas>
     {
         private Point? _rectangleStartPoint;
         private SnapAction snapAction;

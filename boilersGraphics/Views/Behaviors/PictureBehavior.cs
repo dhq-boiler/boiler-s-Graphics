@@ -9,7 +9,7 @@ using System.Windows.Input;
 
 namespace boilersGraphics.Views.Behaviors
 {
-    internal class PictureBehavior : Behavior<DesignerCanvas>
+    public class PictureBehavior : Behavior<DesignerCanvas>
     {
         private Point? _pictureDrawingStartPoint = null;
         private string _filename;

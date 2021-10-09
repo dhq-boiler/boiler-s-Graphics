@@ -8,7 +8,7 @@ using System.Windows.Input;
 
 namespace boilersGraphics.Views.Behaviors
 {
-    internal class LetterBehavior : Behavior<DesignerCanvas>
+    public class LetterBehavior : Behavior<DesignerCanvas>
     {
         private Point? _pictureDrawingStartPoint = null;
         public LetterBehavior()

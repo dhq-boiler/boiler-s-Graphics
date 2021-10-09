@@ -8,7 +8,7 @@ using System.Windows.Input;
 
 namespace boilersGraphics.Views.Behaviors
 {
-    internal class NDrawStraightLineBehavior : Behavior<DesignerCanvas>
+    public class NDrawStraightLineBehavior : Behavior<DesignerCanvas>
     {
         private Point? _straightLineStartPoint;
         private SnapAction snapAction;

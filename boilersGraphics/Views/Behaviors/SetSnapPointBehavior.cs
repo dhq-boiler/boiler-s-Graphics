@@ -5,7 +5,7 @@ using System.Windows.Input;
 
 namespace boilersGraphics.Views.Behaviors
 {
-    class SetSnapPointBehavior : Behavior<DesignerCanvas>
+    public class SetSnapPointBehavior : Behavior<DesignerCanvas>
     {
         protected override void OnAttached()
         {

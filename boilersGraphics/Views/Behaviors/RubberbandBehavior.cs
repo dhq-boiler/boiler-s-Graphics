@@ -13,7 +13,7 @@ using Microsoft.Xaml.Behaviors;
 
 namespace boilersGraphics.Views.Behaviors
 {
-    internal class RubberbandBehavior : Behavior<DesignerCanvas>
+    public class RubberbandBehavior : Behavior<DesignerCanvas>
     {
         private Point? _rubberbandSelectionStartPoint = null;
 

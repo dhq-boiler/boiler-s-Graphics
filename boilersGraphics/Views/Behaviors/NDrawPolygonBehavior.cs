@@ -10,7 +10,7 @@ using System.Windows.Input;
 
 namespace boilersGraphics.Views.Behaviors
 {
-    internal class NDrawPolygonBehavior : Behavior<DesignerCanvas>
+    public class NDrawPolygonBehavior : Behavior<DesignerCanvas>
     {
         private Point? _polygonDrawingStartPoint = null;
         private SnapAction snapAction;
