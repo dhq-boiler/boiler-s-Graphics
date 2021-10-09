@@ -2,9 +2,11 @@
 using Prism.Mvvm;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
+using System;
 
 namespace boilersGraphics.ViewModels
 {
+    [Obsolete]
     public class RenderItemViewModel : BindableBase
     {
         public RenderItem Model { get; set; }

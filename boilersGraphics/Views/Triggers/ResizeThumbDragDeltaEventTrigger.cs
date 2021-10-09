@@ -5,6 +5,7 @@ using System.Windows.Controls.Primitives;
 
 namespace boilersGraphics.Views.Triggers
 {
+    [Obsolete]
     internal class ResizeThumbDragDeltaEventTrigger : Microsoft.Xaml.Behaviors.EventTrigger
     {
         public ResizeThumbDragDeltaEventTrigger()

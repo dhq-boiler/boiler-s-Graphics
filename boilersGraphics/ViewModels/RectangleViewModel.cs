@@ -1,10 +1,12 @@
 ﻿using boilersGraphics.Models;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
+using System;
 using System.Windows.Media;
 
 namespace boilersGraphics.ViewModels
 {
+    [Obsolete]
     internal class RectangleViewModel : RenderItemViewModel
     {
         public ReadOnlyReactivePropertySlim<Brush> Stroke { get; set; }
