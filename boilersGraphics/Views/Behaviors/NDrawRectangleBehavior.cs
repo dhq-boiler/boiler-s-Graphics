@@ -1,18 +1,14 @@
 ﻿using boilersGraphics.Controls;
+using boilersGraphics.Helpers;
 using boilersGraphics.ViewModels;
+using Microsoft.Xaml.Behaviors;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
-using Microsoft.Xaml.Behaviors;
-using boilersGraphics.Extensions;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using boilersGraphics.Helpers;
 
 namespace boilersGraphics.Views.Behaviors
 {
-    internal class NDrawRectangleBehavior : Behavior<DesignerCanvas>
+    public class NDrawRectangleBehavior : Behavior<DesignerCanvas>
     {
         private Point? _rectangleStartPoint;
         private SnapAction snapAction;

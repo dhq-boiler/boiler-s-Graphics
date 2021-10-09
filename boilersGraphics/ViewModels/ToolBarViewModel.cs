@@ -27,60 +27,69 @@ namespace boilersGraphics.ViewModels
 
         public ReactivePropertySlim<bool> CurrentHitTestVisibleState { get; } = new ReactivePropertySlim<bool>();
 
+        public DeselectBehavior DeselectBehavior { get; } = new DeselectBehavior();
+        public RubberbandBehavior RubberbandBehavior { get; } = new RubberbandBehavior();
+        public NDrawStraightLineBehavior NDrawStraightLineBehavior { get; } = new NDrawStraightLineBehavior();
+        public NDrawRectangleBehavior NDrawRectangleBehavior { get; } = new NDrawRectangleBehavior();
+        public NDrawEllipseBehavior NDrawEllipseBehavior { get; } = new NDrawEllipseBehavior();
+        public PictureBehavior PictureBehavior { get; private set; }
+        public LetterBehavior LetterBehavior { get; } = new LetterBehavior();
+        public LetterVerticalBehavior LetterVerticalBehavior { get; } = new LetterVerticalBehavior();
+        public NDrawPolygonBehavior NDrawPolygonBehavior { get; private set; }
+        public NDrawBezierCurveBehavior NDrawBezierCurveBehavior { get; } = new NDrawBezierCurveBehavior();
+        public SetSnapPointBehavior SetSnapPointBehavior { get; } = new SetSnapPointBehavior();
+        public BrushBehavior BrushBehavior { get; private set; }
+        public EraserBehavior EraserBehavior { get; } = new EraserBehavior();
+
         public ToolBarViewModel(IDialogService dialogService)
         {
             this.dlgService = dialogService;
             ToolItems.Add(new ToolItemData("pointer", "pack://application:,,,/Assets/img/pointer.png", new DelegateCommand(() =>
             {
-                var deselectBehavior = new DeselectBehavior();
                 Behaviors.Clear();
-                if (!Behaviors.Contains(deselectBehavior))
+                if (!Behaviors.Contains(DeselectBehavior))
                 {
-                    Behaviors.Add(deselectBehavior);
+                    Behaviors.Add(DeselectBehavior);
                 }
                 ChangeHitTestToEnable();
                 SelectOneToolItem("pointer");
             })));
             ToolItems.Add(new ToolItemData("rubberband", "pack://application:,,,/Assets/img/rubberband.png", new DelegateCommand(() =>
             {
-                var behavior = new RubberbandBehavior();
                 Behaviors.Clear();
-                if (!Behaviors.Contains(behavior))
+                if (!Behaviors.Contains(RubberbandBehavior))
                 {
-                    Behaviors.Add(behavior);
+                    Behaviors.Add(RubberbandBehavior);
                 }
                 ChangeHitTestToEnable();
                 SelectOneToolItem("rubberband");
             })));
             ToolItems.Add(new ToolItemData("straightline", "pack://application:,,,/Assets/img/straightline.png", new DelegateCommand(() =>
             {
-                var behavior = new NDrawStraightLineBehavior();
                 Behaviors.Clear();
-                if (!Behaviors.Contains(behavior))
+                if (!Behaviors.Contains(NDrawStraightLineBehavior))
                 {
-                    Behaviors.Add(behavior);
+                    Behaviors.Add(NDrawStraightLineBehavior);
                 }
                 ChangeHitTestToDisable();
                 SelectOneToolItem("straightline");
             })));
             ToolItems.Add(new ToolItemData("rectangle", "pack://application:,,,/Assets/img/rectangle.png", new DelegateCommand(() =>
             {
-                var behavior = new NDrawRectangleBehavior();
                 Behaviors.Clear();
-                if (!Behaviors.Contains(behavior))
+                if (!Behaviors.Contains(NDrawRectangleBehavior))
                 {
-                    Behaviors.Add(behavior);
+                    Behaviors.Add(NDrawRectangleBehavior);
                 }
                 ChangeHitTestToDisable();
                 SelectOneToolItem("rectangle");
             })));
             ToolItems.Add(new ToolItemData("ellipse", "pack://application:,,,/Assets/img/ellipse.png", new DelegateCommand(() =>
             {
-                var behavior = new NDrawEllipseBehavior();
                 Behaviors.Clear();
-                if (!Behaviors.Contains(behavior))
+                if (!Behaviors.Contains(NDrawEllipseBehavior))
                 {
-                    Behaviors.Add(behavior);
+                    Behaviors.Add(NDrawEllipseBehavior);
                 }
                 ChangeHitTestToDisable();
                 SelectOneToolItem("ellipse");
@@ -93,11 +102,11 @@ namespace boilersGraphics.ViewModels
                 if (dialog.ShowDialog() == true)
                 {
                     var bitmap = BitmapFactory.FromStream(new FileStream(dialog.FileName, FileMode.Open, FileAccess.Read));
-                    var behavior = new PictureBehavior(dialog.FileName, bitmap.Width, bitmap.Height);
+                    PictureBehavior = new PictureBehavior(dialog.FileName, bitmap.Width, bitmap.Height);
                     Behaviors.Clear();
-                    if (!Behaviors.Contains(behavior))
+                    if (!Behaviors.Contains(PictureBehavior))
                     {
-                        Behaviors.Add(behavior);
+                        Behaviors.Add(PictureBehavior);
                     }
                     ChangeHitTestToDisable();
                     SelectOneToolItem("picture");
@@ -105,22 +114,20 @@ namespace boilersGraphics.ViewModels
             })));
             ToolItems.Add(new ToolItemData("letter", "pack://application:,,,/Assets/img/A.png", new DelegateCommand(() =>
             {
-                var behavior = new LetterBehavior();
                 Behaviors.Clear();
-                if (!Behaviors.Contains(behavior))
+                if (!Behaviors.Contains(LetterBehavior))
                 {
-                    Behaviors.Add(behavior);
+                    Behaviors.Add(LetterBehavior);
                 }
                 ChangeHitTestToDisable();
                 SelectOneToolItem("letter");
             })));
             ToolItems.Add(new ToolItemData("letter-vertical", "pack://application:,,,/Assets/img/A_Vertical.png", new DelegateCommand(() =>
             {
-                var behavior = new LetterVerticalBehavior();
                 Behaviors.Clear();
-                if (!Behaviors.Contains(behavior))
+                if (!Behaviors.Contains(LetterVerticalBehavior))
                 {
-                    Behaviors.Add(behavior);
+                    Behaviors.Add(LetterVerticalBehavior);
                 }
                 ChangeHitTestToDisable();
                 SelectOneToolItem("letter-vertical");
@@ -134,11 +141,11 @@ namespace boilersGraphics.ViewModels
                     var corners = result.Parameters.GetValue<ObservableCollection<Corner>>("Corners");
                     var data = result.Parameters.GetValue<string>("Data");
                     var startPoint = result.Parameters.GetValue<Point>("StartPoint");
-                    var behavior = new NDrawPolygonBehavior(corners, data, startPoint);
+                    NDrawPolygonBehavior = new NDrawPolygonBehavior(corners, data, startPoint);
                     Behaviors.Clear();
-                    if (!Behaviors.Contains(behavior))
+                    if (!Behaviors.Contains(NDrawPolygonBehavior))
                     {
-                        Behaviors.Add(behavior);
+                        Behaviors.Add(NDrawPolygonBehavior);
                     }
                     ChangeHitTestToDisable();
                     SelectOneToolItem("polygon");
@@ -146,45 +153,42 @@ namespace boilersGraphics.ViewModels
             })));
             ToolItems.Add(new ToolItemData("bezier", "pack://application:,,,/Assets/img/BezierCurve.png", new DelegateCommand(() =>
             {
-                var behavior = new NDrawBezierCurveBehavior();
                 Behaviors.Clear();
-                if (!Behaviors.Contains(behavior))
+                if (!Behaviors.Contains(NDrawBezierCurveBehavior))
                 {
-                    Behaviors.Add(behavior);
+                    Behaviors.Add(NDrawBezierCurveBehavior);
                 }
                 ChangeHitTestToDisable();
                 SelectOneToolItem("bezier");
             })));
             ToolItems.Add(new ToolItemData("snappoint", "pack://application:,,,/Assets/img/SnapPoint.png", new DelegateCommand(() =>
             {
-                var behavior = new SetSnapPointBehavior();
                 Behaviors.Clear();
-                if (!Behaviors.Contains(behavior))
+                if (!Behaviors.Contains(SetSnapPointBehavior))
                 {
-                    Behaviors.Add(behavior);
+                    Behaviors.Add(SetSnapPointBehavior);
                 }
                 ChangeHitTestToDisable();
                 SelectOneToolItem("snappoint");
             })));
             ToolItems.Add(new ToolItemData("brush", "pack://application:,,,/Assets/img/brush.png", new DelegateCommand(() =>
             {
-                var behavior = new BrushBehavior(dlgService);
-                behavior.CurrentBrush.OpenThicknessDialog();
+                BrushBehavior = new BrushBehavior(dlgService);
+                BrushBehavior.CurrentBrush.OpenThicknessDialog();
                 Behaviors.Clear();
-                if (!Behaviors.Contains(behavior))
+                if (!Behaviors.Contains(BrushBehavior))
                 {
-                    Behaviors.Add(behavior);
+                    Behaviors.Add(BrushBehavior);
                 }
                 ChangeHitTestToDisable();
                 SelectOneToolItem("brush");
             })));
             ToolItems.Add(new ToolItemData("eraser", "pack://application:,,,/Assets/img/eraser.png", new DelegateCommand(() =>
             {
-                var behavior = new EraserBehavior();
                 Behaviors.Clear();
-                if (!Behaviors.Contains(behavior))
+                if (!Behaviors.Contains(EraserBehavior))
                 {
-                    Behaviors.Add(behavior);
+                    Behaviors.Add(EraserBehavior);
                 }
                 ChangeHitTestToDisable();
                 SelectOneToolItem("eraser");

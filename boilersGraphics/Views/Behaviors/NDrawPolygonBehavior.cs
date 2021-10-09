@@ -1,24 +1,16 @@
-﻿using boilersGraphics.Adorners;
-using boilersGraphics.Controls;
-using boilersGraphics.Extensions;
+﻿using boilersGraphics.Controls;
 using boilersGraphics.Helpers;
 using boilersGraphics.Models;
 using boilersGraphics.ViewModels;
 using Microsoft.Xaml.Behaviors;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
 
 namespace boilersGraphics.Views.Behaviors
 {
-    internal class NDrawPolygonBehavior : Behavior<DesignerCanvas>
+    public class NDrawPolygonBehavior : Behavior<DesignerCanvas>
     {
         private Point? _polygonDrawingStartPoint = null;
         private SnapAction snapAction;

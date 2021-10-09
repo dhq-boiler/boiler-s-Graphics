@@ -8,6 +8,7 @@ using Prism.Services.Dialogs;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Disposables;
@@ -102,6 +103,11 @@ namespace boilersGraphics.ViewModels
                     var selectedLayer = newItem as Layer;
                     selectedLayer.IsSelected.Value = true;
                     selectedLayer.ChildrenSwitchIsHitTestVisible(true);
+
+                    selectedLayer.UpdateAppearance(selectedLayer.Children.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(xx => xx.Children).Select(x => (x as LayerItem).Item.Value));
+                    selectedLayer.Children.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                                          .ToList()
+                                          .ForEach(x => (x as LayerItem).UpdateAppearance(IfGroupBringChildren(selectedLayer.Children, (x as LayerItem).Item.Value)));
                 }
                 else if (newItem.GetType() == typeof(LayerItem))
                 {
@@ -154,10 +160,27 @@ namespace boilersGraphics.ViewModels
                         temp = temp.Parent.Value;
                     }
                     temp.IsSelected.Value = true;
+
+                    selectedItem.UpdateAppearance(IfGroupBringChildren(selectedItem.Children, selectedItem.Item.Value));
                 }
             })
             .AddTo(_disposables);
             DropCommand = new DelegateCommand<DropArguments>(Drop);
+        }
+
+        private IEnumerable<SelectableDesignerItemViewModelBase> IfGroupBringChildren(ReactiveCollection<LayerTreeViewItemBase> Children, SelectableDesignerItemViewModelBase value)
+        {
+            if (value is GroupItemViewModel groupItemVM)
+            {
+                var children = Children.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                                       .Select(x => (x as LayerItem).Item.Value)
+                                       .Where(x => x.ParentID == groupItemVM.ID);
+                return children;
+            }
+            else
+            {
+                return new List<SelectableDesignerItemViewModelBase>() { value };
+            }
         }
 
         public void InitializeHitTestVisible()

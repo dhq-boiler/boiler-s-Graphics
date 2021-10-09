@@ -105,17 +105,17 @@ namespace boilersGraphics.ViewModels
 
         public ReactivePropertySlim<BackgroundViewModel> BackgroundItem { get; } = new ReactivePropertySlim<BackgroundViewModel>();
 
-        public ReactiveProperty<double?> EdgeThickness { get; } = new ReactiveProperty<double?>();
+        public ReactivePropertySlim<double?> EdgeThickness { get; } = new ReactivePropertySlim<double?>();
 
-        public ReactiveProperty<bool> EnableMiniMap { get; } = new ReactiveProperty<bool>();
+        public ReactivePropertySlim<bool> EnableMiniMap { get; } = new ReactivePropertySlim<bool>();
 
-        public ReactiveProperty<bool> EnableBrushThickness { get; } = new ReactiveProperty<bool>();
+        public ReactivePropertySlim<bool> EnableBrushThickness { get; } = new ReactivePropertySlim<bool>();
 
-        public ReactiveProperty<string> FileName { get; } = new ReactiveProperty<string>();
+        public ReactivePropertySlim<string> FileName { get; } = new ReactivePropertySlim<string>();
 
-        public ReactiveProperty<Color> CanvasBackground { get; } = new ReactiveProperty<Color>();
+        public ReactivePropertySlim<Color> CanvasBackground { get; } = new ReactivePropertySlim<Color>();
 
-        public ReactiveProperty<bool> EnablePointSnap { get; } = new ReactiveProperty<bool>();
+        public ReactivePropertySlim<bool> EnablePointSnap { get; } = new ReactivePropertySlim<bool>();
 
         public ObservableCollection<Color> EdgeColors
         {

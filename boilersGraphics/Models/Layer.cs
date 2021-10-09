@@ -12,7 +12,6 @@ using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Windows;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
@@ -24,6 +23,8 @@ namespace boilersGraphics.Models
         public ReactivePropertySlim<ImageSource> Appearance { get; } = new ReactivePropertySlim<ImageSource>();
 
         public ReactiveCommand SwitchVisibilityCommand { get; } = new ReactiveCommand();
+
+        public MainWindowViewModel MainWindowViewModel { get { return App.Current.MainWindow.DataContext as MainWindowViewModel; } }
 
         public Layer()
         {
@@ -50,8 +51,9 @@ namespace boilersGraphics.Models
                  .Merge(Children.ObserveElementObservableProperty(x => (x as LayerItem).Item.Value.EdgeThickness).ToUnit())
                  .ToUnit()
                  .Merge(Children.ObserveElementObservableProperty(x => (x as LayerItem).Item.Value.FillColor).ToUnit())
+                 .Where(_ => !MainWindowViewModel.ToolBarViewModel.Behaviors.Contains(MainWindowViewModel.ToolBarViewModel.BrushBehavior))
                  .Delay(TimeSpan.FromMilliseconds(100))
-                 .ObserveOn(new DispatcherScheduler(Dispatcher.CurrentDispatcher))
+                 .ObserveOn(new DispatcherScheduler(App.Current.Dispatcher, DispatcherPriority.ApplicationIdle))
                  .Subscribe(x =>
                  {
                      Trace.WriteLine("detected Layer changes. run Layer.UpdateAppearance().");
@@ -79,7 +81,7 @@ namespace boilersGraphics.Models
             }
         }
 
-        private void UpdateAppearance(IEnumerable<SelectableDesignerItemViewModelBase> items)
+        public void UpdateAppearance(IEnumerable<SelectableDesignerItemViewModelBase> items)
         {
             if (items.Count() == 0)
                 return;

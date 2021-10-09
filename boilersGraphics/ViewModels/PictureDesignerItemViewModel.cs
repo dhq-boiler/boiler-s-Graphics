@@ -1,9 +1,5 @@
 ﻿using Reactive.Bindings;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Media;
 
@@ -33,9 +29,9 @@ namespace boilersGraphics.ViewModels
             set { SetProperty(ref _FileHeight, value); }
         }
 
-        public ReactiveProperty<Geometry> Clip { get; set; } = new ReactiveProperty<Geometry>();
+        public ReactivePropertySlim<Geometry> Clip { get; set; } = new ReactivePropertySlim<Geometry>();
 
-        public ReactiveProperty<SelectableDesignerItemViewModelBase> ClipObject { get; set; } = new ReactiveProperty<SelectableDesignerItemViewModelBase>();
+        public ReactivePropertySlim<SelectableDesignerItemViewModelBase> ClipObject { get; set; } = new ReactivePropertySlim<SelectableDesignerItemViewModelBase>();
 
         public PictureDesignerItemViewModel(int id, DiagramViewModel parent, double left, double top)
             : base(id, parent, left, top)

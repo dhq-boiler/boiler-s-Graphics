@@ -1,10 +1,6 @@
 ﻿using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
@@ -52,7 +48,7 @@ namespace boilersGraphics.ViewModels
             .AddTo(_CompositeDisposable);
         }
 
-        public ReactiveProperty<string> Data { get; set; } = new ReactiveProperty<string>();
+        public ReactivePropertySlim<string> Data { get; set; } = new ReactivePropertySlim<string>();
 
         public override PathGeometry CreateGeometry()
         {

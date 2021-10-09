@@ -1,16 +1,11 @@
 ﻿using boilersGraphics.Controls;
 using boilersGraphics.ViewModels;
 using Microsoft.Xaml.Behaviors;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace boilersGraphics.Views.Behaviors
 {
-    class SetSnapPointBehavior : Behavior<DesignerCanvas>
+    public class SetSnapPointBehavior : Behavior<DesignerCanvas>
     {
         protected override void OnAttached()
         {

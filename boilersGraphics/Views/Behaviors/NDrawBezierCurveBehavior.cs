@@ -8,7 +8,7 @@ using System.Windows.Input;
 
 namespace boilersGraphics.Views.Behaviors
 {
-    internal class NDrawBezierCurveBehavior : Behavior<DesignerCanvas>
+    public class NDrawBezierCurveBehavior : Behavior<DesignerCanvas>
     {
         private Point? _rectangleStartPoint;
         private SnapAction snapAction;

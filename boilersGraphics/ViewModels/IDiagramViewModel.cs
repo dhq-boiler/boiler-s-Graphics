@@ -15,7 +15,7 @@ namespace boilersGraphics.ViewModels
         ReadOnlyReactivePropertySlim<SelectableDesignerItemViewModelBase[]> SelectedItems { get; }
         ObservableCollection<Color> EdgeColors { get; }
         ObservableCollection<Color> FillColors { get; }
-        ReactiveProperty<double?> EdgeThickness { get; }
+        ReactivePropertySlim<double?> EdgeThickness { get; }
         ReactiveCollection<LayerTreeViewItemBase> Layers { get; }
         int Width { get; }
         int Height { get; }

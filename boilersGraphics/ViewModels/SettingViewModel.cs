@@ -1,17 +1,13 @@
 ﻿using boilersGraphics.Helpers;
-using boilersGraphics.Models;
 using boilersGraphics.Views;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace boilersGraphics.ViewModels
 {
@@ -21,11 +17,11 @@ namespace boilersGraphics.ViewModels
         private bool disposedValue;
         private CompositeDisposable _disposables = new CompositeDisposable();
 
-        public ReactiveProperty<ReactiveCommand> OkCommand { get; set; } = new ReactiveProperty<ReactiveCommand>();
+        public ReactivePropertySlim<ReactiveCommand> OkCommand { get; set; } = new ReactivePropertySlim<ReactiveCommand>();
         public ReactiveCommand CancelCommand { get; set; }
         public ReactiveCommand ChangeCanvasBackgroundCommand { get; set; } = new ReactiveCommand();
 
-        public ReactiveProperty<Models.Setting> EditTarget { get; set; } = new ReactiveProperty<Models.Setting>();
+        public ReactivePropertySlim<Models.Setting> EditTarget { get; set; } = new ReactivePropertySlim<Models.Setting>();
 
         public SettingViewModel(IDialogService dialogService)
         {
