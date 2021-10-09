@@ -1,6 +1,4 @@
-﻿using boilersGraphics.Controls;
-using boilersGraphics.Extensions;
-using boilersGraphics.Models;
+﻿using boilersGraphics.Models;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
@@ -12,10 +10,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
