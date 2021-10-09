@@ -24,8 +24,6 @@ namespace boilersGraphics.Models
 
         public ReactiveCommand SwitchVisibilityCommand { get; } = new ReactiveCommand();
 
-        public MainWindowViewModel MainWindowViewModel { get { return App.Current.MainWindow.DataContext as MainWindowViewModel; } }
-
         public Layer()
         {
             SwitchVisibilityCommand.Subscribe(_ =>
@@ -51,9 +49,9 @@ namespace boilersGraphics.Models
                  .Merge(Children.ObserveElementObservableProperty(x => (x as LayerItem).Item.Value.EdgeThickness).ToUnit())
                  .ToUnit()
                  .Merge(Children.ObserveElementObservableProperty(x => (x as LayerItem).Item.Value.FillColor).ToUnit())
-                 .Where(_ => !MainWindowViewModel.ToolBarViewModel.Behaviors.Contains(MainWindowViewModel.ToolBarViewModel.BrushBehavior))
+                 .Where(_ => !MainWindowViewModel.Instance.ToolBarViewModel.Behaviors.Contains(MainWindowViewModel.Instance.ToolBarViewModel.BrushBehavior))
                  .Delay(TimeSpan.FromMilliseconds(100))
-                 .ObserveOn(new DispatcherScheduler(App.Current.Dispatcher, DispatcherPriority.ApplicationIdle))
+                 .ObserveOn(new DispatcherScheduler(Dispatcher.CurrentDispatcher, DispatcherPriority.ApplicationIdle))
                  .Subscribe(x =>
                  {
                      Trace.WriteLine("detected Layer changes. run Layer.UpdateAppearance().");
