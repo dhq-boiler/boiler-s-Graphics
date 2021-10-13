@@ -193,7 +193,43 @@ namespace boilersGraphics.Helpers
                     }
                     else if (item2.GetType() == typeof(CombineGeometryViewModel))
                     {
-                        return null;
+                        ctx.BeginFigure(item1_.Points[0], true, true);
+                        ctx.LineTo(item1_.Points[1], true, true);
+                        var item2_ = item2 as CombineGeometryViewModel;
+                        foreach (var figure in item2_.PathGeometry.Value.Figures)
+                        {
+                            foreach (var segment in figure.Segments)
+                            {
+                                if (segment is ArcSegment arcSegment)
+                                {
+                                    ctx.ArcTo(arcSegment.Point, arcSegment.Size, arcSegment.RotationAngle, arcSegment.IsLargeArc, arcSegment.SweepDirection, true, true);
+                                }
+                                if (segment is BezierSegment bezierSegment)
+                                {
+                                    ctx.BezierTo(bezierSegment.Point1, bezierSegment.Point2, bezierSegment.Point3, true, true);
+                                }
+                                if (segment is LineSegment lineSegment)
+                                {
+                                    ctx.LineTo(lineSegment.Point, true, true);
+                                }
+                                if (segment is PolyBezierSegment polyBezierSegment)
+                                {
+                                    ctx.PolyBezierTo(polyBezierSegment.Points, true, true);
+                                }
+                                if (segment is PolyLineSegment polyLineSegment)
+                                {
+                                    ctx.PolyLineTo(polyLineSegment.Points, true, true);
+                                }
+                                if (segment is PolyQuadraticBezierSegment polyQuadraticBezierSegment)
+                                {
+                                    ctx.PolyQuadraticBezierTo(polyQuadraticBezierSegment.Points, true, true);
+                                }
+                                if (segment is QuadraticBezierSegment quadraticBezierSegment)
+                                {
+                                    ctx.QuadraticBezierTo(quadraticBezierSegment.Point1, quadraticBezierSegment.Point2, true, true);
+                                }
+                            }
+                        }
                     }
                 }
                 else if (item1.GetType() == typeof(BezierCurveViewModel))
