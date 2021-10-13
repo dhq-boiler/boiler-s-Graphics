@@ -170,7 +170,8 @@
                                     </ToolTip>
                                 </Button.ToolTip>
                             </Button>
-                            <Button Command="{x:Static SystemCommands.MaximizeWindowCommand}"
+                            <Button x:Name="MaximizeButton"
+                                    Command="{x:Static SystemCommands.MaximizeWindowCommand}"
                                     Content="1"
                                     Foreground="Gray"
                                     Style="{DynamicResource CaptionButtonStyleKey}"
