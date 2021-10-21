@@ -18,10 +18,10 @@ namespace boilersGraphics.ViewModels
             : base()
         { }
 
-        public StraightConnectorViewModel(Point p1, Point p2)
+        public StraightConnectorViewModel(IDiagramViewModel diagramViewModel, Point p1, Point p2)
             : base()
         {
-            AddPoints(p1, p2);
+            AddPoints(diagramViewModel, p1, p2);
             InitIsSelectedOnSnapPoints();
         }
 
@@ -34,7 +34,7 @@ namespace boilersGraphics.ViewModels
 
         public override object Clone()
         {
-            var clone = new StraightConnectorViewModel(Points[0], Points[1]);
+            var clone = new StraightConnectorViewModel(Owner, Points[0], Points[1]);
             clone.Owner = Owner;
             clone.EdgeColor.Value = EdgeColor.Value;
             clone.EdgeThickness.Value = EdgeThickness.Value;

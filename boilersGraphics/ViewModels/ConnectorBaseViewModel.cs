@@ -24,15 +24,15 @@ namespace boilersGraphics.ViewModels
             Init();
         }
 
-        public void AddPoints(Point p1, Point p2)
+        public void AddPoints(IDiagramViewModel diagramViewModel, Point p1, Point p2)
         {
             Points.Add(p1);
             Points.Add(p2);
             SnapPoint0VM = Observable.Return(Points[0])
-                                     .Select(x => new SnapPointViewModel(this, 0, (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel, x.X, x.Y, 3, 3))
+                                     .Select(x => new SnapPointViewModel(this, 0, diagramViewModel, x.X, x.Y, 3, 3))
                                      .ToReadOnlyReactivePropertySlim();
             SnapPoint1VM = Observable.Return(Points[1])
-                                     .Select(x => new SnapPointViewModel(this, 1, (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel, x.X, x.Y, 3, 3))
+                                     .Select(x => new SnapPointViewModel(this, 1, diagramViewModel, x.X, x.Y, 3, 3))
                                      .ToReadOnlyReactivePropertySlim();
         }
 

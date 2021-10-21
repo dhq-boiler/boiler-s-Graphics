@@ -30,11 +30,11 @@ namespace boilersGraphics.ViewModels
             Init();
         }
 
-        public BezierCurveViewModel(Point p1, Point p2, Point c1, Point c2)
+        public BezierCurveViewModel(IDiagramViewModel diagramViewModel, Point p1, Point p2, Point c1, Point c2)
             : base()
         {
             Init();
-            AddPoints(p1, p2);
+            AddPoints(diagramViewModel, p1, p2);
             ControlPoint1.Value = c1;
             ControlPoint2.Value = c2;
         }
@@ -113,7 +113,7 @@ namespace boilersGraphics.ViewModels
 
         public override object Clone()
         {
-            var clone = new BezierCurveViewModel(Points[0], Points[1], ControlPoint1.Value, ControlPoint2.Value);
+            var clone = new BezierCurveViewModel(Owner, Points[0], Points[1], ControlPoint1.Value, ControlPoint2.Value);
             clone.Owner = Owner;
             clone.EdgeColor.Value = EdgeColor.Value;
             clone.EdgeThickness.Value = EdgeThickness.Value;

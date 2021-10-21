@@ -247,7 +247,7 @@ namespace boilersGraphics.Helpers
             item.ID = Guid.Parse(connectorElm.Element("ID").Value);
             item.ParentID = Guid.Parse(connectorElm.Element("ParentID").Value);
             item.Points = new ObservableCollection<Point>();
-            item.AddPoints(Point.Parse(connectorElm.Element("BeginPoint").Value), Point.Parse(connectorElm.Element("EndPoint").Value));
+            item.AddPoints(diagramViewModel, Point.Parse(connectorElm.Element("BeginPoint").Value), Point.Parse(connectorElm.Element("EndPoint").Value));
             item.InitIsSelectedOnSnapPoints();
             item.ZIndex.Value = Int32.Parse(connectorElm.Element("ZIndex").Value);
             item.EdgeColor.Value = (Color)ColorConverter.ConvertFromString(connectorElm.Element("EdgeColor").Value);
