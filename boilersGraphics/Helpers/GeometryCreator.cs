@@ -382,10 +382,33 @@ namespace boilersGraphics.Helpers
         private static Point GetBeginPoint(PathGeometry pathGeometry)
         {
             string entire = pathGeometry.ToString();
-            string beginPointStr = entire.Substring(entire.IndexOf('M') + 1, entire.IndexOf('L') - entire.IndexOf('M') - 1);
+            string beginPointStr = entire.Substring(entire.IndexOf('M') + 1, GetNextTopCharIndex(entire) - entire.IndexOf('M') - 1);
             string[] split = beginPointStr.Split(',');
             Point beginPoint = new Point(double.Parse(split[0]), double.Parse(split[1]));
             return beginPoint;
+        }
+
+        private static int GetNextTopCharIndex(string entire)
+        {
+            var L = entire.IndexOf('L'); //直線コマンド
+            var H = entire.IndexOf('H'); //水平線コマンド
+            var V = entire.IndexOf('V'); //垂直線コマンド
+            var C = entire.IndexOf('C'); //3 次ベジエ曲線コマンド
+            var Q = entire.IndexOf('Q'); //2 次ベジエ曲線コマンド
+            var S = entire.IndexOf('S'); //スムーズ 3 次ベジエ曲線コマンド
+            var T = entire.IndexOf('T'); //スムーズ 2 次ベジエ曲線コマンド
+            var A = entire.IndexOf('A'); //楕円の円弧コマンド
+            return Max(L, H, V, C, Q, S, T, A);
+        }
+
+        private static int Max(params int[] array)
+        {
+            var left = array.First();
+            foreach (var right in array.Skip(1))
+            {
+                left = Math.Max(left, right);
+            }
+            return left;
         }
     }
 }
