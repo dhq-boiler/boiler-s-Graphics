@@ -18,31 +18,11 @@ namespace boilersGraphics.ViewModels
             : base()
         { }
 
-        public StraightConnectorViewModel(IDiagramViewModel diagramViewModel, Point p1, Point p2)
+        public StraightConnectorViewModel(Point p1, Point p2)
             : base()
         {
-            Points.Add(p1);
-            Points.Add(p2);
-            SnapPoint0VM = Observable.Return(Points[0])
-                                     .Select(x => new SnapPointViewModel(this, 0, diagramViewModel, x.X, x.Y, 3, 3))
-                                     .ToReadOnlyReactivePropertySlim();
-            SnapPoint1VM = Observable.Return(Points[1])
-                                     .Select(x => new SnapPointViewModel(this, 1, diagramViewModel, x.X, x.Y, 3, 3))
-                                     .ToReadOnlyReactivePropertySlim();
-            IsSelected.Subscribe(x =>
-            {
-                if (x)
-                {
-                    SnapPoint0VM.Value.IsSelected.Value = true;
-                    SnapPoint1VM.Value.IsSelected.Value = true;
-                }
-                if (!x)
-                {
-                    SnapPoint0VM.Value.IsSelected.Value = false;
-                    SnapPoint1VM.Value.IsSelected.Value = false;
-                }
-            })
-            .AddTo(_CompositeDisposable);
+            AddPoints(p1, p2);
+            InitIsSelectedOnSnapPoints();
         }
 
         public override Type GetViewType()
@@ -54,7 +34,7 @@ namespace boilersGraphics.ViewModels
 
         public override object Clone()
         {
-            var clone = new StraightConnectorViewModel(Owner, Points[0], Points[1]);
+            var clone = new StraightConnectorViewModel(Points[0], Points[1]);
             clone.Owner = Owner;
             clone.EdgeColor.Value = EdgeColor.Value;
             clone.EdgeThickness.Value = EdgeThickness.Value;
