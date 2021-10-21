@@ -74,7 +74,7 @@ namespace boilersGraphics.Adorners
                 var points = new List<Point>();
                 points.Add(_startPoint.Value);
                 points.Add(_endPoint.Value);
-                var item = new BezierCurveViewModel(_startPoint.Value, _endPoint.Value, BezierCurve.Evaluate(0.25, points), BezierCurve.Evaluate(0.75, points));
+                var item = new BezierCurveViewModel((AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel, _startPoint.Value, _endPoint.Value, BezierCurve.Evaluate(0.25, points), BezierCurve.Evaluate(0.75, points));
                 item.Owner = (AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel;
                 item.EdgeColor.Value = item.Owner.EdgeColors.First();
                 item.EdgeThickness.Value = item.Owner.EdgeThickness.Value.Value;
