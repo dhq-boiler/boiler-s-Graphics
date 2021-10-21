@@ -660,8 +660,8 @@ namespace boilersGraphics.ViewModels
         {
             MainWindowVM.Recorder.BeginRecode();
 
-            var item1 = SelectedItems.Value.OfType<SelectableDesignerItemViewModelBase>().First();
-            var item2 = SelectedItems.Value.OfType<SelectableDesignerItemViewModelBase>().Last();
+            var item1 = GetSelectedItemFirst();
+            var item2 = GetSelectedItemLast();
             var combine = new CombineGeometryViewModel();
             Remove(item1);
             Remove(item2);
@@ -693,6 +693,16 @@ namespace boilersGraphics.ViewModels
             Add(combine);
 
             MainWindowVM.Recorder.EndRecode();
+        }
+
+        private SelectableDesignerItemViewModelBase GetSelectedItemFirst()
+        {
+            return GetSelectedItemsForCombine().First();
+        }
+
+        private SelectableDesignerItemViewModelBase GetSelectedItemLast()
+        {
+            return GetSelectedItemsForCombine().Skip(1).Take(1).First();
         }
 
         private void CastToLetterAndSetTransform(SelectableDesignerItemViewModelBase item1, SelectableDesignerItemViewModelBase item2, PathGeometry item1PathGeometry, PathGeometry item2PathGeometry)
@@ -751,7 +761,7 @@ namespace boilersGraphics.ViewModels
 
         public bool CanExecuteUnion()
         {
-            var countIsCorrent = SelectedItems.Value.Count() == 2;
+            var countIsCorrent = GetCountIsCorrent();
             if (countIsCorrent)
             {
                 var firstElementTypeIsCorrect = SelectedItems.ElementAt(0).GetType() != typeof(PictureDesignerItemViewModel);
@@ -759,6 +769,27 @@ namespace boilersGraphics.ViewModels
                 return countIsCorrent && firstElementTypeIsCorrect && secondElementTypeIsCorrect;
             }
             return false;
+        }
+
+        private bool GetCountIsCorrent()
+        {
+            List<SelectableDesignerItemViewModelBase> newlist = GetSelectedItemsForCombine();
+            return newlist.Count() == 2;
+        }
+
+        private List<SelectableDesignerItemViewModelBase> GetSelectedItemsForCombine()
+        {
+            var list = SelectedItems.Value.ToList();
+            var newlist = new List<SelectableDesignerItemViewModelBase>();
+            foreach (var item in list)
+            {
+                if (item is DesignerItemViewModelBase)
+                    newlist.Add(item);
+                if (item is SnapPointViewModel snapPoint)
+                    newlist.Add(snapPoint.Parent.Value);
+            }
+            newlist = newlist.Distinct().ToList();
+            return newlist;
         }
 
         private void ExecuteCopyCommand()
