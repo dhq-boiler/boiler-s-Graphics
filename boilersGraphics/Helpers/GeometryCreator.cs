@@ -193,9 +193,9 @@ namespace boilersGraphics.Helpers
                     }
                     else if (item2.GetType() == typeof(CombineGeometryViewModel))
                     {
-                        ctx.BeginFigure(item1_.Points[0], true, true);
-                        ctx.LineTo(item1_.Points[1], true, true);
                         var item2_ = item2 as CombineGeometryViewModel;
+                        Point beginPoint = GetBeginPoint(item2_.PathGeometry.Value);
+                        ctx.BeginFigure(beginPoint, true, true);
                         foreach (var figure in item2_.PathGeometry.Value.Figures)
                         {
                             foreach (var segment in figure.Segments)
@@ -230,6 +230,8 @@ namespace boilersGraphics.Helpers
                                 }
                             }
                         }
+                        ctx.LineTo(item1_.Points[0], true, true);
+                        ctx.LineTo(item1_.Points[1], true, true);
                     }
                 }
                 else if (item1.GetType() == typeof(BezierCurveViewModel))
@@ -338,11 +340,52 @@ namespace boilersGraphics.Helpers
                 }
                 else if (item1.GetType() == typeof(CombineGeometryViewModel))
                 {
-                    return null;
+                    var item1_ = item1 as CombineGeometryViewModel;
+                    if (item2.GetType() == typeof(StraightConnectorViewModel))
+                    {
+                        return null;
+                    }
+                    else if (item2.GetType() == typeof(BezierCurveViewModel))
+                    {
+                        return null;
+                    }
+                    else if (item2.GetType() == typeof(NRectangleViewModel))
+                    {
+                        return null;
+                    }
+                    else if (item2.GetType() == typeof(NEllipseViewModel))
+                    {
+                        return null;
+                    }
+                    else if (item2.GetType() == typeof(NPolygonViewModel))
+                    {
+                        return null;
+                    }
+                    else if (item2.GetType() == typeof(LetterDesignerItemViewModel))
+                    {
+                        return null;
+                    }
+                    else if (item2.GetType() == typeof(LetterVerticalDesignerItemViewModel))
+                    {
+                        return null;
+                    }
+                    else if (item2.GetType() == typeof(CombineGeometryViewModel))
+                    {
+                        return null; //leave it to the Geometry.Combine method
+                    }
                 }
             }
             geometry.Freeze();
             return PathGeometry.CreateFromGeometry(geometry);
+        }
+
+        private static Point GetBeginPoint(PathGeometry pathGeometry)
+        {
+            string entire = pathGeometry.ToString();
+            string beginPointStr = entire.Substring(entire.IndexOf('M') + 1, entire.IndexOf('L') - entire.IndexOf('M') - 1);
+            string[] split = beginPointStr.Split(',');
+            Point beginPoint = new Point(double.Parse(split[0]), double.Parse(split[1]));
+            return beginPoint;
         }
     }
 }
