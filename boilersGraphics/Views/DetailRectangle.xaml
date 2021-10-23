@@ -55,7 +55,7 @@
                             VerticalAlignment="Center"
                             Orientation="Horizontal">
                     <Label Content="Top" />
-                    <control:DoubleTextBox VerticalContentAlignment="Center" Text="{Binding ViewModel.Value.Top.Value, Mode=TwoWay}" />
+                    <control:DoubleTextBox VerticalContentAlignment="Center" DoubleText="{Binding ViewModel.Value.Top.Value, Mode=TwoWay}" />
                 </StackPanel>
             </DockPanel>
             <DockPanel Grid.Row="0"
@@ -66,7 +66,7 @@
                             VerticalAlignment="Center"
                             Orientation="Horizontal">
                     <Label Content="Left" />
-                    <control:DoubleTextBox VerticalContentAlignment="Center" Text="{Binding ViewModel.Value.Left.Value, Mode=TwoWay}" />
+                    <control:DoubleTextBox VerticalContentAlignment="Center" DoubleText="{Binding ViewModel.Value.Left.Value, Mode=TwoWay}" />
                 </StackPanel>
             </DockPanel>
             <DockPanel Grid.Row="7" Grid.Column="4">
@@ -74,7 +74,7 @@
                             VerticalAlignment="Top"
                             Orientation="Horizontal">
                     <Label Content="Width" />
-                    <control:DoubleTextBox VerticalContentAlignment="Center" Text="{Binding ViewModel.Value.Width.Value, Mode=TwoWay}" />
+                    <control:DoubleTextBox VerticalContentAlignment="Center" DoubleText="{Binding ViewModel.Value.Width.Value, Mode=TwoWay}" />
                 </StackPanel>
             </DockPanel>
             <DockPanel Grid.Row="4"
@@ -84,7 +84,7 @@
                             VerticalAlignment="Center"
                             Orientation="Horizontal">
                     <Label Content="Height" />
-                    <control:DoubleTextBox VerticalContentAlignment="Center" Text="{Binding ViewModel.Value.Height.Value, Mode=TwoWay}" />
+                    <control:DoubleTextBox VerticalContentAlignment="Center" DoubleText="{Binding ViewModel.Value.Height.Value, Mode=TwoWay}" />
                 </StackPanel>
             </DockPanel>
             <Rectangle Grid.Row="2"
