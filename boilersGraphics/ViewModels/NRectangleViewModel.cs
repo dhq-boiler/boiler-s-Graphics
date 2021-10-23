@@ -71,6 +71,8 @@ namespace boilersGraphics.ViewModels
                 this.Top.Value = viewModel.Top.Value;
                 this.Width.Value = viewModel.Width.Value;
                 this.Height.Value = viewModel.Height.Value;
+                this.CenterX.Value = viewModel.CenterX.Value;
+                this.CenterY.Value = viewModel.CenterY.Value;
             }
         }
 

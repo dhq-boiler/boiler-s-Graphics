@@ -95,6 +95,21 @@
                        Fill="Transparent"
                        Stroke="Black"
                        StrokeThickness="2" />
+            <DockPanel Grid.Row="4"
+                       Grid.Column="3"
+                       Grid.ColumnSpan="3">
+                <StackPanel HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Orientation="Horizontal">
+                    <Label Content="Center" />
+                    <control:DoubleTextBox Margin="5,0,5,0"
+                                           VerticalContentAlignment="Center"
+                                           DoubleText="{Binding ViewModel.Value.CenterX.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <control:DoubleTextBox Margin="5,0,5,0"
+                                           VerticalContentAlignment="Center"
+                                           DoubleText="{Binding ViewModel.Value.CenterY.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+            </DockPanel>
         </Grid>
     </DockPanel>
 </UserControl>
