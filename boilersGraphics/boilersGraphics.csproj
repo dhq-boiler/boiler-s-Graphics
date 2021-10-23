@@ -177,6 +177,7 @@
     <Compile Include="Converters\ToSolidColorBrushConverter.cs" />
     <Compile Include="Extensions\Extensions.cs" />
     <Compile Include="Helpers\BezierCurve.cs" />
+    <Compile Include="Helpers\DebugAction.cs" />
     <Compile Include="Helpers\EraserInternal.cs" />
     <Compile Include="Helpers\BrushInternal.cs" />
     <Compile Include="Helpers\ClipboardDTO.cs" />
@@ -318,6 +319,9 @@
     </Compile>
     <Compile Include="Views\PolygonSetting.xaml.cs">
       <DependentUpon>PolygonSetting.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DetailRectangle.xaml.cs">
+      <DependentUpon>DetailRectangle.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SelectableLabel.xaml.cs">
       <DependentUpon>SelectableLabel.xaml</DependentUpon>
@@ -481,6 +485,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Views\PolygonSetting.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DetailRectangle.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
