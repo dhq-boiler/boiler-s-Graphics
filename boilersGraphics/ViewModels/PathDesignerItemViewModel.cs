@@ -1,9 +1,5 @@
 ﻿using Reactive.Bindings;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Shapes;
@@ -13,6 +9,8 @@ namespace boilersGraphics.ViewModels
     public class PathDesignerItemViewModel : DesignerItemViewModelBase
     {
         public ReactiveCollection<Point> Points { get; } = new ReactiveCollection<Point>();
+
+        public override bool SupportsPropertyDialog => false;
 
         public override PathGeometry CreateGeometry()
         {
@@ -42,6 +40,11 @@ namespace boilersGraphics.ViewModels
         public override Type GetViewType()
         {
             return typeof(Path);
+        }
+
+        public override void OpenPropertyDialog()
+        {
+            throw new NotImplementedException();
         }
     }
 }

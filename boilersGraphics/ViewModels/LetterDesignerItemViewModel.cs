@@ -73,6 +73,8 @@ namespace boilersGraphics.ViewModels
         public ReactiveCommand GotFocusCommand { get; } = new ReactiveCommand();
         public ReactiveCommand LostFocusCommand { get; } = new ReactiveCommand();
 
+        public override bool SupportsPropertyDialog => false;
+
         public LetterDesignerItemViewModel(int id, DiagramViewModel parent, double left, double top)
             : base(id, parent, left, top)
         {
@@ -297,6 +299,11 @@ namespace boilersGraphics.ViewModels
             clone.PathGeometry = PathGeometry;
             clone.AutoLineBreak = AutoLineBreak;
             return clone;
+        }
+
+        public override void OpenPropertyDialog()
+        {
+            throw new NotImplementedException();
         }
 
 

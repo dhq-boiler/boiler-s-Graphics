@@ -2,10 +2,6 @@
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace boilersGraphics.ViewModels
@@ -55,6 +51,8 @@ namespace boilersGraphics.ViewModels
 
         public ReactivePropertySlim<double> Opacity { get; } = new ReactivePropertySlim<double>();
 
+        public override bool SupportsPropertyDialog => false;
+
         public override object Clone()
         {
             var clone = new SnapPointViewModel();
@@ -91,6 +89,11 @@ namespace boilersGraphics.ViewModels
         public override void OnNext(GroupTransformNotification value)
         {
             //do nothing
+        }
+
+        public override void OpenPropertyDialog()
+        {
+            throw new NotImplementedException();
         }
     }
 }

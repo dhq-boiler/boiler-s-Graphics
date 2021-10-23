@@ -90,6 +90,7 @@ namespace boilersGraphics.ViewModels
         public DelegateCommand<MouseEventArgs> MouseLeaveCommand { get; private set; }
         public DelegateCommand<MouseEventArgs> MouseEnterCommand { get; private set; }
         public DelegateCommand<KeyEventArgs> PreviewKeyDownCommand { get; private set; }
+        public DelegateCommand PropertyCommand { get; private set; }
 
         #region Property
 
@@ -310,7 +311,12 @@ namespace boilersGraphics.ViewModels
                 CopyCommand.RaiseCanExecuteChanged();
                 PasteCommand.RaiseCanExecuteChanged();
             });
-
+            PropertyCommand = new DelegateCommand(() =>
+            {
+                var first = SelectedItems.Value.First();
+                first.OpenPropertyDialog();
+            },
+            () => SelectedItems.Value.Length == 1 && SelectedItems.Value.First().SupportsPropertyDialog);
 
             EdgeColors.CollectionChangedAsObservable()
                 .Subscribe(_ => RaisePropertyChanged("EdgeColors"))

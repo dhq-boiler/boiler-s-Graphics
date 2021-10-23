@@ -1,9 +1,5 @@
 ﻿using boilersGraphics.Helpers;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
@@ -11,6 +7,8 @@ namespace boilersGraphics.ViewModels
 {
     public class NEllipseViewModel : DesignerItemViewModelBase
     {
+        public override bool SupportsPropertyDialog => false;
+
         public NEllipseViewModel()
             : base()
         {
@@ -77,6 +75,11 @@ namespace boilersGraphics.ViewModels
             clone.RotationAngle.Value = RotationAngle.Value;
             clone.PathGeometry.Value = GeometryCreator.CreateEllipse(clone);
             return clone;
+        }
+
+        public override void OpenPropertyDialog()
+        {
+            throw new NotImplementedException();
         }
 
         #endregion //IClonable

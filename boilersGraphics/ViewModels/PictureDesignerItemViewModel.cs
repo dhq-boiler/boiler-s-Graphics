@@ -33,6 +33,8 @@ namespace boilersGraphics.ViewModels
 
         public ReactivePropertySlim<SelectableDesignerItemViewModelBase> ClipObject { get; set; } = new ReactivePropertySlim<SelectableDesignerItemViewModelBase>();
 
+        public override bool SupportsPropertyDialog => false;
+
         public PictureDesignerItemViewModel(int id, DiagramViewModel parent, double left, double top)
             : base(id, parent, left, top)
         {
@@ -82,6 +84,11 @@ namespace boilersGraphics.ViewModels
             clone.RotationAngle.Value = RotationAngle.Value;
             clone.Clip.Value = Clip.Value;
             return clone;
+        }
+
+        public override void OpenPropertyDialog()
+        {
+            throw new NotImplementedException();
         }
 
         #endregion //IClonable

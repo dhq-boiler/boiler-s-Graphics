@@ -1,8 +1,4 @@
-﻿
-using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
-using System;
-using System.Reactive.Linq;
+﻿using System;
 using System.Windows;
 using System.Windows.Shapes;
 
@@ -10,6 +6,8 @@ namespace boilersGraphics.ViewModels
 {
     public class StraightConnectorViewModel : ConnectorBaseViewModel
     {
+        public override bool SupportsPropertyDialog => false;
+
         public StraightConnectorViewModel(int id, IDiagramViewModel parent)
             : base(id, parent)
         { }
@@ -42,6 +40,11 @@ namespace boilersGraphics.ViewModels
             clone.Points[1] = Points[1];
 
             return clone;
+        }
+
+        public override void OpenPropertyDialog()
+        {
+            throw new NotImplementedException();
         }
 
         #endregion //IClonable

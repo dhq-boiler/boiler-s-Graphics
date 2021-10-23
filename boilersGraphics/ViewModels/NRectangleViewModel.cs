@@ -46,25 +46,32 @@ namespace boilersGraphics.ViewModels
 
         public ReactiveCommand MouseDoubleClickCommand { get; } = new ReactiveCommand();
 
+        public override bool SupportsPropertyDialog => true;
+
         private void Init()
         {
             this.ShowConnectors = false;
             EnablePathGeometryUpdate.Value = true;
             MouseDoubleClickCommand.Subscribe(x =>
             {
-                var dialogService = new DialogService((App.Current as PrismApplication).Container as IContainerExtension);
-                IDialogResult result = null;
-                dialogService.Show(nameof(DetailRectangle), new DialogParameters() { { "ViewModel", (NRectangleViewModel)this.Clone() } }, ret => result = ret);
-                if (result != null)
-                {
-                    var viewModel = result.Parameters.GetValue<NRectangleViewModel>("ViewModel");
-                    this.Left.Value = viewModel.Left.Value;
-                    this.Top.Value = viewModel.Top.Value;
-                    this.Width.Value = viewModel.Width.Value;
-                    this.Height.Value = viewModel.Height.Value;
-                }
+                OpenPropertyDialog();
             })
             .AddTo(_CompositeDisposable);
+        }
+
+        public override void OpenPropertyDialog()
+        {
+            var dialogService = new DialogService((App.Current as PrismApplication).Container as IContainerExtension);
+            IDialogResult result = null;
+            dialogService.ShowDialog(nameof(DetailRectangle), new DialogParameters() { { "ViewModel", (NRectangleViewModel)this.Clone() } }, ret => result = ret);
+            if (result != null && result.Result == ButtonResult.OK)
+            {
+                var viewModel = result.Parameters.GetValue<NRectangleViewModel>("ViewModel");
+                this.Left.Value = viewModel.Left.Value;
+                this.Top.Value = viewModel.Top.Value;
+                this.Width.Value = viewModel.Width.Value;
+                this.Height.Value = viewModel.Height.Value;
+            }
         }
 
         public override PathGeometry CreateGeometry()

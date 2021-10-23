@@ -247,6 +247,7 @@
     <Compile Include="ViewModels\CombineGeometryViewModel.cs" />
     <Compile Include="ViewModels\ConnectorBaseViewModel.cs" />
     <Compile Include="Models\Corner.cs" />
+    <Compile Include="ViewModels\DetailRectangleViewModel.cs" />
     <Compile Include="ViewModels\ExportViewModel.cs" />
     <Compile Include="ViewModels\GroupItemViewModel.cs" />
     <Compile Include="ViewModels\ILetterDesignerItemViewModel.cs" />

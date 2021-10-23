@@ -118,6 +118,10 @@ namespace boilersGraphics.ViewModels
 
         public abstract Type GetViewType();
 
+        public abstract void OpenPropertyDialog();
+
+        public abstract bool SupportsPropertyDialog { get; }
+
         #region IObserver<GroupTransformNotification>
 
         public abstract void OnNext(GroupTransformNotification value);

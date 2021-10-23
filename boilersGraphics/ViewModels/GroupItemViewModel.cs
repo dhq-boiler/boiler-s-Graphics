@@ -106,6 +106,8 @@ namespace boilersGraphics.ViewModels
 
         public List<IObserver<GroupTransformNotification>> observers = new List<IObserver<GroupTransformNotification>>();
 
+        public override bool SupportsPropertyDialog => false;
+
         public IDisposable Subscribe(IObserver<GroupTransformNotification> observer)
         {
             observers.Add(observer);
@@ -153,6 +155,11 @@ namespace boilersGraphics.ViewModels
             clone.RotationAngle.Value = RotationAngle.Value;
 
             return clone;
+        }
+
+        public override void OpenPropertyDialog()
+        {
+            throw new NotImplementedException();
         }
 
         #endregion //IClonable

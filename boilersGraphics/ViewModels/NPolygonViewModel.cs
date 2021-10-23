@@ -50,6 +50,8 @@ namespace boilersGraphics.ViewModels
 
         public ReactivePropertySlim<string> Data { get; set; } = new ReactivePropertySlim<string>();
 
+        public override bool SupportsPropertyDialog => false;
+
         public override PathGeometry CreateGeometry()
         {
             return System.Windows.Media.PathGeometry.CreateFromGeometry(Geometry.Parse(Data.Value));
@@ -84,6 +86,11 @@ namespace boilersGraphics.ViewModels
             clone.RotationAngle.Value = RotationAngle.Value;
             clone.Data.Value = Data.Value;
             return clone;
+        }
+
+        public override void OpenPropertyDialog()
+        {
+            throw new NotImplementedException();
         }
 
         #endregion //IClonable

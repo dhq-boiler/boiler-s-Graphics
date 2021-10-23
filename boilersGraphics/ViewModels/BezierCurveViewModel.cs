@@ -18,6 +18,8 @@ namespace boilersGraphics.ViewModels
         public ReactivePropertySlim<Point> ControlLine1LeftTop { get; set; } = new ReactivePropertySlim<Point>();
         public ReactivePropertySlim<Point> ControlLine2LeftTop { get; set; } = new ReactivePropertySlim<Point>();
 
+        public override bool SupportsPropertyDialog => false;
+
         public BezierCurveViewModel(int id, IDiagramViewModel parent)
             : base(id, parent)
         {
@@ -125,6 +127,11 @@ namespace boilersGraphics.ViewModels
         public override Type GetViewType()
         {
             return typeof(Path);
+        }
+
+        public override void OpenPropertyDialog()
+        {
+            throw new NotImplementedException();
         }
     }
 }

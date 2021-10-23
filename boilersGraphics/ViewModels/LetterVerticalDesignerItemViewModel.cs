@@ -10,8 +10,6 @@ using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Shapes;
@@ -74,6 +72,8 @@ namespace boilersGraphics.ViewModels
 
         public ReactiveCommand GotFocusCommand { get; } = new ReactiveCommand();
         public ReactiveCommand LostFocusCommand { get; } = new ReactiveCommand();
+
+        public override bool SupportsPropertyDialog => false;
 
         public LetterVerticalDesignerItemViewModel(int id, DiagramViewModel parent, double left, double top)
             : base(id, parent, left, top)
@@ -364,6 +364,11 @@ namespace boilersGraphics.ViewModels
             clone.PathGeometry = PathGeometry;
             clone.AutoLineBreak = AutoLineBreak;
             return clone;
+        }
+
+        public override void OpenPropertyDialog()
+        {
+            throw new NotImplementedException();
         }
 
         #endregion //IClonable
