@@ -248,6 +248,7 @@
     <Compile Include="ViewModels\ConnectorBaseViewModel.cs" />
     <Compile Include="Models\Corner.cs" />
     <Compile Include="ViewModels\DetailEllipseViewModel.cs" />
+    <Compile Include="ViewModels\DetailPolygonViewModel.cs" />
     <Compile Include="ViewModels\DetailRectangleViewModel.cs" />
     <Compile Include="ViewModels\ExportViewModel.cs" />
     <Compile Include="ViewModels\GroupItemViewModel.cs" />
@@ -307,6 +308,9 @@
     </Compile>
     <Compile Include="Views\DetailPathGeometry.xaml.cs">
       <DependentUpon>DetailPathGeometry.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DetailPolygon.xaml.cs">
+      <DependentUpon>DetailPolygon.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Export.xaml.cs">
       <DependentUpon>Export.xaml</DependentUpon>
@@ -465,6 +469,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\DetailPathGeometry.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DetailPolygon.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -1,4 +1,8 @@
-﻿using Reactive.Bindings;
+﻿using boilersGraphics.Views;
+using Prism.Ioc;
+using Prism.Services.Dialogs;
+using Prism.Unity;
+using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
 using System.Windows.Media;
@@ -50,7 +54,7 @@ namespace boilersGraphics.ViewModels
 
         public ReactivePropertySlim<string> Data { get; set; } = new ReactivePropertySlim<string>();
 
-        public override bool SupportsPropertyDialog => false;
+        public override bool SupportsPropertyDialog => true;
 
         public override PathGeometry CreateGeometry()
         {
@@ -88,11 +92,23 @@ namespace boilersGraphics.ViewModels
             return clone;
         }
 
+        #endregion //IClonable
+
         public override void OpenPropertyDialog()
         {
-            throw new NotImplementedException();
+            var dialogService = new DialogService((App.Current as PrismApplication).Container as IContainerExtension);
+            IDialogResult result = null;
+            dialogService.ShowDialog(nameof(DetailPolygon), new DialogParameters() { { "ViewModel", (NPolygonViewModel)this.Clone() } }, ret => result = ret);
+            if (result != null && result.Result == ButtonResult.OK)
+            {
+                var viewModel = result.Parameters.GetValue<NPolygonViewModel>("ViewModel");
+                this.Left.Value = viewModel.Left.Value;
+                this.Top.Value = viewModel.Top.Value;
+                this.Width.Value = viewModel.Width.Value;
+                this.Height.Value = viewModel.Height.Value;
+                this.CenterX.Value = viewModel.CenterX.Value;
+                this.CenterY.Value = viewModel.CenterY.Value;
+            }
         }
-
-        #endregion //IClonable
     }
 }

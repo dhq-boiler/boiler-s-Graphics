@@ -15,14 +15,14 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="100" />
                 <ColumnDefinition Width="1" />
-                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="{Binding Width.Value}" />
                 <ColumnDefinition Width="1" />
                 <ColumnDefinition Width="100" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="100" />
                 <RowDefinition Height="1" />
-                <RowDefinition Height="Auto" />
+                <RowDefinition Height="{Binding Height.Value}" />
                 <RowDefinition Height="1" />
                 <RowDefinition Height="100" />
             </Grid.RowDefinitions>
