@@ -316,7 +316,7 @@ namespace boilersGraphics.ViewModels
                 var first = SelectedItems.Value.First();
                 first.OpenPropertyDialog();
             },
-            () => SelectedItems.Value.Length == 1 && SelectedItems.Value.First().SupportsPropertyDialog);
+            () => CanOpenPropertyDialog());
 
             EdgeColors.CollectionChangedAsObservable()
                 .Subscribe(_ => RaisePropertyChanged("EdgeColors"))
@@ -404,6 +404,8 @@ namespace boilersGraphics.ViewModels
                 IntersectCommand.RaiseCanExecuteChanged();
                 XorCommand.RaiseCanExecuteChanged();
                 ExcludeCommand.RaiseCanExecuteChanged();
+
+                PropertyCommand.RaiseCanExecuteChanged();
             })
             .AddTo(_CompositeDisposable);
 
@@ -419,14 +421,20 @@ namespace boilersGraphics.ViewModels
 
             Layers.ObserveAddChanged()
                   .Subscribe(x =>
-            {
-                RootLayer.Value.Children = new ReactiveCollection<LayerTreeViewItemBase>(Layers.Cast<LayerTreeViewItemBase>().ToObservable());
-                x.SetParentToChildren(RootLayer.Value);
-            })
+                  {
+                      RootLayer.Value.Children = new ReactiveCollection<LayerTreeViewItemBase>(Layers.Cast<LayerTreeViewItemBase>().ToObservable());
+                      x.SetParentToChildren(RootLayer.Value);
+                  })
             .AddTo(_CompositeDisposable);
 
             Width = width;
             Height = height;
+        }
+
+        private bool CanOpenPropertyDialog()
+        {
+            return (SelectedItems.Value.Length == 1 && SelectedItems.Value.First().SupportsPropertyDialog)
+                || (SelectedItems.Value.Length == 2 && SelectedItems.Value.OfType<SnapPointViewModel>().First().Parent.Value.SupportsPropertyDialog);
         }
 
         private void MoveSelectedItems(int horizontalDiff, int verticalDiff)

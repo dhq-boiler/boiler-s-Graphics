@@ -1,4 +1,8 @@
-﻿using System;
+﻿using boilersGraphics.Views;
+using Prism.Ioc;
+using Prism.Services.Dialogs;
+using Prism.Unity;
+using System;
 using System.Windows;
 using System.Windows.Shapes;
 
@@ -6,7 +10,7 @@ namespace boilersGraphics.ViewModels
 {
     public class StraightConnectorViewModel : ConnectorBaseViewModel
     {
-        public override bool SupportsPropertyDialog => false;
+        public override bool SupportsPropertyDialog => true;
 
         public StraightConnectorViewModel(int id, IDiagramViewModel parent)
             : base(id, parent)
@@ -44,7 +48,15 @@ namespace boilersGraphics.ViewModels
 
         public override void OpenPropertyDialog()
         {
-            throw new NotImplementedException();
+            var dialogService = new DialogService((App.Current as PrismApplication).Container as IContainerExtension);
+            IDialogResult result = null;
+            dialogService.ShowDialog(nameof(DetailStraightLine), new DialogParameters() { { "ViewModel", (StraightConnectorViewModel)this.Clone() } }, ret => result = ret);
+            if (result != null && result.Result == ButtonResult.OK)
+            {
+                var viewModel = result.Parameters.GetValue<StraightConnectorViewModel>("ViewModel");
+                this.Points[0] = viewModel.Points[0];
+                this.Points[1] = viewModel.Points[1];
+            }
         }
 
         #endregion //IClonable

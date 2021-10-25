@@ -93,7 +93,7 @@ namespace boilersGraphics.ViewModels
 
         public override void OpenPropertyDialog()
         {
-            throw new NotImplementedException();
+            Parent.Value.OpenPropertyDialog();
         }
     }
 }

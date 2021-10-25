@@ -250,6 +250,7 @@
     <Compile Include="ViewModels\DetailEllipseViewModel.cs" />
     <Compile Include="ViewModels\DetailPolygonViewModel.cs" />
     <Compile Include="ViewModels\DetailRectangleViewModel.cs" />
+    <Compile Include="ViewModels\DetailStraightLineViewModel.cs" />
     <Compile Include="ViewModels\ExportViewModel.cs" />
     <Compile Include="ViewModels\GroupItemViewModel.cs" />
     <Compile Include="ViewModels\ILetterDesignerItemViewModel.cs" />
@@ -306,11 +307,20 @@
     <Compile Include="Views\DetailEllipse.xaml.cs">
       <DependentUpon>DetailEllipse.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\DetailLine.xaml.cs">
+      <DependentUpon>DetailLine.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\DetailPathGeometry.xaml.cs">
       <DependentUpon>DetailPathGeometry.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\DetailPoint.xaml.cs">
+      <DependentUpon>DetailPoint.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\DetailPolygon.xaml.cs">
       <DependentUpon>DetailPolygon.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DetailStraightLine.xaml.cs">
+      <DependentUpon>DetailStraightLine.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Export.xaml.cs">
       <DependentUpon>Export.xaml</DependentUpon>
@@ -468,11 +478,23 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\DetailLine.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\DetailPathGeometry.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\DetailPoint.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\DetailPolygon.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DetailStraightLine.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
