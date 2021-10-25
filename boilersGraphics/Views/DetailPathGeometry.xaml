@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:control="clr-namespace:boilersGraphics.Controls"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:boilersGraphics.Views"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d">
     <Grid>
@@ -119,8 +118,7 @@
                     <control:DoubleTextBox VerticalContentAlignment="Center" DoubleText="{Binding Width.Value, Mode=TwoWay}" />
                 </StackPanel>
             </DockPanel>
-            <DockPanel Grid.Row="2"
-                       Grid.Column="4">
+            <DockPanel Grid.Row="2" Grid.Column="4">
                 <StackPanel HorizontalAlignment="Left"
                             VerticalAlignment="Center"
                             Orientation="Horizontal">
