@@ -138,9 +138,11 @@
                            Foreground="Red" />
                     <control:DoubleTextBox Margin="5,0,5,0"
                                            VerticalContentAlignment="Center"
+                                           Foreground="Red"
                                            DoubleText="{Binding CenterX.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     <control:DoubleTextBox Margin="5,0,5,0"
                                            VerticalContentAlignment="Center"
+                                           Foreground="Red"
                                            DoubleText="{Binding CenterY.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 </StackPanel>
             </DockPanel>
