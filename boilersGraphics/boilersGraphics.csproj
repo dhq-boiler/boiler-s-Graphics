@@ -247,6 +247,7 @@
     <Compile Include="ViewModels\CombineGeometryViewModel.cs" />
     <Compile Include="ViewModels\ConnectorBaseViewModel.cs" />
     <Compile Include="Models\Corner.cs" />
+    <Compile Include="ViewModels\DetailEllipseViewModel.cs" />
     <Compile Include="ViewModels\DetailRectangleViewModel.cs" />
     <Compile Include="ViewModels\ExportViewModel.cs" />
     <Compile Include="ViewModels\GroupItemViewModel.cs" />
@@ -300,6 +301,9 @@
     </Compile>
     <Compile Include="Views\ColorSlider.xaml.cs">
       <DependentUpon>ColorSlider.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DetailEllipse.xaml.cs">
+      <DependentUpon>DetailEllipse.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Export.xaml.cs">
       <DependentUpon>Export.xaml</DependentUpon>
@@ -450,6 +454,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ColorSlider.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DetailEllipse.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

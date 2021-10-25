@@ -38,6 +38,7 @@ namespace boilersGraphics
             containerRegistry.RegisterDialog<Views.Version, ViewModels.VersionViewModel>();
             containerRegistry.RegisterDialog<Views.Thickness, ViewModels.ThicknessViewModel>();
             containerRegistry.RegisterDialog<Views.DetailRectangle, ViewModels.DetailRectangleViewModel>();
+            containerRegistry.RegisterDialog<Views.DetailEllipse, ViewModels.DetailEllipseViewModel>();
         }
 
         public static string GetAppNameAndVersion()
