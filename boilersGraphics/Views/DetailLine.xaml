@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:boilersGraphics.Views"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewmodel="clr-namespace:boilersGraphics.ViewModels"
+             xmlns:view="clr-namespace:boilersGraphics.Views"
              mc:Ignorable="d">
     <UserControl.Resources>
         <converter:StraightLineBaseShiftConverter x:Key="Shift" />
@@ -52,44 +53,48 @@
                             </Style>
                         </Line.Style>
                     </Line>
-                    <local:DetailPoint X="{Binding Points[0].X}" Y="{Binding Points[0].Y}">
+                    <local:DetailPoint DataContext="{Binding Points[0]}"
+                                       X="{Binding X}"
+                                       Y="{Binding Y}">
                         <local:DetailPoint.Style>
                             <Style TargetType="local:DetailPoint">
                                 <Setter Property="Canvas.Left">
                                     <Setter.Value>
                                         <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="X">
-                                            <Binding Path="Points[0].X" />
-                                            <Binding />
+                                            <Binding Path="X" />
+                                            <Binding Path="DataContext.ViewModel.Value" RelativeSource="{RelativeSource AncestorType=view:DetailStraightLine}" />
                                         </MultiBinding>
                                     </Setter.Value>
                                 </Setter>
                                 <Setter Property="Canvas.Top">
                                     <Setter.Value>
                                         <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="Y">
-                                            <Binding Path="Points[0].Y" />
-                                            <Binding />
+                                            <Binding Path="Y" />
+                                            <Binding Path="DataContext.ViewModel.Value" RelativeSource="{RelativeSource AncestorType=view:DetailStraightLine}" />
                                         </MultiBinding>
                                     </Setter.Value>
                                 </Setter>
                             </Style>
                         </local:DetailPoint.Style>
                     </local:DetailPoint>
-                    <local:DetailPoint X="{Binding Points[1].X}" Y="{Binding Points[1].Y}">
+                    <local:DetailPoint DataContext="{Binding Points[1]}"
+                                       X="{Binding X}"
+                                       Y="{Binding Y}">
                         <local:DetailPoint.Style>
                             <Style TargetType="local:DetailPoint">
                                 <Setter Property="Canvas.Left">
                                     <Setter.Value>
                                         <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="X">
-                                            <Binding Path="Points[1].X" />
-                                            <Binding />
+                                            <Binding Path="X" />
+                                            <Binding Path="DataContext.ViewModel.Value" RelativeSource="{RelativeSource AncestorType=view:DetailStraightLine}" />
                                         </MultiBinding>
                                     </Setter.Value>
                                 </Setter>
                                 <Setter Property="Canvas.Top">
                                     <Setter.Value>
                                         <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="Y">
-                                            <Binding Path="Points[1].Y" />
-                                            <Binding />
+                                            <Binding Path="Y" />
+                                            <Binding Path="DataContext.ViewModel.Value" RelativeSource="{RelativeSource AncestorType=view:DetailStraightLine}" />
                                         </MultiBinding>
                                     </Setter.Value>
                                 </Setter>
