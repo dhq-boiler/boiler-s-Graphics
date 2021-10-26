@@ -16,11 +16,11 @@
             <Label Content="X" />
             <control:DoubleTextBox HorizontalContentAlignment="Right"
                                    VerticalContentAlignment="Center"
-                                   DoubleText="{Binding X, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                   DoubleText="{Binding X, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType=local:DetailPoint}}" />
             <Label Content="Y" />
             <control:DoubleTextBox HorizontalContentAlignment="Right"
                                    VerticalContentAlignment="Center"
-                                   DoubleText="{Binding Y, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                   DoubleText="{Binding Y, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType=local:DetailPoint}}" />
         </StackPanel>
     </Grid>
 </UserControl>

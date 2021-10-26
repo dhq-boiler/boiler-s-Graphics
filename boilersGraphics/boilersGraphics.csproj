@@ -170,6 +170,7 @@
     <Compile Include="Converters\IsSelectedToBorderBrushConverter.cs" />
     <Compile Include="Converters\StringToByteConverter.cs" />
     <Compile Include="Converters\WindowStateToVisibilityConverter.cs" />
+    <Compile Include="Converters\StraightLineBaseShiftConverter.cs" />
     <Compile Include="Exceptions\UnexpectedException.cs" />
     <Compile Include="Controls\ZoomBox.cs" />
     <Compile Include="Converters\ShiftCoordinateConverter.cs" />

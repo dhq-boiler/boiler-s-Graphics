@@ -24,5 +24,21 @@ namespace boilersGraphics.Views
         {
             InitializeComponent();
         }
+
+        public static readonly DependencyProperty XProperty = DependencyProperty.Register("X", typeof(double), typeof(DetailPoint), new FrameworkPropertyMetadata(0d, null));
+
+        public double X
+        {
+            get { return (double)GetValue(XProperty); }
+            set { SetValue(XProperty, value); }
+        }
+
+        public static readonly DependencyProperty YProperty = DependencyProperty.Register("Y", typeof(double), typeof(DetailPoint), new FrameworkPropertyMetadata(0d, null));
+
+        public double Y
+        {
+            get { return (double)GetValue(YProperty); }
+            set { SetValue(YProperty, value); }
+        }
     }
 }

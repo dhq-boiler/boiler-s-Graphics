@@ -1,27 +1,101 @@
 ﻿<UserControl x:Class="boilersGraphics.Views.DetailLine"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:converter="clr-namespace:boilersGraphics.Converters"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:boilersGraphics.Views"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewmodel="clr-namespace:boilersGraphics.ViewModels"
              mc:Ignorable="d">
+    <UserControl.Resources>
+        <converter:StraightLineBaseShiftConverter x:Key="Shift" />
+    </UserControl.Resources>
     <UserControl.ContentTemplateSelector>
         <local:ItemsControlTemplateSelector>
             <DataTemplate DataType="{x:Type viewmodel:StraightConnectorViewModel}">
                 <Canvas>
-                    <Line Stroke="{Binding EdgeColor.Value, Converter={StaticResource solidColorBrushConverter}}"
-                          StrokeThickness="{Binding EdgeThickness.Value}"
-                          X1="{Binding Points[0].X}"
-                          X2="{Binding Points[1].X}"
-                          Y1="{Binding Points[0].Y}"
-                          Y2="{Binding Points[1].Y}" />
-                    <local:DetailPoint Canvas.Left="{Binding X}"
-                                       Canvas.Top="{Binding Y}"
-                                       DataContext="{Binding Points[0]}" />
-                    <local:DetailPoint Canvas.Left="{Binding X}"
-                                       Canvas.Top="{Binding Y}"
-                                       DataContext="{Binding Points[1]}" />
+                    <Line Stroke="{Binding EdgeColor.Value, Converter={StaticResource solidColorBrushConverter}}" StrokeThickness="{Binding EdgeThickness.Value}">
+                        <Line.Style>
+                            <Style TargetType="Line">
+                                <Setter Property="X1">
+                                    <Setter.Value>
+                                        <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="X">
+                                            <Binding Path="Points[0].X" />
+                                            <Binding />
+                                        </MultiBinding>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="Y1">
+                                    <Setter.Value>
+                                        <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="Y">
+                                            <Binding Path="Points[0].Y" />
+                                            <Binding />
+                                        </MultiBinding>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="X2">
+                                    <Setter.Value>
+                                        <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="X">
+                                            <Binding Path="Points[1].X" />
+                                            <Binding />
+                                        </MultiBinding>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="Y2">
+                                    <Setter.Value>
+                                        <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="Y">
+                                            <Binding Path="Points[1].Y" />
+                                            <Binding />
+                                        </MultiBinding>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Line.Style>
+                    </Line>
+                    <local:DetailPoint X="{Binding Points[0].X}" Y="{Binding Points[0].Y}">
+                        <local:DetailPoint.Style>
+                            <Style TargetType="local:DetailPoint">
+                                <Setter Property="Canvas.Left">
+                                    <Setter.Value>
+                                        <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="X">
+                                            <Binding Path="Points[0].X" />
+                                            <Binding />
+                                        </MultiBinding>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="Canvas.Top">
+                                    <Setter.Value>
+                                        <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="Y">
+                                            <Binding Path="Points[0].Y" />
+                                            <Binding />
+                                        </MultiBinding>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </local:DetailPoint.Style>
+                    </local:DetailPoint>
+                    <local:DetailPoint X="{Binding Points[1].X}" Y="{Binding Points[1].Y}">
+                        <local:DetailPoint.Style>
+                            <Style TargetType="local:DetailPoint">
+                                <Setter Property="Canvas.Left">
+                                    <Setter.Value>
+                                        <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="X">
+                                            <Binding Path="Points[1].X" />
+                                            <Binding />
+                                        </MultiBinding>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="Canvas.Top">
+                                    <Setter.Value>
+                                        <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="Y">
+                                            <Binding Path="Points[1].Y" />
+                                            <Binding />
+                                        </MultiBinding>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </local:DetailPoint.Style>
+                    </local:DetailPoint>
                 </Canvas>
             </DataTemplate>
             <DataTemplate DataType="{x:Type viewmodel:BezierCurveViewModel}">
