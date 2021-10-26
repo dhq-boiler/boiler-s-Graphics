@@ -54,6 +54,38 @@
                             </Style>
                         </Line.Style>
                     </Line>
+                    <Ellipse Width="10"
+                             Height="10"
+                             Fill="Red">
+                        <Canvas.Left>
+                            <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="X">
+                                <Binding Path="Points[0].X" />
+                                <Binding />
+                            </MultiBinding>
+                        </Canvas.Left>
+                        <Canvas.Top>
+                            <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="Y">
+                                <Binding Path="Points[0].Y" />
+                                <Binding />
+                            </MultiBinding>
+                        </Canvas.Top>
+                    </Ellipse>
+                    <Ellipse Width="10"
+                             Height="10"
+                             Fill="Red">
+                        <Canvas.Left>
+                            <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="X">
+                                <Binding Path="Points[1].X" />
+                                <Binding />
+                            </MultiBinding>
+                        </Canvas.Left>
+                        <Canvas.Top>
+                            <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="Y">
+                                <Binding Path="Points[1].Y" />
+                                <Binding />
+                            </MultiBinding>
+                        </Canvas.Top>
+                    </Ellipse>
                     <Grid>
                         <Grid.Style>
                             <Style TargetType="Grid">
