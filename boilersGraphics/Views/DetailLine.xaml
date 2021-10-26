@@ -224,6 +224,38 @@
                             </MultiBinding>
                         </Canvas.Top>
                     </Ellipse>
+                    <Ellipse Width="10"
+                             Height="10"
+                             Fill="Lime">
+                        <Canvas.Left>
+                            <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="X">
+                                <Binding Path="ControlPoint1.Value.X" />
+                                <Binding />
+                            </MultiBinding>
+                        </Canvas.Left>
+                        <Canvas.Top>
+                            <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="Y">
+                                <Binding Path="ControlPoint1.Value.Y" />
+                                <Binding />
+                            </MultiBinding>
+                        </Canvas.Top>
+                    </Ellipse>
+                    <Ellipse Width="10"
+                             Height="10"
+                             Fill="Lime">
+                        <Canvas.Left>
+                            <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="X">
+                                <Binding Path="ControlPoint2.Value.X" />
+                                <Binding />
+                            </MultiBinding>
+                        </Canvas.Left>
+                        <Canvas.Top>
+                            <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="Y">
+                                <Binding Path="ControlPoint2.Value.Y" />
+                                <Binding />
+                            </MultiBinding>
+                        </Canvas.Top>
+                    </Ellipse>
                     <Grid>
                         <Grid.Style>
                             <Style TargetType="Grid">
@@ -304,6 +336,88 @@
                             <control:DoubleTextBox HorizontalContentAlignment="Right"
                                                    VerticalContentAlignment="Center"
                                                    DoubleText="{Binding P2Y.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        </StackPanel>
+                    </Grid>
+                    <Grid>
+                        <Grid.Style>
+                            <Style TargetType="Grid">
+                                <Setter Property="Canvas.Left">
+                                    <Setter.Value>
+                                        <MultiBinding Converter="{StaticResource Shift}"
+                                                      ConverterParameter="X"
+                                                      Mode="OneTime">
+                                            <Binding Path="C1X.Value" />
+                                            <Binding Path="DataContext.ViewModel.Value" RelativeSource="{RelativeSource AncestorType=view:DetailBezier}" />
+                                        </MultiBinding>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="Canvas.Top">
+                                    <Setter.Value>
+                                        <MultiBinding Converter="{StaticResource Shift}"
+                                                      ConverterParameter="Y"
+                                                      Mode="OneTime">
+                                            <Binding Path="C1Y.Value" />
+                                            <Binding Path="DataContext.ViewModel.Value" RelativeSource="{RelativeSource AncestorType=view:DetailBezier}" />
+                                        </MultiBinding>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Grid.Style>
+                        <Grid.Resources>
+                            <Style TargetType="{x:Type control:DoubleTextBox}">
+                                <Setter Property="Width" Value="50" />
+                            </Style>
+                        </Grid.Resources>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="X" />
+                            <control:DoubleTextBox HorizontalContentAlignment="Right"
+                                                   VerticalContentAlignment="Center"
+                                                   DoubleText="{Binding C1X.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            <Label Content="Y" />
+                            <control:DoubleTextBox HorizontalContentAlignment="Right"
+                                                   VerticalContentAlignment="Center"
+                                                   DoubleText="{Binding C1Y.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        </StackPanel>
+                    </Grid>
+                    <Grid>
+                        <Grid.Style>
+                            <Style TargetType="Grid">
+                                <Setter Property="Canvas.Left">
+                                    <Setter.Value>
+                                        <MultiBinding Converter="{StaticResource Shift}"
+                                                      ConverterParameter="X"
+                                                      Mode="OneTime">
+                                            <Binding Path="C2X.Value" />
+                                            <Binding Path="DataContext.ViewModel.Value" RelativeSource="{RelativeSource AncestorType=view:DetailBezier}" />
+                                        </MultiBinding>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="Canvas.Top">
+                                    <Setter.Value>
+                                        <MultiBinding Converter="{StaticResource Shift}"
+                                                      ConverterParameter="Y"
+                                                      Mode="OneTime">
+                                            <Binding Path="C2Y.Value" />
+                                            <Binding Path="DataContext.ViewModel.Value" RelativeSource="{RelativeSource AncestorType=view:DetailBezier}" />
+                                        </MultiBinding>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Grid.Style>
+                        <Grid.Resources>
+                            <Style TargetType="{x:Type control:DoubleTextBox}">
+                                <Setter Property="Width" Value="50" />
+                            </Style>
+                        </Grid.Resources>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="X" />
+                            <control:DoubleTextBox HorizontalContentAlignment="Right"
+                                                   VerticalContentAlignment="Center"
+                                                   DoubleText="{Binding C2X.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            <Label Content="Y" />
+                            <control:DoubleTextBox HorizontalContentAlignment="Right"
+                                                   VerticalContentAlignment="Center"
+                                                   DoubleText="{Binding C2Y.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                         </StackPanel>
                     </Grid>
                 </Canvas>
