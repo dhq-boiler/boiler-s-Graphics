@@ -14,7 +14,7 @@ namespace boilersGraphics.Converters
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
             var x = (double)values.ElementAt(0);
-            var viewModel = (StraightConnectorViewModel)values.ElementAt(1);
+            var viewModel = (ConnectorBaseViewModel)values.ElementAt(1);
             double temp = 0;
             if (parameter.ToString() == "X")
                 temp = viewModel.LeftTop.Value.X;

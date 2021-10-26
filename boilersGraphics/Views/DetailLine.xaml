@@ -11,6 +11,7 @@
              mc:Ignorable="d">
     <UserControl.Resources>
         <converter:StraightLineBaseShiftConverter x:Key="Shift" />
+        <converter:ShiftPointConverter x:Key="ShiftPoint" />
     </UserControl.Resources>
     <UserControl.ContentTemplateSelector>
         <local:ItemsControlTemplateSelector>
@@ -171,8 +172,141 @@
                 </Canvas>
             </DataTemplate>
             <DataTemplate DataType="{x:Type viewmodel:BezierCurveViewModel}">
-                <Grid>
-                </Grid>
+                <Canvas>
+                    <Path Stroke="{Binding EdgeColor.Value, Converter={StaticResource solidColorBrushConverter}}" StrokeThickness="{Binding EdgeThickness.Value}">
+                        <Path.Data>
+                            <PathGeometry>
+                                <PathGeometry.Figures>
+                                    <PathFigureCollection>
+                                        <PathFigure StartPoint="{Binding Converter={StaticResource ShiftPoint}, ConverterParameter=Point0}">
+                                            <PathFigure.Segments>
+                                                <PathSegmentCollection>
+                                                    <BezierSegment Point1="{Binding Converter={StaticResource ShiftPoint}, ConverterParameter=ControlPoint1}"
+                                                                   Point2="{Binding Converter={StaticResource ShiftPoint}, ConverterParameter=ControlPoint2}"
+                                                                   Point3="{Binding Converter={StaticResource ShiftPoint}, ConverterParameter=Point1}" />
+                                                </PathSegmentCollection>
+                                            </PathFigure.Segments>
+                                        </PathFigure>
+                                    </PathFigureCollection>
+                                </PathGeometry.Figures>
+                            </PathGeometry>
+                        </Path.Data>
+                    </Path>
+                    <Ellipse Width="10"
+                             Height="10"
+                             Fill="Red">
+                        <Canvas.Left>
+                            <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="X">
+                                <Binding Path="Points[0].X" />
+                                <Binding />
+                            </MultiBinding>
+                        </Canvas.Left>
+                        <Canvas.Top>
+                            <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="Y">
+                                <Binding Path="Points[0].Y" />
+                                <Binding />
+                            </MultiBinding>
+                        </Canvas.Top>
+                    </Ellipse>
+                    <Ellipse Width="10"
+                             Height="10"
+                             Fill="Red">
+                        <Canvas.Left>
+                            <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="X">
+                                <Binding Path="Points[1].X" />
+                                <Binding />
+                            </MultiBinding>
+                        </Canvas.Left>
+                        <Canvas.Top>
+                            <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="Y">
+                                <Binding Path="Points[1].Y" />
+                                <Binding />
+                            </MultiBinding>
+                        </Canvas.Top>
+                    </Ellipse>
+                    <Grid>
+                        <Grid.Style>
+                            <Style TargetType="Grid">
+                                <Setter Property="Canvas.Left">
+                                    <Setter.Value>
+                                        <MultiBinding Converter="{StaticResource Shift}"
+                                                      ConverterParameter="X"
+                                                      Mode="OneTime">
+                                            <Binding Path="P1X.Value" />
+                                            <Binding Path="DataContext.ViewModel.Value" RelativeSource="{RelativeSource AncestorType=view:DetailBezier}" />
+                                        </MultiBinding>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="Canvas.Top">
+                                    <Setter.Value>
+                                        <MultiBinding Converter="{StaticResource Shift}"
+                                                      ConverterParameter="Y"
+                                                      Mode="OneTime">
+                                            <Binding Path="P1Y.Value" />
+                                            <Binding Path="DataContext.ViewModel.Value" RelativeSource="{RelativeSource AncestorType=view:DetailBezier}" />
+                                        </MultiBinding>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Grid.Style>
+                        <Grid.Resources>
+                            <Style TargetType="{x:Type control:DoubleTextBox}">
+                                <Setter Property="Width" Value="50" />
+                            </Style>
+                        </Grid.Resources>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="X" />
+                            <control:DoubleTextBox HorizontalContentAlignment="Right"
+                                                   VerticalContentAlignment="Center"
+                                                   DoubleText="{Binding P1X.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            <Label Content="Y" />
+                            <control:DoubleTextBox HorizontalContentAlignment="Right"
+                                                   VerticalContentAlignment="Center"
+                                                   DoubleText="{Binding P1Y.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        </StackPanel>
+                    </Grid>
+                    <Grid>
+                        <Grid.Style>
+                            <Style TargetType="Grid">
+                                <Setter Property="Canvas.Left">
+                                    <Setter.Value>
+                                        <MultiBinding Converter="{StaticResource Shift}"
+                                                      ConverterParameter="X"
+                                                      Mode="OneTime">
+                                            <Binding Path="P2X.Value" />
+                                            <Binding Path="DataContext.ViewModel.Value" RelativeSource="{RelativeSource AncestorType=view:DetailBezier}" />
+                                        </MultiBinding>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="Canvas.Top">
+                                    <Setter.Value>
+                                        <MultiBinding Converter="{StaticResource Shift}"
+                                                      ConverterParameter="Y"
+                                                      Mode="OneTime">
+                                            <Binding Path="P2Y.Value" />
+                                            <Binding Path="DataContext.ViewModel.Value" RelativeSource="{RelativeSource AncestorType=view:DetailBezier}" />
+                                        </MultiBinding>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Grid.Style>
+                        <Grid.Resources>
+                            <Style TargetType="{x:Type control:DoubleTextBox}">
+                                <Setter Property="Width" Value="50" />
+                            </Style>
+                        </Grid.Resources>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="X" />
+                            <control:DoubleTextBox HorizontalContentAlignment="Right"
+                                                   VerticalContentAlignment="Center"
+                                                   DoubleText="{Binding P2X.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            <Label Content="Y" />
+                            <control:DoubleTextBox HorizontalContentAlignment="Right"
+                                                   VerticalContentAlignment="Center"
+                                                   DoubleText="{Binding P2Y.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        </StackPanel>
+                    </Grid>
+                </Canvas>
             </DataTemplate>
         </local:ItemsControlTemplateSelector>
     </UserControl.ContentTemplateSelector>

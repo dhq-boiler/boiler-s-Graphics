@@ -164,6 +164,7 @@
     <Compile Include="Converters\ColorToStringConverter.cs" />
     <Compile Include="Converters\QuadConverter.cs" />
     <Compile Include="Converters\DoubleToStringConverter.cs" />
+    <Compile Include="Converters\ShiftPointConverter.cs" />
     <Compile Include="Converters\ThicknessToDoubleConverter.cs" />
     <Compile Include="Converters\ExtensionConverter.cs" />
     <Compile Include="Converters\IntToStringConverter.cs" />
@@ -248,6 +249,7 @@
     <Compile Include="ViewModels\CombineGeometryViewModel.cs" />
     <Compile Include="ViewModels\ConnectorBaseViewModel.cs" />
     <Compile Include="Models\Corner.cs" />
+    <Compile Include="ViewModels\DetailBezierViewModel.cs" />
     <Compile Include="ViewModels\DetailEllipseViewModel.cs" />
     <Compile Include="ViewModels\DetailPolygonViewModel.cs" />
     <Compile Include="ViewModels\DetailRectangleViewModel.cs" />
@@ -304,6 +306,9 @@
     </Compile>
     <Compile Include="Views\ColorSlider.xaml.cs">
       <DependentUpon>ColorSlider.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DetailBezier.xaml.cs">
+      <DependentUpon>DetailBezier.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\DetailEllipse.xaml.cs">
       <DependentUpon>DetailEllipse.xaml</DependentUpon>
@@ -469,6 +474,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ColorSlider.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DetailBezier.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
