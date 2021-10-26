@@ -4,10 +4,26 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:boilersGraphics.Views"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             d:DesignHeight="450"
-             d:DesignWidth="800"
+             xmlns:prism="http://prismlibrary.com/"
+             prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d">
-    <Grid>
+    <prism:Dialog.WindowStyle>
+        <Style TargetType="Window">
+            <Setter Property="Width" Value="640" />
+            <Setter Property="Height" Value="480" />
+        </Style>
+    </prism:Dialog.WindowStyle>
+    <DockPanel LastChildFill="True">
+        <DockPanel DockPanel.Dock="Bottom">
+            <DockPanel DockPanel.Dock="Right">
+                <Button Width="100"
+                        Margin="5"
+                        HorizontalAlignment="Right"
+                        Command="{Binding OKCommand}">
+                    OK
+                </Button>
+            </DockPanel>
+        </DockPanel>
         <local:DetailLine Content="{Binding}" DataContext="{Binding ViewModel.Value}" />
-    </Grid>
+    </DockPanel>
 </UserControl>

@@ -5,14 +5,13 @@
              xmlns:local="clr-namespace:boilersGraphics.Views"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewmodel="clr-namespace:boilersGraphics.ViewModels"
-             d:DesignHeight="450"
-             d:DesignWidth="800"
              mc:Ignorable="d">
     <UserControl.ContentTemplateSelector>
         <local:ItemsControlTemplateSelector>
             <DataTemplate DataType="{x:Type viewmodel:StraightConnectorViewModel}">
                 <Canvas>
-                    <Line Stroke="Black"
+                    <Line Stroke="{Binding EdgeColor.Value, Converter={StaticResource solidColorBrushConverter}}"
+                          StrokeThickness="{Binding EdgeThickness.Value}"
                           X1="{Binding Points[0].X}"
                           X2="{Binding Points[1].X}"
                           Y1="{Binding Points[0].Y}"
