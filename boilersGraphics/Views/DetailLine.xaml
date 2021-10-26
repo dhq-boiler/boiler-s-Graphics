@@ -140,10 +140,6 @@
             </DataTemplate>
             <DataTemplate DataType="{x:Type viewmodel:BezierCurveViewModel}">
                 <Grid>
-                    <local:DetailPoint DataContext="{Binding Points[0]}" />
-                    <local:DetailPoint DataContext="{Binding ControlPoint1.Value}" />
-                    <local:DetailPoint DataContext="{Binding ControlPoint2.Value}" />
-                    <local:DetailPoint DataContext="{Binding Points[1]}" />
                 </Grid>
             </DataTemplate>
         </local:ItemsControlTemplateSelector>

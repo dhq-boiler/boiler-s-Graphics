@@ -314,9 +314,6 @@
     <Compile Include="Views\DetailPathGeometry.xaml.cs">
       <DependentUpon>DetailPathGeometry.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\DetailPoint.xaml.cs">
-      <DependentUpon>DetailPoint.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\DetailPolygon.xaml.cs">
       <DependentUpon>DetailPolygon.xaml</DependentUpon>
     </Compile>
@@ -484,10 +481,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\DetailPathGeometry.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\DetailPoint.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
