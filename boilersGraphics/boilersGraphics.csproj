@@ -162,6 +162,7 @@
     <Compile Include="Controls\RotateThumb.cs" />
     <Compile Include="Controls\SnapPoint.cs" />
     <Compile Include="Converters\ColorToStringConverter.cs" />
+    <Compile Include="Converters\ExtractRectConverter.cs" />
     <Compile Include="Converters\QuadConverter.cs" />
     <Compile Include="Converters\DoubleToStringConverter.cs" />
     <Compile Include="Converters\ShiftPointConverter.cs" />
@@ -252,6 +253,7 @@
     <Compile Include="ViewModels\DetailBezierViewModel.cs" />
     <Compile Include="ViewModels\DetailEllipseViewModel.cs" />
     <Compile Include="ViewModels\DetailPolygonViewModel.cs" />
+    <Compile Include="ViewModels\DetailPictureViewModel.cs" />
     <Compile Include="ViewModels\DetailRectangleViewModel.cs" />
     <Compile Include="ViewModels\DetailStraightLineViewModel.cs" />
     <Compile Include="ViewModels\ExportViewModel.cs" />
@@ -313,8 +315,14 @@
     <Compile Include="Views\DetailEllipse.xaml.cs">
       <DependentUpon>DetailEllipse.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\DetailImage.xaml.cs">
+      <DependentUpon>DetailImage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\DetailLine.xaml.cs">
       <DependentUpon>DetailLine.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DetailPicture.xaml.cs">
+      <DependentUpon>DetailPicture.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\DetailPathGeometry.xaml.cs">
       <DependentUpon>DetailPathGeometry.xaml</DependentUpon>
@@ -485,9 +493,17 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\DetailImage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\DetailLine.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DetailPicture.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\DetailPathGeometry.xaml">
       <SubType>Designer</SubType>

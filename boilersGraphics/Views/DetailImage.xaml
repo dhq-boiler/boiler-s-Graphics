@@ -1,10 +1,18 @@
-﻿<UserControl x:Class="boilersGraphics.Views.DetailPathGeometry"
+﻿<UserControl x:Class="boilersGraphics.Views.DetailImage"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:control="clr-namespace:boilersGraphics.Controls"
+             xmlns:converter="clr-namespace:boilersGraphics.Converters"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:prism="http://prismlibrary.com/"
+             xmlns:viewmodels="clr-namespace:boilersGraphics.ViewModels"
+             d:DataContext="{d:DesignInstance Type=viewmodels:PictureDesignerItemViewModel}"
+             prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d">
+    <UserControl.Resources>
+        <converter:ExtractRectConverter x:Key="ExtractRect" />
+    </UserControl.Resources>
     <Grid>
         <Grid>
             <Grid.Resources>
@@ -60,12 +68,17 @@
                   Y2="1" />
             <Path Grid.Row="2"
                   Grid.Column="2"
-                  Data="{Binding PathGeometry.Value}"
-                  Fill="{Binding FillColor.Value, Converter={StaticResource solidColorBrushConverter}}"
                   IsHitTestVisible="False"
                   Stretch="Fill"
                   Stroke="{Binding EdgeColor.Value, Converter={StaticResource solidColorBrushConverter}}"
-                  StrokeThickness="{Binding EdgeThickness.Value}" />
+                  StrokeThickness="{Binding EdgeThickness.Value}">
+                <Path.Data>
+                    <RectangleGeometry Rect="{Binding Converter={StaticResource ExtractRect}}" />
+                </Path.Data>
+                <Path.Fill>
+                    <ImageBrush ImageSource="{Binding FileName}" />
+                </Path.Fill>
+            </Path>
             <Ellipse Grid.Row="2"
                      Grid.Column="2"
                      Width="5"
@@ -149,3 +162,4 @@
         </Grid>
     </Grid>
 </UserControl>
+
