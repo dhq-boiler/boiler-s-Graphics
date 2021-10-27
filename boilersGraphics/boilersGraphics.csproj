@@ -243,6 +243,7 @@
     <Compile Include="UserControls\DiagramControl.xaml.cs">
       <DependentUpon>DiagramControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\AbstractLetterDesignerItemViewModel.cs" />
     <Compile Include="ViewModels\BackgroundViewModel.cs" />
     <Compile Include="ViewModels\BezierCurveViewModel.cs" />
     <Compile Include="ViewModels\BrushViewModel.cs" />
