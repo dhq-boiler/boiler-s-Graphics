@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="boilersGraphics.Views.DetailPathGeometry"
+﻿<UserControl x:Name="userControl" x:Class="boilersGraphics.Views.DetailPathGeometry"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:control="clr-namespace:boilersGraphics.Controls"
@@ -63,7 +63,7 @@
                   Data="{Binding PathGeometry.Value}"
                   Fill="{Binding FillColor.Value, Converter={StaticResource solidColorBrushConverter}}"
                   IsHitTestVisible="False"
-                  Stretch="Fill"
+                  Stretch="{Binding Stretch, ElementName=userControl}"
                   Stroke="{Binding EdgeColor.Value, Converter={StaticResource solidColorBrushConverter}}"
                   StrokeThickness="{Binding EdgeThickness.Value}" />
             <Ellipse Grid.Row="2"

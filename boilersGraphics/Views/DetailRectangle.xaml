@@ -19,6 +19,6 @@
                 </Button>
             </DockPanel>
         </DockPanel>
-        <local:DetailPathGeometry DataContext="{Binding ViewModel.Value}" />
+        <local:DetailPathGeometry DataContext="{Binding ViewModel.Value}" Stretch="Fill" />
     </DockPanel>
 </UserControl>

@@ -24,5 +24,13 @@ namespace boilersGraphics.Views
         {
             InitializeComponent();
         }
+
+        public static readonly DependencyProperty StretchProperty = DependencyProperty.Register("Stretch", typeof(Stretch), typeof(DetailPathGeometry), new FrameworkPropertyMetadata(Stretch.None, null));
+
+        public Stretch Stretch
+        {
+            get { return (Stretch)GetValue(StretchProperty); }
+            set { SetValue(StretchProperty, value); }
+        }
     }
 }
