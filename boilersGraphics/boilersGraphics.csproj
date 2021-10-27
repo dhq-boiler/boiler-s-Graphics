@@ -253,10 +253,12 @@
     <Compile Include="Models\Corner.cs" />
     <Compile Include="ViewModels\DetailBezierViewModel.cs" />
     <Compile Include="ViewModels\DetailEllipseViewModel.cs" />
+    <Compile Include="ViewModels\DetailLetterViewModel.cs" />
     <Compile Include="ViewModels\DetailPolygonViewModel.cs" />
     <Compile Include="ViewModels\DetailPictureViewModel.cs" />
     <Compile Include="ViewModels\DetailRectangleViewModel.cs" />
     <Compile Include="ViewModels\DetailStraightLineViewModel.cs" />
+    <Compile Include="ViewModels\DetailViewModelBase.cs" />
     <Compile Include="ViewModels\ExportViewModel.cs" />
     <Compile Include="ViewModels\GroupItemViewModel.cs" />
     <Compile Include="ViewModels\ILetterDesignerItemViewModel.cs" />
