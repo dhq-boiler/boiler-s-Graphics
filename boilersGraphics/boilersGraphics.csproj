@@ -321,6 +321,9 @@
     <Compile Include="Views\DetailImage.xaml.cs">
       <DependentUpon>DetailImage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\DetailLetter.xaml.cs">
+      <DependentUpon>DetailLetter.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\DetailLine.xaml.cs">
       <DependentUpon>DetailLine.xaml</DependentUpon>
     </Compile>
@@ -497,6 +500,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\DetailImage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DetailLetter.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
