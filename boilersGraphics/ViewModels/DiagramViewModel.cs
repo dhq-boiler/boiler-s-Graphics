@@ -490,6 +490,8 @@ namespace boilersGraphics.ViewModels
                 case "右":
                 case "下":
                     return new Point(leftTop.X, leftTop.Y);
+                case "中央":
+                    return new Point(leftTop.X + snapPoint.Width / 2, leftTop.Y + snapPoint.Height / 2);
                 case "始点":
                 case "終点":
                 case "制御点":
