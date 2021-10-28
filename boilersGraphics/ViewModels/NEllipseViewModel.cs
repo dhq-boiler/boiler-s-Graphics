@@ -1,9 +1,9 @@
 ﻿using boilersGraphics.Helpers;
+using boilersGraphics.Views;
+using Prism.Ioc;
+using Prism.Services.Dialogs;
+using Prism.Unity;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
@@ -11,6 +11,8 @@ namespace boilersGraphics.ViewModels
 {
     public class NEllipseViewModel : DesignerItemViewModelBase
     {
+        public override bool SupportsPropertyDialog => true;
+
         public NEllipseViewModel()
             : base()
         {
@@ -77,6 +79,23 @@ namespace boilersGraphics.ViewModels
             clone.RotationAngle.Value = RotationAngle.Value;
             clone.PathGeometry.Value = GeometryCreator.CreateEllipse(clone);
             return clone;
+        }
+
+        public override void OpenPropertyDialog()
+        {
+            var dialogService = new DialogService((App.Current as PrismApplication).Container as IContainerExtension);
+            IDialogResult result = null;
+            dialogService.ShowDialog(nameof(DetailEllipse), new DialogParameters() { { "ViewModel", (NEllipseViewModel)this.Clone() } }, ret => result = ret);
+            if (result != null && result.Result == ButtonResult.OK)
+            {
+                var viewModel = result.Parameters.GetValue<NEllipseViewModel>("ViewModel");
+                this.Left.Value = viewModel.Left.Value;
+                this.Top.Value = viewModel.Top.Value;
+                this.Width.Value = viewModel.Width.Value;
+                this.Height.Value = viewModel.Height.Value;
+                this.CenterX.Value = viewModel.CenterX.Value;
+                this.CenterY.Value = viewModel.CenterY.Value;
+            }
         }
 
         #endregion //IClonable

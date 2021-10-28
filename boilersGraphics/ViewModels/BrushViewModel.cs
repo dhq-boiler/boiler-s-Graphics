@@ -30,6 +30,8 @@ namespace boilersGraphics.ViewModels
 
         public ReactivePropertySlim<bool> ThicknessDialogIsOpen { get; } = new ReactivePropertySlim<bool>();
 
+        public override bool SupportsPropertyDialog => false;
+
         public event EventHandler ThicknessDialogClose;
 
         public static BrushViewModel CreateInstance()
@@ -139,6 +141,11 @@ namespace boilersGraphics.ViewModels
         public override Type GetViewType()
         {
             return typeof(Path);
+        }
+
+        public override void OpenPropertyDialog()
+        {
+            throw new NotImplementedException();
         }
     }
 }

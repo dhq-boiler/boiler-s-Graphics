@@ -301,6 +301,8 @@
                 </ItemsControl>
                 <ScrollViewer.ContextMenu>
                     <ContextMenu>
+                        <MenuItem Command="{Binding PropertyCommand}"
+                                  Header="プロパティ" />
                         <MenuItem Header="{Binding Grouping, Mode=OneWay, Source={StaticResource resources}}">
                             <MenuItem Command="{Binding GroupCommand}" Header="{Binding Command_Group, Mode=OneWay, Source={StaticResource resources}}">
                                 <MenuItem.Icon>

@@ -54,7 +54,7 @@ namespace boilersGraphics.Models
                  .ObserveOn(new DispatcherScheduler(Dispatcher.CurrentDispatcher, DispatcherPriority.ApplicationIdle))
                  .Subscribe(x =>
                  {
-                     Trace.WriteLine("detected Layer changes. run Layer.UpdateAppearance().");
+                     LoggerHelper.GetLogger().Trace("detected Layer changes. run Layer.UpdateAppearance().");
                      UpdateAppearance(Children.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(xx => xx.Children).Select(x => (x as LayerItem).Item.Value));
                      Children.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
                              .ToList()

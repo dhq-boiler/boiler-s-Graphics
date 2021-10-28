@@ -10,6 +10,8 @@ namespace boilersGraphics.ViewModels
 {
     public class CombineGeometryViewModel : DesignerItemViewModelBase
     {
+        public override bool SupportsPropertyDialog => false;
+
         public CombineGeometryViewModel()
             : base()
         {
@@ -77,6 +79,11 @@ namespace boilersGraphics.ViewModels
             clone.RotationAngle.Value = RotationAngle.Value;
             clone.PathGeometry.Value = PathGeometry.Value;
             return clone;
+        }
+
+        public override void OpenPropertyDialog()
+        {
+            throw new NotImplementedException();
         }
 
         #endregion //IClonable

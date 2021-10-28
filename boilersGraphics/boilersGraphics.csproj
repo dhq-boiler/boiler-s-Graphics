@@ -53,6 +53,9 @@
     <Reference Include="Microsoft.Xaml.Behaviors, Version=1.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Xaml.Behaviors.Wpf.1.1.31\lib\net45\Microsoft.Xaml.Behaviors.dll</HintPath>
     </Reference>
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.4.7.12\lib\net45\NLog.dll</HintPath>
+    </Reference>
     <Reference Include="OpenCvSharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=6adad1e807fea099, processorArchitecture=MSIL">
       <HintPath>..\packages\OpenCvSharp4.4.5.2.20210404\lib\net461\OpenCvSharp.dll</HintPath>
     </Reference>
@@ -91,6 +94,7 @@
     <Reference Include="System.Drawing.Common, Version=4.0.0.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Drawing.Common.5.0.2\lib\net461\System.Drawing.Common.dll</HintPath>
     </Reference>
+    <Reference Include="System.IO.Compression" />
     <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
     </Reference>
@@ -104,9 +108,12 @@
     <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.5.0.0\lib\net45\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
     </Reference>
+    <Reference Include="System.Transactions" />
     <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
     </Reference>
@@ -162,14 +169,17 @@
     <Compile Include="Controls\RotateThumb.cs" />
     <Compile Include="Controls\SnapPoint.cs" />
     <Compile Include="Converters\ColorToStringConverter.cs" />
+    <Compile Include="Converters\ExtractRectConverter.cs" />
     <Compile Include="Converters\QuadConverter.cs" />
     <Compile Include="Converters\DoubleToStringConverter.cs" />
+    <Compile Include="Converters\ShiftPointConverter.cs" />
     <Compile Include="Converters\ThicknessToDoubleConverter.cs" />
     <Compile Include="Converters\ExtensionConverter.cs" />
     <Compile Include="Converters\IntToStringConverter.cs" />
     <Compile Include="Converters\IsSelectedToBorderBrushConverter.cs" />
     <Compile Include="Converters\StringToByteConverter.cs" />
     <Compile Include="Converters\WindowStateToVisibilityConverter.cs" />
+    <Compile Include="Converters\StraightLineBaseShiftConverter.cs" />
     <Compile Include="Exceptions\UnexpectedException.cs" />
     <Compile Include="Controls\ZoomBox.cs" />
     <Compile Include="Converters\ShiftCoordinateConverter.cs" />
@@ -177,6 +187,7 @@
     <Compile Include="Converters\ToSolidColorBrushConverter.cs" />
     <Compile Include="Extensions\Extensions.cs" />
     <Compile Include="Helpers\BezierCurve.cs" />
+    <Compile Include="Helpers\DebugAction.cs" />
     <Compile Include="Helpers\EraserInternal.cs" />
     <Compile Include="Helpers\BrushInternal.cs" />
     <Compile Include="Helpers\ClipboardDTO.cs" />
@@ -188,6 +199,7 @@
     <Compile Include="Helpers\GroupTransformNotification.cs" />
     <Compile Include="Helpers\IEventArgsConverter.cs" />
     <Compile Include="Helpers\LayerTreeViewItemCollection.cs" />
+    <Compile Include="Helpers\LoggerHelper.cs" />
     <Compile Include="Helpers\Measure.cs" />
     <Compile Include="Helpers\Name.cs" />
     <Compile Include="Helpers\ObjectDeserializer.cs" />
@@ -239,6 +251,7 @@
     <Compile Include="UserControls\DiagramControl.xaml.cs">
       <DependentUpon>DiagramControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\AbstractLetterDesignerItemViewModel.cs" />
     <Compile Include="ViewModels\BackgroundViewModel.cs" />
     <Compile Include="ViewModels\BezierCurveViewModel.cs" />
     <Compile Include="ViewModels\BrushViewModel.cs" />
@@ -246,6 +259,14 @@
     <Compile Include="ViewModels\CombineGeometryViewModel.cs" />
     <Compile Include="ViewModels\ConnectorBaseViewModel.cs" />
     <Compile Include="Models\Corner.cs" />
+    <Compile Include="ViewModels\DetailBezierViewModel.cs" />
+    <Compile Include="ViewModels\DetailEllipseViewModel.cs" />
+    <Compile Include="ViewModels\DetailLetterViewModel.cs" />
+    <Compile Include="ViewModels\DetailPolygonViewModel.cs" />
+    <Compile Include="ViewModels\DetailPictureViewModel.cs" />
+    <Compile Include="ViewModels\DetailRectangleViewModel.cs" />
+    <Compile Include="ViewModels\DetailStraightLineViewModel.cs" />
+    <Compile Include="ViewModels\DetailViewModelBase.cs" />
     <Compile Include="ViewModels\ExportViewModel.cs" />
     <Compile Include="ViewModels\GroupItemViewModel.cs" />
     <Compile Include="ViewModels\ILetterDesignerItemViewModel.cs" />
@@ -299,6 +320,33 @@
     <Compile Include="Views\ColorSlider.xaml.cs">
       <DependentUpon>ColorSlider.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\DetailBezier.xaml.cs">
+      <DependentUpon>DetailBezier.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DetailEllipse.xaml.cs">
+      <DependentUpon>DetailEllipse.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DetailImage.xaml.cs">
+      <DependentUpon>DetailImage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DetailLetter.xaml.cs">
+      <DependentUpon>DetailLetter.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DetailLine.xaml.cs">
+      <DependentUpon>DetailLine.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DetailPicture.xaml.cs">
+      <DependentUpon>DetailPicture.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DetailPathGeometry.xaml.cs">
+      <DependentUpon>DetailPathGeometry.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DetailPolygon.xaml.cs">
+      <DependentUpon>DetailPolygon.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DetailStraightLine.xaml.cs">
+      <DependentUpon>DetailStraightLine.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Export.xaml.cs">
       <DependentUpon>Export.xaml</DependentUpon>
     </Compile>
@@ -318,6 +366,9 @@
     </Compile>
     <Compile Include="Views\PolygonSetting.xaml.cs">
       <DependentUpon>PolygonSetting.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DetailRectangle.xaml.cs">
+      <DependentUpon>DetailRectangle.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SelectableLabel.xaml.cs">
       <DependentUpon>SelectableLabel.xaml</DependentUpon>
@@ -448,6 +499,42 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\DetailBezier.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DetailEllipse.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DetailImage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DetailLetter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DetailLine.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DetailPicture.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\DetailPathGeometry.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DetailPolygon.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DetailStraightLine.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Export.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -481,6 +568,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Views\PolygonSetting.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DetailRectangle.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -533,6 +624,12 @@
     </None>
     <None Include="LICENSE.md">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="NLog.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="NLog.xsd">
+      <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

@@ -210,7 +210,7 @@ namespace boilersGraphics.ViewModels
                 {
                     var layerItem = y as LayerItem;
                     layerItem.Item.Value.IsHitTestVisible.Value = true;
-                    Trace.WriteLine($"{layerItem.Name.Value}.IsHitTestVisible={layerItem.Item.Value.IsHitTestVisible.Value}");
+                    LoggerHelper.GetLogger().Trace($"{layerItem.Name.Value}.IsHitTestVisible={layerItem.Item.Value.IsHitTestVisible.Value}");
                 })
             );
             CurrentHitTestVisibleState.Value = true;

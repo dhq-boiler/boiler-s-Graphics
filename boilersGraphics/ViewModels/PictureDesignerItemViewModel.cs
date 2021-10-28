@@ -1,4 +1,8 @@
-﻿using Reactive.Bindings;
+﻿using boilersGraphics.Views;
+using Prism.Ioc;
+using Prism.Services.Dialogs;
+using Prism.Unity;
+using Reactive.Bindings;
 using System;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -32,6 +36,8 @@ namespace boilersGraphics.ViewModels
         public ReactivePropertySlim<Geometry> Clip { get; set; } = new ReactivePropertySlim<Geometry>();
 
         public ReactivePropertySlim<SelectableDesignerItemViewModelBase> ClipObject { get; set; } = new ReactivePropertySlim<SelectableDesignerItemViewModelBase>();
+
+        public override bool SupportsPropertyDialog => true;
 
         public PictureDesignerItemViewModel(int id, DiagramViewModel parent, double left, double top)
             : base(id, parent, left, top)
@@ -81,7 +87,27 @@ namespace boilersGraphics.ViewModels
             clone.Matrix.Value = Matrix.Value;
             clone.RotationAngle.Value = RotationAngle.Value;
             clone.Clip.Value = Clip.Value;
+            clone.FileName = FileName;
+            clone.FileWidth = FileWidth;
+            clone.FileHeight = FileHeight;
             return clone;
+        }
+
+        public override void OpenPropertyDialog()
+        {
+            var dialogService = new DialogService((App.Current as PrismApplication).Container as IContainerExtension);
+            IDialogResult result = null;
+            dialogService.ShowDialog(nameof(DetailPicture), new DialogParameters() { { "ViewModel", (PictureDesignerItemViewModel)this.Clone() } }, ret => result = ret);
+            if (result != null && result.Result == ButtonResult.OK)
+            {
+                var viewModel = result.Parameters.GetValue<PictureDesignerItemViewModel>("ViewModel");
+                this.Left.Value = viewModel.Left.Value;
+                this.Top.Value = viewModel.Top.Value;
+                this.Width.Value = viewModel.Width.Value;
+                this.Height.Value = viewModel.Height.Value;
+                this.CenterX.Value = viewModel.CenterX.Value;
+                this.CenterY.Value = viewModel.CenterY.Value;
+            }
         }
 
         #endregion //IClonable

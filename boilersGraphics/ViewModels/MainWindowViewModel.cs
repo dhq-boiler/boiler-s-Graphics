@@ -6,6 +6,7 @@ using Prism.Services.Dialogs;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Windows;
@@ -146,6 +147,11 @@ namespace boilersGraphics.ViewModels
                     BrushViewModel.CloseAllThicknessDialog();
                 }
             });
+            ShowLogCommand = new DelegateCommand(() =>
+            {
+                var path = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "dhq_boiler\\boilersGraphics\\Logs\\boilersGraphics.log");
+                Process.Start(path);
+            });
             ShowVersionCommand = new DelegateCommand(() =>
             {
                 IDialogResult result = null;
@@ -210,6 +216,8 @@ namespace boilersGraphics.ViewModels
         public DelegateCommand SwitchMiniMapCommand { get; }
 
         public DelegateCommand SwitchBrushThicknessCommand { get; }
+
+        public DelegateCommand ShowLogCommand { get; }
 
         public DelegateCommand ShowVersionCommand { get; }
 

@@ -265,6 +265,17 @@
                                      Cursor="SizeNWSE"
                                      Tag="右下"
                                      Template="{StaticResource ResizeHandleTemplate}" />
+                <control:SnapPoint HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   Width="7"
+                                   Height="7"
+                                   Tag="中央">
+                    <control:SnapPoint.Template>
+                        <ControlTemplate TargetType="control:SnapPoint">
+                            <Grid />
+                        </ControlTemplate>
+                    </control:SnapPoint.Template>
+                </control:SnapPoint>
             </Grid>
             <Grid Margin="-3"
                   IsHitTestVisible="False"
