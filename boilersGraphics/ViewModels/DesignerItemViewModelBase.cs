@@ -72,9 +72,10 @@ namespace boilersGraphics.ViewModels
 
         public ReadOnlyReactivePropertySlim<double> Bottom { get; private set; }
 
-        public ReactivePropertySlim<Point> CenterPoint { get; } = new ReactivePropertySlim<Point>();
+        public ReactivePropertySlim<double> CenterX { get; } = new ReactivePropertySlim<double>();
+        public ReactivePropertySlim<double> CenterY { get; } = new ReactivePropertySlim<double>();
 
-        public ReactivePropertySlim<Point> RotatedCenterPoint { get; } = new ReactivePropertySlim<Point>();
+        public ReactiveProperty<Point> CenterPoint { get; private set; }
 
         public ReactivePropertySlim<TransformNotification> TransformNortification { get; } = new ReactivePropertySlim<TransformNotification>(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe | ReactivePropertyMode.DistinctUntilChanged);
 
@@ -82,7 +83,8 @@ namespace boilersGraphics.ViewModels
         {
             var leftTop = new Point(Left.Value, Top.Value);
             var center = new Point(leftTop.X + Width.Value * 0.5, leftTop.Y + Height.Value * 0.5);
-            CenterPoint.Value = center;
+            CenterX.Value = center.X;
+            CenterY.Value = center.Y;
         }
 
         private void Init()
@@ -118,8 +120,24 @@ namespace boilersGraphics.ViewModels
                         .ToReadOnlyReactivePropertySlim();
             Bottom = Top.CombineLatest(Height, (a, b) => a + b)
                         .ToReadOnlyReactivePropertySlim();
+            CenterX.Subscribe(x => UpdateLeft(x))
+                       .AddTo(_CompositeDisposable);
+            CenterY.Subscribe(x => UpdateTop(x))
+                       .AddTo(_CompositeDisposable);
+            CenterPoint = CenterX.CombineLatest(CenterY, (x, y) => new Point(x, y))
+                                 .ToReactiveProperty();
 
             Matrix.Value = new Matrix();
+        }
+
+        private void UpdateLeft(double value)
+        {
+            Left.Value = value - Width.Value / 2;
+        }
+
+        private void UpdateTop(double value)
+        {
+            Top.Value = value - Height.Value / 2;
         }
 
         public IDisposable Connect(ConnectorBaseViewModel connector)
@@ -131,7 +149,15 @@ namespace boilersGraphics.ViewModels
 
         public void UpdateTransform(string propertyName, object oldValue, object newValue)
         {
-            UpdateCenterPoint();
+            switch (propertyName)
+            {
+                case "Left":
+                case "Top":
+                case "Width":
+                case "Height":
+                    UpdateCenterPoint();
+                    break;
+            }
             TransformObserversOnNext(propertyName, oldValue, newValue);
             UpdatePathGeometryInCase(propertyName);
         }

@@ -36,7 +36,7 @@ namespace TsOperationHistory
         public void BeginRecode([CallerMemberName] string callerMemberName = "")
         {
             string className = Reflections.NameOfCallingClass();
-            Trace.WriteLine($"{className}.{callerMemberName}() => BeginRecode()");
+            LoggerHelper.GetLogger().Trace($"{className}.{callerMemberName}() => BeginRecode()");
             _stack.Push(new OperationController(1024));
         }
 
@@ -44,7 +44,7 @@ namespace TsOperationHistory
         {
             string className = Reflections.NameOfCallingClass();
             string message = $"{className}.{callerMemberName}() => EndRecode()";
-            Trace.WriteLine(message);
+            LoggerHelper.GetLogger().Trace(message);
             var controller = _stack.Pop();
             var operation = controller.Operations.ToCompositeOperation();
             operation.Message = message;

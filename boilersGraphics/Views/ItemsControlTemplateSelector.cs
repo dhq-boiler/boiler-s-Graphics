@@ -17,6 +17,9 @@ namespace boilersGraphics.Views
 
         public override DataTemplate SelectTemplate(object item, DependencyObject container)
         {
+            if (item == null)
+                return null;
+
             var template = Items.Find(s => item.GetType().Equals(s.DataType));
             if (template != null) return template;
 

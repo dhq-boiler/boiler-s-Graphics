@@ -153,6 +153,7 @@
                                 </MenuItem>
                             </MenuItem>
                             <MenuItem Header="ヘルプ(_H)">
+                                <MenuItem Command="{Binding ShowLogCommand}" Header="アプリケーションログを開く(_L)" />
                                 <MenuItem Command="{Binding ShowVersionCommand}" Header="boiler's Graphics のバージョン情報(_V)" />
                             </MenuItem>
                         </Menu>

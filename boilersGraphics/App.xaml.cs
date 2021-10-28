@@ -1,4 +1,5 @@
-﻿using boilersGraphics.Views;
+﻿using boilersGraphics.Helpers;
+using boilersGraphics.Views;
 using Prism.Ioc;
 using Prism.Unity;
 using System;
@@ -19,6 +20,16 @@ namespace boilersGraphics
     {
         public static bool IsTest { get; set; }
 
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            base.OnStartup(e);
+
+            var version = Assembly.GetExecutingAssembly().GetName().Version;
+            LoggerHelper.GetLogger().Info($"boiler's Graphics {version}");
+            LoggerHelper.GetLogger().Info($"Copyright (C) dhq_boiler 2018-2021. All rights reserved.");
+            LoggerHelper.GetLogger().Info($"boiler's Graphics IS LAUNCHING");
+        }
+
         protected override Window CreateShell()
         {
             var w = Container.Resolve<MainWindow>();
@@ -37,6 +48,13 @@ namespace boilersGraphics
             containerRegistry.RegisterDialog<SetSnapPoint, ViewModels.SetSnapPointViewModel>();
             containerRegistry.RegisterDialog<Views.Version, ViewModels.VersionViewModel>();
             containerRegistry.RegisterDialog<Views.Thickness, ViewModels.ThicknessViewModel>();
+            containerRegistry.RegisterDialog<Views.DetailRectangle, ViewModels.DetailRectangleViewModel>();
+            containerRegistry.RegisterDialog<Views.DetailEllipse, ViewModels.DetailEllipseViewModel>();
+            containerRegistry.RegisterDialog<Views.DetailPolygon, ViewModels.DetailPolygonViewModel>();
+            containerRegistry.RegisterDialog<Views.DetailStraightLine, ViewModels.DetailStraightLineViewModel>();
+            containerRegistry.RegisterDialog<Views.DetailBezier, ViewModels.DetailBezierViewModel>();
+            containerRegistry.RegisterDialog<Views.DetailPicture, ViewModels.DetailPictureViewModel>();
+            containerRegistry.RegisterDialog<Views.DetailLetter, ViewModels.DetailLetterViewModel>();
         }
 
         public static string GetAppNameAndVersion()

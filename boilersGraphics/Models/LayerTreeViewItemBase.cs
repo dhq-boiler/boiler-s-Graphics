@@ -58,7 +58,7 @@ namespace boilersGraphics.Models
                 if (this is Layer && x is Layer)
                     throw new UnexpectedException("Layers cannot have layers in their children");
                 if (x != null)
-                    Trace.WriteLine($"Set Parent Parent={{{x.Name.Value}}} Child={{{Name.Value}}}");
+                    LoggerHelper.GetLogger().Trace($"Set Parent Parent={{{x.Name.Value}}} Child={{{Name.Value}}}");
             })
             .AddTo(_disposable);
             ChangeNameCommand.Subscribe(_ =>
@@ -127,7 +127,7 @@ namespace boilersGraphics.Models
             layerItems.ToList().ForEach(x =>
             {
                 mainWindowViewModel.Recorder.Current.ExecuteRemove(Children, x);
-                Trace.WriteLine($"{x} removed from {Children}");
+                LoggerHelper.GetLogger().Trace($"{x} removed from {Children}");
             });
         }
 
@@ -138,7 +138,7 @@ namespace boilersGraphics.Models
                 if (x is LayerItem layerItem)
                 {
                     layerItem.Item.Value.IsHitTestVisible.Value = isVisible;
-                    Trace.WriteLine($"{layerItem.Name.Value}.IsHitTestVisible={layerItem.Item.Value.IsHitTestVisible.Value}");
+                    LoggerHelper.GetLogger().Trace($"{layerItem.Name.Value}.IsHitTestVisible={layerItem.Item.Value.IsHitTestVisible.Value}");
                 }
                 x.ChildrenSwitchIsHitTestVisible(isVisible);
             });

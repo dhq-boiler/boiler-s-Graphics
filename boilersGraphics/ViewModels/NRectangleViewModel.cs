@@ -1,6 +1,13 @@
 ﻿
 using boilersGraphics.Helpers;
+using boilersGraphics.Views;
+using Prism.Ioc;
+using Prism.Services.Dialogs;
+using Prism.Unity;
+using Reactive.Bindings;
+using Reactive.Bindings.Extensions;
 using System;
+using System.Reactive.Linq;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
@@ -37,10 +44,36 @@ namespace boilersGraphics.ViewModels
             Init();
         }
 
+        public ReactiveCommand MouseDoubleClickCommand { get; } = new ReactiveCommand();
+
+        public override bool SupportsPropertyDialog => true;
+
         private void Init()
         {
             this.ShowConnectors = false;
             EnablePathGeometryUpdate.Value = true;
+            MouseDoubleClickCommand.Subscribe(x =>
+            {
+                OpenPropertyDialog();
+            })
+            .AddTo(_CompositeDisposable);
+        }
+
+        public override void OpenPropertyDialog()
+        {
+            var dialogService = new DialogService((App.Current as PrismApplication).Container as IContainerExtension);
+            IDialogResult result = null;
+            dialogService.ShowDialog(nameof(DetailRectangle), new DialogParameters() { { "ViewModel", (NRectangleViewModel)this.Clone() } }, ret => result = ret);
+            if (result != null && result.Result == ButtonResult.OK)
+            {
+                var viewModel = result.Parameters.GetValue<NRectangleViewModel>("ViewModel");
+                this.Left.Value = viewModel.Left.Value;
+                this.Top.Value = viewModel.Top.Value;
+                this.Width.Value = viewModel.Width.Value;
+                this.Height.Value = viewModel.Height.Value;
+                this.CenterX.Value = viewModel.CenterX.Value;
+                this.CenterY.Value = viewModel.CenterY.Value;
+            }
         }
 
         public override PathGeometry CreateGeometry()
