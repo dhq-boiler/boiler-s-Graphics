@@ -201,16 +201,16 @@ namespace boilersGraphics.ViewModels
             switch (args.Type)
             {
                 case MoveableTreeViewBehavior.InsertType.Before:
-                    Trace.WriteLine("Before");
-                    Trace.WriteLine(string.Join(", ", Layers));
+                    LoggerHelper.GetLogger().Trace("Before");
+                    LoggerHelper.GetLogger().Trace(string.Join(", ", Layers));
                     break;
                 case MoveableTreeViewBehavior.InsertType.After:
-                    Trace.WriteLine("After");
-                    Trace.WriteLine(string.Join(", ", Layers));
+                    LoggerHelper.GetLogger().Trace("After");
+                    LoggerHelper.GetLogger().Trace(string.Join(", ", Layers));
                     break;
                 case MoveableTreeViewBehavior.InsertType.Children:
-                    Trace.WriteLine("Children");
-                    Trace.WriteLine(string.Join(", ", Layers));
+                    LoggerHelper.GetLogger().Trace("Children");
+                    LoggerHelper.GetLogger().Trace(string.Join(", ", Layers));
                     break;
             }
         }

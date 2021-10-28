@@ -199,6 +199,7 @@
     <Compile Include="Helpers\GroupTransformNotification.cs" />
     <Compile Include="Helpers\IEventArgsConverter.cs" />
     <Compile Include="Helpers\LayerTreeViewItemCollection.cs" />
+    <Compile Include="Helpers\LoggerHelper.cs" />
     <Compile Include="Helpers\Measure.cs" />
     <Compile Include="Helpers\Name.cs" />
     <Compile Include="Helpers\ObjectDeserializer.cs" />
@@ -622,6 +623,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="LICENSE.md">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="NLog.xsd">

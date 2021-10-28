@@ -177,11 +177,7 @@ namespace boilersGraphics.Helpers
                         TriggerBase triggerBase = storyboard.TriggerBase;
                         string triggerName = GetTriggerName(storyboard.TriggerBase);
 
-                        Debug.WriteLine(string.Format("Element: {0}, {1}: {2}: {3}",
-                            targetElement,
-                            triggerBase.GetType().Name,
-                            triggerName,
-                            storyboard.StoryboardType));
+                        LoggerHelper.GetLogger().Debug($"Element: {targetElement}, {triggerBase.GetType().Name}: {triggerName}: {storyboard.StoryboardType}");
                     }
                 }
             }

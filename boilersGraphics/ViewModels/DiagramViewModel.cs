@@ -344,8 +344,8 @@ namespace boilersGraphics.ViewModels
 
             AllItems.Subscribe(x =>
             {
-                Trace.WriteLine($"{x.Length} items in AllItems.");
-                Trace.WriteLine(string.Join(", ", x.Select(y => y?.ToString() ?? "null")));
+                LoggerHelper.GetLogger().Trace($"{x.Length} items in AllItems.");
+                LoggerHelper.GetLogger().Trace(string.Join(", ", x.Select(y => y?.ToString() ?? "null")));
             })
             .AddTo(_CompositeDisposable);
 
@@ -357,7 +357,7 @@ namespace boilersGraphics.ViewModels
                         .Merge()
                 )
                 .Switch()
-                .Do(x => Debug.WriteLine("SelectedItems updated"))
+                .Do(x => LoggerHelper.GetLogger().Debug("SelectedItems updated"))
                 .Select(_ => Layers
                     .SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
                     .Where(x => x is LayerItem)
@@ -379,7 +379,7 @@ namespace boilersGraphics.ViewModels
 
             SelectedItems.Subscribe(selectedItems =>
             {
-                Trace.WriteLine($"SelectedItems changed {string.Join(", ", selectedItems.Select(x => x?.ToString() ?? "null"))}");
+                LoggerHelper.GetLogger().Trace($"SelectedItems changed {string.Join(", ", selectedItems.Select(x => x?.ToString() ?? "null"))}");
 
                 GroupCommand.RaiseCanExecuteChanged();
                 UngroupCommand.RaiseCanExecuteChanged();
@@ -415,7 +415,7 @@ namespace boilersGraphics.ViewModels
 
             SelectedLayers.Subscribe(x =>
             {
-                Trace.WriteLine($"SelectedLayers changed {string.Join(", ", x.Select(x => x.ToString()))}");
+                LoggerHelper.GetLogger().Trace($"SelectedLayers changed {string.Join(", ", x.Select(x => x.ToString()))}");
             })
             .AddTo(_CompositeDisposable);
 
@@ -1197,7 +1197,7 @@ namespace boilersGraphics.ViewModels
             }
             else
             {
-                Trace.WriteLine("強制読み込みモードでファイルを読み込みます。このモードはVersion要素が見つからない時に実施されます。");
+                LoggerHelper.GetLogger().Info("強制読み込みモードでファイルを読み込みます。このモードはVersion要素が見つからない時に実施されます。");
             }
 
 
@@ -1220,6 +1220,7 @@ namespace boilersGraphics.ViewModels
             catch (Exception)
             {
                 MessageBox.Show("このファイルは古すぎるか壊れているため開けません。", "読み込みエラー");
+                LoggerHelper.GetLogger().Error("【読み込みエラー】このファイルは古すぎるか壊れているため開けません。");
                 FileName.Value = "*";
                 return;
             }
