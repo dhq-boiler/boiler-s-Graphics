@@ -160,6 +160,7 @@ namespace boilersGraphics.ViewModels
             });
             SetLogLevelCommand = new DelegateCommand<LogLevel>(parameter =>
             {
+                LogLevel.Value = parameter;
                 foreach (var rule in LogManager.Configuration.LoggingRules)
                 {
                     rule.EnableLoggingForLevel(parameter);
@@ -215,6 +216,8 @@ namespace boilersGraphics.ViewModels
         public IOperationController Controller { get; } = new OperationController();
 
         public OperationRecorder Recorder { get; }
+
+        public ReactivePropertySlim<LogLevel> LogLevel { get; } = new ReactivePropertySlim<LogLevel>();
 
         public DelegateCommand<object> DeleteSelectedItemsCommand { get; private set; }
 

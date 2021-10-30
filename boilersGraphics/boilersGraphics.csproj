@@ -171,6 +171,7 @@
     <Compile Include="Converters\BoolToEnumConverter.cs" />
     <Compile Include="Converters\ColorToStringConverter.cs" />
     <Compile Include="Converters\ExtractRectConverter.cs" />
+    <Compile Include="Converters\LogLevelToBoolConverter.cs" />
     <Compile Include="Converters\QuadConverter.cs" />
     <Compile Include="Converters\DoubleToStringConverter.cs" />
     <Compile Include="Converters\ShiftPointConverter.cs" />

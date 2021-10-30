@@ -23,6 +23,7 @@
     <Window.Resources>
         <converter:StrokeColorConverter x:Key="StrokeColorConverter" />
         <converter:WindowStateToVisibilityConverter x:Key="WindowStateToVisibilityConverter" />
+        <converter:LogLevelToBoolConverter x:Key="LogLevelToBool" />
     </Window.Resources>
     <Window.CommandBindings>
         <CommandBinding CanExecute="CommandBinding_CanExecute_Close"
@@ -158,25 +159,32 @@
                                     <MenuItem Header="ログレベル">
                                         <MenuItem Command="{Binding SetLogLevelCommand}"
                                                   CommandParameter="{x:Static nlog:LogLevel.Trace}"
-                                                  Header="Trace" />
+                                                  Header="Trace"
+                                                  IsChecked="{Binding LogLevel.Value, Converter={StaticResource LogLevelToBool}, ConverterParameter=Trace}" />
                                         <MenuItem Command="{Binding SetLogLevelCommand}"
                                                   CommandParameter="{x:Static nlog:LogLevel.Debug}"
-                                                  Header="Debug" />
+                                                  Header="Debug"
+                                                  IsChecked="{Binding LogLevel.Value, Converter={StaticResource LogLevelToBool}, ConverterParameter=Debug}" />
                                         <MenuItem Command="{Binding SetLogLevelCommand}"
                                                   CommandParameter="{x:Static nlog:LogLevel.Info}"
-                                                  Header="Info" />
+                                                  Header="Info"
+                                                  IsChecked="{Binding LogLevel.Value, Converter={StaticResource LogLevelToBool}, ConverterParameter=Info}" />
                                         <MenuItem Command="{Binding SetLogLevelCommand}"
                                                   CommandParameter="{x:Static nlog:LogLevel.Warn}"
-                                                  Header="Warn" />
+                                                  Header="Warn"
+                                                  IsChecked="{Binding LogLevel.Value, Converter={StaticResource LogLevelToBool}, ConverterParameter=Warn}" />
                                         <MenuItem Command="{Binding SetLogLevelCommand}"
                                                   CommandParameter="{x:Static nlog:LogLevel.Error}"
-                                                  Header="Error" />
+                                                  Header="Error"
+                                                  IsChecked="{Binding LogLevel.Value, Converter={StaticResource LogLevelToBool}, ConverterParameter=Error}" />
                                         <MenuItem Command="{Binding SetLogLevelCommand}"
                                                   CommandParameter="{x:Static nlog:LogLevel.Fatal}"
-                                                  Header="Fatal" />
+                                                  Header="Fatal"
+                                                  IsChecked="{Binding LogLevel.Value, Converter={StaticResource LogLevelToBool}, ConverterParameter=Fatal}" />
                                         <MenuItem Command="{Binding SetLogLevelCommand}"
                                                   CommandParameter="{x:Static nlog:LogLevel.Off}"
-                                                  Header="Off" />
+                                                  Header="Off"
+                                                  IsChecked="{Binding LogLevel.Value, Converter={StaticResource LogLevelToBool}, ConverterParameter=Off}" />
                                     </MenuItem>
                                     <MenuItem Command="{Binding ShowLogCommand}" Header="アプリケーションログを開く(_L)" />
                                 </MenuItem>

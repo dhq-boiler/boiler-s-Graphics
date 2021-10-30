@@ -442,6 +442,8 @@ namespace boilersGraphics.ViewModels
             EnableAutoSave.Value = true;
             AutoSaveType.Value = Models.AutoSaveType.SetInterval;
             AutoSaveInterval.Value = TimeSpan.FromSeconds(30);
+
+            MainWindowVM.LogLevel.Value = NLog.LogLevel.Info;
         }
 
         private bool CanOpenPropertyDialog()
