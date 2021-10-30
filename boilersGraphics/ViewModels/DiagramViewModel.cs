@@ -438,6 +438,10 @@ namespace boilersGraphics.ViewModels
 
             Width = width;
             Height = height;
+
+            EnableAutoSave.Value = true;
+            AutoSaveType.Value = Models.AutoSaveType.SetInterval;
+            AutoSaveInterval.Value = TimeSpan.FromSeconds(30);
         }
 
         private bool CanOpenPropertyDialog()
