@@ -34,7 +34,61 @@
                 <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/DesignerItems/CombineDesignerItemDataTemplate.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/DesignerItems/SnapPointDataTemplate.xaml" />
 
+                <ResourceDictionary Source="/Btl.Controls.MyControls;component/Resources/AllBrushes.xaml" />
+                <ResourceDictionary Source="/Btl.Controls.MyControls;component/Resources/brush.scroll.down.xaml" />
+                <ResourceDictionary Source="/Btl.Controls.MyControls;component/Resources/brush.scroll.up.xaml" />
+                <ResourceDictionary Source="/Btl.Controls.MyControls;component/Themes/ShortTimeSpanControl.Generic.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
+            <Style x:Key="SpinnerStyle" TargetType="{x:Type Button}">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="221*" />
+                                </Grid.RowDefinitions>
+                                <TextBox x:Name="UnderlyingTextBox"
+                                         VerticalAlignment="Center"
+                                         Text="{Binding UnderlyingValue, ElementName=root}" />
+                                <Grid x:Name="grid1" Grid.Column="1">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <Button x:Name="UpButton"
+                                            Grid.Row="0"
+                                            Command="{Binding UpCommand, ElementName=root}"
+                                            Content="Up" />
+                                    <Button x:Name="DownButton"
+                                            Grid.Row="1"
+                                            Command="{Binding DownCommand, ElementName=root}"
+                                            Content="Down" />
+                                </Grid>
+                                <ContentPresenter Grid.RowSpan="2"
+                                                  Grid.ColumnSpan="2"
+                                                  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                  RecognizesAccessKey="True"
+                                                  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                            </Grid>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsFocused" Value="True" />
+                                <Trigger Property="IsDefaulted" Value="True" />
+                                <Trigger Property="IsMouseOver" Value="True" />
+                                <Trigger Property="IsPressed" Value="True" />
+                                <Trigger Property="IsEnabled" Value="False" />
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
             <property:Resources x:Key="resources" />
         </ResourceDictionary>
     </prism:PrismApplication.Resources>

@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
@@ -117,6 +118,14 @@ namespace boilersGraphics.ViewModels
         public ReactivePropertySlim<Color> CanvasBackground { get; } = new ReactivePropertySlim<Color>();
 
         public ReactivePropertySlim<bool> EnablePointSnap { get; } = new ReactivePropertySlim<bool>();
+
+        public ReactivePropertySlim<bool> EnableAutoSave { get; } = new ReactivePropertySlim<bool>();
+
+        public ReactivePropertySlim<DateTime> AutoSavedDateTime { get; } = new ReactivePropertySlim<DateTime>();
+
+        public ReactivePropertySlim<AutoSaveType> AutoSaveType { get; } = new ReactivePropertySlim<AutoSaveType>();
+
+        public ReactivePropertySlim<TimeSpan> AutoSaveInterval { get; } = new ReactivePropertySlim<TimeSpan>(TimeSpan.FromMinutes(1));
 
         public ObservableCollection<Color> EdgeColors
         {
@@ -429,6 +438,12 @@ namespace boilersGraphics.ViewModels
 
             Width = width;
             Height = height;
+
+            EnableAutoSave.Value = true;
+            AutoSaveType.Value = Models.AutoSaveType.SetInterval;
+            AutoSaveInterval.Value = TimeSpan.FromSeconds(30);
+
+            MainWindowVM.LogLevel.Value = NLog.LogLevel.Info;
         }
 
         private bool CanOpenPropertyDialog()
@@ -453,15 +468,83 @@ namespace boilersGraphics.ViewModels
             MainWindowVM.Recorder.EndRecode();
         }
 
+        private IDisposable _AutoSaveTimerDisposableObj;
+
         public void Initialize()
         {
             MainWindowVM.Recorder.BeginRecode();
 
             InitialSetting(MainWindowVM, true, true);
-            
+
             MainWindowVM.Recorder.EndRecode();
-            
+
             MainWindowVM.Controller.Flush();
+            
+            SetAutoSave();
+        }
+
+        private void SetAutoSave()
+        {
+            if (_AutoSaveTimerDisposableObj != null)
+            {
+                _AutoSaveTimerDisposableObj.Dispose();
+            }
+
+            MainWindowVM.Recorder.Current.StackChanged -= Current_StackChanged;
+
+            if (EnableAutoSave.Value)
+            {
+                if (AutoSaveType.Value == Models.AutoSaveType.SetInterval)
+                {
+                    var source = Observable.Timer(TimeSpan.Zero, AutoSaveInterval.Value);
+
+                    _AutoSaveTimerDisposableObj = source.Subscribe(_ =>
+                    {
+                        AutoSave();
+                    });
+                }
+                else if (AutoSaveType.Value == Models.AutoSaveType.EveryTimeCampusChanges)
+                {
+                    MainWindowVM.Recorder.Current.StackChanged += Current_StackChanged;
+                }
+            }
+        }
+
+        private void Current_StackChanged(object sender, TsOperationHistory.OperationStackChangedEventArgs e)
+        {
+            AutoSave();
+        }
+
+        private void AutoSave()
+        {
+            var path = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "dhq_boiler\\boilersGraphics\\AutoSave\\AutoSave.xml");
+            var autoSaveDir = Path.GetDirectoryName(path);
+            if (!Directory.Exists(autoSaveDir))
+            {
+                Directory.CreateDirectory(autoSaveDir);
+            }
+
+            App.Current.Dispatcher.Invoke(() =>
+            {
+                XElement versionXML = new XElement("Version", BGSXFileVersion.ToString());
+                XElement layersXML = new XElement("Layers", ObjectSerializer.SerializeLayers(Layers));
+                XElement configurationXML = new XElement("Configuration", ObjectSerializer.SerializeConfiguration(this));
+
+                XElement root = new XElement("boilersGraphics");
+                root.Add(versionXML);
+                root.Add(layersXML);
+                root.Add(configurationXML);
+                root.Save(path);
+            });
+
+            AutoSavedDateTime.Value = DateTime.Now;
+            MainWindowVM.Message.Value = $"{AutoSavedDateTime.Value} 自動保存しました。";
+
+            LoggerHelper.GetLogger().Info($"{AutoSavedDateTime.Value} {path} に自動保存しました。");
+
+            Observable.Timer(TimeSpan.FromSeconds(5))
+                      .Subscribe(_ => MainWindowVM.Message.Value = "")
+                      .AddTo(_CompositeDisposable);
         }
 
         public LayerTreeViewItemBase GetLayerTreeViewItemBase(SelectableDesignerItemViewModelBase item)
@@ -942,6 +1025,9 @@ namespace boilersGraphics.ViewModels
             setting.CanvasBackground.Value = this.CanvasBackground.Value;
             setting.EnablePointSnap.Value = this.EnablePointSnap.Value;
             setting.SnapPower.Value = (App.Current.MainWindow.DataContext as MainWindowViewModel).SnapPower.Value;
+            setting.EnableAutoSave.Value = this.EnableAutoSave.Value;
+            setting.AutoSaveType.Value = this.AutoSaveType.Value;
+            setting.AutoSaveInterval.Value = this.AutoSaveInterval.Value;
             dlgService.ShowDialog(nameof(Views.Setting), new DialogParameters() { { "Setting",  setting} }, ret => result = ret);
             if (result != null && result.Result == ButtonResult.OK)
             {
@@ -954,6 +1040,10 @@ namespace boilersGraphics.ViewModels
                 (App.Current.MainWindow.DataContext as MainWindowViewModel).SnapPower.Value = s.SnapPower.Value;
                 BackgroundItem.Value.Width.Value = Width;
                 BackgroundItem.Value.Height.Value = Height;
+                EnableAutoSave.Value = s.EnableAutoSave.Value;
+                AutoSaveType.Value = s.AutoSaveType.Value;
+                AutoSaveInterval.Value = s.AutoSaveInterval.Value;
+                SetAutoSave();
             }
         }
 
@@ -1086,11 +1176,13 @@ namespace boilersGraphics.ViewModels
         private void Add(SelectableDesignerItemViewModelBase item)
         {
             SelectedLayers.Value.First().AddItem(MainWindowVM, this, item);
+            LoggerHelper.GetLogger().Info($"Add item {item.ShowPropertiesAndFields()}");
         }
 
         private void Remove(SelectableDesignerItemViewModelBase item)
         {
             Layers.ToList().ForEach(x => x.RemoveItem(MainWindowVM, item));
+            LoggerHelper.GetLogger().Info($"Remove item {item.ShowPropertiesAndFields()}");
         }
 
         #region Save
@@ -2269,6 +2361,8 @@ namespace boilersGraphics.ViewModels
                     FileName.Dispose();
                     CanvasBackground.Dispose();
                     EnablePointSnap.Dispose();
+                    _AutoSaveTimerDisposableObj.Dispose();
+                    MainWindowVM.Recorder.Current.StackChanged -= Current_StackChanged;
                 }
 
                 disposedValue = true;
