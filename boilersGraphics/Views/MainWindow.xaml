@@ -1252,6 +1252,11 @@
                     <Run Text="{Binding Details.Value}" />
                 </TextBlock>
             </StatusBarItem>
+            <StatusBarItem HorizontalAlignment="Right">
+                <TextBlock Width="Auto" TextAlignment="Right">
+                    <Run Text="{Binding Message.Value}" />
+                </TextBlock>
+            </StatusBarItem>
         </StatusBar>
 
         <!--  Diagram Control  -->

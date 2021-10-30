@@ -194,6 +194,7 @@ namespace boilersGraphics.ViewModels
         public ReactivePropertySlim<string> CurrentOperation { get; } = new ReactivePropertySlim<string>();
 
         public ReactivePropertySlim<string> Details { get; } = new ReactivePropertySlim<string>();
+        public ReactivePropertySlim<string> Message { get; } = new ReactivePropertySlim<string>();
 
         public ReactivePropertySlim<double> SnapPower { get; } = new ReactivePropertySlim<double>();
 
