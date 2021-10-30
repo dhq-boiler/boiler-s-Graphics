@@ -2361,7 +2361,8 @@ namespace boilersGraphics.ViewModels
                     FileName.Dispose();
                     CanvasBackground.Dispose();
                     EnablePointSnap.Dispose();
-                    _AutoSaveTimerDisposableObj.Dispose();
+                    if (_AutoSaveTimerDisposableObj != null)
+                        _AutoSaveTimerDisposableObj.Dispose();
                     MainWindowVM.Recorder.Current.StackChanged -= Current_StackChanged;
                 }
 
