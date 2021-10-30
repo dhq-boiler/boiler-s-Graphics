@@ -1,0 +1,12 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:Btl.Controls">
+    <ResourceDictionary.MergedDictionaries>
+        <!--
+            We have to use this 'component' relative notation to load  the
+            other dictionaries at runtime
+        -->
+        <ResourceDictionary Source="/Btl.Controls.MyControls;component/Themes/SpinnerControl.Generic.xaml" />
+        <ResourceDictionary Source="/Btl.Controls.MyControls;component/Themes/ShortTimeSpanControl.Generic.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+</ResourceDictionary>
