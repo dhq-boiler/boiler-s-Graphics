@@ -33,11 +33,6 @@ boiler's Graphicsを動作させるには .NET Framework 4.8 が必要です。
 
 [How to use](https://github.com/dhq-boiler/boiler-s-Graphics/blob/develop/HowToUse.md)
 
-# Loadmap
-
-![Loadmap](https://github.com/dhq-boiler/boiler-s-Graphics/blob/develop/WebComponents/boilersGraphics_loadmap.jpg)
-
-
 # Author
 
 * [@dhq_boiler](https://twitter.com/dhq_boiler)
