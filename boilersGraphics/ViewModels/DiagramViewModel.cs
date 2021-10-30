@@ -1176,11 +1176,13 @@ namespace boilersGraphics.ViewModels
         private void Add(SelectableDesignerItemViewModelBase item)
         {
             SelectedLayers.Value.First().AddItem(MainWindowVM, this, item);
+            LoggerHelper.GetLogger().Info($"Add item {item.ShowPropertiesAndFields()}");
         }
 
         private void Remove(SelectableDesignerItemViewModelBase item)
         {
             Layers.ToList().ForEach(x => x.RemoveItem(MainWindowVM, item));
+            LoggerHelper.GetLogger().Info($"Remove item {item.ShowPropertiesAndFields()}");
         }
 
         #region Save
