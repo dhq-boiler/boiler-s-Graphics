@@ -533,6 +533,9 @@ namespace boilersGraphics.ViewModels
 
             AutoSavedDateTime.Value = DateTime.Now;
             MainWindowVM.Message.Value = $"{AutoSavedDateTime.Value} 自動保存しました。";
+            Observable.Timer(TimeSpan.FromSeconds(5))
+                      .Subscribe(_ => MainWindowVM.Message.Value = "")
+                      .AddTo(_CompositeDisposable);
         }
 
         public LayerTreeViewItemBase GetLayerTreeViewItemBase(SelectableDesignerItemViewModelBase item)
