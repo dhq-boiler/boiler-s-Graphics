@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Disposables;
+using System.Reflection;
 using System.Threading;
 using System.Windows.Media;
 using TsOperationHistory;
@@ -192,6 +193,32 @@ namespace boilersGraphics.ViewModels
                 propertyInfo.SetValue(left, propertyInfo.GetValue(right));
                 propertyInfo.SetValue(right, temp);
             }
+        }
+
+        public string ShowPropertiesAndFields()
+        {
+            string ret = $"<{GetType().Name}>{{";
+
+            PropertyInfo[] properties = GetType().GetProperties(
+                BindingFlags.Public
+                | BindingFlags.Instance);
+
+            foreach (var property in properties)
+            {
+                ret += $"{property.Name}={property.GetValue(this)},";
+            }
+
+            FieldInfo[] fields = GetType().GetFields(
+                BindingFlags.Public
+                | BindingFlags.Instance);
+
+            foreach (var field in fields)
+            {
+                ret += $"{field.Name}={field.GetValue(this)},";
+            }
+            ret = ret.Remove(ret.Length - 1, 1);
+            ret += $"}}";
+            return ret;
         }
     }
 }

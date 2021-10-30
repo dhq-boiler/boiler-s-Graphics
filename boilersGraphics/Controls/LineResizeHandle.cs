@@ -97,6 +97,10 @@ namespace boilersGraphics.Controls
             (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = "";
 
             Recorder.EndRecode();
+
+            var snapPointVM = DataContext as SnapPointViewModel;
+            var connectorVM = DataContext as ConnectorBaseViewModel ?? (DataContext as SnapPointViewModel).Parent.Value as ConnectorBaseViewModel;
+            LoggerHelper.GetLogger().Info($"Deform item {connectorVM.ShowPropertiesAndFields()}");
         }
     }
 }

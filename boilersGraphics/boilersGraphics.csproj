@@ -168,8 +168,10 @@
     <Compile Include="Controls\ResizeThumb.cs" />
     <Compile Include="Controls\RotateThumb.cs" />
     <Compile Include="Controls\SnapPoint.cs" />
+    <Compile Include="Converters\BoolToEnumConverter.cs" />
     <Compile Include="Converters\ColorToStringConverter.cs" />
     <Compile Include="Converters\ExtractRectConverter.cs" />
+    <Compile Include="Converters\LogLevelToBoolConverter.cs" />
     <Compile Include="Converters\QuadConverter.cs" />
     <Compile Include="Converters\DoubleToStringConverter.cs" />
     <Compile Include="Converters\ShiftPointConverter.cs" />
@@ -723,6 +725,15 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\img\polygon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Btl\Controls\Btl.Controls.csproj">
+      <Project>{eefa1336-44f6-4766-be16-a81ad1fcc2e5}</Project>
+      <Name>Btl.Controls</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\Themes\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

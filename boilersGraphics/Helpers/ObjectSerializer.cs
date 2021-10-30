@@ -184,14 +184,13 @@ namespace boilersGraphics.Helpers
 
         public static IEnumerable<XElement> SerializeConfiguration(DiagramViewModel diagramViewModel)
         {
-            var mainWindowVM = (App.Current.MainWindow.DataContext as MainWindowViewModel);
             return new XElement[]
             {
                 new XElement("Width", diagramViewModel.Width),
                 new XElement("Height", diagramViewModel.Height),
                 new XElement("CanvasBackground", diagramViewModel.CanvasBackground.Value),
                 new XElement("EnablePointSnap", diagramViewModel.EnablePointSnap.Value),
-                new XElement("SnapPower", mainWindowVM.SnapPower.Value)
+                new XElement("SnapPower", diagramViewModel.MainWindowVM.SnapPower.Value)
             };
         }
     }

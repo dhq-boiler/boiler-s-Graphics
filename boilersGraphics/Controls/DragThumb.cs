@@ -1,4 +1,5 @@
-﻿using boilersGraphics.ViewModels;
+﻿using boilersGraphics.Helpers;
+using boilersGraphics.ViewModels;
 using System;
 using System.Linq;
 using System.Windows;
@@ -32,6 +33,9 @@ namespace boilersGraphics.Controls
             (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "";
             (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = "";
             Recorder.EndRecode();
+
+            var item = this.DataContext as DesignerItemViewModelBase;
+            LoggerHelper.GetLogger().Info($"Move item {item.ShowPropertiesAndFields()}");
         }
 
         private void DragThumb_DragDelta(object sender, DragDeltaEventArgs e)

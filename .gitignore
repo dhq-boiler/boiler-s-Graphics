@@ -9,3 +9,5 @@ Setup/Debug/
 boilersGraphics/gitversion.json
 .axoCover/
 UpgradeLog.htm
+obj/
+bin/
