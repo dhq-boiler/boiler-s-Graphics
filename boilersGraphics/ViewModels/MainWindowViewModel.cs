@@ -1,5 +1,6 @@
 ﻿using boilersGraphics.Helpers;
 using boilersGraphics.Views;
+using NLog;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
@@ -157,6 +158,15 @@ namespace boilersGraphics.ViewModels
                 IDialogResult result = null;
                 this.dlgService.ShowDialog(nameof(Views.Version), ret => result = ret);
             });
+            SetLogLevelCommand = new DelegateCommand<LogLevel>(parameter =>
+            {
+                foreach (var rule in LogManager.Configuration.LoggingRules)
+                {
+                    rule.EnableLoggingForLevel(parameter);
+                }
+                LogManager.ReconfigExistingLoggers();
+                LoggerHelper.GetLogger().Info($"ログレベルが変更されました。変更後：{parameter}");
+            });
             DiagramViewModel.EdgeThickness.Subscribe(x =>
             {
                 if (x.HasValue && !double.IsNaN(x.Value) && DiagramViewModel.SelectedItems.Value != null)
@@ -221,6 +231,8 @@ namespace boilersGraphics.ViewModels
         public DelegateCommand ShowLogCommand { get; }
 
         public DelegateCommand ShowVersionCommand { get; }
+
+        public DelegateCommand<LogLevel> SetLogLevelCommand { get; }
 
         private void ExecuteDeleteSelectedItemsCommand(object parameter)
         {

@@ -10,6 +10,7 @@
         xmlns:input="clr-namespace:System.Windows.Input;assembly=System"
         xmlns:local="clr-namespace:boilersGraphics.Views"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:nlog="clr-namespace:NLog;assembly=NLog"
         xmlns:prism="http://prismlibrary.com/"
         xmlns:trigger="clr-namespace:boilersGraphics.Views.Triggers"
         xmlns:usercontrol="clr-namespace:boilersGraphics.UserControls"
@@ -153,7 +154,32 @@
                                 </MenuItem>
                             </MenuItem>
                             <MenuItem Header="ヘルプ(_H)">
-                                <MenuItem Command="{Binding ShowLogCommand}" Header="アプリケーションログを開く(_L)" />
+                                <MenuItem Header="ログ">
+                                    <MenuItem Header="ログレベル">
+                                        <MenuItem Command="{Binding SetLogLevelCommand}"
+                                                  CommandParameter="{x:Static nlog:LogLevel.Trace}"
+                                                  Header="Trace" />
+                                        <MenuItem Command="{Binding SetLogLevelCommand}"
+                                                  CommandParameter="{x:Static nlog:LogLevel.Debug}"
+                                                  Header="Debug" />
+                                        <MenuItem Command="{Binding SetLogLevelCommand}"
+                                                  CommandParameter="{x:Static nlog:LogLevel.Info}"
+                                                  Header="Info" />
+                                        <MenuItem Command="{Binding SetLogLevelCommand}"
+                                                  CommandParameter="{x:Static nlog:LogLevel.Warn}"
+                                                  Header="Warn" />
+                                        <MenuItem Command="{Binding SetLogLevelCommand}"
+                                                  CommandParameter="{x:Static nlog:LogLevel.Error}"
+                                                  Header="Error" />
+                                        <MenuItem Command="{Binding SetLogLevelCommand}"
+                                                  CommandParameter="{x:Static nlog:LogLevel.Fatal}"
+                                                  Header="Fatal" />
+                                        <MenuItem Command="{Binding SetLogLevelCommand}"
+                                                  CommandParameter="{x:Static nlog:LogLevel.Off}"
+                                                  Header="Off" />
+                                    </MenuItem>
+                                    <MenuItem Command="{Binding ShowLogCommand}" Header="アプリケーションログを開く(_L)" />
+                                </MenuItem>
                                 <MenuItem Command="{Binding ShowVersionCommand}" Header="boiler's Graphics のバージョン情報(_V)" />
                             </MenuItem>
                         </Menu>
