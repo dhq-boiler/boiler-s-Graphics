@@ -1,4 +1,6 @@
-﻿using boilersGraphics.Helpers;
+﻿using boilersGraphics.Exceptions;
+using boilersGraphics.Helpers;
+using NLog;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
@@ -22,6 +24,35 @@ namespace boilersGraphics.ViewModels
         public ConnectorBaseViewModel()
         {
             Init();
+        }
+
+        public virtual void PostProcess_AddPointP1(Point p1)
+        { }
+        public virtual void PostProcess_AddPointP2(Point p2)
+        { }
+
+        public void AddPointP1(IDiagramViewModel diagramViewModel, Point p1)
+        {
+            if (Points.Count() != 0)
+                throw new UnexpectedException("Points.Count() != 0");
+            Points.Add(p1);
+            SnapPoint0VM = Observable.Return(Points[0])
+                                     .Select(x => new SnapPointViewModel(this, 0, diagramViewModel, x.X, x.Y, 3, 3))
+                                     .ToReadOnlyReactivePropertySlim();
+            LogManager.GetCurrentClassLogger().Debug($"{this.ID} AddPointP1 {p1}");
+            PostProcess_AddPointP1(p1);
+        }
+
+        public void AddPointP2(IDiagramViewModel diagramViewModel, Point p2)
+        {
+            if (Points.Count() != 1)
+                throw new UnexpectedException("Points.Count() != 1");
+            Points.Add(p2);
+            SnapPoint1VM = Observable.Return(Points[1])
+                                     .Select(x => new SnapPointViewModel(this, 1, diagramViewModel, x.X, x.Y, 3, 3))
+                                     .ToReadOnlyReactivePropertySlim();
+            LogManager.GetCurrentClassLogger().Debug($"{this.ID} AddPointP2 {p2}");
+            PostProcess_AddPointP2(p2);
         }
 
         public void AddPoints(IDiagramViewModel diagramViewModel, Point p1, Point p2)
@@ -87,14 +118,6 @@ namespace boilersGraphics.ViewModels
         }
 
         protected virtual void InitPathFinder() { }
-
-        #region IObserver<TransformNotification>
-
-        public void OnNext(TransformNotification value)
-        {
-        }
-
-        #endregion //IObserver<TransformNotification>
 
         #region IObserver<GroupTransformNotification>
 

@@ -54,6 +54,7 @@
                                       Height="7"
                                       DataContext="{Binding SnapPoint0VM.Value}"
                                       OppositeHandle="{Binding ElementName=ResizeHandle_EndPoint}"
+                                      SnapPointEdge="BeginEdge"
                                       Tag="始点"
                                       TargetPointIndex="0">
                 <control:LineResizeHandle.Template>
@@ -81,6 +82,7 @@
                                       Height="7"
                                       DataContext="{Binding SnapPoint1VM.Value}"
                                       OppositeHandle="{Binding ElementName=ResizeHandle_BeginPoint}"
+                                      SnapPointEdge="EndEdge"
                                       Tag="終点"
                                       TargetPointIndex="1">
                 <control:LineResizeHandle.Template>
@@ -265,10 +267,10 @@
                                      Cursor="SizeNWSE"
                                      Tag="右下"
                                      Template="{StaticResource ResizeHandleTemplate}" />
-                <control:SnapPoint HorizontalAlignment="Center"
-                                   VerticalAlignment="Center"
-                                   Width="7"
+                <control:SnapPoint Width="7"
                                    Height="7"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
                                    Tag="中央">
                     <control:SnapPoint.Template>
                         <ControlTemplate TargetType="control:SnapPoint">

@@ -201,7 +201,6 @@
     <Compile Include="Helpers\GroupTransformNotification.cs" />
     <Compile Include="Helpers\IEventArgsConverter.cs" />
     <Compile Include="Helpers\LayerTreeViewItemCollection.cs" />
-    <Compile Include="Helpers\LoggerHelper.cs" />
     <Compile Include="Helpers\Measure.cs" />
     <Compile Include="Helpers\Name.cs" />
     <Compile Include="Helpers\ObjectDeserializer.cs" />
@@ -211,6 +210,7 @@
     <Compile Include="Helpers\Reflections.cs" />
     <Compile Include="Helpers\SnapAction.cs" />
     <Compile Include="Helpers\SnapPointDistincter.cs" />
+    <Compile Include="Helpers\SnapPointEdge.cs" />
     <Compile Include="Helpers\ToolBoxData.cs" />
     <Compile Include="Helpers\ToolItemData.cs" />
     <Compile Include="Helpers\TransformNotification.cs" />
@@ -290,6 +290,7 @@
     <Compile Include="ViewModels\SelectableDesignerItemViewModelBase.cs" />
     <Compile Include="ViewModels\SetSnapPointViewModel.cs" />
     <Compile Include="ViewModels\SettingViewModel.cs" />
+    <Compile Include="ViewModels\SnapPointAdsorptionInformation.cs" />
     <Compile Include="ViewModels\SnapPointViewModel.cs" />
     <Compile Include="ViewModels\StraightConnectorViewModel.cs" />
     <Compile Include="ViewModels\ThicknessViewModel.cs" />

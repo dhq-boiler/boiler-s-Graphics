@@ -22,15 +22,30 @@ namespace boilersGraphics.ViewModels
             : base()
         { }
 
+        public StraightConnectorViewModel(IDiagramViewModel diagramViewModel, Point p1)
+            :base()
+        {
+            AddPointP1(diagramViewModel, p1);
+        }
+
+        [Obsolete]
         public StraightConnectorViewModel(IDiagramViewModel diagramViewModel, Point p1, Point p2)
             : base()
         {
             AddPoints(diagramViewModel, p1, p2);
+            InitIsSelectedOnSnapPoints();
+        }
+
+        public override void PostProcess_AddPointP1(Point p1)
+        {
             P1X = Observable.Return(p1.X).ToReactiveProperty();
             P1Y = Observable.Return(p1.Y).ToReactiveProperty();
+        }
+
+        public override void PostProcess_AddPointP2(Point p2)
+        {
             P2X = Observable.Return(p2.X).ToReactiveProperty();
             P2Y = Observable.Return(p2.Y).ToReactiveProperty();
-            InitIsSelectedOnSnapPoints();
         }
 
         public ReactiveProperty<double> P1X { get; set; }
@@ -75,5 +90,10 @@ namespace boilersGraphics.ViewModels
         }
 
         #endregion //IClonable
+
+        public override void OnNext(Helpers.TransformNotification value)
+        {
+
+        }
     }
 }

@@ -20,10 +20,12 @@ namespace boilersGraphics.Adorners
         private Point? _endPoint;
         private Pen _straightLinePen;
         private SnapAction _snapAction;
+        private StraightConnectorViewModel item;
 
-        public StraightLineAdorner(DesignerCanvas designerCanvas, Point? dragStartPoint)
+        public StraightLineAdorner(DesignerCanvas designerCanvas, Point? dragStartPoint, StraightConnectorViewModel item)
             : base(designerCanvas)
         {
+            this.item = item;
             _designerCanvas = designerCanvas;
             _startPoint = dragStartPoint;
             var parent = (AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel;
@@ -69,20 +71,22 @@ namespace boilersGraphics.Adorners
             if (_startPoint.HasValue && _endPoint.HasValue)
             {
                 var viewModel = (AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel;
-                var item = new StraightConnectorViewModel(viewModel, _startPoint.Value, _endPoint.Value);
                 item.Owner = viewModel;
                 item.EdgeColor.Value = item.Owner.EdgeColors.First();
                 item.EdgeThickness.Value = item.Owner.EdgeThickness.Value.Value;
                 item.ZIndex.Value = item.Owner.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).Count();
                 item.IsSelected.Value = true;
-                item.PathGeometry.Value = GeometryCreator.CreateLine(item);
                 item.IsVisible.Value = true;
+                item.AddPointP2(viewModel, _endPoint.Value);
+                item.PathGeometry.Value = GeometryCreator.CreateLine(item);
                 item.SnapPoint0VM.Value.IsSelected.Value = true;
                 item.SnapPoint1VM.Value.IsSelected.Value = true;
                 item.SnapPoint0VM.Value.IsHitTestVisible.Value = true;
                 item.SnapPoint1VM.Value.IsHitTestVisible.Value = true;
                 item.Owner.DeselectAll();
                 ((AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel).AddItemCommand.Execute(item);
+
+                _snapAction.PostProcess(SnapPointEdge.EndEdge, item);
 
                 _startPoint = null;
                 _endPoint = null;

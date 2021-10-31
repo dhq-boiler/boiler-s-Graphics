@@ -51,6 +51,8 @@ namespace boilersGraphics.ViewModels
 
         public ReactivePropertySlim<double> Opacity { get; } = new ReactivePropertySlim<double>();
 
+        public IDisposable SnapObj { get; set; }
+
         public override bool SupportsPropertyDialog => false;
 
         public override object Clone()
@@ -78,6 +80,7 @@ namespace boilersGraphics.ViewModels
             clone.Width.Value = Width.Value;
             clone.Height.Value = Height.Value;
             clone.Opacity.Value = Opacity.Value;
+            clone.SnapObj = SnapObj;
             return clone;
         }
 

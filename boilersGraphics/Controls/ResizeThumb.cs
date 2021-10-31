@@ -1,10 +1,8 @@
 ﻿using boilersGraphics.Extensions;
-using boilersGraphics.Helpers;
 using boilersGraphics.ViewModels;
 using NLog;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Windows;
@@ -152,15 +150,15 @@ namespace boilersGraphics.Controls
                             if (diagramVM.EnablePointSnap.Value)
                             {
                                 var snapPoints = diagramVM.GetSnapPoints(new List<SnapPoint>(correspondingViews));
-                                Point? snapped = null;
+                                Tuple<SnapPoint, Point> snapped = null;
 
                                 foreach (var snapPoint in snapPoints)
                                 {
                                     var p = GetPosition(rect, base.VerticalAlignment, base.HorizontalAlignment);
-                                    if (p.X > snapPoint.X - mainWindowVM.SnapPower.Value
-                                     && p.X < snapPoint.X + mainWindowVM.SnapPower.Value
-                                     && p.Y > snapPoint.Y - mainWindowVM.SnapPower.Value
-                                     && p.Y < snapPoint.Y + mainWindowVM.SnapPower.Value)
+                                    if (p.X > snapPoint.Item2.X - mainWindowVM.SnapPower.Value
+                                     && p.X < snapPoint.Item2.X + mainWindowVM.SnapPower.Value
+                                     && p.Y > snapPoint.Item2.Y - mainWindowVM.SnapPower.Value
+                                     && p.Y < snapPoint.Item2.Y + mainWindowVM.SnapPower.Value)
                                     {
                                         //スナップする座標を一時変数へ保存
                                         snapped = snapPoint;
@@ -171,10 +169,10 @@ namespace boilersGraphics.Controls
                                 if (snapped != null)
                                 {
                                     AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(designerCanvas);
-                                    RemoveFromAdornerLayerAndDictionary(snapped, adornerLayer);
+                                    RemoveFromAdornerLayerAndDictionary(snapped.Item2, adornerLayer);
 
                                     //ドラッグ終了座標を一時変数で上書きしてスナップ
-                                    SetRect(ref rect, snapped.Value, base.VerticalAlignment, base.HorizontalAlignment);
+                                    SetRect(ref rect, snapped.Item2, base.VerticalAlignment, base.HorizontalAlignment);
 
                                     viewModel.Left.Value = rect.X;
                                     viewModel.Top.Value = rect.Y;
@@ -183,16 +181,16 @@ namespace boilersGraphics.Controls
 
                                     if (adornerLayer != null)
                                     {
-                                        LogManager.GetCurrentClassLogger().Trace($"Snap={snapped.Value}");
-                                        if (!_adorners.ContainsKey(snapped.Value))
+                                        LogManager.GetCurrentClassLogger().Trace($"Snap={snapped.Item2}");
+                                        if (!_adorners.ContainsKey(snapped.Item2))
                                         {
-                                            var adorner = new Adorners.SnapPointAdorner(designerCanvas, snapped.Value);
+                                            var adorner = new Adorners.SnapPointAdorner(designerCanvas, snapped.Item2);
                                             if (adorner != null)
                                             {
                                                 adornerLayer.Add(adorner);
 
                                                 //ディクショナリに記憶する
-                                                _adorners.Add(snapped.Value, adorner);
+                                                _adorners.Add(snapped.Item2, adorner);
                                             }
                                         }
                                     }

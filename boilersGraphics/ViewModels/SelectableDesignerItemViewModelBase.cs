@@ -21,7 +21,7 @@ namespace boilersGraphics.ViewModels
     }
 
 
-    public abstract class SelectableDesignerItemViewModelBase : BindableBase, ISelectItems, IObserver<GroupTransformNotification>, IDisposable, ICloneable, IRestore
+    public abstract class SelectableDesignerItemViewModelBase : BindableBase, ISelectItems, IObserver<TransformNotification>, IObserver<GroupTransformNotification>, IDisposable, ICloneable, IRestore
     {
         protected CompositeDisposable _CompositeDisposable = new CompositeDisposable();
 
@@ -86,6 +86,12 @@ namespace boilersGraphics.ViewModels
         public Guid ParentID { get; set; }
 
         public IDisposable GroupDisposable { get; set; }
+
+        public static void Disconnect(SnapPointViewModel snapPointViewModel)
+        {
+            if (snapPointViewModel.SnapObj != null)
+                snapPointViewModel.SnapObj.Dispose();
+        }
 
         private void ExecuteSelectItemCommand(object param)
         {
@@ -157,6 +163,14 @@ namespace boilersGraphics.ViewModels
         public abstract object Clone();
 
         #endregion //IClonable
+
+        #region IObserver<TransformNotification>
+
+        public virtual void OnNext(TransformNotification value)
+        {
+        }
+
+        #endregion IObserver<TransformNotification>
 
         public void Restore(Action restorePropertiesAction)
         {

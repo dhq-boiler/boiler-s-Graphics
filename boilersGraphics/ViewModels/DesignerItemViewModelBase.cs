@@ -8,6 +8,7 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Media;
+using static boilersGraphics.Helpers.SnapAction;
 
 namespace boilersGraphics.ViewModels
 {
@@ -140,9 +141,10 @@ namespace boilersGraphics.ViewModels
             Top.Value = value - Height.Value / 2;
         }
 
-        public IDisposable Connect(ConnectorBaseViewModel connector)
+        public IDisposable Connect(SnapPointEdge snapPointEdge, SelectableDesignerItemViewModelBase item)
         {
-            var disposable = Subscribe(connector);
+            var spai = new SnapPointAdsorptionInformation(snapPointEdge, item);
+            var disposable = Subscribe(spai);
             _CompositeDisposable.Add(disposable);
             return disposable;
         }

@@ -175,7 +175,7 @@ namespace boilersGraphics.ViewModels
 
         public int LayerItemCount { get; set; } = 1;
 
-        public IEnumerable<Point> SnapPoints
+        public IEnumerable<Tuple<SnapPoint, Point>> SnapPoints
         {
             get
             {
@@ -184,11 +184,11 @@ namespace boilersGraphics.ViewModels
                 var sets = resizeThumbs
                                 .Select(x => new Tuple<SnapPoint, Point>(x, GetCenter(x)))
                                 .Distinct();
-                return sets.Select(x => x.Item2);
+                return sets;
             }
         }
 
-        public IEnumerable<Point> GetSnapPoints(IEnumerable<SnapPoint> exceptSnapPoints)
+        public IEnumerable<Tuple<SnapPoint, Point>> GetSnapPoints(IEnumerable<SnapPoint> exceptSnapPoints)
         {
             var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
             var resizeThumbs = designerCanvas.EnumerateChildOfType<SnapPoint>();
@@ -196,7 +196,18 @@ namespace boilersGraphics.ViewModels
                             .Where(x => !exceptSnapPoints.Contains(x))
                             .Select(x => new Tuple<SnapPoint, Point>(x, GetCenter(x)))
                             .Distinct();
-            return sets.Select(x => x.Item2);
+            return sets;
+        }
+
+        public IEnumerable<Tuple<SnapPoint, Point>> GetSnapPoints(Point exceptPoint)
+        {
+            var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
+            var resizeThumbs = designerCanvas.EnumerateChildOfType<SnapPoint>();
+            var sets = resizeThumbs
+                            .Where(x => x.InputHitTest(exceptPoint) == null)
+                            .Select(x => new Tuple<SnapPoint, Point>(x, GetCenter(x)))
+                            .Distinct();
+            return sets;
         }
 
         #endregion //Property
