@@ -2,7 +2,6 @@
 using boilersGraphics.Helpers;
 using boilersGraphics.ViewModels;
 using NLog;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
