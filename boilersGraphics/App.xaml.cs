@@ -1,5 +1,6 @@
 ﻿using boilersGraphics.Helpers;
 using boilersGraphics.Views;
+using NLog;
 using Prism.Ioc;
 using Prism.Unity;
 using System;
@@ -25,9 +26,9 @@ namespace boilersGraphics
             base.OnStartup(e);
 
             var version = Assembly.GetExecutingAssembly().GetName().Version;
-            LoggerHelper.GetLogger().Info($"boiler's Graphics {version}");
-            LoggerHelper.GetLogger().Info($"Copyright (C) dhq_boiler 2018-2021. All rights reserved.");
-            LoggerHelper.GetLogger().Info($"boiler's Graphics IS LAUNCHING");
+            LogManager.GetCurrentClassLogger().Info($"boiler's Graphics {version}");
+            LogManager.GetCurrentClassLogger().Info($"Copyright (C) dhq_boiler 2018-2021. All rights reserved.");
+            LogManager.GetCurrentClassLogger().Info($"boiler's Graphics IS LAUNCHING");
         }
 
         protected override Window CreateShell()

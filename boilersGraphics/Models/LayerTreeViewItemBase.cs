@@ -3,6 +3,7 @@ using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
 using boilersGraphics.ViewModels;
 using boilersGraphics.Views;
+using NLog;
 using Prism.Mvvm;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
@@ -58,7 +59,7 @@ namespace boilersGraphics.Models
                 if (this is Layer && x is Layer)
                     throw new UnexpectedException("Layers cannot have layers in their children");
                 if (x != null)
-                    LoggerHelper.GetLogger().Trace($"Set Parent Parent={{{x.Name.Value}}} Child={{{Name.Value}}}");
+                    LogManager.GetCurrentClassLogger().Trace($"Set Parent Parent={{{x.Name.Value}}} Child={{{Name.Value}}}");
             })
             .AddTo(_disposable);
             ChangeNameCommand.Subscribe(_ =>
@@ -127,7 +128,7 @@ namespace boilersGraphics.Models
             layerItems.ToList().ForEach(x =>
             {
                 mainWindowViewModel.Recorder.Current.ExecuteRemove(Children, x);
-                LoggerHelper.GetLogger().Trace($"{x} removed from {Children}");
+                LogManager.GetCurrentClassLogger().Trace($"{x} removed from {Children}");
             });
         }
 
@@ -138,7 +139,7 @@ namespace boilersGraphics.Models
                 if (x is LayerItem layerItem)
                 {
                     layerItem.Item.Value.IsHitTestVisible.Value = isVisible;
-                    LoggerHelper.GetLogger().Trace($"{layerItem.Name.Value}.IsHitTestVisible={layerItem.Item.Value.IsHitTestVisible.Value}");
+                    LogManager.GetCurrentClassLogger().Trace($"{layerItem.Name.Value}.IsHitTestVisible={layerItem.Item.Value.IsHitTestVisible.Value}");
                 }
                 x.ChildrenSwitchIsHitTestVisible(isVisible);
             });

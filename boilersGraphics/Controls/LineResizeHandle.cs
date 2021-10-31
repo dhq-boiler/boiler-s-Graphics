@@ -1,6 +1,7 @@
 ﻿using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
 using boilersGraphics.ViewModels;
+using NLog;
 using System.Windows;
 using System.Windows.Input;
 using TsOperationHistory;
@@ -100,7 +101,7 @@ namespace boilersGraphics.Controls
 
             var snapPointVM = DataContext as SnapPointViewModel;
             var connectorVM = DataContext as ConnectorBaseViewModel ?? (DataContext as SnapPointViewModel).Parent.Value as ConnectorBaseViewModel;
-            LoggerHelper.GetLogger().Info($"Deform item {connectorVM.ShowPropertiesAndFields()}");
+            LogManager.GetCurrentClassLogger().Info($"Deform item {connectorVM.ShowPropertiesAndFields()}");
         }
     }
 }

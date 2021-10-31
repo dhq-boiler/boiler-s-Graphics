@@ -1,6 +1,7 @@
 ﻿using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
 using boilersGraphics.ViewModels;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -182,7 +183,7 @@ namespace boilersGraphics.Controls
 
                                     if (adornerLayer != null)
                                     {
-                                        LoggerHelper.GetLogger().Trace($"Snap={snapped.Value}");
+                                        LogManager.GetCurrentClassLogger().Trace($"Snap={snapped.Value}");
                                         if (!_adorners.ContainsKey(snapped.Value))
                                         {
                                             var adorner = new Adorners.SnapPointAdorner(designerCanvas, snapped.Value);
@@ -347,9 +348,9 @@ namespace boilersGraphics.Controls
                     {
                         case HorizontalAlignment.Left:
                             rect.X += dragDeltaHorizontal;
-                            LoggerHelper.GetLogger().Trace($"rect.Y(a)={rect.Y}");
+                            LogManager.GetCurrentClassLogger().Trace($"rect.Y(a)={rect.Y}");
                             rect.Height += dragDeltaVertical;
-                            LoggerHelper.GetLogger().Trace($"rect.Y(b)={rect.Y}");
+                            LogManager.GetCurrentClassLogger().Trace($"rect.Y(b)={rect.Y}");
                             return;
                         case HorizontalAlignment.Center:
                             rect.Height += dragDeltaVertical;

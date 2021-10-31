@@ -6,6 +6,7 @@ using boilersGraphics.Models;
 using boilersGraphics.UserControls;
 using boilersGraphics.Views;
 using Microsoft.Win32;
+using NLog;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
@@ -353,8 +354,8 @@ namespace boilersGraphics.ViewModels
 
             AllItems.Subscribe(x =>
             {
-                LoggerHelper.GetLogger().Trace($"{x.Length} items in AllItems.");
-                LoggerHelper.GetLogger().Trace(string.Join(", ", x.Select(y => y?.ToString() ?? "null")));
+                LogManager.GetCurrentClassLogger().Trace($"{x.Length} items in AllItems.");
+                LogManager.GetCurrentClassLogger().Trace(string.Join(", ", x.Select(y => y?.ToString() ?? "null")));
             })
             .AddTo(_CompositeDisposable);
 
@@ -366,7 +367,7 @@ namespace boilersGraphics.ViewModels
                         .Merge()
                 )
                 .Switch()
-                .Do(x => LoggerHelper.GetLogger().Debug("SelectedItems updated"))
+                .Do(x => LogManager.GetCurrentClassLogger().Debug("SelectedItems updated"))
                 .Select(_ => Layers
                     .SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
                     .Where(x => x is LayerItem)
@@ -388,7 +389,7 @@ namespace boilersGraphics.ViewModels
 
             SelectedItems.Subscribe(selectedItems =>
             {
-                LoggerHelper.GetLogger().Trace($"SelectedItems changed {string.Join(", ", selectedItems.Select(x => x?.ToString() ?? "null"))}");
+                LogManager.GetCurrentClassLogger().Trace($"SelectedItems changed {string.Join(", ", selectedItems.Select(x => x?.ToString() ?? "null"))}");
 
                 GroupCommand.RaiseCanExecuteChanged();
                 UngroupCommand.RaiseCanExecuteChanged();
@@ -424,7 +425,7 @@ namespace boilersGraphics.ViewModels
 
             SelectedLayers.Subscribe(x =>
             {
-                LoggerHelper.GetLogger().Trace($"SelectedLayers changed {string.Join(", ", x.Select(x => x.ToString()))}");
+                LogManager.GetCurrentClassLogger().Trace($"SelectedLayers changed {string.Join(", ", x.Select(x => x.ToString()))}");
             })
             .AddTo(_CompositeDisposable);
 
@@ -540,7 +541,7 @@ namespace boilersGraphics.ViewModels
             AutoSavedDateTime.Value = DateTime.Now;
             MainWindowVM.Message.Value = $"{AutoSavedDateTime.Value} 自動保存しました。";
 
-            LoggerHelper.GetLogger().Info($"{AutoSavedDateTime.Value} {path} に自動保存しました。");
+            LogManager.GetCurrentClassLogger().Info($"{AutoSavedDateTime.Value} {path} に自動保存しました。");
 
             Observable.Timer(TimeSpan.FromSeconds(5))
                       .Subscribe(_ => MainWindowVM.Message.Value = "")
@@ -1176,13 +1177,13 @@ namespace boilersGraphics.ViewModels
         private void Add(SelectableDesignerItemViewModelBase item)
         {
             SelectedLayers.Value.First().AddItem(MainWindowVM, this, item);
-            LoggerHelper.GetLogger().Info($"Add item {item.ShowPropertiesAndFields()}");
+            LogManager.GetCurrentClassLogger().Info($"Add item {item.ShowPropertiesAndFields()}");
         }
 
         private void Remove(SelectableDesignerItemViewModelBase item)
         {
             Layers.ToList().ForEach(x => x.RemoveItem(MainWindowVM, item));
-            LoggerHelper.GetLogger().Info($"Remove item {item.ShowPropertiesAndFields()}");
+            LogManager.GetCurrentClassLogger().Info($"Remove item {item.ShowPropertiesAndFields()}");
         }
 
         #region Save
@@ -1289,7 +1290,7 @@ namespace boilersGraphics.ViewModels
             }
             else
             {
-                LoggerHelper.GetLogger().Info("強制読み込みモードでファイルを読み込みます。このモードはVersion要素が見つからない時に実施されます。");
+                LogManager.GetCurrentClassLogger().Info("強制読み込みモードでファイルを読み込みます。このモードはVersion要素が見つからない時に実施されます。");
             }
 
 
@@ -1312,7 +1313,7 @@ namespace boilersGraphics.ViewModels
             catch (Exception)
             {
                 MessageBox.Show("このファイルは古すぎるか壊れているため開けません。", "読み込みエラー");
-                LoggerHelper.GetLogger().Error("【読み込みエラー】このファイルは古すぎるか壊れているため開けません。");
+                LogManager.GetCurrentClassLogger().Error("【読み込みエラー】このファイルは古すぎるか壊れているため開けません。");
                 FileName.Value = "*";
                 return;
             }

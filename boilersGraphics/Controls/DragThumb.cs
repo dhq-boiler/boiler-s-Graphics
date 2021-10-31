@@ -1,5 +1,6 @@
 ﻿using boilersGraphics.Helpers;
 using boilersGraphics.ViewModels;
+using NLog;
 using System;
 using System.Linq;
 using System.Windows;
@@ -35,7 +36,7 @@ namespace boilersGraphics.Controls
             Recorder.EndRecode();
 
             var item = this.DataContext as DesignerItemViewModelBase;
-            LoggerHelper.GetLogger().Info($"Move item {item.ShowPropertiesAndFields()}");
+            LogManager.GetCurrentClassLogger().Info($"Move item {item.ShowPropertiesAndFields()}");
         }
 
         private void DragThumb_DragDelta(object sender, DragDeltaEventArgs e)
