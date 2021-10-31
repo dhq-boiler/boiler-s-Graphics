@@ -50,6 +50,8 @@ namespace boilersGraphics.Controls
             {
                 (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "移動";
 
+                SelectableDesignerItemViewModelBase.Disconnect(designerItem);
+
                 double minLeft = double.MaxValue;
                 double minTop = double.MaxValue;
 

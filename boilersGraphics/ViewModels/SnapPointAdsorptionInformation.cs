@@ -1,6 +1,8 @@
 ﻿using boilersGraphics.Controls;
+using boilersGraphics.Exceptions;
 using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
+using NLog;
 using System;
 using System.Linq;
 using System.Windows;
@@ -33,14 +35,91 @@ namespace boilersGraphics.ViewModels
 
         public void OnNext(TransformNotification value)
         {
+            var designerItem = Item as DesignerItemViewModelBase;
+            if (value.NewValue != null && value.OldValue != null)
+            {
+                LogManager.GetCurrentClassLogger().Debug($"{SnapPointPositionFrom} {value.PropertyName}");
+                LogManager.GetCurrentClassLogger().Debug($"Left={designerItem.Left.Value} Top={designerItem.Top.Value} Width={designerItem.Width.Value} Height={designerItem.Height.Value}");
+                LogManager.GetCurrentClassLogger().Debug($"{(double)value.NewValue - (double)value.OldValue}");
+            }
             switch (SnapPointPositionFrom)
             {
+                case SnapPointPosition.LeftTop:
+                    switch (value.PropertyName)
+                    {
+                        case "Left":
+                            designerItem.Left.Value += (double)value.NewValue - (double)value.OldValue;
+                            break;
+                        case "Top":
+                            designerItem.Top.Value += (double)value.NewValue - (double)value.OldValue;
+                            break;
+                        case "Width":
+                            designerItem.Left.Value += ((double)value.NewValue - (double)value.OldValue);
+                            break;
+                        case "Height":
+                            designerItem.Top.Value += ((double)value.NewValue - (double)value.OldValue);
+                            break;
+                    }
+                    break;
+                case SnapPointPosition.RightTop:
+                    switch (value.PropertyName)
+                    {
+                        case "Left":
+                            designerItem.Left.Value += (double)value.NewValue - (double)value.OldValue;
+                            break;
+                        case "Top":
+                            designerItem.Top.Value += (double)value.NewValue - (double)value.OldValue;
+                            break;
+                        case "Width":
+                            designerItem.Left.Value += ((double)value.NewValue - (double)value.OldValue);
+                            break;
+                        case "Height":
+                            designerItem.Top.Value += ((double)value.NewValue - (double)value.OldValue);
+                            break;
+                    }
+                    break;
+                case SnapPointPosition.RightBottom:
+                    switch (value.PropertyName)
+                    {
+                        case "Left":
+                            designerItem.Left.Value += (double)value.NewValue - (double)value.OldValue;
+                            break;
+                        case "Top":
+                            designerItem.Top.Value += (double)value.NewValue - (double)value.OldValue;
+                            break;
+                        case "Width":
+                            designerItem.Left.Value += ((double)value.NewValue - (double)value.OldValue);
+                            break;
+                        case "Height":
+                            designerItem.Top.Value += ((double)value.NewValue - (double)value.OldValue);
+                            break;
+                    }
+                    break;
+                case SnapPointPosition.LeftBottom:
+                    switch (value.PropertyName)
+                    {
+                        case "Left":
+                            designerItem.Left.Value += (double)value.NewValue - (double)value.OldValue;
+                            break;
+                        case "Top":
+                            designerItem.Top.Value += (double)value.NewValue - (double)value.OldValue;
+                            break;
+                        case "Width":
+                            designerItem.Left.Value += ((double)value.NewValue - (double)value.OldValue);
+                            break;
+                        case "Height":
+                            designerItem.Top.Value += ((double)value.NewValue - (double)value.OldValue);
+                            break;
+                    }
+                    break;
                 case SnapPointPosition.BeginEdge:
                     Move(0, value);
                     break;
                 case SnapPointPosition.EndEdge:
                     Move(1, value);
                     break;
+                default:
+                    throw new UnexpectedException("zzz");
             }
         }
 

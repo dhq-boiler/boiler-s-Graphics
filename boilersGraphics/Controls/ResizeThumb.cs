@@ -47,12 +47,10 @@ namespace boilersGraphics.Controls
                 switch (SnapPointPosition)
                 {
                     case SnapPointPosition.LeftTop:
-                        break;
                     case SnapPointPosition.RightTop:
-                        break;
                     case SnapPointPosition.LeftBottom:
-                        break;
                     case SnapPointPosition.RightBottom:
+                        designerItem.SnapObjs.Add(_SnapTargetDataContext.Connect(_SnapToEdge, SnapPointPosition, designerItem));
                         break;
                     case SnapPointPosition.BeginEdge:
                         connector.SnapPoint0VM.Value.SnapObjs.Add(_SnapTargetDataContext.Connect(_SnapToEdge, SnapPointPosition.BeginEdge, connector));
@@ -75,6 +73,8 @@ namespace boilersGraphics.Controls
             {
                 double minLeft, minTop, minDeltaHorizontal, minDeltaVertical;
                 double dragDeltaVertical, dragDeltaHorizontal;
+
+                SelectableDesignerItemViewModelBase.Disconnect(designerItem);
 
                 // only resize DesignerItems
                 var selectedDesignerItems = from item in designerItem.Owner.SelectedItems.Value
@@ -209,6 +209,8 @@ namespace boilersGraphics.Controls
                                     viewModel.Width.Value = rect.Width;
                                     viewModel.Height.Value = rect.Height;
 
+                                    _SnapResult = SnapResult.Snapped;
+
                                     if (adornerLayer != null)
                                     {
                                         LogManager.GetCurrentClassLogger().Trace($"Snap={snapped.Item2}");
@@ -227,6 +229,8 @@ namespace boilersGraphics.Controls
                                 }
                                 else //スナップしなかった場合
                                 {
+                                    _SnapResult = SnapResult.NoSnap;
+
                                     RemoveAllAdornerFromAdornerLayerAndDictionary(designerCanvas);
 
                                     switch (base.VerticalAlignment)

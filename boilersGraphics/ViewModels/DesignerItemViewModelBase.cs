@@ -80,6 +80,8 @@ namespace boilersGraphics.ViewModels
 
         public ReactivePropertySlim<TransformNotification> TransformNortification { get; } = new ReactivePropertySlim<TransformNotification>(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe | ReactivePropertyMode.DistinctUntilChanged);
 
+        public List<IDisposable> SnapObjs { get; set; } = new List<IDisposable>();
+
         private void UpdateCenterPoint()
         {
             var leftTop = new Point(Left.Value, Top.Value);

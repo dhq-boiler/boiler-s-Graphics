@@ -177,20 +177,14 @@ namespace boilersGraphics.Helpers
                 switch (snapPointEdge)
                 {
                     case SnapPointPosition.Left:
-                        break;
                     case SnapPointPosition.LeftTop:
-                        break;
                     case SnapPointPosition.Top:
-                        break;
                     case SnapPointPosition.RightTop:
-                        break;
                     case SnapPointPosition.Right:
-                        break;
                     case SnapPointPosition.RightBottom:
-                        break;
                     case SnapPointPosition.Bottom:
-                        break;
                     case SnapPointPosition.LeftBottom:
+                        (item as DesignerItemViewModelBase).SnapObjs.Add(_SnapTargetDataContext.Connect(_SnapToEdge, snapPointEdge, item));
                         break;
                     case SnapPointPosition.BeginEdge:
                         (item as ConnectorBaseViewModel).SnapPoint0VM.Value.SnapObjs.Add(_SnapTargetDataContext.Connect(_SnapToEdge, SnapPointPosition.BeginEdge, item));

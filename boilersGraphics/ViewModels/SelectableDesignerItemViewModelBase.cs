@@ -94,6 +94,12 @@ namespace boilersGraphics.ViewModels
             return disposable;
         }
 
+        public static void Disconnect(DesignerItemViewModelBase designerItem)
+        {
+            if (designerItem.SnapObjs != null)
+                designerItem.SnapObjs.ForEach(x => x.Dispose());
+        }
+
         public static void Disconnect(SnapPointViewModel snapPointViewModel)
         {
             if (snapPointViewModel.SnapObjs != null)
