@@ -1,6 +1,7 @@
 ﻿using boilersGraphics.Controls;
 using boilersGraphics.Extensions;
 using boilersGraphics.ViewModels;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,7 +28,7 @@ namespace boilersGraphics.Helpers
 
         private SnapPointPosition _SnapToEdge;
         private SnapResult _SnapResult = SnapResult.NoSnap;
-        private DesignerItemViewModelBase _SnapTargetDataContext { get; set; }
+        private SelectableDesignerItemViewModelBase _SnapTargetDataContext { get; set; }
 
         public void OnMouseMove(ref Point currentPoint)
         {
@@ -36,7 +37,7 @@ namespace boilersGraphics.Helpers
             var diagramVM = mainWindowVM.DiagramViewModel;
             if (diagramVM.EnablePointSnap.Value)
             {
-                var snapPoints = diagramVM.SnapPoints;
+                var snapPoints = diagramVM.GetSnapPoints(currentPoint);
                 Tuple<SnapPoint, Point> snapped = null;
                 foreach (var snapPoint in snapPoints)
                 {
@@ -48,7 +49,8 @@ namespace boilersGraphics.Helpers
                         //スナップする座標を一時変数へ保存
                         snapped = snapPoint;
                         _SnapToEdge = snapPoint.Item1.SnapPointPosition;
-                        _SnapTargetDataContext = snapPoint.Item1.DataContext as DesignerItemViewModelBase;
+                        _SnapTargetDataContext = snapPoint.Item1.DataContext as SelectableDesignerItemViewModelBase;
+                        break;
                     }
                 }
 
@@ -103,7 +105,8 @@ namespace boilersGraphics.Helpers
                         //スナップする座標を一時変数へ保存
                         snapped = snapPoint;
                         _SnapToEdge = snapPoint.Item1.SnapPointPosition;
-                        _SnapTargetDataContext = snapPoint.Item1.DataContext as DesignerItemViewModelBase;
+                        _SnapTargetDataContext = snapPoint.Item1.DataContext as SelectableDesignerItemViewModelBase;
+                        break;
                     }
                 }
 
@@ -163,23 +166,37 @@ namespace boilersGraphics.Helpers
 
         public void PostProcess(SnapPointPosition snapPointEdge, SelectableDesignerItemViewModelBase item)
         {
+            if (_SnapTargetDataContext == null)
+            {
+                LogManager.GetCurrentClassLogger().Debug("_SnapTargetDataContext == null");
+                return;
+            }
+
             if (_SnapResult == SnapResult.Snapped)
             {
                 switch (snapPointEdge)
                 {
+                    case SnapPointPosition.Left:
+                        break;
                     case SnapPointPosition.LeftTop:
+                        break;
+                    case SnapPointPosition.Top:
                         break;
                     case SnapPointPosition.RightTop:
                         break;
-                    case SnapPointPosition.LeftBottom:
+                    case SnapPointPosition.Right:
                         break;
                     case SnapPointPosition.RightBottom:
                         break;
+                    case SnapPointPosition.Bottom:
+                        break;
+                    case SnapPointPosition.LeftBottom:
+                        break;
                     case SnapPointPosition.BeginEdge:
-                        (item as ConnectorBaseViewModel).SnapPoint0VM.Value.SnapObj = _SnapTargetDataContext.Connect(_SnapToEdge, SnapPointPosition.BeginEdge, item);
+                        (item as ConnectorBaseViewModel).SnapPoint0VM.Value.SnapObjs.Add(_SnapTargetDataContext.Connect(_SnapToEdge, SnapPointPosition.BeginEdge, item));
                         break;
                     case SnapPointPosition.EndEdge:
-                        (item as ConnectorBaseViewModel).SnapPoint1VM.Value.SnapObj = _SnapTargetDataContext.Connect(_SnapToEdge, SnapPointPosition.EndEdge, item);
+                        (item as ConnectorBaseViewModel).SnapPoint1VM.Value.SnapObjs.Add(_SnapTargetDataContext.Connect(_SnapToEdge, SnapPointPosition.EndEdge, item));
                         break;
                 }
             }

@@ -55,10 +55,10 @@ namespace boilersGraphics.Controls
                     case SnapPointPosition.RightBottom:
                         break;
                     case SnapPointPosition.BeginEdge:
-                        connector.SnapPoint0VM.Value.SnapObj = _SnapTargetDataContext.Connect(_SnapToEdge, SnapPointPosition.BeginEdge, connector);
+                        connector.SnapPoint0VM.Value.SnapObjs.Add(_SnapTargetDataContext.Connect(_SnapToEdge, SnapPointPosition.BeginEdge, connector));
                         break;
                     case SnapPointPosition.EndEdge:
-                        connector.SnapPoint1VM.Value.SnapObj = _SnapTargetDataContext.Connect(_SnapToEdge, SnapPointPosition.EndEdge, connector);
+                        connector.SnapPoint1VM.Value.SnapObjs.Add(_SnapTargetDataContext.Connect(_SnapToEdge, SnapPointPosition.EndEdge, connector));
                         break;
                 }
             }

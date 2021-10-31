@@ -12,7 +12,7 @@ using static boilersGraphics.Helpers.SnapAction;
 
 namespace boilersGraphics.ViewModels
 {
-    public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewModelBase, IObservable<TransformNotification>, ICloneable
+    public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewModelBase, ICloneable
     {
         private bool _showConnectors = false;
 
@@ -141,14 +141,6 @@ namespace boilersGraphics.ViewModels
             Top.Value = value - Height.Value / 2;
         }
 
-        public IDisposable Connect(SnapPointPosition snapPointEdgeTo, SnapPointPosition snapPointEdgeFrom, SelectableDesignerItemViewModelBase item)
-        {
-            var spai = new SnapPointAdsorptionInformation(snapPointEdgeTo, snapPointEdgeFrom, item);
-            var disposable = Subscribe(spai);
-            _CompositeDisposable.Add(disposable);
-            return disposable;
-        }
-
         public void UpdateTransform(string propertyName, object oldValue, object newValue)
         {
             switch (propertyName)
@@ -245,37 +237,5 @@ namespace boilersGraphics.ViewModels
                     break;
             }
         }
-
-        #region IObservable<TransformNotification>
-
-        private List<IObserver<TransformNotification>> _observers = new List<IObserver<TransformNotification>>();
-
-        public IDisposable Subscribe(IObserver<TransformNotification> observer)
-        {
-            _observers.Add(observer);
-            observer.OnNext(new TransformNotification()
-            {
-                Sender = this
-            });
-            return new DesignerItemViewModelBaseDisposable(this, observer);
-        }
-
-        public class DesignerItemViewModelBaseDisposable : IDisposable
-        {
-            private DesignerItemViewModelBase _obj;
-            private IObserver<TransformNotification> _observer;
-            public DesignerItemViewModelBaseDisposable(DesignerItemViewModelBase obj, IObserver<TransformNotification> observer)
-            {
-                _obj = obj;
-                _observer = observer;
-            }
-
-            public void Dispose()
-            {
-                _obj._observers.Remove(_observer);
-            }
-        }
-
-        #endregion //IObservable<TransformNotification>
     }
 }
