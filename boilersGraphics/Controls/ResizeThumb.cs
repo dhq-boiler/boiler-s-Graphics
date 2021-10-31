@@ -1,4 +1,5 @@
 ﻿using boilersGraphics.Extensions;
+using boilersGraphics.Helpers;
 using boilersGraphics.ViewModels;
 using NLog;
 using System;
@@ -11,6 +12,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using static boilersGraphics.Helpers.SnapAction;
 
 namespace boilersGraphics.Controls
 {
@@ -18,6 +20,9 @@ namespace boilersGraphics.Controls
     {
         private Dictionary<Point, Adorner> _adorners;
 
+        private SnapPointPosition _SnapToEdge;
+        private SnapResult _SnapResult = SnapResult.NoSnap;
+        private DesignerItemViewModelBase _SnapTargetDataContext { get; set; }
         public ResizeThumb()
         {
             _adorners = new Dictionary<Point, Adorner>();
@@ -34,6 +39,29 @@ namespace boilersGraphics.Controls
         protected override void OnMouseUp(MouseButtonEventArgs e)
         {
             base.OnMouseUp(e);
+
+            if (_SnapResult == SnapResult.Snapped)
+            {
+                var designerItem = this.DataContext as DesignerItemViewModelBase;
+                var connector = this.DataContext as ConnectorBaseViewModel;
+                switch (SnapPointPosition)
+                {
+                    case SnapPointPosition.LeftTop:
+                        break;
+                    case SnapPointPosition.RightTop:
+                        break;
+                    case SnapPointPosition.LeftBottom:
+                        break;
+                    case SnapPointPosition.RightBottom:
+                        break;
+                    case SnapPointPosition.BeginEdge:
+                        connector.SnapPoint0VM.Value.SnapObj = _SnapTargetDataContext.Connect(_SnapToEdge, SnapPointPosition.BeginEdge, connector);
+                        break;
+                    case SnapPointPosition.EndEdge:
+                        connector.SnapPoint1VM.Value.SnapObj = _SnapTargetDataContext.Connect(_SnapToEdge, SnapPointPosition.EndEdge, connector);
+                        break;
+                }
+            }
 
             (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "";
             (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = "";
@@ -162,6 +190,8 @@ namespace boilersGraphics.Controls
                                     {
                                         //スナップする座標を一時変数へ保存
                                         snapped = snapPoint;
+                                        _SnapToEdge = snapPoint.Item1.SnapPointPosition;
+                                        _SnapTargetDataContext = snapPoint.Item1.DataContext as DesignerItemViewModelBase;
                                     }
                                 }
 

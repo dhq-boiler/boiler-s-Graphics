@@ -210,7 +210,7 @@
     <Compile Include="Helpers\Reflections.cs" />
     <Compile Include="Helpers\SnapAction.cs" />
     <Compile Include="Helpers\SnapPointDistincter.cs" />
-    <Compile Include="Helpers\SnapPointEdge.cs" />
+    <Compile Include="Helpers\SnapPointPosition.cs" />
     <Compile Include="Helpers\ToolBoxData.cs" />
     <Compile Include="Helpers\ToolItemData.cs" />
     <Compile Include="Helpers\TransformNotification.cs" />

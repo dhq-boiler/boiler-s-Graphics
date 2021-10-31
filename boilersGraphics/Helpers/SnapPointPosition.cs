@@ -7,12 +7,18 @@ using System.Threading.Tasks;
 namespace boilersGraphics.Helpers
 {
 
-    public enum SnapPointEdge
+    public enum SnapPointPosition
     {
+        None,
+        Left,
         LeftTop,
+        Top,
         RightTop,
-        LeftBottom,
+        Right,
         RightBottom,
+        Bottom,
+        LeftBottom,
+        Center,
         BeginEdge,
         EndEdge
     }

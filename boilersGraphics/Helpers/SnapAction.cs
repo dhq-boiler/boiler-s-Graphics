@@ -25,6 +25,7 @@ namespace boilersGraphics.Helpers
             NoSnap
         }
 
+        private SnapPointPosition _SnapToEdge;
         private SnapResult _SnapResult = SnapResult.NoSnap;
         private DesignerItemViewModelBase _SnapTargetDataContext { get; set; }
 
@@ -46,6 +47,7 @@ namespace boilersGraphics.Helpers
                     {
                         //スナップする座標を一時変数へ保存
                         snapped = snapPoint;
+                        _SnapToEdge = snapPoint.Item1.SnapPointPosition;
                         _SnapTargetDataContext = snapPoint.Item1.DataContext as DesignerItemViewModelBase;
                     }
                 }
@@ -100,6 +102,7 @@ namespace boilersGraphics.Helpers
                     {
                         //スナップする座標を一時変数へ保存
                         snapped = snapPoint;
+                        _SnapToEdge = snapPoint.Item1.SnapPointPosition;
                         _SnapTargetDataContext = snapPoint.Item1.DataContext as DesignerItemViewModelBase;
                     }
                 }
@@ -158,25 +161,25 @@ namespace boilersGraphics.Helpers
             }
         }
 
-        public void PostProcess(SnapPointEdge snapPointEdge, SelectableDesignerItemViewModelBase item)
+        public void PostProcess(SnapPointPosition snapPointEdge, SelectableDesignerItemViewModelBase item)
         {
             if (_SnapResult == SnapResult.Snapped)
             {
                 switch (snapPointEdge)
                 {
-                    case SnapPointEdge.LeftTop:
+                    case SnapPointPosition.LeftTop:
                         break;
-                    case SnapPointEdge.RightTop:
+                    case SnapPointPosition.RightTop:
                         break;
-                    case SnapPointEdge.LeftBottom:
+                    case SnapPointPosition.LeftBottom:
                         break;
-                    case SnapPointEdge.RightBottom:
+                    case SnapPointPosition.RightBottom:
                         break;
-                    case SnapPointEdge.BeginEdge:
-                        (item as ConnectorBaseViewModel).SnapPoint0VM.Value.SnapObj = _SnapTargetDataContext.Connect(SnapPointEdge.BeginEdge, item);
+                    case SnapPointPosition.BeginEdge:
+                        (item as ConnectorBaseViewModel).SnapPoint0VM.Value.SnapObj = _SnapTargetDataContext.Connect(_SnapToEdge, SnapPointPosition.BeginEdge, item);
                         break;
-                    case SnapPointEdge.EndEdge:
-                        (item as ConnectorBaseViewModel).SnapPoint1VM.Value.SnapObj = _SnapTargetDataContext.Connect(SnapPointEdge.EndEdge, item);
+                    case SnapPointPosition.EndEdge:
+                        (item as ConnectorBaseViewModel).SnapPoint1VM.Value.SnapObj = _SnapTargetDataContext.Connect(_SnapToEdge, SnapPointPosition.EndEdge, item);
                         break;
                 }
             }

@@ -90,10 +90,5 @@ namespace boilersGraphics.ViewModels
         }
 
         #endregion //IClonable
-
-        public override void OnNext(Helpers.TransformNotification value)
-        {
-
-        }
     }
 }

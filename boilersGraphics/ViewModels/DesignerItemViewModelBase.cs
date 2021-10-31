@@ -141,9 +141,9 @@ namespace boilersGraphics.ViewModels
             Top.Value = value - Height.Value / 2;
         }
 
-        public IDisposable Connect(SnapPointEdge snapPointEdge, SelectableDesignerItemViewModelBase item)
+        public IDisposable Connect(SnapPointPosition snapPointEdgeTo, SnapPointPosition snapPointEdgeFrom, SelectableDesignerItemViewModelBase item)
         {
-            var spai = new SnapPointAdsorptionInformation(snapPointEdge, item);
+            var spai = new SnapPointAdsorptionInformation(snapPointEdgeTo, snapPointEdgeFrom, item);
             var disposable = Subscribe(spai);
             _CompositeDisposable.Add(disposable);
             return disposable;

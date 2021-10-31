@@ -24,8 +24,6 @@ namespace boilersGraphics.Controls
 
         public static readonly DependencyProperty TargetPointIndexProperty = DependencyProperty.Register("TargetPointIndex", typeof(int), typeof(LineResizeHandle));
 
-        public static readonly DependencyProperty SnapPointEdgeProperty = DependencyProperty.Register("SnapPointEdge", typeof(SnapPointEdge), typeof(LineResizeHandle));
-
         public LineResizeHandle OppositeHandle
         {
             get { return (LineResizeHandle)GetValue(OppositeHandleProperty); }
@@ -36,12 +34,6 @@ namespace boilersGraphics.Controls
         {
             get { return (int)GetValue(TargetPointIndexProperty); }
             set { SetValue(TargetPointIndexProperty, value); }
-        }
-
-        public SnapPointEdge SnapPointEdge
-        {
-            get { return (SnapPointEdge)GetValue(SnapPointEdgeProperty); }
-            set { SetValue(SnapPointEdgeProperty, value); }
         }
 
         public Point? BeginDragPoint { get; private set; }
@@ -110,7 +102,7 @@ namespace boilersGraphics.Controls
 
             snapAction.OnMouseUp(null);
 
-            snapAction.PostProcess(SnapPointEdge, connectorVM);
+            snapAction.PostProcess(SnapPointPosition, connectorVM);
 
             (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "";
             (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = "";

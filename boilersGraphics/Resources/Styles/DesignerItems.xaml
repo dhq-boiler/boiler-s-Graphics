@@ -54,7 +54,7 @@
                                       Height="7"
                                       DataContext="{Binding SnapPoint0VM.Value}"
                                       OppositeHandle="{Binding ElementName=ResizeHandle_EndPoint}"
-                                      SnapPointEdge="BeginEdge"
+                                      SnapPointPosition="BeginEdge"
                                       Tag="始点"
                                       TargetPointIndex="0">
                 <control:LineResizeHandle.Template>
@@ -82,7 +82,7 @@
                                       Height="7"
                                       DataContext="{Binding SnapPoint1VM.Value}"
                                       OppositeHandle="{Binding ElementName=ResizeHandle_BeginPoint}"
-                                      SnapPointEdge="EndEdge"
+                                      SnapPointPosition="EndEdge"
                                       Tag="終点"
                                       TargetPointIndex="1">
                 <control:LineResizeHandle.Template>
@@ -115,6 +115,7 @@
                                       Height="7"
                                       DataContext="{Binding SnapPoint0VM.Value}"
                                       OppositeHandle="{Binding ElementName=ResizeHandle_EndPoint}"
+                                      SnapPointPosition="BeginEdge"
                                       Tag="始点"
                                       TargetPointIndex="0">
                 <control:LineResizeHandle.Template>
@@ -142,6 +143,7 @@
                                       Height="7"
                                       DataContext="{Binding SnapPoint1VM.Value}"
                                       OppositeHandle="{Binding ElementName=ResizeHandle_BeginPoint}"
+                                      SnapPointPosition="EndEdge"
                                       Tag="終点"
                                       TargetPointIndex="1">
                 <control:LineResizeHandle.Template>
@@ -202,6 +204,7 @@
                                      HorizontalAlignment="Center"
                                      VerticalAlignment="Top"
                                      Cursor="SizeNS"
+                                     SnapPointPosition="Top"
                                      Tag="上"
                                      Template="{StaticResource HorizontalResizeHandleTemplate}" />
                 <!--  左  -->
@@ -211,6 +214,7 @@
                                      HorizontalAlignment="Left"
                                      VerticalAlignment="Center"
                                      Cursor="SizeWE"
+                                     SnapPointPosition="Left"
                                      Tag="左"
                                      Template="{StaticResource VerticalResizeHandleTemplate}" />
                 <!--  右  -->
@@ -220,6 +224,7 @@
                                      HorizontalAlignment="Right"
                                      VerticalAlignment="Center"
                                      Cursor="SizeWE"
+                                     SnapPointPosition="Right"
                                      Tag="右"
                                      Template="{StaticResource VerticalResizeHandleTemplate}" />
                 <!--  下  -->
@@ -229,6 +234,7 @@
                                      HorizontalAlignment="Center"
                                      VerticalAlignment="Bottom"
                                      Cursor="SizeNS"
+                                     SnapPointPosition="Bottom"
                                      Tag="下"
                                      Template="{StaticResource HorizontalResizeHandleTemplate}" />
                 <!--  左上  -->
@@ -238,6 +244,7 @@
                                      HorizontalAlignment="Left"
                                      VerticalAlignment="Top"
                                      Cursor="SizeNWSE"
+                                     SnapPointPosition="LeftTop"
                                      Tag="左上"
                                      Template="{StaticResource ResizeHandleTemplate}" />
                 <!--  右上  -->
@@ -247,6 +254,7 @@
                                      HorizontalAlignment="Right"
                                      VerticalAlignment="Top"
                                      Cursor="SizeNESW"
+                                     SnapPointPosition="RightTop"
                                      Tag="右上"
                                      Template="{StaticResource ResizeHandleTemplate}" />
                 <!--  左下  -->
@@ -256,6 +264,7 @@
                                      HorizontalAlignment="Left"
                                      VerticalAlignment="Bottom"
                                      Cursor="SizeNESW"
+                                     SnapPointPosition="LeftBottom"
                                      Tag="左下"
                                      Template="{StaticResource ResizeHandleTemplate}" />
                 <!--  右下  -->
@@ -265,12 +274,14 @@
                                      HorizontalAlignment="Right"
                                      VerticalAlignment="Bottom"
                                      Cursor="SizeNWSE"
+                                     SnapPointPosition="RightBottom"
                                      Tag="右下"
                                      Template="{StaticResource ResizeHandleTemplate}" />
                 <control:SnapPoint Width="7"
                                    Height="7"
                                    HorizontalAlignment="Center"
                                    VerticalAlignment="Center"
+                                   SnapPointPosition="Center"
                                    Tag="中央">
                     <control:SnapPoint.Template>
                         <ControlTemplate TargetType="control:SnapPoint">

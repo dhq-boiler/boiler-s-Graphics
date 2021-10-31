@@ -2,13 +2,10 @@
 using Prism.Commands;
 using Prism.Mvvm;
 using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reflection;
-using System.Threading;
 using System.Windows.Media;
 using TsOperationHistory;
 using TsOperationHistory.Extensions;
@@ -166,7 +163,7 @@ namespace boilersGraphics.ViewModels
 
         #region IObserver<TransformNotification>
 
-        public virtual void OnNext(TransformNotification value)
+        public void OnNext(TransformNotification value)
         {
         }
 

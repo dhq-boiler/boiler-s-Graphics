@@ -84,7 +84,7 @@ namespace boilersGraphics.Adorners
                 item.Owner.DeselectAll();
                 ((AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel).AddItemCommand.Execute(item);
 
-                _snapAction.PostProcess(SnapPointEdge.EndEdge, item);
+                _snapAction.PostProcess(SnapPointPosition.EndEdge, item);
 
                 _startPoint = null;
                 _endPoint = null;
