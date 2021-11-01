@@ -36,7 +36,7 @@ namespace boilersGraphics.ViewModels
         public void OnNext(TransformNotification value)
         {
             var designerItem = Item as DesignerItemViewModelBase;
-            if (value.NewValue != null && value.OldValue != null)
+            if (designerItem != null && value.NewValue != null && value.OldValue != null)
             {
                 LogManager.GetCurrentClassLogger().Debug($"{SnapPointPositionFrom} {value.PropertyName}");
                 LogManager.GetCurrentClassLogger().Debug($"Left={designerItem.Left.Value} Top={designerItem.Top.Value} Width={designerItem.Width.Value} Height={designerItem.Height.Value}");
