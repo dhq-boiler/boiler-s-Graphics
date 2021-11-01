@@ -51,13 +51,15 @@ namespace boilersGraphics.ViewModels
                             designerItem.Left.Value += (double)value.NewValue - (double)value.OldValue;
                             break;
                         case "Top":
-                            designerItem.Top.Value += (double)value.NewValue - (double)value.OldValue;
+                            designerItem.Top.Value += ((double)value.NewValue - (double)value.OldValue) / 2;
                             break;
                         case "Width":
                             switch (value.SnapPointPosition)
                             {
+                                case SnapPointPosition.Center:
                                 case SnapPointPosition.Left:
                                 case SnapPointPosition.Right:
+                                    designerItem.Left.Value += ((double)value.NewValue - (double)value.OldValue) / 2;
                                     break;
                                 case SnapPointPosition.LeftTop:
                                 case SnapPointPosition.Top:
@@ -79,9 +81,10 @@ namespace boilersGraphics.ViewModels
                                 case SnapPointPosition.RightTop:
                                     designerItem.Top.Value += ((double)value.NewValue - (double)value.OldValue) / 2;
                                     break;
-                                case SnapPointPosition.Left:
                                 case SnapPointPosition.Center:
+                                case SnapPointPosition.Left:
                                 case SnapPointPosition.Right:
+                                    designerItem.Top.Value += ((double)value.NewValue - (double)value.OldValue) / 2;
                                     break;
                                 case SnapPointPosition.LeftBottom:
                                 case SnapPointPosition.Bottom:
@@ -104,8 +107,10 @@ namespace boilersGraphics.ViewModels
                         case "Width":
                             switch (value.SnapPointPosition)
                             {
+                                case SnapPointPosition.Center:
                                 case SnapPointPosition.Left:
                                 case SnapPointPosition.Right:
+                                    designerItem.Left.Value += (double)value.NewValue - (double)value.OldValue;
                                     break;
                                 case SnapPointPosition.LeftTop:
                                 case SnapPointPosition.Top:
@@ -130,6 +135,7 @@ namespace boilersGraphics.ViewModels
                                 case SnapPointPosition.Left:
                                 case SnapPointPosition.Center:
                                 case SnapPointPosition.Right:
+                                    designerItem.Top.Value += ((double)value.NewValue - (double)value.OldValue) / 2;
                                     break;
                                 case SnapPointPosition.LeftBottom:
                                 case SnapPointPosition.Bottom:
@@ -152,18 +158,20 @@ namespace boilersGraphics.ViewModels
                         case "Width":
                             switch (value.SnapPointPosition)
                             {
+                                case SnapPointPosition.Center:
                                 case SnapPointPosition.Left:
                                 case SnapPointPosition.Right:
+                                    designerItem.Left.Value += (double)value.NewValue - (double)value.OldValue;
                                     break;
                                 case SnapPointPosition.LeftTop:
                                 case SnapPointPosition.Top:
                                 case SnapPointPosition.RightTop:
-                                    designerItem.Left.Value += (double)value.NewValue - (double)value.OldValue;
+                                    designerItem.Left.Value += ((double)value.NewValue - (double)value.OldValue) / 2;
                                     break;
                                 case SnapPointPosition.RightBottom:
                                 case SnapPointPosition.Bottom:
                                 case SnapPointPosition.LeftBottom:
-                                    designerItem.Left.Value += (double)value.NewValue - (double)value.OldValue;
+                                    designerItem.Left.Value += ((double)value.NewValue - (double)value.OldValue) / 2;
                                     break;
                             }
                             break;
@@ -178,6 +186,7 @@ namespace boilersGraphics.ViewModels
                                 case SnapPointPosition.Left:
                                 case SnapPointPosition.Center:
                                 case SnapPointPosition.Right:
+                                    designerItem.Top.Value += ((double)value.NewValue - (double)value.OldValue) / 2;
                                     break;
                                 case SnapPointPosition.LeftBottom:
                                 case SnapPointPosition.Bottom:
