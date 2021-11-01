@@ -80,6 +80,8 @@ namespace boilersGraphics.ViewModels
 
         public ReactivePropertySlim<TransformNotification> TransformNortification { get; } = new ReactivePropertySlim<TransformNotification>(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe | ReactivePropertyMode.DistinctUntilChanged);
 
+        internal SnapPointPosition snapPointPosition { get; set; }
+
         public List<IDisposable> SnapObjs { get; set; } = new List<IDisposable>();
 
         private void UpdateCenterPoint()
@@ -201,7 +203,8 @@ namespace boilersGraphics.ViewModels
                 Sender = this,
                 PropertyName = propertyName,
                 OldValue = oldValue,
-                NewValue = newValue
+                NewValue = newValue,
+                SnapPointPosition = snapPointPosition,
             };
             this.TransformNortification.Value = tn;
             _observers.ForEach(x => x.OnNext(tn));

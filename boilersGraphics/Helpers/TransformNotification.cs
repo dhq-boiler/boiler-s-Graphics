@@ -9,5 +9,6 @@ namespace boilersGraphics.Helpers
         public string PropertyName { get; set; }
         public object OldValue { get; set; }
         public object NewValue { get; set; }
+        public SnapPointPosition SnapPointPosition { get; set; }
     }
 }

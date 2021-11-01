@@ -1,4 +1,5 @@
-﻿using boilersGraphics.Extensions;
+﻿using boilersGraphics.Exceptions;
+using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
 using boilersGraphics.ViewModels;
 using NLog;
@@ -233,6 +234,8 @@ namespace boilersGraphics.Controls
 
                                     RemoveAllAdornerFromAdornerLayerAndDictionary(designerCanvas);
 
+                                    viewModel.snapPointPosition = GetSnapPointPosition(VerticalAlignment, HorizontalAlignment);
+
                                     switch (base.VerticalAlignment)
                                     {
                                         case VerticalAlignment.Bottom:
@@ -306,6 +309,51 @@ namespace boilersGraphics.Controls
                     }
                 }
                 e.Handled = true;
+            }
+        }
+
+        private SnapPointPosition GetSnapPointPosition(VerticalAlignment verticalAlignment, HorizontalAlignment horizontalAlignment)
+        {
+            switch (verticalAlignment)
+            {
+                case VerticalAlignment.Center:
+                    switch (horizontalAlignment)
+                    {
+                        case HorizontalAlignment.Left:
+                            return SnapPointPosition.Left;
+                        case HorizontalAlignment.Center:
+                            return SnapPointPosition.Center;
+                        case HorizontalAlignment.Right:
+                            return SnapPointPosition.Right;
+                        default:
+                            throw new UnexpectedException(horizontalAlignment.ToString());
+                    }
+                case VerticalAlignment.Top:
+                    switch (horizontalAlignment)
+                    {
+                        case HorizontalAlignment.Left:
+                            return SnapPointPosition.LeftTop;
+                        case HorizontalAlignment.Center:
+                            return SnapPointPosition.Top;
+                        case HorizontalAlignment.Right:
+                            return SnapPointPosition.RightTop;
+                        default:
+                            throw new UnexpectedException(horizontalAlignment.ToString());
+                    }
+                case VerticalAlignment.Bottom:
+                    switch (horizontalAlignment)
+                    {
+                        case HorizontalAlignment.Left:
+                            return SnapPointPosition.LeftBottom;
+                        case HorizontalAlignment.Center:
+                            return SnapPointPosition.Bottom;
+                        case HorizontalAlignment.Right:
+                            return SnapPointPosition.RightBottom;
+                        default:
+                            throw new UnexpectedException(horizontalAlignment.ToString());
+                    }
+                default:
+                    throw new UnexpectedException(verticalAlignment.ToString());
             }
         }
 
