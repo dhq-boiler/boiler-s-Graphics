@@ -390,6 +390,8 @@ namespace boilersGraphics.Controls
             OpenCvSharp.Cv2.ImShow(windowName, mat);
         }
 
+        const double MIN_ONE_SIDE_LENGTH = 10;
+
         private void Sum(ref Rect rect, double dragDeltaHorizontal, double dragDeltaVertical, HorizontalAlignment horizontalAlignment, VerticalAlignment verticalAlignment)
         {
             switch (verticalAlignment)
@@ -405,7 +407,7 @@ namespace boilersGraphics.Controls
                             rect.Y += dragDeltaVertical;
                             return;
                         case HorizontalAlignment.Right:
-                            rect.Width += dragDeltaHorizontal;
+                            rect.Width += SafeValue(rect.Width, MIN_ONE_SIDE_LENGTH, dragDeltaHorizontal);
                             rect.Y += dragDeltaVertical;
                             return;
                     }
@@ -419,7 +421,7 @@ namespace boilersGraphics.Controls
                         case HorizontalAlignment.Center:
                             return;
                         case HorizontalAlignment.Right:
-                            rect.Width += dragDeltaHorizontal;
+                            rect.Width += SafeValue(rect.Width, MIN_ONE_SIDE_LENGTH, dragDeltaHorizontal);
                             return;
                     }
                     break;
@@ -429,20 +431,28 @@ namespace boilersGraphics.Controls
                         case HorizontalAlignment.Left:
                             rect.X += dragDeltaHorizontal;
                             LogManager.GetCurrentClassLogger().Trace($"rect.Y(a)={rect.Y}");
-                            rect.Height += dragDeltaVertical;
+                            rect.Height += SafeValue(rect.Height, MIN_ONE_SIDE_LENGTH, dragDeltaVertical);
                             LogManager.GetCurrentClassLogger().Trace($"rect.Y(b)={rect.Y}");
                             return;
                         case HorizontalAlignment.Center:
-                            rect.Height += dragDeltaVertical;
+                            rect.Height += SafeValue(rect.Height, MIN_ONE_SIDE_LENGTH, dragDeltaVertical);
                             return;
                         case HorizontalAlignment.Right:
-                            rect.Width += dragDeltaHorizontal;
-                            rect.Height += dragDeltaVertical;
+                            rect.Width += SafeValue(rect.Width, MIN_ONE_SIDE_LENGTH, dragDeltaHorizontal);
+                            rect.Height += SafeValue(rect.Height, MIN_ONE_SIDE_LENGTH, dragDeltaVertical);
                             return;
                     }
                     break;
             }
             throw new Exception("alignment conbination is wrong");
+        }
+
+        private double SafeValue(double target, double min, double delta)
+        {
+            if (target + delta < min)
+                return min - target;
+            else
+                return delta;
         }
 
         private void SetRect(ref Rect rect, Point snapPoint, VerticalAlignment verticalAlignment, HorizontalAlignment horizontalAlignment)
