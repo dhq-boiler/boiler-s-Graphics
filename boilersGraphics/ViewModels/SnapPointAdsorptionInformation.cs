@@ -51,45 +51,45 @@ namespace boilersGraphics.ViewModels
                             designerItem.Left.Value += (double)value.NewValue - (double)value.OldValue;
                             break;
                         case "Top":
-                            designerItem.Top.Value += ((double)value.NewValue - (double)value.OldValue) / 2;
+                            designerItem.Top.Value += (double)value.NewValue - (double)value.OldValue;
                             break;
                         case "Width":
-                            switch (value.SnapPointPosition)
+                            switch (SnapPointPositionTo)
                             {
-                                case SnapPointPosition.Center:
                                 case SnapPointPosition.Left:
-                                case SnapPointPosition.Right:
+                                case SnapPointPosition.LeftTop:
+                                case SnapPointPosition.LeftBottom:
+                                    designerItem.Left.Value += 0;
+                                    break;
+                                case SnapPointPosition.Top:
+                                case SnapPointPosition.Center:
+                                case SnapPointPosition.Bottom:
                                     designerItem.Left.Value += ((double)value.NewValue - (double)value.OldValue) / 2;
                                     break;
-                                case SnapPointPosition.LeftTop:
-                                case SnapPointPosition.Top:
+                                case SnapPointPosition.Right:
                                 case SnapPointPosition.RightTop:
-                                    designerItem.Left.Value += (double)value.NewValue - (double)value.OldValue;
-                                    break;
                                 case SnapPointPosition.RightBottom:
-                                case SnapPointPosition.Bottom:
-                                case SnapPointPosition.LeftBottom:
                                     designerItem.Left.Value += (double)value.NewValue - (double)value.OldValue;
                                     break;
                             }
                             break;
                         case "Height":
-                            switch (value.SnapPointPosition)
+                            switch (SnapPointPositionTo)
                             {
                                 case SnapPointPosition.LeftTop:
                                 case SnapPointPosition.Top:
                                 case SnapPointPosition.RightTop:
-                                    designerItem.Top.Value += ((double)value.NewValue - (double)value.OldValue) / 2;
+                                    designerItem.Top.Value += 0;
                                     break;
-                                case SnapPointPosition.Center:
                                 case SnapPointPosition.Left:
+                                case SnapPointPosition.Center:
                                 case SnapPointPosition.Right:
                                     designerItem.Top.Value += ((double)value.NewValue - (double)value.OldValue) / 2;
                                     break;
                                 case SnapPointPosition.LeftBottom:
                                 case SnapPointPosition.Bottom:
                                 case SnapPointPosition.RightBottom:
-                                    designerItem.Top.Value += ((double)value.NewValue - (double)value.OldValue) / 2;
+                                    designerItem.Top.Value += (double)value.NewValue - (double)value.OldValue;
                                     break;
                             }
                             break;
@@ -105,32 +105,32 @@ namespace boilersGraphics.ViewModels
                             designerItem.Top.Value += (double)value.NewValue - (double)value.OldValue;
                             break;
                         case "Width":
-                            switch (value.SnapPointPosition)
+                            switch (SnapPointPositionTo)
                             {
-                                case SnapPointPosition.Center:
                                 case SnapPointPosition.Left:
-                                case SnapPointPosition.Right:
-                                    designerItem.Left.Value += (double)value.NewValue - (double)value.OldValue;
-                                    break;
                                 case SnapPointPosition.LeftTop:
-                                case SnapPointPosition.Top:
-                                case SnapPointPosition.RightTop:
-                                    designerItem.Left.Value += (double)value.NewValue - (double)value.OldValue;
-                                    break;
-                                case SnapPointPosition.RightBottom:
-                                case SnapPointPosition.Bottom:
                                 case SnapPointPosition.LeftBottom:
+                                    designerItem.Left.Value += 0;
+                                    break;
+                                case SnapPointPosition.Top:
+                                case SnapPointPosition.Center:
+                                case SnapPointPosition.Bottom:
+                                    designerItem.Left.Value += ((double)value.NewValue - (double)value.OldValue) / 2;
+                                    break;
+                                case SnapPointPosition.Right:
+                                case SnapPointPosition.RightTop:
+                                case SnapPointPosition.RightBottom:
                                     designerItem.Left.Value += (double)value.NewValue - (double)value.OldValue;
                                     break;
                             }
                             break;
                         case "Height":
-                            switch (value.SnapPointPosition)
+                            switch (SnapPointPositionTo)
                             {
                                 case SnapPointPosition.LeftTop:
                                 case SnapPointPosition.Top:
                                 case SnapPointPosition.RightTop:
-                                    designerItem.Top.Value += ((double)value.NewValue - (double)value.OldValue) / 2;
+                                    designerItem.Top.Value += 0;
                                     break;
                                 case SnapPointPosition.Left:
                                 case SnapPointPosition.Center:
@@ -140,7 +140,7 @@ namespace boilersGraphics.ViewModels
                                 case SnapPointPosition.LeftBottom:
                                 case SnapPointPosition.Bottom:
                                 case SnapPointPosition.RightBottom:
-                                    designerItem.Top.Value += ((double)value.NewValue - (double)value.OldValue) / 2;
+                                    designerItem.Top.Value += (double)value.NewValue - (double)value.OldValue;
                                     break;
                             }
                             break;
@@ -156,32 +156,32 @@ namespace boilersGraphics.ViewModels
                             designerItem.Top.Value += (double)value.NewValue - (double)value.OldValue;
                             break;
                         case "Width":
-                            switch (value.SnapPointPosition)
+                            switch (SnapPointPositionTo)
                             {
-                                case SnapPointPosition.Center:
                                 case SnapPointPosition.Left:
-                                case SnapPointPosition.Right:
-                                    designerItem.Left.Value += (double)value.NewValue - (double)value.OldValue;
-                                    break;
                                 case SnapPointPosition.LeftTop:
+                                case SnapPointPosition.LeftBottom:
+                                    designerItem.Left.Value += 0;
+                                    break;
                                 case SnapPointPosition.Top:
-                                case SnapPointPosition.RightTop:
+                                case SnapPointPosition.Center:
+                                case SnapPointPosition.Bottom:
                                     designerItem.Left.Value += ((double)value.NewValue - (double)value.OldValue) / 2;
                                     break;
+                                case SnapPointPosition.Right:
+                                case SnapPointPosition.RightTop:
                                 case SnapPointPosition.RightBottom:
-                                case SnapPointPosition.Bottom:
-                                case SnapPointPosition.LeftBottom:
-                                    designerItem.Left.Value += ((double)value.NewValue - (double)value.OldValue) / 2;
+                                    designerItem.Left.Value += (double)value.NewValue - (double)value.OldValue;
                                     break;
                             }
                             break;
                         case "Height":
-                            switch (value.SnapPointPosition)
+                            switch (SnapPointPositionTo)
                             {
                                 case SnapPointPosition.LeftTop:
                                 case SnapPointPosition.Top:
                                 case SnapPointPosition.RightTop:
-                                    designerItem.Top.Value += ((double)value.NewValue - (double)value.OldValue) / 2;
+                                    designerItem.Top.Value += 0;
                                     break;
                                 case SnapPointPosition.Left:
                                 case SnapPointPosition.Center:
@@ -191,7 +191,7 @@ namespace boilersGraphics.ViewModels
                                 case SnapPointPosition.LeftBottom:
                                 case SnapPointPosition.Bottom:
                                 case SnapPointPosition.RightBottom:
-                                    designerItem.Top.Value += ((double)value.NewValue - (double)value.OldValue) / 2;
+                                    designerItem.Top.Value += (double)value.NewValue - (double)value.OldValue;
                                     break;
                             }
                             break;
@@ -207,39 +207,42 @@ namespace boilersGraphics.ViewModels
                             designerItem.Top.Value += (double)value.NewValue - (double)value.OldValue;
                             break;
                         case "Width":
-                            switch (value.SnapPointPosition)
+                            switch (SnapPointPositionTo)
                             {
                                 case SnapPointPosition.Left:
-                                case SnapPointPosition.Right:
-                                    break;
                                 case SnapPointPosition.LeftTop:
-                                case SnapPointPosition.Top:
-                                case SnapPointPosition.RightTop:
-                                    designerItem.Left.Value += (double)value.NewValue - (double)value.OldValue;
-                                    break;
-                                case SnapPointPosition.RightBottom:
-                                case SnapPointPosition.Bottom:
                                 case SnapPointPosition.LeftBottom:
+                                    designerItem.Left.Value += 0;
+                                    break;
+                                case SnapPointPosition.Top:
+                                case SnapPointPosition.Center:
+                                case SnapPointPosition.Bottom:
+                                    designerItem.Left.Value += ((double)value.NewValue - (double)value.OldValue) / 2;
+                                    break;
+                                case SnapPointPosition.Right:
+                                case SnapPointPosition.RightTop:
+                                case SnapPointPosition.RightBottom:
                                     designerItem.Left.Value += (double)value.NewValue - (double)value.OldValue;
                                     break;
                             }
                             break;
                         case "Height":
-                            switch (value.SnapPointPosition)
+                            switch (SnapPointPositionTo)
                             {
                                 case SnapPointPosition.LeftTop:
                                 case SnapPointPosition.Top:
                                 case SnapPointPosition.RightTop:
-                                    designerItem.Top.Value += ((double)value.NewValue - (double)value.OldValue) / 2;
+                                    designerItem.Top.Value += 0;
                                     break;
                                 case SnapPointPosition.Left:
                                 case SnapPointPosition.Center:
                                 case SnapPointPosition.Right:
+                                    designerItem.Top.Value += ((double)value.NewValue - (double)value.OldValue) / 2;
                                     break;
                                 case SnapPointPosition.LeftBottom:
                                 case SnapPointPosition.Bottom:
                                 case SnapPointPosition.RightBottom:
-                                    designerItem.Top.Value += ((double)value.NewValue - (double)value.OldValue) / 2;
+                                    designerItem.Top.Value += (double)value.NewValue - (double)value.OldValue;
                                     break;
                             }
                             break;
