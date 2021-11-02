@@ -1,14 +1,13 @@
 ﻿using boilersGraphics.Controls;
 using boilersGraphics.Extensions;
 using boilersGraphics.ViewModels;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Documents;
-using System.Windows.Input;
 
 namespace boilersGraphics.Helpers
 {
@@ -21,6 +20,16 @@ namespace boilersGraphics.Helpers
             _adorners = new Dictionary<Point, Adorner>();
         }
 
+        public enum SnapResult
+        {
+            Snapped,
+            NoSnap
+        }
+
+        private SnapPointPosition _SnapToEdge;
+        private SnapResult _SnapResult = SnapResult.NoSnap;
+        private SelectableDesignerItemViewModelBase _SnapTargetDataContext { get; set; }
+
         public void OnMouseMove(ref Point currentPoint)
         {
             var mainWindowVM = (App.Current.MainWindow.DataContext as MainWindowViewModel);
@@ -28,17 +37,20 @@ namespace boilersGraphics.Helpers
             var diagramVM = mainWindowVM.DiagramViewModel;
             if (diagramVM.EnablePointSnap.Value)
             {
-                var snapPoints = diagramVM.SnapPoints;
-                Point? snapped = null;
+                var snapPoints = diagramVM.GetSnapPoints(currentPoint);
+                Tuple<SnapPoint, Point> snapped = null;
                 foreach (var snapPoint in snapPoints)
                 {
-                    if (currentPoint.X > snapPoint.X - mainWindowVM.SnapPower.Value
-                     && currentPoint.X < snapPoint.X + mainWindowVM.SnapPower.Value
-                     && currentPoint.Y > snapPoint.Y - mainWindowVM.SnapPower.Value
-                     && currentPoint.Y < snapPoint.Y + mainWindowVM.SnapPower.Value)
+                    if (currentPoint.X > snapPoint.Item2.X - mainWindowVM.SnapPower.Value
+                     && currentPoint.X < snapPoint.Item2.X + mainWindowVM.SnapPower.Value
+                     && currentPoint.Y > snapPoint.Item2.Y - mainWindowVM.SnapPower.Value
+                     && currentPoint.Y < snapPoint.Item2.Y + mainWindowVM.SnapPower.Value)
                     {
                         //スナップする座標を一時変数へ保存
                         snapped = snapPoint;
+                        _SnapToEdge = snapPoint.Item1.SnapPointPosition;
+                        _SnapTargetDataContext = snapPoint.Item1.DataContext as SelectableDesignerItemViewModelBase;
+                        break;
                     }
                 }
 
@@ -46,28 +58,89 @@ namespace boilersGraphics.Helpers
                 if (snapped != null)
                 {
                     AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(designerCanvas);
-                    RemoveFromAdornerLayerAndDictionary(snapped, adornerLayer);
+                    RemoveFromAdornerLayerAndDictionary(snapped.Item2, adornerLayer);
 
                     //ドラッグ終了座標を一時変数で上書きしてスナップ
-                    currentPoint = snapped.Value;
+                    currentPoint = snapped.Item2;
                     if (adornerLayer != null)
                     {
-                        if (!_adorners.ContainsKey(snapped.Value))
+                        if (!_adorners.ContainsKey(snapped.Item2))
                         {
-                            var adorner = new Adorners.SnapPointAdorner(designerCanvas, snapped.Value);
+                            var adorner = new Adorners.SnapPointAdorner(designerCanvas, snapped.Item2);
                             if (adorner != null)
                             {
                                 adornerLayer.Add(adorner);
 
                                 //ディクショナリに記憶する
-                                _adorners.Add(snapped.Value, adorner);
+                                _adorners.Add(snapped.Item2, adorner);
                             }
                         }
                     }
+                    _SnapResult = SnapResult.Snapped;
                 }
                 else //スナップしなかった場合
                 {
                     RemoveAllAdornerFromAdornerLayerAndDictionary(designerCanvas);
+                    _SnapResult = SnapResult.NoSnap;
+                }
+            }
+        }
+
+        public void OnMouseMove(ref Point currentPoint, SnapPoint movingSnapPoint)
+        {
+            var mainWindowVM = (App.Current.MainWindow.DataContext as MainWindowViewModel);
+            var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
+            var diagramVM = mainWindowVM.DiagramViewModel;
+            if (diagramVM.EnablePointSnap.Value)
+            {
+                var snapPoints = diagramVM.GetSnapPoints(new SnapPoint[] { movingSnapPoint });
+                Tuple<SnapPoint, Point> snapped = null;
+                foreach (var snapPoint in snapPoints)
+                {
+                    if (currentPoint.X > snapPoint.Item2.X - mainWindowVM.SnapPower.Value
+                     && currentPoint.X < snapPoint.Item2.X + mainWindowVM.SnapPower.Value
+                     && currentPoint.Y > snapPoint.Item2.Y - mainWindowVM.SnapPower.Value
+                     && currentPoint.Y < snapPoint.Item2.Y + mainWindowVM.SnapPower.Value)
+                    {
+                        //スナップする座標を一時変数へ保存
+                        snapped = snapPoint;
+                        _SnapToEdge = snapPoint.Item1.SnapPointPosition;
+                        _SnapTargetDataContext = snapPoint.Item1.DataContext as SelectableDesignerItemViewModelBase;
+                        break;
+                    }
+                }
+
+                //スナップした場合
+                if (snapped != null)
+                {
+                    AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(designerCanvas);
+                    RemoveFromAdornerLayerAndDictionary(snapped.Item2, adornerLayer);
+
+                    //ドラッグ終了座標を一時変数で上書きしてスナップ
+                    currentPoint = snapped.Item2;
+                    Canvas.SetLeft(movingSnapPoint, currentPoint.X - movingSnapPoint.Width / 2);
+                    Canvas.SetTop(movingSnapPoint, currentPoint.Y - movingSnapPoint.Height / 2);
+
+                    if (adornerLayer != null)
+                    {
+                        if (!_adorners.ContainsKey(snapped.Item2))
+                        {
+                            var adorner = new Adorners.SnapPointAdorner(designerCanvas, snapped.Item2);
+                            if (adorner != null)
+                            {
+                                adornerLayer.Add(adorner);
+
+                                //ディクショナリに記憶する
+                                _adorners.Add(snapped.Item2, adorner);
+                            }
+                        }
+                    }
+                    _SnapResult = SnapResult.Snapped;
+                }
+                else //スナップしなかった場合
+                {
+                    RemoveAllAdornerFromAdornerLayerAndDictionary(designerCanvas);
+                    _SnapResult = SnapResult.NoSnap;
                 }
             }
         }
@@ -88,6 +161,38 @@ namespace boilersGraphics.Helpers
                     adornerLayer.Remove(adorner.Value);
 
                 _adorners.Clear();
+            }
+        }
+
+        public void PostProcess(SnapPointPosition snapPointEdge, SelectableDesignerItemViewModelBase item)
+        {
+            if (_SnapTargetDataContext == null)
+            {
+                LogManager.GetCurrentClassLogger().Debug("_SnapTargetDataContext == null");
+                return;
+            }
+
+            if (_SnapResult == SnapResult.Snapped)
+            {
+                switch (snapPointEdge)
+                {
+                    case SnapPointPosition.Left:
+                    case SnapPointPosition.LeftTop:
+                    case SnapPointPosition.Top:
+                    case SnapPointPosition.RightTop:
+                    case SnapPointPosition.Right:
+                    case SnapPointPosition.RightBottom:
+                    case SnapPointPosition.Bottom:
+                    case SnapPointPosition.LeftBottom:
+                        (item as DesignerItemViewModelBase).SnapObjs.Add(_SnapTargetDataContext.Connect(_SnapToEdge, snapPointEdge, item));
+                        break;
+                    case SnapPointPosition.BeginEdge:
+                        (item as ConnectorBaseViewModel).SnapPoint0VM.Value.SnapObjs.Add(_SnapTargetDataContext.Connect(_SnapToEdge, SnapPointPosition.BeginEdge, item));
+                        break;
+                    case SnapPointPosition.EndEdge:
+                        (item as ConnectorBaseViewModel).SnapPoint1VM.Value.SnapObjs.Add(_SnapTargetDataContext.Connect(_SnapToEdge, SnapPointPosition.EndEdge, item));
+                        break;
+                }
             }
         }
 

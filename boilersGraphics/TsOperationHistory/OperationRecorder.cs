@@ -1,4 +1,5 @@
 ﻿using boilersGraphics.Helpers;
+using NLog;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -36,7 +37,7 @@ namespace TsOperationHistory
         public void BeginRecode([CallerMemberName] string callerMemberName = "")
         {
             string className = Reflections.NameOfCallingClass();
-            LoggerHelper.GetLogger().Trace($"{className}.{callerMemberName}() => BeginRecode()");
+            LogManager.GetCurrentClassLogger().Trace($"{className}.{callerMemberName}() => BeginRecode()");
             _stack.Push(new OperationController(1024));
         }
 
@@ -44,7 +45,7 @@ namespace TsOperationHistory
         {
             string className = Reflections.NameOfCallingClass();
             string message = $"{className}.{callerMemberName}() => EndRecode()";
-            LoggerHelper.GetLogger().Trace(message);
+            LogManager.GetCurrentClassLogger().Trace(message);
             var controller = _stack.Pop();
             var operation = controller.Operations.ToCompositeOperation();
             operation.Message = message;

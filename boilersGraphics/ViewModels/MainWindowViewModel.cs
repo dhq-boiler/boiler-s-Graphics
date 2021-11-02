@@ -166,7 +166,7 @@ namespace boilersGraphics.ViewModels
                     rule.EnableLoggingForLevel(parameter);
                 }
                 LogManager.ReconfigExistingLoggers();
-                LoggerHelper.GetLogger().Info($"ログレベルが変更されました。変更後：{parameter}");
+                LogManager.GetCurrentClassLogger().Info($"ログレベルが変更されました。変更後：{parameter}");
             });
             DiagramViewModel.EdgeThickness.Subscribe(x =>
             {

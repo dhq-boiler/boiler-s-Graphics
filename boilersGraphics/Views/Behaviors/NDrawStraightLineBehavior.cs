@@ -1,4 +1,5 @@
 ﻿using boilersGraphics.Controls;
+using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
 using boilersGraphics.ViewModels;
 using Microsoft.Xaml.Behaviors;
@@ -12,6 +13,7 @@ namespace boilersGraphics.Views.Behaviors
     {
         private Point? _straightLineStartPoint;
         private SnapAction snapAction;
+        private StraightConnectorViewModel item;
 
         public NDrawStraightLineBehavior()
         {
@@ -65,7 +67,9 @@ namespace boilersGraphics.Views.Behaviors
                 if (e.Source == AssociatedObject)
                 {
                     _straightLineStartPoint = e.GetPosition(AssociatedObject);
-
+                    var viewModel = AssociatedObject.DataContext as IDiagramViewModel;
+                    item = new StraightConnectorViewModel(viewModel, _straightLineStartPoint.Value);
+                    snapAction.PostProcess(SnapPointPosition.BeginEdge, item);
                     e.Handled = true;
                 }
             }
@@ -91,7 +95,7 @@ namespace boilersGraphics.Views.Behaviors
                 AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(canvas);
                 if (adornerLayer != null)
                 {
-                    var adorner = new Adorners.StraightLineAdorner(canvas, _straightLineStartPoint);
+                    var adorner = new Adorners.StraightLineAdorner(canvas, _straightLineStartPoint, item);
                     if (adorner != null)
                     {
                         adornerLayer.Add(adorner);
@@ -117,7 +121,7 @@ namespace boilersGraphics.Views.Behaviors
                 AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(canvas);
                 if (adornerLayer != null)
                 {
-                    var adorner = new Adorners.StraightLineAdorner(canvas, _straightLineStartPoint);
+                    var adorner = new Adorners.StraightLineAdorner(canvas, _straightLineStartPoint, item);
                     if (adorner != null)
                     {
                         adornerLayer.Add(adorner);

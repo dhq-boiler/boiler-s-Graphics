@@ -1,5 +1,6 @@
 ﻿using boilersGraphics.Helpers;
 using boilersGraphics.ViewModels;
+using NLog;
 using System;
 using System.Linq;
 using System.Windows;
@@ -35,7 +36,7 @@ namespace boilersGraphics.Controls
             Recorder.EndRecode();
 
             var item = this.DataContext as DesignerItemViewModelBase;
-            LoggerHelper.GetLogger().Info($"Move item {item.ShowPropertiesAndFields()}");
+            LogManager.GetCurrentClassLogger().Info($"Move item {item.ShowPropertiesAndFields()}");
         }
 
         private void DragThumb_DragDelta(object sender, DragDeltaEventArgs e)
@@ -48,6 +49,8 @@ namespace boilersGraphics.Controls
             if (designerItem != null && designerItem.IsSelected.Value)
             {
                 (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "移動";
+
+                SelectableDesignerItemViewModelBase.Disconnect(designerItem);
 
                 double minLeft = double.MaxValue;
                 double minTop = double.MaxValue;

@@ -3,10 +3,7 @@ using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
 using boilersGraphics.Models;
 using boilersGraphics.ViewModels;
-using Reactive.Bindings;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Documents;
@@ -19,15 +16,17 @@ namespace boilersGraphics.Adorners
     {
         private DesignerCanvas _designerCanvas;
         private Point? _startPoint;
+        private NRectangleViewModel item;
         private Point? _endPoint;
         private Pen _rectanglePen;
         private SnapAction _snapAction;
 
-        public RectangleAdorner(DesignerCanvas designerCanvas, Point? dragStartPoint)
+        public RectangleAdorner(DesignerCanvas designerCanvas, Point? dragStartPoint, NRectangleViewModel item)
             : base(designerCanvas)
         {
             _designerCanvas = designerCanvas;
             _startPoint = dragStartPoint;
+            this.item = item;
             var parent = (AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel;
             var brush = new SolidColorBrush(parent.EdgeColors.First());
             brush.Opacity = 0.5;
@@ -71,7 +70,6 @@ namespace boilersGraphics.Adorners
             if (_startPoint.HasValue && _endPoint.HasValue)
             {
                 var rand = new Random();
-                var item = new NRectangleViewModel();
                 item.Owner = (AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel;
                 item.Left.Value = Math.Min(_startPoint.Value.X, _endPoint.Value.X);
                 item.Top.Value = Math.Min(_startPoint.Value.Y, _endPoint.Value.Y);
@@ -86,6 +84,27 @@ namespace boilersGraphics.Adorners
                 item.IsVisible.Value = true;
                 item.Owner.DeselectAll();
                 ((AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel).AddItemCommand.Execute(item);
+
+                if (_startPoint.Value.X < _endPoint.Value.X && _startPoint.Value.Y <= _endPoint.Value.Y)
+                {
+                    //右下
+                    _snapAction.PostProcess(SnapPointPosition.RightBottom, item);
+                }
+                else if (_startPoint.Value.X < _endPoint.Value.X && _endPoint.Value.Y < _startPoint.Value.Y)
+                {
+                    //右上
+                    _snapAction.PostProcess(SnapPointPosition.RightTop, item);
+                }
+                else if (_endPoint.Value.X <= _startPoint.Value.X && _startPoint.Value.Y <= _endPoint.Value.Y)
+                {
+                    //左下
+                    _snapAction.PostProcess(SnapPointPosition.LeftBottom, item);
+                }
+                else if (_endPoint.Value.X <= _startPoint.Value.X && _endPoint.Value.Y < _startPoint.Value.Y)
+                {
+                    //左上
+                    _snapAction.PostProcess(SnapPointPosition.LeftTop, item);
+                }
 
                 _startPoint = null;
                 _endPoint = null;

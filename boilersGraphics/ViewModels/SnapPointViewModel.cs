@@ -2,6 +2,7 @@
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
+using System.Collections.Generic;
 using System.Windows;
 
 namespace boilersGraphics.ViewModels
@@ -51,6 +52,8 @@ namespace boilersGraphics.ViewModels
 
         public ReactivePropertySlim<double> Opacity { get; } = new ReactivePropertySlim<double>();
 
+        public List<IDisposable> SnapObjs { get; set; } = new List<IDisposable>();
+
         public override bool SupportsPropertyDialog => false;
 
         public override object Clone()
@@ -78,6 +81,7 @@ namespace boilersGraphics.ViewModels
             clone.Width.Value = Width.Value;
             clone.Height.Value = Height.Value;
             clone.Opacity.Value = Opacity.Value;
+            clone.SnapObjs = SnapObjs;
             return clone;
         }
 

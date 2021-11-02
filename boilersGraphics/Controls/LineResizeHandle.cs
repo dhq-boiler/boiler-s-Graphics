@@ -1,7 +1,9 @@
 ﻿using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
 using boilersGraphics.ViewModels;
+using NLog;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using TsOperationHistory;
 using TsOperationHistory.Extensions;
@@ -59,6 +61,8 @@ namespace boilersGraphics.Controls
                 var snapPointVM = DataContext as SnapPointViewModel;
                 var connectorVM = DataContext as ConnectorBaseViewModel ?? (DataContext as SnapPointViewModel).Parent.Value as ConnectorBaseViewModel;
 
+                SelectableDesignerItemViewModelBase.Disconnect(snapPointVM);
+
                 snapPointVM.IsSelected.Value = true;
 
                 Point currentPosition = Mouse.GetPosition(App.Current.MainWindow.GetChildOfType<DesignerCanvas>());
@@ -66,8 +70,10 @@ namespace boilersGraphics.Controls
                 Point point = currentPosition;
                 Recorder.Current.ExecuteSetProperty(snapPointVM, "Left.Value", currentPosition.X);
                 Recorder.Current.ExecuteSetProperty(snapPointVM, "Top.Value", currentPosition.Y);
+                Canvas.SetLeft(this, currentPosition.X - this.Width / 2);
+                Canvas.SetTop(this, currentPosition.Y - this.Height / 2);
 
-                snapAction.OnMouseMove(ref point);
+                snapAction.OnMouseMove(ref point, this);
 
                 Recorder.Current.ExecuteSetProperty(connectorVM, $"Points[{TargetPointIndex}]", point);
 
@@ -87,20 +93,23 @@ namespace boilersGraphics.Controls
 
         protected override void OnMouseUp(MouseButtonEventArgs e)
         {
+            var snapPointVM = DataContext as SnapPointViewModel;
+            var connectorVM = DataContext as ConnectorBaseViewModel ?? (DataContext as SnapPointViewModel).Parent.Value as ConnectorBaseViewModel;
+
             base.OnMouseUp(e);
 
             BeginDragPoint = null;
 
             snapAction.OnMouseUp(null);
 
+            snapAction.PostProcess(SnapPointPosition, connectorVM);
+
             (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "";
             (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = "";
 
             Recorder.EndRecode();
 
-            var snapPointVM = DataContext as SnapPointViewModel;
-            var connectorVM = DataContext as ConnectorBaseViewModel ?? (DataContext as SnapPointViewModel).Parent.Value as ConnectorBaseViewModel;
-            LoggerHelper.GetLogger().Info($"Deform item {connectorVM.ShowPropertiesAndFields()}");
+            LogManager.GetCurrentClassLogger().Info($"Deform item {connectorVM.ShowPropertiesAndFields()}");
         }
     }
 }

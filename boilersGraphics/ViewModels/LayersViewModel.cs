@@ -2,6 +2,7 @@
 using boilersGraphics.Helpers;
 using boilersGraphics.Models;
 using boilersGraphics.Views.Behaviors;
+using NLog;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
@@ -201,16 +202,16 @@ namespace boilersGraphics.ViewModels
             switch (args.Type)
             {
                 case MoveableTreeViewBehavior.InsertType.Before:
-                    LoggerHelper.GetLogger().Trace("Before");
-                    LoggerHelper.GetLogger().Trace(string.Join(", ", Layers));
+                    LogManager.GetCurrentClassLogger().Trace("Before");
+                    LogManager.GetCurrentClassLogger().Trace(string.Join(", ", Layers));
                     break;
                 case MoveableTreeViewBehavior.InsertType.After:
-                    LoggerHelper.GetLogger().Trace("After");
-                    LoggerHelper.GetLogger().Trace(string.Join(", ", Layers));
+                    LogManager.GetCurrentClassLogger().Trace("After");
+                    LogManager.GetCurrentClassLogger().Trace(string.Join(", ", Layers));
                     break;
                 case MoveableTreeViewBehavior.InsertType.Children:
-                    LoggerHelper.GetLogger().Trace("Children");
-                    LoggerHelper.GetLogger().Trace(string.Join(", ", Layers));
+                    LogManager.GetCurrentClassLogger().Trace("Children");
+                    LogManager.GetCurrentClassLogger().Trace(string.Join(", ", Layers));
                     break;
             }
         }

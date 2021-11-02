@@ -6,6 +6,7 @@ using boilersGraphics.Views;
 using boilersGraphics.Views.Behaviors;
 using Microsoft.Win32;
 using Microsoft.Xaml.Behaviors;
+using NLog;
 using Prism.Commands;
 using Prism.Services.Dialogs;
 using Reactive.Bindings;
@@ -210,7 +211,7 @@ namespace boilersGraphics.ViewModels
                 {
                     var layerItem = y as LayerItem;
                     layerItem.Item.Value.IsHitTestVisible.Value = true;
-                    LoggerHelper.GetLogger().Trace($"{layerItem.Name.Value}.IsHitTestVisible={layerItem.Item.Value.IsHitTestVisible.Value}");
+                    LogManager.GetCurrentClassLogger().Trace($"{layerItem.Name.Value}.IsHitTestVisible={layerItem.Item.Value.IsHitTestVisible.Value}");
                 })
             );
             CurrentHitTestVisibleState.Value = true;
