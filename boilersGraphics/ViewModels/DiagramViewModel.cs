@@ -129,7 +129,7 @@ namespace boilersGraphics.ViewModels
 
         public ReactivePropertySlim<TimeSpan> AutoSaveInterval { get; } = new ReactivePropertySlim<TimeSpan>(TimeSpan.FromMinutes(1));
 
-        public ReactiveCollection<string> AutoSaveFiles { get; } = new ReactiveCollection<string>();   
+        public ReactiveCollection<string> AutoSaveFiles { get; set; } = new ReactiveCollection<string>();   
 
         public ObservableCollection<Color> EdgeColors
         {
@@ -460,11 +460,17 @@ namespace boilersGraphics.ViewModels
             AutoSaveInterval.Value = TimeSpan.FromSeconds(30);
 
             MainWindowVM.LogLevel.Value = NLog.LogLevel.Info;
+            PackAutoSaveFiles();
+        }
 
+        private void PackAutoSaveFiles()
+        {
+            if (AutoSaveFiles != null)
+                AutoSaveFiles.ClearOnScheduler();
             var files = Directory.EnumerateFiles(System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "dhq_boiler\\boilersGraphics\\AutoSave"), "AutoSave-*-*-*-*-*-*.xml");
-            foreach (var file in files)
+            foreach (var file in files.OrderByDescending(x => x))
             {
-                AutoSaveFiles.Add(file);
+                AutoSaveFiles.AddOnScheduler(file);
             }
         }
 
@@ -568,7 +574,7 @@ namespace boilersGraphics.ViewModels
                       .Subscribe(_ => MainWindowVM.Message.Value = "")
                       .AddTo(_CompositeDisposable);
 
-            AutoSaveFiles.AddOnScheduler(path);
+            PackAutoSaveFiles();
         }
 
         public LayerTreeViewItemBase GetLayerTreeViewItemBase(SelectableDesignerItemViewModelBase item)
