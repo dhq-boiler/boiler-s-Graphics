@@ -98,7 +98,17 @@
                         </DockPanel.Resources>
                         <Menu DockPanel.Dock="Left">
                             <MenuItem Header="ファイル(_F)">
-                                <MenuItem Command="{Binding DiagramViewModel.LoadCommand}" Header="開く(_O)" />
+                                <MenuItem Header="開く(_O)">
+                                    <MenuItem Command="{Binding DiagramViewModel.LoadCommand}" Header="ファイルを指定(_S)" />
+                                    <MenuItem Header="自動保存したファイルを指定" ItemsSource="{Binding DiagramViewModel.AutoSaveFiles}">
+                                        <MenuItem.ItemContainerStyle>
+                                            <Style TargetType="MenuItem">
+                                                <Setter Property="Command" Value="{Binding Path=DataContext.DiagramViewModel.LoadFileCommand, ElementName=MainWindowInstance}" />
+                                                <Setter Property="CommandParameter" Value="{Binding}" />
+                                            </Style>
+                                        </MenuItem.ItemContainerStyle>
+                                    </MenuItem>
+                                </MenuItem>
                                 <MenuItem Command="{Binding DiagramViewModel.SaveCommand}"
                                           Header="名前を付けて保存"
                                           InputGestureText="Ctrl+Shift+S" />

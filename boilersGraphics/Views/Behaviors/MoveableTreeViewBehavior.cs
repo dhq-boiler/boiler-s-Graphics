@@ -4,6 +4,7 @@ using boilersGraphics.Helpers;
 using boilersGraphics.Models;
 using boilersGraphics.ViewModels;
 using Microsoft.Xaml.Behaviors;
+using NLog;
 using Reactive.Bindings;
 using System;
 using System.Collections.Generic;
@@ -97,7 +98,7 @@ namespace boilersGraphics.Views.Behaviors
 
             DragScroll(itemsControl, e);
 
-            LoggerHelper.GetLogger().Trace($"Begin OnDragOver()");
+            LogManager.GetCurrentClassLogger().Trace($"Begin OnDragOver()");
 
             var sourceItemLayerItem = (LayerTreeViewItemBase)e.Data.GetData(typeof(LayerItem));
             var sourceItemLayer = (LayerTreeViewItemBase)e.Data.GetData(typeof(Layer));
@@ -107,7 +108,7 @@ namespace boilersGraphics.Views.Behaviors
             var parentGrid = targetElement?.GetParent<Grid>();
             if (parentGrid == null || !(targetElement.DataContext is LayerTreeViewItemBase targetElementInfo) || targetElementInfo == sourceItem)
             {
-                LoggerHelper.GetLogger().Trace("OnDragOver() canceled.");
+                LogManager.GetCurrentClassLogger().Trace("OnDragOver() canceled.");
                 return;
             }
 
@@ -232,7 +233,7 @@ namespace boilersGraphics.Views.Behaviors
                 return;
 
             DragDrop.DoDragDrop(treeView, treeView.SelectedItem, DragDropEffects.Move);
-            LoggerHelper.GetLogger().Trace($"Done DragDrop.DoDragDrop() in OnPreviewMouseMove()");
+            LogManager.GetCurrentClassLogger().Trace($"Done DragDrop.DoDragDrop() in OnPreviewMouseMove()");
 
             _startPos = null;
         }
@@ -247,7 +248,7 @@ namespace boilersGraphics.Views.Behaviors
         {
             if (!(sender is ItemsControl itemsControl))
             {
-                LoggerHelper.GetLogger().Trace("OnPreviewMouseLeftButtonDown() canceled.");
+                LogManager.GetCurrentClassLogger().Trace("OnPreviewMouseLeftButtonDown() canceled.");
                 return;
             }
 

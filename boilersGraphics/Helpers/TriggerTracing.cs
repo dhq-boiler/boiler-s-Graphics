@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NLog;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -177,7 +178,7 @@ namespace boilersGraphics.Helpers
                         TriggerBase triggerBase = storyboard.TriggerBase;
                         string triggerName = GetTriggerName(storyboard.TriggerBase);
 
-                        LoggerHelper.GetLogger().Debug($"Element: {targetElement}, {triggerBase.GetType().Name}: {triggerName}: {storyboard.StoryboardType}");
+                        LogManager.GetCurrentClassLogger().Debug($"Element: {targetElement}, {triggerBase.GetType().Name}: {triggerName}: {storyboard.StoryboardType}");
                     }
                 }
             }

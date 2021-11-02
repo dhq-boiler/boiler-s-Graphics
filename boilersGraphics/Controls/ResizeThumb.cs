@@ -1,9 +1,10 @@
-﻿using boilersGraphics.Extensions;
+﻿using boilersGraphics.Exceptions;
+using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
 using boilersGraphics.ViewModels;
+using NLog;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Windows;
@@ -12,6 +13,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using static boilersGraphics.Helpers.SnapAction;
 
 namespace boilersGraphics.Controls
 {
@@ -19,6 +21,9 @@ namespace boilersGraphics.Controls
     {
         private Dictionary<Point, Adorner> _adorners;
 
+        private SnapPointPosition _SnapToEdge;
+        private SnapResult _SnapResult = SnapResult.NoSnap;
+        private DesignerItemViewModelBase _SnapTargetDataContext { get; set; }
         public ResizeThumb()
         {
             _adorners = new Dictionary<Point, Adorner>();
@@ -36,6 +41,27 @@ namespace boilersGraphics.Controls
         {
             base.OnMouseUp(e);
 
+            if (_SnapResult == SnapResult.Snapped)
+            {
+                var designerItem = this.DataContext as DesignerItemViewModelBase;
+                var connector = this.DataContext as ConnectorBaseViewModel;
+                switch (SnapPointPosition)
+                {
+                    case SnapPointPosition.LeftTop:
+                    case SnapPointPosition.RightTop:
+                    case SnapPointPosition.LeftBottom:
+                    case SnapPointPosition.RightBottom:
+                        designerItem.SnapObjs.Add(_SnapTargetDataContext.Connect(_SnapToEdge, SnapPointPosition, designerItem));
+                        break;
+                    case SnapPointPosition.BeginEdge:
+                        connector.SnapPoint0VM.Value.SnapObjs.Add(_SnapTargetDataContext.Connect(_SnapToEdge, SnapPointPosition.BeginEdge, connector));
+                        break;
+                    case SnapPointPosition.EndEdge:
+                        connector.SnapPoint1VM.Value.SnapObjs.Add(_SnapTargetDataContext.Connect(_SnapToEdge, SnapPointPosition.EndEdge, connector));
+                        break;
+                }
+            }
+
             (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "";
             (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = "";
         }
@@ -48,6 +74,8 @@ namespace boilersGraphics.Controls
             {
                 double minLeft, minTop, minDeltaHorizontal, minDeltaVertical;
                 double dragDeltaVertical, dragDeltaHorizontal;
+
+                SelectableDesignerItemViewModelBase.Disconnect(designerItem);
 
                 // only resize DesignerItems
                 var selectedDesignerItems = from item in designerItem.Owner.SelectedItems.Value
@@ -151,18 +179,20 @@ namespace boilersGraphics.Controls
                             if (diagramVM.EnablePointSnap.Value)
                             {
                                 var snapPoints = diagramVM.GetSnapPoints(new List<SnapPoint>(correspondingViews));
-                                Point? snapped = null;
+                                Tuple<SnapPoint, Point> snapped = null;
 
                                 foreach (var snapPoint in snapPoints)
                                 {
                                     var p = GetPosition(rect, base.VerticalAlignment, base.HorizontalAlignment);
-                                    if (p.X > snapPoint.X - mainWindowVM.SnapPower.Value
-                                     && p.X < snapPoint.X + mainWindowVM.SnapPower.Value
-                                     && p.Y > snapPoint.Y - mainWindowVM.SnapPower.Value
-                                     && p.Y < snapPoint.Y + mainWindowVM.SnapPower.Value)
+                                    if (p.X > snapPoint.Item2.X - mainWindowVM.SnapPower.Value
+                                     && p.X < snapPoint.Item2.X + mainWindowVM.SnapPower.Value
+                                     && p.Y > snapPoint.Item2.Y - mainWindowVM.SnapPower.Value
+                                     && p.Y < snapPoint.Item2.Y + mainWindowVM.SnapPower.Value)
                                     {
                                         //スナップする座標を一時変数へ保存
                                         snapped = snapPoint;
+                                        _SnapToEdge = snapPoint.Item1.SnapPointPosition;
+                                        _SnapTargetDataContext = snapPoint.Item1.DataContext as DesignerItemViewModelBase;
                                     }
                                 }
 
@@ -170,35 +200,41 @@ namespace boilersGraphics.Controls
                                 if (snapped != null)
                                 {
                                     AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(designerCanvas);
-                                    RemoveFromAdornerLayerAndDictionary(snapped, adornerLayer);
+                                    RemoveFromAdornerLayerAndDictionary(snapped.Item2, adornerLayer);
 
                                     //ドラッグ終了座標を一時変数で上書きしてスナップ
-                                    SetRect(ref rect, snapped.Value, base.VerticalAlignment, base.HorizontalAlignment);
+                                    SetRect(ref rect, snapped.Item2, base.VerticalAlignment, base.HorizontalAlignment);
 
                                     viewModel.Left.Value = rect.X;
                                     viewModel.Top.Value = rect.Y;
                                     viewModel.Width.Value = rect.Width;
                                     viewModel.Height.Value = rect.Height;
 
+                                    _SnapResult = SnapResult.Snapped;
+
                                     if (adornerLayer != null)
                                     {
-                                        LoggerHelper.GetLogger().Trace($"Snap={snapped.Value}");
-                                        if (!_adorners.ContainsKey(snapped.Value))
+                                        LogManager.GetCurrentClassLogger().Trace($"Snap={snapped.Item2}");
+                                        if (!_adorners.ContainsKey(snapped.Item2))
                                         {
-                                            var adorner = new Adorners.SnapPointAdorner(designerCanvas, snapped.Value);
+                                            var adorner = new Adorners.SnapPointAdorner(designerCanvas, snapped.Item2);
                                             if (adorner != null)
                                             {
                                                 adornerLayer.Add(adorner);
 
                                                 //ディクショナリに記憶する
-                                                _adorners.Add(snapped.Value, adorner);
+                                                _adorners.Add(snapped.Item2, adorner);
                                             }
                                         }
                                     }
                                 }
                                 else //スナップしなかった場合
                                 {
+                                    _SnapResult = SnapResult.NoSnap;
+
                                     RemoveAllAdornerFromAdornerLayerAndDictionary(designerCanvas);
+
+                                    viewModel.snapPointPosition = GetSnapPointPosition(VerticalAlignment, HorizontalAlignment);
 
                                     switch (base.VerticalAlignment)
                                     {
@@ -276,6 +312,51 @@ namespace boilersGraphics.Controls
             }
         }
 
+        private SnapPointPosition GetSnapPointPosition(VerticalAlignment verticalAlignment, HorizontalAlignment horizontalAlignment)
+        {
+            switch (verticalAlignment)
+            {
+                case VerticalAlignment.Center:
+                    switch (horizontalAlignment)
+                    {
+                        case HorizontalAlignment.Left:
+                            return SnapPointPosition.Left;
+                        case HorizontalAlignment.Center:
+                            return SnapPointPosition.Center;
+                        case HorizontalAlignment.Right:
+                            return SnapPointPosition.Right;
+                        default:
+                            throw new UnexpectedException(horizontalAlignment.ToString());
+                    }
+                case VerticalAlignment.Top:
+                    switch (horizontalAlignment)
+                    {
+                        case HorizontalAlignment.Left:
+                            return SnapPointPosition.LeftTop;
+                        case HorizontalAlignment.Center:
+                            return SnapPointPosition.Top;
+                        case HorizontalAlignment.Right:
+                            return SnapPointPosition.RightTop;
+                        default:
+                            throw new UnexpectedException(horizontalAlignment.ToString());
+                    }
+                case VerticalAlignment.Bottom:
+                    switch (horizontalAlignment)
+                    {
+                        case HorizontalAlignment.Left:
+                            return SnapPointPosition.LeftBottom;
+                        case HorizontalAlignment.Center:
+                            return SnapPointPosition.Bottom;
+                        case HorizontalAlignment.Right:
+                            return SnapPointPosition.RightBottom;
+                        default:
+                            throw new UnexpectedException(horizontalAlignment.ToString());
+                    }
+                default:
+                    throw new UnexpectedException(verticalAlignment.ToString());
+            }
+        }
+
         private void DebugPrint(string windowName, Rect rect, Point? value = null)
         {
             var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
@@ -309,6 +390,8 @@ namespace boilersGraphics.Controls
             OpenCvSharp.Cv2.ImShow(windowName, mat);
         }
 
+        const double MIN_ONE_SIDE_LENGTH = 10;
+
         private void Sum(ref Rect rect, double dragDeltaHorizontal, double dragDeltaVertical, HorizontalAlignment horizontalAlignment, VerticalAlignment verticalAlignment)
         {
             switch (verticalAlignment)
@@ -324,7 +407,7 @@ namespace boilersGraphics.Controls
                             rect.Y += dragDeltaVertical;
                             return;
                         case HorizontalAlignment.Right:
-                            rect.Width += dragDeltaHorizontal;
+                            rect.Width += SafeValue(rect.Width, MIN_ONE_SIDE_LENGTH, dragDeltaHorizontal);
                             rect.Y += dragDeltaVertical;
                             return;
                     }
@@ -338,7 +421,7 @@ namespace boilersGraphics.Controls
                         case HorizontalAlignment.Center:
                             return;
                         case HorizontalAlignment.Right:
-                            rect.Width += dragDeltaHorizontal;
+                            rect.Width += SafeValue(rect.Width, MIN_ONE_SIDE_LENGTH, dragDeltaHorizontal);
                             return;
                     }
                     break;
@@ -347,21 +430,29 @@ namespace boilersGraphics.Controls
                     {
                         case HorizontalAlignment.Left:
                             rect.X += dragDeltaHorizontal;
-                            LoggerHelper.GetLogger().Trace($"rect.Y(a)={rect.Y}");
-                            rect.Height += dragDeltaVertical;
-                            LoggerHelper.GetLogger().Trace($"rect.Y(b)={rect.Y}");
+                            LogManager.GetCurrentClassLogger().Trace($"rect.Y(a)={rect.Y}");
+                            rect.Height += SafeValue(rect.Height, MIN_ONE_SIDE_LENGTH, dragDeltaVertical);
+                            LogManager.GetCurrentClassLogger().Trace($"rect.Y(b)={rect.Y}");
                             return;
                         case HorizontalAlignment.Center:
-                            rect.Height += dragDeltaVertical;
+                            rect.Height += SafeValue(rect.Height, MIN_ONE_SIDE_LENGTH, dragDeltaVertical);
                             return;
                         case HorizontalAlignment.Right:
-                            rect.Width += dragDeltaHorizontal;
-                            rect.Height += dragDeltaVertical;
+                            rect.Width += SafeValue(rect.Width, MIN_ONE_SIDE_LENGTH, dragDeltaHorizontal);
+                            rect.Height += SafeValue(rect.Height, MIN_ONE_SIDE_LENGTH, dragDeltaVertical);
                             return;
                     }
                     break;
             }
             throw new Exception("alignment conbination is wrong");
+        }
+
+        private double SafeValue(double target, double min, double delta)
+        {
+            if (target + delta < min)
+                return min - target;
+            else
+                return delta;
         }
 
         private void SetRect(ref Rect rect, Point snapPoint, VerticalAlignment verticalAlignment, HorizontalAlignment horizontalAlignment)

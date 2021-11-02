@@ -1,5 +1,6 @@
 ﻿using boilersGraphics.Helpers;
 using boilersGraphics.Views;
+using NLog;
 using Prism.Ioc;
 using Prism.Services.Dialogs;
 using Prism.Unity;
@@ -92,7 +93,7 @@ namespace boilersGraphics.ViewModels
             point.X = Math.Min(Points[0].X, ControlPoint1.Value.X);
             point.Y = Math.Min(Points[0].Y, ControlPoint1.Value.Y);
             ControlLine1LeftTop.Value = point;
-            LoggerHelper.GetLogger().Trace($"ControlLine1LeftTop={ControlLine1LeftTop.Value}");
+            LogManager.GetCurrentClassLogger().Trace($"ControlLine1LeftTop={ControlLine1LeftTop.Value}");
         }
 
         private void SetLeftTopOfControlLine2()
@@ -101,20 +102,20 @@ namespace boilersGraphics.ViewModels
             point.X = Math.Min(Points[1].X, ControlPoint2.Value.X);
             point.Y = Math.Min(Points[1].Y, ControlPoint2.Value.Y);
             ControlLine2LeftTop.Value = point;
-            LoggerHelper.GetLogger().Trace($"ControlLine2LeftTop={ControlLine2LeftTop.Value}");
+            LogManager.GetCurrentClassLogger().Trace($"ControlLine2LeftTop={ControlLine2LeftTop.Value}");
         }
 
         private void Points_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             if (Points.Count >= 2)
             {
-                LoggerHelper.GetLogger().Trace($"P1={Points[0]} P2={Points[1]}");
+                LogManager.GetCurrentClassLogger().Trace($"P1={Points[0]} P2={Points[1]}");
                 SetLeftTopOfControlLine1();
                 SetLeftTopOfControlLine2();
                 SetLeftTop();
             }
             else
-                LoggerHelper.GetLogger().Trace($"Points.Count < 2");
+                LogManager.GetCurrentClassLogger().Trace($"Points.Count < 2");
         }
 
         private void SetLeftTop()

@@ -8,10 +8,11 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Media;
+using static boilersGraphics.Helpers.SnapAction;
 
 namespace boilersGraphics.ViewModels
 {
-    public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewModelBase, IObservable<TransformNotification>, ICloneable
+    public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewModelBase, ICloneable
     {
         private bool _showConnectors = false;
 
@@ -79,6 +80,10 @@ namespace boilersGraphics.ViewModels
 
         public ReactivePropertySlim<TransformNotification> TransformNortification { get; } = new ReactivePropertySlim<TransformNotification>(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe | ReactivePropertyMode.DistinctUntilChanged);
 
+        internal SnapPointPosition snapPointPosition { get; set; }
+
+        public List<IDisposable> SnapObjs { get; set; } = new List<IDisposable>();
+
         private void UpdateCenterPoint()
         {
             var leftTop = new Point(Left.Value, Top.Value);
@@ -140,13 +145,6 @@ namespace boilersGraphics.ViewModels
             Top.Value = value - Height.Value / 2;
         }
 
-        public IDisposable Connect(ConnectorBaseViewModel connector)
-        {
-            var disposable = Subscribe(connector);
-            _CompositeDisposable.Add(disposable);
-            return disposable;
-        }
-
         public void UpdateTransform(string propertyName, object oldValue, object newValue)
         {
             switch (propertyName)
@@ -205,7 +203,8 @@ namespace boilersGraphics.ViewModels
                 Sender = this,
                 PropertyName = propertyName,
                 OldValue = oldValue,
-                NewValue = newValue
+                NewValue = newValue,
+                SnapPointPosition = snapPointPosition,
             };
             this.TransformNortification.Value = tn;
             _observers.ForEach(x => x.OnNext(tn));
@@ -243,37 +242,5 @@ namespace boilersGraphics.ViewModels
                     break;
             }
         }
-
-        #region IObservable<TransformNotification>
-
-        private List<IObserver<TransformNotification>> _observers = new List<IObserver<TransformNotification>>();
-
-        public IDisposable Subscribe(IObserver<TransformNotification> observer)
-        {
-            _observers.Add(observer);
-            observer.OnNext(new TransformNotification()
-            {
-                Sender = this
-            });
-            return new DesignerItemViewModelBaseDisposable(this, observer);
-        }
-
-        public class DesignerItemViewModelBaseDisposable : IDisposable
-        {
-            private DesignerItemViewModelBase _obj;
-            private IObserver<TransformNotification> _observer;
-            public DesignerItemViewModelBaseDisposable(DesignerItemViewModelBase obj, IObserver<TransformNotification> observer)
-            {
-                _obj = obj;
-                _observer = observer;
-            }
-
-            public void Dispose()
-            {
-                _obj._observers.Remove(_observer);
-            }
-        }
-
-        #endregion //IObservable<TransformNotification>
     }
 }

@@ -6,6 +6,7 @@ using boilersGraphics.Models;
 using boilersGraphics.UserControls;
 using boilersGraphics.Views;
 using Microsoft.Win32;
+using NLog;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
@@ -51,6 +52,7 @@ namespace boilersGraphics.ViewModels
         public DelegateCommand<object> ClearSelectedItemsCommand { get; private set; }
         public DelegateCommand<object> CreateNewDiagramCommand { get; private set; }
         public DelegateCommand LoadCommand { get; private set; }
+        public DelegateCommand<string> LoadFileCommand { get; private set; }
         public DelegateCommand SaveCommand { get; private set; }
         public DelegateCommand OverwriteCommand { get; private set; }
         public DelegateCommand ExportCommand { get; private set; }
@@ -127,6 +129,8 @@ namespace boilersGraphics.ViewModels
 
         public ReactivePropertySlim<TimeSpan> AutoSaveInterval { get; } = new ReactivePropertySlim<TimeSpan>(TimeSpan.FromMinutes(1));
 
+        public ReactiveCollection<string> AutoSaveFiles { get; set; } = new ReactiveCollection<string>();   
+
         public ObservableCollection<Color> EdgeColors
         {
             get { return _EdgeColors; }
@@ -174,7 +178,7 @@ namespace boilersGraphics.ViewModels
 
         public int LayerItemCount { get; set; } = 1;
 
-        public IEnumerable<Point> SnapPoints
+        public IEnumerable<Tuple<SnapPoint, Point>> SnapPoints
         {
             get
             {
@@ -183,11 +187,11 @@ namespace boilersGraphics.ViewModels
                 var sets = resizeThumbs
                                 .Select(x => new Tuple<SnapPoint, Point>(x, GetCenter(x)))
                                 .Distinct();
-                return sets.Select(x => x.Item2);
+                return sets;
             }
         }
 
-        public IEnumerable<Point> GetSnapPoints(IEnumerable<SnapPoint> exceptSnapPoints)
+        public IEnumerable<Tuple<SnapPoint, Point>> GetSnapPoints(IEnumerable<SnapPoint> exceptSnapPoints)
         {
             var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
             var resizeThumbs = designerCanvas.EnumerateChildOfType<SnapPoint>();
@@ -195,7 +199,18 @@ namespace boilersGraphics.ViewModels
                             .Where(x => !exceptSnapPoints.Contains(x))
                             .Select(x => new Tuple<SnapPoint, Point>(x, GetCenter(x)))
                             .Distinct();
-            return sets.Select(x => x.Item2);
+            return sets;
+        }
+
+        public IEnumerable<Tuple<SnapPoint, Point>> GetSnapPoints(Point exceptPoint)
+        {
+            var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
+            var resizeThumbs = designerCanvas.EnumerateChildOfType<SnapPoint>();
+            var sets = resizeThumbs
+                            .Where(x => x.InputHitTest(exceptPoint) == null)
+                            .Select(x => new Tuple<SnapPoint, Point>(x, GetCenter(x)))
+                            .Distinct();
+            return sets;
         }
 
         #endregion //Property
@@ -209,6 +224,7 @@ namespace boilersGraphics.ViewModels
             ClearSelectedItemsCommand = new DelegateCommand<object>(p => ExecuteClearSelectedItemsCommand(p));
             CreateNewDiagramCommand = new DelegateCommand<object>(p => ExecuteCreateNewDiagramCommand(p));
             LoadCommand = new DelegateCommand(() => ExecuteLoadCommand());
+            LoadFileCommand = new DelegateCommand<string>(file => ExecuteLoadCommand(file));
             SaveCommand = new DelegateCommand(() => ExecuteSaveCommand());
             OverwriteCommand = new DelegateCommand(() => ExecuteOverwriteCommand());
             ExportCommand = new DelegateCommand(() => ExecuteExportCommand());
@@ -353,8 +369,8 @@ namespace boilersGraphics.ViewModels
 
             AllItems.Subscribe(x =>
             {
-                LoggerHelper.GetLogger().Trace($"{x.Length} items in AllItems.");
-                LoggerHelper.GetLogger().Trace(string.Join(", ", x.Select(y => y?.ToString() ?? "null")));
+                LogManager.GetCurrentClassLogger().Trace($"{x.Length} items in AllItems.");
+                LogManager.GetCurrentClassLogger().Trace(string.Join(", ", x.Select(y => y?.ToString() ?? "null")));
             })
             .AddTo(_CompositeDisposable);
 
@@ -366,7 +382,7 @@ namespace boilersGraphics.ViewModels
                         .Merge()
                 )
                 .Switch()
-                .Do(x => LoggerHelper.GetLogger().Debug("SelectedItems updated"))
+                .Do(x => LogManager.GetCurrentClassLogger().Debug("SelectedItems updated"))
                 .Select(_ => Layers
                     .SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
                     .Where(x => x is LayerItem)
@@ -388,7 +404,7 @@ namespace boilersGraphics.ViewModels
 
             SelectedItems.Subscribe(selectedItems =>
             {
-                LoggerHelper.GetLogger().Trace($"SelectedItems changed {string.Join(", ", selectedItems.Select(x => x?.ToString() ?? "null"))}");
+                LogManager.GetCurrentClassLogger().Trace($"SelectedItems changed {string.Join(", ", selectedItems.Select(x => x?.ToString() ?? "null"))}");
 
                 GroupCommand.RaiseCanExecuteChanged();
                 UngroupCommand.RaiseCanExecuteChanged();
@@ -424,7 +440,7 @@ namespace boilersGraphics.ViewModels
 
             SelectedLayers.Subscribe(x =>
             {
-                LoggerHelper.GetLogger().Trace($"SelectedLayers changed {string.Join(", ", x.Select(x => x.ToString()))}");
+                LogManager.GetCurrentClassLogger().Trace($"SelectedLayers changed {string.Join(", ", x.Select(x => x.ToString()))}");
             })
             .AddTo(_CompositeDisposable);
 
@@ -444,6 +460,18 @@ namespace boilersGraphics.ViewModels
             AutoSaveInterval.Value = TimeSpan.FromSeconds(30);
 
             MainWindowVM.LogLevel.Value = NLog.LogLevel.Info;
+            PackAutoSaveFiles();
+        }
+
+        private void PackAutoSaveFiles()
+        {
+            if (AutoSaveFiles != null)
+                AutoSaveFiles.ClearOnScheduler();
+            var files = Directory.EnumerateFiles(System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "dhq_boiler\\boilersGraphics\\AutoSave"), "AutoSave-*-*-*-*-*-*.xml");
+            foreach (var file in files.OrderByDescending(x => x))
+            {
+                AutoSaveFiles.AddOnScheduler(file);
+            }
         }
 
         private bool CanOpenPropertyDialog()
@@ -517,7 +545,8 @@ namespace boilersGraphics.ViewModels
 
         private void AutoSave()
         {
-            var path = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "dhq_boiler\\boilersGraphics\\AutoSave\\AutoSave.xml");
+            AutoSavedDateTime.Value = DateTime.Now;
+            var path = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), $"dhq_boiler\\boilersGraphics\\AutoSave\\AutoSave-{AutoSavedDateTime.Value.Year}-{AutoSavedDateTime.Value.Month}-{AutoSavedDateTime.Value.Day}-{AutoSavedDateTime.Value.Hour}-{AutoSavedDateTime.Value.Minute}-{AutoSavedDateTime.Value.Second}.xml");
             var autoSaveDir = Path.GetDirectoryName(path);
             if (!Directory.Exists(autoSaveDir))
             {
@@ -537,14 +566,15 @@ namespace boilersGraphics.ViewModels
                 root.Save(path);
             });
 
-            AutoSavedDateTime.Value = DateTime.Now;
             MainWindowVM.Message.Value = $"{AutoSavedDateTime.Value} 自動保存しました。";
 
-            LoggerHelper.GetLogger().Info($"{AutoSavedDateTime.Value} {path} に自動保存しました。");
+            LogManager.GetCurrentClassLogger().Info($"{AutoSavedDateTime.Value} {path} に自動保存しました。");
 
             Observable.Timer(TimeSpan.FromSeconds(5))
                       .Subscribe(_ => MainWindowVM.Message.Value = "")
                       .AddTo(_CompositeDisposable);
+
+            PackAutoSaveFiles();
         }
 
         public LayerTreeViewItemBase GetLayerTreeViewItemBase(SelectableDesignerItemViewModelBase item)
@@ -1176,13 +1206,13 @@ namespace boilersGraphics.ViewModels
         private void Add(SelectableDesignerItemViewModelBase item)
         {
             SelectedLayers.Value.First().AddItem(MainWindowVM, this, item);
-            LoggerHelper.GetLogger().Info($"Add item {item.ShowPropertiesAndFields()}");
+            LogManager.GetCurrentClassLogger().Info($"Add item {item.ShowPropertiesAndFields()}");
         }
 
         private void Remove(SelectableDesignerItemViewModelBase item)
         {
             Layers.ToList().ForEach(x => x.RemoveItem(MainWindowVM, item));
-            LoggerHelper.GetLogger().Info($"Remove item {item.ShowPropertiesAndFields()}");
+            LogManager.GetCurrentClassLogger().Info($"Remove item {item.ShowPropertiesAndFields()}");
         }
 
         #region Save
@@ -1271,8 +1301,15 @@ namespace boilersGraphics.ViewModels
 
         private void ExecuteLoadCommand()
         {
+            var result = MessageBox.Show("現在のキャンパスは破棄されますが、よろしいですか？", "確認", MessageBoxButton.OKCancel);
+            if (result == MessageBoxResult.Cancel)
+                return;
             var root = LoadSerializedDataFromFile();
+            LoadInternal(root);
+        }
 
+        private void LoadInternal(XElement root)
+        {
             if (root == null)
             {
                 return;
@@ -1289,7 +1326,7 @@ namespace boilersGraphics.ViewModels
             }
             else
             {
-                LoggerHelper.GetLogger().Info("強制読み込みモードでファイルを読み込みます。このモードはVersion要素が見つからない時に実施されます。");
+                LogManager.GetCurrentClassLogger().Info("強制読み込みモードでファイルを読み込みます。このモードはVersion要素が見つからない時に実施されます。");
             }
 
 
@@ -1312,7 +1349,7 @@ namespace boilersGraphics.ViewModels
             catch (Exception)
             {
                 MessageBox.Show("このファイルは古すぎるか壊れているため開けません。", "読み込みエラー");
-                LoggerHelper.GetLogger().Error("【読み込みエラー】このファイルは古すぎるか壊れているため開けません。");
+                LogManager.GetCurrentClassLogger().Error("【読み込みエラー】このファイルは古すぎるか壊れているため開けません。");
                 FileName.Value = "*";
                 return;
             }
@@ -1324,6 +1361,16 @@ namespace boilersGraphics.ViewModels
             var layersViewModel = App.Current.MainWindow.GetChildOfType<Views.Layers>().DataContext as LayersViewModel;
             layersViewModel.InitializeHitTestVisible();
             Layers.First().IsSelected.Value = true;
+        }
+
+        private void ExecuteLoadCommand(string file)
+        {
+            var result = MessageBox.Show("現在のキャンパスは破棄されますが、よろしいですか？", "確認", MessageBoxButton.OKCancel);
+            if (result == MessageBoxResult.Cancel)
+                return;
+            FileName.Value = file;
+            var root = XElement.Load(file);
+            LoadInternal(root);
         }
 
         private XElement LoadSerializedDataFromFile()

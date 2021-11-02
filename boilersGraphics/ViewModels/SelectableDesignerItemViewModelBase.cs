@@ -2,13 +2,11 @@
 using Prism.Commands;
 using Prism.Mvvm;
 using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reflection;
-using System.Threading;
 using System.Windows.Media;
 using TsOperationHistory;
 using TsOperationHistory.Extensions;
@@ -21,7 +19,7 @@ namespace boilersGraphics.ViewModels
     }
 
 
-    public abstract class SelectableDesignerItemViewModelBase : BindableBase, ISelectItems, IObserver<GroupTransformNotification>, IDisposable, ICloneable, IRestore
+    public abstract class SelectableDesignerItemViewModelBase : BindableBase, ISelectItems, IObserver<TransformNotification>, IObserver<GroupTransformNotification>, IObservable<TransformNotification>, IDisposable, ICloneable, IRestore
     {
         protected CompositeDisposable _CompositeDisposable = new CompositeDisposable();
 
@@ -86,6 +84,27 @@ namespace boilersGraphics.ViewModels
         public Guid ParentID { get; set; }
 
         public IDisposable GroupDisposable { get; set; }
+
+
+        public IDisposable Connect(SnapPointPosition snapPointEdgeTo, SnapPointPosition snapPointEdgeFrom, SelectableDesignerItemViewModelBase item)
+        {
+            var spai = new SnapPointAdsorptionInformation(snapPointEdgeTo, snapPointEdgeFrom, item);
+            var disposable = Subscribe(spai);
+            _CompositeDisposable.Add(disposable);
+            return disposable;
+        }
+
+        public static void Disconnect(DesignerItemViewModelBase designerItem)
+        {
+            if (designerItem.SnapObjs != null)
+                designerItem.SnapObjs.ForEach(x => x.Dispose());
+        }
+
+        public static void Disconnect(SnapPointViewModel snapPointViewModel)
+        {
+            if (snapPointViewModel.SnapObjs != null)
+                snapPointViewModel.SnapObjs.ForEach(x => x.Dispose());
+        }
 
         private void ExecuteSelectItemCommand(object param)
         {
@@ -157,6 +176,46 @@ namespace boilersGraphics.ViewModels
         public abstract object Clone();
 
         #endregion //IClonable
+
+        #region IObserver<TransformNotification>
+
+        public void OnNext(TransformNotification value)
+        {
+        }
+
+        #endregion IObserver<TransformNotification>
+
+        #region IObservable<TransformNotification>
+
+        protected List<IObserver<TransformNotification>> _observers = new List<IObserver<TransformNotification>>();
+
+        public IDisposable Subscribe(IObserver<TransformNotification> observer)
+        {
+            _observers.Add(observer);
+            observer.OnNext(new TransformNotification()
+            {
+                Sender = this
+            });
+            return new SelectableDesignerItemViewModelBaseDisposable(this, observer);
+        }
+
+        public class SelectableDesignerItemViewModelBaseDisposable : IDisposable
+        {
+            private SelectableDesignerItemViewModelBase _obj;
+            private IObserver<TransformNotification> _observer;
+            public SelectableDesignerItemViewModelBaseDisposable(SelectableDesignerItemViewModelBase obj, IObserver<TransformNotification> observer)
+            {
+                _obj = obj;
+                _observer = observer;
+            }
+
+            public void Dispose()
+            {
+                _obj._observers.Remove(_observer);
+            }
+        }
+
+        #endregion //IObservable<TransformNotification>
 
         public void Restore(Action restorePropertiesAction)
         {
