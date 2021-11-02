@@ -1295,6 +1295,9 @@ namespace boilersGraphics.ViewModels
 
         private void ExecuteLoadCommand()
         {
+            var result = MessageBox.Show("現在のキャンパスは破棄されますが、よろしいですか？", "確認", MessageBoxButton.OKCancel);
+            if (result == MessageBoxResult.Cancel)
+                return;
             var root = LoadSerializedDataFromFile();
             LoadInternal(root);
         }
@@ -1356,6 +1359,9 @@ namespace boilersGraphics.ViewModels
 
         private void ExecuteLoadCommand(string file)
         {
+            var result = MessageBox.Show("現在のキャンパスは破棄されますが、よろしいですか？", "確認", MessageBoxButton.OKCancel);
+            if (result == MessageBoxResult.Cancel)
+                return;
             FileName.Value = file;
             var root = XElement.Load(file);
             LoadInternal(root);
