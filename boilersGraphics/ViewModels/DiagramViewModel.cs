@@ -52,6 +52,7 @@ namespace boilersGraphics.ViewModels
         public DelegateCommand<object> ClearSelectedItemsCommand { get; private set; }
         public DelegateCommand<object> CreateNewDiagramCommand { get; private set; }
         public DelegateCommand LoadCommand { get; private set; }
+        public DelegateCommand<string> LoadFileCommand { get; private set; }
         public DelegateCommand SaveCommand { get; private set; }
         public DelegateCommand OverwriteCommand { get; private set; }
         public DelegateCommand ExportCommand { get; private set; }
@@ -127,6 +128,8 @@ namespace boilersGraphics.ViewModels
         public ReactivePropertySlim<AutoSaveType> AutoSaveType { get; } = new ReactivePropertySlim<AutoSaveType>();
 
         public ReactivePropertySlim<TimeSpan> AutoSaveInterval { get; } = new ReactivePropertySlim<TimeSpan>(TimeSpan.FromMinutes(1));
+
+        public ReactiveCollection<string> AutoSaveFiles { get; } = new ReactiveCollection<string>();   
 
         public ObservableCollection<Color> EdgeColors
         {
@@ -221,6 +224,7 @@ namespace boilersGraphics.ViewModels
             ClearSelectedItemsCommand = new DelegateCommand<object>(p => ExecuteClearSelectedItemsCommand(p));
             CreateNewDiagramCommand = new DelegateCommand<object>(p => ExecuteCreateNewDiagramCommand(p));
             LoadCommand = new DelegateCommand(() => ExecuteLoadCommand());
+            LoadFileCommand = new DelegateCommand<string>(file => ExecuteLoadCommand(file));
             SaveCommand = new DelegateCommand(() => ExecuteSaveCommand());
             OverwriteCommand = new DelegateCommand(() => ExecuteOverwriteCommand());
             ExportCommand = new DelegateCommand(() => ExecuteExportCommand());
@@ -456,6 +460,12 @@ namespace boilersGraphics.ViewModels
             AutoSaveInterval.Value = TimeSpan.FromSeconds(30);
 
             MainWindowVM.LogLevel.Value = NLog.LogLevel.Info;
+
+            var files = Directory.EnumerateFiles(System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "dhq_boiler\\boilersGraphics\\AutoSave"), "AutoSave-*-*-*-*-*-*.xml");
+            foreach (var file in files)
+            {
+                AutoSaveFiles.Add(file);
+            }
         }
 
         private bool CanOpenPropertyDialog()
@@ -529,7 +539,8 @@ namespace boilersGraphics.ViewModels
 
         private void AutoSave()
         {
-            var path = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "dhq_boiler\\boilersGraphics\\AutoSave\\AutoSave.xml");
+            AutoSavedDateTime.Value = DateTime.Now;
+            var path = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), $"dhq_boiler\\boilersGraphics\\AutoSave\\AutoSave-{AutoSavedDateTime.Value.Year}-{AutoSavedDateTime.Value.Month}-{AutoSavedDateTime.Value.Day}-{AutoSavedDateTime.Value.Hour}-{AutoSavedDateTime.Value.Minute}-{AutoSavedDateTime.Value.Second}.xml");
             var autoSaveDir = Path.GetDirectoryName(path);
             if (!Directory.Exists(autoSaveDir))
             {
@@ -549,7 +560,6 @@ namespace boilersGraphics.ViewModels
                 root.Save(path);
             });
 
-            AutoSavedDateTime.Value = DateTime.Now;
             MainWindowVM.Message.Value = $"{AutoSavedDateTime.Value} 自動保存しました。";
 
             LogManager.GetCurrentClassLogger().Info($"{AutoSavedDateTime.Value} {path} に自動保存しました。");
@@ -557,6 +567,8 @@ namespace boilersGraphics.ViewModels
             Observable.Timer(TimeSpan.FromSeconds(5))
                       .Subscribe(_ => MainWindowVM.Message.Value = "")
                       .AddTo(_CompositeDisposable);
+
+            AutoSaveFiles.AddOnScheduler(path);
         }
 
         public LayerTreeViewItemBase GetLayerTreeViewItemBase(SelectableDesignerItemViewModelBase item)
@@ -1284,7 +1296,11 @@ namespace boilersGraphics.ViewModels
         private void ExecuteLoadCommand()
         {
             var root = LoadSerializedDataFromFile();
+            LoadInternal(root);
+        }
 
+        private void LoadInternal(XElement root)
+        {
             if (root == null)
             {
                 return;
@@ -1336,6 +1352,13 @@ namespace boilersGraphics.ViewModels
             var layersViewModel = App.Current.MainWindow.GetChildOfType<Views.Layers>().DataContext as LayersViewModel;
             layersViewModel.InitializeHitTestVisible();
             Layers.First().IsSelected.Value = true;
+        }
+
+        private void ExecuteLoadCommand(string file)
+        {
+            FileName.Value = file;
+            var root = XElement.Load(file);
+            LoadInternal(root);
         }
 
         private XElement LoadSerializedDataFromFile()
