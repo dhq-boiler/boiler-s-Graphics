@@ -12,6 +12,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.gitignore = .gitignore
 		azure_devops\azure-pipelines.yml = azure_devops\azure-pipelines.yml
 		azure_devops\azure-pipelines_develop.yml = azure_devops\azure-pipelines_develop.yml
+		GitVersion.yml = GitVersion.yml
 		HowToUse.md = HowToUse.md
 		README.md = README.md
 	EndProjectSection

@@ -87,7 +87,7 @@ steps:
     target: '$(Build.SourceVersion)' # Required when action == Create || Action == Edit
     tagSource: manual # Required when action == Create# Options: auto, manual
     #tagPattern: # Optional
-    tag: develop-$(Build.BuildNumber) # Required when action == Edit || Action == Delete || TagSource == Manual
+    tag: unstable-$(Build.BuildNumber) # Required when action == Edit || Action == Delete || TagSource == Manual
     #title: # Optional
     #releaseNotesSource: 'file' # Optional. Options: file, input
     #releaseNotesFile: # Optional
