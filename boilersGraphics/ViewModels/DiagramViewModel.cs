@@ -1380,6 +1380,12 @@ namespace boilersGraphics.ViewModels
             LoadInternal(root);
         }
 
+        public void Preview(string file)
+        {
+            var root = XElement.Load(file);
+            LoadInternal(root);
+        }
+
         private XElement LoadSerializedDataFromFile()
         {
             var openFile = new OpenFileDialog();
