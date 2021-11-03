@@ -171,6 +171,7 @@
     <Compile Include="Converters\BoolToEnumConverter.cs" />
     <Compile Include="Converters\ColorToStringConverter.cs" />
     <Compile Include="Converters\ExtractRectConverter.cs" />
+    <Compile Include="Converters\FilenameWithFileSizeConverter.cs" />
     <Compile Include="Converters\LogLevelToBoolConverter.cs" />
     <Compile Include="Converters\PreviewConverter.cs" />
     <Compile Include="Converters\QuadConverter.cs" />
@@ -197,6 +198,7 @@
     <Compile Include="Helpers\ColorExchange.cs" />
     <Compile Include="Helpers\DragObject.cs" />
     <Compile Include="Helpers\EventToCommand.cs" />
+    <Compile Include="Helpers\FileSize.cs" />
     <Compile Include="Helpers\GeometryCombiner.cs" />
     <Compile Include="Helpers\GeometryCreator.cs" />
     <Compile Include="Helpers\GroupTransformNotification.cs" />

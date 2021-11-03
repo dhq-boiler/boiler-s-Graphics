@@ -19,6 +19,7 @@
         <converter:WindowStateToVisibilityConverter x:Key="WindowStateToVisibilityConverter" />
         <converter:LogLevelToBoolConverter x:Key="LogLevelToBool" />
         <converter:PreviewConverter x:Key="PreviewConverter" />
+        <converter:FilenameWithFileSizeConverter x:Key="FilenameWithFileSize" />
     </Window.Resources>
     <Window.CommandBindings>
         <CommandBinding CanExecute="CommandBinding_CanExecute_Close"
@@ -101,17 +102,18 @@
                             <MenuItem Header="ファイル(_F)">
                                 <MenuItem Header="開く(_O)">
                                     <MenuItem Command="{Binding DiagramViewModel.LoadCommand}" Header="ファイルを指定(_S)" />
-                                    <MenuItem Header="自動保存したファイルを指定" ItemsSource="{Binding DiagramViewModel.AutoSaveFiles}">
+                                    <MenuItem Header="自動保存したファイルを指定(_A)" ItemsSource="{Binding DiagramViewModel.AutoSaveFiles}">
                                         <MenuItem.ItemContainerStyle>
                                             <Style TargetType="MenuItem">
+                                                <Setter Property="Header" Value="{Binding Converter={StaticResource FilenameWithFileSize}}" />
                                                 <Setter Property="Command" Value="{Binding Path=DataContext.DiagramViewModel.LoadFileCommand, ElementName=MainWindowInstance}" />
                                                 <Setter Property="CommandParameter" Value="{Binding}" />
                                                 <Setter Property="ToolTip">
                                                     <Setter.Value>
                                                         <ToolTip Width="Auto"
                                                                  Height="Auto"
-                                                                 Placement="Right"
-                                                                 Content="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}, Converter={StaticResource PreviewConverter}}" />
+                                                                 Content="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}, Converter={StaticResource PreviewConverter}}"
+                                                                 Placement="Right" />
                                                     </Setter.Value>
                                                 </Setter>
                                             </Style>
