@@ -172,6 +172,7 @@
     <Compile Include="Converters\ColorToStringConverter.cs" />
     <Compile Include="Converters\ExtractRectConverter.cs" />
     <Compile Include="Converters\LogLevelToBoolConverter.cs" />
+    <Compile Include="Converters\PreviewConverter.cs" />
     <Compile Include="Converters\QuadConverter.cs" />
     <Compile Include="Converters\DoubleToStringConverter.cs" />
     <Compile Include="Converters\ShiftPointConverter.cs" />
@@ -252,6 +253,9 @@
     <Compile Include="TsOperationHistory\OperationRecorder.cs" />
     <Compile Include="UserControls\DiagramControl.xaml.cs">
       <DependentUpon>DiagramControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\PreviewDiagramControl.xaml.cs">
+      <DependentUpon>PreviewDiagramControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\AbstractLetterDesignerItemViewModel.cs" />
     <Compile Include="ViewModels\BackgroundViewModel.cs" />
@@ -483,6 +487,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UserControls\DiagramControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\PreviewDiagramControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
