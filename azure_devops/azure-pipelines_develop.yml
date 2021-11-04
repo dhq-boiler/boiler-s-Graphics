@@ -110,8 +110,20 @@ steps:
 # Run a Python file or inline script
 - task: PythonScript@0
   inputs:
-    scriptSource: 'filePath' # Options: filePath, inline
-    scriptPath: azure_devops/python_script/tweet.py # Required when scriptSource == filePath
+    scriptSource: 'inline' # Options: filePath, inline
+    #scriptPath: azure_devops/python_script/tweet.py # Required when scriptSource == filePath
+    script: >
+        from twitter import Twitter, OAuth
+
+        access_token = '$(AccessToken)'
+        access_token_secret = '$(AccessTokenSecret)'
+        api_key = '$(APIKey)'
+        api_secret = '$(APIKeySecret)'
+
+        t = Twitter(auth = OAuth(access_token, access_token_secret, api_key, api_secret))
+
+        text = 'https://github.com/dhq-boiler/boiler-s-Graphics/releases/tag/$(tag)'
+        statusUpdate = t.statuses.update(status=text)
     #arguments: # Optional
     #pythonInterpreter: # Optional
     #workingDirectory: # Optional
