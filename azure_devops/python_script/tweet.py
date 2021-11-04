@@ -1,10 +1,10 @@
-import oauth2
+import oauth2 as oauth
 def tweet(text):
 	url = "https://api.twitter.com/1.1/statuses/update.json?status={}".format(text)
 
-	consumer = oauth2.Consumer(key='$(APIKey)', secret='$(APIKeySecret)')
-	token = oauth2.Token(key='$(AccessToken)', secret='$(AccessTokenSecret)')
-	client = oauth2.Client(consumer, token)
+	consumer = oauth.Consumer(key='$(APIKey)', secret='$(APIKeySecret)')
+	token = oauth.Token(key='$(AccessToken)', secret='$(AccessTokenSecret)')
+	client = oauth.Client(consumer, token)
 	resp, content = client.request( url, method="POST")
 
 	return content
