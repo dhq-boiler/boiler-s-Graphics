@@ -1,5 +1,11 @@
-﻿using boilersGraphics.Helpers;
+﻿using boilersGraphics.Dao;
+using boilersGraphics.Dao.Migration.Plan;
+using boilersGraphics.Helpers;
+using boilersGraphics.Models;
 using boilersGraphics.Views;
+using Homura.Core;
+using Homura.ORM;
+using Homura.ORM.Setup;
 using NLog;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -7,6 +13,8 @@ using Prism.Services.Dialogs;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
+using System.Collections.Generic;
+using System.Data.SQLite;
 using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Disposables;
@@ -29,6 +37,10 @@ namespace boilersGraphics.ViewModels
         {
             Instance = this;
             this.dlgService = dialogService;
+
+            ConnectionManager.SetDefaultConnection("DataSource=bg.db", typeof(SQLiteConnection));
+
+            ManagebGDB();
 
             Recorder = new OperationRecorder(Controller);
 
@@ -187,7 +199,50 @@ namespace boilersGraphics.ViewModels
 
             SnapPower.Value = 10;
 
+            IncrementNumberOfBoots();
+
             DiagramViewModel.Initialize();
+        }
+
+        private void ManagebGDB()
+        {
+            var dvManager = new DataVersionManager();
+            dvManager.CurrentConnection = ConnectionManager.DefaultConnection;
+            dvManager.Mode = VersioningStrategy.ByTick;
+            dvManager.RegisterChangePlan(new ChangePlan_bG_VersionOrigin());
+            dvManager.FinishedToUpgradeTo += DvManager_FinishedToUpgradeTo;
+
+            dvManager.UpgradeToTargetVersion();
+        }
+
+        private void DvManager_FinishedToUpgradeTo(object sender, ModifiedEventArgs e)
+        {
+            LogManager.GetCurrentClassLogger().Info($"Heavy Modifying AppDB Count : {e.ModifiedCount}");
+
+            if (e.ModifiedCount > 0)
+            {
+                SQLiteBaseDao<Dummy>.Vacuum(ConnectionManager.DefaultConnection);
+            }
+        }
+
+        private void IncrementNumberOfBoots()
+        {
+            var id = Guid.Parse("00000000-0000-0000-0000-000000000000");
+            var dao = new StatisticsDao();
+            var statistics = dao.FindBy(new Dictionary<string, object>() { { "ID", id } });
+            if (statistics.Count() == 0)
+            {
+                var newStatistics = new Statistics();
+                newStatistics.ID = id;
+                newStatistics.NumberOfBoots = 1;
+                dao.Insert(newStatistics);
+            }
+            else
+            {
+                var existStatistics = statistics.First();
+                existStatistics.NumberOfBoots += 1;
+                dao.Update(existStatistics);
+            }
         }
 
         public DiagramViewModel DiagramViewModel
