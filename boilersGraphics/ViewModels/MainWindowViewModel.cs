@@ -180,6 +180,11 @@ namespace boilersGraphics.ViewModels
                 LogManager.ReconfigExistingLoggers();
                 LogManager.GetCurrentClassLogger().Info($"ログレベルが変更されました。変更後：{parameter}");
             });
+            ShowStatisticsCommand = new DelegateCommand(() =>
+            {
+                IDialogResult result = null;
+                this.dlgService.ShowDialog(nameof(Views.Statistics), ret => result = ret);
+            });
             DiagramViewModel.EdgeThickness.Subscribe(x =>
             {
                 if (x.HasValue && !double.IsNaN(x.Value) && DiagramViewModel.SelectedItems.Value != null)
@@ -232,7 +237,7 @@ namespace boilersGraphics.ViewModels
             var statistics = dao.FindBy(new Dictionary<string, object>() { { "ID", id } });
             if (statistics.Count() == 0)
             {
-                var newStatistics = new Statistics();
+                var newStatistics = new Models.Statistics();
                 newStatistics.ID = id;
                 newStatistics.NumberOfBoots = 1;
                 dao.Insert(newStatistics);
@@ -291,6 +296,8 @@ namespace boilersGraphics.ViewModels
         public DelegateCommand ShowVersionCommand { get; }
 
         public DelegateCommand<LogLevel> SetLogLevelCommand { get; }
+
+        public DelegateCommand ShowStatisticsCommand { get; }
 
         private void ExecuteDeleteSelectedItemsCommand(object parameter)
         {
