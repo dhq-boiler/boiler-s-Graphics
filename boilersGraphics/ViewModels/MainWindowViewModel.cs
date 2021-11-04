@@ -17,7 +17,9 @@ using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Diagnostics;
 using System.Linq;
+using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Windows;
 using TsOperationHistory;
 using TsOperationHistory.Extensions;
@@ -30,6 +32,7 @@ namespace boilersGraphics.ViewModels
         private ToolBarViewModel _ToolBarViewModel;
         private CompositeDisposable _CompositeDisposable = new CompositeDisposable();
         private IDialogService dlgService = null;
+        private DateTime _StartUpTime;
 
         public static MainWindowViewModel Instance { get; set; }
 
@@ -41,6 +44,8 @@ namespace boilersGraphics.ViewModels
             ConnectionManager.SetDefaultConnection($"DataSource={System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "dhq_boiler\\boilersGraphics\\bg.db")}", typeof(SQLiteConnection));
 
             ManagebGDB();
+
+            _StartUpTime = DateTime.Now;
 
             Recorder = new OperationRecorder(Controller);
 
@@ -207,6 +212,26 @@ namespace boilersGraphics.ViewModels
             IncrementNumberOfBoots();
 
             DiagramViewModel.Initialize();
+
+            var updateTicks = 0L;
+
+            var id = Guid.Parse("00000000-0000-0000-0000-000000000000");
+            var dao = new StatisticsDao();
+            var statistics = dao.FindBy(new Dictionary<string, object>() { { "ID", id } });
+            var statisticsObj = statistics.First();
+            updateTicks = statisticsObj.UptimeTicks;
+
+            Observable.Interval(TimeSpan.FromSeconds(1))
+                      .Subscribe(_ =>
+                      {
+                          var id = Guid.Parse("00000000-0000-0000-0000-000000000000");
+                          var dao = new StatisticsDao();
+                          var statistics = dao.FindBy(new Dictionary<string, object>() { { "ID", id } });
+                          var statisticsObj = statistics.First();
+                          statisticsObj.UptimeTicks = ((DateTime.Now - _StartUpTime) + TimeSpan.FromTicks(updateTicks)).Ticks;
+                          dao.Update(statisticsObj);
+                      })
+                      .AddTo(_CompositeDisposable);
         }
 
         private void ManagebGDB()

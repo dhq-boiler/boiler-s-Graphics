@@ -37,6 +37,15 @@ namespace boilersGraphics.Extensions
             return isNull ? int.MinValue : rdr.GetInt32(index);
         }
 
+        public static long SafeGetLong(this IDataRecord rdr, string columnName, ITable table)
+        {
+            int index = CheckColumnExists(rdr, columnName, table);
+
+            bool isNull = rdr.IsDBNull(index);
+
+            return isNull ? long.MinValue : rdr.GetInt64(index);
+        }
+
         public static int? SafeGetNullableInt(this IDataRecord rdr, string columnName, ITable table)
         {
             int index = CheckColumnExists(rdr, columnName, table);
@@ -71,6 +80,22 @@ namespace boilersGraphics.Extensions
             return isNull ? null : (DateTime?)rdr.GetDateTime(index);
         }
 
+        public static TimeSpan SafeGetTimeSpan(this IDataRecord rdr, string columnName, ITable table)
+        {
+            int index = CheckColumnExists(rdr, columnName, table);
+
+            return (TimeSpan)rdr.GetValue(index);
+        }
+
+        public static TimeSpan? SafeGetNullableTimeSpan(this IDataRecord rdr, string columnName, ITable table)
+        {
+            int index = CheckColumnExists(rdr, columnName, table);
+
+            bool isNull = rdr.IsDBNull(index);
+
+            return isNull ? null : (TimeSpan?)rdr.GetValue(index);
+        }
+
         public static int CheckColumnExists(this IDataRecord rdr, string columnName, ITable table)
         {
             int index = rdr.GetOrdinal(columnName);
@@ -90,6 +115,12 @@ namespace boilersGraphics.Extensions
         public static bool IsDBNull(this IDataRecord rdr, string columnName)
         {
             return rdr.IsDBNull(rdr.GetOrdinal(columnName));
+        }
+
+        public static TimeSpan Truncate(this TimeSpan timeSpan, TimeSpan timeSpan1)
+        {
+            if (timeSpan == TimeSpan.Zero) return timeSpan;
+            return timeSpan.Add(TimeSpan.FromTicks(-(timeSpan.Ticks % timeSpan1.Ticks)));
         }
     }
 }

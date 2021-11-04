@@ -195,6 +195,7 @@
     <Compile Include="Converters\IntToStringConverter.cs" />
     <Compile Include="Converters\IsSelectedToBorderBrushConverter.cs" />
     <Compile Include="Converters\StringToByteConverter.cs" />
+    <Compile Include="Converters\TimeSpanRoundConverter.cs" />
     <Compile Include="Converters\WindowStateToVisibilityConverter.cs" />
     <Compile Include="Converters\StraightLineBaseShiftConverter.cs" />
     <Compile Include="Dao\Migration\Plan\ChangePlan_bG_Statistics_VersionOrigin.cs" />

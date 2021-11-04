@@ -6,11 +6,15 @@
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:prism="http://prismlibrary.com/"
+             xmlns:converter="clr-namespace:boilersGraphics.Converters"
              d:DesignHeight="450"
              d:DesignWidth="800"
              prism:ViewModelLocator.AutoWireViewModel="True"
              Background="White"
              mc:Ignorable="d">
+    <UserControl.Resources>
+        <converter:TimeSpanRoundConverter x:Key="TimeSpanRound" />
+    </UserControl.Resources>
     <prism:Dialog.WindowStyle>
         <Style TargetType="Window">
             <Setter Property="SizeToContent" Value="WidthAndHeight" />
@@ -21,7 +25,7 @@
             <i:InvokeCommandAction Command="{Binding LoadedCommand}" />
         </i:EventTrigger>
     </i:Interaction.Triggers>
-    <controls:SimpleGrid Columns="2" Rows="10">
+    <controls:SimpleGrid Columns="4" Rows="10">
         <controls:SimpleGrid.Resources>
             <Style TargetType="Label">
                 <Setter Property="HorizontalAlignment" Value="Right" />
@@ -29,5 +33,7 @@
         </controls:SimpleGrid.Resources>
         <Label>起動回数</Label>
         <Label Content="{Binding NumberOfBoots.Value}" />
+        <Label>稼働時間</Label>
+        <Label Content="{Binding Uptime.Value, StringFormat={}{0:hh\\:mm\\:ss}, ConverterCulture=ja-jP, Converter={StaticResource TimeSpanRound}}" />
     </controls:SimpleGrid>
 </UserControl>

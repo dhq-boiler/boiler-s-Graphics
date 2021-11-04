@@ -21,7 +21,8 @@ namespace boilersGraphics.Dao
             return new Statistics()
             {
                 ID = reader.SafeGetGuid("ID", Table),
-                NumberOfBoots = reader.SafeGetInt("NumberOfBoots", Table)
+                NumberOfBoots = reader.SafeGetInt("NumberOfBoots", Table),
+                UptimeTicks = reader.SafeGetLong("UptimeTicks", Table)
             };
         }
     }
