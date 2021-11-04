@@ -125,8 +125,8 @@ steps:
         
         t = Twitter(auth = OAuth(access_token, access_token_secret, api_key, api_secret))
 
-        text = 'https://github.com/dhq-boiler/boiler-s-Graphics/releases/tag/$(tag)'
-        
+        text = 'https://github.com/dhq-boiler/boiler-s-Graphics/releases/tag/unstable-$(Build.BuildNumber)'
+
         statusUpdate = t.statuses.update(status=text)
     #arguments: # Optional
     #pythonInterpreter: # Optional
