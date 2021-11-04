@@ -100,6 +100,12 @@ steps:
     compareWith: 'lastFullRelease' # Required when addChangeLog == True. Options: lastFullRelease, lastRelease, lastReleaseByTag
     #releaseTag: # Required when compareWith == LastReleaseByTag
 
+- task: CmdLine@2
+  displayName: "pip install python-oauth2"
+  inputs:
+    script: >
+      pip install python-oauth2
+
 # Python script
 # Run a Python file or inline script
 - task: PythonScript@0
