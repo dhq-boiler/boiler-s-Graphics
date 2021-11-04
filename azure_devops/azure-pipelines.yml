@@ -100,10 +100,10 @@ steps:
     compareWith: 'lastFullRelease' # Required when addChangeLog == True. Options: lastFullRelease, lastRelease, lastReleaseByTag
     #releaseTag: # Required when compareWith == LastReleaseByTag
 
-- task: CmdLine@2
-  displayName: Set the tag name as an environment variable
-  inputs:
-    script: VERSION_TAG=`git describe --tags` && echo "##vso[task.setvariable variable=VERSION_TAG]$VERSION_TAG"
+- powershell: |
+   $CI_BUILD_TAG = git describe --tags
+   Write-Host "##vso[task.setvariable variable=CI_BUILD_TAG]$CI_BUILD_TAG"
+  displayName: 'Set the tag name as an environment variable'
 
 - task: CmdLine@2
   displayName: "pip install python-oauth2"
@@ -130,7 +130,7 @@ steps:
         
         t = Twitter(auth = OAuth(access_token, access_token_secret, api_key, api_secret))
 
-        text = 'https://github.com/dhq-boiler/boiler-s-Graphics/releases/tag/$(VERSION_TAG)'
+        text = 'https://github.com/dhq-boiler/boiler-s-Graphics/releases/tag/$(CI_BUILD_TAG)'
 
         statusUpdate = t.statuses.update(status=text)
     #arguments: # Optional
