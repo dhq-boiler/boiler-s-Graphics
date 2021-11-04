@@ -99,3 +99,37 @@ steps:
     addChangeLog: true # Optional
     compareWith: 'lastFullRelease' # Required when addChangeLog == True. Options: lastFullRelease, lastRelease, lastReleaseByTag
     #releaseTag: # Required when compareWith == LastReleaseByTag
+
+
+- task: CmdLine@2
+  displayName: "pip install python-oauth2"
+  inputs:
+    script: >
+      pip install twitter
+
+# Python script
+# Run a Python file or inline script
+- task: PythonScript@0
+  inputs:
+    scriptSource: 'inline' # Options: filePath, inline
+    #scriptPath: azure_devops/python_script/tweet.py # Required when scriptSource == filePath
+    script: >
+        from twitter import Twitter, OAuth
+
+        access_token = '$(AccessToken)'
+
+        access_token_secret = '$(AccessTokenSecret)'
+
+        api_key = '$(APIKey)'
+
+        api_secret = '$(APIKeySecret)'
+        
+        t = Twitter(auth = OAuth(access_token, access_token_secret, api_key, api_secret))
+
+        text = 'https://github.com/dhq-boiler/boiler-s-Graphics/releases/tag/$(Build.SourceBranchName)'
+
+        statusUpdate = t.statuses.update(status=text)
+    #arguments: # Optional
+    #pythonInterpreter: # Optional
+    #workingDirectory: # Optional
+    #failOnStderr: false # Optional
