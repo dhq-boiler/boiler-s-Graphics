@@ -1,12 +1,11 @@
-import oauth2 as oauth
-def tweet(text):
-	url = "https://api.twitter.com/1.1/statuses/update.json?status={}".format(text)
+from twitter import Twitter, OAuth
 
-	consumer = oauth.Consumer(key='$(APIKey)', secret='$(APIKeySecret)')
-	token = oauth.Token(key='$(AccessToken)', secret='$(AccessTokenSecret)')
-	client = oauth.Client(consumer, token)
-	resp, content = client.request( url, method="POST")
+access_token = "$(AccessToken)"
+access_token_secret = "$(AccessTokenSecret)"
+api_key = "$(APIKey)"
+api_secret = "$(APIKeySecret)"
 
-	return content
+t = Twitter(auth = OAuth(access_token, access_token_secret, api_key, api_secret))
 
-tweet("https://github.com/dhq-boiler/boiler-s-Graphics/releases/tag/$(tag)")
+text = 'https://github.com/dhq-boiler/boiler-s-Graphics/releases/tag/$(tag)'
+statusUpdate = t.statuses.update(status=text)

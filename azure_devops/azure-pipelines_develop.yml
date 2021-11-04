@@ -104,7 +104,7 @@ steps:
   displayName: "pip install python-oauth2"
   inputs:
     script: >
-      pip install oauth2
+      pip install twitter
 
 # Python script
 # Run a Python file or inline script
