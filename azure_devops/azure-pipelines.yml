@@ -100,7 +100,8 @@ steps:
     compareWith: 'lastFullRelease' # Required when addChangeLog == True. Options: lastFullRelease, lastRelease, lastReleaseByTag
     #releaseTag: # Required when compareWith == LastReleaseByTag
 
-- script: VERSION_TAG=`git describe --tags` && echo "##vso[task.setvariable variable=VERSION_TAG]$VERSION_TAG"
+- task: CmdLine@2
+  script: VERSION_TAG=`git describe --tags` && echo "##vso[task.setvariable variable=VERSION_TAG]$VERSION_TAG"
       displayName: Set the tag name as an environment variable
 
 - task: CmdLine@2
