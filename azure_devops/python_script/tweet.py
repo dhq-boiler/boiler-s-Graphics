@@ -1,4 +1,4 @@
-import oath2
+import oauth2
 def tweet(text):
 	url = "https://api.twitter.com/1.1/statuses/update.json?status={}".format(text)
 
