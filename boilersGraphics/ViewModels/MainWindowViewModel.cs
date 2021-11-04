@@ -38,7 +38,7 @@ namespace boilersGraphics.ViewModels
             Instance = this;
             this.dlgService = dialogService;
 
-            ConnectionManager.SetDefaultConnection("DataSource=bg.db", typeof(SQLiteConnection));
+            ConnectionManager.SetDefaultConnection($"DataSource={System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "dhq_boiler\\boilersGraphics\\bg.db")}", typeof(SQLiteConnection));
 
             ManagebGDB();
 
