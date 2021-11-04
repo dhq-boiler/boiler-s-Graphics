@@ -1,5 +1,4 @@
 ﻿using Homura.ORM.Mapping;
-using System;
 
 namespace boilersGraphics.Models
 {
