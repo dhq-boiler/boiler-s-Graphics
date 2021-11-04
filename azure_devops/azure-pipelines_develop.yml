@@ -107,6 +107,7 @@ steps:
     scriptSource: 'inline' # Options: filePath, inline
     #scriptPath: # Required when scriptSource == filePath
     script: >
+        import oath2
         def tweet(text):
             url = "https://api.twitter.com/1.1/statuses/update.json?status={}".format(text)
 
