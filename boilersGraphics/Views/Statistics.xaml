@@ -65,5 +65,9 @@
             <Label>四角形ツールの描画回数</Label>
             <Label Content="{Binding NumberOfDrawsOfTheRectangleTool.Value}" d:Content="0" />
         </DockPanel>
+        <DockPanel>
+            <Label>円ツールの描画回数</Label>
+            <Label Content="{Binding NumberOfDrawsOfTheEllipseTool.Value}" d:Content="0" />
+        </DockPanel>
     </controls:SimpleGrid>
 </UserControl>

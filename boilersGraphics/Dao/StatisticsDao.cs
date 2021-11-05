@@ -29,6 +29,7 @@ namespace boilersGraphics.Dao
                 CumulativeTotalOfItemsSelectedWithTheLassoTool = reader.SafeGetInt("CumulativeTotalOfItemsSelectedWithTheLassoTool", Table),
                 NumberOfDrawsOfTheStraightLineTool = reader.SafeGetInt("NumberOfDrawsOfTheStraightLineTool", Table),
                 NumberOfDrawsOfTheRectangleTool = reader.SafeGetInt("NumberOfDrawsOfTheRectangleTool", Table),
+                NumberOfDrawsOfTheEllipseTool = reader.SafeGetInt("NumberOfDrawsOfTheEllipseTool", Table),
             };
         }
     }

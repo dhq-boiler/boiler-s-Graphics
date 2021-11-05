@@ -28,6 +28,7 @@ namespace boilersGraphics.ViewModels
 
         public ReactivePropertySlim<int> NumberOfDrawsOfTheStraightLineTool { get; } = new ReactivePropertySlim<int>();
         public ReactivePropertySlim<int> NumberOfDrawsOfTheRectangleTool { get; } = new ReactivePropertySlim<int>();
+        public ReactivePropertySlim<int> NumberOfDrawsOfTheEllipseTool { get; } = new ReactivePropertySlim<int>();
 
         public ReactivePropertySlim<TimeSpan> Uptime { get; } = new ReactivePropertySlim<TimeSpan>();
 
@@ -54,6 +55,7 @@ namespace boilersGraphics.ViewModels
             CumulativeTotalOfItemsSelectedWithTheLassoTool.Value = statistics.CumulativeTotalOfItemsSelectedWithTheLassoTool;
             NumberOfDrawsOfTheStraightLineTool.Value = statistics.NumberOfDrawsOfTheStraightLineTool;
             NumberOfDrawsOfTheRectangleTool.Value = statistics.NumberOfDrawsOfTheRectangleTool;
+            NumberOfDrawsOfTheEllipseTool.Value = statistics.NumberOfDrawsOfTheEllipseTool;
             Observable.Timer(DateTime.Now, TimeSpan.FromSeconds(1))
                       .Subscribe(_ =>
                       {
