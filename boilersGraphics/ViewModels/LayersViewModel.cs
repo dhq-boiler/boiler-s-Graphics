@@ -86,6 +86,11 @@ namespace boilersGraphics.ViewModels
                         if (x.HasAsAncestor(newItem as LayerTreeViewItemBase))
                         {
                             x.IsSelected.Value = true;
+                            if ((x as LayerItem).Item.Value is ConnectorBaseViewModel connector)
+                            {
+                                connector.SnapPoint0VM.Value.IsSelected.Value = true;
+                                connector.SnapPoint1VM.Value.IsSelected.Value = true;
+                            }
                             if ((x as LayerItem).Item.Value is SnapPointViewModel snapPointVM)
                             {
                                 snapPointVM.Opacity.Value = 1.0;
@@ -94,6 +99,11 @@ namespace boilersGraphics.ViewModels
                         else
                         {
                             x.IsSelected.Value = false;
+                            if ((x as LayerItem).Item.Value is ConnectorBaseViewModel connector)
+                            {
+                                connector.SnapPoint0VM.Value.IsSelected.Value = false;
+                                connector.SnapPoint1VM.Value.IsSelected.Value = false;
+                            }
                             if ((x as LayerItem).Item.Value is SnapPointViewModel snapPointVM)
                             {
                                 snapPointVM.Opacity.Value = 0.5;
@@ -126,6 +136,11 @@ namespace boilersGraphics.ViewModels
                         if (!Keyboard.IsKeyDown(Key.LeftCtrl) && !Keyboard.IsKeyDown(Key.RightCtrl))
                         {
                             x.IsSelected.Value = false;
+                            if ((x as LayerItem).Item.Value is ConnectorBaseViewModel connector)
+                            {
+                                connector.SnapPoint0VM.Value.IsSelected.Value = false;
+                                connector.SnapPoint1VM.Value.IsSelected.Value = false;
+                            }
                         }
                         if ((x as LayerItem).Item.Value is SnapPointViewModel snapPointVM)
                         {
@@ -133,6 +148,11 @@ namespace boilersGraphics.ViewModels
                         }
                     });
                     selectedItem.IsSelected.Value = true;
+                    if (selectedItem.Item.Value is ConnectorBaseViewModel connector)
+                    {
+                        connector.SnapPoint0VM.Value.IsSelected.Value = true;
+                        connector.SnapPoint1VM.Value.IsSelected.Value = true;
+                    }
                     if (selectedItem.Item.Value is SnapPointViewModel snapPointVM)
                     {
                         snapPointVM.Opacity.Value = 1.0;

@@ -61,6 +61,11 @@ namespace boilersGraphics.Views.Behaviors
                 {
                     //非選択状態にする
                     vm.IsSelected.Value = false;
+                    if (vm is ConnectorBaseViewModel connectorBaseViewModel)
+                    {
+                        connectorBaseViewModel.SnapPoint0VM.Value.IsSelected.Value = false;
+                        connectorBaseViewModel.SnapPoint1VM.Value.IsSelected.Value = false;
+                    }
                 }
             }
         }
