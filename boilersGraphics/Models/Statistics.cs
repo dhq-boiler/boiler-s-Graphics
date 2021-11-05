@@ -2,7 +2,7 @@
 
 namespace boilersGraphics.Models
 {
-    class Statistics : PkIdEntity
+    public class Statistics : PkIdEntity
     {
         private int _number_of_boots;
         private long _uptime;

@@ -218,17 +218,21 @@ namespace boilersGraphics.ViewModels
             var dao = new StatisticsDao();
             var statistics = dao.FindBy(new Dictionary<string, object>() { { "ID", id } });
             var statisticsObj = statistics.First();
+            Statistics.Value = statisticsObj;
             updateTicks = statisticsObj.UptimeTicks;
 
             Observable.Interval(TimeSpan.FromSeconds(1))
                       .Subscribe(_ =>
                       {
-                          var id = Guid.Parse("00000000-0000-0000-0000-000000000000");
+                          Statistics.Value.UptimeTicks = ((DateTime.Now - _StartUpTime) + TimeSpan.FromTicks(updateTicks)).Ticks;
+                      })
+                      .AddTo(_CompositeDisposable);
+
+            Observable.Interval(TimeSpan.FromSeconds(10))
+                      .Subscribe(_ =>
+                      {
                           var dao = new StatisticsDao();
-                          var statistics = dao.FindBy(new Dictionary<string, object>() { { "ID", id } });
-                          var statisticsObj = statistics.First();
-                          statisticsObj.UptimeTicks = ((DateTime.Now - _StartUpTime) + TimeSpan.FromTicks(updateTicks)).Ticks;
-                          dao.Update(statisticsObj);
+                          dao.Update(Statistics.Value);
                       })
                       .AddTo(_CompositeDisposable);
         }
@@ -296,6 +300,8 @@ namespace boilersGraphics.ViewModels
         public ReactiveCollection<double> EdgeThicknessOptions { get; } = new ReactiveCollection<double>();
 
         public ReactivePropertySlim<string> Title { get; } = new ReactivePropertySlim<string>();
+
+        public ReactivePropertySlim<Models.Statistics> Statistics { get; } = new ReactivePropertySlim<Models.Statistics>();
 
         public IOperationController Controller { get; } = new OperationController();
 

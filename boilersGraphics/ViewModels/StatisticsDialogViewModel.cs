@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
+using System.Windows.Threading;
 
 namespace boilersGraphics.ViewModels
 {
@@ -33,15 +34,16 @@ namespace boilersGraphics.ViewModels
 
         public void Load()
         {
-            var id = Guid.Parse("00000000-0000-0000-0000-000000000000");
-            var appDao = new StatisticsDao();
-            var statistics = appDao.FindBy(new Dictionary<string, object>() { { "ID", id } }).First();
+            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
             NumberOfBoots.Value = statistics.NumberOfBoots;
             Observable.Timer(DateTime.Now, TimeSpan.FromSeconds(1))
                       .Subscribe(_ =>
                       {
-                          var statistics = appDao.FindBy(new Dictionary<string, object>() { { "ID", id } }).First();
-                          Uptime.Value = TimeSpan.FromTicks(statistics.UptimeTicks);
+                          App.Current.Dispatcher.Invoke(() =>
+                          {
+                              var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+                              Uptime.Value = TimeSpan.FromTicks(statistics.UptimeTicks);
+                          });
                       });
         }
 
