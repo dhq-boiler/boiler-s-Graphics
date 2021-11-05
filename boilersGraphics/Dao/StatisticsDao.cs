@@ -32,6 +32,7 @@ namespace boilersGraphics.Dao
                 NumberOfDrawsOfTheEllipseTool = reader.SafeGetInt("NumberOfDrawsOfTheEllipseTool", Table),
                 NumberOfDrawsOfTheImageFileTool = reader.SafeGetInt("NumberOfDrawsOfTheImageFileTool", Table),
                 NumberOfDrawsOfTheLetterTool = reader.SafeGetInt("NumberOfDrawsOfTheLetterTool", Table),
+                NumberOfDrawsOfTheVerticalLetterTool = reader.SafeGetInt("NumberOfDrawsOfTheVerticalLetterTool", Table),
             };
         }
     }
