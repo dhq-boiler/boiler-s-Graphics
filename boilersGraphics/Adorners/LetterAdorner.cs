@@ -1,12 +1,10 @@
 ﻿using boilersGraphics.Controls;
+using boilersGraphics.Dao;
 using boilersGraphics.Extensions;
 using boilersGraphics.Models;
 using boilersGraphics.ViewModels;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -49,6 +47,7 @@ namespace boilersGraphics.Adorners
 
             e.Handled = true;
         }
+
         protected override void OnMouseUp(System.Windows.Input.MouseButtonEventArgs e)
         {
             // release mouse capture
@@ -76,12 +75,23 @@ namespace boilersGraphics.Adorners
                 itemBase.ZIndex.Value = itemBase.Owner.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).Count();
                 ((AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel).AddItemCommand.Execute(itemBase);
 
+                UpdateStatisticsCount();
+
                 _startPoint = null;
                 _endPoint = null;
             }
 
             e.Handled = true;
         }
+
+        private static void UpdateStatisticsCount()
+        {
+            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            statistics.NumberOfDrawsOfTheLetterTool++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
+        }
+
         protected override void OnRender(DrawingContext dc)
         {
             base.OnRender(dc);

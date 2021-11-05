@@ -14,6 +14,7 @@ namespace boilersGraphics.Models
         private int _NumberOfDrawsOfTheRectangleTool;
         private int _NumberOfDrawsOfTheEllipseTool;
         private int _NumberOfDrawsOfTheImageFileTool;
+        private int _NumberOfDrawsOfTheLetterTool;
 
         /// <summary>
         /// boiler's Graphics 起動回数
@@ -95,6 +96,13 @@ namespace boilersGraphics.Models
         {
             get => _NumberOfDrawsOfTheImageFileTool;
             set => SetProperty(ref _NumberOfDrawsOfTheImageFileTool, value);
+        }
+
+        [Column("NumberOfDrawsOfTheLetterTool", "INTEGER", 7)]
+        public int NumberOfDrawsOfTheLetterTool
+        {
+            get => _NumberOfDrawsOfTheLetterTool;
+            set => SetProperty(ref _NumberOfDrawsOfTheLetterTool, value);
         }
     }
 }
