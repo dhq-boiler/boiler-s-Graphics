@@ -39,6 +39,9 @@ namespace boilersGraphics.Models
             set { SetProperty(ref _NumberOfTimesTheFileWasOpenedBySpecifyingIt, value); }
         }
 
+        /// <summary>
+        /// 自動保存ファイルを指定して開いた回数
+        /// </summary>
         [Column("NumberOfTimesTheAutoSaveFileIsSpecifiedAndOpened", "INTEGER", 4)]
         public int NumberOfTimesTheAutoSaveFileIsSpecifiedAndOpened
         {
