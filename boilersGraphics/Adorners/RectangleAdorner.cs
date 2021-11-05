@@ -122,7 +122,7 @@ namespace boilersGraphics.Adorners
         private static void UpdateStatisticsCount()
         {
             var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
-            statistics.NumberOfDrawsOfTheStraightLineTool++;
+            statistics.NumberOfDrawsOfTheRectangleTool++;
             var dao = new StatisticsDao();
             dao.Update(statistics);
         }

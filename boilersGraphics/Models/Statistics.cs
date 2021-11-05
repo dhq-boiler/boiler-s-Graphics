@@ -11,6 +11,7 @@ namespace boilersGraphics.Models
         private int _NumberOfClicksWithThePointerTool;
         private int _CumulativeTotalOfItemsSelectedWithTheLassoTool;
         private int _NumberOfDrawsOfTheStraightLineTool;
+        private int _NumberOfDrawsOfTheRectangleTool;
 
         /// <summary>
         /// boiler's Graphics 起動回数
@@ -71,6 +72,13 @@ namespace boilersGraphics.Models
         {
             get => _NumberOfDrawsOfTheStraightLineTool;
             set => SetProperty(ref _NumberOfDrawsOfTheStraightLineTool, value);
+        }
+
+        [Column("NumberOfDrawsOfTheRectangleTool", "INTEGER", 7)]
+        public int NumberOfDrawsOfTheRectangleTool
+        {
+            get => _NumberOfDrawsOfTheRectangleTool;
+            set => SetProperty(ref _NumberOfDrawsOfTheRectangleTool, value);
         }
     }
 }
