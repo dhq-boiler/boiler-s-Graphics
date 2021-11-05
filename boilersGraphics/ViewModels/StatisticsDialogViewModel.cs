@@ -50,11 +50,8 @@ namespace boilersGraphics.ViewModels
                       {
                           App.Current.Dispatcher.Invoke(() =>
                           {
-                              lock (App.Current)
-                              {
-                                  var statistics = MainWindowViewModel.Statistics.Value;
-                                  Uptime.Value = TimeSpan.FromTicks(statistics.UptimeTicks);
-                              }
+                              var statistics = MainWindowViewModel.Statistics.Value;
+                              Uptime.Value = TimeSpan.FromTicks(statistics.UptimeTicks);
                           });
                       });
         }
