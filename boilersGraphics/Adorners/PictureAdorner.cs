@@ -1,4 +1,5 @@
 ﻿using boilersGraphics.Controls;
+using boilersGraphics.Dao;
 using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
 using boilersGraphics.Models;
@@ -91,11 +92,21 @@ namespace boilersGraphics.Adorners
                 itemBase.ZIndex.Value = itemBase.Owner.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).Count();
                 ((AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel).AddItemCommand.Execute(itemBase);
 
+                UpdateStatisticsCount();
+
                 _startPoint = null;
                 _endPoint = null;
             }
 
             e.Handled = true;
+        }
+
+        private static void UpdateStatisticsCount()
+        {
+            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            statistics.NumberOfDrawsOfTheImageFileTool++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
 
         protected override void OnRender(DrawingContext dc)

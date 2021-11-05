@@ -69,5 +69,9 @@
             <Label>円ツールの描画回数</Label>
             <Label Content="{Binding NumberOfDrawsOfTheEllipseTool.Value}" d:Content="0" />
         </DockPanel>
+        <DockPanel>
+            <Label>画像ファイルツールの描画回数</Label>
+            <Label Content="{Binding NumberOfDrawsOfTheImageFileTool.Value}" d:Content="0" />
+        </DockPanel>
     </controls:SimpleGrid>
 </UserControl>
