@@ -185,18 +185,38 @@ namespace boilersGraphics.Controls
         {
             LinkedList<List<UIElement>> rows = new LinkedList<List<UIElement>>();
 
-            foreach (UIElement child in this.InternalChildren)
+            if (Orientation == Orientation.Horizontal)
             {
-                var currentList = rows.Last?.Value;
-                if (currentList == null || (currentList.Count == Columns && rows.Count < Rows))
+                foreach (UIElement child in this.InternalChildren)
                 {
-                    var list = new List<UIElement>();
-                    list.Add(child);
-                    rows.AddLast(list);
+                    var currentList = rows.Last?.Value;
+                    if (currentList == null || (currentList.Count == Columns && rows.Count < Rows))
+                    {
+                        var list = new List<UIElement>();
+                        list.Add(child);
+                        rows.AddLast(list);
+                    }
+                    else if (currentList.Count < Columns)
+                    {
+                        currentList.Add(child);
+                    }
                 }
-                else if (currentList.Count < Columns)
+            }
+            else
+            {
+                foreach (UIElement child in this.InternalChildren)
                 {
-                    currentList.Add(child);
+                    var currentList = rows.Last?.Value;
+                    if (currentList == null || (currentList.Count == Rows && rows.Count < Columns))
+                    {
+                        var list = new List<UIElement>();
+                        list.Add(child);
+                        rows.AddLast(list);
+                    }
+                    else if (currentList.Count < Rows)
+                    {
+                        currentList.Add(child);
+                    }
                 }
             }
 
