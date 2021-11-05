@@ -17,6 +17,8 @@ namespace boilersGraphics.ViewModels
 
         public ReactivePropertySlim<int> NumberOfBoots { get; } = new ReactivePropertySlim<int>();
 
+        public ReactivePropertySlim<int> NumberOfTimesTheFileWasOpenedBySpecifyingIt { get; } = new ReactivePropertySlim<int>();
+
         public ReactivePropertySlim<TimeSpan> Uptime { get; } = new ReactivePropertySlim<TimeSpan>();
 
         public string Title => "統計";
@@ -36,6 +38,7 @@ namespace boilersGraphics.ViewModels
         {
             var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
             NumberOfBoots.Value = statistics.NumberOfBoots;
+            NumberOfTimesTheFileWasOpenedBySpecifyingIt.Value = statistics.NumberOfTimesTheFileWasOpenedBySpecifyingIt;
             Observable.Timer(DateTime.Now, TimeSpan.FromSeconds(1))
                       .Subscribe(_ =>
                       {

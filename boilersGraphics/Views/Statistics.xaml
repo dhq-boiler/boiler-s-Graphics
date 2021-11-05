@@ -35,5 +35,7 @@
         <Label Content="{Binding NumberOfBoots.Value}" />
         <Label>稼働時間</Label>
         <Label Content="{Binding Uptime.Value, StringFormat={}{0:hh\\:mm\\:ss}, ConverterCulture=ja-jP, Converter={StaticResource TimeSpanRound}}" />
+        <Label>ファイルを指定して開いた回数</Label>
+        <Label Content="{Binding NumberOfTimesTheFileWasOpenedBySpecifyingIt.Value}" />
     </controls:SimpleGrid>
 </UserControl>

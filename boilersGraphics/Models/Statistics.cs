@@ -6,6 +6,7 @@ namespace boilersGraphics.Models
     {
         private int _number_of_boots;
         private long _uptime;
+        private int _NumberOfTimesTheFileWasOpenedBySpecifyingIt;
 
         /// <summary>
         /// boiler's Graphics 起動回数
@@ -25,6 +26,13 @@ namespace boilersGraphics.Models
         {
             get { return _uptime; }
             set { SetProperty(ref _uptime, value); }
+        }
+
+        [Column("NumberOfTimesTheFileWasOpenedBySpecifyingIt", "INTEGER", 3)]
+        public int NumberOfTimesTheFileWasOpenedBySpecifyingIt
+        {
+            get { return _NumberOfTimesTheFileWasOpenedBySpecifyingIt; }
+            set { SetProperty(ref _NumberOfTimesTheFileWasOpenedBySpecifyingIt, value); }
         }
     }
 }

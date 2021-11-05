@@ -1,4 +1,5 @@
 ﻿using boilersGraphics.Controls;
+using boilersGraphics.Dao;
 using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
 using boilersGraphics.Messenger;
@@ -1313,6 +1314,10 @@ namespace boilersGraphics.ViewModels
                 return;
             var root = LoadSerializedDataFromFile();
             LoadInternal(root);
+            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            statistics.NumberOfTimesTheFileWasOpenedBySpecifyingIt++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
 
         private void LoadInternal(XElement root)
