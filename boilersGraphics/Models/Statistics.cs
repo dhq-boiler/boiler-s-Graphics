@@ -17,6 +17,9 @@ namespace boilersGraphics.Models
             set { SetProperty(ref _number_of_boots, value); }
         }
 
+        /// <summary>
+        /// boiler's Graphics 稼働時間
+        /// </summary>
         [Column("UptimeTicks", "BIGINT", 2)]
         public long UptimeTicks
         {
