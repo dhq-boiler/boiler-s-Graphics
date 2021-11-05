@@ -28,6 +28,9 @@ namespace boilersGraphics.Models
             set { SetProperty(ref _uptime, value); }
         }
 
+        /// <summary>
+        /// ファイルを指定して開いた回数
+        /// </summary>
         [Column("NumberOfTimesTheFileWasOpenedBySpecifyingIt", "INTEGER", 3)]
         public int NumberOfTimesTheFileWasOpenedBySpecifyingIt
         {
