@@ -27,7 +27,7 @@
     </i:Interaction.Triggers>
     <controls:SimpleGrid Columns="2"
                          Orientation="Vertical"
-                         Rows="10">
+                         Rows="20">
         <controls:SimpleGrid.Resources>
             <Style TargetType="Label">
                 <Setter Property="HorizontalAlignment" Value="Right" />
