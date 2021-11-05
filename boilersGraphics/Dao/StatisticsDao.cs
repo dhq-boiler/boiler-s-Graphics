@@ -22,7 +22,9 @@ namespace boilersGraphics.Dao
             {
                 ID = reader.SafeGetGuid("ID", Table),
                 NumberOfBoots = reader.SafeGetInt("NumberOfBoots", Table),
-                UptimeTicks = reader.SafeGetLong("UptimeTicks", Table)
+                UptimeTicks = reader.SafeGetLong("UptimeTicks", Table),
+                NumberOfTimesTheFileWasOpenedBySpecifyingIt = reader.SafeGetInt("NumberOfTimesTheFileWasOpenedBySpecifyingIt", Table),
+                NumberOfTimesTheAutoSaveFileIsSpecifiedAndOpened = reader.SafeGetInt("NumberOfTimesTheAutoSaveFileIsSpecifiedAndOpened", Table),
             };
         }
     }
