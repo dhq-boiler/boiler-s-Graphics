@@ -68,16 +68,20 @@ namespace boilersGraphics.Adorners
             AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(_designerCanvas);
             if (adornerLayer != null)
                 adornerLayer.Remove(this);
-
-            statistics.CumulativeTotalOfItemsSelectedWithTheLassoTool += sets.Count();
-            var dao = new StatisticsDao();
-            dao.Update(statistics);
-            sets.Clear();
+            UpdateStatisticsCount();
 
             (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "";
             (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = "";
 
             e.Handled = true;
+        }
+
+        private void UpdateStatisticsCount()
+        {
+            statistics.CumulativeTotalOfItemsSelectedWithTheLassoTool += sets.Count();
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
+            sets.Clear();
         }
 
         protected override void OnRender(DrawingContext dc)
