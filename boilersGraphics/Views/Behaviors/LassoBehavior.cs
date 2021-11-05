@@ -1,21 +1,19 @@
 ﻿using boilersGraphics.Adorners;
 using boilersGraphics.Controls;
 using boilersGraphics.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.Xaml.Behaviors;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
-using Microsoft.Xaml.Behaviors;
 
 namespace boilersGraphics.Views.Behaviors
 {
-    public class RubberbandBehavior : Behavior<DesignerCanvas>
+    /// <summary>
+    /// なげなわツールのビヘイビア
+    /// </summary>
+    public class LassoBehavior : Behavior<DesignerCanvas>
     {
-        private Point? _rubberbandSelectionStartPoint = null;
+        private Point? _lassoSelectionStartPoint = null;
 
         protected override void OnAttached()
         {
@@ -42,17 +40,17 @@ namespace boilersGraphics.Views.Behaviors
             var canvas = AssociatedObject as DesignerCanvas;
             // if mouse button is not pressed we have no drag operation, ...
             if (e.LeftButton != MouseButtonState.Pressed)
-                _rubberbandSelectionStartPoint = null;
+                _lassoSelectionStartPoint = null;
 
             // ... but if mouse button is pressed and start
             // point value is set we do have one
-            if (_rubberbandSelectionStartPoint.HasValue)
+            if (_lassoSelectionStartPoint.HasValue)
             {
                 // create rubberband adorner
                 AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(canvas);
                 if (adornerLayer != null)
                 {
-                    RubberbandAdorner adorner = new RubberbandAdorner(canvas, _rubberbandSelectionStartPoint);
+                    RubberbandAdorner adorner = new RubberbandAdorner(canvas, _lassoSelectionStartPoint);
                     if (adorner != null)
                     {
                         adornerLayer.Add(adorner);
@@ -67,14 +65,14 @@ namespace boilersGraphics.Views.Behaviors
             var canvas = AssociatedObject as DesignerCanvas;
 
             if (e.InAir)
-                _rubberbandSelectionStartPoint = null;
+                _lassoSelectionStartPoint = null;
 
-            if (_rubberbandSelectionStartPoint.HasValue)
+            if (_lassoSelectionStartPoint.HasValue)
             {
                 AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(canvas);
                 if (adornerLayer != null)
                 {
-                    RubberbandAdorner adorner = new RubberbandAdorner(canvas, _rubberbandSelectionStartPoint);
+                    RubberbandAdorner adorner = new RubberbandAdorner(canvas, _lassoSelectionStartPoint);
                     if (adorner != null)
                     {
                         adornerLayer.Add(adorner);
@@ -87,7 +85,7 @@ namespace boilersGraphics.Views.Behaviors
         {
             if (e.Source == AssociatedObject)
             {
-                _rubberbandSelectionStartPoint = e.GetPosition(AssociatedObject);
+                _lassoSelectionStartPoint = e.GetPosition(AssociatedObject);
 
                 (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "範囲選択";
 
@@ -105,7 +103,7 @@ namespace boilersGraphics.Views.Behaviors
             if (e.Source == AssociatedObject)
             {
                 var touchPoint = e.GetTouchPoint(AssociatedObject);
-                _rubberbandSelectionStartPoint = touchPoint.Position;
+                _lassoSelectionStartPoint = touchPoint.Position;
 
                 (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "範囲選択";
 
@@ -129,7 +127,7 @@ namespace boilersGraphics.Views.Behaviors
                 {
                     // in case that this click is the start for a 
                     // drag operation we cache the start point
-                    _rubberbandSelectionStartPoint = e.GetPosition(AssociatedObject);
+                    _lassoSelectionStartPoint = e.GetPosition(AssociatedObject);
 
                     (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "範囲選択";
 

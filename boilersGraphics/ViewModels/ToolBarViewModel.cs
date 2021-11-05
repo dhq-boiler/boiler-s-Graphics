@@ -29,7 +29,7 @@ namespace boilersGraphics.ViewModels
         public ReactivePropertySlim<bool> CurrentHitTestVisibleState { get; } = new ReactivePropertySlim<bool>();
 
         public DeselectBehavior DeselectBehavior { get; } = new DeselectBehavior();
-        public RubberbandBehavior RubberbandBehavior { get; } = new RubberbandBehavior();
+        public LassoBehavior RubberbandBehavior { get; } = new LassoBehavior();
         public NDrawStraightLineBehavior NDrawStraightLineBehavior { get; } = new NDrawStraightLineBehavior();
         public NDrawRectangleBehavior NDrawRectangleBehavior { get; } = new NDrawRectangleBehavior();
         public NDrawEllipseBehavior NDrawEllipseBehavior { get; } = new NDrawEllipseBehavior();
