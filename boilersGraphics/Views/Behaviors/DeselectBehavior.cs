@@ -1,4 +1,5 @@
 ﻿using boilersGraphics.Controls;
+using boilersGraphics.Dao;
 using boilersGraphics.ViewModels;
 using Microsoft.Xaml.Behaviors;
 using System;
@@ -68,6 +69,16 @@ namespace boilersGraphics.Views.Behaviors
                     }
                 }
             }
+
+            UpdateStatisticsCount();
+        }
+
+        private static void UpdateStatisticsCount()
+        {
+            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            statistics.NumberOfClicksWithThePointerTool++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
     }
 }

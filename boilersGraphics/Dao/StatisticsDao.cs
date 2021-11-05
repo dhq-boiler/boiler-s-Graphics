@@ -25,6 +25,7 @@ namespace boilersGraphics.Dao
                 UptimeTicks = reader.SafeGetLong("UptimeTicks", Table),
                 NumberOfTimesTheFileWasOpenedBySpecifyingIt = reader.SafeGetInt("NumberOfTimesTheFileWasOpenedBySpecifyingIt", Table),
                 NumberOfTimesTheAutoSaveFileIsSpecifiedAndOpened = reader.SafeGetInt("NumberOfTimesTheAutoSaveFileIsSpecifiedAndOpened", Table),
+                NumberOfClicksWithThePointerTool = reader.SafeGetInt("NumberOfClicksWithThePointerTool", Table)
             };
         }
     }

@@ -49,5 +49,9 @@
             <Label>自動保存ファイルを指定して開いた回数</Label>
             <Label Content="{Binding NumberOfTimesTheAutoSaveFileIsSpecifiedAndOpened.Value}" d:Content="0" />
         </DockPanel>
+        <DockPanel>
+            <Label>ポインターツールでクリックした回数</Label>
+            <Label Content="{Binding NumberOfClicksWithThePointerTool.Value}" d:Content="0" />
+        </DockPanel>
     </controls:SimpleGrid>
 </UserControl>

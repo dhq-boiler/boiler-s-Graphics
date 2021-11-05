@@ -8,6 +8,7 @@ namespace boilersGraphics.Models
         private long _uptime;
         private int _NumberOfTimesTheFileWasOpenedBySpecifyingIt;
         private int _NumberOfTimesTheAutoSaveFileIsSpecifiedAndOpened;
+        private int _NumberOfClicksWithThePointerTool;
 
         /// <summary>
         /// boiler's Graphics 起動回数
@@ -47,6 +48,13 @@ namespace boilersGraphics.Models
         {
             get { return _NumberOfTimesTheAutoSaveFileIsSpecifiedAndOpened; }
             set { SetProperty(ref _NumberOfTimesTheAutoSaveFileIsSpecifiedAndOpened, value); }
+        }
+
+        [Column("NumberOfClicksWithThePointerTool", "INTEGER", 5)]
+        public int NumberOfClicksWithThePointerTool
+        {
+            get { return _NumberOfClicksWithThePointerTool; }
+            set { SetProperty(ref _NumberOfClicksWithThePointerTool, value); }
         }
     }
 }

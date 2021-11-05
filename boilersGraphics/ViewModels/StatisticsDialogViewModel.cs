@@ -17,6 +17,8 @@ namespace boilersGraphics.ViewModels
 
         public ReactivePropertySlim<int> NumberOfTimesTheAutoSaveFileIsSpecifiedAndOpened { get; } = new ReactivePropertySlim<int>();
 
+        public ReactivePropertySlim<int> NumberOfClicksWithThePointerTool { get; } = new ReactivePropertySlim<int>();
+
         public ReactivePropertySlim<TimeSpan> Uptime { get; } = new ReactivePropertySlim<TimeSpan>();
 
         public string Title => "統計";
@@ -38,6 +40,7 @@ namespace boilersGraphics.ViewModels
             NumberOfBoots.Value = statistics.NumberOfBoots;
             NumberOfTimesTheFileWasOpenedBySpecifyingIt.Value = statistics.NumberOfTimesTheFileWasOpenedBySpecifyingIt;
             NumberOfTimesTheAutoSaveFileIsSpecifiedAndOpened.Value = statistics.NumberOfTimesTheAutoSaveFileIsSpecifiedAndOpened;
+            NumberOfClicksWithThePointerTool.Value = statistics.NumberOfClicksWithThePointerTool;
             Observable.Timer(DateTime.Now, TimeSpan.FromSeconds(1))
                       .Subscribe(_ =>
                       {
