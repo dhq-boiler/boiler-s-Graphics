@@ -6,6 +6,7 @@ using Reactive.Bindings.Extensions;
 using System;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Windows.Threading;
 
 namespace boilersGraphics.ViewModels
 {
@@ -61,7 +62,7 @@ namespace boilersGraphics.ViewModels
             Observable.Timer(DateTime.Now, TimeSpan.FromSeconds(1))
                       .Subscribe(_ =>
                       {
-                          App.Current.Dispatcher.Invoke(() =>
+                          Dispatcher.CurrentDispatcher.Invoke(() =>
                           {
                               var statistics = MainWindowViewModel.Statistics.Value;
                               Uptime.Value = TimeSpan.FromTicks(statistics.UptimeTicks);
