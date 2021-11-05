@@ -152,17 +152,6 @@ namespace boilersGraphics.Adorners
             }
         }
 
-        private void UpdateSelectionStraightConnector(Rect lassoRect, ItemsControl itemsControl, SelectableDesignerItemViewModelBase item)
-        {
-            if (item is ConnectorBaseViewModel connector)
-            {
-                var vm = connector.SnapPoint0VM.Value;
-                UpdateSelectionSnapPoint(lassoRect, vm);
-                vm = connector.SnapPoint1VM.Value;
-                UpdateSelectionSnapPoint(lassoRect, vm);
-            }
-        }
-
         private void UpdateSelectionSnapPoint(Rect lassoRect, SnapPointViewModel vm)
         {
             LineResizeHandle container = App.Current.MainWindow.GetChildOfType<DesignerCanvas>().GetCorrespondingViews<LineResizeHandle>(vm).First();
@@ -173,6 +162,7 @@ namespace boilersGraphics.Adorners
             if (lassoRect.Contains(itemBounds))
             {
                 vm.IsSelected.Value = true;
+                sets.Add(vm);
             }
             else
             {
