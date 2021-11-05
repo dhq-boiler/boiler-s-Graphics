@@ -2,13 +2,17 @@
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
 using Reactive.Bindings;
+using Reactive.Bindings.Extensions;
 using System;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
 
 namespace boilersGraphics.ViewModels
 {
-    internal class StatisticsDialogViewModel : BindableBase, IDialogAware
+    internal class StatisticsDialogViewModel : BindableBase, IDialogAware, IDisposable
     {
+        private bool disposedValue;
+        private CompositeDisposable disposables = new CompositeDisposable();
         public MainWindowViewModel MainWindowViewModel { get; set; }
         public DelegateCommand LoadedCommand { get; }
 
@@ -21,6 +25,8 @@ namespace boilersGraphics.ViewModels
         public ReactivePropertySlim<int> NumberOfClicksWithThePointerTool { get; } = new ReactivePropertySlim<int>();
 
         public ReactivePropertySlim<int> CumulativeTotalOfItemsSelectedWithTheLassoTool { get; } = new ReactivePropertySlim<int>();
+
+        public ReactivePropertySlim<int> NumberOfDrawsOfTheStraightLineTool { get; } = new ReactivePropertySlim<int>();
 
         public ReactivePropertySlim<TimeSpan> Uptime { get; } = new ReactivePropertySlim<TimeSpan>();
 
@@ -45,6 +51,7 @@ namespace boilersGraphics.ViewModels
             NumberOfTimesTheAutoSaveFileIsSpecifiedAndOpened.Value = statistics.NumberOfTimesTheAutoSaveFileIsSpecifiedAndOpened;
             NumberOfClicksWithThePointerTool.Value = statistics.NumberOfClicksWithThePointerTool;
             CumulativeTotalOfItemsSelectedWithTheLassoTool.Value = statistics.CumulativeTotalOfItemsSelectedWithTheLassoTool;
+            NumberOfDrawsOfTheStraightLineTool.Value = statistics.NumberOfDrawsOfTheStraightLineTool;
             Observable.Timer(DateTime.Now, TimeSpan.FromSeconds(1))
                       .Subscribe(_ =>
                       {
@@ -53,7 +60,8 @@ namespace boilersGraphics.ViewModels
                               var statistics = MainWindowViewModel.Statistics.Value;
                               Uptime.Value = TimeSpan.FromTicks(statistics.UptimeTicks);
                           });
-                      });
+                      })
+                      .AddTo(disposables);
         }
 
         public bool CanCloseDialog()
@@ -68,6 +76,27 @@ namespace boilersGraphics.ViewModels
         public void OnDialogOpened(IDialogParameters parameters)
         {
             MainWindowViewModel = parameters.GetValue<MainWindowViewModel>("MainWindowViewModel");
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    disposables.Dispose();
+                }
+
+                disposables = null;
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            // このコードを変更しないでください。クリーンアップ コードを 'Dispose(bool disposing)' メソッドに記述します
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }

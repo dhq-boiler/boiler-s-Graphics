@@ -27,6 +27,7 @@ namespace boilersGraphics.Dao
                 NumberOfTimesTheAutoSaveFileIsSpecifiedAndOpened = reader.SafeGetInt("NumberOfTimesTheAutoSaveFileIsSpecifiedAndOpened", Table),
                 NumberOfClicksWithThePointerTool = reader.SafeGetInt("NumberOfClicksWithThePointerTool", Table),
                 CumulativeTotalOfItemsSelectedWithTheLassoTool = reader.SafeGetInt("CumulativeTotalOfItemsSelectedWithTheLassoTool", Table),
+                NumberOfDrawsOfTheStraightLineTool = reader.SafeGetInt("NumberOfDrawsOfTheStraightLineTool", Table),
             };
         }
     }
