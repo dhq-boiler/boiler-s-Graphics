@@ -9,8 +9,6 @@
              xmlns:prism="http://prismlibrary.com/"
              xmlns:viewModel="clr-namespace:boilersGraphics.ViewModels"
              d:DataContext="{d:DesignInstance viewModel:StatisticsDialogViewModel}"
-             d:DesignHeight="450"
-             d:DesignWidth="800"
              prism:ViewModelLocator.AutoWireViewModel="True"
              Background="White"
              mc:Ignorable="d">
@@ -46,6 +44,10 @@
         <DockPanel>
             <Label>ファイルを指定して開いた回数</Label>
             <Label Content="{Binding NumberOfTimesTheFileWasOpenedBySpecifyingIt.Value}" d:Content="0" />
+        </DockPanel>
+        <DockPanel>
+            <Label>自動保存ファイルを指定して開いた回数</Label>
+            <Label Content="{Binding NumberOfTimesTheAutoSaveFileIsSpecifiedAndOpened.Value}" d:Content="0" />
         </DockPanel>
     </controls:SimpleGrid>
 </UserControl>

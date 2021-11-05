@@ -1,13 +1,9 @@
-﻿using boilersGraphics.Dao;
-using Prism.Commands;
+﻿using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
 using Reactive.Bindings;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reactive.Linq;
-using System.Windows.Threading;
 
 namespace boilersGraphics.ViewModels
 {
@@ -18,6 +14,8 @@ namespace boilersGraphics.ViewModels
         public ReactivePropertySlim<int> NumberOfBoots { get; } = new ReactivePropertySlim<int>();
 
         public ReactivePropertySlim<int> NumberOfTimesTheFileWasOpenedBySpecifyingIt { get; } = new ReactivePropertySlim<int>();
+
+        public ReactivePropertySlim<int> NumberOfTimesTheAutoSaveFileIsSpecifiedAndOpened { get; } = new ReactivePropertySlim<int>();
 
         public ReactivePropertySlim<TimeSpan> Uptime { get; } = new ReactivePropertySlim<TimeSpan>();
 
@@ -39,6 +37,7 @@ namespace boilersGraphics.ViewModels
             var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
             NumberOfBoots.Value = statistics.NumberOfBoots;
             NumberOfTimesTheFileWasOpenedBySpecifyingIt.Value = statistics.NumberOfTimesTheFileWasOpenedBySpecifyingIt;
+            NumberOfTimesTheAutoSaveFileIsSpecifiedAndOpened.Value = statistics.NumberOfTimesTheAutoSaveFileIsSpecifiedAndOpened;
             Observable.Timer(DateTime.Now, TimeSpan.FromSeconds(1))
                       .Subscribe(_ =>
                       {

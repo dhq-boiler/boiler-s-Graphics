@@ -1383,6 +1383,10 @@ namespace boilersGraphics.ViewModels
             FileName.Value = file;
             var root = XElement.Load(file);
             LoadInternal(root);
+            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            statistics.NumberOfTimesTheAutoSaveFileIsSpecifiedAndOpened++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
 
         public void Preview(string file)
