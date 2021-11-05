@@ -4,6 +4,7 @@ using boilersGraphics.Extensions;
 using boilersGraphics.Models;
 using boilersGraphics.ViewModels;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -21,8 +22,10 @@ namespace boilersGraphics.Adorners
         private Point? _startPoint;
         private Point? _endPoint;
         private Pen _lassoPen;
+        private HashSet<SelectableDesignerItemViewModelBase> sets = new HashSet<SelectableDesignerItemViewModelBase>();
 
         private DesignerCanvas _designerCanvas;
+        private Statistics statistics;
 
         public LassoAdorner(DesignerCanvas designerCanvas, Point? dragStartPoint)
             : base(designerCanvas)
@@ -31,6 +34,7 @@ namespace boilersGraphics.Adorners
             _startPoint = dragStartPoint;
             _lassoPen = new Pen(Brushes.LightSlateGray, 1);
             _lassoPen.DashStyle = new DashStyle(new double[] { 2 }, 1);
+            statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
         }
 
         protected override void OnMouseMove(System.Windows.Input.MouseEventArgs e)
@@ -64,6 +68,11 @@ namespace boilersGraphics.Adorners
             AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(_designerCanvas);
             if (adornerLayer != null)
                 adornerLayer.Remove(this);
+
+            statistics.CumulativeTotalOfItemsSelectedWithTheLassoTool += sets.Count();
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
+            sets.Clear();
 
             (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "";
             (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = "";
@@ -101,7 +110,6 @@ namespace boilersGraphics.Adorners
             IDiagramViewModel vm = (_designerCanvas.DataContext as IDiagramViewModel);
             Rect lassoRect = new Rect(_startPoint.Value, _endPoint.Value);
             ItemsControl itemsControl = GetParent<ItemsControl>(typeof(ItemsControl), _designerCanvas);
-            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
 
             foreach (SelectableDesignerItemViewModelBase item in vm.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
                                                                           .Where(x => x is LayerItem)
@@ -126,8 +134,7 @@ namespace boilersGraphics.Adorners
                         if (lassoRect.Contains(itemBounds))
                         {
                             item.IsSelected.Value = true;
-
-                            statistics.CumulativeTotalOfItemsSelectedWithTheLassoTool++;
+                            sets.Add(item);
                         }
                         else
                         {
@@ -139,9 +146,6 @@ namespace boilersGraphics.Adorners
                     }
                 }
             }
-
-            var dao = new StatisticsDao();
-            dao.Update(statistics);
         }
 
         private void UpdateSelectionStraightConnector(Rect lassoRect, ItemsControl itemsControl, SelectableDesignerItemViewModelBase item)
