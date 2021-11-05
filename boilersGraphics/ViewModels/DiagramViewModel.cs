@@ -95,6 +95,8 @@ namespace boilersGraphics.ViewModels
         public DelegateCommand<MouseEventArgs> MouseEnterCommand { get; private set; }
         public DelegateCommand<KeyEventArgs> PreviewKeyDownCommand { get; private set; }
         public DelegateCommand PropertyCommand { get; private set; }
+        public DelegateCommand<System.Windows.Shapes.Line> MouseDownStraightLineCommand { get; private set; }
+        public DelegateCommand<System.Windows.Shapes.Path> MouseDownBezierCurveCommand { get; private set; }
 
         #region Property
 
@@ -343,6 +345,21 @@ namespace boilersGraphics.ViewModels
                 first.OpenPropertyDialog();
             },
             () => CanOpenPropertyDialog());
+            MouseDownStraightLineCommand = new DelegateCommand<System.Windows.Shapes.Line>(line =>
+            {
+                var straightLineVM = line.DataContext as StraightConnectorViewModel;
+                straightLineVM.IsSelected.Value = true;
+                straightLineVM.SnapPoint0VM.Value.IsSelected.Value = true;
+                straightLineVM.SnapPoint1VM.Value.IsSelected.Value = true;
+            });
+            MouseDownBezierCurveCommand = new DelegateCommand<System.Windows.Shapes.Path>(line =>
+            {
+                var bezierCurveVM = line.DataContext as BezierCurveViewModel;
+                bezierCurveVM.IsSelected.Value = true;
+                bezierCurveVM.SnapPoint0VM.Value.IsSelected.Value = true;
+                bezierCurveVM.SnapPoint1VM.Value.IsSelected.Value = true;
+            });
+
 
             EdgeColors.CollectionChangedAsObservable()
                 .Subscribe(_ => RaisePropertyChanged("EdgeColors"))
