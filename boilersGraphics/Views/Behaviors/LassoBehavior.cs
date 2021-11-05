@@ -50,7 +50,7 @@ namespace boilersGraphics.Views.Behaviors
                 AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(canvas);
                 if (adornerLayer != null)
                 {
-                    RubberbandAdorner adorner = new RubberbandAdorner(canvas, _lassoSelectionStartPoint);
+                    LassoAdorner adorner = new LassoAdorner(canvas, _lassoSelectionStartPoint);
                     if (adorner != null)
                     {
                         adornerLayer.Add(adorner);
@@ -72,7 +72,7 @@ namespace boilersGraphics.Views.Behaviors
                 AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(canvas);
                 if (adornerLayer != null)
                 {
-                    RubberbandAdorner adorner = new RubberbandAdorner(canvas, _lassoSelectionStartPoint);
+                    LassoAdorner adorner = new LassoAdorner(canvas, _lassoSelectionStartPoint);
                     if (adorner != null)
                     {
                         adornerLayer.Add(adorner);

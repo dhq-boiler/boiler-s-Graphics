@@ -9,6 +9,7 @@ namespace boilersGraphics.Models
         private int _NumberOfTimesTheFileWasOpenedBySpecifyingIt;
         private int _NumberOfTimesTheAutoSaveFileIsSpecifiedAndOpened;
         private int _NumberOfClicksWithThePointerTool;
+        private int _CumulativeTotalOfItemsSelectedWithTheLassoTool;
 
         /// <summary>
         /// boiler's Graphics 起動回数
@@ -55,6 +56,13 @@ namespace boilersGraphics.Models
         {
             get { return _NumberOfClicksWithThePointerTool; }
             set { SetProperty(ref _NumberOfClicksWithThePointerTool, value); }
+        }
+
+        [Column("CumulativeTotalOfItemsSelectedWithTheLassoTool", "INTEGER", 6)]
+        public int CumulativeTotalOfItemsSelectedWithTheLassoTool 
+        {
+            get => _CumulativeTotalOfItemsSelectedWithTheLassoTool;
+            set => SetProperty(ref _CumulativeTotalOfItemsSelectedWithTheLassoTool, value);
         }
     }
 }

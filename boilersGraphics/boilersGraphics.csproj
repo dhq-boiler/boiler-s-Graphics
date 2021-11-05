@@ -165,7 +165,7 @@
     <Compile Include="Adorners\PictureAdorner.cs" />
     <Compile Include="Adorners\PolygonAdorner.cs" />
     <Compile Include="Adorners\RectangleAdorner.cs" />
-    <Compile Include="Adorners\RubberbandAdorner.cs" />
+    <Compile Include="Adorners\LassoAdorner.cs" />
     <Compile Include="Adorners\SnapPointAdorner.cs" />
     <Compile Include="Adorners\StraightLineAdorner.cs" />
     <Compile Include="AttachedProperties\ItemConnectProps.cs" />
@@ -338,7 +338,7 @@
     <Compile Include="Views\Behaviors\NDrawRectangleBehavior.cs" />
     <Compile Include="Views\Behaviors\NDrawStraightLineBehavior.cs" />
     <Compile Include="Views\Behaviors\PictureBehavior.cs" />
-    <Compile Include="Views\Behaviors\RubberbandBehavior.cs" />
+    <Compile Include="Views\Behaviors\LassoBehavior.cs" />
     <Compile Include="Views\Behaviors\SetSnapPointBehavior.cs" />
     <Compile Include="Views\ColorMap.xaml.cs">
       <DependentUpon>ColorMap.xaml</DependentUpon>

@@ -9,6 +9,7 @@ namespace boilersGraphics.ViewModels
 {
     internal class StatisticsDialogViewModel : BindableBase, IDialogAware
     {
+        public MainWindowViewModel MainWindowViewModel { get; set; }
         public DelegateCommand LoadedCommand { get; }
 
         public ReactivePropertySlim<int> NumberOfBoots { get; } = new ReactivePropertySlim<int>();
@@ -18,6 +19,8 @@ namespace boilersGraphics.ViewModels
         public ReactivePropertySlim<int> NumberOfTimesTheAutoSaveFileIsSpecifiedAndOpened { get; } = new ReactivePropertySlim<int>();
 
         public ReactivePropertySlim<int> NumberOfClicksWithThePointerTool { get; } = new ReactivePropertySlim<int>();
+
+        public ReactivePropertySlim<int> CumulativeTotalOfItemsSelectedWithTheLassoTool { get; } = new ReactivePropertySlim<int>();
 
         public ReactivePropertySlim<TimeSpan> Uptime { get; } = new ReactivePropertySlim<TimeSpan>();
 
@@ -41,14 +44,17 @@ namespace boilersGraphics.ViewModels
             NumberOfTimesTheFileWasOpenedBySpecifyingIt.Value = statistics.NumberOfTimesTheFileWasOpenedBySpecifyingIt;
             NumberOfTimesTheAutoSaveFileIsSpecifiedAndOpened.Value = statistics.NumberOfTimesTheAutoSaveFileIsSpecifiedAndOpened;
             NumberOfClicksWithThePointerTool.Value = statistics.NumberOfClicksWithThePointerTool;
+            CumulativeTotalOfItemsSelectedWithTheLassoTool.Value = statistics.CumulativeTotalOfItemsSelectedWithTheLassoTool;
             Observable.Timer(DateTime.Now, TimeSpan.FromSeconds(1))
                       .Subscribe(_ =>
                       {
                           App.Current.Dispatcher.Invoke(() =>
                           {
-                              if (App.Current == null) return;
-                              var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
-                              Uptime.Value = TimeSpan.FromTicks(statistics.UptimeTicks);
+                              lock (App.Current)
+                              {
+                                  var statistics = MainWindowViewModel.Statistics.Value;
+                                  Uptime.Value = TimeSpan.FromTicks(statistics.UptimeTicks);
+                              }
                           });
                       });
         }
@@ -64,6 +70,7 @@ namespace boilersGraphics.ViewModels
 
         public void OnDialogOpened(IDialogParameters parameters)
         {
+            MainWindowViewModel = parameters.GetValue<MainWindowViewModel>("MainWindowViewModel");
         }
     }
 }

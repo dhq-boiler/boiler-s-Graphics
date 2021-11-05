@@ -1,4 +1,5 @@
 ﻿using boilersGraphics.Controls;
+using boilersGraphics.Dao;
 using boilersGraphics.Extensions;
 using boilersGraphics.Models;
 using boilersGraphics.ViewModels;
@@ -12,21 +13,24 @@ using System.Windows.Media;
 
 namespace boilersGraphics.Adorners
 {
-    public class RubberbandAdorner : Adorner
+    /// <summary>
+    /// なげなわツールのAdorner
+    /// </summary>
+    public class LassoAdorner : Adorner
     {
         private Point? _startPoint;
         private Point? _endPoint;
-        private Pen _rubberbandPen;
+        private Pen _lassoPen;
 
         private DesignerCanvas _designerCanvas;
 
-        public RubberbandAdorner(DesignerCanvas designerCanvas, Point? dragStartPoint)
+        public LassoAdorner(DesignerCanvas designerCanvas, Point? dragStartPoint)
             : base(designerCanvas)
         {
             _designerCanvas = designerCanvas;
             _startPoint = dragStartPoint;
-            _rubberbandPen = new Pen(Brushes.LightSlateGray, 1);
-            _rubberbandPen.DashStyle = new DashStyle(new double[] { 2 }, 1);
+            _lassoPen = new Pen(Brushes.LightSlateGray, 1);
+            _lassoPen.DashStyle = new DashStyle(new double[] { 2 }, 1);
         }
 
         protected override void OnMouseMove(System.Windows.Input.MouseEventArgs e)
@@ -77,7 +81,7 @@ namespace boilersGraphics.Adorners
             dc.DrawRectangle(Brushes.Transparent, null, new Rect(RenderSize));
 
             if (_startPoint.HasValue && _endPoint.HasValue)
-                dc.DrawRectangle(Brushes.Transparent, _rubberbandPen, new Rect(_startPoint.Value, _endPoint.Value));
+                dc.DrawRectangle(Brushes.Transparent, _lassoPen, new Rect(_startPoint.Value, _endPoint.Value));
         }
 
 
@@ -95,8 +99,9 @@ namespace boilersGraphics.Adorners
         private void UpdateSelection()
         {
             IDiagramViewModel vm = (_designerCanvas.DataContext as IDiagramViewModel);
-            Rect rubberBand = new Rect(_startPoint.Value, _endPoint.Value);
+            Rect lassoRect = new Rect(_startPoint.Value, _endPoint.Value);
             ItemsControl itemsControl = GetParent<ItemsControl>(typeof(ItemsControl), _designerCanvas);
+            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
 
             foreach (SelectableDesignerItemViewModelBase item in vm.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
                                                                           .Where(x => x is LayerItem)
@@ -107,9 +112,9 @@ namespace boilersGraphics.Adorners
                     if (item is ConnectorBaseViewModel connector)
                     {
                         var snapPointVM = connector.SnapPoint0VM.Value;
-                        UpdateSelectionSnapPoint(rubberBand, snapPointVM);
+                        UpdateSelectionSnapPoint(lassoRect, snapPointVM);
                         snapPointVM = connector.SnapPoint1VM.Value;
-                        UpdateSelectionSnapPoint(rubberBand, snapPointVM);
+                        UpdateSelectionSnapPoint(lassoRect, snapPointVM);
                     }
                     else
                     {
@@ -118,9 +123,11 @@ namespace boilersGraphics.Adorners
                         Rect itemRect = VisualTreeHelper.GetDescendantBounds((Visual)container);
                         Rect itemBounds = ((Visual)container).TransformToAncestor(_designerCanvas).TransformBounds(itemRect);
 
-                        if (rubberBand.Contains(itemBounds))
+                        if (lassoRect.Contains(itemBounds))
                         {
                             item.IsSelected.Value = true;
+
+                            statistics.CumulativeTotalOfItemsSelectedWithTheLassoTool++;
                         }
                         else
                         {
@@ -132,27 +139,30 @@ namespace boilersGraphics.Adorners
                     }
                 }
             }
+
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
 
-        private void UpdateSelectionStraightConnector(Rect rubberBand, ItemsControl itemsControl, SelectableDesignerItemViewModelBase item)
+        private void UpdateSelectionStraightConnector(Rect lassoRect, ItemsControl itemsControl, SelectableDesignerItemViewModelBase item)
         {
             if (item is ConnectorBaseViewModel connector)
             {
                 var vm = connector.SnapPoint0VM.Value;
-                UpdateSelectionSnapPoint(rubberBand, vm);
+                UpdateSelectionSnapPoint(lassoRect, vm);
                 vm = connector.SnapPoint1VM.Value;
-                UpdateSelectionSnapPoint(rubberBand, vm);
+                UpdateSelectionSnapPoint(lassoRect, vm);
             }
         }
 
-        private void UpdateSelectionSnapPoint(Rect rubberBand, SnapPointViewModel vm)
+        private void UpdateSelectionSnapPoint(Rect lassoRect, SnapPointViewModel vm)
         {
             LineResizeHandle container = App.Current.MainWindow.GetChildOfType<DesignerCanvas>().GetCorrespondingViews<LineResizeHandle>(vm).First();
 
             Rect itemRect = VisualTreeHelper.GetDescendantBounds((Visual)container);
             Rect itemBounds = ((Visual)container).TransformToAncestor(_designerCanvas).TransformBounds(itemRect);
 
-            if (rubberBand.Contains(itemBounds))
+            if (lassoRect.Contains(itemBounds))
             {
                 vm.IsSelected.Value = true;
             }

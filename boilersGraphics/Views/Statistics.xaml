@@ -53,5 +53,9 @@
             <Label>ポインターツールでクリックした回数</Label>
             <Label Content="{Binding NumberOfClicksWithThePointerTool.Value}" d:Content="0" />
         </DockPanel>
+        <DockPanel>
+            <Label>なげなわツールで選択したアイテムの累計</Label>
+            <Label Content="{Binding CumulativeTotalOfItemsSelectedWithTheLassoTool.Value}" d:Content="0" />
+        </DockPanel>
     </controls:SimpleGrid>
 </UserControl>

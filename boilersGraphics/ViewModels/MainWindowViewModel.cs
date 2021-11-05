@@ -187,7 +187,7 @@ namespace boilersGraphics.ViewModels
             ShowStatisticsCommand = new DelegateCommand(() =>
             {
                 IDialogResult result = null;
-                this.dlgService.ShowDialog(nameof(Views.Statistics), ret => result = ret);
+                this.dlgService.ShowDialog(nameof(Views.Statistics), new DialogParameters() { { "MainWindowViewModel", this } }, ret => result = ret);
             });
             DiagramViewModel.EdgeThickness.Subscribe(x =>
             {
