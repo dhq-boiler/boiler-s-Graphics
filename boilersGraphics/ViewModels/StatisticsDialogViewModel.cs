@@ -44,6 +44,7 @@ namespace boilersGraphics.ViewModels
                       {
                           App.Current.Dispatcher.Invoke(() =>
                           {
+                              if (App.Current == null) return;
                               var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
                               Uptime.Value = TimeSpan.FromTicks(statistics.UptimeTicks);
                           });
