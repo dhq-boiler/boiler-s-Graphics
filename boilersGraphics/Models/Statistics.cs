@@ -6,16 +6,16 @@ namespace boilersGraphics.Models
     {
         private int _number_of_boots;
         private long _uptime;
-        private int _NumberOfTimesTheFileWasOpenedBySpecifyingIt;
-        private int _NumberOfTimesTheAutoSaveFileIsSpecifiedAndOpened;
-        private int _NumberOfClicksWithThePointerTool;
-        private int _CumulativeTotalOfItemsSelectedWithTheLassoTool;
-        private int _NumberOfDrawsOfTheStraightLineTool;
-        private int _NumberOfDrawsOfTheRectangleTool;
-        private int _NumberOfDrawsOfTheEllipseTool;
-        private int _NumberOfDrawsOfTheImageFileTool;
-        private int _NumberOfDrawsOfTheLetterTool;
-        private int _NumberOfDrawsOfTheVerticalLetterTool;
+        private int _numberOfTimesTheFileWasOpenedBySpecifyingIt;
+        private int _numberOfTimesTheAutoSaveFileIsSpecifiedAndOpened;
+        private int _numberOfClicksWithThePointerTool;
+        private int _cumulativeTotalOfItemsSelectedWithTheLassoTool;
+        private int _numberOfDrawsOfTheStraightLineTool;
+        private int _numberOfDrawsOfTheRectangleTool;
+        private int _numberOfDrawsOfTheEllipseTool;
+        private int _numberOfDrawsOfTheImageFileTool;
+        private int _numberOfDrawsOfTheLetterTool;
+        private int _numberOfDrawsOfTheVerticalLetterTool;
 
         /// <summary>
         /// boiler's Graphics 起動回数
@@ -43,8 +43,8 @@ namespace boilersGraphics.Models
         [Column("NumberOfTimesTheFileWasOpenedBySpecifyingIt", "INTEGER", 3)]
         public int NumberOfTimesTheFileWasOpenedBySpecifyingIt
         {
-            get { return _NumberOfTimesTheFileWasOpenedBySpecifyingIt; }
-            set { SetProperty(ref _NumberOfTimesTheFileWasOpenedBySpecifyingIt, value); }
+            get { return _numberOfTimesTheFileWasOpenedBySpecifyingIt; }
+            set { SetProperty(ref _numberOfTimesTheFileWasOpenedBySpecifyingIt, value); }
         }
 
         /// <summary>
@@ -53,64 +53,64 @@ namespace boilersGraphics.Models
         [Column("NumberOfTimesTheAutoSaveFileIsSpecifiedAndOpened", "INTEGER", 4)]
         public int NumberOfTimesTheAutoSaveFileIsSpecifiedAndOpened
         {
-            get { return _NumberOfTimesTheAutoSaveFileIsSpecifiedAndOpened; }
-            set { SetProperty(ref _NumberOfTimesTheAutoSaveFileIsSpecifiedAndOpened, value); }
+            get { return _numberOfTimesTheAutoSaveFileIsSpecifiedAndOpened; }
+            set { SetProperty(ref _numberOfTimesTheAutoSaveFileIsSpecifiedAndOpened, value); }
         }
 
         [Column("NumberOfClicksWithThePointerTool", "INTEGER", 5)]
         public int NumberOfClicksWithThePointerTool
         {
-            get { return _NumberOfClicksWithThePointerTool; }
-            set { SetProperty(ref _NumberOfClicksWithThePointerTool, value); }
+            get { return _numberOfClicksWithThePointerTool; }
+            set { SetProperty(ref _numberOfClicksWithThePointerTool, value); }
         }
 
         [Column("CumulativeTotalOfItemsSelectedWithTheLassoTool", "INTEGER", 6)]
         public int CumulativeTotalOfItemsSelectedWithTheLassoTool 
         {
-            get => _CumulativeTotalOfItemsSelectedWithTheLassoTool;
-            set => SetProperty(ref _CumulativeTotalOfItemsSelectedWithTheLassoTool, value);
+            get => _cumulativeTotalOfItemsSelectedWithTheLassoTool;
+            set => SetProperty(ref _cumulativeTotalOfItemsSelectedWithTheLassoTool, value);
         }
 
         [Column("NumberOfDrawsOfTheStraightLineTool", "INTEGER", 7)]
         public int NumberOfDrawsOfTheStraightLineTool
         {
-            get => _NumberOfDrawsOfTheStraightLineTool;
-            set => SetProperty(ref _NumberOfDrawsOfTheStraightLineTool, value);
+            get => _numberOfDrawsOfTheStraightLineTool;
+            set => SetProperty(ref _numberOfDrawsOfTheStraightLineTool, value);
         }
 
         [Column("NumberOfDrawsOfTheRectangleTool", "INTEGER", 7)]
         public int NumberOfDrawsOfTheRectangleTool
         {
-            get => _NumberOfDrawsOfTheRectangleTool;
-            set => SetProperty(ref _NumberOfDrawsOfTheRectangleTool, value);
+            get => _numberOfDrawsOfTheRectangleTool;
+            set => SetProperty(ref _numberOfDrawsOfTheRectangleTool, value);
         }
 
         [Column("NumberOfDrawsOfTheEllipseTool", "INTEGER", 7)]
         public int NumberOfDrawsOfTheEllipseTool
         {
-            get => _NumberOfDrawsOfTheEllipseTool;
-            set => SetProperty(ref _NumberOfDrawsOfTheEllipseTool, value);
+            get => _numberOfDrawsOfTheEllipseTool;
+            set => SetProperty(ref _numberOfDrawsOfTheEllipseTool, value);
         }
 
         [Column("NumberOfDrawsOfTheImageFileTool", "INTEGER", 7)]
         public int NumberOfDrawsOfTheImageFileTool
         {
-            get => _NumberOfDrawsOfTheImageFileTool;
-            set => SetProperty(ref _NumberOfDrawsOfTheImageFileTool, value);
+            get => _numberOfDrawsOfTheImageFileTool;
+            set => SetProperty(ref _numberOfDrawsOfTheImageFileTool, value);
         }
 
         [Column("NumberOfDrawsOfTheLetterTool", "INTEGER", 7)]
         public int NumberOfDrawsOfTheLetterTool
         {
-            get => _NumberOfDrawsOfTheLetterTool;
-            set => SetProperty(ref _NumberOfDrawsOfTheLetterTool, value);
+            get => _numberOfDrawsOfTheLetterTool;
+            set => SetProperty(ref _numberOfDrawsOfTheLetterTool, value);
         }
 
         [Column("NumberOfDrawsOfTheVerticalLetterTool", "INTEGER", 7)]
         public int NumberOfDrawsOfTheVerticalLetterTool
         {
-            get => _NumberOfDrawsOfTheVerticalLetterTool;
-            set => SetProperty(ref _NumberOfDrawsOfTheVerticalLetterTool, value);
+            get => _numberOfDrawsOfTheVerticalLetterTool;
+            set => SetProperty(ref _numberOfDrawsOfTheVerticalLetterTool, value);
         }
     }
 }
