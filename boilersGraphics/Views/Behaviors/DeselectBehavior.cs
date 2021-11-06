@@ -1,4 +1,5 @@
 ﻿using boilersGraphics.Controls;
+using boilersGraphics.Dao;
 using boilersGraphics.ViewModels;
 using Microsoft.Xaml.Behaviors;
 using System;
@@ -61,8 +62,23 @@ namespace boilersGraphics.Views.Behaviors
                 {
                     //非選択状態にする
                     vm.IsSelected.Value = false;
+                    if (vm is ConnectorBaseViewModel connectorBaseViewModel)
+                    {
+                        connectorBaseViewModel.SnapPoint0VM.Value.IsSelected.Value = false;
+                        connectorBaseViewModel.SnapPoint1VM.Value.IsSelected.Value = false;
+                    }
                 }
             }
+
+            UpdateStatisticsCount();
+        }
+
+        private static void UpdateStatisticsCount()
+        {
+            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            statistics.NumberOfClicksWithThePointerTool++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
     }
 }

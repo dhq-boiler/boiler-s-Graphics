@@ -1,4 +1,5 @@
-﻿using boilersGraphics.Extensions;
+﻿using boilersGraphics.Dao;
+using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
 using boilersGraphics.Models;
 using boilersGraphics.Views.Behaviors;
@@ -54,6 +55,7 @@ namespace boilersGraphics.ViewModels
                 Random rand = new Random();
                 layer.Color.Value = Randomizer.RandomColor(rand);
                 (App.Current.MainWindow.DataContext as MainWindowViewModel).Controller.ExecuteAdd((App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.Layers, layer);
+                UpdateStatisticsCountNewLayer();
             });
             RemoveLayerCommand = new DelegateCommand(() =>
             {
@@ -64,6 +66,7 @@ namespace boilersGraphics.ViewModels
                 {
                     (App.Current.MainWindow.DataContext as MainWindowViewModel).Controller.ExecuteRemove(layers, remove);
                 }
+                UpdateStatisticsCountRemoveLayer();
             });
             SelectedItemChangedCommand.Subscribe(args =>
             {
@@ -86,6 +89,11 @@ namespace boilersGraphics.ViewModels
                         if (x.HasAsAncestor(newItem as LayerTreeViewItemBase))
                         {
                             x.IsSelected.Value = true;
+                            if ((x as LayerItem).Item.Value is ConnectorBaseViewModel connector)
+                            {
+                                connector.SnapPoint0VM.Value.IsSelected.Value = true;
+                                connector.SnapPoint1VM.Value.IsSelected.Value = true;
+                            }
                             if ((x as LayerItem).Item.Value is SnapPointViewModel snapPointVM)
                             {
                                 snapPointVM.Opacity.Value = 1.0;
@@ -94,6 +102,11 @@ namespace boilersGraphics.ViewModels
                         else
                         {
                             x.IsSelected.Value = false;
+                            if ((x as LayerItem).Item.Value is ConnectorBaseViewModel connector)
+                            {
+                                connector.SnapPoint0VM.Value.IsSelected.Value = false;
+                                connector.SnapPoint1VM.Value.IsSelected.Value = false;
+                            }
                             if ((x as LayerItem).Item.Value is SnapPointViewModel snapPointVM)
                             {
                                 snapPointVM.Opacity.Value = 0.5;
@@ -126,6 +139,11 @@ namespace boilersGraphics.ViewModels
                         if (!Keyboard.IsKeyDown(Key.LeftCtrl) && !Keyboard.IsKeyDown(Key.RightCtrl))
                         {
                             x.IsSelected.Value = false;
+                            if ((x as LayerItem).Item.Value is ConnectorBaseViewModel connector)
+                            {
+                                connector.SnapPoint0VM.Value.IsSelected.Value = false;
+                                connector.SnapPoint1VM.Value.IsSelected.Value = false;
+                            }
                         }
                         if ((x as LayerItem).Item.Value is SnapPointViewModel snapPointVM)
                         {
@@ -133,6 +151,11 @@ namespace boilersGraphics.ViewModels
                         }
                     });
                     selectedItem.IsSelected.Value = true;
+                    if (selectedItem.Item.Value is ConnectorBaseViewModel connector)
+                    {
+                        connector.SnapPoint0VM.Value.IsSelected.Value = true;
+                        connector.SnapPoint1VM.Value.IsSelected.Value = true;
+                    }
                     if (selectedItem.Item.Value is SnapPointViewModel snapPointVM)
                     {
                         snapPointVM.Opacity.Value = 1.0;
@@ -167,6 +190,22 @@ namespace boilersGraphics.ViewModels
             })
             .AddTo(_disposables);
             DropCommand = new DelegateCommand<DropArguments>(Drop);
+        }
+
+        private static void UpdateStatisticsCountNewLayer()
+        {
+            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            statistics.NumberOfNewlyCreatedLayers++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
+        }
+
+        private static void UpdateStatisticsCountRemoveLayer()
+        {
+            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            statistics.NumberOfDeletedLayers++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
 
         private IEnumerable<SelectableDesignerItemViewModelBase> IfGroupBringChildren(ReactiveCollection<LayerTreeViewItemBase> Children, SelectableDesignerItemViewModelBase value)

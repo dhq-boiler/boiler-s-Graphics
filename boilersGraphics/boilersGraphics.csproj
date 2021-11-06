@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\NUnit3TestAdapter.4.1.0-dev-01858\build\net35\NUnit3TestAdapter.props" Condition="Exists('..\packages\NUnit3TestAdapter.4.1.0-dev-01858\build\net35\NUnit3TestAdapter.props')" />
   <Import Project="..\packages\GitVersion.MsBuild.5.7.0\build\GitVersion.MsBuild.props" Condition="Exists('..\packages\GitVersion.MsBuild.5.7.0\build\GitVersion.MsBuild.props')" />
   <Import Project="..\packages\OpenCvSharp4.runtime.win.4.5.2.20210404\build\net\OpenCvSharp4.runtime.win.props" Condition="Exists('..\packages\OpenCvSharp4.runtime.win.4.5.2.20210404\build\net\OpenCvSharp4.runtime.win.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
@@ -44,6 +45,12 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Dapper, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapper.2.0.78\lib\net461\Dapper.dll</HintPath>
+    </Reference>
+    <Reference Include="Homura, Version=1.0.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Homura.1.0.4\lib\net48\Homura.dll</HintPath>
+    </Reference>
     <Reference Include="ICSharpCode.AvalonEdit, Version=5.0.3.0, Culture=neutral, PublicKeyToken=9cc39be672370310, processorArchitecture=MSIL">
       <HintPath>..\packages\AvalonEdit.5.0.4\lib\Net40\ICSharpCode.AvalonEdit.dll</HintPath>
     </Reference>
@@ -90,6 +97,12 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.SQLite, Version=1.0.115.5, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.115.5\lib\net46\System.Data.SQLite.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.SQLite.Linq, Version=1.0.115.5, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.SQLite.Linq.1.0.115.5\lib\net46\System.Data.SQLite.Linq.dll</HintPath>
+    </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.Drawing.Common, Version=4.0.0.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Drawing.Common.5.0.2\lib\net461\System.Drawing.Common.dll</HintPath>
@@ -153,7 +166,7 @@
     <Compile Include="Adorners\PictureAdorner.cs" />
     <Compile Include="Adorners\PolygonAdorner.cs" />
     <Compile Include="Adorners\RectangleAdorner.cs" />
-    <Compile Include="Adorners\RubberbandAdorner.cs" />
+    <Compile Include="Adorners\LassoAdorner.cs" />
     <Compile Include="Adorners\SnapPointAdorner.cs" />
     <Compile Include="Adorners\StraightLineAdorner.cs" />
     <Compile Include="AttachedProperties\ItemConnectProps.cs" />
@@ -167,6 +180,7 @@
     <Compile Include="Controls\LineResizeHandle.cs" />
     <Compile Include="Controls\ResizeThumb.cs" />
     <Compile Include="Controls\RotateThumb.cs" />
+    <Compile Include="Controls\SimpleGrid.cs" />
     <Compile Include="Controls\SnapPoint.cs" />
     <Compile Include="Converters\BoolToEnumConverter.cs" />
     <Compile Include="Converters\ColorToStringConverter.cs" />
@@ -182,14 +196,20 @@
     <Compile Include="Converters\IntToStringConverter.cs" />
     <Compile Include="Converters\IsSelectedToBorderBrushConverter.cs" />
     <Compile Include="Converters\StringToByteConverter.cs" />
+    <Compile Include="Converters\TimeSpanRoundConverter.cs" />
     <Compile Include="Converters\WindowStateToVisibilityConverter.cs" />
     <Compile Include="Converters\StraightLineBaseShiftConverter.cs" />
+    <Compile Include="Dao\Migration\Plan\ChangePlan_bG_Statistics_VersionOrigin.cs" />
+    <Compile Include="Dao\Migration\Plan\ChangePlan_bG_VersionOrigin.cs" />
+    <Compile Include="Dao\SQLiteBaseDao.cs" />
+    <Compile Include="Dao\StatisticsDao.cs" />
     <Compile Include="Exceptions\UnexpectedException.cs" />
     <Compile Include="Controls\ZoomBox.cs" />
     <Compile Include="Converters\ShiftCoordinateConverter.cs" />
     <Compile Include="Converters\StrokeColorConverter.cs" />
     <Compile Include="Converters\ToSolidColorBrushConverter.cs" />
     <Compile Include="Extensions\Extensions.cs" />
+    <Compile Include="Extensions\Extensions2.cs" />
     <Compile Include="Helpers\BezierCurve.cs" />
     <Compile Include="Helpers\DebugAction.cs" />
     <Compile Include="Helpers\EraserInternal.cs" />
@@ -223,15 +243,18 @@
     <Compile Include="Messenger\MediatorMessageSinkAttribute.cs" />
     <Compile Include="Models\Diagram.cs" />
     <Compile Include="Models\DraggingItem.cs" />
+    <Compile Include="Models\Dummy.cs" />
     <Compile Include="Models\Ellipse.cs" />
     <Compile Include="Models\FontFamilyEx.cs" />
     <Compile Include="Models\Layer.cs" />
     <Compile Include="Models\LayerItem.cs" />
     <Compile Include="Models\LayerTreeViewItemBase.cs" />
     <Compile Include="Models\Letter.cs" />
+    <Compile Include="Models\PkIdEntity.cs" />
     <Compile Include="Models\Rectangle.cs" />
     <Compile Include="Models\RenderItem.cs" />
     <Compile Include="Models\Setting.cs" />
+    <Compile Include="Models\Statistics.cs" />
     <Compile Include="Models\StraightLine.cs" />
     <Compile Include="StyleSelectors\DesignerItemsControlItemStyleSelector.cs" />
     <Compile Include="TsOperationHistory\CompositeOperation.cs" />
@@ -298,6 +321,7 @@
     <Compile Include="ViewModels\SettingViewModel.cs" />
     <Compile Include="ViewModels\SnapPointAdsorptionInformation.cs" />
     <Compile Include="ViewModels\SnapPointViewModel.cs" />
+    <Compile Include="ViewModels\StatisticsDialogViewModel.cs" />
     <Compile Include="ViewModels\StraightConnectorViewModel.cs" />
     <Compile Include="ViewModels\ThicknessViewModel.cs" />
     <Compile Include="ViewModels\ToolBarViewModel.cs" />
@@ -315,7 +339,7 @@
     <Compile Include="Views\Behaviors\NDrawRectangleBehavior.cs" />
     <Compile Include="Views\Behaviors\NDrawStraightLineBehavior.cs" />
     <Compile Include="Views\Behaviors\PictureBehavior.cs" />
-    <Compile Include="Views\Behaviors\RubberbandBehavior.cs" />
+    <Compile Include="Views\Behaviors\LassoBehavior.cs" />
     <Compile Include="Views\Behaviors\SetSnapPointBehavior.cs" />
     <Compile Include="Views\ColorMap.xaml.cs">
       <DependentUpon>ColorMap.xaml</DependentUpon>
@@ -387,6 +411,9 @@
     </Compile>
     <Compile Include="Views\Setting.xaml.cs">
       <DependentUpon>Setting.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Statistics.xaml.cs">
+      <DependentUpon>Statistics.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Thickness.xaml.cs">
       <DependentUpon>Thickness.xaml</DependentUpon>
@@ -600,6 +627,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Statistics.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Theme.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -758,6 +789,9 @@
     <Error Condition="!Exists('..\packages\OpenCvSharp4.runtime.win.4.5.2.20210404\build\net\OpenCvSharp4.runtime.win.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\OpenCvSharp4.runtime.win.4.5.2.20210404\build\net\OpenCvSharp4.runtime.win.props'))" />
     <Error Condition="!Exists('..\packages\GitVersion.MsBuild.5.7.0\build\GitVersion.MsBuild.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\GitVersion.MsBuild.5.7.0\build\GitVersion.MsBuild.props'))" />
     <Error Condition="!Exists('..\packages\GitVersion.MsBuild.5.7.0\build\GitVersion.MsBuild.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\GitVersion.MsBuild.5.7.0\build\GitVersion.MsBuild.targets'))" />
+    <Error Condition="!Exists('..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.115.5\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.115.5\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets'))" />
+    <Error Condition="!Exists('..\packages\NUnit3TestAdapter.4.1.0-dev-01858\build\net35\NUnit3TestAdapter.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NUnit3TestAdapter.4.1.0-dev-01858\build\net35\NUnit3TestAdapter.props'))" />
   </Target>
   <Import Project="..\packages\GitVersion.MsBuild.5.7.0\build\GitVersion.MsBuild.targets" Condition="Exists('..\packages\GitVersion.MsBuild.5.7.0\build\GitVersion.MsBuild.targets')" />
+  <Import Project="..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.115.5\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets" Condition="Exists('..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.115.5\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets')" />
 </Project>

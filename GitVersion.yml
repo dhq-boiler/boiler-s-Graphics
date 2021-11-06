@@ -19,7 +19,7 @@ branches:
     is-release-branch: true
     pre-release-weight: 1000
   feature:
-    regex: ^features?[/-]
+    regex: ^feature?[/-]
     mode: ContinuousDelivery
     tag: useBranchName
     increment: Inherit

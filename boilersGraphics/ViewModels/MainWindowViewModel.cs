@@ -1,5 +1,11 @@
-﻿using boilersGraphics.Helpers;
+﻿using boilersGraphics.Dao;
+using boilersGraphics.Dao.Migration.Plan;
+using boilersGraphics.Helpers;
+using boilersGraphics.Models;
 using boilersGraphics.Views;
+using Homura.Core;
+using Homura.ORM;
+using Homura.ORM.Setup;
 using NLog;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -7,9 +13,12 @@ using Prism.Services.Dialogs;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
+using System.Collections.Generic;
+using System.Data.SQLite;
 using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Windows;
 using TsOperationHistory;
 using TsOperationHistory.Extensions;
@@ -22,6 +31,7 @@ namespace boilersGraphics.ViewModels
         private ToolBarViewModel _ToolBarViewModel;
         private CompositeDisposable _CompositeDisposable = new CompositeDisposable();
         private IDialogService dlgService = null;
+        private DateTime _StartUpTime;
 
         public static MainWindowViewModel Instance { get; set; }
 
@@ -29,6 +39,12 @@ namespace boilersGraphics.ViewModels
         {
             Instance = this;
             this.dlgService = dialogService;
+
+            ConnectionManager.SetDefaultConnection($"DataSource={System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "dhq_boiler\\boilersGraphics\\bg.db")}", typeof(SQLiteConnection));
+
+            ManagebGDB();
+
+            _StartUpTime = DateTime.Now;
 
             Recorder = new OperationRecorder(Controller);
 
@@ -152,6 +168,7 @@ namespace boilersGraphics.ViewModels
             {
                 var path = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "dhq_boiler\\boilersGraphics\\Logs\\boilersGraphics.log");
                 Process.Start(path);
+                UpdateStatisticsCountOpenApplicationLog();
             });
             ShowVersionCommand = new DelegateCommand(() =>
             {
@@ -167,6 +184,12 @@ namespace boilersGraphics.ViewModels
                 }
                 LogManager.ReconfigExistingLoggers();
                 LogManager.GetCurrentClassLogger().Info($"ログレベルが変更されました。変更後：{parameter}");
+                UpdateStatisticsCountLogLevelChanged();
+            });
+            ShowStatisticsCommand = new DelegateCommand(() =>
+            {
+                IDialogResult result = null;
+                this.dlgService.ShowDialog(nameof(Views.Statistics), new DialogParameters() { { "MainWindowViewModel", this } }, ret => result = ret);
             });
             DiagramViewModel.EdgeThickness.Subscribe(x =>
             {
@@ -187,7 +210,90 @@ namespace boilersGraphics.ViewModels
 
             SnapPower.Value = 10;
 
+            IncrementNumberOfBoots();
+
             DiagramViewModel.Initialize();
+
+            var updateTicks = 0L;
+
+            var id = Guid.Parse("00000000-0000-0000-0000-000000000000");
+            var dao = new StatisticsDao();
+            var statistics = dao.FindBy(new Dictionary<string, object>() { { "ID", id } });
+            var statisticsObj = statistics.First();
+            Statistics.Value = statisticsObj;
+            updateTicks = statisticsObj.UptimeTicks;
+
+            Observable.Interval(TimeSpan.FromSeconds(1))
+                      .Subscribe(_ =>
+                      {
+                          Statistics.Value.UptimeTicks = ((DateTime.Now - _StartUpTime) + TimeSpan.FromTicks(updateTicks)).Ticks;
+                      })
+                      .AddTo(_CompositeDisposable);
+
+            Observable.Interval(TimeSpan.FromSeconds(10))
+                      .Subscribe(_ =>
+                      {
+                          var dao = new StatisticsDao();
+                          dao.Update(Statistics.Value);
+                      })
+                      .AddTo(_CompositeDisposable);
+        }
+
+        private static void UpdateStatisticsCountLogLevelChanged()
+        {
+            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            statistics.NumberOfLogLevelChanges++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
+        }
+
+        private static void UpdateStatisticsCountOpenApplicationLog()
+        {
+            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            statistics.NumberOfTimesTheApplicationLogWasDisplayed++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
+        }
+
+        private void ManagebGDB()
+        {
+            var dvManager = new DataVersionManager();
+            dvManager.CurrentConnection = ConnectionManager.DefaultConnection;
+            dvManager.Mode = VersioningStrategy.ByTick;
+            dvManager.RegisterChangePlan(new ChangePlan_bG_VersionOrigin());
+            dvManager.FinishedToUpgradeTo += DvManager_FinishedToUpgradeTo;
+
+            dvManager.UpgradeToTargetVersion();
+        }
+
+        private void DvManager_FinishedToUpgradeTo(object sender, ModifiedEventArgs e)
+        {
+            LogManager.GetCurrentClassLogger().Info($"Heavy Modifying AppDB Count : {e.ModifiedCount}");
+
+            if (e.ModifiedCount > 0)
+            {
+                SQLiteBaseDao<Dummy>.Vacuum(ConnectionManager.DefaultConnection);
+            }
+        }
+
+        private void IncrementNumberOfBoots()
+        {
+            var id = Guid.Parse("00000000-0000-0000-0000-000000000000");
+            var dao = new StatisticsDao();
+            var statistics = dao.FindBy(new Dictionary<string, object>() { { "ID", id } });
+            if (statistics.Count() == 0)
+            {
+                var newStatistics = new Models.Statistics();
+                newStatistics.ID = id;
+                newStatistics.NumberOfBoots = 1;
+                dao.Insert(newStatistics);
+            }
+            else
+            {
+                var existStatistics = statistics.First();
+                existStatistics.NumberOfBoots += 1;
+                dao.Update(existStatistics);
+            }
         }
 
         public DiagramViewModel DiagramViewModel
@@ -213,6 +319,8 @@ namespace boilersGraphics.ViewModels
 
         public ReactivePropertySlim<string> Title { get; } = new ReactivePropertySlim<string>();
 
+        public ReactivePropertySlim<Models.Statistics> Statistics { get; } = new ReactivePropertySlim<Models.Statistics>();
+
         public IOperationController Controller { get; } = new OperationController();
 
         public OperationRecorder Recorder { get; }
@@ -236,6 +344,8 @@ namespace boilersGraphics.ViewModels
         public DelegateCommand ShowVersionCommand { get; }
 
         public DelegateCommand<LogLevel> SetLogLevelCommand { get; }
+
+        public DelegateCommand ShowStatisticsCommand { get; }
 
         private void ExecuteDeleteSelectedItemsCommand(object parameter)
         {

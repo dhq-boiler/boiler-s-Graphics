@@ -1,4 +1,5 @@
 ﻿using boilersGraphics.Controls;
+using boilersGraphics.Dao;
 using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
 using boilersGraphics.Models;
@@ -94,6 +95,8 @@ namespace boilersGraphics.Adorners
                 item.Owner.DeselectAll();
                 ((AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel).AddItemCommand.Execute(item);
 
+                UpdateStatisticsCount();
+
                 _dragStartPoint = null;
                 _dragEndPoint = null;
             }
@@ -103,7 +106,13 @@ namespace boilersGraphics.Adorners
 
             e.Handled = true;
         }
-
+        private static void UpdateStatisticsCount()
+        {
+            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            statistics.NumberOfDrawsOfPolygonTool++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
+        }
         protected override void OnRender(DrawingContext dc)
         {
             base.OnRender(dc);

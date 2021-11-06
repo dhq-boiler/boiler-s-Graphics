@@ -1,0 +1,273 @@
+﻿<UserControl x:Class="boilersGraphics.Views.Statistics"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:boilersGraphics.Controls"
+             xmlns:converter="clr-namespace:boilersGraphics.Converters"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:prism="http://prismlibrary.com/"
+             xmlns:viewModel="clr-namespace:boilersGraphics.ViewModels"
+             d:DataContext="{d:DesignInstance viewModel:StatisticsDialogViewModel}"
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             Background="White"
+             mc:Ignorable=" d">
+    <UserControl.Resources>
+        <converter:TimeSpanRoundConverter x:Key="TimeSpanRound" />
+    </UserControl.Resources>
+    <prism:Dialog.WindowStyle>
+        <Style TargetType="Window">
+            <Setter Property="SizeToContent" Value="WidthAndHeight" />
+        </Style>
+    </prism:Dialog.WindowStyle>
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadedCommand}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    <controls:SimpleGrid Columns="5"
+                         Orientation="Vertical"
+                         Rows="20">
+        <controls:SimpleGrid.Resources>
+            <Style TargetType="Label">
+                <Setter Property="HorizontalAlignment" Value="Right" />
+            </Style>
+        </controls:SimpleGrid.Resources>
+        <DockPanel>
+            <Label>起動回数</Label>
+            <Label Content="{Binding NumberOfBoots.Value}" d:Content="0" />
+        </DockPanel>
+        <DockPanel>
+            <Label>累計稼働時間</Label>
+            <Label Content="{Binding Uptime.Value, StringFormat={}{0:hh\\:mm\\:ss}, ConverterCulture=ja-jP, Converter={StaticResource TimeSpanRound}}" d:Content="00:00:00" />
+        </DockPanel>
+        <DockPanel>
+            <Label>ファイルを指定して開いた回数</Label>
+            <Label Content="{Binding NumberOfTimesTheFileWasOpenedBySpecifyingIt.Value}" d:Content="0" />
+        </DockPanel>
+        <DockPanel>
+            <Label>自動保存ファイルを指定して開いた回数</Label>
+            <Label Content="{Binding NumberOfTimesTheAutoSaveFileIsSpecifiedAndOpened.Value}" d:Content="0" />
+        </DockPanel>
+        <DockPanel>
+            <Label>ポインターツールでクリックした回数</Label>
+            <Label Content="{Binding NumberOfClicksWithThePointerTool.Value}" d:Content="0" />
+        </DockPanel>
+        <DockPanel>
+            <Label>なげなわツールで選択したアイテムの累計</Label>
+            <Label Content="{Binding CumulativeTotalOfItemsSelectedWithTheLassoTool.Value}" d:Content="0" />
+        </DockPanel>
+        <DockPanel>
+            <Label>直線ツールの描画回数</Label>
+            <Label Content="{Binding NumberOfDrawsOfTheStraightLineTool.Value}" d:Content="0" />
+        </DockPanel>
+        <DockPanel>
+            <Label>四角形ツールの描画回数</Label>
+            <Label Content="{Binding NumberOfDrawsOfTheRectangleTool.Value}" d:Content="0" />
+        </DockPanel>
+        <DockPanel>
+            <Label>円ツールの描画回数</Label>
+            <Label Content="{Binding NumberOfDrawsOfTheEllipseTool.Value}" d:Content="0" />
+        </DockPanel>
+        <DockPanel>
+            <Label>画像ファイルツールの描画回数</Label>
+            <Label Content="{Binding NumberOfDrawsOfTheImageFileTool.Value}" d:Content="0" />
+        </DockPanel>
+        <DockPanel>
+            <Label>文字ツールの描画回数</Label>
+            <Label Content="{Binding NumberOfDrawsOfTheLetterTool.Value}" d:Content="0" />
+        </DockPanel>
+        <DockPanel>
+            <Label>縦書きツールの描画回数</Label>
+            <Label Content="{Binding NumberOfDrawsOfTheVerticalLetterTool.Value}" d:Content="0" />
+        </DockPanel>
+        <DockPanel>
+            <Label> 多角形ツールの描画回数</Label>
+            <Label Content="{Binding NumberOfDrawsOfPolygonTool.Value}" d:Content="0" />
+        </DockPanel>
+        <DockPanel>
+            <Label> ベジエ曲線ツールの描画回数</Label>
+            <Label Content="{Binding NumberOfDrawsOfBezierCurveTool.Value}" d:Content="0" />
+        </DockPanel>
+        <DockPanel>
+            <Label> スナップポイントツールの設置回数</Label>
+            <Label Content="{Binding NumberOfSnapPointToolInstallations.Value}" d:Content="0" />
+        </DockPanel>
+        <DockPanel>
+            <Label> ブラシツールの描画回数</Label>
+            <Label Content="{Binding BrushToolDrawCount.Value}" d:Content="0" />
+        </DockPanel>
+        <DockPanel>
+            <Label> 消しゴムツールの使用回数</Label>
+            <Label Content="{Binding NumberOfTimesTheEraserToolHasBeenUsed.Value}" d:Content="0" />
+        </DockPanel>
+        <DockPanel>
+            <Label> 上書き保存した回数</Label>
+            <Label Content="{Binding NumberOfTimesSaved.Value}" d:Content="0" />
+        </DockPanel>
+        <DockPanel>
+            <Label> 名前を付けて保存した回数</Label>
+            <Label Content="{Binding NumberOfTimesYouHaveNamedAndSaved.Value}" d:Content="0" />
+        </DockPanel>
+        <DockPanel>
+            <Label> エクスポートした回数</Label>
+            <Label Content="{Binding NumberOfExports.Value}" d:Content="0" />
+        </DockPanel>
+        <DockPanel>
+            <Label> Jpegエクスポートした回数</Label>
+            <Label Content="{Binding NumberOfJpegExports.Value}" d:Content="0" />
+        </DockPanel>
+        <DockPanel>
+            <Label> PNGエクスポートした回数</Label>
+            <Label Content="{Binding NumberOfPngExports.Value}" d:Content="0" />
+        </DockPanel>
+        <DockPanel>
+            <Label> GIFエクスポートした回数</Label>
+            <Label Content="{Binding NumberOfGifExports.Value}" d:Content="0" />
+        </DockPanel>
+        <DockPanel>
+            <Label> BMPエクスポートした回数</Label>
+            <Label Content="{Binding NumberOfBmpExports.Value}" d:Content="0" />
+        </DockPanel>
+        <DockPanel>
+            <Label> TIFFエクスポートした回数</Label>
+            <Label Content="{Binding NumberOfTiffExports.Value}" d:Content="0" />
+        </DockPanel>
+        <DockPanel>
+            <Label> WMPエクスポートした回数</Label>
+            <Label Content="{Binding NumberOfWmpExports.Value}" d:Content="0" />
+        </DockPanel>
+        <DockPanel>
+            <Label> グループ化した回数</Label>
+            <Label Content="{Binding NumberOfTimesGrouped.Value}" d:Content="0" />
+        </DockPanel>
+        <DockPanel>
+            <Label> グループ化解除した回数</Label>
+            <Label Content="{Binding NumberOfUngrouped.Value}" d:Content="0" />
+        </DockPanel>
+        <DockPanel>
+            <Label> 最前面へ移動した回数</Label>
+            <Label Content="{Binding NumberOfMovesToTheFrontend.Value}" d:Content="0" />
+        </DockPanel>
+        <DockPanel>
+            <Label> 前面へ移動した回数</Label>
+            <Label Content="{Binding NumberOfMovesToTheFront.Value}" d:Content="0" />
+        </DockPanel>
+        <DockPanel>
+            <Label> 背面へ移動した回数</Label>
+            <Label Content="{Binding NumberOfMovesToTheBack.Value}" d:Content="0" />
+        </DockPanel>
+        <DockPanel>
+            <Label> 最背面へ移動した回数</Label>
+            <Label Content="{Binding NumberOfMovesToTheBackend.Value}" d:Content="0" />
+        </DockPanel>
+        <DockPanel>
+            <Label> 上揃えした回数</Label>
+            <Label Content="{Binding NumberOfTopAlignment.Value}" d:Content="0" />
+        </DockPanel>
+        <DockPanel>
+            <Label> 上下中央揃えした回数</Label>
+            <Label Content="{Binding NumberOfTimesTheTopAndBottomAreCentered.Value}" d:Content="0" />
+        </DockPanel>
+        <DockPanel>
+            <Label> 下揃えした回数</Label>
+            <Label Content="{Binding NumberOfBottomAlignment.Value}" d:Content="0" />
+        </DockPanel>
+        <DockPanel>
+            <Label> 左揃えした回数</Label>
+            <Label Content="{Binding NumberOfLeftAlignment.Value}" d:Content="0" />
+        </DockPanel>
+        <DockPanel>
+            <Label> 左右中央揃えした回数</Label>
+            <Label Content="{Binding NumberOfTimesLeftAndRightCentered.Value}" d:Content="0" />
+        </DockPanel>
+        <DockPanel>
+            <Label> 右揃えした回数</Label>
+            <Label Content="{Binding NumberOfRightAlignment.Value}" d:Content="0" />
+        </DockPanel>
+        <DockPanel>
+            <Label> 左右に整列した回数</Label>
+            <Label Content="{Binding NumberOfTimesAlignedLeftAndRight.Value}" d:Content="0" />
+        </DockPanel>
+        <DockPanel>
+            <Label> 上下に整列した回数</Label>
+            <Label Content="{Binding NumberOfTimesAlignedUpAndDown.Value}" d:Content="0" />
+        </DockPanel>
+        <DockPanel>
+            <Label> 幅を合わせた回数</Label>
+            <Label Content="{Binding NumberOfTimesToMatchTheWidth.Value}" d:Content="0" />
+        </DockPanel>
+        <DockPanel>
+            <Label> 高さを合わせた回数</Label>
+            <Label Content="{Binding NumberOfTimesToMatchTheHeight.Value}" d:Content="0" />
+        </DockPanel>
+        <DockPanel>
+            <Label> Unionした回数</Label>
+            <Label Content="{Binding NumberOfUnions.Value}" d:Content="0" />
+        </DockPanel>
+        <DockPanel>
+            <Label> Intersectした回数</Label>
+            <Label Content="{Binding NumberOfIntersects.Value}" d:Content="0" />
+        </DockPanel>
+        <DockPanel>
+            <Label> Xorした回数</Label>
+            <Label Content="{Binding NumberOfXors.Value}" d:Content="0" />
+        </DockPanel>
+        <DockPanel>
+            <Label> Excludeした回数</Label>
+            <Label Content="{Binding NumberOfExcludes.Value}" d:Content="0" />
+        </DockPanel>
+        <DockPanel>
+            <Label> 切り取りした回数</Label>
+            <Label Content="{Binding NumberOfCuts.Value}" d:Content="0" />
+        </DockPanel>
+        <DockPanel>
+            <Label> コピーした回数</Label>
+            <Label Content="{Binding NumberOfCopies.Value}" d:Content="0" />
+        </DockPanel>
+        <DockPanel>
+            <Label> 貼り付けした回数</Label>
+            <Label Content="{Binding NumberOfPasted.Value}" d:Content="0" />
+        </DockPanel>
+        <DockPanel>
+            <Label> 元に戻した回数</Label>
+            <Label Content="{Binding NumberOfUndos.Value}" d:Content="0" />
+        </DockPanel>
+        <DockPanel>
+            <Label> やり直しした回数</Label>
+            <Label Content="{Binding NumberOfRedoes.Value}" d:Content="0" />
+        </DockPanel>
+        <DockPanel>
+            <Label> 自動保存した回数</Label>
+            <Label Content="{Binding NumberOfTimesAutomaticallySaved.Value}" d:Content="0" />
+        </DockPanel>
+        <DockPanel>
+            <Label> 新規作成したレイヤー数</Label>
+            <Label Content="{Binding NumberOfNewlyCreatedLayers.Value}" d:Content="0" />
+        </DockPanel>
+        <DockPanel>
+            <Label> 削除したレイヤー数</Label>
+            <Label Content="{Binding NumberOfDeletedLayers.Value}" d:Content="0" />
+        </DockPanel>
+        <DockPanel>
+            <Label> アイテムを描画した回数</Label>
+            <Label Content="{Binding NumberOfTimesTheItemWasDrawn.Value}" d:Content="0" />
+        </DockPanel>
+        <DockPanel>
+            <Label> アイテムを削除した回数</Label>
+            <Label Content="{Binding NumberOfTimesTheItemWasDeleted.Value}" d:Content="0" />
+        </DockPanel>
+        <DockPanel>
+            <Label> ログレベルを変更した回数</Label>
+            <Label Content="{Binding NumberOfLogLevelChanges.Value}" d:Content="0" />
+        </DockPanel>
+        <DockPanel>
+            <Label> バージョン情報ダイアログを表示した回数</Label>
+            <Label Content="{Binding NumberOfTimesTheVersionInformationDialogWasDisplayed.Value}" d:Content="0" />
+        </DockPanel>
+        <DockPanel>
+            <Label> アプリケーションログを表示した回数</Label>
+            <Label Content="{Binding NumberOfTimesTheApplicationLogWasDisplayed.Value}" d:Content="0" />
+        </DockPanel>
+    </controls:SimpleGrid>
+</UserControl>

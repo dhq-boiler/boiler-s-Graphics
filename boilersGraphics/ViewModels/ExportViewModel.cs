@@ -1,4 +1,5 @@
 ﻿using boilersGraphics.Controls;
+using boilersGraphics.Dao;
 using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
 using boilersGraphics.UserControls;
@@ -126,6 +127,16 @@ namespace boilersGraphics.ViewModels
             generator.AddFrame(BitmapFrame.Create(rtb));
             generator.SetQualityLevel(QualityLevel.Value);
             generator.Save(Path.Value);
+
+            UpdateStatisticsCount();
+        }
+
+        private static void UpdateStatisticsCount()
+        {
+            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            statistics.NumberOfExports++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
 
         private void AfterExport(Dictionary<SelectableDesignerItemViewModelBase, bool> tempIsSelected, Transform tempLayoutTransform)
@@ -232,7 +243,10 @@ namespace boilersGraphics.ViewModels
                 {
                     encoder.Save(stream);
                 }
+                UpdateStatisticsCount();
             }
+
+            public abstract void UpdateStatisticsCount();
         }
 
         class JpegFileGenerator : FileGenerator<JpegBitmapEncoder>
@@ -241,12 +255,28 @@ namespace boilersGraphics.ViewModels
             {
                 Cast().QualityLevel = level;
             }
+
+            public override void UpdateStatisticsCount()
+            {
+                var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+                statistics.NumberOfJpegExports++;
+                var dao = new StatisticsDao();
+                dao.Update(statistics);
+            }
         }
 
         class PngFileGenerator : FileGenerator<PngBitmapEncoder>
         {
             public override void SetQualityLevel(int level)
             {
+            }
+
+            public override void UpdateStatisticsCount()
+            {
+                var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+                statistics.NumberOfPngExports++;
+                var dao = new StatisticsDao();
+                dao.Update(statistics);
             }
         }
 
@@ -255,12 +285,28 @@ namespace boilersGraphics.ViewModels
             public override void SetQualityLevel(int level)
             {
             }
+
+            public override void UpdateStatisticsCount()
+            {
+                var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+                statistics.NumberOfGifExports++;
+                var dao = new StatisticsDao();
+                dao.Update(statistics);
+            }
         }
 
         class BmpFileGenerator : FileGenerator<BmpBitmapEncoder>
         {
             public override void SetQualityLevel(int level)
             {
+            }
+
+            public override void UpdateStatisticsCount()
+            {
+                var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+                statistics.NumberOfBmpExports++;
+                var dao = new StatisticsDao();
+                dao.Update(statistics);
             }
         }
 
@@ -269,12 +315,28 @@ namespace boilersGraphics.ViewModels
             public override void SetQualityLevel(int level)
             {
             }
+
+            public override void UpdateStatisticsCount()
+            {
+                var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+                statistics.NumberOfTiffExports++;
+                var dao = new StatisticsDao();
+                dao.Update(statistics);
+            }
         }
 
         class WmpFileGenerator : FileGenerator<WmpBitmapEncoder>
         {
             public override void SetQualityLevel(int level)
             {
+            }
+
+            public override void UpdateStatisticsCount()
+            {
+                var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+                statistics.NumberOfWmpExports++;
+                var dao = new StatisticsDao();
+                dao.Update(statistics);
             }
         }
 

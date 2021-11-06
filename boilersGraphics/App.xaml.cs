@@ -56,6 +56,7 @@ namespace boilersGraphics
             containerRegistry.RegisterDialog<Views.DetailBezier, ViewModels.DetailBezierViewModel>();
             containerRegistry.RegisterDialog<Views.DetailPicture, ViewModels.DetailPictureViewModel>();
             containerRegistry.RegisterDialog<Views.DetailLetter, ViewModels.DetailLetterViewModel>();
+            containerRegistry.RegisterDialog<Views.Statistics, ViewModels.StatisticsDialogViewModel>();
         }
 
         public static string GetAppNameAndVersion()

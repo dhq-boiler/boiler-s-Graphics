@@ -1,8 +1,10 @@
 ﻿using boilersGraphics.Controls;
+using boilersGraphics.Dao;
 using boilersGraphics.Extensions;
 using boilersGraphics.Models;
 using boilersGraphics.ViewModels;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -12,21 +14,27 @@ using System.Windows.Media;
 
 namespace boilersGraphics.Adorners
 {
-    public class RubberbandAdorner : Adorner
+    /// <summary>
+    /// なげなわツールのAdorner
+    /// </summary>
+    public class LassoAdorner : Adorner
     {
         private Point? _startPoint;
         private Point? _endPoint;
-        private Pen _rubberbandPen;
+        private Pen _lassoPen;
+        private HashSet<SelectableDesignerItemViewModelBase> sets = new HashSet<SelectableDesignerItemViewModelBase>();
 
         private DesignerCanvas _designerCanvas;
+        private Statistics statistics;
 
-        public RubberbandAdorner(DesignerCanvas designerCanvas, Point? dragStartPoint)
+        public LassoAdorner(DesignerCanvas designerCanvas, Point? dragStartPoint)
             : base(designerCanvas)
         {
             _designerCanvas = designerCanvas;
             _startPoint = dragStartPoint;
-            _rubberbandPen = new Pen(Brushes.LightSlateGray, 1);
-            _rubberbandPen.DashStyle = new DashStyle(new double[] { 2 }, 1);
+            _lassoPen = new Pen(Brushes.LightSlateGray, 1);
+            _lassoPen.DashStyle = new DashStyle(new double[] { 2 }, 1);
+            statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
         }
 
         protected override void OnMouseMove(System.Windows.Input.MouseEventArgs e)
@@ -60,11 +68,20 @@ namespace boilersGraphics.Adorners
             AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(_designerCanvas);
             if (adornerLayer != null)
                 adornerLayer.Remove(this);
+            UpdateStatisticsCount();
 
             (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "";
             (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = "";
 
             e.Handled = true;
+        }
+
+        private void UpdateStatisticsCount()
+        {
+            statistics.CumulativeTotalOfItemsSelectedWithTheLassoTool += sets.Count();
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
+            sets.Clear();
         }
 
         protected override void OnRender(DrawingContext dc)
@@ -77,7 +94,7 @@ namespace boilersGraphics.Adorners
             dc.DrawRectangle(Brushes.Transparent, null, new Rect(RenderSize));
 
             if (_startPoint.HasValue && _endPoint.HasValue)
-                dc.DrawRectangle(Brushes.Transparent, _rubberbandPen, new Rect(_startPoint.Value, _endPoint.Value));
+                dc.DrawRectangle(Brushes.Transparent, _lassoPen, new Rect(_startPoint.Value, _endPoint.Value));
         }
 
 
@@ -95,7 +112,7 @@ namespace boilersGraphics.Adorners
         private void UpdateSelection()
         {
             IDiagramViewModel vm = (_designerCanvas.DataContext as IDiagramViewModel);
-            Rect rubberBand = new Rect(_startPoint.Value, _endPoint.Value);
+            Rect lassoRect = new Rect(_startPoint.Value, _endPoint.Value);
             ItemsControl itemsControl = GetParent<ItemsControl>(typeof(ItemsControl), _designerCanvas);
 
             foreach (SelectableDesignerItemViewModelBase item in vm.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
@@ -107,9 +124,9 @@ namespace boilersGraphics.Adorners
                     if (item is ConnectorBaseViewModel connector)
                     {
                         var snapPointVM = connector.SnapPoint0VM.Value;
-                        UpdateSelectionSnapPoint(rubberBand, snapPointVM);
+                        UpdateSelectionSnapPoint(lassoRect, snapPointVM);
                         snapPointVM = connector.SnapPoint1VM.Value;
-                        UpdateSelectionSnapPoint(rubberBand, snapPointVM);
+                        UpdateSelectionSnapPoint(lassoRect, snapPointVM);
                     }
                     else
                     {
@@ -118,9 +135,10 @@ namespace boilersGraphics.Adorners
                         Rect itemRect = VisualTreeHelper.GetDescendantBounds((Visual)container);
                         Rect itemBounds = ((Visual)container).TransformToAncestor(_designerCanvas).TransformBounds(itemRect);
 
-                        if (rubberBand.Contains(itemBounds))
+                        if (lassoRect.Contains(itemBounds))
                         {
                             item.IsSelected.Value = true;
+                            sets.Add(item);
                         }
                         else
                         {
@@ -134,27 +152,17 @@ namespace boilersGraphics.Adorners
             }
         }
 
-        private void UpdateSelectionStraightConnector(Rect rubberBand, ItemsControl itemsControl, SelectableDesignerItemViewModelBase item)
-        {
-            if (item is ConnectorBaseViewModel connector)
-            {
-                var vm = connector.SnapPoint0VM.Value;
-                UpdateSelectionSnapPoint(rubberBand, vm);
-                vm = connector.SnapPoint1VM.Value;
-                UpdateSelectionSnapPoint(rubberBand, vm);
-            }
-        }
-
-        private void UpdateSelectionSnapPoint(Rect rubberBand, SnapPointViewModel vm)
+        private void UpdateSelectionSnapPoint(Rect lassoRect, SnapPointViewModel vm)
         {
             LineResizeHandle container = App.Current.MainWindow.GetChildOfType<DesignerCanvas>().GetCorrespondingViews<LineResizeHandle>(vm).First();
 
             Rect itemRect = VisualTreeHelper.GetDescendantBounds((Visual)container);
             Rect itemBounds = ((Visual)container).TransformToAncestor(_designerCanvas).TransformBounds(itemRect);
 
-            if (rubberBand.Contains(itemBounds))
+            if (lassoRect.Contains(itemBounds))
             {
                 vm.IsSelected.Value = true;
+                sets.Add(vm);
             }
             else
             {

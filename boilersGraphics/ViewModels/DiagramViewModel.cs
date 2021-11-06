@@ -1,4 +1,5 @@
 ﻿using boilersGraphics.Controls;
+using boilersGraphics.Dao;
 using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
 using boilersGraphics.Messenger;
@@ -94,6 +95,8 @@ namespace boilersGraphics.ViewModels
         public DelegateCommand<MouseEventArgs> MouseEnterCommand { get; private set; }
         public DelegateCommand<KeyEventArgs> PreviewKeyDownCommand { get; private set; }
         public DelegateCommand PropertyCommand { get; private set; }
+        public DelegateCommand<System.Windows.Shapes.Line> MouseDownStraightLineCommand { get; private set; }
+        public DelegateCommand<System.Windows.Shapes.Path> MouseDownBezierCurveCommand { get; private set; }
 
         #region Property
 
@@ -342,6 +345,21 @@ namespace boilersGraphics.ViewModels
                 first.OpenPropertyDialog();
             },
             () => CanOpenPropertyDialog());
+            MouseDownStraightLineCommand = new DelegateCommand<System.Windows.Shapes.Line>(line =>
+            {
+                var straightLineVM = line.DataContext as StraightConnectorViewModel;
+                straightLineVM.IsSelected.Value = true;
+                straightLineVM.SnapPoint0VM.Value.IsSelected.Value = true;
+                straightLineVM.SnapPoint1VM.Value.IsSelected.Value = true;
+            });
+            MouseDownBezierCurveCommand = new DelegateCommand<System.Windows.Shapes.Path>(line =>
+            {
+                var bezierCurveVM = line.DataContext as BezierCurveViewModel;
+                bezierCurveVM.IsSelected.Value = true;
+                bezierCurveVM.SnapPoint0VM.Value.IsSelected.Value = true;
+                bezierCurveVM.SnapPoint1VM.Value.IsSelected.Value = true;
+            });
+
 
             EdgeColors.CollectionChangedAsObservable()
                 .Subscribe(_ => RaisePropertyChanged("EdgeColors"))
@@ -582,6 +600,15 @@ namespace boilersGraphics.ViewModels
                       .AddTo(_CompositeDisposable);
 
             PackAutoSaveFiles();
+            UpdateStatisticsCountAutoSave();
+        }
+
+        private void UpdateStatisticsCountAutoSave()
+        {
+            var statistics = MainWindowVM.Statistics.Value;
+            statistics.NumberOfTimesAutomaticallySaved++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
 
         public LayerTreeViewItemBase GetLayerTreeViewItemBase(SelectableDesignerItemViewModelBase item)
@@ -691,6 +718,15 @@ namespace boilersGraphics.ViewModels
         {
             MainWindowVM.Controller.Redo();
             RedoCommand.RaiseCanExecuteChanged();
+            UpdateStatisticsCountRedo();
+        }
+
+        private void UpdateStatisticsCountRedo()
+        {
+            var statistics = MainWindowVM.Statistics.Value;
+            statistics.NumberOfRedoes++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
 
         public bool CanExecuteRedo()
@@ -703,6 +739,15 @@ namespace boilersGraphics.ViewModels
             MainWindowVM.Controller.Undo();
             UndoCommand.RaiseCanExecuteChanged();
             RedoCommand.RaiseCanExecuteChanged();
+            UpdateStatisticsCountUndo();
+        }
+
+        private void UpdateStatisticsCountUndo()
+        {
+            var statistics = MainWindowVM.Statistics.Value;
+            statistics.NumberOfUndos++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
 
         public bool CanExecuteUndo()
@@ -739,6 +784,15 @@ namespace boilersGraphics.ViewModels
         private void ExecuteExcludeCommand()
         {
             CombineAndAddItem(GeometryCombineMode.Exclude);
+            UpdateStatisticsCountExclude();
+        }
+
+        private void UpdateStatisticsCountExclude()
+        {
+            var statistics = MainWindowVM.Statistics.Value;
+            statistics.NumberOfExcludes++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
 
         public bool CanExecuteExclude()
@@ -756,6 +810,15 @@ namespace boilersGraphics.ViewModels
         private void ExecuteXorCommand()
         {
             CombineAndAddItem(GeometryCombineMode.Xor);
+            UpdateStatisticsCountXor();
+        }
+
+        private void UpdateStatisticsCountXor()
+        {
+            var statistics = MainWindowVM.Statistics.Value;
+            statistics.NumberOfXors++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
 
         public bool CanExecuteXor()
@@ -773,6 +836,15 @@ namespace boilersGraphics.ViewModels
         private void ExecuteIntersectCommand()
         {
             CombineAndAddItem(GeometryCombineMode.Intersect);
+            UpdateStatisticsCountIntersect();
+        }
+
+        private void UpdateStatisticsCountIntersect()
+        {
+            var statistics = MainWindowVM.Statistics.Value;
+            statistics.NumberOfIntersects++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
 
         public bool CanExecuteIntersect()
@@ -790,6 +862,15 @@ namespace boilersGraphics.ViewModels
         private void ExecuteUnionCommand()
         {
             CombineAndAddItem(GeometryCombineMode.Union);
+            UpdateStatisticsCountUnion();
+        }
+
+        private void UpdateStatisticsCountUnion()
+        {
+            var statistics = MainWindowVM.Statistics.Value;
+            statistics.NumberOfUnions++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
 
         private void CombineAndAddItem(GeometryCombineMode mode)
@@ -931,6 +1012,15 @@ namespace boilersGraphics.ViewModels
         private void ExecuteCopyCommand()
         {
             CopyToClipboard();
+            UpdateStatisticsCountCopy();
+        }
+
+        private void UpdateStatisticsCountCopy()
+        {
+            var statistics = MainWindowVM.Statistics.Value;
+            statistics.NumberOfCopies++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
 
         public bool CanExecuteCopy()
@@ -944,6 +1034,15 @@ namespace boilersGraphics.ViewModels
             var clipboardDTO = obj.GetData(typeof(ClipboardDTO)) as ClipboardDTO;
             var root = XElement.Parse(clipboardDTO.Root);
             ObjectDeserializer.ReadCopyObjectsFromXML(this, root);
+            UpdateStatisticsCountPaste();
+        }
+
+        private void UpdateStatisticsCountPaste()
+        {
+            var statistics = MainWindowVM.Statistics.Value;
+            statistics.NumberOfPasted++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
 
         public bool CanExecutePaste()
@@ -1011,6 +1110,16 @@ namespace boilersGraphics.ViewModels
                     Layers.Remove(selectedLayer);
                 }
             }
+
+            UpdateStatisticsCountCut();
+        }
+
+        private void UpdateStatisticsCountCut()
+        {
+            var statistics = MainWindowVM.Statistics.Value;
+            statistics.NumberOfCuts++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
 
         private void CopyToClipboard()
@@ -1214,12 +1323,30 @@ namespace boilersGraphics.ViewModels
         {
             SelectedLayers.Value.First().AddItem(MainWindowVM, this, item);
             LogManager.GetCurrentClassLogger().Info($"Add item {item.ShowPropertiesAndFields()}");
+            UpdateStatisticsCountAdd();
+        }
+
+        private void UpdateStatisticsCountAdd()
+        {
+            var statistics = MainWindowVM.Statistics.Value;
+            statistics.NumberOfTimesTheItemWasDrawn++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
 
         private void Remove(SelectableDesignerItemViewModelBase item)
         {
             Layers.ToList().ForEach(x => x.RemoveItem(MainWindowVM, item));
             LogManager.GetCurrentClassLogger().Info($"Remove item {item.ShowPropertiesAndFields()}");
+            UpdateStatisticsCountRemove();
+        }
+
+        private void UpdateStatisticsCountRemove()
+        {
+            var statistics = MainWindowVM.Statistics.Value;
+            statistics.NumberOfTimesTheItemWasDeleted++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
 
         #region Save
@@ -1250,6 +1377,8 @@ namespace boilersGraphics.ViewModels
                 {
                     FileName.Value = saveFile.FileName;
                     xElement.Save(saveFile.FileName);
+
+                    UpdateStatisticsCountSaveAs();
                 }
                 catch (Exception ex)
                 {
@@ -1257,6 +1386,14 @@ namespace boilersGraphics.ViewModels
                     MessageBox.Show(ex.StackTrace, ex.Message, MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
+        }
+
+        private void UpdateStatisticsCountSaveAs()
+        {
+            var statistics = MainWindowVM.Statistics.Value;
+            statistics.NumberOfTimesYouHaveNamedAndSaved++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
 
         #endregion //Save
@@ -1288,18 +1425,36 @@ namespace boilersGraphics.ViewModels
                     {
                         FileName.Value = saveFile.FileName;
                         root.Save(saveFile.FileName);
+                        UpdateStatisticsCountSaveAs();
                     }
                     catch (Exception ex)
                     {
                         FileName.Value = "*";
+                        LogManager.GetCurrentClassLogger().Error(ex);
                         MessageBox.Show(ex.StackTrace, ex.Message, MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
             }
             else
             {
-                root.Save(FileName.Value);
+                try
+                {
+                    root.Save(FileName.Value);
+                    UpdateStatisticsCountOverwrite();
+                }
+                catch (Exception ex)
+                {
+                    LogManager.GetCurrentClassLogger().Error(ex);
+                    MessageBox.Show(ex.StackTrace, ex.Message, MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
+        }
+        private void UpdateStatisticsCountOverwrite()
+        {
+            var statistics = MainWindowVM.Statistics.Value;
+            statistics.NumberOfTimesSaved++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
 
         #endregion
@@ -1313,6 +1468,10 @@ namespace boilersGraphics.ViewModels
                 return;
             var root = LoadSerializedDataFromFile();
             LoadInternal(root);
+            var statistics = MainWindowVM.Statistics.Value;
+            statistics.NumberOfTimesTheFileWasOpenedBySpecifyingIt++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
 
         private void LoadInternal(XElement root)
@@ -1337,7 +1496,7 @@ namespace boilersGraphics.ViewModels
             }
 
 
-            var mainwindowViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel);
+            var mainwindowViewModel = MainWindowVM;
             try
             {
                 mainwindowViewModel.Recorder.BeginRecode();
@@ -1378,6 +1537,10 @@ namespace boilersGraphics.ViewModels
             FileName.Value = file;
             var root = XElement.Load(file);
             LoadInternal(root);
+            var statistics = MainWindowVM.Statistics.Value;
+            statistics.NumberOfTimesTheAutoSaveFileIsSpecifiedAndOpened++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
 
         public void Preview(string file)
@@ -1456,6 +1619,16 @@ namespace boilersGraphics.ViewModels
             groupItem.SelectItemCommand.Execute(true);
 
             MainWindowVM.Recorder.EndRecode();
+
+            UpdateStatisticsCountGroup();
+        }
+
+        private void UpdateStatisticsCountGroup()
+        {
+            var statistics = MainWindowVM.Statistics.Value;
+            statistics.NumberOfTimesGrouped++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
 
         private void Remove(LayerItem layerItem)
@@ -1528,6 +1701,16 @@ namespace boilersGraphics.ViewModels
             }
 
             MainWindowVM.Recorder.EndRecode();
+
+            UpdateStatisticsCountUngroup();
+        }
+
+        private void UpdateStatisticsCountUngroup()
+        {
+            var statistics = MainWindowVM.Statistics.Value;
+            statistics.NumberOfUngrouped++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
 
         public bool CanExecuteUngroup()
@@ -1541,6 +1724,9 @@ namespace boilersGraphics.ViewModels
 
         #region Ordering
 
+        /// <summary>
+        /// 前面へ移動
+        /// </summary>
         private void ExecuteBringForwardCommand()
         {
             MainWindowVM.Recorder.BeginRecode();
@@ -1640,8 +1826,21 @@ namespace boilersGraphics.ViewModels
             Sort(Layers);
 
             MainWindowVM.Recorder.EndRecode();
+
+            UpdateStatisticsCountMoveToFront();
         }
 
+        private void UpdateStatisticsCountMoveToFront()
+        {
+            var statistics = MainWindowVM.Statistics.Value;
+            statistics.NumberOfMovesToTheFront++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
+        }
+
+        /// <summary>
+        /// 背面へ移動
+        /// </summary>
         private void ExecuteSendBackwardCommand()
         {
             MainWindowVM.Recorder.BeginRecode();
@@ -1747,8 +1946,21 @@ namespace boilersGraphics.ViewModels
             Sort(Layers);
 
             MainWindowVM.Recorder.EndRecode();
+
+            UpdateStatisticsCountMoveToBack();
         }
 
+        private void UpdateStatisticsCountMoveToBack()
+        {
+            var statistics = MainWindowVM.Statistics.Value;
+            statistics.NumberOfMovesToTheBack++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
+        }
+
+        /// <summary>
+        /// 最前面へ移動
+        /// </summary>
         private void ExecuteBringForegroundCommand()
         {
             MainWindowVM.Recorder.BeginRecode();
@@ -1813,8 +2025,21 @@ namespace boilersGraphics.ViewModels
             Sort(Layers);
 
             MainWindowVM.Recorder.EndRecode();
+
+            UpdateStatisticsCountMoveToFrontend();
         }
 
+        private void UpdateStatisticsCountMoveToFrontend()
+        {
+            var statistics = MainWindowVM.Statistics.Value;
+            statistics.NumberOfMovesToTheFrontend++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
+        }
+
+        /// <summary>
+        /// 最背面へ移動
+        /// </summary>
         private void ExecuteSendBackgroundCommand()
         {
             MainWindowVM.Recorder.BeginRecode();
@@ -1881,6 +2106,16 @@ namespace boilersGraphics.ViewModels
             Sort(Layers);
 
             MainWindowVM.Recorder.EndRecode();
+
+            UpdateStatisticsCountMoveToBackend();
+        }
+
+        private void UpdateStatisticsCountMoveToBackend()
+        {
+            var statistics = MainWindowVM.Statistics.Value;
+            statistics.NumberOfMovesToTheBackend++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
 
         private void Sort(ReactiveCollection<LayerTreeViewItemBase> target)
@@ -1926,7 +2161,17 @@ namespace boilersGraphics.ViewModels
                 }
 
                 MainWindowVM.Recorder.EndRecode();
+
+                UpdateStatisticsCountAlignTop();
             }
+        }
+
+        private void UpdateStatisticsCountAlignTop()
+        {
+            var statistics = MainWindowVM.Statistics.Value;
+            statistics.NumberOfTopAlignment++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
 
         private void ExecuteAlignVerticalCenterCommand()
@@ -1945,7 +2190,16 @@ namespace boilersGraphics.ViewModels
                 }
 
                 MainWindowVM.Recorder.EndRecode();
+                UpdateStatisticsCountAlignVerticalCenter();
             }
+        }
+
+        private void UpdateStatisticsCountAlignVerticalCenter()
+        {
+            var statistics = MainWindowVM.Statistics.Value;
+            statistics.NumberOfTimesTheTopAndBottomAreCentered++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
 
         private void ExecuteAlignBottomCommand()
@@ -1964,7 +2218,16 @@ namespace boilersGraphics.ViewModels
                 }
 
                 MainWindowVM.Recorder.EndRecode();
+                UpdateStatisticsCountAlignBottom();
             }
+        }
+
+        private void UpdateStatisticsCountAlignBottom()
+        {
+            var statistics = MainWindowVM.Statistics.Value;
+            statistics.NumberOfBottomAlignment++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
 
         private void ExecuteAlignLeftCommand()
@@ -1983,7 +2246,16 @@ namespace boilersGraphics.ViewModels
                 }
 
                 MainWindowVM.Recorder.EndRecode();
+                UpdateStatisticsCountAlignLeft();
             }
+        }
+
+        private void UpdateStatisticsCountAlignLeft()
+        {
+            var statistics = MainWindowVM.Statistics.Value;
+            statistics.NumberOfLeftAlignment++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
 
         private void ExecuteAlignHorizontalCenterCommand()
@@ -2002,7 +2274,16 @@ namespace boilersGraphics.ViewModels
                 }
 
                 MainWindowVM.Recorder.EndRecode();
+                UpdateStatisticsCountAlignHorizontalCenter();
             }
+        }
+
+        private void UpdateStatisticsCountAlignHorizontalCenter()
+        {
+            var statistics = MainWindowVM.Statistics.Value;
+            statistics.NumberOfTimesLeftAndRightCentered++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
 
         private void ExecuteAlignRightCommand()
@@ -2021,9 +2302,21 @@ namespace boilersGraphics.ViewModels
                 }
 
                 MainWindowVM.Recorder.EndRecode();
+                UpdateStatisticsCountAlignRight();
             }
         }
 
+        private void UpdateStatisticsCountAlignRight()
+        {
+            var statistics = MainWindowVM.Statistics.Value;
+            statistics.NumberOfRightAlignment++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
+        }
+
+        /// <summary>
+        /// 左右に整列
+        /// </summary>
         private void ExecuteDistributeHorizontalCommand()
         {
             var selectedItems = from item in SelectedItems.Value
@@ -2057,9 +2350,21 @@ namespace boilersGraphics.ViewModels
                 }
 
                 MainWindowVM.Recorder.EndRecode();
+                UpdateStatisticsCountAlignLeftAndRight();
             }
         }
 
+        private void UpdateStatisticsCountAlignLeftAndRight()
+        {
+            var statistics = MainWindowVM.Statistics.Value;
+            statistics.NumberOfTimesAlignedLeftAndRight++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
+        }
+
+        /// <summary>
+        /// 上下に整列
+        /// </summary>
         private void ExecuteDistributeVerticalCommand()
         {
             var selectedItems = from item in SelectedItems.Value
@@ -2093,7 +2398,16 @@ namespace boilersGraphics.ViewModels
                 }
 
                 MainWindowVM.Recorder.EndRecode();
+                UpdateStatisticsCountAlignUpAndDown();
             }
+        }
+
+        private void UpdateStatisticsCountAlignUpAndDown()
+        {
+            var statistics = MainWindowVM.Statistics.Value;
+            statistics.NumberOfTimesAlignedUpAndDown++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
 
         public bool CanExecuteAlign()
@@ -2167,6 +2481,9 @@ namespace boilersGraphics.ViewModels
 
         #region Uniform
 
+        /// <summary>
+        /// 幅を合わせる
+        /// </summary>
         private void ExecuteUniformWidthCommand()
         {
             MainWindowVM.Recorder.BeginRecode();
@@ -2185,8 +2502,20 @@ namespace boilersGraphics.ViewModels
             }
 
             MainWindowVM.Recorder.EndRecode();
+            UpdateStatisticsCountMatchWidth();
         }
 
+        private void UpdateStatisticsCountMatchWidth()
+        {
+            var statistics = MainWindowVM.Statistics.Value;
+            statistics.NumberOfTimesToMatchTheWidth++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
+        }
+
+        /// <summary>
+        /// 高さを合わせる
+        /// </summary>
         private void ExecuteUniformHeightCommand()
         {
             MainWindowVM.Recorder.BeginRecode();
@@ -2205,6 +2534,15 @@ namespace boilersGraphics.ViewModels
             }
 
             MainWindowVM.Recorder.EndRecode();
+            UpdateStatisticsCountMatchHeight();
+        }
+
+        private void UpdateStatisticsCountMatchHeight()
+        {
+            var statistics = MainWindowVM.Statistics.Value;
+            statistics.NumberOfTimesToMatchTheHeight++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
 
         public bool CanExecuteUniform()
