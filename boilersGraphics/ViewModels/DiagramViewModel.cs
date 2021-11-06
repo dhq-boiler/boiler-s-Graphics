@@ -757,6 +757,15 @@ namespace boilersGraphics.ViewModels
         private void ExecuteExcludeCommand()
         {
             CombineAndAddItem(GeometryCombineMode.Exclude);
+            UpdateStatisticsCountExclude();
+        }
+
+        private static void UpdateStatisticsCountExclude()
+        {
+            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            statistics.NumberOfExcludes++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
 
         public bool CanExecuteExclude()
@@ -774,6 +783,15 @@ namespace boilersGraphics.ViewModels
         private void ExecuteXorCommand()
         {
             CombineAndAddItem(GeometryCombineMode.Xor);
+            UpdateStatisticsCountXor();
+        }
+
+        private static void UpdateStatisticsCountXor()
+        {
+            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            statistics.NumberOfXors++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
 
         public bool CanExecuteXor()
@@ -791,6 +809,15 @@ namespace boilersGraphics.ViewModels
         private void ExecuteIntersectCommand()
         {
             CombineAndAddItem(GeometryCombineMode.Intersect);
+            UpdateStatisticsCountIntersect();
+        }
+
+        private static void UpdateStatisticsCountIntersect()
+        {
+            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            statistics.NumberOfIntersects++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
 
         public bool CanExecuteIntersect()
@@ -808,6 +835,15 @@ namespace boilersGraphics.ViewModels
         private void ExecuteUnionCommand()
         {
             CombineAndAddItem(GeometryCombineMode.Union);
+            UpdateStatisticsCountUnion();
+        }
+
+        private static void UpdateStatisticsCountUnion()
+        {
+            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            statistics.NumberOfUnions++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
 
         private void CombineAndAddItem(GeometryCombineMode mode)
