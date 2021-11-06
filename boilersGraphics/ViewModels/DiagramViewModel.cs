@@ -1510,6 +1510,16 @@ namespace boilersGraphics.ViewModels
             groupItem.SelectItemCommand.Execute(true);
 
             MainWindowVM.Recorder.EndRecode();
+
+            UpdateStatisticsCountGroup();
+        }
+
+        private static void UpdateStatisticsCountGroup()
+        {
+            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            statistics.NumberOfTimesGrouped++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
 
         private void Remove(LayerItem layerItem)
