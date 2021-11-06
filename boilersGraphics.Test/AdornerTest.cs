@@ -17,6 +17,7 @@ namespace boilersGraphics.Test
         [Test, RequiresThread(System.Threading.ApartmentState.STA)]
         public void BezierCurveAdornerを作成()
         {
+            boilersGraphics.App.IsTest = true;
             var diagramViewModel = new DiagramViewModel(new MainWindowViewModel(null), 100, 100);
             var designerCanvas = new DesignerCanvas();
             designerCanvas.DataContext = diagramViewModel;
