@@ -168,6 +168,7 @@ namespace boilersGraphics.ViewModels
             {
                 var path = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "dhq_boiler\\boilersGraphics\\Logs\\boilersGraphics.log");
                 Process.Start(path);
+                UpdateStatisticsCountOpenApplicationLog();
             });
             ShowVersionCommand = new DelegateCommand(() =>
             {
@@ -242,6 +243,14 @@ namespace boilersGraphics.ViewModels
         {
             var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
             statistics.NumberOfLogLevelChanges++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
+        }
+
+        private static void UpdateStatisticsCountOpenApplicationLog()
+        {
+            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            statistics.NumberOfTimesTheApplicationLogWasDisplayed++;
             var dao = new StatisticsDao();
             dao.Update(statistics);
         }
