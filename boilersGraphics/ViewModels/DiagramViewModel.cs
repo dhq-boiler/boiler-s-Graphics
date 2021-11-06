@@ -1592,6 +1592,16 @@ namespace boilersGraphics.ViewModels
             }
 
             MainWindowVM.Recorder.EndRecode();
+
+            UpdateStatisticsCountUngroup();
+        }
+
+        private static void UpdateStatisticsCountUngroup()
+        {
+            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            statistics.NumberOfUngrouped++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
 
         public bool CanExecuteUngroup()
