@@ -1268,6 +1268,8 @@ namespace boilersGraphics.ViewModels
                 {
                     FileName.Value = saveFile.FileName;
                     xElement.Save(saveFile.FileName);
+
+                    UpdateStatisticsCountSaveAs();
                 }
                 catch (Exception ex)
                 {
@@ -1275,6 +1277,14 @@ namespace boilersGraphics.ViewModels
                     MessageBox.Show(ex.StackTrace, ex.Message, MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
+        }
+
+        private static void UpdateStatisticsCountSaveAs()
+        {
+            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            statistics.NumberOfTimesYouHaveNamedAndSaved++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
 
         #endregion //Save
@@ -1306,6 +1316,7 @@ namespace boilersGraphics.ViewModels
                     {
                         FileName.Value = saveFile.FileName;
                         root.Save(saveFile.FileName);
+                        UpdateStatisticsCountSaveAs();
                     }
                     catch (Exception ex)
                     {
