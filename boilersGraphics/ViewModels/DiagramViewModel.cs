@@ -2372,6 +2372,9 @@ namespace boilersGraphics.ViewModels
 
         #region Uniform
 
+        /// <summary>
+        /// 幅を合わせる
+        /// </summary>
         private void ExecuteUniformWidthCommand()
         {
             MainWindowVM.Recorder.BeginRecode();
@@ -2390,8 +2393,20 @@ namespace boilersGraphics.ViewModels
             }
 
             MainWindowVM.Recorder.EndRecode();
+            UpdateStatisticsCountMatchWidth();
         }
 
+        private static void UpdateStatisticsCountMatchWidth()
+        {
+            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            statistics.NumberOfTimesToMatchTheWidth++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
+        }
+
+        /// <summary>
+        /// 高さを合わせる
+        /// </summary>
         private void ExecuteUniformHeightCommand()
         {
             MainWindowVM.Recorder.BeginRecode();
@@ -2410,6 +2425,15 @@ namespace boilersGraphics.ViewModels
             }
 
             MainWindowVM.Recorder.EndRecode();
+            UpdateStatisticsCountMatchHeight();
+        }
+
+        private static void UpdateStatisticsCountMatchHeight()
+        {
+            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            statistics.NumberOfTimesToMatchTheHeight++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
 
         public bool CanExecuteUniform()
