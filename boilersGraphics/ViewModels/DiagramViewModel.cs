@@ -721,9 +721,9 @@ namespace boilersGraphics.ViewModels
             UpdateStatisticsCountRedo();
         }
 
-        private static void UpdateStatisticsCountRedo()
+        private void UpdateStatisticsCountRedo()
         {
-            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            var statistics = MainWindowVM.Statistics.Value;
             statistics.NumberOfRedoes++;
             var dao = new StatisticsDao();
             dao.Update(statistics);
@@ -742,9 +742,9 @@ namespace boilersGraphics.ViewModels
             UpdateStatisticsCountUndo();
         }
 
-        private static void UpdateStatisticsCountUndo()
+        private void UpdateStatisticsCountUndo()
         {
-            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            var statistics = MainWindowVM.Statistics.Value;
             statistics.NumberOfUndos++;
             var dao = new StatisticsDao();
             dao.Update(statistics);
@@ -787,9 +787,9 @@ namespace boilersGraphics.ViewModels
             UpdateStatisticsCountExclude();
         }
 
-        private static void UpdateStatisticsCountExclude()
+        private void UpdateStatisticsCountExclude()
         {
-            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            var statistics = MainWindowVM.Statistics.Value;
             statistics.NumberOfExcludes++;
             var dao = new StatisticsDao();
             dao.Update(statistics);
@@ -813,9 +813,9 @@ namespace boilersGraphics.ViewModels
             UpdateStatisticsCountXor();
         }
 
-        private static void UpdateStatisticsCountXor()
+        private void UpdateStatisticsCountXor()
         {
-            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            var statistics = MainWindowVM.Statistics.Value;
             statistics.NumberOfXors++;
             var dao = new StatisticsDao();
             dao.Update(statistics);
@@ -839,9 +839,9 @@ namespace boilersGraphics.ViewModels
             UpdateStatisticsCountIntersect();
         }
 
-        private static void UpdateStatisticsCountIntersect()
+        private void UpdateStatisticsCountIntersect()
         {
-            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            var statistics = MainWindowVM.Statistics.Value;
             statistics.NumberOfIntersects++;
             var dao = new StatisticsDao();
             dao.Update(statistics);
@@ -865,9 +865,9 @@ namespace boilersGraphics.ViewModels
             UpdateStatisticsCountUnion();
         }
 
-        private static void UpdateStatisticsCountUnion()
+        private void UpdateStatisticsCountUnion()
         {
-            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            var statistics = MainWindowVM.Statistics.Value;
             statistics.NumberOfUnions++;
             var dao = new StatisticsDao();
             dao.Update(statistics);
@@ -1015,9 +1015,9 @@ namespace boilersGraphics.ViewModels
             UpdateStatisticsCountCopy();
         }
 
-        private static void UpdateStatisticsCountCopy()
+        private void UpdateStatisticsCountCopy()
         {
-            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            var statistics = MainWindowVM.Statistics.Value;
             statistics.NumberOfCopies++;
             var dao = new StatisticsDao();
             dao.Update(statistics);
@@ -1037,9 +1037,9 @@ namespace boilersGraphics.ViewModels
             UpdateStatisticsCountPaste();
         }
 
-        private static void UpdateStatisticsCountPaste()
+        private void UpdateStatisticsCountPaste()
         {
-            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            var statistics = MainWindowVM.Statistics.Value;
             statistics.NumberOfPasted++;
             var dao = new StatisticsDao();
             dao.Update(statistics);
@@ -1114,9 +1114,9 @@ namespace boilersGraphics.ViewModels
             UpdateStatisticsCountCut();
         }
 
-        private static void UpdateStatisticsCountCut()
+        private void UpdateStatisticsCountCut()
         {
-            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            var statistics = MainWindowVM.Statistics.Value;
             statistics.NumberOfCuts++;
             var dao = new StatisticsDao();
             dao.Update(statistics);
@@ -1326,9 +1326,9 @@ namespace boilersGraphics.ViewModels
             UpdateStatisticsCountAdd();
         }
 
-        private static void UpdateStatisticsCountAdd()
+        private void UpdateStatisticsCountAdd()
         {
-            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            var statistics = MainWindowVM.Statistics.Value;
             statistics.NumberOfTimesTheItemWasDrawn++;
             var dao = new StatisticsDao();
             dao.Update(statistics);
@@ -1341,9 +1341,9 @@ namespace boilersGraphics.ViewModels
             UpdateStatisticsCountRemove();
         }
 
-        private static void UpdateStatisticsCountRemove()
+        private void UpdateStatisticsCountRemove()
         {
-            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            var statistics = MainWindowVM.Statistics.Value;
             statistics.NumberOfTimesTheItemWasDeleted++;
             var dao = new StatisticsDao();
             dao.Update(statistics);
@@ -1388,9 +1388,9 @@ namespace boilersGraphics.ViewModels
             }
         }
 
-        private static void UpdateStatisticsCountSaveAs()
+        private void UpdateStatisticsCountSaveAs()
         {
-            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            var statistics = MainWindowVM.Statistics.Value;
             statistics.NumberOfTimesYouHaveNamedAndSaved++;
             var dao = new StatisticsDao();
             dao.Update(statistics);
@@ -1449,9 +1449,9 @@ namespace boilersGraphics.ViewModels
                 }
             }
         }
-        private static void UpdateStatisticsCountOverwrite()
+        private void UpdateStatisticsCountOverwrite()
         {
-            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            var statistics = MainWindowVM.Statistics.Value;
             statistics.NumberOfTimesSaved++;
             var dao = new StatisticsDao();
             dao.Update(statistics);
@@ -1468,7 +1468,7 @@ namespace boilersGraphics.ViewModels
                 return;
             var root = LoadSerializedDataFromFile();
             LoadInternal(root);
-            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            var statistics = MainWindowVM.Statistics.Value;
             statistics.NumberOfTimesTheFileWasOpenedBySpecifyingIt++;
             var dao = new StatisticsDao();
             dao.Update(statistics);
@@ -1496,7 +1496,7 @@ namespace boilersGraphics.ViewModels
             }
 
 
-            var mainwindowViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel);
+            var mainwindowViewModel = MainWindowVM;
             try
             {
                 mainwindowViewModel.Recorder.BeginRecode();
@@ -1537,7 +1537,7 @@ namespace boilersGraphics.ViewModels
             FileName.Value = file;
             var root = XElement.Load(file);
             LoadInternal(root);
-            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            var statistics = MainWindowVM.Statistics.Value;
             statistics.NumberOfTimesTheAutoSaveFileIsSpecifiedAndOpened++;
             var dao = new StatisticsDao();
             dao.Update(statistics);
@@ -1623,9 +1623,9 @@ namespace boilersGraphics.ViewModels
             UpdateStatisticsCountGroup();
         }
 
-        private static void UpdateStatisticsCountGroup()
+        private void UpdateStatisticsCountGroup()
         {
-            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            var statistics = MainWindowVM.Statistics.Value;
             statistics.NumberOfTimesGrouped++;
             var dao = new StatisticsDao();
             dao.Update(statistics);
@@ -1705,9 +1705,9 @@ namespace boilersGraphics.ViewModels
             UpdateStatisticsCountUngroup();
         }
 
-        private static void UpdateStatisticsCountUngroup()
+        private void UpdateStatisticsCountUngroup()
         {
-            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            var statistics = MainWindowVM.Statistics.Value;
             statistics.NumberOfUngrouped++;
             var dao = new StatisticsDao();
             dao.Update(statistics);
@@ -1830,9 +1830,9 @@ namespace boilersGraphics.ViewModels
             UpdateStatisticsCountMoveToFront();
         }
 
-        private static void UpdateStatisticsCountMoveToFront()
+        private void UpdateStatisticsCountMoveToFront()
         {
-            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            var statistics = MainWindowVM.Statistics.Value;
             statistics.NumberOfMovesToTheFront++;
             var dao = new StatisticsDao();
             dao.Update(statistics);
@@ -1950,9 +1950,9 @@ namespace boilersGraphics.ViewModels
             UpdateStatisticsCountMoveToBack();
         }
 
-        private static void UpdateStatisticsCountMoveToBack()
+        private void UpdateStatisticsCountMoveToBack()
         {
-            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            var statistics = MainWindowVM.Statistics.Value;
             statistics.NumberOfMovesToTheBack++;
             var dao = new StatisticsDao();
             dao.Update(statistics);
@@ -2029,9 +2029,9 @@ namespace boilersGraphics.ViewModels
             UpdateStatisticsCountMoveToFrontend();
         }
 
-        private static void UpdateStatisticsCountMoveToFrontend()
+        private void UpdateStatisticsCountMoveToFrontend()
         {
-            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            var statistics = MainWindowVM.Statistics.Value;
             statistics.NumberOfMovesToTheFrontend++;
             var dao = new StatisticsDao();
             dao.Update(statistics);
@@ -2110,9 +2110,9 @@ namespace boilersGraphics.ViewModels
             UpdateStatisticsCountMoveToBackend();
         }
 
-        private static void UpdateStatisticsCountMoveToBackend()
+        private void UpdateStatisticsCountMoveToBackend()
         {
-            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            var statistics = MainWindowVM.Statistics.Value;
             statistics.NumberOfMovesToTheBackend++;
             var dao = new StatisticsDao();
             dao.Update(statistics);
@@ -2166,9 +2166,9 @@ namespace boilersGraphics.ViewModels
             }
         }
 
-        private static void UpdateStatisticsCountAlignTop()
+        private void UpdateStatisticsCountAlignTop()
         {
-            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            var statistics = MainWindowVM.Statistics.Value;
             statistics.NumberOfTopAlignment++;
             var dao = new StatisticsDao();
             dao.Update(statistics);
@@ -2194,9 +2194,9 @@ namespace boilersGraphics.ViewModels
             }
         }
 
-        private static void UpdateStatisticsCountAlignVerticalCenter()
+        private void UpdateStatisticsCountAlignVerticalCenter()
         {
-            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            var statistics = MainWindowVM.Statistics.Value;
             statistics.NumberOfTimesTheTopAndBottomAreCentered++;
             var dao = new StatisticsDao();
             dao.Update(statistics);
@@ -2222,9 +2222,9 @@ namespace boilersGraphics.ViewModels
             }
         }
 
-        private static void UpdateStatisticsCountAlignBottom()
+        private void UpdateStatisticsCountAlignBottom()
         {
-            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            var statistics = MainWindowVM.Statistics.Value;
             statistics.NumberOfBottomAlignment++;
             var dao = new StatisticsDao();
             dao.Update(statistics);
@@ -2250,9 +2250,9 @@ namespace boilersGraphics.ViewModels
             }
         }
 
-        private static void UpdateStatisticsCountAlignLeft()
+        private void UpdateStatisticsCountAlignLeft()
         {
-            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            var statistics = MainWindowVM.Statistics.Value;
             statistics.NumberOfLeftAlignment++;
             var dao = new StatisticsDao();
             dao.Update(statistics);
@@ -2278,9 +2278,9 @@ namespace boilersGraphics.ViewModels
             }
         }
 
-        private static void UpdateStatisticsCountAlignHorizontalCenter()
+        private void UpdateStatisticsCountAlignHorizontalCenter()
         {
-            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            var statistics = MainWindowVM.Statistics.Value;
             statistics.NumberOfTimesLeftAndRightCentered++;
             var dao = new StatisticsDao();
             dao.Update(statistics);
@@ -2306,9 +2306,9 @@ namespace boilersGraphics.ViewModels
             }
         }
 
-        private static void UpdateStatisticsCountAlignRight()
+        private void UpdateStatisticsCountAlignRight()
         {
-            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            var statistics = MainWindowVM.Statistics.Value;
             statistics.NumberOfRightAlignment++;
             var dao = new StatisticsDao();
             dao.Update(statistics);
@@ -2354,9 +2354,9 @@ namespace boilersGraphics.ViewModels
             }
         }
 
-        private static void UpdateStatisticsCountAlignLeftAndRight()
+        private void UpdateStatisticsCountAlignLeftAndRight()
         {
-            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            var statistics = MainWindowVM.Statistics.Value;
             statistics.NumberOfTimesAlignedLeftAndRight++;
             var dao = new StatisticsDao();
             dao.Update(statistics);
@@ -2402,9 +2402,9 @@ namespace boilersGraphics.ViewModels
             }
         }
 
-        private static void UpdateStatisticsCountAlignUpAndDown()
+        private void UpdateStatisticsCountAlignUpAndDown()
         {
-            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            var statistics = MainWindowVM.Statistics.Value;
             statistics.NumberOfTimesAlignedUpAndDown++;
             var dao = new StatisticsDao();
             dao.Update(statistics);
@@ -2505,9 +2505,9 @@ namespace boilersGraphics.ViewModels
             UpdateStatisticsCountMatchWidth();
         }
 
-        private static void UpdateStatisticsCountMatchWidth()
+        private void UpdateStatisticsCountMatchWidth()
         {
-            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            var statistics = MainWindowVM.Statistics.Value;
             statistics.NumberOfTimesToMatchTheWidth++;
             var dao = new StatisticsDao();
             dao.Update(statistics);
@@ -2537,9 +2537,9 @@ namespace boilersGraphics.ViewModels
             UpdateStatisticsCountMatchHeight();
         }
 
-        private static void UpdateStatisticsCountMatchHeight()
+        private void UpdateStatisticsCountMatchHeight()
         {
-            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            var statistics = MainWindowVM.Statistics.Value;
             statistics.NumberOfTimesToMatchTheHeight++;
             var dao = new StatisticsDao();
             dao.Update(statistics);
