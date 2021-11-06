@@ -1,4 +1,5 @@
-﻿using Prism.Mvvm;
+﻿using boilersGraphics.Dao;
+using Prism.Mvvm;
 using Prism.Services.Dialogs;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
@@ -41,6 +42,15 @@ namespace boilersGraphics.ViewModels
                 RequestClose.Invoke(result);
             })
             .AddTo(_disposables);
+            UpdateStatisticsCountVersionInformationDialogWasDisplayed();
+        }
+
+        private static void UpdateStatisticsCountVersionInformationDialogWasDisplayed()
+        {
+            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            statistics.NumberOfTimesTheVersionInformationDialogWasDisplayed++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
 
         private string LicenseReadToEnd()
