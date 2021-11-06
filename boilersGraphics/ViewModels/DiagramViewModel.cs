@@ -1321,14 +1321,31 @@ namespace boilersGraphics.ViewModels
                     catch (Exception ex)
                     {
                         FileName.Value = "*";
+                        LogManager.GetCurrentClassLogger().Error(ex);
                         MessageBox.Show(ex.StackTrace, ex.Message, MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
             }
             else
             {
-                root.Save(FileName.Value);
+                try
+                {
+                    root.Save(FileName.Value);
+                    UpdateStatisticsCountOverwrite();
+                }
+                catch (Exception ex)
+                {
+                    LogManager.GetCurrentClassLogger().Error(ex);
+                    MessageBox.Show(ex.StackTrace, ex.Message, MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
+        }
+        private static void UpdateStatisticsCountOverwrite()
+        {
+            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            statistics.NumberOfTimesSaved++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
 
         #endregion
