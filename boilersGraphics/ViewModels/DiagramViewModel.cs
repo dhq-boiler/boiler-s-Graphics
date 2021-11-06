@@ -709,6 +709,15 @@ namespace boilersGraphics.ViewModels
         {
             MainWindowVM.Controller.Redo();
             RedoCommand.RaiseCanExecuteChanged();
+            UpdateStatisticsCountRedo();
+        }
+
+        private static void UpdateStatisticsCountRedo()
+        {
+            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            statistics.NumberOfRedoes++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
 
         public bool CanExecuteRedo()
@@ -721,6 +730,15 @@ namespace boilersGraphics.ViewModels
             MainWindowVM.Controller.Undo();
             UndoCommand.RaiseCanExecuteChanged();
             RedoCommand.RaiseCanExecuteChanged();
+            UpdateStatisticsCountUndo();
+        }
+
+        private static void UpdateStatisticsCountUndo()
+        {
+            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            statistics.NumberOfUndos++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
 
         public bool CanExecuteUndo()
