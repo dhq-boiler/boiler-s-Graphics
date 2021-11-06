@@ -1615,6 +1615,9 @@ namespace boilersGraphics.ViewModels
 
         #region Ordering
 
+        /// <summary>
+        /// 前面へ移動
+        /// </summary>
         private void ExecuteBringForwardCommand()
         {
             MainWindowVM.Recorder.BeginRecode();
@@ -1714,6 +1717,16 @@ namespace boilersGraphics.ViewModels
             Sort(Layers);
 
             MainWindowVM.Recorder.EndRecode();
+
+            UpdateStatisticsCountMoveToFront();
+        }
+
+        private static void UpdateStatisticsCountMoveToFront()
+        {
+            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            statistics.NumberOfMovesToTheFront++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
 
         private void ExecuteSendBackwardCommand()
