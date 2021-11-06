@@ -1928,6 +1928,9 @@ namespace boilersGraphics.ViewModels
             dao.Update(statistics);
         }
 
+        /// <summary>
+        /// 最背面へ移動
+        /// </summary>
         private void ExecuteSendBackgroundCommand()
         {
             MainWindowVM.Recorder.BeginRecode();
@@ -1994,6 +1997,16 @@ namespace boilersGraphics.ViewModels
             Sort(Layers);
 
             MainWindowVM.Recorder.EndRecode();
+
+            UpdateStatisticsCountMoveToBackend();
+        }
+
+        private static void UpdateStatisticsCountMoveToBackend()
+        {
+            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            statistics.NumberOfMovesToTheBackend++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
 
         private void Sort(ReactiveCollection<LayerTreeViewItemBase> target)
