@@ -1323,12 +1323,30 @@ namespace boilersGraphics.ViewModels
         {
             SelectedLayers.Value.First().AddItem(MainWindowVM, this, item);
             LogManager.GetCurrentClassLogger().Info($"Add item {item.ShowPropertiesAndFields()}");
+            UpdateStatisticsCountAdd();
+        }
+
+        private static void UpdateStatisticsCountAdd()
+        {
+            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            statistics.NumberOfTimesTheItemWasDrawn++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
 
         private void Remove(SelectableDesignerItemViewModelBase item)
         {
             Layers.ToList().ForEach(x => x.RemoveItem(MainWindowVM, item));
             LogManager.GetCurrentClassLogger().Info($"Remove item {item.ShowPropertiesAndFields()}");
+            UpdateStatisticsCountRemove();
+        }
+
+        private static void UpdateStatisticsCountRemove()
+        {
+            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            statistics.NumberOfTimesTheItemWasDeleted++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
 
         #region Save
