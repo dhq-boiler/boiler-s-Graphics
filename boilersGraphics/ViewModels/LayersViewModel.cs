@@ -1,4 +1,5 @@
-﻿using boilersGraphics.Extensions;
+﻿using boilersGraphics.Dao;
+using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
 using boilersGraphics.Models;
 using boilersGraphics.Views.Behaviors;
@@ -54,6 +55,7 @@ namespace boilersGraphics.ViewModels
                 Random rand = new Random();
                 layer.Color.Value = Randomizer.RandomColor(rand);
                 (App.Current.MainWindow.DataContext as MainWindowViewModel).Controller.ExecuteAdd((App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.Layers, layer);
+                UpdateStatisticsCountNewLayer();
             });
             RemoveLayerCommand = new DelegateCommand(() =>
             {
@@ -64,6 +66,7 @@ namespace boilersGraphics.ViewModels
                 {
                     (App.Current.MainWindow.DataContext as MainWindowViewModel).Controller.ExecuteRemove(layers, remove);
                 }
+                UpdateStatisticsCountRemoveLayer();
             });
             SelectedItemChangedCommand.Subscribe(args =>
             {
@@ -187,6 +190,22 @@ namespace boilersGraphics.ViewModels
             })
             .AddTo(_disposables);
             DropCommand = new DelegateCommand<DropArguments>(Drop);
+        }
+
+        private static void UpdateStatisticsCountNewLayer()
+        {
+            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            statistics.NumberOfNewlyCreatedLayers++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
+        }
+
+        private static void UpdateStatisticsCountRemoveLayer()
+        {
+            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            statistics.NumberOfDeletedLayers++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
 
         private IEnumerable<SelectableDesignerItemViewModelBase> IfGroupBringChildren(ReactiveCollection<LayerTreeViewItemBase> Children, SelectableDesignerItemViewModelBase value)
