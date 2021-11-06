@@ -1,4 +1,5 @@
 ﻿using boilersGraphics.Controls;
+using boilersGraphics.Dao;
 using boilersGraphics.ViewModels;
 using Microsoft.Xaml.Behaviors;
 using System.Windows.Input;
@@ -80,9 +81,19 @@ namespace boilersGraphics.Views.Behaviors
                     item.IsVisible.Value = true;
                     ((AssociatedObject as DesignerCanvas).DataContext as IDiagramViewModel).AddItemCommand.Execute(item);
 
+                    UpdateStatisticsCount();
+
                     e.Handled = true;
                 }
             }
+        }
+
+        private static void UpdateStatisticsCount()
+        {
+            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            statistics.NumberOfSnapPointToolInstallations++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
     }
 }

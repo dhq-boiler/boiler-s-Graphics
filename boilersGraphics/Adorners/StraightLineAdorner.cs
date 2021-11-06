@@ -1,4 +1,5 @@
 ﻿using boilersGraphics.Controls;
+using boilersGraphics.Dao;
 using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
 using boilersGraphics.Models;
@@ -86,6 +87,8 @@ namespace boilersGraphics.Adorners
 
                 _snapAction.PostProcess(SnapPointPosition.EndEdge, item);
 
+                UpdateStatisticsCount();
+
                 _startPoint = null;
                 _endPoint = null;
             }
@@ -94,6 +97,14 @@ namespace boilersGraphics.Adorners
             (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = "";
 
             e.Handled = true;
+        }
+
+        private static void UpdateStatisticsCount()
+        {
+            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            statistics.NumberOfDrawsOfTheStraightLineTool++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
 
         protected override void OnRender(DrawingContext dc)
