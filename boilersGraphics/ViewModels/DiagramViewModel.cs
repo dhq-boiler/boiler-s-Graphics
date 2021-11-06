@@ -2052,7 +2052,17 @@ namespace boilersGraphics.ViewModels
                 }
 
                 MainWindowVM.Recorder.EndRecode();
+
+                UpdateStatisticsCountAlignTop();
             }
+        }
+
+        private static void UpdateStatisticsCountAlignTop()
+        {
+            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            statistics.NumberOfTopAlignment++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
 
         private void ExecuteAlignVerticalCenterCommand()
@@ -2071,7 +2081,16 @@ namespace boilersGraphics.ViewModels
                 }
 
                 MainWindowVM.Recorder.EndRecode();
+                UpdateStatisticsCountAlignVerticalCenter();
             }
+        }
+
+        private static void UpdateStatisticsCountAlignVerticalCenter()
+        {
+            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            statistics.NumberOfTimesTheTopAndBottomAreCentered++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
 
         private void ExecuteAlignBottomCommand()
@@ -2090,7 +2109,16 @@ namespace boilersGraphics.ViewModels
                 }
 
                 MainWindowVM.Recorder.EndRecode();
+                UpdateStatisticsCountAlignBottom();
             }
+        }
+
+        private static void UpdateStatisticsCountAlignBottom()
+        {
+            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            statistics.NumberOfBottomAlignment++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
 
         private void ExecuteAlignLeftCommand()
@@ -2109,7 +2137,16 @@ namespace boilersGraphics.ViewModels
                 }
 
                 MainWindowVM.Recorder.EndRecode();
+                UpdateStatisticsCountAlignLeft();
             }
+        }
+
+        private static void UpdateStatisticsCountAlignLeft()
+        {
+            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            statistics.NumberOfLeftAlignment++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
 
         private void ExecuteAlignHorizontalCenterCommand()
@@ -2128,7 +2165,16 @@ namespace boilersGraphics.ViewModels
                 }
 
                 MainWindowVM.Recorder.EndRecode();
+                UpdateStatisticsCountAlignHorizontalCenter();
             }
+        }
+
+        private static void UpdateStatisticsCountAlignHorizontalCenter()
+        {
+            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            statistics.NumberOfTimesLeftAndRightCentered++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
 
         private void ExecuteAlignRightCommand()
@@ -2147,7 +2193,16 @@ namespace boilersGraphics.ViewModels
                 }
 
                 MainWindowVM.Recorder.EndRecode();
+                UpdateStatisticsCountAlignRight();
             }
+        }
+
+        private static void UpdateStatisticsCountAlignRight()
+        {
+            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            statistics.NumberOfRightAlignment++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
 
         private void ExecuteDistributeHorizontalCommand()
