@@ -1,4 +1,5 @@
 ﻿using boilersGraphics.Controls;
+using boilersGraphics.Dao;
 using boilersGraphics.Helpers;
 using boilersGraphics.ViewModels;
 using Microsoft.Xaml.Behaviors;
@@ -126,12 +127,22 @@ namespace boilersGraphics.Views.Behaviors
 
             (AssociatedObject.DataContext as DiagramViewModel).MainWindowVM.Recorder.EndRecode();
 
+            UpdateStatisticsCount();
+
             // release mouse capture
             if (AssociatedObject.IsMouseCaptured) AssociatedObject.ReleaseMouseCapture();
             // release stylus capture
             if (AssociatedObject.IsStylusCaptured) AssociatedObject.ReleaseStylusCapture();
 
             downFlag = false;
+        }
+
+        private static void UpdateStatisticsCount()
+        {
+            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            statistics.NumberOfTimesTheEraserToolHasBeenUsed++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
 
         private void AssociatedObject_TouchUp(object sender, TouchEventArgs e)
