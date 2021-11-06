@@ -600,6 +600,15 @@ namespace boilersGraphics.ViewModels
                       .AddTo(_CompositeDisposable);
 
             PackAutoSaveFiles();
+            UpdateStatisticsCountAutoSave();
+        }
+
+        private static void UpdateStatisticsCountAutoSave()
+        {
+            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            statistics.NumberOfTimesAutomaticallySaved++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
 
         public LayerTreeViewItemBase GetLayerTreeViewItemBase(SelectableDesignerItemViewModelBase item)
