@@ -985,6 +985,15 @@ namespace boilersGraphics.ViewModels
         private void ExecuteCopyCommand()
         {
             CopyToClipboard();
+            UpdateStatisticsCountCopy();
+        }
+
+        private static void UpdateStatisticsCountCopy()
+        {
+            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            statistics.NumberOfCopies++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
 
         public bool CanExecuteCopy()
@@ -998,6 +1007,15 @@ namespace boilersGraphics.ViewModels
             var clipboardDTO = obj.GetData(typeof(ClipboardDTO)) as ClipboardDTO;
             var root = XElement.Parse(clipboardDTO.Root);
             ObjectDeserializer.ReadCopyObjectsFromXML(this, root);
+            UpdateStatisticsCountPaste();
+        }
+
+        private static void UpdateStatisticsCountPaste()
+        {
+            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            statistics.NumberOfPasted++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
 
         public bool CanExecutePaste()
@@ -1065,6 +1083,16 @@ namespace boilersGraphics.ViewModels
                     Layers.Remove(selectedLayer);
                 }
             }
+
+            UpdateStatisticsCountCut();
+        }
+
+        private static void UpdateStatisticsCountCut()
+        {
+            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            statistics.NumberOfCuts++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
 
         private void CopyToClipboard()
