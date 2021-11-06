@@ -1823,6 +1823,9 @@ namespace boilersGraphics.ViewModels
             MainWindowVM.Recorder.EndRecode();
         }
 
+        /// <summary>
+        /// 最前面へ移動
+        /// </summary>
         private void ExecuteBringForegroundCommand()
         {
             MainWindowVM.Recorder.BeginRecode();
@@ -1887,6 +1890,16 @@ namespace boilersGraphics.ViewModels
             Sort(Layers);
 
             MainWindowVM.Recorder.EndRecode();
+
+            UpdateStatisticsCountMoveToFrontend();
+        }
+
+        private static void UpdateStatisticsCountMoveToFrontend()
+        {
+            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            statistics.NumberOfMovesToTheFrontend++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
 
         private void ExecuteSendBackgroundCommand()
