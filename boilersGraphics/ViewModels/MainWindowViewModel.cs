@@ -183,6 +183,7 @@ namespace boilersGraphics.ViewModels
                 }
                 LogManager.ReconfigExistingLoggers();
                 LogManager.GetCurrentClassLogger().Info($"ログレベルが変更されました。変更後：{parameter}");
+                UpdateStatisticsCountLogLevelChanged();
             });
             ShowStatisticsCommand = new DelegateCommand(() =>
             {
@@ -235,6 +236,14 @@ namespace boilersGraphics.ViewModels
                           dao.Update(Statistics.Value);
                       })
                       .AddTo(_CompositeDisposable);
+        }
+
+        private static void UpdateStatisticsCountLogLevelChanged()
+        {
+            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            statistics.NumberOfLogLevelChanges++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
 
         private void ManagebGDB()
