@@ -603,9 +603,9 @@ namespace boilersGraphics.ViewModels
             UpdateStatisticsCountAutoSave();
         }
 
-        private static void UpdateStatisticsCountAutoSave()
+        private void UpdateStatisticsCountAutoSave()
         {
-            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            var statistics = MainWindowVM.Statistics.Value;
             statistics.NumberOfTimesAutomaticallySaved++;
             var dao = new StatisticsDao();
             dao.Update(statistics);
