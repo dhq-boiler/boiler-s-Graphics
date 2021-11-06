@@ -2205,6 +2205,9 @@ namespace boilersGraphics.ViewModels
             dao.Update(statistics);
         }
 
+        /// <summary>
+        /// 左右に整列
+        /// </summary>
         private void ExecuteDistributeHorizontalCommand()
         {
             var selectedItems = from item in SelectedItems.Value
@@ -2238,9 +2241,21 @@ namespace boilersGraphics.ViewModels
                 }
 
                 MainWindowVM.Recorder.EndRecode();
+                UpdateStatisticsCountAlignLeftAndRight();
             }
         }
 
+        private static void UpdateStatisticsCountAlignLeftAndRight()
+        {
+            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            statistics.NumberOfTimesAlignedLeftAndRight++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
+        }
+
+        /// <summary>
+        /// 上下に整列
+        /// </summary>
         private void ExecuteDistributeVerticalCommand()
         {
             var selectedItems = from item in SelectedItems.Value
@@ -2274,7 +2289,16 @@ namespace boilersGraphics.ViewModels
                 }
 
                 MainWindowVM.Recorder.EndRecode();
+                UpdateStatisticsCountAlignUpAndDown();
             }
+        }
+
+        private static void UpdateStatisticsCountAlignUpAndDown()
+        {
+            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            statistics.NumberOfTimesAlignedUpAndDown++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
 
         public bool CanExecuteAlign()
