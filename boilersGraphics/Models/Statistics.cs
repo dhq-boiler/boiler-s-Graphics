@@ -105,56 +105,80 @@ namespace boilersGraphics.Models
             set { SetProperty(ref _numberOfTimesTheAutoSaveFileIsSpecifiedAndOpened, value); }
         }
 
-        [Column("NumberOfClicksWithThePointerTool", "INTEGER", 5)]
+		/// <summary>
+		/// ポインターツールでクリックした回数
+		/// </summary>
+		[Column("NumberOfClicksWithThePointerTool", "INTEGER", 5)]
         public int NumberOfClicksWithThePointerTool
         {
             get { return _numberOfClicksWithThePointerTool; }
             set { SetProperty(ref _numberOfClicksWithThePointerTool, value); }
         }
 
-        [Column("CumulativeTotalOfItemsSelectedWithTheLassoTool", "INTEGER", 6)]
+		/// <summary>
+		/// なげなわツールで選択したアイテムの累計
+		/// </summary>
+		[Column("CumulativeTotalOfItemsSelectedWithTheLassoTool", "INTEGER", 6)]
         public int CumulativeTotalOfItemsSelectedWithTheLassoTool 
         {
             get => _cumulativeTotalOfItemsSelectedWithTheLassoTool;
             set => SetProperty(ref _cumulativeTotalOfItemsSelectedWithTheLassoTool, value);
         }
 
-        [Column("NumberOfDrawsOfTheStraightLineTool", "INTEGER", 7)]
+		/// <summary>
+		/// 直線ツールの描画回数
+		/// </summary>
+		[Column("NumberOfDrawsOfTheStraightLineTool", "INTEGER", 7)]
         public int NumberOfDrawsOfTheStraightLineTool
         {
             get => _numberOfDrawsOfTheStraightLineTool;
             set => SetProperty(ref _numberOfDrawsOfTheStraightLineTool, value);
         }
 
-        [Column("NumberOfDrawsOfTheRectangleTool", "INTEGER", 8)]
+		/// <summary>
+		/// 四角形ツールの描画回数
+		/// </summary>
+		[Column("NumberOfDrawsOfTheRectangleTool", "INTEGER", 8)]
         public int NumberOfDrawsOfTheRectangleTool
         {
             get => _numberOfDrawsOfTheRectangleTool;
             set => SetProperty(ref _numberOfDrawsOfTheRectangleTool, value);
         }
 
-        [Column("NumberOfDrawsOfTheEllipseTool", "INTEGER", 9)]
+		/// <summary>
+		/// 円ツールの描画回数
+		/// </summary>
+		[Column("NumberOfDrawsOfTheEllipseTool", "INTEGER", 9)]
         public int NumberOfDrawsOfTheEllipseTool
         {
             get => _numberOfDrawsOfTheEllipseTool;
             set => SetProperty(ref _numberOfDrawsOfTheEllipseTool, value);
         }
 
-        [Column("NumberOfDrawsOfTheImageFileTool", "INTEGER", 10)]
+		/// <summary>
+		/// 画像ファイルツールの描画回数
+		/// </summary>
+		[Column("NumberOfDrawsOfTheImageFileTool", "INTEGER", 10)]
         public int NumberOfDrawsOfTheImageFileTool
         {
             get => _numberOfDrawsOfTheImageFileTool;
             set => SetProperty(ref _numberOfDrawsOfTheImageFileTool, value);
         }
 
-        [Column("NumberOfDrawsOfTheLetterTool", "INTEGER", 11)]
+		/// <summary>
+		/// 文字ツールの描画回数
+		/// </summary>
+		[Column("NumberOfDrawsOfTheLetterTool", "INTEGER", 11)]
         public int NumberOfDrawsOfTheLetterTool
         {
             get => _numberOfDrawsOfTheLetterTool;
             set => SetProperty(ref _numberOfDrawsOfTheLetterTool, value);
         }
 
-        [Column("NumberOfDrawsOfTheVerticalLetterTool", "INTEGER", 12)]
+		/// <summary>
+		/// 縦書きツールの描画回数
+		/// </summary>
+		[Column("NumberOfDrawsOfTheVerticalLetterTool", "INTEGER", 12)]
         public int NumberOfDrawsOfTheVerticalLetterTool
         {
             get => _numberOfDrawsOfTheVerticalLetterTool;
