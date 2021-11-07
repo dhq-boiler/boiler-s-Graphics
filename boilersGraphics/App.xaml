@@ -39,7 +39,9 @@
                 <ResourceDictionary Source="/Btl.Controls.MyControls;component/Resources/brush.scroll.up.xaml" />
                 <ResourceDictionary Source="/Btl.Controls.MyControls;component/Themes/ShortTimeSpanControl.Generic.xaml" />
             </ResourceDictionary.MergedDictionaries>
-
+            <Style x:Key="window_common" TargetType="Window">
+                <Setter Property="Icon" Value="/Assets/img/Square150x150Logo.scale-200.png" />
+            </Style>
             <Style x:Key="SpinnerStyle" TargetType="{x:Type Button}">
                 <Setter Property="Template">
                     <Setter.Value>
