@@ -549,7 +549,7 @@ namespace boilersGraphics.ViewModels
             {
                 if (AutoSaveType.Value == Models.AutoSaveType.SetInterval)
                 {
-                    var source = Observable.Timer(TimeSpan.Zero, AutoSaveInterval.Value);
+                    var source = Observable.Timer(AutoSaveInterval.Value, AutoSaveInterval.Value);
 
                     _AutoSaveTimerDisposableObj = source.Subscribe(_ =>
                     {
