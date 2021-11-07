@@ -62,11 +62,7 @@ namespace boilersGraphics.ViewModels
             DiagramViewModel.EnableMiniMap.Value = true;
             DiagramViewModel.EnableBrushThickness.Value = true;
 
-            DiagramViewModel.FileName.Subscribe(x =>
-            {
-                Title.Value = $"{x}\t{App.GetAppNameAndVersion()}";
-            })
-            .AddTo(_CompositeDisposable);
+            Title.Value = $"{App.GetAppNameAndVersion()}";
             DiagramViewModel.FileName.Value = "*";
 
             EdgeThicknessOptions.Add(0.0);
