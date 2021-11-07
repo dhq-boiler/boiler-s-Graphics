@@ -61,11 +61,15 @@ namespace boilersGraphics.ViewModels
             {
                 if (FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).IsPreRelease)
                 {
-                    client.DownloadFile("https://raw.githubusercontent.com/dhq-boiler/boiler-s-Graphics/develop/LICENSE", "LICENSE");
+                    var url = "https://raw.githubusercontent.com/dhq-boiler/boiler-s-Graphics/develop/LICENSE";
+                    var file = "LICENSE";
+                    DownloadFile(client, url, file);
                 }
                 else
                 {
-                    client.DownloadFile("https://raw.githubusercontent.com/dhq-boiler/boiler-s-Graphics/master/LICENSE", "LICENSE");
+                    var url = "https://raw.githubusercontent.com/dhq-boiler/boiler-s-Graphics/master/LICENSE";
+                    var file = "LICENSE";
+                    DownloadFile(client, url, file);
                 }
             }
 
@@ -79,6 +83,12 @@ namespace boilersGraphics.ViewModels
             str = "LICENSEが見つかりません。";
             MessageBox.Show(str);
             return str;
+        }
+
+        private static void DownloadFile(WebClient client, string url, string file)
+        {
+            client.DownloadFile(url, file);
+            LogManager.GetCurrentClassLogger().Info($"Download {file} from {url}");
         }
 
         private string ReadLICENSE()
