@@ -1,4 +1,5 @@
 ﻿using boilersGraphics.Dao;
+using NLog;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
 using Reactive.Bindings;
@@ -6,6 +7,7 @@ using Reactive.Bindings.Extensions;
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Net;
 using System.Reactive.Disposables;
 using System.Reflection;
 using System.Windows;
@@ -51,16 +53,47 @@ namespace boilersGraphics.ViewModels
 
         private string LicenseReadToEnd()
         {
-            if (!File.Exists("LICENSE"))
-            {
-                var str = "LICENSEが見つかりません。";
-                MessageBox.Show(str);
+            var str = ReadLICENSE();
+            if (!string.IsNullOrEmpty(str))
                 return str;
+
+            using (var client = new WebClient())
+            {
+                if (FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).IsPreRelease)
+                {
+                    client.DownloadFile("https://raw.githubusercontent.com/dhq-boiler/boiler-s-Graphics/develop/LICENSE", "LICENSE");
+                }
+                else
+                {
+                    client.DownloadFile("https://raw.githubusercontent.com/dhq-boiler/boiler-s-Graphics/master/LICENSE", "LICENSE");
+                }
             }
 
-            using (var streamReader = new StreamReader(new FileStream("LICENSE", FileMode.Open)))
+            if (File.Exists("LICENSE"))
             {
-                return streamReader.ReadToEnd();
+                str = ReadLICENSE();
+                if (!string.IsNullOrEmpty(str))
+                    return str;
+            }
+
+            str = "LICENSEが見つかりません。";
+            MessageBox.Show(str);
+            return str;
+        }
+
+        private string ReadLICENSE()
+        {
+            try
+            {
+                using (var streamReader = new StreamReader(new FileStream("LICENSE", FileMode.Open)))
+                {
+                    return streamReader.ReadToEnd();
+                }
+            }
+            catch (FileNotFoundException ex)
+            {
+                LogManager.GetCurrentClassLogger().Error(ex);
+                return string.Empty;
             }
         }
 
