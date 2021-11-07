@@ -1,4 +1,5 @@
 ﻿using boilersGraphics.Dao;
+using boilersGraphics.Exceptions;
 using NLog;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
@@ -53,36 +54,46 @@ namespace boilersGraphics.ViewModels
 
         private string LicenseReadToEnd()
         {
-            var str = ReadLICENSE();
+            const string filename = "LICENSE";
+            var str = ReadFileToEnd(filename);
             if (!string.IsNullOrEmpty(str))
                 return str;
 
             using (var client = new WebClient())
             {
-                if (FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).IsPreRelease)
+                var versionInfo = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location);
+                var flags = ParseProductVersion(versionInfo.ProductVersion);
+                if (flags.isPreRelease)
                 {
                     var url = "https://raw.githubusercontent.com/dhq-boiler/boiler-s-Graphics/develop/LICENSE";
-                    var file = "LICENSE";
-                    DownloadFile(client, url, file);
+                    DownloadFile(client, url, filename);
                 }
-                else
+                else if (flags.isMaster)
                 {
                     var url = "https://raw.githubusercontent.com/dhq-boiler/boiler-s-Graphics/master/LICENSE";
-                    var file = "LICENSE";
-                    DownloadFile(client, url, file);
+                    DownloadFile(client, url, filename);
                 }
             }
 
-            if (File.Exists("LICENSE"))
+            if (File.Exists(filename))
             {
-                str = ReadLICENSE();
+                str = ReadFileToEnd(filename);
                 if (!string.IsNullOrEmpty(str))
                     return str;
             }
 
-            str = "LICENSEが見つかりません。";
+            str = $"{filename}が見つかりません。";
             MessageBox.Show(str);
             return str;
+        }
+
+        private (bool isMaster, bool isPreRelease, bool isDebug) ParseProductVersion(string productVersion)
+        {
+            if (productVersion.Contains("master"))
+                return (true, false, false);
+            if (productVersion.Contains("unstable"))
+                return (false, true, false);
+            throw new UnexpectedException("ProductVersionをパースできませんでした。");
         }
 
         private static void DownloadFile(WebClient client, string url, string file)
@@ -91,11 +102,11 @@ namespace boilersGraphics.ViewModels
             LogManager.GetCurrentClassLogger().Info($"Download {file} from {url}");
         }
 
-        private string ReadLICENSE()
+        private string ReadFileToEnd(string filename)
         {
             try
             {
-                using (var streamReader = new StreamReader(new FileStream("LICENSE", FileMode.Open)))
+                using (var streamReader = new StreamReader(new FileStream(filename, FileMode.Open)))
                 {
                     return streamReader.ReadToEnd();
                 }
@@ -109,17 +120,37 @@ namespace boilersGraphics.ViewModels
 
         private string LicenseMdReadToEnd()
         {
-            if (!File.Exists("LICENSE.md"))
-            {
-                var str = "LICENSE.mdが見つかりません。";
-                MessageBox.Show(str);
+            const string filename = "LICENSE.md";
+            var str = ReadFileToEnd(filename);
+            if (!string.IsNullOrEmpty(str))
                 return str;
+
+            using (var client = new WebClient())
+            {
+                var versionInfo = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location);
+                var flags = ParseProductVersion(versionInfo.ProductVersion);
+                if (flags.isPreRelease)
+                {
+                    var url = "https://raw.githubusercontent.com/dhq-boiler/boiler-s-Graphics/develop/boilersGraphics/LICENSE.md";
+                    DownloadFile(client, url, filename);
+                }
+                else if (flags.isMaster)
+                {
+                    var url = "https://raw.githubusercontent.com/dhq-boiler/boiler-s-Graphics/master/boilersGraphics/LICENSE.md";
+                    DownloadFile(client, url, filename);
+                }
             }
 
-            using (var streamReader = new StreamReader(new FileStream("LICENSE.md", FileMode.Open)))
+            if (File.Exists(filename))
             {
-                return streamReader.ReadToEnd();
+                str = ReadFileToEnd(filename);
+                if (!string.IsNullOrEmpty(str))
+                    return str;
             }
+
+            str = $"{filename}が見つかりません。";
+            MessageBox.Show(str);
+            return str;
         }
 
         public bool CanCloseDialog()
