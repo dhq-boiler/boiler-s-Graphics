@@ -795,9 +795,6 @@
     <Folder Include="Resources\Themes\" />
   </ItemGroup>
   <ItemGroup>
-    <SplashScreen Include="Assets\img\SplashScreen.scale-200.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Assets\img\Square150x150Logo.scale-200.png" />
   </ItemGroup>
   <ItemGroup>
