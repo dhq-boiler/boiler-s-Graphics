@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
@@ -46,7 +47,10 @@ namespace boilersGraphics.ViewModels
             }
             else
             {
-                ConnectionManager.SetDefaultConnection($"DataSource={System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "dhq_boiler\\boilersGraphics\\bg.db")}", typeof(SQLiteConnection));
+                var dbDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"dhq_boiler\boilersGraphics");
+                var dbFilePath = Path.Combine(dbDirectory, "bg.db");
+                Directory.CreateDirectory(dbDirectory);
+                ConnectionManager.SetDefaultConnection($"DataSource={dbFilePath}", typeof(SQLiteConnection));
             }
 
             ManagebGDB();
