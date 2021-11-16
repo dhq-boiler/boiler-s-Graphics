@@ -19,7 +19,13 @@
     </prism:Dialog.WindowStyle>
     <DockPanel>
         <StackPanel DockPanel.Dock="Top" Orientation="Vertical">
-            <view:SelectableLabel FontSize="30" Text="boiler's Graphics" />
+            <StackPanel Orientation="Horizontal">
+                <Image Width="50"
+                       Height="50"
+                       Source="pack://application:,,,/Assets/img/square150x150logo_scale_200_Qpf_icon.ico" />
+                <view:SelectableLabel FontSize="30" Text="boiler's Graphics"
+                                      VerticalContentAlignment="Center" />
+            </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <Label Content="バージョン" />
                 <view:SelectableLabel FontSize="20" Text="{Binding Version.Value}" />

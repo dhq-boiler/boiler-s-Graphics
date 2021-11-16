@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,6 +20,7 @@ namespace boilersGraphics.Views
     /// <summary>
     /// SelectableLabel.xaml の相互作用ロジック
     /// </summary>
+    [DesignTimeVisible(true)]
     public partial class SelectableLabel : UserControl
     {
         public static readonly DependencyProperty TextProperty = DependencyProperty.Register("Text",

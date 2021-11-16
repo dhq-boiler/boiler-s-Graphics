@@ -11,3 +11,5 @@ boilersGraphics/gitversion.json
 UpgradeLog.htm
 obj/
 bin/
+*.user
+*.cache
