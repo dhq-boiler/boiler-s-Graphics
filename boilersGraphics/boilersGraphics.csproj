@@ -240,6 +240,7 @@
     <Compile Include="Helpers\GeometryCreator.cs" />
     <Compile Include="Helpers\GroupTransformNotification.cs" />
     <Compile Include="Helpers\IEventArgsConverter.cs" />
+    <Compile Include="Helpers\Intersection.cs" />
     <Compile Include="Helpers\LayerTreeViewItemCollection.cs" />
     <Compile Include="Helpers\Measure.cs" />
     <Compile Include="Helpers\Name.cs" />
