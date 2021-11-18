@@ -118,25 +118,25 @@ namespace boilersGraphics.Helpers
                     if (item2.GetType() == typeof(StraightConnectorViewModel))
                     {
                         var item2_ = item2 as StraightConnectorViewModel;
-                        if (item1_.Points[0] == item2_.Points[0])
+                        if (Distance(item1_.Points[0], item2_.Points[0]) < 5)
                         {
                             ctx.BeginFigure(item1_.Points[1], true, true);
                             ctx.LineTo(item1_.Points[0], true, true);
                             ctx.LineTo(item2_.Points[1], true, true);
                         }
-                        else if (item1_.Points[1] == item2_.Points[0])
+                        else if (Distance(item1_.Points[1], item2_.Points[0]) < 5)
                         {
                             ctx.BeginFigure(item1_.Points[0], true, true);
                             ctx.LineTo(item1_.Points[1], true, true);
                             ctx.LineTo(item2_.Points[1], true, true);
                         }
-                        else if (item1_.Points[0] == item2_.Points[1])
+                        else if (Distance(item1_.Points[0], item2_.Points[1]) < 5)
                         {
                             ctx.BeginFigure(item1_.Points[1], true, true);
                             ctx.LineTo(item1_.Points[0], true, true);
                             ctx.LineTo(item2_.Points[0], true, true);
                         }
-                        else if (item1_.Points[1] == item2_.Points[1])
+                        else if (Distance(item1_.Points[1], item2_.Points[1]) < 5)
                         {
                             ctx.BeginFigure(item1_.Points[0], true, true);
                             ctx.LineTo(item1_.Points[1], true, true);
@@ -146,25 +146,25 @@ namespace boilersGraphics.Helpers
                     else if (item2.GetType() == typeof(BezierCurveViewModel))
                     {
                         var item2_ = item2 as BezierCurveViewModel;
-                        if (item1_.Points[0] == item2_.Points[0])
+                        if (Distance(item1_.Points[0], item2_.Points[0]) < 5)
                         {
                             ctx.BeginFigure(item1_.Points[1], true, true);
                             ctx.LineTo(item1_.Points[0], true, true);
                             ctx.BezierTo(item2_.ControlPoint1.Value, item2_.ControlPoint2.Value, item2_.Points[1], true, true);
                         }
-                        else if (item1_.Points[1] == item2_.Points[0])
+                        else if (Distance(item1_.Points[1], item2_.Points[0]) < 5)
                         {
                             ctx.BeginFigure(item1_.Points[0], true, true);
                             ctx.LineTo(item1_.Points[1], true, true);
                             ctx.BezierTo(item2_.ControlPoint1.Value, item2_.ControlPoint2.Value, item2_.Points[1], true, true);
                         }
-                        else if (item1_.Points[0] == item2_.Points[1])
+                        else if (Distance(item1_.Points[0], item2_.Points[1]) < 5)
                         {
                             ctx.BeginFigure(item1_.Points[1], true, true);
                             ctx.LineTo(item1_.Points[0], true, true);
                             ctx.BezierTo(item2_.ControlPoint2.Value, item2_.ControlPoint1.Value, item2_.Points[0], true, true);
                         }
-                        else if (item1_.Points[1] == item2_.Points[1])
+                        else if (Distance(item1_.Points[1], item2_.Points[1]) < 5)
                         {
                             ctx.BeginFigure(item1_.Points[0], true, true);
                             ctx.LineTo(item1_.Points[1], true, true);
@@ -240,25 +240,25 @@ namespace boilersGraphics.Helpers
                     if (item2.GetType() == typeof(StraightConnectorViewModel))
                     {
                         var item2_ = item2 as StraightConnectorViewModel;
-                        if (item1_.Points[0] == item2_.Points[0])
+                        if (Distance(item1_.Points[0], item2_.Points[0]) < 5)
                         {
                             ctx.BeginFigure(item1_.Points[1], true, true);
                             ctx.BezierTo(item1_.ControlPoint2.Value, item1_.ControlPoint1.Value, item1_.Points[0], true, true);
                             ctx.LineTo(item2_.Points[1], true, true);
                         }
-                        else if (item1_.Points[1] == item2_.Points[0])
+                        else if (Distance(item1_.Points[1], item2_.Points[0]) < 5)
                         {
                             ctx.BeginFigure(item1_.Points[0], true, true);
                             ctx.BezierTo(item1_.ControlPoint1.Value, item1_.ControlPoint2.Value, item1_.Points[1], true, true);
                             ctx.LineTo(item2_.Points[1], true, true);
                         }
-                        else if (item1_.Points[0] == item2_.Points[1])
+                        else if (Distance(item1_.Points[0], item2_.Points[1]) < 5)
                         {
                             ctx.BeginFigure(item1_.Points[1], true, true);
                             ctx.BezierTo(item1_.ControlPoint2.Value, item1_.ControlPoint1.Value, item1_.Points[0], true, true);
                             ctx.LineTo(item2_.Points[0], true, true);
                         }
-                        else if (item1_.Points[1] == item2_.Points[1])
+                        else if (Distance(item1_.Points[1], item2_.Points[1]) < 5)
                         {
                             ctx.BeginFigure(item1_.Points[0], true, true);
                             ctx.BezierTo(item1_.ControlPoint1.Value, item1_.ControlPoint2.Value, item1_.Points[1], true, true);
@@ -268,25 +268,25 @@ namespace boilersGraphics.Helpers
                     else if (item2.GetType() == typeof(BezierCurveViewModel))
                     {
                         var item2_ = item2 as BezierCurveViewModel;
-                        if (item1_.Points[0] == item2_.Points[0])
+                        if (Distance(item1_.Points[0], item2_.Points[0]) < 5)
                         {
                             ctx.BeginFigure(item1_.Points[1], true, true);
                             ctx.BezierTo(item1_.ControlPoint2.Value, item1_.ControlPoint1.Value, item1_.Points[0], true, true);
                             ctx.BezierTo(item2_.ControlPoint1.Value, item2_.ControlPoint2.Value, item2_.Points[1], true, true);
                         }
-                        else if (item1_.Points[1] == item2_.Points[0])
+                        else if (Distance(item1_.Points[1], item2_.Points[0]) < 5)
                         {
                             ctx.BeginFigure(item1_.Points[0], true, true);
                             ctx.BezierTo(item1_.ControlPoint1.Value, item1_.ControlPoint2.Value, item1_.Points[1], true, true);
                             ctx.BezierTo(item2_.ControlPoint1.Value, item2_.ControlPoint2.Value, item2_.Points[1], true, true);
                         }
-                        else if (item1_.Points[0] == item2_.Points[1])
+                        else if (Distance(item1_.Points[0], item2_.Points[1]) < 5)
                         {
                             ctx.BeginFigure(item1_.Points[1], true, true);
                             ctx.BezierTo(item1_.ControlPoint2.Value, item1_.ControlPoint1.Value, item1_.Points[0], true, true);
                             ctx.BezierTo(item2_.ControlPoint2.Value, item2_.ControlPoint1.Value, item2_.Points[0], true, true);
                         }
-                        else if (item1_.Points[1] == item2_.Points[1])
+                        else if (Distance(item1_.Points[1], item2_.Points[1]) < 5)
                         {
                             ctx.BeginFigure(item1_.Points[0], true, true);
                             ctx.BezierTo(item1_.ControlPoint1.Value, item1_.ControlPoint2.Value, item1_.Points[1], true, true);
@@ -415,6 +415,14 @@ namespace boilersGraphics.Helpers
             }
             geometry.Freeze();
             return PathGeometry.CreateFromGeometry(geometry);
+        }
+
+        private static double Distance(Point a, Point b)
+        {
+            var xdiff = a.X - b.X;
+            var ydiff = a.Y - b.Y;
+            var r = Math.Sqrt(xdiff * xdiff + ydiff * ydiff);
+            return r;
         }
 
         private static Point GetBeginPoint(PathGeometry pathGeometry)
