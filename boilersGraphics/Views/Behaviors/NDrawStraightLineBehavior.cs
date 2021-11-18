@@ -3,6 +3,8 @@ using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
 using boilersGraphics.ViewModels;
 using Microsoft.Xaml.Behaviors;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -82,7 +84,20 @@ namespace boilersGraphics.Views.Behaviors
 
             var canvas = AssociatedObject as DesignerCanvas;
             Point current = e.GetPosition(canvas);
-            snapAction.OnMouseMove(ref current);
+            var ellipses = (AssociatedObject.DataContext as DiagramViewModel).AllItems.Value.OfType<NEllipseViewModel>();
+            var appendIntersectionPoints = new List<Point>();
+            if (_straightLineStartPoint.HasValue)
+            {
+                foreach (var ellipse in ellipses)
+                {
+                    var intersections = Intersection.FindEllipseSegmentIntersections(ellipse, _straightLineStartPoint.Value, current, false);
+                    if (intersections.Count() == 1)
+                    {
+                        appendIntersectionPoints.AddRange(intersections);
+                    }
+                }
+            }
+            snapAction.OnMouseMove(ref current, appendIntersectionPoints);
 
             if (e.LeftButton != MouseButtonState.Pressed)
                 _straightLineStartPoint = null;

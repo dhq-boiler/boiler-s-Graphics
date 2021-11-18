@@ -30,14 +30,16 @@ namespace boilersGraphics.Helpers
         private SnapResult _SnapResult = SnapResult.NoSnap;
         private SelectableDesignerItemViewModelBase _SnapTargetDataContext { get; set; }
 
-        public void OnMouseMove(ref Point currentPoint)
+        public void OnMouseMove(ref Point currentPoint, List<Point> appendIntersectionPoints = null)
         {
             var mainWindowVM = (App.Current.MainWindow.DataContext as MainWindowViewModel);
             var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
             var diagramVM = mainWindowVM.DiagramViewModel;
             if (diagramVM.EnablePointSnap.Value)
             {
-                var snapPoints = diagramVM.GetSnapPoints(currentPoint);
+                var snapPoints = diagramVM.GetSnapPoints(currentPoint).ToList();
+                if (appendIntersectionPoints != null)
+                    snapPoints.AddRange(from x in appendIntersectionPoints select new Tuple<SnapPoint, Point>(CreateSnapPoint(x), x));
                 Tuple<SnapPoint, Point> snapped = null;
                 foreach (var snapPoint in snapPoints)
                 {
@@ -86,14 +88,16 @@ namespace boilersGraphics.Helpers
             }
         }
 
-        public void OnMouseMove(ref Point currentPoint, SnapPoint movingSnapPoint)
+        public void OnMouseMove(ref Point currentPoint, SnapPoint movingSnapPoint, List<Point> appendIntersectionPoints = null)
         {
             var mainWindowVM = (App.Current.MainWindow.DataContext as MainWindowViewModel);
             var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
             var diagramVM = mainWindowVM.DiagramViewModel;
             if (diagramVM.EnablePointSnap.Value)
             {
-                var snapPoints = diagramVM.GetSnapPoints(new SnapPoint[] { movingSnapPoint });
+                var snapPoints = diagramVM.GetSnapPoints(new SnapPoint[] { movingSnapPoint }).ToList();
+                if (appendIntersectionPoints != null)
+                    snapPoints.AddRange(from x in appendIntersectionPoints select new Tuple<SnapPoint, Point>(CreateSnapPoint(x), x));
                 Tuple<SnapPoint, Point> snapped = null;
                 foreach (var snapPoint in snapPoints)
                 {
@@ -143,6 +147,15 @@ namespace boilersGraphics.Helpers
                     _SnapResult = SnapResult.NoSnap;
                 }
             }
+        }
+
+        private SnapPoint CreateSnapPoint(Point point)
+        {
+            var snapPoint = new SnapPoint();
+            snapPoint.SetValue(Canvas.LeftProperty, point.X);
+            snapPoint.SetValue(Canvas.TopProperty, point.Y);
+            snapPoint.SnapPointPosition = SnapPointPosition.Intersection;
+            return snapPoint;
         }
 
         public void OnMouseUp(Adorner targetAdorner)

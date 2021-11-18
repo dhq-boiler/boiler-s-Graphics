@@ -4,6 +4,7 @@ using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
 using boilersGraphics.Models;
 using boilersGraphics.ViewModels;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Documents;
@@ -41,10 +42,23 @@ namespace boilersGraphics.Adorners
                 if (!this.IsMouseCaptured)
                     this.CaptureMouse();
 
+                var ellipses = (_designerCanvas.DataContext as DiagramViewModel).AllItems.Value.OfType<NEllipseViewModel>();
+
                 //ドラッグ終了座標を更新
                 _endPoint = e.GetPosition(this);
+
+                var appendIntersectionPoints = new List<Point>();
+                foreach (var ellipse in ellipses)
+                {
+                    var intersections = Intersection.FindEllipseSegmentIntersections(ellipse, _startPoint.Value, _endPoint.Value, false);
+                    if (intersections.Count() == 1)
+                    {
+                        appendIntersectionPoints.AddRange(intersections);
+                    }
+                }
+
                 var currentPosition = _endPoint.Value;
-                _snapAction.OnMouseMove(ref currentPosition);
+                _snapAction.OnMouseMove(ref currentPosition, appendIntersectionPoints);
                 _endPoint = currentPosition;
 
                 (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.CurrentPoint = currentPosition;

@@ -10,40 +10,39 @@ namespace boilersGraphics.Helpers
 {
     public static class Intersection
     {
-        public static Point[] FindEllipseSegmentIntersections(NEllipseViewModel rect, StraightConnectorViewModel straightConnectorViewModel, bool segment_only)
+        public static Point[] FindEllipseSegmentIntersections(NEllipseViewModel ellipse, Point pt1, Point pt2, bool segment_only)
         {
-            var pt1 = straightConnectorViewModel.Points[0];
-            var pt2 = straightConnectorViewModel.Points[1];
+            var clone = ellipse.Clone() as NEllipseViewModel;
             // If the ellipse or line segment are empty, return no intersections.
-            if ((rect.Width.Value == 0) || (rect.Height.Value == 0) ||
+            if ((clone.Width.Value == 0) || (clone.Height.Value == 0) ||
                 ((pt1.X == pt2.X) && (pt1.Y == pt2.Y)))
                 return new Point[] { };
 
             // Make sure the rectangle has non-negative width and height.
-            if (rect.Width.Value < 0)
+            if (clone.Width.Value < 0)
             {
-                rect.Left.Value = rect.Right.Value;
-                rect.Width.Value = -rect.Width.Value;
+                clone.Left.Value = clone.Right.Value;
+                clone.Width.Value = -clone.Width.Value;
             }
-            if (rect.Height.Value < 0)
+            if (clone.Height.Value < 0)
             {
-                rect.Top.Value = rect.Bottom.Value;
-                rect.Height.Value = -rect.Height.Value;
+                clone.Top.Value = clone.Bottom.Value;
+                clone.Height.Value = -clone.Height.Value;
             }
 
             // Translate so the ellipse is centered at the origin.
-            double cx = rect.CenterX.Value;
-            double cy = rect.CenterY.Value;
-            rect.Left.Value -= cx;
-            rect.Top.Value -= cy;
+            double cx = clone.CenterX.Value;
+            double cy = clone.CenterY.Value;
+            clone.Left.Value -= cx;
+            clone.Top.Value -= cy;
             pt1.X -= cx;
             pt1.Y -= cy;
             pt2.X -= cx;
             pt2.Y -= cy;
 
             // Get the semimajor and semiminor axes.
-            double a = rect.Width.Value / 2;
-            double b = rect.Height.Value / 2;
+            double a = clone.Width.Value / 2;
+            double b = clone.Height.Value / 2;
 
             // Calculate the quadratic parameters.
             double A = (pt2.X - pt1.X) * (pt2.X - pt1.X) / a / a +
