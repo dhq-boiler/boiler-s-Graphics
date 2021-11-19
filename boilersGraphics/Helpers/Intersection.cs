@@ -14,9 +14,9 @@ namespace boilersGraphics.Helpers
         /// <summary>
         /// http://csharphelper.com/blog/2017/08/calculate-where-a-line-segment-and-an-ellipse-intersect-in-c/
         /// </summary>
-        /// <param name="ellipse"></param>
-        /// <param name="pt1"></param>
-        /// <param name="pt2"></param>
+        /// <param name="ellipse">ellipse</param>
+        /// <param name="pt1">beginPoint of tangent</param>
+        /// <param name="pt2">endPoint of tangent</param>
         /// <param name="segment_only"></param>
         /// <returns></returns>
         public static Tuple<Point[], double> FindEllipseSegmentIntersections(NEllipseViewModel ellipse, Point pt1, Point pt2, bool segment_only)
