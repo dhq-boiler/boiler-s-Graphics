@@ -3,6 +3,7 @@ using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
 using boilersGraphics.ViewModels;
 using Microsoft.Xaml.Behaviors;
+using NLog;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -93,7 +94,12 @@ namespace boilersGraphics.Views.Behaviors
                     var intersections = Intersection.FindEllipseSegmentIntersections(ellipse, _straightLineStartPoint.Value, current, false);
                     if (intersections.Count() == 1)
                     {
+                        LogManager.GetCurrentClassLogger().Debug($"intersection:{intersections.First()}");
                         appendIntersectionPoints.AddRange(intersections);
+                    }
+                    else
+                    {
+                        LogManager.GetCurrentClassLogger().Debug($"two or more intersections:{intersections}");
                     }
                 }
             }

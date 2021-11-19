@@ -1,4 +1,5 @@
 ﻿using boilersGraphics.ViewModels;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -56,7 +57,8 @@ namespace boilersGraphics.Helpers
 
             // Calculate the discriminant.
             double discriminant = B * B - 4 * A * C;
-            if (discriminant < 0.000001)
+            LogManager.GetCurrentClassLogger().Debug($"discriminant:{discriminant}");
+            if (Math.Abs(discriminant) < 0.1)
             {
                 // One real solution.
                 t_values.Add(-B / 2 / A);

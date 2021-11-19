@@ -2,6 +2,8 @@
 using boilersGraphics.Helpers;
 using boilersGraphics.ViewModels;
 using NLog;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -72,8 +74,25 @@ namespace boilersGraphics.Controls
                 Recorder.Current.ExecuteSetProperty(snapPointVM, "Top.Value", currentPosition.Y);
                 Canvas.SetLeft(this, currentPosition.X - this.Width / 2);
                 Canvas.SetTop(this, currentPosition.Y - this.Height / 2);
-
-                snapAction.OnMouseMove(ref point, this);
+                
+                var ellipses = ((App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel as DiagramViewModel).AllItems.Value.OfType<NEllipseViewModel>();
+                var appendIntersectionPoints = new List<Point>();
+                
+                foreach (var ellipse in ellipses)
+                {
+                    var oppositePoint = OppositeHandle.TranslatePoint(new Point(), App.Current.MainWindow.GetChildOfType<DesignerCanvas>());
+                    var intersections = Intersection.FindEllipseSegmentIntersections(ellipse, oppositePoint, point, false);
+                    if (intersections.Count() == 1)
+                    {
+                        LogManager.GetCurrentClassLogger().Debug($"intersection:{intersections.First()}");
+                        appendIntersectionPoints.AddRange(intersections);
+                    }
+                    else
+                    {
+                        LogManager.GetCurrentClassLogger().Debug($"two or more intersections:{intersections}");
+                    }
+                }
+                snapAction.OnMouseMove(ref point, this, appendIntersectionPoints);
 
                 Recorder.Current.ExecuteSetProperty(connectorVM, $"Points[{TargetPointIndex}]", point);
 
