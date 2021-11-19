@@ -78,39 +78,19 @@ namespace boilersGraphics.Controls
                 
                 var ellipses = ((App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel as DiagramViewModel).AllItems.Value.OfType<NEllipseViewModel>();
                 var appendIntersectionPoints = new List<Point>();
-                
-                foreach (var ellipse in ellipses)
-                {
-                    var oppositePoint = OppositeHandle.TranslatePoint(new Point(), App.Current.MainWindow.GetChildOfType<DesignerCanvas>());
-                    var snapPower = (App.Current.MainWindow.DataContext as MainWindowViewModel).SnapPower.Value;
-                    var array = new List<Tuple<Point[], double>>();
-                    for (double y = -snapPower; y < snapPower; y++)
-                    {
-                        for (double x = -snapPower; x < snapPower; x++)
-                        {
-                            var tuple = Intersection.FindEllipseSegmentIntersections(ellipse, oppositePoint, new Point(point.X + x, point.Y + y), false);
-                            array.Add(tuple);
-                        }
-                    }
-                    var minDiscriminant = array.FirstOrDefault(x => Math.Abs(x.Item2) == array.Min(x => Math.Abs(x.Item2)));
-                    if (minDiscriminant != null && minDiscriminant.Item1.Count() == 1)
-                    {
-                        appendIntersectionPoints.AddRange(minDiscriminant.Item1);
-                    }
-                }
+
+                var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
+                var oppositePoint = OppositeHandle.TransformToAncestor(designerCanvas).Transform(new Point(0, 0));
+                snapAction.SnapIntersectionOfEllipseAndTangent(ellipses, oppositePoint, point, appendIntersectionPoints);
                 snapAction.OnMouseMove(ref point, this, appendIntersectionPoints);
 
                 Recorder.Current.ExecuteSetProperty(connectorVM, $"Points[{TargetPointIndex}]", point);
-
-                var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
                 if ((string)Tag == "始点")
                 {
-                    var oppositePoint = OppositeHandle.TransformToAncestor(designerCanvas).Transform(new Point(0, 0));
                     (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = $"({point}) - ({oppositePoint}) (w, h) = ({oppositePoint.X - point.X}, {oppositePoint.Y - point.Y})";
                 }
                 else if ((string)Tag == "終点")
                 {
-                    var oppositePoint = OppositeHandle.TransformToAncestor(designerCanvas).Transform(new Point(0, 0));
                     (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = $"({oppositePoint}) - ({point}) (w, h) = ({point.X - oppositePoint.X}, {point.Y - oppositePoint.Y})";
                 }
             }

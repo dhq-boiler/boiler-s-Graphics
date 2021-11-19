@@ -49,24 +49,7 @@ namespace boilersGraphics.Adorners
                 _endPoint = e.GetPosition(this);
 
                 var appendIntersectionPoints = new List<Point>();
-                foreach (var ellipse in ellipses)
-                {
-                    var snapPower = (App.Current.MainWindow.DataContext as MainWindowViewModel).SnapPower.Value;
-                    var array = new List<Tuple<Point[], double>>();
-                    for (double y = -snapPower; y < snapPower; y++)
-                    {
-                        for (double x = -snapPower; x < snapPower; x++)
-                        {
-                            var tuple = Intersection.FindEllipseSegmentIntersections(ellipse, _startPoint.Value, new Point(_endPoint.Value.X + x, _endPoint.Value.Y + y), false);
-                            array.Add(tuple);
-                        }
-                    }
-                    var minDiscriminant = array.FirstOrDefault(x => Math.Abs(x.Item2) == array.Min(x => Math.Abs(x.Item2)));
-                    if (minDiscriminant != null && minDiscriminant.Item1.Count() == 1)
-                    {
-                        appendIntersectionPoints.AddRange(minDiscriminant.Item1);
-                    }
-                }
+                _snapAction.SnapIntersectionOfEllipseAndTangent(ellipses, _startPoint.Value, _endPoint.Value, appendIntersectionPoints);
 
                 var currentPosition = _endPoint.Value;
                 _snapAction.OnMouseMove(ref currentPosition, appendIntersectionPoints);

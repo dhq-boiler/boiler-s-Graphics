@@ -90,24 +90,7 @@ namespace boilersGraphics.Views.Behaviors
             var appendIntersectionPoints = new List<Point>();
             if (_straightLineStartPoint.HasValue)
             {
-                foreach (var ellipse in ellipses)
-                {
-                    var snapPower = (App.Current.MainWindow.DataContext as MainWindowViewModel).SnapPower.Value;
-                    var array = new List<Tuple<Point[], double>>();
-                    for (double y = -snapPower; y < snapPower; y++)
-                    {
-                        for (double x = -snapPower; x < snapPower; x++)
-                        {
-                            var tuple = Intersection.FindEllipseSegmentIntersections(ellipse, _straightLineStartPoint.Value, new Point(current.X + x, current.Y + y), false);
-                            array.Add(tuple);
-                        }
-                    }
-                    var minDiscriminant = array.FirstOrDefault(x => Math.Abs(x.Item2) == array.Min(x => Math.Abs(x.Item2)));
-                    if (minDiscriminant != null && minDiscriminant.Item1.Count() == 1)
-                    {
-                        appendIntersectionPoints.AddRange(minDiscriminant.Item1);
-                    }
-                }
+                snapAction.SnapIntersectionOfEllipseAndTangent(ellipses, _straightLineStartPoint.Value, current, appendIntersectionPoints);
             }
             snapAction.OnMouseMove(ref current, appendIntersectionPoints);
 

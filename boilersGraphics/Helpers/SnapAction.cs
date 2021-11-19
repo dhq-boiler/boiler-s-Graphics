@@ -3,8 +3,10 @@ using boilersGraphics.Extensions;
 using boilersGraphics.ViewModels;
 using NLog;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -29,6 +31,28 @@ namespace boilersGraphics.Helpers
         private SnapPointPosition _SnapToEdge;
         private SnapResult _SnapResult = SnapResult.NoSnap;
         private SelectableDesignerItemViewModelBase _SnapTargetDataContext { get; set; }
+
+        public void SnapIntersectionOfEllipseAndTangent(IEnumerable<NEllipseViewModel> ellipses, Point beginPoint, Point endPoint, List<Point> appendIntersectionPoints)
+        {
+            foreach (var ellipse in ellipses)
+            {
+                var snapPower = (App.Current.MainWindow.DataContext as MainWindowViewModel).SnapPower.Value;
+                var array = new ConcurrentBag<Tuple<Point[], double>>();
+                Parallel.For((int)-snapPower, (int)snapPower, (y) =>
+                {
+                    for (double x = -snapPower; x < snapPower; x++)
+                    {
+                        var tuple = Intersection.FindEllipseSegmentIntersections(ellipse, beginPoint, new Point(endPoint.X + x, endPoint.Y + y), false);
+                        array.Add(tuple);
+                    }
+                });
+                var minDiscriminant = array.FirstOrDefault(x => Math.Abs(x.Item2) == array.Min(x => Math.Abs(x.Item2)));
+                if (minDiscriminant != null && minDiscriminant.Item1.Count() == 1)
+                {
+                    appendIntersectionPoints.AddRange(minDiscriminant.Item1);
+                }
+            }
+        }
 
         public void OnMouseMove(ref Point currentPoint, List<Point> appendIntersectionPoints = null)
         {
