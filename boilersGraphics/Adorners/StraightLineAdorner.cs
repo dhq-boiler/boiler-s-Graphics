@@ -4,6 +4,7 @@ using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
 using boilersGraphics.Models;
 using boilersGraphics.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -50,10 +51,20 @@ namespace boilersGraphics.Adorners
                 var appendIntersectionPoints = new List<Point>();
                 foreach (var ellipse in ellipses)
                 {
-                    var intersections = Intersection.FindEllipseSegmentIntersections(ellipse, _startPoint.Value, _endPoint.Value, false);
-                    if (intersections.Count() == 1)
+                    var snapPower = (App.Current.MainWindow.DataContext as MainWindowViewModel).SnapPower.Value;
+                    var array = new List<Tuple<Point[], double>>();
+                    for (double y = -snapPower; y < snapPower; y++)
                     {
-                        appendIntersectionPoints.AddRange(intersections);
+                        for (double x = -snapPower; x < snapPower; x++)
+                        {
+                            var tuple = Intersection.FindEllipseSegmentIntersections(ellipse, _startPoint.Value, new Point(_endPoint.Value.X + x, _endPoint.Value.Y + y), false);
+                            array.Add(tuple);
+                        }
+                    }
+                    var minDiscriminant = array.FirstOrDefault(x => Math.Abs(x.Item2) == array.Min(x => Math.Abs(x.Item2)));
+                    if (minDiscriminant != null && minDiscriminant.Item1.Count() == 1)
+                    {
+                        appendIntersectionPoints.AddRange(minDiscriminant.Item1);
                     }
                 }
 

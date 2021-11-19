@@ -4,6 +4,7 @@ using boilersGraphics.Helpers;
 using boilersGraphics.ViewModels;
 using Microsoft.Xaml.Behaviors;
 using NLog;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -91,15 +92,20 @@ namespace boilersGraphics.Views.Behaviors
             {
                 foreach (var ellipse in ellipses)
                 {
-                    var intersections = Intersection.FindEllipseSegmentIntersections(ellipse, _straightLineStartPoint.Value, current, false);
-                    if (intersections.Count() == 1)
+                    var snapPower = (App.Current.MainWindow.DataContext as MainWindowViewModel).SnapPower.Value;
+                    var array = new List<Tuple<Point[], double>>();
+                    for (double y = -snapPower; y < snapPower; y++)
                     {
-                        LogManager.GetCurrentClassLogger().Debug($"intersection:{intersections.First()}");
-                        appendIntersectionPoints.AddRange(intersections);
+                        for (double x = -snapPower; x < snapPower; x++)
+                        {
+                            var tuple = Intersection.FindEllipseSegmentIntersections(ellipse, _straightLineStartPoint.Value, new Point(current.X + x, current.Y + y), false);
+                            array.Add(tuple);
+                        }
                     }
-                    else
+                    var minDiscriminant = array.FirstOrDefault(x => Math.Abs(x.Item2) == array.Min(x => Math.Abs(x.Item2)));
+                    if (minDiscriminant != null && minDiscriminant.Item1.Count() == 1)
                     {
-                        LogManager.GetCurrentClassLogger().Debug($"two or more intersections:{intersections}");
+                        appendIntersectionPoints.AddRange(minDiscriminant.Item1);
                     }
                 }
             }

@@ -2,6 +2,7 @@
 using boilersGraphics.Helpers;
 using boilersGraphics.ViewModels;
 using NLog;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -81,15 +82,20 @@ namespace boilersGraphics.Controls
                 foreach (var ellipse in ellipses)
                 {
                     var oppositePoint = OppositeHandle.TranslatePoint(new Point(), App.Current.MainWindow.GetChildOfType<DesignerCanvas>());
-                    var intersections = Intersection.FindEllipseSegmentIntersections(ellipse, oppositePoint, point, false);
-                    if (intersections.Count() == 1)
+                    var snapPower = (App.Current.MainWindow.DataContext as MainWindowViewModel).SnapPower.Value;
+                    var array = new List<Tuple<Point[], double>>();
+                    for (double y = -snapPower; y < snapPower; y++)
                     {
-                        LogManager.GetCurrentClassLogger().Debug($"intersection:{intersections.First()}");
-                        appendIntersectionPoints.AddRange(intersections);
+                        for (double x = -snapPower; x < snapPower; x++)
+                        {
+                            var tuple = Intersection.FindEllipseSegmentIntersections(ellipse, oppositePoint, new Point(point.X + x, point.Y + y), false);
+                            array.Add(tuple);
+                        }
                     }
-                    else
+                    var minDiscriminant = array.FirstOrDefault(x => Math.Abs(x.Item2) == array.Min(x => Math.Abs(x.Item2)));
+                    if (minDiscriminant != null && minDiscriminant.Item1.Count() == 1)
                     {
-                        LogManager.GetCurrentClassLogger().Debug($"two or more intersections:{intersections}");
+                        appendIntersectionPoints.AddRange(minDiscriminant.Item1);
                     }
                 }
                 snapAction.OnMouseMove(ref point, this, appendIntersectionPoints);

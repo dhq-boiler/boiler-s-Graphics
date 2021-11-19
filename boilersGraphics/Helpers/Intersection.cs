@@ -19,13 +19,13 @@ namespace boilersGraphics.Helpers
         /// <param name="pt2"></param>
         /// <param name="segment_only"></param>
         /// <returns></returns>
-        public static Point[] FindEllipseSegmentIntersections(NEllipseViewModel ellipse, Point pt1, Point pt2, bool segment_only)
+        public static Tuple<Point[], double> FindEllipseSegmentIntersections(NEllipseViewModel ellipse, Point pt1, Point pt2, bool segment_only)
         {
             var clone = ellipse.Clone() as NEllipseViewModel;
             // If the ellipse or line segment are empty, return no intersections.
             if ((clone.Width.Value == 0) || (clone.Height.Value == 0) ||
                 ((pt1.X == pt2.X) && (pt1.Y == pt2.Y)))
-                return new Point[] { };
+                return new Tuple<Point[], double>(new Point[] { }, double.NaN);
 
             // Make sure the rectangle has non-negative width and height.
             if (clone.Width.Value < 0)
@@ -93,7 +93,7 @@ namespace boilersGraphics.Helpers
             }
 
             // Return the points.
-            return points.ToArray();
+            return new Tuple<Point[], double>(points.ToArray(), discriminant);
         }
     }
 }
