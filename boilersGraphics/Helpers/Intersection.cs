@@ -66,10 +66,6 @@ namespace boilersGraphics.Helpers
                        2 * y1 * (y2 - y1) / b / b;
             double C = x1 * x1 / a / a + y1 * y1 / b / b - 1;
 
-            Console.WriteLine($"A:{A} B:{B} C:{C}");
-            Console.WriteLine($"Ba:{2 * x1 * (x2 - x1) / a / a}");
-            Console.WriteLine($"Bb:{2 * y1 * (y2 - y1) / b / b}");
-
             // Make a list of t values.
             List<double> t_values = new List<double>();
 
@@ -154,12 +150,6 @@ namespace boilersGraphics.Helpers
                      + (Pow(Sin(θ), 2) * 2 * x1 * (x2 - x1) + 2 * Sin(θ) * Cos(θ) * (y1 * (x2 - x1) + x1 * (y2 - y1)) + Pow(Cos(θ), 2) * 2 * y1 * (y2 - y1)) / b / b;
             double C = (Pow(Cos(θ) * x1, 2) - 2 * Cos(θ) * Sin(θ) * x1 * y1 + Pow(Sin(θ) * y1, 2)) / a / a
                      + (Pow(Sin(θ) * x1, 2) + 2 * Sin(θ) * Cos(θ) * x1 * y1 + Pow(Cos(θ) * y1, 2)) / b / b - 1;
-
-            Console.WriteLine($"A:{A} B:{B} C:{C}");
-            Console.WriteLine($"Ba:{(Pow(Cos(θ), 2) * 2 * (x2 - x1) - 2 * Cos(θ) * Sin(θ) * (y1 * (x2 - x1) + x1 * (y2 - y1)) + Pow(Sin(θ), 2) * 2 * (y2 - y1)) / a / a}");
-            Console.WriteLine($"Bb:{(Pow(Sin(θ), 2) * 2 * (x2 - x1) + 2 * Sin(θ) * Cos(θ) * (y1 * (x2 - x1) + x1 * (y2 - y1)) + Pow(Cos(θ), 2) * 2 * (y2 - y1)) / b / b}");
-            Console.WriteLine($"Bb_1:{Pow(Sin(θ), 2) * 2 * (x2 - x1) / b / b} Bb_2:{2 * Sin(θ) * Cos(θ) * (y1 * (x2 - x1) + x1 * (y2 - y1)) / b / b} Bb_3:{Pow(Cos(θ), 2) * 2 * (y2 - y1) / b / b}");
-
 
             // Make a list of t values.
             List<double> t_values = new List<double>();
