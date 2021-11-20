@@ -176,6 +176,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Adorners\AuxiliaryLine.cs" />
     <Compile Include="Adorners\BezierCurveAdorner.cs" />
     <Compile Include="Adorners\EllipseAdorner.cs" />
     <Compile Include="Adorners\LetterAdorner.cs" />

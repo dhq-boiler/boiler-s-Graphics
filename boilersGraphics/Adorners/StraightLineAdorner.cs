@@ -48,7 +48,7 @@ namespace boilersGraphics.Adorners
                 //ドラッグ終了座標を更新
                 _endPoint = e.GetPosition(this);
 
-                var appendIntersectionPoints = new List<Point>();
+                var appendIntersectionPoints = new List<Tuple<Point, NEllipseViewModel>>();
                 _snapAction.SnapIntersectionOfEllipseAndTangent(ellipses, _startPoint.Value, _endPoint.Value, appendIntersectionPoints);
 
                 var currentPosition = _endPoint.Value;

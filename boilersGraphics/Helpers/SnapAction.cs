@@ -32,7 +32,7 @@ namespace boilersGraphics.Helpers
         private SnapResult _SnapResult = SnapResult.NoSnap;
         private SelectableDesignerItemViewModelBase _SnapTargetDataContext { get; set; }
 
-        public void SnapIntersectionOfEllipseAndTangent(IEnumerable<NEllipseViewModel> ellipses, Point beginPoint, Point endPoint, List<Point> appendIntersectionPoints)
+        public void SnapIntersectionOfEllipseAndTangent(IEnumerable<NEllipseViewModel> ellipses, Point beginPoint, Point endPoint, List<Tuple<Point, NEllipseViewModel>> appendIntersectionPoints)
         {
             foreach (var ellipse in ellipses)
             {
@@ -49,12 +49,12 @@ namespace boilersGraphics.Helpers
                 var minDiscriminant = array.FirstOrDefault(x => Math.Abs(x.Item2) == array.Min(x => Math.Abs(x.Item2)));
                 if (minDiscriminant != null && minDiscriminant.Item1.Count() == 1)
                 {
-                    appendIntersectionPoints.AddRange(minDiscriminant.Item1);
+                    appendIntersectionPoints.Add(new Tuple<Point, NEllipseViewModel>(minDiscriminant.Item1.First(), ellipse));
                 }
             }
         }
 
-        public void OnMouseMove(ref Point currentPoint, List<Point> appendIntersectionPoints = null)
+        public void OnMouseMove(ref Point currentPoint, List<Tuple<Point, NEllipseViewModel>> appendIntersectionPoints = null)
         {
             var mainWindowVM = (App.Current.MainWindow.DataContext as MainWindowViewModel);
             var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
@@ -62,8 +62,9 @@ namespace boilersGraphics.Helpers
             if (diagramVM.EnablePointSnap.Value)
             {
                 var snapPoints = diagramVM.GetSnapPoints(currentPoint).ToList();
+                var dataContext = (designerCanvas.InputHitTest(currentPoint) as FrameworkElement).DataContext;
                 if (appendIntersectionPoints != null)
-                    snapPoints.AddRange(from x in appendIntersectionPoints select new Tuple<SnapPoint, Point>(CreateSnapPoint(x), x));
+                    snapPoints.AddRange(from x in appendIntersectionPoints select new Tuple<SnapPoint, Point>(CreateSnapPoint(x.Item1, x.Item2), x.Item1));
                 Tuple<SnapPoint, Point> snapped = null;
                 foreach (var snapPoint in snapPoints)
                 {
@@ -100,6 +101,18 @@ namespace boilersGraphics.Helpers
                                 //ディクショナリに記憶する
                                 _adorners.Add(snapped.Item2, adorner);
                             }
+
+                            if (snapped.Item1.SnapPointPosition == SnapPointPosition.Intersection)
+                            {
+                                var auxiliaryLine = new Adorners.AuxiliaryLine(designerCanvas, (snapped.Item1.DataContext as NEllipseViewModel).CenterPoint.Value, snapped.Item2);
+                                if (auxiliaryLine != null)
+                                {
+                                    adornerLayer.Add(auxiliaryLine);
+
+                                    //ディクショナリに記憶する
+                                    _adorners.Add(snapped.Item2, auxiliaryLine);
+                                }
+                            }
                         }
                     }
                     _SnapResult = SnapResult.Snapped;
@@ -108,11 +121,24 @@ namespace boilersGraphics.Helpers
                 {
                     RemoveAllAdornerFromAdornerLayerAndDictionary(designerCanvas);
                     _SnapResult = SnapResult.NoSnap;
+
+                    if (appendIntersectionPoints != null && appendIntersectionPoints.Count() > 0)
+                    {
+                        AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(designerCanvas);
+                        var adorner = new Adorners.SnapPointAdorner(designerCanvas, appendIntersectionPoints.First().Item1);
+                        if (adorner != null)
+                        {
+                            adornerLayer.Add(adorner);
+
+                            //ディクショナリに記憶する
+                            _adorners.Add(appendIntersectionPoints.First().Item1, adorner);
+                        }
+                    }
                 }
             }
         }
 
-        public void OnMouseMove(ref Point currentPoint, SnapPoint movingSnapPoint, List<Point> appendIntersectionPoints = null)
+        public void OnMouseMove(ref Point currentPoint, SnapPoint movingSnapPoint, List<Tuple<Point, NEllipseViewModel>> appendIntersectionPoints = null)
         {
             var mainWindowVM = (App.Current.MainWindow.DataContext as MainWindowViewModel);
             var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
@@ -121,7 +147,7 @@ namespace boilersGraphics.Helpers
             {
                 var snapPoints = diagramVM.GetSnapPoints(new SnapPoint[] { movingSnapPoint }).ToList();
                 if (appendIntersectionPoints != null)
-                    snapPoints.AddRange(from x in appendIntersectionPoints select new Tuple<SnapPoint, Point>(CreateSnapPoint(x), x));
+                    snapPoints.AddRange(from x in appendIntersectionPoints select new Tuple<SnapPoint, Point>(CreateSnapPoint(x.Item1, x.Item2), x.Item1));
                 Tuple<SnapPoint, Point> snapped = null;
                 foreach (var snapPoint in snapPoints)
                 {
@@ -173,9 +199,10 @@ namespace boilersGraphics.Helpers
             }
         }
 
-        private SnapPoint CreateSnapPoint(Point point)
+        private SnapPoint CreateSnapPoint(Point point, object dataContext)
         {
             var snapPoint = new SnapPoint();
+            snapPoint.DataContext = dataContext;
             snapPoint.SetValue(Canvas.LeftProperty, point.X);
             snapPoint.SetValue(Canvas.TopProperty, point.Y);
             snapPoint.SnapPointPosition = SnapPointPosition.Intersection;

@@ -132,16 +132,19 @@ namespace boilersGraphics.Helpers
             pt2.X -= cx;
             pt2.Y -= cy;
 
-            var θ = clone.RotationAngle.Value * PI / 180.0;
-
-            // Get the semimajor and semiminor axes.
-            double a = clone.Width.Value / 2;
-            double b = clone.Height.Value / 2;
-
             var x1 = pt1.X;
             var y1 = pt1.Y;
             var x2 = pt2.X;
             var y2 = pt2.Y;
+
+            var vec1 = Point.Subtract(new Point(cx, cy - 10), new Point(cx, cy));
+            var vec2 = new Vector(x2, y2);
+            var angle = Vector.AngleBetween(vec1, vec2);
+            var θ = (angle) * PI / 180.0;
+
+            // Get the semimajor and semiminor axes.
+            double a = clone.Width.Value / 2;
+            double b = clone.Height.Value / 2;
 
             // Calculate the quadratic parameters.
             double A = (Pow(Cos(θ) * (x2 - x1), 2) - 2 * Cos(θ) * Sin(θ) * (x2 - x1) * (y2 - y1) + Pow(Sin(θ) * (y2 - y1), 2)) / a / a +

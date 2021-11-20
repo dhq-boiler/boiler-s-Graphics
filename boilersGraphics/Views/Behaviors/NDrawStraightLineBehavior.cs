@@ -87,7 +87,7 @@ namespace boilersGraphics.Views.Behaviors
             var canvas = AssociatedObject as DesignerCanvas;
             Point current = e.GetPosition(canvas);
             var ellipses = (AssociatedObject.DataContext as DiagramViewModel).AllItems.Value.OfType<NEllipseViewModel>();
-            var appendIntersectionPoints = new List<Point>();
+            var appendIntersectionPoints = new List<Tuple<Point, NEllipseViewModel>>();
             if (_straightLineStartPoint.HasValue)
             {
                 snapAction.SnapIntersectionOfEllipseAndTangent(ellipses, _straightLineStartPoint.Value, current, appendIntersectionPoints);
