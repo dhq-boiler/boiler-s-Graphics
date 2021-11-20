@@ -42,7 +42,7 @@ namespace boilersGraphics.Helpers
                 {
                     for (double x = -snapPower; x < snapPower; x++)
                     {
-                        var tuple = Intersection.FindEllipseSegmentIntersections(ellipse, beginPoint, new Point(endPoint.X + x, endPoint.Y + y), false);
+                        var tuple = Intersection.FindEllipseSegmentIntersectionsSupportRotation(ellipse, beginPoint, new Point(endPoint.X + x, endPoint.Y + y), false);
                         array.Add(tuple);
                     }
                 });
