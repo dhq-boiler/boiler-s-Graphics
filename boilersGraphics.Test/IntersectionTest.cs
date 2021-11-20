@@ -20,9 +20,6 @@ namespace boilersGraphics.Test
         [Test]
         public void Basic()
         {
-            boilersGraphics.App.IsTest = true;
-            var mainWindowViewModel = new MainWindowViewModel(null);
-            var diagramViewModel = new DiagramViewModel(mainWindowViewModel, 1000, 1000);
             var ellipse = new NEllipseViewModel(-4, 3, 8, 6);
 
             var intersections = Intersection.FindEllipseSegmentIntersections(ellipse, new Point(-4, -1), new Point(-4, 3), false);
@@ -36,9 +33,6 @@ namespace boilersGraphics.Test
         [Test]
         public void 回転0度の円()
         {
-            boilersGraphics.App.IsTest = true;
-            var mainWindowViewModel = new MainWindowViewModel(null);
-            var diagramViewModel = new DiagramViewModel(mainWindowViewModel, 1000, 1000);
             var ellipse = new NEllipseViewModel(-4, -4, 8, 8);
 
             Assert.That(ellipse.CenterX.Value, Is.EqualTo(0));
@@ -54,9 +48,6 @@ namespace boilersGraphics.Test
         [Test]
         public void 回転0度の円_回転対応版()
         {
-            boilersGraphics.App.IsTest = true;
-            var mainWindowViewModel = new MainWindowViewModel(null);
-            var diagramViewModel = new DiagramViewModel(mainWindowViewModel, 1000, 1000);
             var ellipse = new NEllipseViewModel(-4, -4, 8, 8);
 
             Assert.That(ellipse.CenterX.Value, Is.EqualTo(0));
@@ -72,9 +63,6 @@ namespace boilersGraphics.Test
         [Test]
         public void 回転90度の楕円_回転対応版()
         {
-            boilersGraphics.App.IsTest = true;
-            var mainWindowViewModel = new MainWindowViewModel(null);
-            var diagramViewModel = new DiagramViewModel(mainWindowViewModel, 1000, 1000);
             var ellipse = new NEllipseViewModel(-3, -2, 6, 4);
             ellipse.RotationAngle.Value = 90;
 
