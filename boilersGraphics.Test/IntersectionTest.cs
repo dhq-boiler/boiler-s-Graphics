@@ -75,5 +75,75 @@ namespace boilersGraphics.Test
             Assert.That(intersections.Item1.First().X, Is.EqualTo(0).Within(0.00001));
             Assert.That(intersections.Item1.First().Y, Is.EqualTo(3).Within(0.00001));
         }
+
+        [Test]
+        public void ベクトル2つの角度の確認()
+        {
+            Vector vec1, vec2;
+            double angle;
+            vec1 = new Vector(0, -10);
+            //時計回りに45°
+            vec2 = new Vector(10, -10);
+            angle = Vector.AngleBetween(vec1, vec2);
+            if (angle < 0)
+            {
+                angle += 360;
+            }
+            Assert.That(angle, Is.EqualTo(45));
+            
+            //時計回りに90°
+            vec2 = new Vector(10, 0);
+            angle = Vector.AngleBetween(vec1, vec2);
+            if (angle < 0)
+            {
+                angle += 360;
+            }
+            Assert.That(angle, Is.EqualTo(90));
+
+            //時計回りに135°
+            vec2 = new Vector(10, 10);
+            angle = Vector.AngleBetween(vec1, vec2);
+            if (angle < 0)
+            {
+                angle += 360;
+            }
+            Assert.That(angle, Is.EqualTo(135));
+
+            //時計回りに180°
+            vec2 = new Vector(0, 10);
+            angle = Vector.AngleBetween(vec1, vec2);
+            if (angle < 0)
+            {
+                angle += 360;
+            }
+            Assert.That(angle, Is.EqualTo(180));
+
+            //時計回りに225°/反時計回りに135°
+            vec2 = new Vector(-10, 10);
+            angle = Vector.AngleBetween(vec1, vec2);
+            if (angle < 0)
+            {
+                angle += 360;
+            }
+            Assert.That(angle, Is.EqualTo(225));
+
+            //時計回りに270°/反時計回りに90°
+            vec2 = new Vector(-10, 0);
+            angle = Vector.AngleBetween(vec1, vec2);
+            if (angle < 0)
+            {
+                angle += 360;
+            }
+            Assert.That(angle, Is.EqualTo(270));
+
+            //時計回りに315°/反時計回りに45°
+            vec2 = new Vector(-10, -10);
+            angle = Vector.AngleBetween(vec1, vec2);
+            if (angle < 0)
+            {
+                angle += 360;
+            }
+            Assert.That(angle, Is.EqualTo(315));
+        }
     }
 }
