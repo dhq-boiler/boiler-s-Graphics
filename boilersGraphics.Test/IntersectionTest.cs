@@ -70,22 +70,22 @@ namespace boilersGraphics.Test
         }
 
         [Test]
-        public void 回転90度の円_回転対応版()
+        public void 回転90度の楕円_回転対応版()
         {
             boilersGraphics.App.IsTest = true;
             var mainWindowViewModel = new MainWindowViewModel(null);
             var diagramViewModel = new DiagramViewModel(mainWindowViewModel, 1000, 1000);
-            var ellipse = new NEllipseViewModel(-4, -4, 8, 8);
+            var ellipse = new NEllipseViewModel(-3, -2, 6, 4);
             ellipse.RotationAngle.Value = 90;
 
             Assert.That(ellipse.CenterX.Value, Is.EqualTo(0));
             Assert.That(ellipse.CenterY.Value, Is.EqualTo(0));
 
-            var intersections = Intersection.FindEllipseSegmentIntersectionsSupportRotation(ellipse, new Point(-4, -10), new Point(-4, 10), false);
+            var intersections = Intersection.FindEllipseSegmentIntersectionsSupportRotation(ellipse, new Point(-10, 3), new Point(10, 3), false);
 
             Assert.That(intersections.Item1.Count(), Is.EqualTo(1));
-            Assert.That(intersections.Item1.First().X, Is.EqualTo(-4).Within(0.00001));
-            Assert.That(intersections.Item1.First().Y, Is.EqualTo(0).Within(0.00001));
+            Assert.That(intersections.Item1.First().X, Is.EqualTo(0).Within(0.00001));
+            Assert.That(intersections.Item1.First().Y, Is.EqualTo(3).Within(0.00001));
         }
     }
 }
