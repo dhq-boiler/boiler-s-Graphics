@@ -138,7 +138,95 @@ namespace boilersGraphics.Helpers
             }
         }
 
-        public void OnMouseMove(ref Point currentPoint, SnapPoint movingSnapPoint, List<Tuple<Point, NEllipseViewModel>> appendIntersectionPoints = null)
+        public void OnMouseMove(ref Point currentPoint, Vector vec, List<Tuple<Point, NEllipseViewModel>> appendIntersectionPoints = null)
+        {
+            var mainWindowVM = (App.Current.MainWindow.DataContext as MainWindowViewModel);
+            var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
+            var diagramVM = mainWindowVM.DiagramViewModel;
+            if (diagramVM.EnablePointSnap.Value)
+            {
+                var snapPoints = diagramVM.GetSnapPoints(currentPoint).ToList();
+                var dataContext = (designerCanvas.InputHitTest(currentPoint) as FrameworkElement).DataContext;
+                if (appendIntersectionPoints != null)
+                    snapPoints.AddRange(from x in appendIntersectionPoints select new Tuple<SnapPoint, Point>(CreateSnapPoint(x.Item1, x.Item2), x.Item1));
+                Tuple<SnapPoint, Point> snapped = null;
+                foreach (var snapPoint in snapPoints)
+                {
+                    if (currentPoint.X > snapPoint.Item2.X - mainWindowVM.SnapPower.Value
+                     && currentPoint.X < snapPoint.Item2.X + mainWindowVM.SnapPower.Value
+                     && currentPoint.Y > snapPoint.Item2.Y - mainWindowVM.SnapPower.Value
+                     && currentPoint.Y < snapPoint.Item2.Y + mainWindowVM.SnapPower.Value)
+                    {
+                        //スナップする座標を一時変数へ保存
+                        snapped = snapPoint;
+                        _SnapToEdge = snapPoint.Item1.SnapPointPosition;
+                        _SnapTargetDataContext = snapPoint.Item1.DataContext as SelectableDesignerItemViewModelBase;
+                        break;
+                    }
+                }
+
+                //スナップした場合
+                if (snapped != null)
+                {
+                    AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(designerCanvas);
+                    RemoveFromAdornerLayerAndDictionary(snapped.Item2, adornerLayer);
+
+                    //ドラッグ終了座標を一時変数で上書きしてスナップ
+                    currentPoint = snapped.Item2;
+                    if (adornerLayer != null)
+                    {
+                        if (!_adorners.ContainsKey(snapped.Item2))
+                        {
+                            var adorner = new Adorners.SnapPointAdorner(designerCanvas, snapped.Item2);
+                            if (adorner != null)
+                            {
+                                adornerLayer.Add(adorner);
+
+                                //ディクショナリに記憶する
+                                _adorners.Add(snapped.Item2, adorner);
+                            }
+
+                            if (snapped.Item1.SnapPointPosition == SnapPointPosition.Intersection)
+                            {
+                                var normalVector = -1 / (vec.Y / vec.X);
+                                var x0 = snapped.Item2.X;
+                                var y0 = snapped.Item2.Y;
+                                Func<double, double> f = (x) => normalVector * (x - x0) + y0;
+                                var auxiliaryLine = new Adorners.AuxiliaryLine(designerCanvas, new Point(x0 - 50, f(x0 - 50)), new Point(x0 + 50, f(x0 + 50)));
+                                if (auxiliaryLine != null)
+                                {
+                                    adornerLayer.Add(auxiliaryLine);
+
+                                    //ディクショナリに記憶する
+                                    _adorners.Add(snapped.Item2, auxiliaryLine);
+                                }
+                            }
+                        }
+                    }
+                    _SnapResult = SnapResult.Snapped;
+                }
+                else //スナップしなかった場合
+                {
+                    RemoveAllAdornerFromAdornerLayerAndDictionary(designerCanvas);
+                    _SnapResult = SnapResult.NoSnap;
+
+                    if (appendIntersectionPoints != null && appendIntersectionPoints.Count() > 0)
+                    {
+                        AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(designerCanvas);
+                        var adorner = new Adorners.SnapPointAdorner(designerCanvas, appendIntersectionPoints.First().Item1);
+                        if (adorner != null)
+                        {
+                            adornerLayer.Add(adorner);
+
+                            //ディクショナリに記憶する
+                            _adorners.Add(appendIntersectionPoints.First().Item1, adorner);
+                        }
+                    }
+                }
+            }
+        }
+
+        public void OnMouseMove(ref Point currentPoint, SnapPoint movingSnapPoint, Vector vec, List<Tuple<Point, NEllipseViewModel>> appendIntersectionPoints = null)
         {
             var mainWindowVM = (App.Current.MainWindow.DataContext as MainWindowViewModel);
             var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
@@ -190,7 +278,11 @@ namespace boilersGraphics.Helpers
 
                             if (snapped.Item1.SnapPointPosition == SnapPointPosition.Intersection)
                             {
-                                var auxiliaryLine = new Adorners.AuxiliaryLine(designerCanvas, (snapped.Item1.DataContext as NEllipseViewModel).CenterPoint.Value, snapped.Item2);
+                                var normalVector = -1 / (vec.Y / vec.X);
+                                var x0 = snapped.Item2.X;
+                                var y0 = snapped.Item2.Y;
+                                Func<double, double> f = (x) => normalVector * (x - x0) + y0;
+                                var auxiliaryLine = new Adorners.AuxiliaryLine(designerCanvas, new Point(x0 - 50, f(x0 - 50)), new Point(x0 + 50, f(x0 + 50)));
                                 if (auxiliaryLine != null)
                                 {
                                     adornerLayer.Add(auxiliaryLine);

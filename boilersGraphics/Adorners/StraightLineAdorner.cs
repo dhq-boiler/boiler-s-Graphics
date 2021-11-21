@@ -52,7 +52,9 @@ namespace boilersGraphics.Adorners
                 _snapAction.SnapIntersectionOfEllipseAndTangent(ellipses, _startPoint.Value, _endPoint.Value, appendIntersectionPoints);
 
                 var currentPosition = _endPoint.Value;
-                _snapAction.OnMouseMove(ref currentPosition, appendIntersectionPoints);
+                Vector vec = new Vector();
+                vec = Point.Subtract(_endPoint.Value, _startPoint.Value);
+                _snapAction.OnMouseMove(ref currentPosition, vec, appendIntersectionPoints);
                 _endPoint = currentPosition;
 
                 (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.CurrentPoint = currentPosition;

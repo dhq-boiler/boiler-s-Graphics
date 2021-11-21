@@ -88,11 +88,13 @@ namespace boilersGraphics.Views.Behaviors
             Point current = e.GetPosition(canvas);
             var ellipses = (AssociatedObject.DataContext as DiagramViewModel).AllItems.Value.OfType<NEllipseViewModel>();
             var appendIntersectionPoints = new List<Tuple<Point, NEllipseViewModel>>();
+            Vector vec = new Vector();
             if (_straightLineStartPoint.HasValue)
             {
+                vec = Point.Subtract(current, _straightLineStartPoint.Value);
                 snapAction.SnapIntersectionOfEllipseAndTangent(ellipses, _straightLineStartPoint.Value, current, appendIntersectionPoints);
             }
-            snapAction.OnMouseMove(ref current, appendIntersectionPoints);
+            snapAction.OnMouseMove(ref current, vec, appendIntersectionPoints);
 
             if (e.LeftButton != MouseButtonState.Pressed)
                 _straightLineStartPoint = null;

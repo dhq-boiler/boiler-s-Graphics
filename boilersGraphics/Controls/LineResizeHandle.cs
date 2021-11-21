@@ -82,7 +82,9 @@ namespace boilersGraphics.Controls
                 var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
                 var oppositePoint = OppositeHandle.TransformToAncestor(designerCanvas).Transform(new Point(0, 0));
                 snapAction.SnapIntersectionOfEllipseAndTangent(ellipses, oppositePoint, point, appendIntersectionPoints);
-                snapAction.OnMouseMove(ref point, this, appendIntersectionPoints);
+                Vector vec = new Vector();
+                vec = Point.Subtract(oppositePoint, point);
+                snapAction.OnMouseMove(ref point, this, vec, appendIntersectionPoints);
 
                 Recorder.Current.ExecuteSetProperty(connectorVM, $"Points[{TargetPointIndex}]", point);
                 if ((string)Tag == "始点")
