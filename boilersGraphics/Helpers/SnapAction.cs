@@ -15,11 +15,11 @@ namespace boilersGraphics.Helpers
 {
     class SnapAction
     {
-        private Dictionary<Point, Adorner> _adorners;
+        private MultiDictionary<Point, Adorner> _adorners;
 
         public SnapAction()
         {
-            _adorners = new Dictionary<Point, Adorner>();
+            _adorners = new MultiDictionary<Point, Adorner>();
         }
 
         public enum SnapResult
@@ -222,7 +222,8 @@ namespace boilersGraphics.Helpers
                 }
 
                 foreach (var adorner in _adorners)
-                    adornerLayer.Remove(adorner.Value);
+                    foreach (var remove in adorner.Value)
+                        adornerLayer.Remove(remove);
 
                 _adorners.Clear();
             }
@@ -269,7 +270,8 @@ namespace boilersGraphics.Helpers
             {
                 if (adornerLayer != null)
                 {
-                    adornerLayer.Remove(x.Value);
+                    foreach (var remove in x.Value)
+                        adornerLayer.Remove(remove);
                 }
                 _adorners.Remove(x.Key);
             });
@@ -283,7 +285,8 @@ namespace boilersGraphics.Helpers
             {
                 if (adornerLayer != null)
                 {
-                    adornerLayer.Remove(x.Value);
+                    foreach (var remove in x.Value)
+                        adornerLayer.Remove(remove);
                 }
                 _adorners.Remove(x.Key);
             });

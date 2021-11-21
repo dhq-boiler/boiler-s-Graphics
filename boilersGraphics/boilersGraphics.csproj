@@ -244,6 +244,7 @@
     <Compile Include="Helpers\Intersection.cs" />
     <Compile Include="Helpers\LayerTreeViewItemCollection.cs" />
     <Compile Include="Helpers\Measure.cs" />
+    <Compile Include="Helpers\MultiDictionaryEnumerator.cs" />
     <Compile Include="Helpers\Name.cs" />
     <Compile Include="Helpers\ObjectDeserializer.cs" />
     <Compile Include="Helpers\ObjectSerializer.cs" />
