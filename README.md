@@ -7,7 +7,7 @@ boiler's Graphics は生まれたてのベクターグラフィックスドロ�
 
 # DEMO
 
-※準備中
+![implemented_normal](https://github.com/dhq-boiler/boiler-s-Graphics/blob/be78d466d9e303317850a11d6b34c223f6337805/WebComponents/implemented_normal.gif)
 
 # Features
 
