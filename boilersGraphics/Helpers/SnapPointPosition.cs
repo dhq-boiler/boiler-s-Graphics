@@ -20,6 +20,7 @@ namespace boilersGraphics.Helpers
         LeftBottom,
         Center,
         BeginEdge,
-        EndEdge
+        EndEdge,
+        Intersection
     }
 }

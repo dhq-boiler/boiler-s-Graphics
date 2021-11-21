@@ -176,6 +176,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Adorners\AuxiliaryLine.cs" />
     <Compile Include="Adorners\BezierCurveAdorner.cs" />
     <Compile Include="Adorners\EllipseAdorner.cs" />
     <Compile Include="Adorners\LetterAdorner.cs" />
@@ -240,8 +241,10 @@
     <Compile Include="Helpers\GeometryCreator.cs" />
     <Compile Include="Helpers\GroupTransformNotification.cs" />
     <Compile Include="Helpers\IEventArgsConverter.cs" />
+    <Compile Include="Helpers\Intersection.cs" />
     <Compile Include="Helpers\LayerTreeViewItemCollection.cs" />
     <Compile Include="Helpers\Measure.cs" />
+    <Compile Include="Helpers\MultiDictionaryEnumerator.cs" />
     <Compile Include="Helpers\Name.cs" />
     <Compile Include="Helpers\ObjectDeserializer.cs" />
     <Compile Include="Helpers\ObjectSerializer.cs" />
