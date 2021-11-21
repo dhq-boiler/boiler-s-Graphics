@@ -21,6 +21,22 @@ namespace boilersGraphics
     {
         public static bool IsTest { get; set; }
 
+        public App()
+        {
+            this.DispatcherUnhandledException += App_DispatcherUnhandledException;
+        }
+
+        private void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        {
+            LogManager.GetCurrentClassLogger().Fatal(e.Exception);
+            MessageBox.Show("申し訳ありません。\n" +
+                            "お使いのアプリケーションは異常を検知したため終了します\n" +
+                            "-- エラー内容 --\n" +
+                            e.Exception.ToString(),
+                            "異常終了");
+            Environment.Exit(1);
+        }
+
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
