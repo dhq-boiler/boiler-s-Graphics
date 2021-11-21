@@ -2,6 +2,9 @@
 using boilersGraphics.Helpers;
 using boilersGraphics.ViewModels;
 using NLog;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -72,20 +75,24 @@ namespace boilersGraphics.Controls
                 Recorder.Current.ExecuteSetProperty(snapPointVM, "Top.Value", currentPosition.Y);
                 Canvas.SetLeft(this, currentPosition.X - this.Width / 2);
                 Canvas.SetTop(this, currentPosition.Y - this.Height / 2);
-
-                snapAction.OnMouseMove(ref point, this);
-
-                Recorder.Current.ExecuteSetProperty(connectorVM, $"Points[{TargetPointIndex}]", point);
+                
+                var ellipses = ((App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel as DiagramViewModel).AllItems.Value.OfType<NEllipseViewModel>();
+                var appendIntersectionPoints = new List<Tuple<Point, NEllipseViewModel>>();
 
                 var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
+                var oppositePoint = OppositeHandle.TransformToAncestor(designerCanvas).Transform(new Point(0, 0));
+                snapAction.SnapIntersectionOfEllipseAndTangent(ellipses, oppositePoint, point, appendIntersectionPoints);
+                Vector vec = new Vector();
+                vec = Point.Subtract(oppositePoint, point);
+                snapAction.OnMouseMove(ref point, this, vec, appendIntersectionPoints);
+
+                Recorder.Current.ExecuteSetProperty(connectorVM, $"Points[{TargetPointIndex}]", point);
                 if ((string)Tag == "始点")
                 {
-                    var oppositePoint = OppositeHandle.TransformToAncestor(designerCanvas).Transform(new Point(0, 0));
                     (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = $"({point}) - ({oppositePoint}) (w, h) = ({oppositePoint.X - point.X}, {oppositePoint.Y - point.Y})";
                 }
                 else if ((string)Tag == "終点")
                 {
-                    var oppositePoint = OppositeHandle.TransformToAncestor(designerCanvas).Transform(new Point(0, 0));
                     (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = $"({oppositePoint}) - ({point}) (w, h) = ({point.X - oppositePoint.X}, {point.Y - oppositePoint.Y})";
                 }
             }
