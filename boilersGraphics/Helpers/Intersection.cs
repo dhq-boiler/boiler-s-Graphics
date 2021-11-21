@@ -140,13 +140,16 @@ namespace boilersGraphics.Helpers
             double a = clone.Width.Value / 2;
             double b = clone.Height.Value / 2;
 
+            var cosθ = Cos(θ);
+            var sinθ = Sin(θ);
+
             // Calculate the quadratic parameters.
-            double A = (Pow(Cos(θ) * (x2 - x1), 2) - 2 * Cos(θ) * Sin(θ) * (x2 - x1) * (y2 - y1) + Pow(Sin(θ) * (y2 - y1), 2)) / a / a +
-                       (Pow(Sin(θ) * (x2 - x1), 2) + 2 * Sin(θ) * Cos(θ) * (x2 - x1) * (y2 - y1) + Pow(Cos(θ) * (y2 - y1), 2)) / b / b;
-            double B = (Pow(Cos(θ), 2) * 2 * x1 * (x2 - x1) - 2 * Cos(θ) * Sin(θ) * (y1 * (x2 - x1) + x1 * (y2 - y1)) + Pow(Sin(θ), 2) * 2 * y1 * (y2 - y1)) / a / a
-                     + (Pow(Sin(θ), 2) * 2 * x1 * (x2 - x1) + 2 * Sin(θ) * Cos(θ) * (y1 * (x2 - x1) + x1 * (y2 - y1)) + Pow(Cos(θ), 2) * 2 * y1 * (y2 - y1)) / b / b;
-            double C = (Pow(Cos(θ) * x1, 2) - 2 * Cos(θ) * Sin(θ) * x1 * y1 + Pow(Sin(θ) * y1, 2)) / a / a
-                     + (Pow(Sin(θ) * x1, 2) + 2 * Sin(θ) * Cos(θ) * x1 * y1 + Pow(Cos(θ) * y1, 2)) / b / b - 1;
+            double A = (Pow(cosθ * (x2 - x1), 2) - 2 * cosθ * sinθ * (x2 - x1) * (y2 - y1) + Pow(sinθ * (y2 - y1), 2)) / a / a +
+                       (Pow(sinθ * (x2 - x1), 2) + 2 * sinθ * cosθ * (x2 - x1) * (y2 - y1) + Pow(cosθ * (y2 - y1), 2)) / b / b;
+            double B = (Pow(cosθ, 2) * 2 * x1 * (x2 - x1) - 2 * cosθ * sinθ * (y1 * (x2 - x1) + x1 * (y2 - y1)) + Pow(sinθ, 2) * 2 * y1 * (y2 - y1)) / a / a
+                     + (Pow(sinθ, 2) * 2 * x1 * (x2 - x1) + 2 * sinθ * cosθ * (y1 * (x2 - x1) + x1 * (y2 - y1)) + Pow(cosθ, 2) * 2 * y1 * (y2 - y1)) / b / b;
+            double C = (Pow(cosθ * x1, 2) - 2 * cosθ * sinθ * x1 * y1 + Pow(sinθ * y1, 2)) / a / a
+                     + (Pow(sinθ * x1, 2) + 2 * sinθ * cosθ * x1 * y1 + Pow(cosθ * y1, 2)) / b / b - 1;
 
             // Make a list of t values.
             List<double> t_values = new List<double>();
