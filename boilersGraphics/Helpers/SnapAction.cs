@@ -188,10 +188,10 @@ namespace boilersGraphics.Helpers
 
                             if (snapped.Item1.SnapPointPosition == SnapPointPosition.Intersection)
                             {
-                                var normalVector = -1 / (vec.Y / vec.X);
+                                var gradient = -1 / (vec.Y / vec.X);
                                 var x0 = snapped.Item2.X;
                                 var y0 = snapped.Item2.Y;
-                                Func<double, double> f = (x) => normalVector * (x - x0) + y0;
+                                Func<double, double> f = (x) => gradient * (x - x0) + y0;
                                 var auxiliaryLine = new Adorners.AuxiliaryLine(designerCanvas, new Point(x0 - 50, f(x0 - 50)), new Point(x0 + 50, f(x0 + 50)));
                                 if (auxiliaryLine != null)
                                 {
@@ -278,10 +278,10 @@ namespace boilersGraphics.Helpers
 
                             if (snapped.Item1.SnapPointPosition == SnapPointPosition.Intersection)
                             {
-                                var normalVector = -1 / (vec.Y / vec.X);
+                                var gradient = -1 / (vec.Y / vec.X);
                                 var x0 = snapped.Item2.X;
                                 var y0 = snapped.Item2.Y;
-                                Func<double, double> f = (x) => normalVector * (x - x0) + y0;
+                                Func<double, double> f = (x) => gradient * (x - x0) + y0;
                                 var auxiliaryLine = new Adorners.AuxiliaryLine(designerCanvas, new Point(x0 - 50, f(x0 - 50)), new Point(x0 + 50, f(x0 + 50)));
                                 if (auxiliaryLine != null)
                                 {
