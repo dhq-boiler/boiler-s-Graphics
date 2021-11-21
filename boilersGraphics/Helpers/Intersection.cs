@@ -1,12 +1,7 @@
-﻿using boilersGraphics.Controls;
-using boilersGraphics.Extensions;
-using boilersGraphics.ViewModels;
+﻿using boilersGraphics.ViewModels;
 using NLog;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using static System.Math;
 
