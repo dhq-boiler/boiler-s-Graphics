@@ -122,8 +122,6 @@ namespace boilersGraphics.Helpers
             // Translate so the ellipse is centered at the origin.
             double cx = clone.CenterX.Value;
             double cy = clone.CenterY.Value;
-            clone.Left.Value -= cx;
-            clone.Top.Value -= cy;
             pt1.X -= cx;
             pt1.Y -= cy;
             pt2.X -= cx;
@@ -134,7 +132,7 @@ namespace boilersGraphics.Helpers
             var x2 = pt2.X;
             var y2 = pt2.Y;
 
-            var θ = (ellipse.RotationAngle.Value) * PI / 180.0;
+            var θ = (-ellipse.RotationAngle.Value) * PI / 180.0;
 
             // Get the semimajor and semiminor axes.
             double a = clone.Width.Value / 2;
