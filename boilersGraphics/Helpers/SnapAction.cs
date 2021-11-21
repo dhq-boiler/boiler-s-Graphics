@@ -34,18 +34,15 @@ namespace boilersGraphics.Helpers
 
         public void SnapIntersectionOfEllipseAndTangent(IEnumerable<NEllipseViewModel> ellipses, Point beginPoint, Point endPoint, List<Tuple<Point, NEllipseViewModel>> appendIntersectionPoints)
         {
-            var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
             foreach (var ellipse in ellipses)
             {
-                var rotateThumb = designerCanvas.GetCorrespondingViews<RotateThumb>(ellipse).First();
-                var vec1 = Point.Subtract(rotateThumb.TranslatePoint(new Point(), designerCanvas), ellipse.CenterPoint.Value);
                 var snapPower = (App.Current.MainWindow.DataContext as MainWindowViewModel).SnapPower.Value;
                 var array = new ConcurrentBag<Tuple<Point[], double>>();
                 Parallel.For((int)-snapPower, (int)snapPower, (y) =>
                 {
                     for (double x = -snapPower; x < snapPower; x++)
                     {
-                        var tuple = Intersection.FindEllipseSegmentIntersectionsSupportRotation(vec1, ellipse, beginPoint, new Point(endPoint.X + x, endPoint.Y + y), false);
+                        var tuple = Intersection.FindEllipseSegmentIntersectionsSupportRotation(ellipse, beginPoint, new Point(endPoint.X + x, endPoint.Y + y), false);
                         array.Add(tuple);
                     }
                 });

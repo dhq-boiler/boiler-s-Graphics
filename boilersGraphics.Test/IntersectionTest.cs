@@ -55,8 +55,7 @@ namespace boilersGraphics.Test
             Assert.That(ellipse.CenterX.Value, Is.EqualTo(0));
             Assert.That(ellipse.CenterY.Value, Is.EqualTo(0));
 
-            var vec1 = Point.Subtract(new Point(ellipse.CenterX.Value, ellipse.CenterY.Value - 10), new Point(ellipse.CenterX.Value, ellipse.CenterY.Value));
-            var intersections = Intersection.FindEllipseSegmentIntersectionsSupportRotation(vec1, ellipse, new Point(-4, -10), new Point(-4, 10), false);
+            var intersections = Intersection.FindEllipseSegmentIntersectionsSupportRotation(ellipse, new Point(-4, -10), new Point(-4, 10), false);
 
             Assert.That(intersections.Item1.Count(), Is.EqualTo(1));
             Assert.That(intersections.Item1.First().X, Is.EqualTo(-4).Within(0.00001));
@@ -72,8 +71,7 @@ namespace boilersGraphics.Test
             Assert.That(ellipse.CenterX.Value, Is.EqualTo(0));
             Assert.That(ellipse.CenterY.Value, Is.EqualTo(0));
 
-            var vec1 = Point.Subtract(new Point(ellipse.CenterX.Value, ellipse.CenterY.Value - 10), new Point(ellipse.CenterX.Value, ellipse.CenterY.Value));
-            var intersections = Intersection.FindEllipseSegmentIntersectionsSupportRotation(vec1, ellipse, new Point(-10, 3), new Point(0, 3), false);
+            var intersections = Intersection.FindEllipseSegmentIntersectionsSupportRotation(ellipse, new Point(-10, 3), new Point(0, 3), false);
 
             Assert.That(intersections.Item1.Count(), Is.EqualTo(1));
             Assert.That(intersections.Item1.First().X, Is.EqualTo(0).Within(0.00001));
