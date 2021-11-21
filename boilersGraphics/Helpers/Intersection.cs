@@ -1,4 +1,6 @@
-﻿using boilersGraphics.ViewModels;
+﻿using boilersGraphics.Controls;
+using boilersGraphics.Extensions;
+using boilersGraphics.ViewModels;
 using NLog;
 using System;
 using System.Collections.Generic;
@@ -102,7 +104,7 @@ namespace boilersGraphics.Helpers
             return new Tuple<Point[], double>(points.ToArray(), discriminant);
         }
 
-        public static Tuple<Point[], double> FindEllipseSegmentIntersectionsSupportRotation(NEllipseViewModel ellipse, Point pt1, Point pt2, bool segment_only)
+        public static Tuple<Point[], double> FindEllipseSegmentIntersectionsSupportRotation(Vector vec1, NEllipseViewModel ellipse, Point pt1, Point pt2, bool segment_only)
         {
             var clone = ellipse.Clone() as NEllipseViewModel;
             // If the ellipse or line segment are empty, return no intersections.
@@ -137,10 +139,10 @@ namespace boilersGraphics.Helpers
             var x2 = pt2.X;
             var y2 = pt2.Y;
 
-            var vec1 = Point.Subtract(new Point(cx, cy - 10), new Point(cx, cy));
             var vec2 = new Vector(x2, y2);
             var angle = Vector.AngleBetween(vec1, vec2);
-            var θ = (angle) * PI / 180.0;
+            LogManager.GetCurrentClassLogger().Debug($"angle:{angle}");
+            var θ = (ellipse.RotationAngle.Value) * PI / 180.0;
 
             // Get the semimajor and semiminor axes.
             double a = clone.Width.Value / 2;
