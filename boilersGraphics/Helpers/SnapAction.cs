@@ -187,6 +187,18 @@ namespace boilersGraphics.Helpers
                                 //ディクショナリに記憶する
                                 _adorners.Add(snapped.Item2, adorner);
                             }
+
+                            if (snapped.Item1.SnapPointPosition == SnapPointPosition.Intersection)
+                            {
+                                var auxiliaryLine = new Adorners.AuxiliaryLine(designerCanvas, (snapped.Item1.DataContext as NEllipseViewModel).CenterPoint.Value, snapped.Item2);
+                                if (auxiliaryLine != null)
+                                {
+                                    adornerLayer.Add(auxiliaryLine);
+
+                                    //ディクショナリに記憶する
+                                    _adorners.Add(snapped.Item2, auxiliaryLine);
+                                }
+                            }
                         }
                     }
                     _SnapResult = SnapResult.Snapped;
