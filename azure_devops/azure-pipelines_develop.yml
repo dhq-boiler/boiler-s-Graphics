@@ -45,7 +45,9 @@ steps:
       -returntargetcode
       -output:"coverage.xml"
       -filter:"+[boilersGraphics]* +[TsOperationHistory]* -[*]XamlGeneratedNamespace*"
+
 - task: Windows Application Driver@0
+  condition: always()
   inputs:
     OperationType: 'Stop'
 
