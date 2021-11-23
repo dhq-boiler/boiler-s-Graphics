@@ -2,6 +2,7 @@
 using OpenQA.Selenium;
 using System.IO;
 using System.Reflection;
+using System.Threading;
 
 namespace boilersGraphics.Test.UITests
 {
@@ -14,10 +15,17 @@ namespace boilersGraphics.Test.UITests
             var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var exportFilePath = $"{dir}\\ExportTest.jpg";
 
-            session.FindElementByAccessibilityId("Export").Click();
-            session.FindElementByAccessibilityId("FileName").SendKeys(exportFilePath);
-            session.FindElementByAccessibilityId("PerformExport").Click();
-            Assert.That(File.Exists(exportFilePath), Is.EqualTo(true));
+            try
+            {
+                session.FindElementByAccessibilityId("Export").Click();
+                session.FindElementByAccessibilityId("FileName").SendKeys(exportFilePath);
+                session.FindElementByAccessibilityId("PerformExport").Click();
+                Assert.That(File.Exists(exportFilePath), Is.EqualTo(true));
+            }
+            finally
+            {
+                File.Delete(exportFilePath);
+            }
         }
 
         [Test]
@@ -27,27 +35,25 @@ namespace boilersGraphics.Test.UITests
             var loadFilePath = $"{dir}\\XmlFiles\\checker_pattern.xml";
             var exportFilePath = $"{dir}\\ExportTest2.jpg";
 
-            session.FindElementByAccessibilityId("Load").Click();
-            session.FindElementByAccessibilityId("1").Click();
-            session.Keyboard.SendKeys(Keys.Alt + "N" + Keys.Alt);
-            session.Keyboard.SendKeys(Keys.Alt + "N" + Keys.Alt);
-            session.FindElementByAccessibilityId("1148").SendKeys(loadFilePath);
-            session.FindElementByName("開く(O)").Click();
+            try
+            {
+                session.FindElementByAccessibilityId("Load").Click();
+                session.FindElementByAccessibilityId("1").Click();
+                session.Keyboard.SendKeys(Keys.Alt + "N" + Keys.Alt);
+                session.Keyboard.SendKeys(Keys.Alt + "N" + Keys.Alt);
+                session.FindElementByAccessibilityId("1148").SendKeys(loadFilePath);
+                session.FindElementByName("開く(O)").Click();
 
-            session.FindElementByAccessibilityId("Export").Click();
-            session.FindElementByAccessibilityId("FileName").SendKeys(exportFilePath);
-            session.FindElementByAccessibilityId("PerformExport").Click();
-            Assert.That(File.Exists(exportFilePath), Is.EqualTo(true));
-        }
-        
-        [TearDown]
-        public void RemoveExportedFile()
-        {
-            var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            var exportFilePath = $"{dir}\\ExportTest.jpg";
-            File.Delete(exportFilePath);
-            exportFilePath = $"{dir}\\ExportTest2.jpg";
-            File.Delete(exportFilePath);
+                session.FindElementByAccessibilityId("Export").Click();
+                session.FindElementByAccessibilityId("FileName").SendKeys(exportFilePath);
+                session.FindElementByAccessibilityId("PerformExport").Click();
+                Thread.Sleep(1000);
+                Assert.That(File.Exists(exportFilePath), Is.EqualTo(true));
+            }
+            finally
+            {
+                File.Delete(exportFilePath);
+            }
         }
     }
 }
