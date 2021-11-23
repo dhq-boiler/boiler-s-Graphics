@@ -22,23 +22,10 @@ namespace boilersGraphics
 
         public static App Instance { get; set; }
 
-        public IUnityContainer UnityContainer { get; set; }
-
-        public Func<MainWindow> GetMainWindow { get; private set; }
-
-        private MainWindow MainWindowInstance { get; set; }
-
         public App()
         {
             Instance = this;
             this.DispatcherUnhandledException += App_DispatcherUnhandledException;
-            GetMainWindow = new Func<MainWindow>(() => MainWindowInstance);
-        }
-
-        [Conditional("TEST")]
-        public void CreateShellAtTest()
-        {
-            MainWindowInstance = new MainWindow();
         }
 
         private void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
@@ -65,7 +52,6 @@ namespace boilersGraphics
         protected override Window CreateShell()
         {
             var w = Container.Resolve<MainWindow>();
-            MainWindowInstance = w;
             return w;
         }
 
@@ -78,9 +64,6 @@ namespace boilersGraphics
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            UnityContainer = containerRegistry.GetContainer();
-            //containerRegistry.RegisterSingleton<UserControls.DiagramControl, UserControls.DiagramControl>();
-            //containerRegistry.RegisterSingleton<Controls.DesignerCanvas, Controls.DesignerCanvas>();
             containerRegistry.RegisterDialog<ColorPicker, ViewModels.ColorPickerViewModel>();
             containerRegistry.RegisterDialog<LetterSetting, ViewModels.LetterSettingViewModel>();
             containerRegistry.RegisterDialog<LetterVerticalSetting, ViewModels.LetterVerticalSettingViewModel>();
@@ -99,11 +82,6 @@ namespace boilersGraphics
             containerRegistry.RegisterDialog<Views.DetailPicture, ViewModels.DetailPictureViewModel>();
             containerRegistry.RegisterDialog<Views.DetailLetter, ViewModels.DetailLetterViewModel>();
             containerRegistry.RegisterDialog<Views.Statistics, ViewModels.StatisticsDialogViewModel>();
-
-            //STATask.Run(() =>
-            //{
-            //    containerRegistry.RegisterInstance(typeof(Controls.DesignerCanvas), Container.Resolve<MainWindow>().GetChildOfType<Controls.DesignerCanvas>());
-            //});
         }
 
         public static string GetAppNameAndVersion()
