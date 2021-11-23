@@ -34,7 +34,10 @@ namespace boilersGraphics.Test.UITests
                 Assert.That(session, Is.Not.Null);
 
                 // Set implicit timeout to 1.5 seconds to make element search to retry every 500 ms for at most three times
-                session.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(1.5);
+
+                session.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
+
+                session.Manage().Window.Maximize();
             }
         }
 

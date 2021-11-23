@@ -1,9 +1,7 @@
 ﻿using NUnit.Framework;
 using OpenQA.Selenium;
-using System;
 using System.IO;
 using System.Reflection;
-using System.Threading;
 
 namespace boilersGraphics.Test.UITests
 {
@@ -15,9 +13,8 @@ namespace boilersGraphics.Test.UITests
         {
             var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var exportFilePath = $"{dir}\\ExportTest.jpg";
-            Thread.Sleep(TimeSpan.FromSeconds(1));
+
             session.FindElementByAccessibilityId("Export").Click();
-            Thread.Sleep(TimeSpan.FromSeconds(1));
             session.FindElementByAccessibilityId("FileName").SendKeys(exportFilePath);
             session.FindElementByAccessibilityId("PerformExport").Click();
             Assert.That(File.Exists(exportFilePath), Is.EqualTo(true));
@@ -28,13 +25,13 @@ namespace boilersGraphics.Test.UITests
         {
             var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var loadFilePath = $"{dir}\\XmlFiles\\checker_pattern.xml";
-            var exportFilePath = $"{dir}\\ExportTest.jpg";
+            var exportFilePath = $"{dir}\\ExportTest2.jpg";
 
             session.FindElementByAccessibilityId("Load").Click();
             session.FindElementByAccessibilityId("1").Click();
-            Thread.Sleep(TimeSpan.FromSeconds(1));
-            session.Keyboard.PressKey(Keys.Alt + "N" + Keys.Alt);
-            session.Keyboard.SendKeys(loadFilePath);
+            session.Keyboard.SendKeys(Keys.Alt + "N" + Keys.Alt);
+            session.Keyboard.SendKeys(Keys.Alt + "N" + Keys.Alt);
+            session.FindElementByAccessibilityId("1148").SendKeys(loadFilePath);
             session.FindElementByName("開く(O)").Click();
 
             session.FindElementByAccessibilityId("Export").Click();
@@ -48,6 +45,8 @@ namespace boilersGraphics.Test.UITests
         {
             var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var exportFilePath = $"{dir}\\ExportTest.jpg";
+            File.Delete(exportFilePath);
+            exportFilePath = $"{dir}\\ExportTest2.jpg";
             File.Delete(exportFilePath);
         }
     }
