@@ -44,9 +44,9 @@ namespace boilersGraphics.ViewModels
 
         public LayersViewModel()
         {
-            var mainWindowVM = App.Current.MainWindow.DataContext as MainWindowViewModel;
+            var mainWindowVM = App.Instance.MainWindow.DataContext as MainWindowViewModel;
             Layers = mainWindowVM.DiagramViewModel.Layers;
-            InitializeHitTestVisible();
+            InitializeHitTestVisible(mainWindowVM);
             AddLayerCommand = new DelegateCommand(() =>
             {
                 var layer = new Layer();
@@ -54,25 +54,25 @@ namespace boilersGraphics.ViewModels
                 layer.Name.Value = Name.GetNewLayerName(mainWindowVM.DiagramViewModel);
                 Random rand = new Random();
                 layer.Color.Value = Randomizer.RandomColor(rand);
-                (App.Current.MainWindow.DataContext as MainWindowViewModel).Controller.ExecuteAdd((App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.Layers, layer);
-                UpdateStatisticsCountNewLayer();
+                mainWindowVM.Controller.ExecuteAdd(mainWindowVM.DiagramViewModel.Layers, layer);
+                UpdateStatisticsCountNewLayer(mainWindowVM);
             });
             RemoveLayerCommand = new DelegateCommand(() =>
             {
-                var diagramViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel;
+                var diagramViewModel = mainWindowVM.DiagramViewModel;
                 var layers = diagramViewModel.Layers;
                 var selectedLayers = diagramViewModel.SelectedLayers;
                 foreach (var remove in selectedLayers.Value.ToList())
                 {
-                    (App.Current.MainWindow.DataContext as MainWindowViewModel).Controller.ExecuteRemove(layers, remove);
+                    mainWindowVM.Controller.ExecuteRemove(layers, remove);
                 }
-                UpdateStatisticsCountRemoveLayer();
+                UpdateStatisticsCountRemoveLayer(mainWindowVM);
             });
             SelectedItemChangedCommand.Subscribe(args =>
             {
                 var newItem = args.NewValue;
                 if (newItem == null) return;
-                var layers = (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.Layers;
+                var layers = mainWindowVM.DiagramViewModel.Layers;
                 if (newItem.GetType() == typeof(Layer))
                 {
                     layers.ToList().ForEach(x =>
@@ -164,15 +164,15 @@ namespace boilersGraphics.ViewModels
                     {
                         if (layerItems.Where(x => x.IsSelected.Value == true).Count() > 1)
                         {
-                            (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.EdgeColors.Clear();
-                            (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.FillColors.Clear();
+                            mainWindowVM.DiagramViewModel.EdgeColors.Clear();
+                            mainWindowVM.DiagramViewModel.FillColors.Clear();
                         }
                         else
                         {
-                            (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.EdgeColors.Clear();
-                            (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.FillColors.Clear();
-                            (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.EdgeColors.Add(designerItem.EdgeColor.Value);
-                            (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.FillColors.Add(designerItem.FillColor.Value);
+                            mainWindowVM.DiagramViewModel.EdgeColors.Clear();
+                            mainWindowVM.DiagramViewModel.FillColors.Clear();
+                            mainWindowVM.DiagramViewModel.EdgeColors.Add(designerItem.EdgeColor.Value);
+                            mainWindowVM.DiagramViewModel.FillColors.Add(designerItem.FillColor.Value);
                         }
                     }
 
@@ -192,17 +192,17 @@ namespace boilersGraphics.ViewModels
             DropCommand = new DelegateCommand<DropArguments>(Drop);
         }
 
-        private static void UpdateStatisticsCountNewLayer()
+        private static void UpdateStatisticsCountNewLayer(MainWindowViewModel mainWindowVM)
         {
-            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            var statistics = mainWindowVM.Statistics.Value;
             statistics.NumberOfNewlyCreatedLayers++;
             var dao = new StatisticsDao();
             dao.Update(statistics);
         }
 
-        private static void UpdateStatisticsCountRemoveLayer()
+        private static void UpdateStatisticsCountRemoveLayer(MainWindowViewModel mainWindowVM)
         {
-            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            var statistics = mainWindowVM.Statistics.Value;
             statistics.NumberOfDeletedLayers++;
             var dao = new StatisticsDao();
             dao.Update(statistics);
@@ -223,9 +223,8 @@ namespace boilersGraphics.ViewModels
             }
         }
 
-        public void InitializeHitTestVisible()
+        public void InitializeHitTestVisible(MainWindowViewModel mainWindowVM)
         {
-            var mainWindowVM = App.Current.MainWindow.DataContext as MainWindowViewModel;
             Layers.ToList().ForEach(x =>
             {
                 x.ChildrenSwitchIsHitTestVisible(false);

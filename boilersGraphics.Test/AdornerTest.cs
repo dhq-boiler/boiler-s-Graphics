@@ -1,5 +1,6 @@
 ﻿using boilersGraphics.Adorners;
 using boilersGraphics.Controls;
+using boilersGraphics.Helpers;
 using boilersGraphics.ViewModels;
 using NUnit.Framework;
 using System;
@@ -18,7 +19,8 @@ namespace boilersGraphics.Test
         public void BezierCurveAdornerを作成()
         {
             boilersGraphics.App.IsTest = true;
-            var diagramViewModel = new DiagramViewModel(new MainWindowViewModel(null), 100, 100);
+            MainWindowViewModel mainWindowViewModel = new MainWindowViewModel(null);
+            var diagramViewModel = new DiagramViewModel(mainWindowViewModel, 100, 100);
             var designerCanvas = new DesignerCanvas();
             designerCanvas.DataContext = diagramViewModel;
             diagramViewModel.EdgeColors.Add(Colors.Red);

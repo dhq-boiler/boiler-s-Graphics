@@ -25,8 +25,8 @@
                     <Setter Property="Width" Value="75" />
                 </Style>
             </StackPanel.Resources>
-            <Button Command="{Binding ExportCommand}">エクスポート</Button>
-            <Button Command="{Binding CancelCommand}">キャンセル</Button>
+            <Button x:Name="PerformExport" Command="{Binding ExportCommand}">エクスポート</Button>
+            <Button x:Name="CancelExport" Command="{Binding CancelCommand}">キャンセル</Button>
         </StackPanel>
         <Grid>
             <Grid.ColumnDefinitions>
@@ -39,14 +39,15 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Label Grid.Row="0" Grid.Column="0">ファイル名</Label>
-            <TextBox Grid.Row="0"
+            <TextBox x:Name="FileName"
+                     Grid.Row="0"
                      Grid.Column="1"
-                     Text="{Binding Path.Value}" />
+                     Text="{Binding Path.Value, UpdateSourceTrigger=PropertyChanged}" />
             <Button Grid.Row="0"
                     Grid.Column="2"
                     Width="75"
                     Command="{Binding PathFinderCommand}">
-                参照
+                    参照
             </Button>
             <Label Grid.Row="1" Grid.Column="0">
                 <Label.Style>
@@ -79,7 +80,7 @@
                         </Style.Triggers>
                     </Style>
                 </Label.Style>
-                クオリティレベル
+                                         クオリティレベル
             </Label>
             <Slider Grid.Row="1"
                     Grid.Column="1"

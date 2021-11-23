@@ -4,6 +4,7 @@ using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
 using boilersGraphics.UserControls;
 using Microsoft.Win32;
+using NLog;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
 using Reactive.Bindings;
@@ -21,7 +22,7 @@ using System.Windows.Media.Imaging;
 
 namespace boilersGraphics.ViewModels
 {
-    class ExportViewModel : BindableBase, IDialogAware, IDisposable
+    public class ExportViewModel : BindableBase, IDialogAware, IDisposable
     {
         private bool disposedValue;
         private CompositeDisposable _disposables = new CompositeDisposable();
@@ -38,8 +39,11 @@ namespace boilersGraphics.ViewModels
 
         public event Action<IDialogResult> RequestClose;
 
-        public ExportViewModel()
+        public ExportViewModel(MainWindowViewModel mainWindowViewModel)
         {
+            var mainWindow = App.Current.MainWindow;
+            var designerCanvas = mainWindow.GetChildOfType<DesignerCanvas>();
+            var diagramViewModel = mainWindow.GetChildOfType<DiagramControl>().DataContext as DiagramViewModel;
             PathFinderCommand = new ReactiveCommand();
             PathFinderCommand.Subscribe(_ => OpenFileDialog())
                              .AddTo(_disposables);
@@ -47,7 +51,7 @@ namespace boilersGraphics.ViewModels
                            .Where(x => x != null)
                            .Select(x => x.Length > 0)
                            .ToReactiveCommand();
-            ExportCommand.Subscribe(_ => ExportProcess())
+            ExportCommand.Subscribe(_ => ExportProcess(designerCanvas, mainWindowViewModel, diagramViewModel))
                          .AddTo(_disposables);
             CancelCommand = new ReactiveCommand();
             CancelCommand.Subscribe(_ => CancelClose())
@@ -55,37 +59,33 @@ namespace boilersGraphics.ViewModels
             Path.Value = "";
         }
 
-        private void ExportProcess()
+        private void ExportProcess(DesignerCanvas designerCanvas, MainWindowViewModel mainWindowViewModel, DiagramViewModel diagramViewModel)
         {
             Dictionary<SelectableDesignerItemViewModelBase, bool> tempIsSelected;
             Transform tempLayoutTransform;
 
-            BeforeExport(out tempIsSelected, out tempLayoutTransform);
+            BeforeExport(designerCanvas, diagramViewModel, out tempIsSelected, out tempLayoutTransform);
 
-            Export();
+            Export(mainWindowViewModel, designerCanvas, diagramViewModel);
 
-            AfterExport(tempIsSelected, tempLayoutTransform);
+            AfterExport(designerCanvas, diagramViewModel, tempIsSelected, tempLayoutTransform);
 
             OkClose();
         }
 
-        private void BeforeExport(out Dictionary<SelectableDesignerItemViewModelBase, bool> tempIsSelected, out Transform tempLayoutTransform)
+        private void BeforeExport(DesignerCanvas designerCanvas, DiagramViewModel diagramViewModel, out Dictionary<SelectableDesignerItemViewModelBase, bool> tempIsSelected, out Transform tempLayoutTransform)
         {
-            var diagramControl = App.Current.MainWindow.GetChildOfType<DiagramControl>();
-            var itemsControl = diagramControl.GetChildOfType<ItemsControl>();
             tempIsSelected = new Dictionary<SelectableDesignerItemViewModelBase, bool>();
-            var diagramViewModel = diagramControl.DataContext as DiagramViewModel;
             var backgroundItem = diagramViewModel.BackgroundItem.Value;
-            var designerCanvas = diagramControl.GetChildOfType<DesignerCanvas>();
 
-            foreach (var item in itemsControl.Items.Cast<SelectableDesignerItemViewModelBase>())
+            foreach (var item in diagramViewModel.AllItems.Value.Cast<SelectableDesignerItemViewModelBase>())
             {
                 tempIsSelected.Add(item, item.IsSelected.Value);
                 //一時的に選択状態を解除する
                 item.IsSelected.Value = false;
             }
 
-            foreach (var snapPointVM in itemsControl.Items.OfType<SnapPointViewModel>())
+            foreach (var snapPointVM in diagramViewModel.AllItems.Value.OfType<SnapPointViewModel>())
             {
                 //一時的に非表示にする
                 snapPointVM.Opacity.Value = 0;
@@ -98,12 +98,11 @@ namespace boilersGraphics.ViewModels
             designerCanvas.LayoutTransform = new MatrixTransform();
         }
 
-        private void Export()
+        private void Export(MainWindowViewModel mainWindowViewModel, DesignerCanvas designerCanvas, DiagramViewModel diagramViewModel)
         {
-            var diagramControl = App.Current.MainWindow.GetChildOfType<DiagramControl>();
-            var itemsControl = diagramControl.GetChildOfType<ItemsControl>();
-            var designerCanvas = diagramControl.GetChildOfType<DesignerCanvas>();
-            var diagramViewModel = diagramControl.DataContext as DiagramViewModel;
+            //var itemsControl = diagramControl.GetChildOfType<ItemsControl>();
+            //var designerCanvas = diagramControl.GetChildOfType<DesignerCanvas>();
+            //var diagramViewModel = diagramControl.DataContext as DiagramViewModel;
             var backgroundItem = diagramViewModel.BackgroundItem.Value;
 
             var rtb = new RenderTargetBitmap((int)diagramViewModel.Width, (int)diagramViewModel.Height, 96, 96, PixelFormats.Pbgra32);
@@ -112,7 +111,7 @@ namespace boilersGraphics.ViewModels
             using (DrawingContext context = visual.RenderOpen())
             {
                 //背景を描画
-                RenderBackgroundViewModel(context, backgroundItem);
+                RenderBackgroundViewModel(designerCanvas, context, backgroundItem);
 
                 VisualBrush brush = new VisualBrush(designerCanvas);
                 brush.Stretch = Stretch.None;
@@ -126,32 +125,29 @@ namespace boilersGraphics.ViewModels
             var generator = FileGenerator.Create(System.IO.Path.GetExtension(Path.Value));
             generator.AddFrame(BitmapFrame.Create(rtb));
             generator.SetQualityLevel(QualityLevel.Value);
-            generator.Save(Path.Value);
+            generator.Save(mainWindowViewModel, Path.Value);
+            LogManager.GetCurrentClassLogger().Info($"Exported:{Path.Value}");
 
-            UpdateStatisticsCount();
+            UpdateStatisticsCount(mainWindowViewModel);
         }
 
-        private static void UpdateStatisticsCount()
+        private static void UpdateStatisticsCount(MainWindowViewModel mainWindowViewModel)
         {
-            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            var statistics = mainWindowViewModel.Statistics.Value;
             statistics.NumberOfExports++;
             var dao = new StatisticsDao();
             dao.Update(statistics);
         }
 
-        private void AfterExport(Dictionary<SelectableDesignerItemViewModelBase, bool> tempIsSelected, Transform tempLayoutTransform)
+        private void AfterExport(DesignerCanvas designerCanvas, DiagramViewModel diagramViewModel, Dictionary<SelectableDesignerItemViewModelBase, bool> tempIsSelected, Transform tempLayoutTransform)
         {
-            var diagramControl = App.Current.MainWindow.GetChildOfType<DiagramControl>();
-            var itemsControl = diagramControl.GetChildOfType<ItemsControl>();
-            var diagramViewModel = diagramControl.DataContext as DiagramViewModel;
             var backgroundItem = diagramViewModel.BackgroundItem.Value;
-            var designerCanvas = diagramControl.GetChildOfType<DesignerCanvas>();
 
             //背景の境界線を復元する
             backgroundItem.EdgeThickness.Value = 1;
 
             //IsSelectedの復元
-            foreach (var item in itemsControl.Items.Cast<SelectableDesignerItemViewModelBase>())
+            foreach (var item in diagramViewModel.AllItems.Value.Cast<SelectableDesignerItemViewModelBase>())
             {
                 bool outIsSelected;
                 if (tempIsSelected.TryGetValue(item, out outIsSelected))
@@ -160,7 +156,7 @@ namespace boilersGraphics.ViewModels
                 }
             }
 
-            foreach (var snapPointVM in itemsControl.Items.OfType<SnapPointViewModel>())
+            foreach (var snapPointVM in diagramViewModel.AllItems.Value.OfType<SnapPointViewModel>())
             {
                 //スナップポイントを半透明に復元する
                 snapPointVM.Opacity.Value = 0.5;
@@ -169,10 +165,10 @@ namespace boilersGraphics.ViewModels
             designerCanvas.LayoutTransform = tempLayoutTransform;
         }
 
-        private static void RenderBackgroundViewModel(DrawingContext context, BackgroundViewModel background)
+        private static void RenderBackgroundViewModel(DesignerCanvas designerCanvas, DrawingContext context, BackgroundViewModel background)
         {
-            var diagramControl = App.Current.MainWindow.GetChildOfType<DiagramControl>();
-            var view = diagramControl.GetCorrespondingViews<FrameworkElement>(background).First(x => x.GetType() == background.GetViewType());
+            var views = designerCanvas.GetCorrespondingViews<FrameworkElement>(background);
+            var view = views.First(x => x.GetType() == background.GetViewType());
             VisualBrush brush = new VisualBrush(view);
             brush.Stretch = Stretch.None;
             view.UpdateLayout();
@@ -183,7 +179,7 @@ namespace boilersGraphics.ViewModels
         {
             void AddFrame(BitmapFrame frame);
             void SetQualityLevel(int level);
-            void Save(string filename);
+            void Save(MainWindowViewModel mainWindowViewModel, string filename);
         }
 
         abstract class FileGenerator
@@ -237,16 +233,16 @@ namespace boilersGraphics.ViewModels
                 encoder.Frames.Add(frame);
             }
 
-            public void Save(string filename)
+            public void Save(MainWindowViewModel mainWindowViewModel, string filename)
             {
                 using (var stream = File.Create(filename))
                 {
                     encoder.Save(stream);
                 }
-                UpdateStatisticsCount();
+                UpdateStatisticsCount(mainWindowViewModel);
             }
 
-            public abstract void UpdateStatisticsCount();
+            public abstract void UpdateStatisticsCount(MainWindowViewModel mainWindowViewModel);
         }
 
         class JpegFileGenerator : FileGenerator<JpegBitmapEncoder>
@@ -256,9 +252,9 @@ namespace boilersGraphics.ViewModels
                 Cast().QualityLevel = level;
             }
 
-            public override void UpdateStatisticsCount()
+            public override void UpdateStatisticsCount(MainWindowViewModel mainWindowViewModel)
             {
-                var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+                var statistics = mainWindowViewModel.Statistics.Value;
                 statistics.NumberOfJpegExports++;
                 var dao = new StatisticsDao();
                 dao.Update(statistics);
@@ -271,9 +267,9 @@ namespace boilersGraphics.ViewModels
             {
             }
 
-            public override void UpdateStatisticsCount()
+            public override void UpdateStatisticsCount(MainWindowViewModel mainWindowViewModel)
             {
-                var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+                var statistics = mainWindowViewModel.Statistics.Value;
                 statistics.NumberOfPngExports++;
                 var dao = new StatisticsDao();
                 dao.Update(statistics);
@@ -286,9 +282,9 @@ namespace boilersGraphics.ViewModels
             {
             }
 
-            public override void UpdateStatisticsCount()
+            public override void UpdateStatisticsCount(MainWindowViewModel mainWindowViewModel)
             {
-                var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+                var statistics = mainWindowViewModel.Statistics.Value;
                 statistics.NumberOfGifExports++;
                 var dao = new StatisticsDao();
                 dao.Update(statistics);
@@ -301,9 +297,9 @@ namespace boilersGraphics.ViewModels
             {
             }
 
-            public override void UpdateStatisticsCount()
+            public override void UpdateStatisticsCount(MainWindowViewModel mainWindowViewModel)
             {
-                var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+                var statistics = mainWindowViewModel.Statistics.Value;
                 statistics.NumberOfBmpExports++;
                 var dao = new StatisticsDao();
                 dao.Update(statistics);
@@ -316,9 +312,9 @@ namespace boilersGraphics.ViewModels
             {
             }
 
-            public override void UpdateStatisticsCount()
+            public override void UpdateStatisticsCount(MainWindowViewModel mainWindowViewModel)
             {
-                var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+                var statistics = mainWindowViewModel.Statistics.Value;
                 statistics.NumberOfTiffExports++;
                 var dao = new StatisticsDao();
                 dao.Update(statistics);
@@ -331,9 +327,9 @@ namespace boilersGraphics.ViewModels
             {
             }
 
-            public override void UpdateStatisticsCount()
+            public override void UpdateStatisticsCount(MainWindowViewModel mainWindowViewModel)
             {
-                var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+                var statistics = mainWindowViewModel.Statistics.Value;
                 statistics.NumberOfWmpExports++;
                 var dao = new StatisticsDao();
                 dao.Update(statistics);

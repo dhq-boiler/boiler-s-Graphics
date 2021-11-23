@@ -1,16 +1,15 @@
-﻿using boilersGraphics.Helpers;
+﻿using boilersGraphics.Extensions;
+using boilersGraphics.Helpers;
 using boilersGraphics.Views;
 using NLog;
 using Prism.Ioc;
 using Prism.Unity;
 using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
+using System.Diagnostics;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
+using Unity;
 
 namespace boilersGraphics
 {
@@ -21,8 +20,11 @@ namespace boilersGraphics
     {
         public static bool IsTest { get; set; }
 
+        public static App Instance { get; set; }
+
         public App()
         {
+            Instance = this;
             this.DispatcherUnhandledException += App_DispatcherUnhandledException;
         }
 
@@ -51,6 +53,13 @@ namespace boilersGraphics
         {
             var w = Container.Resolve<MainWindow>();
             return w;
+        }
+
+        protected override IContainerExtension CreateContainerExtension()
+        {
+            var container = new UnityContainer();
+            container.AddExtension(new Diagnostic());
+            return new UnityContainerExtension(container);
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)

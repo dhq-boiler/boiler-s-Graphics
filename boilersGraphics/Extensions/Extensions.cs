@@ -10,7 +10,7 @@ using System.Windows.Media;
 
 namespace boilersGraphics.Extensions
 {
-    internal static class Extensions
+    public static class Extensions
     {
         /*
          * https://stackoverflow.com/questions/10279092/how-to-get-children-of-a-wpf-container-by-type
