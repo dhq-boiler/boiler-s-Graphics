@@ -1525,7 +1525,7 @@ namespace boilersGraphics.ViewModels
             }
 
             var layersViewModel = App.Current.MainWindow.GetChildOfType<Views.Layers>().DataContext as LayersViewModel;
-            layersViewModel.InitializeHitTestVisible();
+            layersViewModel.InitializeHitTestVisible(mainwindowViewModel);
             Layers.First().IsSelected.Value = true;
         }
 

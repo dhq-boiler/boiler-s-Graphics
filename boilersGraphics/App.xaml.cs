@@ -1,16 +1,15 @@
-﻿using boilersGraphics.Helpers;
+﻿using boilersGraphics.Extensions;
+using boilersGraphics.Helpers;
 using boilersGraphics.Views;
 using NLog;
 using Prism.Ioc;
 using Prism.Unity;
 using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
+using System.Diagnostics;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
+using Unity;
 
 namespace boilersGraphics
 {
@@ -21,9 +20,25 @@ namespace boilersGraphics
     {
         public static bool IsTest { get; set; }
 
+        public static App Instance { get; set; }
+
+        public IUnityContainer UnityContainer { get; set; }
+
+        public Func<MainWindow> GetMainWindow { get; private set; }
+
+        private MainWindow MainWindowInstance { get; set; }
+
         public App()
         {
+            Instance = this;
             this.DispatcherUnhandledException += App_DispatcherUnhandledException;
+            GetMainWindow = new Func<MainWindow>(() => MainWindowInstance);
+        }
+
+        [Conditional("TEST")]
+        public void CreateShellAtTest()
+        {
+            MainWindowInstance = new MainWindow();
         }
 
         private void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
@@ -50,11 +65,22 @@ namespace boilersGraphics
         protected override Window CreateShell()
         {
             var w = Container.Resolve<MainWindow>();
+            MainWindowInstance = w;
             return w;
+        }
+
+        protected override IContainerExtension CreateContainerExtension()
+        {
+            var container = new UnityContainer();
+            container.AddExtension(new Diagnostic());
+            return new UnityContainerExtension(container);
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
+            UnityContainer = containerRegistry.GetContainer();
+            //containerRegistry.RegisterSingleton<UserControls.DiagramControl, UserControls.DiagramControl>();
+            //containerRegistry.RegisterSingleton<Controls.DesignerCanvas, Controls.DesignerCanvas>();
             containerRegistry.RegisterDialog<ColorPicker, ViewModels.ColorPickerViewModel>();
             containerRegistry.RegisterDialog<LetterSetting, ViewModels.LetterSettingViewModel>();
             containerRegistry.RegisterDialog<LetterVerticalSetting, ViewModels.LetterVerticalSettingViewModel>();
@@ -73,6 +99,11 @@ namespace boilersGraphics
             containerRegistry.RegisterDialog<Views.DetailPicture, ViewModels.DetailPictureViewModel>();
             containerRegistry.RegisterDialog<Views.DetailLetter, ViewModels.DetailLetterViewModel>();
             containerRegistry.RegisterDialog<Views.Statistics, ViewModels.StatisticsDialogViewModel>();
+
+            //STATask.Run(() =>
+            //{
+            //    containerRegistry.RegisterInstance(typeof(Controls.DesignerCanvas), Container.Resolve<MainWindow>().GetChildOfType<Controls.DesignerCanvas>());
+            //});
         }
 
         public static string GetAppNameAndVersion()

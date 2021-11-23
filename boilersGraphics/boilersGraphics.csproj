@@ -254,6 +254,7 @@
     <Compile Include="Helpers\SnapAction.cs" />
     <Compile Include="Helpers\SnapPointDistincter.cs" />
     <Compile Include="Helpers\SnapPointPosition.cs" />
+    <Compile Include="Helpers\STATask.cs" />
     <Compile Include="Helpers\ToolBoxData.cs" />
     <Compile Include="Helpers\ToolItemData.cs" />
     <Compile Include="Helpers\TransformNotification.cs" />
@@ -672,6 +673,7 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -681,8 +683,11 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.ja-JP.resx" />
+    <EmbeddedResource Include="Properties\Resources.ja-JP.resx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
     <None Include="..\LICENSE">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

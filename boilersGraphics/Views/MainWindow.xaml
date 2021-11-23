@@ -516,7 +516,7 @@
                             </ControlTemplate>
                         </Button.Template>
                     </Button>
-                    <Button Command="{Binding DiagramViewModel.ExportCommand}" ToolTip="{Binding Command_Export, Mode=OneWay, Source={StaticResource resources}}">
+                    <Button x:Name="Export" Command="{Binding DiagramViewModel.ExportCommand}" ToolTip="{Binding Command_Export, Mode=OneWay, Source={StaticResource resources}}">
                         <Button.Template>
                             <ControlTemplate TargetType="{x:Type Button}">
                                 <Grid>
