@@ -30,7 +30,7 @@ namespace boilersGraphics.Test.UITests
                 DesiredCapabilities appCapabilities = new DesiredCapabilities();
                 appCapabilities.SetCapability("app", AppPath);
                 appCapabilities.SetCapability("deviceName", "WindowsPC");
-                session = new WindowsDriver<WindowsElement>(new Uri(WindowsApplicationDriverUrl), appCapabilities));
+                session = new WindowsDriver<WindowsElement>(new Uri(WindowsApplicationDriverUrl), appCapabilities);
                 Assert.That(session, Is.Not.Null);
 
                 // Set implicit timeout to 1.5 seconds to make element search to retry every 500 ms for at most three times
