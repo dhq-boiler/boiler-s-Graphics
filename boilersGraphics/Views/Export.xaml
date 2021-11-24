@@ -39,10 +39,11 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Label Grid.Row="0" Grid.Column="0">ファイル名</Label>
-            <TextBox x:Name="FileName"
+            <TextBox x:Name="ExportFileName"
                      Grid.Row="0"
                      Grid.Column="1"
-                     AutomationProperties.AutomationId="FileName"
+                     AutomationProperties.AutomationId="ExportFileName"
+                     AutomationProperties.Name="ExportFileName"
                      Text="{Binding Path.Value, UpdateSourceTrigger=PropertyChanged}" />
             <Button Grid.Row="0"
                     Grid.Column="2"

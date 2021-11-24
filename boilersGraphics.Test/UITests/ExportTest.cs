@@ -19,7 +19,7 @@ namespace boilersGraphics.Test.UITests
             try
             {
                 session.FindElementByAccessibilityId("Export").Click();
-                session.FindElementByAccessibilityId("FileName").SendKeys(exportFilePath);
+                session.FindElementByAccessibilityId("ExportFileName").SendKeys(exportFilePath);
                 session.FindElementByAccessibilityId("PerformExport").Click();
                 Thread.Sleep(1000);
                 LogManager.GetCurrentClassLogger().Info(exportFilePath);
@@ -61,7 +61,7 @@ namespace boilersGraphics.Test.UITests
                 session.FindElementByAccessibilityId("Export").Click();
                 LogManager.GetCurrentClassLogger().Info("I");
                 Thread.Sleep(1000);
-                session.FindElementByAccessibilityId("FileName").SendKeys(exportFilePath);
+                session.FindElementByAccessibilityId("ExportFileName").SendKeys(exportFilePath);
                 LogManager.GetCurrentClassLogger().Info("J");
                 session.FindElementByAccessibilityId("PerformExport").Click();
                 LogManager.GetCurrentClassLogger().Info("K");
