@@ -52,9 +52,10 @@ namespace boilersGraphics.Test.UITests
                 LogManager.GetCurrentClassLogger().Info("F");
                 session.FindElementByAccessibilityId("1148").SendKeys(loadFilePath);
                 LogManager.GetCurrentClassLogger().Info("G");
-                session.FindElementByName("開く(O)").Click();
+                session.FindElementByAccessibilityId("1").Click();
 
                 LogManager.GetCurrentClassLogger().Info("H");
+                Thread.Sleep(1000);
 
 
                 session.FindElementByAccessibilityId("Export").Click();
