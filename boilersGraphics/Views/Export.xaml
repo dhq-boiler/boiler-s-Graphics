@@ -47,7 +47,7 @@
                     Grid.Column="2"
                     Width="75"
                     Command="{Binding PathFinderCommand}">
-                    参照
+                参照
             </Button>
             <Label Grid.Row="1" Grid.Column="0">
                 <Label.Style>
@@ -80,7 +80,7 @@
                         </Style.Triggers>
                     </Style>
                 </Label.Style>
-                                         クオリティレベル
+                クオリティレベル
             </Label>
             <Slider Grid.Row="1"
                     Grid.Column="1"
