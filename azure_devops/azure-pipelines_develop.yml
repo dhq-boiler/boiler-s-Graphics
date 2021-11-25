@@ -22,16 +22,16 @@ steps:
   inputs:
     restoreSolution: '$(solution)'
 
+- task: Windows Application Driver@0
+  inputs:
+    OperationType: 'Start'
+    AgentResolution: '1080p'
+
 - task: VSBuild@1
   inputs:
     solution: '$(solution)'
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
-    
-- task: Windows Application Driver@0
-  inputs:
-    OperationType: 'Start'
-    AgentResolution: '1080p'
 
 - task: CmdLine@2
   displayName: "NUnit & OpenCover"
