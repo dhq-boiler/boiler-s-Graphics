@@ -61,7 +61,7 @@ namespace boilersGraphics.Test.UITests
                 session.FindElementByAccessibilityId("Export").Click();
                 LogManager.GetCurrentClassLogger().Info("I");
                 Thread.Sleep(1000);
-                session.FindElementByAccessibilityId("ExportFileName").SendKeys(exportFilePath);
+                this.WaitForObject(() => session.FindElementByAccessibilityId("ExportFileName"), 30).SendKeys(exportFilePath);
                 LogManager.GetCurrentClassLogger().Info("J");
                 session.FindElementByAccessibilityId("PerformExport").Click();
                 LogManager.GetCurrentClassLogger().Info("K");

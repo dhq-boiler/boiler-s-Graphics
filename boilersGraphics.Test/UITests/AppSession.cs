@@ -1,8 +1,11 @@
 ﻿using NUnit.Framework;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Appium.Windows;
 using OpenQA.Selenium.Remote;
+using OpenQA.Selenium.Support.UI;
 using System;
 using System.IO;
+using System.Net;
 using System.Reflection;
 
 namespace boilersGraphics.Test.UITests
@@ -45,6 +48,46 @@ namespace boilersGraphics.Test.UITests
             {
                 session.Quit();
                 session = null;
+            }
+        }
+
+        // Wait for an Object to be accessible, use a custom timeout
+        public WindowsElement WaitForObject(Func<WindowsElement> element, int timeout)
+        {
+
+            WindowsElement waitElement = null;
+
+            try
+            {
+                var wait = new DefaultWait<WindowsDriver<WindowsElement>>(session)
+                {
+                    Timeout = TimeSpan.FromSeconds(timeout),
+                    PollingInterval = TimeSpan.FromSeconds(1)
+                };
+
+                wait.IgnoreExceptionTypes(typeof(WebDriverException));
+                wait.IgnoreExceptionTypes(typeof(InvalidOperationException));
+                wait.IgnoreExceptionTypes(typeof(StaleElementReferenceException));
+                wait.IgnoreExceptionTypes(typeof(NoSuchElementException));
+                wait.IgnoreExceptionTypes(typeof(NotFoundException));
+                wait.IgnoreExceptionTypes(typeof(WebException));
+                wait.IgnoreExceptionTypes(typeof(WebDriverTimeoutException));
+
+                wait.Until(driver =>
+                {
+                    waitElement = element();
+
+                    return waitElement != null && waitElement.Enabled && waitElement.Displayed;
+                });
+
+                return waitElement;
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                Assert.Fail("Failed to WaitForObject.. Check screenshots");
+                return waitElement;
             }
         }
     }
