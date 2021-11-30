@@ -42,8 +42,6 @@
             <TextBox x:Name="ExportFileName"
                      Grid.Row="0"
                      Grid.Column="1"
-                     AutomationProperties.AutomationId="ExportFileName"
-                     AutomationProperties.Name="ExportFileName"
                      Text="{Binding Path.Value, UpdateSourceTrigger=PropertyChanged}" />
             <Button Grid.Row="0"
                     Grid.Column="2"
