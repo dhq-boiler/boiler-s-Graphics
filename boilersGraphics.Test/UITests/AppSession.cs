@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using OpenQA.Selenium;
+using OpenQA.Selenium.Appium;
 using OpenQA.Selenium.Appium.Windows;
 using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
@@ -26,10 +27,9 @@ namespace boilersGraphics.Test.UITests
             {
                 // Create a new session to bring up an instance of the Calculator application
                 // Note: Multiple calculator windows (instances) share the same process Id
-                DesiredCapabilities appCapabilities = new DesiredCapabilities();
-                appCapabilities.SetCapability("app", AppPath);
-                appCapabilities.SetCapability("deviceName", "WindowsPC");
-                session = new WindowsDriver<WindowsElement>(new Uri(WindowsApplicationDriverUrl), appCapabilities);
+                var options = new AppiumOptions();
+                options.AddAdditionalCapability("app", AppPath);
+                session = new WindowsDriver<WindowsElement>(new Uri(WindowsApplicationDriverUrl), options);
                 Assert.That(session, Is.Not.Null);
 
                 // Set implicit timeout to 1.5 seconds to make element search to retry every 500 ms for at most three times
