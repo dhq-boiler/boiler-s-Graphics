@@ -40,6 +40,7 @@
             <TextBox x:Name="fileName"
                      Grid.Row="0"
                      Grid.Column="1"
+                     AutomationProperties.AutomationId="fileName"
                      Text="{Binding Path.Value, UpdateSourceTrigger=PropertyChanged}" />
             <Button Grid.Row="0"
                     Grid.Column="2"

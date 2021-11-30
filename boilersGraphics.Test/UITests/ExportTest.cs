@@ -21,9 +21,9 @@ namespace boilersGraphics.Test.UITests
 
             try
             {
-                session.FindElementByAccessibilityId("Export").Click();
-                session.FindElementByAccessibilityId("ExportFileName").SendKeys(exportFilePath);
-                session.FindElementByAccessibilityId("PerformExport").Click();
+                GetElementByAutomationID("Export").Click();
+                GetElementByAutomationID("fileName").SendKeys(exportFilePath);
+                GetElementByAutomationID("PerformExport").Click();
                 Thread.Sleep(1000);
                 LogManager.GetCurrentClassLogger().Info(exportFilePath);
                 Assert.That(File.Exists(exportFilePath), Is.EqualTo(true));
