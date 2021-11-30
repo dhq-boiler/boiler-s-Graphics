@@ -1,6 +1,7 @@
 ﻿using NLog;
 using NUnit.Framework;
 using OpenQA.Selenium;
+using OpenQA.Selenium.Interactions;
 using System.IO;
 using System.Reflection;
 using System.Threading;
@@ -55,15 +56,18 @@ namespace boilersGraphics.Test.UITests
                 session.FindElementByAccessibilityId("1").Click();
 
                 LogManager.GetCurrentClassLogger().Info("H");
-                Thread.Sleep(1000);
-
-
                 session.FindElementByAccessibilityId("Export").Click();
+
                 LogManager.GetCurrentClassLogger().Info("I");
-                Thread.Sleep(1000);
-                this.WaitForObject(() => session.FindElementByAccessibilityId("ExportFileName"), 30).SendKeys(exportFilePath);
+                var action = new Actions(session);
+                action.SendKeys(session.FindElementByAccessibilityId("ExportFileName"), exportFilePath);
+                action.Perform();
+
                 LogManager.GetCurrentClassLogger().Info("J");
-                session.FindElementByAccessibilityId("PerformExport").Click();
+                action = new Actions(session);
+                action.Click(session.FindElementByAccessibilityId("PerformExport"));
+                action.Perform();
+
                 LogManager.GetCurrentClassLogger().Info("K");
                 Thread.Sleep(1000);
                 LogManager.GetCurrentClassLogger().Info("L");
