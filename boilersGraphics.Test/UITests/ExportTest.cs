@@ -12,7 +12,7 @@ namespace boilersGraphics.Test.UITests
     public class ExportTest : AppSession
     {
         [Test]
-        public void b_真っ白なキャンパスをエクスポートする()
+        public void 真っ白なキャンパスをエクスポートする()
         {
             var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var exportFilePath = $"{dir}\\ExportTest.jpg";
@@ -33,7 +33,7 @@ namespace boilersGraphics.Test.UITests
         }
 
         [Test]
-        public void a_チェッカーパターンを読み込んでエクスポートする()
+        public void チェッカーパターンを読み込んでエクスポートする()
         {
             LogManager.GetCurrentClassLogger().Info("A");
             var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
@@ -47,9 +47,13 @@ namespace boilersGraphics.Test.UITests
                 LogManager.GetCurrentClassLogger().Info("C");
                 session.FindElementByAccessibilityId("1").Click();
                 LogManager.GetCurrentClassLogger().Info("D");
-                session.Keyboard.SendKeys(Keys.Alt + "N" + Keys.Alt);
+                var action = new Actions(session);
+                action.SendKeys(Keys.Alt + "N" + Keys.Alt);
+                action.Perform();
                 LogManager.GetCurrentClassLogger().Info("E");
-                session.Keyboard.SendKeys(Keys.Alt + "N" + Keys.Alt);
+                action = new Actions(session);
+                action.SendKeys(Keys.Alt + "N" + Keys.Alt);
+                action.Perform();
                 LogManager.GetCurrentClassLogger().Info("F");
                 session.FindElementByAccessibilityId("1148").SendKeys(loadFilePath);
                 LogManager.GetCurrentClassLogger().Info("G");
@@ -59,7 +63,7 @@ namespace boilersGraphics.Test.UITests
                 session.FindElementByAccessibilityId("Export").Click();
 
                 LogManager.GetCurrentClassLogger().Info("I");
-                var action = new Actions(session);
+                action = new Actions(session);
                 action.SendKeys(session.FindElementByAccessibilityId("ExportFileName"), exportFilePath);
                 action.Perform();
 
