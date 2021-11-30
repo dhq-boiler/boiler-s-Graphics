@@ -60,7 +60,11 @@ namespace boilersGraphics.Test.UITests
                 session.FindElementByAccessibilityId("1").Click();
 
                 LogManager.GetCurrentClassLogger().Info("H");
-                session.FindElementByAccessibilityId("Export").Click();
+                action = new Actions(session);
+                action.Click(session.FindElementByAccessibilityId("Export"));
+                action.Perform();
+
+                Thread.Sleep(1000);
 
                 LogManager.GetCurrentClassLogger().Info("I");
                 action = new Actions(session);
