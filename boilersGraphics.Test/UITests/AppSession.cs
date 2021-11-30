@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using NLog;
+using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Appium;
 using OpenQA.Selenium.Appium.Windows;
@@ -88,6 +89,36 @@ namespace boilersGraphics.Test.UITests
                 Assert.Fail("Failed to WaitForObject.. Check screenshots");
                 return waitElement;
             }
+        }
+
+        public WindowsElement GetElementByAutomationID(string automationId, int timeOut = 10000)
+        {
+            WindowsElement element = null;
+
+            var wait = new DefaultWait<WindowsDriver<WindowsElement>>(session)
+            {
+                Timeout = TimeSpan.FromMilliseconds(timeOut),
+                Message = $"Element with automationId \"{automationId}\" not found."
+            };
+
+            wait.IgnoreExceptionTypes(typeof(WebDriverException));
+
+            try
+            {
+                wait.Until(Driver =>
+                {
+                    element = Driver.FindElementByAccessibilityId(automationId);
+                    return element != null;
+                });
+            }
+            catch (WebDriverTimeoutException ex)
+            {
+                LogManager.GetCurrentClassLogger().Error(ex);
+                LogManager.GetCurrentClassLogger().Error($"automationId:{automationId}");
+                Assert.Fail(ex.Message);
+            }
+
+            return element;
         }
     }
 }

@@ -2,6 +2,8 @@
 using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
+using OpenQA.Selenium.Support.UI;
+using System;
 using System.IO;
 using System.Reflection;
 using System.Threading;
@@ -68,7 +70,7 @@ namespace boilersGraphics.Test.UITests
 
                 LogManager.GetCurrentClassLogger().Info("I");
                 action = new Actions(session);
-                action.SendKeys(session.FindElementByAccessibilityId("ExportFileName"), exportFilePath);
+                action.SendKeys(GetElementByAutomationID("ExportFileName"), exportFilePath);
                 action.Perform();
 
                 LogManager.GetCurrentClassLogger().Info("J");
