@@ -12,7 +12,7 @@ namespace boilersGraphics.Test.UITests
     public class ExportTest : AppSession
     {
         [Test]
-        public void 真っ白なキャンパスをエクスポートする()
+        public void a_真っ白なキャンパスをエクスポートする()
         {
             var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var exportFilePath = $"{dir}\\ExportTest.jpg";
@@ -33,7 +33,7 @@ namespace boilersGraphics.Test.UITests
         }
 
         [Test]
-        public void チェッカーパターンを読み込んでエクスポートする()
+        public void b_チェッカーパターンを読み込んでエクスポートする()
         {
             LogManager.GetCurrentClassLogger().Info("A");
             var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
