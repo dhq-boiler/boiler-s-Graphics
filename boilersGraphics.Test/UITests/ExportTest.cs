@@ -65,6 +65,8 @@ namespace boilersGraphics.Test.UITests
                 action = new Actions(session);
                 action.Click(session.FindElementByAccessibilityId("Export"));
                 action.Perform();
+                Thread.Sleep(1000);
+                action.Perform();
 
                 Thread.Sleep(1000);
 
