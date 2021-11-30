@@ -70,7 +70,7 @@ namespace boilersGraphics.Test.UITests
 
                 LogManager.GetCurrentClassLogger().Info("I");
                 action = new Actions(session);
-                action.SendKeys(GetElementByAutomationID("ExportFileName"), exportFilePath);
+                action.SendKeys(GetElementByAutomationID("fileName"), exportFilePath);
                 action.Perform();
 
                 LogManager.GetCurrentClassLogger().Info("J");

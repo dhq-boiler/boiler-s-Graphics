@@ -37,7 +37,7 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Label Grid.Row="0" Grid.Column="0">ファイル名</Label>
-            <TextBox x:Name="ExportFileName"
+            <TextBox x:Name="fileName"
                      Grid.Row="0"
                      Grid.Column="1"
                      Text="{Binding Path.Value, UpdateSourceTrigger=PropertyChanged}" />
