@@ -44,24 +44,22 @@ namespace boilersGraphics.Test.UITests
 
             try
             {
-                LogManager.GetCurrentClassLogger().Info("B");
-                session.FindElementByAccessibilityId("Load").Click();
-                LogManager.GetCurrentClassLogger().Info("C");
-                session.FindElementByAccessibilityId("1").Click();
-                LogManager.GetCurrentClassLogger().Info("D");
-                var action = new Actions(session);
-                action.SendKeys(Keys.Alt + "N" + Keys.Alt);
-                action.Perform();
-                LogManager.GetCurrentClassLogger().Info("E");
-                action = new Actions(session);
-                action.SendKeys(Keys.Alt + "N" + Keys.Alt);
-                action.Perform();
-                LogManager.GetCurrentClassLogger().Info("F");
-                session.FindElementByAccessibilityId("1148").SendKeys(loadFilePath);
-                LogManager.GetCurrentClassLogger().Info("G");
-                session.FindElementByAccessibilityId("1").Click();
-
-
+                //LogManager.GetCurrentClassLogger().Info("B");
+                //session.FindElementByAccessibilityId("Load").Click();
+                //LogManager.GetCurrentClassLogger().Info("C");
+                //session.FindElementByAccessibilityId("1").Click();
+                //LogManager.GetCurrentClassLogger().Info("D");
+                //var action = new Actions(session);
+                //action.SendKeys(Keys.Alt + "N" + Keys.Alt);
+                //action.Perform();
+                //LogManager.GetCurrentClassLogger().Info("E");
+                //action = new Actions(session);
+                //action.SendKeys(Keys.Alt + "N" + Keys.Alt);
+                //action.Perform();
+                //LogManager.GetCurrentClassLogger().Info("F");
+                //session.FindElementByAccessibilityId("1148").SendKeys(loadFilePath);
+                //LogManager.GetCurrentClassLogger().Info("G");
+                //session.FindElementByAccessibilityId("1").Click();
 
                 LogManager.GetCurrentClassLogger().Info("H");
                 //action = new Actions(session);
