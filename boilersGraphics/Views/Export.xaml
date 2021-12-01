@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="boilersGraphics.Views.Export"
+<UserControl x:Class="boilersGraphics.Views.Export"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:converter="clr-namespace:boilersGraphics.Converters"
