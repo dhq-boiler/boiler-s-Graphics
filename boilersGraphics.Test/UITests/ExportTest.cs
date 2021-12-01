@@ -82,6 +82,7 @@ namespace boilersGraphics.Test.UITests
                 //action.Click(session.FindElementByAccessibilityId("Export"));
                 //action.Perform();
                 GetElementByAutomationID("Export").Click();
+                GetElementByAutomationID("Export").Click();
 
                 Thread.Sleep(1000);
 
