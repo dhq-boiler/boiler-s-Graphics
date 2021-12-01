@@ -61,22 +61,27 @@ namespace boilersGraphics.Test.UITests
                 LogManager.GetCurrentClassLogger().Info("G");
                 session.FindElementByAccessibilityId("1").Click();
 
+
+
                 LogManager.GetCurrentClassLogger().Info("H");
-                action = new Actions(session);
-                action.Click(session.FindElementByAccessibilityId("Export"));
-                action.Perform();
+                //action = new Actions(session);
+                //action.Click(session.FindElementByAccessibilityId("Export"));
+                //action.Perform();
+                GetElementByAutomationID("Export").Click();
 
                 Thread.Sleep(1000);
 
                 LogManager.GetCurrentClassLogger().Info("I");
-                action = new Actions(session);
-                action.SendKeys(GetElementByAutomationID("filename"), exportFilePath);
-                action.Perform();
+                //action = new Actions(session);
+                //action.SendKeys(GetElementByAutomationID("filename"), exportFilePath);
+                //action.Perform();
+                GetElementByAutomationID("filename").SendKeys(exportFilePath);
 
                 LogManager.GetCurrentClassLogger().Info("J");
-                action = new Actions(session);
-                action.Click(session.FindElementByAccessibilityId("PerformExport"));
-                action.Perform();
+                //action = new Actions(session);
+                //action.Click(session.FindElementByAccessibilityId("PerformExport"));
+                //action.Perform();
+                GetElementByAutomationID("PerformExport").Click();
 
                 LogManager.GetCurrentClassLogger().Info("K");
                 Thread.Sleep(1000);
