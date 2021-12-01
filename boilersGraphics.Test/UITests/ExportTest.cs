@@ -50,19 +50,21 @@ namespace boilersGraphics.Test.UITests
                 //「現在のキャンパスは破棄されますが、よろしいですか？」→OK（"1"）
                 session.FindElementByAccessibilityId("1").Click();
                 LogManager.GetCurrentClassLogger().Info("D");
-                var action = new Actions(session);
-                action.SendKeys(Keys.Alt + "N" + Keys.Alt);
-                action.Perform();
-                LogManager.GetCurrentClassLogger().Info("E");
-                action = new Actions(session);
-                action.SendKeys(Keys.Alt + "N" + Keys.Alt);
-                action.Perform();
-                LogManager.GetCurrentClassLogger().Info("F");
+                //var action = new Actions(session);
+                //action.SendKeys(Keys.Alt + "N" + Keys.Alt);
+                //action.Perform();
+                //LogManager.GetCurrentClassLogger().Info("E");
+                //action = new Actions(session);
+                //action.SendKeys(Keys.Alt + "N" + Keys.Alt);
+                //action.Perform();
+                //LogManager.GetCurrentClassLogger().Info("F");
                 //ファイル名（コンボボックス、"1148"）に入力
-                session.FindElementByAccessibilityId("1148").SendKeys(loadFilePath);
-                LogManager.GetCurrentClassLogger().Info("G");
+                //session.FindElementByAccessibilityId("1148").SendKeys(loadFilePath);
+                //LogManager.GetCurrentClassLogger().Info("G");
                 //開く（O)ボタン（"1")をクリック
-                session.FindElementByAccessibilityId("1").Click();
+                //session.FindElementByAccessibilityId("1").Click();
+                //キャンセルボタン("2")をクリック
+                session.FindElementByAccessibilityId("2").Click();
 
                 LogManager.GetCurrentClassLogger().Info("H");
                 //action = new Actions(session);
