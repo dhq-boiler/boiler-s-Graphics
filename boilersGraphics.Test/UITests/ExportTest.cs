@@ -83,15 +83,17 @@ namespace boilersGraphics.Test.UITests
                 //action.Perform();
                 GetElementByAutomationID("Export").Click();
                 GetElementByAutomationID("Export").Click();
+                GetElementByAutomationID("Export").Click();
+                GetElementByAutomationID("Export").Click();
+                GetElementByAutomationID("Export").Click();
 
-                Thread.Sleep(1000);
+                Thread.Sleep(5000);
 
                 LogManager.GetCurrentClassLogger().Info("I");
                 //action = new Actions(session);
                 //action.SendKeys(GetElementByAutomationID("filename"), exportFilePath);
                 //action.Perform();
                 GetElementByAutomationID("filename").SendKeys(exportFilePath);
-
                 LogManager.GetCurrentClassLogger().Info("J");
                 //action = new Actions(session);
                 //action.Click(session.FindElementByAccessibilityId("PerformExport"));
