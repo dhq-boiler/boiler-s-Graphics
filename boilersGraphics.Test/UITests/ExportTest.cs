@@ -55,10 +55,6 @@ namespace boilersGraphics.Test.UITests
                     session.FindElementByAccessibilityId("1").Click();
                     LogManager.GetCurrentClassLogger().Info("D");
                     TakeScreenShot("SCREENSHOT_D.png");
-                    //var action = new Actions(session);
-                    //action.SendKeys(Keys.Alt + "N" + Keys.Alt);
-                    //action.Perform();
-                    //LogManager.GetCurrentClassLogger().Info("E");
                     var action = new Actions(session);
                     action.SendKeys(Keys.Alt + "N" + Keys.Alt);
                     action.Perform();
