@@ -44,25 +44,7 @@ namespace boilersGraphics.Test.UITests
 
             try
             {
-                LogManager.GetCurrentClassLogger().Info("B");
-                session.FindElementByAccessibilityId("Load").Click();
-                LogManager.GetCurrentClassLogger().Info("C");
-                //「現在のキャンパスは破棄されますが、よろしいですか？」→OK（"1"）
-                session.FindElementByAccessibilityId("1").Click();
-                LogManager.GetCurrentClassLogger().Info("D");
-                var action = new Actions(session);
-                action.SendKeys(Keys.Alt + "N" + Keys.Alt);
-                action.Perform();
-                LogManager.GetCurrentClassLogger().Info("E");
-                action = new Actions(session);
-                action.SendKeys(Keys.Alt + "N" + Keys.Alt);
-                action.Perform();
-                LogManager.GetCurrentClassLogger().Info("F");
-                //ファイル名（コンボボックス、"1148"）に入力
-                session.FindElementByAccessibilityId("1148").SendKeys(loadFilePath);
-                LogManager.GetCurrentClassLogger().Info("G");
-                //開く（O)ボタン（"1")をクリック
-                session.FindElementByAccessibilityId("1").Click();
+                NewMethod(loadFilePath);
 
                 LogManager.GetCurrentClassLogger().Info("H");
                 //action = new Actions(session);
@@ -96,6 +78,29 @@ namespace boilersGraphics.Test.UITests
                 File.Delete(exportFilePath);
                 LogManager.GetCurrentClassLogger().Info("O");
             }
+        }
+
+        private static void NewMethod(string loadFilePath)
+        {
+            LogManager.GetCurrentClassLogger().Info("B");
+            session.FindElementByAccessibilityId("Load").Click();
+            LogManager.GetCurrentClassLogger().Info("C");
+            //「現在のキャンパスは破棄されますが、よろしいですか？」→OK（"1"）
+            session.FindElementByAccessibilityId("1").Click();
+            LogManager.GetCurrentClassLogger().Info("D");
+            var action = new Actions(session);
+            action.SendKeys(Keys.Alt + "N" + Keys.Alt);
+            action.Perform();
+            LogManager.GetCurrentClassLogger().Info("E");
+            action = new Actions(session);
+            action.SendKeys(Keys.Alt + "N" + Keys.Alt);
+            action.Perform();
+            LogManager.GetCurrentClassLogger().Info("F");
+            //ファイル名（コンボボックス、"1148"）に入力
+            session.FindElementByAccessibilityId("1148").SendKeys(loadFilePath);
+            LogManager.GetCurrentClassLogger().Info("G");
+            //開く（O)ボタン（"1")をクリック
+            session.FindElementByAccessibilityId("1").Click();
         }
     }
 }
