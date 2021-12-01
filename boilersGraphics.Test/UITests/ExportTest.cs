@@ -90,6 +90,7 @@ namespace boilersGraphics.Test.UITests
                 //action.SendKeys(GetElementByAutomationID("filename"), exportFilePath);
                 //action.Perform();
                 session.GetScreenshot().SaveAsFile($"{AppDomain.CurrentDomain.BaseDirectory}\\SCREENSHOT.png");
+                TestContext.AddTestAttachment($"{AppDomain.CurrentDomain.BaseDirectory}\\SCREENSHOT.png");
                 GetElementByAutomationID("filename").SendKeys(exportFilePath);
                 LogManager.GetCurrentClassLogger().Info("J");
                 //action = new Actions(session);
