@@ -47,11 +47,14 @@ namespace boilersGraphics.Test.UITests
                 try
                 {
                     LogManager.GetCurrentClassLogger().Info("B");
+                    TakeScreenShot("SCREENSHOT_B.png");
                     session.FindElementByAccessibilityId("Load").Click();
                     LogManager.GetCurrentClassLogger().Info("C");
+                    TakeScreenShot("SCREENSHOT_C.png");
                     //「現在のキャンパスは破棄されますが、よろしいですか？」→OK（"1"）
                     session.FindElementByAccessibilityId("1").Click();
                     LogManager.GetCurrentClassLogger().Info("D");
+                    TakeScreenShot("SCREENSHOT_D.png");
                     //var action = new Actions(session);
                     //action.SendKeys(Keys.Alt + "N" + Keys.Alt);
                     //action.Perform();
@@ -60,9 +63,11 @@ namespace boilersGraphics.Test.UITests
                     action.SendKeys(Keys.Alt + "N" + Keys.Alt);
                     action.Perform();
                     LogManager.GetCurrentClassLogger().Info("F");
+                    TakeScreenShot("SCREENSHOT_F.png");
                     //ファイル名（コンボボックス、"1148"）に入力
                     GetElementByAutomationID("1148").SendKeys(loadFilePath);
                     LogManager.GetCurrentClassLogger().Info("G");
+                    TakeScreenShot("SCREENSHOT_G.png");
                     //開く（O)ボタン（"1")をクリック
                     session.FindElementByAccessibilityId("1").Click(); //ファイル名が全選択状態になる
                     session.FindElementByAccessibilityId("1").Click(); //もう一度クリックが必要
@@ -78,31 +83,28 @@ namespace boilersGraphics.Test.UITests
                 }
 
                 LogManager.GetCurrentClassLogger().Info("H");
-                //action = new Actions(session);
-                //action.Click(session.FindElementByAccessibilityId("Export"));
-                //action.Perform();
+                TakeScreenShot("SCREENSHOT_H.png");
                 GetElementByAutomationID("Export").Click();
 
                 Thread.Sleep(5000);
 
                 LogManager.GetCurrentClassLogger().Info("I");
-                //action = new Actions(session);
-                //action.SendKeys(GetElementByAutomationID("filename"), exportFilePath);
-                //action.Perform();
-                session.GetScreenshot().SaveAsFile($"{AppDomain.CurrentDomain.BaseDirectory}\\SCREENSHOT.png");
-                TestContext.AddTestAttachment($"{AppDomain.CurrentDomain.BaseDirectory}\\SCREENSHOT.png");
+                TakeScreenShot("SCREENSHOT_I.png");
+                
                 GetElementByAutomationID("filename").SendKeys(exportFilePath);
+                
                 LogManager.GetCurrentClassLogger().Info("J");
-                //action = new Actions(session);
-                //action.Click(session.FindElementByAccessibilityId("PerformExport"));
-                //action.Perform();
+                TakeScreenShot("SCREENSHOT_J.png");
                 GetElementByAutomationID("PerformExport").Click();
 
                 LogManager.GetCurrentClassLogger().Info("K");
+                TakeScreenShot("SCREENSHOT_K.png");
                 Thread.Sleep(1000);
                 LogManager.GetCurrentClassLogger().Info("L");
+                TakeScreenShot("SCREENSHOT_L.png");
                 Assert.That(File.Exists(exportFilePath), Is.EqualTo(true));
                 LogManager.GetCurrentClassLogger().Info("M");
+                TakeScreenShot("SCREENSHOT_M.png");
             }
             finally
             {

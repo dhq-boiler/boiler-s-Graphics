@@ -137,5 +137,11 @@ namespace boilersGraphics.Test.UITests
                 return false;
             }
         }
+
+        public void TakeScreenShot(string filename)
+        {
+            session.GetScreenshot().SaveAsFile($"{AppDomain.CurrentDomain.BaseDirectory}\\{filename}");
+            TestContext.AddTestAttachment($"{AppDomain.CurrentDomain.BaseDirectory}\\{filename}");
+        }
     }
 }
