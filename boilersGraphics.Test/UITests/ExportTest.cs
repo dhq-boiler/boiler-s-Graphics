@@ -59,11 +59,11 @@ namespace boilersGraphics.Test.UITests
                 action.Perform();
                 LogManager.GetCurrentClassLogger().Info("F");
                 //ファイル名（コンボボックス、"1148"）に入力
-                session.FindElementByAccessibilityId("1148").SendKeys(loadFilePath);
+                GetElementByAutomationID("1148").SendKeys(loadFilePath);
                 LogManager.GetCurrentClassLogger().Info("G");
                 //開く（O)ボタン（"1")をクリック
-                session.FindElementByAccessibilityId("1").Click();
-                session.FindElementByAccessibilityId("1").Click();
+                session.FindElementByAccessibilityId("1").Click(); //ファイル名が全選択状態になる
+                session.FindElementByAccessibilityId("1").Click(); //もう一度クリックが必要
                 //キャンセルボタン("2")をクリック
                 //session.FindElementByAccessibilityId("2").Click();
 
