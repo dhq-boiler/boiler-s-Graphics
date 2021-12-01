@@ -22,7 +22,7 @@ namespace boilersGraphics.Test.UITests
             try
             {
                 GetElementByAutomationID("Export").Click();
-                GetElementByAutomationID("fileName").SendKeys(exportFilePath);
+                GetElementByAutomationID("filename").SendKeys(exportFilePath);
                 GetElementByAutomationID("PerformExport").Click();
                 Thread.Sleep(1000);
                 LogManager.GetCurrentClassLogger().Info(exportFilePath);
@@ -70,7 +70,7 @@ namespace boilersGraphics.Test.UITests
 
                 LogManager.GetCurrentClassLogger().Info("I");
                 action = new Actions(session);
-                action.SendKeys(GetElementByAutomationID("fileName"), exportFilePath);
+                action.SendKeys(GetElementByAutomationID("filename"), exportFilePath);
                 action.Perform();
 
                 LogManager.GetCurrentClassLogger().Info("J");
