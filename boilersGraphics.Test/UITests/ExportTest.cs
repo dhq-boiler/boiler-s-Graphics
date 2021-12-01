@@ -1,4 +1,4 @@
-﻿using NLog;
+using NLog;
 using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
