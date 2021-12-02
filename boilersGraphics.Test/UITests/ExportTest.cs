@@ -66,6 +66,11 @@ namespace boilersGraphics.Test.UITests
                 TakeScreenShot("SCREENSHOT_G.png");
                 //開く（O)ボタン（"1")をクリック
                 GetElementByAutomationID("1").Click();
+                if (IsElementPresent(By.Id("1")))
+                {
+                    LogManager.GetCurrentClassLogger().Info("GG");
+                    GetElementByAutomationID("1").Click();
+                }
             }
             finally
             {
