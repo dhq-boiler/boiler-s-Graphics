@@ -65,7 +65,7 @@ namespace boilersGraphics.Test.UITests
                 LogManager.GetCurrentClassLogger().Info("G");
                 TakeScreenShot("SCREENSHOT_G.png");
                 //開く（O)ボタン（"1")をクリック
-                session.FindElementByAccessibilityId("1").Click();
+                GetElementByAutomationID("1").Click();
             }
             finally
             {
@@ -73,13 +73,15 @@ namespace boilersGraphics.Test.UITests
                 {
                     session.FindElementByName("開く").FindElementByAccessibilityId("Close").Click();
                 }
+                if (IsElementPresent(By.Name("Open")))
+                {
+                    session.FindElementByName("Open").FindElementByAccessibilityId("Close").Click();
+                }
             }
 
             LogManager.GetCurrentClassLogger().Info("H");
             TakeScreenShot("SCREENSHOT_H.png");
             GetElementByAutomationID("Export").Click();
-
-            Thread.Sleep(5000);
 
             LogManager.GetCurrentClassLogger().Info("I");
             TakeScreenShot("SCREENSHOT_I.png");
