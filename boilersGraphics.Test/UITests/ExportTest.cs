@@ -71,11 +71,11 @@ namespace boilersGraphics.Test.UITests
             {
                 if (IsElementPresent(By.Name("開く")))
                 {
-                    session.FindElementByName("開く").FindElementByAccessibilityId("Close").Click();
+                    session.FindElementByName("開く").FindElementByAccessibilityId("2").Click();
                 }
                 if (IsElementPresent(By.Name("Open")))
                 {
-                    session.FindElementByName("Open").FindElementByAccessibilityId("Close").Click();
+                    session.FindElementByName("Open").FindElementByAccessibilityId("2").Click();
                 }
             }
 
