@@ -11,12 +11,12 @@ using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
@@ -100,10 +100,9 @@ namespace boilersGraphics.ViewModels
 
         private void Export(MainWindowViewModel mainWindowViewModel, DesignerCanvas designerCanvas, DiagramViewModel diagramViewModel)
         {
-            //var itemsControl = diagramControl.GetChildOfType<ItemsControl>();
-            //var designerCanvas = diagramControl.GetChildOfType<DesignerCanvas>();
-            //var diagramViewModel = diagramControl.DataContext as DiagramViewModel;
             var backgroundItem = diagramViewModel.BackgroundItem.Value;
+            var bounds = VisualTreeHelper.GetDescendantBounds(designerCanvas);
+            LogManager.GetCurrentClassLogger().Debug($"bounds:{bounds}");
 
             var rtb = new RenderTargetBitmap((int)diagramViewModel.Width, (int)diagramViewModel.Height, 96, 96, PixelFormats.Pbgra32);
 
@@ -115,9 +114,9 @@ namespace boilersGraphics.ViewModels
 
                 VisualBrush brush = new VisualBrush(designerCanvas);
                 brush.Stretch = Stretch.None;
-                context.DrawRectangle(brush, null, new Rect(new Point(), new Size(designerCanvas.ActualWidth, designerCanvas.ActualHeight)));
+                context.DrawRectangle(brush, null, bounds);
             }
-
+            
             rtb.Render(visual);
 
             OpenCvSharpHelper.ImShow("test", rtb);
@@ -169,10 +168,11 @@ namespace boilersGraphics.ViewModels
         {
             var views = designerCanvas.GetCorrespondingViews<FrameworkElement>(background);
             var view = views.First(x => x.GetType() == background.GetViewType());
+            var bounds = VisualTreeHelper.GetDescendantBounds(view);
             VisualBrush brush = new VisualBrush(view);
             brush.Stretch = Stretch.None;
             view.UpdateLayout();
-            context.DrawRectangle(brush, null, new Rect(new Point(background.Left.Value, background.Top.Value), new Size(background.Width.Value, background.Height.Value)));
+            context.DrawRectangle(brush, null, bounds);
         }
 
         interface IFileGenerator
