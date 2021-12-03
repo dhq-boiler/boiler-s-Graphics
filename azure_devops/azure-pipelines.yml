@@ -28,6 +28,11 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
+- task: Windows Application Driver@0
+  inputs:
+    OperationType: 'Start'
+    AgentResolution: '1080p'
+
 - task: CmdLine@2
   displayName: "NUnit & OpenCover"
   inputs:
@@ -40,6 +45,11 @@ steps:
       -returntargetcode
       -output:"coverage.xml"
       -filter:"+[boilersGraphics]* +[TsOperationHistory]* -[*]XamlGeneratedNamespace*"
+
+- task: Windows Application Driver@0
+  condition: always()
+  inputs:
+    OperationType: 'Stop'
 
 - task: PublishTestResults@2
   displayName: "Publish unit test result"
