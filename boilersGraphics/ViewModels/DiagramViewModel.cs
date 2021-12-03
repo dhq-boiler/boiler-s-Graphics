@@ -488,7 +488,7 @@ namespace boilersGraphics.ViewModels
             try
             {
                 var files = Directory.EnumerateFiles(System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "dhq_boiler\\boilersGraphics\\AutoSave"), "AutoSave-*-*-*-*-*-*.xml");
-                foreach (var file in files.OrderByDescending(x => x))
+                foreach (var file in files.OrderByDescending(x => new FileInfo(x).LastWriteTime))
                 {
                     AutoSaveFiles.AddOnScheduler(file);
                 }
