@@ -87,8 +87,8 @@ namespace boilersGraphics.Controls
                 var diff = angleInDegrees - _previousAngleInDegrees;
                 diff = Math.Round(diff, 0);
                 viewModel.RotationAngle.Value += diff;
-                _initialMatrix.RotateAt(diff, 0, 0);
-                viewModel.Matrix.Value = _initialMatrix;
+                //_initialMatrix.RotateAt(diff, 0, 0);
+                //viewModel.Matrix.Value = _initialMatrix;
                 _previousAngleInDegrees = angleInDegrees;
 
                 (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = $"角度 {viewModel.RotationAngle.Value}°";

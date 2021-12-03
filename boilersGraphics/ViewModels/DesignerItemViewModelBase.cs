@@ -115,7 +115,11 @@ namespace boilersGraphics.ViewModels
                 .AddTo(_CompositeDisposable);
             RotationAngle
                 .Zip(RotationAngle.Skip(1), (Old, New) => new { OldItem = Old, NewItem = New })
-                .Subscribe(x => UpdateTransform(nameof(RotationAngle), x.OldItem, x.NewItem))
+                .Subscribe(x =>
+                {
+                    UpdateTransform(nameof(RotationAngle), x.OldItem, x.NewItem);
+                    UpdateMatrix(x.OldItem, x.NewItem);
+                })
                 .AddTo(_CompositeDisposable);
             Matrix
                 .Zip(Matrix.Skip(1), (Old, New) => new { OldItem = Old, NewItem = New })
@@ -133,6 +137,13 @@ namespace boilersGraphics.ViewModels
                                  .ToReactiveProperty();
 
             Matrix.Value = new Matrix();
+        }
+
+        private void UpdateMatrix(double oldAngle, double newAngle)
+        {
+            var targetMatrix = Matrix.Value;
+            targetMatrix.RotateAt(newAngle - oldAngle, 0, 0);
+            Matrix.Value = targetMatrix;
         }
 
         private void UpdateLeft(double value)
