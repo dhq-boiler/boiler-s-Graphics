@@ -95,6 +95,7 @@ namespace boilersGraphics.ViewModels
                 this.Height.Value = viewModel.Height.Value;
                 this.CenterX.Value = viewModel.CenterX.Value;
                 this.CenterY.Value = viewModel.CenterY.Value;
+                this.RotationAngle.Value = viewModel.RotationAngle.Value;
             }
         }
 
