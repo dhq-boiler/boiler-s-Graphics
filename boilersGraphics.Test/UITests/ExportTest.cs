@@ -66,7 +66,8 @@ namespace boilersGraphics.Test.UITests
                 TakeScreenShot("SCREENSHOT_G.png");
                 //開く（O)ボタン（"1")をクリック
                 GetElementByAutomationID("1").Click();
-                if (IsElementPresent(By.Id("1")))
+                //開くボタンが押されない場合があるので、"1"がまだ存在していたら再度押し直す
+                if (ExistsElementByAutomationID("1"))
                 {
                     LogManager.GetCurrentClassLogger().Info("GG");
                     GetElementByAutomationID("1").Click();
