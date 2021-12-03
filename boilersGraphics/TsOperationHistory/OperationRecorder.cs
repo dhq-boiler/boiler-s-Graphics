@@ -43,6 +43,11 @@ namespace TsOperationHistory
 
         public void EndRecode([CallerMemberName] string callerMemberName = "")
         {
+            if (_stack.Count() == 0)
+            {
+                LogManager.GetCurrentClassLogger().Warn($"_stackが空ですがEndRecord()が呼び出されました。");
+                return;
+            }
             string className = Reflections.NameOfCallingClass();
             string message = $"{className}.{callerMemberName}() => EndRecode()";
             LogManager.GetCurrentClassLogger().Trace(message);
