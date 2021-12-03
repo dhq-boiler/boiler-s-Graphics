@@ -36,6 +36,11 @@ namespace boilersGraphics.ViewModels
 
         public static MainWindowViewModel Instance { get; set; }
 
+        public MainWindowViewModel()
+        {
+            Instance = this;
+        }
+
         public MainWindowViewModel(IDialogService dialogService)
         {
             Instance = this;

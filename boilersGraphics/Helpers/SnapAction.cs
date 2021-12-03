@@ -62,7 +62,9 @@ namespace boilersGraphics.Helpers
             if (diagramVM.EnablePointSnap.Value)
             {
                 var snapPoints = diagramVM.GetSnapPoints(currentPoint).ToList();
-                var dataContext = (designerCanvas.InputHitTest(currentPoint) as FrameworkElement).DataContext;
+                var hitTestResult = designerCanvas.InputHitTest(currentPoint);
+                if (!(hitTestResult is FrameworkElement)) return;
+                var dataContext = (hitTestResult as FrameworkElement).DataContext;
                 if (appendIntersectionPoints != null)
                     snapPoints.AddRange(from x in appendIntersectionPoints select new Tuple<SnapPoint, Point>(CreateSnapPoint(x.Item1, x.Item2), x.Item1));
                 Tuple<SnapPoint, Point> snapped = null;

@@ -627,11 +627,11 @@ namespace boilersGraphics.ViewModels
                 case "左上":
                     return new Point(leftTop.X + snapPoint.Width - 1, leftTop.Y + snapPoint.Height - 1);
                 case "右上":
-                    return new Point(leftTop.X, leftTop.Y + snapPoint.Height - 1);
+                    return new Point(leftTop.X + 1, leftTop.Y + snapPoint.Height - 1);
                 case "左下":
-                    return new Point(leftTop.X + snapPoint.Width - 1, leftTop.Y);
+                    return new Point(leftTop.X + snapPoint.Width - 1, leftTop.Y + 1);
                 case "右下":
-                    return new Point(leftTop.X, leftTop.Y);
+                    return new Point(leftTop.X + 1, leftTop.Y + 1);
                 case "左":
                 case "上":
                 case "右":
@@ -1525,7 +1525,7 @@ namespace boilersGraphics.ViewModels
             }
 
             var layersViewModel = App.Current.MainWindow.GetChildOfType<Views.Layers>().DataContext as LayersViewModel;
-            layersViewModel.InitializeHitTestVisible();
+            layersViewModel.InitializeHitTestVisible(mainwindowViewModel);
             Layers.First().IsSelected.Value = true;
         }
 
