@@ -221,7 +221,8 @@
                                     </ToolTip>
                                 </Button.ToolTip>
                             </Button>
-                            <Button Command="{x:Static SystemCommands.MaximizeWindowCommand}"
+                            <Button x:Name="MaximizeButton"
+                                    Command="{x:Static SystemCommands.MaximizeWindowCommand}"
                                     Content="1"
                                     Foreground="Gray"
                                     Style="{DynamicResource CaptionButtonStyleKey}"
@@ -232,7 +233,8 @@
                                     </ToolTip>
                                 </Button.ToolTip>
                             </Button>
-                            <Button Command="{x:Static SystemCommands.RestoreWindowCommand}"
+                            <Button x:Name="RestoreButton"
+                                    Command="{x:Static SystemCommands.RestoreWindowCommand}"
                                     Content="2"
                                     Foreground="Gray"
                                     Style="{DynamicResource CaptionButtonStyleKey}"
