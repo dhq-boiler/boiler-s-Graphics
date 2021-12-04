@@ -182,7 +182,8 @@
                                     </ToolTip>
                                 </Button.ToolTip>
                             </Button>
-                            <Button Command="{x:Static SystemCommands.RestoreWindowCommand}"
+                            <Button x:Name="RestoreButton"
+                                    Command="{x:Static SystemCommands.RestoreWindowCommand}"
                                     Content="2"
                                     Foreground="Gray"
                                     Style="{DynamicResource CaptionButtonStyleKey}"
