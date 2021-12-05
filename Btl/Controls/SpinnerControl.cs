@@ -37,6 +37,14 @@ namespace Btl.Controls
             DefaultStyleKeyProperty.OverrideMetadata(typeof(SpinnerControl), new FrameworkPropertyMetadata(typeof(SpinnerControl)));
         }
 
+        public static readonly DependencyProperty IsEnableProperty = DependencyProperty.Register("IsEnable", typeof(bool), typeof(SpinnerControl));
+
+        public bool IsEnable
+        {
+            get { return (bool)GetValue(IsEnableProperty); }
+            set { SetValue(IsEnableProperty, value); }
+        }
+
         #region FormattedValue property
 
         /// <summary>

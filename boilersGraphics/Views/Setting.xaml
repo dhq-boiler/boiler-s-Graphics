@@ -169,6 +169,7 @@
                     <Label>インターバル：</Label>
                     <btl:ShortTimeSpanControl x:Name="shortTimeSpanControl1"
                                               Background="LightGray"
+                                              IsEnable="{Binding EditTarget.Value.AutoSaveType.Value, Converter={StaticResource BoolToEnumConverter}, Mode=TwoWay, ConverterParameter=SetInterval}"
                                               Value="{Binding EditTarget.Value.AutoSaveInterval.Value}" />
                 </StackPanel>
             </Grid>

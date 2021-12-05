@@ -34,9 +34,7 @@
                                  Margin="0,0,1,0"
                                  VerticalAlignment="Center"
                                  IsReadOnly="True"
-                                 Text="{Binding RelativeSource={RelativeSource TemplatedParent},
-                                                Path=FormattedValue,
-                                                Mode=OneWay}" />
+                                 Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=FormattedValue, Mode=OneWay}" />
                         <Grid x:Name="grid1"
                               Grid.Column="1"
                               HorizontalAlignment="Center"
@@ -49,7 +47,8 @@
                                           Grid.Column="1"
                                           Width="22"
                                           Height="11"
-                                          Command="{x:Static btl:SpinnerControl.IncreaseCommand}">
+                                          Command="{x:Static btl:SpinnerControl.IncreaseCommand}"
+                                          IsEnabled="{Binding IsEnable, RelativeSource={RelativeSource TemplatedParent}}">
                                 <RepeatButton.Content>
                                     <Rectangle Width="16"
                                                Height="5"
@@ -60,7 +59,8 @@
                                           Grid.Column="1"
                                           Width="22"
                                           Height="11"
-                                          Command="{x:Static btl:SpinnerControl.DecreaseCommand}">
+                                          Command="{x:Static btl:SpinnerControl.DecreaseCommand}"
+                                          IsEnabled="{Binding IsEnable, RelativeSource={RelativeSource TemplatedParent}}">
                                 <RepeatButton.Content>
                                     <Rectangle Width="16"
                                                Height="5"
