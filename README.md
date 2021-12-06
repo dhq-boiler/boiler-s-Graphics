@@ -3,6 +3,7 @@
 [![Build Status](https://dev.azure.com/dhq-boiler/boiler_s%20Graphics/_apis/build/status/dhq-boiler.boiler-s-Graphics?branchName=master)](https://dev.azure.com/dhq-boiler/boiler_s%20Graphics/_build/latest?definitionId=4&branchName=master)
 ![GitHub](https://img.shields.io/github/license/dhq-boiler/boiler-s-Graphics)
 ![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/dhq-boiler/boiler-s-Graphics?include_prereleases)
+![Twitter](https://img.shields.io/twitter/follow/boilersGraphics?style=social)
 
 boiler's Graphics は生まれたてのベクターグラフィックスドローイングツールです。C# + Windows Presentation Foundation(WPF)で開発しています。単純な図形やビットマップを組み合わせて、あなたの望むがままのキャンバスを描くことができます。
 
@@ -41,7 +42,3 @@ boiler's Graphicsを動作させるには .NET Framework 4.8 が必要です。
 # License
 
 boiler's Graphics は [MITライセンス](https://en.wikipedia.org/wiki/MIT_License)で公開しています。
-
-# Twitter
-
-[boiler's Graphics ビルドステータス](https://twitter.com/boilersGraphics)
