@@ -41,3 +41,7 @@ boiler's Graphicsを動作させるには .NET Framework 4.8 が必要です。
 # License
 
 boiler's Graphics は [MITライセンス](https://en.wikipedia.org/wiki/MIT_License)で公開しています。
+
+# Twitter
+
+[boiler's Graphics ビルドステータス](https://twitter.com/boilersGraphics)
