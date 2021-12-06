@@ -189,7 +189,6 @@ namespace boilersGraphics.ViewModels
         private void UpdateSegments()
         {
             Data.Value = "";
-            var collection = new PathSegmentCollection();
             var data = $"M {StartPoint.Value}";
             var list = new List<Corner>();
             foreach (var corner in Corners)
@@ -199,19 +198,7 @@ namespace boilersGraphics.ViewModels
                                 Math.Round(corner.Radius.Value * Math.Cos(angle * Math.PI / 180.0), 2, MidpointRounding.AwayFromZero),
                                 Math.Round(corner.Radius.Value * Math.Sin(angle * Math.PI / 180.0), 2, MidpointRounding.AwayFromZero));
                 data += $" L {point}";
-                collection.Add(
-                    new LineSegment()
-                    {
-                        Point = new System.Windows.Point(
-                                Math.Round(corner.Radius.Value * Math.Cos(angle * Math.PI / 180.0), 2, MidpointRounding.AwayFromZero),
-                                Math.Round(corner.Radius.Value * Math.Sin(angle * Math.PI / 180.0), 2, MidpointRounding.AwayFromZero)
-                            )
-                    }
-                );
-                corner.Point.Value = new Point(
-                                            Math.Round(corner.Radius.Value * Math.Cos(angle * Math.PI / 180.0), 2, MidpointRounding.AwayFromZero),
-                                            Math.Round(corner.Radius.Value * Math.Sin(angle * Math.PI / 180.0), 2, MidpointRounding.AwayFromZero)
-                                            );
+                corner.Point.Value = point;
                 list.Add(corner);
             }
             data += " Z";
