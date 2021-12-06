@@ -1,5 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:boilersGraphics.Controls"
                     xmlns:convereter="clr-namespace:boilersGraphics.Converters"
                     xmlns:viewModel="clr-namespace:boilersGraphics.ViewModels">
     <convereter:ToSolidColorBrushConverter x:Key="solidColorBrushConverter" />
@@ -11,17 +12,19 @@
                   Stretch="Fill"
                   Stroke="{Binding EdgeColor.Value, Converter={StaticResource solidColorBrushConverter}}"
                   StrokeThickness="{Binding EdgeThickness.Value}" />
-            <ItemsControl ItemsSource="{Binding SnapPoints}">
+            <ItemsControl HorizontalAlignment="Stretch"
+                          VerticalAlignment="Stretch"
+                          ItemsSource="{Binding SnapPoints}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <Grid />
+                        <Canvas HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
-                <ItemsControl.Template>
-                    <ControlTemplate TargetType="ItemsControl">
+                <ItemsControl.ItemTemplate>
+                    <ItemContainerTemplate>
                         <ItemsPresenter />
-                    </ControlTemplate>
-                </ItemsControl.Template>
+                    </ItemContainerTemplate>
+                </ItemsControl.ItemTemplate>
             </ItemsControl>
         </Grid>
     </DataTemplate>

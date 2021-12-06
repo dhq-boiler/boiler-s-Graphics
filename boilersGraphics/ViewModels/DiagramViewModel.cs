@@ -645,7 +645,7 @@ namespace boilersGraphics.ViewModels
                 case "独立点":
                     return new Point(leftTop.X + snapPoint.Width / 2, leftTop.Y + snapPoint.Height / 2);
                 case "頂点":
-                    return new Point(leftTop.X + snapPoint.Width / 2 + 5, leftTop.Y + snapPoint.Height / 2 + 5);
+                    return new Point(leftTop.X + snapPoint.Width / 2, leftTop.Y + snapPoint.Height / 2);
                 default:
                     throw new Exception("ResizeThumb.Tag doesn't set");
             }

@@ -21,6 +21,7 @@ namespace boilersGraphics.Helpers
         Center,
         BeginEdge,
         EndEdge,
-        Intersection
+        Intersection,
+        Vertex,
     }
 }
