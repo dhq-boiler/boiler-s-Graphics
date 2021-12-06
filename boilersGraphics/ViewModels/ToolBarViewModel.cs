@@ -141,8 +141,7 @@ namespace boilersGraphics.ViewModels
                 {
                     var corners = result.Parameters.GetValue<ObservableCollection<Corner>>("Corners");
                     var data = result.Parameters.GetValue<string>("Data");
-                    var startPoint = result.Parameters.GetValue<Point>("StartPoint");
-                    NDrawPolygonBehavior = new NDrawPolygonBehavior(corners, data, startPoint);
+                    NDrawPolygonBehavior = new NDrawPolygonBehavior(corners, data);
                     Behaviors.Clear();
                     if (!Behaviors.Contains(NDrawPolygonBehavior))
                     {

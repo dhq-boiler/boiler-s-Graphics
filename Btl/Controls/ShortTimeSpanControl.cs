@@ -32,6 +32,14 @@ namespace Btl.Controls
 
         // Properties...
 
+        public static readonly DependencyProperty IsEnableProperty = DependencyProperty.Register("IsEnable", typeof(bool), typeof(ShortTimeSpanControl));
+
+        public bool IsEnable
+        {
+            get { return (bool)GetValue(IsEnableProperty); }
+            set { SetValue(IsEnableProperty, value); }
+        }
+
         #region Hours, minutes, and seconds
 
         #region Hours

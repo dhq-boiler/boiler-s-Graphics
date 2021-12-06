@@ -4,6 +4,7 @@ using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
 using boilersGraphics.Models;
 using boilersGraphics.ViewModels;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -12,6 +13,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -25,11 +27,10 @@ namespace boilersGraphics.Adorners
         private Pen _edgePen;
         private DesignerCanvas _designerCanvas;
         private string _data;
-        private readonly Point _startPoint;
         private ObservableCollection<Corner> _corners;
         private SnapAction _snapAction;
 
-        public PolygonAdorner(DesignerCanvas designerCanvas, Point? dragStartPoint, ObservableCollection<Corner> corners, string data, Point startPoint)
+        public PolygonAdorner(DesignerCanvas designerCanvas, Point? dragStartPoint, ObservableCollection<Corner> corners, string data)
             : base(designerCanvas)
         {
             _designerCanvas = designerCanvas;
@@ -39,7 +40,6 @@ namespace boilersGraphics.Adorners
             brush.Opacity = 0.5;
             _edgePen = new Pen(brush, parent.EdgeThickness.Value.Value);
             _data = data;
-            _startPoint = startPoint;
             _corners = corners;
             _snapAction = new SnapAction();
         }
@@ -90,6 +90,30 @@ namespace boilersGraphics.Adorners
                 item.EdgeThickness.Value = item.Owner.EdgeThickness.Value.Value;
                 item.ZIndex.Value = item.Owner.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).Count();
                 item.Data.Value = _data;
+                item.SnapPoints.Clear();
+                _corners.ToList().ForEach(x => LogManager.GetCurrentClassLogger().Debug($"corner:{x.Point.  Value}"));
+                item.SnapPoints.AddRange(_corners.Select(x =>
+                {
+                    var itemPathGeometry = item.PathGeometry.Value;
+                    var _x = (-_corners.Select(x => x.Point.Value.X).Min() + x.Point.Value.X) / itemPathGeometry.Bounds.Width * item.Width.Value - 3;
+                    var _y = (-_corners.Select(x => x.Point.Value.Y).Min() + x.Point.Value.Y) / itemPathGeometry.Bounds.Height * item.Height.Value - 3;
+                    LogManager.GetCurrentClassLogger().Debug($"_x:{_x}, _y:{_y}");
+                    var snapPoint = new SnapPoint(_x, _y);
+                    snapPoint.Tag = "頂点";
+                    snapPoint.Width = 5;
+                    snapPoint.Height = 5;
+                    snapPoint.SnapPointPosition = SnapPointPosition.Vertex;
+
+                    var controlTemplate = new ControlTemplate(typeof(SnapPoint));
+                    var ellipse = new FrameworkElementFactory(typeof(System.Windows.Shapes.Ellipse));
+                    ellipse.SetValue(WidthProperty, 5d);
+                    ellipse.SetValue(HeightProperty, 5d);
+                    ellipse.SetValue(System.Windows.Shapes.Shape.FillProperty, new SolidColorBrush(Colors.Red));
+                    ellipse.SetValue(OpacityProperty, 0d);
+                    controlTemplate.VisualTree = ellipse;
+                    snapPoint.Template = controlTemplate;
+                    return snapPoint;
+                }));
                 item.IsSelected.Value = true;
                 item.IsVisible.Value = true;
                 item.Owner.DeselectAll();
@@ -123,7 +147,6 @@ namespace boilersGraphics.Adorners
             {
                 var diff = _dragEndPoint.Value - _dragStartPoint.Value;
                 var points = new List<Point>();
-                points.Add(_startPoint);
                 points.AddRange(_corners.Select(x => x.Point.Value));
                 var width = points.Select(x => x.X).Max() - points.Select(x => x.X).Min();
                 var height = points.Select(y => y.Y).Max() - points.Select(y => y.Y).Min();
@@ -132,10 +155,10 @@ namespace boilersGraphics.Adorners
                 geometry.FillRule = FillRule.EvenOdd;
                 using (StreamGeometryContext ctx = geometry.Open())
                 {
-                    ctx.BeginFigure(_startPoint.Multiple(diff.X / width, diff.Y / height)
-                                               .Shift((_dragStartPoint.Value.X + _dragEndPoint.Value.X) / 2, (_dragStartPoint.Value.Y + _dragEndPoint.Value.Y) / 2), true, true);
+                    ctx.BeginFigure(_corners.Skip(1).First().Point.Value.Multiple(diff.X / width, diff.Y / height)
+                                                                .Shift((_dragStartPoint.Value.X + _dragEndPoint.Value.X) / 2, (_dragStartPoint.Value.Y + _dragEndPoint.Value.Y) / 2), true, true);
 
-                    foreach (var corner in _corners)
+                    foreach (var corner in _corners.Skip(1))
                     {
                         ctx.LineTo(corner.Point.Value.Multiple(diff.X / width, diff.Y / height)
                                                      .Shift((_dragStartPoint.Value.X + _dragEndPoint.Value.X) / 2, (_dragStartPoint.Value.Y + _dragEndPoint.Value.Y) / 2), true, false);

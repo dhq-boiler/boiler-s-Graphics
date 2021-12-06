@@ -121,6 +121,33 @@ namespace boilersGraphics.Test.UITests
             return element;
         }
 
+        public bool ExistsElementByAutomationID(string automationId, int timeOut = 10000)
+        {
+            WindowsElement element = null;
+
+            var wait = new DefaultWait<WindowsDriver<WindowsElement>>(session)
+            {
+                Timeout = TimeSpan.FromMilliseconds(timeOut),
+                Message = $"Element with automationId \"{automationId}\" not found."
+            };
+
+            wait.IgnoreExceptionTypes(typeof(WebDriverException));
+
+            try
+            {
+                wait.Until(Driver =>
+                {
+                    element = Driver.FindElementByAccessibilityId(automationId);
+                    return element != null;
+                });
+            }
+            catch (WebDriverTimeoutException ex)
+            {
+            }
+
+            return element != null;
+        }
+
         public bool IsElementPresent(By by)
         {
             try

@@ -15,17 +15,15 @@ namespace boilersGraphics.Views.Behaviors
         private Point? _polygonDrawingStartPoint = null;
         private SnapAction snapAction;
 
-        public NDrawPolygonBehavior(ObservableCollection<Corner> corners, string data, Point startPoint)
+        public NDrawPolygonBehavior(ObservableCollection<Corner> corners, string data)
         {
             Corners = corners;
             Data = data;
-            StartPoint = startPoint;
             snapAction = new SnapAction();
         }
 
         public ObservableCollection<Corner> Corners { get; }
         public string Data { get; }
-        public Point StartPoint { get; }
 
         protected override void OnAttached()
         {
@@ -100,7 +98,7 @@ namespace boilersGraphics.Views.Behaviors
                 AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(canvas);
                 if (adornerLayer != null)
                 {
-                    var adorner = new Adorners.PolygonAdorner(canvas, _polygonDrawingStartPoint, Corners, Data, StartPoint);
+                    var adorner = new Adorners.PolygonAdorner(canvas, _polygonDrawingStartPoint, Corners, Data);
                     if (adorner != null)
                     {
                         adornerLayer.Add(adorner);
@@ -126,7 +124,7 @@ namespace boilersGraphics.Views.Behaviors
                 AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(canvas);
                 if (adornerLayer != null)
                 {
-                    var adorner = new Adorners.PolygonAdorner(canvas, _polygonDrawingStartPoint, Corners, Data, StartPoint);
+                    var adorner = new Adorners.PolygonAdorner(canvas, _polygonDrawingStartPoint, Corners, Data);
                     if (adorner != null)
                     {
                         adornerLayer.Add(adorner);

@@ -1,15 +1,31 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:boilersGraphics.Controls"
                     xmlns:convereter="clr-namespace:boilersGraphics.Converters"
-                    xmlns:local="clr-namespace:boilersGraphics.Resources.DesignerItems"
                     xmlns:viewModel="clr-namespace:boilersGraphics.ViewModels">
     <convereter:ToSolidColorBrushConverter x:Key="solidColorBrushConverter" />
     <DataTemplate DataType="{x:Type viewModel:NPolygonViewModel}">
-        <Path Data="{Binding Data.Value}"
-              Fill="{Binding FillColor.Value, Converter={StaticResource solidColorBrushConverter}}"
-              IsHitTestVisible="False"
-              Stretch="Fill"
-              Stroke="{Binding EdgeColor.Value, Converter={StaticResource solidColorBrushConverter}}"
-              StrokeThickness="{Binding EdgeThickness.Value}" />
+        <Grid>
+            <Path Data="{Binding Data.Value}"
+                  Fill="{Binding FillColor.Value, Converter={StaticResource solidColorBrushConverter}}"
+                  IsHitTestVisible="False"
+                  Stretch="Fill"
+                  Stroke="{Binding EdgeColor.Value, Converter={StaticResource solidColorBrushConverter}}"
+                  StrokeThickness="{Binding EdgeThickness.Value}" />
+            <ItemsControl HorizontalAlignment="Stretch"
+                          VerticalAlignment="Stretch"
+                          ItemsSource="{Binding SnapPoints}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Canvas HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <ItemContainerTemplate>
+                        <ItemsPresenter />
+                    </ItemContainerTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Grid>
     </DataTemplate>
 </ResourceDictionary>

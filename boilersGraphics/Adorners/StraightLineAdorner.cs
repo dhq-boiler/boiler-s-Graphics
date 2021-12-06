@@ -4,6 +4,7 @@ using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
 using boilersGraphics.Models;
 using boilersGraphics.ViewModels;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -93,6 +94,7 @@ namespace boilersGraphics.Adorners
                 item.SnapPoint0VM.Value.IsHitTestVisible.Value = true;
                 item.SnapPoint1VM.Value.IsHitTestVisible.Value = true;
                 item.Owner.DeselectAll();
+                LogManager.GetCurrentClassLogger().Debug($"Confirm straight line P1:{item.Points[0]} P2:{item.Points[1]}");
                 ((AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel).AddItemCommand.Execute(item);
 
                 _snapAction.PostProcess(SnapPointPosition.EndEdge, item);

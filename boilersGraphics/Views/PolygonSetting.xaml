@@ -23,11 +23,18 @@
     </UserControl.Resources>
     <DockPanel>
         <DockPanel DockPanel.Dock="Right">
-            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
-                <Label Content="始点X" />
-                <control:DoubleTextBox Width="50" DoubleText="{Binding StartPointX.Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DoubleToStringConverter}}" />
-                <Label Content="始点Y" />
-                <control:DoubleTextBox Width="50" DoubleText="{Binding StartPointY.Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DoubleToStringConverter}}" />
+            <StackPanel DockPanel.Dock="Top">
+                <StackPanel Orientation="Vertical">
+                    <DockPanel>
+                        <Label DockPanel.Dock="Right" Content="{Binding ElementName=AngleSlider, Path=Value}" />
+                        <Slider x:Name="AngleSlider"
+                                Minimum="0"
+                                Maximum="360"
+                                TickFrequency="1"
+                                TickPlacement="BottomRight"
+                                Value="{Binding Angle.Value}" />
+                    </DockPanel>
+                </StackPanel>
             </StackPanel>
             <StackPanel HorizontalAlignment="Right"
                         DockPanel.Dock="Bottom"
@@ -66,7 +73,6 @@
                             <Button Command="{Binding DataContext.RemoveCornerCommand, RelativeSource={RelativeSource AncestorType=local:PolygonSetting}}"
                                     CommandParameter="{Binding}"
                                     Content="削除" />
-                            <Label Content="{Binding Point.Value}" />
                         </StackPanel>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>

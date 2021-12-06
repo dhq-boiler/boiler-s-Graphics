@@ -644,6 +644,8 @@ namespace boilersGraphics.ViewModels
                 case "制御点":
                 case "独立点":
                     return new Point(leftTop.X + snapPoint.Width / 2, leftTop.Y + snapPoint.Height / 2);
+                case "頂点":
+                    return new Point(leftTop.X + snapPoint.Width / 2, leftTop.Y + snapPoint.Height / 2);
                 default:
                     throw new Exception("ResizeThumb.Tag doesn't set");
             }
@@ -1466,15 +1468,15 @@ namespace boilersGraphics.ViewModels
             var result = MessageBox.Show("現在のキャンパスは破棄されますが、よろしいですか？", "確認", MessageBoxButton.OKCancel);
             if (result == MessageBoxResult.Cancel)
                 return;
-            var root = LoadSerializedDataFromFile();
-            LoadInternal(root);
+            var (root, filename) = LoadSerializedDataFromFile();
+            LoadInternal(root, filename);
             var statistics = MainWindowVM.Statistics.Value;
             statistics.NumberOfTimesTheFileWasOpenedBySpecifyingIt++;
             var dao = new StatisticsDao();
             dao.Update(statistics);
         }
 
-        private void LoadInternal(XElement root)
+        private void LoadInternal(XElement root, string filename)
         {
             if (root == null)
             {
@@ -1527,6 +1529,8 @@ namespace boilersGraphics.ViewModels
             var layersViewModel = App.Current.MainWindow.GetChildOfType<Views.Layers>().DataContext as LayersViewModel;
             layersViewModel.InitializeHitTestVisible(mainwindowViewModel);
             Layers.First().IsSelected.Value = true;
+
+            LogManager.GetCurrentClassLogger().Info($"ファイル({filename})を読み込みました。");
         }
 
         private void ExecuteLoadCommand(string file)
@@ -1536,7 +1540,7 @@ namespace boilersGraphics.ViewModels
                 return;
             FileName.Value = file;
             var root = XElement.Load(file);
-            LoadInternal(root);
+            LoadInternal(root, file);
             var statistics = MainWindowVM.Statistics.Value;
             statistics.NumberOfTimesTheAutoSaveFileIsSpecifiedAndOpened++;
             var dao = new StatisticsDao();
@@ -1546,10 +1550,10 @@ namespace boilersGraphics.ViewModels
         public void Preview(string file)
         {
             var root = XElement.Load(file);
-            LoadInternal(root);
+            LoadInternal(root, file);
         }
 
-        private XElement LoadSerializedDataFromFile()
+        private (XElement, string) LoadSerializedDataFromFile()
         {
             var openFile = new OpenFileDialog();
             openFile.Filter = "Designer Files (*.xml)|*.xml|All Files (*.*)|*.*";
@@ -1561,7 +1565,7 @@ namespace boilersGraphics.ViewModels
                 try
                 {
                     FileName.Value = openFile.FileName;
-                    return XElement.Load(openFile.FileName);
+                    return (XElement.Load(openFile.FileName), openFile.FileName);
                 }
                 catch (Exception e)
                 {
@@ -1570,7 +1574,7 @@ namespace boilersGraphics.ViewModels
                 }
             }
 
-            return null;
+            return (null, string.Empty);
         }
 
         #endregion //Load

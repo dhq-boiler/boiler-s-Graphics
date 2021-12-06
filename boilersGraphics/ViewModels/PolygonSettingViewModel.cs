@@ -24,13 +24,9 @@ namespace boilersGraphics.ViewModels
         public event Action<IDialogResult> RequestClose;
 
         public ReactivePropertySlim<string> Data { get; private set; } = new ReactivePropertySlim<string>();
-        public ReactivePropertySlim<double> StartPointX { get; private set; } = new ReactivePropertySlim<double>();
-        public ReactivePropertySlim<double> StartPointY { get; private set; } = new ReactivePropertySlim<double>();
+        public ReactivePropertySlim<int> Angle { get; private set; } = new ReactivePropertySlim<int>();
 
-        public ReactivePropertySlim<Point> StartPoint { get; private set; } = new ReactivePropertySlim<Point>();
         public ObservableCollection<Corner> Corners { get; private set; } = new ObservableCollection<Corner>();
-
-        public ReactivePropertySlim<bool> IsClosed { get; private set; } = new ReactivePropertySlim<bool>();
 
         public ReactiveCommand AddCornerCommand { get; } = new ReactiveCommand();
 
@@ -54,18 +50,9 @@ namespace boilersGraphics.ViewModels
                 RemoveCorner(x);
             })
             .AddTo(_disposables);
-            StartPointX.Subscribe(x =>
+            Angle.Subscribe(x =>
             {
-                StartPoint.Value = new Point(StartPointX.Value, StartPointY.Value);
                 UpdateSegments();
-                IsClosed.Value = Corners.Count > 2 && StartPoint.Value == Corners.Last().Point.Value;
-            })
-            .AddTo(_disposables);
-            StartPointY.Subscribe(x =>
-            {
-                StartPoint.Value = new Point(StartPointX.Value, StartPointY.Value);
-                UpdateSegments();
-                IsClosed.Value = Corners.Count > 2 && StartPoint.Value == Corners.Last().Point.Value;
             })
             .AddTo(_disposables);
             Corners.ObserveElementObservableProperty(x => x.Angle)
@@ -80,14 +67,7 @@ namespace boilersGraphics.ViewModels
                        UpdateSegments();
                    })
                    .AddTo(_disposables);
-            Corners.ObserveElementObservableProperty(x => x.Point)
-                   .Subscribe(x =>
-                   {
-                       IsClosed.Value = StartPoint.Value == Corners.Last().Point.Value;
-                   })
-                   .AddTo(_disposables);
-            DrawCommand = IsClosed
-                         .ToReactiveCommand();
+            DrawCommand = new ReactiveCommand();
             DrawCommand.Subscribe(_ =>
             {
                 var result = new DialogResult(ButtonResult.OK,
@@ -95,7 +75,6 @@ namespace boilersGraphics.ViewModels
                                               {
                                                   { "Corners", Corners },
                                                   { "Data", Data.Value },
-                                                  { "StartPoint", StartPoint.Value }
                                               }
                                               );
                 RequestClose.Invoke(result);
@@ -109,6 +88,68 @@ namespace boilersGraphics.ViewModels
                     args.Handled = true;
                 }
             });
+
+            var corner = new Corner();
+            corner.Number.Value = 1;
+            corner.Angle.Value = 36;
+            corner.Radius.Value = 10;
+            Corners.Add(corner);
+            corner = new Corner();
+            corner.Number.Value = 2;
+            corner.Angle.Value = 36;
+            corner.Radius.Value = 5;
+            Corners.Add(corner);
+            corner = new Corner();
+            corner.Number.Value = 3;
+            corner.Angle.Value = 36;
+            corner.Radius.Value = 10;
+            Corners.Add(corner);
+            corner = new Corner();
+            corner.Number.Value = 4;
+            corner.Angle.Value = 36;
+            corner.Radius.Value = 5;
+            Corners.Add(corner);
+            corner = new Corner();
+            corner.Number.Value = 5;
+            corner.Angle.Value = 36;
+            corner.Radius.Value = 10;
+            Corners.Add(corner);
+            corner = new Corner();
+            corner.Number.Value = 6;
+            corner.Angle.Value = 36;
+            corner.Radius.Value = 5;
+            Corners.Add(corner);
+            corner = new Corner();
+            corner.Number.Value = 7;
+            corner.Angle.Value = 36;
+            corner.Radius.Value = 10;
+            Corners.Add(corner);
+            corner = new Corner();
+            corner.Number.Value = 8;
+            corner.Angle.Value = 36;
+            corner.Radius.Value = 5;
+            Corners.Add(corner);
+            corner = new Corner();
+            corner.Number.Value = 9;
+            corner.Angle.Value = 36;
+            corner.Radius.Value = 10;
+            Corners.Add(corner);
+            corner = new Corner();
+            corner.Number.Value = 10;
+            corner.Angle.Value = 36;
+            corner.Radius.Value = 5;
+            Corners.Add(corner);
+            corner = new Corner();
+            corner.Number.Value = 11;
+            corner.Angle.Value = 36;
+            corner.Radius.Value = 10;
+            Corners.Add(corner);
+            corner = new Corner();
+            corner.Number.Value = 12;
+            corner.Angle.Value = 36;
+            corner.Radius.Value = 5;
+            Corners.Add(corner);
+            UpdateSegments();
         }
 
         private void RemoveCorner(Corner x)
@@ -129,30 +170,20 @@ namespace boilersGraphics.ViewModels
 
         private void UpdateSegments()
         {
+            if (Corners.Count() <= 1) return;
             Data.Value = "";
-            var collection = new PathSegmentCollection();
-            var data = $"M {StartPoint.Value}";
+            var x = Corners.Skip(1);
+            var data = $"M {x.First().Point.Value}";
             var list = new List<Corner>();
-            foreach (var corner in Corners)
+            foreach (var corner in Corners.Skip(1))
             {
                 var angle = list.Sum(x => x.Angle.Value);
+                var θ = (angle - Angle.Value) * Math.PI / 180.0;
                 var point = new System.Windows.Point(
-                                Math.Round(corner.Radius.Value * Math.Cos(angle * Math.PI / 180.0), 2, MidpointRounding.AwayFromZero),
-                                Math.Round(corner.Radius.Value * Math.Sin(angle * Math.PI / 180.0), 2, MidpointRounding.AwayFromZero));
+                                Math.Round(corner.Radius.Value * Math.Cos(θ), 2, MidpointRounding.AwayFromZero),
+                                Math.Round(corner.Radius.Value * Math.Sin(θ), 2, MidpointRounding.AwayFromZero));
                 data += $" L {point}";
-                collection.Add(
-                    new LineSegment()
-                    {
-                        Point = new System.Windows.Point(
-                                Math.Round(corner.Radius.Value * Math.Cos(angle * Math.PI / 180.0), 2, MidpointRounding.AwayFromZero),
-                                Math.Round(corner.Radius.Value * Math.Sin(angle * Math.PI / 180.0), 2, MidpointRounding.AwayFromZero)
-                            )
-                    }
-                );
-                corner.Point.Value = new Point(
-                                            Math.Round(corner.Radius.Value * Math.Cos(angle * Math.PI / 180.0), 2, MidpointRounding.AwayFromZero),
-                                            Math.Round(corner.Radius.Value * Math.Sin(angle * Math.PI / 180.0), 2, MidpointRounding.AwayFromZero)
-                                            );
+                corner.Point.Value = point;
                 list.Add(corner);
             }
             data += " Z";
