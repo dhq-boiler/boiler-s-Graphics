@@ -29,7 +29,7 @@ namespace boilersGraphics.Views
         const int WM_NCHITTEST = 0x0084;
         const int WM_NCLBUTTONDOWN = 0x00A1;
         /// <summary>DPI Scale for current display</summary>
-        private const double DPI_SCALE = 1.5;
+        private const double DPI_SCALE = 1.0;
         private const int HTMAXBUTTON = 9;
         private SolidColorBrush _bgNormal = new SolidColorBrush(Color.FromArgb(0xff, 0xbe, 0xe6, 0xfe));
         private SolidColorBrush _bgMouseHover = new SolidColorBrush(Color.FromArgb(0xff, 0xdd, 0xdd, 0xdd));
