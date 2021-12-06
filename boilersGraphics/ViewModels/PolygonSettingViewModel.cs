@@ -109,6 +109,65 @@ namespace boilersGraphics.ViewModels
                     args.Handled = true;
                 }
             });
+
+            var corner = new Corner();
+            corner.Number.Value = 1;
+            corner.Angle.Value = 36;
+            corner.Radius.Value = 10;
+            Corners.Add(corner);
+            corner = new Corner();
+            corner.Number.Value = 2;
+            corner.Angle.Value = 36;
+            corner.Radius.Value = 5;
+            Corners.Add(corner);
+            corner = new Corner();
+            corner.Number.Value = 3;
+            corner.Angle.Value = 36;
+            corner.Radius.Value = 10;
+            Corners.Add(corner);
+            corner = new Corner();
+            corner.Number.Value = 4;
+            corner.Angle.Value = 36;
+            corner.Radius.Value = 5;
+            Corners.Add(corner);
+            corner = new Corner();
+            corner.Number.Value = 5;
+            corner.Angle.Value = 36;
+            corner.Radius.Value = 10;
+            Corners.Add(corner);
+            corner = new Corner();
+            corner.Number.Value = 6;
+            corner.Angle.Value = 36;
+            corner.Radius.Value = 5;
+            Corners.Add(corner);
+            corner = new Corner();
+            corner.Number.Value = 7;
+            corner.Angle.Value = 36;
+            corner.Radius.Value = 10;
+            Corners.Add(corner);
+            corner = new Corner();
+            corner.Number.Value = 8;
+            corner.Angle.Value = 36;
+            corner.Radius.Value = 5;
+            Corners.Add(corner);
+            corner = new Corner();
+            corner.Number.Value = 9;
+            corner.Angle.Value = 36;
+            corner.Radius.Value = 10;
+            Corners.Add(corner);
+            corner = new Corner();
+            corner.Number.Value = 10;
+            corner.Angle.Value = 36;
+            corner.Radius.Value = 5;
+            Corners.Add(corner);
+            corner = new Corner();
+            corner.Number.Value = 11;
+            corner.Angle.Value = 36;
+            corner.Radius.Value = 10;
+            Corners.Add(corner);
+            StartPointX.Value = 10;
+            StartPointY.Value = 0;
+            UpdateSegments();
         }
 
         private void RemoveCorner(Corner x)

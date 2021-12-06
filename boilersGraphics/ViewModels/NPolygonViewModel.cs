@@ -1,4 +1,5 @@
-﻿using boilersGraphics.Views;
+﻿using boilersGraphics.Controls;
+using boilersGraphics.Views;
 using Prism.Ioc;
 using Prism.Services.Dialogs;
 using Prism.Unity;
@@ -12,6 +13,8 @@ namespace boilersGraphics.ViewModels
 {
     public class NPolygonViewModel : DesignerItemViewModelBase
     {
+        public ReactiveCollection<SnapPoint> SnapPoints { get; } = new ReactiveCollection<SnapPoint>();
+
         public NPolygonViewModel()
             : base()
         {

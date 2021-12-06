@@ -12,8 +12,8 @@
             <control:SnapPoint.Template>
                 <ControlTemplate TargetType="control:SnapPoint">
                     <Ellipse x:Name="SnapPoint_Internal_Ellipse"
-                             Width="3"
-                             Height="3"
+                             Width="7"
+                             Height="7"
                              Fill="Blue" />
                 </ControlTemplate>
             </control:SnapPoint.Template>

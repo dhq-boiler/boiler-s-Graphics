@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 
 namespace boilersGraphics.Controls
@@ -17,6 +18,15 @@ namespace boilersGraphics.Controls
         {
             get { return (SnapPointPosition)GetValue(SnapPointPositionProperty); }
             set { SetValue(SnapPointPositionProperty, value); }
+        }
+
+        public SnapPoint()
+        { }
+
+        public SnapPoint(double x, double y)
+        {
+            SetValue(Canvas.LeftProperty, x);
+            SetValue(Canvas.TopProperty, y);
         }
     }
 }
