@@ -4,6 +4,7 @@ using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
 using boilersGraphics.Models;
 using boilersGraphics.ViewModels;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -12,6 +13,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -90,6 +92,31 @@ namespace boilersGraphics.Adorners
                 item.EdgeThickness.Value = item.Owner.EdgeThickness.Value.Value;
                 item.ZIndex.Value = item.Owner.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).Count();
                 item.Data.Value = _data;
+                item.SnapPoints.Clear();
+                _corners.ToList().ForEach(x => LogManager.GetCurrentClassLogger().Debug($"corner:{x.Point.  Value}"));
+                item.SnapPoints.AddRange(_corners.Select(x =>
+                {
+                    var itemPathGeometry = item.PathGeometry.Value;
+                    var _x = item.Left.Value + (x.Point.Value.X / itemPathGeometry.Bounds.Width) * item.Width.Value;
+                    var _y = item.Top.Value + (x.Point.Value.Y / itemPathGeometry.Bounds.Height) * item.Height.Value;
+                    LogManager.GetCurrentClassLogger().Debug($"_x:{_x}, _y:{_y}");
+                    var snapPoint = new SnapPoint(_x, _y);
+                    //snapPoint.SetValue(Canvas.LeftProperty, x.Point.Value.X + item.Left.Value);
+                    //snapPoint.SetValue(Canvas.TopProperty, x.Point.Value.Y + item.Top.Value);
+                    snapPoint.Tag = "頂点";
+                    snapPoint.Width = 5;
+                    snapPoint.Height = 5;
+
+                    var controlTemplate = new ControlTemplate(typeof(SnapPoint));
+                    var ellipse = new FrameworkElementFactory(typeof(System.Windows.Shapes.Ellipse));
+                    ellipse.SetValue(WidthProperty, 5d);
+                    ellipse.SetValue(HeightProperty, 5d);
+                    ellipse.SetValue(System.Windows.Shapes.Shape.FillProperty, new SolidColorBrush(Colors.Red));
+                    //ellipse.SetValue(OpacityProperty, 0d);
+                    controlTemplate.VisualTree = ellipse;
+                    snapPoint.Template = controlTemplate;
+                    return snapPoint;
+                }));
                 item.IsSelected.Value = true;
                 item.IsVisible.Value = true;
                 item.Owner.DeselectAll();
