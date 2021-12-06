@@ -29,7 +29,7 @@ namespace boilersGraphics.Test.UITests
                 // Note: Multiple calculator windows (instances) share the same process Id
                 var options = new AppiumOptions();
                 options.AddAdditionalCapability("app", AppPath);
-                options.AddAdditionalCapability("appWorkingDir", Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
+                options.AddAdditionalCapability("appWorkingDir", Path.GetDirectoryName(AppPath));
                 session = new WindowsDriver<WindowsElement>(new Uri(WindowsApplicationDriverUrl), options);
                 Assert.That(session, Is.Not.Null);
 
