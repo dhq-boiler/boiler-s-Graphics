@@ -97,8 +97,8 @@ namespace boilersGraphics.Adorners
                 item.SnapPoints.AddRange(_corners.Select(x =>
                 {
                     var itemPathGeometry = item.PathGeometry.Value;
-                    var _x = ((-_corners.Select(x => x.Point.Value.X).Min() + x.Point.Value.X) / itemPathGeometry.Bounds.Width) * item.Width.Value - 3;
-                    var _y = ((-_corners.Select(x => x.Point.Value.Y).Min() + x.Point.Value.Y) / itemPathGeometry.Bounds.Height) * item.Height.Value - 3;
+                    var _x = (-_corners.Select(x => x.Point.Value.X).Min() + x.Point.Value.X) / itemPathGeometry.Bounds.Width * item.Width.Value - 3;
+                    var _y = (-_corners.Select(x => x.Point.Value.Y).Min() + x.Point.Value.Y) / itemPathGeometry.Bounds.Height * item.Height.Value - 3;
                     LogManager.GetCurrentClassLogger().Debug($"_x:{_x}, _y:{_y}");
                     var snapPoint = new SnapPoint(_x, _y);
                     snapPoint.Tag = "頂点";
