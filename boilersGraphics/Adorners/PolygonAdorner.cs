@@ -27,11 +27,10 @@ namespace boilersGraphics.Adorners
         private Pen _edgePen;
         private DesignerCanvas _designerCanvas;
         private string _data;
-        private readonly Point _startPoint;
         private ObservableCollection<Corner> _corners;
         private SnapAction _snapAction;
 
-        public PolygonAdorner(DesignerCanvas designerCanvas, Point? dragStartPoint, ObservableCollection<Corner> corners, string data, Point startPoint)
+        public PolygonAdorner(DesignerCanvas designerCanvas, Point? dragStartPoint, ObservableCollection<Corner> corners, string data)
             : base(designerCanvas)
         {
             _designerCanvas = designerCanvas;
@@ -41,7 +40,6 @@ namespace boilersGraphics.Adorners
             brush.Opacity = 0.5;
             _edgePen = new Pen(brush, parent.EdgeThickness.Value.Value);
             _data = data;
-            _startPoint = startPoint;
             _corners = corners;
             _snapAction = new SnapAction();
         }
@@ -149,7 +147,6 @@ namespace boilersGraphics.Adorners
             {
                 var diff = _dragEndPoint.Value - _dragStartPoint.Value;
                 var points = new List<Point>();
-                points.Add(_startPoint);
                 points.AddRange(_corners.Select(x => x.Point.Value));
                 var width = points.Select(x => x.X).Max() - points.Select(x => x.X).Min();
                 var height = points.Select(y => y.Y).Max() - points.Select(y => y.Y).Min();
@@ -158,10 +155,10 @@ namespace boilersGraphics.Adorners
                 geometry.FillRule = FillRule.EvenOdd;
                 using (StreamGeometryContext ctx = geometry.Open())
                 {
-                    ctx.BeginFigure(_startPoint.Multiple(diff.X / width, diff.Y / height)
-                                               .Shift((_dragStartPoint.Value.X + _dragEndPoint.Value.X) / 2, (_dragStartPoint.Value.Y + _dragEndPoint.Value.Y) / 2), true, true);
+                    ctx.BeginFigure(_corners.Skip(1).First().Point.Value.Multiple(diff.X / width, diff.Y / height)
+                                                                .Shift((_dragStartPoint.Value.X + _dragEndPoint.Value.X) / 2, (_dragStartPoint.Value.Y + _dragEndPoint.Value.Y) / 2), true, true);
 
-                    foreach (var corner in _corners)
+                    foreach (var corner in _corners.Skip(1))
                     {
                         ctx.LineTo(corner.Point.Value.Multiple(diff.X / width, diff.Y / height)
                                                      .Shift((_dragStartPoint.Value.X + _dragEndPoint.Value.X) / 2, (_dragStartPoint.Value.Y + _dragEndPoint.Value.Y) / 2), true, false);
