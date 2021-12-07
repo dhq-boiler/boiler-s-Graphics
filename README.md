@@ -2,6 +2,7 @@
 
 [![Build Status](https://dev.azure.com/dhq-boiler/boiler_s%20Graphics/_apis/build/status/dhq-boiler.boiler-s-Graphics?branchName=master)](https://dev.azure.com/dhq-boiler/boiler_s%20Graphics/_build/latest?definitionId=4&branchName=master)
 [![GitHub](https://img.shields.io/github/license/dhq-boiler/boiler-s-Graphics)](https://github.com/dhq-boiler/boiler-s-Graphics/blob/develop/LICENSE)
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/dhq-boiler/boiler-s-Graphics)](https://github.com/dhq-boiler/boiler-s-Graphics/releases)
 [![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/dhq-boiler/boiler-s-Graphics?include_prereleases)](https://github.com/dhq-boiler/boiler-s-Graphics/releases)
 [![Twitter](https://img.shields.io/twitter/follow/boilersGraphics?style=social)](https://twitter.com/boilersGraphics)
 
