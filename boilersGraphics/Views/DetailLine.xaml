@@ -22,7 +22,7 @@
                             <Style TargetType="Line">
                                 <Setter Property="X1">
                                     <Setter.Value>
-                                        <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="X">
+                                        <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="X1">
                                             <Binding Path="Points[0].X" />
                                             <Binding />
                                         </MultiBinding>
@@ -30,7 +30,7 @@
                                 </Setter>
                                 <Setter Property="Y1">
                                     <Setter.Value>
-                                        <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="Y">
+                                        <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="Y2">
                                             <Binding Path="Points[0].Y" />
                                             <Binding />
                                         </MultiBinding>
@@ -38,7 +38,7 @@
                                 </Setter>
                                 <Setter Property="X2">
                                     <Setter.Value>
-                                        <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="X">
+                                        <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="X3">
                                             <Binding Path="Points[1].X" />
                                             <Binding />
                                         </MultiBinding>
@@ -46,7 +46,7 @@
                                 </Setter>
                                 <Setter Property="Y2">
                                     <Setter.Value>
-                                        <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="Y">
+                                        <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="Y4">
                                             <Binding Path="Points[1].Y" />
                                             <Binding />
                                         </MultiBinding>
@@ -59,13 +59,13 @@
                              Height="10"
                              Fill="Red">
                         <Canvas.Left>
-                            <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="X">
+                            <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="X5">
                                 <Binding Path="Points[0].X" />
                                 <Binding />
                             </MultiBinding>
                         </Canvas.Left>
                         <Canvas.Top>
-                            <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="Y">
+                            <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="Y6">
                                 <Binding Path="Points[0].Y" />
                                 <Binding />
                             </MultiBinding>
@@ -75,13 +75,13 @@
                              Height="10"
                              Fill="Red">
                         <Canvas.Left>
-                            <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="X">
+                            <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="X7">
                                 <Binding Path="Points[1].X" />
                                 <Binding />
                             </MultiBinding>
                         </Canvas.Left>
                         <Canvas.Top>
-                            <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="Y">
+                            <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="Y8">
                                 <Binding Path="Points[1].Y" />
                                 <Binding />
                             </MultiBinding>
@@ -93,7 +93,7 @@
                                 <Setter Property="Canvas.Left">
                                     <Setter.Value>
                                         <MultiBinding Converter="{StaticResource Shift}"
-                                                      ConverterParameter="X"
+                                                      ConverterParameter="X9"
                                                       Mode="OneTime">
                                             <Binding Path="P1X.Value" />
                                             <Binding Path="DataContext.ViewModel.Value" RelativeSource="{RelativeSource AncestorType=view:DetailStraightLine}" />
@@ -103,7 +103,7 @@
                                 <Setter Property="Canvas.Top">
                                     <Setter.Value>
                                         <MultiBinding Converter="{StaticResource Shift}"
-                                                      ConverterParameter="Y"
+                                                      ConverterParameter="Y10"
                                                       Mode="OneTime">
                                             <Binding Path="P1Y.Value" />
                                             <Binding Path="DataContext.ViewModel.Value" RelativeSource="{RelativeSource AncestorType=view:DetailStraightLine}" />
@@ -134,7 +134,7 @@
                                 <Setter Property="Canvas.Left">
                                     <Setter.Value>
                                         <MultiBinding Converter="{StaticResource Shift}"
-                                                      ConverterParameter="X"
+                                                      ConverterParameter="X11"
                                                       Mode="OneTime">
                                             <Binding Path="P2X.Value" />
                                             <Binding Path="DataContext.ViewModel.Value" RelativeSource="{RelativeSource AncestorType=view:DetailStraightLine}" />
@@ -144,7 +144,7 @@
                                 <Setter Property="Canvas.Top">
                                     <Setter.Value>
                                         <MultiBinding Converter="{StaticResource Shift}"
-                                                      ConverterParameter="Y"
+                                                      ConverterParameter="Y12"
                                                       Mode="OneTime">
                                             <Binding Path="P2Y.Value" />
                                             <Binding Path="DataContext.ViewModel.Value" RelativeSource="{RelativeSource AncestorType=view:DetailStraightLine}" />
@@ -195,25 +195,25 @@
                     <Line Stroke="Blue"
                           StrokeDashArray="2 2">
                         <Line.X1>
-                            <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="X">
+                            <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="X13">
                                 <Binding Path="Points[0].X" />
                                 <Binding />
                             </MultiBinding>
                         </Line.X1>
                         <Line.Y1>
-                            <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="Y">
+                            <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="Y14">
                                 <Binding Path="Points[0].Y" />
                                 <Binding />
                             </MultiBinding>
                         </Line.Y1>
                         <Line.X2>
-                            <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="X">
+                            <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="X15">
                                 <Binding Path="ControlPoint1.Value.X" />
                                 <Binding />
                             </MultiBinding>
                         </Line.X2>
                         <Line.Y2>
-                            <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="Y">
+                            <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="Y16">
                                 <Binding Path="ControlPoint1.Value.Y" />
                                 <Binding />
                             </MultiBinding>
@@ -222,25 +222,25 @@
                     <Line Stroke="Blue"
                           StrokeDashArray="2 2">
                         <Line.X1>
-                            <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="X">
+                            <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="X17">
                                 <Binding Path="Points[1].X" />
                                 <Binding />
                             </MultiBinding>
                         </Line.X1>
                         <Line.Y1>
-                            <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="Y">
+                            <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="Y18">
                                 <Binding Path="Points[1].Y" />
                                 <Binding />
                             </MultiBinding>
                         </Line.Y1>
                         <Line.X2>
-                            <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="X">
+                            <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="X19">
                                 <Binding Path="ControlPoint2.Value.X" />
                                 <Binding />
                             </MultiBinding>
                         </Line.X2>
                         <Line.Y2>
-                            <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="Y">
+                            <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="Y20">
                                 <Binding Path="ControlPoint2.Value.Y" />
                                 <Binding />
                             </MultiBinding>
@@ -250,13 +250,13 @@
                              Height="10"
                              Fill="Red">
                         <Canvas.Left>
-                            <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="X">
+                            <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="X21">
                                 <Binding Path="Points[0].X" />
                                 <Binding />
                             </MultiBinding>
                         </Canvas.Left>
                         <Canvas.Top>
-                            <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="Y">
+                            <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="Y22">
                                 <Binding Path="Points[0].Y" />
                                 <Binding />
                             </MultiBinding>
@@ -266,13 +266,13 @@
                              Height="10"
                              Fill="Red">
                         <Canvas.Left>
-                            <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="X">
+                            <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="X23">
                                 <Binding Path="Points[1].X" />
                                 <Binding />
                             </MultiBinding>
                         </Canvas.Left>
                         <Canvas.Top>
-                            <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="Y">
+                            <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="Y24">
                                 <Binding Path="Points[1].Y" />
                                 <Binding />
                             </MultiBinding>
@@ -282,13 +282,13 @@
                              Height="10"
                              Fill="Lime">
                         <Canvas.Left>
-                            <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="X">
+                            <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="X25">
                                 <Binding Path="ControlPoint1.Value.X" />
                                 <Binding />
                             </MultiBinding>
                         </Canvas.Left>
                         <Canvas.Top>
-                            <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="Y">
+                            <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="Y26">
                                 <Binding Path="ControlPoint1.Value.Y" />
                                 <Binding />
                             </MultiBinding>
@@ -298,13 +298,13 @@
                              Height="10"
                              Fill="Lime">
                         <Canvas.Left>
-                            <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="X">
+                            <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="X27">
                                 <Binding Path="ControlPoint2.Value.X" />
                                 <Binding />
                             </MultiBinding>
                         </Canvas.Left>
                         <Canvas.Top>
-                            <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="Y">
+                            <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="Y28">
                                 <Binding Path="ControlPoint2.Value.Y" />
                                 <Binding />
                             </MultiBinding>
@@ -316,7 +316,7 @@
                                 <Setter Property="Canvas.Left">
                                     <Setter.Value>
                                         <MultiBinding Converter="{StaticResource Shift}"
-                                                      ConverterParameter="X"
+                                                      ConverterParameter="X29"
                                                       Mode="OneTime">
                                             <Binding Path="P1X.Value" />
                                             <Binding Path="DataContext.ViewModel.Value" RelativeSource="{RelativeSource AncestorType=view:DetailBezier}" />
@@ -326,7 +326,7 @@
                                 <Setter Property="Canvas.Top">
                                     <Setter.Value>
                                         <MultiBinding Converter="{StaticResource Shift}"
-                                                      ConverterParameter="Y"
+                                                      ConverterParameter="Y30"
                                                       Mode="OneTime">
                                             <Binding Path="P1Y.Value" />
                                             <Binding Path="DataContext.ViewModel.Value" RelativeSource="{RelativeSource AncestorType=view:DetailBezier}" />
@@ -357,7 +357,7 @@
                                 <Setter Property="Canvas.Left">
                                     <Setter.Value>
                                         <MultiBinding Converter="{StaticResource Shift}"
-                                                      ConverterParameter="X"
+                                                      ConverterParameter="X31"
                                                       Mode="OneTime">
                                             <Binding Path="P2X.Value" />
                                             <Binding Path="DataContext.ViewModel.Value" RelativeSource="{RelativeSource AncestorType=view:DetailBezier}" />
@@ -367,7 +367,7 @@
                                 <Setter Property="Canvas.Top">
                                     <Setter.Value>
                                         <MultiBinding Converter="{StaticResource Shift}"
-                                                      ConverterParameter="Y"
+                                                      ConverterParameter="Y32"
                                                       Mode="OneTime">
                                             <Binding Path="P2Y.Value" />
                                             <Binding Path="DataContext.ViewModel.Value" RelativeSource="{RelativeSource AncestorType=view:DetailBezier}" />
@@ -398,7 +398,7 @@
                                 <Setter Property="Canvas.Left">
                                     <Setter.Value>
                                         <MultiBinding Converter="{StaticResource Shift}"
-                                                      ConverterParameter="X"
+                                                      ConverterParameter="X33"
                                                       Mode="OneTime">
                                             <Binding Path="C1X.Value" />
                                             <Binding Path="DataContext.ViewModel.Value" RelativeSource="{RelativeSource AncestorType=view:DetailBezier}" />
@@ -408,7 +408,7 @@
                                 <Setter Property="Canvas.Top">
                                     <Setter.Value>
                                         <MultiBinding Converter="{StaticResource Shift}"
-                                                      ConverterParameter="Y"
+                                                      ConverterParameter="Y34"
                                                       Mode="OneTime">
                                             <Binding Path="C1Y.Value" />
                                             <Binding Path="DataContext.ViewModel.Value" RelativeSource="{RelativeSource AncestorType=view:DetailBezier}" />
@@ -439,7 +439,7 @@
                                 <Setter Property="Canvas.Left">
                                     <Setter.Value>
                                         <MultiBinding Converter="{StaticResource Shift}"
-                                                      ConverterParameter="X"
+                                                      ConverterParameter="X35"
                                                       Mode="OneTime">
                                             <Binding Path="C2X.Value" />
                                             <Binding Path="DataContext.ViewModel.Value" RelativeSource="{RelativeSource AncestorType=view:DetailBezier}" />
@@ -449,7 +449,7 @@
                                 <Setter Property="Canvas.Top">
                                     <Setter.Value>
                                         <MultiBinding Converter="{StaticResource Shift}"
-                                                      ConverterParameter="Y"
+                                                      ConverterParameter="Y36"
                                                       Mode="OneTime">
                                             <Binding Path="C2Y.Value" />
                                             <Binding Path="DataContext.ViewModel.Value" RelativeSource="{RelativeSource AncestorType=view:DetailBezier}" />

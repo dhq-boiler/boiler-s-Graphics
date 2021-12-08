@@ -16,9 +16,9 @@ namespace boilersGraphics.Converters
             var x = (double)values.ElementAt(0);
             var viewModel = (ConnectorBaseViewModel)values.ElementAt(1);
             double temp = 0;
-            if (parameter.ToString() == "X")
+            if (parameter.ToString().StartsWith("X"))
                 temp = viewModel.LeftTop.Value.X;
-            else if (parameter.ToString() == "Y")
+            else if (parameter.ToString().StartsWith("Y"))
                 temp = viewModel.LeftTop.Value.Y;
             return x - temp + 50;
         }
