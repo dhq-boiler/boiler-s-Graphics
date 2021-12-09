@@ -31,6 +31,10 @@ namespace boilersGraphics.ViewModels
 
         public ReactivePropertySlim<int> QualityLevel { get; set; } = new ReactivePropertySlim<int>(100);
 
+        public ReactivePropertySlim<Rect?> SliceRect { get; set; } = new ReactivePropertySlim<Rect?>();
+
+        public ReactivePropertySlim<RenderTargetBitmap> Preview { get; set; } = new ReactivePropertySlim<RenderTargetBitmap>();
+
         public ReactiveCommand PathFinderCommand { get; set; }
 
         public ReactiveCommand ExportCommand { get; set; }
@@ -57,6 +61,21 @@ namespace boilersGraphics.ViewModels
             CancelCommand.Subscribe(_ => CancelClose())
                          .AddTo(_disposables);
             Path.Value = "";
+
+            SliceRect.Subscribe(x =>
+            {
+                var tempLayoutTransform = designerCanvas.LayoutTransform;
+                designerCanvas.LayoutTransform = new MatrixTransform();
+
+                var backgroundItem = diagramViewModel.BackgroundItem.Value;
+                RenderTargetBitmap rtb = Render(designerCanvas, diagramViewModel, backgroundItem);
+                Preview.Value = rtb;
+
+                OpenCvSharpHelper.ImShow("preview", rtb);
+                
+                designerCanvas.LayoutTransform = tempLayoutTransform;
+            })
+            .AddTo(_disposables);
         }
 
         private void ExportProcess(DesignerCanvas designerCanvas, MainWindowViewModel mainWindowViewModel, DiagramViewModel diagramViewModel)
@@ -101,23 +120,7 @@ namespace boilersGraphics.ViewModels
         private void Export(MainWindowViewModel mainWindowViewModel, DesignerCanvas designerCanvas, DiagramViewModel diagramViewModel)
         {
             var backgroundItem = diagramViewModel.BackgroundItem.Value;
-            var bounds = VisualTreeHelper.GetDescendantBounds(designerCanvas);
-            LogManager.GetCurrentClassLogger().Debug($"bounds:{bounds}");
-
-            var rtb = new RenderTargetBitmap((int)diagramViewModel.Width, (int)diagramViewModel.Height, 96, 96, PixelFormats.Pbgra32);
-
-            DrawingVisual visual = new DrawingVisual();
-            using (DrawingContext context = visual.RenderOpen())
-            {
-                //背景を描画
-                RenderBackgroundViewModel(designerCanvas, context, backgroundItem);
-
-                VisualBrush brush = new VisualBrush(designerCanvas);
-                brush.Stretch = Stretch.None;
-                context.DrawRectangle(brush, null, bounds);
-            }
-            
-            rtb.Render(visual);
+            RenderTargetBitmap rtb = Render(designerCanvas, diagramViewModel, backgroundItem);
 
             OpenCvSharpHelper.ImShow("test", rtb);
 
@@ -128,6 +131,45 @@ namespace boilersGraphics.ViewModels
             LogManager.GetCurrentClassLogger().Info($"Exported:{Path.Value}");
 
             UpdateStatisticsCount(mainWindowViewModel);
+        }
+
+        private RenderTargetBitmap Render(DesignerCanvas designerCanvas, DiagramViewModel diagramViewModel, BackgroundViewModel backgroundItem)
+        {
+            Size size;
+            if (SliceRect.Value.HasValue)
+            {
+                size = SliceRect.Value.Value.Size;
+            }
+            else
+            {
+                size = new Size(diagramViewModel.Width, diagramViewModel.Height);
+            }
+            var rtb = new RenderTargetBitmap((int)size.Width, (int)size.Height, 96, 96, PixelFormats.Pbgra32);
+
+            DrawingVisual visual = new DrawingVisual();
+            using (DrawingContext context = visual.RenderOpen())
+            {
+                //背景を描画
+                RenderBackgroundViewModel(designerCanvas, context, backgroundItem);
+
+                VisualBrush brush = new VisualBrush(designerCanvas);
+                brush.Stretch = Stretch.None;
+                Rect rect;
+                if (SliceRect.Value.HasValue)
+                {
+                    rect = SliceRect.Value.Value;
+                }
+                else
+                {
+                    var bounds = VisualTreeHelper.GetDescendantBounds(designerCanvas);
+                    LogManager.GetCurrentClassLogger().Debug($"bounds:{bounds}");
+                    rect = bounds;
+                }
+                context.DrawRectangle(brush, null, rect);
+            }
+
+            rtb.Render(visual);
+            return rtb;
         }
 
         private static void UpdateStatisticsCount(MainWindowViewModel mainWindowViewModel)
@@ -164,15 +206,33 @@ namespace boilersGraphics.ViewModels
             designerCanvas.LayoutTransform = tempLayoutTransform;
         }
 
-        private static void RenderBackgroundViewModel(DesignerCanvas designerCanvas, DrawingContext context, BackgroundViewModel background)
+        private void RenderBackgroundViewModel(DesignerCanvas designerCanvas, DrawingContext context, BackgroundViewModel background)
         {
             var views = designerCanvas.GetCorrespondingViews<FrameworkElement>(background);
             var view = views.First(x => x.GetType() == background.GetViewType());
             var bounds = VisualTreeHelper.GetDescendantBounds(view);
+
+            Rect rect;
+            if (SliceRect.Value.HasValue)
+            {
+                rect = SliceRect.Value.Value;
+            }
+            else
+            {
+                rect = bounds;
+            }
+
             VisualBrush brush = new VisualBrush(view);
             brush.Stretch = Stretch.None;
             view.UpdateLayout();
-            context.DrawRectangle(brush, null, bounds);
+            if (SliceRect.Value.HasValue)
+            {
+                context.DrawRectangle(brush, null, rect);
+            }
+            else
+            {
+                context.DrawRectangle(brush, null, rect);
+            }
         }
 
         interface IFileGenerator
@@ -392,6 +452,10 @@ namespace boilersGraphics.ViewModels
 
         public void OnDialogOpened(IDialogParameters parameters)
         {
+            if (parameters.ContainsKey("sliceRect"))
+            {
+                SliceRect.Value = parameters.GetValue<Rect>("sliceRect");
+            }
         }
     }
 }

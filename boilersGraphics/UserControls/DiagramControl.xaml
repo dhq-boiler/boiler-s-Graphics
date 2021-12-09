@@ -14,17 +14,18 @@
              xmlns:selector="clr-namespace:boilersGraphics.StyleSelectors"
              xmlns:view="clr-namespace:boilersGraphics.Views"
              xmlns:viewModel="clr-namespace:boilersGraphics.ViewModels"
+             x:Name="diagramControl"
              d:DesignHeight="450"
              d:DesignWidth="800"
              Loaded="DesignerCanvas_Loaded"
-             mc:Ignorable="d"
-             x:Name="diagramControl">
+             mc:Ignorable="d">
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
     </UserControl.Resources>
     <Border BorderBrush="LightGray" BorderThickness="1">
         <Grid>
-            <ScrollViewer Name="DesignerScrollViewer"
+            <ScrollViewer x:Name="DesignerScrollViewer"
+                          AutomationProperties.Name="DesignerScrollViewer"
                           HorizontalScrollBarVisibility="Auto"
                           VerticalScrollBarVisibility="Auto">
                 <i:Interaction.Triggers>
@@ -48,6 +49,9 @@
                     </i:EventTrigger>
                     <i:EventTrigger EventName="PreviewKeyDown">
                         <helper:EventToCommand Command="{Binding PreviewKeyDownCommand}" PassEventArgsToCommand="True" />
+                    </i:EventTrigger>
+                    <i:EventTrigger EventName="Loaded">
+                        <helper:EventToCommand Command="{Binding LoadedCommand}" PassEventArgsToCommand="True" />
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
                 <ScrollViewer.Background>
@@ -201,13 +205,13 @@
                                                         </Setter>
                                                     </Style>
                                                 </Canvas.Style>
-                                                <Path Canvas.Left="{Binding LeftTop.Value.X}"
+                                                <Path x:Name="bezierCurve"
+                                                      Canvas.Left="{Binding LeftTop.Value.X}"
                                                       Canvas.Top="{Binding LeftTop.Value.Y}"
                                                       IsHitTestVisible="True"
                                                       Stretch="Fill"
                                                       Stroke="{Binding EdgeColor.Value, Converter={StaticResource solidColorBrushConverter}}"
-                                                      StrokeThickness="{Binding EdgeThickness.Value}"
-                                                      x:Name="bezierCurve">
+                                                      StrokeThickness="{Binding EdgeThickness.Value}">
                                                     <Path.Data>
                                                         <PathGeometry>
                                                             <PathFigure StartPoint="{Binding Points[0]}">
@@ -308,14 +312,14 @@
                                                     Width="{Binding Width}"
                                                     Height="{Binding Height}"
                                                     AllowDrop="True"
+                                                    AutomationProperties.Name="designerCanvas"
                                                     Background="Transparent" />
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                 </ItemsControl>
                 <ScrollViewer.ContextMenu>
                     <ContextMenu>
-                        <MenuItem Command="{Binding PropertyCommand}"
-                                  Header="プロパティ" />
+                        <MenuItem Command="{Binding PropertyCommand}" Header="プロパティ" />
                         <MenuItem Header="{Binding Grouping, Mode=OneWay, Source={StaticResource resources}}">
                             <MenuItem Command="{Binding GroupCommand}" Header="{Binding Command_Group, Mode=OneWay, Source={StaticResource resources}}">
                                 <MenuItem.Icon>

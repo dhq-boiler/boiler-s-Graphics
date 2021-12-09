@@ -160,6 +160,55 @@ namespace boilersGraphics.Test.UITests
             }
         }
 
+        [Test]
+        public void スライス()
+        {
+            var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var loadFilePath = $"{dir}\\XmlFiles\\checker_pattern.xml";
+
+            session.FindElementByAccessibilityId("Load").Click();
+            //「現在のキャンパスは破棄されますが、よろしいですか？」→OK（"1"）
+            session.FindElementByAccessibilityId("1").Click();
+            var action = new Actions(session);
+            action.SendKeys(Keys.Alt + "N" + Keys.Alt);
+            action.Perform();
+            //ファイル名（コンボボックス、"1148"）に入力
+            GetElementByAutomationID("1148").SendKeys(loadFilePath);
+            //開く（O)ボタン（"1")をクリック
+            GetElementByAutomationID("1").Click();
+            //開くボタンが押されない場合があるので、"1"がまだ存在していたら再度押し直す
+            if (ExistsElementByAutomationID("1"))
+            {
+                GetElementByAutomationID("1").Click();
+            }
+
+            GetElementByName("slice").Click();
+            action = new Actions(session);
+            var designerCanvas = GetElementBy(By.XPath("//Pane[@Name=\"DesignerScrollViewer\"][@AutomationId=\"DesignerScrollViewer\"]"));
+            action.MoveToElement(designerCanvas, 525, 100);
+            action.ClickAndHold();
+            for (int i = 1; i < 100; ++i)
+                action.MoveByOffset(1, 1);
+            action.Release();
+            action.Perform();
+
+            var exportFilePath = $"{dir}\\ExportTest4.jpg";
+
+            GetElementByAutomationID("filename").SendKeys(exportFilePath);
+            GetElementByAutomationID("PerformExport").Click();
+
+            using (var mat = new Mat(exportFilePath))
+            {
+                for (int y = 0; y < 100; ++y)
+                {
+                    for (int x = 0; x < 100; ++x)
+                    {
+                        TestPixelIsBlack(mat, y, x);
+                    }
+                }
+            }
+        }
+
         private void TestPixelIsBlack(Mat mat, int y, int x)
         {
             Vec3b pic = mat.At<Vec3b>(y, x);

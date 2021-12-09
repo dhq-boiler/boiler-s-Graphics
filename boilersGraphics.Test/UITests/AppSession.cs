@@ -122,6 +122,65 @@ namespace boilersGraphics.Test.UITests
             return element;
         }
 
+        public WindowsElement GetElementByName(string name, int timeOut = 10000)
+        {
+            WindowsElement element = null;
+
+            var wait = new DefaultWait<WindowsDriver<WindowsElement>>(session)
+            {
+                Timeout = TimeSpan.FromMilliseconds(timeOut),
+                Message = $"Element with Name \"{name}\" not found."
+            };
+
+            wait.IgnoreExceptionTypes(typeof(WebDriverException));
+
+            try
+            {
+                wait.Until(Driver =>
+                {
+                    element = Driver.FindElementByName(name);
+                    return element != null;
+                });
+            }
+            catch (WebDriverTimeoutException ex)
+            {
+                LogManager.GetCurrentClassLogger().Error(ex);
+                LogManager.GetCurrentClassLogger().Error($"Name:{name}");
+                Assert.Fail(ex.Message);
+            }
+
+            return element;
+        }
+
+        public WindowsElement GetElementBy(By by, int timeOut = 10000)
+        {
+            WindowsElement element = null;
+
+            var wait = new DefaultWait<WindowsDriver<WindowsElement>>(session)
+            {
+                Timeout = TimeSpan.FromMilliseconds(timeOut),
+                Message = $"Element with By not found."
+            };
+
+            wait.IgnoreExceptionTypes(typeof(WebDriverException));
+
+            try
+            {
+                wait.Until(Driver =>
+                {
+                    element = Driver.FindElement(by);
+                    return element != null;
+                });
+            }
+            catch (WebDriverTimeoutException ex)
+            {
+                LogManager.GetCurrentClassLogger().Error(ex);
+                Assert.Fail(ex.Message);
+            }
+
+            return element;
+        }
+
         public bool ExistsElementByAutomationID(string automationId, int timeOut = 10000)
         {
             WindowsElement element = null;

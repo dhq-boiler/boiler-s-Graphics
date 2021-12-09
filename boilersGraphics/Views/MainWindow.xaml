@@ -1374,7 +1374,8 @@
             <ToolBar ItemsSource="{Binding ToolBarViewModel.ToolItems}">
                 <ToolBar.ItemTemplate>
                     <DataTemplate>
-                        <ToggleButton Width="40"
+                        <ToggleButton AutomationProperties.Name="{Binding Name.Value}"
+                                      Width="40"
                                       Height="40"
                                       Padding="3"
                                       Command="{Binding Command}"
