@@ -4,6 +4,7 @@ using OpenCvSharp;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Threading;
 
@@ -187,7 +188,7 @@ namespace boilersGraphics.Test.UITests
             var designerCanvas = GetElementBy(By.XPath("//Pane[@Name=\"DesignerScrollViewer\"][@AutomationId=\"DesignerScrollViewer\"]"));
             action.MoveToElement(designerCanvas, 525, 100);
             action.ClickAndHold();
-            for (int i = 1; i < 100; ++i)
+            for (int i = 1; i < 200; ++i)
                 action.MoveByOffset(1, 1);
             action.Release();
             action.Perform();
@@ -207,6 +208,27 @@ namespace boilersGraphics.Test.UITests
                     for (int x = 0; x < 100; ++x)
                     {
                         TestPixelIsBlack(mat, y, x);
+                    }
+                }
+                for (int y = 100; y < 200; ++y)
+                {
+                    for (int x = 100; x < 200; ++x)
+                    {
+                        TestPixelIsBlack(mat, y, x);
+                    }
+                }
+                for (int y = 0; y < 100; ++y)
+                {
+                    for (int x = 100; x < 200; ++x)
+                    {
+                        TestPixelIsWhite(mat, y, x);
+                    }
+                }
+                for (int y = 100; y < 200; ++y)
+                {
+                    for (int x = 0; x < 100; ++x)
+                    {
+                        TestPixelIsWhite(mat, y, x);
                     }
                 }
             }
