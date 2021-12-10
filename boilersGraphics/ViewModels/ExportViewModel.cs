@@ -156,7 +156,7 @@ namespace boilersGraphics.ViewModels
             }
             rtb.Render(visual);
 
-            OpenCvSharpHelper.ImShow("a", rtb);
+            OpenCvSharpHelper.ImShow("step1. render background", rtb);
 
             using (DrawingContext context = visual.RenderOpen())
             {
@@ -177,7 +177,7 @@ namespace boilersGraphics.ViewModels
             }
             rtb.Render(visual);
 
-            OpenCvSharpHelper.ImShow("b", rtb);
+            OpenCvSharpHelper.ImShow("step2. render foreground", rtb);
 
             rtb.Freeze();
 
