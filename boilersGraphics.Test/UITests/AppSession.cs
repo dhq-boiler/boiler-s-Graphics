@@ -6,10 +6,12 @@ using OpenQA.Selenium.Appium.Windows;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using System;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
+using System.Runtime.InteropServices;
 
 namespace boilersGraphics.Test.UITests
 {
@@ -40,6 +42,17 @@ namespace boilersGraphics.Test.UITests
                 //session.Manage().Timeouts().ImplicitWait = TimeSpan.FromMinutes(1);
 
                 session.Manage().Window.Maximize();
+
+                while (GetCurrentKeyboardLayout().Name != "en-US")
+                {
+                    var actions = new Actions(session);
+                    actions.KeyDown(OpenQA.Selenium.Keys.Command);
+                    actions.SendKeys(OpenQA.Selenium.Keys.Space);
+                    actions.Release();
+                    actions.Build();
+                    actions.Perform();
+                    actions.Perform();
+                }
             }
         }
 
@@ -50,7 +63,7 @@ namespace boilersGraphics.Test.UITests
             if (session != null)
             {
                 var actions = new Actions(session);
-                actions.SendKeys(Keys.Alt + Keys.F4 + Keys.Alt);
+                actions.SendKeys(OpenQA.Selenium.Keys.Alt + OpenQA.Selenium.Keys.F4 + OpenQA.Selenium.Keys.Alt);
                 actions.Perform();
                 session.WindowHandles.Select(x => session.SwitchTo().Window(x)).ToList().ForEach(x => x.Dispose());
                 session.Quit();
@@ -235,6 +248,24 @@ namespace boilersGraphics.Test.UITests
         {
             session.GetScreenshot().SaveAsFile($"{AppDomain.CurrentDomain.BaseDirectory}\\{filename}");
             TestContext.AddTestAttachment($"{AppDomain.CurrentDomain.BaseDirectory}\\{filename}");
+        }
+
+        [DllImport("user32.dll")] static extern IntPtr GetForegroundWindow();
+        [DllImport("user32.dll")] static extern uint GetWindowThreadProcessId(IntPtr hwnd, IntPtr proccess);
+        [DllImport("user32.dll")] static extern IntPtr GetKeyboardLayout(uint thread);
+        public static CultureInfo GetCurrentKeyboardLayout()
+        {
+            try
+            {
+                IntPtr foregroundWindow = GetForegroundWindow();
+                uint foregroundProcess = GetWindowThreadProcessId(foregroundWindow, IntPtr.Zero);
+                int keyboardLayout = GetKeyboardLayout(foregroundProcess).ToInt32() & 0xFFFF;
+                return new CultureInfo(keyboardLayout);
+            }
+            catch (Exception _)
+            {
+                return new CultureInfo(1033); // Assume English if something went wrong.
+            }
         }
     }
 }
