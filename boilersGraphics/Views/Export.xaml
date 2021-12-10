@@ -46,10 +46,13 @@
             <Image x:Name="Preview"
                    Grid.Row="0"
                    Grid.ColumnSpan="3"
+                   Width="{Binding Preview.Value.PixelWidth}"
+                   Height="{Binding Preview.Value.PixelHeight}"
                    MaxWidth="500"
                    MaxHeight="500"
                    AutomationProperties.Name="Preview"
-                   Source="{Binding Preview.Value, UpdateSourceTrigger=PropertyChanged}" />
+                   Source="{Binding Preview.Value, UpdateSourceTrigger=PropertyChanged}"
+                   Stretch="Uniform" />
             <Label Grid.Row="1" Grid.Column="0">ファイル名</Label>
             <TextBox x:Name="filename"
                      Grid.Row="1"
