@@ -362,9 +362,9 @@ namespace boilersGraphics.ViewModels
             });
             LoadedCommand = new DelegateCommand(() =>
             {
-                var filename = @"Z:\Git\boilersGraphics\boilersGraphics.Test\bin\Debug\XmlFiles\checker_pattern.xml";
-                ExecuteLoadCommand(filename, false);
-                BackgroundItem.Value.FillColor.Value = Colors.Red;
+                //var filename = @"Z:\Git\boilersGraphics\boilersGraphics.Test\bin\Debug\XmlFiles\checker_pattern.xml";
+                //ExecuteLoadCommand(filename, false);
+                //BackgroundItem.Value.FillColor.Value = Colors.Red;
             });
 
             EdgeColors.CollectionChangedAsObservable()
