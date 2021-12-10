@@ -69,10 +69,9 @@ namespace boilersGraphics.ViewModels
 
                 var backgroundItem = diagramViewModel.BackgroundItem.Value;
                 RenderTargetBitmap rtb = Render(designerCanvas, diagramViewModel, backgroundItem);
+                OpenCvSharpHelper.ImShow("preview", rtb);
                 Preview.Value = rtb;
 
-                //OpenCvSharpHelper.ImShow("preview", rtb);
-                
                 designerCanvas.LayoutTransform = tempLayoutTransform;
             })
             .AddTo(_disposables);
@@ -144,6 +143,9 @@ namespace boilersGraphics.ViewModels
             {
                 size = new Size(diagramViewModel.Width, diagramViewModel.Height);
             }
+
+            LogManager.GetCurrentClassLogger().Info($"SliceRect size:{size}");
+
             var rtb = new RenderTargetBitmap((int)size.Width, (int)size.Height, 96, 96, PixelFormats.Pbgra32);
 
             DrawingVisual visual = new DrawingVisual();
@@ -151,7 +153,13 @@ namespace boilersGraphics.ViewModels
             {
                 //背景を描画
                 RenderBackgroundViewModel(designerCanvas, context, backgroundItem);
+            }
+            rtb.Render(visual);
 
+            OpenCvSharpHelper.ImShow("a", rtb);
+
+            using (DrawingContext context = visual.RenderOpen())
+            {
                 VisualBrush brush = new VisualBrush(designerCanvas);
                 brush.Stretch = Stretch.None;
                 Rect rect;
@@ -167,8 +175,12 @@ namespace boilersGraphics.ViewModels
                 }
                 context.DrawRectangle(brush, null, rect);
             }
-
             rtb.Render(visual);
+
+            OpenCvSharpHelper.ImShow("b", rtb);
+
+            rtb.Freeze();
+
             return rtb;
         }
 
