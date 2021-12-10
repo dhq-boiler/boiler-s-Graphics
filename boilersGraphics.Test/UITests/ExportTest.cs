@@ -204,6 +204,8 @@ namespace boilersGraphics.Test.UITests
 
             TakeScreenShot("SCREENSHOT_PREVIEW.png");
 
+            session.WindowHandles.Select(x => session.SwitchTo().Window(x)).First(x => x.Title == "エクスポート").SwitchTo();
+
             GetElementBy(By.XPath("//Window[@ClassName=\"Window\"][@Name=\"エクスポート\"]/Custom[@ClassName=\"Export\"]/Image[@Name=\"Preview\"][@AutomationId=\"Preview\"]")).GetScreenshot().SaveAsFile(previewFilePath);
 
             using (var mat = new Mat(previewFilePath))
