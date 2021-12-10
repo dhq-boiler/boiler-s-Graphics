@@ -362,7 +362,7 @@ namespace boilersGraphics.ViewModels
             });
             LoadedCommand = new DelegateCommand(() =>
             {
-                ExecuteLoadCommand(@"C:\Users\boiler\OneDrive\ドキュメント\Personal\アプリケーション開発\boiler_sGraphics\EyeSlash.xml", false);
+                //ExecuteLoadCommand(filename, false);
             });
 
             EdgeColors.CollectionChangedAsObservable()

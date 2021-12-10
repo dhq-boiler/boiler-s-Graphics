@@ -71,7 +71,7 @@ namespace boilersGraphics.ViewModels
                 RenderTargetBitmap rtb = Render(designerCanvas, diagramViewModel, backgroundItem);
                 Preview.Value = rtb;
 
-                OpenCvSharpHelper.ImShow("preview", rtb);
+                //OpenCvSharpHelper.ImShow("preview", rtb);
                 
                 designerCanvas.LayoutTransform = tempLayoutTransform;
             })
@@ -122,7 +122,7 @@ namespace boilersGraphics.ViewModels
             var backgroundItem = diagramViewModel.BackgroundItem.Value;
             RenderTargetBitmap rtb = Render(designerCanvas, diagramViewModel, backgroundItem);
 
-            OpenCvSharpHelper.ImShow("test", rtb);
+            //OpenCvSharpHelper.ImShow("test", rtb);
 
             var generator = FileGenerator.Create(System.IO.Path.GetExtension(Path.Value));
             generator.AddFrame(BitmapFrame.Create(rtb));
