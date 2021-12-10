@@ -236,13 +236,16 @@ namespace boilersGraphics.ViewModels
 
             VisualBrush brush = new VisualBrush(view);
             brush.Stretch = Stretch.None;
-            view.UpdateLayout();
             if (SliceRect.Value.HasValue)
             {
+                rect.X = 0;
+                rect.Y = 0;
+                view.UpdateLayout();
                 context.DrawRectangle(brush, null, rect);
             }
             else
             {
+                view.UpdateLayout();
                 context.DrawRectangle(brush, null, rect);
             }
         }
