@@ -30,7 +30,7 @@ namespace boilersGraphics.Adorners
             _designerCanvas = designerCanvas;
             _startPoint = dragStartPoint;
             this.dialogService = dialogService;
-            var brush = new SolidColorBrush(Colors.Black);
+            var brush = new SolidColorBrush(Colors.Blue);
             brush.Opacity = 0.5;
             _rectanglePen = new Pen(brush, 1);
             _snapAction = new SnapAction();
@@ -95,7 +95,7 @@ namespace boilersGraphics.Adorners
             dc.DrawRectangle(Brushes.Transparent, null, new Rect(RenderSize));
 
             if (_startPoint.HasValue && _endPoint.HasValue)
-                dc.DrawRectangle(Brushes.Transparent, _rectanglePen, ShiftEdgeThickness());
+                dc.DrawRectangle(new SolidColorBrush(Color.FromArgb(255 / 2, 0, 0, 255)), _rectanglePen, ShiftEdgeThickness());
         }
 
         private Rect ShiftEdgeThickness()
