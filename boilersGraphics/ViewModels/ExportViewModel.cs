@@ -134,15 +134,7 @@ namespace boilersGraphics.ViewModels
 
         private RenderTargetBitmap Render(DesignerCanvas designerCanvas, DiagramViewModel diagramViewModel, BackgroundViewModel backgroundItem)
         {
-            Size size;
-            if (SliceRect.Value.HasValue)
-            {
-                size = SliceRect.Value.Value.Size;
-            }
-            else
-            {
-                size = new Size(diagramViewModel.Width, diagramViewModel.Height);
-            }
+            Size size = GetRenderSize(diagramViewModel);
 
             LogManager.GetCurrentClassLogger().Info($"SliceRect size:{size}");
 
@@ -160,20 +152,7 @@ namespace boilersGraphics.ViewModels
 
             using (DrawingContext context = visual.RenderOpen())
             {
-                VisualBrush brush = new VisualBrush(designerCanvas);
-                brush.Stretch = Stretch.None;
-                Rect rect;
-                if (SliceRect.Value.HasValue)
-                {
-                    rect = SliceRect.Value.Value;
-                }
-                else
-                {
-                    var bounds = VisualTreeHelper.GetDescendantBounds(designerCanvas);
-                    LogManager.GetCurrentClassLogger().Debug($"bounds:{bounds}");
-                    rect = bounds;
-                }
-                context.DrawRectangle(brush, null, rect);
+                RenderForeground(diagramViewModel, designerCanvas, context);
             }
             rtb.Render(visual);
 
@@ -182,6 +161,52 @@ namespace boilersGraphics.ViewModels
             rtb.Freeze();
 
             return rtb;
+        }
+
+        private Size GetRenderSize(DiagramViewModel diagramViewModel)
+        {
+            Size size;
+            if (SliceRect.Value.HasValue)
+            {
+                size = SliceRect.Value.Value.Size;
+            }
+            else
+            {
+                size = new Size(diagramViewModel.Width, diagramViewModel.Height);
+            }
+            return size;
+        }
+
+        private void RenderForeground(DiagramViewModel diagramViewModel, DesignerCanvas designerCanvas, DrawingContext context)
+        {
+            VisualBrush brush = new VisualBrush(designerCanvas);
+            brush.Stretch = Stretch.None;
+            Rect rect;
+            if (SliceRect.Value.HasValue)
+            {
+                var bounds = VisualTreeHelper.GetDescendantBounds(designerCanvas);
+                rect = SliceRect.Value.Value;
+                rect.X = 0;
+                rect.Y = 0;
+            }
+            else
+            {
+                var bounds = VisualTreeHelper.GetDescendantBounds(designerCanvas);
+                LogManager.GetCurrentClassLogger().Debug($"bounds:{bounds}");
+                rect = bounds;
+            }
+            context.DrawRectangle(brush, null, rect);
+
+            var size = GetRenderSize(diagramViewModel);
+            var rtb = new RenderTargetBitmap((int)size.Width, (int)size.Height, 96, 96, PixelFormats.Pbgra32);
+            DrawingVisual visual = new DrawingVisual();
+            using (DrawingContext context2 = visual.RenderOpen())
+            {
+                context2.DrawRectangle(new SolidColorBrush(Colors.Green), null, new Rect(new Point(0, 0), size));
+                context2.DrawRectangle(brush, null, rect);
+            }
+            rtb.Render(visual);
+            OpenCvSharpHelper.ImShow("Foreground", rtb);
         }
 
         private static void UpdateStatisticsCount(MainWindowViewModel mainWindowViewModel)
