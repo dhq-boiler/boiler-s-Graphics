@@ -20,6 +20,7 @@ namespace boilersGraphics.Test.UITests
             var exportFilePath = $"{dir}\\ExportTest.jpg";
 
             GetElementByAutomationID("Export").Click();
+            session.WindowHandles.Select(x => session.SwitchTo().Window(x)).First(x => x.Title == "エクスポート").SwitchTo();
             GetElementByAutomationID("filename").SendKeys(exportFilePath);
             GetElementByAutomationID("PerformExport").Click();
             Thread.Sleep(1000);
@@ -92,12 +93,16 @@ namespace boilersGraphics.Test.UITests
 
             LogManager.GetCurrentClassLogger().Info("I");
             TakeScreenShot("SCREENSHOT_I.png");
+
+            session.WindowHandles.Select(x => session.SwitchTo().Window(x)).First(x => x.Title == "エクスポート").SwitchTo();
                 
             GetElementByAutomationID("filename").SendKeys(exportFilePath);
                 
             LogManager.GetCurrentClassLogger().Info("J");
             TakeScreenShot("SCREENSHOT_J.png");
             GetElementByAutomationID("PerformExport").Click();
+
+            session.WindowHandles.Select(x => session.SwitchTo().Window(x)).First(x => x.Title.StartsWith("boiler's Graphics")).SwitchTo();
 
             LogManager.GetCurrentClassLogger().Info("K");
             TakeScreenShot("SCREENSHOT_K.png");

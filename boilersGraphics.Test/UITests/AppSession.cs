@@ -3,9 +3,11 @@ using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Appium;
 using OpenQA.Selenium.Appium.Windows;
+using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using System;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Reflection;
 
@@ -47,6 +49,10 @@ namespace boilersGraphics.Test.UITests
             // Close the application and delete the session
             if (session != null)
             {
+                var actions = new Actions(session);
+                actions.SendKeys(Keys.Alt + Keys.F4 + Keys.Alt);
+                actions.Perform();
+                session.WindowHandles.Select(x => session.SwitchTo().Window(x)).ToList().ForEach(x => x.Dispose());
                 session.Quit();
                 session = null;
             }
