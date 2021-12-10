@@ -172,6 +172,8 @@ namespace boilersGraphics.Test.UITests
             var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var loadFilePath = $"{dir}\\XmlFiles\\checker_pattern.xml";
 
+            session.WindowHandles.Select(x => session.SwitchTo().Window(x)).First(x => x.Title.StartsWith("boiler's Graphics")).SwitchTo();
+
             session.FindElementByAccessibilityId("Load").Click();
             //「現在のキャンパスは破棄されますが、よろしいですか？」→OK（"1"）
             session.FindElementByAccessibilityId("1").Click();
@@ -210,6 +212,8 @@ namespace boilersGraphics.Test.UITests
 
             using (var mat = new Mat(previewFilePath))
             {
+                Assert.That(mat.Rows, Is.EqualTo(200));
+                Assert.That(mat.Cols, Is.EqualTo(200));
                 for (int y = 0; y < 100; ++y)
                 {
                     for (int x = 0; x < 100; ++x)
