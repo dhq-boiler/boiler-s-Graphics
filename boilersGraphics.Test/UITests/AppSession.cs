@@ -62,9 +62,12 @@ namespace boilersGraphics.Test.UITests
             // Close the application and delete the session
             if (session != null)
             {
-                var actions = new Actions(session);
-                actions.SendKeys(OpenQA.Selenium.Keys.Alt + OpenQA.Selenium.Keys.F4 + OpenQA.Selenium.Keys.Alt);
-                actions.Perform();
+                while (session.WindowHandles.Count() > 0)
+                {
+                    var actions = new Actions(session);
+                    actions.SendKeys(OpenQA.Selenium.Keys.Alt + OpenQA.Selenium.Keys.F4 + OpenQA.Selenium.Keys.Alt);
+                    actions.Perform();
+                }
                 session.WindowHandles.Select(x => session.SwitchTo().Window(x)).ToList().ForEach(x => x.Dispose());
                 session.Quit();
                 session = null;
