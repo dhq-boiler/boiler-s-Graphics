@@ -184,8 +184,10 @@ namespace boilersGraphics.ViewModels
             {
                 var views = designerCanvas.GetCorrespondingViews<FrameworkElement>(item);
                 var view = views.First(x => x.GetType() == item.GetViewType());
+                view.SnapsToDevicePixels = true;
                 VisualBrush brush = new VisualBrush(view);
                 brush.Stretch = Stretch.None;
+                brush.TileMode = TileMode.None;
                 Rect rect = new Rect();
                 if (item is DesignerItemViewModelBase designerItem)
                 {

@@ -212,8 +212,15 @@ namespace boilersGraphics.Test.UITests
             session.WindowHandles.Select(x => session.SwitchTo().Window(x)).First(x => x.Title == "エクスポート").SwitchTo();
 
             GetElementBy(By.XPath("//Window[@ClassName=\"Window\"][@Name=\"エクスポート\"]/Custom[@ClassName=\"Export\"]/Image[@Name=\"Preview\"][@AutomationId=\"Preview\"]")).GetScreenshot().SaveAsFile(previewFilePath);
+            TestContext.AddTestAttachment(previewFilePath);
 
-            using (var mat = new Mat(previewFilePath))
+            var exportFilePath = $"{dir}\\ExportTest4.jpg";
+
+            GetElementByAutomationID("filename").SendKeys(exportFilePath);
+            GetElementByAutomationID("PerformExport").Click();
+            TestContext.AddTestAttachment(exportFilePath);
+
+            using (var mat = new Mat(exportFilePath))
             {
                 Assert.That(mat.Rows, Is.EqualTo(200));
                 Assert.That(mat.Cols, Is.EqualTo(200));
@@ -243,22 +250,6 @@ namespace boilersGraphics.Test.UITests
                     for (int x = 0; x < 100; ++x)
                     {
                         TestPixelIsWhite(mat, y, x);
-                    }
-                }
-            }
-
-            var exportFilePath = $"{dir}\\ExportTest4.jpg";
-
-            GetElementByAutomationID("filename").SendKeys(exportFilePath);
-            GetElementByAutomationID("PerformExport").Click();
-
-            using (var mat = new Mat(exportFilePath))
-            {
-                for (int y = 0; y < 100; ++y)
-                {
-                    for (int x = 0; x < 100; ++x)
-                    {
-                        TestPixelIsBlack(mat, y, x);
                     }
                 }
             }

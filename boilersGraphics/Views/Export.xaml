@@ -54,9 +54,11 @@
                            Width="{Binding Preview.Value.PixelWidth}"
                            Height="{Binding Preview.Value.PixelHeight}"
                            Margin="0"
+                           MaxWidth="500"
+                           MaxHeight="500"
                            AutomationProperties.Name="Preview"
                            Source="{Binding Preview.Value, UpdateSourceTrigger=PropertyChanged}"
-                           Stretch="None" />
+                           Stretch="UniformToFill" />
                 </Border>
             </DockPanel>
             <Label Grid.Row="1" Grid.Column="0">ファイル名</Label>
