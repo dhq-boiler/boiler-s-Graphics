@@ -43,16 +43,22 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <Image x:Name="Preview"
-                   Grid.Row="0"
-                   Grid.ColumnSpan="3"
-                   Width="{Binding Preview.Value.PixelWidth}"
-                   Height="{Binding Preview.Value.PixelHeight}"
-                   MaxWidth="500"
-                   MaxHeight="500"
-                   AutomationProperties.Name="Preview"
-                   Source="{Binding Preview.Value, UpdateSourceTrigger=PropertyChanged}"
-                   Stretch="Uniform" />
+            <DockPanel Grid.Row="0" Grid.ColumnSpan="3">
+                <DockPanel DockPanel.Dock="Right" />
+                <DockPanel DockPanel.Dock="Left" />
+                <Border HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        BorderBrush="Black"
+                        BorderThickness="1">
+                    <Image x:Name="Preview"
+                           Width="{Binding Preview.Value.PixelWidth}"
+                           Height="{Binding Preview.Value.PixelHeight}"
+                           Margin="0"
+                           AutomationProperties.Name="Preview"
+                           Source="{Binding Preview.Value, UpdateSourceTrigger=PropertyChanged}"
+                           Stretch="None" />
+                </Border>
+            </DockPanel>
             <Label Grid.Row="1" Grid.Column="0">ファイル名</Label>
             <TextBox x:Name="filename"
                      Grid.Row="1"
