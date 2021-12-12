@@ -178,7 +178,15 @@ namespace boilersGraphics.Test.UITests
 
             Thread.Sleep(1000);
 
-            while (ExistsElementByAutomationID("1"))
+            action = new Actions(session);
+            action.SendKeys(Keys.Alt + "N" + Keys.Alt);
+            //ファイル名（コンボボックス、"1148"）に入力
+            action.SendKeys(GetElementByAutomationID("1148"), loadFilePath);
+            //開く（O)ボタン（"1")をクリック
+            action.Click(GetElementByAutomationID("1"));
+            action.Perform();
+
+            if (ExistsElementByAutomationID("1"))
             {
                 action = new Actions(session);
                 action.SendKeys(Keys.Alt + "N" + Keys.Alt);
