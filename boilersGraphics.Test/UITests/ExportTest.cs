@@ -20,7 +20,7 @@ namespace boilersGraphics.Test.UITests
             var exportFilePath = $"{dir}\\ExportTest.jpg";
 
             GetElementByAutomationID("Export").Click();
-            session.WindowHandles.Select(x => session.SwitchTo().Window(x)).First(x => x.Title == "エクスポート").SwitchTo();
+            session.WindowHandles.Select(x => session.SwitchTo().Window(x)).First(x => x.Title.StartsWith("エクスポート")).SwitchTo();
             GetElementByAutomationID("filename").SendKeys(exportFilePath);
             GetElementByAutomationID("PerformExport").Click();
             Thread.Sleep(1000);
@@ -94,7 +94,7 @@ namespace boilersGraphics.Test.UITests
             LogManager.GetCurrentClassLogger().Info("I");
             TakeScreenShot("SCREENSHOT_I.png");
 
-            session.WindowHandles.Select(x => session.SwitchTo().Window(x)).First(x => x.Title == "エクスポート").SwitchTo();
+            session.WindowHandles.Select(x => session.SwitchTo().Window(x)).First(x => x.Title.StartsWith("エクスポート")).SwitchTo();
                 
             GetElementByAutomationID("filename").SendKeys(exportFilePath);
                 
@@ -209,7 +209,7 @@ namespace boilersGraphics.Test.UITests
 
             TakeScreenShot("SCREENSHOT_PREVIEW.png");
 
-            session.WindowHandles.Select(x => session.SwitchTo().Window(x)).First(x => x.Title == "エクスポート").SwitchTo();
+            session.WindowHandles.Select(x => session.SwitchTo().Window(x)).First(x => x.Title.StartsWith("エクスポート")).SwitchTo();
 
             GetElementBy(By.XPath("//Window[@ClassName=\"Window\"][@Name=\"エクスポート\"]/Custom[@ClassName=\"Export\"]/Image[@Name=\"Preview\"][@AutomationId=\"Preview\"]")).GetScreenshot().SaveAsFile(previewFilePath);
             TestContext.AddTestAttachment(previewFilePath);
