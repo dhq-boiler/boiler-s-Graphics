@@ -144,6 +144,36 @@ namespace boilersGraphics.Test.UITests
             return element;
         }
 
+        public IWebDriver GetWindowByTitle(string windowTitle, int timeOut = 10000)
+        {
+            IWebDriver webDriver = null;
+
+            var wait = new DefaultWait<WindowsDriver<WindowsElement>>(session)
+            {
+                Timeout = TimeSpan.FromMilliseconds(timeOut),
+                Message = $"Window with windowTitle \"{windowTitle}\" not found."
+            };
+
+            wait.IgnoreExceptionTypes(typeof(WebDriverException));
+
+            try
+            {
+                wait.Until(Driver =>
+                {
+                    webDriver = Driver.WindowHandles.Select(x => session.SwitchTo().Window(x)).FirstOrDefault(x => x.Title == windowTitle);
+                    return webDriver != null;
+                });
+            }
+            catch (WebDriverTimeoutException ex)
+            {
+                LogManager.GetCurrentClassLogger().Error(ex);
+                LogManager.GetCurrentClassLogger().Error($"windowTitle:{windowTitle}");
+                Assert.Fail(ex.Message);
+            }
+
+            return webDriver;
+        }
+
         public WindowsElement GetElementByName(string name, int timeOut = 10000)
         {
             WindowsElement element = null;
