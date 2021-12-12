@@ -4,6 +4,7 @@ using OpenCvSharp;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Threading;
 
@@ -91,12 +92,14 @@ namespace boilersGraphics.Test.UITests
 
             LogManager.GetCurrentClassLogger().Info("I");
             TakeScreenShot("SCREENSHOT_I.png");
-                
+
             GetElementByAutomationID("filename").SendKeys(exportFilePath);
                 
             LogManager.GetCurrentClassLogger().Info("J");
             TakeScreenShot("SCREENSHOT_J.png");
             GetElementByAutomationID("PerformExport").Click();
+
+            session.WindowHandles.Select(x => session.SwitchTo().Window(x)).First(x => x.Title.StartsWith("boiler's Graphics")).SwitchTo();
 
             LogManager.GetCurrentClassLogger().Info("K");
             TakeScreenShot("SCREENSHOT_K.png");
@@ -153,6 +156,101 @@ namespace boilersGraphics.Test.UITests
                 for (int y = 800; y < 900; ++y)
                 {
                     for (int x = 900; x < 1000; ++x)
+                    {
+                        TestPixelIsWhite(mat, y, x);
+                    }
+                }
+            }
+        }
+
+        [Test]
+        public void スライス()
+        {
+            var action = new Actions(session);
+            var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var loadFilePath = $"{dir}\\XmlFiles\\checker_pattern.xml";
+
+            session.WindowHandles.Select(x => session.SwitchTo().Window(x)).First(x => x.Title.StartsWith("boiler's Graphics")).SwitchTo();
+
+            session.FindElementByAccessibilityId("Load").Click();
+            //「現在のキャンパスは破棄されますが、よろしいですか？」→OK（"1"）
+            session.FindElementByAccessibilityId("1").Click();
+
+            Thread.Sleep(1000);
+
+            action = new Actions(session);
+            action.SendKeys(Keys.Alt + "N" + Keys.Alt);
+            //ファイル名（コンボボックス、"1148"）に入力
+            action.SendKeys(GetElementByAutomationID("1148"), loadFilePath);
+            //開く（O)ボタン（"1")をクリック
+            action.Click(GetElementByAutomationID("1"));
+            action.Perform();
+
+            if (ExistsElementByAutomationID("1"))
+            {
+                action = new Actions(session);
+                action.SendKeys(Keys.Alt + "N" + Keys.Alt);
+                //ファイル名（コンボボックス、"1148"）に入力
+                action.SendKeys(GetElementByAutomationID("1148"), loadFilePath);
+                //開く（O)ボタン（"1")をクリック
+                action.Click(GetElementByAutomationID("1"));
+                action.Perform();
+            }
+
+            GetElementByName("slice").Click();
+            action = new Actions(session);
+            TakeScreenShot("SCREENSHOT_GetDesignerCanvas.png");
+            var designerCanvas = GetElementBy(By.XPath("//Pane[@Name=\"DesignerScrollViewer\"][@AutomationId=\"DesignerScrollViewer\"]"));
+            action.MoveToElement(designerCanvas, 525, 100);
+            action.ClickAndHold();
+            for (int i = 1; i < 200; ++i)
+                action.MoveByOffset(1, 1);
+            action.Release();
+            action.Perform();
+
+            var previewFilePath = $"{dir}\\ExportTest3.jpg";
+
+            Thread.Sleep(1000);
+
+            TakeScreenShot("SCREENSHOT_PREVIEW.png");
+
+            GetElementBy(By.XPath("//Window[@ClassName=\"Window\"][@Name=\"エクスポート\"]/Custom[@ClassName=\"Export\"]/Image[@Name=\"Preview\"][@AutomationId=\"Preview\"]")).GetScreenshot().SaveAsFile(previewFilePath);
+            TestContext.AddTestAttachment(previewFilePath);
+
+            var exportFilePath = $"{dir}\\ExportTest4.jpg";
+
+            GetElementByAutomationID("filename").SendKeys(exportFilePath);
+            GetElementByAutomationID("PerformExport").Click();
+            TestContext.AddTestAttachment(exportFilePath);
+
+            using (var mat = new Mat(exportFilePath))
+            {
+                Assert.That(mat.Rows, Is.EqualTo(200));
+                Assert.That(mat.Cols, Is.EqualTo(200));
+                for (int y = 0; y < 100; ++y)
+                {
+                    for (int x = 0; x < 100; ++x)
+                    {
+                        TestPixelIsBlack(mat, y, x);
+                    }
+                }
+                for (int y = 100; y < 200; ++y)
+                {
+                    for (int x = 100; x < 200; ++x)
+                    {
+                        TestPixelIsBlack(mat, y, x);
+                    }
+                }
+                for (int y = 0; y < 100; ++y)
+                {
+                    for (int x = 100; x < 200; ++x)
+                    {
+                        TestPixelIsWhite(mat, y, x);
+                    }
+                }
+                for (int y = 100; y < 200; ++y)
+                {
+                    for (int x = 0; x < 100; ++x)
                     {
                         TestPixelIsWhite(mat, y, x);
                     }

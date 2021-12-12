@@ -97,6 +97,7 @@ namespace boilersGraphics.ViewModels
         public DelegateCommand PropertyCommand { get; private set; }
         public DelegateCommand<System.Windows.Shapes.Line> MouseDownStraightLineCommand { get; private set; }
         public DelegateCommand<System.Windows.Shapes.Path> MouseDownBezierCurveCommand { get; private set; }
+        public DelegateCommand LoadedCommand { get; private set; }
 
         #region Property
 
@@ -359,7 +360,12 @@ namespace boilersGraphics.ViewModels
                 bezierCurveVM.SnapPoint0VM.Value.IsSelected.Value = true;
                 bezierCurveVM.SnapPoint1VM.Value.IsSelected.Value = true;
             });
-
+            LoadedCommand = new DelegateCommand(() =>
+            {
+                //var filename = @"Z:\Git\boilersGraphics\boilersGraphics.Test\bin\Debug\XmlFiles\checker_pattern.xml";
+                //ExecuteLoadCommand(filename, false);
+                //BackgroundItem.Value.FillColor.Value = Colors.Red;
+            });
 
             EdgeColors.CollectionChangedAsObservable()
                 .Subscribe(_ => RaisePropertyChanged("EdgeColors"))
@@ -502,7 +508,7 @@ namespace boilersGraphics.ViewModels
         private bool CanOpenPropertyDialog()
         {
             return (SelectedItems.Value.Length == 1 && SelectedItems.Value.First().SupportsPropertyDialog)
-                || (SelectedItems.Value.Length == 2 && SelectedItems.Value.OfType<SnapPointViewModel>().First().Parent.Value.SupportsPropertyDialog);
+                || (SelectedItems.Value.OfType<SnapPointViewModel>().Count() == 2 && SelectedItems.Value.OfType<SnapPointViewModel>().First().Parent.Value.SupportsPropertyDialog);
         }
 
         private void MoveSelectedItems(int horizontalDiff, int verticalDiff)
@@ -1533,11 +1539,14 @@ namespace boilersGraphics.ViewModels
             LogManager.GetCurrentClassLogger().Info($"ファイル({filename})を読み込みました。");
         }
 
-        private void ExecuteLoadCommand(string file)
+        private void ExecuteLoadCommand(string file, bool showConfirmDialog = true)
         {
-            var result = MessageBox.Show("現在のキャンパスは破棄されますが、よろしいですか？", "確認", MessageBoxButton.OKCancel);
-            if (result == MessageBoxResult.Cancel)
-                return;
+            if (showConfirmDialog)
+            {
+                var result = MessageBox.Show("現在のキャンパスは破棄されますが、よろしいですか？", "確認", MessageBoxButton.OKCancel);
+                if (result == MessageBoxResult.Cancel)
+                    return;
+            }
             FileName.Value = file;
             var root = XElement.Load(file);
             LoadInternal(root, file);

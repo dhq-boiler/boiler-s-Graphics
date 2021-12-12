@@ -62,13 +62,11 @@ namespace boilersGraphics.ViewModels
 
         public override object Clone()
         {
-            var clone = new StraightConnectorViewModel(Owner, Points[0], Points[1]);
+            var clone = new StraightConnectorViewModel(Owner, Points[0]);
             clone.Owner = Owner;
             clone.EdgeColor.Value = EdgeColor.Value;
             clone.EdgeThickness.Value = EdgeThickness.Value;
-            clone.Points[0] = Points[0];
-            clone.Points[1] = Points[1];
-
+            clone.AddPointP2(Owner, Points[1]);
             return clone;
         }
 
@@ -76,7 +74,8 @@ namespace boilersGraphics.ViewModels
         {
             var dialogService = new DialogService((App.Current as PrismApplication).Container as IContainerExtension);
             IDialogResult result = null;
-            dialogService.ShowDialog(nameof(DetailStraightLine), new DialogParameters() { { "ViewModel", (StraightConnectorViewModel)this.Clone() } }, ret => result = ret);
+            var parameters = new DialogParameters() { { "ViewModel", (StraightConnectorViewModel)this.Clone() } };
+            dialogService.ShowDialog(nameof(DetailStraightLine), parameters, ret => result = ret);
             if (result != null && result.Result == ButtonResult.OK)
             {
                 var viewModel = result.Parameters.GetValue<StraightConnectorViewModel>("ViewModel");

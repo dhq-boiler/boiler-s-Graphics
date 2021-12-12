@@ -3,11 +3,16 @@ using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Appium;
 using OpenQA.Selenium.Appium.Windows;
+using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using System;
+using System.Diagnostics;
+using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Reflection;
+using System.Runtime.InteropServices;
 
 namespace boilersGraphics.Test.UITests
 {
@@ -29,6 +34,7 @@ namespace boilersGraphics.Test.UITests
                 // Note: Multiple calculator windows (instances) share the same process Id
                 var options = new AppiumOptions();
                 options.AddAdditionalCapability("app", AppPath);
+                options.AddAdditionalCapability("appWorkingDir", Path.GetDirectoryName(AppPath));
                 session = new WindowsDriver<WindowsElement>(new Uri(WindowsApplicationDriverUrl), options);
                 Assert.That(session, Is.Not.Null);
 
@@ -37,6 +43,17 @@ namespace boilersGraphics.Test.UITests
                 //session.Manage().Timeouts().ImplicitWait = TimeSpan.FromMinutes(1);
 
                 session.Manage().Window.Maximize();
+
+                while (GetCurrentKeyboardLayout().Name != "en-US")
+                {
+                    var actions = new Actions(session);
+                    actions.KeyDown(OpenQA.Selenium.Keys.Command);
+                    actions.SendKeys(OpenQA.Selenium.Keys.Space);
+                    actions.Release();
+                    actions.Build();
+                    actions.Perform();
+                    actions.Perform();
+                }
             }
         }
 
@@ -46,6 +63,13 @@ namespace boilersGraphics.Test.UITests
             // Close the application and delete the session
             if (session != null)
             {
+                while (session.WindowHandles.Count() > 0)
+                {
+                    var actions = new Actions(session);
+                    actions.SendKeys(OpenQA.Selenium.Keys.Alt + OpenQA.Selenium.Keys.F4 + OpenQA.Selenium.Keys.Alt);
+                    actions.Perform();
+                }
+                session.WindowHandles.Select(x => session.SwitchTo().Window(x)).ToList().ForEach(x => x.Dispose());
                 session.Quit();
                 session = null;
             }
@@ -121,6 +145,65 @@ namespace boilersGraphics.Test.UITests
             return element;
         }
 
+        public WindowsElement GetElementByName(string name, int timeOut = 10000)
+        {
+            WindowsElement element = null;
+
+            var wait = new DefaultWait<WindowsDriver<WindowsElement>>(session)
+            {
+                Timeout = TimeSpan.FromMilliseconds(timeOut),
+                Message = $"Element with Name \"{name}\" not found."
+            };
+
+            wait.IgnoreExceptionTypes(typeof(WebDriverException));
+
+            try
+            {
+                wait.Until(Driver =>
+                {
+                    element = Driver.FindElementByName(name);
+                    return element != null;
+                });
+            }
+            catch (WebDriverTimeoutException ex)
+            {
+                LogManager.GetCurrentClassLogger().Error(ex);
+                LogManager.GetCurrentClassLogger().Error($"Name:{name}");
+                Assert.Fail(ex.Message);
+            }
+
+            return element;
+        }
+
+        public WindowsElement GetElementBy(By by, int timeOut = 10000)
+        {
+            WindowsElement element = null;
+
+            var wait = new DefaultWait<WindowsDriver<WindowsElement>>(session)
+            {
+                Timeout = TimeSpan.FromMilliseconds(timeOut),
+                Message = $"Element with By not found."
+            };
+
+            wait.IgnoreExceptionTypes(typeof(WebDriverException));
+
+            try
+            {
+                wait.Until(Driver =>
+                {
+                    element = Driver.FindElement(by);
+                    return element != null;
+                });
+            }
+            catch (WebDriverTimeoutException ex)
+            {
+                LogManager.GetCurrentClassLogger().Error(ex);
+                Assert.Fail(ex.Message);
+            }
+
+            return element;
+        }
+
         public bool ExistsElementByAutomationID(string automationId, int timeOut = 10000)
         {
             WindowsElement element = null;
@@ -169,6 +252,24 @@ namespace boilersGraphics.Test.UITests
         {
             session.GetScreenshot().SaveAsFile($"{AppDomain.CurrentDomain.BaseDirectory}\\{filename}");
             TestContext.AddTestAttachment($"{AppDomain.CurrentDomain.BaseDirectory}\\{filename}");
+        }
+
+        [DllImport("user32.dll")] static extern IntPtr GetForegroundWindow();
+        [DllImport("user32.dll")] static extern uint GetWindowThreadProcessId(IntPtr hwnd, IntPtr proccess);
+        [DllImport("user32.dll")] static extern IntPtr GetKeyboardLayout(uint thread);
+        public static CultureInfo GetCurrentKeyboardLayout()
+        {
+            try
+            {
+                IntPtr foregroundWindow = GetForegroundWindow();
+                uint foregroundProcess = GetWindowThreadProcessId(foregroundWindow, IntPtr.Zero);
+                int keyboardLayout = GetKeyboardLayout(foregroundProcess).ToInt32() & 0xFFFF;
+                return new CultureInfo(keyboardLayout);
+            }
+            catch (Exception _)
+            {
+                return new CultureInfo(1033); // Assume English if something went wrong.
+            }
         }
     }
 }

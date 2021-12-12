@@ -103,4 +103,7 @@
     <BitmapImage x:Key="Icon_Eraser"
                  x:Shared="False"
                  UriSource="pack://application:,,,/Assets/img/eraser.png" />
+    <BitmapImage x:Key="Icon_Slice"
+                 x:Shared="False"
+                 UriSource="pack://application:,,,/Assets/img/slice_tool.png" />
 </ResourceDictionary>
