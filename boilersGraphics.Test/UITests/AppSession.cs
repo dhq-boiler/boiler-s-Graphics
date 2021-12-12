@@ -182,7 +182,7 @@ namespace boilersGraphics.Test.UITests
             var wait = new DefaultWait<WindowsDriver<WindowsElement>>(session)
             {
                 Timeout = TimeSpan.FromMilliseconds(timeOut),
-                Message = $"Element with By not found."
+                Message = $"Element with By {by.ToString()} not found."
             };
 
             wait.IgnoreExceptionTypes(typeof(WebDriverException));
