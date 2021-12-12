@@ -87,7 +87,7 @@ namespace boilersGraphics.AttachedProperties
                             return s.Parent.Value.EdgeThickness.Value;
                         }
                         else
-                            return double.NaN;
+                            return 0d;
                     });
                     if (edgeThicknesses.Count() > 0 && edgeThicknesses.All(x => x == edgeThicknesses.First()))
                     {
@@ -103,7 +103,7 @@ namespace boilersGraphics.AttachedProperties
                     selectableDesignerItemViewModelBase.Owner.DeselectAll();
                     selectableDesignerItemViewModelBase.Owner.EdgeColors.Clear();
                     selectableDesignerItemViewModelBase.Owner.FillColors.Clear();
-                    selectableDesignerItemViewModelBase.Owner.EdgeThickness.Value = double.NaN;
+                    selectableDesignerItemViewModelBase.Owner.EdgeThickness.Value = 0d;
                     selectableDesignerItemViewModelBase.IsSelected.Value = true;
                     var view = App.Current.MainWindow.GetCorrespondingViews<FrameworkElement>(selectableDesignerItemViewModelBase)
                                                      .Where(x => x.GetType() == selectableDesignerItemViewModelBase.GetViewType()).First();
