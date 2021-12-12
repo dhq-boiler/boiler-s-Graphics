@@ -41,10 +41,12 @@ namespace boilersGraphics.ViewModels
         public SetSnapPointBehavior SetSnapPointBehavior { get; } = new SetSnapPointBehavior();
         public BrushBehavior BrushBehavior { get; private set; }
         public EraserBehavior EraserBehavior { get; } = new EraserBehavior();
+        public SliceBehavior SliceBehavior { get; }
 
         public ToolBarViewModel(IDialogService dialogService)
         {
             this.dlgService = dialogService;
+            SliceBehavior = new SliceBehavior(dialogService);
             ToolItems.Add(new ToolItemData("pointer", "pack://application:,,,/Assets/img/pointer.png", new DelegateCommand(() =>
             {
                 Behaviors.Clear();
@@ -193,6 +195,16 @@ namespace boilersGraphics.ViewModels
                 ChangeHitTestToDisable();
                 SelectOneToolItem("eraser");
             })));
+            ToolItems.Add(new ToolItemData("slice", "pack://application:,,,/Assets/img/slice_tool.png", new DelegateCommand(() =>
+            {
+                Behaviors.Clear();
+                if (!Behaviors.Contains(SliceBehavior))
+                {
+                    Behaviors.Add(SliceBehavior);
+                }
+                ChangeHitTestToDisable();
+                SelectOneToolItem("slice");
+            })));
         }
 
         private void ChangeHitTestToDisable()
@@ -218,10 +230,10 @@ namespace boilersGraphics.ViewModels
 
         private void SelectOneToolItem(string toolName)
         {
-            var toolItem = ToolItems.Where(i => i.Name == toolName).Single();
+            var toolItem = ToolItems.Where(i => i.Name.Value == toolName).Single();
             toolItem.IsChecked = true;
 
-            ToolItems.Where(i => i.Name != toolName).ToList().ForEach(i => i.IsChecked = false);
+            ToolItems.Where(i => i.Name.Value != toolName).ToList().ForEach(i => i.IsChecked = false);
         }
     }
 }

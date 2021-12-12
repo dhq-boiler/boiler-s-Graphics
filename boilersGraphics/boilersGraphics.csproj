@@ -186,6 +186,7 @@
     <Compile Include="Adorners\PolygonAdorner.cs" />
     <Compile Include="Adorners\RectangleAdorner.cs" />
     <Compile Include="Adorners\LassoAdorner.cs" />
+    <Compile Include="Adorners\SliceAdorner.cs" />
     <Compile Include="Adorners\SnapPointAdorner.cs" />
     <Compile Include="Adorners\StraightLineAdorner.cs" />
     <Compile Include="AttachedProperties\ItemConnectProps.cs" />
@@ -363,6 +364,7 @@
     <Compile Include="Views\Behaviors\PictureBehavior.cs" />
     <Compile Include="Views\Behaviors\LassoBehavior.cs" />
     <Compile Include="Views\Behaviors\SetSnapPointBehavior.cs" />
+    <Compile Include="Views\Behaviors\SliceBehavior.cs" />
     <Compile Include="Views\ColorMap.xaml.cs">
       <DependentUpon>ColorMap.xaml</DependentUpon>
     </Compile>
@@ -823,6 +825,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="square150x150logo_scale_200_Qpf_icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\img\slice_tool.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

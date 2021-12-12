@@ -17,6 +17,7 @@ using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
@@ -30,6 +31,10 @@ namespace boilersGraphics.ViewModels
         public ReactivePropertySlim<string> Path { get; set; } = new ReactivePropertySlim<string>();
 
         public ReactivePropertySlim<int> QualityLevel { get; set; } = new ReactivePropertySlim<int>(100);
+
+        public ReactivePropertySlim<Rect?> SliceRect { get; set; } = new ReactivePropertySlim<Rect?>();
+
+        public ReactivePropertySlim<RenderTargetBitmap> Preview { get; set; } = new ReactivePropertySlim<RenderTargetBitmap>();
 
         public ReactiveCommand PathFinderCommand { get; set; }
 
@@ -57,6 +62,20 @@ namespace boilersGraphics.ViewModels
             CancelCommand.Subscribe(_ => CancelClose())
                          .AddTo(_disposables);
             Path.Value = "";
+
+            SliceRect.Subscribe(x =>
+            {
+                var tempLayoutTransform = designerCanvas.LayoutTransform;
+                designerCanvas.LayoutTransform = new MatrixTransform();
+
+                var backgroundItem = diagramViewModel.BackgroundItem.Value;
+                RenderTargetBitmap rtb = Render(designerCanvas, diagramViewModel, backgroundItem);
+                OpenCvSharpHelper.ImShow("preview", rtb);
+                Preview.Value = rtb;
+
+                designerCanvas.LayoutTransform = tempLayoutTransform;
+            })
+            .AddTo(_disposables);
         }
 
         private void ExportProcess(DesignerCanvas designerCanvas, MainWindowViewModel mainWindowViewModel, DiagramViewModel diagramViewModel)
@@ -101,25 +120,9 @@ namespace boilersGraphics.ViewModels
         private void Export(MainWindowViewModel mainWindowViewModel, DesignerCanvas designerCanvas, DiagramViewModel diagramViewModel)
         {
             var backgroundItem = diagramViewModel.BackgroundItem.Value;
-            var bounds = VisualTreeHelper.GetDescendantBounds(designerCanvas);
-            LogManager.GetCurrentClassLogger().Debug($"bounds:{bounds}");
+            RenderTargetBitmap rtb = Render(designerCanvas, diagramViewModel, backgroundItem);
 
-            var rtb = new RenderTargetBitmap((int)diagramViewModel.Width, (int)diagramViewModel.Height, 96, 96, PixelFormats.Pbgra32);
-
-            DrawingVisual visual = new DrawingVisual();
-            using (DrawingContext context = visual.RenderOpen())
-            {
-                //背景を描画
-                RenderBackgroundViewModel(designerCanvas, context, backgroundItem);
-
-                VisualBrush brush = new VisualBrush(designerCanvas);
-                brush.Stretch = Stretch.None;
-                context.DrawRectangle(brush, null, bounds);
-            }
-            
-            rtb.Render(visual);
-
-            OpenCvSharpHelper.ImShow("test", rtb);
+            //OpenCvSharpHelper.ImShow("test", rtb);
 
             var generator = FileGenerator.Create(System.IO.Path.GetExtension(Path.Value));
             generator.AddFrame(BitmapFrame.Create(rtb));
@@ -128,6 +131,116 @@ namespace boilersGraphics.ViewModels
             LogManager.GetCurrentClassLogger().Info($"Exported:{Path.Value}");
 
             UpdateStatisticsCount(mainWindowViewModel);
+        }
+
+        private RenderTargetBitmap Render(DesignerCanvas designerCanvas, DiagramViewModel diagramViewModel, BackgroundViewModel backgroundItem)
+        {
+            Size size = GetRenderSize(diagramViewModel);
+
+            LogManager.GetCurrentClassLogger().Info($"SliceRect size:{size}");
+
+            var rtb = new RenderTargetBitmap((int)size.Width, (int)size.Height, 96, 96, PixelFormats.Pbgra32);
+
+            DrawingVisual visual = new DrawingVisual();
+            using (DrawingContext context = visual.RenderOpen())
+            {
+                //背景を描画
+                RenderBackgroundViewModel(designerCanvas, context, backgroundItem);
+            }
+            rtb.Render(visual);
+
+            OpenCvSharpHelper.ImShow("step1. render background", rtb);
+
+            using (DrawingContext context = visual.RenderOpen())
+            {
+                RenderForeground(diagramViewModel, designerCanvas, context, backgroundItem);
+            }
+            rtb.Render(visual);
+
+            OpenCvSharpHelper.ImShow("step2. render foreground", rtb);
+
+            rtb.Freeze();
+
+            return rtb;
+        }
+
+        private Size GetRenderSize(DiagramViewModel diagramViewModel)
+        {
+            Size size;
+            if (SliceRect.Value.HasValue)
+            {
+                size = SliceRect.Value.Value.Size;
+            }
+            else
+            {
+                size = new Size(diagramViewModel.Width, diagramViewModel.Height);
+            }
+            return size;
+        }
+
+        private void RenderForeground(DiagramViewModel diagramViewModel, DesignerCanvas designerCanvas, DrawingContext context, BackgroundViewModel background)
+        {
+            foreach (var item in diagramViewModel.AllItems.Value.Except(new SelectableDesignerItemViewModelBase[] { background }))
+            {
+                var views = designerCanvas.GetCorrespondingViews<FrameworkElement>(item);
+                var view = views.First(x => x.GetType() == item.GetViewType());
+                view.SnapsToDevicePixels = true;
+                VisualBrush brush = new VisualBrush(view);
+                brush.Stretch = Stretch.None;
+                brush.TileMode = TileMode.None;
+                Rect rect = new Rect();
+                if (item is DesignerItemViewModelBase designerItem)
+                {
+                    var bounds = VisualTreeHelper.GetDescendantBounds(view);
+                    if (SliceRect.Value.HasValue)
+                    {
+                        rect = SliceRect.Value.Value;
+                        var intersectSrc = new Rect(designerItem.Left.Value, designerItem.Top.Value, bounds.Width, bounds.Height);
+                        rect = Rect.Intersect(rect, intersectSrc);
+                        if (rect != Rect.Empty)
+                        {
+                            rect.X -= SliceRect.Value.Value.X;
+                            rect.Y -= SliceRect.Value.Value.Y;
+                        }
+                    }
+                    else
+                    {
+                        rect = new Rect(designerItem.Left.Value, designerItem.Top.Value, designerItem.Width.Value, designerItem.Height.Value);
+                    }
+                    context.DrawRectangle(brush, null, rect);
+                }
+                else if (item is ConnectorBaseViewModel connector)
+                {
+                    var bounds = VisualTreeHelper.GetDescendantBounds(view);
+                    if (SliceRect.Value.HasValue)
+                    {
+                        rect = SliceRect.Value.Value;
+                        var intersectSrc = new Rect(connector.LeftTop.Value, bounds.Size);
+                        rect = Rect.Intersect(rect, intersectSrc);
+                        if (rect != Rect.Empty)
+                        {
+                            rect.X -= SliceRect.Value.Value.X;
+                            rect.Y -= SliceRect.Value.Value.Y;
+                        }
+                    }
+                    else
+                    {
+                        rect = new Rect(connector.LeftTop.Value, bounds.Size);
+                    }
+                    context.DrawRectangle(brush, null, rect);
+                }
+
+                var size = GetRenderSize(diagramViewModel);
+                var rtb = new RenderTargetBitmap((int)size.Width, (int)size.Height, 96, 96, PixelFormats.Pbgra32);
+                DrawingVisual visual = new DrawingVisual();
+                using (DrawingContext context2 = visual.RenderOpen())
+                {
+                    context2.DrawRectangle(new SolidColorBrush(Colors.Green), null, new Rect(new Point(0, 0), size));
+                    context2.DrawRectangle(brush, null, rect);
+                }
+                rtb.Render(visual);
+                OpenCvSharpHelper.ImShow("Foreground", rtb);
+            }
         }
 
         private static void UpdateStatisticsCount(MainWindowViewModel mainWindowViewModel)
@@ -164,15 +277,36 @@ namespace boilersGraphics.ViewModels
             designerCanvas.LayoutTransform = tempLayoutTransform;
         }
 
-        private static void RenderBackgroundViewModel(DesignerCanvas designerCanvas, DrawingContext context, BackgroundViewModel background)
+        private void RenderBackgroundViewModel(DesignerCanvas designerCanvas, DrawingContext context, BackgroundViewModel background)
         {
             var views = designerCanvas.GetCorrespondingViews<FrameworkElement>(background);
             var view = views.First(x => x.GetType() == background.GetViewType());
             var bounds = VisualTreeHelper.GetDescendantBounds(view);
+
+            Rect rect;
+            if (SliceRect.Value.HasValue)
+            {
+                rect = SliceRect.Value.Value;
+            }
+            else
+            {
+                rect = bounds;
+            }
+
             VisualBrush brush = new VisualBrush(view);
             brush.Stretch = Stretch.None;
-            view.UpdateLayout();
-            context.DrawRectangle(brush, null, bounds);
+            if (SliceRect.Value.HasValue)
+            {
+                rect.X = 0;
+                rect.Y = 0;
+                view.UpdateLayout();
+                context.DrawRectangle(brush, null, rect);
+            }
+            else
+            {
+                view.UpdateLayout();
+                context.DrawRectangle(brush, null, rect);
+            }
         }
 
         interface IFileGenerator
@@ -392,6 +526,10 @@ namespace boilersGraphics.ViewModels
 
         public void OnDialogOpened(IDialogParameters parameters)
         {
+            if (parameters.ContainsKey("sliceRect"))
+            {
+                SliceRect.Value = parameters.GetValue<Rect>("sliceRect");
+            }
         }
     }
 }

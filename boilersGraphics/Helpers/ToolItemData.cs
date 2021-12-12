@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Microsoft.Xaml.Behaviors;
+using Reactive.Bindings;
 
 namespace boilersGraphics.Helpers
 {
@@ -15,12 +16,13 @@ namespace boilersGraphics.Helpers
 
         public ToolItemData(string name, string imageUrl, ICommand command)
         {
-            this.Name = name;
+            this.Name.Value = name;
             this.ImageUrl = imageUrl;
             this.Command = command;
         }
 
-        public string Name { get; private set; }
+        //public string Name { get; private set; }
+        public ReactivePropertySlim<string> Name { get; private set; } = new ReactivePropertySlim<string>();
         public string ImageUrl { get; private set; }
         public ICommand Command { get; private set; }
 
