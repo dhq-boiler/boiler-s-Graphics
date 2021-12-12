@@ -177,13 +177,16 @@ namespace boilersGraphics.Test.UITests
             session.FindElementByAccessibilityId("Load").Click();
             //「現在のキャンパスは破棄されますが、よろしいですか？」→OK（"1"）
             session.FindElementByAccessibilityId("1").Click();
+
+            Thread.Sleep(1000);
+
             var action = new Actions(session);
             action.SendKeys(Keys.Alt + "N" + Keys.Alt);
-            action.Perform();
             //ファイル名（コンボボックス、"1148"）に入力
-            GetElementByAutomationID("1148").SendKeys(loadFilePath);
+            action.SendKeys(GetElementByAutomationID("1148"), loadFilePath);
             //開く（O)ボタン（"1")をクリック
-            GetElementByAutomationID("1").Click();
+            action.Click(GetElementByAutomationID("1"));
+            action.Perform();
             //開くボタンが押されない場合があるので、"1"がまだ存在していたら再度押し直す
             if (ExistsElementByAutomationID("1"))
             {
