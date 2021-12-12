@@ -4,7 +4,6 @@ using OpenCvSharp;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Threading;
 
@@ -99,8 +98,6 @@ namespace boilersGraphics.Test.UITests
             TakeScreenShot("SCREENSHOT_J.png");
             GetElementByAutomationID("PerformExport").Click();
 
-            session.WindowHandles.Select(x => session.SwitchTo().Window(x)).First(x => x.Title.StartsWith("boiler's Graphics")).SwitchTo();
-
             LogManager.GetCurrentClassLogger().Info("K");
             TakeScreenShot("SCREENSHOT_K.png");
             Thread.Sleep(1000);
@@ -169,8 +166,6 @@ namespace boilersGraphics.Test.UITests
             var action = new Actions(session);
             var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var loadFilePath = $"{dir}\\XmlFiles\\checker_pattern.xml";
-
-            session.WindowHandles.Select(x => session.SwitchTo().Window(x)).First(x => x.Title.StartsWith("boiler's Graphics")).SwitchTo();
 
             session.FindElementByAccessibilityId("Load").Click();
             //「現在のキャンパスは破棄されますが、よろしいですか？」→OK（"1"）
