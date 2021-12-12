@@ -20,7 +20,6 @@ namespace boilersGraphics.Test.UITests
             var exportFilePath = $"{dir}\\ExportTest.jpg";
 
             GetElementByAutomationID("Export").Click();
-            GetWindowByTitle("エクスポート").SwitchTo();
             GetElementByAutomationID("filename").SendKeys(exportFilePath);
             GetElementByAutomationID("PerformExport").Click();
             Thread.Sleep(1000);
@@ -93,8 +92,6 @@ namespace boilersGraphics.Test.UITests
 
             LogManager.GetCurrentClassLogger().Info("I");
             TakeScreenShot("SCREENSHOT_I.png");
-
-            GetWindowByTitle("エクスポート").SwitchTo();
 
             GetElementByAutomationID("filename").SendKeys(exportFilePath);
                 
@@ -169,6 +166,7 @@ namespace boilersGraphics.Test.UITests
         [Test]
         public void スライス()
         {
+            var action = new Actions(session);
             var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var loadFilePath = $"{dir}\\XmlFiles\\checker_pattern.xml";
 
@@ -180,17 +178,15 @@ namespace boilersGraphics.Test.UITests
 
             Thread.Sleep(1000);
 
-            var action = new Actions(session);
-            action.SendKeys(Keys.Alt + "N" + Keys.Alt);
-            //ファイル名（コンボボックス、"1148"）に入力
-            action.SendKeys(GetElementByAutomationID("1148"), loadFilePath);
-            //開く（O)ボタン（"1")をクリック
-            action.Click(GetElementByAutomationID("1"));
-            action.Perform();
-            //開くボタンが押されない場合があるので、"1"がまだ存在していたら再度押し直す
-            if (ExistsElementByAutomationID("1"))
+            while (ExistsElementByAutomationID("1"))
             {
-                GetElementByAutomationID("1").Click();
+                action = new Actions(session);
+                action.SendKeys(Keys.Alt + "N" + Keys.Alt);
+                //ファイル名（コンボボックス、"1148"）に入力
+                action.SendKeys(GetElementByAutomationID("1148"), loadFilePath);
+                //開く（O)ボタン（"1")をクリック
+                action.Click(GetElementByAutomationID("1"));
+                action.Perform();
             }
 
             GetElementByName("slice").Click();
@@ -208,8 +204,6 @@ namespace boilersGraphics.Test.UITests
             Thread.Sleep(1000);
 
             TakeScreenShot("SCREENSHOT_PREVIEW.png");
-
-            GetWindowByTitle("エクスポート").SwitchTo();
 
             GetElementBy(By.XPath("//Window[@ClassName=\"Window\"][@Name=\"エクスポート\"]/Custom[@ClassName=\"Export\"]/Image[@Name=\"Preview\"][@AutomationId=\"Preview\"]")).GetScreenshot().SaveAsFile(previewFilePath);
             TestContext.AddTestAttachment(previewFilePath);
