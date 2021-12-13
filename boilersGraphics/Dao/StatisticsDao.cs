@@ -80,6 +80,7 @@ namespace boilersGraphics.Dao
                 NumberOfLogLevelChanges = reader.SafeGetInt("NumberOfLogLevelChanges", Table),
                 NumberOfTimesTheVersionInformationDialogWasDisplayed = reader.SafeGetInt("NumberOfTimesTheVersionInformationDialogWasDisplayed", Table),
                 NumberOfTimesTheApplicationLogWasDisplayed = reader.SafeGetInt("NumberOfTimesTheApplicationLogWasDisplayed", Table),
+                NumberOfTimesSliceToolHasBeenUsed = reader.SafeGetInt("NumberOfTimesSliceToolHasBeenUsed", Table),
             };
         }
     }
