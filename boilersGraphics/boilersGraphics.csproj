@@ -162,7 +162,7 @@
     <Resource Include="Assets\img\slice_tool.png" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Dapper" Version="2.0.123" />
+    <PackageReference Include="Dapper.StrongName" Version="2.0.123" />
     <PackageReference Include="GitVersion.MsBuild" Version="5.8.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
