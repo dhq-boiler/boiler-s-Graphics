@@ -178,8 +178,12 @@ namespace boilersGraphics.ViewModels
             });
             ShowLogCommand = new DelegateCommand(() =>
             {
-                var path = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "dhq_boiler\\boilersGraphics\\Logs\\boilersGraphics.log");
-                Process.Start(path);
+                var p = new Process();
+                p.StartInfo = new ProcessStartInfo(System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "dhq_boiler\\boilersGraphics\\Logs\\boilersGraphics.log"))
+                {
+                    UseShellExecute = true
+                };
+                p.Start();
                 UpdateStatisticsCountOpenApplicationLog();
             });
             ShowVersionCommand = new DelegateCommand(() =>

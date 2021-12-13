@@ -1,23 +1,7 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\GitVersion.MsBuild.5.7.0\build\GitVersion.MsBuild.props" Condition="Exists('..\packages\GitVersion.MsBuild.5.7.0\build\GitVersion.MsBuild.props')" />
-  <Import Project="..\packages\OpenCvSharp4.runtime.win.4.5.2.20210404\build\net\OpenCvSharp4.runtime.win.props" Condition="Exists('..\packages\OpenCvSharp4.runtime.win.4.5.2.20210404\build\net\OpenCvSharp4.runtime.win.props')" />
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{22E14D88-7443-4526-9C02-3523E08FFA83}</ProjectGuid>
+    <TargetFramework>net6.0-windows</TargetFramework>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>boilersGraphics</RootNamespace>
-    <AssemblyName>boilersGraphics</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <WarningLevel>4</WarningLevel>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <TargetFrameworkProfile />
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
     <LangVersion>latest</LangVersion>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
@@ -34,686 +18,34 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <UseWindowsForms>true</UseWindowsForms>
+    <UseWPF>true</UseWPF>
+    <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>square150x150logo_scale_200_Qpf_icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Dapper, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Dapper.2.0.78\lib\net461\Dapper.dll</HintPath>
-    </Reference>
-    <Reference Include="Homura, Version=1.0.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Homura.1.0.4\lib\net48\Homura.dll</HintPath>
-    </Reference>
-    <Reference Include="ICSharpCode.AvalonEdit, Version=5.0.3.0, Culture=neutral, PublicKeyToken=9cc39be672370310, processorArchitecture=MSIL">
-      <HintPath>..\packages\AvalonEdit.5.0.4\lib\Net40\ICSharpCode.AvalonEdit.dll</HintPath>
-    </Reference>
-    <Reference Include="MdXaml, Version=1.11.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MdXaml.1.11.0\lib\net45\MdXaml.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Xaml.Behaviors, Version=1.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Xaml.Behaviors.Wpf.1.1.31\lib\net45\Microsoft.Xaml.Behaviors.dll</HintPath>
-    </Reference>
-    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
-      <HintPath>..\packages\NLog.4.7.12\lib\net45\NLog.dll</HintPath>
-    </Reference>
-    <Reference Include="OpenCvSharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=6adad1e807fea099, processorArchitecture=MSIL">
-      <HintPath>..\packages\OpenCvSharp4.4.5.2.20210404\lib\net461\OpenCvSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="OpenCvSharp.Extensions, Version=1.0.0.0, Culture=neutral, PublicKeyToken=6adad1e807fea099, processorArchitecture=MSIL">
-      <HintPath>..\packages\OpenCvSharp4.4.5.2.20210404\lib\net461\OpenCvSharp.Extensions.dll</HintPath>
-    </Reference>
-    <Reference Include="OpenCvSharp.WpfExtensions, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\OpenCvSharp4.WpfExtensions.4.5.2.20210404\lib\net461\OpenCvSharp.WpfExtensions.dll</HintPath>
-    </Reference>
-    <Reference Include="Prism, Version=8.1.97.5141, Culture=neutral, PublicKeyToken=40ee6c3a2184dc59, processorArchitecture=MSIL">
-      <HintPath>..\packages\Prism.Core.8.1.97\lib\net47\Prism.dll</HintPath>
-    </Reference>
-    <Reference Include="Prism.Unity.Wpf, Version=8.1.97.5141, Culture=neutral, PublicKeyToken=40ee6c3a2184dc59, processorArchitecture=MSIL">
-      <HintPath>..\packages\Prism.Unity.8.1.97\lib\net47\Prism.Unity.Wpf.dll</HintPath>
-    </Reference>
-    <Reference Include="Prism.Wpf, Version=8.1.97.5141, Culture=neutral, PublicKeyToken=40ee6c3a2184dc59, processorArchitecture=MSIL">
-      <HintPath>..\packages\Prism.Wpf.8.1.97\lib\net47\Prism.Wpf.dll</HintPath>
-    </Reference>
-    <Reference Include="ReactiveProperty, Version=7.11.0.0, Culture=neutral, PublicKeyToken=910d1732782c71cb, processorArchitecture=MSIL">
-      <HintPath>..\packages\ReactiveProperty.7.11.0\lib\netstandard2.0\ReactiveProperty.dll</HintPath>
-    </Reference>
-    <Reference Include="ReactiveProperty.Core, Version=7.11.0.0, Culture=neutral, PublicKeyToken=910d1732782c71cb, processorArchitecture=MSIL">
-      <HintPath>..\packages\ReactiveProperty.Core.7.11.0\lib\netstandard2.0\ReactiveProperty.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
-    </Reference>
-    <Reference Include="System.ComponentModel.Annotations, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.ComponentModel.Annotations.5.0.0\lib\net461\System.ComponentModel.Annotations.dll</HintPath>
-    </Reference>
-    <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Data.SQLite, Version=1.0.115.5, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
-      <HintPath>..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.115.5\lib\net46\System.Data.SQLite.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Data.SQLite.Linq, Version=1.0.115.5, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Data.SQLite.Linq.1.0.115.5\lib\net46\System.Data.SQLite.Linq.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Drawing.Common, Version=4.0.0.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Drawing.Common.5.0.2\lib\net461\System.Drawing.Common.dll</HintPath>
-    </Reference>
     <Reference Include="System.IO.Compression" />
-    <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Numerics" />
-    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Reactive, Version=5.0.0.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Reactive.5.0.0\lib\net472\System.Reactive.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.5.0.0\lib\net45\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.ServiceModel" />
-    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
-    </Reference>
     <Reference Include="System.Transactions" />
-    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
-    </Reference>
     <Reference Include="System.Windows" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xaml">
-      <RequiredTargetFramework>4.0</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="UIAutomationProvider" />
-    <Reference Include="Unity.Abstractions, Version=5.11.7.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
-      <HintPath>..\packages\Unity.Abstractions.5.11.7\lib\net48\Unity.Abstractions.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.Container, Version=5.11.11.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
-      <HintPath>..\packages\Unity.Container.5.11.11\lib\net48\Unity.Container.dll</HintPath>
-    </Reference>
-    <Reference Include="WindowsBase" />
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-    <Reference Include="WriteableBitmapEx.Wpf, Version=1.6.7.0, Culture=neutral, PublicKeyToken=50375ca6144f1c69, processorArchitecture=MSIL">
-      <HintPath>..\packages\WriteableBitmapEx.1.6.7\lib\net40\WriteableBitmapEx.Wpf.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ApplicationDefinition Include="App.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </ApplicationDefinition>
-    <Compile Include="Adorners\AuxiliaryLine.cs" />
-    <Compile Include="Adorners\BezierCurveAdorner.cs" />
-    <Compile Include="Adorners\EllipseAdorner.cs" />
-    <Compile Include="Adorners\LetterAdorner.cs" />
-    <Compile Include="Adorners\LetterVerticalAdorner.cs" />
-    <Compile Include="Adorners\PictureAdorner.cs" />
-    <Compile Include="Adorners\PolygonAdorner.cs" />
-    <Compile Include="Adorners\RectangleAdorner.cs" />
-    <Compile Include="Adorners\LassoAdorner.cs" />
-    <Compile Include="Adorners\SliceAdorner.cs" />
-    <Compile Include="Adorners\SnapPointAdorner.cs" />
-    <Compile Include="Adorners\StraightLineAdorner.cs" />
-    <Compile Include="AttachedProperties\ItemConnectProps.cs" />
-    <Compile Include="AttachedProperties\SelectionProps.cs" />
-    <Compile Include="Controls\Combine.cs" />
-    <Compile Include="Controls\ControlPoint.cs" />
-    <Compile Include="Controls\DesignerCanvas.cs" />
-    <Compile Include="Controls\DoubleTextBox.cs" />
-    <Compile Include="Controls\DragThumb.cs" />
-    <Compile Include="Controls\Layers.cs" />
-    <Compile Include="Controls\LineResizeHandle.cs" />
-    <Compile Include="Controls\ResizeThumb.cs" />
-    <Compile Include="Controls\RotateThumb.cs" />
-    <Compile Include="Controls\SimpleGrid.cs" />
-    <Compile Include="Controls\SnapPoint.cs" />
-    <Compile Include="Converters\BoolToEnumConverter.cs" />
-    <Compile Include="Converters\ColorToStringConverter.cs" />
-    <Compile Include="Converters\ExtractRectConverter.cs" />
-    <Compile Include="Converters\FilenameWithFileSizeConverter.cs" />
-    <Compile Include="Converters\LogLevelToBoolConverter.cs" />
-    <Compile Include="Converters\PreviewConverter.cs" />
-    <Compile Include="Converters\QuadConverter.cs" />
-    <Compile Include="Converters\DoubleToStringConverter.cs" />
-    <Compile Include="Converters\ShiftPointConverter.cs" />
-    <Compile Include="Converters\ThicknessToDoubleConverter.cs" />
-    <Compile Include="Converters\ExtensionConverter.cs" />
-    <Compile Include="Converters\IntToStringConverter.cs" />
-    <Compile Include="Converters\IsSelectedToBorderBrushConverter.cs" />
-    <Compile Include="Converters\StringToByteConverter.cs" />
-    <Compile Include="Converters\TimeSpanRoundConverter.cs" />
-    <Compile Include="Converters\WindowStateToVisibilityConverter.cs" />
-    <Compile Include="Converters\StraightLineBaseShiftConverter.cs" />
-    <Compile Include="Dao\Migration\Plan\ChangePlan_bG_Statistics_Version1.cs" />
-    <Compile Include="Dao\Migration\Plan\ChangePlan_bG_Statistics_VersionOrigin.cs" />
-    <Compile Include="Dao\Migration\Plan\ChangePlan_bG_Version1.cs" />
-    <Compile Include="Dao\Migration\Plan\ChangePlan_bG_VersionOrigin.cs" />
-    <Compile Include="Dao\Migration\Version\Version1.cs" />
-    <Compile Include="Dao\SQLiteBaseDao.cs" />
-    <Compile Include="Dao\StatisticsDao.cs" />
-    <Compile Include="Exceptions\UnexpectedException.cs" />
-    <Compile Include="Controls\ZoomBox.cs" />
-    <Compile Include="Converters\ShiftCoordinateConverter.cs" />
-    <Compile Include="Converters\StrokeColorConverter.cs" />
-    <Compile Include="Converters\ToSolidColorBrushConverter.cs" />
-    <Compile Include="Extensions\Extensions.cs" />
-    <Compile Include="Extensions\Extensions2.cs" />
-    <Compile Include="Helpers\BezierCurve.cs" />
-    <Compile Include="Helpers\DebugAction.cs" />
-    <Compile Include="Helpers\EraserInternal.cs" />
-    <Compile Include="Helpers\BrushInternal.cs" />
-    <Compile Include="Helpers\ClipboardDTO.cs" />
-    <Compile Include="Helpers\ColorExchange.cs" />
-    <Compile Include="Helpers\DragObject.cs" />
-    <Compile Include="Helpers\EventToCommand.cs" />
-    <Compile Include="Helpers\FileSize.cs" />
-    <Compile Include="Helpers\GeometryCombiner.cs" />
-    <Compile Include="Helpers\GeometryCreator.cs" />
-    <Compile Include="Helpers\GroupTransformNotification.cs" />
-    <Compile Include="Helpers\IEventArgsConverter.cs" />
-    <Compile Include="Helpers\Intersection.cs" />
-    <Compile Include="Helpers\LayerTreeViewItemCollection.cs" />
-    <Compile Include="Helpers\Measure.cs" />
-    <Compile Include="Helpers\MultiDictionaryEnumerator.cs" />
-    <Compile Include="Helpers\Name.cs" />
-    <Compile Include="Helpers\ObjectDeserializer.cs" />
-    <Compile Include="Helpers\ObjectSerializer.cs" />
-    <Compile Include="Helpers\OpenCvSharpHelper.cs" />
-    <Compile Include="Helpers\Randomizer.cs" />
-    <Compile Include="Helpers\Reflections.cs" />
-    <Compile Include="Helpers\SnapAction.cs" />
-    <Compile Include="Helpers\SnapPointDistincter.cs" />
-    <Compile Include="Helpers\SnapPointPosition.cs" />
-    <Compile Include="Helpers\STATask.cs" />
-    <Compile Include="Helpers\ToolBoxData.cs" />
-    <Compile Include="Helpers\ToolItemData.cs" />
-    <Compile Include="Helpers\TransformNotification.cs" />
-    <Compile Include="Helpers\TriggerTracing.cs" />
-    <Compile Include="Helpers\WeakINPCEventHandler.cs" />
-    <Compile Include="Messenger\Mediator.cs" />
-    <Compile Include="Messenger\MediatorMessageSinkAttribute.cs" />
-    <Compile Include="Models\Diagram.cs" />
-    <Compile Include="Models\DraggingItem.cs" />
-    <Compile Include="Models\Dummy.cs" />
-    <Compile Include="Models\Ellipse.cs" />
-    <Compile Include="Models\FontFamilyEx.cs" />
-    <Compile Include="Models\Layer.cs" />
-    <Compile Include="Models\LayerItem.cs" />
-    <Compile Include="Models\LayerTreeViewItemBase.cs" />
-    <Compile Include="Models\Letter.cs" />
-    <Compile Include="Models\PkIdEntity.cs" />
-    <Compile Include="Models\Rectangle.cs" />
-    <Compile Include="Models\RenderItem.cs" />
-    <Compile Include="Models\Setting.cs" />
-    <Compile Include="Models\Statistics.cs" />
-    <Compile Include="Models\StraightLine.cs" />
-    <Compile Include="StyleSelectors\DesignerItemsControlItemStyleSelector.cs" />
-    <Compile Include="TsOperationHistory\CompositeOperation.cs" />
-    <Compile Include="TsOperationHistory\DelegateOperation.cs" />
-    <Compile Include="TsOperationHistory\Extensions\OperationControllerExtensions.cs" />
-    <Compile Include="TsOperationHistory\Extensions\OperationControllerServiceExtensions.cs" />
-    <Compile Include="TsOperationHistory\Extensions\OperationExtensions.cs" />
-    <Compile Include="TsOperationHistory\Interfaces.cs" />
-    <Compile Include="TsOperationHistory\Internal\CapacityStack.cs" />
-    <Compile Include="TsOperationHistory\Internal\Disposer.cs" />
-    <Compile Include="TsOperationHistory\Internal\ErrorMessages.cs" />
-    <Compile Include="TsOperationHistory\Internal\FastReflection.cs" />
-    <Compile Include="TsOperationHistory\Internal\PropertyAccesser.cs" />
-    <Compile Include="TsOperationHistory\Internal\ThrottleMergeJudge.cs" />
-    <Compile Include="TsOperationHistory\Internal\UndoStack.cs" />
-    <Compile Include="TsOperationHistory\ListOperation.cs" />
-    <Compile Include="TsOperationHistory\MergeableOperation.cs" />
-    <Compile Include="TsOperationHistory\OperationBuilder.cs" />
-    <Compile Include="TsOperationHistory\OperationBuilderInternal.cs" />
-    <Compile Include="TsOperationHistory\OperationController.cs" />
-    <Compile Include="TsOperationHistory\OperationRecorder.cs" />
-    <Compile Include="UserControls\DiagramControl.xaml.cs">
-      <DependentUpon>DiagramControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UserControls\PreviewDiagramControl.xaml.cs">
-      <DependentUpon>PreviewDiagramControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="ViewModels\AbstractLetterDesignerItemViewModel.cs" />
-    <Compile Include="ViewModels\BackgroundViewModel.cs" />
-    <Compile Include="ViewModels\BezierCurveViewModel.cs" />
-    <Compile Include="ViewModels\BrushViewModel.cs" />
-    <Compile Include="ViewModels\ColorPickerViewModel.cs" />
-    <Compile Include="ViewModels\CombineGeometryViewModel.cs" />
-    <Compile Include="ViewModels\ConnectorBaseViewModel.cs" />
-    <Compile Include="Models\Corner.cs" />
-    <Compile Include="ViewModels\DetailBezierViewModel.cs" />
-    <Compile Include="ViewModels\DetailEllipseViewModel.cs" />
-    <Compile Include="ViewModels\DetailLetterViewModel.cs" />
-    <Compile Include="ViewModels\DetailPolygonViewModel.cs" />
-    <Compile Include="ViewModels\DetailPictureViewModel.cs" />
-    <Compile Include="ViewModels\DetailRectangleViewModel.cs" />
-    <Compile Include="ViewModels\DetailStraightLineViewModel.cs" />
-    <Compile Include="ViewModels\DetailViewModelBase.cs" />
-    <Compile Include="ViewModels\ExportViewModel.cs" />
-    <Compile Include="ViewModels\GroupItemViewModel.cs" />
-    <Compile Include="ViewModels\ILetterDesignerItemViewModel.cs" />
-    <Compile Include="ViewModels\LayersViewModel.cs" />
-    <Compile Include="ViewModels\LetterDesignerItemViewModel.cs" />
-    <Compile Include="ViewModels\LetterVerticalSettingViewModel.cs" />
-    <Compile Include="ViewModels\LetterSettingViewModel.cs" />
-    <Compile Include="ViewModels\LetterVerticalDesignerItemViewModel.cs" />
-    <Compile Include="ViewModels\NEllipseViewModel.cs" />
-    <Compile Include="ViewModels\NPolygonViewModel.cs" />
-    <Compile Include="ViewModels\NRectangleViewModel.cs" />
-    <Compile Include="ViewModels\PathDesignerItemViewModel.cs" />
-    <Compile Include="ViewModels\PictureDesignerItemViewModel.cs" />
-    <Compile Include="ViewModels\DesignerItemViewModelBase.cs" />
-    <Compile Include="ViewModels\DiagramViewModel.cs" />
-    <Compile Include="ViewModels\IDiagramViewModel.cs" />
-    <Compile Include="ViewModels\MainWindowViewModel.cs" />
-    <Compile Include="ViewModels\PolygonSettingViewModel.cs" />
-    <Compile Include="ViewModels\SelectableDesignerItemViewModelBase.cs" />
-    <Compile Include="ViewModels\SetSnapPointViewModel.cs" />
-    <Compile Include="ViewModels\SettingViewModel.cs" />
-    <Compile Include="ViewModels\SnapPointAdsorptionInformation.cs" />
-    <Compile Include="ViewModels\SnapPointViewModel.cs" />
-    <Compile Include="ViewModels\StatisticsDialogViewModel.cs" />
-    <Compile Include="ViewModels\StraightConnectorViewModel.cs" />
-    <Compile Include="ViewModels\ThicknessViewModel.cs" />
-    <Compile Include="ViewModels\ToolBarViewModel.cs" />
-    <Compile Include="ViewModels\VersionViewModel.cs" />
-    <Compile Include="Views\AdornedBy.cs" />
-    <Compile Include="Views\Behaviors\EraserBehavior.cs" />
-    <Compile Include="Views\Behaviors\BrushBehavior.cs" />
-    <Compile Include="Views\Behaviors\DeselectBehavior.cs" />
-    <Compile Include="Views\Behaviors\LetterBehavior.cs" />
-    <Compile Include="Views\Behaviors\LetterVerticalBehavior.cs" />
-    <Compile Include="Views\Behaviors\MoveableTreeViewBehavior.cs" />
-    <Compile Include="Views\Behaviors\NDrawBezierCurveBehavior.cs" />
-    <Compile Include="Views\Behaviors\NDrawEllipseBehavior.cs" />
-    <Compile Include="Views\Behaviors\NDrawPolygonBehavior.cs" />
-    <Compile Include="Views\Behaviors\NDrawRectangleBehavior.cs" />
-    <Compile Include="Views\Behaviors\NDrawStraightLineBehavior.cs" />
-    <Compile Include="Views\Behaviors\PictureBehavior.cs" />
-    <Compile Include="Views\Behaviors\LassoBehavior.cs" />
-    <Compile Include="Views\Behaviors\SetSnapPointBehavior.cs" />
-    <Compile Include="Views\Behaviors\SliceBehavior.cs" />
-    <Compile Include="Views\ColorMap.xaml.cs">
-      <DependentUpon>ColorMap.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\ColorPickerDialog.xaml.cs">
-      <DependentUpon>ColorPickerDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\ColorPicker.xaml.cs">
-      <DependentUpon>ColorPicker.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\ColorSlider.xaml.cs">
-      <DependentUpon>ColorSlider.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\DetailBezier.xaml.cs">
-      <DependentUpon>DetailBezier.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\DetailEllipse.xaml.cs">
-      <DependentUpon>DetailEllipse.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\DetailImage.xaml.cs">
-      <DependentUpon>DetailImage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\DetailLetter.xaml.cs">
-      <DependentUpon>DetailLetter.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\DetailLine.xaml.cs">
-      <DependentUpon>DetailLine.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\DetailPicture.xaml.cs">
-      <DependentUpon>DetailPicture.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\DetailPathGeometry.xaml.cs">
-      <DependentUpon>DetailPathGeometry.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\DetailPolygon.xaml.cs">
-      <DependentUpon>DetailPolygon.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\DetailStraightLine.xaml.cs">
-      <DependentUpon>DetailStraightLine.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Export.xaml.cs">
-      <DependentUpon>Export.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\ItemsControlItemContainerStyleSelector.cs" />
-    <Compile Include="Views\ItemsControlTemplateSelector.cs" />
-    <Compile Include="Views\LabelTextBox.xaml.cs">
-      <DependentUpon>LabelTextBox.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Layers.xaml.cs">
-      <DependentUpon>Layers.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\LetterVerticalSetting.xaml.cs">
-      <DependentUpon>LetterVerticalSetting.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\LetterSetting.xaml.cs">
-      <DependentUpon>LetterSetting.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\PolygonSetting.xaml.cs">
-      <DependentUpon>PolygonSetting.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\DetailRectangle.xaml.cs">
-      <DependentUpon>DetailRectangle.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\SelectableLabel.xaml.cs">
-      <DependentUpon>SelectableLabel.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\SetSnapPoint.xaml.cs">
-      <DependentUpon>SetSnapPoint.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Setting.xaml.cs">
-      <DependentUpon>Setting.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Statistics.xaml.cs">
-      <DependentUpon>Statistics.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Thickness.xaml.cs">
-      <DependentUpon>Thickness.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Triggers\InteractionRequestTrigger.cs" />
-    <Compile Include="Views\Triggers\WindowLoadedEventTrigger.cs" />
-    <Compile Include="Views\Version.xaml.cs">
-      <DependentUpon>Version.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Resources\DesignerItems\BrushDesignerItemDataTemplate.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Resources\DesignerItems\GroupItemDataTemplate.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\DesignerItems\LetterDesignerItemDataTemplate.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\DesignerItems\LetterVerticalDesignerItemDataTemplate.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\DesignerItems\PathDesignerItemDataTemplate.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\DesignerItems\PictureDesignerItemDataTemplate.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\DesignerItems\EllipseDesignerItemDataTemplate.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Resources\DesignerItems\CombineDesignerItemDataTemplate.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Resources\DesignerItems\PolygonDesignerItemDataTemplate.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Resources\DesignerItems\BackgroundDataTemplate.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Resources\DesignerItems\SnapPointDataTemplate.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Resources\DesignerItems\RectangleDesignerItemDataTemplate.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\Icons.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\Styles.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\Styles\Combine.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\Styles\DesignerItems.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\Styles\Expander.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\Styles\GroupBox.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\Styles\ScrollBar.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\Styles\ScrollViewer.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\Styles\Shared.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\Styles\ToolTip.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\Styles\ZoomBox.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UserControls\DiagramControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UserControls\PreviewDiagramControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\ColorMap.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\ColorPickerDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\ColorPicker.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\ColorSlider.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\DetailBezier.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\DetailEllipse.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\DetailImage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\DetailLetter.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\DetailLine.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\DetailPicture.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\DetailPathGeometry.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\DetailPolygon.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\DetailStraightLine.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Export.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\LabelTextBox.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Layers.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\LetterVerticalSetting.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\LetterSetting.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\MainWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="App.xaml.cs">
-      <DependentUpon>App.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Views\MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Page Include="Views\PolygonSetting.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\DetailRectangle.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\SelectableLabel.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\SetSnapPoint.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Setting.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Statistics.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Theme.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Thickness.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Version.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Compile>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.ja-JP.resx">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
+    <None Include="..\.editorconfig" Link=".editorconfig" />
     <None Include="..\LICENSE">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="LICENSE.md">
+    <None Update="LICENSE.md">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="NLog.config">
+    <None Update="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="NLog.xsd">
+    <None Update="NLog.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="packages.config" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\img\rectangle.png" />
@@ -800,10 +132,7 @@
     <Resource Include="Assets\img\polygon.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Btl\Controls\Btl.Controls.csproj">
-      <Project>{eefa1336-44f6-4766-be16-a81ad1fcc2e5}</Project>
-      <Name>Btl.Controls</Name>
-    </ProjectReference>
+    <ProjectReference Include="..\Btl\Controls\Btl.Controls.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\Themes\" />
@@ -832,20 +161,39 @@
   <ItemGroup>
     <Resource Include="Assets\img\slice_tool.png" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.0.123" />
+    <PackageReference Include="GitVersion.MsBuild" Version="5.8.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="MdXaml" Version="1.12.0" />
+    <PackageReference Include="NLog" Version="4.7.13" />
+    <PackageReference Include="NLog.Schema" Version="4.7.13" />
+    <PackageReference Include="OpenCvSharp4.Windows" Version="4.5.3.20211207" />
+    <PackageReference Include="Prism.Unity" Version="8.1.97" />
+    <PackageReference Include="ReactiveProperty" Version="8.0.3" />
+    <PackageReference Include="Stub.System.Data.SQLite.Core.NetFramework" Version="1.0.115.5" />
+    <PackageReference Include="System.Data.SQLite.Linq" Version="1.0.115.5" />
+    <PackageReference Include="System.Reactive" Version="5.0.0" />
+    <PackageReference Include="System.Reactive.Windows.Threading" Version="5.0.0" />
+    <PackageReference Include="WriteableBitmapEx" Version="1.6.8" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="6.0.0" />
+    <PackageReference Include="System.ServiceModel.Duplex" Version="4.9.0" />
+    <PackageReference Include="System.ServiceModel.NetTcp" Version="4.9.0" />
+    <PackageReference Include="System.ServiceModel.Federation" Version="4.9.0" />
+    <PackageReference Include="Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers" Version="0.3.256001">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Homura" Version="2.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="RubberbandAdorner.cs" />
+  </ItemGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn>1701;1702;0002;1416;</NoWarn>
   </PropertyGroup>
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>このプロジェクトは、このコンピューター上にない NuGet パッケージを参照しています。それらのパッケージをダウンロードするには、[NuGet パッケージの復元] を使用します。詳細については、http://go.microsoft.com/fwlink/?LinkID=322105 を参照してください。見つからないファイルは {0} です。</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\OpenCvSharp4.runtime.win.4.5.2.20210404\build\net\OpenCvSharp4.runtime.win.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\OpenCvSharp4.runtime.win.4.5.2.20210404\build\net\OpenCvSharp4.runtime.win.props'))" />
-    <Error Condition="!Exists('..\packages\GitVersion.MsBuild.5.7.0\build\GitVersion.MsBuild.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\GitVersion.MsBuild.5.7.0\build\GitVersion.MsBuild.props'))" />
-    <Error Condition="!Exists('..\packages\GitVersion.MsBuild.5.7.0\build\GitVersion.MsBuild.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\GitVersion.MsBuild.5.7.0\build\GitVersion.MsBuild.targets'))" />
-    <Error Condition="!Exists('..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.115.5\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.115.5\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets'))" />
-  </Target>
-  <Import Project="..\packages\GitVersion.MsBuild.5.7.0\build\GitVersion.MsBuild.targets" Condition="Exists('..\packages\GitVersion.MsBuild.5.7.0\build\GitVersion.MsBuild.targets')" />
-  <Import Project="..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.115.5\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets" Condition="Exists('..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.115.5\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets')" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <NoWarn>1701;1702;0002;1416;</NoWarn>
+  </PropertyGroup>
 </Project>
