@@ -483,7 +483,19 @@ namespace boilersGraphics.ViewModels
             AutoSaveType.Value = Models.AutoSaveType.SetInterval;
             AutoSaveInterval.Value = TimeSpan.FromSeconds(30);
 
-            MainWindowVM.LogLevel.Value = NLog.LogLevel.Info;
+            var id = Guid.Parse("00000000-0000-0000-0000-000000000000");
+            var dao = new LogSettingDao();
+            var logSettings = dao.FindBy(new Dictionary<string, object>() { { "ID", id } });
+            if (logSettings.Count() == 0)
+            {
+                var newLogSetting = new Models.LogSetting();
+                newLogSetting.ID = id;
+                newLogSetting.LogLevel = NLog.LogLevel.Info.ToString();
+                dao.Insert(newLogSetting);
+            }
+            logSettings = dao.FindBy(new Dictionary<string, object>() { { "ID", id } });
+            var logSetting = logSettings.First();
+            MainWindowVM.LogLevel.Value = NLog.LogLevel.FromString(logSetting.LogLevel);
             PackAutoSaveFiles();
         }
 

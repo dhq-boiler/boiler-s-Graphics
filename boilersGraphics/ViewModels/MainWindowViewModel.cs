@@ -190,13 +190,6 @@ namespace boilersGraphics.ViewModels
             SetLogLevelCommand = new DelegateCommand<LogLevel>(parameter =>
             {
                 LogLevel.Value = parameter;
-                foreach (var rule in LogManager.Configuration.LoggingRules)
-                {
-                    rule.EnableLoggingForLevel(parameter);
-                }
-                LogManager.ReconfigExistingLoggers();
-                LogManager.GetCurrentClassLogger().Info($"ログレベルが変更されました。変更後：{parameter}");
-                UpdateStatisticsCountLogLevelChanged();
             });
             ShowStatisticsCommand = new DelegateCommand(() =>
             {
@@ -235,6 +228,29 @@ namespace boilersGraphics.ViewModels
             Statistics.Value = statisticsObj;
             updateTicks = statisticsObj.UptimeTicks;
 
+            LogLevel.Subscribe(x =>
+            {
+                foreach (var rule in LogManager.Configuration.LoggingRules)
+                {
+                    rule.EnableLoggingForLevel(x);
+                }
+                LogManager.ReconfigExistingLoggers();
+
+                var dao = new LogSettingDao();
+                var id = Guid.Parse("00000000-0000-0000-0000-000000000000");
+                var logSettings = dao.FindBy(new Dictionary<string, object>() { { "ID", id } });
+                if (logSettings.Count() == 1)
+                {
+                    var logSetting = logSettings.First();
+                    logSetting.LogLevel = LogLevel.Value.ToString();
+                    dao.Update(logSetting);
+                }
+
+                LogManager.GetCurrentClassLogger().Info($"ログレベルが変更されました。変更後：{x}");
+                UpdateStatisticsCountLogLevelChanged();
+            })
+            .AddTo(_CompositeDisposable);
+
             Observable.Interval(TimeSpan.FromSeconds(1))
                       .Subscribe(_ =>
                       {
@@ -251,9 +267,9 @@ namespace boilersGraphics.ViewModels
                       .AddTo(_CompositeDisposable);
         }
 
-        private static void UpdateStatisticsCountLogLevelChanged()
+        private void UpdateStatisticsCountLogLevelChanged()
         {
-            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            var statistics = Statistics.Value;
             statistics.NumberOfLogLevelChanges++;
             var dao = new StatisticsDao();
             dao.Update(statistics);

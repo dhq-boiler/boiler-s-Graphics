@@ -16,6 +16,7 @@ namespace boilersGraphics.Dao.Migration.Plan
             get
             {
                 yield return new ChangePlan_bG_Statistics_Version1();
+                yield return new ChangePlan_bG_LogSetting_VersionOrigin();
             }
         }
     }
