@@ -13,3 +13,5 @@ obj/
 bin/
 *.user
 *.cache
+coverage.xml
+boilersGraphics.Test/TestResults/

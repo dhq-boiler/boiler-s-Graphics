@@ -8,25 +8,32 @@ trigger:
 
 pool:
   vmImage: 'windows-2022'
-
+  
 variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
   disable.coverage.autogenerate: 'true'
+  System.Debug: True
+  TargetSolution: '$(Build.SourcesDirectory)\boilersGraphics.sln'
+  TestProjects: '$(Build.SourcesDirectory)\boilersGraphics.Test\*.Test.csproj'
 
 steps:
 - task: NuGetToolInstaller@1
 
-- task: NuGetCommand@2
+- task: DotNetCoreCLI@2
+  displayName: 'NuGet パッケージの復元'
   inputs:
-    restoreSolution: '$(solution)'
+    command: 'restore'
+    projects: '$(TargetSolution)'
+    feedsToUse: 'select'
 
-- task: VSBuild@1
+- task: DotNetCoreCLI@2
+  displayName: 'アプリケーションのビルド'
   inputs:
-    solution: '$(solution)'
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+    command: 'build'
+    projects: '$(TargetSolution)'
+    arguments: '--configuration $(BuildConfiguration)'  
     
 - task: Windows Application Driver@0
   inputs:
@@ -34,43 +41,27 @@ steps:
     AgentResolution: '1080p'
 
 - task: CmdLine@2
-  displayName: "NUnit & OpenCover"
+  displayName: '単体テストの実行'
   inputs:
-    script: >
-      packages\OpenCover.4.7.1221\tools\OpenCover.Console.exe
-      -register:Path64
-      -target:"packages\NUnit.ConsoleRunner.3.12.0\tools\nunit3-console.exe"
-      -targetargs:"boilersGraphics.Test.dll"
-      -targetdir:"boilersGraphics.Test\bin\$(buildConfiguration)\net6.0-windows"
-      -returntargetcode
-      -output:"coverage.xml"
-      -filter:"+[boilersGraphics]* +[TsOperationHistory]* -[*]XamlGeneratedNamespace*"
+    script: 'dotnet test --configuration $(BuildConfiguration) --collect "XPlat Code coverage" -- RunConfiguration.DisableAppDomain=true'
 
 - task: Windows Application Driver@0
   condition: always()
   inputs:
     OperationType: 'Stop'
 
-- task: PublishTestResults@2
-  displayName: "Publish unit test result"
-  condition: always()
-  inputs:
-    testResultsFormat: 'NUnit'
-    testResultsFiles: '**/TestResult.xml'
-    failTaskOnFailedTests: false
-
 - task: reportgenerator@4
-  condition: always()
+  displayName: 'コードカバレッジレポートの作成'
   inputs:
-    reports: '**\coverage.xml'
-    targetdir: 'coveragereport'
+    reports: '$(System.DefaultWorkingDirectory)\boilersGraphics.Test\TestResults\**\coverage.cobertura.xml'
+    targetdir: '$(System.DefaultWorkingDirectory)\TestResults\Coverage\Reports'
+    reporttypes: 'Cobertura'
 
 - task: PublishCodeCoverageResults@1
-  condition: always()
+  displayName: 'コードカバレッジレポートの発行'
   inputs:
     codeCoverageTool: 'Cobertura'
-    summaryFileLocation: 'coveragereport\Cobertura.xml'
-    reportDirectory: 'coveragereport\'
+    summaryFileLocation: '$(System.DefaultWorkingDirectory)\TestResults\Coverage\Reports\Cobertura.xml'
 
 # Archive files
 # Compress files into .7z, .tar.gz, or .zip
