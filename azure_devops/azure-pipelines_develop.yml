@@ -45,7 +45,7 @@ steps:
   inputs:
     command: 'test'
     projects: '$(TestProjects)'
-    arguments: '--configuration $(BuildConfiguration) --collect "XPlat Code coverage" -- RunConfiguration.DisableAppDomain=true'  
+    arguments: '--configuration $(BuildConfiguration) --collect:"XPlat Code Coverage" -- RunConfiguration.DisableAppDomain=true'  
 
 - task: Windows Application Driver@0
   condition: always()
