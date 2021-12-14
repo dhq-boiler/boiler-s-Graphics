@@ -45,10 +45,6 @@ steps:
   inputs:
     script: 'dotnet test --configuration $(BuildConfiguration) --collect "XPlat Code coverage" -- RunConfiguration.DisableAppDomain=true'
 
-- task: CmdLine@2
-  inputs:
-    script: 'tree'
-
 - task: Windows Application Driver@0
   condition: always()
   inputs:

@@ -22,14 +22,14 @@ steps:
 - task: NuGetToolInstaller@1
 
 - task: DotNetCoreCLI@2
-  displayName: 'NuGet ƒpƒbƒP[ƒW‚Ì•œŒ³'
+  displayName: 'NuGet ãƒ‘ãƒƒã‚±ãƒ¼ã‚¸ã®å¾©å…ƒ'
   inputs:
     command: 'restore'
     projects: '$(TargetSolution)'
     feedsToUse: 'select'
 
 - task: DotNetCoreCLI@2
-  displayName: 'ƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚Ìƒrƒ‹ƒh'
+  displayName: 'ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã®ãƒ“ãƒ«ãƒ‰'
   inputs:
     command: 'build'
     projects: '$(TargetSolution)'
@@ -40,12 +40,10 @@ steps:
     OperationType: 'Start'
     AgentResolution: '1080p'
 
-- task: DotNetCoreCLI@2
-  displayName: '’P‘ÌƒeƒXƒg‚ÌÀs'
+- task: CmdLine@2
+  displayName: 'å˜ä½“ãƒ†ã‚¹ãƒˆã®å®Ÿè¡Œ'
   inputs:
-    command: 'test'
-    projects: '$(TestProjects)'
-    arguments: '--configuration $(BuildConfiguration) --collect "XPlat Code coverage" -- RunConfiguration.DisableAppDomain=true'  
+    script: 'dotnet test --configuration $(BuildConfiguration) --collect "XPlat Code coverage" -- RunConfiguration.DisableAppDomain=true'
 
 - task: Windows Application Driver@0
   condition: always()
@@ -53,14 +51,14 @@ steps:
     OperationType: 'Stop'
 
 - task: reportgenerator@4
-  displayName: 'ƒR[ƒhƒJƒoƒŒƒbƒWƒŒƒ|[ƒg‚Ìì¬'
+  displayName: 'ã‚³ãƒ¼ãƒ‰ã‚«ãƒãƒ¬ãƒƒã‚¸ãƒ¬ãƒãƒ¼ãƒˆã®ä½œæˆ'
   inputs:
-    reports: '$(Agent.TempDirectory)/**/coverage.cobertura.xml'
+    reports: '$(System.DefaultWorkingDirectory)\boilersGraphics.Test\TestResults\**\coverage.cobertura.xml'
     targetdir: '$(System.DefaultWorkingDirectory)\TestResults\Coverage\Reports'
     reporttypes: 'Cobertura'
 
 - task: PublishCodeCoverageResults@1
-  displayName: 'ƒR[ƒhƒJƒoƒŒƒbƒWƒŒƒ|[ƒg‚Ì”­s'
+  displayName: 'ã‚³ãƒ¼ãƒ‰ã‚«ãƒãƒ¬ãƒƒã‚¸ãƒ¬ãƒãƒ¼ãƒˆã®ç™ºè¡Œ'
   inputs:
     codeCoverageTool: 'Cobertura'
     summaryFileLocation: '$(System.DefaultWorkingDirectory)\TestResults\Coverage\Reports\Cobertura.xml'
