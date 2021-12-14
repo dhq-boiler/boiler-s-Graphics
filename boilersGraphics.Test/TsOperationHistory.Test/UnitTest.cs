@@ -166,7 +166,7 @@ namespace TsOperationHistory.Test
             Assert.AreEqual(100, person.Age );
 
             //100ms 待つ
-            await Task.Delay(75);
+            await Task.Delay(100);
             
             //Age = 150
             controller.ExecuteSetProperty(person,nameof(Person.Age),150);
