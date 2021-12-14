@@ -55,7 +55,7 @@ steps:
 - task: reportgenerator@4
   displayName: 'コードカバレッジレポートの作成'
   inputs:
-    reports: '$(Agent.TempDirectory)/**/coverage.cobertura.xml'
+    reports: '$(Build.SourcesDirectory)\boilersGraphics.Test\TestResults\**\coverage.cobertura.xml'
     targetdir: '$(System.DefaultWorkingDirectory)\TestResults\Coverage\Reports'
     reporttypes: 'Cobertura'
 
