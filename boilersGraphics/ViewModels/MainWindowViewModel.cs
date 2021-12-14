@@ -246,9 +246,24 @@ namespace boilersGraphics.ViewModels
                 var logSettings = dao.FindBy(new Dictionary<string, object>() { { "ID", id } });
                 if (logSettings.Count() == 1)
                 {
-                    var logSetting = logSettings.First();
-                    logSetting.LogLevel = LogLevel.Value.ToString();
-                    dao.Update(logSetting);
+                    var finished = false;
+                    do
+                    {
+                        try
+                        {
+                            var logSetting = logSettings.First();
+                            logSetting.LogLevel = LogLevel.Value.ToString();
+                            dao.Update(logSetting);
+                            finished = true;
+                        }
+                        catch (SQLiteException ex)
+                        {
+                            LogManager.GetCurrentClassLogger().Warn(ex);
+                            LogManager.GetCurrentClassLogger().Warn("The app will continue to update logSettings after sleep 10 seconds of sleep.");
+                            Thread.Sleep(10000);
+                        }
+                    }
+                    while (!finished);
                 }
 
                 LogManager.GetCurrentClassLogger().Info($"ログレベルが変更されました。変更後：{x}");
