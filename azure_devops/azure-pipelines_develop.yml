@@ -40,12 +40,10 @@ steps:
     OperationType: 'Start'
     AgentResolution: '1080p'
 
-- task: DotNetCoreCLI@2
+- task: CmdLine@2
   displayName: '単体テストの実行'
   inputs:
-    command: 'test'
-    projects: '$(TestProjects)'
-    arguments: '--configuration $(BuildConfiguration) --collect:"XPlat Code Coverage" -- RunConfiguration.DisableAppDomain=true'  
+    script: 'dotnet test --configuration $(BuildConfiguration) --collect "XPlat Code coverage" -- RunConfiguration.DisableAppDomain=true'
 
 - task: CmdLine@2
   inputs:
@@ -59,7 +57,7 @@ steps:
 - task: reportgenerator@4
   displayName: 'コードカバレッジレポートの作成'
   inputs:
-    reports: '$(System.DefaultWorkingDirectory)\boilersGraphics.Test\TestResults\**\coverage.cobertura.xml'
+    reports: '$(System.DefaultWorkingDirectory)\boilersGraphics\boilersGraphics.Test\TestResults\**\coverage.cobertura.xml'
     targetdir: '$(System.DefaultWorkingDirectory)\TestResults\Coverage\Reports'
     reporttypes: 'Cobertura'
 
