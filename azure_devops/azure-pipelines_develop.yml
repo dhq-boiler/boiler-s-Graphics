@@ -7,7 +7,7 @@ trigger:
 - develop
 
 pool:
-  vmImage: 'windows-latest'
+  vmImage: 'windows-2022'
 
 variables:
   solution: '**/*.sln'
@@ -77,7 +77,7 @@ steps:
 - task: ArchiveFiles@2
   condition: always()
   inputs:
-    rootFolderOrFile: '$(System.DefaultWorkingDirectory)\boilersGraphics\bin\Release' 
+    rootFolderOrFile: '$(System.DefaultWorkingDirectory)\boilersGraphics\bin\Release\net6.0-windows' 
     includeRootFolder: false
     archiveType: 'zip' # Options: zip, 7z, tar, wim
     tarCompression: 'gz' # Optional. Options: gz, bz2, xz, none
