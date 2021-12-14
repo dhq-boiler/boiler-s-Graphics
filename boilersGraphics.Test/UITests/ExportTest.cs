@@ -23,7 +23,7 @@ namespace boilersGraphics.Test.UITests
             GetElementByAutomationID("PerformExport").Click();
             Thread.Sleep(1000);
             LogManager.GetCurrentClassLogger().Info(exportFilePath);
-            Assert.That(exportFilePath, Does.Exist);
+            Assert.That(exportFilePath, Does.Exist.After(5000, 50));
             TestContext.AddTestAttachment(exportFilePath);
             Assert.That(File.Exists(exportFilePath), Is.EqualTo(true));
 
@@ -104,9 +104,8 @@ namespace boilersGraphics.Test.UITests
             Thread.Sleep(1000);
             LogManager.GetCurrentClassLogger().Info("L");
             TakeScreenShot("SCREENSHOT_L.png");
-            Assert.That(exportFilePath, Does.Exist);
+            Assert.That(exportFilePath, Does.Exist.After(5000, 50));
             TestContext.AddTestAttachment(exportFilePath);
-            Assert.That(File.Exists(exportFilePath), Is.EqualTo(true));
             LogManager.GetCurrentClassLogger().Info("M");
             TakeScreenShot("SCREENSHOT_M.png");
 
@@ -212,14 +211,14 @@ namespace boilersGraphics.Test.UITests
             TakeScreenShot("SCREENSHOT_PREVIEW.png");
 
             GetElementBy(By.XPath("//Window[@ClassName=\"Window\"][@Name=\"エクスポート\"]/Custom[@ClassName=\"Export\"]/Image[@Name=\"Preview\"][@AutomationId=\"Preview\"]")).GetScreenshot().SaveAsFile(previewFilePath);
-            Assert.That(previewFilePath, Does.Exist);
+            Assert.That(previewFilePath, Does.Exist.After(5000, 50));
             TestContext.AddTestAttachment(previewFilePath);
 
             var exportFilePath = $"{dir}\\ExportTest4.jpg";
 
             GetElementByAutomationID("filename").SendKeys(exportFilePath);
             GetElementByAutomationID("PerformExport").Click();
-            Assert.That(exportFilePath, Does.Exist);
+            Assert.That(exportFilePath, Does.Exist.After(5000, 50));
             TestContext.AddTestAttachment(exportFilePath);
 
             using (var mat = new Mat(exportFilePath))
