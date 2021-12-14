@@ -13,3 +13,4 @@ obj/
 bin/
 *.user
 *.cache
+coverage.xml
