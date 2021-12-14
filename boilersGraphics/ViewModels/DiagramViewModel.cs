@@ -483,7 +483,19 @@ namespace boilersGraphics.ViewModels
             AutoSaveType.Value = Models.AutoSaveType.SetInterval;
             AutoSaveInterval.Value = TimeSpan.FromSeconds(30);
 
-            MainWindowVM.LogLevel.Value = NLog.LogLevel.Info;
+            var id = Guid.Parse("00000000-0000-0000-0000-000000000000");
+            var dao = new LogSettingDao();
+            var logSettings = dao.FindBy(new Dictionary<string, object>() { { "ID", id } });
+            if (logSettings.Count() == 0)
+            {
+                var newLogSetting = new Models.LogSetting();
+                newLogSetting.ID = id;
+                newLogSetting.LogLevel = NLog.LogLevel.Info.ToString();
+                dao.Insert(newLogSetting);
+            }
+            logSettings = dao.FindBy(new Dictionary<string, object>() { { "ID", id } });
+            var logSetting = logSettings.First();
+            MainWindowVM.LogLevel.Value = NLog.LogLevel.FromString(logSetting.LogLevel);
             PackAutoSaveFiles();
         }
 
@@ -576,6 +588,12 @@ namespace boilersGraphics.ViewModels
 
         private void AutoSave()
         {
+            if (App.IsTest)
+            {
+                LogManager.GetCurrentClassLogger().Warn($"AutoSave()が呼び出されましたが、App.IsTest=trueのため、処理を実行しませんでした。");
+                return;
+            }
+
             AutoSavedDateTime.Value = DateTime.Now;
             var path = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), $"dhq_boiler\\boilersGraphics\\AutoSave\\AutoSave-{AutoSavedDateTime.Value.Year}-{AutoSavedDateTime.Value.Month}-{AutoSavedDateTime.Value.Day}-{AutoSavedDateTime.Value.Hour}-{AutoSavedDateTime.Value.Minute}-{AutoSavedDateTime.Value.Second}.xml");
             var autoSaveDir = Path.GetDirectoryName(path);
@@ -584,7 +602,7 @@ namespace boilersGraphics.ViewModels
                 Directory.CreateDirectory(autoSaveDir);
             }
 
-            App.Current.Dispatcher.Invoke(() =>
+            App.GetCurrentApp().Dispatcher.Invoke(() =>
             {
                 XElement versionXML = new XElement("Version", BGSXFileVersion.ToString());
                 XElement layersXML = new XElement("Layers", ObjectSerializer.SerializeLayers(Layers));
@@ -602,12 +620,13 @@ namespace boilersGraphics.ViewModels
             LogManager.GetCurrentClassLogger().Info($"{AutoSavedDateTime.Value} {path} に自動保存しました。");
 
             Observable.Timer(TimeSpan.FromSeconds(5))
-                      .Subscribe(_ => MainWindowVM.Message.Value = "")
-                      .AddTo(_CompositeDisposable);
+                        .Subscribe(_ => MainWindowVM.Message.Value = "")
+                        .AddTo(_CompositeDisposable);
 
             PackAutoSaveFiles();
             UpdateStatisticsCountAutoSave();
         }
+
 
         private void UpdateStatisticsCountAutoSave()
         {

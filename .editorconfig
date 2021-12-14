@@ -1,0 +1,4 @@
+﻿[*.cs]
+
+# UA0002: Types should be upgraded
+dotnet_diagnostic.UA0002.severity = silent

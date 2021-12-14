@@ -20,6 +20,7 @@ using System.IO;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Threading;
 using System.Windows;
 using TsOperationHistory;
 using TsOperationHistory.Extensions;
@@ -178,8 +179,12 @@ namespace boilersGraphics.ViewModels
             });
             ShowLogCommand = new DelegateCommand(() =>
             {
-                var path = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "dhq_boiler\\boilersGraphics\\Logs\\boilersGraphics.log");
-                Process.Start(path);
+                var p = new Process();
+                p.StartInfo = new ProcessStartInfo(System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "dhq_boiler\\boilersGraphics\\Logs\\boilersGraphics.log"))
+                {
+                    UseShellExecute = true
+                };
+                p.Start();
                 UpdateStatisticsCountOpenApplicationLog();
             });
             ShowVersionCommand = new DelegateCommand(() =>
@@ -190,13 +195,6 @@ namespace boilersGraphics.ViewModels
             SetLogLevelCommand = new DelegateCommand<LogLevel>(parameter =>
             {
                 LogLevel.Value = parameter;
-                foreach (var rule in LogManager.Configuration.LoggingRules)
-                {
-                    rule.EnableLoggingForLevel(parameter);
-                }
-                LogManager.ReconfigExistingLoggers();
-                LogManager.GetCurrentClassLogger().Info($"ログレベルが変更されました。変更後：{parameter}");
-                UpdateStatisticsCountLogLevelChanged();
             });
             ShowStatisticsCommand = new DelegateCommand(() =>
             {
@@ -235,6 +233,44 @@ namespace boilersGraphics.ViewModels
             Statistics.Value = statisticsObj;
             updateTicks = statisticsObj.UptimeTicks;
 
+            LogLevel.Subscribe(x =>
+            {
+                foreach (var rule in LogManager.Configuration.LoggingRules)
+                {
+                    rule.EnableLoggingForLevel(x);
+                }
+                LogManager.ReconfigExistingLoggers();
+
+                var dao = new LogSettingDao();
+                var id = Guid.Parse("00000000-0000-0000-0000-000000000000");
+                var logSettings = dao.FindBy(new Dictionary<string, object>() { { "ID", id } });
+                if (logSettings.Count() == 1)
+                {
+                    var finished = false;
+                    do
+                    {
+                        try
+                        {
+                            var logSetting = logSettings.First();
+                            logSetting.LogLevel = LogLevel.Value.ToString();
+                            dao.Update(logSetting);
+                            finished = true;
+                        }
+                        catch (SQLiteException ex)
+                        {
+                            LogManager.GetCurrentClassLogger().Warn(ex);
+                            LogManager.GetCurrentClassLogger().Warn("The app will continue to update logSettings after sleep 10 seconds of sleep.");
+                            Thread.Sleep(10000);
+                        }
+                    }
+                    while (!finished);
+                }
+
+                LogManager.GetCurrentClassLogger().Info($"ログレベルが変更されました。変更後：{x}");
+                UpdateStatisticsCountLogLevelChanged();
+            })
+            .AddTo(_CompositeDisposable);
+
             Observable.Interval(TimeSpan.FromSeconds(1))
                       .Subscribe(_ =>
                       {
@@ -245,15 +281,22 @@ namespace boilersGraphics.ViewModels
             Observable.Interval(TimeSpan.FromSeconds(10))
                       .Subscribe(_ =>
                       {
-                          var dao = new StatisticsDao();
-                          dao.Update(Statistics.Value);
+                          try
+                          {
+                              var dao = new StatisticsDao();
+                              dao.Update(Statistics.Value);
+                          }
+                          catch (SQLiteException ex)
+                          {
+                              LogManager.GetCurrentClassLogger().Warn(ex);
+                          }
                       })
                       .AddTo(_CompositeDisposable);
         }
 
-        private static void UpdateStatisticsCountLogLevelChanged()
+        private void UpdateStatisticsCountLogLevelChanged()
         {
-            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            var statistics = Statistics.Value;
             statistics.NumberOfLogLevelChanges++;
             var dao = new StatisticsDao();
             dao.Update(statistics);
@@ -273,6 +316,7 @@ namespace boilersGraphics.ViewModels
             dvManager.CurrentConnection = ConnectionManager.DefaultConnection;
             dvManager.Mode = VersioningStrategy.ByTick;
             dvManager.RegisterChangePlan(new ChangePlan_bG_VersionOrigin());
+            dvManager.RegisterChangePlan(new ChangePlan_bG_Version1());
             dvManager.FinishedToUpgradeTo += DvManager_FinishedToUpgradeTo;
 
             dvManager.UpgradeToTargetVersion();

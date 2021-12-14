@@ -1,7 +1,9 @@
-﻿using Homura.ORM.Mapping;
+﻿using boilersGraphics.Dao.Migration.Version;
+using Homura.ORM.Mapping;
 
 namespace boilersGraphics.Models
 {
+	[DefaultVersion(typeof(Version1))]
     public class Statistics : PkIdEntity
     {
         private int _number_of_boots;
@@ -63,6 +65,7 @@ namespace boilersGraphics.Models
         private int _numberOfLogLevelChanges;
         private int _numberOfTimesTheVersionInformationDialogWasDisplayed;
         private int _numberOfTimesTheApplicationLogWasDisplayed;
+        private int _numberOfTimesSliceToolHasBeenUsed;
 
 
         /// <summary>
@@ -653,5 +656,16 @@ namespace boilersGraphics.Models
 			get => _numberOfTimesTheApplicationLogWasDisplayed;
 			set => SetProperty(ref _numberOfTimesTheApplicationLogWasDisplayed, value);
 		}
-    }
+
+		/// <summary>
+		/// スライスツールの使用回数
+		/// </summary>
+		[Since(typeof(Version1))]
+		[Column("NumberOfTimesSliceToolHasBeenUsed", "INTEGER", 60)]
+		public int NumberOfTimesSliceToolHasBeenUsed
+		{
+			get => _numberOfTimesSliceToolHasBeenUsed;
+			set => SetProperty(ref _numberOfTimesSliceToolHasBeenUsed, value);
+		}
+	}
 }

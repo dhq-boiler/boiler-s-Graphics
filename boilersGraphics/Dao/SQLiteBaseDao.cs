@@ -4,6 +4,7 @@ using Homura.QueryBuilder.Vendor.SQLite.Dcl;
 using Homura.QueryBuilder.Vendor.SQLite.Dml;
 using NLog;
 using System;
+using System.Data;
 using System.Data.Common;
 using System.Data.SQLite;
 using System.Linq;
@@ -45,7 +46,7 @@ namespace boilersGraphics.Dao
             }
         }
 
-        public void InsertOrReplace(E entity, DbConnection conn = null)
+        public void InsertOrReplace(E entity, IDbConnection conn = null)
         {
             InitializeColumnDefinitions();
             try
@@ -57,7 +58,7 @@ namespace boilersGraphics.Dao
                 throw new DatabaseSchemaException($"Didn't insert because mismatch definition of table:{TableName}", e);
             }
 
-            ConnectionInternal(new Action<DbConnection>((connection) =>
+            ConnectionInternal(new Action<IDbConnection>((connection) =>
             {
                 using (var command = connection.CreateCommand())
                 {

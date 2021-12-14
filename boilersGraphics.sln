@@ -3,12 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31825.309
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "boilersGraphics", "boilersGraphics\boilersGraphics.csproj", "{22E14D88-7443-4526-9C02-3523E08FFA83}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "boilersGraphics", "boilersGraphics\boilersGraphics.csproj", "{22E14D88-7443-4526-9C02-3523E08FFA83}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "boilersGraphics.Test", "boilersGraphics.Test\boilersGraphics.Test.csproj", "{8EDF4429-251A-416D-BB68-93F227191BCF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "boilersGraphics.Test", "boilersGraphics.Test\boilersGraphics.Test.csproj", "{8EDF4429-251A-416D-BB68-93F227191BCF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{91F75893-628A-4062-9BD7-24EA5033AB8A}"
 	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
 		.gitignore = .gitignore
 		azure_devops\azure-pipelines.yml = azure_devops\azure-pipelines.yml
 		azure_devops\azure-pipelines_develop.yml = azure_devops\azure-pipelines_develop.yml
@@ -17,7 +18,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Btl.Controls", "Btl\Controls\Btl.Controls.csproj", "{EEFA1336-44F6-4766-BE16-A81AD1FCC2E5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Btl.Controls", "Btl\Controls\Btl.Controls.csproj", "{EEFA1336-44F6-4766-BE16-A81AD1FCC2E5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

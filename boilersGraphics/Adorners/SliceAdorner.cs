@@ -1,4 +1,5 @@
 ﻿using boilersGraphics.Controls;
+using boilersGraphics.Dao;
 using boilersGraphics.Helpers;
 using boilersGraphics.ViewModels;
 using boilersGraphics.Views;
@@ -70,6 +71,8 @@ namespace boilersGraphics.Adorners
 
                 var sliceRect = new Rect(_startPoint.Value, _endPoint.Value);
 
+                UpdateStatisticsCount();
+
                 IDialogResult result = null;
                 var dialogParameters = new DialogParameters() { { "sliceRect", sliceRect } };
                 this.dialogService.ShowDialog(nameof(Export), dialogParameters, ret => result = ret);
@@ -86,6 +89,14 @@ namespace boilersGraphics.Adorners
             (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = "";
 
             e.Handled = true;
+        }
+
+        private static void UpdateStatisticsCount()
+        {
+            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            statistics.NumberOfTimesSliceToolHasBeenUsed++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
 
         protected override void OnRender(DrawingContext dc)
