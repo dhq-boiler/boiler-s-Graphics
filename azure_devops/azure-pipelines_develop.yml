@@ -16,7 +16,7 @@ variables:
   disable.coverage.autogenerate: 'true'
   System.Debug: True
   TargetSolution: '$(Build.SourcesDirectory)\boilersGraphics.sln'
-  TestProjects: '$(Build.SourcesDirectory)\boilersGraphics.Test\**\Test.*.csproj'
+  TestProjects: '$(Build.SourcesDirectory)\boilersGraphics.Test\*.Test.csproj'
 
 steps:
 - task: NuGetToolInstaller@1
