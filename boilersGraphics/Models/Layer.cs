@@ -39,7 +39,7 @@ namespace boilersGraphics.Models
             })
             .AddTo(_disposable);
 
-            Children.ObserveElementProperty(x => (x as LayerItem).Item.Value)
+            var temp = Children.ObserveElementProperty(x => (x as LayerItem).Item.Value)
                  .ToUnit()
                  .Merge(Children.ObserveElementObservableProperty(x => x.IsSelected).ToUnit())
                  .ToUnit()
@@ -49,19 +49,25 @@ namespace boilersGraphics.Models
                  .ToUnit()
                  .Merge(Children.ObserveElementObservableProperty(x => (x as LayerItem).Item.Value.EdgeThickness).ToUnit())
                  .ToUnit()
-                 .Merge(Children.ObserveElementObservableProperty(x => (x as LayerItem).Item.Value.FillColor).ToUnit())
-                 .Where(_ => !MainWindowViewModel.Instance.ToolBarViewModel.Behaviors.Contains(MainWindowViewModel.Instance.ToolBarViewModel.BrushBehavior))
-                 .Delay(TimeSpan.FromMilliseconds(100))
-                 .ObserveOn(new DispatcherScheduler(Dispatcher.CurrentDispatcher, DispatcherPriority.ApplicationIdle))
-                 .Subscribe(x =>
-                 {
-                     LogManager.GetCurrentClassLogger().Trace("detected Layer changes. run Layer.UpdateAppearance().");
-                     UpdateAppearance(Children.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(xx => xx.Children).Select(x => (x as LayerItem).Item.Value));
-                     Children.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
-                             .ToList()
-                             .ForEach(x => (x as LayerItem).UpdateAppearance(IfGroupBringChildren((x as LayerItem).Item.Value)));
-                 })
-                 .AddTo(_disposable);
+                 .Merge(Children.ObserveElementObservableProperty(x => (x as LayerItem).Item.Value.FillColor).ToUnit());
+
+            if (!App.IsTest)
+            {
+                temp = temp.Where(_ => !MainWindowViewModel.Instance.ToolBarViewModel.Behaviors.Contains(MainWindowViewModel.Instance.ToolBarViewModel.BrushBehavior));
+            }
+
+            temp.Delay(TimeSpan.FromMilliseconds(100))
+            .ObserveOn(new DispatcherScheduler(Dispatcher.CurrentDispatcher, DispatcherPriority.ApplicationIdle))
+            .Subscribe(x =>
+            {
+                LogManager.GetCurrentClassLogger().Trace("detected Layer changes. run Layer.UpdateAppearance().");
+                UpdateAppearance(Children.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(xx => xx.Children).Select(x => (x as LayerItem).Item.Value));
+                Children.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                        .ToList()
+                        .ForEach(x => (x as LayerItem).UpdateAppearance(IfGroupBringChildren((x as LayerItem).Item.Value)));
+            })
+            .AddTo(_disposable);
+
             IsVisible.Value = true;
         }
 

@@ -24,7 +24,7 @@ namespace boilersGraphics.ViewModels
         private IDialogService dlgService = null;
         public ObservableCollection<ToolItemData> ToolItems { get; } = new ObservableCollection<ToolItemData>();
 
-        public BehaviorCollection Behaviors { get { return Interaction.GetBehaviors(App.Current.MainWindow.GetChildOfType<DesignerCanvas>()); } }
+        public BehaviorCollection Behaviors { get { return Interaction.GetBehaviors(App.GetCurrentApp().MainWindow.GetChildOfType<DesignerCanvas>()); } }
 
         public ReactivePropertySlim<bool> CurrentHitTestVisibleState { get; } = new ReactivePropertySlim<bool>();
 

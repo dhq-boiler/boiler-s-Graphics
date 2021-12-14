@@ -3,11 +3,7 @@ using boilersGraphics.Helpers;
 using boilersGraphics.Models;
 using boilersGraphics.ViewModels;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -20,6 +16,7 @@ namespace boilersGraphics.Test
         [Test]
         public void GeometryCreator_CreateEllipse()
         {
+            App.IsTest = true;
             var ellipse = new NEllipseViewModel();
             ellipse.Left.Value = 10;
             ellipse.Top.Value = 10;
@@ -34,6 +31,7 @@ namespace boilersGraphics.Test
         [Test]
         public void GeometryCreator_CreateEllipse_Angle()
         {
+            App.IsTest = true;
             var ellipse = new NEllipseViewModel();
             ellipse.Left.Value = 10;
             ellipse.Top.Value = 10;
@@ -54,6 +52,7 @@ namespace boilersGraphics.Test
         [Test, RequiresThread(System.Threading.ApartmentState.STA)]
         public void BrushInternal_AddNewBrushViewModel()
         {
+            App.IsTest = true;
             var mainWindowViewModel = new MainWindowViewModel(null);
             var diagramViewModel = mainWindowViewModel.DiagramViewModel;
             var desingerCanvas = new DesignerCanvas();
@@ -82,6 +81,7 @@ namespace boilersGraphics.Test
         [Test, RequiresThread(System.Threading.ApartmentState.STA)]
         public void BrushInternal_Draw()
         {
+            App.IsTest = true;
             var mainWindowViewModel = new MainWindowViewModel(null);
             var diagramViewModel = mainWindowViewModel.DiagramViewModel;
             var desingerCanvas = new DesignerCanvas();
@@ -101,12 +101,13 @@ namespace boilersGraphics.Test
 
             BrushInternal.Draw(mainWindowViewModel, ref vm, new System.Windows.Point() { X = 100, Y = 100 });
 
-            Assert.That(vm.PathGeometry.Value.ToString(), Is.EqualTo("F1M99,97C99.5522842407227,97 100.052284240723,97.2238616943359 100.414215087891,97.5857849121094 100.776138305664,97.9477157592773 101,98.4477157592773 101,99 101,99.5522842407227 100.776138305664,100.052284240723 100.414215087891,100.414215087891C100.052284240723,100.776138305664,99.5522842407227,101,99,101C98.4477157592773,101,97.9477157592773,100.776138305664,97.5857849121094,100.414215087891C97.2238616943359,100.052284240723,97,99.5522842407227,97,99C97,98.4477157592773,97.2238616943359,97.9477157592773,97.5857849121094,97.5857849121094C97.9477157592773,97.2238616943359,98.4477157592773,97,99,97z"));
+            Assert.That(vm.PathGeometry.Value.ToString(), Is.EqualTo("F1M99,97C99.55228424072266,97 100.05228424072266,97.22386169433594 100.41421508789062,97.58578491210938 100.77613830566406,97.94771575927734 101,98.44771575927734 101,99 101,99.55228424072266 100.77613830566406,100.05228424072266 100.41421508789062,100.41421508789062C100.05228424072266,100.77613830566406,99.55228424072266,101,99,101C98.44771575927734,101,97.94771575927734,100.77613830566406,97.58578491210938,100.41421508789062C97.22386169433594,100.05228424072266,97,99.55228424072266,97,99C97,98.44771575927734,97.22386169433594,97.94771575927734,97.58578491210938,97.58578491210938C97.94771575927734,97.22386169433594,98.44771575927734,97,99,97z"));
         }
 
         [Test, RequiresThread(System.Threading.ApartmentState.STA)]
         public void BrushInternal_Down()
         {
+            App.IsTest = true;
             var mainWindowViewModel = new MainWindowViewModel(null);
             var diagramViewModel = mainWindowViewModel.DiagramViewModel;
             var designerCanvas = new DesignerCanvas();
@@ -124,12 +125,13 @@ namespace boilersGraphics.Test
 
             BrushInternal.Down(mainWindowViewModel, designerCanvas, ref vm, () => new System.Windows.Input.MouseButtonEventArgs(InputManager.Current.PrimaryMouseDevice, 0, MouseButton.Left).MouseDevice.Capture(designerCanvas), new System.Windows.Input.MouseButtonEventArgs(InputManager.Current.PrimaryMouseDevice, 0, MouseButton.Left), new System.Windows.Point() { X = 50, Y = 50 });
 
-            Assert.That(vm.PathGeometry.Value.ToString(), Is.EqualTo("M51,49C51,50.1045694996616 50.1045694996616,51 49,51 47.8954305003384,51 47,50.1045694996616 47,49 47,47.8954305003384 47.8954305003384,47 49,47 50.1045694996616,47 51,47.8954305003384 51,49z"));
+            Assert.That(vm.PathGeometry.Value.ToString(), Is.EqualTo("M51,49C51,50.10456949966159 50.10456949966159,51 49,51 47.89543050033841,51 47,50.10456949966159 47,49 47,47.89543050033841 47.89543050033841,47 49,47 50.10456949966159,47 51,47.89543050033841 51,49z"));
         }
 
         [Test, RequiresThread(System.Threading.ApartmentState.STA)]
         public void BrushInternal_Down_2回目()
         {
+            App.IsTest = true;
             var mainWindowViewModel = new MainWindowViewModel(null);
             var diagramViewModel = mainWindowViewModel.DiagramViewModel;
             var designerCanvas = new DesignerCanvas();
@@ -147,18 +149,19 @@ namespace boilersGraphics.Test
 
             BrushInternal.Down(mainWindowViewModel, designerCanvas, ref vm, () => new System.Windows.Input.MouseButtonEventArgs(InputManager.Current.PrimaryMouseDevice, 0, MouseButton.Left).MouseDevice.Capture(designerCanvas), new System.Windows.Input.MouseButtonEventArgs(InputManager.Current.PrimaryMouseDevice, 0, MouseButton.Left), new System.Windows.Point() { X = 50, Y = 50 }) ;
 
-            Assert.That(vm.PathGeometry.Value.ToString(), Is.EqualTo("M51,49C51,50.1045694996616 50.1045694996616,51 49,51 47.8954305003384,51 47,50.1045694996616 47,49 47,47.8954305003384 47.8954305003384,47 49,47 50.1045694996616,47 51,47.8954305003384 51,49z"));
+            Assert.That(vm.PathGeometry.Value.ToString(), Is.EqualTo("M51,49C51,50.10456949966159 50.10456949966159,51 49,51 47.89543050033841,51 47,50.10456949966159 47,49 47,47.89543050033841 47.89543050033841,47 49,47 50.10456949966159,47 51,47.89543050033841 51,49z"));
 
             mainWindowViewModel.DiagramViewModel.AllItems.Value.First().IsSelected.Value = true;
 
             BrushInternal.Down(mainWindowViewModel, designerCanvas, ref vm, () => new System.Windows.Input.MouseButtonEventArgs(InputManager.Current.PrimaryMouseDevice, 0, MouseButton.Left).MouseDevice.Capture(designerCanvas), new System.Windows.Input.MouseButtonEventArgs(InputManager.Current.PrimaryMouseDevice, 0, MouseButton.Left), new System.Windows.Point() { X = 100, Y = 100 });
 
-            Assert.That(vm.PathGeometry.Value.ToString(), Is.EqualTo("M101,99C101,100.104569499662 100.104569499662,101 99,101 97.8954305003384,101 97,100.104569499662 97,99 97,97.8954305003384 97.8954305003384,97 99,97 100.104569499662,97 101,97.8954305003384 101,99z"));
+            Assert.That(vm.PathGeometry.Value.ToString(), Is.EqualTo("M101,99C101,100.1045694996616 100.1045694996616,101 99,101 97.8954305003384,101 97,100.1045694996616 97,99 97,97.8954305003384 97.8954305003384,97 99,97 100.1045694996616,97 101,97.8954305003384 101,99z"));
         }
 
         [Test, RequiresThread(System.Threading.ApartmentState.STA)]
         public void EraserInternal_Erase()
         {
+            App.IsTest = true;
             var mainWindowViewModel = new MainWindowViewModel(null);
             var diagramViewModel = mainWindowViewModel.DiagramViewModel;
             var desingerCanvas = new DesignerCanvas();
@@ -186,6 +189,7 @@ namespace boilersGraphics.Test
         [Test, RequiresThread(System.Threading.ApartmentState.STA)]
         public void EraserInternal_Down()
         {
+            App.IsTest = true;
             var mainWindowViewModel = new MainWindowViewModel(null);
             var diagramViewModel = mainWindowViewModel.DiagramViewModel;
             var designerCanvas = new DesignerCanvas();
@@ -216,7 +220,7 @@ namespace boilersGraphics.Test
                                 new System.Windows.Input.MouseButtonEventArgs(InputManager.Current.PrimaryMouseDevice, 0, MouseButton.Left) { RoutedEvent = Mouse.MouseDownEvent },
                                 new Point() { X = 100, Y = 100 });
 
-            Assert.That(vm.PathGeometry.Value.ToString(), Is.EqualTo("F1M101,99C101,99.5522842407227,100.776138305664,100.052284240723,100.414215087891,100.414215087891C100.052284240723,100.776138305664,99.5522842407227,101,99,101C100.104568481445,101,101,100.104568481445,101,99z M97,99C97,100.104568481445,97.8954315185547,101,99,101C98.4477157592773,101,97.9477157592773,100.776138305664,97.5857849121094,100.414215087891C97.2238616943359,100.052284240723,97,99.5522842407227,97,99z M99,97C97.8954315185547,97 97,97.8954315185547 97,99 97,98.4477157592773 97.2238616943359,97.9477157592773 97.5857849121094,97.5857849121094C97.9477157592773,97.2238616943359,98.4477157592773,97,99,97z M99,97C99.5522842407227,97 100.052284240723,97.2238616943359 100.414215087891,97.5857849121094 100.776138305664,97.9477157592773 101,98.4477157592773 101,99C101,97.8954315185547,100.104568481445,97,99,97z"));
+            Assert.That(vm.PathGeometry.Value.ToString(), Is.EqualTo("F1M101,99C101,99.55228424072266,100.77613830566406,100.05228424072266,100.41421508789062,100.41421508789062C100.05228424072266,100.77613830566406,99.55228424072266,101,99,101C100.10456848144531,101,101,100.10456848144531,101,99z M97,99C97,100.10456848144531,97.89543151855469,101,99,101C98.44771575927734,101,97.94771575927734,100.77613830566406,97.58578491210938,100.41421508789062C97.22386169433594,100.05228424072266,97,99.55228424072266,97,99z M99,97C97.89543151855469,97 97,97.89543151855469 97,99 97,98.44771575927734 97.22386169433594,97.94771575927734 97.58578491210938,97.58578491210938C97.94771575927734,97.22386169433594,98.44771575927734,97,99,97z M99,97C99.55228424072266,97 100.05228424072266,97.22386169433594 100.41421508789062,97.58578491210938 100.77613830566406,97.94771575927734 101,98.44771575927734 101,99C101,97.89543151855469,100.10456848144531,97,99,97z"));
         }
     }
 }

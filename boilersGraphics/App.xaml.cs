@@ -28,6 +28,11 @@ namespace boilersGraphics
             this.DispatcherUnhandledException += App_DispatcherUnhandledException;
         }
 
+        public static Application GetCurrentApp()
+        {
+            return App.Current != null ? App.Current : new Application();
+        }
+
         private void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
             LogManager.GetCurrentClassLogger().Fatal(e.Exception);

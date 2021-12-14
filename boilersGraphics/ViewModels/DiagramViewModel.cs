@@ -591,6 +591,7 @@ namespace boilersGraphics.ViewModels
             if (App.IsTest)
             {
                 LogManager.GetCurrentClassLogger().Warn($"AutoSave()が呼び出されましたが、App.IsTest=trueのため、処理を実行しませんでした。");
+                return;
             }
 
             AutoSavedDateTime.Value = DateTime.Now;
@@ -601,7 +602,7 @@ namespace boilersGraphics.ViewModels
                 Directory.CreateDirectory(autoSaveDir);
             }
 
-            GetCurrentApp().Dispatcher.Invoke(() =>
+            App.GetCurrentApp().Dispatcher.Invoke(() =>
             {
                 XElement versionXML = new XElement("Version", BGSXFileVersion.ToString());
                 XElement layersXML = new XElement("Layers", ObjectSerializer.SerializeLayers(Layers));
@@ -626,10 +627,6 @@ namespace boilersGraphics.ViewModels
             UpdateStatisticsCountAutoSave();
         }
 
-        private Application GetCurrentApp()
-        {
-            return App.Current != null ? App.Current : new Application();
-        }
 
         private void UpdateStatisticsCountAutoSave()
         {

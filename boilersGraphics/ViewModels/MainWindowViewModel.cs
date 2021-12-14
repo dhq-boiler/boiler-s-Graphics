@@ -20,6 +20,7 @@ using System.IO;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Threading;
 using System.Windows;
 using TsOperationHistory;
 using TsOperationHistory.Extensions;
@@ -265,8 +266,15 @@ namespace boilersGraphics.ViewModels
             Observable.Interval(TimeSpan.FromSeconds(10))
                       .Subscribe(_ =>
                       {
-                          var dao = new StatisticsDao();
-                          dao.Update(Statistics.Value);
+                          try
+                          {
+                              var dao = new StatisticsDao();
+                              dao.Update(Statistics.Value);
+                          }
+                          catch (SQLiteException ex)
+                          {
+                              LogManager.GetCurrentClassLogger().Warn(ex);
+                          }
                       })
                       .AddTo(_CompositeDisposable);
         }
