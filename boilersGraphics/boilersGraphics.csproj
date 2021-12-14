@@ -185,7 +185,7 @@
     <PackageReference Include="Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers" Version="0.3.256001">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Homura" Version="2.0.0" />
+    <PackageReference Include="Homura" Version="3.1.0" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="RubberbandAdorner.cs" />
