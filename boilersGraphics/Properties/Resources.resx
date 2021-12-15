@@ -279,6 +279,9 @@
   <data name="MenuItem_Preference" xml:space="preserve">
     <value>Preference(_P)</value>
   </data>
+  <data name="MenuItem_Property" xml:space="preserve">
+    <value>Property</value>
+  </data>
   <data name="MenuItem_Redo" xml:space="preserve">
     <value>Redo(_R)</value>
   </data>

@@ -279,6 +279,9 @@
   <data name="MenuItem_Preference" xml:space="preserve">
     <value>設定(_P)</value>
   </data>
+  <data name="MenuItem_Property" xml:space="preserve">
+    <value>プロパティ</value>
+  </data>
   <data name="MenuItem_Redo" xml:space="preserve">
     <value>やり直し(_R)</value>
   </data>

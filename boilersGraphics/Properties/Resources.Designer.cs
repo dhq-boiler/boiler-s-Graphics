@@ -547,6 +547,15 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Property に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_Property {
+            get {
+                return ResourceManager.GetString("MenuItem_Property", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Redo(_R) に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string MenuItem_Redo {
