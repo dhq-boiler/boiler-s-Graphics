@@ -20,6 +20,7 @@
         <converter:LogLevelToBoolConverter x:Key="LogLevelToBool" />
         <converter:PreviewConverter x:Key="PreviewConverter" />
         <converter:FilenameWithFileSizeConverter x:Key="FilenameWithFileSize" />
+        <converter:CultureToBool x:Key="CultureToBool" />
     </Window.Resources>
     <Window.CommandBindings>
         <CommandBinding CanExecute="CommandBinding_CanExecute_Close"
@@ -204,8 +205,12 @@
                                     <MenuItem Command="{Binding ShowLogCommand}" Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.MenuItem_ShowLog, Mode=OneWay}" />
                                 </MenuItem>
                                 <MenuItem Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.MenuItem_Language, Mode=OneWay}">
-                                    <MenuItem Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.MenuItem_en_US, Mode=OneWay}" Command="{Binding SwitchLanguageCommand}" CommandParameter="en-US"/>
-                                    <MenuItem Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.MenuItem_ja_JP, Mode=OneWay}" Command="{Binding SwitchLanguageCommand}" CommandParameter="ja-JP"/>
+                                    <MenuItem Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.MenuItem_en_US, Mode=OneWay}"
+                                              IsChecked="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Culture, Mode=OneWay, Converter={StaticResource CultureToBool}, ConverterParameter=en-US}"
+                                              Command="{Binding SwitchLanguageCommand}" CommandParameter="en-US"/>
+                                    <MenuItem Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.MenuItem_ja_JP, Mode=OneWay}"
+                                              IsChecked="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Culture, Mode=OneWay, Converter={StaticResource CultureToBool}, ConverterParameter=ja-JP}"
+                                              Command="{Binding SwitchLanguageCommand}" CommandParameter="ja-JP"/>
                                 </MenuItem>
                                 <MenuItem Command="{Binding ShowStatisticsCommand}" Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.MenuItem_Statistics, Mode=OneWay}" />
                                 <MenuItem Command="{Binding ShowVersionCommand}" Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.MenuItem_Version, Mode=OneWay}" />
