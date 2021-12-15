@@ -19,7 +19,7 @@ namespace boilersGraphics.Properties {
     // または Visual Studio のようなツールを使用して自動生成されました。
     // メンバーを追加または削除するには、.ResX ファイルを編集して、/str オプションと共に
     // ResGen を実行し直すか、または VS プロジェクトをビルドし直します。
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -29,7 +29,7 @@ namespace boilersGraphics.Properties {
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        public Resources() {
+        internal Resources() {
         }
         
         /// <summary>
@@ -66,6 +66,42 @@ namespace boilersGraphics.Properties {
         public static string Alignment {
             get {
                 return ResourceManager.GetString("Alignment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Close に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Button_Close {
+            get {
+                return ResourceManager.GetString("Button_Close", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Maximize に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Button_MaximizeWindow {
+            get {
+                return ResourceManager.GetString("Button_MaximizeWindow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Minimize に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Button_MinimizeWindow {
+            get {
+                return ResourceManager.GetString("Button_MinimizeWindow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Restore に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Button_Restore {
+            get {
+                return ResourceManager.GetString("Button_Restore", resourceCulture);
             }
         }
         
@@ -264,6 +300,339 @@ namespace boilersGraphics.Properties {
         public static string Grouping {
             get {
                 return ResourceManager.GetString("Grouping", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Brush thickness に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_BrushThickness {
+            get {
+                return ResourceManager.GetString("MenuItem_BrushThickness", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Canvas(_C) に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_Canvas {
+            get {
+                return ResourceManager.GetString("MenuItem_Canvas", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Set clip に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_Clip {
+            get {
+                return ResourceManager.GetString("MenuItem_Clip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Copy(_C) に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_Copy {
+            get {
+                return ResourceManager.GetString("MenuItem_Copy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Cut(_T) に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_Cut {
+            get {
+                return ResourceManager.GetString("MenuItem_Cut", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Edit(_E) に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_Edit {
+            get {
+                return ResourceManager.GetString("MenuItem_Edit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   English(US) に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_en_US {
+            get {
+                return ResourceManager.GetString("MenuItem_en_US", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Exit boiler&apos;s Graphics に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_ExitApplication {
+            get {
+                return ResourceManager.GetString("MenuItem_ExitApplication", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Export に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_Export {
+            get {
+                return ResourceManager.GetString("MenuItem_Export", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   File(_F) に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_File {
+            get {
+                return ResourceManager.GetString("MenuItem_File", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Help(_H) に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_Help {
+            get {
+                return ResourceManager.GetString("MenuItem_Help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Japanese に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_ja_JP {
+            get {
+                return ResourceManager.GetString("MenuItem_ja_JP", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Language に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_Language {
+            get {
+                return ResourceManager.GetString("MenuItem_Language", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Log に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_Log {
+            get {
+                return ResourceManager.GetString("MenuItem_Log", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Log level に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_LogLevel {
+            get {
+                return ResourceManager.GetString("MenuItem_LogLevel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Debug に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_LogLevel_Debug {
+            get {
+                return ResourceManager.GetString("MenuItem_LogLevel_Debug", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Error に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_LogLevel_Error {
+            get {
+                return ResourceManager.GetString("MenuItem_LogLevel_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Fatal に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_LogLevel_Fatal {
+            get {
+                return ResourceManager.GetString("MenuItem_LogLevel_Fatal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Info に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_LogLevel_Info {
+            get {
+                return ResourceManager.GetString("MenuItem_LogLevel_Info", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Off に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_LogLevel_Off {
+            get {
+                return ResourceManager.GetString("MenuItem_LogLevel_Off", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Trace に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_LogLevel_Trace {
+            get {
+                return ResourceManager.GetString("MenuItem_LogLevel_Trace", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Warn に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_LogLevel_Warn {
+            get {
+                return ResourceManager.GetString("MenuItem_LogLevel_Warn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Mini map に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_MiniMap {
+            get {
+                return ResourceManager.GetString("MenuItem_MiniMap", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Open(_O) に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_Open {
+            get {
+                return ResourceManager.GetString("MenuItem_Open", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Overwrite に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_Overwrite {
+            get {
+                return ResourceManager.GetString("MenuItem_Overwrite", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Paste(_P) に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_Paste {
+            get {
+                return ResourceManager.GetString("MenuItem_Paste", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Preference(_P) に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_Preference {
+            get {
+                return ResourceManager.GetString("MenuItem_Preference", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Redo(_R) に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_Redo {
+            get {
+                return ResourceManager.GetString("MenuItem_Redo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Save as に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_SaveAs {
+            get {
+                return ResourceManager.GetString("MenuItem_SaveAs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Open application log(_L) に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_ShowLog {
+            get {
+                return ResourceManager.GetString("MenuItem_ShowLog", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Specify File(_S) に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_SpecifyFile {
+            get {
+                return ResourceManager.GetString("MenuItem_SpecifyFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Specify the automatically saved file(_A) に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_SpecifyFileAutoSaved {
+            get {
+                return ResourceManager.GetString("MenuItem_SpecifyFileAutoSaved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Statistics(_S) に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_Statistics {
+            get {
+                return ResourceManager.GetString("MenuItem_Statistics", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Undo(_U) に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_Undo {
+            get {
+                return ResourceManager.GetString("MenuItem_Undo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Version information of boiler&apos;s Graphics(_I) に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_Version {
+            get {
+                return ResourceManager.GetString("MenuItem_Version", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   View(_V) に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_View {
+            get {
+                return ResourceManager.GetString("MenuItem_View", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Window(_W) に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_Window {
+            get {
+                return ResourceManager.GetString("MenuItem_Window", resourceCulture);
             }
         }
         

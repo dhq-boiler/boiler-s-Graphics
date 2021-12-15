@@ -112,13 +112,25 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Alignment" xml:space="preserve">
     <value>Alignment</value>
+  </data>
+  <data name="Button_Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="Button_MaximizeWindow" xml:space="preserve">
+    <value>Maximize</value>
+  </data>
+  <data name="Button_MinimizeWindow" xml:space="preserve">
+    <value>Minimize</value>
+  </data>
+  <data name="Button_Restore" xml:space="preserve">
+    <value>Restore</value>
   </data>
   <data name="Command_AlignBottom" xml:space="preserve">
     <value>Align bottom</value>
@@ -185,6 +197,117 @@
   </data>
   <data name="Grouping" xml:space="preserve">
     <value>Grouping</value>
+  </data>
+  <data name="MenuItem_BrushThickness" xml:space="preserve">
+    <value>Brush thickness</value>
+  </data>
+  <data name="MenuItem_Canvas" xml:space="preserve">
+    <value>Canvas(_C)</value>
+  </data>
+  <data name="MenuItem_Clip" xml:space="preserve">
+    <value>Set clip</value>
+  </data>
+  <data name="MenuItem_Copy" xml:space="preserve">
+    <value>Copy(_C)</value>
+  </data>
+  <data name="MenuItem_Cut" xml:space="preserve">
+    <value>Cut(_T)</value>
+  </data>
+  <data name="MenuItem_Edit" xml:space="preserve">
+    <value>Edit(_E)</value>
+  </data>
+  <data name="MenuItem_en_US" xml:space="preserve">
+    <value>English(US)</value>
+  </data>
+  <data name="MenuItem_ExitApplication" xml:space="preserve">
+    <value>Exit boiler's Graphics</value>
+  </data>
+  <data name="MenuItem_Export" xml:space="preserve">
+    <value>Export</value>
+  </data>
+  <data name="MenuItem_File" xml:space="preserve">
+    <value>File(_F)</value>
+  </data>
+  <data name="MenuItem_Help" xml:space="preserve">
+    <value>Help(_H)</value>
+  </data>
+  <data name="MenuItem_ja_JP" xml:space="preserve">
+    <value>Japanese</value>
+  </data>
+  <data name="MenuItem_Language" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="MenuItem_Log" xml:space="preserve">
+    <value>Log</value>
+  </data>
+  <data name="MenuItem_LogLevel" xml:space="preserve">
+    <value>Log level</value>
+  </data>
+  <data name="MenuItem_LogLevel_Debug" xml:space="preserve">
+    <value>Debug</value>
+  </data>
+  <data name="MenuItem_LogLevel_Error" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="MenuItem_LogLevel_Fatal" xml:space="preserve">
+    <value>Fatal</value>
+  </data>
+  <data name="MenuItem_LogLevel_Info" xml:space="preserve">
+    <value>Info</value>
+  </data>
+  <data name="MenuItem_LogLevel_Off" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="MenuItem_LogLevel_Trace" xml:space="preserve">
+    <value>Trace</value>
+  </data>
+  <data name="MenuItem_LogLevel_Warn" xml:space="preserve">
+    <value>Warn</value>
+  </data>
+  <data name="MenuItem_MiniMap" xml:space="preserve">
+    <value>Mini map</value>
+  </data>
+  <data name="MenuItem_Open" xml:space="preserve">
+    <value>Open(_O)</value>
+  </data>
+  <data name="MenuItem_Overwrite" xml:space="preserve">
+    <value>Overwrite</value>
+  </data>
+  <data name="MenuItem_Paste" xml:space="preserve">
+    <value>Paste(_P)</value>
+  </data>
+  <data name="MenuItem_Preference" xml:space="preserve">
+    <value>Preference(_P)</value>
+  </data>
+  <data name="MenuItem_Redo" xml:space="preserve">
+    <value>Redo(_R)</value>
+  </data>
+  <data name="MenuItem_SaveAs" xml:space="preserve">
+    <value>Save as</value>
+  </data>
+  <data name="MenuItem_ShowLog" xml:space="preserve">
+    <value>Open application log(_L)</value>
+  </data>
+  <data name="MenuItem_SpecifyFile" xml:space="preserve">
+    <value>Specify File(_S)</value>
+  </data>
+  <data name="MenuItem_SpecifyFileAutoSaved" xml:space="preserve">
+    <value>Specify the automatically saved file(_A)</value>
+  </data>
+  <data name="MenuItem_Statistics" xml:space="preserve">
+    <value>Statistics(_S)</value>
+  </data>
+  <data name="MenuItem_Undo" xml:space="preserve">
+    <value>Undo(_U)</value>
+  </data>
+  <data name="MenuItem_Version" xml:space="preserve">
+    <value>Version information of boiler's Graphics(_I)</value>
+  </data>
+  <data name="MenuItem_View" xml:space="preserve">
+    <value>View(_V)</value>
+  </data>
+  <data name="MenuItem_Window" xml:space="preserve">
+    <value>Window(_W)</value>
   </data>
   <data name="Ordering" xml:space="preserve">
     <value>Ordering</value>

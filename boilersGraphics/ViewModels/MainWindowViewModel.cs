@@ -217,6 +217,10 @@ namespace boilersGraphics.ViewModels
                 }
             })
             .AddTo(_CompositeDisposable);
+            SwitchLanguageCommand = new DelegateCommand<string>(parameter =>
+            {
+                ResourceService.Current.ChangeCulture(parameter);
+            });
 
             SnapPower.Value = 10;
 
@@ -402,6 +406,8 @@ namespace boilersGraphics.ViewModels
         public DelegateCommand<LogLevel> SetLogLevelCommand { get; }
 
         public DelegateCommand ShowStatisticsCommand { get; }
+
+        public DelegateCommand<string> SwitchLanguageCommand { get; }
 
         private void ExecuteDeleteSelectedItemsCommand(object parameter)
         {
