@@ -73,7 +73,6 @@ namespace boilersGraphics.ViewModels
             clone.Owner = Owner;
             clone.ParentID = ParentID;
             clone.PathGeometry = PathGeometry;
-            clone.RotatePathGeometry.Value = RotatePathGeometry.Value;
             clone.RotationAngle.Value = RotationAngle.Value;
             clone.ZIndex.Value = ZIndex.Value;
             clone.Left.Value = Left.Value;

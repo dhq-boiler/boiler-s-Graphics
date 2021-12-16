@@ -73,6 +73,8 @@ namespace boilersGraphics.ViewModels
 
         public ReadOnlyReactivePropertySlim<double> Bottom { get; private set; }
 
+        public ReadOnlyReactivePropertySlim<PathGeometry> RotatePathGeometry { get; private set; }
+
         public ReactivePropertySlim<double> CenterX { get; } = new ReactivePropertySlim<double>();
         public ReactivePropertySlim<double> CenterY { get; } = new ReactivePropertySlim<double>();
 
@@ -135,6 +137,8 @@ namespace boilersGraphics.ViewModels
                        .AddTo(_CompositeDisposable);
             CenterPoint = CenterX.CombineLatest(CenterY, (x, y) => new Point(x, y))
                                  .ToReactiveProperty();
+            RotatePathGeometry = RotationAngle.Select(x => CreateGeometry(x))
+                                              .ToReadOnlyReactivePropertySlim();
 
             Matrix.Value = new Matrix();
         }

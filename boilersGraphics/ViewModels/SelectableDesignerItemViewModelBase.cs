@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Reflection;
 using System.Windows.Media;
 using TsOperationHistory;
@@ -63,9 +64,6 @@ namespace boilersGraphics.ViewModels
         public ReactivePropertySlim<double> EdgeThickness { get; } = new ReactivePropertySlim<double>();
 
         public ReactivePropertySlim<PathGeometry> PathGeometry { get; set; } = new ReactivePropertySlim<PathGeometry>();
-
-        [Obsolete]
-        public ReactivePropertySlim<PathGeometry> RotatePathGeometry { get; set; } = new ReactivePropertySlim<PathGeometry>();
 
         public ReactivePropertySlim<bool> EnablePathGeometryUpdate { get; set; } = new ReactivePropertySlim<bool>();
 

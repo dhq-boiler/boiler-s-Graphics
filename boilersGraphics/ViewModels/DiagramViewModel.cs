@@ -921,10 +921,10 @@ namespace boilersGraphics.ViewModels
                 var item1PathGeometry = item1.PathGeometry.Value;
                 var item2PathGeometry = item2.PathGeometry.Value;
 
-                if (item1.RotationAngle.Value != 0)
-                    item1PathGeometry = item1.RotatePathGeometry.Value;
-                if (item2.RotationAngle.Value != 0)
-                    item2PathGeometry = item2.RotatePathGeometry.Value;
+                if (item1 is DesignerItemViewModelBase designerItem1 && item1.RotationAngle.Value != 0)
+                    item1PathGeometry = designerItem1.RotatePathGeometry.Value;
+                if (item2 is DesignerItemViewModelBase designerItem2 && item2.RotationAngle.Value != 0)
+                    item2PathGeometry = designerItem2.RotatePathGeometry.Value;
                 
                 CastToLetterAndSetTransform(item1, item2, item1PathGeometry, item2PathGeometry);
 
