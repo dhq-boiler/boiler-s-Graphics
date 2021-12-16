@@ -73,7 +73,7 @@ namespace boilersGraphics.ViewModels
 
         public ReadOnlyReactivePropertySlim<double> Bottom { get; private set; }
 
-        public ReadOnlyReactivePropertySlim<PathGeometry> RotatePathGeometry { get; private set; }
+        public ReactivePropertySlim<PathGeometry> RotatePathGeometry { get; } = new ReactivePropertySlim<PathGeometry>();
 
         public ReactivePropertySlim<double> CenterX { get; } = new ReactivePropertySlim<double>();
         public ReactivePropertySlim<double> CenterY { get; } = new ReactivePropertySlim<double>();
@@ -100,7 +100,7 @@ namespace boilersGraphics.ViewModels
             MinHeight = 0;
 
             Left
-                .Zip(Left.Skip(1), (Old, New) => new { OldItem = Old, NewItem = New})
+                .Zip(Left.Skip(1), (Old, New) => new { OldItem = Old, NewItem = New })
                 .Subscribe(x => UpdateTransform(nameof(Left), x.OldItem, x.NewItem))
                 .AddTo(_CompositeDisposable);
             Top
@@ -137,8 +137,6 @@ namespace boilersGraphics.ViewModels
                        .AddTo(_CompositeDisposable);
             CenterPoint = CenterX.CombineLatest(CenterY, (x, y) => new Point(x, y))
                                  .ToReactiveProperty();
-            RotatePathGeometry = RotationAngle.Select(x => CreateGeometry(x))
-                                              .ToReadOnlyReactivePropertySlim();
 
             Matrix.Value = new Matrix();
         }
@@ -196,7 +194,14 @@ namespace boilersGraphics.ViewModels
         {
             if (EnablePathGeometryUpdate.Value)
             {
-                PathGeometry.Value = CreateGeometry();
+                if (RotationAngle.Value == 0)
+                {
+                    PathGeometry.Value = CreateGeometry();
+                }
+                else
+                {
+                    RotatePathGeometry.Value = CreateGeometry(RotationAngle.Value);
+                }
             }
         }
 
