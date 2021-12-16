@@ -192,14 +192,7 @@ namespace boilersGraphics.ViewModels
         {
             if (EnablePathGeometryUpdate.Value)
             {
-                if (RotationAngle.Value == 0)
-                {
-                    PathGeometry.Value = CreateGeometry();
-                }
-                else
-                {
-                    RotatePathGeometry.Value = CreateGeometry(RotationAngle.Value);
-                }
+                PathGeometry.Value = CreateGeometry();
             }
         }
 

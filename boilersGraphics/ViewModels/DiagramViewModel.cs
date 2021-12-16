@@ -176,7 +176,7 @@ namespace boilersGraphics.ViewModels
 
         public double ScaleX { get; set; } = 1.0;
         public double ScaleY { get; set; } = 1.0;
-        public System.Version BGSXFileVersion { get; } = new System.Version(2, 1);
+        public System.Version BGSXFileVersion { get; } = new System.Version(2, 2);
 
         public int LayerCount { get; set; } = 1;
 

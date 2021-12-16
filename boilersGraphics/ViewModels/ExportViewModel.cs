@@ -207,7 +207,9 @@ namespace boilersGraphics.ViewModels
                     {
                         rect = new Rect(designerItem.Left.Value, designerItem.Top.Value, designerItem.Width.Value, designerItem.Height.Value);
                     }
+                    context.PushTransform(new RotateTransform(item.RotationAngle.Value, (item as DesignerItemViewModelBase).CenterX.Value, (item as DesignerItemViewModelBase).CenterY.Value));
                     context.DrawRectangle(brush, null, rect);
+                    context.Pop();
                 }
                 else if (item is ConnectorBaseViewModel connector)
                 {

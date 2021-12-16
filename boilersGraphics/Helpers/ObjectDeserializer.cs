@@ -276,11 +276,12 @@ namespace boilersGraphics.Helpers
             item.ID = Guid.Parse(designerItemElm.Element("ID").Value);
             item.ParentID = Guid.Parse(designerItemElm.Element("ParentID").Value);
             item.ZIndex.Value = Int32.Parse(designerItemElm.Element("ZIndex").Value);
-            item.Matrix.Value = Matrix.Parse(designerItemElm.Element("Matrix").Value);
+            //item.Matrix.Value = Matrix.Parse(designerItemElm.Element("Matrix").Value);
             item.EdgeColor.Value = (Color)ColorConverter.ConvertFromString(designerItemElm.Element("EdgeColor").Value);
             item.FillColor.Value = (Color)ColorConverter.ConvertFromString(designerItemElm.Element("FillColor").Value);
             item.EdgeThickness.Value = double.Parse(designerItemElm.Element("EdgeThickness").Value);
             item.PathGeometry.Value = PathGeometry.CreateFromGeometry(PathGeometry.Parse(designerItemElm.Element("PathGeometry").Value));
+            item.RotationAngle.Value = double.Parse(designerItemElm.Element("RotationAngle").Value);
             item.Owner = diagramViewModel;
             if (item is PictureDesignerItemViewModel)
             {
