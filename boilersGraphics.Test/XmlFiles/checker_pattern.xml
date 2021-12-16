@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <boilersGraphics>
-  <Version>2.1</Version>
+  <Version>2.2</Version>
   <Layers>
     <Layer>
       <IsVisible>true</IsVisible>
@@ -26,6 +26,7 @@
               <FillColor>#FF000000</FillColor>
               <EdgeThickness>1</EdgeThickness>
               <PathGeometry>M0,0L100,0 100,100 0,100z</PathGeometry>
+		      <RotationAngle>0</RotationAngle>
             </DesignerItem>
           </Item>
           <Children />
@@ -49,6 +50,7 @@
               <FillColor>#FF000000</FillColor>
               <EdgeThickness>1</EdgeThickness>
               <PathGeometry>M900,900L1000,900 1000,1000 900,1000z</PathGeometry>
+		      <RotationAngle>0</RotationAngle>
             </DesignerItem>
           </Item>
           <Children />
@@ -72,6 +74,7 @@
               <FillColor>#FF000000</FillColor>
               <EdgeThickness>1</EdgeThickness>
               <PathGeometry>M100,100L200,100 200,200 100,200z</PathGeometry>
+			  <RotationAngle>0</RotationAngle>
             </DesignerItem>
           </Item>
           <Children />
@@ -95,6 +98,7 @@
               <FillColor>#FF000000</FillColor>
               <EdgeThickness>1</EdgeThickness>
               <PathGeometry>M200,200L300,200 300,300 200,300z</PathGeometry>
+			  <RotationAngle>0</RotationAngle>
             </DesignerItem>
           </Item>
           <Children />
@@ -118,6 +122,7 @@
               <FillColor>#FF000000</FillColor>
               <EdgeThickness>1</EdgeThickness>
               <PathGeometry>M300,300L400,300 400,400 300,400z</PathGeometry>
+			  <RotationAngle>0</RotationAngle>
             </DesignerItem>
           </Item>
           <Children />
@@ -141,6 +146,7 @@
               <FillColor>#FF000000</FillColor>
               <EdgeThickness>1</EdgeThickness>
               <PathGeometry>M400,400L500,400 500,500 400,500z</PathGeometry>
+			  <RotationAngle>0</RotationAngle>
             </DesignerItem>
           </Item>
           <Children />
@@ -164,6 +170,7 @@
               <FillColor>#FF000000</FillColor>
               <EdgeThickness>1</EdgeThickness>
               <PathGeometry>M500,500L600,500 600,600 500,600z</PathGeometry>
+			  <RotationAngle>0</RotationAngle>
             </DesignerItem>
           </Item>
           <Children />
@@ -187,6 +194,7 @@
               <FillColor>#FF000000</FillColor>
               <EdgeThickness>1</EdgeThickness>
               <PathGeometry>M600,600L700,600 700,700 600,700z</PathGeometry>
+			  <RotationAngle>0</RotationAngle>
             </DesignerItem>
           </Item>
           <Children />
@@ -210,6 +218,7 @@
               <FillColor>#FF000000</FillColor>
               <EdgeThickness>1</EdgeThickness>
               <PathGeometry>M700,700L800,700 800,800 700,800z</PathGeometry>
+			  <RotationAngle>0</RotationAngle>
             </DesignerItem>
           </Item>
           <Children />
@@ -233,6 +242,7 @@
               <FillColor>#FF000000</FillColor>
               <EdgeThickness>1</EdgeThickness>
               <PathGeometry>M800,800L900,800 900,900 800,900z</PathGeometry>
+			  <RotationAngle>0</RotationAngle>
             </DesignerItem>
           </Item>
           <Children />
