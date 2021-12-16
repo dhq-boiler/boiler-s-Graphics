@@ -34,7 +34,21 @@ steps:
     command: 'build'
     projects: '$(TargetSolution)'
     arguments: '--configuration $(BuildConfiguration)'  
-    
+
+- task: MsixPackaging@1
+  inputs:
+    outputPath: '$(Build.ArtifactStagingDirectory)\boilersGraphics.msix'
+    solution: 'boilersGraphics.sln'
+    clean: false
+    generateBundle: false
+    buildConfiguration: 'release'
+    buildPlatform: 'Any CPU'
+    updateAppVersion: false
+    appPackageDistributionMode: 'StoreAndSideload'
+    msbuildLocationMethod: 'version'
+    msbuildVersion: 'latest'
+    msbuildArchitecture: 'x64'
+
 - task: Windows Application Driver@0
   inputs:
     OperationType: 'Start'
