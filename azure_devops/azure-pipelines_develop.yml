@@ -44,7 +44,7 @@ steps:
   displayName: 'dotnet test'
   inputs:
     command: 'test'
-    arguments: '--configuration $(BuildConfiguration) --collect "XPlat Code coverage" -- RunConfiguration.DisableAppDomain=true'
+    arguments: '--configuration $(BuildConfiguration) /p:CollectCoverage=true -- RunConfiguration.DisableAppDomain=true'
     publishTestResults: true
     projects: 'boilersGraphics.Test'
 
