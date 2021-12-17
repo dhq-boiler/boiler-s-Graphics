@@ -40,10 +40,13 @@ steps:
     OperationType: 'Start'
     AgentResolution: '1080p'
 
-- task: CmdLine@2
-  displayName: '単体テストの実行'
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet test'
   inputs:
-    script: 'dotnet test --configuration $(BuildConfiguration) --collect "XPlat Code coverage" -- RunConfiguration.DisableAppDomain=true'
+    command: 'test'
+    arguments: '--configuration $(BuildConfiguration) --collect "XPlat Code coverage" -- RunConfiguration.DisableAppDomain=true'
+    publishTestResults: true
+    projects: 'boilersGraphics.Test'
 
 - task: Windows Application Driver@0
   condition: always()
