@@ -653,5 +653,59 @@ namespace boilersGraphics.Properties {
                 return ResourceManager.GetString("Ordering", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Alpha に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_A {
+            get {
+                return ResourceManager.GetString("String_A", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Blue に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_B {
+            get {
+                return ResourceManager.GetString("String_B", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Green に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_G {
+            get {
+                return ResourceManager.GetString("String_G", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Hue に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_Hue {
+            get {
+                return ResourceManager.GetString("String_Hue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Red に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_R {
+            get {
+                return ResourceManager.GetString("String_R", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Color picker に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Title_ColorPicker {
+            get {
+                return ResourceManager.GetString("Title_ColorPicker", resourceCulture);
+            }
+        }
     }
 }
