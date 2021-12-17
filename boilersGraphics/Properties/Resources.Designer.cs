@@ -673,6 +673,33 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Cancel に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_Cancel {
+            get {
+                return ResourceManager.GetString("String_Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Export に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_Export {
+            get {
+                return ResourceManager.GetString("String_Export", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   File name に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_FileName {
+            get {
+                return ResourceManager.GetString("String_FileName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Green に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string String_G {
@@ -691,6 +718,15 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Quality level に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_QualityLevel {
+            get {
+                return ResourceManager.GetString("String_QualityLevel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Red に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string String_R {
@@ -700,11 +736,29 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Reference に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_Reference {
+            get {
+                return ResourceManager.GetString("String_Reference", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Color picker に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Title_ColorPicker {
             get {
                 return ResourceManager.GetString("Title_ColorPicker", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Export に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Title_Export {
+            get {
+                return ResourceManager.GetString("Title_Export", resourceCulture);
             }
         }
     }

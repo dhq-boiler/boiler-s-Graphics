@@ -6,8 +6,9 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:prism="http://prismlibrary.com/"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
-             d:DesignHeight="450"
-             d:DesignWidth="800"
+             xmlns:helper="clr-namespace:boilersGraphics.Helpers"
+             d:DesignHeight="100"
+             d:DesignWidth="600"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d">
     <UserControl.Resources>
@@ -28,8 +29,8 @@
                     <Setter Property="Width" Value="75" />
                 </Style>
             </StackPanel.Resources>
-            <Button x:Name="PerformExport" Command="{Binding ExportCommand}">エクスポート</Button>
-            <Button x:Name="CancelExport" Command="{Binding CancelCommand}">キャンセル</Button>
+            <Button x:Name="PerformExport" Command="{Binding ExportCommand}" Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_Export, Mode=OneWay}" />
+            <Button x:Name="CancelExport" Command="{Binding CancelCommand}" Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_Cancel, Mode=OneWay}" />
         </StackPanel>
         <Grid>
             <Grid.ColumnDefinitions>
@@ -91,7 +92,7 @@
                            Stretch="UniformToFill" />
                 </Border>
             </DockPanel>
-            <Label Grid.Row="1" Grid.Column="0">ファイル名</Label>
+            <Label Grid.Row="1" Grid.Column="0" Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_FileName, Mode=OneWay}" />
             <TextBox x:Name="filename"
                      Grid.Row="1"
                      Grid.Column="1"
@@ -100,10 +101,9 @@
             <Button Grid.Row="1"
                     Grid.Column="2"
                     Width="75"
-                    Command="{Binding PathFinderCommand}">
-                    参照
-            </Button>
-            <Label Grid.Row="2" Grid.Column="0">
+                    Command="{Binding PathFinderCommand}"
+                    Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_Reference, Mode=OneWay}"/>
+            <Label Grid.Row="2" Grid.Column="0" Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_QualityLevel, Mode=OneWay}">
                 <Label.Style>
                     <Style TargetType="Label">
                         <Style.Triggers>
@@ -134,7 +134,6 @@
                         </Style.Triggers>
                     </Style>
                 </Label.Style>
-                                         クオリティレベル
             </Label>
             <Slider Grid.Row="2"
                     Grid.Column="1"

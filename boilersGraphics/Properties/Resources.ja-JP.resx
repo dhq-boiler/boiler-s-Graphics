@@ -321,16 +321,34 @@
   <data name="String_B" xml:space="preserve">
     <value>青(Blue)</value>
   </data>
+  <data name="String_Cancel" xml:space="preserve">
+    <value>キャンセル</value>
+  </data>
+  <data name="String_Export" xml:space="preserve">
+    <value>エクスポート</value>
+  </data>
+  <data name="String_FileName" xml:space="preserve">
+    <value>ファイル名</value>
+  </data>
   <data name="String_G" xml:space="preserve">
     <value>緑(Green)</value>
   </data>
   <data name="String_Hue" xml:space="preserve">
     <value>色相(Hue)</value>
   </data>
+  <data name="String_QualityLevel" xml:space="preserve">
+    <value>クオリティレベル</value>
+  </data>
   <data name="String_R" xml:space="preserve">
     <value>赤(Red)</value>
   </data>
+  <data name="String_Reference" xml:space="preserve">
+    <value>参照</value>
+  </data>
   <data name="Title_ColorPicker" xml:space="preserve">
     <value>カラーピッカー</value>
+  </data>
+  <data name="Title_Export" xml:space="preserve">
+    <value>エクスポート</value>
   </data>
 </root>

@@ -2,6 +2,7 @@
 using boilersGraphics.Dao;
 using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
+using boilersGraphics.Properties;
 using boilersGraphics.UserControls;
 using Microsoft.Win32;
 using NLog;
@@ -44,9 +45,10 @@ namespace boilersGraphics.ViewModels
 
         public event Action<IDialogResult> RequestClose;
 
-        public ExportViewModel(MainWindowViewModel mainWindowViewModel)
+        public ExportViewModel()
         {
             var mainWindow = App.Current.MainWindow;
+            var mainWindowViewModel = mainWindow.DataContext as MainWindowViewModel;
             var designerCanvas = mainWindow.GetChildOfType<DesignerCanvas>();
             var diagramViewModel = mainWindow.GetChildOfType<DiagramControl>().DataContext as DiagramViewModel;
             PathFinderCommand = new ReactiveCommand();
@@ -494,7 +496,7 @@ namespace boilersGraphics.ViewModels
             }
         }
 
-        public string Title => "エクスポート";
+        public string Title => Resources.Title_Export;
 
         protected virtual void Dispose(bool disposing)
         {
