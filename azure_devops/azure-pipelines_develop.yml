@@ -48,10 +48,6 @@ steps:
     publishTestResults: true
     projects: 'boilersGraphics.Test'
 
-- task: CmdLine@2
-  inputs:
-    script: 'tree'
-
 - task: Windows Application Driver@0
   condition: always()
   inputs:
@@ -60,7 +56,7 @@ steps:
 - task: reportgenerator@4
   displayName: 'コードカバレッジレポートの作成'
   inputs:
-    reports: '$(System.DefaultWorkingDirectory)\boilersGraphics.Test\TestResults\**\coverage.cobertura.xml'
+    reports: '$(System.DefaultWorkingDirectory)\boilersGraphics.Test\coverage.cobertura.xml'
     targetdir: '$(System.DefaultWorkingDirectory)\TestResults\Coverage\Reports'
     reporttypes: 'Cobertura'
 
