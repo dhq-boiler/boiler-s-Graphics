@@ -65,7 +65,6 @@ steps:
   inputs:
     codeCoverageTool: 'Cobertura'
     summaryFileLocation: '$(System.DefaultWorkingDirectory)\TestResults\Coverage\Reports\Cobertura.xml'
-    reportDirectory: '$(System.DefaultWorkingDirectory)/boilersGraphics.Test/**/site/cobertura'
 
 # Archive files
 # Compress files into .7z, .tar.gz, or .zip
