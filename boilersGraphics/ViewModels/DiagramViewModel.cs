@@ -1181,9 +1181,9 @@ namespace boilersGraphics.ViewModels
         private void ExecuteSettingCommand()
         {
             IDialogResult result = null;
-            var setting = new Models.Setting();
-            setting.Width.Value = this.Width;
-            setting.Height.Value = this.Height;
+            var preferences = new Models.Preference();
+            preferences.Width.Value = this.Width;
+            preferences.Height.Value = this.Height;
             Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
                                                      .Where(x => x.GetType() == typeof(LayerItem))
                                                      .Select(y => (y as LayerItem).Item.Value)
@@ -1195,16 +1195,16 @@ namespace boilersGraphics.ViewModels
                                                          z.Width.Value = this.Width;
                                                          z.Height.Value = this.Height;
                                                      });
-            setting.CanvasBackground.Value = this.CanvasBackground.Value;
-            setting.EnablePointSnap.Value = this.EnablePointSnap.Value;
-            setting.SnapPower.Value = (App.Current.MainWindow.DataContext as MainWindowViewModel).SnapPower.Value;
-            setting.EnableAutoSave.Value = this.EnableAutoSave.Value;
-            setting.AutoSaveType.Value = this.AutoSaveType.Value;
-            setting.AutoSaveInterval.Value = this.AutoSaveInterval.Value;
-            dlgService.ShowDialog(nameof(Views.Setting), new DialogParameters() { { "Setting",  setting} }, ret => result = ret);
+            preferences.CanvasBackground.Value = this.CanvasBackground.Value;
+            preferences.EnablePointSnap.Value = this.EnablePointSnap.Value;
+            preferences.SnapPower.Value = (App.Current.MainWindow.DataContext as MainWindowViewModel).SnapPower.Value;
+            preferences.EnableAutoSave.Value = this.EnableAutoSave.Value;
+            preferences.AutoSaveType.Value = this.AutoSaveType.Value;
+            preferences.AutoSaveInterval.Value = this.AutoSaveInterval.Value;
+            dlgService.ShowDialog(nameof(Views.Preference), new DialogParameters() { { "Preferences",  preferences} }, ret => result = ret);
             if (result != null && result.Result == ButtonResult.OK)
             {
-                var s = result.Parameters.GetValue<Models.Setting>("Setting");
+                var s = result.Parameters.GetValue<Models.Preference>("Preferences");
                 Width = s.Width.Value;
                 Height = s.Height.Value;
                 CanvasBackground.Value = s.CanvasBackground.Value;

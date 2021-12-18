@@ -5,7 +5,7 @@ using System.Windows.Media;
 
 namespace boilersGraphics.Models
 {
-    class Setting : BindableBase
+    class Preference : BindableBase
     {
         public ReactivePropertySlim<int> Width { get; set; } = new ReactivePropertySlim<int>();
         public ReactivePropertySlim<int> Height { get; set; } = new ReactivePropertySlim<int>();

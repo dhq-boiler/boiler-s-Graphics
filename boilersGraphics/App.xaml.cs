@@ -72,7 +72,7 @@ namespace boilersGraphics
             containerRegistry.RegisterDialog<ColorPicker, ViewModels.ColorPickerViewModel>();
             containerRegistry.RegisterDialog<LetterSetting, ViewModels.LetterSettingViewModel>();
             containerRegistry.RegisterDialog<LetterVerticalSetting, ViewModels.LetterVerticalSettingViewModel>();
-            containerRegistry.RegisterDialog<Views.Setting, ViewModels.SettingViewModel>();
+            containerRegistry.RegisterDialog<Views.Preference, ViewModels.PreferenceViewModel>();
             containerRegistry.RegisterDialog<Export, ViewModels.ExportViewModel>();
             containerRegistry.RegisterDialog<PolygonSetting, ViewModels.PolygonSettingViewModel>();
             containerRegistry.RegisterDialog<Layers, ViewModels.LayersViewModel>();
