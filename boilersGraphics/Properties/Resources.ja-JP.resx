@@ -375,6 +375,9 @@
   <data name="Dialog_Statistics_Uptime" xml:space="preserve">
     <value>累計稼働時間</value>
   </data>
+  <data name="Dialog_Title_Version" xml:space="preserve">
+    <value>boiler's Graphics のバージョン情報</value>
+  </data>
   <data name="Grouping" xml:space="preserve">
     <value>グループ</value>
   </data>
@@ -564,8 +567,14 @@
   <data name="String_Interval" xml:space="preserve">
     <value>インターバル：</value>
   </data>
+  <data name="String_License" xml:space="preserve">
+    <value>ライセンス</value>
+  </data>
   <data name="String_OK" xml:space="preserve">
     <value>OK</value>
+  </data>
+  <data name="String_OpensourceComponent_Library_Code" xml:space="preserve">
+    <value>オープンソース コンポーネント / ライブラリ / コード</value>
   </data>
   <data name="String_QualityLevel" xml:space="preserve">
     <value>クオリティレベル</value>
@@ -584,6 +593,9 @@
   </data>
   <data name="String_SnapRange" xml:space="preserve">
     <value>ポイントにスナップする範囲</value>
+  </data>
+  <data name="String_Version" xml:space="preserve">
+    <value>バージョン</value>
   </data>
   <data name="Title_ColorPicker" xml:space="preserve">
     <value>カラーピッカー</value>

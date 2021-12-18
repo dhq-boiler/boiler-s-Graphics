@@ -835,6 +835,15 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Version information of boiler&apos;s Graphics に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Title_Version {
+            get {
+                return ResourceManager.GetString("Dialog_Title_Version", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Grouping に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Grouping {
@@ -1402,11 +1411,29 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   License に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_License {
+            get {
+                return ResourceManager.GetString("String_License", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   OK に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string String_OK {
             get {
                 return ResourceManager.GetString("String_OK", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   OpenSource component / Libraries / Code に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_OpensourceComponent_Library_Code {
+            get {
+                return ResourceManager.GetString("String_OpensourceComponent_Library_Code", resourceCulture);
             }
         }
         
@@ -1461,6 +1488,15 @@ namespace boilersGraphics.Properties {
         public static string String_SnapRange {
             get {
                 return ResourceManager.GetString("String_SnapRange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Version に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_Version {
+            get {
+                return ResourceManager.GetString("String_Version", resourceCulture);
             }
         }
         

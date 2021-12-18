@@ -375,6 +375,9 @@
   <data name="Dialog_Statistics_Uptime" xml:space="preserve">
     <value>Uptime</value>
   </data>
+  <data name="Dialog_Title_Version" xml:space="preserve">
+    <value>Version information of boiler's Graphics</value>
+  </data>
   <data name="Grouping" xml:space="preserve">
     <value>Grouping</value>
   </data>
@@ -564,8 +567,14 @@
   <data name="String_Interval" xml:space="preserve">
     <value>Interval:</value>
   </data>
+  <data name="String_License" xml:space="preserve">
+    <value>License</value>
+  </data>
   <data name="String_OK" xml:space="preserve">
     <value>OK</value>
+  </data>
+  <data name="String_OpensourceComponent_Library_Code" xml:space="preserve">
+    <value>OpenSource component / Libraries / Code</value>
   </data>
   <data name="String_QualityLevel" xml:space="preserve">
     <value>Quality level</value>
@@ -584,6 +593,9 @@
   </data>
   <data name="String_SnapRange" xml:space="preserve">
     <value>Range to snap to a point</value>
+  </data>
+  <data name="String_Version" xml:space="preserve">
+    <value>Version</value>
   </data>
   <data name="Title_ColorPicker" xml:space="preserve">
     <value>Color picker</value>

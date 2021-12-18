@@ -7,6 +7,7 @@
              xmlns:mdxam="clr-namespace:MdXaml;assembly=MdXaml"
              xmlns:prism="http://prismlibrary.com/"
              xmlns:view="clr-namespace:boilersGraphics.Views"
+             xmlns:helper="clr-namespace:boilersGraphics.Helpers"
              d:DesignHeight="450"
              d:DesignWidth="800"
              prism:ViewModelLocator.AutoWireViewModel="True"
@@ -27,10 +28,10 @@
                                       VerticalContentAlignment="Center" />
             </StackPanel>
             <StackPanel Orientation="Horizontal">
-                <Label Content="バージョン" />
+                <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_Version, Mode=OneWay}" />
                 <view:SelectableLabel FontSize="20" Text="{Binding Version.Value}" />
             </StackPanel>
-            <Label Content="ライセンス" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_License, Mode=OneWay}" />
             <mdxam:MarkdownScrollViewer xml:space="preserve"
                                         Markdown="{Binding License.Value}"
                                         ScrollViewer.VerticalScrollBarVisibility="Hidden" />
@@ -44,7 +45,7 @@
                 OK
             </Button>
         </StackPanel>
-        <Label Content="オープンソース コンポーネント / ライブラリ / コード"
+        <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_OpensourceComponent_Library_Code, Mode=OneWay}"
                DockPanel.Dock="Top"
                FontSize="20" />
         <mdxam:MarkdownScrollViewer xml:space="preserve" Markdown="{Binding Markdown.Value}" />
