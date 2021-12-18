@@ -1,11 +1,8 @@
 ﻿using boilersGraphics.Models;
+using boilersGraphics.Properties;
 using boilersGraphics.ViewModels;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace boilersGraphics.Test
@@ -83,8 +80,8 @@ namespace boilersGraphics.Test
 
             Assert.That(viewModel.SelectedItems.Value.ToList(), Has.Count.EqualTo(2));
             var selectedItems = viewModel.SelectedItems.Value.ToList();
-            Assert.That(viewModel.GetLayerTreeViewItemBase(selectedItems[0]).Name.Value, Is.EqualTo("アイテム1"));
-            Assert.That(viewModel.GetLayerTreeViewItemBase(selectedItems[1]).Name.Value, Is.EqualTo("アイテム2"));
+            Assert.That(viewModel.GetLayerTreeViewItemBase(selectedItems[0]).Name.Value, Is.EqualTo($"{Resources.Name_Item}1"));
+            Assert.That(viewModel.GetLayerTreeViewItemBase(selectedItems[1]).Name.Value, Is.EqualTo($"{Resources.Name_Item}2"));
         }
 
         [Test]
@@ -111,8 +108,8 @@ namespace boilersGraphics.Test
 
             Assert.That(viewModel.SelectedItems.Value.ToList(), Has.Count.EqualTo(2));
             var selectedItems = viewModel.SelectedItems.Value.ToList();
-            Assert.That(viewModel.GetLayerTreeViewItemBase(selectedItems[0]).Name.Value, Is.EqualTo("アイテム2"));
-            Assert.That(viewModel.GetLayerTreeViewItemBase(selectedItems[1]).Name.Value, Is.EqualTo("アイテム1"));
+            Assert.That(viewModel.GetLayerTreeViewItemBase(selectedItems[0]).Name.Value, Is.EqualTo($"{Resources.Name_Item}2"));
+            Assert.That(viewModel.GetLayerTreeViewItemBase(selectedItems[1]).Name.Value, Is.EqualTo($"{Resources.Name_Item}1"));
         }
 
         [Test]
@@ -141,8 +138,8 @@ namespace boilersGraphics.Test
 
             Assert.That(viewModel.SelectedItems.Value.ToList(), Has.Count.EqualTo(2));
             var selectedItems = viewModel.SelectedItems.Value.ToList();
-            Assert.That(viewModel.GetLayerTreeViewItemBase(selectedItems[0]).Name.Value, Is.EqualTo("アイテム2"));
-            Assert.That(viewModel.GetLayerTreeViewItemBase(selectedItems[1]).Name.Value, Is.EqualTo("アイテム3"));
+            Assert.That(viewModel.GetLayerTreeViewItemBase(selectedItems[0]).Name.Value, Is.EqualTo($"{Resources.Name_Item}2"));
+            Assert.That(viewModel.GetLayerTreeViewItemBase(selectedItems[1]).Name.Value, Is.EqualTo($"{Resources.Name_Item}3"));
         }
 
         [Test]
