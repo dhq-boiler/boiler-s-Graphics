@@ -221,6 +221,8 @@ namespace boilersGraphics.ViewModels
             SwitchLanguageCommand = new DelegateCommand<string>(parameter =>
             {
                 ResourceService.Current.ChangeCulture(parameter);
+
+                ToolBarViewModel.ReinitializeToolItems();
             });
 
             SnapPower.Value = 10;

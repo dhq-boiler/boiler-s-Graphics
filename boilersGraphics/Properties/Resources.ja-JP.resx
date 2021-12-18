@@ -384,4 +384,46 @@
   <data name="Title_Preferences" xml:space="preserve">
     <value>設定</value>
   </data>
+  <data name="Tool_BezierCurve" xml:space="preserve">
+    <value>ベジエ曲線ツール</value>
+  </data>
+  <data name="Tool_Brush" xml:space="preserve">
+    <value>ブラシツール</value>
+  </data>
+  <data name="Tool_Ellipse" xml:space="preserve">
+    <value>円ツール</value>
+  </data>
+  <data name="Tool_Eraser" xml:space="preserve">
+    <value>消しゴムツール</value>
+  </data>
+  <data name="Tool_Lasso" xml:space="preserve">
+    <value>なげなわツール</value>
+  </data>
+  <data name="Tool_Lettering" xml:space="preserve">
+    <value>文字ツール</value>
+  </data>
+  <data name="Tool_Picture" xml:space="preserve">
+    <value>画像ツール</value>
+  </data>
+  <data name="Tool_Pointer" xml:space="preserve">
+    <value>ポインターツール</value>
+  </data>
+  <data name="Tool_Polygon" xml:space="preserve">
+    <value>多角形ツール</value>
+  </data>
+  <data name="Tool_Rectangle" xml:space="preserve">
+    <value>四角形ツール</value>
+  </data>
+  <data name="Tool_Slice" xml:space="preserve">
+    <value>スライスツール</value>
+  </data>
+  <data name="Tool_SnapPoint" xml:space="preserve">
+    <value>スナップポイントツール</value>
+  </data>
+  <data name="Tool_StraightLine" xml:space="preserve">
+    <value>直線ツール</value>
+  </data>
+  <data name="Tool_VerticalLettering" xml:space="preserve">
+    <value>縦書きツール</value>
+  </data>
 </root>

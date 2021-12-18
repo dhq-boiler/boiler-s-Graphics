@@ -1387,6 +1387,7 @@
                                       Width="40"
                                       Height="40"
                                       Padding="3"
+                                      ToolTip="{Binding Tooltip.Value}"
                                       Command="{Binding Command}"
                                       IsChecked="{Binding IsChecked}">
                             <Image RenderOptions.BitmapScalingMode="HighQuality" Source="{Binding ImageUrl}" />

@@ -20,11 +20,19 @@ namespace boilersGraphics.Helpers
             this.ImageUrl = imageUrl;
             this.Command = command;
         }
+        public ToolItemData(string name, string imageUrl, string tooltip, ICommand command)
+        {
+            this.Name.Value = name;
+            this.ImageUrl = imageUrl;
+            this.Command = command;
+            this.Tooltip.Value = tooltip;
+        }
 
         //public string Name { get; private set; }
         public ReactivePropertySlim<string> Name { get; private set; } = new ReactivePropertySlim<string>();
         public string ImageUrl { get; private set; }
         public ICommand Command { get; private set; }
+        public ReactivePropertySlim<string> Tooltip { get; private set; } = new ReactivePropertySlim<string>();
 
         public bool IsChecked
         {

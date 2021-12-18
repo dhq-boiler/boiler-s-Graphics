@@ -860,5 +860,131 @@ namespace boilersGraphics.Properties {
                 return ResourceManager.GetString("Title_Preferences", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Bezier curve tool に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Tool_BezierCurve {
+            get {
+                return ResourceManager.GetString("Tool_BezierCurve", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Brush tool に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Tool_Brush {
+            get {
+                return ResourceManager.GetString("Tool_Brush", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ellipse tool に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Tool_Ellipse {
+            get {
+                return ResourceManager.GetString("Tool_Ellipse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Eraser tool に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Tool_Eraser {
+            get {
+                return ResourceManager.GetString("Tool_Eraser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Lasso tool に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Tool_Lasso {
+            get {
+                return ResourceManager.GetString("Tool_Lasso", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Lettering tool に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Tool_Lettering {
+            get {
+                return ResourceManager.GetString("Tool_Lettering", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Picture tool に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Tool_Picture {
+            get {
+                return ResourceManager.GetString("Tool_Picture", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Pointer tool に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Tool_Pointer {
+            get {
+                return ResourceManager.GetString("Tool_Pointer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Polygon tool に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Tool_Polygon {
+            get {
+                return ResourceManager.GetString("Tool_Polygon", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Rectangle tool に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Tool_Rectangle {
+            get {
+                return ResourceManager.GetString("Tool_Rectangle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Slice tool に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Tool_Slice {
+            get {
+                return ResourceManager.GetString("Tool_Slice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Snap point tool に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Tool_SnapPoint {
+            get {
+                return ResourceManager.GetString("Tool_SnapPoint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Straight line tool に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Tool_StraightLine {
+            get {
+                return ResourceManager.GetString("Tool_StraightLine", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Vertical lettering tool に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Tool_VerticalLettering {
+            get {
+                return ResourceManager.GetString("Tool_VerticalLettering", resourceCulture);
+            }
+        }
     }
 }

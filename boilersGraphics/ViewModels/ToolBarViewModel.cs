@@ -2,6 +2,7 @@
 using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
 using boilersGraphics.Models;
+using boilersGraphics.Properties;
 using boilersGraphics.Views;
 using boilersGraphics.Views.Behaviors;
 using Microsoft.Win32;
@@ -41,13 +42,18 @@ namespace boilersGraphics.ViewModels
         public SetSnapPointBehavior SetSnapPointBehavior { get; } = new SetSnapPointBehavior();
         public BrushBehavior BrushBehavior { get; private set; }
         public EraserBehavior EraserBehavior { get; } = new EraserBehavior();
-        public SliceBehavior SliceBehavior { get; }
+        public SliceBehavior SliceBehavior { get; private set; }
 
         public ToolBarViewModel(IDialogService dialogService)
         {
             this.dlgService = dialogService;
+            InitializeToolItems(dialogService);
+        }
+
+        public void InitializeToolItems(IDialogService dialogService)
+        {
             SliceBehavior = new SliceBehavior(dialogService);
-            ToolItems.Add(new ToolItemData("pointer", "pack://application:,,,/Assets/img/pointer.png", new DelegateCommand(() =>
+            ToolItems.Add(new ToolItemData("pointer", "pack://application:,,,/Assets/img/pointer.png", Resources.Tool_Pointer, new DelegateCommand(() =>
             {
                 Behaviors.Clear();
                 if (!Behaviors.Contains(DeselectBehavior))
@@ -57,7 +63,7 @@ namespace boilersGraphics.ViewModels
                 ChangeHitTestToEnable();
                 SelectOneToolItem("pointer");
             })));
-            ToolItems.Add(new ToolItemData("rubberband", "pack://application:,,,/Assets/img/rubberband.png", new DelegateCommand(() =>
+            ToolItems.Add(new ToolItemData("lasso", "pack://application:,,,/Assets/img/rubberband.png", Resources.Tool_Lasso, new DelegateCommand(() =>
             {
                 Behaviors.Clear();
                 if (!Behaviors.Contains(RubberbandBehavior))
@@ -65,9 +71,9 @@ namespace boilersGraphics.ViewModels
                     Behaviors.Add(RubberbandBehavior);
                 }
                 ChangeHitTestToEnable();
-                SelectOneToolItem("rubberband");
+                SelectOneToolItem("lasso");
             })));
-            ToolItems.Add(new ToolItemData("straightline", "pack://application:,,,/Assets/img/straightline.png", new DelegateCommand(() =>
+            ToolItems.Add(new ToolItemData("straightline", "pack://application:,,,/Assets/img/straightline.png", Resources.Tool_StraightLine, new DelegateCommand(() =>
             {
                 Behaviors.Clear();
                 if (!Behaviors.Contains(NDrawStraightLineBehavior))
@@ -77,7 +83,7 @@ namespace boilersGraphics.ViewModels
                 ChangeHitTestToDisable();
                 SelectOneToolItem("straightline");
             })));
-            ToolItems.Add(new ToolItemData("rectangle", "pack://application:,,,/Assets/img/rectangle.png", new DelegateCommand(() =>
+            ToolItems.Add(new ToolItemData("rectangle", "pack://application:,,,/Assets/img/rectangle.png", Resources.Tool_Rectangle, new DelegateCommand(() =>
             {
                 Behaviors.Clear();
                 if (!Behaviors.Contains(NDrawRectangleBehavior))
@@ -87,7 +93,7 @@ namespace boilersGraphics.ViewModels
                 ChangeHitTestToDisable();
                 SelectOneToolItem("rectangle");
             })));
-            ToolItems.Add(new ToolItemData("ellipse", "pack://application:,,,/Assets/img/ellipse.png", new DelegateCommand(() =>
+            ToolItems.Add(new ToolItemData("ellipse", "pack://application:,,,/Assets/img/ellipse.png", Resources.Tool_Ellipse, new DelegateCommand(() =>
             {
                 Behaviors.Clear();
                 if (!Behaviors.Contains(NDrawEllipseBehavior))
@@ -97,7 +103,7 @@ namespace boilersGraphics.ViewModels
                 ChangeHitTestToDisable();
                 SelectOneToolItem("ellipse");
             })));
-            ToolItems.Add(new ToolItemData("picture", "pack://application:,,,/Assets/img/Picture.png", new DelegateCommand(() =>
+            ToolItems.Add(new ToolItemData("picture", "pack://application:,,,/Assets/img/Picture.png", Resources.Tool_Picture, new DelegateCommand(() =>
             {
                 var dialog = new OpenFileDialog();
                 dialog.Multiselect = false;
@@ -115,7 +121,7 @@ namespace boilersGraphics.ViewModels
                     SelectOneToolItem("picture");
                 }
             })));
-            ToolItems.Add(new ToolItemData("letter", "pack://application:,,,/Assets/img/A.png", new DelegateCommand(() =>
+            ToolItems.Add(new ToolItemData("letter", "pack://application:,,,/Assets/img/A.png", Resources.Tool_Lettering, new DelegateCommand(() =>
             {
                 Behaviors.Clear();
                 if (!Behaviors.Contains(LetterBehavior))
@@ -125,7 +131,7 @@ namespace boilersGraphics.ViewModels
                 ChangeHitTestToDisable();
                 SelectOneToolItem("letter");
             })));
-            ToolItems.Add(new ToolItemData("letter-vertical", "pack://application:,,,/Assets/img/A_Vertical.png", new DelegateCommand(() =>
+            ToolItems.Add(new ToolItemData("letter-vertical", "pack://application:,,,/Assets/img/A_Vertical.png", Resources.Tool_VerticalLettering, new DelegateCommand(() =>
             {
                 Behaviors.Clear();
                 if (!Behaviors.Contains(LetterVerticalBehavior))
@@ -135,7 +141,7 @@ namespace boilersGraphics.ViewModels
                 ChangeHitTestToDisable();
                 SelectOneToolItem("letter-vertical");
             })));
-            ToolItems.Add(new ToolItemData("polygon", "pack://application:,,,/Assets/img/polygon.png", new DelegateCommand(() =>
+            ToolItems.Add(new ToolItemData("polygon", "pack://application:,,,/Assets/img/polygon.png", Resources.Tool_Polygon, new DelegateCommand(() =>
             {
                 IDialogResult result = null;
                 this.dlgService.ShowDialog(nameof(PolygonSetting), ret => result = ret);
@@ -153,7 +159,7 @@ namespace boilersGraphics.ViewModels
                     SelectOneToolItem("polygon");
                 }
             })));
-            ToolItems.Add(new ToolItemData("bezier", "pack://application:,,,/Assets/img/BezierCurve.png", new DelegateCommand(() =>
+            ToolItems.Add(new ToolItemData("bezier", "pack://application:,,,/Assets/img/BezierCurve.png", Resources.Tool_BezierCurve, new DelegateCommand(() =>
             {
                 Behaviors.Clear();
                 if (!Behaviors.Contains(NDrawBezierCurveBehavior))
@@ -163,7 +169,7 @@ namespace boilersGraphics.ViewModels
                 ChangeHitTestToDisable();
                 SelectOneToolItem("bezier");
             })));
-            ToolItems.Add(new ToolItemData("snappoint", "pack://application:,,,/Assets/img/SnapPoint.png", new DelegateCommand(() =>
+            ToolItems.Add(new ToolItemData("snappoint", "pack://application:,,,/Assets/img/SnapPoint.png", Resources.Tool_SnapPoint, new DelegateCommand(() =>
             {
                 Behaviors.Clear();
                 if (!Behaviors.Contains(SetSnapPointBehavior))
@@ -173,7 +179,7 @@ namespace boilersGraphics.ViewModels
                 ChangeHitTestToDisable();
                 SelectOneToolItem("snappoint");
             })));
-            ToolItems.Add(new ToolItemData("brush", "pack://application:,,,/Assets/img/brush.png", new DelegateCommand(() =>
+            ToolItems.Add(new ToolItemData("brush", "pack://application:,,,/Assets/img/brush.png", Resources.Tool_Brush, new DelegateCommand(() =>
             {
                 BrushBehavior = new BrushBehavior(dlgService);
                 BrushBehavior.CurrentBrush.OpenThicknessDialog();
@@ -185,7 +191,7 @@ namespace boilersGraphics.ViewModels
                 ChangeHitTestToDisable();
                 SelectOneToolItem("brush");
             })));
-            ToolItems.Add(new ToolItemData("eraser", "pack://application:,,,/Assets/img/eraser.png", new DelegateCommand(() =>
+            ToolItems.Add(new ToolItemData("eraser", "pack://application:,,,/Assets/img/eraser.png", Resources.Tool_Eraser, new DelegateCommand(() =>
             {
                 Behaviors.Clear();
                 if (!Behaviors.Contains(EraserBehavior))
@@ -195,7 +201,7 @@ namespace boilersGraphics.ViewModels
                 ChangeHitTestToDisable();
                 SelectOneToolItem("eraser");
             })));
-            ToolItems.Add(new ToolItemData("slice", "pack://application:,,,/Assets/img/slice_tool.png", new DelegateCommand(() =>
+            ToolItems.Add(new ToolItemData("slice", "pack://application:,,,/Assets/img/slice_tool.png", Resources.Tool_Slice, new DelegateCommand(() =>
             {
                 Behaviors.Clear();
                 if (!Behaviors.Contains(SliceBehavior))
@@ -205,6 +211,17 @@ namespace boilersGraphics.ViewModels
                 ChangeHitTestToDisable();
                 SelectOneToolItem("slice");
             })));
+        }
+
+        public void FinalizeToolItems()
+        {
+            ToolItems.Clear();
+        }
+
+        public void ReinitializeToolItems()
+        {
+            FinalizeToolItems();
+            InitializeToolItems(dlgService);
         }
 
         private void ChangeHitTestToDisable()

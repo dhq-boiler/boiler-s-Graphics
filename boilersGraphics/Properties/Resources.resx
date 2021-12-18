@@ -384,4 +384,46 @@
   <data name="Title_Preferences" xml:space="preserve">
     <value>Preferences</value>
   </data>
+  <data name="Tool_BezierCurve" xml:space="preserve">
+    <value>Bezier curve tool</value>
+  </data>
+  <data name="Tool_Brush" xml:space="preserve">
+    <value>Brush tool</value>
+  </data>
+  <data name="Tool_Ellipse" xml:space="preserve">
+    <value>Ellipse tool</value>
+  </data>
+  <data name="Tool_Eraser" xml:space="preserve">
+    <value>Eraser tool</value>
+  </data>
+  <data name="Tool_Lasso" xml:space="preserve">
+    <value>Lasso tool</value>
+  </data>
+  <data name="Tool_Lettering" xml:space="preserve">
+    <value>Lettering tool</value>
+  </data>
+  <data name="Tool_Picture" xml:space="preserve">
+    <value>Picture tool</value>
+  </data>
+  <data name="Tool_Pointer" xml:space="preserve">
+    <value>Pointer tool</value>
+  </data>
+  <data name="Tool_Polygon" xml:space="preserve">
+    <value>Polygon tool</value>
+  </data>
+  <data name="Tool_Rectangle" xml:space="preserve">
+    <value>Rectangle tool</value>
+  </data>
+  <data name="Tool_Slice" xml:space="preserve">
+    <value>Slice tool</value>
+  </data>
+  <data name="Tool_SnapPoint" xml:space="preserve">
+    <value>Snap point tool</value>
+  </data>
+  <data name="Tool_StraightLine" xml:space="preserve">
+    <value>Straight line tool</value>
+  </data>
+  <data name="Tool_VerticalLettering" xml:space="preserve">
+    <value>Vertical lettering tool</value>
+  </data>
 </root>
