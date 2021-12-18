@@ -646,6 +646,24 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Item に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Name_Item {
+            get {
+                return ResourceManager.GetString("Name_Item", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Layer に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Name_Layer {
+            get {
+                return ResourceManager.GetString("Name_Layer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ordering に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Ordering {
@@ -691,11 +709,38 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Create a Layer に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Pane_Layer_CreateLayer {
+            get {
+                return ResourceManager.GetString("Pane_Layer_CreateLayer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Remove a Layer に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Pane_Layer_RemoveLayer {
+            get {
+                return ResourceManager.GetString("Pane_Layer_RemoveLayer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Combine に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string PaneTitle_Combine {
             get {
                 return ResourceManager.GetString("PaneTitle_Combine", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Layer に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PaneTitle_Layer {
+            get {
+                return ResourceManager.GetString("PaneTitle_Layer", resourceCulture);
             }
         }
         

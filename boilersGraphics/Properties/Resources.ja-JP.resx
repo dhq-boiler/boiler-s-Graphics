@@ -312,11 +312,20 @@
   <data name="MenuItem_Window" xml:space="preserve">
     <value>ウインドウ(_W)</value>
   </data>
+  <data name="Name_Item" xml:space="preserve">
+    <value>アイテム</value>
+  </data>
+  <data name="Name_Layer" xml:space="preserve">
+    <value>レイヤー</value>
+  </data>
   <data name="Ordering" xml:space="preserve">
     <value>順序</value>
   </data>
   <data name="PaneTitle_Combine" xml:space="preserve">
     <value>結合</value>
+  </data>
+  <data name="PaneTitle_Layer" xml:space="preserve">
+    <value>レイヤー</value>
   </data>
   <data name="Pane_Combine_Exclude" xml:space="preserve">
     <value>Exclude</value>
@@ -329,6 +338,12 @@
   </data>
   <data name="Pane_Combine_Xor" xml:space="preserve">
     <value>Xor</value>
+  </data>
+  <data name="Pane_Layer_CreateLayer" xml:space="preserve">
+    <value>レイヤーを新規作成する</value>
+  </data>
+  <data name="Pane_Layer_RemoveLayer" xml:space="preserve">
+    <value>レイヤーを削除する</value>
   </data>
   <data name="String_A" xml:space="preserve">
     <value>アルファ</value>

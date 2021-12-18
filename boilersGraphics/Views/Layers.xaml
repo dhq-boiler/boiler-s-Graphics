@@ -302,7 +302,8 @@
                                         <Button Width="20"
                                                 Height="20"
                                                 Command="{Binding RemoveLayerCommand}"
-                                                DockPanel.Dock="Right">
+                                                DockPanel.Dock="Right"
+                                                ToolTip="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Pane_Layer_RemoveLayer}">
                                             <Button.Template>
                                                 <ControlTemplate TargetType="Button">
                                                     <Border BorderBrush="Black" BorderThickness="1">
@@ -316,7 +317,8 @@
                                         <Button Width="20"
                                                 Height="20"
                                                 Command="{Binding AddLayerCommand}"
-                                                DockPanel.Dock="Right">
+                                                DockPanel.Dock="Right"
+                                                ToolTip="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Pane_Layer_CreateLayer}">
                                             <Button.Template>
                                                 <ControlTemplate TargetType="Button">
                                                     <Border BorderBrush="Black" BorderThickness="1">
@@ -327,7 +329,7 @@
                                                 </ControlTemplate>
                                             </Button.Template>
                                         </Button>
-                                        <Label Content="レイヤー" />
+                                        <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.PaneTitle_Layer}" />
                                     </DockPanel>
                                 </Expander.Header>
                             </Expander>
