@@ -72,7 +72,7 @@ namespace boilersGraphics.ViewModels
 
                 var backgroundItem = diagramViewModel.BackgroundItem.Value;
                 RenderTargetBitmap rtb = Render(designerCanvas, diagramViewModel, backgroundItem);
-                OpenCvSharpHelper.ImShow("preview", rtb);
+                //OpenCvSharpHelper.ImShow("preview", rtb);
                 Preview.Value = rtb;
 
                 designerCanvas.LayoutTransform = tempLayoutTransform;
@@ -151,7 +151,7 @@ namespace boilersGraphics.ViewModels
             }
             rtb.Render(visual);
 
-            OpenCvSharpHelper.ImShow("step1. render background", rtb);
+            //OpenCvSharpHelper.ImShow("step1. render background", rtb);
 
             using (DrawingContext context = visual.RenderOpen())
             {
@@ -159,7 +159,7 @@ namespace boilersGraphics.ViewModels
             }
             rtb.Render(visual);
 
-            OpenCvSharpHelper.ImShow("step2. render foreground", rtb);
+            //OpenCvSharpHelper.ImShow("step2. render foreground", rtb);
 
             rtb.Freeze();
 
@@ -243,7 +243,7 @@ namespace boilersGraphics.ViewModels
                     context2.DrawRectangle(brush, null, rect);
                 }
                 rtb.Render(visual);
-                OpenCvSharpHelper.ImShow("Foreground", rtb);
+                //OpenCvSharpHelper.ImShow("Foreground", rtb);
             }
         }
 
