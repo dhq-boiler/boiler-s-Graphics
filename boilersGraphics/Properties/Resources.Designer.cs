@@ -655,6 +655,51 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Exclude に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Pane_Combine_Exclude {
+            get {
+                return ResourceManager.GetString("Pane_Combine_Exclude", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Intersect に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Pane_Combine_Intersect {
+            get {
+                return ResourceManager.GetString("Pane_Combine_Intersect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Union に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Pane_Combine_Union {
+            get {
+                return ResourceManager.GetString("Pane_Combine_Union", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Xor に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Pane_Combine_Xor {
+            get {
+                return ResourceManager.GetString("Pane_Combine_Xor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Combine に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PaneTitle_Combine {
+            get {
+                return ResourceManager.GetString("PaneTitle_Combine", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Alpha に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string String_A {

@@ -315,6 +315,21 @@
   <data name="Ordering" xml:space="preserve">
     <value>Ordering</value>
   </data>
+  <data name="PaneTitle_Combine" xml:space="preserve">
+    <value>Combine</value>
+  </data>
+  <data name="Pane_Combine_Exclude" xml:space="preserve">
+    <value>Exclude</value>
+  </data>
+  <data name="Pane_Combine_Intersect" xml:space="preserve">
+    <value>Intersect</value>
+  </data>
+  <data name="Pane_Combine_Union" xml:space="preserve">
+    <value>Union</value>
+  </data>
+  <data name="Pane_Combine_Xor" xml:space="preserve">
+    <value>Xor</value>
+  </data>
   <data name="String_A" xml:space="preserve">
     <value>Alpha</value>
   </data>
