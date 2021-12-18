@@ -184,7 +184,7 @@
     <value>Send backward</value>
   </data>
   <data name="Command_Setting" xml:space="preserve">
-    <value>Setting</value>
+    <value>Preferences</value>
   </data>
   <data name="Command_Ungroup" xml:space="preserve">
     <value>Ungroup</value>
@@ -277,7 +277,7 @@
     <value>Paste(_P)</value>
   </data>
   <data name="MenuItem_Preference" xml:space="preserve">
-    <value>Preference(_P)</value>
+    <value>Preferences(_P)</value>
   </data>
   <data name="MenuItem_Property" xml:space="preserve">
     <value>Property</value>
@@ -318,11 +318,26 @@
   <data name="String_A" xml:space="preserve">
     <value>Alpha</value>
   </data>
+  <data name="String_AutoSave" xml:space="preserve">
+    <value>Autosave</value>
+  </data>
+  <data name="String_AutoSaveEveryTimeYouChangeCamvas" xml:space="preserve">
+    <value>Automatically save every camvas change</value>
+  </data>
   <data name="String_B" xml:space="preserve">
     <value>Blue</value>
   </data>
   <data name="String_Cancel" xml:space="preserve">
     <value>Cancel</value>
+  </data>
+  <data name="String_CanvasBackground" xml:space="preserve">
+    <value>Canvas Background</value>
+  </data>
+  <data name="String_CanvasHeight" xml:space="preserve">
+    <value>Canvas Height</value>
+  </data>
+  <data name="String_CanvasWidth" xml:space="preserve">
+    <value>Canvas Width</value>
   </data>
   <data name="String_Export" xml:space="preserve">
     <value>Export</value>
@@ -336,6 +351,12 @@
   <data name="String_Hue" xml:space="preserve">
     <value>Hue</value>
   </data>
+  <data name="String_Interval" xml:space="preserve">
+    <value>Interval:</value>
+  </data>
+  <data name="String_OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
   <data name="String_QualityLevel" xml:space="preserve">
     <value>Quality level</value>
   </data>
@@ -345,10 +366,22 @@
   <data name="String_Reference" xml:space="preserve">
     <value>Reference</value>
   </data>
+  <data name="String_SetInterval" xml:space="preserve">
+    <value>Set the interval</value>
+  </data>
+  <data name="String_SnapPoint" xml:space="preserve">
+    <value>Snap to a point</value>
+  </data>
+  <data name="String_SnapRange" xml:space="preserve">
+    <value>Range to snap to a point</value>
+  </data>
   <data name="Title_ColorPicker" xml:space="preserve">
     <value>Color picker</value>
   </data>
   <data name="Title_Export" xml:space="preserve">
     <value>Export</value>
+  </data>
+  <data name="Title_Preferences" xml:space="preserve">
+    <value>Preferences</value>
   </data>
 </root>

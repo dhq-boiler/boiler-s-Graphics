@@ -318,11 +318,26 @@
   <data name="String_A" xml:space="preserve">
     <value>アルファ</value>
   </data>
+  <data name="String_AutoSave" xml:space="preserve">
+    <value>自動保存</value>
+  </data>
+  <data name="String_AutoSaveEveryTimeYouChangeCamvas" xml:space="preserve">
+    <value>キャンパス変更毎に自動保存する</value>
+  </data>
   <data name="String_B" xml:space="preserve">
     <value>青(Blue)</value>
   </data>
   <data name="String_Cancel" xml:space="preserve">
     <value>キャンセル</value>
+  </data>
+  <data name="String_CanvasBackground" xml:space="preserve">
+    <value>キャンバスの背景色</value>
+  </data>
+  <data name="String_CanvasHeight" xml:space="preserve">
+    <value>キャンパスの高さ</value>
+  </data>
+  <data name="String_CanvasWidth" xml:space="preserve">
+    <value>キャンパスの幅</value>
   </data>
   <data name="String_Export" xml:space="preserve">
     <value>エクスポート</value>
@@ -336,6 +351,12 @@
   <data name="String_Hue" xml:space="preserve">
     <value>色相(Hue)</value>
   </data>
+  <data name="String_Interval" xml:space="preserve">
+    <value>インターバル：</value>
+  </data>
+  <data name="String_OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
   <data name="String_QualityLevel" xml:space="preserve">
     <value>クオリティレベル</value>
   </data>
@@ -345,10 +366,22 @@
   <data name="String_Reference" xml:space="preserve">
     <value>参照</value>
   </data>
+  <data name="String_SetInterval" xml:space="preserve">
+    <value>インターバルを設定する</value>
+  </data>
+  <data name="String_SnapPoint" xml:space="preserve">
+    <value>ポイントにスナップする</value>
+  </data>
+  <data name="String_SnapRange" xml:space="preserve">
+    <value>ポイントにスナップする範囲</value>
+  </data>
   <data name="Title_ColorPicker" xml:space="preserve">
     <value>カラーピッカー</value>
   </data>
   <data name="Title_Export" xml:space="preserve">
     <value>エクスポート</value>
+  </data>
+  <data name="Title_Preferences" xml:space="preserve">
+    <value>設定</value>
   </data>
 </root>

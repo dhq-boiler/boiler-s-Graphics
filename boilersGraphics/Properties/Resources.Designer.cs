@@ -259,7 +259,7 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
-        ///   Setting に類似しているローカライズされた文字列を検索します。
+        ///   Preferences に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_Setting {
             get {
@@ -538,7 +538,7 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
-        ///   Preference(_P) に類似しているローカライズされた文字列を検索します。
+        ///   Preferences(_P) に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string MenuItem_Preference {
             get {
@@ -664,6 +664,24 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Autosave に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_AutoSave {
+            get {
+                return ResourceManager.GetString("String_AutoSave", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Automatically save every camvas change に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_AutoSaveEveryTimeYouChangeCamvas {
+            get {
+                return ResourceManager.GetString("String_AutoSaveEveryTimeYouChangeCamvas", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Blue に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string String_B {
@@ -678,6 +696,33 @@ namespace boilersGraphics.Properties {
         public static string String_Cancel {
             get {
                 return ResourceManager.GetString("String_Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Canvas Background に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_CanvasBackground {
+            get {
+                return ResourceManager.GetString("String_CanvasBackground", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Canvas Height に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_CanvasHeight {
+            get {
+                return ResourceManager.GetString("String_CanvasHeight", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Canvas Width に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_CanvasWidth {
+            get {
+                return ResourceManager.GetString("String_CanvasWidth", resourceCulture);
             }
         }
         
@@ -718,6 +763,24 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Interval: に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_Interval {
+            get {
+                return ResourceManager.GetString("String_Interval", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   OK に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_OK {
+            get {
+                return ResourceManager.GetString("String_OK", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Quality level に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string String_QualityLevel {
@@ -745,6 +808,33 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Set the interval に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_SetInterval {
+            get {
+                return ResourceManager.GetString("String_SetInterval", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Snap to a point に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_SnapPoint {
+            get {
+                return ResourceManager.GetString("String_SnapPoint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Range to snap to a point に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_SnapRange {
+            get {
+                return ResourceManager.GetString("String_SnapRange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Color picker に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Title_ColorPicker {
@@ -759,6 +849,15 @@ namespace boilersGraphics.Properties {
         public static string Title_Export {
             get {
                 return ResourceManager.GetString("Title_Export", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Preferences に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Title_Preferences {
+            get {
+                return ResourceManager.GetString("Title_Preferences", resourceCulture);
             }
         }
     }

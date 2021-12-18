@@ -1,4 +1,5 @@
 ﻿using boilersGraphics.Helpers;
+using boilersGraphics.Properties;
 using boilersGraphics.Views;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
@@ -77,7 +78,7 @@ namespace boilersGraphics.ViewModels
             .AddTo(_disposables);
         }
 
-        public string Title => "設定";
+        public string Title => Resources.Title_Preferences;
 
         public event Action<IDialogResult> RequestClose;
 
