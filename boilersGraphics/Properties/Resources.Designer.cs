@@ -844,11 +844,56 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Confirm に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string DialogTitle_Confirm {
+            get {
+                return ResourceManager.GetString("DialogTitle_Confirm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Read error に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string DialogTitle_ReadError {
+            get {
+                return ResourceManager.GetString("DialogTitle_ReadError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Grouping に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Grouping {
             get {
                 return ResourceManager.GetString("Grouping", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   This file is too old or corrupted to open. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Log_FileCannotOpenBecauseTooOldOrCorrupted {
+            get {
+                return ResourceManager.GetString("Log_FileCannotOpenBecauseTooOldOrCorrupted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Read the file in forced read mode. This mode is enforced when the Version element is not found. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Log_ForceReadMode {
+            get {
+                return ResourceManager.GetString("Log_ForceReadMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   App read the file ({0}). に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Log_LoadedFile {
+            get {
+                return ResourceManager.GetString("Log_LoadedFile", resourceCulture);
             }
         }
         
@@ -1191,6 +1236,42 @@ namespace boilersGraphics.Properties {
         public static string MenuItem_Window {
             get {
                 return ResourceManager.GetString("MenuItem_Window", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   It was saved automatically. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Message_Autosaved {
+            get {
+                return ResourceManager.GetString("Message_Autosaved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   The current campus will be destroyed, is that okay? に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Message_CanvasWillDiscardedConfirm {
+            get {
+                return ResourceManager.GetString("Message_CanvasWillDiscardedConfirm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   The file is too new to open. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Message_FileCannotOpenBecauseTooNew {
+            get {
+                return ResourceManager.GetString("Message_FileCannotOpenBecauseTooNew", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   This file is too old or corrupted to open. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Message_FileCannotOpenBecauseTooOldOrCorrupted {
+            get {
+                return ResourceManager.GetString("Message_FileCannotOpenBecauseTooOldOrCorrupted", resourceCulture);
             }
         }
         

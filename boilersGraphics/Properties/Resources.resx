@@ -195,6 +195,12 @@
   <data name="Command_UniformWidth" xml:space="preserve">
     <value>Uniform width</value>
   </data>
+  <data name="DialogTitle_Confirm" xml:space="preserve">
+    <value>Confirm</value>
+  </data>
+  <data name="DialogTitle_ReadError" xml:space="preserve">
+    <value>Read error</value>
+  </data>
   <data name="Dialog_Statistics_CumulativeNumberOfItemsSelectedWithTheLassoTool" xml:space="preserve">
     <value>Cumulative number of items selected with the Lasso Tool</value>
   </data>
@@ -381,6 +387,15 @@
   <data name="Grouping" xml:space="preserve">
     <value>Grouping</value>
   </data>
+  <data name="Log_FileCannotOpenBecauseTooOldOrCorrupted" xml:space="preserve">
+    <value>This file is too old or corrupted to open.</value>
+  </data>
+  <data name="Log_ForceReadMode" xml:space="preserve">
+    <value>Read the file in forced read mode. This mode is enforced when the Version element is not found.</value>
+  </data>
+  <data name="Log_LoadedFile" xml:space="preserve">
+    <value>App read the file ({0}).</value>
+  </data>
   <data name="MenuItem_BrushThickness" xml:space="preserve">
     <value>Brush thickness</value>
   </data>
@@ -494,6 +509,18 @@
   </data>
   <data name="MenuItem_Window" xml:space="preserve">
     <value>Window(_W)</value>
+  </data>
+  <data name="Message_Autosaved" xml:space="preserve">
+    <value>It was saved automatically.</value>
+  </data>
+  <data name="Message_CanvasWillDiscardedConfirm" xml:space="preserve">
+    <value>The current campus will be destroyed, is that okay?</value>
+  </data>
+  <data name="Message_FileCannotOpenBecauseTooNew" xml:space="preserve">
+    <value>The file is too new to open.</value>
+  </data>
+  <data name="Message_FileCannotOpenBecauseTooOldOrCorrupted" xml:space="preserve">
+    <value>This file is too old or corrupted to open.</value>
   </data>
   <data name="Name_Item" xml:space="preserve">
     <value>Item</value>

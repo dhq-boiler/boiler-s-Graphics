@@ -195,6 +195,12 @@
   <data name="Command_UniformWidth" xml:space="preserve">
     <value>幅を合わせる</value>
   </data>
+  <data name="DialogTitle_Confirm" xml:space="preserve">
+    <value>確認</value>
+  </data>
+  <data name="DialogTitle_ReadError" xml:space="preserve">
+    <value>読み込みエラー</value>
+  </data>
   <data name="Dialog_Statistics_CumulativeNumberOfItemsSelectedWithTheLassoTool" xml:space="preserve">
     <value>なげなわツールで選択したアイテムの累計</value>
   </data>
@@ -381,6 +387,15 @@
   <data name="Grouping" xml:space="preserve">
     <value>グループ</value>
   </data>
+  <data name="Log_FileCannotOpenBecauseTooOldOrCorrupted" xml:space="preserve">
+    <value>【読み込みエラー】このファイルは古すぎるか壊れているため開けません。</value>
+  </data>
+  <data name="Log_ForceReadMode" xml:space="preserve">
+    <value>強制読み込みモードでファイルを読み込みます。このモードはVersion要素が見つからない時に実施されます。</value>
+  </data>
+  <data name="Log_LoadedFile" xml:space="preserve">
+    <value>ファイル({0})を読み込みました。</value>
+  </data>
   <data name="MenuItem_BrushThickness" xml:space="preserve">
     <value>ブラシの太さ</value>
   </data>
@@ -494,6 +509,18 @@
   </data>
   <data name="MenuItem_Window" xml:space="preserve">
     <value>ウインドウ(_W)</value>
+  </data>
+  <data name="Message_Autosaved" xml:space="preserve">
+    <value>自動保存しました。</value>
+  </data>
+  <data name="Message_CanvasWillDiscardedConfirm" xml:space="preserve">
+    <value>現在のキャンパスは破棄されますが、よろしいですか？</value>
+  </data>
+  <data name="Message_FileCannotOpenBecauseTooNew" xml:space="preserve">
+    <value>ファイルが新しすぎて開けません。</value>
+  </data>
+  <data name="Message_FileCannotOpenBecauseTooOldOrCorrupted" xml:space="preserve">
+    <value>このファイルは古すぎるか壊れているため開けません。</value>
   </data>
   <data name="Name_Item" xml:space="preserve">
     <value>アイテム</value>

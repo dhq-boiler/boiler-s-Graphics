@@ -4,6 +4,7 @@ using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
 using boilersGraphics.Messenger;
 using boilersGraphics.Models;
+using boilersGraphics.Properties;
 using boilersGraphics.UserControls;
 using boilersGraphics.Views;
 using Microsoft.Win32;
@@ -615,7 +616,7 @@ namespace boilersGraphics.ViewModels
                 root.Save(path);
             });
 
-            MainWindowVM.Message.Value = $"{AutoSavedDateTime.Value} 自動保存しました。";
+            MainWindowVM.Message.Value = $"{AutoSavedDateTime.Value} {Resources.Message_Autosaved}";
 
             LogManager.GetCurrentClassLogger().Info($"{AutoSavedDateTime.Value} {path} に自動保存しました。");
 
@@ -1490,7 +1491,7 @@ namespace boilersGraphics.ViewModels
 
         private void ExecuteLoadCommand()
         {
-            var result = MessageBox.Show("現在のキャンパスは破棄されますが、よろしいですか？", "確認", MessageBoxButton.OKCancel);
+            var result = MessageBox.Show(Resources.Message_CanvasWillDiscardedConfirm, Resources.DialogTitle_Confirm, MessageBoxButton.OKCancel);
             if (result == MessageBoxResult.Cancel)
                 return;
             var (root, filename) = LoadSerializedDataFromFile();
@@ -1513,13 +1514,13 @@ namespace boilersGraphics.ViewModels
                 var version = new System.Version(root.Element("Version").Value);
                 if (version > BGSXFileVersion)
                 {
-                    MessageBox.Show("ファイルが新しすぎて開けません。");
+                    MessageBox.Show(Resources.Message_FileCannotOpenBecauseTooNew);
                     return;
                 }
             }
             else
             {
-                LogManager.GetCurrentClassLogger().Info("強制読み込みモードでファイルを読み込みます。このモードはVersion要素が見つからない時に実施されます。");
+                LogManager.GetCurrentClassLogger().Info(Resources.Log_ForceReadMode);
             }
 
 
@@ -1541,8 +1542,8 @@ namespace boilersGraphics.ViewModels
             }
             catch (Exception)
             {
-                MessageBox.Show("このファイルは古すぎるか壊れているため開けません。", "読み込みエラー");
-                LogManager.GetCurrentClassLogger().Error("【読み込みエラー】このファイルは古すぎるか壊れているため開けません。");
+                MessageBox.Show(Resources.Message_FileCannotOpenBecauseTooOldOrCorrupted, Resources.DialogTitle_ReadError);
+                LogManager.GetCurrentClassLogger().Error(Resources.Log_FileCannotOpenBecauseTooOldOrCorrupted);
                 FileName.Value = "*";
                 return;
             }
@@ -1555,14 +1556,14 @@ namespace boilersGraphics.ViewModels
             layersViewModel.InitializeHitTestVisible(mainwindowViewModel);
             Layers.First().IsSelected.Value = true;
 
-            LogManager.GetCurrentClassLogger().Info($"ファイル({filename})を読み込みました。");
+            LogManager.GetCurrentClassLogger().Info(string.Format(Resources.Log_LoadedFile, filename));
         }
 
         private void ExecuteLoadCommand(string file, bool showConfirmDialog = true)
         {
             if (showConfirmDialog)
             {
-                var result = MessageBox.Show("現在のキャンパスは破棄されますが、よろしいですか？", "確認", MessageBoxButton.OKCancel);
+                var result = MessageBox.Show(Resources.Message_CanvasWillDiscardedConfirm, Resources.DialogTitle_Confirm, MessageBoxButton.OKCancel);
                 if (result == MessageBoxResult.Cancel)
                     return;
             }
