@@ -295,6 +295,546 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Cumulative number of items selected with the Lasso Tool に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_CumulativeNumberOfItemsSelectedWithTheLassoTool {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_CumulativeNumberOfItemsSelectedWithTheLassoTool", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of boots に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfBoots {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfBoots", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of bottom alignment に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfBottomAlignment {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfBottomAlignment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of clicks with the pointer tool に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfClicksWithThePointerTool {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfClicksWithThePointerTool", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of copies に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfCopies {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfCopies", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of cuts に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfCuts {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfCuts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of deleted layers に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfDeletedLayers {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfDeletedLayers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of drawing of picture tool に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfDrawingOfPictureTool {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfDrawingOfPictureTool", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of draws for the straight line tool に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfDrawsForTheStraightLineTool {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfDrawsForTheStraightLineTool", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of draws of Bezier curve tool に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfDrawsOfBezierCurveTool {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfDrawsOfBezierCurveTool", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of draws of polygon tool に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfDrawsOfPolygonTool {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfDrawsOfPolygonTool", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of draws of the ellipse tool に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfDrawsOfTheEllipseTool {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfDrawsOfTheEllipseTool", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of draws of the lettering tool に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfDrawsOfTheLetteringTool {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfDrawsOfTheLetteringTool", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of draws of the rectangle tool に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfDrawsOfTheRectangleTool {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfDrawsOfTheRectangleTool", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of draws of the vertical lettering tool に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfDrawsOfTheVerticalLetteringTool {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfDrawsOfTheVerticalLetteringTool", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of Excludes に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfExcludes {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfExcludes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of exports に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfExports {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfExports", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of exports as BMP に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfExportsAsBmp {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfExportsAsBmp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of exports as GIF に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfExportsAsGif {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfExportsAsGif", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of exports as Jpeg に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfExportsAsJpeg {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfExportsAsJpeg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of exports as PNG に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfExportsAsPng {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfExportsAsPng", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of exports as TIFF に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfExportsAsTiff {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfExportsAsTiff", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of exports as WMP に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfExportsAsWmp {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfExportsAsWmp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of intersects に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfIntersects {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfIntersects", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of left aligned に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfLeftAlignment {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfLeftAlignment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of log level changes に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfLogLevelChanges {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfLogLevelChanges", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of moves to the back に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfMovesToTheBack {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfMovesToTheBack", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of moves to the front に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfMovesToTheFront {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfMovesToTheFront", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of newly created layers に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfNewlyCreatedLayers {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfNewlyCreatedLayers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of pasted に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfPasted {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfPasted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of redoes に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfRedoes {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfRedoes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of right aligned に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfRightAlignment {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfRightAlignment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of snap point tool installations に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfSnapPointToolInstallations {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfSnapPointToolInstallations", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of times aligned left and right に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfTimesAlignedLeftAndRight {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfTimesAlignedLeftAndRight", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of times aligned up and down に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfTimesAlignedUpAndDown {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfTimesAlignedUpAndDown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of times automatically saved に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfTimesAutomaticallySaved {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfTimesAutomaticallySaved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of times grouped に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfTimesGrouped {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfTimesGrouped", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of times left and right centered に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfTimesLeftAndRightCentered {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfTimesLeftAndRightCentered", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of times saved by overwriting に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfTimesSavedByOverwriting {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfTimesSavedByOverwriting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of times the application log was displayed に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfTimesTheApplicationLogWasDisplayed {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfTimesTheApplicationLogWasDisplayed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of times the auto save file is specified and opened に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfTimesTheAutoSaveFileIsSpecifiedAndOpened {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfTimesTheAutoSaveFileIsSpecifiedAndOpened", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of times the brush tool is drawn に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfTimesTheBrushToolIsDrawn {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfTimesTheBrushToolIsDrawn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of times the eraser tool has been used に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfTimesTheEraserToolHasBeenUsed {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfTimesTheEraserToolHasBeenUsed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of times the file was opened by specifying it に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfTimesTheFileWasOpenedBySpecifyingIt {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfTimesTheFileWasOpenedBySpecifyingIt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of times the item was deleted に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfTimesTheItemWasDeleted {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfTimesTheItemWasDeleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of times the item was drawn に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfTimesTheItemWasDrawn {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfTimesTheItemWasDrawn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of times the slice tool was used に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfTimesTheSliceToolWasUsed {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfTimesTheSliceToolWasUsed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of times the top and bottom are aligned に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfTimesTheTopAndBottomAreAligned {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfTimesTheTopAndBottomAreAligned", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of times the version information dialog was displayed に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfTimesTheVersionInformationDialogWasDisplayed {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfTimesTheVersionInformationDialogWasDisplayed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of times to match the height に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfTimesToMatchTheHeight {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfTimesToMatchTheHeight", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of times to match the width に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfTimesToMatchTheWidth {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfTimesToMatchTheWidth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of times to move to the backend に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfTimesToMoveToTheBackend {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfTimesToMoveToTheBackend", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of times to move to the frontend に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfTimesToMoveToTheFrontend {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfTimesToMoveToTheFrontend", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of times you have named and saved に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfTimesYouHaveNamedAndSaved {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfTimesYouHaveNamedAndSaved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of top alignment に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfTopAlignment {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfTopAlignment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of undos に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfUndos {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfUndos", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of ungrouped に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfUngrouped {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfUngrouped", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of unions に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfUnions {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfUnions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of Xors に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfXors {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfXors", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Uptime に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_Uptime {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_Uptime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Grouping に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Grouping {
@@ -948,6 +1488,15 @@ namespace boilersGraphics.Properties {
         public static string Title_Preferences {
             get {
                 return ResourceManager.GetString("Title_Preferences", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Statistics に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Title_Statistics {
+            get {
+                return ResourceManager.GetString("Title_Statistics", resourceCulture);
             }
         }
         

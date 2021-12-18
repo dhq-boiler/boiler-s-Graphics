@@ -195,6 +195,186 @@
   <data name="Command_UniformWidth" xml:space="preserve">
     <value>Uniform width</value>
   </data>
+  <data name="Dialog_Statistics_CumulativeNumberOfItemsSelectedWithTheLassoTool" xml:space="preserve">
+    <value>Cumulative number of items selected with the Lasso Tool</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfBoots" xml:space="preserve">
+    <value>Number of boots</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfBottomAlignment" xml:space="preserve">
+    <value>Number of bottom alignment</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfClicksWithThePointerTool" xml:space="preserve">
+    <value>Number of clicks with the pointer tool</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfCopies" xml:space="preserve">
+    <value>Number of copies</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfCuts" xml:space="preserve">
+    <value>Number of cuts</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfDeletedLayers" xml:space="preserve">
+    <value>Number of deleted layers</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfDrawingOfPictureTool" xml:space="preserve">
+    <value>Number of drawing of picture tool</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfDrawsForTheStraightLineTool" xml:space="preserve">
+    <value>Number of draws for the straight line tool</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfDrawsOfBezierCurveTool" xml:space="preserve">
+    <value>Number of draws of Bezier curve tool</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfDrawsOfPolygonTool" xml:space="preserve">
+    <value>Number of draws of polygon tool</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfDrawsOfTheEllipseTool" xml:space="preserve">
+    <value>Number of draws of the ellipse tool</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfDrawsOfTheLetteringTool" xml:space="preserve">
+    <value>Number of draws of the lettering tool</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfDrawsOfTheRectangleTool" xml:space="preserve">
+    <value>Number of draws of the rectangle tool</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfDrawsOfTheVerticalLetteringTool" xml:space="preserve">
+    <value>Number of draws of the vertical lettering tool</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfExcludes" xml:space="preserve">
+    <value>Number of Excludes</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfExports" xml:space="preserve">
+    <value>Number of exports</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfExportsAsBmp" xml:space="preserve">
+    <value>Number of exports as BMP</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfExportsAsGif" xml:space="preserve">
+    <value>Number of exports as GIF</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfExportsAsJpeg" xml:space="preserve">
+    <value>Number of exports as Jpeg</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfExportsAsPng" xml:space="preserve">
+    <value>Number of exports as PNG</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfExportsAsTiff" xml:space="preserve">
+    <value>Number of exports as TIFF</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfExportsAsWmp" xml:space="preserve">
+    <value>Number of exports as WMP</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfIntersects" xml:space="preserve">
+    <value>Number of intersects</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfLeftAlignment" xml:space="preserve">
+    <value>Number of left aligned</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfLogLevelChanges" xml:space="preserve">
+    <value>Number of log level changes</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfMovesToTheBack" xml:space="preserve">
+    <value>Number of moves to the back</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfMovesToTheFront" xml:space="preserve">
+    <value>Number of moves to the front</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfNewlyCreatedLayers" xml:space="preserve">
+    <value>Number of newly created layers</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfPasted" xml:space="preserve">
+    <value>Number of pasted</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfRedoes" xml:space="preserve">
+    <value>Number of redoes</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfRightAlignment" xml:space="preserve">
+    <value>Number of right aligned</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfSnapPointToolInstallations" xml:space="preserve">
+    <value>Number of snap point tool installations</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesAlignedLeftAndRight" xml:space="preserve">
+    <value>Number of times aligned left and right</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesAlignedUpAndDown" xml:space="preserve">
+    <value>Number of times aligned up and down</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesAutomaticallySaved" xml:space="preserve">
+    <value>Number of times automatically saved</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesGrouped" xml:space="preserve">
+    <value>Number of times grouped</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesLeftAndRightCentered" xml:space="preserve">
+    <value>Number of times left and right centered</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesSavedByOverwriting" xml:space="preserve">
+    <value>Number of times saved by overwriting</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesTheApplicationLogWasDisplayed" xml:space="preserve">
+    <value>Number of times the application log was displayed</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesTheAutoSaveFileIsSpecifiedAndOpened" xml:space="preserve">
+    <value>Number of times the auto save file is specified and opened</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesTheBrushToolIsDrawn" xml:space="preserve">
+    <value>Number of times the brush tool is drawn</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesTheEraserToolHasBeenUsed" xml:space="preserve">
+    <value>Number of times the eraser tool has been used</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesTheFileWasOpenedBySpecifyingIt" xml:space="preserve">
+    <value>Number of times the file was opened by specifying it</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesTheItemWasDeleted" xml:space="preserve">
+    <value>Number of times the item was deleted</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesTheItemWasDrawn" xml:space="preserve">
+    <value>Number of times the item was drawn</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesTheSliceToolWasUsed" xml:space="preserve">
+    <value>Number of times the slice tool was used</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesTheTopAndBottomAreAligned" xml:space="preserve">
+    <value>Number of times the top and bottom are aligned</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesTheVersionInformationDialogWasDisplayed" xml:space="preserve">
+    <value>Number of times the version information dialog was displayed</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesToMatchTheHeight" xml:space="preserve">
+    <value>Number of times to match the height</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesToMatchTheWidth" xml:space="preserve">
+    <value>Number of times to match the width</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesToMoveToTheBackend" xml:space="preserve">
+    <value>Number of times to move to the backend</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesToMoveToTheFrontend" xml:space="preserve">
+    <value>Number of times to move to the frontend</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesYouHaveNamedAndSaved" xml:space="preserve">
+    <value>Number of times you have named and saved</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTopAlignment" xml:space="preserve">
+    <value>Number of top alignment</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfUndos" xml:space="preserve">
+    <value>Number of undos</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfUngrouped" xml:space="preserve">
+    <value>Number of ungrouped</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfUnions" xml:space="preserve">
+    <value>Number of unions</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfXors" xml:space="preserve">
+    <value>Number of Xors</value>
+  </data>
+  <data name="Dialog_Statistics_Uptime" xml:space="preserve">
+    <value>Uptime</value>
+  </data>
   <data name="Grouping" xml:space="preserve">
     <value>Grouping</value>
   </data>
@@ -413,6 +593,9 @@
   </data>
   <data name="Title_Preferences" xml:space="preserve">
     <value>Preferences</value>
+  </data>
+  <data name="Title_Statistics" xml:space="preserve">
+    <value>Statistics</value>
   </data>
   <data name="Tool_BezierCurve" xml:space="preserve">
     <value>Bezier curve tool</value>

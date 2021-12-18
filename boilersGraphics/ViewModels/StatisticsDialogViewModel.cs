@@ -1,4 +1,5 @@
-﻿using Prism.Commands;
+﻿using boilersGraphics.Properties;
+using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
 using Reactive.Bindings;
@@ -85,7 +86,7 @@ namespace boilersGraphics.ViewModels
 
         public ReactivePropertySlim<TimeSpan> Uptime { get; } = new ReactivePropertySlim<TimeSpan>();
 
-        public string Title => "統計";
+        public string Title => Resources.Title_Statistics;
 
         public StatisticsDialogViewModel()
         {

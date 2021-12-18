@@ -195,6 +195,186 @@
   <data name="Command_UniformWidth" xml:space="preserve">
     <value>幅を合わせる</value>
   </data>
+  <data name="Dialog_Statistics_CumulativeNumberOfItemsSelectedWithTheLassoTool" xml:space="preserve">
+    <value>なげなわツールで選択したアイテムの累計</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfBoots" xml:space="preserve">
+    <value>起動回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfBottomAlignment" xml:space="preserve">
+    <value>下揃えした回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfClicksWithThePointerTool" xml:space="preserve">
+    <value>ポインターツールでクリックした回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfCopies" xml:space="preserve">
+    <value>コピーした回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfCuts" xml:space="preserve">
+    <value>切り取りした回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfDeletedLayers" xml:space="preserve">
+    <value>削除したレイヤー数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfDrawingOfPictureTool" xml:space="preserve">
+    <value>画像ツールの描画回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfDrawsForTheStraightLineTool" xml:space="preserve">
+    <value>直線ツールの描画回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfDrawsOfBezierCurveTool" xml:space="preserve">
+    <value>ベジエ曲線ツールの描画回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfDrawsOfPolygonTool" xml:space="preserve">
+    <value>多角形ツールの描画回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfDrawsOfTheEllipseTool" xml:space="preserve">
+    <value>円ツールの描画回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfDrawsOfTheLetteringTool" xml:space="preserve">
+    <value>文字ツールの描画回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfDrawsOfTheRectangleTool" xml:space="preserve">
+    <value>四角形ツールの描画回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfDrawsOfTheVerticalLetteringTool" xml:space="preserve">
+    <value>縦書きツールの描画回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfExcludes" xml:space="preserve">
+    <value>Excludeした回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfExports" xml:space="preserve">
+    <value>エクスポートした回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfExportsAsBmp" xml:space="preserve">
+    <value>BMPエクスポートした回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfExportsAsGif" xml:space="preserve">
+    <value>GIFエクスポートした回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfExportsAsJpeg" xml:space="preserve">
+    <value>Jpegエクスポートした回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfExportsAsPng" xml:space="preserve">
+    <value>PNGエクスポートした回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfExportsAsTiff" xml:space="preserve">
+    <value>TIFFエクスポートした回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfExportsAsWmp" xml:space="preserve">
+    <value>WMPエクスポートした回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfIntersects" xml:space="preserve">
+    <value>Intersectした回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfLeftAlignment" xml:space="preserve">
+    <value>左揃えした回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfLogLevelChanges" xml:space="preserve">
+    <value>ログレベルを変更した回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfMovesToTheBack" xml:space="preserve">
+    <value>背面へ移動した回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfMovesToTheFront" xml:space="preserve">
+    <value>前面へ移動した回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfNewlyCreatedLayers" xml:space="preserve">
+    <value>新規作成したレイヤー数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfPasted" xml:space="preserve">
+    <value>貼り付けした回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfRedoes" xml:space="preserve">
+    <value>やり直しした回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfRightAlignment" xml:space="preserve">
+    <value>右揃えした回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfSnapPointToolInstallations" xml:space="preserve">
+    <value>スナップポイントツールの設置回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesAlignedLeftAndRight" xml:space="preserve">
+    <value>左右に整列した回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesAlignedUpAndDown" xml:space="preserve">
+    <value>上下に整列した回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesAutomaticallySaved" xml:space="preserve">
+    <value>自動保存した回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesGrouped" xml:space="preserve">
+    <value>グループ化した回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesLeftAndRightCentered" xml:space="preserve">
+    <value>左右中央揃えした回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesSavedByOverwriting" xml:space="preserve">
+    <value>上書き保存した回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesTheApplicationLogWasDisplayed" xml:space="preserve">
+    <value>アプリケーションログを表示した回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesTheAutoSaveFileIsSpecifiedAndOpened" xml:space="preserve">
+    <value>自動保存ファイルを指定して開いた回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesTheBrushToolIsDrawn" xml:space="preserve">
+    <value>ブラシツールの描画回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesTheEraserToolHasBeenUsed" xml:space="preserve">
+    <value>消しゴムツールの使用回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesTheFileWasOpenedBySpecifyingIt" xml:space="preserve">
+    <value>ファイルを指定して開いた回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesTheItemWasDeleted" xml:space="preserve">
+    <value>アイテムを削除した回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesTheItemWasDrawn" xml:space="preserve">
+    <value>アイテムを描画した回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesTheSliceToolWasUsed" xml:space="preserve">
+    <value>スライスツールを使用した回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesTheTopAndBottomAreAligned" xml:space="preserve">
+    <value>上下中央揃えした回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesTheVersionInformationDialogWasDisplayed" xml:space="preserve">
+    <value>バージョン情報ダイアログを表示した回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesToMatchTheHeight" xml:space="preserve">
+    <value>高さを合わせた回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesToMatchTheWidth" xml:space="preserve">
+    <value>幅を合わせた回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesToMoveToTheBackend" xml:space="preserve">
+    <value>最背面へ移動した回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesToMoveToTheFrontend" xml:space="preserve">
+    <value>最前面へ移動した回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesYouHaveNamedAndSaved" xml:space="preserve">
+    <value>名前を付けて保存した回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTopAlignment" xml:space="preserve">
+    <value>上揃えした回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfUndos" xml:space="preserve">
+    <value>元に戻した回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfUngrouped" xml:space="preserve">
+    <value>グループ化解除した回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfUnions" xml:space="preserve">
+    <value>Unionした回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfXors" xml:space="preserve">
+    <value>Xorした回数</value>
+  </data>
+  <data name="Dialog_Statistics_Uptime" xml:space="preserve">
+    <value>累計稼働時間</value>
+  </data>
   <data name="Grouping" xml:space="preserve">
     <value>グループ</value>
   </data>
@@ -413,6 +593,9 @@
   </data>
   <data name="Title_Preferences" xml:space="preserve">
     <value>設定</value>
+  </data>
+  <data name="Title_Statistics" xml:space="preserve">
+    <value>統計</value>
   </data>
   <data name="Tool_BezierCurve" xml:space="preserve">
     <value>ベジエ曲線ツール</value>
