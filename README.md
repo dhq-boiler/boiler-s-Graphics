@@ -31,8 +31,6 @@ boiler's Graphicsを動作させるには Windows 7 SP1 以降の Windows OS が
  3. 展開したフォルダを安全な場所に配置します。
  4. 配置したフォルダ内の boilersGraphics.exe を実行します。
 
-なお、zipでのバイナリ配布は継続しますが、バージョン2.0から setup.exe によるインストール方法を提供する予定です。
-
 # How to use
 
 [How to use](https://github.com/dhq-boiler/boiler-s-Graphics/blob/develop/HowToUse.md)
