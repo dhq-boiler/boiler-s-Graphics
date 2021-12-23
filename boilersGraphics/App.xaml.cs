@@ -53,12 +53,6 @@ namespace boilersGraphics
             base.OnStartup(e);
         }
 
-        protected override Window CreateShell()
-        {
-            var w = Container.Resolve<MainWindow>();
-            return w;
-        }
-
         protected override IContainerExtension CreateContainerExtension()
         {
             var container = new UnityContainer();
@@ -87,6 +81,12 @@ namespace boilersGraphics
             containerRegistry.RegisterDialog<Views.DetailPicture, ViewModels.DetailPictureViewModel>();
             containerRegistry.RegisterDialog<Views.DetailLetter, ViewModels.DetailLetterViewModel>();
             containerRegistry.RegisterDialog<Views.Statistics, ViewModels.StatisticsDialogViewModel>();
+        }
+
+        protected override Window CreateShell()
+        {
+            var w = Container.Resolve<MainWindow>();
+            return w;
         }
 
         public static string GetAppNameAndVersion()
