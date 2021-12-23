@@ -64,6 +64,7 @@ namespace boilersGraphics
         {
             var container = new UnityContainer();
             container.AddExtension(new Diagnostic());
+            container.AddExtension(new LogResolvesUnityContainerExtension());
             return new UnityContainerExtension(container);
         }
 
