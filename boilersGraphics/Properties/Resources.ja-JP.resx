@@ -198,6 +198,9 @@
   <data name="DialogTitle_Confirm" xml:space="preserve">
     <value>確認</value>
   </data>
+  <data name="DialogTitle_Error" xml:space="preserve">
+    <value>異常終了</value>
+  </data>
   <data name="DialogTitle_ReadError" xml:space="preserve">
     <value>読み込みエラー</value>
   </data>
@@ -578,6 +581,18 @@
   </data>
   <data name="String_CanvasWidth" xml:space="preserve">
     <value>キャンパスの幅</value>
+  </data>
+  <data name="String_ErrorReporting" xml:space="preserve">
+    <value>申し訳ありません。</value>
+  </data>
+  <data name="String_ErrorReporting1" xml:space="preserve">
+    <value>お使いのアプリケーションは異常を検知したため終了します。</value>
+  </data>
+  <data name="String_ErrorReporting2" xml:space="preserve">
+    <value>イベントビューアーかアプリケーションログファイルからエラーの詳細を確認することができます。アプリケーションログファイル：</value>
+  </data>
+  <data name="String_ErrorReporting3" xml:space="preserve">
+    <value>-- エラー内容 --</value>
   </data>
   <data name="String_Export" xml:space="preserve">
     <value>エクスポート</value>

@@ -48,6 +48,8 @@ namespace boilersGraphics.ViewModels
             Instance = this;
             this.dlgService = dialogService;
 
+            throw new NotImplementedException();
+
             if (App.IsTest)
             {
                 ConnectionManager.SetDefaultConnection($"DataSource=bg.db", typeof(SQLiteConnection));

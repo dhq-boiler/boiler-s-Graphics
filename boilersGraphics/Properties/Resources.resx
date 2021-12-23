@@ -198,6 +198,9 @@
   <data name="DialogTitle_Confirm" xml:space="preserve">
     <value>Confirm</value>
   </data>
+  <data name="DialogTitle_Error" xml:space="preserve">
+    <value>Abnormal termination</value>
+  </data>
   <data name="DialogTitle_ReadError" xml:space="preserve">
     <value>Read error</value>
   </data>
@@ -578,6 +581,18 @@
   </data>
   <data name="String_CanvasWidth" xml:space="preserve">
     <value>Canvas Width</value>
+  </data>
+  <data name="String_ErrorReporting" xml:space="preserve">
+    <value>I'm sorry. </value>
+  </data>
+  <data name="String_ErrorReporting1" xml:space="preserve">
+    <value>Your application will close because it has detected an error.</value>
+  </data>
+  <data name="String_ErrorReporting2" xml:space="preserve">
+    <value>You can see the details of the error in the event viewer or the application log file. The application log file is here:</value>
+  </data>
+  <data name="String_ErrorReporting3" xml:space="preserve">
+    <value>-- error contents --</value>
   </data>
   <data name="String_Export" xml:space="preserve">
     <value>Export</value>

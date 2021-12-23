@@ -1,13 +1,11 @@
 ﻿using boilersGraphics.Extensions;
-using boilersGraphics.Helpers;
 using boilersGraphics.Views;
 using NLog;
 using Prism.Ioc;
+using Prism.Services.Dialogs;
 using Prism.Unity;
 using System;
-using System.Diagnostics;
 using System.Reflection;
-using System.Threading.Tasks;
 using System.Windows;
 using Unity;
 
@@ -36,12 +34,16 @@ namespace boilersGraphics
         private void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
             LogManager.GetCurrentClassLogger().Fatal(e.Exception);
-            MessageBox.Show("申し訳ありません。\n" +
-                            "お使いのアプリケーションは異常を検知したため終了します\n" +
-                            "-- エラー内容 --\n" +
-                            e.Exception.ToString(),
-                            "異常終了");
-            Environment.Exit(1);
+            IDialogParameters dialogParameters = new DialogParameters();
+            dialogParameters.Add("Title", boilersGraphics.Properties.Resources.DialogTitle_Error);
+            dialogParameters.Add("Text", boilersGraphics.Properties.Resources.String_ErrorReporting + "\n" +
+                                         boilersGraphics.Properties.Resources.String_ErrorReporting1 + "\n" +
+                                         boilersGraphics.Properties.Resources.String_ErrorReporting2 + System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "dhq_boiler\\boilersGraphics\\Logs\\boilersGraphics.log") + "\n" +
+                                         boilersGraphics.Properties.Resources.String_ErrorReporting3 + "\n" +
+                                         e.Exception.ToString());
+            IDialogResult dialogResult = new DialogResult();
+            Container.Resolve<IDialogService>().ShowDialog(nameof(CustomMessageBox), dialogParameters, ret => dialogResult = ret);
+            throw e.Exception;
         }
 
         protected override void OnStartup(StartupEventArgs e)
@@ -81,6 +83,7 @@ namespace boilersGraphics
             containerRegistry.RegisterDialog<Views.DetailPicture, ViewModels.DetailPictureViewModel>();
             containerRegistry.RegisterDialog<Views.DetailLetter, ViewModels.DetailLetterViewModel>();
             containerRegistry.RegisterDialog<Views.Statistics, ViewModels.StatisticsDialogViewModel>();
+            containerRegistry.RegisterDialog<Views.CustomMessageBox, ViewModels.CustomMessageBoxViewModel>();
         }
 
         protected override Window CreateShell()

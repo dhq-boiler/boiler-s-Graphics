@@ -853,6 +853,15 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Abnormal termination に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string DialogTitle_Error {
+            get {
+                return ResourceManager.GetString("DialogTitle_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Read error に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string DialogTitle_ReadError {
@@ -1443,6 +1452,42 @@ namespace boilersGraphics.Properties {
         public static string String_CanvasWidth {
             get {
                 return ResourceManager.GetString("String_CanvasWidth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   I&apos;m sorry.  に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_ErrorReporting {
+            get {
+                return ResourceManager.GetString("String_ErrorReporting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Your application will close because it has detected an error. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_ErrorReporting1 {
+            get {
+                return ResourceManager.GetString("String_ErrorReporting1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   You can see the details of the error in the event viewer or the application log file. The application log file is here: に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_ErrorReporting2 {
+            get {
+                return ResourceManager.GetString("String_ErrorReporting2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   -- error contents -- に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_ErrorReporting3 {
+            get {
+                return ResourceManager.GetString("String_ErrorReporting3", resourceCulture);
             }
         }
         
