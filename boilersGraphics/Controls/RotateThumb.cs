@@ -19,16 +19,15 @@ namespace boilersGraphics.Controls
         private Matrix _initialMatrix;
         private MatrixTransform _rotateTransform;
         private Vector _startVector;
+        private Vector _endVector;
         private double _beginDegree;
         private Point _centerPoint;
         private FrameworkElement _designerItem;
         private Canvas _canvas;
-        private double _previousAngleInDegrees;
         private AuxiliaryLine _CenterToP1;
-        private Vector _endVector;
         private AuxiliaryLine _CenterToP2;
-        private FrameworkElementAdorner _Arc;
         private AuxiliaryText _DegreeText;
+        private FrameworkElementAdorner _Arc;
 
         public RotateThumb()
         {
@@ -91,7 +90,6 @@ namespace boilersGraphics.Controls
                     else
                     {
                         _initialMatrix = _rotateTransform.Matrix;
-                        _previousAngleInDegrees = 0;
                     }
                 }
             }
