@@ -138,6 +138,7 @@ namespace boilersGraphics.Controls
                 var beginDegree = MakeDegree(-180);
                 var endDegree = MakeDegree(deltaAngle);
 
+                var angleType = (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.AngleType.Value;
                 viewModel.RotationAngle.Value = Math.Round(endDegree + 90);
 
                 if (Arc != null)
@@ -145,7 +146,7 @@ namespace boilersGraphics.Controls
                     adornerLayer.Remove(Arc);
                 }
                 Arc = new FrameworkElementAdorner(_canvas);
-                var pie = PieGeometry(viewModel.CenterPoint.Value, 20, beginDegree, endDegree, SweepDirection.Clockwise);
+                var pie = PieGeometry(viewModel.CenterPoint.Value, 20, beginDegree, endDegree, DecideSweepDirection(angleType, viewModel.RotationAngle.Value));
                 Arc.Child = new Path()
                 {
                     Data = pie,
@@ -158,12 +159,48 @@ namespace boilersGraphics.Controls
                     adornerLayer.Remove(DegreeText);
                 }
                 var roundDegree = Math.Round(viewModel.RotationAngle.Value);
-                DegreeText = new AuxiliaryText(_canvas, $"{roundDegree}°", new Point(_centerPoint.X + 40 * Math.Cos(Radian((roundDegree - 90) / 2)) - 20, _centerPoint.Y + 40 * Math.Sin(Radian((roundDegree - 90) / 2)) - 20));
+                if (angleType == Helpers.AngleType.Minus180To180 && roundDegree > 180)
+                {
+                    roundDegree = roundDegree - 360;
+                }
+                viewModel.RotationAngle.Value = roundDegree;
+                DegreeText = new AuxiliaryText(_canvas, $"{roundDegree}°", new Point(_centerPoint.X + 40 * Math.Cos(θ(viewModel, angleType, roundDegree)) - 20, _centerPoint.Y + 40 * Math.Sin(θ(viewModel, angleType, roundDegree)) - 20));
                 adornerLayer.Add(DegreeText);
 
                 (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = $"角度 {viewModel.RotationAngle.Value}°";
 
                 _designerItem.InvalidateMeasure();
+            }
+        }
+
+        private double θ(DesignerItemViewModelBase viewModel, Helpers.AngleType angleType, double roundDegree)
+        {
+            if (DecideSweepDirection(angleType, viewModel.RotationAngle.Value) == SweepDirection.Clockwise)
+            {
+                return Radian((roundDegree - 90) / 2);
+            }
+            else
+            {
+                return -Radian((-roundDegree - 90) / 2 - 180);
+            }
+        }
+
+        private SweepDirection DecideSweepDirection(Helpers.AngleType angleType, double endDegree)
+        {
+            if (angleType == Helpers.AngleType.ZeroTo360)
+            {
+                return SweepDirection.Clockwise;
+            }
+            else //angleType == Helpers.AngleType.Minus180To180
+            {
+                if (endDegree > 180 || endDegree < 0)
+                {
+                    return SweepDirection.Counterclockwise;
+                }
+                else
+                {
+                    return SweepDirection.Clockwise;
+                }
             }
         }
 
