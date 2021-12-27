@@ -138,7 +138,7 @@ namespace boilersGraphics.Controls
                 var beginDegree = MakeDegree(-180);
                 var endDegree = MakeDegree(deltaAngle);
 
-                viewModel.RotationAngle.Value = (endDegree + 90);
+                viewModel.RotationAngle.Value = Math.Round(endDegree + 90);
 
                 if (Arc != null)
                 {
