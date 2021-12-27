@@ -157,7 +157,8 @@ namespace boilersGraphics.Controls
                 {
                     adornerLayer.Remove(DegreeText);
                 }
-                DegreeText = new AuxiliaryText(_canvas, $"{viewModel.RotationAngle.Value}°", new Point(_centerPoint.X + 40 * Math.Cos(Radian((viewModel.RotationAngle.Value - 90) / 2)) - 20, _centerPoint.Y + 40 * Math.Sin(Radian((viewModel.RotationAngle.Value - 90) / 2)) - 20));
+                var roundDegree = Math.Round(viewModel.RotationAngle.Value);
+                DegreeText = new AuxiliaryText(_canvas, $"{roundDegree}°", new Point(_centerPoint.X + 40 * Math.Cos(Radian((roundDegree - 90) / 2)) - 20, _centerPoint.Y + 40 * Math.Sin(Radian((roundDegree - 90) / 2)) - 20));
                 adornerLayer.Add(DegreeText);
 
                 (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = $"角度 {viewModel.RotationAngle.Value}°";
