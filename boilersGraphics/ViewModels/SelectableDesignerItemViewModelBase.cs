@@ -2,6 +2,7 @@
 using Prism.Commands;
 using Prism.Mvvm;
 using Reactive.Bindings;
+using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -133,6 +134,15 @@ namespace boilersGraphics.ViewModels
             SelectItemCommand = new DelegateCommand<object>(p => SelectItem((bool)p, !IsSelected.Value));
 
             EnableForSelection.Value = true;
+
+            RotationAngle.Subscribe(angle =>
+            {
+                if (angle > 360)
+                {
+                    RotationAngle.Value = angle % 360;
+                }
+            })
+            .AddTo(_CompositeDisposable);
         }
 
         public abstract Type GetViewType();

@@ -29,6 +29,7 @@ namespace boilersGraphics.Controls
         private AuxiliaryLine CenterToP2;
 
         public FrameworkElementAdorner Arc { get; private set; }
+        public Adorner DegreeText { get; private set; }
 
         public RotateThumb()
         {
@@ -67,6 +68,11 @@ namespace boilersGraphics.Controls
             {
                 adornerLayer.Remove(Arc);
                 Arc = null;
+            }
+            if (DegreeText != null)
+            {
+                adornerLayer.Remove(DegreeText);
+                DegreeText = null;
             }
         }
 
@@ -131,6 +137,9 @@ namespace boilersGraphics.Controls
                 var deltaAngle = Vector.AngleBetween(new Vector(0, 1), deltaVector);
                 var beginDegree = MakeDegree(-180);
                 var endDegree = MakeDegree(deltaAngle);
+
+                viewModel.RotationAngle.Value = (endDegree + 90);
+
                 if (Arc != null)
                 {
                     adornerLayer.Remove(Arc);
@@ -144,8 +153,12 @@ namespace boilersGraphics.Controls
                     StrokeThickness = 1,
                 };
                 adornerLayer.Add(Arc);
-
-                viewModel.RotationAngle.Value = (endDegree - 270);
+                if (DegreeText != null)
+                {
+                    adornerLayer.Remove(DegreeText);
+                }
+                DegreeText = new AuxiliaryText(_canvas, $"{viewModel.RotationAngle.Value}°", new Point(_centerPoint.X + 40 * Math.Cos(Radian((viewModel.RotationAngle.Value - 90) / 2)) - 20, _centerPoint.Y + 40 * Math.Sin(Radian((viewModel.RotationAngle.Value - 90) / 2)) - 20));
+                adornerLayer.Add(DegreeText);
 
                 (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = $"角度 {viewModel.RotationAngle.Value}°";
 
