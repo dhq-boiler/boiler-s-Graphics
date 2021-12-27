@@ -24,12 +24,11 @@ namespace boilersGraphics.Controls
         private FrameworkElement _designerItem;
         private Canvas _canvas;
         private double _previousAngleInDegrees;
-        private AuxiliaryLine CenterToP1;
+        private AuxiliaryLine _CenterToP1;
         private Vector _endVector;
-        private AuxiliaryLine CenterToP2;
-
-        public FrameworkElementAdorner Arc { get; private set; }
-        public Adorner DegreeText { get; private set; }
+        private AuxiliaryLine _CenterToP2;
+        private FrameworkElementAdorner _Arc;
+        private AuxiliaryText _DegreeText;
 
         public RotateThumb()
         {
@@ -54,26 +53,10 @@ namespace boilersGraphics.Controls
             _canvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
             AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(_canvas);
 
-            if (CenterToP1 != null)
-            {
-                adornerLayer.Remove(CenterToP1);
-                CenterToP1 = null;
-            }
-            if (CenterToP2 != null)
-            {
-                adornerLayer.Remove(CenterToP2);
-                CenterToP2 = null;
-            }
-            if (Arc != null)
-            {
-                adornerLayer.Remove(Arc);
-                Arc = null;
-            }
-            if (DegreeText != null)
-            {
-                adornerLayer.Remove(DegreeText);
-                DegreeText = null;
-            }
+            RemoveFromAdornerLayer(adornerLayer, nameof(_CenterToP1));
+            RemoveFromAdornerLayer(adornerLayer, nameof(_CenterToP2));
+            RemoveFromAdornerLayer(adornerLayer, nameof(_Arc));
+            RemoveFromAdornerLayer(adornerLayer, nameof(_DegreeText));
         }
 
         private void RotateThumb_DragStarted(object sender, DragStartedEventArgs e)
@@ -97,8 +80,8 @@ namespace boilersGraphics.Controls
                     var vector = new Vector(endPoint.X - _centerPoint.X, endPoint.Y - _centerPoint.Y);
                     _startVector = Point.Subtract(startPoint, _centerPoint);
                     _beginDegree = Vector.AngleBetween(_startVector, new Vector(0, 1));
-                    CenterToP1 = new AuxiliaryLine(_canvas, new Point(_centerPoint.X, _centerPoint.Y - vector.Length), _centerPoint);
-                    adornerLayer.Add(CenterToP1);
+                    _CenterToP1 = new AuxiliaryLine(_canvas, new Point(_centerPoint.X, _centerPoint.Y - vector.Length), _centerPoint);
+                    adornerLayer.Add(_CenterToP1);
 
                     _rotateTransform = _designerItem.RenderTransform as MatrixTransform;
                     if (_rotateTransform == null)
@@ -123,40 +106,33 @@ namespace boilersGraphics.Controls
                 _canvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
                 AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(_canvas);
 
-                if (CenterToP2 != null)
-                {
-                    adornerLayer.Remove(CenterToP2);
-                }
+                RemoveFromAdornerLayer(adornerLayer, nameof(_CenterToP2));
 
                 Point currentPoint = Mouse.GetPosition(_canvas);
                 Vector deltaVector = Point.Subtract(currentPoint, _centerPoint);
                 var endPoint = (sender as RotateThumb).TranslatePoint(new Point(0, 0), _canvas);
                 _endVector = Vector.Subtract(new Vector(endPoint.X, endPoint.Y), new Vector(_centerPoint.X, _centerPoint.Y));
-                CenterToP2 = new AuxiliaryLine(_canvas, _centerPoint, endPoint);
-                adornerLayer.Add(CenterToP2);
+                _CenterToP2 = new AuxiliaryLine(_canvas, _centerPoint, endPoint);
+                adornerLayer.Add(_CenterToP2);
                 var deltaAngle = Vector.AngleBetween(new Vector(0, 1), deltaVector);
                 var beginDegree = MakeDegree(-180);
                 var endDegree = MakeDegree(deltaAngle);
 
                 var angleType = (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.AngleType.Value;
                 viewModel.RotationAngle.Value = Math.Round(endDegree + 90);
-
-                if (Arc != null)
-                {
-                    adornerLayer.Remove(Arc);
-                }
-                Arc = new FrameworkElementAdorner(_canvas);
+                RemoveFromAdornerLayer(adornerLayer, nameof(_Arc));
+                _Arc = new FrameworkElementAdorner(_canvas);
                 var pie = PieGeometry(viewModel.CenterPoint.Value, 20, beginDegree, endDegree, DecideSweepDirection(angleType, viewModel.RotationAngle.Value));
-                Arc.Child = new Path()
+                _Arc.Child = new Path()
                 {
                     Data = pie,
                     Stroke = Brushes.Blue,
                     StrokeThickness = 1,
                 };
-                adornerLayer.Add(Arc);
-                if (DegreeText != null)
+                adornerLayer.Add(_Arc);
+                if (_DegreeText != null)
                 {
-                    adornerLayer.Remove(DegreeText);
+                    adornerLayer.Remove(_DegreeText);
                 }
                 var roundDegree = Math.Round(viewModel.RotationAngle.Value);
                 if (angleType == Helpers.AngleType.Minus180To180 && roundDegree > 180)
@@ -164,12 +140,25 @@ namespace boilersGraphics.Controls
                     roundDegree = roundDegree - 360;
                 }
                 viewModel.RotationAngle.Value = roundDegree;
-                DegreeText = new AuxiliaryText(_canvas, $"{roundDegree}°", new Point(_centerPoint.X + 40 * Math.Cos(θ(viewModel, angleType, roundDegree)) - 20, _centerPoint.Y + 40 * Math.Sin(θ(viewModel, angleType, roundDegree)) - 20));
-                adornerLayer.Add(DegreeText);
+                _DegreeText = new AuxiliaryText(_canvas, $"{roundDegree}°", new Point(_centerPoint.X + 40 * Math.Cos(θ(viewModel, angleType, roundDegree)) - 20, _centerPoint.Y + 40 * Math.Sin(θ(viewModel, angleType, roundDegree)) - 20));
+                adornerLayer.Add(_DegreeText);
 
                 (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = $"角度 {viewModel.RotationAngle.Value}°";
 
                 _designerItem.InvalidateMeasure();
+            }
+        }
+
+        private void RemoveFromAdornerLayer(AdornerLayer adornerLayer, string fieldName)
+        {
+            var field = typeof(RotateThumb).GetField(fieldName, System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            if (field.FieldType.BaseType != typeof(Adorner))
+                throw new UnexpectedException("field.FieldType.BaseType != typeof(Adorner)");
+            var target = (Adorner)field.GetValue(this);
+            if (target != null)
+            {
+                adornerLayer.Remove(target);
+                field.SetValue(this, null);
             }
         }
 
