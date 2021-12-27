@@ -1,4 +1,5 @@
-﻿using Prism.Mvvm;
+﻿using boilersGraphics.Helpers;
+using Prism.Mvvm;
 using Reactive.Bindings;
 using System;
 using System.Windows.Media;
@@ -15,6 +16,7 @@ namespace boilersGraphics.Models
         public ReactivePropertySlim<bool> EnableAutoSave { get; set; } = new ReactivePropertySlim<bool>();
         public ReactivePropertySlim<AutoSaveType> AutoSaveType { get; set; } = new ReactivePropertySlim<AutoSaveType>();
         public ReactivePropertySlim<TimeSpan> AutoSaveInterval { get; set; } = new ReactivePropertySlim<TimeSpan>();
+        public ReactivePropertySlim<AngleType> AngleType { get; set; } = new ReactivePropertySlim<AngleType>();
     }
 
     public enum AutoSaveType

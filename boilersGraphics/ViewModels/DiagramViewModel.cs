@@ -134,7 +134,9 @@ namespace boilersGraphics.ViewModels
 
         public ReactivePropertySlim<TimeSpan> AutoSaveInterval { get; } = new ReactivePropertySlim<TimeSpan>(TimeSpan.FromMinutes(1));
 
-        public ReactiveCollection<string> AutoSaveFiles { get; set; } = new ReactiveCollection<string>();   
+        public ReactiveCollection<string> AutoSaveFiles { get; set; } = new ReactiveCollection<string>();
+
+        public ReactivePropertySlim<AngleType> AngleType { get; set; } = new ReactivePropertySlim<AngleType>();
 
         public ObservableCollection<Color> EdgeColors
         {
@@ -498,6 +500,8 @@ namespace boilersGraphics.ViewModels
             var logSetting = logSettings.First();
             MainWindowVM.LogLevel.Value = NLog.LogLevel.FromString(logSetting.LogLevel);
             PackAutoSaveFiles();
+
+            AngleType.Value = Helpers.AngleType.Minus180To180;
         }
 
         private void PackAutoSaveFiles()
@@ -1202,6 +1206,7 @@ namespace boilersGraphics.ViewModels
             preferences.EnableAutoSave.Value = this.EnableAutoSave.Value;
             preferences.AutoSaveType.Value = this.AutoSaveType.Value;
             preferences.AutoSaveInterval.Value = this.AutoSaveInterval.Value;
+            preferences.AngleType.Value = this.AngleType.Value;
             dlgService.ShowDialog(nameof(Views.Preference), new DialogParameters() { { "Preferences",  preferences} }, ret => result = ret);
             if (result != null && result.Result == ButtonResult.OK)
             {
@@ -1217,6 +1222,7 @@ namespace boilersGraphics.ViewModels
                 EnableAutoSave.Value = s.EnableAutoSave.Value;
                 AutoSaveType.Value = s.AutoSaveType.Value;
                 AutoSaveInterval.Value = s.AutoSaveInterval.Value;
+                AngleType.Value = s.AngleType.Value;
                 SetAutoSave();
             }
         }
