@@ -95,6 +95,10 @@ steps:
     #verbose: # Optional
     #quiet: # Optional
 
+- task: CmdLine@2
+  inputs:
+    script: 'tree'
+
 # GitHub Release
 # Create, edit, or delete a GitHub release
 - task: GitHubRelease@0
