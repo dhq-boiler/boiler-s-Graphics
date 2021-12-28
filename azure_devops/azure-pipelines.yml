@@ -45,7 +45,7 @@ steps:
     solution: boilersGraphics.Msix\boilersGraphics.Msix.wapproj
     platform: '$(BuildPlatform)'
     configuration: '$(BuildConfiguration)'
-    msbuildArguments: '/t:restore'
+    msbuildArguments: '/t:restore /p:UapAppxPackageBuildMode=StoreAndSideload /p:AppxPackageSigningEnabled=false /p:AppxBundle=Never /p:AppxPackageOutput=$(Build.ArtifactStagingDirectory)\boilersGraphics.msix'
 
 - task: MsixPackaging@1
   inputs:
