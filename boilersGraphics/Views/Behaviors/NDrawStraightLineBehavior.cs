@@ -77,7 +77,6 @@ namespace boilersGraphics.Views.Behaviors
                     _straightLineStartPoint = e.GetPosition(AssociatedObject);
                     var viewModel = AssociatedObject.DataContext as IDiagramViewModel;
                     item = new StraightConnectorViewModel(viewModel, _straightLineStartPoint.Value);
-                    snapAction.PostProcess(SnapPointPosition.BeginEdge, item);
                     e.Handled = true;
                 }
             }
