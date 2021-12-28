@@ -45,22 +45,7 @@ steps:
     solution: boilersGraphics.Msix\boilersGraphics.Msix.wapproj
     platform: '$(BuildPlatform)'
     configuration: '$(BuildConfiguration)'
-    msbuildArguments: '/t:restore /p:UapAppxPackageBuildMode=StoreUpload /p:AppxPackageSigningEnabled=false /p:AppxBundle=Always /p:AppxPackageOutput=$(Build.ArtifactStagingDirectory)\boilersGraphics.msix'
-
-- task: MsixPackaging@1
-  inputs:
-    outputPath: '$(Build.ArtifactStagingDirectory)\boilersGraphics.msix'
-    solution: 'boilersGraphics.sln'
-    clean: true
-    generateBundle: true
-    buildConfiguration: 'release'
-    buildPlatform: 'Any CPU'
-    updateAppVersion: false
-    manifestFile: Package.appxmanifest
-    appPackageDistributionMode: 'StoreAndSideload'
-    msbuildLocationMethod: 'version'
-    msbuildVersion: 'latest'
-    msbuildArchitecture: 'x64'
+    msbuildArguments: '/p:OutputPath=NonPackagedApp /p:UapAppxPackageBuildMode=StoreUpload /p:AppxBundle=Never /p:AppxPackageOutput=$(Build.ArtifactStagingDirectory)\boilersGraphics.msix /p:AppxPackageSigningEnabled=false'
     
 - task: CmdLine@2
   inputs:
