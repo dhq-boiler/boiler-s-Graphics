@@ -1276,7 +1276,7 @@ namespace boilersGraphics.ViewModels
             if (parameter is SelectableDesignerItemViewModelBase)
             {
                 SelectableDesignerItemViewModelBase item = (SelectableDesignerItemViewModelBase)parameter;
-                if (item is SnapPointViewModel snapPoint)
+                if (item is SnapPointViewModel snapPoint && !(snapPoint.Parent.Value is null))
                 {
                     item = snapPoint.Parent.Value;
                 }
