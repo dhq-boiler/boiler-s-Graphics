@@ -51,6 +51,8 @@ namespace boilersGraphics.Views.Behaviors
             if (e.Source == AssociatedObject)
             {
                 _straightLineStartPoint = e.GetPosition(AssociatedObject);
+                var viewModel = AssociatedObject.DataContext as IDiagramViewModel;
+                item = new StraightConnectorViewModel(viewModel, _straightLineStartPoint.Value);
                 e.Handled = true;
             }
         }
@@ -61,6 +63,8 @@ namespace boilersGraphics.Views.Behaviors
             {
                 var touchPoint = e.GetTouchPoint(AssociatedObject);
                 _straightLineStartPoint = touchPoint.Position;
+                var viewModel = AssociatedObject.DataContext as IDiagramViewModel;
+                item = new StraightConnectorViewModel(viewModel, _straightLineStartPoint.Value);
             }
         }
 
@@ -73,7 +77,6 @@ namespace boilersGraphics.Views.Behaviors
                     _straightLineStartPoint = e.GetPosition(AssociatedObject);
                     var viewModel = AssociatedObject.DataContext as IDiagramViewModel;
                     item = new StraightConnectorViewModel(viewModel, _straightLineStartPoint.Value);
-                    snapAction.PostProcess(SnapPointPosition.BeginEdge, item);
                     e.Handled = true;
                 }
             }
@@ -120,7 +123,15 @@ namespace boilersGraphics.Views.Behaviors
         {
             var canvas = AssociatedObject as DesignerCanvas;
             Point current = e.GetPosition(canvas);
-            snapAction.OnMouseMove(ref current);
+            var ellipses = (AssociatedObject.DataContext as DiagramViewModel).AllItems.Value.OfType<NEllipseViewModel>();
+            var appendIntersectionPoints = new List<Tuple<Point, NEllipseViewModel>>();
+            Vector vec = new Vector();
+            if (_straightLineStartPoint.HasValue)
+            {
+                vec = Point.Subtract(current, _straightLineStartPoint.Value);
+                snapAction.SnapIntersectionOfEllipseAndTangent(ellipses, _straightLineStartPoint.Value, current, appendIntersectionPoints);
+            }
+            snapAction.OnMouseMove(ref current, vec, appendIntersectionPoints);
 
             if (e.InAir)
                 _straightLineStartPoint = null;

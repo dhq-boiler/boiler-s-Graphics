@@ -112,13 +112,28 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Alignment" xml:space="preserve">
     <value>配置</value>
+  </data>
+  <data name="Button_Close" xml:space="preserve">
+    <value>閉じる</value>
+  </data>
+  <data name="Button_MaximizeWindow" xml:space="preserve">
+    <value>最大化</value>
+  </data>
+  <data name="Button_MinimizeWindow" xml:space="preserve">
+    <value>最小化</value>
+  </data>
+  <data name="Button_PostIssue" xml:space="preserve">
+    <value>GitHubにIssueを投稿する</value>
+  </data>
+  <data name="Button_Restore" xml:space="preserve">
+    <value>元に戻す(縮小)</value>
   </data>
   <data name="Command_AlignBottom" xml:space="preserve">
     <value>下揃え</value>
@@ -183,10 +198,505 @@
   <data name="Command_UniformWidth" xml:space="preserve">
     <value>幅を合わせる</value>
   </data>
+  <data name="DialogTitle_Confirm" xml:space="preserve">
+    <value>確認</value>
+  </data>
+  <data name="DialogTitle_Error" xml:space="preserve">
+    <value>異常終了</value>
+  </data>
+  <data name="DialogTitle_ReadError" xml:space="preserve">
+    <value>読み込みエラー</value>
+  </data>
+  <data name="Dialog_Statistics_CumulativeNumberOfItemsSelectedWithTheLassoTool" xml:space="preserve">
+    <value>なげなわツールで選択したアイテムの累計</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfBoots" xml:space="preserve">
+    <value>起動回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfBottomAlignment" xml:space="preserve">
+    <value>下揃えした回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfClicksWithThePointerTool" xml:space="preserve">
+    <value>ポインターツールでクリックした回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfCopies" xml:space="preserve">
+    <value>コピーした回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfCuts" xml:space="preserve">
+    <value>切り取りした回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfDeletedLayers" xml:space="preserve">
+    <value>削除したレイヤー数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfDrawingOfPictureTool" xml:space="preserve">
+    <value>画像ツールの描画回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfDrawsForTheStraightLineTool" xml:space="preserve">
+    <value>直線ツールの描画回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfDrawsOfBezierCurveTool" xml:space="preserve">
+    <value>ベジエ曲線ツールの描画回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfDrawsOfPolygonTool" xml:space="preserve">
+    <value>多角形ツールの描画回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfDrawsOfTheEllipseTool" xml:space="preserve">
+    <value>円ツールの描画回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfDrawsOfTheLetteringTool" xml:space="preserve">
+    <value>文字ツールの描画回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfDrawsOfTheRectangleTool" xml:space="preserve">
+    <value>四角形ツールの描画回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfDrawsOfTheVerticalLetteringTool" xml:space="preserve">
+    <value>縦書きツールの描画回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfExcludes" xml:space="preserve">
+    <value>Excludeした回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfExports" xml:space="preserve">
+    <value>エクスポートした回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfExportsAsBmp" xml:space="preserve">
+    <value>BMPエクスポートした回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfExportsAsGif" xml:space="preserve">
+    <value>GIFエクスポートした回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfExportsAsJpeg" xml:space="preserve">
+    <value>Jpegエクスポートした回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfExportsAsPng" xml:space="preserve">
+    <value>PNGエクスポートした回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfExportsAsTiff" xml:space="preserve">
+    <value>TIFFエクスポートした回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfExportsAsWmp" xml:space="preserve">
+    <value>WMPエクスポートした回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfIntersects" xml:space="preserve">
+    <value>Intersectした回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfLeftAlignment" xml:space="preserve">
+    <value>左揃えした回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfLogLevelChanges" xml:space="preserve">
+    <value>ログレベルを変更した回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfMovesToTheBack" xml:space="preserve">
+    <value>背面へ移動した回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfMovesToTheFront" xml:space="preserve">
+    <value>前面へ移動した回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfNewlyCreatedLayers" xml:space="preserve">
+    <value>新規作成したレイヤー数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfPasted" xml:space="preserve">
+    <value>貼り付けした回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfRedoes" xml:space="preserve">
+    <value>やり直しした回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfRightAlignment" xml:space="preserve">
+    <value>右揃えした回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfSnapPointToolInstallations" xml:space="preserve">
+    <value>スナップポイントツールの設置回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesAlignedLeftAndRight" xml:space="preserve">
+    <value>左右に整列した回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesAlignedUpAndDown" xml:space="preserve">
+    <value>上下に整列した回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesAutomaticallySaved" xml:space="preserve">
+    <value>自動保存した回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesGrouped" xml:space="preserve">
+    <value>グループ化した回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesLeftAndRightCentered" xml:space="preserve">
+    <value>左右中央揃えした回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesSavedByOverwriting" xml:space="preserve">
+    <value>上書き保存した回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesTheApplicationLogWasDisplayed" xml:space="preserve">
+    <value>アプリケーションログを表示した回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesTheAutoSaveFileIsSpecifiedAndOpened" xml:space="preserve">
+    <value>自動保存ファイルを指定して開いた回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesTheBrushToolIsDrawn" xml:space="preserve">
+    <value>ブラシツールの描画回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesTheEraserToolHasBeenUsed" xml:space="preserve">
+    <value>消しゴムツールの使用回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesTheFileWasOpenedBySpecifyingIt" xml:space="preserve">
+    <value>ファイルを指定して開いた回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesTheItemWasDeleted" xml:space="preserve">
+    <value>アイテムを削除した回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesTheItemWasDrawn" xml:space="preserve">
+    <value>アイテムを描画した回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesTheSliceToolWasUsed" xml:space="preserve">
+    <value>スライスツールを使用した回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesTheTopAndBottomAreAligned" xml:space="preserve">
+    <value>上下中央揃えした回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesTheVersionInformationDialogWasDisplayed" xml:space="preserve">
+    <value>バージョン情報ダイアログを表示した回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesToMatchTheHeight" xml:space="preserve">
+    <value>高さを合わせた回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesToMatchTheWidth" xml:space="preserve">
+    <value>幅を合わせた回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesToMoveToTheBackend" xml:space="preserve">
+    <value>最背面へ移動した回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesToMoveToTheFrontend" xml:space="preserve">
+    <value>最前面へ移動した回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesYouHaveNamedAndSaved" xml:space="preserve">
+    <value>名前を付けて保存した回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTopAlignment" xml:space="preserve">
+    <value>上揃えした回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfUndos" xml:space="preserve">
+    <value>元に戻した回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfUngrouped" xml:space="preserve">
+    <value>グループ化解除した回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfUnions" xml:space="preserve">
+    <value>Unionした回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfXors" xml:space="preserve">
+    <value>Xorした回数</value>
+  </data>
+  <data name="Dialog_Statistics_Uptime" xml:space="preserve">
+    <value>累計稼働時間</value>
+  </data>
+  <data name="Dialog_Title_Version" xml:space="preserve">
+    <value>boiler's Graphics のバージョン情報</value>
+  </data>
   <data name="Grouping" xml:space="preserve">
     <value>グループ</value>
   </data>
+  <data name="Log_FileCannotOpenBecauseTooOldOrCorrupted" xml:space="preserve">
+    <value>【読み込みエラー】このファイルは古すぎるか壊れているため開けません。</value>
+  </data>
+  <data name="Log_ForceReadMode" xml:space="preserve">
+    <value>強制読み込みモードでファイルを読み込みます。このモードはVersion要素が見つからない時に実施されます。</value>
+  </data>
+  <data name="Log_LoadedFile" xml:space="preserve">
+    <value>ファイル({0})を読み込みました。</value>
+  </data>
+  <data name="MenuItem_BrushThickness" xml:space="preserve">
+    <value>ブラシの太さ</value>
+  </data>
+  <data name="MenuItem_Canvas" xml:space="preserve">
+    <value>キャンパス(_C)</value>
+  </data>
+  <data name="MenuItem_Clip" xml:space="preserve">
+    <value>クリップを設定</value>
+  </data>
+  <data name="MenuItem_Copy" xml:space="preserve">
+    <value>コピー(_C)</value>
+  </data>
+  <data name="MenuItem_Cut" xml:space="preserve">
+    <value>切り取り(_T)</value>
+  </data>
+  <data name="MenuItem_Edit" xml:space="preserve">
+    <value>編集(_E)</value>
+  </data>
+  <data name="MenuItem_en_US" xml:space="preserve">
+    <value>英語（米国）</value>
+  </data>
+  <data name="MenuItem_ExitApplication" xml:space="preserve">
+    <value>boiler's Graphics を終了する</value>
+  </data>
+  <data name="MenuItem_Export" xml:space="preserve">
+    <value>エクスポート</value>
+  </data>
+  <data name="MenuItem_File" xml:space="preserve">
+    <value>ファイル(_F)</value>
+  </data>
+  <data name="MenuItem_Help" xml:space="preserve">
+    <value>ヘルプ(_H)</value>
+  </data>
+  <data name="MenuItem_ja_JP" xml:space="preserve">
+    <value>日本語</value>
+  </data>
+  <data name="MenuItem_Language" xml:space="preserve">
+    <value>言語</value>
+  </data>
+  <data name="MenuItem_Log" xml:space="preserve">
+    <value>ログ</value>
+  </data>
+  <data name="MenuItem_LogLevel" xml:space="preserve">
+    <value>ログレベル</value>
+  </data>
+  <data name="MenuItem_LogLevel_Debug" xml:space="preserve">
+    <value>Debug</value>
+  </data>
+  <data name="MenuItem_LogLevel_Error" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="MenuItem_LogLevel_Fatal" xml:space="preserve">
+    <value>Fatal</value>
+  </data>
+  <data name="MenuItem_LogLevel_Info" xml:space="preserve">
+    <value>Info</value>
+  </data>
+  <data name="MenuItem_LogLevel_Off" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="MenuItem_LogLevel_Trace" xml:space="preserve">
+    <value>Trace</value>
+  </data>
+  <data name="MenuItem_LogLevel_Warn" xml:space="preserve">
+    <value>Warn</value>
+  </data>
+  <data name="MenuItem_MiniMap" xml:space="preserve">
+    <value>ミニマップ</value>
+  </data>
+  <data name="MenuItem_Open" xml:space="preserve">
+    <value>開く(_O)</value>
+  </data>
+  <data name="MenuItem_Overwrite" xml:space="preserve">
+    <value>上書き保存</value>
+  </data>
+  <data name="MenuItem_Paste" xml:space="preserve">
+    <value>貼り付け(_P)</value>
+  </data>
+  <data name="MenuItem_Preference" xml:space="preserve">
+    <value>設定(_P)</value>
+  </data>
+  <data name="MenuItem_Property" xml:space="preserve">
+    <value>プロパティ</value>
+  </data>
+  <data name="MenuItem_Redo" xml:space="preserve">
+    <value>やり直し(_R)</value>
+  </data>
+  <data name="MenuItem_SaveAs" xml:space="preserve">
+    <value>名前を付けて保存</value>
+  </data>
+  <data name="MenuItem_ShowLog" xml:space="preserve">
+    <value>アプリケーションログを開く(_L)</value>
+  </data>
+  <data name="MenuItem_SpecifyFile" xml:space="preserve">
+    <value>ファイルを指定(_S)</value>
+  </data>
+  <data name="MenuItem_SpecifyFileAutoSaved" xml:space="preserve">
+    <value>自動保存したファイルを指定(_A)</value>
+  </data>
+  <data name="MenuItem_Statistics" xml:space="preserve">
+    <value>統計(_S)</value>
+  </data>
+  <data name="MenuItem_Undo" xml:space="preserve">
+    <value>元に戻す(_U)</value>
+  </data>
+  <data name="MenuItem_Version" xml:space="preserve">
+    <value>boiler's Graphics のバージョン情報(_I)</value>
+  </data>
+  <data name="MenuItem_View" xml:space="preserve">
+    <value>表示(_V)</value>
+  </data>
+  <data name="MenuItem_Window" xml:space="preserve">
+    <value>ウインドウ(_W)</value>
+  </data>
+  <data name="Message_Autosaved" xml:space="preserve">
+    <value>自動保存しました。</value>
+  </data>
+  <data name="Message_CanvasWillDiscardedConfirm" xml:space="preserve">
+    <value>現在のキャンパスは破棄されますが、よろしいですか？</value>
+  </data>
+  <data name="Message_FileCannotOpenBecauseTooNew" xml:space="preserve">
+    <value>ファイルが新しすぎて開けません。</value>
+  </data>
+  <data name="Message_FileCannotOpenBecauseTooOldOrCorrupted" xml:space="preserve">
+    <value>このファイルは古すぎるか壊れているため開けません。</value>
+  </data>
+  <data name="Name_Item" xml:space="preserve">
+    <value>アイテム</value>
+  </data>
+  <data name="Name_Layer" xml:space="preserve">
+    <value>レイヤー</value>
+  </data>
   <data name="Ordering" xml:space="preserve">
     <value>順序</value>
+  </data>
+  <data name="PaneTitle_Combine" xml:space="preserve">
+    <value>結合</value>
+  </data>
+  <data name="PaneTitle_Layer" xml:space="preserve">
+    <value>レイヤー</value>
+  </data>
+  <data name="Pane_Combine_Exclude" xml:space="preserve">
+    <value>Exclude</value>
+  </data>
+  <data name="Pane_Combine_Intersect" xml:space="preserve">
+    <value>Intersect</value>
+  </data>
+  <data name="Pane_Combine_Union" xml:space="preserve">
+    <value>Union</value>
+  </data>
+  <data name="Pane_Combine_Xor" xml:space="preserve">
+    <value>Xor</value>
+  </data>
+  <data name="Pane_Layer_CreateLayer" xml:space="preserve">
+    <value>レイヤーを新規作成する</value>
+  </data>
+  <data name="Pane_Layer_RemoveLayer" xml:space="preserve">
+    <value>レイヤーを削除する</value>
+  </data>
+  <data name="String_A" xml:space="preserve">
+    <value>アルファ</value>
+  </data>
+  <data name="String_AutoSave" xml:space="preserve">
+    <value>自動保存</value>
+  </data>
+  <data name="String_AutoSaveEveryTimeYouChangeCamvas" xml:space="preserve">
+    <value>キャンパス変更毎に自動保存する</value>
+  </data>
+  <data name="String_B" xml:space="preserve">
+    <value>青(Blue)</value>
+  </data>
+  <data name="String_Cancel" xml:space="preserve">
+    <value>キャンセル</value>
+  </data>
+  <data name="String_CanvasBackground" xml:space="preserve">
+    <value>キャンバスの背景色</value>
+  </data>
+  <data name="String_CanvasHeight" xml:space="preserve">
+    <value>キャンパスの高さ</value>
+  </data>
+  <data name="String_CanvasWidth" xml:space="preserve">
+    <value>キャンパスの幅</value>
+  </data>
+  <data name="String_ErrorReporting" xml:space="preserve">
+    <value>申し訳ありません。</value>
+  </data>
+  <data name="String_ErrorReporting1" xml:space="preserve">
+    <value>お使いのアプリケーションは異常を検知したため終了します。</value>
+  </data>
+  <data name="String_ErrorReporting2" xml:space="preserve">
+    <value>イベントビューアーかアプリケーションログファイルからエラーの詳細を確認することができます。アプリケーションログファイル：</value>
+  </data>
+  <data name="String_ErrorReporting3" xml:space="preserve">
+    <value>-- エラー内容 --</value>
+  </data>
+  <data name="String_Export" xml:space="preserve">
+    <value>エクスポート</value>
+  </data>
+  <data name="String_FileName" xml:space="preserve">
+    <value>ファイル名</value>
+  </data>
+  <data name="String_G" xml:space="preserve">
+    <value>緑(Green)</value>
+  </data>
+  <data name="String_Hue" xml:space="preserve">
+    <value>色相(Hue)</value>
+  </data>
+  <data name="String_Interval" xml:space="preserve">
+    <value>インターバル：</value>
+  </data>
+  <data name="String_License" xml:space="preserve">
+    <value>ライセンス</value>
+  </data>
+  <data name="String_OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="String_OpensourceComponent_Library_Code" xml:space="preserve">
+    <value>オープンソース コンポーネント / ライブラリ / コード</value>
+  </data>
+  <data name="String_PleaseDescribeError" xml:space="preserve">
+    <value>**エラーの詳細を説明してください**</value>
+  </data>
+  <data name="String_QualityLevel" xml:space="preserve">
+    <value>クオリティレベル</value>
+  </data>
+  <data name="String_R" xml:space="preserve">
+    <value>赤(Red)</value>
+  </data>
+  <data name="String_Reference" xml:space="preserve">
+    <value>参照</value>
+  </data>
+  <data name="String_SetInterval" xml:space="preserve">
+    <value>インターバルを設定する</value>
+  </data>
+  <data name="String_SnapPoint" xml:space="preserve">
+    <value>ポイントにスナップする</value>
+  </data>
+  <data name="String_SnapRange" xml:space="preserve">
+    <value>ポイントにスナップする範囲</value>
+  </data>
+  <data name="String_Version" xml:space="preserve">
+    <value>バージョン</value>
+  </data>
+  <data name="Title_ColorPicker" xml:space="preserve">
+    <value>カラーピッカー</value>
+  </data>
+  <data name="Title_Export" xml:space="preserve">
+    <value>エクスポート</value>
+  </data>
+  <data name="Title_Preferences" xml:space="preserve">
+    <value>設定</value>
+  </data>
+  <data name="Title_Statistics" xml:space="preserve">
+    <value>統計</value>
+  </data>
+  <data name="Tool_BezierCurve" xml:space="preserve">
+    <value>ベジエ曲線ツール</value>
+  </data>
+  <data name="Tool_Brush" xml:space="preserve">
+    <value>ブラシツール</value>
+  </data>
+  <data name="Tool_Ellipse" xml:space="preserve">
+    <value>円ツール</value>
+  </data>
+  <data name="Tool_Eraser" xml:space="preserve">
+    <value>消しゴムツール</value>
+  </data>
+  <data name="Tool_Lasso" xml:space="preserve">
+    <value>なげなわツール</value>
+  </data>
+  <data name="Tool_Lettering" xml:space="preserve">
+    <value>文字ツール</value>
+  </data>
+  <data name="Tool_Picture" xml:space="preserve">
+    <value>画像ツール</value>
+  </data>
+  <data name="Tool_Pointer" xml:space="preserve">
+    <value>ポインターツール</value>
+  </data>
+  <data name="Tool_Polygon" xml:space="preserve">
+    <value>多角形ツール</value>
+  </data>
+  <data name="Tool_Rectangle" xml:space="preserve">
+    <value>四角形ツール</value>
+  </data>
+  <data name="Tool_Slice" xml:space="preserve">
+    <value>スライスツール</value>
+  </data>
+  <data name="Tool_SnapPoint" xml:space="preserve">
+    <value>スナップポイントツール</value>
+  </data>
+  <data name="Tool_StraightLine" xml:space="preserve">
+    <value>直線ツール</value>
+  </data>
+  <data name="Tool_VerticalLettering" xml:space="preserve">
+    <value>縦書きツール</value>
   </data>
 </root>

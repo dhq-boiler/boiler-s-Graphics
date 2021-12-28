@@ -1,4 +1,5 @@
 ﻿using boilersGraphics.Helpers;
+using boilersGraphics.Properties;
 using OpenCvSharp;
 using OpenCvSharp.WpfExtensions;
 using Prism.Mvvm;
@@ -503,7 +504,7 @@ namespace boilersGraphics.ViewModels
 
         public ColorExchange EditTarget { get; set; }
 
-        public string Title => "カラーピッカー";
+        public string Title => Resources.Title_ColorPicker;
 
         public bool CanCloseDialog()
         {

@@ -112,13 +112,28 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Alignment" xml:space="preserve">
     <value>Alignment</value>
+  </data>
+  <data name="Button_Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="Button_MaximizeWindow" xml:space="preserve">
+    <value>Maximize</value>
+  </data>
+  <data name="Button_MinimizeWindow" xml:space="preserve">
+    <value>Minimize</value>
+  </data>
+  <data name="Button_PostIssue" xml:space="preserve">
+    <value>Post an issue on GitHub</value>
+  </data>
+  <data name="Button_Restore" xml:space="preserve">
+    <value>Restore</value>
   </data>
   <data name="Command_AlignBottom" xml:space="preserve">
     <value>Align bottom</value>
@@ -172,7 +187,7 @@
     <value>Send backward</value>
   </data>
   <data name="Command_Setting" xml:space="preserve">
-    <value>Setting</value>
+    <value>Preferences</value>
   </data>
   <data name="Command_Ungroup" xml:space="preserve">
     <value>Ungroup</value>
@@ -183,10 +198,505 @@
   <data name="Command_UniformWidth" xml:space="preserve">
     <value>Uniform width</value>
   </data>
+  <data name="DialogTitle_Confirm" xml:space="preserve">
+    <value>Confirm</value>
+  </data>
+  <data name="DialogTitle_Error" xml:space="preserve">
+    <value>Abnormal termination</value>
+  </data>
+  <data name="DialogTitle_ReadError" xml:space="preserve">
+    <value>Read error</value>
+  </data>
+  <data name="Dialog_Statistics_CumulativeNumberOfItemsSelectedWithTheLassoTool" xml:space="preserve">
+    <value>Cumulative number of items selected with the Lasso Tool</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfBoots" xml:space="preserve">
+    <value>Number of boots</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfBottomAlignment" xml:space="preserve">
+    <value>Number of bottom alignment</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfClicksWithThePointerTool" xml:space="preserve">
+    <value>Number of clicks with the pointer tool</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfCopies" xml:space="preserve">
+    <value>Number of copies</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfCuts" xml:space="preserve">
+    <value>Number of cuts</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfDeletedLayers" xml:space="preserve">
+    <value>Number of deleted layers</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfDrawingOfPictureTool" xml:space="preserve">
+    <value>Number of drawing of picture tool</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfDrawsForTheStraightLineTool" xml:space="preserve">
+    <value>Number of draws for the straight line tool</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfDrawsOfBezierCurveTool" xml:space="preserve">
+    <value>Number of draws of Bezier curve tool</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfDrawsOfPolygonTool" xml:space="preserve">
+    <value>Number of draws of polygon tool</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfDrawsOfTheEllipseTool" xml:space="preserve">
+    <value>Number of draws of the ellipse tool</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfDrawsOfTheLetteringTool" xml:space="preserve">
+    <value>Number of draws of the lettering tool</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfDrawsOfTheRectangleTool" xml:space="preserve">
+    <value>Number of draws of the rectangle tool</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfDrawsOfTheVerticalLetteringTool" xml:space="preserve">
+    <value>Number of draws of the vertical lettering tool</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfExcludes" xml:space="preserve">
+    <value>Number of Excludes</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfExports" xml:space="preserve">
+    <value>Number of exports</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfExportsAsBmp" xml:space="preserve">
+    <value>Number of exports as BMP</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfExportsAsGif" xml:space="preserve">
+    <value>Number of exports as GIF</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfExportsAsJpeg" xml:space="preserve">
+    <value>Number of exports as Jpeg</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfExportsAsPng" xml:space="preserve">
+    <value>Number of exports as PNG</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfExportsAsTiff" xml:space="preserve">
+    <value>Number of exports as TIFF</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfExportsAsWmp" xml:space="preserve">
+    <value>Number of exports as WMP</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfIntersects" xml:space="preserve">
+    <value>Number of intersects</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfLeftAlignment" xml:space="preserve">
+    <value>Number of left aligned</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfLogLevelChanges" xml:space="preserve">
+    <value>Number of log level changes</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfMovesToTheBack" xml:space="preserve">
+    <value>Number of moves to the back</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfMovesToTheFront" xml:space="preserve">
+    <value>Number of moves to the front</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfNewlyCreatedLayers" xml:space="preserve">
+    <value>Number of newly created layers</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfPasted" xml:space="preserve">
+    <value>Number of pasted</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfRedoes" xml:space="preserve">
+    <value>Number of redoes</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfRightAlignment" xml:space="preserve">
+    <value>Number of right aligned</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfSnapPointToolInstallations" xml:space="preserve">
+    <value>Number of snap point tool installations</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesAlignedLeftAndRight" xml:space="preserve">
+    <value>Number of times aligned left and right</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesAlignedUpAndDown" xml:space="preserve">
+    <value>Number of times aligned up and down</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesAutomaticallySaved" xml:space="preserve">
+    <value>Number of times automatically saved</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesGrouped" xml:space="preserve">
+    <value>Number of times grouped</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesLeftAndRightCentered" xml:space="preserve">
+    <value>Number of times left and right centered</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesSavedByOverwriting" xml:space="preserve">
+    <value>Number of times saved by overwriting</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesTheApplicationLogWasDisplayed" xml:space="preserve">
+    <value>Number of times the application log was displayed</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesTheAutoSaveFileIsSpecifiedAndOpened" xml:space="preserve">
+    <value>Number of times the auto save file is specified and opened</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesTheBrushToolIsDrawn" xml:space="preserve">
+    <value>Number of times the brush tool is drawn</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesTheEraserToolHasBeenUsed" xml:space="preserve">
+    <value>Number of times the eraser tool has been used</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesTheFileWasOpenedBySpecifyingIt" xml:space="preserve">
+    <value>Number of times the file was opened by specifying it</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesTheItemWasDeleted" xml:space="preserve">
+    <value>Number of times the item was deleted</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesTheItemWasDrawn" xml:space="preserve">
+    <value>Number of times the item was drawn</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesTheSliceToolWasUsed" xml:space="preserve">
+    <value>Number of times the slice tool was used</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesTheTopAndBottomAreAligned" xml:space="preserve">
+    <value>Number of times the top and bottom are aligned</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesTheVersionInformationDialogWasDisplayed" xml:space="preserve">
+    <value>Number of times the version information dialog was displayed</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesToMatchTheHeight" xml:space="preserve">
+    <value>Number of times to match the height</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesToMatchTheWidth" xml:space="preserve">
+    <value>Number of times to match the width</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesToMoveToTheBackend" xml:space="preserve">
+    <value>Number of times to move to the backend</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesToMoveToTheFrontend" xml:space="preserve">
+    <value>Number of times to move to the frontend</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTimesYouHaveNamedAndSaved" xml:space="preserve">
+    <value>Number of times you have named and saved</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfTopAlignment" xml:space="preserve">
+    <value>Number of top alignment</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfUndos" xml:space="preserve">
+    <value>Number of undos</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfUngrouped" xml:space="preserve">
+    <value>Number of ungrouped</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfUnions" xml:space="preserve">
+    <value>Number of unions</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfXors" xml:space="preserve">
+    <value>Number of Xors</value>
+  </data>
+  <data name="Dialog_Statistics_Uptime" xml:space="preserve">
+    <value>Uptime</value>
+  </data>
+  <data name="Dialog_Title_Version" xml:space="preserve">
+    <value>Version information of boiler's Graphics</value>
+  </data>
   <data name="Grouping" xml:space="preserve">
     <value>Grouping</value>
   </data>
+  <data name="Log_FileCannotOpenBecauseTooOldOrCorrupted" xml:space="preserve">
+    <value>This file is too old or corrupted to open.</value>
+  </data>
+  <data name="Log_ForceReadMode" xml:space="preserve">
+    <value>Read the file in forced read mode. This mode is enforced when the Version element is not found.</value>
+  </data>
+  <data name="Log_LoadedFile" xml:space="preserve">
+    <value>App read the file ({0}).</value>
+  </data>
+  <data name="MenuItem_BrushThickness" xml:space="preserve">
+    <value>Brush thickness</value>
+  </data>
+  <data name="MenuItem_Canvas" xml:space="preserve">
+    <value>Canvas(_C)</value>
+  </data>
+  <data name="MenuItem_Clip" xml:space="preserve">
+    <value>Set clip</value>
+  </data>
+  <data name="MenuItem_Copy" xml:space="preserve">
+    <value>Copy(_C)</value>
+  </data>
+  <data name="MenuItem_Cut" xml:space="preserve">
+    <value>Cut(_T)</value>
+  </data>
+  <data name="MenuItem_Edit" xml:space="preserve">
+    <value>Edit(_E)</value>
+  </data>
+  <data name="MenuItem_en_US" xml:space="preserve">
+    <value>English(US)</value>
+  </data>
+  <data name="MenuItem_ExitApplication" xml:space="preserve">
+    <value>Exit boiler's Graphics</value>
+  </data>
+  <data name="MenuItem_Export" xml:space="preserve">
+    <value>Export</value>
+  </data>
+  <data name="MenuItem_File" xml:space="preserve">
+    <value>File(_F)</value>
+  </data>
+  <data name="MenuItem_Help" xml:space="preserve">
+    <value>Help(_H)</value>
+  </data>
+  <data name="MenuItem_ja_JP" xml:space="preserve">
+    <value>Japanese</value>
+  </data>
+  <data name="MenuItem_Language" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="MenuItem_Log" xml:space="preserve">
+    <value>Log</value>
+  </data>
+  <data name="MenuItem_LogLevel" xml:space="preserve">
+    <value>Log level</value>
+  </data>
+  <data name="MenuItem_LogLevel_Debug" xml:space="preserve">
+    <value>Debug</value>
+  </data>
+  <data name="MenuItem_LogLevel_Error" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="MenuItem_LogLevel_Fatal" xml:space="preserve">
+    <value>Fatal</value>
+  </data>
+  <data name="MenuItem_LogLevel_Info" xml:space="preserve">
+    <value>Info</value>
+  </data>
+  <data name="MenuItem_LogLevel_Off" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="MenuItem_LogLevel_Trace" xml:space="preserve">
+    <value>Trace</value>
+  </data>
+  <data name="MenuItem_LogLevel_Warn" xml:space="preserve">
+    <value>Warn</value>
+  </data>
+  <data name="MenuItem_MiniMap" xml:space="preserve">
+    <value>Mini map</value>
+  </data>
+  <data name="MenuItem_Open" xml:space="preserve">
+    <value>Open(_O)</value>
+  </data>
+  <data name="MenuItem_Overwrite" xml:space="preserve">
+    <value>Overwrite</value>
+  </data>
+  <data name="MenuItem_Paste" xml:space="preserve">
+    <value>Paste(_P)</value>
+  </data>
+  <data name="MenuItem_Preference" xml:space="preserve">
+    <value>Preferences(_P)</value>
+  </data>
+  <data name="MenuItem_Property" xml:space="preserve">
+    <value>Property</value>
+  </data>
+  <data name="MenuItem_Redo" xml:space="preserve">
+    <value>Redo(_R)</value>
+  </data>
+  <data name="MenuItem_SaveAs" xml:space="preserve">
+    <value>Save as</value>
+  </data>
+  <data name="MenuItem_ShowLog" xml:space="preserve">
+    <value>Open application log(_L)</value>
+  </data>
+  <data name="MenuItem_SpecifyFile" xml:space="preserve">
+    <value>Specify File(_S)</value>
+  </data>
+  <data name="MenuItem_SpecifyFileAutoSaved" xml:space="preserve">
+    <value>Specify the automatically saved file(_A)</value>
+  </data>
+  <data name="MenuItem_Statistics" xml:space="preserve">
+    <value>Statistics(_S)</value>
+  </data>
+  <data name="MenuItem_Undo" xml:space="preserve">
+    <value>Undo(_U)</value>
+  </data>
+  <data name="MenuItem_Version" xml:space="preserve">
+    <value>Version information of boiler's Graphics(_I)</value>
+  </data>
+  <data name="MenuItem_View" xml:space="preserve">
+    <value>View(_V)</value>
+  </data>
+  <data name="MenuItem_Window" xml:space="preserve">
+    <value>Window(_W)</value>
+  </data>
+  <data name="Message_Autosaved" xml:space="preserve">
+    <value>It was saved automatically.</value>
+  </data>
+  <data name="Message_CanvasWillDiscardedConfirm" xml:space="preserve">
+    <value>The current campus will be destroyed, is that okay?</value>
+  </data>
+  <data name="Message_FileCannotOpenBecauseTooNew" xml:space="preserve">
+    <value>The file is too new to open.</value>
+  </data>
+  <data name="Message_FileCannotOpenBecauseTooOldOrCorrupted" xml:space="preserve">
+    <value>This file is too old or corrupted to open.</value>
+  </data>
+  <data name="Name_Item" xml:space="preserve">
+    <value>Item</value>
+  </data>
+  <data name="Name_Layer" xml:space="preserve">
+    <value>Layer</value>
+  </data>
   <data name="Ordering" xml:space="preserve">
     <value>Ordering</value>
+  </data>
+  <data name="PaneTitle_Combine" xml:space="preserve">
+    <value>Combine</value>
+  </data>
+  <data name="PaneTitle_Layer" xml:space="preserve">
+    <value>Layer</value>
+  </data>
+  <data name="Pane_Combine_Exclude" xml:space="preserve">
+    <value>Exclude</value>
+  </data>
+  <data name="Pane_Combine_Intersect" xml:space="preserve">
+    <value>Intersect</value>
+  </data>
+  <data name="Pane_Combine_Union" xml:space="preserve">
+    <value>Union</value>
+  </data>
+  <data name="Pane_Combine_Xor" xml:space="preserve">
+    <value>Xor</value>
+  </data>
+  <data name="Pane_Layer_CreateLayer" xml:space="preserve">
+    <value>Create a Layer</value>
+  </data>
+  <data name="Pane_Layer_RemoveLayer" xml:space="preserve">
+    <value>Remove a Layer</value>
+  </data>
+  <data name="String_A" xml:space="preserve">
+    <value>Alpha</value>
+  </data>
+  <data name="String_AutoSave" xml:space="preserve">
+    <value>Autosave</value>
+  </data>
+  <data name="String_AutoSaveEveryTimeYouChangeCamvas" xml:space="preserve">
+    <value>Automatically save every camvas change</value>
+  </data>
+  <data name="String_B" xml:space="preserve">
+    <value>Blue</value>
+  </data>
+  <data name="String_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="String_CanvasBackground" xml:space="preserve">
+    <value>Canvas Background</value>
+  </data>
+  <data name="String_CanvasHeight" xml:space="preserve">
+    <value>Canvas Height</value>
+  </data>
+  <data name="String_CanvasWidth" xml:space="preserve">
+    <value>Canvas Width</value>
+  </data>
+  <data name="String_ErrorReporting" xml:space="preserve">
+    <value>I'm sorry. </value>
+  </data>
+  <data name="String_ErrorReporting1" xml:space="preserve">
+    <value>Your application will close because it has detected an error.</value>
+  </data>
+  <data name="String_ErrorReporting2" xml:space="preserve">
+    <value>You can see the details of the error in the event viewer or the application log file. The application log file is here:</value>
+  </data>
+  <data name="String_ErrorReporting3" xml:space="preserve">
+    <value>-- error contents --</value>
+  </data>
+  <data name="String_Export" xml:space="preserve">
+    <value>Export</value>
+  </data>
+  <data name="String_FileName" xml:space="preserve">
+    <value>File name</value>
+  </data>
+  <data name="String_G" xml:space="preserve">
+    <value>Green</value>
+  </data>
+  <data name="String_Hue" xml:space="preserve">
+    <value>Hue</value>
+  </data>
+  <data name="String_Interval" xml:space="preserve">
+    <value>Interval:</value>
+  </data>
+  <data name="String_License" xml:space="preserve">
+    <value>License</value>
+  </data>
+  <data name="String_OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="String_OpensourceComponent_Library_Code" xml:space="preserve">
+    <value>OpenSource component / Libraries / Code</value>
+  </data>
+  <data name="String_PleaseDescribeError" xml:space="preserve">
+    <value>**Please describe the details of the error**</value>
+  </data>
+  <data name="String_QualityLevel" xml:space="preserve">
+    <value>Quality level</value>
+  </data>
+  <data name="String_R" xml:space="preserve">
+    <value>Red</value>
+  </data>
+  <data name="String_Reference" xml:space="preserve">
+    <value>Reference</value>
+  </data>
+  <data name="String_SetInterval" xml:space="preserve">
+    <value>Set the interval</value>
+  </data>
+  <data name="String_SnapPoint" xml:space="preserve">
+    <value>Snap to a point</value>
+  </data>
+  <data name="String_SnapRange" xml:space="preserve">
+    <value>Range to snap to a point</value>
+  </data>
+  <data name="String_Version" xml:space="preserve">
+    <value>Version</value>
+  </data>
+  <data name="Title_ColorPicker" xml:space="preserve">
+    <value>Color picker</value>
+  </data>
+  <data name="Title_Export" xml:space="preserve">
+    <value>Export</value>
+  </data>
+  <data name="Title_Preferences" xml:space="preserve">
+    <value>Preferences</value>
+  </data>
+  <data name="Title_Statistics" xml:space="preserve">
+    <value>Statistics</value>
+  </data>
+  <data name="Tool_BezierCurve" xml:space="preserve">
+    <value>Bezier curve tool</value>
+  </data>
+  <data name="Tool_Brush" xml:space="preserve">
+    <value>Brush tool</value>
+  </data>
+  <data name="Tool_Ellipse" xml:space="preserve">
+    <value>Ellipse tool</value>
+  </data>
+  <data name="Tool_Eraser" xml:space="preserve">
+    <value>Eraser tool</value>
+  </data>
+  <data name="Tool_Lasso" xml:space="preserve">
+    <value>Lasso tool</value>
+  </data>
+  <data name="Tool_Lettering" xml:space="preserve">
+    <value>Lettering tool</value>
+  </data>
+  <data name="Tool_Picture" xml:space="preserve">
+    <value>Picture tool</value>
+  </data>
+  <data name="Tool_Pointer" xml:space="preserve">
+    <value>Pointer tool</value>
+  </data>
+  <data name="Tool_Polygon" xml:space="preserve">
+    <value>Polygon tool</value>
+  </data>
+  <data name="Tool_Rectangle" xml:space="preserve">
+    <value>Rectangle tool</value>
+  </data>
+  <data name="Tool_Slice" xml:space="preserve">
+    <value>Slice tool</value>
+  </data>
+  <data name="Tool_SnapPoint" xml:space="preserve">
+    <value>Snap point tool</value>
+  </data>
+  <data name="Tool_StraightLine" xml:space="preserve">
+    <value>Straight line tool</value>
+  </data>
+  <data name="Tool_VerticalLettering" xml:space="preserve">
+    <value>Vertical lettering tool</value>
   </data>
 </root>

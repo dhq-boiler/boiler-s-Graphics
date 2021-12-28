@@ -46,6 +46,7 @@ namespace boilersGraphics.Test
                   <FillColor>#00000000</FillColor>
                   <EdgeThickness>0</EdgeThickness>
                   <PathGeometry />
+                  <RotationAngle>0</RotationAngle>
                 </DesignerItem>
             </Item>
             <Children>
@@ -68,6 +69,7 @@ namespace boilersGraphics.Test
                        <FillColor>#00000000</FillColor>
                        <EdgeThickness>1</EdgeThickness>
                        <PathGeometry>M514,187C514,252.721885229864 420.875227964805,306 306,306 191.124772035195,306 98,252.721885229864 98,187 98,121.278114770136 191.124772035195,68 306,68 420.875227964805,68 514,121.278114770136 514,187z</PathGeometry>
+                       <RotationAngle>0</RotationAngle>
                     </DesignerItem>
                  </Item>
                  <Children />
@@ -91,8 +93,9 @@ namespace boilersGraphics.Test
                     <FillColor>#00000000</FillColor>
                     <EdgeThickness>1</EdgeThickness>
                     <PathGeometry>M509.5,463C509.5,517.952332608164 417.494516090228,562.5 304,562.5 190.505483909772,562.5 98.5,517.952332608164 98.5,463 98.5,408.047667391836 190.505483909772,363.5 304,363.5 417.494516090228,363.5 509.5,408.047667391836 509.5,463z</PathGeometry>
-                    </DesignerItem>
-                  </Item>
+                    <RotationAngle>0</RotationAngle>
+                  </DesignerItem>
+                </Item>
                 <Children />
               </LayerItem>
             </Children>

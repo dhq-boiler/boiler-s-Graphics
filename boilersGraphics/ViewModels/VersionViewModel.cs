@@ -1,5 +1,6 @@
 ﻿using boilersGraphics.Dao;
 using boilersGraphics.Exceptions;
+using boilersGraphics.Properties;
 using NLog;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
@@ -18,7 +19,7 @@ namespace boilersGraphics.ViewModels
     public class VersionViewModel : BindableBase, IDialogAware
     {
         private CompositeDisposable _disposables = new CompositeDisposable();
-        public string Title => "boiler's Graphics のバージョン情報";
+        public string Title => Resources.Dialog_Title_Version;
 
         public event Action<IDialogResult> RequestClose;
 

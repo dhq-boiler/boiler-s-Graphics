@@ -7,6 +7,7 @@
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:prism="http://prismlibrary.com/"
+             xmlns:helper="clr-namespace:boilersGraphics.Helpers"
              xmlns:viewModel="clr-namespace:boilersGraphics.ViewModels"
              d:DataContext="{d:DesignInstance viewModel:StatisticsDialogViewModel}"
              prism:ViewModelLocator.AutoWireViewModel="True"
@@ -34,244 +35,240 @@
             </Style>
         </controls:SimpleGrid.Resources>
         <DockPanel>
-            <Label>起動回数</Label>
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfBoots}" />
             <Label d:Content="0" Content="{Binding NumberOfBoots.Value}" />
         </DockPanel>
         <DockPanel>
-            <Label>累計稼働時間</Label>
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_Uptime}" />
             <Label d:Content="00:00:00" Content="{Binding Uptime.Value, StringFormat={}{0:hh\\:mm\\:ss}, ConverterCulture=ja-jP, Converter={StaticResource TimeSpanRound}}" />
         </DockPanel>
         <DockPanel>
-            <Label>ファイルを指定して開いた回数</Label>
-            <Label d:Content="0" Content="{Binding NumberOfTimesTheFileWasOpenedBySpecifyingIt.Value}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfTimesTheFileWasOpenedBySpecifyingIt}" />
+            <Label Content="{Binding NumberOfTimesTheFileWasOpenedBySpecifyingIt.Value}" d:Content="0" />
         </DockPanel>
         <DockPanel>
-            <Label>自動保存ファイルを指定して開いた回数</Label>
-            <Label d:Content="0" Content="{Binding NumberOfTimesTheAutoSaveFileIsSpecifiedAndOpened.Value}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfTimesTheAutoSaveFileIsSpecifiedAndOpened}" />
+                <Label Content="{Binding NumberOfTimesTheAutoSaveFileIsSpecifiedAndOpened.Value}" d:Content="0" />
         </DockPanel>
         <DockPanel>
-            <Label>ポインターツールでクリックした回数</Label>
-            <Label d:Content="0" Content="{Binding NumberOfClicksWithThePointerTool.Value}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfClicksWithThePointerTool}" />
+            <Label Content="{Binding NumberOfClicksWithThePointerTool.Value}" d:Content="0" />
         </DockPanel>
         <DockPanel>
-            <Label>なげなわツールで選択したアイテムの累計</Label>
-            <Label d:Content="0" Content="{Binding CumulativeTotalOfItemsSelectedWithTheLassoTool.Value}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_CumulativeNumberOfItemsSelectedWithTheLassoTool}" />
+            <Label Content="{Binding CumulativeTotalOfItemsSelectedWithTheLassoTool.Value}" d:Content="0" />
         </DockPanel>
         <DockPanel>
-            <Label>直線ツールの描画回数</Label>
-            <Label d:Content="0" Content="{Binding NumberOfDrawsOfTheStraightLineTool.Value}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfDrawsForTheStraightLineTool}" />
+            <Label Content="{Binding NumberOfDrawsOfTheStraightLineTool.Value}" d:Content="0" />
         </DockPanel>
         <DockPanel>
-            <Label>四角形ツールの描画回数</Label>
-            <Label d:Content="0" Content="{Binding NumberOfDrawsOfTheRectangleTool.Value}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfDrawsOfTheRectangleTool}" />
+            <Label Content="{Binding NumberOfDrawsOfTheRectangleTool.Value}" d:Content="0" />
         </DockPanel>
         <DockPanel>
-            <Label>円ツールの描画回数</Label>
-            <Label d:Content="0" Content="{Binding NumberOfDrawsOfTheEllipseTool.Value}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfDrawsOfTheEllipseTool}" />
+            <Label Content="{Binding NumberOfDrawsOfTheEllipseTool.Value}" d:Content="0" />
         </DockPanel>
         <DockPanel>
-            <Label>画像ファイルツールの描画回数</Label>
-            <Label d:Content="0" Content="{Binding NumberOfDrawsOfTheImageFileTool.Value}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfDrawingOfPictureTool}" />
+            <Label Content="{Binding NumberOfDrawsOfTheImageFileTool.Value}" d:Content="0" />
         </DockPanel>
         <DockPanel>
-            <Label>文字ツールの描画回数</Label>
-            <Label d:Content="0" Content="{Binding NumberOfDrawsOfTheLetterTool.Value}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfDrawsOfTheLetteringTool}" />
+            <Label Content="{Binding NumberOfDrawsOfTheLetterTool.Value}" d:Content="0" />
         </DockPanel>
         <DockPanel>
-            <Label>縦書きツールの描画回数</Label>
-            <Label d:Content="0" Content="{Binding NumberOfDrawsOfTheVerticalLetterTool.Value}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfDrawsOfTheVerticalLetteringTool}" />
+            <Label Content="{Binding NumberOfDrawsOfTheVerticalLetterTool.Value}" d:Content="0" />
         </DockPanel>
         <DockPanel>
-            <Label>多角形ツールの描画回数</Label>
-            <Label d:Content="0" Content="{Binding NumberOfDrawsOfPolygonTool.Value}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfDrawsOfPolygonTool}" />
+            <Label Content="{Binding NumberOfDrawsOfPolygonTool.Value}" d:Content="0" />
         </DockPanel>
         <DockPanel>
-            <Label>ベジエ曲線ツールの描画回数</Label>
-            <Label d:Content="0" Content="{Binding NumberOfDrawsOfBezierCurveTool.Value}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfDrawsOfBezierCurveTool}" />
+            <Label Content="{Binding NumberOfDrawsOfBezierCurveTool.Value}" d:Content="0" />
         </DockPanel>
         <DockPanel>
-            <Label>スナップポイントツールの設置回数</Label>
-            <Label d:Content="0" Content="{Binding NumberOfSnapPointToolInstallations.Value}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfSnapPointToolInstallations}" />
+            <Label Content="{Binding NumberOfSnapPointToolInstallations.Value}" d:Content="0" />
         </DockPanel>
         <DockPanel>
-            <Label>ブラシツールの描画回数</Label>
-            <Label d:Content="0" Content="{Binding BrushToolDrawCount.Value}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfTimesTheBrushToolIsDrawn}" />
+            <Label Content="{Binding BrushToolDrawCount.Value}" d:Content="0" />
         </DockPanel>
         <DockPanel>
-            <Label>消しゴムツールの使用回数</Label>
-            <Label d:Content="0" Content="{Binding NumberOfTimesTheEraserToolHasBeenUsed.Value}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfTimesTheEraserToolHasBeenUsed}" />
+            <Label Content="{Binding NumberOfTimesTheEraserToolHasBeenUsed.Value}" d:Content="0" />
         </DockPanel>
         <DockPanel>
-            <Label>スライスツールを使用した回数</Label>
-            <Label d:Content="0" Content="{Binding NumberOfTimesSliceToolHasBeenUsed.Value}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfTimesSavedByOverwriting}" />
+            <Label Content="{Binding NumberOfTimesSaved.Value}" d:Content="0" />
         </DockPanel>
         <DockPanel>
-            <Label>上書き保存した回数</Label>
-            <Label d:Content="0" Content="{Binding NumberOfTimesSaved.Value}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfTimesYouHaveNamedAndSaved}" />
+            <Label Content="{Binding NumberOfTimesYouHaveNamedAndSaved.Value}" d:Content="0" />
         </DockPanel>
         <DockPanel>
-            <Label>名前を付けて保存した回数</Label>
-            <Label d:Content="0" Content="{Binding NumberOfTimesYouHaveNamedAndSaved.Value}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfExports}" />
+            <Label Content="{Binding NumberOfExports.Value}" d:Content="0" />
         </DockPanel>
         <DockPanel>
-            <Label>エクスポートした回数</Label>
-            <Label d:Content="0" Content="{Binding NumberOfExports.Value}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfExportsAsJpeg}" />
+            <Label Content="{Binding NumberOfJpegExports.Value}" d:Content="0" />
         </DockPanel>
         <DockPanel>
-            <Label>Jpegエクスポートした回数</Label>
-            <Label d:Content="0" Content="{Binding NumberOfJpegExports.Value}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfExportsAsPng}" />
+            <Label Content="{Binding NumberOfPngExports.Value}" d:Content="0" />
         </DockPanel>
         <DockPanel>
-            <Label>PNGエクスポートした回数</Label>
-            <Label d:Content="0" Content="{Binding NumberOfPngExports.Value}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfExportsAsGif}" />
+            <Label Content="{Binding NumberOfGifExports.Value}" d:Content="0" />
         </DockPanel>
         <DockPanel>
-            <Label>GIFエクスポートした回数</Label>
-            <Label d:Content="0" Content="{Binding NumberOfGifExports.Value}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfExportsAsBmp}" />
+            <Label Content="{Binding NumberOfBmpExports.Value}" d:Content="0" />
         </DockPanel>
         <DockPanel>
-            <Label>BMPエクスポートした回数</Label>
-            <Label d:Content="0" Content="{Binding NumberOfBmpExports.Value}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfExportsAsTiff}" />
+            <Label Content="{Binding NumberOfTiffExports.Value}" d:Content="0" />
         </DockPanel>
         <DockPanel>
-            <Label>TIFFエクスポートした回数</Label>
-            <Label d:Content="0" Content="{Binding NumberOfTiffExports.Value}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfExportsAsWmp}" />
+            <Label Content="{Binding NumberOfWmpExports.Value}" d:Content="0" />
         </DockPanel>
         <DockPanel>
-            <Label>WMPエクスポートした回数</Label>
-            <Label d:Content="0" Content="{Binding NumberOfWmpExports.Value}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfTimesGrouped}" />
+            <Label Content="{Binding NumberOfTimesGrouped.Value}" d:Content="0" />
         </DockPanel>
         <DockPanel>
-            <Label>グループ化した回数</Label>
-            <Label d:Content="0" Content="{Binding NumberOfTimesGrouped.Value}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfUngrouped}" />
+            <Label Content="{Binding NumberOfUngrouped.Value}" d:Content="0" />
         </DockPanel>
         <DockPanel>
-            <Label>グループ化解除した回数</Label>
-            <Label d:Content="0" Content="{Binding NumberOfUngrouped.Value}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfTimesToMoveToTheFrontend}" />
+            <Label Content="{Binding NumberOfMovesToTheFrontend.Value}" d:Content="0" />
         </DockPanel>
         <DockPanel>
-            <Label>最前面へ移動した回数</Label>
-            <Label d:Content="0" Content="{Binding NumberOfMovesToTheFrontend.Value}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfMovesToTheFront}" />
+            <Label Content="{Binding NumberOfMovesToTheFront.Value}" d:Content="0" />
         </DockPanel>
         <DockPanel>
-            <Label>前面へ移動した回数</Label>
-            <Label d:Content="0" Content="{Binding NumberOfMovesToTheFront.Value}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfMovesToTheBack}" />
+            <Label Content="{Binding NumberOfMovesToTheBack.Value}" d:Content="0" />
         </DockPanel>
         <DockPanel>
-            <Label>背面へ移動した回数</Label>
-            <Label d:Content="0" Content="{Binding NumberOfMovesToTheBack.Value}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfTimesToMoveToTheBackend}" />
+            <Label Content="{Binding NumberOfMovesToTheBackend.Value}" d:Content="0" />
         </DockPanel>
         <DockPanel>
-            <Label>最背面へ移動した回数</Label>
-            <Label d:Content="0" Content="{Binding NumberOfMovesToTheBackend.Value}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfTopAlignment}" />
+            <Label Content="{Binding NumberOfTopAlignment.Value}" d:Content="0" />
         </DockPanel>
         <DockPanel>
-            <Label>上揃えした回数</Label>
-            <Label d:Content="0" Content="{Binding NumberOfTopAlignment.Value}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfTimesTheTopAndBottomAreAligned}" />
+            <Label Content="{Binding NumberOfTimesTheTopAndBottomAreCentered.Value}" d:Content="0" />
         </DockPanel>
         <DockPanel>
-            <Label>上下中央揃えした回数</Label>
-            <Label d:Content="0" Content="{Binding NumberOfTimesTheTopAndBottomAreCentered.Value}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfBottomAlignment}" />
+            <Label Content="{Binding NumberOfBottomAlignment.Value}" d:Content="0" />
         </DockPanel>
         <DockPanel>
-            <Label>下揃えした回数</Label>
-            <Label d:Content="0" Content="{Binding NumberOfBottomAlignment.Value}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfLeftAlignment}" />
+            <Label Content="{Binding NumberOfLeftAlignment.Value}" d:Content="0" />
         </DockPanel>
         <DockPanel>
-            <Label>左揃えした回数</Label>
-            <Label d:Content="0" Content="{Binding NumberOfLeftAlignment.Value}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfTimesLeftAndRightCentered}" />
+            <Label Content="{Binding NumberOfTimesLeftAndRightCentered.Value}" d:Content="0" />
         </DockPanel>
         <DockPanel>
-            <Label>左右中央揃えした回数</Label>
-            <Label d:Content="0" Content="{Binding NumberOfTimesLeftAndRightCentered.Value}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfRightAlignment}" />
+            <Label Content="{Binding NumberOfRightAlignment.Value}" d:Content="0" />
         </DockPanel>
         <DockPanel>
-            <Label>右揃えした回数</Label>
-            <Label d:Content="0" Content="{Binding NumberOfRightAlignment.Value}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfTimesAlignedLeftAndRight}" />
+            <Label Content="{Binding NumberOfTimesAlignedLeftAndRight.Value}" d:Content="0" />
         </DockPanel>
         <DockPanel>
-            <Label>左右に整列した回数</Label>
-            <Label d:Content="0" Content="{Binding NumberOfTimesAlignedLeftAndRight.Value}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfTimesAlignedUpAndDown}" />
+            <Label Content="{Binding NumberOfTimesAlignedUpAndDown.Value}" d:Content="0" />
         </DockPanel>
         <DockPanel>
-            <Label>上下に整列した回数</Label>
-            <Label d:Content="0" Content="{Binding NumberOfTimesAlignedUpAndDown.Value}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfTimesToMatchTheWidth}" />
+            <Label Content="{Binding NumberOfTimesToMatchTheWidth.Value}" d:Content="0" />
         </DockPanel>
         <DockPanel>
-            <Label>幅を合わせた回数</Label>
-            <Label d:Content="0" Content="{Binding NumberOfTimesToMatchTheWidth.Value}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfTimesToMatchTheHeight}" />
+            <Label Content="{Binding NumberOfTimesToMatchTheHeight.Value}" d:Content="0" />
         </DockPanel>
         <DockPanel>
-            <Label>高さを合わせた回数</Label>
-            <Label d:Content="0" Content="{Binding NumberOfTimesToMatchTheHeight.Value}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfUnions}" />
+            <Label Content="{Binding NumberOfUnions.Value}" d:Content="0" />
         </DockPanel>
         <DockPanel>
-            <Label>Unionした回数</Label>
-            <Label d:Content="0" Content="{Binding NumberOfUnions.Value}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfIntersects}" />
+            <Label Content="{Binding NumberOfIntersects.Value}" d:Content="0" />
         </DockPanel>
         <DockPanel>
-            <Label>Intersectした回数</Label>
-            <Label d:Content="0" Content="{Binding NumberOfIntersects.Value}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfXors}" />
+            <Label Content="{Binding NumberOfXors.Value}" d:Content="0" />
         </DockPanel>
         <DockPanel>
-            <Label>Xorした回数</Label>
-            <Label d:Content="0" Content="{Binding NumberOfXors.Value}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfExcludes}" />
+            <Label Content="{Binding NumberOfExcludes.Value}" d:Content="0" />
         </DockPanel>
         <DockPanel>
-            <Label>Excludeした回数</Label>
-            <Label d:Content="0" Content="{Binding NumberOfExcludes.Value}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfCuts}" />
+            <Label Content="{Binding NumberOfCuts.Value}" d:Content="0" />
         </DockPanel>
         <DockPanel>
-            <Label>切り取りした回数</Label>
-            <Label d:Content="0" Content="{Binding NumberOfCuts.Value}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfCopies}" />
+            <Label Content="{Binding NumberOfCopies.Value}" d:Content="0" />
         </DockPanel>
         <DockPanel>
-            <Label>コピーした回数</Label>
-            <Label d:Content="0" Content="{Binding NumberOfCopies.Value}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfPasted}" />
+            <Label Content="{Binding NumberOfPasted.Value}" d:Content="0" />
         </DockPanel>
         <DockPanel>
-            <Label>貼り付けした回数</Label>
-            <Label d:Content="0" Content="{Binding NumberOfPasted.Value}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfUndos}" />
+            <Label Content="{Binding NumberOfUndos.Value}" d:Content="0" />
         </DockPanel>
         <DockPanel>
-            <Label>元に戻した回数</Label>
-            <Label d:Content="0" Content="{Binding NumberOfUndos.Value}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfRedoes}" />
+            <Label Content="{Binding NumberOfRedoes.Value}" d:Content="0" />
         </DockPanel>
         <DockPanel>
-            <Label>やり直しした回数</Label>
-            <Label d:Content="0" Content="{Binding NumberOfRedoes.Value}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfTimesAutomaticallySaved}" />
+            <Label Content="{Binding NumberOfTimesAutomaticallySaved.Value}" d:Content="0" />
         </DockPanel>
         <DockPanel>
-            <Label>自動保存した回数</Label>
-            <Label d:Content="0" Content="{Binding NumberOfTimesAutomaticallySaved.Value}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfNewlyCreatedLayers}" />
+            <Label Content="{Binding NumberOfNewlyCreatedLayers.Value}" d:Content="0" />
         </DockPanel>
         <DockPanel>
-            <Label>新規作成したレイヤー数</Label>
-            <Label d:Content="0" Content="{Binding NumberOfNewlyCreatedLayers.Value}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfDeletedLayers}" />
+            <Label Content="{Binding NumberOfDeletedLayers.Value}" d:Content="0" />
         </DockPanel>
         <DockPanel>
-            <Label>削除したレイヤー数</Label>
-            <Label d:Content="0" Content="{Binding NumberOfDeletedLayers.Value}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfTimesTheItemWasDrawn}" />
+            <Label Content="{Binding NumberOfTimesTheItemWasDrawn.Value}" d:Content="0" />
         </DockPanel>
         <DockPanel>
-            <Label>アイテムを描画した回数</Label>
-            <Label d:Content="0" Content="{Binding NumberOfTimesTheItemWasDrawn.Value}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfTimesTheItemWasDeleted}" />
+            <Label Content="{Binding NumberOfTimesTheItemWasDeleted.Value}" d:Content="0" />
         </DockPanel>
         <DockPanel>
-            <Label>アイテムを削除した回数</Label>
-            <Label d:Content="0" Content="{Binding NumberOfTimesTheItemWasDeleted.Value}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfLogLevelChanges}" />
+            <Label Content="{Binding NumberOfLogLevelChanges.Value}" d:Content="0" />
         </DockPanel>
         <DockPanel>
-            <Label>ログレベルを変更した回数</Label>
-            <Label d:Content="0" Content="{Binding NumberOfLogLevelChanges.Value}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfTimesTheVersionInformationDialogWasDisplayed}" />
+            <Label Content="{Binding NumberOfTimesTheVersionInformationDialogWasDisplayed.Value}" d:Content="0" />
         </DockPanel>
         <DockPanel>
-            <Label>バージョン情報ダイアログを表示した回数</Label>
-            <Label d:Content="0" Content="{Binding NumberOfTimesTheVersionInformationDialogWasDisplayed.Value}" />
-        </DockPanel>
-        <DockPanel>
-            <Label>アプリケーションログを表示した回数</Label>
-            <Label d:Content="0" Content="{Binding NumberOfTimesTheApplicationLogWasDisplayed.Value}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfTimesTheApplicationLogWasDisplayed}" />
+            <Label Content="{Binding NumberOfTimesTheApplicationLogWasDisplayed.Value}" d:Content="0" />
         </DockPanel>
     </controls:SimpleGrid>
 </UserControl>

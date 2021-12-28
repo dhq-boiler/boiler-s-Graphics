@@ -18,9 +18,9 @@ namespace boilersGraphics.Views
     /// <summary>
     /// Setting.xaml の相互作用ロジック
     /// </summary>
-    public partial class Setting : UserControl
+    public partial class Preference : UserControl
     {
-        public Setting()
+        public Preference()
         {
             InitializeComponent();
         }

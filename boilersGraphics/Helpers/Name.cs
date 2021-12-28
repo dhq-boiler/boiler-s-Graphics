@@ -1,10 +1,5 @@
-﻿using boilersGraphics.Models;
+﻿using boilersGraphics.Properties;
 using boilersGraphics.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace boilersGraphics.Helpers
 {
@@ -12,12 +7,12 @@ namespace boilersGraphics.Helpers
     {
         public static string GetNewLayerName(DiagramViewModel diagramViewModel)
         {
-            return $"レイヤー{diagramViewModel.LayerCount++}";
+            return $"{Resources.Name_Layer}{diagramViewModel.LayerCount++}";
         }
 
         public static string GetNewLayerItemName(DiagramViewModel diagramViewModel)
         {
-            return $"アイテム{diagramViewModel.LayerItemCount++}";
+            return $"{Resources.Name_Item}{diagramViewModel.LayerItemCount++}";
         }
     }
 }

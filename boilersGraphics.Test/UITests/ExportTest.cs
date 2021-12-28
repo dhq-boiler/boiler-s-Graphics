@@ -1,8 +1,10 @@
+using boilersGraphics.Properties;
 using NLog;
 using NUnit.Framework;
 using OpenCvSharp;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
+using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Threading;
@@ -210,7 +212,7 @@ namespace boilersGraphics.Test.UITests
 
             TakeScreenShot("SCREENSHOT_PREVIEW.png");
 
-            GetElementBy(By.XPath("//Window[@ClassName=\"Window\"][@Name=\"エクスポート\"]/Custom[@ClassName=\"Export\"]/Image[@Name=\"Preview\"][@AutomationId=\"Preview\"]")).GetScreenshot().SaveAsFile(previewFilePath);
+            GetElementBy(By.XPath($"//Window[@ClassName=\"Window\"][@Name=\"{Resources.Title_Export}\"]/Custom[@ClassName=\"Export\"]/Image[@Name=\"Preview\"][@AutomationId=\"Preview\"]")).GetScreenshot().SaveAsFile(previewFilePath);
             Assert.That(previewFilePath, Does.Exist.After(5000, 50));
             TestContext.AddTestAttachment(previewFilePath);
 

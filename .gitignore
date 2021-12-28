@@ -15,3 +15,5 @@ bin/
 *.cache
 coverage.xml
 boilersGraphics.Test/TestResults/
+boilersGraphics.Msix/AppPackages/
+boilersGraphics.Msix/BundleArtifacts/

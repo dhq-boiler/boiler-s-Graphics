@@ -73,6 +73,8 @@ namespace boilersGraphics.ViewModels
 
         public ReadOnlyReactivePropertySlim<double> Bottom { get; private set; }
 
+        public ReactivePropertySlim<PathGeometry> RotatePathGeometry { get; } = new ReactivePropertySlim<PathGeometry>();
+
         public ReactivePropertySlim<double> CenterX { get; } = new ReactivePropertySlim<double>();
         public ReactivePropertySlim<double> CenterY { get; } = new ReactivePropertySlim<double>();
 
@@ -98,7 +100,7 @@ namespace boilersGraphics.ViewModels
             MinHeight = 0;
 
             Left
-                .Zip(Left.Skip(1), (Old, New) => new { OldItem = Old, NewItem = New})
+                .Zip(Left.Skip(1), (Old, New) => new { OldItem = Old, NewItem = New })
                 .Subscribe(x => UpdateTransform(nameof(Left), x.OldItem, x.NewItem))
                 .AddTo(_CompositeDisposable);
             Top

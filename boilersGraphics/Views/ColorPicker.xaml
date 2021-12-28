@@ -4,6 +4,7 @@
              xmlns:attached="clr-namespace:boilersGraphics.AttachedProperties"
              xmlns:control="clr-namespace:boilersGraphics.Controls"
              xmlns:converter="clr-namespace:boilersGraphics.Converters"
+             xmlns:helper="clr-namespace:boilersGraphics.Helpers"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:boilersGraphics.Views"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -298,7 +299,7 @@
                             Color="{Binding Output.Value, Mode=OneWayToSource}"
                             Value="{Binding Value.Value, Mode=TwoWay}" />
         </DockPanel>
-        <DockPanel Width="266">
+        <DockPanel Width="280">
             <Grid DockPanel.Dock="Top">
                 <Grid Width="256" Height="100" />
                 <Grid>
@@ -350,11 +351,10 @@
             </Grid>
             <DockPanel>
                 <DockPanel DockPanel.Dock="Top">
-                    <Label Width="35"
+                    <Label Width="65"
                            DockPanel.Dock="Left"
-                           Foreground="White">
-                        Hue
-                    </Label>
+                           Foreground="White"
+                           Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_Hue, Mode=OneWay}" />
                     <TextBox Width="25"
                              Height="20"
                              DockPanel.Dock="Right"
@@ -368,11 +368,10 @@
                                        Value="{Binding Hue.Value, Mode=TwoWay}" />
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top">
-                    <Label Width="35"
+                    <Label Width="65"
                            DockPanel.Dock="Left"
-                           Foreground="White">
-                        A
-                    </Label>
+                           Foreground="White"
+                           Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_A, Mode=OneWay}" />
                     <TextBox Width="25"
                              DockPanel.Dock="Right"
                              Text="{Binding A.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource StringToByteConverter}}"
@@ -385,11 +384,10 @@
                                        Value="{Binding A.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top">
-                    <Label Width="35"
+                    <Label Width="65"
                            DockPanel.Dock="Left"
-                           Foreground="White">
-                        R
-                    </Label>
+                           Foreground="White"
+                           Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_R, Mode=OneWay}" />
                     <TextBox Width="25"
                              Height="20"
                              DockPanel.Dock="Right"
@@ -403,12 +401,11 @@
                                        Value="{Binding R.Value, Mode=TwoWay}" />
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top">
-                    <Label Width="35"
+                    <Label Width="65"
                            DockPanel.Dock="Left"
-                           Foreground="White">
-                        G
-                    </Label>
-                    <TextBox Width="25"
+                           Foreground="White"
+                           Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_G, Mode=OneWay}" />
+                        <TextBox Width="25"
                              Height="20"
                              DockPanel.Dock="Right"
                              Text="{Binding ElementName=Green_Slider, Path=Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -421,11 +418,10 @@
                                        Value="{Binding G.Value, Mode=TwoWay}" />
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top">
-                    <Label Width="35"
+                    <Label Width="65"
                            DockPanel.Dock="Left"
-                           Foreground="White">
-                        B
-                    </Label>
+                           Foreground="White"
+                           Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_B, Mode=OneWay}" />
                     <TextBox Width="25"
                              Height="20"
                              DockPanel.Dock="Right"

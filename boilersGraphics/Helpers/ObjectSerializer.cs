@@ -73,11 +73,12 @@ namespace boilersGraphics.Helpers
                 list.Add(new XElement("Width", designerItem.Width.Value));
                 list.Add(new XElement("Height", designerItem.Height.Value));
                 list.Add(new XElement("ZIndex", designerItem.ZIndex.Value));
-                list.Add(new XElement("Matrix", designerItem.Matrix.Value));
+                //list.Add(new XElement("Matrix", designerItem.Matrix.Value));
                 list.Add(new XElement("EdgeColor", designerItem.EdgeColor.Value));
                 list.Add(new XElement("FillColor", designerItem.FillColor.Value));
                 list.Add(new XElement("EdgeThickness", designerItem.EdgeThickness.Value));
                 list.Add(new XElement("PathGeometry", designerItem.PathGeometry.Value));
+                list.Add(new XElement("RotationAngle", designerItem.RotationAngle.Value));
                 if (designerItem is PictureDesignerItemViewModel)
                 {
                     list.Add(new XElement("FileName", (designerItem as PictureDesignerItemViewModel).FileName));

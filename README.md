@@ -14,6 +14,7 @@ boiler's Graphics は生まれたてのベクターグラフィックスドロ�
 
 # Features
 
+* 環境としては最新の.NET 6
 * 64bitアプリケーション
 * 使い方の幅が広がるレイヤー機能
 * 描画を補助するポイントスナップ機能
@@ -21,7 +22,7 @@ boiler's Graphics は生まれたてのベクターグラフィックスドロ�
 
 # Requirement
 
-boiler's Graphicsを動作させるには .NET Framework 4.8 が必要です。
+boiler's Graphicsを動作させるには Windows 7 SP1 以降の Windows OS が必要です。
 
 # How to install
 
@@ -29,8 +30,6 @@ boiler's Graphicsを動作させるには .NET Framework 4.8 が必要です。
  2. ダウンロードしたzipファイルを展開します。
  3. 展開したフォルダを安全な場所に配置します。
  4. 配置したフォルダ内の boilersGraphics.exe を実行します。
-
-なお、zipでのバイナリ配布は継続しますが、バージョン2.0から setup.exe によるインストール方法を提供する予定です。
 
 # How to use
 

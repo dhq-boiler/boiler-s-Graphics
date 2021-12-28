@@ -2,6 +2,7 @@
 using boilersGraphics.Dao;
 using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
+using boilersGraphics.Properties;
 using boilersGraphics.UserControls;
 using Microsoft.Win32;
 using NLog;
@@ -44,9 +45,10 @@ namespace boilersGraphics.ViewModels
 
         public event Action<IDialogResult> RequestClose;
 
-        public ExportViewModel(MainWindowViewModel mainWindowViewModel)
+        public ExportViewModel()
         {
             var mainWindow = App.Current.MainWindow;
+            var mainWindowViewModel = mainWindow.DataContext as MainWindowViewModel;
             var designerCanvas = mainWindow.GetChildOfType<DesignerCanvas>();
             var diagramViewModel = mainWindow.GetChildOfType<DiagramControl>().DataContext as DiagramViewModel;
             PathFinderCommand = new ReactiveCommand();
@@ -70,7 +72,7 @@ namespace boilersGraphics.ViewModels
 
                 var backgroundItem = diagramViewModel.BackgroundItem.Value;
                 RenderTargetBitmap rtb = Render(designerCanvas, diagramViewModel, backgroundItem);
-                OpenCvSharpHelper.ImShow("preview", rtb);
+                //OpenCvSharpHelper.ImShow("preview", rtb);
                 Preview.Value = rtb;
 
                 designerCanvas.LayoutTransform = tempLayoutTransform;
@@ -149,7 +151,7 @@ namespace boilersGraphics.ViewModels
             }
             rtb.Render(visual);
 
-            OpenCvSharpHelper.ImShow("step1. render background", rtb);
+            //OpenCvSharpHelper.ImShow("step1. render background", rtb);
 
             using (DrawingContext context = visual.RenderOpen())
             {
@@ -157,7 +159,7 @@ namespace boilersGraphics.ViewModels
             }
             rtb.Render(visual);
 
-            OpenCvSharpHelper.ImShow("step2. render foreground", rtb);
+            //OpenCvSharpHelper.ImShow("step2. render foreground", rtb);
 
             rtb.Freeze();
 
@@ -207,7 +209,9 @@ namespace boilersGraphics.ViewModels
                     {
                         rect = new Rect(designerItem.Left.Value, designerItem.Top.Value, designerItem.Width.Value, designerItem.Height.Value);
                     }
+                    context.PushTransform(new RotateTransform(item.RotationAngle.Value, (item as DesignerItemViewModelBase).CenterX.Value, (item as DesignerItemViewModelBase).CenterY.Value));
                     context.DrawRectangle(brush, null, rect);
+                    context.Pop();
                 }
                 else if (item is ConnectorBaseViewModel connector)
                 {
@@ -239,7 +243,7 @@ namespace boilersGraphics.ViewModels
                     context2.DrawRectangle(brush, null, rect);
                 }
                 rtb.Render(visual);
-                OpenCvSharpHelper.ImShow("Foreground", rtb);
+                //OpenCvSharpHelper.ImShow("Foreground", rtb);
             }
         }
 
@@ -492,7 +496,7 @@ namespace boilersGraphics.ViewModels
             }
         }
 
-        public string Title => "エクスポート";
+        public string Title => Resources.Title_Export;
 
         protected virtual void Dispose(bool disposing)
         {

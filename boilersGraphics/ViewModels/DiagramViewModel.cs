@@ -4,6 +4,7 @@ using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
 using boilersGraphics.Messenger;
 using boilersGraphics.Models;
+using boilersGraphics.Properties;
 using boilersGraphics.UserControls;
 using boilersGraphics.Views;
 using Microsoft.Win32;
@@ -133,7 +134,9 @@ namespace boilersGraphics.ViewModels
 
         public ReactivePropertySlim<TimeSpan> AutoSaveInterval { get; } = new ReactivePropertySlim<TimeSpan>(TimeSpan.FromMinutes(1));
 
-        public ReactiveCollection<string> AutoSaveFiles { get; set; } = new ReactiveCollection<string>();   
+        public ReactiveCollection<string> AutoSaveFiles { get; set; } = new ReactiveCollection<string>();
+
+        public ReactivePropertySlim<AngleType> AngleType { get; set; } = new ReactivePropertySlim<AngleType>();
 
         public ObservableCollection<Color> EdgeColors
         {
@@ -176,7 +179,7 @@ namespace boilersGraphics.ViewModels
 
         public double ScaleX { get; set; } = 1.0;
         public double ScaleY { get; set; } = 1.0;
-        public System.Version BGSXFileVersion { get; } = new System.Version(2, 1);
+        public System.Version BGSXFileVersion { get; } = new System.Version(2, 2);
 
         public int LayerCount { get; set; } = 1;
 
@@ -497,6 +500,8 @@ namespace boilersGraphics.ViewModels
             var logSetting = logSettings.First();
             MainWindowVM.LogLevel.Value = NLog.LogLevel.FromString(logSetting.LogLevel);
             PackAutoSaveFiles();
+
+            AngleType.Value = Helpers.AngleType.Minus180To180;
         }
 
         private void PackAutoSaveFiles()
@@ -615,7 +620,7 @@ namespace boilersGraphics.ViewModels
                 root.Save(path);
             });
 
-            MainWindowVM.Message.Value = $"{AutoSavedDateTime.Value} 自動保存しました。";
+            MainWindowVM.Message.Value = $"{AutoSavedDateTime.Value} {Resources.Message_Autosaved}";
 
             LogManager.GetCurrentClassLogger().Info($"{AutoSavedDateTime.Value} {path} に自動保存しました。");
 
@@ -921,10 +926,10 @@ namespace boilersGraphics.ViewModels
                 var item1PathGeometry = item1.PathGeometry.Value;
                 var item2PathGeometry = item2.PathGeometry.Value;
 
-                if (item1.RotationAngle.Value != 0)
-                    item1PathGeometry = item1.RotatePathGeometry.Value;
-                if (item2.RotationAngle.Value != 0)
-                    item2PathGeometry = item2.RotatePathGeometry.Value;
+                if (item1 is DesignerItemViewModelBase designerItem1 && item1.RotationAngle.Value != 0)
+                    item1PathGeometry = designerItem1.RotatePathGeometry.Value;
+                if (item2 is DesignerItemViewModelBase designerItem2 && item2.RotationAngle.Value != 0)
+                    item2PathGeometry = designerItem2.RotatePathGeometry.Value;
                 
                 CastToLetterAndSetTransform(item1, item2, item1PathGeometry, item2PathGeometry);
 
@@ -1181,9 +1186,9 @@ namespace boilersGraphics.ViewModels
         private void ExecuteSettingCommand()
         {
             IDialogResult result = null;
-            var setting = new Models.Setting();
-            setting.Width.Value = this.Width;
-            setting.Height.Value = this.Height;
+            var preferences = new Models.Preference();
+            preferences.Width.Value = this.Width;
+            preferences.Height.Value = this.Height;
             Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
                                                      .Where(x => x.GetType() == typeof(LayerItem))
                                                      .Select(y => (y as LayerItem).Item.Value)
@@ -1195,16 +1200,17 @@ namespace boilersGraphics.ViewModels
                                                          z.Width.Value = this.Width;
                                                          z.Height.Value = this.Height;
                                                      });
-            setting.CanvasBackground.Value = this.CanvasBackground.Value;
-            setting.EnablePointSnap.Value = this.EnablePointSnap.Value;
-            setting.SnapPower.Value = (App.Current.MainWindow.DataContext as MainWindowViewModel).SnapPower.Value;
-            setting.EnableAutoSave.Value = this.EnableAutoSave.Value;
-            setting.AutoSaveType.Value = this.AutoSaveType.Value;
-            setting.AutoSaveInterval.Value = this.AutoSaveInterval.Value;
-            dlgService.ShowDialog(nameof(Views.Setting), new DialogParameters() { { "Setting",  setting} }, ret => result = ret);
+            preferences.CanvasBackground.Value = this.CanvasBackground.Value;
+            preferences.EnablePointSnap.Value = this.EnablePointSnap.Value;
+            preferences.SnapPower.Value = (App.Current.MainWindow.DataContext as MainWindowViewModel).SnapPower.Value;
+            preferences.EnableAutoSave.Value = this.EnableAutoSave.Value;
+            preferences.AutoSaveType.Value = this.AutoSaveType.Value;
+            preferences.AutoSaveInterval.Value = this.AutoSaveInterval.Value;
+            preferences.AngleType.Value = this.AngleType.Value;
+            dlgService.ShowDialog(nameof(Views.Preference), new DialogParameters() { { "Preferences",  preferences} }, ret => result = ret);
             if (result != null && result.Result == ButtonResult.OK)
             {
-                var s = result.Parameters.GetValue<Models.Setting>("Setting");
+                var s = result.Parameters.GetValue<Models.Preference>("Preferences");
                 Width = s.Width.Value;
                 Height = s.Height.Value;
                 CanvasBackground.Value = s.CanvasBackground.Value;
@@ -1216,6 +1222,7 @@ namespace boilersGraphics.ViewModels
                 EnableAutoSave.Value = s.EnableAutoSave.Value;
                 AutoSaveType.Value = s.AutoSaveType.Value;
                 AutoSaveInterval.Value = s.AutoSaveInterval.Value;
+                AngleType.Value = s.AngleType.Value;
                 SetAutoSave();
             }
         }
@@ -1269,7 +1276,7 @@ namespace boilersGraphics.ViewModels
             if (parameter is SelectableDesignerItemViewModelBase)
             {
                 SelectableDesignerItemViewModelBase item = (SelectableDesignerItemViewModelBase)parameter;
-                if (item is SnapPointViewModel snapPoint)
+                if (item is SnapPointViewModel snapPoint && !(snapPoint.Parent.Value is null))
                 {
                     item = snapPoint.Parent.Value;
                 }
@@ -1490,7 +1497,7 @@ namespace boilersGraphics.ViewModels
 
         private void ExecuteLoadCommand()
         {
-            var result = MessageBox.Show("現在のキャンパスは破棄されますが、よろしいですか？", "確認", MessageBoxButton.OKCancel);
+            var result = MessageBox.Show(Resources.Message_CanvasWillDiscardedConfirm, Resources.DialogTitle_Confirm, MessageBoxButton.OKCancel);
             if (result == MessageBoxResult.Cancel)
                 return;
             var (root, filename) = LoadSerializedDataFromFile();
@@ -1513,13 +1520,13 @@ namespace boilersGraphics.ViewModels
                 var version = new System.Version(root.Element("Version").Value);
                 if (version > BGSXFileVersion)
                 {
-                    MessageBox.Show("ファイルが新しすぎて開けません。");
+                    MessageBox.Show(Resources.Message_FileCannotOpenBecauseTooNew);
                     return;
                 }
             }
             else
             {
-                LogManager.GetCurrentClassLogger().Info("強制読み込みモードでファイルを読み込みます。このモードはVersion要素が見つからない時に実施されます。");
+                LogManager.GetCurrentClassLogger().Info(Resources.Log_ForceReadMode);
             }
 
 
@@ -1541,8 +1548,8 @@ namespace boilersGraphics.ViewModels
             }
             catch (Exception)
             {
-                MessageBox.Show("このファイルは古すぎるか壊れているため開けません。", "読み込みエラー");
-                LogManager.GetCurrentClassLogger().Error("【読み込みエラー】このファイルは古すぎるか壊れているため開けません。");
+                MessageBox.Show(Resources.Message_FileCannotOpenBecauseTooOldOrCorrupted, Resources.DialogTitle_ReadError);
+                LogManager.GetCurrentClassLogger().Error(Resources.Log_FileCannotOpenBecauseTooOldOrCorrupted);
                 FileName.Value = "*";
                 return;
             }
@@ -1555,14 +1562,14 @@ namespace boilersGraphics.ViewModels
             layersViewModel.InitializeHitTestVisible(mainwindowViewModel);
             Layers.First().IsSelected.Value = true;
 
-            LogManager.GetCurrentClassLogger().Info($"ファイル({filename})を読み込みました。");
+            LogManager.GetCurrentClassLogger().Info(string.Format(Resources.Log_LoadedFile, filename));
         }
 
         private void ExecuteLoadCommand(string file, bool showConfirmDialog = true)
         {
             if (showConfirmDialog)
             {
-                var result = MessageBox.Show("現在のキャンパスは破棄されますが、よろしいですか？", "確認", MessageBoxButton.OKCancel);
+                var result = MessageBox.Show(Resources.Message_CanvasWillDiscardedConfirm, Resources.DialogTitle_Confirm, MessageBoxButton.OKCancel);
                 if (result == MessageBoxResult.Cancel)
                     return;
             }

@@ -2,10 +2,12 @@
 using Prism.Commands;
 using Prism.Mvvm;
 using Reactive.Bindings;
+using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Reflection;
 using System.Windows.Media;
 using TsOperationHistory;
@@ -63,8 +65,6 @@ namespace boilersGraphics.ViewModels
         public ReactivePropertySlim<double> EdgeThickness { get; } = new ReactivePropertySlim<double>();
 
         public ReactivePropertySlim<PathGeometry> PathGeometry { get; set; } = new ReactivePropertySlim<PathGeometry>();
-
-        public ReactivePropertySlim<PathGeometry> RotatePathGeometry { get; set; } = new ReactivePropertySlim<PathGeometry>();
 
         public ReactivePropertySlim<bool> EnablePathGeometryUpdate { get; set; } = new ReactivePropertySlim<bool>();
 
@@ -134,6 +134,15 @@ namespace boilersGraphics.ViewModels
             SelectItemCommand = new DelegateCommand<object>(p => SelectItem((bool)p, !IsSelected.Value));
 
             EnableForSelection.Value = true;
+
+            RotationAngle.Subscribe(angle =>
+            {
+                if (angle > 360)
+                {
+                    RotationAngle.Value = angle % 360;
+                }
+            })
+            .AddTo(_CompositeDisposable);
         }
 
         public abstract Type GetViewType();

@@ -1,4 +1,5 @@
 ﻿using boilersGraphics.Helpers;
+using boilersGraphics.Properties;
 using boilersGraphics.Views;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
@@ -11,7 +12,7 @@ using System.Reactive.Linq;
 
 namespace boilersGraphics.ViewModels
 {
-    class SettingViewModel : BindableBase, IDialogAware, IDisposable
+    class PreferenceViewModel : BindableBase, IDialogAware, IDisposable
     {
         private IDialogService dlgService;
         private bool disposedValue;
@@ -21,12 +22,12 @@ namespace boilersGraphics.ViewModels
         public ReactiveCommand CancelCommand { get; set; }
         public ReactiveCommand ChangeCanvasBackgroundCommand { get; set; } = new ReactiveCommand();
 
-        public ReactivePropertySlim<Models.Setting> EditTarget { get; set; } = new ReactivePropertySlim<Models.Setting>();
+        public ReactivePropertySlim<Models.Preference> EditTarget { get; set; } = new ReactivePropertySlim<Models.Preference>();
 
-        public SettingViewModel(IDialogService dialogService)
+        public PreferenceViewModel(IDialogService dialogService)
         {
             this.dlgService = dialogService;
-            EditTarget.Value = new Models.Setting();
+            EditTarget.Value = new Models.Preference();
             CancelCommand = new ReactiveCommand();
             CancelCommand.Subscribe(_ =>
             {
@@ -68,7 +69,7 @@ namespace boilersGraphics.ViewModels
                              .ToReactiveCommand();
                 OkCommand.Value.Subscribe(__ =>
                 {
-                    var parameters = new DialogParameters() { { "Setting", EditTarget.Value } };
+                    var parameters = new DialogParameters() { { "Preferences", EditTarget.Value } };
                     var ret = new DialogResult(ButtonResult.OK, parameters);
                     RequestClose.Invoke(ret);
                 })
@@ -77,7 +78,7 @@ namespace boilersGraphics.ViewModels
             .AddTo(_disposables);
         }
 
-        public string Title => "設定";
+        public string Title => Resources.Title_Preferences;
 
         public event Action<IDialogResult> RequestClose;
 
@@ -92,7 +93,7 @@ namespace boilersGraphics.ViewModels
 
         public void OnDialogOpened(IDialogParameters parameters)
         {
-            EditTarget.Value = parameters.GetValue<Models.Setting>("Setting");
+            EditTarget.Value = parameters.GetValue<Models.Preference>("Preferences");
         }
 
         protected virtual void Dispose(bool disposing)

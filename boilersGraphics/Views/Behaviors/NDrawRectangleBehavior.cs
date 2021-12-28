@@ -46,6 +46,9 @@ namespace boilersGraphics.Views.Behaviors
             if (e.Source == AssociatedObject)
             {
                 _rectangleStartPoint = e.GetPosition(AssociatedObject);
+                var viewModel = AssociatedObject.DataContext as IDiagramViewModel;
+                item = new NRectangleViewModel();
+                item.Owner = viewModel;
                 e.Handled = true;
             }
         }
@@ -56,6 +59,9 @@ namespace boilersGraphics.Views.Behaviors
             {
                 var touchPoint = e.GetTouchPoint(AssociatedObject);
                 _rectangleStartPoint = touchPoint.Position;
+                var viewModel = AssociatedObject.DataContext as IDiagramViewModel;
+                item = new NRectangleViewModel();
+                item.Owner = viewModel;
             }
         }
 
@@ -87,6 +93,22 @@ namespace boilersGraphics.Views.Behaviors
 
             if (_rectangleStartPoint.HasValue)
             {
+                if (_rectangleStartPoint.Value.X < current.X && _rectangleStartPoint.Value.Y <= current.Y)
+                {
+                    snapAction.PostProcess(SnapPointPosition.LeftTop, item);
+                }
+                else if (_rectangleStartPoint.Value.X < current.X && current.Y < _rectangleStartPoint.Value.Y)
+                {
+                    snapAction.PostProcess(SnapPointPosition.LeftBottom, item);
+                }
+                else if (current.X <= _rectangleStartPoint.Value.X && _rectangleStartPoint.Value.Y <= current.Y)
+                {
+                    snapAction.PostProcess(SnapPointPosition.RightTop, item);
+                }
+                else if (current.X <= _rectangleStartPoint.Value.X && current.Y < _rectangleStartPoint.Value.Y)
+                {
+                    snapAction.PostProcess(SnapPointPosition.RightBottom, item);
+                }
                 _rectangleStartPoint = current;
                 (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "描画";
 

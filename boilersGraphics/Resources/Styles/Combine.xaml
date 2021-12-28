@@ -1,5 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:helper="clr-namespace:boilersGraphics.Helpers"
                     xmlns:control="clr-namespace:boilersGraphics.Controls">
 
     <Style TargetType="{x:Type control:Combine}">
@@ -163,7 +164,7 @@
                                         Height="25"
                                         Padding="0"
                                         Command="{Binding UnionCommand}"
-                                        ToolTip="Union">
+                                        ToolTip="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Pane_Combine_Union}">
                                     <Button.Template>
                                         <ControlTemplate TargetType="{x:Type Button}">
                                             <Grid>
@@ -210,7 +211,7 @@
                                 <Button Width="25"
                                         Height="25"
                                         Command="{Binding IntersectCommand}"
-                                        ToolTip="Intersect">
+                                        ToolTip="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Pane_Combine_Intersect}">
                                     <Button.Template>
                                         <ControlTemplate TargetType="{x:Type Button}">
                                             <Grid>
@@ -257,7 +258,7 @@
                                 <Button Width="25"
                                         Height="25"
                                         Command="{Binding XorCommand}"
-                                        ToolTip="Xor">
+                                        ToolTip="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Pane_Combine_Xor}">
                                     <Button.Template>
                                         <ControlTemplate TargetType="{x:Type Button}">
                                             <Grid>
@@ -304,7 +305,7 @@
                                 <Button Width="25"
                                         Height="25"
                                         Command="{Binding ExcludeCommand}"
-                                        ToolTip="Exclude">
+                                        ToolTip="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Pane_Combine_Exclude}">
                                     <Button.Template>
                                         <ControlTemplate TargetType="{x:Type Button}">
                                             <Grid>
@@ -351,7 +352,7 @@
                             </WrapPanel>
                             <Expander.Header>
                                 <Grid>
-                                    <Label Content="結合" />
+                                    <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.PaneTitle_Combine}" />
                                 </Grid>
                             </Expander.Header>
                         </Expander>

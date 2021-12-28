@@ -19,7 +19,7 @@ namespace boilersGraphics.Properties {
     // または Visual Studio のようなツールを使用して自動生成されました。
     // メンバーを追加または削除するには、.ResX ファイルを編集して、/str オプションと共に
     // ResGen を実行し直すか、または VS プロジェクトをビルドし直します。
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -29,7 +29,7 @@ namespace boilersGraphics.Properties {
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        public Resources() {
+        internal Resources() {
         }
         
         /// <summary>
@@ -66,6 +66,51 @@ namespace boilersGraphics.Properties {
         public static string Alignment {
             get {
                 return ResourceManager.GetString("Alignment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Close に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Button_Close {
+            get {
+                return ResourceManager.GetString("Button_Close", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Maximize に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Button_MaximizeWindow {
+            get {
+                return ResourceManager.GetString("Button_MaximizeWindow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Minimize に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Button_MinimizeWindow {
+            get {
+                return ResourceManager.GetString("Button_MinimizeWindow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Post an issue on GitHub に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Button_PostIssue {
+            get {
+                return ResourceManager.GetString("Button_PostIssue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Restore に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Button_Restore {
+            get {
+                return ResourceManager.GetString("Button_Restore", resourceCulture);
             }
         }
         
@@ -223,7 +268,7 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
-        ///   Setting に類似しているローカライズされた文字列を検索します。
+        ///   Preferences に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_Setting {
             get {
@@ -259,6 +304,582 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Cumulative number of items selected with the Lasso Tool に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_CumulativeNumberOfItemsSelectedWithTheLassoTool {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_CumulativeNumberOfItemsSelectedWithTheLassoTool", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of boots に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfBoots {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfBoots", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of bottom alignment に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfBottomAlignment {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfBottomAlignment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of clicks with the pointer tool に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfClicksWithThePointerTool {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfClicksWithThePointerTool", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of copies に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfCopies {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfCopies", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of cuts に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfCuts {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfCuts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of deleted layers に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfDeletedLayers {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfDeletedLayers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of drawing of picture tool に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfDrawingOfPictureTool {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfDrawingOfPictureTool", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of draws for the straight line tool に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfDrawsForTheStraightLineTool {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfDrawsForTheStraightLineTool", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of draws of Bezier curve tool に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfDrawsOfBezierCurveTool {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfDrawsOfBezierCurveTool", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of draws of polygon tool に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfDrawsOfPolygonTool {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfDrawsOfPolygonTool", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of draws of the ellipse tool に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfDrawsOfTheEllipseTool {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfDrawsOfTheEllipseTool", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of draws of the lettering tool に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfDrawsOfTheLetteringTool {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfDrawsOfTheLetteringTool", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of draws of the rectangle tool に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfDrawsOfTheRectangleTool {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfDrawsOfTheRectangleTool", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of draws of the vertical lettering tool に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfDrawsOfTheVerticalLetteringTool {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfDrawsOfTheVerticalLetteringTool", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of Excludes に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfExcludes {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfExcludes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of exports に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfExports {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfExports", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of exports as BMP に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfExportsAsBmp {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfExportsAsBmp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of exports as GIF に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfExportsAsGif {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfExportsAsGif", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of exports as Jpeg に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfExportsAsJpeg {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfExportsAsJpeg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of exports as PNG に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfExportsAsPng {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfExportsAsPng", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of exports as TIFF に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfExportsAsTiff {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfExportsAsTiff", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of exports as WMP に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfExportsAsWmp {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfExportsAsWmp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of intersects に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfIntersects {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfIntersects", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of left aligned に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfLeftAlignment {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfLeftAlignment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of log level changes に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfLogLevelChanges {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfLogLevelChanges", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of moves to the back に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfMovesToTheBack {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfMovesToTheBack", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of moves to the front に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfMovesToTheFront {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfMovesToTheFront", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of newly created layers に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfNewlyCreatedLayers {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfNewlyCreatedLayers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of pasted に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfPasted {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfPasted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of redoes に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfRedoes {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfRedoes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of right aligned に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfRightAlignment {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfRightAlignment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of snap point tool installations に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfSnapPointToolInstallations {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfSnapPointToolInstallations", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of times aligned left and right に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfTimesAlignedLeftAndRight {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfTimesAlignedLeftAndRight", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of times aligned up and down に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfTimesAlignedUpAndDown {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfTimesAlignedUpAndDown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of times automatically saved に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfTimesAutomaticallySaved {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfTimesAutomaticallySaved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of times grouped に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfTimesGrouped {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfTimesGrouped", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of times left and right centered に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfTimesLeftAndRightCentered {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfTimesLeftAndRightCentered", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of times saved by overwriting に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfTimesSavedByOverwriting {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfTimesSavedByOverwriting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of times the application log was displayed に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfTimesTheApplicationLogWasDisplayed {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfTimesTheApplicationLogWasDisplayed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of times the auto save file is specified and opened に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfTimesTheAutoSaveFileIsSpecifiedAndOpened {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfTimesTheAutoSaveFileIsSpecifiedAndOpened", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of times the brush tool is drawn に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfTimesTheBrushToolIsDrawn {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfTimesTheBrushToolIsDrawn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of times the eraser tool has been used に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfTimesTheEraserToolHasBeenUsed {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfTimesTheEraserToolHasBeenUsed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of times the file was opened by specifying it に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfTimesTheFileWasOpenedBySpecifyingIt {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfTimesTheFileWasOpenedBySpecifyingIt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of times the item was deleted に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfTimesTheItemWasDeleted {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfTimesTheItemWasDeleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of times the item was drawn に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfTimesTheItemWasDrawn {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfTimesTheItemWasDrawn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of times the slice tool was used に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfTimesTheSliceToolWasUsed {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfTimesTheSliceToolWasUsed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of times the top and bottom are aligned に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfTimesTheTopAndBottomAreAligned {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfTimesTheTopAndBottomAreAligned", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of times the version information dialog was displayed に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfTimesTheVersionInformationDialogWasDisplayed {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfTimesTheVersionInformationDialogWasDisplayed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of times to match the height に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfTimesToMatchTheHeight {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfTimesToMatchTheHeight", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of times to match the width に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfTimesToMatchTheWidth {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfTimesToMatchTheWidth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of times to move to the backend に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfTimesToMoveToTheBackend {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfTimesToMoveToTheBackend", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of times to move to the frontend に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfTimesToMoveToTheFrontend {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfTimesToMoveToTheFrontend", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of times you have named and saved に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfTimesYouHaveNamedAndSaved {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfTimesYouHaveNamedAndSaved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of top alignment に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfTopAlignment {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfTopAlignment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of undos に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfUndos {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfUndos", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of ungrouped に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfUngrouped {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfUngrouped", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of unions に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfUnions {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfUnions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of Xors に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfXors {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfXors", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Uptime に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_Uptime {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_Uptime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Version information of boiler&apos;s Graphics に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Title_Version {
+            get {
+                return ResourceManager.GetString("Dialog_Title_Version", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Confirm に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string DialogTitle_Confirm {
+            get {
+                return ResourceManager.GetString("DialogTitle_Confirm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Abnormal termination に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string DialogTitle_Error {
+            get {
+                return ResourceManager.GetString("DialogTitle_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Read error に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string DialogTitle_ReadError {
+            get {
+                return ResourceManager.GetString("DialogTitle_ReadError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Grouping に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Grouping {
@@ -268,11 +889,920 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   This file is too old or corrupted to open. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Log_FileCannotOpenBecauseTooOldOrCorrupted {
+            get {
+                return ResourceManager.GetString("Log_FileCannotOpenBecauseTooOldOrCorrupted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Read the file in forced read mode. This mode is enforced when the Version element is not found. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Log_ForceReadMode {
+            get {
+                return ResourceManager.GetString("Log_ForceReadMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   App read the file ({0}). に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Log_LoadedFile {
+            get {
+                return ResourceManager.GetString("Log_LoadedFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Brush thickness に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_BrushThickness {
+            get {
+                return ResourceManager.GetString("MenuItem_BrushThickness", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Canvas(_C) に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_Canvas {
+            get {
+                return ResourceManager.GetString("MenuItem_Canvas", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Set clip に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_Clip {
+            get {
+                return ResourceManager.GetString("MenuItem_Clip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Copy(_C) に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_Copy {
+            get {
+                return ResourceManager.GetString("MenuItem_Copy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Cut(_T) に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_Cut {
+            get {
+                return ResourceManager.GetString("MenuItem_Cut", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Edit(_E) に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_Edit {
+            get {
+                return ResourceManager.GetString("MenuItem_Edit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   English(US) に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_en_US {
+            get {
+                return ResourceManager.GetString("MenuItem_en_US", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Exit boiler&apos;s Graphics に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_ExitApplication {
+            get {
+                return ResourceManager.GetString("MenuItem_ExitApplication", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Export に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_Export {
+            get {
+                return ResourceManager.GetString("MenuItem_Export", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   File(_F) に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_File {
+            get {
+                return ResourceManager.GetString("MenuItem_File", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Help(_H) に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_Help {
+            get {
+                return ResourceManager.GetString("MenuItem_Help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Japanese に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_ja_JP {
+            get {
+                return ResourceManager.GetString("MenuItem_ja_JP", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Language に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_Language {
+            get {
+                return ResourceManager.GetString("MenuItem_Language", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Log に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_Log {
+            get {
+                return ResourceManager.GetString("MenuItem_Log", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Log level に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_LogLevel {
+            get {
+                return ResourceManager.GetString("MenuItem_LogLevel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Debug に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_LogLevel_Debug {
+            get {
+                return ResourceManager.GetString("MenuItem_LogLevel_Debug", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Error に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_LogLevel_Error {
+            get {
+                return ResourceManager.GetString("MenuItem_LogLevel_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Fatal に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_LogLevel_Fatal {
+            get {
+                return ResourceManager.GetString("MenuItem_LogLevel_Fatal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Info に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_LogLevel_Info {
+            get {
+                return ResourceManager.GetString("MenuItem_LogLevel_Info", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Off に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_LogLevel_Off {
+            get {
+                return ResourceManager.GetString("MenuItem_LogLevel_Off", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Trace に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_LogLevel_Trace {
+            get {
+                return ResourceManager.GetString("MenuItem_LogLevel_Trace", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Warn に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_LogLevel_Warn {
+            get {
+                return ResourceManager.GetString("MenuItem_LogLevel_Warn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Mini map に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_MiniMap {
+            get {
+                return ResourceManager.GetString("MenuItem_MiniMap", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Open(_O) に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_Open {
+            get {
+                return ResourceManager.GetString("MenuItem_Open", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Overwrite に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_Overwrite {
+            get {
+                return ResourceManager.GetString("MenuItem_Overwrite", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Paste(_P) に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_Paste {
+            get {
+                return ResourceManager.GetString("MenuItem_Paste", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Preferences(_P) に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_Preference {
+            get {
+                return ResourceManager.GetString("MenuItem_Preference", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Property に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_Property {
+            get {
+                return ResourceManager.GetString("MenuItem_Property", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Redo(_R) に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_Redo {
+            get {
+                return ResourceManager.GetString("MenuItem_Redo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Save as に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_SaveAs {
+            get {
+                return ResourceManager.GetString("MenuItem_SaveAs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Open application log(_L) に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_ShowLog {
+            get {
+                return ResourceManager.GetString("MenuItem_ShowLog", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Specify File(_S) に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_SpecifyFile {
+            get {
+                return ResourceManager.GetString("MenuItem_SpecifyFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Specify the automatically saved file(_A) に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_SpecifyFileAutoSaved {
+            get {
+                return ResourceManager.GetString("MenuItem_SpecifyFileAutoSaved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Statistics(_S) に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_Statistics {
+            get {
+                return ResourceManager.GetString("MenuItem_Statistics", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Undo(_U) に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_Undo {
+            get {
+                return ResourceManager.GetString("MenuItem_Undo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Version information of boiler&apos;s Graphics(_I) に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_Version {
+            get {
+                return ResourceManager.GetString("MenuItem_Version", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   View(_V) に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_View {
+            get {
+                return ResourceManager.GetString("MenuItem_View", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Window(_W) に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_Window {
+            get {
+                return ResourceManager.GetString("MenuItem_Window", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   It was saved automatically. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Message_Autosaved {
+            get {
+                return ResourceManager.GetString("Message_Autosaved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   The current campus will be destroyed, is that okay? に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Message_CanvasWillDiscardedConfirm {
+            get {
+                return ResourceManager.GetString("Message_CanvasWillDiscardedConfirm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   The file is too new to open. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Message_FileCannotOpenBecauseTooNew {
+            get {
+                return ResourceManager.GetString("Message_FileCannotOpenBecauseTooNew", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   This file is too old or corrupted to open. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Message_FileCannotOpenBecauseTooOldOrCorrupted {
+            get {
+                return ResourceManager.GetString("Message_FileCannotOpenBecauseTooOldOrCorrupted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Item に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Name_Item {
+            get {
+                return ResourceManager.GetString("Name_Item", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Layer に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Name_Layer {
+            get {
+                return ResourceManager.GetString("Name_Layer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ordering に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Ordering {
             get {
                 return ResourceManager.GetString("Ordering", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Exclude に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Pane_Combine_Exclude {
+            get {
+                return ResourceManager.GetString("Pane_Combine_Exclude", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Intersect に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Pane_Combine_Intersect {
+            get {
+                return ResourceManager.GetString("Pane_Combine_Intersect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Union に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Pane_Combine_Union {
+            get {
+                return ResourceManager.GetString("Pane_Combine_Union", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Xor に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Pane_Combine_Xor {
+            get {
+                return ResourceManager.GetString("Pane_Combine_Xor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Create a Layer に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Pane_Layer_CreateLayer {
+            get {
+                return ResourceManager.GetString("Pane_Layer_CreateLayer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Remove a Layer に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Pane_Layer_RemoveLayer {
+            get {
+                return ResourceManager.GetString("Pane_Layer_RemoveLayer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Combine に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PaneTitle_Combine {
+            get {
+                return ResourceManager.GetString("PaneTitle_Combine", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Layer に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PaneTitle_Layer {
+            get {
+                return ResourceManager.GetString("PaneTitle_Layer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Alpha に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_A {
+            get {
+                return ResourceManager.GetString("String_A", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Autosave に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_AutoSave {
+            get {
+                return ResourceManager.GetString("String_AutoSave", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Automatically save every camvas change に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_AutoSaveEveryTimeYouChangeCamvas {
+            get {
+                return ResourceManager.GetString("String_AutoSaveEveryTimeYouChangeCamvas", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Blue に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_B {
+            get {
+                return ResourceManager.GetString("String_B", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Cancel に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_Cancel {
+            get {
+                return ResourceManager.GetString("String_Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Canvas Background に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_CanvasBackground {
+            get {
+                return ResourceManager.GetString("String_CanvasBackground", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Canvas Height に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_CanvasHeight {
+            get {
+                return ResourceManager.GetString("String_CanvasHeight", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Canvas Width に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_CanvasWidth {
+            get {
+                return ResourceManager.GetString("String_CanvasWidth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   I&apos;m sorry.  に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_ErrorReporting {
+            get {
+                return ResourceManager.GetString("String_ErrorReporting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Your application will close because it has detected an error. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_ErrorReporting1 {
+            get {
+                return ResourceManager.GetString("String_ErrorReporting1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   You can see the details of the error in the event viewer or the application log file. The application log file is here: に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_ErrorReporting2 {
+            get {
+                return ResourceManager.GetString("String_ErrorReporting2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   -- error contents -- に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_ErrorReporting3 {
+            get {
+                return ResourceManager.GetString("String_ErrorReporting3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Export に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_Export {
+            get {
+                return ResourceManager.GetString("String_Export", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   File name に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_FileName {
+            get {
+                return ResourceManager.GetString("String_FileName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Green に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_G {
+            get {
+                return ResourceManager.GetString("String_G", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Hue に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_Hue {
+            get {
+                return ResourceManager.GetString("String_Hue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Interval: に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_Interval {
+            get {
+                return ResourceManager.GetString("String_Interval", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   License に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_License {
+            get {
+                return ResourceManager.GetString("String_License", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   OK に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_OK {
+            get {
+                return ResourceManager.GetString("String_OK", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   OpenSource component / Libraries / Code に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_OpensourceComponent_Library_Code {
+            get {
+                return ResourceManager.GetString("String_OpensourceComponent_Library_Code", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   **Please describe the details of the error** に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_PleaseDescribeError {
+            get {
+                return ResourceManager.GetString("String_PleaseDescribeError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Quality level に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_QualityLevel {
+            get {
+                return ResourceManager.GetString("String_QualityLevel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Red に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_R {
+            get {
+                return ResourceManager.GetString("String_R", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Reference に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_Reference {
+            get {
+                return ResourceManager.GetString("String_Reference", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Set the interval に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_SetInterval {
+            get {
+                return ResourceManager.GetString("String_SetInterval", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Snap to a point に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_SnapPoint {
+            get {
+                return ResourceManager.GetString("String_SnapPoint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Range to snap to a point に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_SnapRange {
+            get {
+                return ResourceManager.GetString("String_SnapRange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Version に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_Version {
+            get {
+                return ResourceManager.GetString("String_Version", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Color picker に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Title_ColorPicker {
+            get {
+                return ResourceManager.GetString("Title_ColorPicker", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Export に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Title_Export {
+            get {
+                return ResourceManager.GetString("Title_Export", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Preferences に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Title_Preferences {
+            get {
+                return ResourceManager.GetString("Title_Preferences", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Statistics に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Title_Statistics {
+            get {
+                return ResourceManager.GetString("Title_Statistics", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Bezier curve tool に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Tool_BezierCurve {
+            get {
+                return ResourceManager.GetString("Tool_BezierCurve", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Brush tool に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Tool_Brush {
+            get {
+                return ResourceManager.GetString("Tool_Brush", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ellipse tool に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Tool_Ellipse {
+            get {
+                return ResourceManager.GetString("Tool_Ellipse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Eraser tool に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Tool_Eraser {
+            get {
+                return ResourceManager.GetString("Tool_Eraser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Lasso tool に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Tool_Lasso {
+            get {
+                return ResourceManager.GetString("Tool_Lasso", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Lettering tool に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Tool_Lettering {
+            get {
+                return ResourceManager.GetString("Tool_Lettering", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Picture tool に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Tool_Picture {
+            get {
+                return ResourceManager.GetString("Tool_Picture", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Pointer tool に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Tool_Pointer {
+            get {
+                return ResourceManager.GetString("Tool_Pointer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Polygon tool に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Tool_Polygon {
+            get {
+                return ResourceManager.GetString("Tool_Polygon", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Rectangle tool に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Tool_Rectangle {
+            get {
+                return ResourceManager.GetString("Tool_Rectangle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Slice tool に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Tool_Slice {
+            get {
+                return ResourceManager.GetString("Tool_Slice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Snap point tool に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Tool_SnapPoint {
+            get {
+                return ResourceManager.GetString("Tool_SnapPoint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Straight line tool に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Tool_StraightLine {
+            get {
+                return ResourceManager.GetString("Tool_StraightLine", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Vertical lettering tool に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Tool_VerticalLettering {
+            get {
+                return ResourceManager.GetString("Tool_VerticalLettering", resourceCulture);
             }
         }
     }

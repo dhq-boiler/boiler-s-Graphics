@@ -73,7 +73,6 @@ namespace boilersGraphics.ViewModels
             clone.Owner = Owner;
             clone.ParentID = ParentID;
             clone.PathGeometry = PathGeometry;
-            clone.RotatePathGeometry.Value = RotatePathGeometry.Value;
             clone.RotationAngle.Value = RotationAngle.Value;
             clone.ZIndex.Value = ZIndex.Value;
             clone.Left.Value = Left.Value;
@@ -87,7 +86,7 @@ namespace boilersGraphics.ViewModels
 
         public override Type GetViewType()
         {
-            return typeof(SnapPointViewModel);
+            return typeof(Controls.SnapPoint);
         }
 
         public override void OnNext(GroupTransformNotification value)
