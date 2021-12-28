@@ -43,7 +43,7 @@ steps:
 - task: MSBuild@1
   displayName: 'MSBuild boilersGraphics.Msix.wapproj'
   inputs:
-    solution: boilersGraphics.Msix\boilersGraphics.Msix.wapproj
+    solution: 'boilersGraphics.Msix\boilersGraphics.Msix.wapproj'
     platform: '$(BuildPlatform)'
     configuration: '$(BuildConfiguration)'
     msbuildArguments: '/p:OutputPath=NonPackagedApp /p:UapAppxPackageBuildMode=StoreUpload /p:AppxBundle=Never /p:AppxPackageOutput=$(Build.ArtifactStagingDirectory)\boilersGraphics.msix /p:AppxPackageSigningEnabled=false'
