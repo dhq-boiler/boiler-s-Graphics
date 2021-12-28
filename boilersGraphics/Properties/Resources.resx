@@ -129,6 +129,9 @@
   <data name="Button_MinimizeWindow" xml:space="preserve">
     <value>Minimize</value>
   </data>
+  <data name="Button_PostIssue" xml:space="preserve">
+    <value>Post an issue on GitHub</value>
+  </data>
   <data name="Button_Restore" xml:space="preserve">
     <value>Restore</value>
   </data>
@@ -617,6 +620,9 @@
   </data>
   <data name="String_OpensourceComponent_Library_Code" xml:space="preserve">
     <value>OpenSource component / Libraries / Code</value>
+  </data>
+  <data name="String_PleaseDescribeError" xml:space="preserve">
+    <value>**Please describe the details of the error**</value>
   </data>
   <data name="String_QualityLevel" xml:space="preserve">
     <value>Quality level</value>

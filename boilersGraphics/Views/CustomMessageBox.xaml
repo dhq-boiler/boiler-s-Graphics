@@ -17,6 +17,17 @@
     <DockPanel>
         <DockPanel DockPanel.Dock="Bottom">
             <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right">
+                <ItemsControl ItemsSource="{Binding Buttons}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button Command="{Binding ClickCommand}"
+                                    Margin="5"
+                                    Width="Auto"
+                                    Height="25"
+                                    Content="{Binding Content.Value}" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
                 <Button Command="{Binding OKCommand}"
                         Margin="5"
                         Width="75"

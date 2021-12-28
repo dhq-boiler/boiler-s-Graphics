@@ -1,13 +1,17 @@
 ﻿using boilersGraphics.Extensions;
 using boilersGraphics.Views;
 using NLog;
+using Prism.Commands;
 using Prism.Ioc;
 using Prism.Services.Dialogs;
 using Prism.Unity;
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Reflection;
 using System.Windows;
 using Unity;
+using static boilersGraphics.ViewModels.CustomMessageBoxViewModel;
 
 namespace boilersGraphics
 {
@@ -36,11 +40,40 @@ namespace boilersGraphics
             LogManager.GetCurrentClassLogger().Fatal(e.Exception);
             IDialogParameters dialogParameters = new DialogParameters();
             dialogParameters.Add("Title", boilersGraphics.Properties.Resources.DialogTitle_Error);
-            dialogParameters.Add("Text", boilersGraphics.Properties.Resources.String_ErrorReporting + "\n" +
-                                         boilersGraphics.Properties.Resources.String_ErrorReporting1 + "\n" +
-                                         boilersGraphics.Properties.Resources.String_ErrorReporting2 + System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "dhq_boiler\\boilersGraphics\\Logs\\boilersGraphics.log") + "\n" +
-                                         boilersGraphics.Properties.Resources.String_ErrorReporting3 + "\n" +
-                                         e.Exception.ToString());
+            var title = Uri.EscapeDataString(e.Exception.Message);
+            var body = boilersGraphics.Properties.Resources.String_ErrorReporting + "\n" +
+                       boilersGraphics.Properties.Resources.String_ErrorReporting1 + "\n" +
+                       boilersGraphics.Properties.Resources.String_ErrorReporting2 + System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "dhq_boiler\\boilersGraphics\\Logs\\boilersGraphics.log") + "\n" +
+                       boilersGraphics.Properties.Resources.String_ErrorReporting3 + "\n" +
+                       e.Exception.ToString();
+            dialogParameters.Add("Text", body);
+            body = Uri.EscapeDataString(e.Exception.ToString());
+            dialogParameters.Add("Buttons", new List<Button>() {new Button(boilersGraphics.Properties.Resources.Button_PostIssue, new DelegateCommand(() =>
+            {
+                body = boilersGraphics.Properties.Resources.String_PleaseDescribeError +
+                       Environment.NewLine +
+                       Environment.NewLine +
+                       e.Exception.ToString();
+                const int maxExceptionDetailsLength = 4000;
+                if (body.Length > maxExceptionDetailsLength)
+                {
+                    body = body.Substring(0, maxExceptionDetailsLength);
+                    body += Environment.NewLine;
+                    body += $"Exception details truncated at {maxExceptionDetailsLength} chars.";
+                }
+                body = Uri.EscapeDataString(body);
+
+                var url = $"https://github.com/dhq-boiler/boiler-s-Graphics/issues/new?title={title}&body={body}";
+
+                var processStartInfo = new ProcessStartInfo(url)
+                {
+                    UseShellExecute = true
+                };
+                using (Process.Start(processStartInfo))
+                {
+
+                }
+            }))});
             IDialogResult dialogResult = new DialogResult();
             Container.Resolve<IDialogService>().ShowDialog(nameof(CustomMessageBox), dialogParameters, ret => dialogResult = ret);
             throw e.Exception;

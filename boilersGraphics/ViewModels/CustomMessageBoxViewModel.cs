@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reactive.Disposables;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace boilersGraphics.ViewModels
 {
@@ -23,6 +24,44 @@ namespace boilersGraphics.ViewModels
         public ReactivePropertySlim<string> Text { get; } = new ReactivePropertySlim<string>();
 
         public ReactiveCommand OKCommand { get; } = new ReactiveCommand();
+
+        public ReactiveCollection<Button> Buttons { get; set; } = new ReactiveCollection<Button>();
+
+        public class Button : IDisposable
+        {
+            private bool disposedValue;
+
+            public Button(string content, ICommand clickCommand)
+            {
+                this.Content.Value = content;
+                ClickCommand = clickCommand;
+            }
+
+            public ReactivePropertySlim<string> Content { get; set; } = new ReactivePropertySlim<string>();
+
+            public ICommand ClickCommand { get; set; }
+
+            protected virtual void Dispose(bool disposing)
+            {
+                if (!disposedValue)
+                {
+                    if (disposing)
+                    {
+                        Content.Dispose();
+                    }
+
+                    Content = null;
+                    disposedValue = true;
+                }
+            }
+
+            public void Dispose()
+            {
+                // このコードを変更しないでください。クリーンアップ コードを 'Dispose(bool disposing)' メソッドに記述します
+                Dispose(disposing: true);
+                GC.SuppressFinalize(this);
+            }
+        }
 
         public CustomMessageBoxViewModel()
         {
@@ -46,6 +85,8 @@ namespace boilersGraphics.ViewModels
         {
             _title = parameters.GetValue<string>("Title");
             Text.Value = parameters.GetValue<string>("Text");
+            var buttons = parameters.GetValue<IEnumerable<Button>>("Buttons");
+            buttons.ToList().ForEach(button => Buttons.Add(button));
         }
 
         protected virtual void Dispose(bool disposing)

@@ -97,6 +97,15 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Post an issue on GitHub に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Button_PostIssue {
+            get {
+                return ResourceManager.GetString("Button_PostIssue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Restore に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Button_Restore {
@@ -1560,6 +1569,15 @@ namespace boilersGraphics.Properties {
         public static string String_OpensourceComponent_Library_Code {
             get {
                 return ResourceManager.GetString("String_OpensourceComponent_Library_Code", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   **Please describe the details of the error** に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_PleaseDescribeError {
+            get {
+                return ResourceManager.GetString("String_PleaseDescribeError", resourceCulture);
             }
         }
         
