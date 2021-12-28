@@ -46,6 +46,9 @@ namespace boilersGraphics.Views.Behaviors
             if (e.Source == AssociatedObject)
             {
                 _rectangleStartPoint = e.GetPosition(AssociatedObject);
+                var viewModel = AssociatedObject.DataContext as IDiagramViewModel;
+                item = new NRectangleViewModel();
+                item.Owner = viewModel;
                 e.Handled = true;
             }
         }
@@ -56,6 +59,9 @@ namespace boilersGraphics.Views.Behaviors
             {
                 var touchPoint = e.GetTouchPoint(AssociatedObject);
                 _rectangleStartPoint = touchPoint.Position;
+                var viewModel = AssociatedObject.DataContext as IDiagramViewModel;
+                item = new NRectangleViewModel();
+                item.Owner = viewModel;
             }
         }
 
