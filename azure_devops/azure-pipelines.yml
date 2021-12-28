@@ -46,7 +46,7 @@ steps:
     solution: 'boilersGraphics.Msix\boilersGraphics.Msix.wapproj'
     platform: '$(BuildPlatform)'
     configuration: '$(BuildConfiguration)'
-    msbuildArguments: '/p:OutputPath=NonPackagedApp /p:UapAppxPackageBuildMode=StoreUpload /p:AppxBundle=Never /p:AppxPackageOutput=$(Build.ArtifactStagingDirectory)\boilersGraphics.msix /p:AppxPackageSigningEnabled=false'
+    msbuildArguments: '/p:OutputPath=boilersGraphics /p:UapAppxPackageBuildMode=StoreUpload /p:AppxBundle=Never /p:AppxPackageOutput=$(Build.ArtifactStagingDirectory)\boilersGraphics.msix /p:AppxPackageSigningEnabled=false'
     
 - task: CmdLine@2
   displayName: 'tree /F'
