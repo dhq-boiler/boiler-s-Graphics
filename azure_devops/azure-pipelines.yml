@@ -40,6 +40,13 @@ steps:
     projects: '$(TargetSolution)'
     arguments: '--configuration $(BuildConfiguration)'  
 
+- task: MSBuild@1
+  inputs:
+    solution: boilersGraphics.Msix\boilersGraphics.Msix.wapproj
+    platform: '$(BuildPlatform)'
+    configuration: '$(BuildConfiguration)'
+    msbuildArguments: '/t:restore'
+
 - task: MsixPackaging@1
   inputs:
     outputPath: '$(Build.ArtifactStagingDirectory)\boilersGraphics.msix'
