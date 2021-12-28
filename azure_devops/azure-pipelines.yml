@@ -21,6 +21,17 @@ variables:
 steps:
 - task: NuGetToolInstaller@1
 
+- powershell: |
+   $Version = git describe --tags --abbrev=0
+   $Version -match '^v(?<major>\d+?)\.(?<minor>\d+?)\.*(?<build>\d+?)$'
+   Write-Host "##vso[task.setvariable variable=Major]$Matches.major"
+   Write-Host "##vso[task.setvariable variable=Minor]$Matches.minor"
+   if ($Matches.ContainsKey("build"))
+   {
+       Write-Host "##vso[task.setvariable variable=Build]$Matches.build"
+   }
+  displayName: 'Get version'
+
 - task: DotNetCoreCLI@2
   displayName: 'NuGet パッケージの復元'
   inputs:
@@ -34,6 +45,18 @@ steps:
     command: 'build'
     projects: '$(TargetSolution)'
     arguments: '--configuration $(BuildConfiguration)'  
+
+- powershell: |
+       [Reflection.Assembly]::LoadWithPartialName("System.Xml.Linq")
+       $path = "boilersGraphics.Msix/Package.appxmanifest"
+       $doc = [System.Xml.Linq.XDocument]::Load($path)
+       $xName =
+         [System.Xml.Linq.XName]
+           "{http://schemas.microsoft.com/appx/manifest/foundation/windows10}Identity"
+       $doc.Root.Element($xName).Attribute("Version").Value =
+         "$(Major).$(Minor).$(Build)";
+       $doc.Save($path)
+  displayName: 'Update Version in Package.appxmanifest'
 
 - task: MSBuild@1
   displayName: 'MSBuild boilersGraphics.Msix.wapproj'
