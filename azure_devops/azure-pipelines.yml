@@ -39,7 +39,7 @@ steps:
   displayName: 'MSBuild boilersGraphics.Msix.wapproj'
   inputs:
     solution: 'boilersGraphics.Msix\boilersGraphics.Msix.wapproj'
-    platform: '$(BuildPlatform)'
+    platform: 'AnyCPU'
     configuration: '$(BuildConfiguration)'
     msbuildArguments: '/p:OutputPath=boilersGraphics /p:UapAppxPackageBuildMode=StoreUpload /p:AppxBundle=Never /p:AppxPackageOutput=$(Build.ArtifactStagingDirectory)\boilersGraphics.msix /p:AppxPackageSigningEnabled=false'
     
