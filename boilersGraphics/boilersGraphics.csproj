@@ -23,7 +23,7 @@
     <UseWPF>true</UseWPF>
     <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-	<RuntimeIdentifier>win-x64</RuntimeIdentifier>
+	<PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>square150x150logo_scale_200_Qpf_icon.ico</ApplicationIcon>
