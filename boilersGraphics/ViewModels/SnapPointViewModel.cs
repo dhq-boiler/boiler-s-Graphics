@@ -86,7 +86,7 @@ namespace boilersGraphics.ViewModels
 
         public override Type GetViewType()
         {
-            return typeof(SnapPointViewModel);
+            return typeof(Controls.SnapPoint);
         }
 
         public override void OnNext(GroupTransformNotification value)
