@@ -7,6 +7,8 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <UseWPF>true</UseWPF>
     <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
+	<RuntimeIdentifier>win-x64</RuntimeIdentifier>
+	<PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
     <AppDesigner Include="Properties\" />
