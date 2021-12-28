@@ -47,14 +47,11 @@ steps:
     arguments: '--configuration $(BuildConfiguration)'  
 
 - powershell: |
-       [Reflection.Assembly]::LoadWithPartialName("System.Xml.Linq")
-       $path = "boilersGraphics.Msix/Package.appxmanifest"
+       [Reflection.Assembly]::LoadWithPartialName("System.Xml.Linq") | Out-Null
+       $path = (Convert-Path .) + "/boilersGraphics.Msix/Package.appxmanifest"
        $doc = [System.Xml.Linq.XDocument]::Load($path)
-       $xName =
-         [System.Xml.Linq.XName]
-           "{http://schemas.microsoft.com/appx/manifest/foundation/windows10}Identity"
-       $doc.Root.Element($xName).Attribute("Version").Value =
-         "$(Major).$(Minor).$(Build)";
+       $xName = [System.Xml.Linq.XName]"{http://schemas.microsoft.com/appx/manifest/foundation/windows10}Identity"
+       $doc.Root.Element($xName).Attribute("Version").Value = "$Major.$Minor.$Build"
        $doc.Save($path)
   displayName: 'Update Version in Package.appxmanifest'
 
