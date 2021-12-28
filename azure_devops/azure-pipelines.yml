@@ -109,9 +109,7 @@ steps:
     #releaseNotesSource: 'file' # Optional. Options: file, input
     #releaseNotesFile: # Optional
     #releaseNotes: # Optional
-    assets: 
-      - '$(Build.ArtifactStagingDirectory)\*'
-      - '$(System.DefaultWorkingDirectory)\boilersGraphics.Msix\AppPackages\boilersGraphics.Msix_**_AnyCPU.appxupload'
+    assets: '$(System.DefaultWorkingDirectory)\boilersGraphics.Msix\AppPackages\boilersGraphics.Msix_**_AnyCPU.appxupload'
     assetUploadMode: 'delete' # Optional. Options: delete, replace
     isDraft: false # Optional
     isPreRelease: false # Optional
