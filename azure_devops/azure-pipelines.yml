@@ -97,7 +97,7 @@ steps:
 
 - task: CmdLine@2
   inputs:
-    script: 'tree'
+    script: 'tree /F'
 
 # GitHub Release
 # Create, edit, or delete a GitHub release
