@@ -51,6 +51,8 @@ namespace boilersGraphics.Views.Behaviors
             if (e.Source == AssociatedObject)
             {
                 _straightLineStartPoint = e.GetPosition(AssociatedObject);
+                var viewModel = AssociatedObject.DataContext as IDiagramViewModel;
+                item = new StraightConnectorViewModel(viewModel, _straightLineStartPoint.Value);
                 e.Handled = true;
             }
         }
@@ -61,6 +63,8 @@ namespace boilersGraphics.Views.Behaviors
             {
                 var touchPoint = e.GetTouchPoint(AssociatedObject);
                 _straightLineStartPoint = touchPoint.Position;
+                var viewModel = AssociatedObject.DataContext as IDiagramViewModel;
+                item = new StraightConnectorViewModel(viewModel, _straightLineStartPoint.Value);
             }
         }
 
