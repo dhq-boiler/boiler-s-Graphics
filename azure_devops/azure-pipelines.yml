@@ -51,7 +51,7 @@ steps:
        $path = (Convert-Path .) + "/boilersGraphics.Msix/Package.appxmanifest"
        $doc = [System.Xml.Linq.XDocument]::Load($path)
        $xName = [System.Xml.Linq.XName]"{http://schemas.microsoft.com/appx/manifest/foundation/windows10}Identity"
-       $doc.Root.Element($xName).Attribute("Version").Value = "$Major.$Minor.$Build"
+       $doc.Root.Element($xName).Attribute("Version").Value = "$Major.$Minor.$Build.0"
        $doc.Save($path)
   displayName: 'Update Version in Package.appxmanifest'
 
