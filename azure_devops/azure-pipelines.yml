@@ -52,22 +52,7 @@ steps:
     outputPath: '$(Build.ArtifactStagingDirectory)\boilersGraphics.msix'
     solution: 'boilersGraphics.sln'
     clean: true
-    generateBundle: false
-    buildConfiguration: 'release'
-    buildPlatform: 'Any CPU'
-    updateAppVersion: false
-    manifestFile: Package.appxmanifest
-    appPackageDistributionMode: 'StoreAndSideload'
-    msbuildLocationMethod: 'version'
-    msbuildVersion: 'latest'
-    msbuildArchitecture: 'x64'
-
-- task: MsixPackaging@1
-  inputs:
-    outputPath: '$(Build.ArtifactStagingDirectory)\boilersGraphics.msix'
-    solution: '**/*.sln'
-    clean: true
-    generateBundle: false
+    generateBundle: true
     buildConfiguration: 'release'
     buildPlatform: 'Any CPU'
     updateAppVersion: false
