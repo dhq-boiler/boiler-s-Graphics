@@ -41,6 +41,7 @@ steps:
     arguments: '--configuration $(BuildConfiguration)'  
 
 - task: MSBuild@1
+  displayName: 'MSBuild boilersGraphics.Msix.wapproj'
   inputs:
     solution: boilersGraphics.Msix\boilersGraphics.Msix.wapproj
     platform: '$(BuildPlatform)'
@@ -48,6 +49,7 @@ steps:
     msbuildArguments: '/p:OutputPath=NonPackagedApp /p:UapAppxPackageBuildMode=StoreUpload /p:AppxBundle=Never /p:AppxPackageOutput=$(Build.ArtifactStagingDirectory)\boilersGraphics.msix /p:AppxPackageSigningEnabled=false'
     
 - task: CmdLine@2
+  displayName: 'tree /F'
   inputs:
     script: 'tree /F'
 
