@@ -24,11 +24,11 @@ steps:
 - powershell: |
    $Version = git describe --tags --abbrev=0
    $Version -match '^v(?<major>\d+?)\.(?<minor>\d+?)\.*(?<build>\d+?)$'
-   Write-Host "##vso[task.setvariable variable=Major]$Matches.major"
-   Write-Host "##vso[task.setvariable variable=Minor]$Matches.minor"
+   Write-Host "##vso[task.setvariable variable=Major]$Matches.major.ToString()"
+   Write-Host "##vso[task.setvariable variable=Minor]$Matches.minor.ToString()"
    if ($Matches.ContainsKey("build"))
    {
-       Write-Host "##vso[task.setvariable variable=Build]$Matches.build"
+       Write-Host "##vso[task.setvariable variable=Build]$Matches.build.ToString()"
    }
   displayName: 'Get version'
 
