@@ -69,9 +69,9 @@ steps:
     msbuildArguments: '/p:OutDir=$(Build.ArtifactStagingDirectory) /p:UapAppxPackageBuildMode=StoreUpload /p:AppxBundle=Never /p:AppxPackageOutput=boilersGraphics.msix /p:AppxPackageSigningEnabled=false'
     
 - task: CmdLine@2
-  displayName: 'tree /F'
+  displayName: 'tree $(Build.ArtifactStagingDirectory) /F'
   inputs:
-    script: 'tree /F'
+    script: 'tree $(Build.ArtifactStagingDirectory) /F'
 
 - task: Windows Application Driver@0
   inputs:
@@ -136,7 +136,7 @@ steps:
     #releaseNotes: # Optional
     assets: |
       $(Build.ArtifactStagingDirectory)\boilersGraphics_$(Major)_$(Minor)_$(Build).zip
-      $(System.DefaultWorkingDirectory)\boilersGraphics.Msix\AppPackages\boilersGraphics.Msix_**_AnyCPU.appxupload
+      $(Build.ArtifactStagingDirectory)\boilersGraphics.Msix\AppPackages\boilersGraphics.Msix_**_AnyCPU.appxupload
       $(Build.ArtifactStagingDirectory)\boilersGraphics.Msix\boilersGraphics.msix
     assetUploadMode: 'delete' # Optional. Options: delete, replace
     isDraft: false # Optional
