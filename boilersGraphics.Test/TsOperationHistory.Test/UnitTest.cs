@@ -139,50 +139,6 @@ namespace TsOperationHistory.Test
         }
 
         /// <summary>
-        /// Operationの自動結合テスト
-        /// </summary>
-        [Test]
-        public async Task MergedTest()
-        {
-            IOperationController controller = new OperationController();
-
-            var person = new Person()
-            {
-                Age = 14,
-            };
-
-            // デフォルトのマージ時間を 70msに設定
-            Operation.DefaultMergeSpan = TimeSpan.FromMilliseconds(70);
-
-            //Age = 30
-            controller.ExecuteSetProperty(person,nameof(Person.Age),30);
-            Assert.AreEqual(30, person.Age );
-            
-            //10 ms待つ
-            await Task.Delay(10);
-            
-            //Age = 100
-            controller.ExecuteSetProperty(person,nameof(Person.Age),100);
-            Assert.AreEqual(100, person.Age );
-
-            //100ms 待つ
-            await Task.Delay(100);
-            
-            //Age = 150
-            controller.ExecuteSetProperty(person,nameof(Person.Age),150);
-            Assert.AreEqual(150, person.Age );
-            
-            //Age = 100
-            controller.Undo();
-            Assert.AreEqual(100, person.Age );
-
-            // マージされているので 30には戻らずそのまま14に戻る
-            // Age = 14
-            controller.Undo();
-            Assert.AreEqual(14, person.Age );
-        }
-
-        /// <summary>
         /// リスト操作のテスト
         /// </summary>
         [Test]
