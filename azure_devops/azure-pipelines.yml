@@ -77,7 +77,7 @@ steps:
   inputs:
     package: '$(System.DefaultWorkingDirectory)\boilersGraphics.Msix\boilersGraphics_$(Major)_$(Minor)_$(Build).msix'
     certificate: 'www.dhq-boiler.ne.jp.pfx'
-    passwordVariable: 'pass'
+    passwordVariable: 'secret'
   displayName: 'Sign MSIX Package'
 
 - task: CmdLine@2
