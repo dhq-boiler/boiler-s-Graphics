@@ -8,7 +8,7 @@
 
   <Identity
     Name="10443dhqboiler.boilersGraphics"
-    Publisher="CN=F2E61F15-88E6-4972-ADC5-BF310C00F85F"
+    Publisher="CN=dhq_boiler"
     Version="5.0.8.0" />
 
   <Properties>
