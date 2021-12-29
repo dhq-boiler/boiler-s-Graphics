@@ -70,13 +70,13 @@ steps:
 
 - task: DownloadSecureFile@1
   inputs:
-    secureFile: 'www.dhq-boiler.ne.jp.pfx'
+    secureFile: 'dhq_boiler.pfx'
   displayName: 'Download Secure PFX File'
   
 - task: MsixSigning@1
   inputs:
     package: '$(System.DefaultWorkingDirectory)\boilersGraphics.Msix\boilersGraphics_$(Major)_$(Minor)_$(Build).msix'
-    certificate: 'www.dhq-boiler.ne.jp.pfx'
+    certificate: 'dhq_boiler.pfx'
     passwordVariable: 'secret'
   displayName: 'Sign MSIX Package'
 
