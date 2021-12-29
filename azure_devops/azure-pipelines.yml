@@ -69,18 +69,6 @@ steps:
     msbuildArguments: '/p:OutDir=$(Build.ArtifactStagingDirectory) /p:UapAppxPackageBuildMode=StoreUpload /p:AppxBundle=Never /p:AppxPackageOutput=boilersGraphics_$(Major)_$(Minor)_$(Build).msix /p:AppxPackageSigningEnabled=false'
     clean: true
 
-- task: DownloadSecureFile@1
-  inputs:
-    secureFile: 'dhq_boiler.pfx'
-  displayName: 'Download Secure PFX File'
-  
-- task: MsixSigning@1
-  inputs:
-    package: '$(System.DefaultWorkingDirectory)\boilersGraphics.Msix\boilersGraphics_$(Major)_$(Minor)_$(Build).msix'
-    certificate: 'dhq_boiler.pfx'
-    passwordVariable: 'secret'
-  displayName: 'Sign MSIX Package'
-
 - task: CmdLine@2
   displayName: 'tree $(Build.ArtifactStagingDirectory) /F'
   inputs:
