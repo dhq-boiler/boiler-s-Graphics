@@ -73,6 +73,11 @@ steps:
   inputs:
     script: 'tree $(Build.ArtifactStagingDirectory) /F'
 
+- task: CmdLine@2
+  displayName: 'tree $(System.DefaultWorkingDirectory) /F'
+  inputs:
+    script: 'tree $(System.DefaultWorkingDirectory) /F'
+
 - task: Windows Application Driver@0
   inputs:
     OperationType: 'Start'
@@ -137,7 +142,7 @@ steps:
     assets: |
       $(Build.ArtifactStagingDirectory)\boilersGraphics_$(Major)_$(Minor)_$(Build).zip
       $(Build.ArtifactStagingDirectory)\boilersGraphics.Msix\AppPackages\boilersGraphics.Msix_**_AnyCPU.appxupload
-      $(Build.ArtifactStagingDirectory)\boilersGraphics.Msix\boilersGraphics.msix
+      $(System.DefaultWorkingDirectory)\boilersGraphics.Msix\boilersGraphics.msix
     assetUploadMode: 'delete' # Optional. Options: delete, replace
     isDraft: false # Optional
     isPreRelease: false # Optional
