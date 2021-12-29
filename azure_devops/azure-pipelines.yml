@@ -33,6 +33,10 @@ steps:
        $Build = $Matches['build']
        Write-Host "##vso[task.setvariable variable=Build]$Build"
    }
+   else
+   {
+       $Build = 0
+   }
   displayName: 'Get version'
 
 - task: DotNetCoreCLI@2
