@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <StoreAssociation xmlns="http://schemas.microsoft.com/appx/2010/storeassociation">
-  <Publisher>CN=F2E61F15-88E6-4972-ADC5-BF310C00F85F</Publisher>
+  <Publisher>CN=dhq_boiler</Publisher>
   <PublisherDisplayName>dhq_boiler</PublisherDisplayName>
   <DeveloperAccountType>MSA</DeveloperAccountType>
   <GeneratePackageHash>http://www.w3.org/2001/04/xmlenc#sha256</GeneratePackageHash>
