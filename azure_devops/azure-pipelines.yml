@@ -67,7 +67,15 @@ steps:
     platform: 'AnyCPU'
     configuration: '$(BuildConfiguration)'
     msbuildArguments: '/p:OutDir=$(Build.ArtifactStagingDirectory) /p:UapAppxPackageBuildMode=StoreUpload /p:AppxBundle=Never /p:AppxPackageOutput=boilersGraphics_$(Major)_$(Minor)_$(Build).msix /p:AppxPackageSigningEnabled=false'
-    
+
+- task: DownloadSecureFile@1
+  inputs:
+    secureFile: 'www.dhq-boiler.ne.jp.pfx'
+  displayName: 'Download Secure PFX File'
+  
+- script: '"C:\Program Files (x86)\Windows Kits\10\bin\10.0.17763.0\x86\signtool" sign /fd SHA256 /f $(Agent.TempDirectory)/www.dhq-boiler.ne.jp.pfx /p secret $(System.DefaultWorkingDirectory)\boilersGraphics.Msix\boilersGraphics_$(Major)_$(Minor)_$(Build).msix'
+  displayName: 'Sign MSIX Package'
+
 - task: CmdLine@2
   displayName: 'tree $(Build.ArtifactStagingDirectory) /F'
   inputs:
