@@ -67,6 +67,7 @@ steps:
     platform: 'AnyCPU'
     configuration: '$(BuildConfiguration)'
     msbuildArguments: '/p:OutDir=$(Build.ArtifactStagingDirectory) /p:UapAppxPackageBuildMode=StoreUpload /p:AppxBundle=Never /p:AppxPackageOutput=boilersGraphics_$(Major)_$(Minor)_$(Build).msix /p:AppxPackageSigningEnabled=false'
+    clean: true
 
 - task: DownloadSecureFile@1
   inputs:
