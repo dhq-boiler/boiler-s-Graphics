@@ -143,23 +143,23 @@
                     </TextBox.Style>
                 </TextBox>
                 <CheckBox x:Name="enableAutoSave"
-                          Grid.Row="6"
+                          Grid.Row="5"
                           Grid.Column="0"
                           Grid.ColumnSpan="2"
                           Margin="5"
                           IsChecked="{Binding EditTarget.Value.EnableAutoSave.Value}"
                           Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_AutoSave, Mode=OneWay}"/>
-                <RadioButton Grid.Row="6"
+                <RadioButton Grid.Row="5"
                              Grid.Column="1"
                              Margin="5"
                              IsChecked="{Binding EditTarget.Value.AutoSaveType.Value, Converter={StaticResource BoolToEnumConverter}, Mode=TwoWay, ConverterParameter=EveryTimeCampusChanges}"
                              Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_AutoSaveEveryTimeYouChangeCamvas, Mode=OneWay}" />
-                <RadioButton Grid.Row="7"
+                <RadioButton Grid.Row="6"
                              Grid.Column="1"
                              Margin="5"
                              IsChecked="{Binding EditTarget.Value.AutoSaveType.Value, Converter={StaticResource BoolToEnumConverter}, Mode=TwoWay, ConverterParameter=SetInterval}"
                              Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_SetInterval, Mode=OneWay}" />
-                <StackPanel Grid.Row="8"
+                <StackPanel Grid.Row="7"
                             Grid.Column="1"
                             Orientation="Horizontal">
                     <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_Interval, Mode=OneWay}" />
@@ -168,8 +168,8 @@
                                               IsEnable="{Binding EditTarget.Value.AutoSaveType.Value, Converter={StaticResource BoolToEnumConverter}, Mode=TwoWay, ConverterParameter=SetInterval}"
                                               Value="{Binding EditTarget.Value.AutoSaveInterval.Value}" />
                 </StackPanel>
-                <Label Grid.Row="10" Grid.Column="0" Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_RotationAngleType, Mode=OneWay}"/>
-                <ComboBox Grid.Row="10" Grid.Column="1" SelectedValuePath="Tag" SelectedValue="{Binding EditTarget.Value.AngleType.Value}">
+                <Label Grid.Row="8" Grid.Column="0" Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_RotationAngleType, Mode=OneWay}"/>
+                <ComboBox Grid.Row="8" Grid.Column="1" SelectedValuePath="Tag" SelectedValue="{Binding EditTarget.Value.AngleType.Value}">
                     <ComboBoxItem Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_RotationAngleType_Minus180To180, Mode=OneWay}" Tag="{x:Static helper:AngleType.Minus180To180}" />
                     <ComboBoxItem Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_RotationAngleType_ZeroTo360, Mode=OneWay}" Tag="{x:Static helper:AngleType.ZeroTo360}" />
                 </ComboBox>
