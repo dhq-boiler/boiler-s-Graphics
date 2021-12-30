@@ -633,6 +633,15 @@
   <data name="String_Reference" xml:space="preserve">
     <value>参照</value>
   </data>
+  <data name="String_RotationAngleType" xml:space="preserve">
+    <value>回転角度タイプ</value>
+  </data>
+  <data name="String_RotationAngleType_Minus180To180" xml:space="preserve">
+    <value>-180 ≦ angle &lt; 180</value>
+  </data>
+  <data name="String_RotationAngleType_ZeroTo360" xml:space="preserve">
+    <value>0 ≦ angle &lt; 360</value>
+  </data>
   <data name="String_SetInterval" xml:space="preserve">
     <value>インターバルを設定する</value>
   </data>

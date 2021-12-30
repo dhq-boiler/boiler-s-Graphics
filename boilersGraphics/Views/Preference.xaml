@@ -168,10 +168,10 @@
                                               IsEnable="{Binding EditTarget.Value.AutoSaveType.Value, Converter={StaticResource BoolToEnumConverter}, Mode=TwoWay, ConverterParameter=SetInterval}"
                                               Value="{Binding EditTarget.Value.AutoSaveInterval.Value}" />
                 </StackPanel>
-                <Label Grid.Row="10" Grid.Column="0">回転角度タイプ</Label>
+                <Label Grid.Row="10" Grid.Column="0" Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_RotationAngleType, Mode=OneWay}"/>
                 <ComboBox Grid.Row="10" Grid.Column="1" SelectedValuePath="Tag" SelectedValue="{Binding EditTarget.Value.AngleType.Value}">
-                    <ComboBoxItem Content="-180 ≦ angle &lt; 180" Tag="{x:Static helper:AngleType.Minus180To180}" />
-                    <ComboBoxItem Content="0 ≦ angle &lt; 360" Tag="{x:Static helper:AngleType.ZeroTo360}" />
+                    <ComboBoxItem Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_RotationAngleType_Minus180To180, Mode=OneWay}" Tag="{x:Static helper:AngleType.Minus180To180}" />
+                    <ComboBoxItem Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_RotationAngleType_ZeroTo360, Mode=OneWay}" Tag="{x:Static helper:AngleType.ZeroTo360}" />
                 </ComboBox>
             </Grid>
             <StackPanel Orientation="Horizontal" />

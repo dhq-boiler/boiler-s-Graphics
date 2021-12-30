@@ -1609,6 +1609,33 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Rotation angle type に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_RotationAngleType {
+            get {
+                return ResourceManager.GetString("String_RotationAngleType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   -180 ≦ angle &lt; 180 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_RotationAngleType_Minus180To180 {
+            get {
+                return ResourceManager.GetString("String_RotationAngleType_Minus180To180", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   0 ≦ angle &lt; 360 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_RotationAngleType_ZeroTo360 {
+            get {
+                return ResourceManager.GetString("String_RotationAngleType_ZeroTo360", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Set the interval に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string String_SetInterval {
