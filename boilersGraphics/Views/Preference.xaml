@@ -143,6 +143,10 @@
                     <ComboBoxItem Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_RotationAngleType_Minus180To180, Mode=OneWay}" Tag="{x:Static helper:AngleType.Minus180To180}" />
                     <ComboBoxItem Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_RotationAngleType_ZeroTo360, Mode=OneWay}" Tag="{x:Static helper:AngleType.ZeroTo360}" />
                 </ComboBox>
+                <CheckBox x:Name="enableImageEmbedding"
+                          Margin="5"
+                          IsChecked="{Binding EditTarget.Value.EnableImageEmbedding.Value}"
+                          Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_EnableImageEmbedding, Mode=OneWay}"/>
             </controls:SimpleGrid>
         </StackPanel>
     </DockPanel>

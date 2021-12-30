@@ -585,6 +585,9 @@
   <data name="String_CanvasWidth" xml:space="preserve">
     <value>キャンパスの幅</value>
   </data>
+  <data name="String_EnableImageEmbedding" xml:space="preserve">
+    <value>画像を埋め込む</value>
+  </data>
   <data name="String_ErrorReporting" xml:space="preserve">
     <value>申し訳ありません。</value>
   </data>

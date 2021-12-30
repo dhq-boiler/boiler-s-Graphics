@@ -1465,6 +1465,15 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Enable image embedding に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_EnableImageEmbedding {
+            get {
+                return ResourceManager.GetString("String_EnableImageEmbedding", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   I&apos;m sorry.  に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string String_ErrorReporting {

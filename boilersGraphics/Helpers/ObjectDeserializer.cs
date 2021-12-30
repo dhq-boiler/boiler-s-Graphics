@@ -5,10 +5,12 @@ using Reactive.Bindings;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Xml.Linq;
 
 namespace boilersGraphics.Helpers
@@ -286,7 +288,14 @@ namespace boilersGraphics.Helpers
             if (item is PictureDesignerItemViewModel)
             {
                 var picture = item as PictureDesignerItemViewModel;
-                picture.FileName = designerItemElm.Element("FileName").Value;
+                if (designerItemElm.Elements("EnableImageEmbedding").Any() && bool.TryParse(designerItemElm.Element("EnableImageEmbedding").Value, out var enableImageEmbedding))
+                {
+                    picture.EmbeddedImage.Value = Base64StringToBitmap(designerItemElm.Element("EmbeddedImageBase64").Value);
+                }
+                else
+                {
+                    picture.FileName = designerItemElm.Element("FileName").Value;
+                }
             }
             if (item is LetterDesignerItemViewModel)
             {
@@ -316,5 +325,27 @@ namespace boilersGraphics.Helpers
 
             return item;
         }
+
+        public static BitmapImage Base64StringToBitmap(string base64String)
+        {
+            byte[] byteBuffer = Convert.FromBase64String(base64String);
+            BitmapImage bitmapImage = new BitmapImage();
+            using (var memStream = new MemoryStream(byteBuffer))
+            using (var memStream2 = new MemoryStream())
+            {
+                System.Drawing.Image image = System.Drawing.Image.FromStream(memStream);
+                image.Save(memStream2, System.Drawing.Imaging.ImageFormat.Png);
+                using (MemoryStream memoryStream = new MemoryStream(byteBuffer))
+                {
+                    memoryStream.Position = 0;
+                    bitmapImage.BeginInit();
+                    bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+                    bitmapImage.StreamSource = memStream2;
+                    bitmapImage.EndInit();
+                    bitmapImage.Freeze();
+                }
+            }
+            return bitmapImage;
+        }   
     }
 }

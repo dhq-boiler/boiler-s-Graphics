@@ -585,6 +585,9 @@
   <data name="String_CanvasWidth" xml:space="preserve">
     <value>Canvas Width</value>
   </data>
+  <data name="String_EnableImageEmbedding" xml:space="preserve">
+    <value>Enable image embedding</value>
+  </data>
   <data name="String_ErrorReporting" xml:space="preserve">
     <value>I'm sorry. </value>
   </data>

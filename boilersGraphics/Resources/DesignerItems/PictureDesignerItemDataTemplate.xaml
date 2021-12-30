@@ -1,11 +1,15 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:converters="clr-namespace:boilersGraphics.Converters"
                     xmlns:viewModel="clr-namespace:boilersGraphics.ViewModels">
     <DataTemplate DataType="{x:Type viewModel:PictureDesignerItemViewModel}">
+        <DataTemplate.Resources>
+            <converters:ToFileNameOrBitmapImage x:Key="ToFileNameOrBitmapImage" />
+        </DataTemplate.Resources>
         <Border BorderBrush="{Binding EdgeColor.Value, Converter={StaticResource solidColorBrushConverter}}" BorderThickness="{Binding EdgeThickness.Value}">
             <Image Clip="{Binding Clip.Value}"
                    IsHitTestVisible="False"
-                   Source="{Binding FileName}"
+                   Source="{Binding Converter={StaticResource ToFileNameOrBitmapImage}}"
                    Stretch="Fill"
                    Tag="picture" />
         </Border>

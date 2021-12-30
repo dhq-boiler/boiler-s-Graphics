@@ -4,7 +4,9 @@ using boilersGraphics.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
+using System.Windows.Media.Imaging;
 using System.Xml.Linq;
 
 namespace boilersGraphics.Helpers
@@ -79,9 +81,23 @@ namespace boilersGraphics.Helpers
                 list.Add(new XElement("EdgeThickness", designerItem.EdgeThickness.Value));
                 list.Add(new XElement("PathGeometry", designerItem.PathGeometry.Value));
                 list.Add(new XElement("RotationAngle", designerItem.RotationAngle.Value));
-                if (designerItem is PictureDesignerItemViewModel)
+                if (designerItem is PictureDesignerItemViewModel picture)
                 {
                     list.Add(new XElement("FileName", (designerItem as PictureDesignerItemViewModel).FileName));
+                    var enableImageEmbedding = (App.GetCurrentApp().MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.EnableImageEmbedding.Value;
+                    list.Add(new XElement("EnableImageEmbedding", enableImageEmbedding));
+                    if (enableImageEmbedding)
+                    {
+                        var image = !string.IsNullOrEmpty(picture.FileName) ? new BitmapImage(new Uri(picture.FileName)) : picture.EmbeddedImage.Value;
+                        var writeableBitmap = new WriteableBitmap(image);
+                        using (var memStream = new MemoryStream())
+                        {
+                            var encoder = new PngBitmapEncoder();
+                            encoder.Frames.Add(BitmapFrame.Create(writeableBitmap));
+                            encoder.Save(memStream);
+                            list.Add(new XElement("EmbeddedImageBase64", Convert.ToBase64String(memStream.ToArray())));
+                        }
+                    }
                 }
                 if (designerItem is ILetterDesignerItemViewModel)
                 {

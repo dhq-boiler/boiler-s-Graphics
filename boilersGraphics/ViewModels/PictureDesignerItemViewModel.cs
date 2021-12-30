@@ -6,6 +6,7 @@ using Reactive.Bindings;
 using System;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace boilersGraphics.ViewModels
 {
@@ -38,6 +39,8 @@ namespace boilersGraphics.ViewModels
         public ReactivePropertySlim<SelectableDesignerItemViewModelBase> ClipObject { get; set; } = new ReactivePropertySlim<SelectableDesignerItemViewModelBase>();
 
         public override bool SupportsPropertyDialog => true;
+
+        public ReactivePropertySlim<BitmapImage> EmbeddedImage { get; } = new ReactivePropertySlim<BitmapImage>();
 
         public PictureDesignerItemViewModel(int id, DiagramViewModel parent, double left, double top)
             : base(id, parent, left, top)
