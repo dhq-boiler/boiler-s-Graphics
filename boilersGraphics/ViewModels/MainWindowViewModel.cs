@@ -76,6 +76,7 @@ namespace boilersGraphics.ViewModels
             Title.Value = $"{App.GetAppNameAndVersion()}";
             DiagramViewModel.FileName.Value = "*";
 
+            EdgeThicknessOptions.Add(double.NaN);
             EdgeThicknessOptions.Add(0.0);
             EdgeThicknessOptions.Add(1.0);
             EdgeThicknessOptions.Add(2.0);
