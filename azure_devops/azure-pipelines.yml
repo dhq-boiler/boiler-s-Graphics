@@ -34,6 +34,7 @@ steps:
        Write-Host "##vso[task.setvariable variable=Build]$Build"
    } else {
        $Build = 0
+       Write-Host "##vso[task.setvariable variable=Build]$Build"
    }
   displayName: 'Get version'
 
