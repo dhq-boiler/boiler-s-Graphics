@@ -1,6 +1,8 @@
 ﻿using boilersGraphics.Helpers;
 using boilersGraphics.ViewModels;
+using Moq;
 using NUnit.Framework;
+using Prism.Services.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -112,7 +114,8 @@ namespace boilersGraphics.Test
     </Configuration>
   </boilersGraphics>";
 
-            var mainWindowViewModel = new MainWindowViewModel(null);
+            var dlgService = new Mock<IDialogService>();
+            MainWindowViewModel mainWindowViewModel = new MainWindowViewModel(dlgService.Object);
             var diagramVM = new DiagramViewModel(mainWindowViewModel, 1000, 1000);
             var root = XElement.Parse(xml);
             diagramVM.Layers.Clear();

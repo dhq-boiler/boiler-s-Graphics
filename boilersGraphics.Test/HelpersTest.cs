@@ -2,7 +2,9 @@
 using boilersGraphics.Helpers;
 using boilersGraphics.Models;
 using boilersGraphics.ViewModels;
+using Moq;
 using NUnit.Framework;
+using Prism.Services.Dialogs;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
@@ -53,7 +55,8 @@ namespace boilersGraphics.Test
         public void BrushInternal_AddNewBrushViewModel()
         {
             App.IsTest = true;
-            var mainWindowViewModel = new MainWindowViewModel(null);
+            var dlgService = new Mock<IDialogService>();
+            MainWindowViewModel mainWindowViewModel = new MainWindowViewModel(dlgService.Object);
             var diagramViewModel = mainWindowViewModel.DiagramViewModel;
             var desingerCanvas = new DesignerCanvas();
             desingerCanvas.DataContext = diagramViewModel;
@@ -82,7 +85,8 @@ namespace boilersGraphics.Test
         public void BrushInternal_Draw()
         {
             App.IsTest = true;
-            var mainWindowViewModel = new MainWindowViewModel(null);
+            var dlgService = new Mock<IDialogService>();
+            MainWindowViewModel mainWindowViewModel = new MainWindowViewModel(dlgService.Object);
             var diagramViewModel = mainWindowViewModel.DiagramViewModel;
             var desingerCanvas = new DesignerCanvas();
             desingerCanvas.DataContext = diagramViewModel;
@@ -108,7 +112,8 @@ namespace boilersGraphics.Test
         public void BrushInternal_Down()
         {
             App.IsTest = true;
-            var mainWindowViewModel = new MainWindowViewModel(null);
+            var dlgService = new Mock<IDialogService>();
+            MainWindowViewModel mainWindowViewModel = new MainWindowViewModel(dlgService.Object);
             var diagramViewModel = mainWindowViewModel.DiagramViewModel;
             var designerCanvas = new DesignerCanvas();
             designerCanvas.DataContext = diagramViewModel;
@@ -132,7 +137,8 @@ namespace boilersGraphics.Test
         public void BrushInternal_Down_2回目()
         {
             App.IsTest = true;
-            var mainWindowViewModel = new MainWindowViewModel(null);
+            var dlgService = new Mock<IDialogService>();
+            MainWindowViewModel mainWindowViewModel = new MainWindowViewModel(dlgService.Object);
             var diagramViewModel = mainWindowViewModel.DiagramViewModel;
             var designerCanvas = new DesignerCanvas();
             designerCanvas.DataContext = diagramViewModel;
@@ -162,7 +168,8 @@ namespace boilersGraphics.Test
         public void EraserInternal_Erase()
         {
             App.IsTest = true;
-            var mainWindowViewModel = new MainWindowViewModel(null);
+            var dlgService = new Mock<IDialogService>();
+            MainWindowViewModel mainWindowViewModel = new MainWindowViewModel(dlgService.Object);
             var diagramViewModel = mainWindowViewModel.DiagramViewModel;
             var desingerCanvas = new DesignerCanvas();
             desingerCanvas.DataContext = diagramViewModel;
@@ -190,7 +197,8 @@ namespace boilersGraphics.Test
         public void EraserInternal_Down()
         {
             App.IsTest = true;
-            var mainWindowViewModel = new MainWindowViewModel(null);
+            var dlgService = new Mock<IDialogService>();
+            MainWindowViewModel mainWindowViewModel = new MainWindowViewModel(dlgService.Object);
             var diagramViewModel = mainWindowViewModel.DiagramViewModel;
             var designerCanvas = new DesignerCanvas();
             designerCanvas.DataContext = diagramViewModel;
