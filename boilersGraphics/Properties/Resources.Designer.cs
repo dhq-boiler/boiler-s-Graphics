@@ -1150,6 +1150,15 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Post new issue に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_PostNewIssue {
+            get {
+                return ResourceManager.GetString("MenuItem_PostNewIssue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Preferences(_P) に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string MenuItem_Preference {

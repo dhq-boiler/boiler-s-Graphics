@@ -480,6 +480,9 @@
   <data name="MenuItem_Paste" xml:space="preserve">
     <value>Paste(_P)</value>
   </data>
+  <data name="MenuItem_PostNewIssue" xml:space="preserve">
+    <value>Post new issue</value>
+  </data>
   <data name="MenuItem_Preference" xml:space="preserve">
     <value>Preferences(_P)</value>
   </data>

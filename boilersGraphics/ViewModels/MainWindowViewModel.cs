@@ -101,7 +101,7 @@ namespace boilersGraphics.ViewModels
             SelectColorCommand = new DelegateCommand<DiagramViewModel>(p =>
             {
                 IDialogResult result = null;
-                this.dlgService.ShowDialog(nameof(ColorPicker), 
+                this.dlgService.ShowDialog(nameof(ColorPicker),
                                            new DialogParameters()
                                            {
                                                {
@@ -224,6 +224,15 @@ namespace boilersGraphics.ViewModels
                 ResourceService.Current.ChangeCulture(parameter);
 
                 ToolBarViewModel.ReinitializeToolItems();
+            });
+            PostNewIssueCommand = new DelegateCommand(() =>
+            {
+                var p = new Process();
+                p.StartInfo = new ProcessStartInfo("https://github.com/dhq-boiler/boiler-s-Graphics/issues/new")
+                {
+                    UseShellExecute = true
+                };
+                p.Start();
             });
 
             SnapPower.Value = 10;
@@ -414,6 +423,8 @@ namespace boilersGraphics.ViewModels
         public DelegateCommand ShowStatisticsCommand { get; }
 
         public DelegateCommand<string> SwitchLanguageCommand { get; }
+
+        public DelegateCommand PostNewIssueCommand { get; }
 
         private void ExecuteDeleteSelectedItemsCommand(object parameter)
         {

@@ -480,6 +480,9 @@
   <data name="MenuItem_Paste" xml:space="preserve">
     <value>貼り付け(_P)</value>
   </data>
+  <data name="MenuItem_PostNewIssue" xml:space="preserve">
+    <value>新規Issueを投稿する</value>
+  </data>
   <data name="MenuItem_Preference" xml:space="preserve">
     <value>設定(_P)</value>
   </data>
