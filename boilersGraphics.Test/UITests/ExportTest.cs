@@ -4,7 +4,6 @@ using NUnit.Framework;
 using OpenCvSharp;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
-using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Threading;
