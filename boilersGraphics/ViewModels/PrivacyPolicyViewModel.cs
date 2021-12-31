@@ -1,6 +1,7 @@
 ﻿using boilersGraphics.Dao;
 using boilersGraphics.Exceptions;
 using boilersGraphics.Models;
+using NLog;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
 using Reactive.Bindings;
@@ -36,6 +37,8 @@ namespace boilersGraphics.ViewModels
         public ReactivePropertySlim<string> Markdown { get; } = new ReactivePropertySlim<string>();
 
         public ReactivePropertySlim<PrivacyPolicyAgreement> CurrentPrivacyPolicyAgreement { get; } = new ReactivePropertySlim<PrivacyPolicyAgreement>();
+
+        public ReactivePropertySlim<string> Message { get; } = new ReactivePropertySlim<string>();
 
         public PrivacyPolicyViewModel()
         {
@@ -127,10 +130,26 @@ namespace boilersGraphics.ViewModels
             AgreeDisagreeVisibility.Value = currentState == null || !currentState.IsAgree ? Visibility.Visible : Visibility.Collapsed;
             OKVisibility.Value = currentState == null || !currentState.IsAgree ? Visibility.Collapsed : Visibility.Visible;
 
-            var privacyPolicyUrl = "https://raw.githubusercontent.com/dhq-boiler/boiler-s-Graphics/master/PrivacyPolicy.md";
-            using (var client = new WebClient())
+            if (OKVisibility.Value == Visibility.Visible)
             {
-                Markdown.Value = client.DownloadString(privacyPolicyUrl);
+                Message.Value = $"{currentState.DateOfAgreement:yyyy/MM/dd} にプライバシーポリシーに同意しました。";
+            }
+
+            try
+            {
+                var privacyPolicyUrl = "https://raw.githubusercontent.com/dhq-boiler/boiler-s-Graphics/master/PrivacyPolicy.md";
+                using (var client = new WebClient())
+                {
+                    Markdown.Value = client.DownloadString(privacyPolicyUrl);
+                }
+            }
+            catch (WebException e)
+            {
+                LogManager.GetCurrentClassLogger().Warn(e);
+                LogManager.GetCurrentClassLogger().Warn("インターネットに接続されていないため、最新のプライバシーポリシーを確認できませんでした。");
+                Markdown.Value = "**インターネットに接続されていないため、最新のプライバシーポリシーを確認できませんでした。**";
+                AgreeDisagreeVisibility.Value = Visibility.Collapsed;
+                OKVisibility.Value = Visibility.Visible;
             }
         }
     }

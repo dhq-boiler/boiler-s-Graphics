@@ -300,22 +300,30 @@ namespace boilersGraphics.ViewModels
             })
             .AddTo(_CompositeDisposable);
 
-            //retrieve currentState of PrivacyPolicy agreement status from db
-            var currentState = PickoutPrivacyPolicyAgreementTop1();
-            //retrieve latest privacy policy date of enactment
-            var latestDate = PickoutLatestPrivacyPolicyDateOfEnactment();
-            if (currentState == null || (latestDate.Result == null || currentState.DateOfEnactment < latestDate.Result))
+            try
             {
-                currentState = PickoutPrivacyPolicyAgreementTop1AgreeOrDisagree();
-                IDialogParameters dialogParameters = new DialogParameters();
-                dialogParameters.Add("CurrentStatus", currentState);
-                IDialogResult dialogResult = null;
-                dlgService.ShowDialog(nameof(PrivacyPolicy), dialogParameters, ret => dialogResult = ret);
-                if (dialogResult != null)
+                //retrieve currentState of PrivacyPolicy agreement status from db
+                var currentState = PickoutPrivacyPolicyAgreementTop1();
+                //retrieve latest privacy policy date of enactment
+                var latestDate = PickoutLatestPrivacyPolicyDateOfEnactment();
+                if (currentState == null || (latestDate == null || currentState.DateOfEnactment < latestDate))
                 {
-                    if (dialogResult.Result == ButtonResult.No || dialogResult.Result == ButtonResult.None)
-                        Application.Current.Shutdown();
+                    currentState = PickoutPrivacyPolicyAgreementTop1AgreeOrDisagree();
+                    IDialogParameters dialogParameters = new DialogParameters();
+                    dialogParameters.Add("CurrentStatus", currentState);
+                    IDialogResult dialogResult = null;
+                    dlgService.ShowDialog(nameof(PrivacyPolicy), dialogParameters, ret => dialogResult = ret);
+                    if (dialogResult != null)
+                    {
+                        if (dialogResult.Result == ButtonResult.No || dialogResult.Result == ButtonResult.None)
+                            Application.Current.Shutdown();
+                    }
                 }
+            }
+            catch (WebException e)
+            {
+                LogManager.GetCurrentClassLogger().Warn(e);
+                LogManager.GetCurrentClassLogger().Warn("インターネットに接続されていないため、最新のプライバシーポリシーを確認できませんでした。");
             }
 
             Observable.Interval(TimeSpan.FromSeconds(1))
@@ -343,7 +351,7 @@ namespace boilersGraphics.ViewModels
             ResourceService.Current.ChangeCulture(CultureInfo.CurrentCulture.Name);
         }
 
-        private async Task<DateTime?> PickoutLatestPrivacyPolicyDateOfEnactment()
+        private DateTime? PickoutLatestPrivacyPolicyDateOfEnactment()
         {
             var privacyPolicyUrl = "https://raw.githubusercontent.com/dhq-boiler/boiler-s-Graphics/master/PrivacyPolicy.md";
             using (var client = new WebClient())

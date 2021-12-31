@@ -5,8 +5,15 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:boilersGraphics.Views"
              xmlns:mdxam="clr-namespace:MdXaml;assembly=MdXaml"
+             xmlns:prism="http://prismlibrary.com/"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <prism:Dialog.WindowStyle>
+        <Style TargetType="Window">
+            <Setter Property="Width" Value="800" />
+            <Setter Property="Height" Value="600" />
+        </Style>
+    </prism:Dialog.WindowStyle>
     <DockPanel>
         <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
             <StackPanel.Resources>
@@ -20,6 +27,7 @@
             <Button Command="{Binding DisagreeCommand}" Visibility="{Binding AgreeDisagreeVisibility.Value}" Content="Disagree" />
             <Button Command="{Binding OKCommand}" Visibility="{Binding OKVisibility.Value}" Content="OK" />
         </StackPanel>
-        <mdxam:MarkdownScrollViewer xml:space="preserve" Markdown="{Binding Markdown.Value}" />
+        <Label DockPanel.Dock="Bottom" Visibility="{Binding OKVisibility.Value}" Content="{Binding Message.Value}" />
+        <mdxam:MarkdownScrollViewer Margin="5" xml:space="preserve" Markdown="{Binding Markdown.Value}" />
     </DockPanel>
 </UserControl>
