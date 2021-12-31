@@ -1,7 +1,9 @@
 ﻿using boilersGraphics.Models;
 using boilersGraphics.Properties;
 using boilersGraphics.ViewModels;
+using Moq;
 using NUnit.Framework;
+using Prism.Services.Dialogs;
 using System.Linq;
 using System.Windows;
 
@@ -14,7 +16,8 @@ namespace boilersGraphics.Test
         public void アイテムは選択されていない()
         {
             boilersGraphics.App.IsTest = true;
-            var mainWindowViewModel = new MainWindowViewModel(null);
+            var dlgService = new Mock<IDialogService>();
+            MainWindowViewModel mainWindowViewModel = new MainWindowViewModel(dlgService.Object);
             var viewModel = new DiagramViewModel(mainWindowViewModel, 1000, 1000);
             viewModel.Layers.Clear();
             var layer1 = new Layer();
@@ -36,7 +39,8 @@ namespace boilersGraphics.Test
         public void アイテム1つが選択されている()
         {
             boilersGraphics.App.IsTest = true;
-            var mainWindowViewModel = new MainWindowViewModel(null);
+            var dlgService = new Mock<IDialogService>();
+            MainWindowViewModel mainWindowViewModel = new MainWindowViewModel(dlgService.Object);
             var viewModel = new DiagramViewModel(mainWindowViewModel, 1000, 1000);
             viewModel.Layers.Clear();
             var layer1 = new Layer();
@@ -60,7 +64,8 @@ namespace boilersGraphics.Test
         public void アイテム2つが選択されている()
         {
             boilersGraphics.App.IsTest = true;
-            var mainWindowViewModel = new MainWindowViewModel(null);
+            var dlgService = new Mock<IDialogService>();
+            MainWindowViewModel mainWindowViewModel = new MainWindowViewModel(dlgService.Object);
             var viewModel = new DiagramViewModel(mainWindowViewModel, 1000, 1000);
             viewModel.Layers.Clear();
             var layer1 = new Layer();
@@ -88,7 +93,8 @@ namespace boilersGraphics.Test
         public void アイテム2つが選択されている_順序逆()
         {
             boilersGraphics.App.IsTest = true;
-            var mainWindowViewModel = new MainWindowViewModel(null);
+            var dlgService = new Mock<IDialogService>();
+            MainWindowViewModel mainWindowViewModel = new MainWindowViewModel(dlgService.Object);
             var viewModel = new DiagramViewModel(mainWindowViewModel, 1000, 1000);
             viewModel.Layers.Clear();
             var layer1 = new Layer();
@@ -116,7 +122,8 @@ namespace boilersGraphics.Test
         public void アイテム3ついや2つが選択されている()
         {
             boilersGraphics.App.IsTest = true;
-            var mainWindowViewModel = new MainWindowViewModel(null);
+            var dlgService = new Mock<IDialogService>();
+            MainWindowViewModel mainWindowViewModel = new MainWindowViewModel(dlgService.Object);
             var viewModel = new DiagramViewModel(mainWindowViewModel, 1000, 1000);
             viewModel.Layers.Clear();
             var layer1 = new Layer();
@@ -146,7 +153,8 @@ namespace boilersGraphics.Test
         public void 直線は選択されていない()
         {
             boilersGraphics.App.IsTest = true;
-            var mainWindowViewModel = new MainWindowViewModel(null);
+            var dlgService = new Mock<IDialogService>();
+            MainWindowViewModel mainWindowViewModel = new MainWindowViewModel(dlgService.Object);
             var viewModel = new DiagramViewModel(mainWindowViewModel, 1000, 1000);
             viewModel.Layers.Clear();
             var layer1 = new Layer();
@@ -166,7 +174,8 @@ namespace boilersGraphics.Test
         public void 直線1つが選択されている()
         {
             boilersGraphics.App.IsTest = true;
-            var mainWindowViewModel = new MainWindowViewModel(null);
+            var dlgService = new Mock<IDialogService>();
+            MainWindowViewModel mainWindowViewModel = new MainWindowViewModel(dlgService.Object);
             var viewModel = new DiagramViewModel(mainWindowViewModel, 1000, 1000);
             viewModel.Layers.Clear();
             var layer1 = new Layer();
@@ -188,7 +197,8 @@ namespace boilersGraphics.Test
         public void 直線の頂点2つが選択されている()
         {
             boilersGraphics.App.IsTest = true;
-            var mainWindowViewModel = new MainWindowViewModel(null);
+            var dlgService = new Mock<IDialogService>();
+            MainWindowViewModel mainWindowViewModel = new MainWindowViewModel(dlgService.Object);
             var viewModel = new DiagramViewModel(mainWindowViewModel, 1000, 1000);
             viewModel.Layers.Clear();
             var layer1 = new Layer();
@@ -212,7 +222,8 @@ namespace boilersGraphics.Test
         public void 直線の頂点1つが選択されている()
         {
             boilersGraphics.App.IsTest = true;
-            var mainWindowViewModel = new MainWindowViewModel(null);
+            var dlgService = new Mock<IDialogService>();
+            MainWindowViewModel mainWindowViewModel = new MainWindowViewModel(dlgService.Object);
             var viewModel = new DiagramViewModel(mainWindowViewModel, 1000, 1000);
             viewModel.Layers.Clear();
             var layer1 = new Layer();

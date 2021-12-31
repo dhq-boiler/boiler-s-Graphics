@@ -138,6 +138,8 @@ namespace boilersGraphics.ViewModels
 
         public ReactivePropertySlim<AngleType> AngleType { get; set; } = new ReactivePropertySlim<AngleType>();
 
+        public ReactivePropertySlim<bool> EnableImageEmbedding { get; set; } = new ReactivePropertySlim<bool>();
+
         public ObservableCollection<Color> EdgeColors
         {
             get { return _EdgeColors; }
@@ -502,6 +504,7 @@ namespace boilersGraphics.ViewModels
             PackAutoSaveFiles();
 
             AngleType.Value = Helpers.AngleType.Minus180To180;
+            EnableImageEmbedding.Value = true;
         }
 
         private void PackAutoSaveFiles()
@@ -1207,6 +1210,7 @@ namespace boilersGraphics.ViewModels
             preferences.AutoSaveType.Value = this.AutoSaveType.Value;
             preferences.AutoSaveInterval.Value = this.AutoSaveInterval.Value;
             preferences.AngleType.Value = this.AngleType.Value;
+            preferences.EnableImageEmbedding.Value = this.EnableImageEmbedding.Value;
             dlgService.ShowDialog(nameof(Views.Preference), new DialogParameters() { { "Preferences",  preferences} }, ret => result = ret);
             if (result != null && result.Result == ButtonResult.OK)
             {
@@ -1223,6 +1227,7 @@ namespace boilersGraphics.ViewModels
                 AutoSaveType.Value = s.AutoSaveType.Value;
                 AutoSaveInterval.Value = s.AutoSaveInterval.Value;
                 AngleType.Value = s.AngleType.Value;
+                EnableImageEmbedding.Value = s.EnableImageEmbedding.Value;
                 SetAutoSave();
             }
         }

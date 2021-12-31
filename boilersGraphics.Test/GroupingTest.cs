@@ -1,6 +1,8 @@
 ﻿using boilersGraphics.Models;
 using boilersGraphics.ViewModels;
+using Moq;
 using NUnit.Framework;
+using Prism.Services.Dialogs;
 using System.Linq;
 using System.Reactive.Linq;
 
@@ -13,7 +15,8 @@ namespace boilersGraphics.Test
         public void Group_Move()
         {
             boilersGraphics.App.IsTest = true;
-            var mainWindowViewModel = new MainWindowViewModel(null);
+            var dlgService = new Mock<IDialogService>();
+            MainWindowViewModel mainWindowViewModel = new MainWindowViewModel(dlgService.Object);
             var diagramVM = new DiagramViewModel(mainWindowViewModel, 1000, 1000);
             diagramVM.Layers.Clear();
             var layer1 = new Layer();

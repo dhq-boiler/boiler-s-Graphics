@@ -480,6 +480,9 @@
   <data name="MenuItem_Paste" xml:space="preserve">
     <value>Paste(_P)</value>
   </data>
+  <data name="MenuItem_PostNewIssue" xml:space="preserve">
+    <value>Post new issue</value>
+  </data>
   <data name="MenuItem_Preference" xml:space="preserve">
     <value>Preferences(_P)</value>
   </data>
@@ -494,6 +497,9 @@
   </data>
   <data name="MenuItem_ShowLog" xml:space="preserve">
     <value>Open application log(_L)</value>
+  </data>
+  <data name="MenuItem_ShowPrivacyPolicy" xml:space="preserve">
+    <value>Show Privacy policy</value>
   </data>
   <data name="MenuItem_SpecifyFile" xml:space="preserve">
     <value>Specify File(_S)</value>
@@ -518,6 +524,9 @@
   </data>
   <data name="Message_Autosaved" xml:space="preserve">
     <value>It was saved automatically.</value>
+  </data>
+  <data name="Message_CantDownloadPrivacyPolicy" xml:space="preserve">
+    <value>**App couldn't check the latest privacy policy because App is not connected to the internet.**</value>
   </data>
   <data name="Message_CanvasWillDiscardedConfirm" xml:space="preserve">
     <value>The current campus will be destroyed, is that okay?</value>
@@ -561,8 +570,14 @@
   <data name="Pane_Layer_RemoveLayer" xml:space="preserve">
     <value>Remove a Layer</value>
   </data>
+  <data name="PrivacyPolicy_AgreedMessage" xml:space="preserve">
+    <value>You agreed to the privacy policy on {0:yyyy/MM/dd}.</value>
+  </data>
   <data name="String_A" xml:space="preserve">
     <value>Alpha</value>
+  </data>
+  <data name="String_Agree" xml:space="preserve">
+    <value>Agree</value>
   </data>
   <data name="String_AutoSave" xml:space="preserve">
     <value>Autosave</value>
@@ -584,6 +599,12 @@
   </data>
   <data name="String_CanvasWidth" xml:space="preserve">
     <value>Canvas Width</value>
+  </data>
+  <data name="String_Disagree" xml:space="preserve">
+    <value>Disagree</value>
+  </data>
+  <data name="String_EnableImageEmbedding" xml:space="preserve">
+    <value>Enable image embedding</value>
   </data>
   <data name="String_ErrorReporting" xml:space="preserve">
     <value>I'm sorry. </value>
@@ -633,6 +654,15 @@
   <data name="String_Reference" xml:space="preserve">
     <value>Reference</value>
   </data>
+  <data name="String_RotationAngleType" xml:space="preserve">
+    <value>Rotation angle type</value>
+  </data>
+  <data name="String_RotationAngleType_Minus180To180" xml:space="preserve">
+    <value>-180 ≦ angle &lt; 180</value>
+  </data>
+  <data name="String_RotationAngleType_ZeroTo360" xml:space="preserve">
+    <value>0 ≦ angle &lt; 360</value>
+  </data>
   <data name="String_SetInterval" xml:space="preserve">
     <value>Set the interval</value>
   </data>
@@ -653,6 +683,9 @@
   </data>
   <data name="Title_Preferences" xml:space="preserve">
     <value>Preferences</value>
+  </data>
+  <data name="Title_PrivacyPolicy" xml:space="preserve">
+    <value>Privacy Policy</value>
   </data>
   <data name="Title_Statistics" xml:space="preserve">
     <value>Statistics</value>

@@ -103,7 +103,7 @@ namespace boilersGraphics.AttachedProperties
                     selectableDesignerItemViewModelBase.Owner.DeselectAll();
                     selectableDesignerItemViewModelBase.Owner.EdgeColors.Clear();
                     selectableDesignerItemViewModelBase.Owner.FillColors.Clear();
-                    selectableDesignerItemViewModelBase.Owner.EdgeThickness.Value = 0d;
+                    selectableDesignerItemViewModelBase.Owner.EdgeThickness.Value = double.NaN;
                     selectableDesignerItemViewModelBase.IsSelected.Value = true;
                     var view = App.Current.MainWindow.GetCorrespondingViews<FrameworkElement>(selectableDesignerItemViewModelBase)
                                                      .Where(x => x.GetType() == selectableDesignerItemViewModelBase.GetViewType()).First();

@@ -1150,6 +1150,15 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Post new issue に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_PostNewIssue {
+            get {
+                return ResourceManager.GetString("MenuItem_PostNewIssue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Preferences(_P) に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string MenuItem_Preference {
@@ -1191,6 +1200,15 @@ namespace boilersGraphics.Properties {
         public static string MenuItem_ShowLog {
             get {
                 return ResourceManager.GetString("MenuItem_ShowLog", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Show Privacy policy に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_ShowPrivacyPolicy {
+            get {
+                return ResourceManager.GetString("MenuItem_ShowPrivacyPolicy", resourceCulture);
             }
         }
         
@@ -1263,6 +1281,15 @@ namespace boilersGraphics.Properties {
         public static string Message_Autosaved {
             get {
                 return ResourceManager.GetString("Message_Autosaved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   **App couldn&apos;t check the latest privacy policy because App is not connected to the internet.** に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Message_CantDownloadPrivacyPolicy {
+            get {
+                return ResourceManager.GetString("Message_CantDownloadPrivacyPolicy", resourceCulture);
             }
         }
         
@@ -1393,11 +1420,29 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   You agreed to the privacy policy on {0:yyyy/MM/dd}. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PrivacyPolicy_AgreedMessage {
+            get {
+                return ResourceManager.GetString("PrivacyPolicy_AgreedMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Alpha に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string String_A {
             get {
                 return ResourceManager.GetString("String_A", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Agree に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_Agree {
+            get {
+                return ResourceManager.GetString("String_Agree", resourceCulture);
             }
         }
         
@@ -1461,6 +1506,24 @@ namespace boilersGraphics.Properties {
         public static string String_CanvasWidth {
             get {
                 return ResourceManager.GetString("String_CanvasWidth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Disagree に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_Disagree {
+            get {
+                return ResourceManager.GetString("String_Disagree", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Enable image embedding に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_EnableImageEmbedding {
+            get {
+                return ResourceManager.GetString("String_EnableImageEmbedding", resourceCulture);
             }
         }
         
@@ -1609,6 +1672,33 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Rotation angle type に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_RotationAngleType {
+            get {
+                return ResourceManager.GetString("String_RotationAngleType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   -180 ≦ angle &lt; 180 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_RotationAngleType_Minus180To180 {
+            get {
+                return ResourceManager.GetString("String_RotationAngleType_Minus180To180", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   0 ≦ angle &lt; 360 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_RotationAngleType_ZeroTo360 {
+            get {
+                return ResourceManager.GetString("String_RotationAngleType_ZeroTo360", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Set the interval に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string String_SetInterval {
@@ -1668,6 +1758,15 @@ namespace boilersGraphics.Properties {
         public static string Title_Preferences {
             get {
                 return ResourceManager.GetString("Title_Preferences", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Privacy Policy に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Title_PrivacyPolicy {
+            get {
+                return ResourceManager.GetString("Title_PrivacyPolicy", resourceCulture);
             }
         }
         

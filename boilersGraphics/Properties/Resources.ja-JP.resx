@@ -480,6 +480,9 @@
   <data name="MenuItem_Paste" xml:space="preserve">
     <value>貼り付け(_P)</value>
   </data>
+  <data name="MenuItem_PostNewIssue" xml:space="preserve">
+    <value>新規Issueを投稿する</value>
+  </data>
   <data name="MenuItem_Preference" xml:space="preserve">
     <value>設定(_P)</value>
   </data>
@@ -494,6 +497,9 @@
   </data>
   <data name="MenuItem_ShowLog" xml:space="preserve">
     <value>アプリケーションログを開く(_L)</value>
+  </data>
+  <data name="MenuItem_ShowPrivacyPolicy" xml:space="preserve">
+    <value>プライバシーポリシーを確認する</value>
   </data>
   <data name="MenuItem_SpecifyFile" xml:space="preserve">
     <value>ファイルを指定(_S)</value>
@@ -518,6 +524,9 @@
   </data>
   <data name="Message_Autosaved" xml:space="preserve">
     <value>自動保存しました。</value>
+  </data>
+  <data name="Message_CantDownloadPrivacyPolicy" xml:space="preserve">
+    <value>**インターネットに接続されていないため、最新のプライバシーポリシーを確認できませんでした。**</value>
   </data>
   <data name="Message_CanvasWillDiscardedConfirm" xml:space="preserve">
     <value>現在のキャンパスは破棄されますが、よろしいですか？</value>
@@ -561,8 +570,14 @@
   <data name="Pane_Layer_RemoveLayer" xml:space="preserve">
     <value>レイヤーを削除する</value>
   </data>
+  <data name="PrivacyPolicy_AgreedMessage" xml:space="preserve">
+    <value>{0:yyyy/MM/dd} にプライバシーポリシーに同意しました。</value>
+  </data>
   <data name="String_A" xml:space="preserve">
     <value>アルファ</value>
+  </data>
+  <data name="String_Agree" xml:space="preserve">
+    <value>同意する</value>
   </data>
   <data name="String_AutoSave" xml:space="preserve">
     <value>自動保存</value>
@@ -584,6 +599,12 @@
   </data>
   <data name="String_CanvasWidth" xml:space="preserve">
     <value>キャンパスの幅</value>
+  </data>
+  <data name="String_Disagree" xml:space="preserve">
+    <value>同意しない</value>
+  </data>
+  <data name="String_EnableImageEmbedding" xml:space="preserve">
+    <value>画像を埋め込む</value>
   </data>
   <data name="String_ErrorReporting" xml:space="preserve">
     <value>申し訳ありません。</value>
@@ -633,6 +654,15 @@
   <data name="String_Reference" xml:space="preserve">
     <value>参照</value>
   </data>
+  <data name="String_RotationAngleType" xml:space="preserve">
+    <value>回転角度タイプ</value>
+  </data>
+  <data name="String_RotationAngleType_Minus180To180" xml:space="preserve">
+    <value>-180 ≦ angle &lt; 180</value>
+  </data>
+  <data name="String_RotationAngleType_ZeroTo360" xml:space="preserve">
+    <value>0 ≦ angle &lt; 360</value>
+  </data>
   <data name="String_SetInterval" xml:space="preserve">
     <value>インターバルを設定する</value>
   </data>
@@ -653,6 +683,9 @@
   </data>
   <data name="Title_Preferences" xml:space="preserve">
     <value>設定</value>
+  </data>
+  <data name="Title_PrivacyPolicy" xml:space="preserve">
+    <value>プライバシーポリシー</value>
   </data>
   <data name="Title_Statistics" xml:space="preserve">
     <value>統計</value>

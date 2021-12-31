@@ -17,6 +17,7 @@ namespace boilersGraphics.Models
         public ReactivePropertySlim<AutoSaveType> AutoSaveType { get; set; } = new ReactivePropertySlim<AutoSaveType>();
         public ReactivePropertySlim<TimeSpan> AutoSaveInterval { get; set; } = new ReactivePropertySlim<TimeSpan>();
         public ReactivePropertySlim<AngleType> AngleType { get; set; } = new ReactivePropertySlim<AngleType>();
+        public ReactivePropertySlim<bool> EnableImageEmbedding { get; set; } = new ReactivePropertySlim<bool>();
     }
 
     public enum AutoSaveType
