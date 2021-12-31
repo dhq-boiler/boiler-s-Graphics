@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:boilersGraphics.Views"
+             xmlns:helper="clr-namespace:boilersGraphics.Helpers"
              xmlns:mdxam="clr-namespace:MdXaml;assembly=MdXaml"
              xmlns:prism="http://prismlibrary.com/"
              mc:Ignorable="d" 
@@ -23,9 +24,9 @@
                     <Setter Property="Margin" Value="5" />
                 </Style>
             </StackPanel.Resources>
-            <Button Command="{Binding AgreeCommand}" Visibility="{Binding AgreeDisagreeVisibility.Value}" Content="Agree" />
-            <Button Command="{Binding DisagreeCommand}" Visibility="{Binding AgreeDisagreeVisibility.Value}" Content="Disagree" />
-            <Button Command="{Binding OKCommand}" Visibility="{Binding OKVisibility.Value}" Content="OK" />
+            <Button Command="{Binding AgreeCommand}" Visibility="{Binding AgreeDisagreeVisibility.Value}" Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_Agree, Mode=OneWay}" />
+            <Button Command="{Binding DisagreeCommand}" Visibility="{Binding AgreeDisagreeVisibility.Value}" Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_Disagree, Mode=OneWay}" />
+            <Button Command="{Binding OKCommand}" Visibility="{Binding OKVisibility.Value}" Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_OK, Mode=OneWay}" />
         </StackPanel>
         <Label DockPanel.Dock="Bottom" Visibility="{Binding OKVisibility.Value}" Content="{Binding Message.Value}" />
         <mdxam:MarkdownScrollViewer Margin="5" xml:space="preserve" Markdown="{Binding Markdown.Value}" />

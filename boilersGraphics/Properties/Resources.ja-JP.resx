@@ -498,6 +498,9 @@
   <data name="MenuItem_ShowLog" xml:space="preserve">
     <value>アプリケーションログを開く(_L)</value>
   </data>
+  <data name="MenuItem_ShowPrivacyPolicy" xml:space="preserve">
+    <value>プライバシーポリシーを確認する</value>
+  </data>
   <data name="MenuItem_SpecifyFile" xml:space="preserve">
     <value>ファイルを指定(_S)</value>
   </data>
@@ -521,6 +524,9 @@
   </data>
   <data name="Message_Autosaved" xml:space="preserve">
     <value>自動保存しました。</value>
+  </data>
+  <data name="Message_CantDownloadPrivacyPolicy" xml:space="preserve">
+    <value>**インターネットに接続されていないため、最新のプライバシーポリシーを確認できませんでした。**</value>
   </data>
   <data name="Message_CanvasWillDiscardedConfirm" xml:space="preserve">
     <value>現在のキャンパスは破棄されますが、よろしいですか？</value>
@@ -564,8 +570,14 @@
   <data name="Pane_Layer_RemoveLayer" xml:space="preserve">
     <value>レイヤーを削除する</value>
   </data>
+  <data name="PrivacyPolicy_AgreedMessage" xml:space="preserve">
+    <value>{0:yyyy/MM/dd} にプライバシーポリシーに同意しました。</value>
+  </data>
   <data name="String_A" xml:space="preserve">
     <value>アルファ</value>
+  </data>
+  <data name="String_Agree" xml:space="preserve">
+    <value>同意する</value>
   </data>
   <data name="String_AutoSave" xml:space="preserve">
     <value>自動保存</value>
@@ -587,6 +599,9 @@
   </data>
   <data name="String_CanvasWidth" xml:space="preserve">
     <value>キャンパスの幅</value>
+  </data>
+  <data name="String_Disagree" xml:space="preserve">
+    <value>同意しない</value>
   </data>
   <data name="String_EnableImageEmbedding" xml:space="preserve">
     <value>画像を埋め込む</value>
@@ -668,6 +683,9 @@
   </data>
   <data name="Title_Preferences" xml:space="preserve">
     <value>設定</value>
+  </data>
+  <data name="Title_PrivacyPolicy" xml:space="preserve">
+    <value>プライバシーポリシー</value>
   </data>
   <data name="Title_Statistics" xml:space="preserve">
     <value>統計</value>

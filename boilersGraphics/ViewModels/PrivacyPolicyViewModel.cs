@@ -1,6 +1,8 @@
 ﻿using boilersGraphics.Dao;
 using boilersGraphics.Exceptions;
+using boilersGraphics.Helpers;
 using boilersGraphics.Models;
+using boilersGraphics.Properties;
 using NLog;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
@@ -19,7 +21,7 @@ namespace boilersGraphics.ViewModels
     public class PrivacyPolicyViewModel : BindableBase, IDialogAware
     {
         private CompositeDisposable disposables = new CompositeDisposable();
-        public string Title => "Privacy Policy";
+        public string Title => Resources.Title_PrivacyPolicy;
 
         public event Action<IDialogResult> RequestClose;
 
@@ -135,7 +137,7 @@ namespace boilersGraphics.ViewModels
 
             if (OKVisibility.Value == Visibility.Visible)
             {
-                Message.Value = $"{currentState.DateOfAgreement:yyyy/MM/dd} にプライバシーポリシーに同意しました。";
+                Message.Value = string.Format(Resources.PrivacyPolicy_AgreedMessage, currentState.DateOfAgreement);
             }
 
             try
@@ -150,7 +152,7 @@ namespace boilersGraphics.ViewModels
             {
                 LogManager.GetCurrentClassLogger().Warn(e);
                 LogManager.GetCurrentClassLogger().Warn("インターネットに接続されていないため、最新のプライバシーポリシーを確認できませんでした。");
-                Markdown.Value = "**インターネットに接続されていないため、最新のプライバシーポリシーを確認できませんでした。**";
+                Markdown.Value = Resources.Message_CantDownloadPrivacyPolicy;
                 AgreeDisagreeVisibility.Value = Visibility.Collapsed;
                 OKVisibility.Value = Visibility.Visible;
             }

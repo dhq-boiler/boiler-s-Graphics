@@ -1204,6 +1204,15 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Show Privacy policy に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_ShowPrivacyPolicy {
+            get {
+                return ResourceManager.GetString("MenuItem_ShowPrivacyPolicy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Specify File(_S) に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string MenuItem_SpecifyFile {
@@ -1272,6 +1281,15 @@ namespace boilersGraphics.Properties {
         public static string Message_Autosaved {
             get {
                 return ResourceManager.GetString("Message_Autosaved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   **App couldn&apos;t check the latest privacy policy because App is not connected to the internet.** に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Message_CantDownloadPrivacyPolicy {
+            get {
+                return ResourceManager.GetString("Message_CantDownloadPrivacyPolicy", resourceCulture);
             }
         }
         
@@ -1402,11 +1420,29 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   You agreed to the privacy policy on {0:yyyy/MM/dd}. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PrivacyPolicy_AgreedMessage {
+            get {
+                return ResourceManager.GetString("PrivacyPolicy_AgreedMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Alpha に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string String_A {
             get {
                 return ResourceManager.GetString("String_A", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Agree に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_Agree {
+            get {
+                return ResourceManager.GetString("String_Agree", resourceCulture);
             }
         }
         
@@ -1470,6 +1506,15 @@ namespace boilersGraphics.Properties {
         public static string String_CanvasWidth {
             get {
                 return ResourceManager.GetString("String_CanvasWidth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Disagree に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_Disagree {
+            get {
+                return ResourceManager.GetString("String_Disagree", resourceCulture);
             }
         }
         
@@ -1713,6 +1758,15 @@ namespace boilersGraphics.Properties {
         public static string Title_Preferences {
             get {
                 return ResourceManager.GetString("Title_Preferences", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Privacy Policy に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Title_PrivacyPolicy {
+            get {
+                return ResourceManager.GetString("Title_PrivacyPolicy", resourceCulture);
             }
         }
         

@@ -213,7 +213,7 @@
                                               Command="{Binding SwitchLanguageCommand}" CommandParameter="ja-JP"/>
                                 </MenuItem>
                                 <MenuItem Command="{Binding PostNewIssueCommand}" Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.MenuItem_PostNewIssue, Mode=OneWay}" />
-                                <MenuItem Command="{Binding ShowPrivacyPolicyCommand}" Header="Show Privacy policy" />
+                                <MenuItem Command="{Binding ShowPrivacyPolicyCommand}" Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.MenuItem_ShowPrivacyPolicy, Mode=OneWay}" />
                                 <MenuItem Command="{Binding ShowStatisticsCommand}" Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.MenuItem_Statistics, Mode=OneWay}" />
                                 <MenuItem Command="{Binding ShowVersionCommand}" Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.MenuItem_Version, Mode=OneWay}" />
                             </MenuItem>
