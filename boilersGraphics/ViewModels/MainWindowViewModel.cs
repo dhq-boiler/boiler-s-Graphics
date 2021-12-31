@@ -19,9 +19,13 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using TsOperationHistory;
 using TsOperationHistory.Extensions;
@@ -234,6 +238,14 @@ namespace boilersGraphics.ViewModels
                 };
                 p.Start();
             });
+            ShowPrivacyPolicyCommand = new DelegateCommand(() =>
+            {
+                var currentState = PickoutPrivacyPolicyAgreementTop1AgreeOrDisagree();
+                IDialogParameters dialogParameters = new DialogParameters();
+                dialogParameters.Add("CurrentStatus", currentState);
+                IDialogResult dialogResult = null;
+                dlgService.ShowDialog(nameof(PrivacyPolicy), dialogParameters, ret => dialogResult = ret);
+            });
 
             SnapPower.Value = 10;
 
@@ -288,6 +300,24 @@ namespace boilersGraphics.ViewModels
             })
             .AddTo(_CompositeDisposable);
 
+            //retrieve currentState of PrivacyPolicy agreement status from db
+            var currentState = PickoutPrivacyPolicyAgreementTop1();
+            //retrieve latest privacy policy date of enactment
+            var latestDate = PickoutLatestPrivacyPolicyDateOfEnactment();
+            if (currentState == null || (latestDate.Result == null || currentState.DateOfEnactment < latestDate.Result))
+            {
+                currentState = PickoutPrivacyPolicyAgreementTop1AgreeOrDisagree();
+                IDialogParameters dialogParameters = new DialogParameters();
+                dialogParameters.Add("CurrentStatus", currentState);
+                IDialogResult dialogResult = null;
+                dlgService.ShowDialog(nameof(PrivacyPolicy), dialogParameters, ret => dialogResult = ret);
+                if (dialogResult != null)
+                {
+                    if (dialogResult.Result == ButtonResult.No || dialogResult.Result == ButtonResult.None)
+                        Application.Current.Shutdown();
+                }
+            }
+
             Observable.Interval(TimeSpan.FromSeconds(1))
                       .Subscribe(_ =>
                       {
@@ -313,6 +343,41 @@ namespace boilersGraphics.ViewModels
             ResourceService.Current.ChangeCulture(CultureInfo.CurrentCulture.Name);
         }
 
+        private async Task<DateTime?> PickoutLatestPrivacyPolicyDateOfEnactment()
+        {
+            var privacyPolicyUrl = "https://raw.githubusercontent.com/dhq-boiler/boiler-s-Graphics/master/PrivacyPolicy.md";
+            using (var client = new WebClient())
+            {
+                var markdown = client.DownloadString(privacyPolicyUrl);
+                var lines = markdown.Split("\n");
+                foreach (var line in lines)
+                {
+                    var regex = new Regex("^制定：(?<year>\\d+?)年(?<month>\\d+?)月(?<day>\\d+?)日$");
+                    if (regex.IsMatch(line))
+                    {
+                        var mc = regex.Match(line);
+                        var date = DateTime.Parse($"{mc.Groups["year"].Value}/{mc.Groups["month"].Value}/{mc.Groups["day"].Value}");
+                        return date;
+                    }
+                }
+            }
+            return null;
+        }
+
+        private PrivacyPolicyAgreement PickoutPrivacyPolicyAgreementTop1()
+        {
+            var dao = new PrivacyPolicyAgreementDao();
+            var list = dao.GetAgree();
+            return list.FirstOrDefault();
+        }
+
+        private PrivacyPolicyAgreement PickoutPrivacyPolicyAgreementTop1AgreeOrDisagree()
+        {
+            var dao = new PrivacyPolicyAgreementDao();
+            var list = dao.GetAgreeOrDisagree();
+            return list.FirstOrDefault();
+        }
+
         private void UpdateStatisticsCountLogLevelChanged()
         {
             var statistics = Statistics.Value;
@@ -336,6 +401,7 @@ namespace boilersGraphics.ViewModels
             dvManager.Mode = VersioningStrategy.ByTick;
             dvManager.RegisterChangePlan(new ChangePlan_bG_VersionOrigin());
             dvManager.RegisterChangePlan(new ChangePlan_bG_Version1());
+            dvManager.RegisterChangePlan(new ChangePlan_bG_Version2());
             dvManager.FinishedToUpgradeTo += DvManager_FinishedToUpgradeTo;
 
             dvManager.UpgradeToTargetVersion();
@@ -425,6 +491,8 @@ namespace boilersGraphics.ViewModels
         public DelegateCommand<string> SwitchLanguageCommand { get; }
 
         public DelegateCommand PostNewIssueCommand { get; }
+
+        public DelegateCommand ShowPrivacyPolicyCommand { get; }
 
         private void ExecuteDeleteSelectedItemsCommand(object parameter)
         {

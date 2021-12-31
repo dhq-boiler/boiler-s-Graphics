@@ -6,6 +6,15 @@ namespace boilersGraphics.Extensions
 {
     static class Extensions2
     {
+        public static bool SafeGetBoolean(this IDataRecord rdr, string columnName, ITable table)
+        {
+            int index = rdr.CheckColumnExists(columnName, table);
+
+            bool isNull = rdr.IsDBNull(index);
+
+            return isNull ? false : rdr.GetBoolean(index);
+        }
+
         public static Guid SafeGetGuid(this IDataRecord rdr, string columnName, ITable table)
         {
             int index = rdr.CheckColumnExists(columnName, table);
