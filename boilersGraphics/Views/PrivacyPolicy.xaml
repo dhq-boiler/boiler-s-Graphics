@@ -24,9 +24,9 @@
                     <Setter Property="Margin" Value="5" />
                 </Style>
             </StackPanel.Resources>
-            <Button Command="{Binding AgreeCommand}" Visibility="{Binding AgreeDisagreeVisibility.Value}" Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_Agree, Mode=OneWay}" />
-            <Button Command="{Binding DisagreeCommand}" Visibility="{Binding AgreeDisagreeVisibility.Value}" Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_Disagree, Mode=OneWay}" />
-            <Button Command="{Binding OKCommand}" Visibility="{Binding OKVisibility.Value}" Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_OK, Mode=OneWay}" />
+            <Button AutomationProperties.AutomationId="Agree" Command="{Binding AgreeCommand}" Visibility="{Binding AgreeDisagreeVisibility.Value}" Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_Agree, Mode=OneWay}" />
+            <Button AutomationProperties.AutomationId="Disagree" Command="{Binding DisagreeCommand}" Visibility="{Binding AgreeDisagreeVisibility.Value}" Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_Disagree, Mode=OneWay}" />
+            <Button AutomationProperties.AutomationId="OK" Command="{Binding OKCommand}" Visibility="{Binding OKVisibility.Value}" Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_OK, Mode=OneWay}" />
         </StackPanel>
         <Label DockPanel.Dock="Bottom" Visibility="{Binding OKVisibility.Value}" Content="{Binding Message.Value}" />
         <mdxam:MarkdownScrollViewer Margin="5" xml:space="preserve" Markdown="{Binding Markdown.Value}" />

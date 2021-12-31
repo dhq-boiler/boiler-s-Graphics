@@ -41,8 +41,6 @@ namespace boilersGraphics.Test.UITests
 
                 //session.Manage().Timeouts().ImplicitWait = TimeSpan.FromMinutes(1);
 
-                session.Manage().Window.Maximize();
-
                 while (GetCurrentKeyboardLayout().Name != "en-US")
                 {
                     var actions = new Actions(session);
@@ -53,6 +51,17 @@ namespace boilersGraphics.Test.UITests
                     actions.Perform();
                     actions.Perform();
                 }
+
+                SkipPrivacyPolicyIfExists();
+                session.SwitchTo().Window(session.WindowHandles.First()).Manage().Window.Maximize();
+            }
+        }
+
+        public static void SkipPrivacyPolicyIfExists()
+        {
+            if (ExistsElementByAutomationID("Agree"))
+            {
+                GetElementByAutomationID("Agree").Click();
             }
         }
 
@@ -75,7 +84,7 @@ namespace boilersGraphics.Test.UITests
         }
 
         // Wait for an Object to be accessible, use a custom timeout
-        public WindowsElement WaitForObject(Func<WindowsElement> element, int timeout)
+        public static WindowsElement WaitForObject(Func<WindowsElement> element, int timeout)
         {
 
             WindowsElement waitElement = null;
@@ -114,7 +123,7 @@ namespace boilersGraphics.Test.UITests
             }
         }
 
-        public WindowsElement GetElementByAutomationID(string automationId, int timeOut = 10000)
+        public static WindowsElement GetElementByAutomationID(string automationId, int timeOut = 10000)
         {
             WindowsElement element = null;
 
@@ -144,7 +153,7 @@ namespace boilersGraphics.Test.UITests
             return element;
         }
 
-        public WindowsElement GetElementByName(string name, int timeOut = 10000)
+        public static WindowsElement GetElementByName(string name, int timeOut = 10000)
         {
             WindowsElement element = null;
 
@@ -174,7 +183,7 @@ namespace boilersGraphics.Test.UITests
             return element;
         }
 
-        public WindowsElement GetElementBy(By by, int timeOut = 10000)
+        public static WindowsElement GetElementBy(By by, int timeOut = 10000)
         {
             WindowsElement element = null;
 
@@ -203,7 +212,7 @@ namespace boilersGraphics.Test.UITests
             return element;
         }
 
-        public bool ExistsElementByAutomationID(string automationId, int timeOut = 10000)
+        public static bool ExistsElementByAutomationID(string automationId, int timeOut = 10000)
         {
             WindowsElement element = null;
 
@@ -230,7 +239,7 @@ namespace boilersGraphics.Test.UITests
             return element != null;
         }
 
-        public bool IsElementPresent(By by)
+        public static bool IsElementPresent(By by)
         {
             try
             {
@@ -247,7 +256,7 @@ namespace boilersGraphics.Test.UITests
             }
         }
 
-        public void TakeScreenShot(string filename)
+        public static void TakeScreenShot(string filename)
         {
             session.GetScreenshot().SaveAsFile($"{AppDomain.CurrentDomain.BaseDirectory}\\{filename}");
             TestContext.AddTestAttachment($"{AppDomain.CurrentDomain.BaseDirectory}\\{filename}");
