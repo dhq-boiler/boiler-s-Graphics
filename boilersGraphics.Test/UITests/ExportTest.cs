@@ -170,9 +170,9 @@ namespace boilersGraphics.Test.UITests
             var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var loadFilePath = $"{dir}\\XmlFiles\\checker_pattern.xml";
 
-            session.FindElementByAccessibilityId("Load").Click();
+            GetElementByAutomationID("Load").Click();
             //「現在のキャンパスは破棄されますが、よろしいですか？」→OK（"1"）
-            session.FindElementByAccessibilityId("1").Click();
+            GetElementByAutomationID("1").Click();
 
             Thread.Sleep(1000);
 
