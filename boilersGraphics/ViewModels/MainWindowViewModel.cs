@@ -356,14 +356,19 @@ namespace boilersGraphics.ViewModels
             {
                 var markdown = client.DownloadString(privacyPolicyUrl);
                 var lines = markdown.Split("\n");
-                foreach (var line in lines)
+                foreach (var line in lines.Reverse())
                 {
-                    var regex = new Regex("^制定：(?<year>\\d+?)年(?<month>\\d+?)月(?<day>\\d+?)日$");
+                    var regex = new Regex("^改定：(?<year>\\d+?)年(?<month>\\d+?)月(?<day>\\d+?)日$");
                     if (regex.IsMatch(line))
                     {
                         var mc = regex.Match(line);
-                        var date = DateTime.Parse($"{mc.Groups["year"].Value}/{mc.Groups["month"].Value}/{mc.Groups["day"].Value}");
-                        return date;
+                        return DateTime.Parse($"{mc.Groups["year"].Value}/{mc.Groups["month"].Value}/{mc.Groups["day"].Value}");
+                    }
+                    regex = new Regex("^制定：(?<year>\\d+?)年(?<month>\\d+?)月(?<day>\\d+?)日$");
+                    if (regex.IsMatch(line))
+                    {
+                        var mc = regex.Match(line);
+                        return DateTime.Parse($"{mc.Groups["year"].Value}/{mc.Groups["month"].Value}/{mc.Groups["day"].Value}");
                     }
                 }
             }
