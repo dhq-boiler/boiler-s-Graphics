@@ -91,16 +91,18 @@ namespace boilersGraphics.ViewModels
 
         public ReactivePropertySlim<double> EndDegree { get; } = new ReactivePropertySlim<double>();
 
+        public ReactivePropertySlim<SweepDirection> SweepDirection { get; } = new ReactivePropertySlim<SweepDirection>();
+
 
 
         public override PathGeometry CreateGeometry()
         {
-            return GeometryCreator.CreateDonut(PieCenterPoint.Value, DonutWidth.Value, Distance.Value, StartDegree.Value, EndDegree.Value, SweepDirection.Clockwise);
+            return GeometryCreator.CreateDonut(PieCenterPoint.Value, DonutWidth.Value, Distance.Value, StartDegree.Value, EndDegree.Value, SweepDirection.Value);
         }
 
         public override PathGeometry CreateGeometry(double angle)
         {
-            var geometry = GeometryCreator.CreateDonut(PieCenterPoint.Value, DonutWidth.Value, Distance.Value, StartDegree.Value, EndDegree.Value, SweepDirection.Clockwise);
+            var geometry = GeometryCreator.CreateDonut(PieCenterPoint.Value, DonutWidth.Value, Distance.Value, StartDegree.Value, EndDegree.Value, SweepDirection.Value);
             geometry.Transform = new RotateTransform(angle, PieCenterPoint.Value.X, PieCenterPoint.Value.Y);
             return geometry;
         }
@@ -126,6 +128,12 @@ namespace boilersGraphics.ViewModels
             clone.Matrix.Value = Matrix.Value;
             clone.RotationAngle.Value = RotationAngle.Value;
             clone.PathGeometry.Value = CreateGeometry(clone.RotationAngle.Value);
+            clone.PieCenterPoint.Value = PieCenterPoint.Value;
+            clone.DonutWidth.Value = DonutWidth.Value;
+            clone.Distance.Value = Distance.Value;
+            clone.StartDegree.Value = StartDegree.Value;
+            clone.EndDegree.Value = EndDegree.Value;
+            clone.SweepDirection.Value = SweepDirection.Value;
             return clone;
         }
 
