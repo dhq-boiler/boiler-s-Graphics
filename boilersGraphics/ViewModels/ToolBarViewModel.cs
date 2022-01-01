@@ -212,7 +212,7 @@ namespace boilersGraphics.ViewModels
                 ChangeHitTestToDisable();
                 SelectOneToolItem("slice");
             })));
-            ToolItems.Add(new ToolItemData("pie", null, "Pie tool", new DelegateCommand(() =>
+            ToolItems.Add(new ToolItemData("pie", "pack://application:,,,/Assets/img/FoldingFan.png", Resources.Tool_Pie, new DelegateCommand(() =>
             {
                 Behaviors.Clear();
                 if (!Behaviors.Contains(NDrawPieBehavior))

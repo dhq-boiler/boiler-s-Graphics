@@ -714,6 +714,9 @@
   <data name="Tool_Picture" xml:space="preserve">
     <value>画像ツール</value>
   </data>
+  <data name="Tool_Pie" xml:space="preserve">
+    <value>扇形ツール</value>
+  </data>
   <data name="Tool_Pointer" xml:space="preserve">
     <value>ポインターツール</value>
   </data>

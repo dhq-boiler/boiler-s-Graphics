@@ -58,16 +58,22 @@ namespace boilersGraphics.Adorners
                     var currentPosition = _firstDragEndPoint.Value;
                     _snapAction.OnMouseMove(ref currentPosition);
                     _firstDragEndPoint = currentPosition;
+                    (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "描画";
+                    (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = $"{_step} 中心点：{_firstDragStartPoint}";
                     break;
                 case PieCreationStep.Step2:
                     currentPosition = e.GetPosition(this);
                     var anotherVector = new Vector(currentPosition.X - _firstDragStartPoint.Value.X, currentPosition.Y - _firstDragStartPoint.Value.Y);
                     _Angle = Vector.AngleBetween(_RadiusVector, anotherVector);
+                    (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "描画";
+                    (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = $"{_step} 中心点：{_firstDragStartPoint} 開始角度：{_StartAngle} 終了角度：{_EndAngle}";
                     break;
                 case PieCreationStep.Step3:
                     currentPosition = e.GetPosition(this);
                     var vector = new Vector(currentPosition.X - _firstDragStartPoint.Value.X, currentPosition.Y - _firstDragStartPoint.Value.Y);
                     _MinusRaidus = vector.Length;
+                    (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "描画";
+                    (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = $"{_step} 中心点：{_firstDragStartPoint} 開始角度：{_StartAngle} 終了角度：{_EndAngle} 短い半径：{_MinusRaidus}";
                     break;
             }
 
@@ -127,7 +133,7 @@ namespace boilersGraphics.Adorners
             }
 
             (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "";
-            (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = $"{_step}";
+            (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = $"";
 
             e.Handled = true;
         }

@@ -1852,6 +1852,15 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Pie tool に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Tool_Pie {
+            get {
+                return ResourceManager.GetString("Tool_Pie", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Pointer tool に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Tool_Pointer {
