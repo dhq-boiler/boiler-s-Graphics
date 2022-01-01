@@ -221,6 +221,7 @@ namespace boilersGraphics.ViewModels
                 }
                 ChangeHitTestToDisable();
                 SelectOneToolItem("pie");
+                (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = $"クリックして扇形の中心点を決定します。";
             })));
         }
 

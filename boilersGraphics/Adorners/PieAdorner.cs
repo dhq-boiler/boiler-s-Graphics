@@ -50,35 +50,35 @@ namespace boilersGraphics.Adorners
 
         protected override void OnMouseMove(MouseEventArgs e)
         {
-            switch (_step)
-            {
-                case PieCreationStep.Step1:
-                    //ドラッグ終了座標を更新
-                    _firstDragEndPoint = e.GetPosition(this);
-                    var currentPosition = _firstDragEndPoint.Value;
-                    _snapAction.OnMouseMove(ref currentPosition);
-                    _firstDragEndPoint = currentPosition;
-                    (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "描画";
-                    (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = $"{_step} 中心点：{_firstDragStartPoint}";
-                    break;
-                case PieCreationStep.Step2:
-                    currentPosition = e.GetPosition(this);
-                    var anotherVector = new Vector(currentPosition.X - _firstDragStartPoint.Value.X, currentPosition.Y - _firstDragStartPoint.Value.Y);
-                    _Angle = Vector.AngleBetween(_RadiusVector, anotherVector);
-                    (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "描画";
-                    (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = $"{_step} 中心点：{_firstDragStartPoint} 開始角度：{_StartAngle} 終了角度：{_EndAngle}";
-                    break;
-                case PieCreationStep.Step3:
-                    currentPosition = e.GetPosition(this);
-                    var vector = new Vector(currentPosition.X - _firstDragStartPoint.Value.X, currentPosition.Y - _firstDragStartPoint.Value.Y);
-                    _MinusRaidus = vector.Length;
-                    (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "描画";
-                    (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = $"{_step} 中心点：{_firstDragStartPoint} 開始角度：{_StartAngle} 終了角度：{_EndAngle} 短い半径：{_MinusRaidus}";
-                    break;
-            }
-
             if (e.LeftButton == MouseButtonState.Pressed)
             {
+                switch (_step)
+                {
+                    case PieCreationStep.Step1:
+                        //ドラッグ終了座標を更新
+                        _firstDragEndPoint = e.GetPosition(this);
+                        var currentPosition = _firstDragEndPoint.Value;
+                        _snapAction.OnMouseMove(ref currentPosition);
+                        _firstDragEndPoint = currentPosition;
+                        (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "描画";
+                        (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = $"マウスアップで扇形の開始角度を決定しています。 中心点：{_firstDragStartPoint}";
+                        break;
+                    case PieCreationStep.Step2:
+                        currentPosition = e.GetPosition(this);
+                        var anotherVector = new Vector(currentPosition.X - _firstDragStartPoint.Value.X, currentPosition.Y - _firstDragStartPoint.Value.Y);
+                        _Angle = Vector.AngleBetween(_RadiusVector, anotherVector);
+                        (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "描画";
+                        (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = $"マウスアップで扇形の終了角度を決定しています。 中心点：{_firstDragStartPoint} 開始角度：{_StartAngle} 終了角度：{_EndAngle}";
+                        break;
+                    case PieCreationStep.Step3:
+                        currentPosition = e.GetPosition(this);
+                        var vector = new Vector(currentPosition.X - _firstDragStartPoint.Value.X, currentPosition.Y - _firstDragStartPoint.Value.Y);
+                        _MinusRaidus = vector.Length;
+                        (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "描画";
+                        (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = $"マウスアップで扇形の短い半径を決定しています。 中心点：{_firstDragStartPoint} 開始角度：{_StartAngle} 終了角度：{_EndAngle} 短い半径：{_MinusRaidus}";
+                        break;
+                }
+
                 if (!this.IsMouseCaptured)
                     this.CaptureMouse();
 
@@ -98,9 +98,13 @@ namespace boilersGraphics.Adorners
             {
                 case PieCreationStep.Step1:
                     _step = PieCreationStep.Step2;
+                    (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "";
+                    (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = $"クリックして扇形の終了角度を決定します。";
                     break;
                 case PieCreationStep.Step2:
                     _step = PieCreationStep.Step3;
+                    (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "";
+                    (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = $"クリックして扇形の短い半径を決定します。";
                     break;
                 case PieCreationStep.Step3:
                     // release mouse capture
@@ -129,11 +133,10 @@ namespace boilersGraphics.Adorners
                     ((AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel).AddItemCommand.Execute(item);
                     _snapAction.OnMouseUp(this);
                     UpdateStatisticsCount();
+                    (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "";
+                    (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = $"クリックして扇形の中心点を決定します。";
                     break;
             }
-
-            (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "";
-            (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = $"";
 
             e.Handled = true;
         }
