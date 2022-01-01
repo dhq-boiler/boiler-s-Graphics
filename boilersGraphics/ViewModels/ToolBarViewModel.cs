@@ -43,6 +43,7 @@ namespace boilersGraphics.ViewModels
         public BrushBehavior BrushBehavior { get; private set; }
         public EraserBehavior EraserBehavior { get; } = new EraserBehavior();
         public SliceBehavior SliceBehavior { get; private set; }
+        public NDrawPieBehavior NDrawPieBehavior { get; } = new NDrawPieBehavior();
 
         public ToolBarViewModel(IDialogService dialogService)
         {
@@ -210,6 +211,16 @@ namespace boilersGraphics.ViewModels
                 }
                 ChangeHitTestToDisable();
                 SelectOneToolItem("slice");
+            })));
+            ToolItems.Add(new ToolItemData("pie", null, "Pie tool", new DelegateCommand(() =>
+            {
+                Behaviors.Clear();
+                if (!Behaviors.Contains(NDrawPieBehavior))
+                {
+                    Behaviors.Add(NDrawPieBehavior);
+                }
+                ChangeHitTestToDisable();
+                SelectOneToolItem("pie");
             })));
         }
 
