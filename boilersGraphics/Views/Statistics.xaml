@@ -270,5 +270,9 @@
             <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfTimesTheApplicationLogWasDisplayed}" />
             <Label Content="{Binding NumberOfTimesTheApplicationLogWasDisplayed.Value}" d:Content="0" />
         </DockPanel>
+        <DockPanel>
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfDrawsOfThePieTool}" />
+            <Label Content="{Binding NumberOfDrawsOfThePieTool.Value}" d:Content="0" />
+        </DockPanel>
     </controls:SimpleGrid>
 </UserControl>

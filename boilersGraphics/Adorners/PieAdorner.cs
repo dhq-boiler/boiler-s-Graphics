@@ -1,4 +1,5 @@
 ﻿using boilersGraphics.Controls;
+using boilersGraphics.Dao;
 using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
 using boilersGraphics.Models;
@@ -30,9 +31,9 @@ namespace boilersGraphics.Adorners
 
         public enum PieCreationStep
         {
-            Step1, // 中心点決定→長径決定
+            Step1, // 中心点決定→長い半径決定
             Step2, // 角度決定
-            Step3, // 短径決定
+            Step3, // 短い半径決定
         }
 
         public PieAdorner(DesignerCanvas designerCanvas, Point? firstDragStartPoint)
@@ -120,20 +121,9 @@ namespace boilersGraphics.Adorners
                     item.Owner.DeselectAll();
                     ((AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel).AddItemCommand.Execute(item);
                     _snapAction.OnMouseUp(this);
+                    UpdateStatisticsCount();
                     break;
             }
-
-            //if (_firstDragStartPoint.HasValue && _firstDragEndPoint.HasValue)
-            //{
-            //    _snapAction.OnMouseUp(this);
-
-            //    var sliceRect = new Rect(_firstDragStartPoint.Value, _firstDragEndPoint.Value);
-
-            //    UpdateStatisticsCount();
-
-            //    _firstDragStartPoint = null;
-            //    _firstDragEndPoint = null;
-            //}
 
             (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "";
             (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = $"{_step}";
@@ -143,9 +133,10 @@ namespace boilersGraphics.Adorners
 
         private static void UpdateStatisticsCount()
         {
-            //var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
-            //var dao = new StatisticsDao();
-            //dao.Update(statistics);
+            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            statistics.NumberOfDrawsOfThePieTool++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
 
         protected override void OnRender(DrawingContext dc)
@@ -153,9 +144,6 @@ namespace boilersGraphics.Adorners
             base.OnRender(dc);
 
             dc.DrawRectangle(Brushes.Transparent, null, new Rect(RenderSize));
-
-            //if (_startPoint.HasValue && _endPoint.HasValue)
-            //    dc.DrawRectangle(new SolidColorBrush(Color.FromArgb(255 / 2, 0, 0, 255)), _rectanglePen, ShiftEdgeThickness());
 
             if (_firstDragStartPoint.HasValue && _firstDragEndPoint.HasValue)
             {

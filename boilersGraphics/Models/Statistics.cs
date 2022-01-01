@@ -66,12 +66,13 @@ namespace boilersGraphics.Models
         private int _numberOfTimesTheVersionInformationDialogWasDisplayed;
         private int _numberOfTimesTheApplicationLogWasDisplayed;
         private int _numberOfTimesSliceToolHasBeenUsed;
+		private int _numberOfDrawsOfThePieTool;
 
 
-        /// <summary>
-        /// boiler's Graphics 起動回数
-        /// </summary>
-        [Column("NumberOfBoots", "INTEGER", 1)]
+		/// <summary>
+		/// boiler's Graphics 起動回数
+		/// </summary>
+		[Column("NumberOfBoots", "INTEGER", 1)]
         public int NumberOfBoots
         {
             get { return _number_of_boots; }
@@ -667,5 +668,16 @@ namespace boilersGraphics.Models
 			get => _numberOfTimesSliceToolHasBeenUsed;
 			set => SetProperty(ref _numberOfTimesSliceToolHasBeenUsed, value);
 		}
-	}
+
+		/// <summary>
+		/// パイツールの描画回数
+		/// </summary>
+		[Since(typeof(Version2))]
+		[Column("NumberOfDrawsOfThePieTool", "INTEGER", 61)]
+		public int NumberOfDrawsOfThePieTool
+        {
+			get => _numberOfDrawsOfThePieTool;
+			set => SetProperty(ref _numberOfDrawsOfThePieTool, value);
+        }
+    }
 }

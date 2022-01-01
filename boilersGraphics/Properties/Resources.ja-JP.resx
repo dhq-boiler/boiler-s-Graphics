@@ -246,6 +246,9 @@
   <data name="Dialog_Statistics_NumberOfDrawsOfTheLetteringTool" xml:space="preserve">
     <value>文字ツールの描画回数</value>
   </data>
+  <data name="Dialog_Statistics_NumberOfDrawsOfThePieTool" xml:space="preserve">
+    <value>パイツールの描画回数</value>
+  </data>
   <data name="Dialog_Statistics_NumberOfDrawsOfTheRectangleTool" xml:space="preserve">
     <value>四角形ツールの描画回数</value>
   </data>
