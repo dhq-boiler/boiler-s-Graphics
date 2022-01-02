@@ -65,20 +65,7 @@ namespace boilersGraphics.ViewModels
 
         public override void OpenPropertyDialog()
         {
-            var dialogService = new DialogService((App.Current as PrismApplication).Container as IContainerExtension);
-            IDialogResult result = null;
-            dialogService.ShowDialog(nameof(DetailRectangle), new DialogParameters() { { "ViewModel", (NRectangleViewModel)this.Clone() } }, ret => result = ret);
-            if (result != null && result.Result == ButtonResult.OK)
-            {
-                var viewModel = result.Parameters.GetValue<NRectangleViewModel>("ViewModel");
-                this.Left.Value = viewModel.Left.Value;
-                this.Top.Value = viewModel.Top.Value;
-                this.Width.Value = viewModel.Width.Value;
-                this.Height.Value = viewModel.Height.Value;
-                this.CenterX.Value = viewModel.CenterX.Value;
-                this.CenterY.Value = viewModel.CenterY.Value;
-                this.RotationAngle.Value = viewModel.RotationAngle.Value;
-            }
+            throw new NotImplementedException();
         }
 
         public ReactivePropertySlim<Point> PieCenterPoint { get; } = new ReactivePropertySlim<Point>();
