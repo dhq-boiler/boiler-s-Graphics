@@ -6,6 +6,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:prism="http://prismlibrary.com/"
              xmlns:viewmodels="clr-namespace:boilersGraphics.ViewModels"
+             xmlns:control="clr-namespace:boilersGraphics.Controls"
              xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
              d:DataContext="{d:DesignInstance Type=viewmodels:NPieViewModel}"
              xmlns:c="clr-namespace:CalcBinding;assembly=CalcBinding"
@@ -33,8 +34,13 @@
                 <StackPanel Orientation="Horizontal"
                             Canvas.Left="{c:Binding PieCenterPoint.Value.X-Left.Value+125}"
                             Canvas.Top="{c:Binding PieCenterPoint.Value.Y-Top.Value+125}">
-                    <TextBox Text="{Binding PieCenterPoint.Value.X}" />
-                    <TextBox Text="{Binding PieCenterPoint.Value.Y}" />
+                    <StackPanel.Resources>
+                        <Style TargetType="control:DoubleTextBox">
+                            <Setter Property="Width" Value="40" />
+                        </Style>
+                    </StackPanel.Resources>
+                    <control:DoubleTextBox DoubleText="{Binding PieCenterPoint.Value.X}" />
+                    <control:DoubleTextBox DoubleText="{Binding PieCenterPoint.Value.Y}" />
                 </StackPanel>
             </Canvas>
         </local:DetailPathGeometry>
