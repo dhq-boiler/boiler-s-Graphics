@@ -27,7 +27,7 @@ namespace boilersGraphics.Adorners
         private double _MinusRaidus;
         private double _StartAngle;
         private double _EndAngle;
-
+        private AuxiliaryArcBetweenCeilingAndTarget _auxiliaryArcBetweenCeilingAndTarget;
 
         public enum PieCreationStep
         {
@@ -46,6 +46,7 @@ namespace boilersGraphics.Adorners
             brush.Opacity = 0.5;
             _rectanglePen = new Pen(brush, 1);
             _snapAction = new SnapAction();
+            _auxiliaryArcBetweenCeilingAndTarget = new AuxiliaryArcBetweenCeilingAndTarget(designerCanvas);
         }
 
         protected override void OnMouseMove(MouseEventArgs e)
@@ -62,6 +63,9 @@ namespace boilersGraphics.Adorners
                         _firstDragEndPoint = currentPosition;
                         (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "描画";
                         (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = $"マウスアップで扇形の長い半径と開始角度を決定します。 中心点：{_firstDragStartPoint} 長い半径：{Math.Round(new Vector(_firstDragEndPoint.Value.X - _firstDragStartPoint.Value.X, _firstDragEndPoint.Value.Y - _firstDragStartPoint.Value.Y).Length)} 開始角度：{Math.Round(_StartAngle + 90)}";
+                        var beginVector = new Vector(_firstDragEndPoint.Value.X - _firstDragStartPoint.Value.X, _firstDragEndPoint.Value.Y - _firstDragStartPoint.Value.Y);
+                        _auxiliaryArcBetweenCeilingAndTarget.Render1st(_firstDragStartPoint.Value, new Point(_firstDragStartPoint.Value.X, _firstDragStartPoint.Value.Y - beginVector.Length));
+                        _auxiliaryArcBetweenCeilingAndTarget.Render2nd(_firstDragEndPoint.Value, Vector.AngleBetween(beginVector, new Vector(0, -1)));
                         break;
                     case PieCreationStep.Step2:
                         currentPosition = e.GetPosition(this);
@@ -69,6 +73,9 @@ namespace boilersGraphics.Adorners
                         _Angle = Vector.AngleBetween(_RadiusVector, anotherVector);
                         (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "描画";
                         (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = $"マウスアップで扇形の終了角度を決定します。 中心点：{_firstDragStartPoint} 長い半径：{Math.Round(new Vector(_firstDragEndPoint.Value.X - _firstDragStartPoint.Value.X, _firstDragEndPoint.Value.Y - _firstDragStartPoint.Value.Y).Length)} 開始角度：{Math.Round(_StartAngle + 90)} 終了角度：{Math.Round(_EndAngle + 90)}";
+                        beginVector = new Vector(_firstDragEndPoint.Value.X - _firstDragStartPoint.Value.X, _firstDragEndPoint.Value.Y - _firstDragStartPoint.Value.Y);
+                        _auxiliaryArcBetweenCeilingAndTarget.Render1st(_firstDragStartPoint.Value, new Point(_firstDragStartPoint.Value.X, _firstDragStartPoint.Value.Y - beginVector.Length));
+                        _auxiliaryArcBetweenCeilingAndTarget.Render2nd(currentPosition, Vector.AngleBetween(anotherVector, new Vector(0, -1)), GetSweepDirection());
                         break;
                     case PieCreationStep.Step3:
                         currentPosition = e.GetPosition(this);
@@ -100,11 +107,13 @@ namespace boilersGraphics.Adorners
                     _step = PieCreationStep.Step2;
                     (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "";
                     (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = $"クリックして扇形の終了角度を決定します。";
+                    _auxiliaryArcBetweenCeilingAndTarget.OnMouseUp();
                     break;
                 case PieCreationStep.Step2:
                     _step = PieCreationStep.Step3;
                     (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "";
                     (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = $"クリックして扇形の短い半径を決定します。";
+                    _auxiliaryArcBetweenCeilingAndTarget.OnMouseUp();
                     break;
                 case PieCreationStep.Step3:
                     // release mouse capture

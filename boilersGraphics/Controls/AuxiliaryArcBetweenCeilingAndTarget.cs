@@ -44,6 +44,7 @@ namespace boilersGraphics.Controls
         public void Render1st(Point centerPoint, Point endPoint)
         {
             AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(adornedElement);
+            RemoveFromAdornerLayer(adornerLayer, nameof(_CenterToP1));
             _centerPoint = centerPoint;
             Point startPoint = Mouse.GetPosition(adornedElement);
             var vector = new Vector(endPoint.X - centerPoint.X, endPoint.Y - centerPoint.Y);
@@ -52,7 +53,6 @@ namespace boilersGraphics.Controls
             _CenterToP1 = new AuxiliaryLine(adornedElement, new Point(centerPoint.X, centerPoint.Y - vector.Length), centerPoint);
             adornerLayer.Add(_CenterToP1);
         }
-
 
         public double Render2nd(Point endPoint, double rotationAngle)
         {
@@ -81,6 +81,49 @@ namespace boilersGraphics.Controls
             }
             rotationAngle = roundDegree;
             var pie = GeometryCreator.CreatePie(_centerPoint, 20, beginDegree, endDegree, DecideSweepDirection(angleType, rotationAngle));
+            _Arc.Child = new Path()
+            {
+                Data = pie,
+                Stroke = Brushes.Blue,
+                StrokeThickness = 1,
+            };
+            adornerLayer.Add(_Arc);
+            if (_DegreeText != null)
+            {
+                adornerLayer.Remove(_DegreeText);
+            }
+            _DegreeText = new AuxiliaryText(adornedElement, $"{roundDegree}°", new Point(_centerPoint.X + 40 * Math.Cos(θ(rotationAngle, angleType, roundDegree)) - 20, _centerPoint.Y + 40 * Math.Sin(θ(rotationAngle, angleType, roundDegree)) - 20));
+            adornerLayer.Add(_DegreeText);
+            return rotationAngle;
+        }
+
+        public double Render2nd(Point endPoint, double rotationAngle, SweepDirection sweepDirection)
+        {
+            AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(adornedElement);
+
+            RemoveFromAdornerLayer(adornerLayer, nameof(_CenterToP2));
+
+            Point currentPoint = Mouse.GetPosition(adornedElement);
+            Vector deltaVector = Point.Subtract(currentPoint, _centerPoint);
+            _endVector = Vector.Subtract(new Vector(endPoint.X, endPoint.Y), new Vector(_centerPoint.X, _centerPoint.Y));
+            _CenterToP2 = new AuxiliaryLine(adornedElement, _centerPoint, endPoint);
+            adornerLayer.Add(_CenterToP2);
+            var deltaAngle = Vector.AngleBetween(new Vector(0, 1), deltaVector);
+            var beginDegree = MakeDegree(-180);
+            var endDegree = MakeDegree(deltaAngle);
+
+            var angleType = (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.AngleType.Value;
+            rotationAngle = Math.Round(endDegree + 90);
+            RemoveFromAdornerLayer(adornerLayer, nameof(_Arc));
+            _Arc = new FrameworkElementAdorner(adornedElement);
+            var roundDegree = Math.Round(rotationAngle);
+            roundDegree = roundDegree % 360;
+            if (angleType == Helpers.AngleType.Minus180To180 && roundDegree > 180)
+            {
+                roundDegree = roundDegree - 360;
+            }
+            rotationAngle = roundDegree;
+            var pie = GeometryCreator.CreatePie(_centerPoint, 20, beginDegree, endDegree, sweepDirection);
             _Arc.Child = new Path()
             {
                 Data = pie,
