@@ -77,7 +77,7 @@ namespace boilersGraphics.Controls
                 Canvas.SetTop(this, currentPosition.Y - this.Height / 2);
                 
                 var ellipses = ((App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel as DiagramViewModel).AllItems.Value.OfType<NEllipseViewModel>();
-                var appendIntersectionPoints = new List<Tuple<Point, NEllipseViewModel>>();
+                var appendIntersectionPoints = new List<Tuple<Point, object>>();
 
                 var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
                 var oppositePoint = OppositeHandle.TransformToAncestor(designerCanvas).Transform(new Point(0, 0));

@@ -6,6 +6,7 @@ using boilersGraphics.Models;
 using boilersGraphics.ViewModels;
 using NLog;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Documents;
@@ -30,6 +31,7 @@ namespace boilersGraphics.Adorners
         private double _DispStartAngle;
         private double _DispEndAngle;
         private AuxiliaryArcBetweenCeilingAndTarget _auxiliaryArcBetweenCeilingAndTarget;
+        private NPieViewModel _item;
 
         public enum PieCreationStep
         {
@@ -49,6 +51,7 @@ namespace boilersGraphics.Adorners
             _rectanglePen = new Pen(brush, 1);
             _snapAction = new SnapAction();
             _auxiliaryArcBetweenCeilingAndTarget = new AuxiliaryArcBetweenCeilingAndTarget(designerCanvas);
+            _item = new NPieViewModel();
         }
 
         protected override void OnMouseMove(MouseEventArgs e)
@@ -72,6 +75,7 @@ namespace boilersGraphics.Adorners
                         break;
                     case PieCreationStep.Step2:
                         currentPosition = e.GetPosition(this);
+                        _snapAction.OnMouseMove(ref currentPosition, new List<Tuple<Point, object>>() { new Tuple<Point, object>(_firstDragStartPoint.Value, _item) });
                         var anotherVector = new Vector(currentPosition.X - _firstDragStartPoint.Value.X, currentPosition.Y - _firstDragStartPoint.Value.Y);
                         _Angle = Vector.AngleBetween(_RadiusVector, anotherVector);
                         beginVector = new Vector(_firstDragEndPoint.Value.X - _firstDragStartPoint.Value.X, _firstDragEndPoint.Value.Y - _firstDragStartPoint.Value.Y);
@@ -83,6 +87,7 @@ namespace boilersGraphics.Adorners
                         break;
                     case PieCreationStep.Step3:
                         currentPosition = e.GetPosition(this);
+                        _snapAction.OnMouseMove(ref currentPosition, new List<Tuple<Point, object>>() { new Tuple<Point, object>(_firstDragStartPoint.Value, _item) });
                         var vector = new Vector(currentPosition.X - _firstDragStartPoint.Value.X, currentPosition.Y - _firstDragStartPoint.Value.Y);
                         _MinusRaidus = vector.Length;
                         (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "描画";
@@ -137,27 +142,26 @@ namespace boilersGraphics.Adorners
                     // release mouse capture
                     _step = PieCreationStep.Step1;
                     if (this.IsMouseCaptured) this.ReleaseMouseCapture();
-                    var item = new NPieViewModel();
-                    item.Owner = (AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel;
-                    item.EdgeColor.Value = item.Owner.EdgeColors.First();
-                    item.FillColor.Value = item.Owner.FillColors.First();
-                    item.EdgeThickness.Value = item.Owner.EdgeThickness.Value.Value;
-                    item.ZIndex.Value = item.Owner.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).Count();
+                    _item.Owner = (AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel;
+                    _item.EdgeColor.Value = _item.Owner.EdgeColors.First();
+                    _item.FillColor.Value = _item.Owner.FillColors.First();
+                    _item.EdgeThickness.Value = _item.Owner.EdgeThickness.Value.Value;
+                    _item.ZIndex.Value = _item.Owner.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).Count();
                     var geometry = GeometryCreator.CreateDonut(_firstDragStartPoint.Value, _RadiusVector.Length - _MinusRaidus, _RadiusVector.Length, _StartAngle, _EndAngle, GetSweepDirection());
-                    item.PieCenterPoint.Value = _firstDragStartPoint.Value;
-                    item.DonutWidth.Value = _RadiusVector.Length - _MinusRaidus;
-                    item.Distance.Value = _RadiusVector.Length;
-                    item.StartDegree.Value = _StartAngle;
-                    item.EndDegree.Value = _EndAngle;
-                    item.SweepDirection.Value = GetSweepDirection();
-                    item.PathGeometry.Value = geometry;
-                    item.Left.Value = geometry.Bounds.X;
-                    item.Top.Value = geometry.Bounds.Y;
-                    item.Width.Value = geometry.Bounds.Width;
-                    item.Height.Value = geometry.Bounds.Height;
-                    item.IsVisible.Value = true;
-                    item.Owner.DeselectAll();
-                    ((AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel).AddItemCommand.Execute(item);
+                    _item.PieCenterPoint.Value = _firstDragStartPoint.Value;
+                    _item.DonutWidth.Value = _RadiusVector.Length - _MinusRaidus;
+                    _item.Distance.Value = _RadiusVector.Length;
+                    _item.StartDegree.Value = _StartAngle;
+                    _item.EndDegree.Value = _EndAngle;
+                    _item.SweepDirection.Value = GetSweepDirection();
+                    _item.PathGeometry.Value = geometry;
+                    _item.Left.Value = geometry.Bounds.X;
+                    _item.Top.Value = geometry.Bounds.Y;
+                    _item.Width.Value = geometry.Bounds.Width;
+                    _item.Height.Value = geometry.Bounds.Height;
+                    _item.IsVisible.Value = true;
+                    _item.Owner.DeselectAll();
+                    ((AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel).AddItemCommand.Execute(_item);
                     _snapAction.OnMouseUp(this);
                     UpdateStatisticsCount();
                     (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "";
