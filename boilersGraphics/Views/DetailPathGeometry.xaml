@@ -6,154 +6,161 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              x:Name="userControl"
              mc:Ignorable="d">
-    <Grid>
-        <Grid>
-            <Grid.Resources>
-                <Style TargetType="control:DoubleTextBox">
-                    <Setter Property="Width" Value="40" />
-                </Style>
-            </Grid.Resources>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="100" />
-                <ColumnDefinition Width="1" />
-                <ColumnDefinition Width="{Binding Width.Value}" />
-                <ColumnDefinition Width="1" />
-                <ColumnDefinition Width="100" />
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="100" />
-                <RowDefinition Height="1" />
-                <RowDefinition Height="{Binding Height.Value}" />
-                <RowDefinition Height="1" />
-                <RowDefinition Height="100" />
-            </Grid.RowDefinitions>
-            <Line Grid.Row="1"
-                  Grid.Column="1"
-                  Grid.ColumnSpan="3"
-                  Margin="-20"
-                  Stretch="Fill"
-                  Stroke="Red"
-                  StrokeDashArray="2 2"
-                  X2="1" />
-            <Line Grid.Row="3"
-                  Grid.Column="1"
-                  Grid.ColumnSpan="3"
-                  Margin="-20"
-                  Stretch="Fill"
-                  Stroke="Red"
-                  StrokeDashArray="2 2"
-                  X2="1" />
-            <Line Grid.Row="1"
-                  Grid.RowSpan="3"
-                  Grid.Column="1"
-                  Margin="-20"
-                  Stretch="Fill"
-                  Stroke="Red"
-                  StrokeDashArray="2 2"
-                  Y2="1" />
-            <Line Grid.Row="1"
-                  Grid.RowSpan="3"
-                  Grid.Column="3"
-                  Margin="-20"
-                  Stretch="Fill"
-                  Stroke="Red"
-                  StrokeDashArray="2 2"
-                  Y2="1" />
-            <Path Grid.Row="2"
-                  Grid.Column="2"
-                  Data="{Binding PathGeometry.Value}"
-                  Fill="{Binding FillColor.Value, Converter={StaticResource solidColorBrushConverter}}"
-                  IsHitTestVisible="False"
-                  Stretch="{Binding Stretch, ElementName=userControl}"
-                  Stroke="{Binding EdgeColor.Value, Converter={StaticResource solidColorBrushConverter}}"
-                  StrokeThickness="{Binding EdgeThickness.Value}" />
-            <Ellipse Grid.Row="2"
-                     Grid.Column="2"
-                     Width="5"
-                     Height="5"
-                     Fill="Red" />
-        </Grid>
-        <Grid>
-            <Grid.Resources>
-                <Style TargetType="control:DoubleTextBox">
-                    <Setter Property="Width" Value="40" />
-                </Style>
-            </Grid.Resources>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="85" />
-                <ColumnDefinition Width="31" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="31" />
-                <ColumnDefinition Width="85" />
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="85" />
-                <RowDefinition Height="31" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="31" />
-                <RowDefinition Height="85" />
-            </Grid.RowDefinitions>
-            <DockPanel Grid.Row="1" Grid.Column="0">
-                <StackPanel HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            Orientation="Horizontal">
-                    <Label Content="Top" />
-                    <control:DoubleTextBox VerticalContentAlignment="Center" DoubleText="{Binding Top.Value, Mode=TwoWay}" />
-                </StackPanel>
-            </DockPanel>
-            <DockPanel Grid.Row="0"
-                       Grid.Column="1"
-                       Grid.ColumnSpan="2">
-                <StackPanel HorizontalAlignment="Left"
-                            VerticalAlignment="Center"
-                            Orientation="Horizontal">
-                    <Label Content="Left" />
-                    <control:DoubleTextBox VerticalContentAlignment="Center" DoubleText="{Binding Left.Value, Mode=TwoWay}" />
-                </StackPanel>
-                <StackPanel HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            Orientation="Horizontal">
-                    <Label Content="Rotate" />
-                    <control:DoubleTextBox VerticalContentAlignment="Center" DoubleText="{Binding RotationAngle.Value, Mode=TwoWay}" />
-                    <Label Content="°" />
-                </StackPanel>
-            </DockPanel>
-            <DockPanel Grid.Row="4" Grid.Column="2">
-                <StackPanel HorizontalAlignment="Center"
-                            VerticalAlignment="Top"
-                            Orientation="Horizontal">
-                    <Label Content="Width" />
-                    <control:DoubleTextBox VerticalContentAlignment="Center" DoubleText="{Binding Width.Value, Mode=TwoWay}" />
-                </StackPanel>
-            </DockPanel>
-            <DockPanel Grid.Row="2" Grid.Column="4">
-                <StackPanel HorizontalAlignment="Left"
-                            VerticalAlignment="Center"
-                            Orientation="Horizontal">
-                    <Label Content="Height" />
-                    <control:DoubleTextBox VerticalContentAlignment="Center" DoubleText="{Binding Height.Value, Mode=TwoWay}" />
-                </StackPanel>
-            </DockPanel>
-            <DockPanel Grid.Row="2"
-                       Grid.Column="2"
-                       Margin="0,50,0,0">
-                <StackPanel HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            Orientation="Horizontal">
-                    <Label Background="White"
-                           Content="Center"
-                           FontWeight="Bold"
-                           Foreground="Red" />
-                    <control:DoubleTextBox Margin="5,0,5,0"
-                                           VerticalContentAlignment="Center"
-                                           DoubleText="{Binding CenterX.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                           Foreground="Red" />
-                    <control:DoubleTextBox Margin="5,0,5,0"
-                                           VerticalContentAlignment="Center"
-                                           DoubleText="{Binding CenterY.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                           Foreground="Red" />
-                </StackPanel>
-            </DockPanel>
-        </Grid>
-    </Grid>
+    <UserControl.ContentTemplate>
+        <DataTemplate>
+            <Grid>
+                <Grid>
+                    <Grid.Resources>
+                        <Style TargetType="control:DoubleTextBox">
+                            <Setter Property="Width" Value="40" />
+                        </Style>
+                    </Grid.Resources>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition Width="1" />
+                        <ColumnDefinition Width="{Binding DataContext.Width.Value, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}" />
+                        <ColumnDefinition Width="1" />
+                        <ColumnDefinition Width="100" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="100" />
+                        <RowDefinition Height="1" />
+                        <RowDefinition Height="{Binding DataContext.Height.Value, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}" />
+                        <RowDefinition Height="1" />
+                        <RowDefinition Height="100" />
+                    </Grid.RowDefinitions>
+                    <Line Grid.Row="1"
+                          Grid.Column="1"
+                          Grid.ColumnSpan="3"
+                          Margin="-20"
+                          Stretch="Fill"
+                          Stroke="Red"
+                          StrokeDashArray="2 2"
+                          X2="1" />
+                    <Line Grid.Row="3"
+                          Grid.Column="1"
+                          Grid.ColumnSpan="3"
+                          Margin="-20"
+                          Stretch="Fill"
+                          Stroke="Red"
+                          StrokeDashArray="2 2"
+                          X2="1" />
+                    <Line Grid.Row="1"
+                          Grid.RowSpan="3"
+                          Grid.Column="1"
+                          Margin="-20"
+                          Stretch="Fill"
+                          Stroke="Red"
+                          StrokeDashArray="2 2"
+                          Y2="1" />
+                    <Line Grid.Row="1"
+                          Grid.RowSpan="3"
+                          Grid.Column="3"
+                          Margin="-20"
+                          Stretch="Fill"
+                          Stroke="Red"
+                          StrokeDashArray="2 2"
+                          Y2="1" />
+                    <Path Grid.Row="2"
+                          Grid.Column="2"
+                          Data="{Binding DataContext.PathGeometry.Value, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                          Fill="{Binding DataContext.FillColor.Value, Converter={StaticResource solidColorBrushConverter}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                          IsHitTestVisible="False"
+                          Stretch="{Binding Stretch, ElementName=userControl}"
+                          Stroke="{Binding DataContext.EdgeColor.Value, Converter={StaticResource solidColorBrushConverter}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                          StrokeThickness="{Binding DataContext.EdgeThickness.Value, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}" />
+                    <Ellipse Grid.Row="2"
+                             Grid.Column="2"
+                             Width="5"
+                             Height="5"
+                             Fill="Red"
+                             Visibility="{Binding CenterVisibility, ElementName=userControl}" />
+                </Grid>
+                <Grid>
+                    <Grid.Resources>
+                        <Style TargetType="control:DoubleTextBox">
+                            <Setter Property="Width" Value="40" />
+                        </Style>
+                    </Grid.Resources>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="85" />
+                        <ColumnDefinition Width="31" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="31" />
+                        <ColumnDefinition Width="85" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="85" />
+                        <RowDefinition Height="31" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="31" />
+                        <RowDefinition Height="85" />
+                    </Grid.RowDefinitions>
+                    <DockPanel Grid.Row="1" Grid.Column="0">
+                        <StackPanel HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Orientation="Horizontal">
+                            <Label Content="Top" />
+                            <control:DoubleTextBox VerticalContentAlignment="Center" DoubleText="{Binding DataContext.Top.Value, Mode=TwoWay, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}" />
+                        </StackPanel>
+                    </DockPanel>
+                    <DockPanel Grid.Row="0"
+                               Grid.Column="1"
+                               Grid.ColumnSpan="2">
+                        <StackPanel HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Orientation="Horizontal">
+                            <Label Content="Left" />
+                            <control:DoubleTextBox VerticalContentAlignment="Center" DoubleText="{Binding DataContext.Left.Value, Mode=TwoWay, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}" />
+                        </StackPanel>
+                        <StackPanel HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Orientation="Horizontal">
+                            <Label Content="Rotate" />
+                            <control:DoubleTextBox VerticalContentAlignment="Center" DoubleText="{Binding DataContext.RotationAngle.Value, Mode=TwoWay, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}" />
+                            <Label Content="°" />
+                        </StackPanel>
+                    </DockPanel>
+                    <DockPanel Grid.Row="4" Grid.Column="2">
+                        <StackPanel HorizontalAlignment="Center"
+                                    VerticalAlignment="Top"
+                                    Orientation="Horizontal">
+                            <Label Content="Width" />
+                            <control:DoubleTextBox VerticalContentAlignment="Center" DoubleText="{Binding DataContext.Width.Value, Mode=TwoWay, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}" />
+                        </StackPanel>
+                    </DockPanel>
+                    <DockPanel Grid.Row="2" Grid.Column="4">
+                        <StackPanel HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Orientation="Horizontal">
+                            <Label Content="Height" />
+                            <control:DoubleTextBox VerticalContentAlignment="Center" DoubleText="{Binding DataContext.Height.Value, Mode=TwoWay, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}" />
+                        </StackPanel>
+                    </DockPanel>
+                    <DockPanel Grid.Row="2"
+                               Grid.Column="2"
+                               Margin="0,50,0,0"
+                               Visibility="{Binding CenterVisibility, ElementName=userControl}">
+                        <StackPanel HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Orientation="Horizontal">
+                            <Label Background="White"
+                                   Content="Center"
+                                   FontWeight="Bold"
+                                   Foreground="Red" />
+                            <control:DoubleTextBox Margin="5,0,5,0"
+                                                   VerticalContentAlignment="Center"
+                                                   DoubleText="{Binding DataContext.CenterX.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                                                   Foreground="Red" />
+                            <control:DoubleTextBox Margin="5,0,5,0"
+                                                   VerticalContentAlignment="Center"
+                                                   DoubleText="{Binding DataContext.CenterY.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                                                   Foreground="Red" />
+                        </StackPanel>
+                    </DockPanel>
+                </Grid>
+                <ContentPresenter x:Name="Content" Content="{Binding ElementName=userControl, Path=Content}"/>
+            </Grid>
+        </DataTemplate>
+    </UserControl.ContentTemplate>
 </UserControl>

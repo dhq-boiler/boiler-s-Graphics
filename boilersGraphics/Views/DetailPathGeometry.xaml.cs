@@ -27,10 +27,18 @@ namespace boilersGraphics.Views
 
         public static readonly DependencyProperty StretchProperty = DependencyProperty.Register("Stretch", typeof(Stretch), typeof(DetailPathGeometry), new FrameworkPropertyMetadata(Stretch.None, null));
 
+        public static readonly DependencyProperty CenterVisibilityProperty = DependencyProperty.Register("CenterVisibility", typeof(Visibility), typeof(DetailPathGeometry), new FrameworkPropertyMetadata(Visibility.Visible, null));
+
         public Stretch Stretch
         {
             get { return (Stretch)GetValue(StretchProperty); }
             set { SetValue(StretchProperty, value); }
+        }
+
+        public Visibility CenterVisibility
+        {
+            get { return (Visibility)GetValue(CenterVisibilityProperty); }
+            set { SetValue(CenterVisibilityProperty, value); }
         }
     }
 }

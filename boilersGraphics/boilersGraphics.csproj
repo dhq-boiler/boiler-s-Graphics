@@ -163,6 +163,7 @@
     <Resource Include="Assets\img\slice_tool.png" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="CalcBinding" Version="2.5.2" />
     <PackageReference Include="Dapper.StrongName" Version="2.0.123" />
     <PackageReference Include="GitVersion.MsBuild" Version="5.8.1">
       <PrivateAssets>all</PrivateAssets>
@@ -209,6 +210,9 @@
   </ItemGroup>
   <ItemGroup>
     <Page Update="Resources\DesignerItems\PieDesignerItemDataTemplate.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Views\DetailPie.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
   </ItemGroup>
