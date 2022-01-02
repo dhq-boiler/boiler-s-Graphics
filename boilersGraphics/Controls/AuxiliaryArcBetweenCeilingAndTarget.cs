@@ -54,7 +54,7 @@ namespace boilersGraphics.Controls
             adornerLayer.Add(_CenterToP1);
         }
 
-        public double Render2nd(Point endPoint, double rotationAngle)
+        public (double, double) Render2nd(Point endPoint, double rotationAngle)
         {
             AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(adornedElement);
 
@@ -94,10 +94,10 @@ namespace boilersGraphics.Controls
             }
             _DegreeText = new AuxiliaryText(adornedElement, $"{roundDegree}°", new Point(_centerPoint.X + 40 * Math.Cos(θ(rotationAngle, angleType, roundDegree)) - 20, _centerPoint.Y + 40 * Math.Sin(θ(rotationAngle, angleType, roundDegree)) - 20));
             adornerLayer.Add(_DegreeText);
-            return rotationAngle;
+            return (rotationAngle, roundDegree);
         }
 
-        public double Render2nd(Point endPoint, double rotationAngle, SweepDirection sweepDirection)
+        public (double, double) Render2nd(Point endPoint, double rotationAngle, SweepDirection sweepDirection)
         {
             AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(adornedElement);
 
@@ -137,7 +137,7 @@ namespace boilersGraphics.Controls
             }
             _DegreeText = new AuxiliaryText(adornedElement, $"{roundDegree}°", new Point(_centerPoint.X + 40 * Math.Cos(θ(rotationAngle, angleType, roundDegree)) - 20, _centerPoint.Y + 40 * Math.Sin(θ(rotationAngle, angleType, roundDegree)) - 20));
             adornerLayer.Add(_DegreeText);
-            return rotationAngle;
+            return (rotationAngle, roundDegree);
         }
 
         private double θ(double rotationAngle, Helpers.AngleType angleType, double roundDegree)

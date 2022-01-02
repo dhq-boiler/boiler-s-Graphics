@@ -27,6 +27,8 @@ namespace boilersGraphics.Adorners
         private double _MinusRaidus;
         private double _StartAngle;
         private double _EndAngle;
+        private double _DispStartAngle;
+        private double _DispEndAngle;
         private AuxiliaryArcBetweenCeilingAndTarget _auxiliaryArcBetweenCeilingAndTarget;
 
         public enum PieCreationStep
@@ -61,28 +63,30 @@ namespace boilersGraphics.Adorners
                         var currentPosition = _firstDragEndPoint.Value;
                         _snapAction.OnMouseMove(ref currentPosition);
                         _firstDragEndPoint = currentPosition;
-                        (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "描画";
-                        (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = $"マウスアップで扇形の長い半径と開始角度を決定します。 中心点：{_firstDragStartPoint} 長い半径：{Math.Round(new Vector(_firstDragEndPoint.Value.X - _firstDragStartPoint.Value.X, _firstDragEndPoint.Value.Y - _firstDragStartPoint.Value.Y).Length)} 開始角度：{Math.Round(_StartAngle + 90)}";
                         var beginVector = new Vector(_firstDragEndPoint.Value.X - _firstDragStartPoint.Value.X, _firstDragEndPoint.Value.Y - _firstDragStartPoint.Value.Y);
                         _auxiliaryArcBetweenCeilingAndTarget.Render1st(_firstDragStartPoint.Value, new Point(_firstDragStartPoint.Value.X, _firstDragStartPoint.Value.Y - beginVector.Length));
-                        _auxiliaryArcBetweenCeilingAndTarget.Render2nd(_firstDragEndPoint.Value, Vector.AngleBetween(beginVector, new Vector(0, -1)));
+                        var (_, roundDegree) = _auxiliaryArcBetweenCeilingAndTarget.Render2nd(_firstDragEndPoint.Value, Vector.AngleBetween(beginVector, new Vector(0, -1)));
+                        _DispStartAngle = roundDegree;
+                        (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "描画";
+                        (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = $"マウスアップで扇形の長い半径と開始角度を決定します。 中心点：{_firstDragStartPoint} 長い半径：{Math.Round(new Vector(_firstDragEndPoint.Value.X - _firstDragStartPoint.Value.X, _firstDragEndPoint.Value.Y - _firstDragStartPoint.Value.Y).Length)} 開始角度：{_DispStartAngle}°";
                         break;
                     case PieCreationStep.Step2:
                         currentPosition = e.GetPosition(this);
                         var anotherVector = new Vector(currentPosition.X - _firstDragStartPoint.Value.X, currentPosition.Y - _firstDragStartPoint.Value.Y);
                         _Angle = Vector.AngleBetween(_RadiusVector, anotherVector);
-                        (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "描画";
-                        (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = $"マウスアップで扇形の終了角度を決定します。 中心点：{_firstDragStartPoint} 長い半径：{Math.Round(new Vector(_firstDragEndPoint.Value.X - _firstDragStartPoint.Value.X, _firstDragEndPoint.Value.Y - _firstDragStartPoint.Value.Y).Length)} 開始角度：{Math.Round(_StartAngle + 90)} 終了角度：{Math.Round(_EndAngle + 90)}";
                         beginVector = new Vector(_firstDragEndPoint.Value.X - _firstDragStartPoint.Value.X, _firstDragEndPoint.Value.Y - _firstDragStartPoint.Value.Y);
                         _auxiliaryArcBetweenCeilingAndTarget.Render1st(_firstDragStartPoint.Value, new Point(_firstDragStartPoint.Value.X, _firstDragStartPoint.Value.Y - beginVector.Length));
-                        _auxiliaryArcBetweenCeilingAndTarget.Render2nd(currentPosition, Vector.AngleBetween(anotherVector, new Vector(0, -1)), GetSweepDirection());
+                        (_, roundDegree) = _auxiliaryArcBetweenCeilingAndTarget.Render2nd(currentPosition, Vector.AngleBetween(anotherVector, new Vector(0, -1)));
+                        _DispEndAngle = roundDegree;
+                        (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "描画";
+                        (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = $"マウスアップで扇形の終了角度を決定します。 中心点：{_firstDragStartPoint} 長い半径：{Math.Round(new Vector(_firstDragEndPoint.Value.X - _firstDragStartPoint.Value.X, _firstDragEndPoint.Value.Y - _firstDragStartPoint.Value.Y).Length)} 開始角度：{_DispStartAngle}° 終了角度：{_DispEndAngle}°";
                         break;
                     case PieCreationStep.Step3:
                         currentPosition = e.GetPosition(this);
                         var vector = new Vector(currentPosition.X - _firstDragStartPoint.Value.X, currentPosition.Y - _firstDragStartPoint.Value.Y);
                         _MinusRaidus = vector.Length;
                         (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "描画";
-                        (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = $"マウスアップで扇形の短い半径を決定します。 中心点：{_firstDragStartPoint} 長い半径：{Math.Round(new Vector(_firstDragEndPoint.Value.X - _firstDragStartPoint.Value.X, _firstDragEndPoint.Value.Y - _firstDragStartPoint.Value.Y).Length)} 開始角度：{Math.Round(_StartAngle + 90)} 終了角度：{Math.Round(_EndAngle + 90)} 短い半径：{Math.Round(_MinusRaidus)}";
+                        (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = $"マウスアップで扇形の短い半径を決定します。 中心点：{_firstDragStartPoint} 長い半径：{Math.Round(new Vector(_firstDragEndPoint.Value.X - _firstDragStartPoint.Value.X, _firstDragEndPoint.Value.Y - _firstDragStartPoint.Value.Y).Length)} 開始角度：{_DispStartAngle}° 終了角度：{_DispEndAngle}° 短い半径：{Math.Round(_MinusRaidus)}";
                         break;
                 }
 
@@ -97,6 +101,20 @@ namespace boilersGraphics.Adorners
             }
 
             e.Handled = true;
+        }
+
+        private double GetAngle(double angle)
+        {
+            var angleType = (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.AngleType.Value;
+            var ret = Math.Round(angle);
+            if (angleType == AngleType.ZeroTo360)
+            {
+                return ret % 360;
+            }
+            else // angleType == AngleType.Minus180To180
+            {
+                return ret % 180;
+            }
         }
 
         protected override void OnMouseUp(MouseButtonEventArgs e)

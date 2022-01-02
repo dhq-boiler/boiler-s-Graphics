@@ -84,7 +84,7 @@ namespace boilersGraphics.Controls
                 _canvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
                 AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(_canvas);
 
-                viewModel.RotationAngle.Value = _ArcBetweenCeilingAndTarget.Render2nd((sender as RotateThumb).TranslatePoint(new Point(0, 0), _canvas), viewModel.RotationAngle.Value);
+                viewModel.RotationAngle.Value = _ArcBetweenCeilingAndTarget.Render2nd((sender as RotateThumb).TranslatePoint(new Point(0, 0), _canvas), viewModel.RotationAngle.Value).Item1;
                 (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = $"角度 {viewModel.RotationAngle.Value}°";
 
                 _designerItem.InvalidateMeasure();
