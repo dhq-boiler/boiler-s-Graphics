@@ -1,17 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using Reactive.Bindings;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using static boilersGraphics.Views.DetailPathGeometry;
 
 namespace boilersGraphics.Views
 {
@@ -23,6 +12,15 @@ namespace boilersGraphics.Views
         public DetailPie()
         {
             InitializeComponent();
+        }
+
+        public Placement WidthPlacement
+        {
+            get {
+                //var detailPathGeometry = this.DetailPathGeometry;
+                //var dockPanel = detailPathGeometry.ContentTemplate.FindName("WidthCell", detailPathGeometry);
+                return Placement.Top;
+            }
         }
     }
 }

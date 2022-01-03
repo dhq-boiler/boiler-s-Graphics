@@ -11,6 +11,7 @@
              d:DataContext="{d:DesignInstance Type=viewmodels:NPieViewModel}"
              xmlns:c="clr-namespace:CalcBinding;assembly=CalcBinding"
              prism:ViewModelLocator.AutoWireViewModel="True"
+             x:Name="userControl"
              Background="White"
              mc:Ignorable="d">
     <DockPanel>
@@ -24,23 +25,25 @@
                 </Button>
             </DockPanel>
         </DockPanel>
-        <local:DetailPathGeometry DataContext="{Binding ViewModel.Value}" CenterVisibility="Collapsed" Stretch="Fill">
+        <local:DetailPathGeometry x:Name="DetailPathGeometry" DataContext="{Binding ViewModel.Value}" CenterVisibility="Collapsed" Stretch="Fill" WidthPlacement="{c:Binding WidthPlacement, ElementName=userControl}">
             <Canvas>
-                <Ellipse Width="5"
+                <Ellipse x:Name="CenterPoint"
+                         Width="5"
                          Height="5"
                          Fill="Red"
                          Canvas.Left="{c:Binding PieCenterPoint.Value.X-Left.Value+100}"
                          Canvas.Top="{c:Binding PieCenterPoint.Value.Y-Top.Value+100}" />
                 <StackPanel Orientation="Horizontal"
-                            Canvas.Left="{c:Binding PieCenterPoint.Value.X-Left.Value+125}"
-                            Canvas.Top="{c:Binding PieCenterPoint.Value.Y-Top.Value+125}">
+                            Canvas.Left="{c:Binding PieCenterPoint.Value.X-Left.Value+115}"
+                            Canvas.Top="{c:Binding PieCenterPoint.Value.Y-Top.Value+115}">
                     <StackPanel.Resources>
                         <Style TargetType="control:DoubleTextBox">
                             <Setter Property="Width" Value="40" />
                         </Style>
                     </StackPanel.Resources>
-                    <control:DoubleTextBox DoubleText="{Binding PieCenterPoint.Value.X}" />
-                    <control:DoubleTextBox DoubleText="{Binding PieCenterPoint.Value.Y}" />
+                    <Label Foreground="Red">Center Point</Label>
+                    <control:DoubleTextBox Foreground="Red" DoubleText="{Binding PieCenterPoint.Value.X}" />
+                    <control:DoubleTextBox Foreground="Red" DoubleText="{Binding PieCenterPoint.Value.Y}" />
                 </StackPanel>
             </Canvas>
         </local:DetailPathGeometry>

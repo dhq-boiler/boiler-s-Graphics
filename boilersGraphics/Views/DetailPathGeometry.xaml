@@ -4,6 +4,7 @@
              xmlns:control="clr-namespace:boilersGraphics.Controls"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:c="clr-namespace:CalcBinding;assembly=CalcBinding"
              x:Name="userControl"
              mc:Ignorable="d">
     <UserControl.ContentTemplate>
@@ -121,7 +122,9 @@
                             <Label Content="°" />
                         </StackPanel>
                     </DockPanel>
-                    <DockPanel Grid.Row="4" Grid.Column="2">
+                    <DockPanel Name="WidthCell"
+                               Grid.Row="{c:Binding WidthRow, ElementName=userControl}"
+                               Grid.Column="2">
                         <StackPanel HorizontalAlignment="Center"
                                     VerticalAlignment="Top"
                                     Orientation="Horizontal">
