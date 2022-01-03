@@ -3,7 +3,7 @@ using Homura.ORM.Mapping;
 
 namespace boilersGraphics.Models
 {
-	[DefaultVersion(typeof(Version1))]
+	[DefaultVersion(typeof(Version2))]
     public class Statistics : PkIdEntity
     {
         private int _number_of_boots;
