@@ -72,7 +72,7 @@ namespace boilersGraphics.Models
 		/// <summary>
 		/// boiler's Graphics 起動回数
 		/// </summary>
-		[Column("NumberOfBoots", "INTEGER", 1)]
+		[Column("NumberOfBoots", "INTEGER", 1), NotNull]
         public int NumberOfBoots
         {
             get { return _number_of_boots; }
@@ -82,7 +82,7 @@ namespace boilersGraphics.Models
         /// <summary>
         /// boiler's Graphics 稼働時間
         /// </summary>
-        [Column("UptimeTicks", "BIGINT", 2)]
+        [Column("UptimeTicks", "BIGINT", 2), NotNull]
         public long UptimeTicks
         {
             get { return _uptime; }
@@ -92,7 +92,7 @@ namespace boilersGraphics.Models
         /// <summary>
         /// ファイルを指定して開いた回数
         /// </summary>
-        [Column("NumberOfTimesTheFileWasOpenedBySpecifyingIt", "INTEGER", 3)]
+        [Column("NumberOfTimesTheFileWasOpenedBySpecifyingIt", "INTEGER", 3), NotNull]
         public int NumberOfTimesTheFileWasOpenedBySpecifyingIt
         {
             get { return _numberOfTimesTheFileWasOpenedBySpecifyingIt; }
@@ -102,7 +102,7 @@ namespace boilersGraphics.Models
         /// <summary>
         /// 自動保存ファイルを指定して開いた回数
         /// </summary>
-        [Column("NumberOfTimesTheAutoSaveFileIsSpecifiedAndOpened", "INTEGER", 4)]
+        [Column("NumberOfTimesTheAutoSaveFileIsSpecifiedAndOpened", "INTEGER", 4), NotNull]
         public int NumberOfTimesTheAutoSaveFileIsSpecifiedAndOpened
         {
             get { return _numberOfTimesTheAutoSaveFileIsSpecifiedAndOpened; }
@@ -112,7 +112,7 @@ namespace boilersGraphics.Models
 		/// <summary>
 		/// ポインターツールでクリックした回数
 		/// </summary>
-		[Column("NumberOfClicksWithThePointerTool", "INTEGER", 5)]
+		[Column("NumberOfClicksWithThePointerTool", "INTEGER", 5), NotNull]
         public int NumberOfClicksWithThePointerTool
         {
             get { return _numberOfClicksWithThePointerTool; }
@@ -122,7 +122,7 @@ namespace boilersGraphics.Models
 		/// <summary>
 		/// なげなわツールで選択したアイテムの累計
 		/// </summary>
-		[Column("CumulativeTotalOfItemsSelectedWithTheLassoTool", "INTEGER", 6)]
+		[Column("CumulativeTotalOfItemsSelectedWithTheLassoTool", "INTEGER", 6), NotNull]
         public int CumulativeTotalOfItemsSelectedWithTheLassoTool 
         {
             get => _cumulativeTotalOfItemsSelectedWithTheLassoTool;
@@ -132,7 +132,7 @@ namespace boilersGraphics.Models
 		/// <summary>
 		/// 直線ツールの描画回数
 		/// </summary>
-		[Column("NumberOfDrawsOfTheStraightLineTool", "INTEGER", 7)]
+		[Column("NumberOfDrawsOfTheStraightLineTool", "INTEGER", 7), NotNull]
         public int NumberOfDrawsOfTheStraightLineTool
         {
             get => _numberOfDrawsOfTheStraightLineTool;
@@ -142,7 +142,7 @@ namespace boilersGraphics.Models
 		/// <summary>
 		/// 四角形ツールの描画回数
 		/// </summary>
-		[Column("NumberOfDrawsOfTheRectangleTool", "INTEGER", 8)]
+		[Column("NumberOfDrawsOfTheRectangleTool", "INTEGER", 8), NotNull]
         public int NumberOfDrawsOfTheRectangleTool
         {
             get => _numberOfDrawsOfTheRectangleTool;
@@ -152,7 +152,7 @@ namespace boilersGraphics.Models
 		/// <summary>
 		/// 円ツールの描画回数
 		/// </summary>
-		[Column("NumberOfDrawsOfTheEllipseTool", "INTEGER", 9)]
+		[Column("NumberOfDrawsOfTheEllipseTool", "INTEGER", 9), NotNull]
         public int NumberOfDrawsOfTheEllipseTool
         {
             get => _numberOfDrawsOfTheEllipseTool;
@@ -162,7 +162,7 @@ namespace boilersGraphics.Models
 		/// <summary>
 		/// 画像ファイルツールの描画回数
 		/// </summary>
-		[Column("NumberOfDrawsOfTheImageFileTool", "INTEGER", 10)]
+		[Column("NumberOfDrawsOfTheImageFileTool", "INTEGER", 10), NotNull]
         public int NumberOfDrawsOfTheImageFileTool
         {
             get => _numberOfDrawsOfTheImageFileTool;
@@ -172,7 +172,7 @@ namespace boilersGraphics.Models
 		/// <summary>
 		/// 文字ツールの描画回数
 		/// </summary>
-		[Column("NumberOfDrawsOfTheLetterTool", "INTEGER", 11)]
+		[Column("NumberOfDrawsOfTheLetterTool", "INTEGER", 11), NotNull]
         public int NumberOfDrawsOfTheLetterTool
         {
             get => _numberOfDrawsOfTheLetterTool;
@@ -182,7 +182,7 @@ namespace boilersGraphics.Models
 		/// <summary>
 		/// 縦書きツールの描画回数
 		/// </summary>
-		[Column("NumberOfDrawsOfTheVerticalLetterTool", "INTEGER", 12)]
+		[Column("NumberOfDrawsOfTheVerticalLetterTool", "INTEGER", 12), NotNull]
         public int NumberOfDrawsOfTheVerticalLetterTool
         {
             get => _numberOfDrawsOfTheVerticalLetterTool;
@@ -192,7 +192,7 @@ namespace boilersGraphics.Models
         /// <summary>
 		/// 多角形ツールの描画回数
 		/// </summary>
-		[Column("NumberOfDrawsOfPolygonTool", "INTEGER", 13)]
+		[Column("NumberOfDrawsOfPolygonTool", "INTEGER", 13), NotNull]
 		public int NumberOfDrawsOfPolygonTool
 		{
 			get => _numberOfDrawsOfPolygonTool;
@@ -202,7 +202,7 @@ namespace boilersGraphics.Models
 		///<summary>
 		/// ベジエ曲線ツールの描画回数
 		/// </summary>
-		[Column("NumberOfDrawsOfBezierCurveTool", "INTEGER", 14)]
+		[Column("NumberOfDrawsOfBezierCurveTool", "INTEGER", 14), NotNull]
 		public int NumberOfDrawsOfBezierCurveTool
 		{
 			get => _numberOfDrawsOfBezierCurveTool;
@@ -212,7 +212,7 @@ namespace boilersGraphics.Models
 		///<summary>
 		/// スナップポイントツールの設置回数
 		/// </summary>
-		[Column("NumberOfSnapPointToolInstallations", "INTEGER", 15)]
+		[Column("NumberOfSnapPointToolInstallations", "INTEGER", 15), NotNull]
 		public int NumberOfSnapPointToolInstallations
 		{
 			get => _numberOfSnapPointToolInstallations;
@@ -222,7 +222,7 @@ namespace boilersGraphics.Models
 		///<summary>
 		/// ブラシツールの描画回数
 		/// </summary>
-		[Column("BrushToolDrawCount", "INTEGER", 16)]
+		[Column("BrushToolDrawCount", "INTEGER", 16), NotNull]
 		public int BrushToolDrawCount
 		{
 			get => _brushToolDrawCount;
@@ -232,7 +232,7 @@ namespace boilersGraphics.Models
 		///<summary>
 		/// 消しゴムツールの使用回数
 		/// </summary>
-		[Column("NumberOfTimesTheEraserToolHasBeenUsed", "INTEGER", 17)]
+		[Column("NumberOfTimesTheEraserToolHasBeenUsed", "INTEGER", 17), NotNull]
 		public int NumberOfTimesTheEraserToolHasBeenUsed
 		{
 			get => _numberOfTimesTheEraserToolHasBeenUsed;
@@ -242,7 +242,7 @@ namespace boilersGraphics.Models
 		///<summary>
 		/// 上書き保存した回数
 		/// </summary>
-		[Column("NumberOfTimesSaved", "INTEGER", 18)]
+		[Column("NumberOfTimesSaved", "INTEGER", 18), NotNull]
 		public int NumberOfTimesSaved
 		{
 			get => _numberOfTimesSaved;
@@ -252,7 +252,7 @@ namespace boilersGraphics.Models
 		///<summary>
 		/// 名前を付けて保存した回数
 		/// </summary>
-		[Column("NumberOfTimesYouHaveNamedAndSaved", "INTEGER", 19)]
+		[Column("NumberOfTimesYouHaveNamedAndSaved", "INTEGER", 19), NotNull]
 		public int NumberOfTimesYouHaveNamedAndSaved
 		{
 			get => _numberOfTimesYouHaveNamedAndSaved;
@@ -262,7 +262,7 @@ namespace boilersGraphics.Models
 		///<summary>
 		/// エクスポートした回数
 		/// </summary>
-		[Column("NumberOfExports", "INTEGER", 20)]
+		[Column("NumberOfExports", "INTEGER", 20), NotNull]
 		public int NumberOfExports
 		{
 			get => _numberOfExports;
@@ -272,7 +272,7 @@ namespace boilersGraphics.Models
 		///<summary>
 		/// Jpegエクスポートした回数
 		/// </summary>
-		[Column("NumberOfJpegExports", "INTEGER", 21)]
+		[Column("NumberOfJpegExports", "INTEGER", 21), NotNull]
 		public int NumberOfJpegExports
 		{
 			get => _numberOfJpegExports;
@@ -282,7 +282,7 @@ namespace boilersGraphics.Models
 		///<summary>
 		/// PNGエクスポートした回数
 		/// </summary>
-		[Column("NumberOfPngExports", "INTEGER", 22)]
+		[Column("NumberOfPngExports", "INTEGER", 22), NotNull]
 		public int NumberOfPngExports
 		{
 			get => _numberOfPngExports;
@@ -292,7 +292,7 @@ namespace boilersGraphics.Models
 		///<summary>
 		/// GIFエクスポートした回数
 		/// </summary>
-		[Column("NumberOfGifExports", "INTEGER", 23)]
+		[Column("NumberOfGifExports", "INTEGER", 23), NotNull]
 		public int NumberOfGifExports
 		{
 			get => _numberOfGifExports;
@@ -302,7 +302,7 @@ namespace boilersGraphics.Models
 		///<summary>
 		/// BMPエクスポートした回数
 		/// </summary>
-		[Column("NumberOfBmpExports", "INTEGER", 24)]
+		[Column("NumberOfBmpExports", "INTEGER", 24), NotNull]
 		public int NumberOfBmpExports
 		{
 			get => _numberOfBmpExports;
@@ -312,7 +312,7 @@ namespace boilersGraphics.Models
 		///<summary>
 		/// TIFFエクスポートした回数
 		/// </summary>
-		[Column("NumberOfTiffExports", "INTEGER", 25)]
+		[Column("NumberOfTiffExports", "INTEGER", 25), NotNull]
 		public int NumberOfTiffExports
 		{
 			get => _numberOfTiffExports;
@@ -322,7 +322,7 @@ namespace boilersGraphics.Models
 		///<summary>
 		/// WMPエクスポートした回数
 		/// </summary>
-		[Column("NumberOfWmpExports", "INTEGER", 26)]
+		[Column("NumberOfWmpExports", "INTEGER", 26), NotNull]
 		public int NumberOfWmpExports
 		{
 			get => _numberOfWmpExports;
@@ -332,7 +332,7 @@ namespace boilersGraphics.Models
 		///<summary>
 		/// グループ化した回数
 		/// </summary>
-		[Column("NumberOfTimesGrouped", "INTEGER", 27)]
+		[Column("NumberOfTimesGrouped", "INTEGER", 27), NotNull]
 		public int NumberOfTimesGrouped
 		{
 			get => _numberOfTimesGrouped;
@@ -342,7 +342,7 @@ namespace boilersGraphics.Models
 		///<summary>
 		/// グループ化解除した回数
 		/// </summary>
-		[Column("NumberOfUngrouped", "INTEGER", 28)]
+		[Column("NumberOfUngrouped", "INTEGER", 28), NotNull]
 		public int NumberOfUngrouped
 		{
 			get => _numberOfUngrouped;
@@ -352,7 +352,7 @@ namespace boilersGraphics.Models
 		///<summary>
 		/// 最前面へ移動した回数
 		/// </summary>
-		[Column("NumberOfMovesToTheFrontend", "INTEGER", 29)]
+		[Column("NumberOfMovesToTheFrontend", "INTEGER", 29), NotNull]
 		public int NumberOfMovesToTheFrontend
 		{
 			get => _numberOfMovesToTheFrontend;
@@ -362,7 +362,7 @@ namespace boilersGraphics.Models
 		///<summary>
 		/// 前面へ移動した回数
 		/// </summary>
-		[Column("NumberOfMovesToTheFront", "INTEGER", 30)]
+		[Column("NumberOfMovesToTheFront", "INTEGER", 30), NotNull]
 		public int NumberOfMovesToTheFront
 		{
 			get => _numberOfMovesToTheFront;
@@ -372,7 +372,7 @@ namespace boilersGraphics.Models
 		///<summary>
 		/// 背面へ移動した回数
 		/// </summary>
-		[Column("NumberOfMovesToTheBack", "INTEGER", 31)]
+		[Column("NumberOfMovesToTheBack", "INTEGER", 31), NotNull]
 		public int NumberOfMovesToTheBack
 		{
 			get => _numberOfMovesToTheBack;
@@ -382,7 +382,7 @@ namespace boilersGraphics.Models
 		///<summary>
 		/// 最背面へ移動した回数
 		/// </summary>
-		[Column("NumberOfMovesToTheBackend", "INTEGER", 32)]
+		[Column("NumberOfMovesToTheBackend", "INTEGER", 32), NotNull]
 		public int NumberOfMovesToTheBackend
 		{
 			get => _numberOfMovesToTheBackend;
@@ -392,7 +392,7 @@ namespace boilersGraphics.Models
 		///<summary>
 		/// 上揃えした回数
 		/// </summary>
-		[Column("NumberOfTopAlignment", "INTEGER", 33)]
+		[Column("NumberOfTopAlignment", "INTEGER", 33), NotNull]
 		public int NumberOfTopAlignment
 		{
 			get => _numberOfTopAlignment;
@@ -402,7 +402,7 @@ namespace boilersGraphics.Models
 		///<summary>
 		/// 上下中央揃えした回数
 		/// </summary>
-		[Column("NumberOfTimesTheTopAndBottomAreCentered", "INTEGER", 34)]
+		[Column("NumberOfTimesTheTopAndBottomAreCentered", "INTEGER", 34), NotNull]
 		public int NumberOfTimesTheTopAndBottomAreCentered
 		{
 			get => _numberOfTimesTheTopAndBottomAreCentered;
@@ -412,7 +412,7 @@ namespace boilersGraphics.Models
 		///<summary>
 		/// 下揃えした回数
 		/// </summary>
-		[Column("NumberOfBottomAlignment", "INTEGER", 35)]
+		[Column("NumberOfBottomAlignment", "INTEGER", 35), NotNull]
 		public int NumberOfBottomAlignment
 		{
 			get => _numberOfBottomAlignment;
@@ -421,7 +421,7 @@ namespace boilersGraphics.Models
 		///<summary>
 		/// 左揃えした回数
 		/// </summary>
-		[Column("NumberOfLeftAlignment", "INTEGER", 36)]
+		[Column("NumberOfLeftAlignment", "INTEGER", 36), NotNull]
 		public int NumberOfLeftAlignment
 		{
 			get => _numberOfLeftAlignment;
@@ -431,7 +431,7 @@ namespace boilersGraphics.Models
 		///<summary>
 		/// 左右中央揃えした回数
 		/// </summary>
-		[Column("NumberOfTimesLeftAndRightCentered", "INTEGER", 37)]
+		[Column("NumberOfTimesLeftAndRightCentered", "INTEGER", 37), NotNull]
 		public int NumberOfTimesLeftAndRightCentered
 		{
 			get => _numberOfTimesLeftAndRightCentered;
@@ -441,7 +441,7 @@ namespace boilersGraphics.Models
 		///<summary>
 		/// 右揃えした回数
 		/// </summary>
-		[Column("NumberOfRightAlignment", "INTEGER", 38)]
+		[Column("NumberOfRightAlignment", "INTEGER", 38), NotNull]
 		public int NumberOfRightAlignment
 		{
 			get => _numberOfRightAlignment;
@@ -451,7 +451,7 @@ namespace boilersGraphics.Models
 		///<summary>
 		/// 左右に整列した回数
 		/// </summary>
-		[Column("NumberOfTimesAlignedLeftAndRight", "INTEGER", 39)]
+		[Column("NumberOfTimesAlignedLeftAndRight", "INTEGER", 39), NotNull]
 		public int NumberOfTimesAlignedLeftAndRight
 		{
 			get => _numberOfTimesAlignedLeftAndRight;
@@ -461,7 +461,7 @@ namespace boilersGraphics.Models
 		///<summary>
 		/// 上下に整列した回数
 		/// </summary>
-		[Column("NumberOfTimesAlignedUpAndDown", "INTEGER", 40)]
+		[Column("NumberOfTimesAlignedUpAndDown", "INTEGER", 40), NotNull]
 		public int NumberOfTimesAlignedUpAndDown
 		{
 			get => _numberOfTimesAlignedUpAndDown;
@@ -471,7 +471,7 @@ namespace boilersGraphics.Models
 		///<summary>
 		/// 幅を合わせた回数
 		/// </summary>
-		[Column("NumberOfTimesToMatchTheWidth", "INTEGER", 41)]
+		[Column("NumberOfTimesToMatchTheWidth", "INTEGER", 41), NotNull]
 		public int NumberOfTimesToMatchTheWidth
 		{
 			get => _numberOfTimesToMatchTheWidth;
@@ -481,7 +481,7 @@ namespace boilersGraphics.Models
 		///<summary>
 		/// 高さを合わせた回数
 		/// </summary>
-		[Column("NumberOfTimesToMatchTheHeight", "INTEGER", 42)]
+		[Column("NumberOfTimesToMatchTheHeight", "INTEGER", 42), NotNull]
 		public int NumberOfTimesToMatchTheHeight
 		{
 			get => _numberOfTimesToMatchTheHeight;
@@ -491,7 +491,7 @@ namespace boilersGraphics.Models
 		///<summary>
 		/// Unionした回数
 		/// </summary>
-		[Column("NumberOfUnions", "INTEGER", 43)]
+		[Column("NumberOfUnions", "INTEGER", 43), NotNull]
 		public int NumberOfUnions
 		{
 			get => _numberOfUnions;
@@ -501,7 +501,7 @@ namespace boilersGraphics.Models
 		///<summary>
 		/// Intersectした回数
 		/// </summary>
-		[Column("NumberOfIntersects", "INTEGER", 44)]
+		[Column("NumberOfIntersects", "INTEGER", 44), NotNull]
 		public int NumberOfIntersects
 		{
 			get => _numberOfIntersects;
@@ -511,7 +511,7 @@ namespace boilersGraphics.Models
 		///<summary>
 		/// Xorした回数
 		/// </summary>
-		[Column("NumberOfXors", "INTEGER", 45)]
+		[Column("NumberOfXors", "INTEGER", 45), NotNull]
 		public int NumberOfXors
 		{
 			get => _numberOfXors;
@@ -521,7 +521,7 @@ namespace boilersGraphics.Models
 		///<summary>
 		/// Excludeした回数
 		/// </summary>
-		[Column("NumberOfExcludes", "INTEGER", 46)]
+		[Column("NumberOfExcludes", "INTEGER", 46), NotNull]
 		public int NumberOfExcludes
 		{
 			get => _numberOfExcludes;
@@ -531,7 +531,7 @@ namespace boilersGraphics.Models
 		///<summary>
 		/// 切り取りした回数
 		/// </summary>
-		[Column("NumberOfCuts", "INTEGER", 47)]
+		[Column("NumberOfCuts", "INTEGER", 47), NotNull]
 		public int NumberOfCuts
 		{
 			get => _numberOfCuts;
@@ -541,7 +541,7 @@ namespace boilersGraphics.Models
 		///<summary>
 		/// コピーした回数
 		/// </summary>
-		[Column("NumberOfCopies", "INTEGER", 48)]
+		[Column("NumberOfCopies", "INTEGER", 48), NotNull]
 		public int NumberOfCopies
 		{
 			get => _numberOfCopies;
@@ -551,7 +551,7 @@ namespace boilersGraphics.Models
 		///<summary>
 		/// 貼り付けした回数
 		/// </summary>
-		[Column("NumberOfPasted", "INTEGER", 49)]
+		[Column("NumberOfPasted", "INTEGER", 49), NotNull]
 		public int NumberOfPasted
 		{
 			get => _numberOfPasted;
@@ -561,7 +561,7 @@ namespace boilersGraphics.Models
 		///<summary>
 		/// 元に戻した回数
 		/// </summary>
-		[Column("NumberOfUndos", "INTEGER", 50)]
+		[Column("NumberOfUndos", "INTEGER", 50), NotNull]
 		public int NumberOfUndos
 		{
 			get => _numberOfUndos;
@@ -571,7 +571,7 @@ namespace boilersGraphics.Models
 		///<summary>
 		/// やり直しした回数
 		/// </summary>
-		[Column("NumberOfRedoes", "INTEGER", 51)]
+		[Column("NumberOfRedoes", "INTEGER", 51), NotNull]
 		public int NumberOfRedoes
 		{
 			get => _numberOfRedoes;
@@ -581,7 +581,7 @@ namespace boilersGraphics.Models
 		///<summary>
 		/// 自動保存した回数
 		/// </summary>
-		[Column("NumberOfTimesAutomaticallySaved", "INTEGER", 52)]
+		[Column("NumberOfTimesAutomaticallySaved", "INTEGER", 52), NotNull]
 		public int NumberOfTimesAutomaticallySaved
 		{
 			get => _numberOfTimesAutomaticallySaved;
@@ -591,7 +591,7 @@ namespace boilersGraphics.Models
 		///<summary>
 		/// 新規作成したレイヤー数
 		/// </summary>
-		[Column("NumberOfNewlyCreatedLayers", "INTEGER", 53)]
+		[Column("NumberOfNewlyCreatedLayers", "INTEGER", 53), NotNull]
 		public int NumberOfNewlyCreatedLayers
 		{
 			get => _numberOfNewlyCreatedLayers;
@@ -601,7 +601,7 @@ namespace boilersGraphics.Models
 		///<summary>
 		/// 削除したレイヤー数
 		/// </summary>
-		[Column("NumberOfDeletedLayers", "INTEGER", 54)]
+		[Column("NumberOfDeletedLayers", "INTEGER", 54), NotNull]
 		public int NumberOfDeletedLayers
 		{
 			get => _numberOfDeletedLayers;
@@ -611,7 +611,7 @@ namespace boilersGraphics.Models
 		///<summary>
 		/// アイテムを描画した回数
 		/// </summary>
-		[Column("NumberOfTimesTheItemWasDrawn", "INTEGER", 55)]
+		[Column("NumberOfTimesTheItemWasDrawn", "INTEGER", 55), NotNull]
 		public int NumberOfTimesTheItemWasDrawn
 		{
 			get => _numberOfTimesTheItemWasDrawn;
@@ -621,7 +621,7 @@ namespace boilersGraphics.Models
 		///<summary>
 		/// アイテムを削除した回数
 		/// </summary>
-		[Column("NumberOfTimesTheItemWasDeleted", "INTEGER", 56)]
+		[Column("NumberOfTimesTheItemWasDeleted", "INTEGER", 56), NotNull]
 		public int NumberOfTimesTheItemWasDeleted
 		{
 			get => _numberOfTimesTheItemWasDeleted;
@@ -631,7 +631,7 @@ namespace boilersGraphics.Models
 		///<summary>
 		/// ログレベルを変更した回数
 		/// </summary>
-		[Column("NumberOfLogLevelChanges", "INTEGER", 57)]
+		[Column("NumberOfLogLevelChanges", "INTEGER", 57), NotNull]
 		public int NumberOfLogLevelChanges
 		{
 			get => _numberOfLogLevelChanges;
@@ -641,7 +641,7 @@ namespace boilersGraphics.Models
 		///<summary>
 		/// バージョン情報ダイアログを表示した回数
 		/// </summary>
-		[Column("NumberOfTimesTheVersionInformationDialogWasDisplayed", "INTEGER", 58)]
+		[Column("NumberOfTimesTheVersionInformationDialogWasDisplayed", "INTEGER", 58), NotNull]
 		public int NumberOfTimesTheVersionInformationDialogWasDisplayed
 		{
 			get => _numberOfTimesTheVersionInformationDialogWasDisplayed;
@@ -651,7 +651,7 @@ namespace boilersGraphics.Models
 		///<summary>
 		/// アプリケーションログを表示した回数
 		/// </summary>
-		[Column("NumberOfTimesTheApplicationLogWasDisplayed", "INTEGER", 59)]
+		[Column("NumberOfTimesTheApplicationLogWasDisplayed", "INTEGER", 59), NotNull]
 		public int NumberOfTimesTheApplicationLogWasDisplayed
 		{
 			get => _numberOfTimesTheApplicationLogWasDisplayed;
@@ -662,7 +662,7 @@ namespace boilersGraphics.Models
 		/// スライスツールの使用回数
 		/// </summary>
 		[Since(typeof(Version1))]
-		[Column("NumberOfTimesSliceToolHasBeenUsed", "INTEGER", 60)]
+		[Column("NumberOfTimesSliceToolHasBeenUsed", "INTEGER", 60), NotNull]
 		public int NumberOfTimesSliceToolHasBeenUsed
 		{
 			get => _numberOfTimesSliceToolHasBeenUsed;
@@ -673,7 +673,7 @@ namespace boilersGraphics.Models
 		/// パイツールの描画回数
 		/// </summary>
 		[Since(typeof(Version2))]
-		[Column("NumberOfDrawsOfThePieTool", "INTEGER", 61)]
+		[Column("NumberOfDrawsOfThePieTool", "INTEGER", 61), NotNull]
 		public int NumberOfDrawsOfThePieTool
         {
 			get => _numberOfDrawsOfThePieTool;
