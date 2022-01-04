@@ -53,6 +53,22 @@ namespace boilersGraphics.Extensions
             }
         }
 
+        public static IEnumerable<FrameworkElement> GetChildren(this FrameworkElement parent)
+        {
+            var count = VisualTreeHelper.GetChildrenCount(parent);
+            for (int i = 0; i < count; i++)
+            {
+                var child = VisualTreeHelper.GetChild(parent, i) as FrameworkElement;
+
+                var children = GetChildren(child).ToList();
+                foreach (var child2 in children)
+                    yield return child2;
+
+                if (child != null)
+                    yield return child;
+            }
+        }
+
         public static IEnumerable<T> GetCorrespondingViews<T>(this FrameworkElement parent, object dataContext, bool parentInclude = false)
             where T : FrameworkElement
         {
