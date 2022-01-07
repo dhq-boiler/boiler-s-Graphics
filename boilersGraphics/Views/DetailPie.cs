@@ -21,6 +21,7 @@ namespace boilersGraphics.Views
         private DetailPathGeometry _detailPathGeometry;
         public DetailPie()
         {
+            Name = "DetailPie";
             Loaded += DetailPie_Loaded;
         }
 
@@ -45,7 +46,7 @@ namespace boilersGraphics.Views
             _detailPathGeometry.SetBinding(FrameworkElement.DataContextProperty, "ViewModel.Value");
             _detailPathGeometry.CenterVisibility = Visibility.Collapsed;
             _detailPathGeometry.Stretch = System.Windows.Media.Stretch.Fill;
-            _detailPathGeometry.SetValue(WidthPlacementProperty, WidthPlacement);
+            _detailPathGeometry.SetBinding(WidthPlacementProperty, new Binding("WidthPlacement") { Source = this });
             var canvas = new Canvas();
             var centerPoint = new Ellipse();
             centerPoint.Width = 5;
@@ -90,38 +91,11 @@ namespace boilersGraphics.Views
             get
             {
                 var detailPathGeometry = _detailPathGeometry;
-                //var d = this as DependencyObject;
-                //ContentPresenter cp = null;
-                //while (d != null)
-                //{
-                //    if (d is ContentPresenter) cp = d as ContentPresenter;
-                //    d = VisualTreeHelper.GetParent(d);
-                //    if (cp != null && cp.FindName("WidthCell") != null) break;
-                //}
-                //if (cp != null)
-                //{
-                //    cp = cp.FindName("WidthCell") as ContentPresenter; 
-                //    //if (cp != null)
-                //    //{
+                var children = this.FindVisualChildren<DependencyObject>().ToList();
+                var target = children.FirstOrDefault(x => x is FrameworkElement xx && xx.Name == "WidthCell");
 
-                //    //}
-                //}
-                //var a = detailPathGeometry.Template;
-                var b = detailPathGeometry.ContentTemplate;
-                //var x = this.FindByName("WidthCell").ToList();
-                var c = this.GetChildren().ToList();
-                var x = c.FirstOrDefault(x => x.Name == "WidthCell");
-                //var cp = this.GetChildOfType<DockPanel>();
-                //cp = cp.GetChildOfType<ContentPresenter>();
-                //cp = cp.GetChildOfType<ContentPresenter>();
-                //var dockPanel = b.FindName("WidthCell", cp);
-                //var template = this.Template;
-                //var border = VisualTreeHelper.GetChild(this, 0) as Border;
-                //var contentPresenter = VisualTreeHelper.GetChild(border, 0) as ContentPresenter;
+                // コードが続きます...
 
-                //var dockPanel__ = a.FindName("WidthCell", this);
-                //var dockPanel_ = b.FindName("WidthCell", VisualTreeHelper.GetParent(b));
-                //var dockPanel = template.FindName("WidthCell", this);
                 return Placement.Top;
             }
         }
