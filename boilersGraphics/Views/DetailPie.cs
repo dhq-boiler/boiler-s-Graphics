@@ -93,6 +93,10 @@ namespace boilersGraphics.Views
                 var detailPathGeometry = _detailPathGeometry;
                 var children = this.FindVisualChildren<DependencyObject>().ToList();
                 var target = children.FirstOrDefault(x => x is FrameworkElement xx && xx.Name == "WidthCell");
+                // target is null!!!
+
+                var obj = detailPathGeometry.FindName("WidthCell");
+                // obj is null!!!
 
                 // コードが続きます...
 
