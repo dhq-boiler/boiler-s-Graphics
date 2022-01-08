@@ -87,17 +87,31 @@ namespace boilersGraphics.Views
             get
             {
                 var detailPathGeometry = _detailPathGeometry;
-                var children = this.FindVisualChildren<DependencyObject>().ToList();
-                var target = children.FirstOrDefault(x => x is FrameworkElement xx && xx.Name == "WidthCell");
-                // target is null!!!
-
-                var obj = detailPathGeometry.FindName("WidthCell");
-                // obj is null!!!
+                var contentPresenter = FindVisualChild<ContentPresenter>(this);
+                DataTemplate dataTemplate = contentPresenter.ContentTemplate; //dataTemplate is null!!!
+                var target = dataTemplate.FindName("WidthCell", contentPresenter);
 
                 // コードが続きます...
 
                 return Placement.Top;
             }
+        }
+
+        private T FindVisualChild<T>(DependencyObject obj) where T : DependencyObject
+        {
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
+            {
+                DependencyObject child = VisualTreeHelper.GetChild(obj, i);
+                if (child != null && child is T)
+                    return (T)child;
+                else
+                {
+                    T childOfChild = FindVisualChild<T>(child);
+                    if (childOfChild != null)
+                        return childOfChild;
+                }
+            }
+            return null;
         }
     }
 }
