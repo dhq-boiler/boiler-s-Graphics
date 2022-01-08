@@ -1,11 +1,6 @@
 ﻿using boilersGraphics.ViewModels;
-using Reactive.Bindings;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 
@@ -21,6 +16,19 @@ namespace boilersGraphics.Helpers
         public static PathGeometry CreateEllipse(double centerX, double centerY, Thickness thickness)
         {
             return PathGeometry.CreateFromGeometry(new EllipseGeometry(new Point(centerX - thickness.Left, centerY - thickness.Top), thickness.Left + thickness.Right, thickness.Top + thickness.Bottom));
+        }
+
+        public static PathGeometry CreatePolyBezier(PolyBezierViewModel clone)
+        {
+            var geometry = new PathGeometry();
+            var pathFigure = new PathFigure();
+            var pathFigureCollection = new PathFigureCollection();
+            var pathSegmentCollection = new PathSegmentCollection();
+            pathSegmentCollection.Add(new PolyBezierSegment(clone.Points, true));
+            pathFigure.Segments = pathSegmentCollection;
+            pathFigureCollection.Add(pathFigure);
+            geometry.Figures = pathFigureCollection;
+            return geometry;
         }
 
         public static PathGeometry CreateEllipse(NEllipseViewModel item, double angle)

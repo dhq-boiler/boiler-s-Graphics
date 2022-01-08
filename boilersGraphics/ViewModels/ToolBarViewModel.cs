@@ -44,6 +44,8 @@ namespace boilersGraphics.ViewModels
         public EraserBehavior EraserBehavior { get; } = new EraserBehavior();
         public SliceBehavior SliceBehavior { get; private set; }
 
+        public NDrawPolyBezierBehavior PolyBezierBehavior { get; } = new NDrawPolyBezierBehavior();
+
         public ToolBarViewModel(IDialogService dialogService)
         {
             this.dlgService = dialogService;
@@ -210,6 +212,16 @@ namespace boilersGraphics.ViewModels
                 }
                 ChangeHitTestToDisable();
                 SelectOneToolItem("slice");
+            })));
+            ToolItems.Add(new ToolItemData("polybezier", string.Empty, string.Empty, new DelegateCommand(() =>
+            {
+                Behaviors.Clear();
+                if (!Behaviors.Contains(PolyBezierBehavior))
+                {
+                    Behaviors.Add(PolyBezierBehavior);
+                }
+                ChangeHitTestToDisable();
+                SelectOneToolItem("polybezier");
             })));
         }
 

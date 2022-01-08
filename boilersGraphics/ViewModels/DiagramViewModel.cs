@@ -98,6 +98,7 @@ namespace boilersGraphics.ViewModels
         public DelegateCommand PropertyCommand { get; private set; }
         public DelegateCommand<System.Windows.Shapes.Line> MouseDownStraightLineCommand { get; private set; }
         public DelegateCommand<System.Windows.Shapes.Path> MouseDownBezierCurveCommand { get; private set; }
+        public DelegateCommand<System.Windows.Shapes.Path> MouseDownPolyBezierCommand { get; private set; }
         public DelegateCommand LoadedCommand { get; private set; }
 
         #region Property
@@ -364,6 +365,13 @@ namespace boilersGraphics.ViewModels
                 bezierCurveVM.IsSelected.Value = true;
                 bezierCurveVM.SnapPoint0VM.Value.IsSelected.Value = true;
                 bezierCurveVM.SnapPoint1VM.Value.IsSelected.Value = true;
+            });
+            MouseDownPolyBezierCommand = new DelegateCommand<System.Windows.Shapes.Path>(line =>
+            {
+                var polyBezierVM = line.DataContext as PolyBezierViewModel;
+                polyBezierVM.IsSelected.Value = true;
+                polyBezierVM.SnapPoint0VM.Value.IsSelected.Value = true;
+                polyBezierVM.SnapPoint1VM.Value.IsSelected.Value = true;
             });
             LoadedCommand = new DelegateCommand(() =>
             {
