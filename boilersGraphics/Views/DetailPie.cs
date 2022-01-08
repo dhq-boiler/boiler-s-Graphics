@@ -1,5 +1,7 @@
 ﻿using boilersGraphics.Controls;
+using boilersGraphics.Extensions;
 using boilersGraphics.ViewModels;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -86,31 +88,15 @@ namespace boilersGraphics.Views
             {
                 var detailPathGeometry = _detailPathGeometry;
                 detailPathGeometry.ApplyTemplate();
-                var contentPresenter = FindVisualChild<ContentPresenter>(detailPathGeometry);
+                var contentPresenter = detailPathGeometry.FindVisualChildren<ContentPresenter>().ToList().First();
                 DataTemplate dataTemplate = contentPresenter.ContentTemplate;
-                var target = dataTemplate.FindName("WidthCell", contentPresenter);
-
+                var obj = dataTemplate.LoadContent();
+                var x = obj.FindVisualChildren<DockPanel>().First(x => x.Name == "WidthCell");
+                
                 // コードが続きます...
 
                 return Placement.Top;
             }
-        }
-
-        private T FindVisualChild<T>(DependencyObject obj) where T : DependencyObject
-        {
-            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
-            {
-                DependencyObject child = VisualTreeHelper.GetChild(obj, i);
-                if (child != null && child is T)
-                    return (T)child;
-                else
-                {
-                    T childOfChild = FindVisualChild<T>(child);
-                    if (childOfChild != null)
-                        return childOfChild;
-                }
-            }
-            return null;
         }
     }
 }
