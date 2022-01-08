@@ -88,11 +88,8 @@ namespace boilersGraphics.Views
             {
                 var detailPathGeometry = _detailPathGeometry;
                 detailPathGeometry.ApplyTemplate();
-                var contentPresenter = detailPathGeometry.FindVisualChildren<ContentPresenter>().ToList().First();
-                DataTemplate dataTemplate = contentPresenter.ContentTemplate;
-                var obj = dataTemplate.LoadContent();
-                var x = obj.FindVisualChildren<DockPanel>().First(x => x.Name == "WidthCell");
-                
+                var widthCell = detailPathGeometry.FindVisualChildren<DockPanel>().First(x => x.Name == "WidthCell");
+                                
                 // コードが続きます...
 
                 return Placement.Top;

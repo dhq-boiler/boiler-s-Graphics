@@ -65,6 +65,15 @@ namespace boilersGraphics.Extensions
                         yield return (T)child;
                     }
 
+                    if (child != null && child is ContentPresenter cp)
+                    {
+                        var dependencyObject = cp.ContentTemplate.LoadContent();
+                        foreach (T childOfChild in FindVisualChildren<T>(dependencyObject))
+                        {
+                            yield return childOfChild;
+                        }
+                    }
+
                     foreach (T childOfChild in FindVisualChildren<T>(child))
                     {
                         yield return childOfChild;
