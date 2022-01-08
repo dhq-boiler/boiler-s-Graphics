@@ -1,7 +1,5 @@
 ﻿using boilersGraphics.Controls;
-using boilersGraphics.Extensions;
 using boilersGraphics.ViewModels;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -87,8 +85,9 @@ namespace boilersGraphics.Views
             get
             {
                 var detailPathGeometry = _detailPathGeometry;
-                var contentPresenter = FindVisualChild<ContentPresenter>(this);
-                DataTemplate dataTemplate = contentPresenter.ContentTemplate; //dataTemplate is null!!!
+                detailPathGeometry.ApplyTemplate();
+                var contentPresenter = FindVisualChild<ContentPresenter>(detailPathGeometry);
+                DataTemplate dataTemplate = contentPresenter.ContentTemplate;
                 var target = dataTemplate.FindName("WidthCell", contentPresenter);
 
                 // コードが続きます...
