@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 
 namespace boilersGraphics.Extensions
@@ -53,6 +54,36 @@ namespace boilersGraphics.Extensions
             }
         }
 
+        public static Rect BoundsRelativeTo(this FrameworkElement element, Visual relativeTo)
+        {
+            var slot = LayoutInformation.GetLayoutSlot(element);
+            return element.TransformToVisual(relativeTo).TransformBounds(slot);
+        }
+
+        //public static Rect BoundsRelativeTo(this FrameworkElement child, Visual parent)
+        //{
+        //    GeneralTransform gt = child.TransformToAncestor(parent);
+        //    return gt.TransformBounds(new Rect(0, 0, child.ActualWidth, child.ActualHeight));
+        //}
+
+        /// <summary>
+        /// VisualTreeを親側にたどって、
+        /// 指定した型の要素を探す
+        /// </summary>
+        public static T FindAncestor<T>(this DependencyObject depObj)
+            where T : DependencyObject
+        {
+            while (depObj != null)
+            {
+                if (depObj is T target)
+                {
+                    return target;
+                }
+                depObj = VisualTreeHelper.GetParent(depObj);
+            }
+            return null;
+        }
+
         public static IEnumerable<T> FindVisualChildren<T>(this DependencyObject depObj) where T : DependencyObject
         {
             if (depObj != null)
@@ -65,9 +96,11 @@ namespace boilersGraphics.Extensions
                         yield return (T)child;
                     }
 
-                    if (child != null && child is ContentPresenter cp)
+                    if (child != null && child is ContentPresenter cp && cp.ContentTemplate != null)
                     {
                         var dependencyObject = cp.ContentTemplate.LoadContent();
+                        if (dependencyObject is T)
+                            yield return (T)dependencyObject;
                         foreach (T childOfChild in FindVisualChildren<T>(dependencyObject))
                         {
                             yield return childOfChild;

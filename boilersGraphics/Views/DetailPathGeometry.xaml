@@ -5,11 +5,11 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:c="clr-namespace:CalcBinding;assembly=CalcBinding"
-             x:Name="userControl"
+             Name="userControl"
              mc:Ignorable="d">
     <UserControl.ContentTemplate>
         <DataTemplate>
-            <Grid>
+            <Grid x:Name="DPGRoot">
                 <Grid>
                     <Grid.Resources>
                         <Style TargetType="control:DoubleTextBox">
