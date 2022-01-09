@@ -83,7 +83,7 @@ namespace boilersGraphics
         {
             var version = Assembly.GetExecutingAssembly().GetName().Version;
             LogManager.GetCurrentClassLogger().Info($"boiler's Graphics {version}");
-            LogManager.GetCurrentClassLogger().Info($"Copyright (C) dhq_boiler 2018-2021. All rights reserved.");
+            LogManager.GetCurrentClassLogger().Info($"Copyright (C) dhq_boiler 2018-2022. All rights reserved.");
             LogManager.GetCurrentClassLogger().Info($"boiler's Graphics IS LAUNCHING");
             base.OnStartup(e);
         }
