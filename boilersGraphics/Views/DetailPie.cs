@@ -1,10 +1,8 @@
 ﻿using boilersGraphics.Controls;
 using boilersGraphics.Extensions;
 using boilersGraphics.ViewModels;
-using NLog;
 using Reactive.Bindings;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -87,11 +85,8 @@ namespace boilersGraphics.Views
             Content = _dockPanel;
         }
 
-        private bool loaded = false;
-
         private void DetailPie_LayoutUpdated(object sender, System.EventArgs e)
         {
-            if (loaded) return;
             var detailPathGeometry = _detailPathGeometry;
             detailPathGeometry.ApplyTemplate();
             var widthCell = detailPathGeometry.FindVisualChildren<DockPanel>().First(x => x.Name == "WidthCell");
@@ -102,11 +97,9 @@ namespace boilersGraphics.Views
             widthCell.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
             widthCell.Arrange(new Rect(0, 0, widthCell.DesiredSize.Width, widthCell.DesiredSize.Height));
             x.UpdateLayout();
-            var widthCellBounds = widthCell.BoundsRelativeTo(dpgRoot);
-            LogManager.GetCurrentClassLogger().Info(widthCellBounds);
             var centerPointBounds = _centerPoint.BoundsRelativeTo(x);
-            var isIntersect = widthCellBounds.IntersectsWith(centerPointBounds);
-            if (isIntersect)
+            var hitTestResult = widthCell.InputHitTest(new Point(centerPointBounds.X + centerPointBounds.Width / 2, centerPointBounds.Y + centerPointBounds.Height / 2));
+            if (hitTestResult != null)
             {
                 WidthPlacement.Value = Placement.Top;
             }
@@ -114,31 +107,8 @@ namespace boilersGraphics.Views
             {
                 WidthPlacement.Value = Placement.Bottom;
             }
-            loaded = true;
         }
-
-        private void DetailPie_Loaded1(object sender, RoutedEventArgs e)
-        {
-            
-        }
-
         
-
         public ReactivePropertySlim<Placement> WidthPlacement { get; } = new ReactivePropertySlim<Placement>(Placement.Bottom);
-
-        //public Placement WidthPlacement
-        //{
-        //    get
-        //    {
-        //        var detailPathGeometry = _detailPathGeometry;
-        //        detailPathGeometry.ApplyTemplate();
-        //        var widthCell = detailPathGeometry.FindVisualChildren<DockPanel>().First(x => x.Name == "WidthCell");
-
-        //        var dataContext = DataContext as DetailPieViewModel;
-        //        var inputElement = widthCell.InputHitTest(dataContext.ViewModel.Value.CenterPoint.Value);
-
-        //        return Placement.Bottom;
-        //    }
-        //}
     }
 }
