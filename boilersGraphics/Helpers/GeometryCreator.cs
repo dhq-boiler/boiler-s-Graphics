@@ -1,4 +1,5 @@
 ﻿using boilersGraphics.ViewModels;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -121,6 +122,30 @@ namespace boilersGraphics.Helpers
             Point oneIntersection;
             int beginI = 0;
             int endJ = 0;
+            DetectIntersections(pb, ref oneIntersection, ref beginI, ref endJ);
+
+            if (beginI > endJ)
+            {
+                Swap(ref beginI, ref endJ);
+            }
+
+            LogManager.GetCurrentClassLogger().Debug($"oneIntersection:{oneIntersection}");
+            LogManager.GetCurrentClassLogger().Debug($"beginI:{beginI}, endJ:{endJ}");
+
+            var segments = ExtractSegment(pb.Points, beginI + 1, endJ);
+            LogManager.GetCurrentClassLogger().Debug($"segments count:{segments.Count}");
+            var geometry = new StreamGeometry();
+            using (var ctx = geometry.Open())
+            {
+                ctx.BeginFigure(oneIntersection, true, true);
+                ctx.PolyBezierTo(segments, true, false);
+            }
+            geometry.Freeze();
+            return PathGeometry.CreateFromGeometry(geometry);
+        }
+
+        private static void DetectIntersections(PolyBezierViewModel pb, ref Point oneIntersection, ref int beginI, ref int endJ)
+        {
             for (int i = 0; i < pb.Points.Count - 1; i++)
             {
                 var pt1 = pb.Points[i];
@@ -138,15 +163,13 @@ namespace boilersGraphics.Helpers
                     }
                 }
             }
+        }
 
-            var geometry = new StreamGeometry();
-            using (var ctx = geometry.Open())
-            {
-                ctx.BeginFigure(oneIntersection, true, true);
-                ctx.PolyBezierTo(ExtractSegment(pb.Points, beginI + 1, endJ), true, false);
-            }
-            geometry.Freeze();
-            return PathGeometry.CreateFromGeometry(geometry);
+        public static void Swap<T>(ref T a, ref T b)
+        {
+            T _tmp = a;
+            a = b;
+            b = _tmp;
         }
 
         private static IList<Point> ExtractSegment(ObservableCollection<Point> points, int beginI, int endJ)
