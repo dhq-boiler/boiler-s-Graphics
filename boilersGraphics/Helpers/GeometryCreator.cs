@@ -1,5 +1,7 @@
 ﻿using boilersGraphics.ViewModels;
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Media;
@@ -116,14 +118,65 @@ namespace boilersGraphics.Helpers
 
         public static PathGeometry CreateCombineGeometry(PolyBezierViewModel pb)
         {
+            Point oneIntersection;
+            int beginI = 0;
+            int endJ = 0;
+            for (int i = 0; i < pb.Points.Count - 1; i++)
+            {
+                var pt1 = pb.Points[i];
+                var pt2 = pb.Points[i + 1];
+                for (int j = 0; j < pb.Points.Count - 1; j++)
+                {
+                    if (i == j || i + 1 == j || i == j + 1 || (i == endJ && j == beginI)) continue;
+                    var pt3 = pb.Points[j];
+                    var pt4 = pb.Points[j + 1];
+                    if (Intersects(pt1, pt2, pt3, pt4, out var intersection))
+                    {
+                        oneIntersection = intersection;
+                        beginI = i;
+                        endJ = j;
+                    }
+                }
+            }
+
             var geometry = new StreamGeometry();
             using (var ctx = geometry.Open())
             {
-                ctx.BeginFigure(pb.Points[0], true, true);
-                ctx.PolyBezierTo(pb.Points.Skip(1).ToList(), true, false);
+                ctx.BeginFigure(oneIntersection, true, true);
+                ctx.PolyBezierTo(ExtractSegment(pb.Points, beginI + 1, endJ), true, false);
             }
             geometry.Freeze();
             return PathGeometry.CreateFromGeometry(geometry);
+        }
+
+        private static IList<Point> ExtractSegment(ObservableCollection<Point> points, int beginI, int endJ)
+        {
+            return points.Skip(beginI).Take(endJ - beginI).ToList();
+        }
+
+        static bool Intersects(Point a1, Point a2, Point b1, Point b2, out Point intersection)
+        {
+            intersection = new Point(0, 0);
+
+            Vector b = a2 - a1;
+            Vector d = b2 - b1;
+            double bDotDPerp = b.X * d.Y - b.Y * d.X;
+
+            if (bDotDPerp == 0)
+                return false;
+
+            Vector c = b1 - a1;
+            double t = (c.X * d.Y - c.Y * d.X) / bDotDPerp;
+            if (t < 0 || t > 1)
+                return false;
+
+            double u = (c.X * b.Y - c.Y * b.X) / bDotDPerp;
+            if (u < 0 || u > 1)
+                return false;
+
+            intersection = a1 + t * b;
+
+            return true;
         }
 
         public static PathGeometry CreateCombineGeometry<T1, T2>(T1 item1, T2 item2) where T1 : SelectableDesignerItemViewModelBase
