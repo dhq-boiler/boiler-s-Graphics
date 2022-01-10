@@ -114,6 +114,18 @@ namespace boilersGraphics.Helpers
             return PathGeometry.CreateFromGeometry(geometry);
         }
 
+        public static PathGeometry CreateCombineGeometry(PolyBezierViewModel pb)
+        {
+            var geometry = new StreamGeometry();
+            using (var ctx = geometry.Open())
+            {
+                ctx.BeginFigure(pb.Points[0], true, true);
+                ctx.PolyBezierTo(pb.Points.Skip(1).ToList(), true, false);
+            }
+            geometry.Freeze();
+            return PathGeometry.CreateFromGeometry(geometry);
+        }
+
         public static PathGeometry CreateCombineGeometry<T1, T2>(T1 item1, T2 item2) where T1 : SelectableDesignerItemViewModelBase
                                                                                      where T2 : SelectableDesignerItemViewModelBase
         {
