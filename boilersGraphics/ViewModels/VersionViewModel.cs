@@ -55,7 +55,7 @@ namespace boilersGraphics.ViewModels
 
         private string LicenseReadToEnd()
         {
-            const string filename = "LICENSE";
+            var filename = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "dhq_boiler\\boilersGraphics\\LICENSE");
             var str = ReadFileToEnd(filename);
             if (!string.IsNullOrEmpty(str))
                 return str;
@@ -90,7 +90,7 @@ namespace boilersGraphics.ViewModels
 
         private (bool isMaster, bool isPreRelease, bool isDebug) ParseProductVersion(string productVersion)
         {
-            if (productVersion.Contains("master"))
+            if (productVersion.Contains("master") || productVersion.Contains("hotfix"))
                 return (true, false, false);
             if (productVersion.Contains("unstable"))
                 return (false, true, false);
@@ -121,7 +121,7 @@ namespace boilersGraphics.ViewModels
 
         private string LicenseMdReadToEnd()
         {
-            const string filename = "LICENSE.md";
+            var filename = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "dhq_boiler\\boilersGraphics\\LICENSE.md");
             var str = ReadFileToEnd(filename);
             if (!string.IsNullOrEmpty(str))
                 return str;
