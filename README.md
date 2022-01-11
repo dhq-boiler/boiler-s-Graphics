@@ -26,10 +26,7 @@ boiler's Graphicsを動作させるには Windows 7 SP1 以降の Windows OS が
 
 # How to install
 
- 1. Releasesページから boilersGraphics_*.zip をダウンロードします。
- 2. ダウンロードしたzipファイルを展開します。
- 3. 展開したフォルダを安全な場所に配置します。
- 4. 配置したフォルダ内の boilersGraphics.exe を実行します。
+<a href="https://www.microsoft.com/store/apps/9N288RJ615LM"><img src="https://github.com/dhq-boiler/boiler-s-Graphics/blob/b8e24331f4014784cc80896184433dab9080503a/WebComponents/Japanese_L.png?raw=true" width="150"></a>
 
 # How to use
 
