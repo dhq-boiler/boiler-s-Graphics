@@ -48,7 +48,7 @@ namespace boilersGraphics.Controls
 
             if (designerItem != null && designerItem.IsSelected.Value)
             {
-                (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "移動";
+                (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = boilersGraphics.Properties.Resources.String_Move;
 
                 SelectableDesignerItemViewModelBase.Disconnect(designerItem);
 

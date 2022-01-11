@@ -579,6 +579,9 @@
   <data name="String_Agree" xml:space="preserve">
     <value>同意する</value>
   </data>
+  <data name="String_Angle" xml:space="preserve">
+    <value>角度</value>
+  </data>
   <data name="String_AutoSave" xml:space="preserve">
     <value>自動保存</value>
   </data>
@@ -600,8 +603,14 @@
   <data name="String_CanvasWidth" xml:space="preserve">
     <value>キャンパスの幅</value>
   </data>
+  <data name="String_Deform" xml:space="preserve">
+    <value>変形</value>
+  </data>
   <data name="String_Disagree" xml:space="preserve">
     <value>同意しない</value>
+  </data>
+  <data name="String_Draw" xml:space="preserve">
+    <value>描画</value>
   </data>
   <data name="String_EnableImageEmbedding" xml:space="preserve">
     <value>画像を埋め込む</value>
@@ -636,6 +645,9 @@
   <data name="String_License" xml:space="preserve">
     <value>ライセンス</value>
   </data>
+  <data name="String_Move" xml:space="preserve">
+    <value>移動</value>
+  </data>
   <data name="String_OK" xml:space="preserve">
     <value>OK</value>
   </data>
@@ -651,8 +663,17 @@
   <data name="String_R" xml:space="preserve">
     <value>赤(Red)</value>
   </data>
+  <data name="String_RangeSelection" xml:space="preserve">
+    <value>範囲選択</value>
+  </data>
   <data name="String_Reference" xml:space="preserve">
     <value>参照</value>
+  </data>
+  <data name="String_Resize" xml:space="preserve">
+    <value>リサイズ</value>
+  </data>
+  <data name="String_Rotate" xml:space="preserve">
+    <value>回転</value>
   </data>
   <data name="String_RotationAngleType" xml:space="preserve">
     <value>回転角度タイプ</value>
@@ -665,6 +686,9 @@
   </data>
   <data name="String_SetInterval" xml:space="preserve">
     <value>インターバルを設定する</value>
+  </data>
+  <data name="String_Slice" xml:space="preserve">
+    <value>スライス</value>
   </data>
   <data name="String_SnapPoint" xml:space="preserve">
     <value>ポイントにスナップする</value>

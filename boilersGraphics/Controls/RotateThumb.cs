@@ -39,7 +39,7 @@ namespace boilersGraphics.Controls
         {
             base.OnMouseDown(e);
 
-            (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "回転";
+            (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = boilersGraphics.Properties.Resources.String_Rotate;
         }
 
         protected override void OnMouseUp(MouseButtonEventArgs e)
@@ -141,7 +141,7 @@ namespace boilersGraphics.Controls
                 _DegreeText = new AuxiliaryText(_canvas, $"{roundDegree}°", new Point(_centerPoint.X + 40 * Math.Cos(θ(viewModel, angleType, roundDegree)) - 20, _centerPoint.Y + 40 * Math.Sin(θ(viewModel, angleType, roundDegree)) - 20));
                 adornerLayer.Add(_DegreeText);
 
-                (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = $"角度 {viewModel.RotationAngle.Value}°";
+                (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = $"{boilersGraphics.Properties.Resources.String_Angle}={viewModel.RotationAngle.Value}°";
 
                 _designerItem.InvalidateMeasure();
             }
