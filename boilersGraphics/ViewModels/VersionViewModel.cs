@@ -90,7 +90,7 @@ namespace boilersGraphics.ViewModels
 
         private (bool isMaster, bool isPreRelease, bool isDebug) ParseProductVersion(string productVersion)
         {
-            if (productVersion.Contains("master"))
+            if (productVersion.Contains("master") || productVersion.Contains("hotfix"))
                 return (true, false, false);
             if (productVersion.Contains("unstable"))
                 return (false, true, false);
