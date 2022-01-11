@@ -1,9 +1,7 @@
 ﻿using boilersGraphics.Controls;
-using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
 using boilersGraphics.ViewModels;
 using Microsoft.Xaml.Behaviors;
-using NLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -105,7 +103,7 @@ namespace boilersGraphics.Views.Behaviors
             if (_straightLineStartPoint.HasValue)
             {
                 _straightLineStartPoint = current;
-                (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "描画";
+                (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = boilersGraphics.Properties.Resources.String_Draw;
 
                 AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(canvas);
                 if (adornerLayer != null)
@@ -139,7 +137,7 @@ namespace boilersGraphics.Views.Behaviors
             if (_straightLineStartPoint.HasValue)
             {
                 _straightLineStartPoint = current;
-                (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "描画";
+                (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = boilersGraphics.Properties.Resources.String_Draw;
 
                 AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(canvas);
                 if (adornerLayer != null)

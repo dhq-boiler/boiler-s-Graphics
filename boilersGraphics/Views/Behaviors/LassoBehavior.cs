@@ -87,7 +87,7 @@ namespace boilersGraphics.Views.Behaviors
             {
                 _lassoSelectionStartPoint = e.GetPosition(AssociatedObject);
 
-                (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "範囲選択";
+                (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = boilersGraphics.Properties.Resources.String_RangeSelection;
 
                 IDiagramViewModel vm = (AssociatedObject.DataContext as IDiagramViewModel);
                 if (!(Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
@@ -105,7 +105,7 @@ namespace boilersGraphics.Views.Behaviors
                 var touchPoint = e.GetTouchPoint(AssociatedObject);
                 _lassoSelectionStartPoint = touchPoint.Position;
 
-                (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "範囲選択";
+                (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = boilersGraphics.Properties.Resources.String_RangeSelection;
 
                 IDiagramViewModel vm = (AssociatedObject.DataContext as IDiagramViewModel);
                 if (!(Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
@@ -129,7 +129,7 @@ namespace boilersGraphics.Views.Behaviors
                     // drag operation we cache the start point
                     _lassoSelectionStartPoint = e.GetPosition(AssociatedObject);
 
-                    (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "範囲選択";
+                    (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = boilersGraphics.Properties.Resources.String_RangeSelection;
 
                     IDiagramViewModel vm = (AssociatedObject.DataContext as IDiagramViewModel);
                     if (!(Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))

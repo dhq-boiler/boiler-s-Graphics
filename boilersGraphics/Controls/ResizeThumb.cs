@@ -34,7 +34,7 @@ namespace boilersGraphics.Controls
         {
             base.OnMouseDown(e);
 
-            (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "リサイズ";
+            (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = boilersGraphics.Properties.Resources.String_Resize;
         }
 
         protected override void OnMouseUp(MouseButtonEventArgs e)

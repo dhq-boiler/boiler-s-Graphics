@@ -579,6 +579,9 @@
   <data name="String_Agree" xml:space="preserve">
     <value>Agree</value>
   </data>
+  <data name="String_Angle" xml:space="preserve">
+    <value>Angle</value>
+  </data>
   <data name="String_AutoSave" xml:space="preserve">
     <value>Autosave</value>
   </data>
@@ -600,8 +603,14 @@
   <data name="String_CanvasWidth" xml:space="preserve">
     <value>Canvas Width</value>
   </data>
+  <data name="String_Deform" xml:space="preserve">
+    <value>Deform</value>
+  </data>
   <data name="String_Disagree" xml:space="preserve">
     <value>Disagree</value>
+  </data>
+  <data name="String_Draw" xml:space="preserve">
+    <value>Draw</value>
   </data>
   <data name="String_EnableImageEmbedding" xml:space="preserve">
     <value>Enable image embedding</value>
@@ -636,6 +645,9 @@
   <data name="String_License" xml:space="preserve">
     <value>License</value>
   </data>
+  <data name="String_Move" xml:space="preserve">
+    <value>Move</value>
+  </data>
   <data name="String_OK" xml:space="preserve">
     <value>OK</value>
   </data>
@@ -651,8 +663,17 @@
   <data name="String_R" xml:space="preserve">
     <value>Red</value>
   </data>
+  <data name="String_RangeSelection" xml:space="preserve">
+    <value>Range selection</value>
+  </data>
   <data name="String_Reference" xml:space="preserve">
     <value>Reference</value>
+  </data>
+  <data name="String_Resize" xml:space="preserve">
+    <value>Resize</value>
+  </data>
+  <data name="String_Rotate" xml:space="preserve">
+    <value>Rotate</value>
   </data>
   <data name="String_RotationAngleType" xml:space="preserve">
     <value>Rotation angle type</value>
@@ -665,6 +686,9 @@
   </data>
   <data name="String_SetInterval" xml:space="preserve">
     <value>Set the interval</value>
+  </data>
+  <data name="String_Slice" xml:space="preserve">
+    <value>Slice</value>
   </data>
   <data name="String_SnapPoint" xml:space="preserve">
     <value>Snap to a point</value>

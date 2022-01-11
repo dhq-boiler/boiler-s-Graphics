@@ -1447,6 +1447,15 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Angle に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_Angle {
+            get {
+                return ResourceManager.GetString("String_Angle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Autosave に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string String_AutoSave {
@@ -1510,11 +1519,29 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Deform に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_Deform {
+            get {
+                return ResourceManager.GetString("String_Deform", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Disagree に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string String_Disagree {
             get {
                 return ResourceManager.GetString("String_Disagree", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Draw に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_Draw {
+            get {
+                return ResourceManager.GetString("String_Draw", resourceCulture);
             }
         }
         
@@ -1618,6 +1645,15 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Move に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_Move {
+            get {
+                return ResourceManager.GetString("String_Move", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   OK に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string String_OK {
@@ -1663,11 +1699,38 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Range selection に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_RangeSelection {
+            get {
+                return ResourceManager.GetString("String_RangeSelection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Reference に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string String_Reference {
             get {
                 return ResourceManager.GetString("String_Reference", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Resize に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_Resize {
+            get {
+                return ResourceManager.GetString("String_Resize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Rotate に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_Rotate {
+            get {
+                return ResourceManager.GetString("String_Rotate", resourceCulture);
             }
         }
         
@@ -1704,6 +1767,15 @@ namespace boilersGraphics.Properties {
         public static string String_SetInterval {
             get {
                 return ResourceManager.GetString("String_SetInterval", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Slice に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_Slice {
+            get {
+                return ResourceManager.GetString("String_Slice", resourceCulture);
             }
         }
         

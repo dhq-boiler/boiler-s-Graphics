@@ -3,11 +3,6 @@ using boilersGraphics.Helpers;
 using boilersGraphics.ViewModels;
 using Microsoft.Xaml.Behaviors;
 using Prism.Services.Dialogs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -92,7 +87,7 @@ namespace boilersGraphics.Views.Behaviors
             if (_rectangleStartPoint.HasValue)
             {
                 _rectangleStartPoint = current;
-                (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "スライス";
+                (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = boilersGraphics.Properties.Resources.String_Slice;
 
                 AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(canvas);
                 if (adornerLayer != null)
@@ -118,7 +113,7 @@ namespace boilersGraphics.Views.Behaviors
             if (_rectangleStartPoint.HasValue)
             {
                 _rectangleStartPoint = current;
-                (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "スライス";
+                (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = boilersGraphics.Properties.Resources.String_Slice;
 
                 AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(canvas);
                 if (adornerLayer != null)

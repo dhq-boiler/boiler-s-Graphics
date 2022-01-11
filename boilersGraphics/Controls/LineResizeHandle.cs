@@ -50,7 +50,7 @@ namespace boilersGraphics.Controls
             var vm = DataContext as ConnectorBaseViewModel ?? (DataContext as SnapPointViewModel).Parent.Value as ConnectorBaseViewModel;
             Point point = vm.Points[TargetPointIndex];
 
-            (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "変形";
+            (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = boilersGraphics.Properties.Resources.String_Deform;
 
             Recorder.BeginRecode();
         }

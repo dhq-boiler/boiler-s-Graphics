@@ -84,7 +84,7 @@ namespace boilersGraphics.Views.Behaviors
             if (_rectangleStartPoint.HasValue)
             {
                 _rectangleStartPoint = current;
-                (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "描画";
+                (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = boilersGraphics.Properties.Resources.String_Draw;
 
                 AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(canvas);
                 if (adornerLayer != null)
@@ -110,7 +110,7 @@ namespace boilersGraphics.Views.Behaviors
             if (_rectangleStartPoint.HasValue)
             {
                 _rectangleStartPoint = current;
-                (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "描画";
+                (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = boilersGraphics.Properties.Resources.String_Draw;
 
                 AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(canvas);
                 if (adornerLayer != null)
