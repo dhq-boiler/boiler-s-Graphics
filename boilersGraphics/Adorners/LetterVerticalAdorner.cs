@@ -83,6 +83,9 @@ namespace boilersGraphics.Adorners
                 _endPoint = null;
             }
 
+            (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "";
+            (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = "";
+
             e.Handled = true;
         }
 
