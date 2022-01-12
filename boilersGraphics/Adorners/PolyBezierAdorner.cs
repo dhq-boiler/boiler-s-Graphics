@@ -1,4 +1,5 @@
 ﻿using boilersGraphics.Controls;
+using boilersGraphics.Dao;
 using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
 using boilersGraphics.Models;
@@ -105,10 +106,10 @@ namespace boilersGraphics.Adorners
         }
         private static void UpdateStatisticsCount()
         {
-            //var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
-            //statistics.NumberOfDrawsOfBezierCurveTool++;
-            //var dao = new StatisticsDao();
-            //dao.Update(statistics);
+            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+            statistics.NumberOfDrawsOfFreeHandTool++;
+            var dao = new StatisticsDao();
+            dao.Update(statistics);
         }
 
         protected override void OnRender(DrawingContext dc)

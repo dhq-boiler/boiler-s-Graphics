@@ -237,6 +237,9 @@
   <data name="Dialog_Statistics_NumberOfDrawsOfBezierCurveTool" xml:space="preserve">
     <value>ベジエ曲線ツールの描画回数</value>
   </data>
+  <data name="Dialog_Statistics_NumberOfDrawsOfFreeHandTool" xml:space="preserve">
+    <value>フリーハンドツールの描画回数</value>
+  </data>
   <data name="Dialog_Statistics_NumberOfDrawsOfPolygonTool" xml:space="preserve">
     <value>多角形ツールの描画回数</value>
   </data>

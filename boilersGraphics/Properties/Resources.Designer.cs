@@ -394,6 +394,15 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Number of draws of Free hand tool に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfDrawsOfFreeHandTool {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfDrawsOfFreeHandTool", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Number of draws of polygon tool に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Dialog_Statistics_NumberOfDrawsOfPolygonTool {

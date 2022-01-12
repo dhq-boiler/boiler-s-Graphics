@@ -3,7 +3,7 @@ using Homura.ORM.Mapping;
 
 namespace boilersGraphics.Models
 {
-	[DefaultVersion(typeof(Version1))]
+	[DefaultVersion(typeof(Version2))]
     public class Statistics : PkIdEntity
     {
         private int _number_of_boots;
@@ -66,6 +66,7 @@ namespace boilersGraphics.Models
         private int _numberOfTimesTheVersionInformationDialogWasDisplayed;
         private int _numberOfTimesTheApplicationLogWasDisplayed;
         private int _numberOfTimesSliceToolHasBeenUsed;
+        private int _numberOfDrawsOfFreeHandTool;
 
 
         /// <summary>
@@ -666,6 +667,17 @@ namespace boilersGraphics.Models
 		{
 			get => _numberOfTimesSliceToolHasBeenUsed;
 			set => SetProperty(ref _numberOfTimesSliceToolHasBeenUsed, value);
+		}
+
+		///<summary>
+		/// フリーハンドツールの描画回数
+		/// </summary>
+		[Since(typeof(Version2))]
+		[Column("NumberOfDrawsOfFreeHandTool", "INTEGER", 61)]
+		public int NumberOfDrawsOfFreeHandTool
+		{
+			get => _numberOfDrawsOfFreeHandTool;
+			set => SetProperty(ref _numberOfDrawsOfFreeHandTool, value);
 		}
 	}
 }

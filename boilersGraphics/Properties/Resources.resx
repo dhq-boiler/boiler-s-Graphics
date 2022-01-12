@@ -237,6 +237,9 @@
   <data name="Dialog_Statistics_NumberOfDrawsOfBezierCurveTool" xml:space="preserve">
     <value>Number of draws of Bezier curve tool</value>
   </data>
+  <data name="Dialog_Statistics_NumberOfDrawsOfFreeHandTool" xml:space="preserve">
+    <value>Number of draws of Free hand tool</value>
+  </data>
   <data name="Dialog_Statistics_NumberOfDrawsOfPolygonTool" xml:space="preserve">
     <value>Number of draws of polygon tool</value>
   </data>
