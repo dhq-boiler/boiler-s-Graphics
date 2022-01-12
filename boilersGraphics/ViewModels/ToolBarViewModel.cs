@@ -213,7 +213,7 @@ namespace boilersGraphics.ViewModels
                 ChangeHitTestToDisable();
                 SelectOneToolItem("slice");
             })));
-            ToolItems.Add(new ToolItemData("polybezier", string.Empty, string.Empty, new DelegateCommand(() =>
+            ToolItems.Add(new ToolItemData("polybezier", "pack://application:,,,/Assets/img/poly_bezier.png", string.Empty, new DelegateCommand(() =>
             {
                 Behaviors.Clear();
                 if (!Behaviors.Contains(PolyBezierBehavior))

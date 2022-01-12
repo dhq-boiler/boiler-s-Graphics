@@ -106,4 +106,7 @@
     <BitmapImage x:Key="Icon_Slice"
                  x:Shared="False"
                  UriSource="pack://application:,,,/Assets/img/slice_tool.png" />
+    <BitmapImage x:Key="Icon_PolyBezier"
+                 x:Shared="False"
+                 UriSource="pack://application:,,,/Assets/img/poly_bezier.png" />
 </ResourceDictionary>
