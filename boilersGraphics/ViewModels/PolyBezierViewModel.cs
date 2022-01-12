@@ -12,6 +12,10 @@ namespace boilersGraphics.ViewModels
     {
         public override bool SupportsPropertyDialog => false;
 
+        public PolyBezierViewModel()
+            : base()
+        { }
+
         public PolyBezierViewModel(int id, IDiagramViewModel parent)
             : base(id, parent)
         {
@@ -23,6 +27,16 @@ namespace boilersGraphics.ViewModels
         {
             Init(parent);
             Points.Add(beginPoint);
+        }
+
+        public void InitializeSnapPoints(Point begin, Point end)
+        {
+            SnapPoint0VM = Observable.Return(begin)
+                                     .Select(x => new SnapPointViewModel(this, 0, Owner, x.X, x.Y, 3, 3))
+                                     .ToReadOnlyReactivePropertySlim();
+            SnapPoint1VM = Observable.Return(end)
+                                     .Select(x => new SnapPointViewModel(this, 1, Owner, x.X, x.Y, 3, 3))
+                                     .ToReadOnlyReactivePropertySlim();
         }
 
         private void Init(IDiagramViewModel diagramViewModel)

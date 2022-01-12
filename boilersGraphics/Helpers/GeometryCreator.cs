@@ -25,9 +25,10 @@ namespace boilersGraphics.Helpers
         {
             var geometry = new PathGeometry();
             var pathFigure = new PathFigure();
+            pathFigure.StartPoint = clone.Points.First();
             var pathFigureCollection = new PathFigureCollection();
             var pathSegmentCollection = new PathSegmentCollection();
-            pathSegmentCollection.Add(new PolyBezierSegment(clone.Points, true));
+            pathSegmentCollection.Add(new PolyBezierSegment(clone.Points.Skip(1), true));
             pathFigure.Segments = pathSegmentCollection;
             pathFigureCollection.Add(pathFigure);
             geometry.Figures = pathFigureCollection;
