@@ -249,21 +249,44 @@ namespace boilersGraphics.Helpers
             item.ID = Guid.Parse(connectorElm.Element("ID").Value);
             item.ParentID = Guid.Parse(connectorElm.Element("ParentID").Value);
             item.Points = new ObservableCollection<Point>();
-            item.AddPoints(diagramViewModel, Point.Parse(connectorElm.Element("BeginPoint").Value), Point.Parse(connectorElm.Element("EndPoint").Value));
-            item.InitIsSelectedOnSnapPoints();
+            if (item is StraightConnectorViewModel || item is BezierCurveViewModel)
+            {
+                item.AddPoints(diagramViewModel, Point.Parse(connectorElm.Element("BeginPoint").Value), Point.Parse(connectorElm.Element("EndPoint").Value));
+            }
             item.ZIndex.Value = Int32.Parse(connectorElm.Element("ZIndex").Value);
             item.EdgeColor.Value = (Color)ColorConverter.ConvertFromString(connectorElm.Element("EdgeColor").Value);
             item.EdgeThickness.Value = double.Parse(connectorElm.Element("EdgeThickness").Value);
-            item.PathGeometry.Value = PathGeometry.CreateFromGeometry(PathGeometry.Parse(connectorElm.Element("PathGeometry").Value));
-            item.Owner = diagramViewModel;
-            if (item is BezierCurveViewModel)
+            item.LeftTop.Value = Point.Parse(connectorElm.Element("LeftTop").Value);
+            if (item is StraightConnectorViewModel || item is BezierCurveViewModel)
             {
-                var bezier = item as BezierCurveViewModel;
+                item.PathGeometry.Value = PathGeometry.CreateFromGeometry(Geometry.Parse(connectorElm.Element("PathGeometry").Value));
+            }
+            else if (item is PolyBezierViewModel poly)
+            {
+                poly.Points = StrToPoints(connectorElm.Element("Points").Value);
+                poly.InitializeSnapPoints(poly.Points.First(), poly.Points.Last());
+                item.PathGeometry.Value = GeometryCreator.CreatePolyBezier(poly);
+            }
+            item.Owner = diagramViewModel;
+            if (item is BezierCurveViewModel bezier)
+            {
                 bezier.ControlPoint1.Value = Point.Parse(connectorElm.Element("ControlPoint1").Value);
                 bezier.ControlPoint2.Value = Point.Parse(connectorElm.Element("ControlPoint2").Value);
             }
+            item.InitIsSelectedOnSnapPoints();
 
             return item;
+        }
+
+        private static ObservableCollection<Point> StrToPoints(string value)
+        {
+            var points = new ObservableCollection<Point>();
+            foreach (var point in value.Split(' '))
+            {
+                var splits = point.Split(',');
+                points.Add(new Point(double.Parse(splits[0]), double.Parse(splits[1])));
+            }
+            return points;
         }
 
         private static DesignerItemViewModelBase ExtractDesignerItemViewModelBase(DiagramViewModel diagramViewModel, XElement designerItemElm)
