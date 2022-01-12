@@ -3,6 +3,7 @@ using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 
 namespace boilersGraphics.ViewModels
@@ -31,21 +32,27 @@ namespace boilersGraphics.ViewModels
             .AddTo(_CompositeDisposable);
             Left.Subscribe(x =>
             {
-                parent.Points[index] = new Point(x, parent.Points[index].Y);
+                if (parent.Points.Count() < index + 1)
+                    return;
+                var point = parent.Points[index];
+                point.X = x;
             })
             .AddTo(_CompositeDisposable);
-            Top.Subscribe(x =>
+            Top.Subscribe(y =>
             {
-                parent.Points[index] = new Point(parent.Points[index].X, x);
+                if (parent.Points.Count() < index + 1)
+                    return;
+                var point = parent.Points[index];
+                point.Y = y;
             })
             .AddTo(_CompositeDisposable);
         }
 
         public ReactivePropertySlim<SelectableDesignerItemViewModelBase> Parent { get; } = new ReactivePropertySlim<SelectableDesignerItemViewModelBase>();
 
-        public ReactivePropertySlim<double> Left { get; } = new ReactivePropertySlim<double>();
+        public ReactivePropertySlim<double> Left { get; } = new ReactivePropertySlim<double>(0, ReactivePropertyMode.RaiseLatestValueOnSubscribe);
 
-        public ReactivePropertySlim<double> Top { get; } = new ReactivePropertySlim<double>();
+        public ReactivePropertySlim<double> Top { get; } = new ReactivePropertySlim<double>(0, ReactivePropertyMode.RaiseLatestValueOnSubscribe);
         public ReactivePropertySlim<double> Width { get; } = new ReactivePropertySlim<double>();
 
         public ReactivePropertySlim<double> Height { get; } = new ReactivePropertySlim<double>();

@@ -1,11 +1,9 @@
 ﻿using boilersGraphics.ViewModels;
-using Reactive.Bindings;
+using NLog;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 
@@ -21,6 +19,20 @@ namespace boilersGraphics.Helpers
         public static PathGeometry CreateEllipse(double centerX, double centerY, Thickness thickness)
         {
             return PathGeometry.CreateFromGeometry(new EllipseGeometry(new Point(centerX - thickness.Left, centerY - thickness.Top), thickness.Left + thickness.Right, thickness.Top + thickness.Bottom));
+        }
+
+        public static PathGeometry CreatePolyBezier(PolyBezierViewModel clone)
+        {
+            var geometry = new PathGeometry();
+            var pathFigure = new PathFigure();
+            pathFigure.StartPoint = clone.Points.First();
+            var pathFigureCollection = new PathFigureCollection();
+            var pathSegmentCollection = new PathSegmentCollection();
+            pathSegmentCollection.Add(new PolyBezierSegment(clone.Points.Skip(1), true));
+            pathFigure.Segments = pathSegmentCollection;
+            pathFigureCollection.Add(pathFigure);
+            geometry.Figures = pathFigureCollection;
+            return geometry;
         }
 
         public static PathGeometry CreateEllipse(NEllipseViewModel item, double angle)
@@ -104,6 +116,91 @@ namespace boilersGraphics.Helpers
             }
             geometry.Freeze();
             return PathGeometry.CreateFromGeometry(geometry);
+        }
+
+        public static PathGeometry CreateCombineGeometry(PolyBezierViewModel pb)
+        {
+            Point oneIntersection;
+            int beginI = 0;
+            int endJ = 0;
+            DetectIntersections(pb, ref oneIntersection, ref beginI, ref endJ);
+
+            if (beginI > endJ)
+            {
+                Swap(ref beginI, ref endJ);
+            }
+
+            LogManager.GetCurrentClassLogger().Debug($"oneIntersection:{oneIntersection}");
+            LogManager.GetCurrentClassLogger().Debug($"beginI:{beginI}, endJ:{endJ}");
+
+            var segments = ExtractSegment(pb.Points, beginI + 1, endJ);
+            LogManager.GetCurrentClassLogger().Debug($"segments count:{segments.Count}");
+            var geometry = new StreamGeometry();
+            using (var ctx = geometry.Open())
+            {
+                ctx.BeginFigure(oneIntersection, true, true);
+                ctx.PolyBezierTo(segments, true, false);
+            }
+            geometry.Freeze();
+            return PathGeometry.CreateFromGeometry(geometry);
+        }
+
+        private static void DetectIntersections(PolyBezierViewModel pb, ref Point oneIntersection, ref int beginI, ref int endJ)
+        {
+            for (int i = 0; i < pb.Points.Count - 1; i++)
+            {
+                var pt1 = pb.Points[i];
+                var pt2 = pb.Points[i + 1];
+                for (int j = 0; j < pb.Points.Count - 1; j++)
+                {
+                    if (i == j || i + 1 == j || i == j + 1 || (i == endJ && j == beginI)) continue;
+                    var pt3 = pb.Points[j];
+                    var pt4 = pb.Points[j + 1];
+                    if (Intersects(pt1, pt2, pt3, pt4, out var intersection))
+                    {
+                        oneIntersection = intersection;
+                        beginI = i;
+                        endJ = j;
+                    }
+                }
+            }
+        }
+
+        public static void Swap<T>(ref T a, ref T b)
+        {
+            T _tmp = a;
+            a = b;
+            b = _tmp;
+        }
+
+        private static IList<Point> ExtractSegment(ObservableCollection<Point> points, int beginI, int endJ)
+        {
+            return points.Skip(beginI).Take(endJ - beginI).ToList();
+        }
+
+        static bool Intersects(Point a1, Point a2, Point b1, Point b2, out Point intersection)
+        {
+            intersection = new Point(0, 0);
+
+            Vector b = a2 - a1;
+            Vector d = b2 - b1;
+            double bDotDPerp = b.X * d.Y - b.Y * d.X;
+
+            if (bDotDPerp == 0)
+                return false;
+
+            Vector c = b1 - a1;
+            double t = (c.X * d.Y - c.Y * d.X) / bDotDPerp;
+            if (t < 0 || t > 1)
+                return false;
+
+            double u = (c.X * b.Y - c.Y * b.X) / bDotDPerp;
+            if (u < 0 || u > 1)
+                return false;
+
+            intersection = a1 + t * b;
+
+            return true;
         }
 
         public static PathGeometry CreateCombineGeometry<T1, T2>(T1 item1, T2 item2) where T1 : SelectableDesignerItemViewModelBase
@@ -232,6 +329,14 @@ namespace boilersGraphics.Helpers
                         }
                         ctx.LineTo(item1_.Points[0], true, true);
                         ctx.LineTo(item1_.Points[1], true, true);
+                    }
+                    else if (item2.GetType() == typeof(PolyBezierViewModel))
+                    {
+                        var item2_ = item2 as PolyBezierViewModel;
+                        Point beginPoint = GetBeginPoint(item1_.PathGeometry.Value);
+                        ctx.BeginFigure(beginPoint, true, true);
+                        ctx.LineTo(item1_.Points[1], true, false);
+                        ctx.PolyBezierTo(item2_.Points.ToList(), true, false);
                     }
                 }
                 else if (item1.GetType() == typeof(BezierCurveViewModel))
@@ -410,6 +515,92 @@ namespace boilersGraphics.Helpers
                     else if (item2.GetType() == typeof(CombineGeometryViewModel))
                     {
                         return null; //leave it to the Geometry.Combine method
+                    }
+                }
+                else if (item1.GetType() == typeof(PolyBezierViewModel))
+                {
+                    var item1_ = item1 as PolyBezierViewModel;
+                    if (item2.GetType() == typeof(StraightConnectorViewModel))
+                    {
+                        Point beginPoint = GetBeginPoint(item1_.PathGeometry.Value);
+                        ctx.BeginFigure(beginPoint, true, true);
+                        foreach (var figure in item1_.PathGeometry.Value.Figures)
+                        {
+                            foreach (var segment in figure.Segments)
+                            {
+                                if (segment is ArcSegment arcSegment)
+                                {
+                                    ctx.ArcTo(arcSegment.Point, arcSegment.Size, arcSegment.RotationAngle, arcSegment.IsLargeArc, arcSegment.SweepDirection, true, true);
+                                }
+                                if (segment is BezierSegment bezierSegment)
+                                {
+                                    ctx.BezierTo(bezierSegment.Point1, bezierSegment.Point2, bezierSegment.Point3, true, true);
+                                }
+                                if (segment is LineSegment lineSegment)
+                                {
+                                    ctx.LineTo(lineSegment.Point, true, true);
+                                }
+                                if (segment is PolyBezierSegment polyBezierSegment)
+                                {
+                                    ctx.PolyBezierTo(polyBezierSegment.Points, true, true);
+                                }
+                                if (segment is PolyLineSegment polyLineSegment)
+                                {
+                                    ctx.PolyLineTo(polyLineSegment.Points, true, true);
+                                }
+                                if (segment is PolyQuadraticBezierSegment polyQuadraticBezierSegment)
+                                {
+                                    ctx.PolyQuadraticBezierTo(polyQuadraticBezierSegment.Points, true, true);
+                                }
+                                if (segment is QuadraticBezierSegment quadraticBezierSegment)
+                                {
+                                    ctx.QuadraticBezierTo(quadraticBezierSegment.Point1, quadraticBezierSegment.Point2, true, true);
+                                }
+                            }
+                        }
+                        var item2_ = item2 as StraightConnectorViewModel;
+                        ctx.LineTo(item2_.Points[0], true, true);
+                        ctx.LineTo(item2_.Points[1], true, true);
+                    }
+                    else if (item2.GetType() == typeof(BezierCurveViewModel))
+                    {
+                        var item2_ = item2 as BezierCurveViewModel;
+                        Point beginPoint = GetBeginPoint(item1_.PathGeometry.Value);
+                        ctx.BeginFigure(beginPoint, true, true);
+                        ctx.PolyBezierTo(item1_.Points.Skip(1).ToList(), true, false);
+                        ctx.BezierTo(item2_.ControlPoint1.Value, item2_.ControlPoint2.Value, item2_.Points[1], true, false);
+                    }
+                    else if (item2.GetType() == typeof(NRectangleViewModel))
+                    {
+                        return null;
+                    }
+                    else if (item2.GetType() == typeof(NEllipseViewModel))
+                    {
+                        return null;
+                    }
+                    else if (item2.GetType() == typeof(NPolygonViewModel))
+                    {
+                        return null;
+                    }
+                    else if (item2.GetType() == typeof(LetterDesignerItemViewModel))
+                    {
+                        return null;
+                    }
+                    else if (item2.GetType() == typeof(LetterVerticalDesignerItemViewModel))
+                    {
+                        return null;
+                    }
+                    else if (item2.GetType() == typeof(CombineGeometryViewModel))
+                    {
+                        return null; //leave it to the Geometry.Combine method
+                    }
+                    else if (item2.GetType() == typeof(PolyBezierViewModel))
+                    {
+                        var item2_ = item2 as PolyBezierViewModel;
+                        Point beginPoint = GetBeginPoint(item1_.PathGeometry.Value);
+                        ctx.BeginFigure(beginPoint, true, true);
+                        ctx.PolyBezierTo(item1_.Points.Skip(1).ToList(), true, false);
+                        ctx.PolyBezierTo(item2_.Points.ToList(), true, false);
                     }
                 }
             }

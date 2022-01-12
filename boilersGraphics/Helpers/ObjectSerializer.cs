@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Windows;
 using System.Windows.Media.Imaging;
 using System.Xml.Linq;
 
@@ -122,16 +123,24 @@ namespace boilersGraphics.Helpers
                 list.Add(new XElement("ID", connectorItem.ID));
                 list.Add(new XElement("ParentID", connectorItem.ParentID));
                 list.Add(new XElement("Type", connectorItem.GetType().FullName));
-                list.Add(new XElement("BeginPoint", connectorItem.Points[0]));
-                list.Add(new XElement("EndPoint", connectorItem.Points[1]));
+                if (connectorItem is StraightConnectorViewModel || connectorItem is BezierCurveViewModel)
+                {
+                    list.Add(new XElement("BeginPoint", connectorItem.Points[0]));
+                    list.Add(new XElement("EndPoint", connectorItem.Points[1]));
+                }
                 list.Add(new XElement("ZIndex", connectorItem.ZIndex.Value));
                 list.Add(new XElement("EdgeColor", connectorItem.EdgeColor));
                 list.Add(new XElement("EdgeThickness", connectorItem.EdgeThickness));
                 list.Add(new XElement("PathGeometry", connectorItem.PathGeometry.Value));
+                list.Add(new XElement("LeftTop", connectorItem.LeftTop.Value));
                 if (connectorItem is BezierCurveViewModel)
                 {
                     list.Add(new XElement("ControlPoint1", (connectorItem as BezierCurveViewModel).ControlPoint1.Value));
                     list.Add(new XElement("ControlPoint2", (connectorItem as BezierCurveViewModel).ControlPoint2.Value));
+                }
+                if (connectorItem is PolyBezierViewModel)
+                {
+                    list.Add(new XElement("Points", PointsToStr(connectorItem.Points)));
                 }
                 var connectorItemXML = new XElement("ConnectorItem", list);
                 return connectorItemXML;
@@ -158,6 +167,18 @@ namespace boilersGraphics.Helpers
             }
             else
                 throw new Exception("Neither DesinerItem nor ConnectorItem");
+        }
+
+        private static string PointsToStr(ObservableCollection<Point> points)
+        {
+            var ret = string.Empty;
+            foreach (Point point in points)
+            {
+                ret += $"{point.X},{point.Y}";
+                if (point != points.Last())
+                    ret += " ";
+            }
+            return ret;
         }
 
         public static IEnumerable<XElement> SerializeConnections(DiagramViewModel dialogViewModel, IEnumerable<SelectableDesignerItemViewModelBase> items)

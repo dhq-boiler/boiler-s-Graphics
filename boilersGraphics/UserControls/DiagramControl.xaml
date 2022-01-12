@@ -21,6 +21,7 @@
              mc:Ignorable="d">
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <converter:ToPointCollectionConverter x:Key="ToPointCollection" />
     </UserControl.Resources>
     <Border BorderBrush="LightGray" BorderThickness="1">
         <Grid>
@@ -290,6 +291,45 @@
                                                     <Setter TargetName="ControlLine2" Property="Visibility" Value="Visible" />
                                                 </DataTrigger>
                                             </DataTemplate.Triggers>
+                                        </DataTemplate>
+                                        <DataTemplate DataType="{x:Type viewModel:PolyBezierViewModel}">
+                                            <Canvas x:Name="selectedGrid"
+                                                    Margin="0"
+                                                    HorizontalAlignment="Stretch"
+                                                    VerticalAlignment="Stretch">
+                                                <Canvas.Style>
+                                                    <Style TargetType="{x:Type Canvas}">
+                                                        <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
+                                                        <Setter Property="RenderTransform">
+                                                            <Setter.Value>
+                                                                <MatrixTransform Matrix="{Binding Matrix.Value}" />
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </Style>
+                                                </Canvas.Style>
+                                                <Path x:Name="polyBezier"
+                                                      Canvas.Left="{Binding LeftTop.Value.X}"
+                                                      Canvas.Top="{Binding LeftTop.Value.Y}"
+                                                      IsHitTestVisible="True"
+                                                      Stretch="Fill"
+                                                      Stroke="{Binding EdgeColor.Value, Converter={StaticResource solidColorBrushConverter}}"
+                                                      StrokeThickness="{Binding EdgeThickness.Value}">
+                                                    <Path.Data>
+                                                        <PathGeometry>
+                                                            <PathFigure StartPoint="{Binding Points[0]}">
+                                                                <PolyBezierSegment Points="{Binding Points, Converter={StaticResource ToPointCollection}}" />
+                                                            </PathFigure>
+                                                        </PathGeometry>
+                                                    </Path.Data>
+                                                    <i:Interaction.Triggers>
+                                                        <i:EventTrigger EventName="MouseDown">
+                                                            <helper:EventToCommand Command="{Binding DataContext.MouseDownPolyBezierCommand, ElementName=diagramControl}" CommandParameter="{Binding ElementName=polyBezier}" />
+                                                        </i:EventTrigger>
+                                                    </i:Interaction.Triggers>
+                                                </Path>
+                                                <!--  PART_ResizeDecorator  -->
+                                                <Control x:Name="PART_ResizeDecorator" Template="{StaticResource BezierCurveResizeDecoratorTemplate}" />
+                                            </Canvas>
                                         </DataTemplate>
                                     </view:ItemsControlTemplateSelector>
                                 </Setter.Value>

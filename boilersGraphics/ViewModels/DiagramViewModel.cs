@@ -98,6 +98,7 @@ namespace boilersGraphics.ViewModels
         public DelegateCommand PropertyCommand { get; private set; }
         public DelegateCommand<System.Windows.Shapes.Line> MouseDownStraightLineCommand { get; private set; }
         public DelegateCommand<System.Windows.Shapes.Path> MouseDownBezierCurveCommand { get; private set; }
+        public DelegateCommand<System.Windows.Shapes.Path> MouseDownPolyBezierCommand { get; private set; }
         public DelegateCommand LoadedCommand { get; private set; }
 
         #region Property
@@ -364,6 +365,13 @@ namespace boilersGraphics.ViewModels
                 bezierCurveVM.IsSelected.Value = true;
                 bezierCurveVM.SnapPoint0VM.Value.IsSelected.Value = true;
                 bezierCurveVM.SnapPoint1VM.Value.IsSelected.Value = true;
+            });
+            MouseDownPolyBezierCommand = new DelegateCommand<System.Windows.Shapes.Path>(line =>
+            {
+                var polyBezierVM = line.DataContext as PolyBezierViewModel;
+                polyBezierVM.IsSelected.Value = true;
+                polyBezierVM.SnapPoint0VM.Value.IsSelected.Value = true;
+                polyBezierVM.SnapPoint1VM.Value.IsSelected.Value = true;
             });
             LoadedCommand = new DelegateCommand(() =>
             {
@@ -911,39 +919,58 @@ namespace boilersGraphics.ViewModels
         private void CombineAndAddItem(GeometryCombineMode mode)
         {
             MainWindowVM.Recorder.BeginRecode();
-
+            var selectedItems = GetSelectedItemsForCombine();
             var item1 = GetSelectedItemFirst();
-            var item2 = GetSelectedItemLast();
-            var combine = new CombineGeometryViewModel();
-            Remove(item1);
-            Remove(item2);
-            MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "EdgeColor.Value", item1.EdgeColor.Value);
-            MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "EdgeThickness.Value", item1.EdgeThickness.Value);
-            MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "IsSelected.Value", true);
-            MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "Owner", this);
-            MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "ZIndex.Value", Layers.SelectMany(x => x.Children).Count());
-            MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "IsHitTestVisible.Value", MainWindowVM.ToolBarViewModel.CurrentHitTestVisibleState.Value);
-            MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "PathGeometry.Value", GeometryCreator.CreateCombineGeometry(item1, item2));
-            if (combine.PathGeometry.Value == null || combine.PathGeometry.Value.Figures.Count() == 0)
+            if (selectedItems.Count() == 1 && item1 is PolyBezierViewModel pb)
             {
-                var item1PathGeometry = item1.PathGeometry.Value;
-                var item2PathGeometry = item2.PathGeometry.Value;
-
-                if (item1 is DesignerItemViewModelBase designerItem1 && item1.RotationAngle.Value != 0)
-                    item1PathGeometry = designerItem1.RotatePathGeometry.Value;
-                if (item2 is DesignerItemViewModelBase designerItem2 && item2.RotationAngle.Value != 0)
-                    item2PathGeometry = designerItem2.RotatePathGeometry.Value;
-                
-                CastToLetterAndSetTransform(item1, item2, item1PathGeometry, item2PathGeometry);
-
-                MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "PathGeometry.Value", Geometry.Combine(item1PathGeometry, item2PathGeometry, mode, null));
+                Remove(pb);
+                var combine = new CombineGeometryViewModel();
+                MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "EdgeColor.Value", pb.EdgeColor.Value);
+                MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "EdgeThickness.Value", pb.EdgeThickness.Value);
+                MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "IsSelected.Value", true);
+                MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "Owner", this);
+                MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "ZIndex.Value", Layers.SelectMany(x => x.Children).Count());
+                MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "IsHitTestVisible.Value", MainWindowVM.ToolBarViewModel.CurrentHitTestVisibleState.Value);
+                MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "PathGeometry.Value", GeometryCreator.CreateCombineGeometry(pb));
+                MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "Left.Value", combine.PathGeometry.Value.Bounds.Left);
+                MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "Top.Value", combine.PathGeometry.Value.Bounds.Top);
+                MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "Width.Value", combine.PathGeometry.Value.Bounds.Width);
+                MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "Height.Value", combine.PathGeometry.Value.Bounds.Height);
+                Add(combine);
             }
-            MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "Left.Value", combine.PathGeometry.Value.Bounds.Left);
-            MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "Top.Value", combine.PathGeometry.Value.Bounds.Top);
-            MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "Width.Value", combine.PathGeometry.Value.Bounds.Width);
-            MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "Height.Value", combine.PathGeometry.Value.Bounds.Height);
-            Add(combine);
+            else
+            {
+                var item2 = GetSelectedItemLast();
+                var combine = new CombineGeometryViewModel();
+                Remove(item1);
+                Remove(item2);
+                MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "EdgeColor.Value", item1.EdgeColor.Value);
+                MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "EdgeThickness.Value", item1.EdgeThickness.Value);
+                MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "IsSelected.Value", true);
+                MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "Owner", this);
+                MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "ZIndex.Value", Layers.SelectMany(x => x.Children).Count());
+                MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "IsHitTestVisible.Value", MainWindowVM.ToolBarViewModel.CurrentHitTestVisibleState.Value);
+                MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "PathGeometry.Value", GeometryCreator.CreateCombineGeometry(item1, item2));
+                if (combine.PathGeometry.Value == null || combine.PathGeometry.Value.Figures.Count() == 0)
+                {
+                    var item1PathGeometry = item1.PathGeometry.Value;
+                    var item2PathGeometry = item2.PathGeometry.Value;
 
+                    if (item1 is DesignerItemViewModelBase designerItem1 && item1.RotationAngle.Value != 0)
+                        item1PathGeometry = designerItem1.RotatePathGeometry.Value;
+                    if (item2 is DesignerItemViewModelBase designerItem2 && item2.RotationAngle.Value != 0)
+                        item2PathGeometry = designerItem2.RotatePathGeometry.Value;
+
+                    CastToLetterAndSetTransform(item1, item2, item1PathGeometry, item2PathGeometry);
+
+                    MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "PathGeometry.Value", Geometry.Combine(item1PathGeometry, item2PathGeometry, mode, null));
+                }
+                MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "Left.Value", combine.PathGeometry.Value.Bounds.Left);
+                MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "Top.Value", combine.PathGeometry.Value.Bounds.Top);
+                MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "Width.Value", combine.PathGeometry.Value.Bounds.Width);
+                MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "Height.Value", combine.PathGeometry.Value.Bounds.Height);
+                Add(combine);
+            }
             MainWindowVM.Recorder.EndRecode();
         }
 
@@ -1019,6 +1046,11 @@ namespace boilersGraphics.ViewModels
                 var firstElementTypeIsCorrect = SelectedItems.ElementAt(0).GetType() != typeof(PictureDesignerItemViewModel);
                 var secondElementTypeIsCorrect = SelectedItems.ElementAt(1).GetType() != typeof(PictureDesignerItemViewModel);
                 return countIsCorrent && firstElementTypeIsCorrect && secondElementTypeIsCorrect;
+            }
+            var polyBezier = GetSelectedItemsForCombine().FirstOrDefault() as PolyBezierViewModel;
+            if (polyBezier != null)
+            {
+                return true;
             }
             return false;
         }
