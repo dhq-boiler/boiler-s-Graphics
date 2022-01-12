@@ -330,6 +330,14 @@ namespace boilersGraphics.Helpers
                         ctx.LineTo(item1_.Points[0], true, true);
                         ctx.LineTo(item1_.Points[1], true, true);
                     }
+                    else if (item2.GetType() == typeof(PolyBezierViewModel))
+                    {
+                        var item2_ = item2 as PolyBezierViewModel;
+                        Point beginPoint = GetBeginPoint(item1_.PathGeometry.Value);
+                        ctx.BeginFigure(beginPoint, true, true);
+                        ctx.LineTo(item1_.Points[1], true, false);
+                        ctx.PolyBezierTo(item2_.Points.ToList(), true, false);
+                    }
                 }
                 else if (item1.GetType() == typeof(BezierCurveViewModel))
                 {
@@ -507,6 +515,92 @@ namespace boilersGraphics.Helpers
                     else if (item2.GetType() == typeof(CombineGeometryViewModel))
                     {
                         return null; //leave it to the Geometry.Combine method
+                    }
+                }
+                else if (item1.GetType() == typeof(PolyBezierViewModel))
+                {
+                    var item1_ = item1 as PolyBezierViewModel;
+                    if (item2.GetType() == typeof(StraightConnectorViewModel))
+                    {
+                        Point beginPoint = GetBeginPoint(item1_.PathGeometry.Value);
+                        ctx.BeginFigure(beginPoint, true, true);
+                        foreach (var figure in item1_.PathGeometry.Value.Figures)
+                        {
+                            foreach (var segment in figure.Segments)
+                            {
+                                if (segment is ArcSegment arcSegment)
+                                {
+                                    ctx.ArcTo(arcSegment.Point, arcSegment.Size, arcSegment.RotationAngle, arcSegment.IsLargeArc, arcSegment.SweepDirection, true, true);
+                                }
+                                if (segment is BezierSegment bezierSegment)
+                                {
+                                    ctx.BezierTo(bezierSegment.Point1, bezierSegment.Point2, bezierSegment.Point3, true, true);
+                                }
+                                if (segment is LineSegment lineSegment)
+                                {
+                                    ctx.LineTo(lineSegment.Point, true, true);
+                                }
+                                if (segment is PolyBezierSegment polyBezierSegment)
+                                {
+                                    ctx.PolyBezierTo(polyBezierSegment.Points, true, true);
+                                }
+                                if (segment is PolyLineSegment polyLineSegment)
+                                {
+                                    ctx.PolyLineTo(polyLineSegment.Points, true, true);
+                                }
+                                if (segment is PolyQuadraticBezierSegment polyQuadraticBezierSegment)
+                                {
+                                    ctx.PolyQuadraticBezierTo(polyQuadraticBezierSegment.Points, true, true);
+                                }
+                                if (segment is QuadraticBezierSegment quadraticBezierSegment)
+                                {
+                                    ctx.QuadraticBezierTo(quadraticBezierSegment.Point1, quadraticBezierSegment.Point2, true, true);
+                                }
+                            }
+                        }
+                        var item2_ = item2 as StraightConnectorViewModel;
+                        ctx.LineTo(item2_.Points[0], true, true);
+                        ctx.LineTo(item2_.Points[1], true, true);
+                    }
+                    else if (item2.GetType() == typeof(BezierCurveViewModel))
+                    {
+                        var item2_ = item2 as BezierCurveViewModel;
+                        Point beginPoint = GetBeginPoint(item1_.PathGeometry.Value);
+                        ctx.BeginFigure(beginPoint, true, true);
+                        ctx.PolyBezierTo(item1_.Points.Skip(1).ToList(), true, false);
+                        ctx.BezierTo(item2_.ControlPoint1.Value, item2_.ControlPoint2.Value, item2_.Points[1], true, false);
+                    }
+                    else if (item2.GetType() == typeof(NRectangleViewModel))
+                    {
+                        return null;
+                    }
+                    else if (item2.GetType() == typeof(NEllipseViewModel))
+                    {
+                        return null;
+                    }
+                    else if (item2.GetType() == typeof(NPolygonViewModel))
+                    {
+                        return null;
+                    }
+                    else if (item2.GetType() == typeof(LetterDesignerItemViewModel))
+                    {
+                        return null;
+                    }
+                    else if (item2.GetType() == typeof(LetterVerticalDesignerItemViewModel))
+                    {
+                        return null;
+                    }
+                    else if (item2.GetType() == typeof(CombineGeometryViewModel))
+                    {
+                        return null; //leave it to the Geometry.Combine method
+                    }
+                    else if (item2.GetType() == typeof(PolyBezierViewModel))
+                    {
+                        var item2_ = item2 as PolyBezierViewModel;
+                        Point beginPoint = GetBeginPoint(item1_.PathGeometry.Value);
+                        ctx.BeginFigure(beginPoint, true, true);
+                        ctx.PolyBezierTo(item1_.Points.Skip(1).ToList(), true, false);
+                        ctx.PolyBezierTo(item2_.Points.ToList(), true, false);
                     }
                 }
             }

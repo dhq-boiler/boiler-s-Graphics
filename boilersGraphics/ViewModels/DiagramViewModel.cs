@@ -919,9 +919,9 @@ namespace boilersGraphics.ViewModels
         private void CombineAndAddItem(GeometryCombineMode mode)
         {
             MainWindowVM.Recorder.BeginRecode();
-
+            var selectedItems = GetSelectedItemsForCombine();
             var item1 = GetSelectedItemFirst();
-            if (item1 is PolyBezierViewModel pb)
+            if (selectedItems.Count() == 1 && item1 is PolyBezierViewModel pb)
             {
                 Remove(pb);
                 var combine = new CombineGeometryViewModel();
