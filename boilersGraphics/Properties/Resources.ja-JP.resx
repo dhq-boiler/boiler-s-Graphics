@@ -726,6 +726,9 @@
   <data name="Tool_Eraser" xml:space="preserve">
     <value>消しゴムツール</value>
   </data>
+  <data name="Tool_FreeHand" xml:space="preserve">
+    <value>フリーハンドツール</value>
+  </data>
   <data name="Tool_Lasso" xml:space="preserve">
     <value>なげなわツール</value>
   </data>

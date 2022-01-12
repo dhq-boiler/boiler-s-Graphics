@@ -1888,6 +1888,15 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Free hand tool に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Tool_FreeHand {
+            get {
+                return ResourceManager.GetString("Tool_FreeHand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Lasso tool に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Tool_Lasso {
