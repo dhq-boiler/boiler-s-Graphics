@@ -77,8 +77,8 @@ namespace boilersGraphics.Adorners
                 var points = new List<Point>();
                 points.Add(_startPoint.Value);
                 points.Add(_endPoint.Value);
-                //var item = new BezierCurveViewModel((AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel, _startPoint.Value, _endPoint.Value, BezierCurve.Evaluate(0.25, points), BezierCurve.Evaluate(0.75, points));
                 _item.Owner = (AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel;
+                _item.LeftTop.Value = new Point(_item.Points.Select(x => x.X).Min() - _item.Owner.EdgeThickness.Value.Value / 2, _item.Points.Select(x => x.Y).Min() - _item.Owner.EdgeThickness.Value.Value / 2);
                 _item.EdgeColor.Value = _item.Owner.EdgeColors.First();
                 _item.EdgeThickness.Value = _item.Owner.EdgeThickness.Value.Value;
                 _item.ZIndex.Value = _item.Owner.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).Count();
@@ -130,8 +130,7 @@ namespace boilersGraphics.Adorners
                 using (StreamGeometryContext ctx = geometry.Open())
                 {
                     ctx.BeginFigure(_startPoint.Value, true, false);
-                    //ctx.BezierTo(BezierCurve.Evaluate(0.25, points), BezierCurve.Evaluate(0.75, points), _endPoint.Value, true, false);
-                    ctx.PolyBezierTo(_item.Points, true, false);
+                    ctx.PolyBezierTo(_item.Points.Skip(1).ToList(), true, false);
                 }
                 dc.DrawGeometry(Brushes.Transparent, _bezierCurvePen, geometry);
             }
