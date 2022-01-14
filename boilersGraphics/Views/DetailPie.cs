@@ -2,11 +2,13 @@
 using boilersGraphics.Extensions;
 using boilersGraphics.ViewModels;
 using Reactive.Bindings;
+using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using static boilersGraphics.Views.DetailPathGeometry;
@@ -85,20 +87,27 @@ namespace boilersGraphics.Views
             Content = _dockPanel;
         }
 
+        private Ellipse hitTestResult;
+
         private void DetailPie_LayoutUpdated(object sender, System.EventArgs e)
         {
             var detailPathGeometry = _detailPathGeometry;
             detailPathGeometry.ApplyTemplate();
             var widthCell = detailPathGeometry.FindVisualChildren<DockPanel>().First(x => x.Name == "WidthCell");
+            var widthCellInternal = detailPathGeometry.FindVisualChildren<StackPanel>().First(x => x.Name == "WidthCellInternal");
             var dpgRoot = widthCell.FindAncestor<Grid>().FindAncestor<Grid>().FindAncestor<Grid>();
             var x = _centerPoint.FindAncestor<Canvas>();
             dpgRoot.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
             dpgRoot.Arrange(new Rect(0, 0, dpgRoot.DesiredSize.Width, dpgRoot.DesiredSize.Height));
             widthCell.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
             widthCell.Arrange(new Rect(0, 0, widthCell.DesiredSize.Width, widthCell.DesiredSize.Height));
+            widthCellInternal.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+            widthCellInternal.Arrange(new Rect(0, 0, widthCell.DesiredSize.Width, widthCell.DesiredSize.Height));
             x.UpdateLayout();
+            widthCell.UpdateLayout();
+            widthCellInternal.UpdateLayout();
             var centerPointBounds = _centerPoint.BoundsRelativeTo(x);
-            var hitTestResult = widthCell.InputHitTest(new Point(centerPointBounds.X + centerPointBounds.Width / 2, centerPointBounds.Y + centerPointBounds.Height / 2));
+            var hitTestResult = widthCellInternal.InputHitTest(new Point(centerPointBounds.X + centerPointBounds.Width / 2, centerPointBounds.Y + centerPointBounds.Height / 2));
             if (hitTestResult != null)
             {
                 WidthPlacement.Value = Placement.Top;
@@ -108,7 +117,7 @@ namespace boilersGraphics.Views
                 WidthPlacement.Value = Placement.Bottom;
             }
         }
-        
+
         public ReactivePropertySlim<Placement> WidthPlacement { get; } = new ReactivePropertySlim<Placement>(Placement.Bottom);
     }
 }
