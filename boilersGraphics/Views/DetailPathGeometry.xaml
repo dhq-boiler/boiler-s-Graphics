@@ -128,7 +128,6 @@
                         <StackPanel Name="WidthCellInternal"
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Top"
-                                    Background="Blue"
                                     Orientation="Horizontal">
                             <Label Content="Width" />
                             <control:DoubleTextBox VerticalContentAlignment="Center" DoubleText="{Binding DataContext.Width.Value, Mode=TwoWay, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}" />

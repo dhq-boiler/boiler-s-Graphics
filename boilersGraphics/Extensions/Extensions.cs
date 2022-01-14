@@ -83,6 +83,17 @@ namespace boilersGraphics.Extensions
             }
             return null;
         }
+        public static Visual FindRoot(this Visual depObj)
+        {
+            Visual parent = depObj;
+            while (parent != null)
+            {
+                parent = VisualTreeHelper.GetParent(depObj) as Visual;
+                if (parent != null)
+                    depObj = parent;
+            }
+            return depObj;
+        }
 
         public static IEnumerable<T> FindVisualChildren<T>(this DependencyObject depObj) where T : DependencyObject
         {
