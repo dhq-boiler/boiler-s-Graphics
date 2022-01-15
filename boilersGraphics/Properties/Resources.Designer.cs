@@ -430,6 +430,15 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Number of draws of the pie tool に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfDrawsOfThePieTool {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfDrawsOfThePieTool", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Number of draws of the rectangle tool に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Dialog_Statistics_NumberOfDrawsOfTheRectangleTool {
@@ -1929,6 +1938,15 @@ namespace boilersGraphics.Properties {
         public static string Tool_Picture {
             get {
                 return ResourceManager.GetString("Tool_Picture", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Pie tool に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Tool_Pie {
+            get {
+                return ResourceManager.GetString("Tool_Pie", resourceCulture);
             }
         }
         

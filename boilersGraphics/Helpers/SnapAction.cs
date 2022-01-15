@@ -32,7 +32,7 @@ namespace boilersGraphics.Helpers
         private SnapResult _SnapResult = SnapResult.NoSnap;
         private SelectableDesignerItemViewModelBase _SnapTargetDataContext { get; set; }
 
-        public void SnapIntersectionOfEllipseAndTangent(IEnumerable<NEllipseViewModel> ellipses, Point beginPoint, Point endPoint, List<Tuple<Point, NEllipseViewModel>> appendIntersectionPoints)
+        public void SnapIntersectionOfEllipseAndTangent(IEnumerable<NEllipseViewModel> ellipses, Point beginPoint, Point endPoint, List<Tuple<Point, object>> appendIntersectionPoints)
         {
             foreach (var ellipse in ellipses)
             {
@@ -49,12 +49,48 @@ namespace boilersGraphics.Helpers
                 var minDiscriminant = array.FirstOrDefault(x => Math.Abs(x.Item2) == array.Min(x => Math.Abs(x.Item2)));
                 if (minDiscriminant != null && minDiscriminant.Item1.Count() == 1)
                 {
-                    appendIntersectionPoints.Add(new Tuple<Point, NEllipseViewModel>(minDiscriminant.Item1.First(), ellipse));
+                    appendIntersectionPoints.Add(new Tuple<Point, object>(minDiscriminant.Item1.First(), ellipse));
                 }
             }
         }
 
-        public void OnMouseMove(ref Point currentPoint, List<Tuple<Point, NEllipseViewModel>> appendIntersectionPoints = null)
+        public void SnapIntersectionOfPieAndTangent(IEnumerable<NPieViewModel> pies, Point beginPoint, Point endPoint, List<Tuple<Point, object>> appendIntersectionPoints)
+        {
+            foreach (var pie in pies)
+            {
+                var snapPower = (App.Current.MainWindow.DataContext as MainWindowViewModel).SnapPower.Value;
+                var array = new ConcurrentBag<Tuple<Point[], double>>();
+                Parallel.For((int)-snapPower, (int)snapPower, (y) =>
+                {
+                    for (double x = -snapPower; x < snapPower; x++)
+                    {
+                        var tuple = Intersection.FindPieSegmentIntersectionsSupportRotationLong(pie, beginPoint, new Point(endPoint.X + x, endPoint.Y + y), false);
+                        array.Add(tuple);
+                    }
+                });
+                var minDiscriminant = array.FirstOrDefault(x => Math.Abs(x.Item2) == array.Min(x => Math.Abs(x.Item2)));
+                if (minDiscriminant != null && minDiscriminant.Item1.Count() == 1)
+                {
+                    appendIntersectionPoints.Add(new Tuple<Point, object>(minDiscriminant.Item1.First(), pie));
+                }
+
+                Parallel.For((int)-snapPower, (int)snapPower, (y) =>
+                {
+                    for (double x = -snapPower; x < snapPower; x++)
+                    {
+                        var tuple = Intersection.FindPieSegmentIntersectionsSupportRotationShort(pie, beginPoint, new Point(endPoint.X + x, endPoint.Y + y), false);
+                        array.Add(tuple);
+                    }
+                });
+                minDiscriminant = array.FirstOrDefault(x => Math.Abs(x.Item2) == array.Min(x => Math.Abs(x.Item2)));
+                if (minDiscriminant != null && minDiscriminant.Item1.Count() == 1)
+                {
+                    appendIntersectionPoints.Add(new Tuple<Point, object>(minDiscriminant.Item1.First(), pie));
+                }
+            }
+        }
+
+        public void OnMouseMove(ref Point currentPoint, List<Tuple<Point, object>> appendIntersectionPoints = null)
         {
             var mainWindowVM = (App.Current.MainWindow.DataContext as MainWindowViewModel);
             var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
@@ -140,7 +176,7 @@ namespace boilersGraphics.Helpers
             }
         }
 
-        public void OnMouseMove(ref Point currentPoint, Vector vec, List<Tuple<Point, NEllipseViewModel>> appendIntersectionPoints = null)
+        public void OnMouseMove(ref Point currentPoint, Vector vec, List<Tuple<Point, object>> appendIntersectionPoints = null)
         {
             var mainWindowVM = (App.Current.MainWindow.DataContext as MainWindowViewModel);
             var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
@@ -228,7 +264,7 @@ namespace boilersGraphics.Helpers
             }
         }
 
-        public void OnMouseMove(ref Point currentPoint, SnapPoint movingSnapPoint, Vector vec, List<Tuple<Point, NEllipseViewModel>> appendIntersectionPoints = null)
+        public void OnMouseMove(ref Point currentPoint, SnapPoint movingSnapPoint, Vector vec, List<Tuple<Point, object>> appendIntersectionPoints = null)
         {
             var mainWindowVM = (App.Current.MainWindow.DataContext as MainWindowViewModel);
             var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();

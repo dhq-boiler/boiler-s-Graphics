@@ -88,12 +88,14 @@ namespace boilersGraphics.Views.Behaviors
             var canvas = AssociatedObject as DesignerCanvas;
             Point current = e.GetPosition(canvas);
             var ellipses = (AssociatedObject.DataContext as DiagramViewModel).AllItems.Value.OfType<NEllipseViewModel>();
-            var appendIntersectionPoints = new List<Tuple<Point, NEllipseViewModel>>();
+            var pies = (AssociatedObject.DataContext as DiagramViewModel).AllItems.Value.OfType<NPieViewModel>();
+            var appendIntersectionPoints = new List<Tuple<Point, object>>();
             Vector vec = new Vector();
             if (_straightLineStartPoint.HasValue)
             {
                 vec = Point.Subtract(current, _straightLineStartPoint.Value);
                 snapAction.SnapIntersectionOfEllipseAndTangent(ellipses, _straightLineStartPoint.Value, current, appendIntersectionPoints);
+                snapAction.SnapIntersectionOfPieAndTangent(pies, _straightLineStartPoint.Value, current, appendIntersectionPoints);
             }
             snapAction.OnMouseMove(ref current, vec, appendIntersectionPoints);
 
@@ -122,12 +124,14 @@ namespace boilersGraphics.Views.Behaviors
             var canvas = AssociatedObject as DesignerCanvas;
             Point current = e.GetPosition(canvas);
             var ellipses = (AssociatedObject.DataContext as DiagramViewModel).AllItems.Value.OfType<NEllipseViewModel>();
-            var appendIntersectionPoints = new List<Tuple<Point, NEllipseViewModel>>();
+            var pies = (AssociatedObject.DataContext as DiagramViewModel).AllItems.Value.OfType<NPieViewModel>();
+            var appendIntersectionPoints = new List<Tuple<Point, object>>();
             Vector vec = new Vector();
             if (_straightLineStartPoint.HasValue)
             {
                 vec = Point.Subtract(current, _straightLineStartPoint.Value);
                 snapAction.SnapIntersectionOfEllipseAndTangent(ellipses, _straightLineStartPoint.Value, current, appendIntersectionPoints);
+                snapAction.SnapIntersectionOfPieAndTangent(pies, _straightLineStartPoint.Value, current, appendIntersectionPoints);
             }
             snapAction.OnMouseMove(ref current, vec, appendIntersectionPoints);
 

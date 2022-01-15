@@ -43,6 +43,7 @@ namespace boilersGraphics.ViewModels
         public BrushBehavior BrushBehavior { get; private set; }
         public EraserBehavior EraserBehavior { get; } = new EraserBehavior();
         public SliceBehavior SliceBehavior { get; private set; }
+        public NDrawPieBehavior NDrawPieBehavior { get; } = new NDrawPieBehavior();
 
         public NDrawPolyBezierBehavior PolyBezierBehavior { get; } = new NDrawPolyBezierBehavior();
 
@@ -222,6 +223,17 @@ namespace boilersGraphics.ViewModels
                 }
                 ChangeHitTestToDisable();
                 SelectOneToolItem("polybezier");
+            })));
+            ToolItems.Add(new ToolItemData("pie", "pack://application:,,,/Assets/img/FoldingFan.png", Resources.Tool_Pie, new DelegateCommand(() =>
+            {
+                Behaviors.Clear();
+                if (!Behaviors.Contains(NDrawPieBehavior))
+                {
+                    Behaviors.Add(NDrawPieBehavior);
+                }
+                ChangeHitTestToDisable();
+                SelectOneToolItem("pie");
+                (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = $"クリックして扇形の中心点を決定します。";
             })));
         }
 
