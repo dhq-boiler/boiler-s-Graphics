@@ -122,7 +122,7 @@ namespace boilersGraphics.ViewModels
                 mainWindowViewModel.ClearCurrentOperationAndDetails();
                 var dialog = new OpenFileDialog();
                 dialog.Multiselect = false;
-                dialog.Filter = "サポートする画像|*.jpg;*.jpeg;*.png;*.gif;*.bmp|JPEG file|*.jpg;*.jpeg|PNG file|*.png|GIF file|*.gif|BMP file|*.bmp|ALL|*.*";
+                dialog.Filter = boilersGraphics.Properties.Resources.String_SupportImage;
                 if (dialog.ShowDialog() == true)
                 {
                     var bitmap = BitmapFactory.FromStream(new FileStream(dialog.FileName, FileMode.Open, FileAccess.Read));

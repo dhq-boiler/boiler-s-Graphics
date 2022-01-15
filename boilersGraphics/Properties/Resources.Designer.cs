@@ -1870,6 +1870,15 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Supported images|*.jpg;*.jpeg;*.png;*.gif;*.bmp|JPEG file|*.jpg;*.jpeg|PNG file|*.png|GIF file|*.gif|BMP file|*.bmp|ALL|*.* に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_SupportImage {
+            get {
+                return ResourceManager.GetString("String_SupportImage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Version に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string String_Version {

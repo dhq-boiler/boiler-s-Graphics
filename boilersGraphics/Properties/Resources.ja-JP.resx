@@ -720,6 +720,9 @@
   <data name="String_SnapRange" xml:space="preserve">
     <value>ポイントにスナップする範囲</value>
   </data>
+  <data name="String_SupportImage" xml:space="preserve">
+    <value>サポートする画像|*.jpg;*.jpeg;*.png;*.gif;*.bmp|JPEG file|*.jpg;*.jpeg|PNG file|*.png|GIF file|*.gif|BMP file|*.bmp|すべて|*.*</value>
+  </data>
   <data name="String_Version" xml:space="preserve">
     <value>バージョン</value>
   </data>
