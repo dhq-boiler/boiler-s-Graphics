@@ -262,15 +262,52 @@ namespace boilersGraphics.Views
             tooltip.VerticalOffset = Y + 14;
 
             tooltip.IsOpen = true;
+            Thumb.CaptureMouse();
+        }
+
+        private void Thumb_PreviewStylusDown(object sender, StylusDownEventArgs e)
+        {
+            var tooltip = (ToolTip)Thumb.ToolTip;
+            if (tooltip.PlacementTarget == null)
+            {
+                tooltip.PlacementTarget = this;
+            }
+
+            tooltip.HorizontalOffset = X + 13;
+            tooltip.VerticalOffset = Y + 14;
+
+            tooltip.IsOpen = true;
+            Thumb.CaptureStylus();
         }
 
         private void Thumb_PreviewMouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             var tooltip = (ToolTip)Thumb.ToolTip;
             tooltip.IsOpen = false;
+            Thumb.ReleaseMouseCapture();
+        }
+
+        private void Thumb_PreviewStylusUp(object sender, StylusEventArgs e)
+        {
+            var tooltip = (ToolTip)Thumb.ToolTip;
+            tooltip.IsOpen = false;
+            Thumb.ReleaseStylusCapture();
         }
 
         private void Thumb_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            if (IsPressed)
+            {
+                IsPressed = false;
+            }
+
+            var tooltip = (ToolTip)Thumb.ToolTip;
+            tooltip.IsOpen = false;
+
+            Image.ReleaseMouseCapture();
+        }
+
+        private void Thumb_StylusUp(object sender, StylusEventArgs e)
         {
             if (IsPressed)
             {
