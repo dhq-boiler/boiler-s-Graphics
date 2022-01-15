@@ -450,6 +450,12 @@ namespace boilersGraphics.ViewModels
             }
         }
 
+        public void ClearCurrentOperationAndDetails()
+        {
+            CurrentOperation.Value = string.Empty;
+            Details.Value = string.Empty;
+        }
+
         public DiagramViewModel DiagramViewModel
         {
             get { return _DiagramViewModel; }
