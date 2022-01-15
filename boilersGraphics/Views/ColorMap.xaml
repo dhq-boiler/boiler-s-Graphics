@@ -60,15 +60,19 @@
     </UserControl.Background>
     <Canvas>
         <Image x:Name="Image"
+               PreviewMouseDown="Image_PreviewMouseDown"
                MouseDown="Image_MouseDown"
                MouseMove="Image_MouseMove"
                MouseUp="Image_MouseUp"
+               StylusDown="Image_StylusDown"
+               StylusUp="Image_StylusUp"
                Source="{Binding Source, RelativeSource={RelativeSource AncestorType={x:Type local:ColorMap}}}" />
         <Thumb x:Name="Thumb"
                Canvas.Left="{Binding X, RelativeSource={RelativeSource AncestorType={x:Type local:ColorMap}}}"
                Canvas.Top="{Binding Y, RelativeSource={RelativeSource AncestorType={x:Type local:ColorMap}}}"
                Width="11"
                Height="11"
+               MouseMove="Thumb_MouseMove"
                DragDelta="Thumb_DragDelta"
                MouseUp="Thumb_MouseUp"
                StylusUp="Thumb_StylusUp"
