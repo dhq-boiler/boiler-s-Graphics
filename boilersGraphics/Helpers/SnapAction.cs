@@ -74,6 +74,8 @@ namespace boilersGraphics.Helpers
                     appendIntersectionPoints.Add(new Tuple<Point, object>(minDiscriminant.Item1.First(), pie));
                 }
 
+                if (pie.Distance.Value - pie.DonutWidth.Value < 10) continue; //短い半径が短すぎる場合、接線の交点を計算しない
+
                 Parallel.For((int)-snapPower, (int)snapPower, (y) =>
                 {
                     for (double x = -snapPower; x < snapPower; x++)
