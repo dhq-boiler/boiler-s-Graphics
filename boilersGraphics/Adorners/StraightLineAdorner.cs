@@ -45,12 +45,14 @@ namespace boilersGraphics.Adorners
                     this.CaptureMouse();
 
                 var ellipses = (_designerCanvas.DataContext as DiagramViewModel).AllItems.Value.OfType<NEllipseViewModel>();
+                var pies = (_designerCanvas.DataContext as DiagramViewModel).AllItems.Value.OfType<NPieViewModel>();
 
                 //ドラッグ終了座標を更新
                 _endPoint = e.GetPosition(this);
 
                 var appendIntersectionPoints = new List<Tuple<Point, object>>();
                 _snapAction.SnapIntersectionOfEllipseAndTangent(ellipses, _startPoint.Value, _endPoint.Value, appendIntersectionPoints);
+                _snapAction.SnapIntersectionOfPieAndTangent(pies, _startPoint.Value, _endPoint.Value, appendIntersectionPoints);
 
                 var currentPosition = _endPoint.Value;
                 Vector vec = new Vector();

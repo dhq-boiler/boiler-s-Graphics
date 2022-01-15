@@ -113,6 +113,28 @@ namespace boilersGraphics.ViewModels
             return geometry;
         }
 
+        public NEllipseViewModel CreateNEllipseViewModelLong()
+        {
+            var viewModel = new NEllipseViewModel();
+            viewModel.Left.Value = PieCenterPoint.Value.X - Distance.Value;
+            viewModel.Top.Value = PieCenterPoint.Value.Y - Distance.Value;
+            viewModel.Width.Value = Distance.Value * 2;
+            viewModel.Height.Value = Distance.Value * 2;
+            viewModel.PathGeometry.Value = GeometryCreator.CreateEllipse(PieCenterPoint.Value.X, PieCenterPoint.Value.Y, new System.Windows.Thickness(PieCenterPoint.Value.X - Distance.Value, PieCenterPoint.Value.Y - Distance.Value, PieCenterPoint.Value.X + Distance.Value, PieCenterPoint.Value.Y + Distance.Value));
+            return viewModel;
+        }
+
+        public NEllipseViewModel CreateNEllipseViewModelShort()
+        {
+            var viewModel = new NEllipseViewModel();
+            viewModel.Left.Value = PieCenterPoint.Value.X - (Distance.Value - DonutWidth.Value);
+            viewModel.Top.Value = PieCenterPoint.Value.Y - (Distance.Value - DonutWidth.Value);
+            viewModel.Width.Value = (Distance.Value - DonutWidth.Value) * 2;
+            viewModel.Height.Value = (Distance.Value - DonutWidth.Value) * 2;
+            viewModel.PathGeometry.Value = GeometryCreator.CreateEllipse(PieCenterPoint.Value.X, PieCenterPoint.Value.Y, new System.Windows.Thickness(PieCenterPoint.Value.X - Distance.Value, PieCenterPoint.Value.Y - Distance.Value, PieCenterPoint.Value.X + Distance.Value, PieCenterPoint.Value.Y + Distance.Value));
+            return viewModel;
+        }
+
         public override Type GetViewType()
         {
             return typeof(Path);

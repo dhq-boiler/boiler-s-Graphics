@@ -77,11 +77,13 @@ namespace boilersGraphics.Controls
                 Canvas.SetTop(this, currentPosition.Y - this.Height / 2);
                 
                 var ellipses = ((App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel as DiagramViewModel).AllItems.Value.OfType<NEllipseViewModel>();
+                var pies = ((App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel as DiagramViewModel).AllItems.Value.OfType<NPieViewModel>();
                 var appendIntersectionPoints = new List<Tuple<Point, object>>();
 
                 var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
                 var oppositePoint = OppositeHandle.TransformToAncestor(designerCanvas).Transform(new Point(0, 0));
                 snapAction.SnapIntersectionOfEllipseAndTangent(ellipses, oppositePoint, point, appendIntersectionPoints);
+                snapAction.SnapIntersectionOfPieAndTangent(pies, oppositePoint, point, appendIntersectionPoints);
                 Vector vec = new Vector();
                 vec = Point.Subtract(oppositePoint, point);
                 snapAction.OnMouseMove(ref point, this, vec, appendIntersectionPoints);
