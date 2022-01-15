@@ -660,6 +660,24 @@
   <data name="String_OpensourceComponent_Library_Code" xml:space="preserve">
     <value>OpenSource component / Libraries / Code</value>
   </data>
+  <data name="String_Pie_DetermineCenterPoint" xml:space="preserve">
+    <value>Click to determine the center point of the pie</value>
+  </data>
+  <data name="String_Pie_DetermineEndAngle" xml:space="preserve">
+    <value>Click to determine the end angle of the pie.</value>
+  </data>
+  <data name="String_Pie_DetermineEndAngleByMouseUp" xml:space="preserve">
+    <value>Mouse up to determine the end angle of the pie. Center point: {0} Long radius: {1} Start angle: {2} ° End angle: {3} °</value>
+  </data>
+  <data name="String_Pie_DetermineLongRadiusAndStartingAngle" xml:space="preserve">
+    <value>Mouse up to determine the long radius and starting angle of the pie. Center point:{0} Long radius:{1} Starting angle:{2}°</value>
+  </data>
+  <data name="String_Pie_DetermineShortRadius" xml:space="preserve">
+    <value>Click to determine the short radius of the pie.</value>
+  </data>
+  <data name="String_Pie_DetermineShortRadiusByMouseUp" xml:space="preserve">
+    <value>Mouse up to determine the short radius of the pie. Center point: {0} Long radius: {1} Start angle: {2} ° End angle: {3} ° Short radius: {4}</value>
+  </data>
   <data name="String_PleaseDescribeError" xml:space="preserve">
     <value>**Please describe the details of the error**</value>
   </data>

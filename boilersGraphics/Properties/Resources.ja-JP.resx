@@ -660,6 +660,24 @@
   <data name="String_OpensourceComponent_Library_Code" xml:space="preserve">
     <value>オープンソース コンポーネント / ライブラリ / コード</value>
   </data>
+  <data name="String_Pie_DetermineCenterPoint" xml:space="preserve">
+    <value>クリックして扇形の中心点を決定します。</value>
+  </data>
+  <data name="String_Pie_DetermineEndAngle" xml:space="preserve">
+    <value>クリックして扇形の終了角度を決定します。</value>
+  </data>
+  <data name="String_Pie_DetermineEndAngleByMouseUp" xml:space="preserve">
+    <value>マウスアップで扇形の終了角度を決定します。 中心点：{0} 長い半径：{1} 開始角度：{2}° 終了角度：{3}°</value>
+  </data>
+  <data name="String_Pie_DetermineLongRadiusAndStartingAngle" xml:space="preserve">
+    <value>マウスアップで扇形の長い半径と開始角度を決定します。 中心点：{0} 長い半径：{1} 開始角度：{2}°</value>
+  </data>
+  <data name="String_Pie_DetermineShortRadius" xml:space="preserve">
+    <value>クリックして扇形の短い半径を決定します。</value>
+  </data>
+  <data name="String_Pie_DetermineShortRadiusByMouseUp" xml:space="preserve">
+    <value>マウスアップで扇形の短い半径を決定します。 中心点：{0} 長い半径：{1} 開始角度：{2}° 終了角度：{3}° 短い半径：{4}</value>
+  </data>
   <data name="String_PleaseDescribeError" xml:space="preserve">
     <value>**エラーの詳細を説明してください**</value>
   </data>
