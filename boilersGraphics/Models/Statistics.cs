@@ -3,7 +3,7 @@ using Homura.ORM.Mapping;
 
 namespace boilersGraphics.Models
 {
-	[DefaultVersion(typeof(Version2))]
+	[DefaultVersion(typeof(Version3))]
     public class Statistics : PkIdEntity
     {
         private int _number_of_boots;
@@ -680,12 +680,11 @@ namespace boilersGraphics.Models
 			get => _numberOfDrawsOfFreeHandTool;
 			set => SetProperty(ref _numberOfDrawsOfFreeHandTool, value);
 		}
-	}
 
 		/// <summary>
 		/// パイツールの描画回数
 		/// </summary>
-		[Since(typeof(Version2))]
+		[Since(typeof(Version3))]
 		[Column("NumberOfDrawsOfThePieTool", "INTEGER", 61), NotNull]
 		public int NumberOfDrawsOfThePieTool
         {
