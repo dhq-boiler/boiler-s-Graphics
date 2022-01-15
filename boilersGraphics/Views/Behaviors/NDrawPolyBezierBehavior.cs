@@ -88,7 +88,7 @@ namespace boilersGraphics.Views.Behaviors
             var canvas = AssociatedObject as DesignerCanvas;
             Point current = e.GetPosition(canvas);
             var ellipses = (AssociatedObject.DataContext as DiagramViewModel).AllItems.Value.OfType<NEllipseViewModel>();
-            var appendIntersectionPoints = new List<Tuple<Point, NEllipseViewModel>>();
+            var appendIntersectionPoints = new List<Tuple<Point, object>>();
             Vector vec = new Vector();
             if (_straightLineStartPoint.HasValue)
             {
@@ -122,7 +122,7 @@ namespace boilersGraphics.Views.Behaviors
             var canvas = AssociatedObject as DesignerCanvas;
             Point current = e.GetPosition(canvas);
             var ellipses = (AssociatedObject.DataContext as DiagramViewModel).AllItems.Value.OfType<NEllipseViewModel>();
-            var appendIntersectionPoints = new List<Tuple<Point, NEllipseViewModel>>();
+            var appendIntersectionPoints = new List<Tuple<Point, object>>();
             Vector vec = new Vector();
             if (_straightLineStartPoint.HasValue)
             {
