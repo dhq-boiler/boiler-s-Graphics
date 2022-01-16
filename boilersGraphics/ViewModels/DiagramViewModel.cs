@@ -492,6 +492,12 @@ namespace boilersGraphics.ViewModels
             Width = width;
             Height = height;
 
+            EnableAutoSave.Subscribe(x =>
+            {
+                if (!x && _AutoSaveTimerDisposableObj != null)
+                    _AutoSaveTimerDisposableObj.Dispose();
+            })
+            .AddTo(_CompositeDisposable);
             EnableAutoSave.Value = true;
             AutoSaveType.Value = Models.AutoSaveType.SetInterval;
             AutoSaveInterval.Value = TimeSpan.FromSeconds(30);
@@ -589,6 +595,7 @@ namespace boilersGraphics.ViewModels
                     {
                         AutoSave();
                     });
+                    _CompositeDisposable.Add(_AutoSaveTimerDisposableObj);
                 }
                 else if (AutoSaveType.Value == Models.AutoSaveType.EveryTimeCampusChanges)
                 {
