@@ -43,6 +43,7 @@ namespace boilersGraphics.ViewModels
         public BrushBehavior BrushBehavior { get; private set; }
         public EraserBehavior EraserBehavior { get; } = new EraserBehavior();
         public SliceBehavior SliceBehavior { get; private set; }
+        public NDrawPieBehavior NDrawPieBehavior { get; } = new NDrawPieBehavior();
 
         public NDrawPolyBezierBehavior PolyBezierBehavior { get; } = new NDrawPolyBezierBehavior();
 
@@ -57,6 +58,8 @@ namespace boilersGraphics.ViewModels
             SliceBehavior = new SliceBehavior(dialogService);
             ToolItems.Add(new ToolItemData("pointer", "pack://application:,,,/Assets/img/pointer.png", Resources.Tool_Pointer, new DelegateCommand(() =>
             {
+                var mainWindowViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel);
+                mainWindowViewModel.ClearCurrentOperationAndDetails();
                 Behaviors.Clear();
                 if (!Behaviors.Contains(DeselectBehavior))
                 {
@@ -67,6 +70,8 @@ namespace boilersGraphics.ViewModels
             })));
             ToolItems.Add(new ToolItemData("lasso", "pack://application:,,,/Assets/img/rubberband.png", Resources.Tool_Lasso, new DelegateCommand(() =>
             {
+                var mainWindowViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel);
+                mainWindowViewModel.ClearCurrentOperationAndDetails();
                 Behaviors.Clear();
                 if (!Behaviors.Contains(RubberbandBehavior))
                 {
@@ -77,6 +82,8 @@ namespace boilersGraphics.ViewModels
             })));
             ToolItems.Add(new ToolItemData("straightline", "pack://application:,,,/Assets/img/straightline.png", Resources.Tool_StraightLine, new DelegateCommand(() =>
             {
+                var mainWindowViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel);
+                mainWindowViewModel.ClearCurrentOperationAndDetails();
                 Behaviors.Clear();
                 if (!Behaviors.Contains(NDrawStraightLineBehavior))
                 {
@@ -87,6 +94,8 @@ namespace boilersGraphics.ViewModels
             })));
             ToolItems.Add(new ToolItemData("rectangle", "pack://application:,,,/Assets/img/rectangle.png", Resources.Tool_Rectangle, new DelegateCommand(() =>
             {
+                var mainWindowViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel);
+                mainWindowViewModel.ClearCurrentOperationAndDetails();
                 Behaviors.Clear();
                 if (!Behaviors.Contains(NDrawRectangleBehavior))
                 {
@@ -97,6 +106,8 @@ namespace boilersGraphics.ViewModels
             })));
             ToolItems.Add(new ToolItemData("ellipse", "pack://application:,,,/Assets/img/ellipse.png", Resources.Tool_Ellipse, new DelegateCommand(() =>
             {
+                var mainWindowViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel);
+                mainWindowViewModel.ClearCurrentOperationAndDetails();
                 Behaviors.Clear();
                 if (!Behaviors.Contains(NDrawEllipseBehavior))
                 {
@@ -107,9 +118,11 @@ namespace boilersGraphics.ViewModels
             })));
             ToolItems.Add(new ToolItemData("picture", "pack://application:,,,/Assets/img/Picture.png", Resources.Tool_Picture, new DelegateCommand(() =>
             {
+                var mainWindowViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel);
+                mainWindowViewModel.ClearCurrentOperationAndDetails();
                 var dialog = new OpenFileDialog();
                 dialog.Multiselect = false;
-                dialog.Filter = "サポートする画像|*.jpg;*.jpeg;*.png;*.gif;*.bmp|JPEG file|*.jpg;*.jpeg|PNG file|*.png|GIF file|*.gif|BMP file|*.bmp|ALL|*.*";
+                dialog.Filter = boilersGraphics.Properties.Resources.String_SupportImage;
                 if (dialog.ShowDialog() == true)
                 {
                     var bitmap = BitmapFactory.FromStream(new FileStream(dialog.FileName, FileMode.Open, FileAccess.Read));
@@ -125,6 +138,8 @@ namespace boilersGraphics.ViewModels
             })));
             ToolItems.Add(new ToolItemData("letter", "pack://application:,,,/Assets/img/A.png", Resources.Tool_Lettering, new DelegateCommand(() =>
             {
+                var mainWindowViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel);
+                mainWindowViewModel.ClearCurrentOperationAndDetails();
                 Behaviors.Clear();
                 if (!Behaviors.Contains(LetterBehavior))
                 {
@@ -135,6 +150,8 @@ namespace boilersGraphics.ViewModels
             })));
             ToolItems.Add(new ToolItemData("letter-vertical", "pack://application:,,,/Assets/img/A_Vertical.png", Resources.Tool_VerticalLettering, new DelegateCommand(() =>
             {
+                var mainWindowViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel);
+                mainWindowViewModel.ClearCurrentOperationAndDetails();
                 Behaviors.Clear();
                 if (!Behaviors.Contains(LetterVerticalBehavior))
                 {
@@ -145,6 +162,8 @@ namespace boilersGraphics.ViewModels
             })));
             ToolItems.Add(new ToolItemData("polygon", "pack://application:,,,/Assets/img/polygon.png", Resources.Tool_Polygon, new DelegateCommand(() =>
             {
+                var mainWindowViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel);
+                mainWindowViewModel.ClearCurrentOperationAndDetails();
                 IDialogResult result = null;
                 this.dlgService.ShowDialog(nameof(PolygonSetting), ret => result = ret);
                 if (result != null && result.Result == ButtonResult.OK)
@@ -163,6 +182,8 @@ namespace boilersGraphics.ViewModels
             })));
             ToolItems.Add(new ToolItemData("bezier", "pack://application:,,,/Assets/img/BezierCurve.png", Resources.Tool_BezierCurve, new DelegateCommand(() =>
             {
+                var mainWindowViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel);
+                mainWindowViewModel.ClearCurrentOperationAndDetails();
                 Behaviors.Clear();
                 if (!Behaviors.Contains(NDrawBezierCurveBehavior))
                 {
@@ -173,6 +194,8 @@ namespace boilersGraphics.ViewModels
             })));
             ToolItems.Add(new ToolItemData("snappoint", "pack://application:,,,/Assets/img/SnapPoint.png", Resources.Tool_SnapPoint, new DelegateCommand(() =>
             {
+                var mainWindowViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel);
+                mainWindowViewModel.ClearCurrentOperationAndDetails();
                 Behaviors.Clear();
                 if (!Behaviors.Contains(SetSnapPointBehavior))
                 {
@@ -183,6 +206,8 @@ namespace boilersGraphics.ViewModels
             })));
             ToolItems.Add(new ToolItemData("brush", "pack://application:,,,/Assets/img/brush.png", Resources.Tool_Brush, new DelegateCommand(() =>
             {
+                var mainWindowViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel);
+                mainWindowViewModel.ClearCurrentOperationAndDetails();
                 BrushBehavior = new BrushBehavior(dlgService);
                 BrushBehavior.CurrentBrush.OpenThicknessDialog();
                 Behaviors.Clear();
@@ -195,6 +220,8 @@ namespace boilersGraphics.ViewModels
             })));
             ToolItems.Add(new ToolItemData("eraser", "pack://application:,,,/Assets/img/eraser.png", Resources.Tool_Eraser, new DelegateCommand(() =>
             {
+                var mainWindowViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel);
+                mainWindowViewModel.ClearCurrentOperationAndDetails();
                 Behaviors.Clear();
                 if (!Behaviors.Contains(EraserBehavior))
                 {
@@ -205,6 +232,8 @@ namespace boilersGraphics.ViewModels
             })));
             ToolItems.Add(new ToolItemData("slice", "pack://application:,,,/Assets/img/slice_tool.png", Resources.Tool_Slice, new DelegateCommand(() =>
             {
+                var mainWindowViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel);
+                mainWindowViewModel.ClearCurrentOperationAndDetails();
                 Behaviors.Clear();
                 if (!Behaviors.Contains(SliceBehavior))
                 {
@@ -215,6 +244,8 @@ namespace boilersGraphics.ViewModels
             })));
             ToolItems.Add(new ToolItemData("polybezier", "pack://application:,,,/Assets/img/poly_bezier.png", Resources.Tool_FreeHand, new DelegateCommand(() =>
             {
+                var mainWindowViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel);
+                mainWindowViewModel.ClearCurrentOperationAndDetails();
                 Behaviors.Clear();
                 if (!Behaviors.Contains(PolyBezierBehavior))
                 {
@@ -222,6 +253,19 @@ namespace boilersGraphics.ViewModels
                 }
                 ChangeHitTestToDisable();
                 SelectOneToolItem("polybezier");
+            })));
+            ToolItems.Add(new ToolItemData("pie", "pack://application:,,,/Assets/img/FoldingFan.png", Resources.Tool_Pie, new DelegateCommand(() =>
+            {
+                var mainWindowViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel);
+                mainWindowViewModel.ClearCurrentOperationAndDetails();
+                Behaviors.Clear();
+                if (!Behaviors.Contains(NDrawPieBehavior))
+                {
+                    Behaviors.Add(NDrawPieBehavior);
+                }
+                ChangeHitTestToDisable();
+                SelectOneToolItem("pie");
+                (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = Resources.String_Pie_DetermineCenterPoint;
             })));
         }
 

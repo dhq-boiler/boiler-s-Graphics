@@ -430,6 +430,15 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Number of draws of the pie tool に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfDrawsOfThePieTool {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfDrawsOfThePieTool", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Number of draws of the rectangle tool に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Dialog_Statistics_NumberOfDrawsOfTheRectangleTool {
@@ -1681,6 +1690,60 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Click to determine the center point of the pie に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_Pie_DetermineCenterPoint {
+            get {
+                return ResourceManager.GetString("String_Pie_DetermineCenterPoint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Click to determine the end angle of the pie. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_Pie_DetermineEndAngle {
+            get {
+                return ResourceManager.GetString("String_Pie_DetermineEndAngle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Mouse up to determine the end angle of the pie. Center point: {0} Long radius: {1} Start angle: {2} ° End angle: {3} ° に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_Pie_DetermineEndAngleByMouseUp {
+            get {
+                return ResourceManager.GetString("String_Pie_DetermineEndAngleByMouseUp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Mouse up to determine the long radius and starting angle of the pie. Center point:{0} Long radius:{1} Starting angle:{2}° に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_Pie_DetermineLongRadiusAndStartingAngle {
+            get {
+                return ResourceManager.GetString("String_Pie_DetermineLongRadiusAndStartingAngle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Click to determine the short radius of the pie. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_Pie_DetermineShortRadius {
+            get {
+                return ResourceManager.GetString("String_Pie_DetermineShortRadius", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Mouse up to determine the short radius of the pie. Center point: {0} Long radius: {1} Start angle: {2} ° End angle: {3} ° Short radius: {4} に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_Pie_DetermineShortRadiusByMouseUp {
+            get {
+                return ResourceManager.GetString("String_Pie_DetermineShortRadiusByMouseUp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   **Please describe the details of the error** に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string String_PleaseDescribeError {
@@ -1807,6 +1870,15 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Supported images|*.jpg;*.jpeg;*.png;*.gif;*.bmp|JPEG file|*.jpg;*.jpeg|PNG file|*.png|GIF file|*.gif|BMP file|*.bmp|ALL|*.* に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_SupportImage {
+            get {
+                return ResourceManager.GetString("String_SupportImage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Version に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string String_Version {
@@ -1929,6 +2001,15 @@ namespace boilersGraphics.Properties {
         public static string Tool_Picture {
             get {
                 return ResourceManager.GetString("Tool_Picture", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Pie tool に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Tool_Pie {
+            get {
+                return ResourceManager.GetString("Tool_Pie", resourceCulture);
             }
         }
         

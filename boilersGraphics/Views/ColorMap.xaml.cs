@@ -194,95 +194,6 @@ namespace boilersGraphics.Views
 
         public bool IsPressed { get; private set; }
 
-        private void Image_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            var position = e.GetPosition(sender as IInputElement);
-            if (position.X < 0 || position.X > 254 || position.Y < 0 || position.Y > 254)
-            {
-                return;
-            }
-
-            Saturation = (byte)Math.Round(position.X);
-            Value = (byte)Math.Round(255 - position.Y);
-
-            SetToolTipCoordinate();
-
-            IsPressed = true;
-
-            var tooltip = (ToolTip)Thumb.ToolTip;
-            tooltip.IsOpen = true;
-
-            Image.CaptureMouse();
-        }
-
-        private void Image_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (IsPressed && e.LeftButton == MouseButtonState.Pressed)
-            {
-                var position = e.GetPosition(sender as IInputElement);
-                if (position.X < 0 || position.X > 254 || position.Y < 0 || position.Y > 254)
-                {
-                    return;
-                }
-
-                Saturation = (byte)Math.Round(position.X);
-                Value = (byte)Math.Round(255 - position.Y);
-
-                SetToolTipCoordinate();
-            }
-            else
-            {
-                IsPressed = false;
-                Image.ReleaseMouseCapture();
-            }
-        }
-
-        private void Image_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            if (IsPressed)
-            {
-                IsPressed = false;
-            }
-
-            var tooltip = (ToolTip)Thumb.ToolTip;
-            tooltip.IsOpen = false;
-
-            Image.ReleaseMouseCapture();
-        }
-
-        private void Thumb_PreviewMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            var tooltip = (ToolTip)Thumb.ToolTip;
-            if (tooltip.PlacementTarget == null)
-            {
-                tooltip.PlacementTarget = this;
-            }
-
-            tooltip.HorizontalOffset = X + 13;
-            tooltip.VerticalOffset = Y + 14;
-
-            tooltip.IsOpen = true;
-        }
-
-        private void Thumb_PreviewMouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            var tooltip = (ToolTip)Thumb.ToolTip;
-            tooltip.IsOpen = false;
-        }
-
-        private void Thumb_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            if (IsPressed)
-            {
-                IsPressed = false;
-            }
-
-            var tooltip = (ToolTip)Thumb.ToolTip;
-            tooltip.IsOpen = false;
-
-            Image.ReleaseMouseCapture();
-        }
-
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             var tooltip = (ToolTip)Thumb.ToolTip;
@@ -315,6 +226,199 @@ namespace boilersGraphics.Views
             tooltip.VerticalOffset = 0 + 10;
 
             e.Handled = true;
+        }
+
+        private void Thumb_PreviewMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            var tooltip = (ToolTip)Thumb.ToolTip;
+            if (tooltip.PlacementTarget == null)
+            {
+                tooltip.PlacementTarget = this;
+            }
+
+            tooltip.HorizontalOffset = X + 13;
+            tooltip.VerticalOffset = Y + 14;
+
+            tooltip.IsOpen = true;
+            Thumb.CaptureMouse();
+        }
+
+        private void Thumb_PreviewStylusDown(object sender, StylusDownEventArgs e)
+        {
+            var tooltip = (ToolTip)Thumb.ToolTip;
+            if (tooltip.PlacementTarget == null)
+            {
+                tooltip.PlacementTarget = this;
+            }
+
+            tooltip.HorizontalOffset = X + 13;
+            tooltip.VerticalOffset = Y + 14;
+
+            tooltip.IsOpen = true;
+            Thumb.CaptureStylus();
+        }
+
+        private void Thumb_PreviewMouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            var tooltip = (ToolTip)Thumb.ToolTip;
+            tooltip.IsOpen = false;
+            Thumb.ReleaseMouseCapture();
+        }
+
+        private void Thumb_PreviewStylusUp(object sender, StylusEventArgs e)
+        {
+            var tooltip = (ToolTip)Thumb.ToolTip;
+            tooltip.IsOpen = false;
+            Thumb.ReleaseStylusCapture();
+        }
+
+        private void Thumb_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            if (IsPressed)
+            {
+                IsPressed = false;
+            }
+
+            var tooltip = (ToolTip)Thumb.ToolTip;
+            tooltip.IsOpen = false;
+
+            Thumb.ReleaseMouseCapture();
+        }
+
+        private void Thumb_StylusUp(object sender, StylusEventArgs e)
+        {
+            if (IsPressed)
+            {
+                IsPressed = false;
+            }
+
+            var tooltip = (ToolTip)Thumb.ToolTip;
+            tooltip.IsOpen = false;
+
+            Thumb.ReleaseStylusCapture();
+        }
+
+        private void Image_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            var position = e.GetPosition(sender as IInputElement);
+            if (position.X < 0 || position.X > 254 || position.Y < 0 || position.Y > 254)
+            {
+                return;
+            }
+
+            Saturation = (byte)Math.Round(position.X);
+            Value = (byte)Math.Round(255 - position.Y);
+
+            SetToolTipCoordinate();
+
+            IsPressed = true;
+
+            var tooltip = (ToolTip)Thumb.ToolTip;
+            tooltip.IsOpen = true;
+
+            Thumb.CaptureMouse();
+        }
+
+        private void Image_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            var position = e.GetPosition(sender as IInputElement);
+            if (position.X < 0 || position.X > 254 || position.Y < 0 || position.Y > 254)
+            {
+                return;
+            }
+
+            Saturation = (byte)Math.Round(position.X);
+            Value = (byte)Math.Round(255 - position.Y);
+
+            SetToolTipCoordinate();
+
+            IsPressed = true;
+
+            var tooltip = (ToolTip)Thumb.ToolTip;
+            tooltip.IsOpen = true;
+
+            Thumb.CaptureMouse();
+        }
+
+        private void Image_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (Image.IsMouseCaptured || Image.IsStylusCaptured || Thumb.IsMouseCaptured || Thumb.IsStylusCaptured)
+            {
+                var position = e.GetPosition(sender as IInputElement);
+                if (position.X < 0 || position.X > 254 || position.Y < 0 || position.Y > 254)
+                {
+                    return;
+                }
+
+                Saturation = (byte)Math.Round(position.X);
+                Value = (byte)Math.Round(255 - position.Y);
+
+                SetToolTipCoordinate();
+            }
+        }
+
+        private void Image_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            if (IsPressed)
+            {
+                IsPressed = false;
+            }
+
+            var tooltip = (ToolTip)Thumb.ToolTip;
+            tooltip.IsOpen = false;
+
+            Thumb.ReleaseMouseCapture();
+        }
+
+        private void Image_StylusDown(object sender, StylusDownEventArgs e)
+        {
+            var position = e.GetPosition(sender as IInputElement);
+            if (position.X < 0 || position.X > 254 || position.Y < 0 || position.Y > 254)
+            {
+                return;
+            }
+
+            Saturation = (byte)Math.Round(position.X);
+            Value = (byte)Math.Round(255 - position.Y);
+
+            SetToolTipCoordinate();
+
+            IsPressed = true;
+
+            var tooltip = (ToolTip)Thumb.ToolTip;
+            tooltip.IsOpen = true;
+
+            Thumb.CaptureStylus();
+        }
+
+        private void Image_StylusUp(object sender, StylusEventArgs e)
+        {
+            if (IsPressed)
+            {
+                IsPressed = false;
+            }
+
+            var tooltip = (ToolTip)Thumb.ToolTip;
+            tooltip.IsOpen = false;
+
+            Thumb.ReleaseStylusCapture();
+        }
+
+        private void Thumb_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (Image.IsMouseCaptured || Image.IsStylusCaptured || Thumb.IsMouseCaptured || Thumb.IsStylusCaptured)
+            {
+                var position = e.GetPosition(Image);
+                if (position.X < 0 || position.X > 254 || position.Y < 0 || position.Y > 254)
+                {
+                    return;
+                }
+
+                Saturation = (byte)Math.Round(position.X);
+                Value = (byte)Math.Round(255 - position.Y);
+
+                SetToolTipCoordinate();
+            }
         }
     }
 }

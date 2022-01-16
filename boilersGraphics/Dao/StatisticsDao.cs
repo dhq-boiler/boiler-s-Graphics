@@ -82,6 +82,7 @@ namespace boilersGraphics.Dao
                 NumberOfTimesTheApplicationLogWasDisplayed = reader.SafeGetInt("NumberOfTimesTheApplicationLogWasDisplayed", Table),
                 NumberOfTimesSliceToolHasBeenUsed = reader.SafeGetInt("NumberOfTimesSliceToolHasBeenUsed", Table),
                 NumberOfDrawsOfFreeHandTool = reader.SafeGetInt("NumberOfDrawsOfFreeHandTool", Table),
+                NumberOfDrawsOfThePieTool = reader.SafeGetInt("NumberOfDrawsOfThePieTool", Table),
             };
         }
     }

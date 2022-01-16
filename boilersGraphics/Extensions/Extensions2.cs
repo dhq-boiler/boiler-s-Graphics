@@ -12,7 +12,7 @@ namespace boilersGraphics.Extensions
 
             bool isNull = rdr.IsDBNull(index);
 
-            return isNull ? false : rdr.GetBoolean(index);
+            return isNull ? throw new NullReferenceException($"expected bool value but {columnName} value is null") : rdr.GetBoolean(index);
         }
 
         public static Guid SafeGetGuid(this IDataRecord rdr, string columnName, ITable table)
@@ -21,7 +21,7 @@ namespace boilersGraphics.Extensions
 
             bool isNull = rdr.IsDBNull(index);
 
-            return isNull ? Guid.Empty : rdr.GetGuid(index);
+            return isNull ? throw new NullReferenceException($"expected Guid value but {columnName} value is null") : rdr.GetGuid(index);
         }
 
         public static string SafeGetString(this IDataRecord rdr, string columnName, ITable table)
@@ -39,7 +39,7 @@ namespace boilersGraphics.Extensions
 
             bool isNull = rdr.IsDBNull(index);
 
-            return isNull ? int.MinValue : rdr.GetInt32(index);
+            return isNull ? throw new NullReferenceException($"expected int value but {columnName} value is null") : rdr.GetInt32(index);
         }
 
         public static long SafeGetLong(this IDataRecord rdr, string columnName, ITable table)
@@ -48,7 +48,7 @@ namespace boilersGraphics.Extensions
 
             bool isNull = rdr.IsDBNull(index);
 
-            return isNull ? long.MinValue : rdr.GetInt64(index);
+            return isNull ? throw new NullReferenceException($"expected long value but {columnName} value is null") : rdr.GetInt64(index);
         }
 
         public static int? SafeGetNullableInt(this IDataRecord rdr, string columnName, ITable table)

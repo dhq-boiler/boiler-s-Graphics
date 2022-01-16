@@ -2,22 +2,18 @@
 using boilersGraphics.Helpers;
 using boilersGraphics.ViewModels;
 using Microsoft.Xaml.Behaviors;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
 
 namespace boilersGraphics.Views.Behaviors
 {
-    public class NDrawPolyBezierBehavior : Behavior<DesignerCanvas>
+    public class NDrawPieBehavior : Behavior<DesignerCanvas>
     {
-        private Point? _straightLineStartPoint;
+        private Point? _rectangleStartPoint;
         private SnapAction snapAction;
-        private PolyBezierViewModel item;
 
-        public NDrawPolyBezierBehavior()
+        public NDrawPieBehavior()
         {
             snapAction = new SnapAction();
         }
@@ -29,7 +25,6 @@ namespace boilersGraphics.Views.Behaviors
             this.AssociatedObject.TouchDown += AssociatedObject_TouchDown;
             this.AssociatedObject.MouseDown += AssociatedObject_MouseDown;
             this.AssociatedObject.MouseMove += AssociatedObject_MouseMove;
-            this.AssociatedObject.MouseUp += AssociatedObject_MouseUp;
             base.OnAttached();
         }
 
@@ -40,7 +35,6 @@ namespace boilersGraphics.Views.Behaviors
             this.AssociatedObject.TouchDown -= AssociatedObject_TouchDown;
             this.AssociatedObject.MouseDown -= AssociatedObject_MouseDown;
             this.AssociatedObject.MouseMove -= AssociatedObject_MouseMove;
-            this.AssociatedObject.MouseUp -= AssociatedObject_MouseUp;
             base.OnDetaching();
         }
 
@@ -48,9 +42,7 @@ namespace boilersGraphics.Views.Behaviors
         {
             if (e.Source == AssociatedObject)
             {
-                _straightLineStartPoint = e.GetPosition(AssociatedObject);
-                var viewModel = AssociatedObject.DataContext as IDiagramViewModel;
-                item = new PolyBezierViewModel(viewModel, _straightLineStartPoint.Value);
+                _rectangleStartPoint = e.GetPosition(AssociatedObject);
                 e.Handled = true;
             }
         }
@@ -60,9 +52,7 @@ namespace boilersGraphics.Views.Behaviors
             if (e.Source == AssociatedObject)
             {
                 var touchPoint = e.GetTouchPoint(AssociatedObject);
-                _straightLineStartPoint = touchPoint.Position;
-                var viewModel = AssociatedObject.DataContext as IDiagramViewModel;
-                item = new PolyBezierViewModel(viewModel, _straightLineStartPoint.Value);
+                _rectangleStartPoint = touchPoint.Position;
             }
         }
 
@@ -72,9 +62,8 @@ namespace boilersGraphics.Views.Behaviors
             {
                 if (e.Source == AssociatedObject)
                 {
-                    _straightLineStartPoint = e.GetPosition(AssociatedObject);
-                    var viewModel = AssociatedObject.DataContext as IDiagramViewModel;
-                    item = new PolyBezierViewModel(viewModel, _straightLineStartPoint.Value);
+                    _rectangleStartPoint = e.GetPosition(AssociatedObject);
+
                     e.Handled = true;
                 }
             }
@@ -87,28 +76,20 @@ namespace boilersGraphics.Views.Behaviors
 
             var canvas = AssociatedObject as DesignerCanvas;
             Point current = e.GetPosition(canvas);
-            var ellipses = (AssociatedObject.DataContext as DiagramViewModel).AllItems.Value.OfType<NEllipseViewModel>();
-            var appendIntersectionPoints = new List<Tuple<Point, object>>();
-            Vector vec = new Vector();
-            if (_straightLineStartPoint.HasValue)
-            {
-                vec = Point.Subtract(current, _straightLineStartPoint.Value);
-                snapAction.SnapIntersectionOfEllipseAndTangent(ellipses, _straightLineStartPoint.Value, current, appendIntersectionPoints);
-            }
-            snapAction.OnMouseMove(ref current, vec, appendIntersectionPoints);
+            snapAction.OnMouseMove(ref current);
 
             if (e.LeftButton != MouseButtonState.Pressed)
-                _straightLineStartPoint = null;
+                _rectangleStartPoint = null;
 
-            if (_straightLineStartPoint.HasValue)
+            if (_rectangleStartPoint.HasValue)
             {
-                _straightLineStartPoint = current;
+                _rectangleStartPoint = current;
                 (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "描画";
 
                 AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(canvas);
                 if (adornerLayer != null)
                 {
-                    var adorner = new Adorners.PolyBezierAdorner(canvas, _straightLineStartPoint, item);
+                    var adorner = new Adorners.PieAdorner(canvas, _rectangleStartPoint);
                     if (adorner != null)
                     {
                         adornerLayer.Add(adorner);
@@ -121,40 +102,26 @@ namespace boilersGraphics.Views.Behaviors
         {
             var canvas = AssociatedObject as DesignerCanvas;
             Point current = e.GetPosition(canvas);
-            var ellipses = (AssociatedObject.DataContext as DiagramViewModel).AllItems.Value.OfType<NEllipseViewModel>();
-            var appendIntersectionPoints = new List<Tuple<Point, object>>();
-            Vector vec = new Vector();
-            if (_straightLineStartPoint.HasValue)
-            {
-                vec = Point.Subtract(current, _straightLineStartPoint.Value);
-                snapAction.SnapIntersectionOfEllipseAndTangent(ellipses, _straightLineStartPoint.Value, current, appendIntersectionPoints);
-            }
-            snapAction.OnMouseMove(ref current, vec, appendIntersectionPoints);
+            snapAction.OnMouseMove(ref current);
 
             if (e.InAir)
-                _straightLineStartPoint = null;
+                _rectangleStartPoint = null;
 
-            if (_straightLineStartPoint.HasValue)
+            if (_rectangleStartPoint.HasValue)
             {
-                _straightLineStartPoint = current;
+                _rectangleStartPoint = current;
                 (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "描画";
 
                 AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(canvas);
                 if (adornerLayer != null)
                 {
-                    var adorner = new Adorners.PolyBezierAdorner(canvas, _straightLineStartPoint, item);
+                    var adorner = new Adorners.PieAdorner(canvas, _rectangleStartPoint);
                     if (adorner != null)
                     {
                         adornerLayer.Add(adorner);
                     }
                 }
             }
-        }
-
-        private void AssociatedObject_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            // release mouse capture
-            if (AssociatedObject.IsMouseCaptured) AssociatedObject.ReleaseMouseCapture();
         }
     }
 }

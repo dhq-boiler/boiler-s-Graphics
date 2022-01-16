@@ -414,6 +414,7 @@ namespace boilersGraphics.ViewModels
             dvManager.RegisterChangePlan(new ChangePlan_bG_Version1());
             dvManager.RegisterChangePlan(new ChangePlan_bG_Version2());
             dvManager.RegisterChangePlan(new ChangePlan_bG_Version3());
+            dvManager.RegisterChangePlan(new ChangePlan_bG_Version4());
             dvManager.FinishedToUpgradeTo += DvManager_FinishedToUpgradeTo;
 
             dvManager.UpgradeToTargetVersion();
@@ -447,6 +448,12 @@ namespace boilersGraphics.ViewModels
                 existStatistics.NumberOfBoots += 1;
                 dao.Update(existStatistics);
             }
+        }
+
+        public void ClearCurrentOperationAndDetails()
+        {
+            CurrentOperation.Value = string.Empty;
+            Details.Value = string.Empty;
         }
 
         public DiagramViewModel DiagramViewModel

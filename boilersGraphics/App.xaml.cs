@@ -118,6 +118,7 @@ namespace boilersGraphics
             containerRegistry.RegisterDialog<Views.Statistics, ViewModels.StatisticsDialogViewModel>();
             containerRegistry.RegisterDialog<Views.CustomMessageBox, ViewModels.CustomMessageBoxViewModel>();
             containerRegistry.RegisterDialog<Views.PrivacyPolicy, ViewModels.PrivacyPolicyViewModel>();
+            containerRegistry.RegisterDialog<Views.DetailPie, ViewModels.DetailPieViewModel>();
         }
 
         protected override Window CreateShell()

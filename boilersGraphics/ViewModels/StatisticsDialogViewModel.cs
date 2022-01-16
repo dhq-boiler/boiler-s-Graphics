@@ -84,6 +84,7 @@ namespace boilersGraphics.ViewModels
         public ReactivePropertySlim<int> NumberOfTimesTheApplicationLogWasDisplayed { get; } = new ReactivePropertySlim<int>();
         public ReactivePropertySlim<int> NumberOfTimesSliceToolHasBeenUsed { get; } = new ReactivePropertySlim<int>();
         public ReactivePropertySlim<int> NumberOfDrawsOfFreeHandTool { get; } = new ReactivePropertySlim<int>();
+        public ReactivePropertySlim<int> NumberOfDrawsOfThePieTool { get; } = new ReactivePropertySlim<int>();
 
         public ReactivePropertySlim<TimeSpan> Uptime { get; } = new ReactivePropertySlim<TimeSpan>();
 
@@ -163,6 +164,7 @@ namespace boilersGraphics.ViewModels
             NumberOfTimesTheApplicationLogWasDisplayed.Value = statistics.NumberOfTimesTheApplicationLogWasDisplayed;
             NumberOfTimesSliceToolHasBeenUsed.Value = statistics.NumberOfTimesSliceToolHasBeenUsed;
             NumberOfDrawsOfFreeHandTool.Value = statistics.NumberOfDrawsOfFreeHandTool;
+            NumberOfDrawsOfThePieTool.Value = statistics.NumberOfDrawsOfThePieTool;
 
             Observable.Timer(DateTime.Now, TimeSpan.FromSeconds(1))
                       .Subscribe(_ =>
