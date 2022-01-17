@@ -188,7 +188,7 @@ namespace boilersGraphics.ViewModels
 
         public override object Clone()
         {
-            var clone = new LetterDesignerItemViewModel();
+            var clone = new LetterVerticalDesignerItemViewModel();
             clone.Owner = Owner;
             clone.Left.Value = Left.Value;
             clone.Top.Value = Top.Value;
