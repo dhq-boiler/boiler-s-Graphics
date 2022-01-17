@@ -2655,9 +2655,9 @@ namespace boilersGraphics.ViewModels
                 DuplicateDesignerItem(selectedItems, oldNewList, item);
             }
 
-            var selectedConnectors = from item in items.OfType<ConnectorBaseViewModel>()
+            var selectedConnectors = (from item in items.OfType<SnapPointViewModel>().Select(x => x.Parent.Value).OfType<ConnectorBaseViewModel>()
                                      orderby item.ZIndex.Value ascending
-                                     select item;
+                                     select item).Distinct();
 
             foreach (var connector in selectedConnectors)
             {
