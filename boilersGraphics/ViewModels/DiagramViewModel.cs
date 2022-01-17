@@ -2706,6 +2706,7 @@ namespace boilersGraphics.ViewModels
                 var clone = item.Clone() as DesignerItemViewModelBase;
                 clone.ZIndex.Value = Layers.SelectMany(x => x.Children).Count();
                 clone.EdgeThickness.Value = item.EdgeThickness.Value;
+                clone.IsHitTestVisible.Value = true;
                 if (parent != null)
                 {
                     clone.ParentID = parent.ID;
