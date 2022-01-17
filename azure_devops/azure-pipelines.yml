@@ -67,7 +67,7 @@ steps:
     solution: 'boilersGraphics.Msix\boilersGraphics.Msix.wapproj'
     platform: 'AnyCPU'
     configuration: '$(BuildConfiguration)'
-    msbuildArguments: '/p:OutDir=$(Build.ArtifactStagingDirectory) /p:UapAppxPackageBuildMode=StoreUpload /p:AppxBundle=Never /p:AppxPackageOutput=boilersGraphics_$(Major)_$(Minor)_$(Build).msix /p:AppxPackageSigningEnabled=false'
+    msbuildArguments: '/p:OutDir=$(Build.ArtifactStagingDirectory) /p:UapAppxPackageBuildMode=StoreUpload /p:AppxBundle=Never /p:AppxPackageOutput=boilersGraphics_$(Major)_$(Minor)_$(Build).msix /p:AppxPackageSigningEnabled=false /p:DebugSymbols=true'
     clean: true
 
 - task: CmdLine@2
