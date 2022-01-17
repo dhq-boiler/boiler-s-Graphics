@@ -2722,6 +2722,9 @@ namespace boilersGraphics.ViewModels
         {
             var clone = connector.Clone() as ConnectorBaseViewModel;
             clone.ZIndex.Value = Layers.SelectMany(x => x.Children).Count();
+            clone.IsHitTestVisible.Value = true;
+            clone.SnapPoint0VM.Value.IsHitTestVisible.Value = true;
+            clone.SnapPoint1VM.Value.IsHitTestVisible.Value = true;
             if (groupItem != null)
             {
                 clone.ParentID = groupItem.ID;
