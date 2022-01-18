@@ -13,6 +13,7 @@ using System.Net;
 using System.Reactive.Disposables;
 using System.Reflection;
 using System.Windows;
+using Windows.Services.Store;
 
 namespace boilersGraphics.ViewModels
 {
@@ -31,6 +32,10 @@ namespace boilersGraphics.ViewModels
 
         public ReactiveCommand OKCommand { get; } = new ReactiveCommand();
 
+        private StoreAppLicense appLicense;
+
+        public ReactivePropertySlim<string> LicenseMessage { get; } = new ReactivePropertySlim<string>(null);
+
         public VersionViewModel()
         {
             Version.Value = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion;
@@ -43,6 +48,42 @@ namespace boilersGraphics.ViewModels
             })
             .AddTo(_disposables);
             UpdateStatisticsCountVersionInformationDialogWasDisplayed();
+
+            var app = App.Current as App;
+            appLicense = app.StoreContext.GetAppLicenseAsync().GetResults();
+            app.StoreContext.OfflineLicensesChanged += StoreContext_OfflineLicensesChanged;
+
+            if (appLicense.IsActive)
+            {
+                if (appLicense.IsTrial)
+                {
+                    LicenseMessage.Value = string.Format(Resources.String_TrialMessage, appLicense.ExpirationDate);
+                }
+                else
+                {
+                    //full license
+                    LicenseMessage.Value = string.Format(Resources.String_FullLicense);
+                }
+            }
+        }
+
+        private void StoreContext_OfflineLicensesChanged(StoreContext sender, object args)
+        {
+            var app = App.Current as App;
+            appLicense = app.StoreContext.GetAppLicenseAsync().GetResults();
+
+            if (appLicense.IsActive)
+            {
+                if (appLicense.IsTrial)
+                {
+                    LicenseMessage.Value = string.Format(Resources.String_TrialMessage, appLicense.ExpirationDate);
+                }
+                else
+                {
+                    //full license
+                    LicenseMessage.Value = string.Format(Resources.String_FullLicense);
+                }
+            }
         }
 
         private static void UpdateStatisticsCountVersionInformationDialogWasDisplayed()

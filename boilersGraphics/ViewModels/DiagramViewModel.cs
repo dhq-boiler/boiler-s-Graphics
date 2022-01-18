@@ -492,6 +492,12 @@ namespace boilersGraphics.ViewModels
             Width = width;
             Height = height;
 
+            EnableAutoSave.Subscribe(x =>
+            {
+                if (!x && _AutoSaveTimerDisposableObj != null)
+                    _AutoSaveTimerDisposableObj.Dispose();
+            })
+            .AddTo(_CompositeDisposable);
             EnableAutoSave.Value = true;
             AutoSaveType.Value = Models.AutoSaveType.SetInterval;
             AutoSaveInterval.Value = TimeSpan.FromSeconds(30);
@@ -589,6 +595,7 @@ namespace boilersGraphics.ViewModels
                     {
                         AutoSave();
                     });
+                    _CompositeDisposable.Add(_AutoSaveTimerDisposableObj);
                 }
                 else if (AutoSaveType.Value == Models.AutoSaveType.EveryTimeCampusChanges)
                 {
@@ -2648,9 +2655,9 @@ namespace boilersGraphics.ViewModels
                 DuplicateDesignerItem(selectedItems, oldNewList, item);
             }
 
-            var selectedConnectors = from item in items.OfType<ConnectorBaseViewModel>()
+            var selectedConnectors = (from item in items.OfType<SnapPointViewModel>().Select(x => x.Parent.Value).OfType<ConnectorBaseViewModel>()
                                      orderby item.ZIndex.Value ascending
-                                     select item;
+                                     select item).Distinct();
 
             foreach (var connector in selectedConnectors)
             {
@@ -2699,6 +2706,7 @@ namespace boilersGraphics.ViewModels
                 var clone = item.Clone() as DesignerItemViewModelBase;
                 clone.ZIndex.Value = Layers.SelectMany(x => x.Children).Count();
                 clone.EdgeThickness.Value = item.EdgeThickness.Value;
+                clone.IsHitTestVisible.Value = true;
                 if (parent != null)
                 {
                     clone.ParentID = parent.ID;
@@ -2714,6 +2722,9 @@ namespace boilersGraphics.ViewModels
         {
             var clone = connector.Clone() as ConnectorBaseViewModel;
             clone.ZIndex.Value = Layers.SelectMany(x => x.Children).Count();
+            clone.IsHitTestVisible.Value = true;
+            clone.SnapPoint0VM.Value.IsHitTestVisible.Value = true;
+            clone.SnapPoint1VM.Value.IsHitTestVisible.Value = true;
             if (groupItem != null)
             {
                 clone.ParentID = groupItem.ID;

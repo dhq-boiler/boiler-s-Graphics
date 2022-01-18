@@ -87,7 +87,6 @@ namespace boilersGraphics.ViewModels
             clone.EdgeColor.Value = EdgeColor.Value;
             clone.FillColor.Value = FillColor.Value;
             clone.EdgeThickness.Value = EdgeThickness.Value;
-            clone.Matrix.Value = Matrix.Value;
             clone.RotationAngle.Value = RotationAngle.Value;
             clone.Clip.Value = Clip.Value;
             clone.FileName = FileName;

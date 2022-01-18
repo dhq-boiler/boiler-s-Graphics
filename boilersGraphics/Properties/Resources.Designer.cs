@@ -1474,6 +1474,15 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Application license に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_ApplicationLicense {
+            get {
+                return ResourceManager.GetString("String_ApplicationLicense", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Autosave に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string String_AutoSave {
@@ -1627,6 +1636,15 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   You have a full license. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_FullLicense {
+            get {
+                return ResourceManager.GetString("String_FullLicense", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Green に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string String_G {
@@ -1650,15 +1668,6 @@ namespace boilersGraphics.Properties {
         public static string String_Interval {
             get {
                 return ResourceManager.GetString("String_Interval", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   License に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string String_License {
-            get {
-                return ResourceManager.GetString("String_License", resourceCulture);
             }
         }
         
@@ -1870,11 +1879,29 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Source code license に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_SourceCodeLicense {
+            get {
+                return ResourceManager.GetString("String_SourceCodeLicense", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Supported images|*.jpg;*.jpeg;*.png;*.gif;*.bmp|JPEG file|*.jpg;*.jpeg|PNG file|*.png|GIF file|*.gif|BMP file|*.bmp|ALL|*.* に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string String_SupportImage {
             get {
                 return ResourceManager.GetString("String_SupportImage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   This is the trial version. Expiration date：{0:dd \da\y\s HH:mm:ss} に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_TrialMessage {
+            get {
+                return ResourceManager.GetString("String_TrialMessage", resourceCulture);
             }
         }
         

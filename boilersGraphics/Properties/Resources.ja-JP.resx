@@ -588,6 +588,9 @@
   <data name="String_Angle" xml:space="preserve">
     <value>角度</value>
   </data>
+  <data name="String_ApplicationLicense" xml:space="preserve">
+    <value>アプリケーションのライセンス</value>
+  </data>
   <data name="String_AutoSave" xml:space="preserve">
     <value>自動保存</value>
   </data>
@@ -639,6 +642,9 @@
   <data name="String_FileName" xml:space="preserve">
     <value>ファイル名</value>
   </data>
+  <data name="String_FullLicense" xml:space="preserve">
+    <value>あなたはフルライセンスを所有しています。</value>
+  </data>
   <data name="String_G" xml:space="preserve">
     <value>緑(Green)</value>
   </data>
@@ -647,9 +653,6 @@
   </data>
   <data name="String_Interval" xml:space="preserve">
     <value>インターバル：</value>
-  </data>
-  <data name="String_License" xml:space="preserve">
-    <value>ライセンス</value>
   </data>
   <data name="String_Move" xml:space="preserve">
     <value>移動</value>
@@ -720,8 +723,14 @@
   <data name="String_SnapRange" xml:space="preserve">
     <value>ポイントにスナップする範囲</value>
   </data>
+  <data name="String_SourceCodeLicense" xml:space="preserve">
+    <value>ソースコードのライセンス</value>
+  </data>
   <data name="String_SupportImage" xml:space="preserve">
     <value>サポートする画像|*.jpg;*.jpeg;*.png;*.gif;*.bmp|JPEG file|*.jpg;*.jpeg|PNG file|*.png|GIF file|*.gif|BMP file|*.bmp|すべて|*.*</value>
+  </data>
+  <data name="String_TrialMessage" xml:space="preserve">
+    <value>これは試用版です。有効期限：{0:dd日 HH:mm:ss}</value>
   </data>
   <data name="String_Version" xml:space="preserve">
     <value>バージョン</value>

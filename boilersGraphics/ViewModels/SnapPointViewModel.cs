@@ -75,7 +75,6 @@ namespace boilersGraphics.ViewModels
             clone.IsHitTestVisible.Value = IsHitTestVisible.Value;
             clone.IsSelected.Value = IsSelected.Value;
             clone.IsVisible.Value = IsVisible.Value;
-            clone.Matrix.Value = Matrix.Value;
             clone.Name = Name;
             clone.Owner = Owner;
             clone.ParentID = ParentID;
