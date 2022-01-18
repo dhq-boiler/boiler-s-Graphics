@@ -23,7 +23,7 @@ steps:
 
 - powershell: |
    $Version = git describe --tags --abbrev=0
-   $Version -match '^v(?<major>\d+?)\.(?<minor>\d+?)\.?(?<build>\d*?)\.?(?<revision>\d*?)$'
+   $Version -match '^v(?<major>\d+?)\.(?<minor>\d+?)\.?(?<build>\d*?)$'
    $Major = $Matches['major']
    $Minor = $Matches['minor']
    Write-Host "##vso[task.setvariable variable=Major]$Major"
