@@ -588,6 +588,9 @@
   <data name="String_Angle" xml:space="preserve">
     <value>Angle</value>
   </data>
+  <data name="String_ApplicationLicense" xml:space="preserve">
+    <value>Application license</value>
+  </data>
   <data name="String_AutoSave" xml:space="preserve">
     <value>Autosave</value>
   </data>
@@ -639,6 +642,9 @@
   <data name="String_FileName" xml:space="preserve">
     <value>File name</value>
   </data>
+  <data name="String_FullLicense" xml:space="preserve">
+    <value>You have a full license.</value>
+  </data>
   <data name="String_G" xml:space="preserve">
     <value>Green</value>
   </data>
@@ -647,9 +653,6 @@
   </data>
   <data name="String_Interval" xml:space="preserve">
     <value>Interval:</value>
-  </data>
-  <data name="String_License" xml:space="preserve">
-    <value>License</value>
   </data>
   <data name="String_Move" xml:space="preserve">
     <value>Move</value>
@@ -720,8 +723,14 @@
   <data name="String_SnapRange" xml:space="preserve">
     <value>Range to snap to a point</value>
   </data>
+  <data name="String_SourceCodeLicense" xml:space="preserve">
+    <value>Source code license</value>
+  </data>
   <data name="String_SupportImage" xml:space="preserve">
     <value>Supported images|*.jpg;*.jpeg;*.png;*.gif;*.bmp|JPEG file|*.jpg;*.jpeg|PNG file|*.png|GIF file|*.gif|BMP file|*.bmp|ALL|*.*</value>
+  </data>
+  <data name="String_TrialMessage" xml:space="preserve">
+    <value>This is the trial version. Expiration date：{0:dd \da\y\s HH:mm:ss}</value>
   </data>
   <data name="String_Version" xml:space="preserve">
     <value>Version</value>

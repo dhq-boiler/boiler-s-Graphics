@@ -31,7 +31,11 @@
                 <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_Version, Mode=OneWay}" />
                 <view:SelectableLabel FontSize="20" Text="{Binding Version.Value}" />
             </StackPanel>
-            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_License, Mode=OneWay}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_ApplicationLicense, Mode=OneWay}" />
+            <StackPanel Orientation="Horizontal">
+                <Label Content="{Binding LicenseMessage.Value}" />
+            </StackPanel>
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_SourceCodeLicense, Mode=OneWay}" />
             <mdxam:MarkdownScrollViewer xml:space="preserve"
                                         Markdown="{Binding License.Value}"
                                         ScrollViewer.VerticalScrollBarVisibility="Hidden" />
