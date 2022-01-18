@@ -36,6 +36,14 @@ steps:
        $Build = 0
        Write-Host "##vso[task.setvariable variable=Build]$Build"
    }
+   if ($Matches.ContainsKey("revision") -and $Matches['revision'] -ne '')
+   {
+       $Revision = $Matches['revision']
+       Write-Host "##vso[task.setvariable variable=Revision]$Revision"
+   } else {
+       $Revision = 0
+       Write-Host "##vso[task.setvariable variable=Revision]$Revision"
+   }
   displayName: 'Get version'
 
 - task: DotNetCoreCLI@2
@@ -57,7 +65,7 @@ steps:
        $path = (Convert-Path .) + "/boilersGraphics.Msix/Package.appxmanifest"
        $doc = [System.Xml.Linq.XDocument]::Load($path)
        $xName = [System.Xml.Linq.XName]"{http://schemas.microsoft.com/appx/manifest/foundation/windows10}Identity"
-       $doc.Root.Element($xName).Attribute("Version").Value = "$(Major).$(Minor).$(Build).0"
+       $doc.Root.Element($xName).Attribute("Version").Value = "$(Major).$(Minor).$(Build).$(Revision)"
        $doc.Save($path)
   displayName: 'Update Version in Package.appxmanifest'
 
@@ -67,7 +75,7 @@ steps:
     solution: 'boilersGraphics.Msix\boilersGraphics.Msix.wapproj'
     platform: 'AnyCPU'
     configuration: '$(BuildConfiguration)'
-    msbuildArguments: '/p:OutDir=$(Build.ArtifactStagingDirectory) /p:UapAppxPackageBuildMode=StoreUpload /p:AppxBundle=Never /p:AppxPackageOutput=boilersGraphics_$(Major)_$(Minor)_$(Build).msix /p:AppxPackageSigningEnabled=false /p:DebugSymbols=true'
+    msbuildArguments: '/p:OutDir=$(Build.ArtifactStagingDirectory) /p:UapAppxPackageBuildMode=StoreUpload /p:AppxBundle=Never /p:AppxPackageOutput=boilersGraphics_$(Major)_$(Minor)_$(Build)_$(Revision).msix /p:AppxPackageSigningEnabled=false /p:DebugSymbols=true'
     clean: true
 
 - task: CmdLine@2
@@ -116,11 +124,11 @@ steps:
 - task: ArchiveFiles@2
   condition: always()
   inputs:
-    rootFolderOrFile: '$(System.DefaultWorkingDirectory)\boilersGraphics\bin\Release\net6.0-windows' 
+    rootFolderOrFile: '$(System.DefaultWorkingDirectory)\boilersGraphics\bin\Release\net6.0-windows10.0.22000.0' 
     includeRootFolder: false
     archiveType: 'zip' # Options: zip, 7z, tar, wim
     tarCompression: 'gz' # Optional. Options: gz, bz2, xz, none
-    archiveFile: '$(Build.ArtifactStagingDirectory)/boilersGraphics_$(Major)_$(Minor)_$(Build).zip' 
+    archiveFile: '$(Build.ArtifactStagingDirectory)/boilersGraphics_$(Major)_$(Minor)_$(Build)_$(Revision).zip' 
     replaceExistingArchive: true 
     #verbose: # Optional
     #quiet: # Optional
@@ -142,9 +150,9 @@ steps:
     #releaseNotesFile: # Optional
     #releaseNotes: # Optional
     assets: |
-      $(Build.ArtifactStagingDirectory)\boilersGraphics_$(Major)_$(Minor)_$(Build).zip
+      $(Build.ArtifactStagingDirectory)\boilersGraphics_$(Major)_$(Minor)_$(Build)_$(Revision).zip
       $(Build.ArtifactStagingDirectory)\boilersGraphics.Msix\AppPackages\boilersGraphics.Msix_**_AnyCPU.appxupload
-      $(System.DefaultWorkingDirectory)\boilersGraphics.Msix\boilersGraphics_$(Major)_$(Minor)_$(Build).msix
+      $(System.DefaultWorkingDirectory)\boilersGraphics.Msix\boilersGraphics_$(Major)_$(Minor)_$(Build)_$(Revision).msix
     assetUploadMode: 'delete' # Optional. Options: delete, replace
     isDraft: false # Optional
     isPreRelease: false # Optional
