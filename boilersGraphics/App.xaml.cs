@@ -1,4 +1,5 @@
 ﻿using boilersGraphics.Extensions;
+using boilersGraphics.Models;
 using boilersGraphics.Views;
 using NLog;
 using Prism.Commands;
@@ -11,6 +12,8 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Windows;
 using Unity;
+using Windows.Services.Store;
+using WinRT;
 using static boilersGraphics.ViewModels.CustomMessageBoxViewModel;
 
 namespace boilersGraphics
@@ -23,6 +26,8 @@ namespace boilersGraphics
         public static bool IsTest { get; set; }
 
         public static App Instance { get; set; }
+
+        public StoreContext StoreContext { get; private set; }
 
         public App()
         {
@@ -85,6 +90,12 @@ namespace boilersGraphics
             LogManager.GetCurrentClassLogger().Info($"boiler's Graphics {version}");
             LogManager.GetCurrentClassLogger().Info($"Copyright (C) dhq_boiler 2018-2022. All rights reserved.");
             LogManager.GetCurrentClassLogger().Info($"boiler's Graphics IS LAUNCHING");
+
+            StoreContext context = StoreContext.GetDefault();
+            IInitializeWithWindow initWindow = context.As<IInitializeWithWindow>();
+            initWindow.Initialize(System.Diagnostics.Process.GetCurrentProcess().MainWindowHandle);
+            StoreContext = context;
+
             base.OnStartup(e);
         }
 
