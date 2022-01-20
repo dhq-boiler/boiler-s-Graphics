@@ -67,6 +67,8 @@ namespace boilersGraphics.ViewModels
             clone.EdgeColor.Value = EdgeColor.Value;
             clone.EdgeThickness.Value = EdgeThickness.Value;
             clone.AddPointP2(Owner, Points[1]);
+            clone.StrokeStartLineCap.Value = StrokeStartLineCap.Value;
+            clone.StrokeEndLineCap.Value = StrokeEndLineCap.Value;
             return clone;
         }
 
@@ -85,6 +87,8 @@ namespace boilersGraphics.ViewModels
                 this.SnapPoint0VM.Value.Top.Value = viewModel.P1Y.Value;
                 this.SnapPoint1VM.Value.Left.Value = viewModel.P2X.Value;
                 this.SnapPoint1VM.Value.Top.Value = viewModel.P2Y.Value;
+                this.StrokeStartLineCap.Value = viewModel.StrokeStartLineCap.Value;
+                this.StrokeEndLineCap.Value = viewModel.StrokeEndLineCap.Value;
             }
         }
 
