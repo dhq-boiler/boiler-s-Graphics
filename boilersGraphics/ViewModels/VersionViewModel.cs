@@ -62,7 +62,8 @@ namespace boilersGraphics.ViewModels
             {
                 if (appLicense.IsTrial)
                 {
-                    LicenseMessage.Value = string.Format(Resources.String_TrialMessage, appLicense.ExpirationDate);
+                    var timespan = appLicense.ExpirationDate - DateTime.Now;
+                    LicenseMessage.Value = string.Format(Resources.String_TrialMessage, timespan.Days, timespan.Hours, timespan.Minutes, timespan.Seconds);
                 }
                 else
                 {
@@ -81,7 +82,8 @@ namespace boilersGraphics.ViewModels
             {
                 if (appLicense.IsTrial)
                 {
-                    LicenseMessage.Value = string.Format(Resources.String_TrialMessage, appLicense.ExpirationDate);
+                    var timespan = appLicense.ExpirationDate - DateTime.Now;
+                    LicenseMessage.Value = string.Format(Resources.String_TrialMessage, timespan.Days, timespan.Hours, timespan.Minutes, timespan.Seconds);
                 }
                 else
                 {
