@@ -124,6 +124,7 @@ namespace boilersGraphics.ViewModels
             clone.EdgeThickness.Value = EdgeThickness.Value;
             clone.RotationAngle.Value = RotationAngle.Value;
             clone.PathGeometry.Value = PathGeometry.Value.Clone();
+            clone.PenLineJoin.Value = PenLineJoin.Value;
             return clone;
         }
 

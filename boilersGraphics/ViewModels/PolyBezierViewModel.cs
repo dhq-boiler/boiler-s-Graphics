@@ -64,7 +64,7 @@ namespace boilersGraphics.ViewModels
             clone.EdgeColor.Value = EdgeColor.Value;
             clone.EdgeThickness.Value = EdgeThickness.Value;
             clone.PathGeometry.Value = GeometryCreator.CreatePolyBezier(clone);
-
+            clone.PenLineJoin.Value = PenLineJoin.Value;
             return clone;
         }
 

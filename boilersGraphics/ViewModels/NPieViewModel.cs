@@ -84,6 +84,7 @@ namespace boilersGraphics.ViewModels
                 this.StartDegree.Value = viewModel.StartDegree.Value;
                 this.EndDegree.Value = viewModel.EndDegree.Value;
                 this.SweepDirection.Value = viewModel.SweepDirection.Value;
+                this.PenLineJoin.Value = viewModel.PenLineJoin.Value;
             }
         }
 
@@ -161,6 +162,7 @@ namespace boilersGraphics.ViewModels
             clone.StartDegree.Value = StartDegree.Value;
             clone.EndDegree.Value = EndDegree.Value;
             clone.SweepDirection.Value = SweepDirection.Value;
+            clone.PenLineJoin.Value = PenLineJoin.Value;
             return clone;
         }
 

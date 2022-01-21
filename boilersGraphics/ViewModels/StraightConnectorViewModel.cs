@@ -69,6 +69,7 @@ namespace boilersGraphics.ViewModels
             clone.AddPointP2(Owner, Points[1]);
             clone.StrokeStartLineCap.Value = StrokeStartLineCap.Value;
             clone.StrokeEndLineCap.Value = StrokeEndLineCap.Value;
+            clone.PenLineJoin.Value = PenLineJoin.Value;
             return clone;
         }
 
@@ -89,6 +90,7 @@ namespace boilersGraphics.ViewModels
                 this.SnapPoint1VM.Value.Top.Value = viewModel.P2Y.Value;
                 this.StrokeStartLineCap.Value = viewModel.StrokeStartLineCap.Value;
                 this.StrokeEndLineCap.Value = viewModel.StrokeEndLineCap.Value;
+                this.PenLineJoin.Value = viewModel.PenLineJoin.Value;
             }
         }
 

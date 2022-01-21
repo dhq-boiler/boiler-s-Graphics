@@ -74,6 +74,7 @@ namespace boilersGraphics.ViewModels
                 this.CenterX.Value = viewModel.CenterX.Value;
                 this.CenterY.Value = viewModel.CenterY.Value;
                 this.RotationAngle.Value = viewModel.RotationAngle.Value;
+                this.PenLineJoin.Value = viewModel.PenLineJoin.Value;
             }
         }
 
@@ -106,6 +107,7 @@ namespace boilersGraphics.ViewModels
             clone.FillColor.Value = FillColor.Value;
             clone.EdgeThickness.Value = EdgeThickness.Value;
             clone.RotationAngle.Value = RotationAngle.Value;
+            clone.PenLineJoin.Value = PenLineJoin.Value;
             return clone;
         }
 

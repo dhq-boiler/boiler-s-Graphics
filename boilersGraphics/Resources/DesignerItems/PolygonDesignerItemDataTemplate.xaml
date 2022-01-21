@@ -11,7 +11,8 @@
                   IsHitTestVisible="False"
                   Stretch="Fill"
                   Stroke="{Binding EdgeColor.Value, Converter={StaticResource solidColorBrushConverter}}"
-                  StrokeThickness="{Binding EdgeThickness.Value}" />
+                  StrokeThickness="{Binding EdgeThickness.Value}"
+                  StrokeLineJoin="{Binding PenLineJoin.Value}" />
             <ItemsControl HorizontalAlignment="Stretch"
                           VerticalAlignment="Stretch"
                           ItemsSource="{Binding SnapPoints}">

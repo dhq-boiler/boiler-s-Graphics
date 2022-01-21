@@ -92,6 +92,7 @@ namespace boilersGraphics.ViewModels
             clone.FileName = FileName;
             clone.FileWidth = FileWidth;
             clone.FileHeight = FileHeight;
+            clone.PenLineJoin.Value = PenLineJoin.Value;
             return clone;
         }
 
@@ -110,6 +111,7 @@ namespace boilersGraphics.ViewModels
                 this.CenterX.Value = viewModel.CenterX.Value;
                 this.CenterY.Value = viewModel.CenterY.Value;
                 this.RotationAngle.Value = viewModel.RotationAngle.Value;
+                this.PenLineJoin.Value = viewModel.PenLineJoin.Value;
             }
         }
 

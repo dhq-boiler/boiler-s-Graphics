@@ -13,7 +13,8 @@
               IsHitTestVisible="False"
               Stretch="None"
               Stroke="{Binding EdgeColor.Value, Converter={StaticResource solidColorBrushConverter}}"
-              StrokeThickness="{Binding EdgeThickness.Value}">
+              StrokeThickness="{Binding EdgeThickness.Value}"
+              StrokeLineJoin="{Binding PenLineJoin.Value}">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="GotFocus">
                     <helper:EventToCommand Command="{Binding GotFocusCommand}" />

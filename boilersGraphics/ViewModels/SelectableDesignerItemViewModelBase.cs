@@ -77,6 +77,10 @@ namespace boilersGraphics.ViewModels
 
         public ReactivePropertySlim<Color> FillColor { get; } = new ReactivePropertySlim<Color>();
 
+        public ReactivePropertySlim<PenLineJoin> PenLineJoin { get; } = new ReactivePropertySlim<PenLineJoin>();
+
+        public ReactiveCollection<PenLineJoin> PenLineJoins { get; private set; }
+
         public string Name { get; set; }
 
         public Guid ID { get; set; } = Guid.NewGuid();
@@ -143,6 +147,10 @@ namespace boilersGraphics.ViewModels
                 }
             })
             .AddTo(_CompositeDisposable);
+            PenLineJoins = new ReactiveCollection<PenLineJoin>();
+            PenLineJoins.Add(System.Windows.Media.PenLineJoin.Miter);
+            PenLineJoins.Add(System.Windows.Media.PenLineJoin.Bevel);
+            PenLineJoins.Add(System.Windows.Media.PenLineJoin.Round);
         }
 
         public abstract Type GetViewType();
