@@ -730,7 +730,7 @@
     <value>Supported images|*.jpg;*.jpeg;*.png;*.gif;*.bmp|JPEG file|*.jpg;*.jpeg|PNG file|*.png|GIF file|*.gif|BMP file|*.bmp|ALL|*.*</value>
   </data>
   <data name="String_TrialMessage" xml:space="preserve">
-    <value>This is the trial version. Expiration date：{0:dd \da\y\s HH:mm:ss}</value>
+    <value>This is the trial version. Expiration date：{0} days {1}:{2}:{3}</value>
   </data>
   <data name="String_Version" xml:space="preserve">
     <value>Version</value>

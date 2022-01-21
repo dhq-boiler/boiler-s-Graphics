@@ -1897,7 +1897,7 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
-        ///   This is the trial version. Expiration date：{0:dd \da\y\s HH:mm:ss} に類似しているローカライズされた文字列を検索します。
+        ///   This is the trial version. Expiration date：{0} days {1}:{2}:{3} に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string String_TrialMessage {
             get {
