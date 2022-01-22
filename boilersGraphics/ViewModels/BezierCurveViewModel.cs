@@ -145,6 +145,7 @@ namespace boilersGraphics.ViewModels
             clone.StrokeStartLineCap.Value = StrokeStartLineCap.Value;
             clone.StrokeEndLineCap.Value = StrokeEndLineCap.Value;
             clone.PenLineJoin.Value = PenLineJoin.Value;
+            clone.StrokeDashArray.Value = StrokeDashArray.Value;
             return clone;
         }
 
@@ -172,6 +173,7 @@ namespace boilersGraphics.ViewModels
                 this.StrokeStartLineCap.Value = viewModel.StrokeStartLineCap.Value;
                 this.StrokeEndLineCap.Value = viewModel.StrokeEndLineCap.Value;
                 this.PenLineJoin.Value = viewModel.PenLineJoin.Value;
+                this.StrokeDashArray.Value = viewModel.StrokeDashArray.Value;
             }
         }
     }

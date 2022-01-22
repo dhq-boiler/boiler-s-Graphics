@@ -70,7 +70,7 @@ namespace boilersGraphics.ViewModels
 
         public ReactivePropertySlim<bool> IsVisible { get; } = new ReactivePropertySlim<bool>();
 
-        
+
         public ReactivePropertySlim<bool> IsHitTestVisible { get; set; } = new ReactivePropertySlim<bool>();
 
         public ReactivePropertySlim<bool> CanDrag { get; set; } = new ReactivePropertySlim<bool>(true);
@@ -80,6 +80,8 @@ namespace boilersGraphics.ViewModels
         public ReactivePropertySlim<PenLineJoin> PenLineJoin { get; } = new ReactivePropertySlim<PenLineJoin>();
 
         public ReactiveCollection<PenLineJoin> PenLineJoins { get; private set; }
+
+        public ReactivePropertySlim<DoubleCollection> StrokeDashArray { get; } = new ReactivePropertySlim<DoubleCollection>();
 
         public string Name { get; set; }
 
@@ -151,6 +153,7 @@ namespace boilersGraphics.ViewModels
             PenLineJoins.Add(System.Windows.Media.PenLineJoin.Miter);
             PenLineJoins.Add(System.Windows.Media.PenLineJoin.Bevel);
             PenLineJoins.Add(System.Windows.Media.PenLineJoin.Round);
+            StrokeDashArray.Value = new DoubleCollection();
         }
 
         public abstract Type GetViewType();

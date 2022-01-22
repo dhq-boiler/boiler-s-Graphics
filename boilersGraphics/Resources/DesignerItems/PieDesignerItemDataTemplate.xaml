@@ -8,6 +8,7 @@
               Stretch="Fill"
               Stroke="{Binding EdgeColor.Value, Converter={StaticResource solidColorBrushConverter}}"
               StrokeThickness="{Binding EdgeThickness.Value}"
-              StrokeLineJoin="{Binding PenLineJoin.Value}" />
+              StrokeLineJoin="{Binding PenLineJoin.Value}"
+              StrokeDashArray="{Binding StrokeDashArray.Value}" />
     </DataTemplate>
 </ResourceDictionary>

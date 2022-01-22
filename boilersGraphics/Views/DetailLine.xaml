@@ -12,6 +12,7 @@
     <UserControl.Resources>
         <converter:StraightLineBaseShiftConverter x:Key="Shift" />
         <converter:ShiftPointConverter x:Key="ShiftPoint" />
+        <converter:DoubleCollectionToStringConverter x:Key="DoubleCollectionToString" />
     </UserControl.Resources>
     <UserControl.ContentTemplateSelector>
         <local:ItemsControlTemplateSelector>
@@ -29,13 +30,19 @@
                                 <ComboBox ItemsSource="{Binding PenLineCaps}"
                                           SelectedValue="{Binding StrokeEndLineCap.Value}" />
                             </DockPanel>
+                            <DockPanel>
+                                <Label DockPanel.Dock="Left">StrokeDashArray</Label>
+                                <TextBox Text="{Binding StrokeDashArray.Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DoubleCollectionToString}}"
+                                         Width="100"/>
+                            </DockPanel>
                         </StackPanel>
                     </DockPanel>
                     <Canvas>
                         <Line Stroke="{Binding EdgeColor.Value, Converter={StaticResource solidColorBrushConverter}}"
                               StrokeThickness="{Binding EdgeThickness.Value}"
                               StrokeStartLineCap="{Binding StrokeStartLineCap.Value}"
-                              StrokeEndLineCap="{Binding StrokeEndLineCap.Value}">
+                              StrokeEndLineCap="{Binding StrokeEndLineCap.Value}"
+                              StrokeDashArray="{Binding StrokeDashArray.Value}">
                             <Line.Style>
                                 <Style TargetType="Line">
                                     <Setter Property="X1">
@@ -204,13 +211,19 @@
                                 <ComboBox ItemsSource="{Binding PenLineCaps}"
                                           SelectedValue="{Binding StrokeEndLineCap.Value}" />
                             </DockPanel>
+                            <DockPanel>
+                                <Label DockPanel.Dock="Left">StrokeDashArray</Label>
+                                <TextBox Text="{Binding StrokeDashArray.Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DoubleCollectionToString}}"
+                                         Width="100"/>
+                            </DockPanel>
                         </StackPanel>
                     </DockPanel>
                     <Canvas>
                         <Path Stroke="{Binding EdgeColor.Value, Converter={StaticResource solidColorBrushConverter}}"
                               StrokeThickness="{Binding EdgeThickness.Value}"
                               StrokeStartLineCap="{Binding StrokeStartLineCap.Value}"
-                              StrokeEndLineCap="{Binding StrokeEndLineCap.Value}">
+                              StrokeEndLineCap="{Binding StrokeEndLineCap.Value}"
+                              StrokeDashArray="{Binding StrokeDashArray.Value}">
                             <Path.Data>
                                 <PathGeometry>
                                     <PathGeometry.Figures>

@@ -92,6 +92,7 @@ namespace boilersGraphics.ViewModels
             clone.RotationAngle.Value = RotationAngle.Value;
             clone.Data.Value = Data.Value;
             clone.PenLineJoin.Value = PenLineJoin.Value;
+            clone.StrokeDashArray.Value = StrokeDashArray.Value;
             return clone;
         }
 
@@ -113,6 +114,7 @@ namespace boilersGraphics.ViewModels
                 this.CenterY.Value = viewModel.CenterY.Value;
                 this.RotationAngle.Value = viewModel.RotationAngle.Value;
                 this.PenLineJoin.Value = viewModel.PenLineJoin.Value;
+                this.StrokeDashArray.Value = viewModel.StrokeDashArray.Value;
             }
         }
     }

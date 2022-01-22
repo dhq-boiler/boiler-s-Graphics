@@ -93,6 +93,7 @@ namespace boilersGraphics.ViewModels
             clone.FileWidth = FileWidth;
             clone.FileHeight = FileHeight;
             clone.PenLineJoin.Value = PenLineJoin.Value;
+            clone.StrokeDashArray.Value = StrokeDashArray.Value;
             return clone;
         }
 
@@ -112,6 +113,7 @@ namespace boilersGraphics.ViewModels
                 this.CenterY.Value = viewModel.CenterY.Value;
                 this.RotationAngle.Value = viewModel.RotationAngle.Value;
                 this.PenLineJoin.Value = viewModel.PenLineJoin.Value;
+                this.StrokeDashArray.Value = viewModel.StrokeDashArray.Value;
             }
         }
 

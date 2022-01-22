@@ -85,6 +85,7 @@ namespace boilersGraphics.ViewModels
                 this.EndDegree.Value = viewModel.EndDegree.Value;
                 this.SweepDirection.Value = viewModel.SweepDirection.Value;
                 this.PenLineJoin.Value = viewModel.PenLineJoin.Value;
+                this.StrokeDashArray.Value = viewModel.StrokeDashArray.Value;
             }
         }
 
@@ -163,6 +164,7 @@ namespace boilersGraphics.ViewModels
             clone.EndDegree.Value = EndDegree.Value;
             clone.SweepDirection.Value = SweepDirection.Value;
             clone.PenLineJoin.Value = PenLineJoin.Value;
+            clone.StrokeDashArray.Value = StrokeDashArray.Value;
             return clone;
         }
 
