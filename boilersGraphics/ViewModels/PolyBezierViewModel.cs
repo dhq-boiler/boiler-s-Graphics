@@ -69,7 +69,10 @@ namespace boilersGraphics.ViewModels
             clone.EdgeThickness.Value = EdgeThickness.Value;
             clone.Points = Points;
             clone.PathGeometry.Value = GeometryCreator.CreatePolyBezier(clone);
+            clone.StrokeStartLineCap.Value = StrokeStartLineCap.Value;
+            clone.StrokeEndLineCap.Value = StrokeEndLineCap.Value;
             clone.PenLineJoin.Value = PenLineJoin.Value;
+            clone.StrokeDashArray.Value = StrokeDashArray.Value;
             return clone;
         }
 
