@@ -8,11 +8,13 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:view="clr-namespace:boilersGraphics.Views"
              xmlns:viewmodel="clr-namespace:boilersGraphics.ViewModels"
+             xmlns:c="clr-namespace:CalcBinding;assembly=CalcBinding"
              mc:Ignorable="d">
     <UserControl.Resources>
         <converter:StraightLineBaseShiftConverter x:Key="Shift" />
         <converter:ShiftPointConverter x:Key="ShiftPoint" />
         <converter:DoubleCollectionToStringConverter x:Key="DoubleCollectionToString" />
+        <converter:ToPointCollectionConverter x:Key="ToPointCollection" />
     </UserControl.Resources>
     <UserControl.ContentTemplateSelector>
         <local:ItemsControlTemplateSelector>
@@ -524,6 +526,49 @@
                                                        DoubleText="{Binding C2Y.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                             </StackPanel>
                         </Grid>
+                    </Canvas>
+                </DockPanel>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewmodel:PolyBezierViewModel}">
+                <DockPanel>
+                    <DockPanel DockPanel.Dock="Top">
+                        <StackPanel Orientation="Horizontal">
+                            <DockPanel>
+                                <Label DockPanel.Dock="Left">StrokeStartLineCap</Label>
+                                <ComboBox ItemsSource="{Binding PenLineCaps}"
+                                          SelectedValue="{Binding StrokeStartLineCap.Value}" />
+                            </DockPanel>
+                            <DockPanel>
+                                <Label DockPanel.Dock="Left">StrokeEndLineCap</Label>
+                                <ComboBox ItemsSource="{Binding PenLineCaps}"
+                                          SelectedValue="{Binding StrokeEndLineCap.Value}" />
+                            </DockPanel>
+                            <DockPanel>
+                                <Label DockPanel.Dock="Left">StrokeDashArray</Label>
+                                <TextBox Text="{Binding StrokeDashArray.Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DoubleCollectionToString}}"
+                                         Width="100"/>
+                            </DockPanel>
+                        </StackPanel>
+                    </DockPanel>
+                    <Canvas>
+                        <Path x:Name="polyBezier"
+                              Canvas.Left="{Binding LeftTop.Value.X}"
+                              Canvas.Top="{Binding LeftTop.Value.Y}"
+                              IsHitTestVisible="True"
+                              Stretch="Fill"
+                              Stroke="{Binding EdgeColor.Value, Converter={StaticResource solidColorBrushConverter}}"
+                              StrokeThickness="{Binding EdgeThickness.Value}"
+                              StrokeStartLineCap="{Binding StrokeStartLineCap.Value}"
+                              StrokeEndLineCap="{Binding StrokeEndLineCap.Value}"
+                              StrokeDashArray="{Binding StrokeDashArray.Value}">
+                            <Path.Data>
+                                <PathGeometry>
+                                    <PathFigure StartPoint="{Binding Points[0]}">
+                                        <PolyBezierSegment Points="{Binding Points, Converter={StaticResource ToPointCollection}}" />
+                                    </PathFigure>
+                                </PathGeometry>
+                            </Path.Data>
+                        </Path>
                     </Canvas>
                 </DockPanel>
             </DataTemplate>

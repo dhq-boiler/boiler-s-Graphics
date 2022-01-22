@@ -319,7 +319,10 @@
                                                       IsHitTestVisible="True"
                                                       Stretch="Fill"
                                                       Stroke="{Binding EdgeColor.Value, Converter={StaticResource solidColorBrushConverter}}"
-                                                      StrokeThickness="{Binding EdgeThickness.Value}">
+                                                      StrokeThickness="{Binding EdgeThickness.Value}"
+                                                      StrokeStartLineCap="{Binding StrokeStartLineCap.Value}"
+                                                      StrokeEndLineCap="{Binding StrokeEndLineCap.Value}"
+                                                      StrokeDashArray="{Binding StrokeDashArray.Value}">
                                                     <Path.Data>
                                                         <PathGeometry>
                                                             <PathFigure StartPoint="{Binding Points[0]}">
