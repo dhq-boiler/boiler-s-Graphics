@@ -1,5 +1,6 @@
 ﻿using boilersGraphics.Controls;
 using boilersGraphics.Extensions;
+using boilersGraphics.Models;
 using boilersGraphics.ViewModels;
 using Microsoft.Xaml.Behaviors;
 using NLog;
@@ -204,6 +205,9 @@ namespace boilersGraphics.Views.Behaviors
             {
                 foreach (var item in diagramViewModel.AllItems.Value.Except(new SelectableDesignerItemViewModelBase[] { background }))
                 {
+                    var layerItems = diagramViewModel.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children);
+                    if (!layerItems.OfType<LayerItem>().First(x => x.Item.Value == item).IsVisible.Value)
+                        continue;
                     var views = designerCanvas.GetCorrespondingViews<FrameworkElement>(item);
                     var view = views.First(x => x.GetType() == item.GetViewType());
                     view.SnapsToDevicePixels = true;
