@@ -141,6 +141,8 @@ namespace boilersGraphics.ViewModels
 
         public ReactivePropertySlim<bool> EnableImageEmbedding { get; set; } = new ReactivePropertySlim<bool>();
 
+        public ReactivePropertySlim<Visibility> ContextMenuVisibility { get; } = new ReactivePropertySlim<Visibility>(Visibility.Visible);
+
         public ObservableCollection<Color> EdgeColors
         {
             get { return _EdgeColors; }

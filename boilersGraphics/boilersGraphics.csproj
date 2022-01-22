@@ -48,6 +48,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Assets\img\dropper.png" />
     <Resource Include="Assets\img\poly_bezier.png" />
     <Resource Include="Assets\img\FoldingFan.png" />
     <Resource Include="Assets\img\rectangle.png" />
@@ -195,6 +196,7 @@
     <Compile Remove="RubberbandAdorner.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="Assets\img\dropper.png" />
     <None Remove="Assets\img\poly_bezier.png" />
   </ItemGroup>
   <ItemGroup>

@@ -367,7 +367,7 @@
                     </ItemsControl.ItemsPanel>
                 </ItemsControl>
                 <ScrollViewer.ContextMenu>
-                    <ContextMenu>
+                    <ContextMenu Visibility="{Binding ContextMenuVisibility.Value}">
                         <MenuItem Command="{Binding PropertyCommand}" Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.MenuItem_Property, Mode=OneWay}" />
                         <MenuItem Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Grouping, Mode=OneWay}">
                             <MenuItem Command="{Binding GroupCommand}" Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Command_Group, Mode=OneWay}">

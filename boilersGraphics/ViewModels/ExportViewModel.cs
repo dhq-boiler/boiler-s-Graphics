@@ -1,7 +1,6 @@
 ﻿using boilersGraphics.Controls;
 using boilersGraphics.Dao;
 using boilersGraphics.Extensions;
-using boilersGraphics.Helpers;
 using boilersGraphics.Properties;
 using boilersGraphics.UserControls;
 using Microsoft.Win32;
@@ -12,13 +11,11 @@ using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
