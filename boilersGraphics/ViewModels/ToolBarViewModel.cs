@@ -44,6 +44,7 @@ namespace boilersGraphics.ViewModels
         public EraserBehavior EraserBehavior { get; } = new EraserBehavior();
         public SliceBehavior SliceBehavior { get; private set; }
         public NDrawPieBehavior NDrawPieBehavior { get; } = new NDrawPieBehavior();
+        public DropperBehavior DropperBehavior { get; } = new DropperBehavior();
 
         public NDrawPolyBezierBehavior PolyBezierBehavior { get; } = new NDrawPolyBezierBehavior();
 
@@ -267,6 +268,18 @@ namespace boilersGraphics.ViewModels
                 SelectOneToolItem("pie");
                 (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = Resources.String_Pie_DetermineCenterPoint;
             })));
+            ToolItems.Add(new ToolItemData("dropper", "pack://application:,,,/Assets/img/dropper.png", null, new DelegateCommand(() =>
+            {
+                var mainWindowViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel);
+                mainWindowViewModel.ClearCurrentOperationAndDetails();
+                Behaviors.Clear();
+                if (!Behaviors.Contains(DropperBehavior))
+                {
+                    Behaviors.Add(DropperBehavior);
+                }
+                ChangeHitTestToDisable();
+                SelectOneToolItem("dropper");
+            })));
         }
 
         public void FinalizeToolItems()
@@ -307,6 +320,31 @@ namespace boilersGraphics.ViewModels
             toolItem.IsChecked = true;
 
             ToolItems.Where(i => i.Name.Value != toolName).ToList().ForEach(i => i.IsChecked = false);
+
+            switch (toolName)
+            {
+                case "pointer":
+                case "lasso":
+                case "straightline":
+                case "rectangle":
+                case "ellipse":
+                case "picture":
+                case "letter":
+                case "letter-vertical":
+                case "polygon":
+                case "bezier":
+                case "snappoint":
+                case "brush":
+                case "eraser":
+                case "slice":
+                case "polybezier":
+                case "pie":
+                    (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.ContextMenuVisibility.Value = Visibility.Visible;
+                    break;
+                case "dropper":
+                    (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.ContextMenuVisibility.Value = Visibility.Collapsed;
+                    break;
+            }
         }
     }
 }

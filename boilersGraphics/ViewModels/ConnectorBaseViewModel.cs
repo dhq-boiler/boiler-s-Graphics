@@ -99,6 +99,12 @@ namespace boilersGraphics.ViewModels
         public ReadOnlyReactivePropertySlim<SnapPointViewModel> SnapPoint0VM { get; protected set; }
         public ReadOnlyReactivePropertySlim<SnapPointViewModel> SnapPoint1VM { get; protected set; }
 
+        public ReactiveCollection<PenLineCap> PenLineCaps { get; private set; }
+
+        public ReactivePropertySlim<PenLineCap> StrokeStartLineCap { get; } = new ReactivePropertySlim<PenLineCap>();
+
+        public ReactivePropertySlim<PenLineCap> StrokeEndLineCap { get; } = new ReactivePropertySlim<PenLineCap>();
+
         private void Init()
         {
             _Points = new ObservableCollection<Point>();
@@ -115,6 +121,11 @@ namespace boilersGraphics.ViewModels
                           .Where(x => x > 0)
                           .Select(_ => Points.Max(x => x.Y) - Points.Min(x => x.Y))
                           .ToReadOnlyReactivePropertySlim();
+            PenLineCaps = new ReactiveCollection<PenLineCap>();
+            PenLineCaps.Add(PenLineCap.Flat);
+            PenLineCaps.Add(PenLineCap.Round);
+            PenLineCaps.Add(PenLineCap.Square);
+            PenLineCaps.Add(PenLineCap.Triangle);
         }
 
         protected virtual void InitPathFinder() { }

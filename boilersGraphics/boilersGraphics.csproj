@@ -48,6 +48,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Assets\img\dropper.png" />
     <Resource Include="Assets\img\poly_bezier.png" />
     <Resource Include="Assets\img\FoldingFan.png" />
     <Resource Include="Assets\img\rectangle.png" />
@@ -172,7 +173,6 @@
     </PackageReference>
     <PackageReference Include="MdXaml" Version="1.12.0" />
     <PackageReference Include="Microsoft.Windows.CsWinRT" Version="1.4.1" />
-    <PackageReference Include="Microsoft.Windows.SDK.Contracts" Version="10.0.22000.196" />
     <PackageReference Include="NLog" Version="4.7.13" />
     <PackageReference Include="NLog.Schema" Version="4.7.13" />
     <PackageReference Include="OpenCvSharp4.Windows" Version="4.5.3.20211207" />
@@ -196,6 +196,7 @@
     <Compile Remove="RubberbandAdorner.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="Assets\img\dropper.png" />
     <None Remove="Assets\img\poly_bezier.png" />
   </ItemGroup>
   <ItemGroup>
@@ -220,9 +221,9 @@
     </Page>
   </ItemGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <NoWarn>1701;1702;0002;1416;</NoWarn>
+    <NoWarn>1701;1702;0002;CA1416;</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <NoWarn>1701;1702;0002;1416;</NoWarn>
+    <NoWarn>1701;1702;0002;CA1416;</NoWarn>
   </PropertyGroup>
 </Project>

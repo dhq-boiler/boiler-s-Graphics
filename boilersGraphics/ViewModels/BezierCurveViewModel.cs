@@ -142,7 +142,10 @@ namespace boilersGraphics.ViewModels
             clone.EdgeColor.Value = EdgeColor.Value;
             clone.EdgeThickness.Value = EdgeThickness.Value;
             clone.PathGeometry.Value = GeometryCreator.CreateBezierCurve(clone);
-
+            clone.StrokeStartLineCap.Value = StrokeStartLineCap.Value;
+            clone.StrokeEndLineCap.Value = StrokeEndLineCap.Value;
+            clone.PenLineJoin.Value = PenLineJoin.Value;
+            clone.StrokeDashArray.Value = StrokeDashArray.Value;
             return clone;
         }
 
@@ -167,6 +170,10 @@ namespace boilersGraphics.ViewModels
                 this.SnapPoint0VM.Value.Top.Value = viewModel.P1Y.Value;
                 this.SnapPoint1VM.Value.Left.Value = viewModel.P2X.Value;
                 this.SnapPoint1VM.Value.Top.Value = viewModel.P2Y.Value;
+                this.StrokeStartLineCap.Value = viewModel.StrokeStartLineCap.Value;
+                this.StrokeEndLineCap.Value = viewModel.StrokeEndLineCap.Value;
+                this.PenLineJoin.Value = viewModel.PenLineJoin.Value;
+                this.StrokeDashArray.Value = viewModel.StrokeDashArray.Value;
             }
         }
     }

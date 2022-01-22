@@ -205,6 +205,8 @@ namespace boilersGraphics.ViewModels
             clone.FontSize = FontSize;
             clone.PathGeometry = PathGeometry;
             clone.AutoLineBreak = AutoLineBreak;
+            clone.PenLineJoin.Value = PenLineJoin.Value;
+            clone.StrokeDashArray.Value = StrokeDashArray.Value;
             return clone;
         }
 
@@ -224,6 +226,8 @@ namespace boilersGraphics.ViewModels
                 this.Height.Value = viewModel.Height.Value;
                 this.CenterX.Value = viewModel.CenterX.Value;
                 this.CenterY.Value = viewModel.CenterY.Value;
+                this.PenLineJoin.Value = viewModel.PenLineJoin.Value;
+                this.StrokeDashArray.Value = viewModel.StrokeDashArray.Value;
             }
         }
 

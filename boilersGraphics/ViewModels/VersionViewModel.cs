@@ -12,6 +12,7 @@ using System.IO;
 using System.Net;
 using System.Reactive.Disposables;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows;
 using Windows.Services.Store;
 
@@ -48,16 +49,21 @@ namespace boilersGraphics.ViewModels
             })
             .AddTo(_disposables);
             UpdateStatisticsCountVersionInformationDialogWasDisplayed();
+            InitializeLicenseMessage();
+        }
 
+        private async Task InitializeLicenseMessage()
+        {
             var app = App.Current as App;
-            appLicense = app.StoreContext.GetAppLicenseAsync().GetResults();
+            appLicense = await app.StoreContext.GetAppLicenseAsync();
             app.StoreContext.OfflineLicensesChanged += StoreContext_OfflineLicensesChanged;
 
             if (appLicense.IsActive)
             {
                 if (appLicense.IsTrial)
                 {
-                    LicenseMessage.Value = string.Format(Resources.String_TrialMessage, appLicense.ExpirationDate);
+                    var timespan = appLicense.ExpirationDate - DateTime.Now;
+                    LicenseMessage.Value = string.Format(Resources.String_TrialMessage, timespan.Days, timespan.Hours, timespan.Minutes, timespan.Seconds);
                 }
                 else
                 {
@@ -67,16 +73,17 @@ namespace boilersGraphics.ViewModels
             }
         }
 
-        private void StoreContext_OfflineLicensesChanged(StoreContext sender, object args)
+        private async void StoreContext_OfflineLicensesChanged(StoreContext sender, object args)
         {
             var app = App.Current as App;
-            appLicense = app.StoreContext.GetAppLicenseAsync().GetResults();
+            appLicense = await app.StoreContext.GetAppLicenseAsync();
 
             if (appLicense.IsActive)
             {
                 if (appLicense.IsTrial)
                 {
-                    LicenseMessage.Value = string.Format(Resources.String_TrialMessage, appLicense.ExpirationDate);
+                    var timespan = appLicense.ExpirationDate - DateTime.Now;
+                    LicenseMessage.Value = string.Format(Resources.String_TrialMessage, timespan.Days, timespan.Hours, timespan.Minutes, timespan.Seconds);
                 }
                 else
                 {

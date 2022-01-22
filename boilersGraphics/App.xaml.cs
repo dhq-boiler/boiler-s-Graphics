@@ -130,6 +130,7 @@ namespace boilersGraphics
             containerRegistry.RegisterDialog<Views.CustomMessageBox, ViewModels.CustomMessageBoxViewModel>();
             containerRegistry.RegisterDialog<Views.PrivacyPolicy, ViewModels.PrivacyPolicyViewModel>();
             containerRegistry.RegisterDialog<Views.DetailPie, ViewModels.DetailPieViewModel>();
+            containerRegistry.RegisterDialog<Views.DetailPolyBezier, ViewModels.DetailPolyBezierViewModel>();
         }
 
         protected override Window CreateShell()
