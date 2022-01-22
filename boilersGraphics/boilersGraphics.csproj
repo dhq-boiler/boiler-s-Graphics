@@ -219,9 +219,9 @@
     </Page>
   </ItemGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <NoWarn>1701;1702;0002;1416;</NoWarn>
+    <NoWarn>1701;1702;0002;CA1416;</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <NoWarn>1701;1702;0002;1416;</NoWarn>
+    <NoWarn>1701;1702;0002;CA1416;</NoWarn>
   </PropertyGroup>
 </Project>
