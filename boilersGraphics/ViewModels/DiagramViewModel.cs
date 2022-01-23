@@ -521,6 +521,14 @@ namespace boilersGraphics.ViewModels
 
             AngleType.Value = Helpers.AngleType.Minus180To180;
             EnableImageEmbedding.Value = true;
+
+            SettingIfDebug();
+        }
+
+        [Conditional("DEBUG")]
+        private void SettingIfDebug()
+        {
+            EnableAutoSave.Value = false;
         }
 
         private void PackAutoSaveFiles()
