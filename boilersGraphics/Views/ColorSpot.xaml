@@ -10,37 +10,6 @@
     <UserControl.Resources>
         <converter:ToSolidColorBrushConverter x:Key="ToSolid" />
     </UserControl.Resources>
-    <UserControl.Background>
-        <VisualBrush Stretch="None"
-                     TileMode="Tile"
-                     Viewport="0,0,16,16"
-                     ViewportUnits="Absolute">
-            <VisualBrush.Visual>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="8" />
-                        <ColumnDefinition Width="8" />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="8" />
-                        <RowDefinition Height="8" />
-                    </Grid.RowDefinitions>
-                    <Rectangle Grid.Row="0"
-                               Grid.Column="0"
-                               Fill="#EEE" />
-                    <Rectangle Grid.Row="0"
-                               Grid.Column="1"
-                               Fill="#AAA" />
-                    <Rectangle Grid.Row="1"
-                               Grid.Column="0"
-                               Fill="#AAA" />
-                    <Rectangle Grid.Row="1"
-                               Grid.Column="1"
-                               Fill="#EEE" />
-                </Grid>
-            </VisualBrush.Visual>
-        </VisualBrush>
-    </UserControl.Background>
     <Button Background="{Binding Color.Value, Converter={StaticResource ToSolid}, RelativeSource={RelativeSource AncestorType=UserControl}}"
             Command="{Binding Command, RelativeSource={RelativeSource AncestorType=UserControl}}"
             CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=UserControl}}">
@@ -49,13 +18,59 @@
                 <Style.Triggers>
                     <DataTrigger Binding="{Binding IsSelected.Value, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True">
                         <Setter Property="BorderBrush" Value="Blue" />
-                        <Setter Property="BorderThickness" Value="2" />
                     </DataTrigger>
                     <DataTrigger Binding="{Binding IsSelected.Value, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="False">
                         <Setter Property="BorderBrush" Value="Transparent" />
-                        <Setter Property="BorderThickness" Value="0" />
                     </DataTrigger>
                 </Style.Triggers>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Grid>
+                                <Ellipse Width="25"
+                                         Height="25"
+                                         StrokeThickness="0">
+                                    <Ellipse.Fill>
+                                        <VisualBrush Stretch="None"
+                                                     TileMode="Tile"
+                                                     Viewport="0,0,16,16"
+                                                     ViewportUnits="Absolute">
+                                            <VisualBrush.Visual>
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="8" />
+                                                        <ColumnDefinition Width="8" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="8" />
+                                                        <RowDefinition Height="8" />
+                                                    </Grid.RowDefinitions>
+                                                    <Rectangle Grid.Row="0"
+                                                               Grid.Column="0"
+                                                               Fill="#EEE" />
+                                                    <Rectangle Grid.Row="0"
+                                                               Grid.Column="1"
+                                                               Fill="#AAA" />
+                                                    <Rectangle Grid.Row="1"
+                                                               Grid.Column="0"
+                                                               Fill="#AAA" />
+                                                    <Rectangle Grid.Row="1"
+                                                               Grid.Column="1"
+                                                               Fill="#EEE" />
+                                                </Grid>
+                                            </VisualBrush.Visual>
+                                        </VisualBrush>
+                                    </Ellipse.Fill>
+                                </Ellipse>
+                                <Ellipse Width="26"
+                                         Height="26"
+                                         Stroke="{Binding BorderBrush, RelativeSource={RelativeSource TemplatedParent}}"
+                                         StrokeThickness="3"
+                                         Fill="{Binding Background, RelativeSource={RelativeSource TemplatedParent}}" />
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
             </Style>
         </Button.Style>
     </Button>

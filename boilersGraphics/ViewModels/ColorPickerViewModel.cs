@@ -32,6 +32,7 @@ namespace boilersGraphics.ViewModels
         private CompositeDisposable _disposables = new CompositeDisposable();
         private ColorPicker _colorPicker;
         private IEnumerable<ColorSpot> _spots;
+        private bool _flag;
 
         public event Action<IDialogResult> RequestClose;
 
@@ -182,16 +183,21 @@ namespace boilersGraphics.ViewModels
                     colorSpot.IsSelected.Value = false;
                 else
                 {
-                    _spots.ToList().ForEach(x => x.IsSelected.Value = false);
-                    colorSpot.IsSelected.Value = true;
-                    var a = colorSpot.Color.Value.A;
-                    var r = colorSpot.Color.Value.R;
-                    var g = colorSpot.Color.Value.G;
-                    var b = colorSpot.Color.Value.B;
-                    A.Value = a;
-                    R.Value = r;
-                    G.Value = g;
-                    B.Value = b;
+                    if (!colorSpot.IsSelected.Value)
+                    {
+                        _spots.ToList().ForEach(x => x.IsSelected.Value = false);
+                        colorSpot.IsSelected.Value = true;
+                        var a = colorSpot.Color.Value.A;
+                        var r = colorSpot.Color.Value.R;
+                        var g = colorSpot.Color.Value.G;
+                        var b = colorSpot.Color.Value.B;
+                        _flag = false;
+                        A.Value = a;
+                        R.Value = r;
+                        G.Value = g;
+                        B.Value = b;
+                        _flag = true;
+                    }
                 }
             })
             .AddTo(_disposables);
@@ -206,11 +212,14 @@ namespace boilersGraphics.ViewModels
 
         private void SetColorToSpot()
         {
-            if (_spots != null)
+            if (_spots != null && _flag)
             {
                 _spots.Where(x => x.IsSelected.Value)
                       .ToList()
-                      .ForEach(x => x.Color.Value = Output.Value);
+                      .ForEach(x =>
+                      {
+                          x.Color.Value = Output.Value;
+                      });
             }
         }
 
