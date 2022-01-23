@@ -24,15 +24,22 @@ namespace boilersGraphics.Views
         public ColorSpot()
         {
             InitializeComponent();
+            Color = Colors.White;
         }
 
-        public ReactivePropertySlim<Color> Color { get; } = new ReactivePropertySlim<Color>(Colors.White);
-
         public ReactivePropertySlim<bool> IsSelected { get; } = new ReactivePropertySlim<bool>();
+
+        public static readonly DependencyProperty ColorProperty = DependencyProperty.Register("Color", typeof(Color), typeof(ColorSpot));
 
         public static readonly DependencyProperty CommandProperty = DependencyProperty.Register("Command", typeof(ICommand), typeof(ColorSpot));
 
         public static readonly DependencyProperty CommandParameterProperty = DependencyProperty.Register("CommandParameter", typeof(object), typeof(ColorSpot));
+
+        public Color Color
+        {
+            get { return (Color)GetValue(ColorProperty); }
+            set { SetValue(ColorProperty, value); }
+        }
 
         public ICommand Command
         {

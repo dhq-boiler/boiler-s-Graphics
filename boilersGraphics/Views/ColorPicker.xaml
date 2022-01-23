@@ -10,6 +10,9 @@
              xmlns:local="clr-namespace:boilersGraphics.Views"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:prism="http://prismlibrary.com/"
+             xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
+             xmlns:ViewModels="clr-namespace:boilersGraphics.ViewModels"
+             d:DataContext="{d:DesignInstance Type=ViewModels:ColorPickerViewModel}"
              x:Name="colorPicker"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d">
@@ -37,7 +40,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Thumb}">
-                        <Ellipse Name="Ellipse"
+                        <Ellipse x:Name="Ellipse"
                                  Fill="{StaticResource NormalBrush}"
                                  Stroke="{StaticResource NormalBorderBrush}"
                                  StrokeThickness="1" />
@@ -58,16 +61,16 @@
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" MinHeight="{TemplateBinding Slider.MinHeight}" />
+                    <RowDefinition Height="Auto" MinHeight="{TemplateBinding MinHeight}" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                <TickBar Name="TopTick"
+                <TickBar x:Name="TopTick"
                          Height="4"
                          Fill="{StaticResource GlyphBrush}"
                          Placement="Top"
                          SnapsToDevicePixels="True"
                          Visibility="Collapsed" />
-                <Border Name="TrackBackground"
+                <Border x:Name="TrackBackground"
                         Grid.Row="1"
                         Height="4"
                         Margin="0"
@@ -75,7 +78,7 @@
                         BorderBrush="{StaticResource NormalBorderBrush}"
                         BorderThickness="1"
                         CornerRadius="2" />
-                <Track Name="PART_Track" Grid.Row="1">
+                <Track x:Name="PART_Track" Grid.Row="1">
                     <Track.DecreaseRepeatButton>
                         <RepeatButton Command="Slider.DecreaseLarge" Style="{StaticResource SliderButtonStyle}" />
                     </Track.DecreaseRepeatButton>
@@ -86,7 +89,7 @@
                         <RepeatButton Command="Slider.IncreaseLarge" Style="{StaticResource SliderButtonStyle}" />
                     </Track.IncreaseRepeatButton>
                 </Track>
-                <TickBar Name="BottomTick"
+                <TickBar x:Name="BottomTick"
                          Grid.Row="2"
                          Height="4"
                          Fill="{TemplateBinding Foreground}"
@@ -112,16 +115,16 @@
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" MinWidth="{TemplateBinding Slider.MinWidth}" />
+                    <ColumnDefinition Width="Auto" MinWidth="{TemplateBinding MinWidth}" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <TickBar Name="TopTick"
+                <TickBar x:Name="TopTick"
                          Width="4"
                          Fill="{StaticResource GlyphBrush}"
                          Placement="Left"
                          SnapsToDevicePixels="True"
                          Visibility="Collapsed" />
-                <Border Name="TrackBackground"
+                <Border x:Name="TrackBackground"
                         Grid.Column="1"
                         Width="4"
                         Margin="0"
@@ -129,7 +132,7 @@
                         BorderBrush="{StaticResource HorizontalNormalBorderBrush}"
                         BorderThickness="1"
                         CornerRadius="2" />
-                <Track Name="PART_Track" Grid.Column="1">
+                <Track x:Name="PART_Track" Grid.Column="1">
                     <Track.DecreaseRepeatButton>
                         <RepeatButton Command="Slider.DecreaseLarge" Style="{StaticResource SliderButtonStyle}" />
                     </Track.DecreaseRepeatButton>
@@ -140,7 +143,7 @@
                         <RepeatButton Command="Slider.IncreaseLarge" Style="{StaticResource SliderButtonStyle}" />
                     </Track.IncreaseRepeatButton>
                 </Track>
-                <TickBar Name="BottomTick"
+                <TickBar x:Name="BottomTick"
                          Grid.Column="2"
                          Width="4"
                          Fill="{TemplateBinding Foreground}"
@@ -179,59 +182,59 @@
             </Style.Triggers>
         </Style>
         <LinearGradientBrush x:Key="NormalBrush" StartPoint="0,0" EndPoint="0,1">
-            <GradientBrush.GradientStops>
+            <LinearGradientBrush.GradientStops>
                 <GradientStopCollection>
                     <GradientStop Offset="0.0" Color="#FFF" />
                     <GradientStop Offset="1.0" Color="#CCC" />
                 </GradientStopCollection>
-            </GradientBrush.GradientStops>
+            </LinearGradientBrush.GradientStops>
         </LinearGradientBrush>
 
         <LinearGradientBrush x:Key="HorizontalNormalBrush" StartPoint="0,0" EndPoint="1,0">
-            <GradientBrush.GradientStops>
+            <LinearGradientBrush.GradientStops>
                 <GradientStopCollection>
                     <GradientStop Offset="0.0" Color="#FFF" />
                     <GradientStop Offset="1.0" Color="#CCC" />
                 </GradientStopCollection>
-            </GradientBrush.GradientStops>
+            </LinearGradientBrush.GradientStops>
         </LinearGradientBrush>
 
         <LinearGradientBrush x:Key="LightBrush" StartPoint="0,0" EndPoint="0,1">
-            <GradientBrush.GradientStops>
+            <LinearGradientBrush.GradientStops>
                 <GradientStopCollection>
                     <GradientStop Offset="0.0" Color="#FFF" />
                     <GradientStop Offset="1.0" Color="#EEE" />
                 </GradientStopCollection>
-            </GradientBrush.GradientStops>
+            </LinearGradientBrush.GradientStops>
         </LinearGradientBrush>
 
         <LinearGradientBrush x:Key="HorizontalLightBrush" StartPoint="0,0" EndPoint="1,0">
-            <GradientBrush.GradientStops>
+            <LinearGradientBrush.GradientStops>
                 <GradientStopCollection>
                     <GradientStop Offset="0.0" Color="#FFF" />
                     <GradientStop Offset="1.0" Color="#EEE" />
                 </GradientStopCollection>
-            </GradientBrush.GradientStops>
+            </LinearGradientBrush.GradientStops>
         </LinearGradientBrush>
 
         <LinearGradientBrush x:Key="DarkBrush" StartPoint="0,0" EndPoint="0,1">
-            <GradientBrush.GradientStops>
+            <LinearGradientBrush.GradientStops>
                 <GradientStopCollection>
                     <GradientStop Offset="0.0" Color="#FFF" />
                     <GradientStop Offset="1.0" Color="#AAA" />
                 </GradientStopCollection>
-            </GradientBrush.GradientStops>
+            </LinearGradientBrush.GradientStops>
         </LinearGradientBrush>
 
         <LinearGradientBrush x:Key="PressedBrush" StartPoint="0,0" EndPoint="0,1">
-            <GradientBrush.GradientStops>
+            <LinearGradientBrush.GradientStops>
                 <GradientStopCollection>
                     <GradientStop Offset="0.0" Color="#BBB" />
                     <GradientStop Offset="0.1" Color="#EEE" />
                     <GradientStop Offset="0.9" Color="#EEE" />
                     <GradientStop Offset="1.0" Color="#FFF" />
                 </GradientStopCollection>
-            </GradientBrush.GradientStops>
+            </LinearGradientBrush.GradientStops>
         </LinearGradientBrush>
 
         <SolidColorBrush x:Key="DisabledForegroundBrush" Color="#888" />
@@ -245,39 +248,39 @@
         <!--  Border Brushes  -->
 
         <LinearGradientBrush x:Key="NormalBorderBrush" StartPoint="0,0" EndPoint="0,1">
-            <GradientBrush.GradientStops>
+            <LinearGradientBrush.GradientStops>
                 <GradientStopCollection>
                     <GradientStop Offset="0.0" Color="#CCC" />
                     <GradientStop Offset="1.0" Color="#444" />
                 </GradientStopCollection>
-            </GradientBrush.GradientStops>
+            </LinearGradientBrush.GradientStops>
         </LinearGradientBrush>
 
         <LinearGradientBrush x:Key="HorizontalNormalBorderBrush" StartPoint="0,0" EndPoint="1,0">
-            <GradientBrush.GradientStops>
+            <LinearGradientBrush.GradientStops>
                 <GradientStopCollection>
                     <GradientStop Offset="0.0" Color="#CCC" />
                     <GradientStop Offset="1.0" Color="#444" />
                 </GradientStopCollection>
-            </GradientBrush.GradientStops>
+            </LinearGradientBrush.GradientStops>
         </LinearGradientBrush>
 
         <LinearGradientBrush x:Key="DefaultedBorderBrush" StartPoint="0,0" EndPoint="0,1">
-            <GradientBrush.GradientStops>
+            <LinearGradientBrush.GradientStops>
                 <GradientStopCollection>
                     <GradientStop Offset="0.0" Color="#777" />
                     <GradientStop Offset="1.0" Color="#000" />
                 </GradientStopCollection>
-            </GradientBrush.GradientStops>
+            </LinearGradientBrush.GradientStops>
         </LinearGradientBrush>
 
         <LinearGradientBrush x:Key="PressedBorderBrush" StartPoint="0,0" EndPoint="0,1">
-            <GradientBrush.GradientStops>
+            <LinearGradientBrush.GradientStops>
                 <GradientStopCollection>
                     <GradientStop Offset="0.0" Color="#444" />
                     <GradientStop Offset="1.0" Color="#888" />
                 </GradientStopCollection>
-            </GradientBrush.GradientStops>
+            </LinearGradientBrush.GradientStops>
         </LinearGradientBrush>
 
         <SolidColorBrush x:Key="DisabledBorderBrush" Color="#AAA" />
@@ -300,112 +303,114 @@
         <DockPanel DockPanel.Dock="Bottom" Visibility="{Binding ColorPalleteVisibility.Value}">
             <control:SimpleGrid Rows="10" Columns="10" Orientation="Horizontal">
                 <control:SimpleGrid.Resources>
-                    <Style TargetType="local:ColorSpot">
+                    <Style TargetType="{x:Type local:ColorSpot}">
                         <Setter Property="Width" Value="44.5" />
                         <Setter Property="Height" Value="auto" />
                         <Setter Property="Margin" Value="5" />
                     </Style>
                 </control:SimpleGrid.Resources>
-                <local:ColorSpot x:Name="ColorSpot0" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot1" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot2" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot3" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot4" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot5" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot6" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot7" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot8" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot9" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot10" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot11" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot12" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot13" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot14" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot15" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot16" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot17" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot18" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot19" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot20" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot21" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot22" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot23" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot24" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot25" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot26" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot27" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot28" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot29" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot30" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot31" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot32" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot33" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot34" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot35" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot36" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot37" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot38" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot39" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot40" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot41" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot42" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot43" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot44" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot45" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot46" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot47" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot48" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot49" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot50" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot51" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot52" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot53" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot54" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot55" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot56" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot57" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot58" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot59" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot60" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot61" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot62" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot63" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot64" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot65" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot66" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot67" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot68" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot69" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot70" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot71" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot72" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot73" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot74" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot75" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot76" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot77" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot78" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot79" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot80" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot81" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot82" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot83" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot84" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot85" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot86" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot87" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot88" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot89" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot90" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot91" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot92" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot93" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot94" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot95" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot96" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot97" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot98" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="ColorSpot99" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot0" Color="{Binding ColorSpot0.Value, Mode=TwoWay, diag:PresentationTraceSources.TraceLevel=High}" Command="{Binding SpotSelectCommand}"/>
+                <!--
+                <local:ColorSpot x:Name="colorSpot1" Color="{Binding ColorSpot1.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot2" Color="{Binding ColorSpot2.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot3" Color="{Binding ColorSpot3.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot4" Color="{Binding ColorSpot4.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot5" Color="{Binding ColorSpot5.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot6" Color="{Binding ColorSpot6.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot7" Color="{Binding ColorSpot7.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot8" Color="{Binding ColorSpot8.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot9" Color="{Binding ColorSpot9.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot10" Color="{Binding ColorSpot10.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot11" Color="{Binding ColorSpot11.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot12" Color="{Binding ColorSpot12.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot13" Color="{Binding ColorSpot13.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot14" Color="{Binding ColorSpot14.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot15" Color="{Binding ColorSpot15.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot16" Color="{Binding ColorSpot16.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot17" Color="{Binding ColorSpot17.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot18" Color="{Binding ColorSpot18.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot19" Color="{Binding ColorSpot19.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot20" Color="{Binding ColorSpot20.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot21" Color="{Binding ColorSpot21.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot22" Color="{Binding ColorSpot22.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot23" Color="{Binding ColorSpot23.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot24" Color="{Binding ColorSpot24.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot25" Color="{Binding ColorSpot25.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot26" Color="{Binding ColorSpot26.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot27" Color="{Binding ColorSpot27.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot28" Color="{Binding ColorSpot28.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot29" Color="{Binding ColorSpot29.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot30" Color="{Binding ColorSpot30.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot31" Color="{Binding ColorSpot31.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot32" Color="{Binding ColorSpot32.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot33" Color="{Binding ColorSpot33.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot34" Color="{Binding ColorSpot34.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot35" Color="{Binding ColorSpot35.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot36" Color="{Binding ColorSpot36.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot37" Color="{Binding ColorSpot37.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot38" Color="{Binding ColorSpot38.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot39" Color="{Binding ColorSpot39.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot40" Color="{Binding ColorSpot40.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot41" Color="{Binding ColorSpot41.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot42" Color="{Binding ColorSpot42.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot43" Color="{Binding ColorSpot43.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot44" Color="{Binding ColorSpot44.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot45" Color="{Binding ColorSpot45.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot46" Color="{Binding ColorSpot46.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot47" Color="{Binding ColorSpot47.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot48" Color="{Binding ColorSpot48.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot49" Color="{Binding ColorSpot49.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot50" Color="{Binding ColorSpot50.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot51" Color="{Binding ColorSpot51.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot52" Color="{Binding ColorSpot52.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot53" Color="{Binding ColorSpot53.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot54" Color="{Binding ColorSpot54.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot55" Color="{Binding ColorSpot55.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot56" Color="{Binding ColorSpot56.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot57" Color="{Binding ColorSpot57.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot58" Color="{Binding ColorSpot58.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot59" Color="{Binding ColorSpot59.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot60" Color="{Binding ColorSpot60.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot61" Color="{Binding ColorSpot61.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot62" Color="{Binding ColorSpot62.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot63" Color="{Binding ColorSpot63.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot64" Color="{Binding ColorSpot64.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot65" Color="{Binding ColorSpot65.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot66" Color="{Binding ColorSpot66.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot67" Color="{Binding ColorSpot67.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot68" Color="{Binding ColorSpot68.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot69" Color="{Binding ColorSpot69.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot70" Color="{Binding ColorSpot70.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot71" Color="{Binding ColorSpot71.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot72" Color="{Binding ColorSpot72.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot73" Color="{Binding ColorSpot73.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot74" Color="{Binding ColorSpot74.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot75" Color="{Binding ColorSpot75.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot76" Color="{Binding ColorSpot76.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot77" Color="{Binding ColorSpot77.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot78" Color="{Binding ColorSpot78.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot79" Color="{Binding ColorSpot79.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot80" Color="{Binding ColorSpot80.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot81" Color="{Binding ColorSpot81.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot82" Color="{Binding ColorSpot82.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot83" Color="{Binding ColorSpot83.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot84" Color="{Binding ColorSpot84.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot85" Color="{Binding ColorSpot85.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot86" Color="{Binding ColorSpot86.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot87" Color="{Binding ColorSpot87.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot88" Color="{Binding ColorSpot88.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot89" Color="{Binding ColorSpot89.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot90" Color="{Binding ColorSpot90.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot91" Color="{Binding ColorSpot91.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot92" Color="{Binding ColorSpot92.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot93" Color="{Binding ColorSpot93.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot94" Color="{Binding ColorSpot94.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot95" Color="{Binding ColorSpot95.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot96" Color="{Binding ColorSpot96.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot97" Color="{Binding ColorSpot97.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot98" Color="{Binding ColorSpot98.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot99" Color="{Binding ColorSpot99.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                -->
             </control:SimpleGrid>
         </DockPanel>
         <DockPanel Width="266" DockPanel.Dock="Left">
@@ -462,7 +467,7 @@
                                HorizontalAlignment="Center"
                                VerticalAlignment="Center">
                         <Rectangle.Fill>
-                            <SolidColorBrush Color="{Binding ElementName=ColorMap, Path=Color}" />
+                            <SolidColorBrush Color="{Binding Color, ElementName=ColorMap}" />
                         </Rectangle.Fill>
                     </Rectangle>
                 </Grid>
@@ -472,11 +477,11 @@
                     <Label Width="65"
                            DockPanel.Dock="Left"
                            Foreground="White"
-                           Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_Hue, Mode=OneWay}" />
+                           Content="{Binding Resources.String_Hue, Mode=OneWay, Source={x:Static helper:ResourceService.Current}}" />
                     <TextBox Width="25"
                              Height="20"
                              DockPanel.Dock="Right"
-                             Text="{Binding ElementName=Hue_Slider, Path=Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             Text="{Binding Value, ElementName=Hue_Slider, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                              TextAlignment="Right" />
                     <local:ColorSlider x:Name="Hue_Slider"
                                        VerticalAlignment="Center"
@@ -489,10 +494,10 @@
                     <Label Width="65"
                            DockPanel.Dock="Left"
                            Foreground="White"
-                           Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_A, Mode=OneWay}" />
+                           Content="{Binding Resources.String_A, Mode=OneWay, Source={x:Static helper:ResourceService.Current}}" />
                     <TextBox Width="25"
                              DockPanel.Dock="Right"
-                             Text="{Binding A.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource StringToByteConverter}}"
+                             Text="{Binding A.Value, Converter={StaticResource StringToByteConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                              TextAlignment="Right" />
                     <local:ColorSlider x:Name="A_Slider"
                                        VerticalAlignment="Center"
@@ -505,11 +510,11 @@
                     <Label Width="65"
                            DockPanel.Dock="Left"
                            Foreground="White"
-                           Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_R, Mode=OneWay}" />
+                           Content="{Binding Resources.String_R, Mode=OneWay, Source={x:Static helper:ResourceService.Current}}" />
                     <TextBox Width="25"
                              Height="20"
                              DockPanel.Dock="Right"
-                             Text="{Binding ElementName=Red_Slider, Path=Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             Text="{Binding Value, ElementName=Red_Slider, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                              TextAlignment="Right" />
                     <local:ColorSlider x:Name="Red_Slider"
                                        VerticalAlignment="Center"
@@ -522,11 +527,11 @@
                     <Label Width="65"
                            DockPanel.Dock="Left"
                            Foreground="White"
-                           Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_G, Mode=OneWay}" />
-                        <TextBox Width="25"
+                           Content="{Binding Resources.String_G, Mode=OneWay, Source={x:Static helper:ResourceService.Current}}" />
+                    <TextBox Width="25"
                              Height="20"
                              DockPanel.Dock="Right"
-                             Text="{Binding ElementName=Green_Slider, Path=Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             Text="{Binding Value, ElementName=Green_Slider, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                              TextAlignment="Right" />
                     <local:ColorSlider x:Name="Green_Slider"
                                        VerticalAlignment="Center"
@@ -539,11 +544,11 @@
                     <Label Width="65"
                            DockPanel.Dock="Left"
                            Foreground="White"
-                           Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_B, Mode=OneWay}" />
+                           Content="{Binding Resources.String_B, Mode=OneWay, Source={x:Static helper:ResourceService.Current}}" />
                     <TextBox Width="25"
                              Height="20"
                              DockPanel.Dock="Right"
-                             Text="{Binding ElementName=Blue_Slider, Path=Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             Text="{Binding Value, ElementName=Blue_Slider, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                              TextAlignment="Right" />
                     <local:ColorSlider x:Name="Blue_Slider"
                                        VerticalAlignment="Center"
@@ -566,7 +571,7 @@
                         <StackPanel Orientation="Horizontal">
                             <Label FontSize="10">
                                 <Label.Style>
-                                    <Style TargetType="Label">
+                                    <Style TargetType="{x:Type Label}">
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding ColorPalleteVisibility.Value}" Value="Visible">
                                                 <Setter Property="Content" Value="▲" />

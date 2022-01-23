@@ -143,6 +143,8 @@ namespace boilersGraphics.ViewModels
 
         public ReactivePropertySlim<Visibility> ContextMenuVisibility { get; } = new ReactivePropertySlim<Visibility>(Visibility.Visible);
 
+        public ReactivePropertySlim<ColorSpots> ColorSpots { get; } = new ReactivePropertySlim<ColorSpots>();
+
         public ObservableCollection<Color> EdgeColors
         {
             get { return _EdgeColors; }
@@ -521,6 +523,7 @@ namespace boilersGraphics.ViewModels
 
             AngleType.Value = Helpers.AngleType.Minus180To180;
             EnableImageEmbedding.Value = true;
+            ColorSpots.Value = new ColorSpots();
 
             SettingIfDebug();
         }

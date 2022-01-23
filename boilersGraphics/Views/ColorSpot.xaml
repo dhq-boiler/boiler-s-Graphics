@@ -10,7 +10,7 @@
     <UserControl.Resources>
         <converter:ToSolidColorBrushConverter x:Key="ToSolid" />
     </UserControl.Resources>
-    <Button Background="{Binding Color.Value, Converter={StaticResource ToSolid}, RelativeSource={RelativeSource AncestorType=UserControl}}"
+    <Button Background="{Binding Color, Converter={StaticResource ToSolid}, RelativeSource={RelativeSource AncestorType=UserControl}}"
             Command="{Binding Command, RelativeSource={RelativeSource AncestorType=UserControl}}"
             CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=UserControl}}">
         <Button.Style>
