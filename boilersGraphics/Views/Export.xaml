@@ -16,7 +16,8 @@
     </UserControl.Resources>
     <prism:Dialog.WindowStyle>
         <Style TargetType="Window">
-            <Setter Property="SizeToContent" Value="WidthAndHeight" />
+            <Setter Property="Width" Value="800" />
+            <Setter Property="Height" Value="600" />
         </Style>
     </prism:Dialog.WindowStyle>
     <DockPanel>
@@ -32,29 +33,149 @@
             <Button x:Name="PerformExport" Command="{Binding ExportCommand}" Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_Export, Mode=OneWay}" />
             <Button x:Name="CancelExport" Command="{Binding CancelCommand}" Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_Cancel, Mode=OneWay}" />
         </StackPanel>
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="400" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <DockPanel Grid.Row="0" Grid.ColumnSpan="3">
-                <DockPanel DockPanel.Dock="Right" />
-                <DockPanel DockPanel.Dock="Left" />
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Vertical">
+            <DockPanel>
+                <DockPanel.Resources>
+                    <Style TargetType="Button">
+                        <Setter Property="Margin" Value="5" />
+                        <Setter Property="Width" Value="75" />
+                    </Style>
+                    <Style TargetType="TextBox">
+                        <Setter Property="Margin" Value="5" />
+                    </Style>
+                    <Style TargetType="Label">
+                        <Setter Property="Margin" Value="5" />
+                    </Style>
+                </DockPanel.Resources>
+                <Label DockPanel.Dock="Left"
+                       Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_FileName, Mode=OneWay}" />
+                <Button DockPanel.Dock="Right"
+                        Command="{Binding PathFinderCommand}"
+                        Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_Reference, Mode=OneWay}"/>
+                <TextBox x:Name="filename"
+                         AutomationProperties.AutomationId="filename"
+                         Text="{Binding Path.Value, UpdateSourceTrigger=PropertyChanged}" />
+            </DockPanel>
+            <DockPanel>
+                <Label DockPanel.Dock="Left"
+                       Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_QualityLevel, Mode=OneWay}">
+                    <Label.Style>
+                        <Style TargetType="Label">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value="{x:Static sys:String.Empty}">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value=".jpg">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value=".jpeg">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value=".png">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value=".gif">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value=".bmp">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value=".tiff">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value=".wmp">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Label.Style>
+                </Label>
+                <Label DockPanel.Dock="Right"
+                       HorizontalContentAlignment="Right"
+                       Content="{Binding QualityLevel.Value}">
+                    <Label.Style>
+                        <Style TargetType="Label">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value="{x:Static sys:String.Empty}">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value=".jpg">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value=".jpeg">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value=".png">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value=".gif">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value=".bmp">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value=".tiff">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value=".wmp">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Label.Style>
+                </Label>
+                <Slider IsSelectionRangeEnabled="True"
+                            Maximum="100"
+                            Minimum="1"
+                            SelectionEnd="{Binding QualityLevel.Value}"
+                            SelectionStart="1"
+                            TickPlacement="BottomRight"
+                            Value="{Binding QualityLevel.Value}">
+                    <Slider.Style>
+                        <Style TargetType="Slider">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value="{x:Static sys:String.Empty}">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value=".jpg">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value=".jpeg">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value=".png">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value=".gif">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value=".bmp">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value=".tiff">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value=".wmp">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Slider.Style>
+                </Slider>
+            </DockPanel>
+        </StackPanel>
+        <DockPanel>
+            <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                              VerticalScrollBarVisibility="Auto">
                 <Border HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        BorderBrush="Black"
-                        BorderThickness="1">
+                            VerticalAlignment="Center"
+                            BorderBrush="Black"
+                            BorderThickness="1">
                     <Border.Background>
                         <VisualBrush Stretch="None"
-                                     TileMode="Tile"
-                                     Viewport="0,0,16,16"
-                                     ViewportUnits="Absolute">
+                                         TileMode="Tile"
+                                         Viewport="0,0,16,16"
+                                         ViewportUnits="Absolute">
                             <VisualBrush.Visual>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
@@ -66,150 +187,34 @@
                                         <RowDefinition Height="8" />
                                     </Grid.RowDefinitions>
                                     <Rectangle Grid.Row="0"
-                                               Grid.Column="0"
-                                               Fill="#EEE" />
+                                                   Grid.Column="0"
+                                                   Fill="#EEE" />
                                     <Rectangle Grid.Row="0"
-                                               Grid.Column="1"
-                                               Fill="#AAA" />
+                                                   Grid.Column="1"
+                                                   Fill="#AAA" />
                                     <Rectangle Grid.Row="1"
-                                               Grid.Column="0"
-                                               Fill="#AAA" />
+                                                   Grid.Column="0"
+                                                   Fill="#AAA" />
                                     <Rectangle Grid.Row="1"
-                                               Grid.Column="1"
-                                               Fill="#EEE" />
+                                                   Grid.Column="1"
+                                                   Fill="#EEE" />
                                 </Grid>
                             </VisualBrush.Visual>
                         </VisualBrush>
                     </Border.Background>
                     <Image x:Name="Preview"
-                           Width="{Binding Preview.Value.PixelWidth}"
-                           Height="{Binding Preview.Value.PixelHeight}"
-                           Margin="0"
-                           MaxWidth="500"
-                           MaxHeight="500"
-                           AutomationProperties.Name="Preview"
-                           Source="{Binding Preview.Value, UpdateSourceTrigger=PropertyChanged}"
-                           Stretch="UniformToFill" />
+                               Width="{Binding Preview.Value.PixelWidth}"
+                               Height="{Binding Preview.Value.PixelHeight}"
+                               Margin="0"
+                               AutomationProperties.Name="Preview"
+                               Source="{Binding Preview.Value, UpdateSourceTrigger=PropertyChanged}"
+                               Stretch="UniformToFill">
+                        <Image.LayoutTransform>
+                            <ScaleTransform ScaleX="0.5" ScaleY="0.5" />
+                        </Image.LayoutTransform>
+                    </Image>
                 </Border>
-            </DockPanel>
-            <Label Grid.Row="1" Grid.Column="0" Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_FileName, Mode=OneWay}" />
-            <TextBox x:Name="filename"
-                     Grid.Row="1"
-                     Grid.Column="1"
-                     AutomationProperties.AutomationId="filename"
-                     Text="{Binding Path.Value, UpdateSourceTrigger=PropertyChanged}" />
-            <Button Grid.Row="1"
-                    Grid.Column="2"
-                    Width="75"
-                    Command="{Binding PathFinderCommand}"
-                    Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_Reference, Mode=OneWay}"/>
-            <Label Grid.Row="2" Grid.Column="0" Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_QualityLevel, Mode=OneWay}">
-                <Label.Style>
-                    <Style TargetType="Label">
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value="{x:Static sys:String.Empty}">
-                                <Setter Property="Visibility" Value="Collapsed" />
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value=".jpg">
-                                <Setter Property="Visibility" Value="Visible" />
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value=".jpeg">
-                                <Setter Property="Visibility" Value="Visible" />
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value=".png">
-                                <Setter Property="Visibility" Value="Collapsed" />
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value=".gif">
-                                <Setter Property="Visibility" Value="Collapsed" />
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value=".bmp">
-                                <Setter Property="Visibility" Value="Collapsed" />
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value=".tiff">
-                                <Setter Property="Visibility" Value="Collapsed" />
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value=".wmp">
-                                <Setter Property="Visibility" Value="Collapsed" />
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </Label.Style>
-            </Label>
-            <Slider Grid.Row="2"
-                    Grid.Column="1"
-                    IsSelectionRangeEnabled="True"
-                    Maximum="100"
-                    Minimum="1"
-                    SelectionEnd="{Binding QualityLevel.Value}"
-                    SelectionStart="1"
-                    TickPlacement="BottomRight"
-                    Value="{Binding QualityLevel.Value}">
-                <Slider.Style>
-                    <Style TargetType="Slider">
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value="{x:Static sys:String.Empty}">
-                                <Setter Property="Visibility" Value="Collapsed" />
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value=".jpg">
-                                <Setter Property="Visibility" Value="Visible" />
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value=".jpeg">
-                                <Setter Property="Visibility" Value="Visible" />
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value=".png">
-                                <Setter Property="Visibility" Value="Collapsed" />
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value=".gif">
-                                <Setter Property="Visibility" Value="Collapsed" />
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value=".bmp">
-                                <Setter Property="Visibility" Value="Collapsed" />
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value=".tiff">
-                                <Setter Property="Visibility" Value="Collapsed" />
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value=".wmp">
-                                <Setter Property="Visibility" Value="Collapsed" />
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </Slider.Style>
-            </Slider>
-            <Label Grid.Row="2"
-                   Grid.Column="2"
-                   HorizontalContentAlignment="Right"
-                   Content="{Binding QualityLevel.Value}">
-                <Label.Style>
-                    <Style TargetType="Label">
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value="{x:Static sys:String.Empty}">
-                                <Setter Property="Visibility" Value="Collapsed" />
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value=".jpg">
-                                <Setter Property="Visibility" Value="Visible" />
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value=".jpeg">
-                                <Setter Property="Visibility" Value="Visible" />
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value=".png">
-                                <Setter Property="Visibility" Value="Collapsed" />
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value=".gif">
-                                <Setter Property="Visibility" Value="Collapsed" />
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value=".bmp">
-                                <Setter Property="Visibility" Value="Collapsed" />
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value=".tiff">
-                                <Setter Property="Visibility" Value="Collapsed" />
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value=".wmp">
-                                <Setter Property="Visibility" Value="Collapsed" />
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </Label.Style>
-            </Label>
-        </Grid>
+            </ScrollViewer>
+        </DockPanel>
     </DockPanel>
 </UserControl>
