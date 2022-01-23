@@ -40,6 +40,16 @@ namespace boilersGraphics
             return App.Current != null ? App.Current : new Application();
         }
 
+        public Window GetDialog()
+        {
+            foreach (var window in this.Windows)
+            {
+                if (window.GetType() == typeof(Prism.Services.Dialogs.DialogWindow))
+                    return window as Window;
+            }
+            return null;
+        }
+
         private void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
             LogManager.GetCurrentClassLogger().Fatal(e.Exception);

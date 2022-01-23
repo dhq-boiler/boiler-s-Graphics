@@ -1,5 +1,7 @@
-﻿using boilersGraphics.Helpers;
+﻿using boilersGraphics.Extensions;
+using boilersGraphics.Helpers;
 using boilersGraphics.Properties;
+using boilersGraphics.Views;
 using OpenCvSharp;
 using OpenCvSharp.WpfExtensions;
 using Prism.Mvvm;
@@ -7,8 +9,11 @@ using Prism.Services.Dialogs;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
@@ -25,6 +30,8 @@ namespace boilersGraphics.ViewModels
         private bool _hsv2bgr;
         private bool _bgr2hsv;
         private CompositeDisposable _disposables = new CompositeDisposable();
+        private ColorPicker _colorPicker;
+        private IEnumerable<ColorSpot> _spots;
 
         public event Action<IDialogResult> RequestClose;
 
@@ -55,6 +62,7 @@ namespace boilersGraphics.ViewModels
                         SetRGB();
                         _hsv2bgr = false;
                     }
+                    SetColorToSpot();
                 })
                 .AddTo(_disposables);
 
@@ -67,6 +75,7 @@ namespace boilersGraphics.ViewModels
                         HSV2RGB();
                         _hsv2bgr = false;
                     }
+                    SetColorToSpot();
                 })
                 .AddTo(_disposables);
 
@@ -79,6 +88,14 @@ namespace boilersGraphics.ViewModels
                         HSV2RGB();
                         _hsv2bgr = false;
                     }
+                    SetColorToSpot();
+                })
+                .AddTo(_disposables);
+
+            A
+                .Subscribe(_ =>
+                {
+                    SetColorToSpot();
                 })
                 .AddTo(_disposables);
 
@@ -92,8 +109,8 @@ namespace boilersGraphics.ViewModels
                         RecalcHue();
                         RecalcValue();
                         RecalcSaturation();
-                        _bgr2hsv = false;
                     }
+                    SetColorToSpot();
                 })
                 .AddTo(_disposables);
 
@@ -109,6 +126,7 @@ namespace boilersGraphics.ViewModels
                         RecalcSaturation();
                         _bgr2hsv = false;
                     }
+                    SetColorToSpot();
                 })
                 .AddTo(_disposables);
 
@@ -124,11 +142,12 @@ namespace boilersGraphics.ViewModels
                         RecalcSaturation();
                         _bgr2hsv = false;
                     }
+                    SetColorToSpot();
                 })
                 .AddTo(_disposables);
 
             Color
-                .Subscribe(_ =>
+                .Subscribe(newColor =>
                 {
                     if (!_hsv2bgr && !_bgr2hsv)
                     {
@@ -147,6 +166,52 @@ namespace boilersGraphics.ViewModels
             GenerateGreenSelectorMat();
             GenerateBlueSelectorMat();
             GenerateASelectorMat();
+
+            OpenCloseColorPalleteCommand.Subscribe(_ =>
+            {
+                if (ColorPalleteVisibility.Value == Visibility.Collapsed)
+                    ColorPalleteVisibility.Value = Visibility.Visible;
+                else if (ColorPalleteVisibility.Value == Visibility.Visible)
+                    ColorPalleteVisibility.Value = Visibility.Collapsed;
+            })
+            .AddTo(_disposables);
+            SpotSelectCommand.Subscribe(x =>
+            {
+                var colorSpot = x as ColorSpot;
+                if (colorSpot.IsSelected.Value == true)
+                    colorSpot.IsSelected.Value = false;
+                else
+                {
+                    _spots.ToList().ForEach(x => x.IsSelected.Value = false);
+                    colorSpot.IsSelected.Value = true;
+                    var a = colorSpot.Color.Value.A;
+                    var r = colorSpot.Color.Value.R;
+                    var g = colorSpot.Color.Value.G;
+                    var b = colorSpot.Color.Value.B;
+                    A.Value = a;
+                    R.Value = r;
+                    G.Value = g;
+                    B.Value = b;
+                }
+            })
+            .AddTo(_disposables);
+            LoadedCommand.Subscribe(x =>
+            {
+                var source = x.Source;
+                _colorPicker = source as ColorPicker;
+                _spots = _colorPicker.FindVisualChildren<ColorSpot>();
+            })
+            .AddTo(_disposables);
+        }
+
+        private void SetColorToSpot()
+        {
+            if (_spots != null)
+            {
+                _spots.Where(x => x.IsSelected.Value)
+                      .ToList()
+                      .ForEach(x => x.Color.Value = Output.Value);
+            }
         }
 
         private void GenerateRedSelectorMat()
@@ -500,7 +565,15 @@ namespace boilersGraphics.ViewModels
 
         public ReactivePropertySlim<Color> Output { get; } = new ReactivePropertySlim<Color>();
 
+        public ReactivePropertySlim<Visibility> ColorPalleteVisibility { get; } = new ReactivePropertySlim<Visibility>(Visibility.Collapsed);
+
         public ReactiveCommand OkCommand { get; }
+
+        public ReactiveCommand OpenCloseColorPalleteCommand { get; } = new ReactiveCommand();
+
+        public ReactiveCommand SpotSelectCommand { get; } = new ReactiveCommand();
+
+        public ReactiveCommand<RoutedEventArgs> LoadedCommand { get; } = new ReactiveCommand<RoutedEventArgs>();
 
         public ColorExchange EditTarget { get; set; }
 

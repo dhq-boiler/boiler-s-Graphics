@@ -5,10 +5,12 @@
              xmlns:control="clr-namespace:boilersGraphics.Controls"
              xmlns:converter="clr-namespace:boilersGraphics.Converters"
              xmlns:helper="clr-namespace:boilersGraphics.Helpers"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:boilersGraphics.Views"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:prism="http://prismlibrary.com/"
+             x:Name="colorPicker"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d">
     <UserControl.Resources>
@@ -289,7 +291,123 @@
 
         <SolidColorBrush x:Key="LightColorBrush" Color="#DDD" />
     </UserControl.Resources>
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <helper:EventToCommand Command="{Binding LoadedCommand}" PassEventArgsToCommand="True" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <DockPanel Background="#FF2D2D30">
+        <DockPanel DockPanel.Dock="Bottom" Visibility="{Binding ColorPalleteVisibility.Value}">
+            <control:SimpleGrid Rows="10" Columns="10" Orientation="Horizontal">
+                <control:SimpleGrid.Resources>
+                    <Style TargetType="local:ColorSpot">
+                        <Setter Property="Width" Value="44.5" />
+                        <Setter Property="Height" Value="15" />
+                        <Setter Property="Margin" Value="5" />
+                    </Style>
+                </control:SimpleGrid.Resources>
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot Command="{Binding SpotSelectCommand}" />
+            </control:SimpleGrid>
+        </DockPanel>
         <DockPanel Width="266" DockPanel.Dock="Left">
             <local:ColorMap x:Name="ColorMap"
                             Margin="5"
@@ -441,6 +559,28 @@
                             Command="{Binding OkCommand}"
                             Content="OK"
                             DockPanel.Dock="Right" />
+                    <Button Width="50"
+                            Height="25"
+                            Command="{Binding OpenCloseColorPalleteCommand}"
+                            DockPanel.Dock="Left">
+                        <StackPanel Orientation="Horizontal">
+                            <Label FontSize="10">
+                                <Label.Style>
+                                    <Style TargetType="Label">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding ColorPalleteVisibility.Value}" Value="Visible">
+                                                <Setter Property="Content" Value="▲" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ColorPalleteVisibility.Value}" Value="Collapsed">
+                                                <Setter Property="Content" Value="▼" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Label.Style>
+                            </Label>
+                            <Image RenderOptions.BitmapScalingMode="HighQuality" Source="pack://application:,,,/Assets/img/art-pallete.png" />
+                        </StackPanel>
+                    </Button>
                     <DockPanel />
                 </DockPanel>
             </DockPanel>
