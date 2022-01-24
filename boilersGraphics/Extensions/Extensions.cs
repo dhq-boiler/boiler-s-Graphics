@@ -3,6 +3,7 @@ using boilersGraphics.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Windows;
@@ -99,6 +100,112 @@ namespace boilersGraphics.Extensions
         {
             if (depObj != null)
             {
+                if (depObj is Prism.Services.Dialogs.DialogWindow dw)
+                {
+                    var loadObj = dw.Template.LoadContent();
+                    foreach (var childOfChild in FindVisualChildren<DependencyObject>(loadObj))
+                    {
+                        if (childOfChild is ContentPresenter cp)
+                        {
+                            var content = cp.Content as DependencyObject;
+                            if (content is T)
+                            {
+                                yield return (T)content;
+                            }
+                            foreach (var childOfChild2 in FindVisualChildren<DependencyObject>(content))
+                            {
+                                if (childOfChild2 != null && childOfChild2 is T)
+                                {
+                                    yield return (T)childOfChild2;
+                                }
+                            }
+                            if (cp.ContentTemplate != null)
+                            {
+                                var loadObj2 = cp.ContentTemplate.LoadContent();
+                                if (loadObj2 is T)
+                                {
+                                    yield return (T)loadObj2;
+                                }
+                                foreach (var childOfChild2 in FindVisualChildren<DependencyObject>(loadObj2))
+                                {
+                                    if (childOfChild2 != null && childOfChild2 is T)
+                                    {
+                                        yield return (T)childOfChild2;
+                                    }
+                                }
+                            }
+                        }
+                        if (childOfChild is Control c)
+                        {
+                            if (c.Template != null)
+                            {
+                                var loadObj2 = c.Template.LoadContent();
+                                if (loadObj2 is T)
+                                {
+                                    yield return (T)loadObj2;
+                                }
+                                foreach (var childOfChild2 in FindVisualChildren<DependencyObject>(loadObj2))
+                                {
+                                    if (childOfChild2 != null && childOfChild2 is T)
+                                    {
+                                        yield return (T)childOfChild2;
+                                    }
+                                }
+                            }
+                        }
+                        if (childOfChild is ContentControl cc)
+                        {
+                            if (cc.Template != null)
+                            {
+                                var loadObj2 = cc.Template.LoadContent();
+                                if (loadObj2 is T)
+                                {
+                                    yield return (T)loadObj2;
+                                }
+                                foreach (var childOfChild2 in FindVisualChildren<DependencyObject>(loadObj2))
+                                {
+                                    if (childOfChild2 != null && childOfChild2 is T)
+                                    {
+                                        yield return (T)childOfChild2;
+                                    }
+                                }
+                            }
+
+                            if (cc.ContentTemplate != null)
+                            {
+                                var loadObj2 = cc.ContentTemplate.LoadContent();
+                                if (loadObj2 is T)
+                                {
+                                    yield return (T)loadObj2;
+                                }
+                                foreach (var childOfChild2 in FindVisualChildren<DependencyObject>(loadObj2))
+                                {
+                                    if (childOfChild2 != null && childOfChild2 is T)
+                                    {
+                                        yield return (T)childOfChild2;
+                                    }
+                                }
+                            }
+                        }
+                        if (childOfChild != null && childOfChild is T)
+                        {
+                            yield return (T)childOfChild;
+                        }
+                    }
+
+                    if (dw.ContentTemplate != null)
+                    {
+                        loadObj = dw.ContentTemplate.LoadContent();
+                        foreach (var childOfChild in FindVisualChildren<DependencyObject>(loadObj))
+                        {
+                            if (childOfChild != null && childOfChild is T)
+                            {
+                                yield return (T)childOfChild;
+                            }
+                        }
+                    }
+                }
+
                 for (int i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++)
                 {
                     DependencyObject child = VisualTreeHelper.GetChild(depObj, i);
@@ -111,7 +218,9 @@ namespace boilersGraphics.Extensions
                     {
                         var dependencyObject = cp.ContentTemplate.LoadContent();
                         if (dependencyObject is T)
+                        {
                             yield return (T)dependencyObject;
+                        }
                         foreach (T childOfChild in FindVisualChildren<T>(dependencyObject))
                         {
                             yield return childOfChild;

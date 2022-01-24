@@ -211,7 +211,8 @@ namespace boilersGraphics.Test.UITests
 
             TakeScreenShot("SCREENSHOT_PREVIEW.png");
 
-            GetElementBy(By.XPath($"//Window[@ClassName=\"Window\"][@Name=\"{Resources.Title_Export}\"]/Custom[@ClassName=\"Export\"]/Image[@Name=\"Preview\"][@AutomationId=\"Preview\"]")).GetScreenshot().SaveAsFile(previewFilePath);
+            
+            GetElementBy(By.XPath($"//*/Image[@Name=\"Preview\"][@AutomationId=\"Preview\"]")).GetScreenshot().SaveAsFile(previewFilePath);
             Assert.That(previewFilePath, Does.Exist.After(5000, 50));
             TestContext.AddTestAttachment(previewFilePath);
 

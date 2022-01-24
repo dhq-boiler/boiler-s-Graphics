@@ -112,6 +112,10 @@ namespace boilersGraphics.ViewModels
                                                    {
                                                        Old = DiagramViewModel.EdgeColors.FirstOrDefault()
                                                    }
+                                               },
+                                               {
+                                                   "ColorSpots",
+                                                   DiagramViewModel.ColorSpots.Value
                                                }
                                            },
                                            ret => result = ret);
@@ -132,6 +136,11 @@ namespace boilersGraphics.ViewModels
                         }
                         Recorder.EndRecode();
                     }
+                    var colorSpots = result.Parameters.GetValue<ColorSpots>("ColorSpots");
+                    if (colorSpots != null)
+                    {
+                        DiagramViewModel.ColorSpots.Value = colorSpots;
+                    }
                 }
             });
             SelectFillColorCommand = new DelegateCommand<DiagramViewModel>(p =>
@@ -146,6 +155,10 @@ namespace boilersGraphics.ViewModels
                                                    {
                                                        Old = DiagramViewModel.FillColors.FirstOrDefault()
                                                    }
+                                               },
+                                               {
+                                                   "ColorSpots",
+                                                   DiagramViewModel.ColorSpots.Value
                                                }
                                            },
                                            ret => result = ret);
@@ -162,6 +175,11 @@ namespace boilersGraphics.ViewModels
                             Recorder.Current.ExecuteSetProperty(item, "FillColor.Value", exchange.New.Value);
                         }
                         Recorder.EndRecode();
+                    }
+                    var colorSpots = result.Parameters.GetValue<ColorSpots>("ColorSpots");
+                    if (colorSpots != null)
+                    {
+                        DiagramViewModel.ColorSpots.Value = colorSpots;
                     }
                 }
             });

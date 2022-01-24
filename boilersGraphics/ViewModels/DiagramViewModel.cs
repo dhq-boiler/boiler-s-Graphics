@@ -143,6 +143,8 @@ namespace boilersGraphics.ViewModels
 
         public ReactivePropertySlim<Visibility> ContextMenuVisibility { get; } = new ReactivePropertySlim<Visibility>(Visibility.Visible);
 
+        public ReactivePropertySlim<ColorSpots> ColorSpots { get; } = new ReactivePropertySlim<ColorSpots>();
+
         public ObservableCollection<Color> EdgeColors
         {
             get { return _EdgeColors; }
@@ -184,7 +186,7 @@ namespace boilersGraphics.ViewModels
 
         public double ScaleX { get; set; } = 1.0;
         public double ScaleY { get; set; } = 1.0;
-        public System.Version BGSXFileVersion { get; } = new System.Version(2, 2);
+        public System.Version BGSXFileVersion { get; } = new System.Version(2, 3);
 
         public int LayerCount { get; set; } = 1;
 
@@ -521,6 +523,15 @@ namespace boilersGraphics.ViewModels
 
             AngleType.Value = Helpers.AngleType.Minus180To180;
             EnableImageEmbedding.Value = true;
+            ColorSpots.Value = new ColorSpots();
+
+            SettingIfDebug();
+        }
+
+        [Conditional("DEBUG")]
+        private void SettingIfDebug()
+        {
+            EnableAutoSave.Value = false;
         }
 
         private void PackAutoSaveFiles()
@@ -1587,6 +1598,110 @@ namespace boilersGraphics.ViewModels
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "CanvasBackground.Value", (Color)ColorConverter.ConvertFromString(configuration.Element("CanvasBackground").Value));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "EnablePointSnap.Value", bool.Parse(configuration.Element("EnablePointSnap").Value));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(mainwindowViewModel, "SnapPower.Value", double.Parse(configuration.Element("SnapPower").Value));
+                if (configuration.Element("ColorSpots") != null)
+                {
+                    var colorSpots = configuration.Element("ColorSpots");
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot0", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot0").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot1", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot1").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot2", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot2").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot3", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot3").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot4", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot4").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot5", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot5").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot6", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot6").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot7", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot7").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot8", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot8").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot9", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot9").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot10", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot10").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot11", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot11").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot12", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot12").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot13", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot13").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot14", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot14").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot15", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot15").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot16", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot16").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot17", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot17").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot18", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot18").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot19", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot19").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot20", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot20").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot21", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot21").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot22", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot22").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot23", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot23").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot24", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot24").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot25", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot25").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot26", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot26").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot27", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot27").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot28", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot28").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot29", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot29").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot30", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot30").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot31", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot31").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot32", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot32").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot33", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot33").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot34", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot34").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot35", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot35").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot36", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot36").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot37", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot37").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot38", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot38").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot39", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot39").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot40", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot40").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot41", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot41").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot42", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot42").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot43", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot43").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot44", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot44").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot45", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot45").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot46", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot46").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot47", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot47").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot48", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot48").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot49", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot49").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot50", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot50").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot51", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot51").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot52", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot52").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot53", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot53").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot54", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot54").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot55", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot55").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot56", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot56").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot57", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot57").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot58", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot58").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot59", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot59").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot60", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot60").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot61", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot61").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot62", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot62").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot63", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot63").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot64", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot64").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot65", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot65").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot66", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot66").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot67", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot67").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot68", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot68").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot69", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot69").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot70", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot70").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot71", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot71").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot72", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot72").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot73", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot73").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot74", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot74").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot75", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot75").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot76", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot76").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot77", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot77").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot78", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot78").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot79", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot79").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot80", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot80").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot81", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot81").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot82", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot82").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot83", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot83").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot84", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot84").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot85", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot85").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot86", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot86").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot87", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot87").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot88", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot88").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot89", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot89").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot90", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot90").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot91", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot91").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot92", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot92").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot93", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot93").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot94", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot94").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot95", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot95").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot96", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot96").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot97", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot97").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot98", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot98").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot99", (Color)ColorConverter.ConvertFromString(colorSpots.Element("ColorSpot99").Value));
+                }
 
                 InitialSetting(mainwindowViewModel, false, false);
 
