@@ -1,17 +1,15 @@
 ﻿<UserControl x:Class="boilersGraphics.Views.ColorPicker"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:prism="http://prismlibrary.com/"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:attached="clr-namespace:boilersGraphics.AttachedProperties"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:control="clr-namespace:boilersGraphics.Controls"
              xmlns:converter="clr-namespace:boilersGraphics.Converters"
              xmlns:helper="clr-namespace:boilersGraphics.Helpers"
-             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:boilersGraphics.Views"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:prism="http://prismlibrary.com/"
-             xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
              xmlns:ViewModels="clr-namespace:boilersGraphics.ViewModels"
+             xmlns:local="clr-namespace:boilersGraphics.Views"
              d:DataContext="{d:DesignInstance Type=ViewModels:ColorPickerViewModel}"
              x:Name="colorPicker"
              prism:ViewModelLocator.AutoWireViewModel="True"
@@ -309,8 +307,7 @@
                         <Setter Property="Margin" Value="5" />
                     </Style>
                 </control:SimpleGrid.Resources>
-                <local:ColorSpot x:Name="colorSpot0" Color="{Binding ColorSpot0.Value, Mode=TwoWay, diag:PresentationTraceSources.TraceLevel=High}" Command="{Binding SpotSelectCommand}"/>
-                <!--
+                <local:ColorSpot x:Name="colorSpot0" Color="{Binding ColorSpot0.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
                 <local:ColorSpot x:Name="colorSpot1" Color="{Binding ColorSpot1.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
                 <local:ColorSpot x:Name="colorSpot2" Color="{Binding ColorSpot2.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
                 <local:ColorSpot x:Name="colorSpot3" Color="{Binding ColorSpot3.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
@@ -410,7 +407,6 @@
                 <local:ColorSpot x:Name="colorSpot97" Color="{Binding ColorSpot97.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
                 <local:ColorSpot x:Name="colorSpot98" Color="{Binding ColorSpot98.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
                 <local:ColorSpot x:Name="colorSpot99" Color="{Binding ColorSpot99.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                -->
             </control:SimpleGrid>
         </DockPanel>
         <DockPanel Width="266" DockPanel.Dock="Left">
