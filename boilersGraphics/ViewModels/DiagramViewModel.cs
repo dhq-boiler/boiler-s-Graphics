@@ -1118,9 +1118,45 @@ namespace boilersGraphics.ViewModels
         private void ExecutePasteCommand()
         {
             var obj = Clipboard.GetDataObject();
-            var clipboardDTO = obj.GetData(typeof(ClipboardDTO)) as ClipboardDTO;
-            var root = XElement.Parse(clipboardDTO.Root);
-            ObjectDeserializer.ReadCopyObjectsFromXML(this, root);
+            if (obj.GetDataPresent(typeof(ClipboardDTO)))
+            {
+                var clipboardDTO = obj.GetData(typeof(ClipboardDTO)) as ClipboardDTO;
+                var root = XElement.Parse(clipboardDTO.Root);
+                ObjectDeserializer.ReadCopyObjectsFromXML(this, root);
+            }
+            else if (Clipboard.ContainsImage())
+            {
+                var bitmap = Clipboard.GetImage();
+                var pic = new PictureDesignerItemViewModel();
+                pic.Owner = this;
+                JpegBitmapEncoder encoder = new JpegBitmapEncoder();
+                MemoryStream memoryStream = new MemoryStream();
+                BitmapImage bImg = new BitmapImage();
+
+                encoder.Frames.Add(BitmapFrame.Create(bitmap));
+                encoder.Save(memoryStream);
+
+                memoryStream.Position = 0;
+                bImg.BeginInit();
+                bImg.CacheOption = BitmapCacheOption.OnLoad;
+                bImg.StreamSource = memoryStream;
+                bImg.EndInit();
+                bImg.Freeze();
+
+                memoryStream.Close();
+                pic.EmbeddedImage.Value = bImg;
+                pic.Left.Value = 0;
+                pic.Top.Value = 0;
+                pic.Width.Value = bImg.PixelWidth;
+                pic.Height.Value = bImg.PixelHeight;
+                pic.FileWidth = bImg.PixelWidth;
+                pic.FileHeight = bImg.PixelHeight;
+                pic.IsVisible.Value = true;
+                pic.IsSelected.Value = true;
+                pic.IsHitTestVisible.Value = true;
+                pic.ZIndex.Value = pic.Owner.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).Count();
+                Add(pic);
+            }
             UpdateStatisticsCountPaste();
         }
 
@@ -1170,6 +1206,10 @@ namespace boilersGraphics.ViewModels
                 {
                     return false;
                 }
+            }
+            else if (Clipboard.ContainsImage())
+            {
+                return true;
             }
             return false;
         }
