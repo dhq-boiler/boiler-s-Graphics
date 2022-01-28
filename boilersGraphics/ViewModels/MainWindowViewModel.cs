@@ -25,6 +25,7 @@ using System.Reactive.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
+using System.Windows.Media;
 using TsOperationHistory;
 using TsOperationHistory.Extensions;
 
@@ -110,7 +111,7 @@ namespace boilersGraphics.ViewModels
                                                    "ColorExchange",
                                                    new ColorExchange()
                                                    {
-                                                       Old = DiagramViewModel.EdgeColors.FirstOrDefault()
+                                                       Old = (DiagramViewModel.EdgeBrush.Value as SolidColorBrush).Color
                                                    }
                                                },
                                                {
@@ -125,8 +126,7 @@ namespace boilersGraphics.ViewModels
                     if (exchange != null)
                     {
                         Recorder.BeginRecode();
-                        DiagramViewModel.EdgeColors.ToClearOperation().ExecuteTo(Recorder.Current);
-                        DiagramViewModel.EdgeColors.ToAddOperation(exchange.New.Value).ExecuteTo(Recorder.Current);
+                        Recorder.Current.ExecuteSetProperty(DiagramViewModel, "EdgeBrush.Value", new SolidColorBrush(exchange.New.Value));
                         foreach (var item in DiagramViewModel.SelectedItems.Value.OfType<SelectableDesignerItemViewModelBase>())
                         {
                             if (item is SnapPointViewModel snapPoint)

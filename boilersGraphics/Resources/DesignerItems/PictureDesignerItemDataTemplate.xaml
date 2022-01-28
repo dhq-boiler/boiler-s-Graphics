@@ -6,7 +6,7 @@
         <DataTemplate.Resources>
             <converters:ToFileNameOrBitmapImage x:Key="ToFileNameOrBitmapImage" />
         </DataTemplate.Resources>
-        <Border BorderBrush="{Binding EdgeColor.Value, Converter={StaticResource solidColorBrushConverter}}" BorderThickness="{Binding EdgeThickness.Value}">
+        <Border BorderBrush="{Binding EdgeBrush.Value}" BorderThickness="{Binding EdgeThickness.Value}">
             <Image Clip="{Binding Clip.Value}"
                    IsHitTestVisible="False"
                    Source="{Binding Converter={StaticResource ToFileNameOrBitmapImage}}"

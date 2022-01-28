@@ -62,6 +62,8 @@ namespace boilersGraphics.ViewModels
 
         public ReactivePropertySlim<Color> EdgeColor { get; } = new ReactivePropertySlim<Color>();
 
+        public ReactivePropertySlim<Brush> EdgeBrush { get; } = new ReactivePropertySlim<Brush>();
+
         public ReactivePropertySlim<double> EdgeThickness { get; } = new ReactivePropertySlim<double>();
 
         public ReactivePropertySlim<PathGeometry> PathGeometry { get; set; } = new ReactivePropertySlim<PathGeometry>();

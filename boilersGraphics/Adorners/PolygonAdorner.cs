@@ -36,7 +36,7 @@ namespace boilersGraphics.Adorners
             _designerCanvas = designerCanvas;
             _dragStartPoint = dragStartPoint;
             var parent = (AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel;
-            var brush = new SolidColorBrush(parent.EdgeColors.First());
+            var brush = parent.EdgeBrush.Value.Clone();
             brush.Opacity = 0.5;
             _edgePen = new Pen(brush, parent.EdgeThickness.Value.Value);
             _data = data;
@@ -85,7 +85,7 @@ namespace boilersGraphics.Adorners
                 item.Top.Value = Math.Min(_dragStartPoint.Value.Y, _dragEndPoint.Value.Y);
                 item.Width.Value = Math.Max(_dragStartPoint.Value.X - _dragEndPoint.Value.X, _dragEndPoint.Value.X - _dragStartPoint.Value.X);
                 item.Height.Value = Math.Max(_dragStartPoint.Value.Y - _dragEndPoint.Value.Y, _dragEndPoint.Value.Y - _dragStartPoint.Value.Y);
-                item.EdgeColor.Value = item.Owner.EdgeColors.First();
+                item.EdgeBrush.Value = item.Owner.EdgeBrush.Value.Clone();
                 item.FillColor.Value = item.Owner.FillColors.First();
                 item.EdgeThickness.Value = item.Owner.EdgeThickness.Value.Value;
                 item.ZIndex.Value = item.Owner.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).Count();

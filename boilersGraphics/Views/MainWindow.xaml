@@ -599,7 +599,7 @@
                                     </Grid.RowDefinitions>
                                     <Line Grid.Row="0"
                                           Grid.Column="0"
-                                          Stroke="{Binding DataContext.DiagramViewModel.EdgeColors[0], Converter={StaticResource solidColorBrushConverter}, ElementName=EdgeThicknessComboBox}"
+                                          Stroke="{Binding DataContext.DiagramViewModel.EdgeBrush.Value, ElementName=EdgeThicknessComboBox}"
                                           StrokeThickness="{Binding}"
                                           X1="0"
                                           X2="75"
@@ -668,7 +668,7 @@
                                                Height="16"
                                                Margin="2"
                                                Fill="Transparent"
-                                               Stroke="{Binding DiagramViewModel.EdgeColors, Converter={StaticResource StrokeColorConverter}}"
+                                               Stroke="{Binding DiagramViewModel.EdgeBrush.Value}"
                                                StrokeThickness="4" />
                                 </Grid>
                             </ControlTemplate>

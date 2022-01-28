@@ -66,7 +66,7 @@ namespace boilersGraphics.Adorners
                 itemBase.Top.Value = Math.Max(0, _startPoint.Value.Y);
                 itemBase.Width.Value = Math.Abs(_endPoint.Value.X - _startPoint.Value.X);
                 itemBase.Height.Value = Math.Abs(_endPoint.Value.Y - _startPoint.Value.Y);
-                itemBase.EdgeColor.Value = itemBase.Owner.EdgeColors.First();
+                itemBase.EdgeBrush.Value = itemBase.Owner.EdgeBrush.Value.Clone();
                 itemBase.EdgeThickness.Value = itemBase.Owner.EdgeThickness.Value.Value;
                 itemBase.FillColor.Value = itemBase.Owner.FillColors.First();
                 itemBase.IsSelected.Value = true;

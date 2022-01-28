@@ -28,7 +28,7 @@ namespace boilersGraphics.Test
             var diagramViewModel = new DiagramViewModel(mainWindowViewModel, 100, 100);
             var designerCanvas = new DesignerCanvas();
             designerCanvas.DataContext = diagramViewModel;
-            diagramViewModel.EdgeColors.Add(Colors.Red);
+            diagramViewModel.EdgeBrush.Value = new SolidColorBrush(Colors.Red);
             diagramViewModel.EdgeThickness.Value = 1.0;
             var adorner = new BezierCurveAdorner(designerCanvas, new System.Windows.Point() { X = 100, Y = 100 });
             var po = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject(adorner);

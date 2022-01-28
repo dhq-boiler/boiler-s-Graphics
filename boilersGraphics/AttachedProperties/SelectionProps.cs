@@ -101,7 +101,6 @@ namespace boilersGraphics.AttachedProperties
                 else
                 {
                     selectableDesignerItemViewModelBase.Owner.DeselectAll();
-                    selectableDesignerItemViewModelBase.Owner.EdgeColors.Clear();
                     selectableDesignerItemViewModelBase.Owner.FillColors.Clear();
                     selectableDesignerItemViewModelBase.Owner.EdgeThickness.Value = double.NaN;
                     selectableDesignerItemViewModelBase.IsSelected.Value = true;
@@ -137,7 +136,7 @@ namespace boilersGraphics.AttachedProperties
                     {
                         edgeColor = (selectableDesignerItemViewModelBase as ConnectorBaseViewModel).EdgeColor.Value;
                     }
-                    selectableDesignerItemViewModelBase.Owner.EdgeColors.Add(edgeColor);
+                    selectableDesignerItemViewModelBase.Owner.EdgeBrush.Value = new SolidColorBrush(edgeColor);
                     selectableDesignerItemViewModelBase.Owner.FillColors.Add(fillColor);
 
                     var owner = selectableDesignerItemViewModelBase.Owner;

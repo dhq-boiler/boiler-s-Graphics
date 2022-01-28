@@ -29,7 +29,7 @@ namespace boilersGraphics.Adorners
             _designerCanvas = designerCanvas;
             _startPoint = dragStartPoint;
             var parent = (AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel;
-            var brush = new SolidColorBrush(parent.EdgeColors.First());
+            var brush = parent.EdgeBrush.Value.Clone();
             brush.Opacity = 0.5;
             _ellipsePen = new Pen(brush, parent.EdgeThickness.Value.Value);
         }
@@ -122,7 +122,7 @@ namespace boilersGraphics.Adorners
 
                 Dilate(item);
 
-                item.EdgeColor.Value = item.Owner.EdgeColors.First();
+                item.EdgeBrush.Value = item.Owner.EdgeBrush.Value.Clone();
                 item.EdgeThickness.Value = item.Owner.EdgeThickness.Value.Value;
                 item.FillColor.Value = item.Owner.FillColors.First();
                 item.ZIndex.Value = item.Owner.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).Count();

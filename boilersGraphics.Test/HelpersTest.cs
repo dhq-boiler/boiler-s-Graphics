@@ -62,8 +62,7 @@ namespace boilersGraphics.Test
             desingerCanvas.DataContext = diagramViewModel;
             diagramViewModel.FillColors.Clear();
             diagramViewModel.FillColors.Add(Colors.Red);
-            diagramViewModel.EdgeColors.Clear();
-            diagramViewModel.EdgeColors.Add(Colors.Transparent);
+            diagramViewModel.EdgeBrush.Value = new SolidColorBrush(Colors.Transparent);
             diagramViewModel.EdgeThickness.Value = 1.0;
             diagramViewModel.Layers.Clear();
             var layer1 = new Layer();
@@ -91,7 +90,7 @@ namespace boilersGraphics.Test
             var desingerCanvas = new DesignerCanvas();
             desingerCanvas.DataContext = diagramViewModel;
             diagramViewModel.FillColors.Add(Colors.Red);
-            diagramViewModel.EdgeColors.Add(Colors.Transparent);
+            diagramViewModel.EdgeBrush.Value = new SolidColorBrush(Colors.Transparent);
             diagramViewModel.EdgeThickness.Value = 1.0;
             diagramViewModel.Layers.Clear();
             var layer1 = new Layer();
@@ -118,7 +117,7 @@ namespace boilersGraphics.Test
             var designerCanvas = new DesignerCanvas();
             designerCanvas.DataContext = diagramViewModel;
             diagramViewModel.FillColors.Add(Colors.Red);
-            diagramViewModel.EdgeColors.Add(Colors.Transparent);
+            diagramViewModel.EdgeBrush.Value = new SolidColorBrush(Colors.Transparent);
             diagramViewModel.EdgeThickness.Value = 1.0;
             diagramViewModel.Layers.Clear();
             var layer1 = new Layer();
@@ -143,7 +142,7 @@ namespace boilersGraphics.Test
             var designerCanvas = new DesignerCanvas();
             designerCanvas.DataContext = diagramViewModel;
             diagramViewModel.FillColors.Add(Colors.Red);
-            diagramViewModel.EdgeColors.Add(Colors.Transparent);
+            diagramViewModel.EdgeBrush.Value = new SolidColorBrush(Colors.Transparent);
             diagramViewModel.EdgeThickness.Value = 1.0;
             diagramViewModel.Layers.Clear();
             var layer1 = new Layer();
@@ -174,7 +173,7 @@ namespace boilersGraphics.Test
             var desingerCanvas = new DesignerCanvas();
             desingerCanvas.DataContext = diagramViewModel;
             diagramViewModel.FillColors.Add(Colors.Red);
-            diagramViewModel.EdgeColors.Add(Colors.Transparent);
+            diagramViewModel.EdgeBrush.Value = new SolidColorBrush(Colors.Transparent);
             diagramViewModel.EdgeThickness.Value = 1.0;
             diagramViewModel.Layers.Clear();
             var layer1 = new Layer();
@@ -203,7 +202,7 @@ namespace boilersGraphics.Test
             var designerCanvas = new DesignerCanvas();
             designerCanvas.DataContext = diagramViewModel;
             diagramViewModel.FillColors.Add(Colors.Red);
-            diagramViewModel.EdgeColors.Add(Colors.Transparent);
+            diagramViewModel.EdgeBrush.Value = new SolidColorBrush(Colors.Transparent);
             diagramViewModel.EdgeThickness.Value = 1.0;
             diagramViewModel.Layers.Clear();
             var layer1 = new Layer();

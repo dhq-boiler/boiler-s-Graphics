@@ -12,7 +12,7 @@
               Focusable="True"
               IsHitTestVisible="False"
               Stretch="None"
-              Stroke="{Binding EdgeColor.Value, Converter={StaticResource solidColorBrushConverter}}"
+              Stroke="{Binding EdgeBrush.Value}"
               StrokeThickness="{Binding EdgeThickness.Value}"
               StrokeLineJoin="{Binding PenLineJoin.Value}"
               StrokeDashArray="{Binding StrokeDashArray.Value}">

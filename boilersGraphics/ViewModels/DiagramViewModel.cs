@@ -39,7 +39,6 @@ namespace boilersGraphics.ViewModels
         public MainWindowViewModel MainWindowVM { get; private set; }
         private IDialogService dlgService;
         private Point _CurrentPoint;
-        private ObservableCollection<Color> _EdgeColors = new ObservableCollection<Color>();
         private ObservableCollection<Color> _FillColors = new ObservableCollection<Color>();
         private CompositeDisposable _CompositeDisposable = new CompositeDisposable();
         private int _Width;
@@ -145,11 +144,7 @@ namespace boilersGraphics.ViewModels
 
         public ReactivePropertySlim<ColorSpots> ColorSpots { get; } = new ReactivePropertySlim<ColorSpots>();
 
-        public ObservableCollection<Color> EdgeColors
-        {
-            get { return _EdgeColors; }
-            set { SetProperty(ref _EdgeColors, value); }
-        }
+        public ReactivePropertySlim<Brush> EdgeBrush { get; } = new ReactivePropertySlim<Brush>();
 
         public ObservableCollection<Color> FillColors
         {
@@ -384,9 +379,9 @@ namespace boilersGraphics.ViewModels
                 //BackgroundItem.Value.FillColor.Value = Colors.Red;
             });
 
-            EdgeColors.CollectionChangedAsObservable()
-                .Subscribe(_ => RaisePropertyChanged("EdgeColors"))
-                .AddTo(_CompositeDisposable);
+            //EdgeColors.CollectionChangedAsObservable()
+            //    .Subscribe(_ => RaisePropertyChanged("EdgeColors"))
+            //    .AddTo(_CompositeDisposable);
             FillColors.CollectionChangedAsObservable()
                 .Subscribe(_ => RaisePropertyChanged("FillColors"))
                 .AddTo(_CompositeDisposable);
@@ -739,7 +734,7 @@ namespace boilersGraphics.ViewModels
 
         private void InitialSetting(MainWindowViewModel mainwindowViewModel, bool addingLayer = false, bool initCanvasBackground = false)
         {
-            mainwindowViewModel.Recorder.Current.ExecuteAdd(EdgeColors, Colors.Black);
+            mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "EdgeBrush.Value", new SolidColorBrush(Colors.Black));
             mainwindowViewModel.Recorder.Current.ExecuteAdd(FillColors, Colors.White);
             mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "EdgeThickness.Value", 1.0);
             mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "CanvasBorderThickness", 0.0);
@@ -755,7 +750,7 @@ namespace boilersGraphics.ViewModels
             mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.Width.Value", (double)Width);
             mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.Height.Value", (double)Height);
             mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.Owner", this);
-            mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.EdgeColor.Value", Colors.Black);
+            mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.EdgeBrush.Value", new SolidColorBrush(Colors.Black));
             mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.EdgeThickness.Value", 1d);
             mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.EnableForSelection.Value", false);
             mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.IsVisible.Value", true);
