@@ -76,7 +76,7 @@ namespace boilersGraphics.Test
 
             Assert.That(vm.Width.Value, Is.EqualTo(1000));
             Assert.That(vm.Height.Value, Is.EqualTo(1000));
-            Assert.That(vm.EdgeColor.Value, Is.EqualTo(Colors.Transparent));
+            Assert.That((vm.EdgeBrush.Value as SolidColorBrush).Color, Is.EqualTo(new SolidColorBrush(Colors.Transparent).Color));
             Assert.That(vm.FillColor.Value, Is.EqualTo(Colors.Red));
         }
 
