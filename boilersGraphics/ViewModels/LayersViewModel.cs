@@ -164,13 +164,11 @@ namespace boilersGraphics.ViewModels
                     {
                         if (layerItems.Where(x => x.IsSelected.Value == true).Count() > 1)
                         {
-                            mainWindowVM.DiagramViewModel.FillColors.Clear();
                         }
                         else
                         {
-                            mainWindowVM.DiagramViewModel.FillColors.Clear();
                             mainWindowVM.DiagramViewModel.EdgeBrush.Value = designerItem.EdgeBrush.Value.Clone();
-                            mainWindowVM.DiagramViewModel.FillColors.Add(designerItem.FillColor.Value);
+                            mainWindowVM.DiagramViewModel.FillBrush.Value = designerItem.FillBrush.Value.Clone();
                         }
                     }
 

@@ -124,7 +124,7 @@ namespace boilersGraphics.Adorners
 
                 item.EdgeBrush.Value = item.Owner.EdgeBrush.Value.Clone();
                 item.EdgeThickness.Value = item.Owner.EdgeThickness.Value.Value;
-                item.FillColor.Value = item.Owner.FillColors.First();
+                item.FillBrush.Value = item.Owner.FillBrush.Value.Clone();
                 item.ZIndex.Value = item.Owner.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).Count();
                 item.PathGeometry.Value = GeometryCreator.CreateEllipse(item);
                 item.IsSelected.Value = true;
@@ -182,7 +182,7 @@ namespace boilersGraphics.Adorners
                     var center = new Point((_endPoint.Value.X + _startPoint.Value.X) / 2, (_endPoint.Value.Y + _startPoint.Value.Y) / 2);
                     var radiusX = (_endPoint.Value.X - _startPoint.Value.X) / 2;
                     var radiusY = (_endPoint.Value.Y - _startPoint.Value.Y) / 2;
-                    dc.DrawEllipse(Brushes.Transparent, _ellipsePen, center, radiusX, radiusY);
+                    dc.DrawEllipse(((AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel).FillBrush.Value.Clone(), _ellipsePen, center, radiusX, radiusY);
                 }
                 else if ((Keyboard.GetKeyStates(Key.LeftAlt) & KeyStates.Down) == KeyStates.Down ||
                          (Keyboard.GetKeyStates(Key.RightAlt) & KeyStates.Down) == KeyStates.Down)
@@ -196,14 +196,14 @@ namespace boilersGraphics.Adorners
                     //var center = new Point((_endPoint.Value.X + _startPoint.Value.X) / 2, (_endPoint.Value.Y + _startPoint.Value.Y) / 2);
                     var radiusX = (_endPoint.Value.X - _startPoint.Value.X) / 2;
                     var radiusY = (_endPoint.Value.Y - _startPoint.Value.Y) / 2;
-                    dc.DrawEllipse(Brushes.Transparent, _ellipsePen, _startPoint.Value, radiusX, radiusY);
+                    dc.DrawEllipse(((AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel).FillBrush.Value.Clone(), _ellipsePen, _startPoint.Value, radiusX, radiusY);
                 }
                 else
                 {
                     var center = new Point((_endPoint.Value.X + _startPoint.Value.X) / 2, (_endPoint.Value.Y + _startPoint.Value.Y) / 2);
                     var radiusX = (_endPoint.Value.X - _startPoint.Value.X) / 2;
                     var radiusY = (_endPoint.Value.Y - _startPoint.Value.Y) / 2;
-                    dc.DrawEllipse(Brushes.Transparent, _ellipsePen, center, radiusX, radiusY);
+                    dc.DrawEllipse(((AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel).FillBrush.Value.Clone(), _ellipsePen, center, radiusX, radiusY);
                 }
             }
         }

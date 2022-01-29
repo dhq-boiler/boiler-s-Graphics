@@ -77,7 +77,7 @@ namespace boilersGraphics.Adorners
                 item.Width.Value = Math.Max(_startPoint.Value.X - _endPoint.Value.X, _endPoint.Value.X - _startPoint.Value.X);
                 item.Height.Value = Math.Max(_startPoint.Value.Y - _endPoint.Value.Y, _endPoint.Value.Y - _startPoint.Value.Y);
                 item.EdgeBrush.Value = item.Owner.EdgeBrush.Value.Clone();
-                item.FillColor.Value = item.Owner.FillColors.First();
+                item.FillBrush.Value = item.Owner.FillBrush.Value.Clone();
                 item.EdgeThickness.Value = item.Owner.EdgeThickness.Value.Value;
                 item.ZIndex.Value = item.Owner.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).Count();
                 item.PathGeometry.Value = GeometryCreator.CreateRectangle(item);
@@ -134,7 +134,7 @@ namespace boilersGraphics.Adorners
             dc.DrawRectangle(Brushes.Transparent, null, new Rect(RenderSize));
 
             if (_startPoint.HasValue && _endPoint.HasValue)
-                dc.DrawRectangle(Brushes.Transparent, _rectanglePen, ShiftEdgeThickness());
+                dc.DrawRectangle(((AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel).FillBrush.Value.Clone(), _rectanglePen, ShiftEdgeThickness());
         }
 
         private Rect ShiftEdgeThickness()

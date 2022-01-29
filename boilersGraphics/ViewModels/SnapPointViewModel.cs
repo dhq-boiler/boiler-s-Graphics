@@ -66,11 +66,11 @@ namespace boilersGraphics.ViewModels
         public override object Clone()
         {
             var clone = new SnapPointViewModel();
-            clone.EdgeColor.Value = EdgeColor.Value;
+            clone.EdgeBrush.Value = EdgeBrush.Value;
+            clone.FillBrush.Value = FillBrush.Value;
             clone.EdgeThickness.Value = EdgeThickness.Value;
             clone.EnableForSelection.Value = EnableForSelection.Value;
             clone.EnablePathGeometryUpdate.Value = EnablePathGeometryUpdate.Value;
-            clone.FillColor.Value = FillColor.Value;
             clone.ID = ID;
             clone.IsHitTestVisible.Value = IsHitTestVisible.Value;
             clone.IsSelected.Value = IsSelected.Value;

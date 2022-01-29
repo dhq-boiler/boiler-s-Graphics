@@ -145,12 +145,7 @@ namespace boilersGraphics.ViewModels
         public ReactivePropertySlim<ColorSpots> ColorSpots { get; } = new ReactivePropertySlim<ColorSpots>();
 
         public ReactivePropertySlim<Brush> EdgeBrush { get; } = new ReactivePropertySlim<Brush>();
-
-        public ObservableCollection<Color> FillColors
-        {
-            get { return _FillColors; }
-            set { SetProperty(ref _FillColors, value); }
-        }
+        public ReactivePropertySlim<Brush> FillBrush { get; } = new ReactivePropertySlim<Brush>();
 
         public int Width
         {
@@ -181,7 +176,7 @@ namespace boilersGraphics.ViewModels
 
         public double ScaleX { get; set; } = 1.0;
         public double ScaleY { get; set; } = 1.0;
-        public System.Version BGSXFileVersion { get; } = new System.Version(2, 3);
+        public System.Version BGSXFileVersion { get; } = new System.Version(2, 4);
 
         public int LayerCount { get; set; } = 1;
 
@@ -382,9 +377,9 @@ namespace boilersGraphics.ViewModels
             //EdgeColors.CollectionChangedAsObservable()
             //    .Subscribe(_ => RaisePropertyChanged("EdgeColors"))
             //    .AddTo(_CompositeDisposable);
-            FillColors.CollectionChangedAsObservable()
-                .Subscribe(_ => RaisePropertyChanged("FillColors"))
-                .AddTo(_CompositeDisposable);
+            //FillColors.CollectionChangedAsObservable()
+            //    .Subscribe(_ => RaisePropertyChanged("FillColors"))
+            //    .AddTo(_CompositeDisposable);
 
             Layers = RootLayer.Value.Children.CollectionChangedAsObservable()
                            .Select(_ => RootLayer.Value.LayerChangedAsObservable())
@@ -735,7 +730,7 @@ namespace boilersGraphics.ViewModels
         private void InitialSetting(MainWindowViewModel mainwindowViewModel, bool addingLayer = false, bool initCanvasBackground = false)
         {
             mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "EdgeBrush.Value", new SolidColorBrush(Colors.Black));
-            mainwindowViewModel.Recorder.Current.ExecuteAdd(FillColors, Colors.White);
+            mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "FillBrush.Value", new SolidColorBrush(Colors.White));
             mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "EdgeThickness.Value", 1.0);
             mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "CanvasBorderThickness", 0.0);
             if (initCanvasBackground)
@@ -744,7 +739,7 @@ namespace boilersGraphics.ViewModels
             }
             mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value", new BackgroundViewModel());
             mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.ZIndex.Value", -1);
-            mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.FillColor.Value", CanvasBackground.Value);
+            mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.FillBrush.Value", new SolidColorBrush(CanvasBackground.Value));
             mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.Left.Value", 0d);
             mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.Top.Value", 0d);
             mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.Width.Value", (double)Width);
@@ -940,7 +935,7 @@ namespace boilersGraphics.ViewModels
             {
                 Remove(pb);
                 var combine = new CombineGeometryViewModel();
-                MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "EdgeColor.Value", pb.EdgeColor.Value);
+                MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "EdgeBrush.Value", pb.EdgeBrush.Value);
                 MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "EdgeThickness.Value", pb.EdgeThickness.Value);
                 MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "IsSelected.Value", true);
                 MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "Owner", this);
@@ -959,7 +954,7 @@ namespace boilersGraphics.ViewModels
                 var combine = new CombineGeometryViewModel();
                 Remove(item1);
                 Remove(item2);
-                MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "EdgeColor.Value", item1.EdgeColor.Value);
+                MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "EdgeBrush.Value", item1.EdgeBrush.Value);
                 MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "EdgeThickness.Value", item1.EdgeThickness.Value);
                 MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "IsSelected.Value", true);
                 MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "Owner", this);
@@ -1305,7 +1300,7 @@ namespace boilersGraphics.ViewModels
                 Width = s.Width.Value;
                 Height = s.Height.Value;
                 CanvasBackground.Value = s.CanvasBackground.Value;
-                BackgroundItem.Value.FillColor.Value = CanvasBackground.Value;
+                BackgroundItem.Value.FillBrush.Value = new SolidColorBrush(CanvasBackground.Value);
                 EnablePointSnap.Value = s.EnablePointSnap.Value;
                 (App.Current.MainWindow.DataContext as MainWindowViewModel).SnapPower.Value = s.SnapPower.Value;
                 BackgroundItem.Value.Width.Value = Width;

@@ -7,7 +7,7 @@
     <DataTemplate DataType="{x:Type viewModel:NPolygonViewModel}">
         <Grid>
             <Path Data="{Binding Data.Value}"
-                  Fill="{Binding FillColor.Value, Converter={StaticResource solidColorBrushConverter}}"
+                  Fill="{Binding FillBrush.Value}"
                   IsHitTestVisible="False"
                   Stretch="Fill"
                   Stroke="{Binding EdgeBrush.Value}"

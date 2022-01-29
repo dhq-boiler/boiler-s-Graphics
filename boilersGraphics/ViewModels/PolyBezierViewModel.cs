@@ -65,7 +65,8 @@ namespace boilersGraphics.ViewModels
         public override object Clone()
         {
             var clone = new PolyBezierViewModel(0, Owner);
-            clone.EdgeColor.Value = EdgeColor.Value;
+            clone.EdgeBrush.Value = EdgeBrush.Value;
+            clone.FillBrush.Value = FillBrush.Value;
             clone.EdgeThickness.Value = EdgeThickness.Value;
             clone.Points = Points;
             clone.PathGeometry.Value = GeometryCreator.CreatePolyBezier(clone);

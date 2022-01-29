@@ -8,7 +8,7 @@
     <convereter:ToSolidColorBrushConverter x:Key="solidColorBrushConverter" />
     <DataTemplate DataType="{x:Type viewModel:BrushViewModel}">
         <Path Data="{Binding PathGeometry.Value}"
-              Fill="{Binding FillColor.Value, Converter={StaticResource solidColorBrushConverter}}"
+              Fill="{Binding FillBrush.Value}"
               Focusable="True"
               IsHitTestVisible="False"
               Stretch="None"

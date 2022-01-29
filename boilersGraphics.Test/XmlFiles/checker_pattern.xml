@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <boilersGraphics>
-  <Version>2.2</Version>
+  <Version>2.4</Version>
   <Layers>
     <Layer>
       <IsVisible>true</IsVisible>
@@ -21,12 +21,11 @@
               <Width>100</Width>
               <Height>100</Height>
               <ZIndex>0</ZIndex>
-              <Matrix>Identity</Matrix>
-              <EdgeColor>#FF000000</EdgeColor>
-              <FillColor>#FF000000</FillColor>
+              <EdgeBrush>#FF000000</EdgeBrush>
+              <FillBrush>#FF000000</FillBrush>
               <EdgeThickness>1</EdgeThickness>
               <PathGeometry>M0,0L100,0 100,100 0,100z</PathGeometry>
-		      <RotationAngle>0</RotationAngle>
+              <RotationAngle>0</RotationAngle>
             </DesignerItem>
           </Item>
           <Children />
@@ -45,12 +44,11 @@
               <Width>100</Width>
               <Height>100</Height>
               <ZIndex>1</ZIndex>
-              <Matrix>Identity</Matrix>
-              <EdgeColor>#FF000000</EdgeColor>
-              <FillColor>#FF000000</FillColor>
+              <EdgeBrush>#FF000000</EdgeBrush>
+              <FillBrush>#FF000000</FillBrush>
               <EdgeThickness>1</EdgeThickness>
               <PathGeometry>M900,900L1000,900 1000,1000 900,1000z</PathGeometry>
-		      <RotationAngle>0</RotationAngle>
+              <RotationAngle>0</RotationAngle>
             </DesignerItem>
           </Item>
           <Children />
@@ -69,12 +67,11 @@
               <Width>100</Width>
               <Height>100</Height>
               <ZIndex>2</ZIndex>
-              <Matrix>Identity</Matrix>
-              <EdgeColor>#FF000000</EdgeColor>
-              <FillColor>#FF000000</FillColor>
+              <EdgeBrush>#FF000000</EdgeBrush>
+              <FillBrush>#FF000000</FillBrush>
               <EdgeThickness>1</EdgeThickness>
               <PathGeometry>M100,100L200,100 200,200 100,200z</PathGeometry>
-			  <RotationAngle>0</RotationAngle>
+              <RotationAngle>0</RotationAngle>
             </DesignerItem>
           </Item>
           <Children />
@@ -93,12 +90,11 @@
               <Width>100</Width>
               <Height>100</Height>
               <ZIndex>3</ZIndex>
-              <Matrix>Identity</Matrix>
-              <EdgeColor>#FF000000</EdgeColor>
-              <FillColor>#FF000000</FillColor>
+              <EdgeBrush>#FF000000</EdgeBrush>
+              <FillBrush>#FF000000</FillBrush>
               <EdgeThickness>1</EdgeThickness>
               <PathGeometry>M200,200L300,200 300,300 200,300z</PathGeometry>
-			  <RotationAngle>0</RotationAngle>
+              <RotationAngle>0</RotationAngle>
             </DesignerItem>
           </Item>
           <Children />
@@ -117,12 +113,11 @@
               <Width>100</Width>
               <Height>100</Height>
               <ZIndex>4</ZIndex>
-              <Matrix>Identity</Matrix>
-              <EdgeColor>#FF000000</EdgeColor>
-              <FillColor>#FF000000</FillColor>
+              <EdgeBrush>#FF000000</EdgeBrush>
+              <FillBrush>#FF000000</FillBrush>
               <EdgeThickness>1</EdgeThickness>
               <PathGeometry>M300,300L400,300 400,400 300,400z</PathGeometry>
-			  <RotationAngle>0</RotationAngle>
+              <RotationAngle>0</RotationAngle>
             </DesignerItem>
           </Item>
           <Children />
@@ -141,12 +136,11 @@
               <Width>100</Width>
               <Height>100</Height>
               <ZIndex>5</ZIndex>
-              <Matrix>Identity</Matrix>
-              <EdgeColor>#FF000000</EdgeColor>
-              <FillColor>#FF000000</FillColor>
+              <EdgeBrush>#FF000000</EdgeBrush>
+              <FillBrush>#FF000000</FillBrush>
               <EdgeThickness>1</EdgeThickness>
               <PathGeometry>M400,400L500,400 500,500 400,500z</PathGeometry>
-			  <RotationAngle>0</RotationAngle>
+              <RotationAngle>0</RotationAngle>
             </DesignerItem>
           </Item>
           <Children />
@@ -165,12 +159,11 @@
               <Width>100</Width>
               <Height>100</Height>
               <ZIndex>6</ZIndex>
-              <Matrix>Identity</Matrix>
-              <EdgeColor>#FF000000</EdgeColor>
-              <FillColor>#FF000000</FillColor>
+              <EdgeBrush>#FF000000</EdgeBrush>
+              <FillBrush>#FF000000</FillBrush>
               <EdgeThickness>1</EdgeThickness>
               <PathGeometry>M500,500L600,500 600,600 500,600z</PathGeometry>
-			  <RotationAngle>0</RotationAngle>
+              <RotationAngle>0</RotationAngle>
             </DesignerItem>
           </Item>
           <Children />
@@ -189,12 +182,11 @@
               <Width>100</Width>
               <Height>100</Height>
               <ZIndex>7</ZIndex>
-              <Matrix>Identity</Matrix>
-              <EdgeColor>#FF000000</EdgeColor>
-              <FillColor>#FF000000</FillColor>
+              <EdgeBrush>#FF000000</EdgeBrush>
+              <FillBrush>#FF000000</FillBrush>
               <EdgeThickness>1</EdgeThickness>
               <PathGeometry>M600,600L700,600 700,700 600,700z</PathGeometry>
-			  <RotationAngle>0</RotationAngle>
+              <RotationAngle>0</RotationAngle>
             </DesignerItem>
           </Item>
           <Children />
@@ -213,12 +205,11 @@
               <Width>100</Width>
               <Height>100</Height>
               <ZIndex>8</ZIndex>
-              <Matrix>Identity</Matrix>
-              <EdgeColor>#FF000000</EdgeColor>
-              <FillColor>#FF000000</FillColor>
+              <EdgeBrush>#FF000000</EdgeBrush>
+              <FillBrush>#FF000000</FillBrush>
               <EdgeThickness>1</EdgeThickness>
               <PathGeometry>M700,700L800,700 800,800 700,800z</PathGeometry>
-			  <RotationAngle>0</RotationAngle>
+              <RotationAngle>0</RotationAngle>
             </DesignerItem>
           </Item>
           <Children />
@@ -237,12 +228,11 @@
               <Width>100</Width>
               <Height>100</Height>
               <ZIndex>9</ZIndex>
-              <Matrix>Identity</Matrix>
-              <EdgeColor>#FF000000</EdgeColor>
-              <FillColor>#FF000000</FillColor>
+              <EdgeBrush>#FF000000</EdgeBrush>
+              <FillBrush>#FF000000</FillBrush>
               <EdgeThickness>1</EdgeThickness>
               <PathGeometry>M800,800L900,800 900,900 800,900z</PathGeometry>
-			  <RotationAngle>0</RotationAngle>
+              <RotationAngle>0</RotationAngle>
             </DesignerItem>
           </Item>
           <Children />
@@ -256,5 +246,107 @@
     <CanvasBackground>#FFFFFFFF</CanvasBackground>
     <EnablePointSnap>true</EnablePointSnap>
     <SnapPower>10</SnapPower>
+    <ColorSpots>
+      <ColorSpot0>#FFFFFFFF</ColorSpot0>
+      <ColorSpot1>#FFFFFFFF</ColorSpot1>
+      <ColorSpot2>#FFFFFFFF</ColorSpot2>
+      <ColorSpot3>#FFFFFFFF</ColorSpot3>
+      <ColorSpot4>#FFFFFFFF</ColorSpot4>
+      <ColorSpot5>#FFFFFFFF</ColorSpot5>
+      <ColorSpot6>#FFFFFFFF</ColorSpot6>
+      <ColorSpot7>#FFFFFFFF</ColorSpot7>
+      <ColorSpot8>#FFFFFFFF</ColorSpot8>
+      <ColorSpot9>#FFFFFFFF</ColorSpot9>
+      <ColorSpot10>#FFFFFFFF</ColorSpot10>
+      <ColorSpot11>#FFFFFFFF</ColorSpot11>
+      <ColorSpot12>#FFFFFFFF</ColorSpot12>
+      <ColorSpot13>#FFFFFFFF</ColorSpot13>
+      <ColorSpot14>#FFFFFFFF</ColorSpot14>
+      <ColorSpot15>#FFFFFFFF</ColorSpot15>
+      <ColorSpot16>#FFFFFFFF</ColorSpot16>
+      <ColorSpot17>#FFFFFFFF</ColorSpot17>
+      <ColorSpot18>#FFFFFFFF</ColorSpot18>
+      <ColorSpot19>#FFFFFFFF</ColorSpot19>
+      <ColorSpot20>#FFFFFFFF</ColorSpot20>
+      <ColorSpot21>#FFFFFFFF</ColorSpot21>
+      <ColorSpot22>#FFFFFFFF</ColorSpot22>
+      <ColorSpot23>#FFFFFFFF</ColorSpot23>
+      <ColorSpot24>#FFFFFFFF</ColorSpot24>
+      <ColorSpot25>#FFFFFFFF</ColorSpot25>
+      <ColorSpot26>#FFFFFFFF</ColorSpot26>
+      <ColorSpot27>#FFFFFFFF</ColorSpot27>
+      <ColorSpot28>#FFFFFFFF</ColorSpot28>
+      <ColorSpot29>#FFFFFFFF</ColorSpot29>
+      <ColorSpot30>#FFFFFFFF</ColorSpot30>
+      <ColorSpot31>#FFFFFFFF</ColorSpot31>
+      <ColorSpot32>#FFFFFFFF</ColorSpot32>
+      <ColorSpot33>#FFFFFFFF</ColorSpot33>
+      <ColorSpot34>#FFFFFFFF</ColorSpot34>
+      <ColorSpot35>#FFFFFFFF</ColorSpot35>
+      <ColorSpot36>#FFFFFFFF</ColorSpot36>
+      <ColorSpot37>#FFFFFFFF</ColorSpot37>
+      <ColorSpot38>#FFFFFFFF</ColorSpot38>
+      <ColorSpot39>#FFFFFFFF</ColorSpot39>
+      <ColorSpot40>#FFFFFFFF</ColorSpot40>
+      <ColorSpot41>#FFFFFFFF</ColorSpot41>
+      <ColorSpot42>#FFFFFFFF</ColorSpot42>
+      <ColorSpot43>#FFFFFFFF</ColorSpot43>
+      <ColorSpot44>#FFFFFFFF</ColorSpot44>
+      <ColorSpot45>#FFFFFFFF</ColorSpot45>
+      <ColorSpot46>#FFFFFFFF</ColorSpot46>
+      <ColorSpot47>#FFFFFFFF</ColorSpot47>
+      <ColorSpot48>#FFFFFFFF</ColorSpot48>
+      <ColorSpot49>#FFFFFFFF</ColorSpot49>
+      <ColorSpot50>#FFFFFFFF</ColorSpot50>
+      <ColorSpot51>#FFFFFFFF</ColorSpot51>
+      <ColorSpot52>#FFFFFFFF</ColorSpot52>
+      <ColorSpot53>#FFFFFFFF</ColorSpot53>
+      <ColorSpot54>#FFFFFFFF</ColorSpot54>
+      <ColorSpot55>#FFFFFFFF</ColorSpot55>
+      <ColorSpot56>#FFFFFFFF</ColorSpot56>
+      <ColorSpot57>#FFFFFFFF</ColorSpot57>
+      <ColorSpot58>#FFFFFFFF</ColorSpot58>
+      <ColorSpot59>#FFFFFFFF</ColorSpot59>
+      <ColorSpot60>#FFFFFFFF</ColorSpot60>
+      <ColorSpot61>#FFFFFFFF</ColorSpot61>
+      <ColorSpot62>#FFFFFFFF</ColorSpot62>
+      <ColorSpot63>#FFFFFFFF</ColorSpot63>
+      <ColorSpot64>#FFFFFFFF</ColorSpot64>
+      <ColorSpot65>#FFFFFFFF</ColorSpot65>
+      <ColorSpot66>#FFFFFFFF</ColorSpot66>
+      <ColorSpot67>#FFFFFFFF</ColorSpot67>
+      <ColorSpot68>#FFFFFFFF</ColorSpot68>
+      <ColorSpot69>#FFFFFFFF</ColorSpot69>
+      <ColorSpot70>#FFFFFFFF</ColorSpot70>
+      <ColorSpot71>#FFFFFFFF</ColorSpot71>
+      <ColorSpot72>#FFFFFFFF</ColorSpot72>
+      <ColorSpot73>#FFFFFFFF</ColorSpot73>
+      <ColorSpot74>#FFFFFFFF</ColorSpot74>
+      <ColorSpot75>#FFFFFFFF</ColorSpot75>
+      <ColorSpot76>#FFFFFFFF</ColorSpot76>
+      <ColorSpot77>#FFFFFFFF</ColorSpot77>
+      <ColorSpot78>#FFFFFFFF</ColorSpot78>
+      <ColorSpot79>#FFFFFFFF</ColorSpot79>
+      <ColorSpot80>#FFFFFFFF</ColorSpot80>
+      <ColorSpot81>#FFFFFFFF</ColorSpot81>
+      <ColorSpot82>#FFFFFFFF</ColorSpot82>
+      <ColorSpot83>#FFFFFFFF</ColorSpot83>
+      <ColorSpot84>#FFFFFFFF</ColorSpot84>
+      <ColorSpot85>#FFFFFFFF</ColorSpot85>
+      <ColorSpot86>#FFFFFFFF</ColorSpot86>
+      <ColorSpot87>#FFFFFFFF</ColorSpot87>
+      <ColorSpot88>#FFFFFFFF</ColorSpot88>
+      <ColorSpot89>#FFFFFFFF</ColorSpot89>
+      <ColorSpot90>#FFFFFFFF</ColorSpot90>
+      <ColorSpot91>#FFFFFFFF</ColorSpot91>
+      <ColorSpot92>#FFFFFFFF</ColorSpot92>
+      <ColorSpot93>#FFFFFFFF</ColorSpot93>
+      <ColorSpot94>#FFFFFFFF</ColorSpot94>
+      <ColorSpot95>#FFFFFFFF</ColorSpot95>
+      <ColorSpot96>#FFFFFFFF</ColorSpot96>
+      <ColorSpot97>#FFFFFFFF</ColorSpot97>
+      <ColorSpot98>#FFFFFFFF</ColorSpot98>
+      <ColorSpot99>#FFFFFFFF</ColorSpot99>
+    </ColorSpots>
   </Configuration>
 </boilersGraphics>

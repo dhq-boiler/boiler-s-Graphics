@@ -14,7 +14,7 @@
                 </i:EventTrigger>
             </i:Interaction.Triggers>
             <Path Data="{Binding PathGeometry.Value}"
-                  Fill="{Binding FillColor.Value, Converter={StaticResource solidColorBrushConverter}}"
+                  Fill="{Binding FillBrush.Value}"
                   IsHitTestVisible="False"
                   Stretch="Fill"
                   Stroke="{Binding EdgeBrush.Value}"

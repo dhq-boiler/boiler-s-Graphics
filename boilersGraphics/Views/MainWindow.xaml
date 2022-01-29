@@ -721,7 +721,7 @@
                                     <Rectangle Width="16"
                                                Height="16"
                                                Margin="2"
-                                               Fill="{Binding DiagramViewModel.FillColors, Converter={StaticResource StrokeColorConverter}}" />
+                                               Fill="{Binding DiagramViewModel.FillBrush.Value}" />
                                 </Grid>
                             </ControlTemplate>
                         </Button.Template>

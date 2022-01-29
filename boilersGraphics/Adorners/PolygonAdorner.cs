@@ -86,7 +86,7 @@ namespace boilersGraphics.Adorners
                 item.Width.Value = Math.Max(_dragStartPoint.Value.X - _dragEndPoint.Value.X, _dragEndPoint.Value.X - _dragStartPoint.Value.X);
                 item.Height.Value = Math.Max(_dragStartPoint.Value.Y - _dragEndPoint.Value.Y, _dragEndPoint.Value.Y - _dragStartPoint.Value.Y);
                 item.EdgeBrush.Value = item.Owner.EdgeBrush.Value.Clone();
-                item.FillColor.Value = item.Owner.FillColors.First();
+                item.FillBrush.Value = item.Owner.FillBrush.Value.Clone();
                 item.EdgeThickness.Value = item.Owner.EdgeThickness.Value.Value;
                 item.ZIndex.Value = item.Owner.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).Count();
                 item.Data.Value = _data;
@@ -165,7 +165,7 @@ namespace boilersGraphics.Adorners
                     }
                 }
                 geometry.Freeze();
-                dc.DrawGeometry(Brushes.Transparent, _edgePen, geometry);
+                dc.DrawGeometry(((AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel).FillBrush.Value.Clone(), _edgePen, geometry);
             }
         }
     }

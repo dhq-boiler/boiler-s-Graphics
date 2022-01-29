@@ -45,11 +45,11 @@ namespace boilersGraphics.Models
                  .ToUnit()
                  .Merge(Children.ObserveElementObservableProperty(x => x.IsVisible).ToUnit())
                  .ToUnit()
-                 .Merge(Children.ObserveElementObservableProperty(x => (x as LayerItem).Item.Value.EdgeColor).ToUnit())
+                 .Merge(Children.ObserveElementObservableProperty(x => (x as LayerItem).Item.Value.EdgeBrush).ToUnit())
                  .ToUnit()
                  .Merge(Children.ObserveElementObservableProperty(x => (x as LayerItem).Item.Value.EdgeThickness).ToUnit())
                  .ToUnit()
-                 .Merge(Children.ObserveElementObservableProperty(x => (x as LayerItem).Item.Value.FillColor).ToUnit());
+                 .Merge(Children.ObserveElementObservableProperty(x => (x as LayerItem).Item.Value.FillBrush).ToUnit());
 
             if (!App.IsTest)
             {

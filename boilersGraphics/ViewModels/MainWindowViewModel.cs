@@ -130,9 +130,9 @@ namespace boilersGraphics.ViewModels
                         foreach (var item in DiagramViewModel.SelectedItems.Value.OfType<SelectableDesignerItemViewModelBase>())
                         {
                             if (item is SnapPointViewModel snapPoint)
-                                Recorder.Current.ExecuteSetProperty(snapPoint.Parent.Value, "EdgeColor.Value", exchange.New.Value);
+                                Recorder.Current.ExecuteSetProperty(snapPoint.Parent.Value, "EdgeBrush.Value", new SolidColorBrush(exchange.New.Value));
                             else
-                                Recorder.Current.ExecuteSetProperty(item, "EdgeColor.Value", exchange.New.Value);
+                                Recorder.Current.ExecuteSetProperty(item, "EdgeBrush.Value", new SolidColorBrush(exchange.New.Value));
                         }
                         Recorder.EndRecode();
                     }
@@ -153,7 +153,7 @@ namespace boilersGraphics.ViewModels
                                                    "ColorExchange",
                                                    new ColorExchange()
                                                    {
-                                                       Old = DiagramViewModel.FillColors.FirstOrDefault()
+                                                       Old = (DiagramViewModel.FillBrush.Value as SolidColorBrush).Color
                                                    }
                                                },
                                                {
@@ -168,11 +168,10 @@ namespace boilersGraphics.ViewModels
                     if (exchange != null)
                     {
                         Recorder.BeginRecode();
-                        DiagramViewModel.FillColors.ToClearOperation().ExecuteTo(Recorder.Current);
-                        DiagramViewModel.FillColors.ToAddOperation(exchange.New.Value).ExecuteTo(Recorder.Current);
+                        Recorder.Current.ExecuteSetProperty(DiagramViewModel, "FillBrush.Value", new SolidColorBrush(exchange.New.Value));
                         foreach (var item in DiagramViewModel.SelectedItems.Value.OfType<DesignerItemViewModelBase>())
                         {
-                            Recorder.Current.ExecuteSetProperty(item, "FillColor.Value", exchange.New.Value);
+                            Recorder.Current.ExecuteSetProperty(item, "FillBrush.Value", new SolidColorBrush(exchange.New.Value));
                         }
                         Recorder.EndRecode();
                     }

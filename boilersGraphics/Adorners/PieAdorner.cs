@@ -144,7 +144,7 @@ namespace boilersGraphics.Adorners
                     if (this.IsMouseCaptured) this.ReleaseMouseCapture();
                     _item.Owner = (AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel;
                     _item.EdgeBrush.Value = _item.Owner.EdgeBrush.Value.Clone();
-                    _item.FillColor.Value = _item.Owner.FillColors.First();
+                    _item.FillBrush.Value = _item.Owner.FillBrush.Value.Clone();
                     _item.EdgeThickness.Value = _item.Owner.EdgeThickness.Value.Value;
                     _item.ZIndex.Value = _item.Owner.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).Count();
                     var geometry = GeometryCreator.CreateDonut(_firstDragStartPoint.Value, _RadiusVector.Length - _MinusRaidus, _RadiusVector.Length, _StartAngle, _EndAngle, GetSweepDirection());

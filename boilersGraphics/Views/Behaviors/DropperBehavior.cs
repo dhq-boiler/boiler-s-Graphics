@@ -115,9 +115,7 @@ namespace boilersGraphics.Views.Behaviors
             var writeableBitmap = new WriteableBitmap(rtb);
             var position = e.GetTouchPoint(designerCanvas);
             var color = writeableBitmap.GetPixel((int)position.Position.X, (int)position.Position.Y);
-            var fillColors = (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.FillColors;
-            fillColors.Clear();
-            fillColors.Add(color);
+            (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.FillBrush.Value = new SolidColorBrush(color);
         }
 
         private static void SetEdgeColor(TouchEventArgs e)
@@ -137,9 +135,7 @@ namespace boilersGraphics.Views.Behaviors
             var writeableBitmap = new WriteableBitmap(rtb);
             var position = e.GetPosition(designerCanvas);
             var color = writeableBitmap.GetPixel((int)position.X, (int)position.Y);
-            var fillColors = (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.FillColors;
-            fillColors.Clear();
-            fillColors.Add(color);
+            (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.FillBrush.Value = new SolidColorBrush(color);
         }
 
         private static void SetEdgeColor(StylusEventArgs e)
@@ -159,9 +155,7 @@ namespace boilersGraphics.Views.Behaviors
             var writeableBitmap = new WriteableBitmap(rtb);
             var position = e.GetPosition(designerCanvas);
             var color = writeableBitmap.GetPixel((int)position.X, (int)position.Y);
-            var fillColors = (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.FillColors;
-            fillColors.Clear();
-            fillColors.Add(color);
+            (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.FillBrush.Value = new SolidColorBrush(color);
         }
 
         private static void SetEdgeColor(MouseEventArgs e)

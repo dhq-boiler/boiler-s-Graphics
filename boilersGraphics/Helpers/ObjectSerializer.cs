@@ -77,8 +77,8 @@ namespace boilersGraphics.Helpers
                 list.Add(new XElement("Height", designerItem.Height.Value));
                 list.Add(new XElement("ZIndex", designerItem.ZIndex.Value));
                 //list.Add(new XElement("Matrix", designerItem.Matrix.Value));
-                list.Add(new XElement("EdgeColor", designerItem.EdgeColor.Value));
-                list.Add(new XElement("FillColor", designerItem.FillColor.Value));
+                list.Add(new XElement("EdgeBrush", designerItem.EdgeBrush.Value));
+                list.Add(new XElement("FillBrush", designerItem.FillBrush.Value));
                 list.Add(new XElement("EdgeThickness", designerItem.EdgeThickness.Value));
                 list.Add(new XElement("PathGeometry", designerItem.PathGeometry.Value));
                 list.Add(new XElement("RotationAngle", designerItem.RotationAngle.Value));
@@ -129,8 +129,8 @@ namespace boilersGraphics.Helpers
                     list.Add(new XElement("EndPoint", connectorItem.Points[1]));
                 }
                 list.Add(new XElement("ZIndex", connectorItem.ZIndex.Value));
-                list.Add(new XElement("EdgeColor", connectorItem.EdgeColor));
-                list.Add(new XElement("EdgeThickness", connectorItem.EdgeThickness));
+                list.Add(new XElement("EdgeBrush", connectorItem.EdgeBrush.Value));
+                list.Add(new XElement("EdgeThickness", connectorItem.EdgeThickness.Value));
                 list.Add(new XElement("PathGeometry", connectorItem.PathGeometry.Value));
                 list.Add(new XElement("LeftTop", connectorItem.LeftTop.Value));
                 if (connectorItem is BezierCurveViewModel)
@@ -158,8 +158,8 @@ namespace boilersGraphics.Helpers
                 list.Add(new XElement("Opacity", snapPointItem.Opacity.Value));
                 list.Add(new XElement("ZIndex", snapPointItem.ZIndex.Value));
                 list.Add(new XElement("Matrix", snapPointItem.Matrix.Value));
-                list.Add(new XElement("EdgeColor", snapPointItem.EdgeColor.Value));
-                list.Add(new XElement("FillColor", snapPointItem.FillColor.Value));
+                list.Add(new XElement("EdgeBrush", snapPointItem.EdgeBrush.Value));
+                list.Add(new XElement("FillBrush", snapPointItem.FillBrush.Value));
                 list.Add(new XElement("EdgeThickness", snapPointItem.EdgeThickness.Value));
                 list.Add(new XElement("PathGeometry", snapPointItem.PathGeometry.Value));
                 var snappointItemXML = new XElement("SnapPointItem", list);
@@ -195,7 +195,7 @@ namespace boilersGraphics.Helpers
                                new XElement("BeginPoint", connection.Points[0]),
                                new XElement("EndPoint", connection.Points[1]),
                                new XElement("ZIndex", connection.ZIndex.Value),
-                               new XElement("EdgeColor", connection.EdgeColor.Value),
+                               new XElement("EdgeBrush", connection.EdgeBrush.Value),
                                new XElement("EdgeThickness", connection.EdgeThickness.Value),
                                new XElement("PathGeometry", connection.PathGeometry.Value)
                     ))
@@ -212,7 +212,7 @@ namespace boilersGraphics.Helpers
                                     new XElement("BeginPoint", connection.Points[0]),
                                     new XElement("EndPoint", connection.Points[1]),
                                     new XElement("ZIndex", connection.ZIndex.Value),
-                                    new XElement("EdgeColor", connection.EdgeColor.Value),
+                                    new XElement("EdgeBrush", connection.EdgeBrush.Value),
                                     new XElement("EdgeThickness", connection.EdgeThickness.Value),
                                     new XElement("ControlPoint1", (connection as BezierCurveViewModel).ControlPoint1.Value),
                                     new XElement("ControlPoint2", (connection as BezierCurveViewModel).ControlPoint2.Value),
