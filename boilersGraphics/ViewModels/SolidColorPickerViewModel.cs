@@ -934,7 +934,6 @@ namespace boilersGraphics.ViewModels
 
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
-            //navigationContext.NavigationService.Region.RegionManager.Regions.Remove("ColorPickerRegion");
             EditTarget.Value = navigationContext.Parameters.GetValue<ColorExchange>("ColorExchange");
             A.Value = EditTarget.Value.Old.A;
             R.Value = EditTarget.Value.Old.R;
