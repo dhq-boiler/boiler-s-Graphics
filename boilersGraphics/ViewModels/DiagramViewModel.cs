@@ -122,7 +122,7 @@ namespace boilersGraphics.ViewModels
 
         public ReactivePropertySlim<string> FileName { get; } = new ReactivePropertySlim<string>();
 
-        public ReactivePropertySlim<Color> CanvasBackground { get; } = new ReactivePropertySlim<Color>();
+        public ReactivePropertySlim<Brush> CanvasBackground { get; } = new ReactivePropertySlim<Brush>();
 
         public ReactivePropertySlim<bool> EnablePointSnap { get; } = new ReactivePropertySlim<bool>();
 
@@ -735,11 +735,11 @@ namespace boilersGraphics.ViewModels
             mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "CanvasBorderThickness", 0.0);
             if (initCanvasBackground)
             {
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "CanvasBackground.Value", Colors.White);
+                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "CanvasBackground.Value", new SolidColorBrush(Colors.White));
             }
             mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value", new BackgroundViewModel());
             mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.ZIndex.Value", -1);
-            mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.FillBrush.Value", new SolidColorBrush(CanvasBackground.Value));
+            mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.FillBrush.Value", CanvasBackground.Value);
             mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.Left.Value", 0d);
             mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.Top.Value", 0d);
             mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.Width.Value", (double)Width);
@@ -1300,7 +1300,7 @@ namespace boilersGraphics.ViewModels
                 Width = s.Width.Value;
                 Height = s.Height.Value;
                 CanvasBackground.Value = s.CanvasBackground.Value;
-                BackgroundItem.Value.FillBrush.Value = new SolidColorBrush(CanvasBackground.Value);
+                BackgroundItem.Value.FillBrush.Value = CanvasBackground.Value;
                 EnablePointSnap.Value = s.EnablePointSnap.Value;
                 (App.Current.MainWindow.DataContext as MainWindowViewModel).SnapPower.Value = s.SnapPower.Value;
                 BackgroundItem.Value.Width.Value = Width;

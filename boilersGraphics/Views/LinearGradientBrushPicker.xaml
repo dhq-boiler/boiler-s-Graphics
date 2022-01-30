@@ -3,11 +3,25 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:helper="clr-namespace:boilersGraphics.Helpers"
              xmlns:control="clr-namespace:boilersGraphics.Controls"
+             xmlns:models="clr-namespace:boilersGraphics.Models"
              xmlns:local="clr-namespace:boilersGraphics.Views"
+             xmlns:views="clr-namespace:boilersGraphics.Views"
              xmlns:prism="http://prismlibrary.com/"
+             xmlns:converters="clr-namespace:boilersGraphics.Converters"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d">
+    <UserControl.Resources>
+        <converters:ToSolidColorBrushConverter x:Key="ColorToSolidColorBrush" />
+        <converters:StringToPointConverter x:Key="StringToPoint" />
+    </UserControl.Resources>
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <helper:EventToCommand Command="{Binding LoadedCommand}" PassEventArgsToCommand="True" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <DockPanel>
         <DockPanel DockPanel.Dock="Bottom" Visibility="{Binding ColorPalleteVisibility.Value}">
             <control:SimpleGrid Rows="10" Columns="10" Orientation="Horizontal">
@@ -125,6 +139,12 @@
         </DockPanel>
         <DockPanel>
             <DockPanel DockPanel.Dock="Bottom">
+                <Button Width="75"
+                        Height="25"
+                        Margin="5"
+                        Command="{Binding Path=DataContext.OKCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=views:ColorPicker}}"
+                        Content="OK"
+                        DockPanel.Dock="Right" />
                 <StackPanel Orientation="Horizontal">
                     <Button Width="50"
                             Height="25"
@@ -158,26 +178,46 @@
                         <Setter Property="Width" Value="60" />
                     </Style>
                 </StackPanel.Resources>
-                <Label Content="StartPoint:" />
-                <TextBox Text="{Binding StartPoint.Value}" />
-                <Label Content="EndPoint:" />
-                <TextBox Text="{Binding EndPoint.Value}" />           
+                <Label Content="StartPoint:" Foreground="White" />
+                <TextBox Text="{Binding StartPoint.Value, Converter={StaticResource StringToPoint}, UpdateSourceTrigger=PropertyChanged}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="TextChanged">
+                            <helper:EventToCommand Command="{Binding TextChangedCommand}" PassEventArgsToCommand="True" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </TextBox>
+                <Label Content="EndPoint:" Foreground="White" />
+                <TextBox Text="{Binding EndPoint.Value, Converter={StaticResource StringToPoint}, UpdateSourceTrigger=PropertyChanged}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="TextChanged">
+                            <helper:EventToCommand Command="{Binding TextChangedCommand}" PassEventArgsToCommand="True" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </TextBox>      
             </StackPanel>
-            <ListView ItemsSource="{Binding GradientStops}">
+            <ListView ItemsSource="{Binding GradientStops}"
+                      SelectedItem="{Binding SelectedGradientStop.Value}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
-                            <Button Command="{Binding DataContext.SelectGradientStopColorCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=local:LinearGradientBrushPicker}}" CommandParameter="{Binding}">
-                                <Button.ContentTemplate>
-                                    <DataTemplate>
-                                        <Rectangle Fill="{Binding Color}"
-                                                   Width="25"
-                                                   Height="25" />
-                                    </DataTemplate>
-                                </Button.ContentTemplate>
+                            <Button Command="{Binding DataContext.SelectGradientStopColorCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=local:LinearGradientBrushPicker}}"
+                                    CommandParameter="{Binding}">
+                                <Button.Template>
+                                    <ControlTemplate>
+                                        <Rectangle Fill="{Binding Color.Value, Converter={StaticResource ColorToSolidColorBrush}}"
+                                                   Width="20"
+                                                   Height="20" />
+                                    </ControlTemplate>
+                                </Button.Template>
                             </Button>
                             <Label Content="Offset" />
-                            <TextBox Width="50" Text="{Binding Offset}" />
+                            <TextBox Width="50" Text="{Binding Offset.Value, UpdateSourceTrigger=PropertyChanged}">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="TextChanged">
+                                        <helper:EventToCommand Command="{Binding DataContext.TextChangedCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=local:LinearGradientBrushPicker}}" PassEventArgsToCommand="True" />
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </TextBox>
                             <Button />
                         </StackPanel>
                     </DataTemplate>

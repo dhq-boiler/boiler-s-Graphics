@@ -124,6 +124,7 @@ namespace boilersGraphics
             containerRegistry.RegisterForNavigation<RadialGradientBrushPicker>();
 
             containerRegistry.RegisterDialog<ColorPicker, ViewModels.ColorPickerViewModel>();
+            containerRegistry.RegisterDialog<OldColorPicker, ViewModels.OldColorPickerViewModel>();
             containerRegistry.RegisterDialog<SolidColorPicker, ViewModels.SolidColorPickerViewModel>();
             containerRegistry.RegisterDialog<LetterSetting, ViewModels.LetterSettingViewModel>();
             containerRegistry.RegisterDialog<LetterVerticalSetting, ViewModels.LetterVerticalSettingViewModel>();

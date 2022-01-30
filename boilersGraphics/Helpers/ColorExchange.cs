@@ -9,7 +9,7 @@ namespace boilersGraphics.Helpers
 {
     public class ColorExchange
     {
-        public Color Old { get; set; }
-        public Color? New { get; set; }
+        public Brush Old { get; set; }
+        public Brush New { get; set; }
     }
 }

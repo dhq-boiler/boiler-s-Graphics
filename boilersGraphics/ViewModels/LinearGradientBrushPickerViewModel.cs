@@ -2,6 +2,7 @@
 using boilersGraphics.Helpers;
 using boilersGraphics.Models;
 using boilersGraphics.Views;
+using NLog;
 using Prism.Mvvm;
 using Prism.Regions;
 using Prism.Services.Dialogs;
@@ -11,9 +12,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Disposables;
-using System.Text;
-using System.Threading.Tasks;
+using System.Reactive.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 
 namespace boilersGraphics.ViewModels
@@ -26,13 +27,14 @@ namespace boilersGraphics.ViewModels
         private readonly IDialogService dialogService;
 
         public ReactivePropertySlim<Brush> TargetBrush { get; } = new ReactivePropertySlim<Brush>();
-        public ReactiveCommand OKCommand { get; }
-        public ReactiveCommand<GradientStop> SelectGradientStopColorCommand { get; } = new ReactiveCommand<GradientStop>();
+        //public ReactiveCommand OKCommand { get; }
+        public ReactiveCommand<boilersGraphics.Models.GradientStop> SelectGradientStopColorCommand { get; } = new ReactiveCommand<boilersGraphics.Models.GradientStop>();
         public ReactiveCommand SpotSelectCommand { get; } = new ReactiveCommand();
         public ReactiveCommand<RoutedEventArgs> LoadedCommand { get; } = new ReactiveCommand<RoutedEventArgs>();
         public ReactiveCommand OpenCloseColorPalleteCommand { get; } = new ReactiveCommand();
         public ReactiveCommand AddGradientStopCommand { get; } = new ReactiveCommand();
-        public ReactiveCollection<GradientStop> GradientStops { get; } = new ReactiveCollection<GradientStop>();
+        public ReactiveCommand<TextChangedEventArgs> TextChangedCommand { get; } = new ReactiveCommand<TextChangedEventArgs>();
+        public ReactiveCollection<boilersGraphics.Models.GradientStop> GradientStops { get; } = new ReactiveCollection<boilersGraphics.Models.GradientStop>();
         public ReactivePropertySlim<Visibility> ColorPalleteVisibility { get; } = new ReactivePropertySlim<Visibility>(Visibility.Collapsed);
         public ReactivePropertySlim<ColorSpots> ColorSpots { get; } = new ReactivePropertySlim<ColorSpots>();
         public ReactivePropertySlim<Color> ColorSpot0 { get; } = new ReactivePropertySlim<Color>();
@@ -136,120 +138,133 @@ namespace boilersGraphics.ViewModels
         public ReactivePropertySlim<Color> ColorSpot98 { get; } = new ReactivePropertySlim<Color>();
         public ReactivePropertySlim<Color> ColorSpot99 { get; } = new ReactivePropertySlim<Color>();
 
+        public ReactivePropertySlim<boilersGraphics.Models.GradientStop> SelectedGradientStop { get; } = new ReactivePropertySlim<Models.GradientStop>();
+        public ReactivePropertySlim<Point> StartPoint { get; } = new ReactivePropertySlim<Point>();
+        public ReactivePropertySlim<Point> EndPoint { get; } = new ReactivePropertySlim<Point>();
+        public ReactivePropertySlim<ColorExchange> EditTarget { get; } = new ReactivePropertySlim<ColorExchange>(new ColorExchange());
+
         public LinearGradientBrushPickerViewModel(IDialogService dialogService)
         {
-            OKCommand = new ReactiveCommand();
+            //OKCommand = new ReactiveCommand();
 
-            OKCommand
-                .Subscribe(_ =>
-                {
-                    var colorSpots = new ColorSpots();
-                    colorSpots.ColorSpot0 = ColorSpot0.Value;
-                    colorSpots.ColorSpot1 = ColorSpot1.Value;
-                    colorSpots.ColorSpot2 = ColorSpot2.Value;
-                    colorSpots.ColorSpot3 = ColorSpot3.Value;
-                    colorSpots.ColorSpot4 = ColorSpot4.Value;
-                    colorSpots.ColorSpot5 = ColorSpot5.Value;
-                    colorSpots.ColorSpot6 = ColorSpot6.Value;
-                    colorSpots.ColorSpot7 = ColorSpot7.Value;
-                    colorSpots.ColorSpot8 = ColorSpot8.Value;
-                    colorSpots.ColorSpot9 = ColorSpot9.Value;
-                    colorSpots.ColorSpot10 = ColorSpot10.Value;
-                    colorSpots.ColorSpot11 = ColorSpot11.Value;
-                    colorSpots.ColorSpot12 = ColorSpot12.Value;
-                    colorSpots.ColorSpot13 = ColorSpot13.Value;
-                    colorSpots.ColorSpot14 = ColorSpot14.Value;
-                    colorSpots.ColorSpot15 = ColorSpot15.Value;
-                    colorSpots.ColorSpot16 = ColorSpot16.Value;
-                    colorSpots.ColorSpot17 = ColorSpot17.Value;
-                    colorSpots.ColorSpot18 = ColorSpot18.Value;
-                    colorSpots.ColorSpot19 = ColorSpot19.Value;
-                    colorSpots.ColorSpot20 = ColorSpot20.Value;
-                    colorSpots.ColorSpot21 = ColorSpot21.Value;
-                    colorSpots.ColorSpot22 = ColorSpot22.Value;
-                    colorSpots.ColorSpot23 = ColorSpot23.Value;
-                    colorSpots.ColorSpot24 = ColorSpot24.Value;
-                    colorSpots.ColorSpot25 = ColorSpot25.Value;
-                    colorSpots.ColorSpot26 = ColorSpot26.Value;
-                    colorSpots.ColorSpot27 = ColorSpot27.Value;
-                    colorSpots.ColorSpot28 = ColorSpot28.Value;
-                    colorSpots.ColorSpot29 = ColorSpot29.Value;
-                    colorSpots.ColorSpot30 = ColorSpot30.Value;
-                    colorSpots.ColorSpot31 = ColorSpot31.Value;
-                    colorSpots.ColorSpot32 = ColorSpot32.Value;
-                    colorSpots.ColorSpot33 = ColorSpot33.Value;
-                    colorSpots.ColorSpot34 = ColorSpot34.Value;
-                    colorSpots.ColorSpot35 = ColorSpot35.Value;
-                    colorSpots.ColorSpot36 = ColorSpot36.Value;
-                    colorSpots.ColorSpot37 = ColorSpot37.Value;
-                    colorSpots.ColorSpot38 = ColorSpot38.Value;
-                    colorSpots.ColorSpot39 = ColorSpot39.Value;
-                    colorSpots.ColorSpot40 = ColorSpot40.Value;
-                    colorSpots.ColorSpot41 = ColorSpot41.Value;
-                    colorSpots.ColorSpot42 = ColorSpot42.Value;
-                    colorSpots.ColorSpot43 = ColorSpot43.Value;
-                    colorSpots.ColorSpot44 = ColorSpot44.Value;
-                    colorSpots.ColorSpot45 = ColorSpot45.Value;
-                    colorSpots.ColorSpot46 = ColorSpot46.Value;
-                    colorSpots.ColorSpot47 = ColorSpot47.Value;
-                    colorSpots.ColorSpot48 = ColorSpot48.Value;
-                    colorSpots.ColorSpot49 = ColorSpot49.Value;
-                    colorSpots.ColorSpot50 = ColorSpot50.Value;
-                    colorSpots.ColorSpot51 = ColorSpot51.Value;
-                    colorSpots.ColorSpot52 = ColorSpot52.Value;
-                    colorSpots.ColorSpot53 = ColorSpot53.Value;
-                    colorSpots.ColorSpot54 = ColorSpot54.Value;
-                    colorSpots.ColorSpot55 = ColorSpot55.Value;
-                    colorSpots.ColorSpot56 = ColorSpot56.Value;
-                    colorSpots.ColorSpot57 = ColorSpot57.Value;
-                    colorSpots.ColorSpot58 = ColorSpot58.Value;
-                    colorSpots.ColorSpot59 = ColorSpot59.Value;
-                    colorSpots.ColorSpot60 = ColorSpot60.Value;
-                    colorSpots.ColorSpot61 = ColorSpot61.Value;
-                    colorSpots.ColorSpot62 = ColorSpot62.Value;
-                    colorSpots.ColorSpot63 = ColorSpot63.Value;
-                    colorSpots.ColorSpot64 = ColorSpot64.Value;
-                    colorSpots.ColorSpot65 = ColorSpot65.Value;
-                    colorSpots.ColorSpot66 = ColorSpot66.Value;
-                    colorSpots.ColorSpot67 = ColorSpot67.Value;
-                    colorSpots.ColorSpot68 = ColorSpot68.Value;
-                    colorSpots.ColorSpot69 = ColorSpot69.Value;
-                    colorSpots.ColorSpot70 = ColorSpot70.Value;
-                    colorSpots.ColorSpot71 = ColorSpot71.Value;
-                    colorSpots.ColorSpot72 = ColorSpot72.Value;
-                    colorSpots.ColorSpot73 = ColorSpot73.Value;
-                    colorSpots.ColorSpot74 = ColorSpot74.Value;
-                    colorSpots.ColorSpot75 = ColorSpot75.Value;
-                    colorSpots.ColorSpot76 = ColorSpot76.Value;
-                    colorSpots.ColorSpot77 = ColorSpot77.Value;
-                    colorSpots.ColorSpot78 = ColorSpot78.Value;
-                    colorSpots.ColorSpot79 = ColorSpot79.Value;
-                    colorSpots.ColorSpot80 = ColorSpot80.Value;
-                    colorSpots.ColorSpot81 = ColorSpot81.Value;
-                    colorSpots.ColorSpot82 = ColorSpot82.Value;
-                    colorSpots.ColorSpot83 = ColorSpot83.Value;
-                    colorSpots.ColorSpot84 = ColorSpot84.Value;
-                    colorSpots.ColorSpot85 = ColorSpot85.Value;
-                    colorSpots.ColorSpot86 = ColorSpot86.Value;
-                    colorSpots.ColorSpot87 = ColorSpot87.Value;
-                    colorSpots.ColorSpot88 = ColorSpot88.Value;
-                    colorSpots.ColorSpot89 = ColorSpot89.Value;
-                    colorSpots.ColorSpot90 = ColorSpot90.Value;
-                    colorSpots.ColorSpot91 = ColorSpot91.Value;
-                    colorSpots.ColorSpot92 = ColorSpot92.Value;
-                    colorSpots.ColorSpot93 = ColorSpot93.Value;
-                    colorSpots.ColorSpot94 = ColorSpot94.Value;
-                    colorSpots.ColorSpot95 = ColorSpot95.Value;
-                    colorSpots.ColorSpot96 = ColorSpot96.Value;
-                    colorSpots.ColorSpot97 = ColorSpot97.Value;
-                    colorSpots.ColorSpot98 = ColorSpot98.Value;
-                    colorSpots.ColorSpot99 = ColorSpot99.Value;
+            //OKCommand
+            //    .Subscribe(_ =>
+            //    {
+            //        var colorSpots = new ColorSpots();
+            //        colorSpots.ColorSpot0 = ColorSpot0.Value;
+            //        colorSpots.ColorSpot1 = ColorSpot1.Value;
+            //        colorSpots.ColorSpot2 = ColorSpot2.Value;
+            //        colorSpots.ColorSpot3 = ColorSpot3.Value;
+            //        colorSpots.ColorSpot4 = ColorSpot4.Value;
+            //        colorSpots.ColorSpot5 = ColorSpot5.Value;
+            //        colorSpots.ColorSpot6 = ColorSpot6.Value;
+            //        colorSpots.ColorSpot7 = ColorSpot7.Value;
+            //        colorSpots.ColorSpot8 = ColorSpot8.Value;
+            //        colorSpots.ColorSpot9 = ColorSpot9.Value;
+            //        colorSpots.ColorSpot10 = ColorSpot10.Value;
+            //        colorSpots.ColorSpot11 = ColorSpot11.Value;
+            //        colorSpots.ColorSpot12 = ColorSpot12.Value;
+            //        colorSpots.ColorSpot13 = ColorSpot13.Value;
+            //        colorSpots.ColorSpot14 = ColorSpot14.Value;
+            //        colorSpots.ColorSpot15 = ColorSpot15.Value;
+            //        colorSpots.ColorSpot16 = ColorSpot16.Value;
+            //        colorSpots.ColorSpot17 = ColorSpot17.Value;
+            //        colorSpots.ColorSpot18 = ColorSpot18.Value;
+            //        colorSpots.ColorSpot19 = ColorSpot19.Value;
+            //        colorSpots.ColorSpot20 = ColorSpot20.Value;
+            //        colorSpots.ColorSpot21 = ColorSpot21.Value;
+            //        colorSpots.ColorSpot22 = ColorSpot22.Value;
+            //        colorSpots.ColorSpot23 = ColorSpot23.Value;
+            //        colorSpots.ColorSpot24 = ColorSpot24.Value;
+            //        colorSpots.ColorSpot25 = ColorSpot25.Value;
+            //        colorSpots.ColorSpot26 = ColorSpot26.Value;
+            //        colorSpots.ColorSpot27 = ColorSpot27.Value;
+            //        colorSpots.ColorSpot28 = ColorSpot28.Value;
+            //        colorSpots.ColorSpot29 = ColorSpot29.Value;
+            //        colorSpots.ColorSpot30 = ColorSpot30.Value;
+            //        colorSpots.ColorSpot31 = ColorSpot31.Value;
+            //        colorSpots.ColorSpot32 = ColorSpot32.Value;
+            //        colorSpots.ColorSpot33 = ColorSpot33.Value;
+            //        colorSpots.ColorSpot34 = ColorSpot34.Value;
+            //        colorSpots.ColorSpot35 = ColorSpot35.Value;
+            //        colorSpots.ColorSpot36 = ColorSpot36.Value;
+            //        colorSpots.ColorSpot37 = ColorSpot37.Value;
+            //        colorSpots.ColorSpot38 = ColorSpot38.Value;
+            //        colorSpots.ColorSpot39 = ColorSpot39.Value;
+            //        colorSpots.ColorSpot40 = ColorSpot40.Value;
+            //        colorSpots.ColorSpot41 = ColorSpot41.Value;
+            //        colorSpots.ColorSpot42 = ColorSpot42.Value;
+            //        colorSpots.ColorSpot43 = ColorSpot43.Value;
+            //        colorSpots.ColorSpot44 = ColorSpot44.Value;
+            //        colorSpots.ColorSpot45 = ColorSpot45.Value;
+            //        colorSpots.ColorSpot46 = ColorSpot46.Value;
+            //        colorSpots.ColorSpot47 = ColorSpot47.Value;
+            //        colorSpots.ColorSpot48 = ColorSpot48.Value;
+            //        colorSpots.ColorSpot49 = ColorSpot49.Value;
+            //        colorSpots.ColorSpot50 = ColorSpot50.Value;
+            //        colorSpots.ColorSpot51 = ColorSpot51.Value;
+            //        colorSpots.ColorSpot52 = ColorSpot52.Value;
+            //        colorSpots.ColorSpot53 = ColorSpot53.Value;
+            //        colorSpots.ColorSpot54 = ColorSpot54.Value;
+            //        colorSpots.ColorSpot55 = ColorSpot55.Value;
+            //        colorSpots.ColorSpot56 = ColorSpot56.Value;
+            //        colorSpots.ColorSpot57 = ColorSpot57.Value;
+            //        colorSpots.ColorSpot58 = ColorSpot58.Value;
+            //        colorSpots.ColorSpot59 = ColorSpot59.Value;
+            //        colorSpots.ColorSpot60 = ColorSpot60.Value;
+            //        colorSpots.ColorSpot61 = ColorSpot61.Value;
+            //        colorSpots.ColorSpot62 = ColorSpot62.Value;
+            //        colorSpots.ColorSpot63 = ColorSpot63.Value;
+            //        colorSpots.ColorSpot64 = ColorSpot64.Value;
+            //        colorSpots.ColorSpot65 = ColorSpot65.Value;
+            //        colorSpots.ColorSpot66 = ColorSpot66.Value;
+            //        colorSpots.ColorSpot67 = ColorSpot67.Value;
+            //        colorSpots.ColorSpot68 = ColorSpot68.Value;
+            //        colorSpots.ColorSpot69 = ColorSpot69.Value;
+            //        colorSpots.ColorSpot70 = ColorSpot70.Value;
+            //        colorSpots.ColorSpot71 = ColorSpot71.Value;
+            //        colorSpots.ColorSpot72 = ColorSpot72.Value;
+            //        colorSpots.ColorSpot73 = ColorSpot73.Value;
+            //        colorSpots.ColorSpot74 = ColorSpot74.Value;
+            //        colorSpots.ColorSpot75 = ColorSpot75.Value;
+            //        colorSpots.ColorSpot76 = ColorSpot76.Value;
+            //        colorSpots.ColorSpot77 = ColorSpot77.Value;
+            //        colorSpots.ColorSpot78 = ColorSpot78.Value;
+            //        colorSpots.ColorSpot79 = ColorSpot79.Value;
+            //        colorSpots.ColorSpot80 = ColorSpot80.Value;
+            //        colorSpots.ColorSpot81 = ColorSpot81.Value;
+            //        colorSpots.ColorSpot82 = ColorSpot82.Value;
+            //        colorSpots.ColorSpot83 = ColorSpot83.Value;
+            //        colorSpots.ColorSpot84 = ColorSpot84.Value;
+            //        colorSpots.ColorSpot85 = ColorSpot85.Value;
+            //        colorSpots.ColorSpot86 = ColorSpot86.Value;
+            //        colorSpots.ColorSpot87 = ColorSpot87.Value;
+            //        colorSpots.ColorSpot88 = ColorSpot88.Value;
+            //        colorSpots.ColorSpot89 = ColorSpot89.Value;
+            //        colorSpots.ColorSpot90 = ColorSpot90.Value;
+            //        colorSpots.ColorSpot91 = ColorSpot91.Value;
+            //        colorSpots.ColorSpot92 = ColorSpot92.Value;
+            //        colorSpots.ColorSpot93 = ColorSpot93.Value;
+            //        colorSpots.ColorSpot94 = ColorSpot94.Value;
+            //        colorSpots.ColorSpot95 = ColorSpot95.Value;
+            //        colorSpots.ColorSpot96 = ColorSpot96.Value;
+            //        colorSpots.ColorSpot97 = ColorSpot97.Value;
+            //        colorSpots.ColorSpot98 = ColorSpot98.Value;
+            //        colorSpots.ColorSpot99 = ColorSpot99.Value;
 
-                    //something should be written
-                })
-                .AddTo(_disposables);
+            //        //something should be written
+            //        var gradientStopCollection = new GradientStopCollection();
+            //        GradientStops.ToList().ForEach(x => gradientStopCollection.Add(x.ConvertToGradientStop()));
+            //        EditTarget.Value.New = new LinearGradientBrush(gradientStopCollection, StartPoint.Value, EndPoint.Value);
+            //    })
+            //    .AddTo(_disposables);
 
-            
+            TextChangedCommand.Subscribe(args =>
+            {
+                BuildTargetBrush();
+                args.Handled = false;
+            })
+            .AddTo(_disposables);
 
             OpenCloseColorPalleteCommand.Subscribe(_ =>
             {
@@ -270,16 +285,11 @@ namespace boilersGraphics.ViewModels
                     {
                         _spots.ToList().ForEach(x => x.IsSelected.Value = false);
                         colorSpot.IsSelected.Value = true;
-                        var a = colorSpot.Color.A;
-                        var r = colorSpot.Color.R;
-                        var g = colorSpot.Color.G;
-                        var b = colorSpot.Color.B;
-                        //_flag = false;
-                        //A.Value = a;
-                        //R.Value = r;
-                        //G.Value = g;
-                        //B.Value = b;
-                        //_flag = true;
+                        if (SelectedGradientStop.Value != null)
+                        {
+                            SelectedGradientStop.Value.Color.Value = colorSpot.Color;
+                            BuildTargetBrush();
+                        }
                     }
                 }
             })
@@ -293,7 +303,7 @@ namespace boilersGraphics.ViewModels
             .AddTo(_disposables);
             AddGradientStopCommand.Subscribe(x =>
             {
-                GradientStops.Add(new GradientStop(Colors.White, 0));
+                GradientStops.Add(new boilersGraphics.Models.GradientStop(Colors.White, 0));
             })
             .AddTo(_disposables);
             this.dialogService = dialogService;
@@ -401,14 +411,14 @@ namespace boilersGraphics.ViewModels
                 colorSpots.ColorSpot98 = ColorSpot98.Value;
                 colorSpots.ColorSpot99 = ColorSpot99.Value;
                 IDialogResult result = null;
-                this.dialogService.ShowDialog(nameof(SolidColorPicker),
+                this.dialogService.ShowDialog(nameof(OldColorPicker),
                                            new DialogParameters()
                                            {
                                                {
                                                    "ColorExchange",
                                                    new ColorExchange()
                                                    {
-                                                       Old = gradientStop.Color
+                                                       Old = new SolidColorBrush(gradientStop.Color.Value)
                                                    }
                                                },
                                                {
@@ -422,7 +432,8 @@ namespace boilersGraphics.ViewModels
                     var exchange = result.Parameters.GetValue<ColorExchange>("ColorExchange");
                     if (exchange != null)
                     {
-                        gradientStop.Color = exchange.New.Value;
+                        gradientStop.Color.Value = (exchange.New as SolidColorBrush).Color;
+                        BuildTargetBrush();
                     }
                     var _colorSpots = result.Parameters.GetValue<ColorSpots>("ColorSpots");
                     if (_colorSpots != null)
@@ -434,6 +445,14 @@ namespace boilersGraphics.ViewModels
             .AddTo(_disposables);
         }
 
+        private void BuildTargetBrush()
+        {
+            LogManager.GetCurrentClassLogger().Debug($"BuildTargetBrush StartPoint={StartPoint.Value}, EndPoint={EndPoint.Value}");
+            var gradientStopCollection = new GradientStopCollection();
+            GradientStops.ToList().ForEach(x => gradientStopCollection.Add(x.ConvertToGradientStop()));
+            TargetBrush.Value = new LinearGradientBrush(gradientStopCollection, StartPoint.Value, EndPoint.Value);
+        }
+
         public bool IsNavigationTarget(NavigationContext navigationContext)
         {
             return false;
@@ -441,6 +460,107 @@ namespace boilersGraphics.ViewModels
 
         public void OnNavigatedFrom(NavigationContext navigationContext)
         {
+            var colorSpots = navigationContext.Parameters.GetValue<ColorSpots>("ColorSpots");
+            colorSpots.ColorSpot0 = ColorSpot0.Value;
+            colorSpots.ColorSpot1 = ColorSpot1.Value;
+            colorSpots.ColorSpot2 = ColorSpot2.Value;
+            colorSpots.ColorSpot3 = ColorSpot3.Value;
+            colorSpots.ColorSpot4 = ColorSpot4.Value;
+            colorSpots.ColorSpot5 = ColorSpot5.Value;
+            colorSpots.ColorSpot6 = ColorSpot6.Value;
+            colorSpots.ColorSpot7 = ColorSpot7.Value;
+            colorSpots.ColorSpot8 = ColorSpot8.Value;
+            colorSpots.ColorSpot9 = ColorSpot9.Value;
+            colorSpots.ColorSpot10 = ColorSpot10.Value;
+            colorSpots.ColorSpot11 = ColorSpot11.Value;
+            colorSpots.ColorSpot12 = ColorSpot12.Value;
+            colorSpots.ColorSpot13 = ColorSpot13.Value;
+            colorSpots.ColorSpot14 = ColorSpot14.Value;
+            colorSpots.ColorSpot15 = ColorSpot15.Value;
+            colorSpots.ColorSpot16 = ColorSpot16.Value;
+            colorSpots.ColorSpot17 = ColorSpot17.Value;
+            colorSpots.ColorSpot18 = ColorSpot18.Value;
+            colorSpots.ColorSpot19 = ColorSpot19.Value;
+            colorSpots.ColorSpot20 = ColorSpot20.Value;
+            colorSpots.ColorSpot21 = ColorSpot21.Value;
+            colorSpots.ColorSpot22 = ColorSpot22.Value;
+            colorSpots.ColorSpot23 = ColorSpot23.Value;
+            colorSpots.ColorSpot24 = ColorSpot24.Value;
+            colorSpots.ColorSpot25 = ColorSpot25.Value;
+            colorSpots.ColorSpot26 = ColorSpot26.Value;
+            colorSpots.ColorSpot27 = ColorSpot27.Value;
+            colorSpots.ColorSpot28 = ColorSpot28.Value;
+            colorSpots.ColorSpot29 = ColorSpot29.Value;
+            colorSpots.ColorSpot30 = ColorSpot30.Value;
+            colorSpots.ColorSpot31 = ColorSpot31.Value;
+            colorSpots.ColorSpot32 = ColorSpot32.Value;
+            colorSpots.ColorSpot33 = ColorSpot33.Value;
+            colorSpots.ColorSpot34 = ColorSpot34.Value;
+            colorSpots.ColorSpot35 = ColorSpot35.Value;
+            colorSpots.ColorSpot36 = ColorSpot36.Value;
+            colorSpots.ColorSpot37 = ColorSpot37.Value;
+            colorSpots.ColorSpot38 = ColorSpot38.Value;
+            colorSpots.ColorSpot39 = ColorSpot39.Value;
+            colorSpots.ColorSpot40 = ColorSpot40.Value;
+            colorSpots.ColorSpot41 = ColorSpot41.Value;
+            colorSpots.ColorSpot42 = ColorSpot42.Value;
+            colorSpots.ColorSpot43 = ColorSpot43.Value;
+            colorSpots.ColorSpot44 = ColorSpot44.Value;
+            colorSpots.ColorSpot45 = ColorSpot45.Value;
+            colorSpots.ColorSpot46 = ColorSpot46.Value;
+            colorSpots.ColorSpot47 = ColorSpot47.Value;
+            colorSpots.ColorSpot48 = ColorSpot48.Value;
+            colorSpots.ColorSpot49 = ColorSpot49.Value;
+            colorSpots.ColorSpot50 = ColorSpot50.Value;
+            colorSpots.ColorSpot51 = ColorSpot51.Value;
+            colorSpots.ColorSpot52 = ColorSpot52.Value;
+            colorSpots.ColorSpot53 = ColorSpot53.Value;
+            colorSpots.ColorSpot54 = ColorSpot54.Value;
+            colorSpots.ColorSpot55 = ColorSpot55.Value;
+            colorSpots.ColorSpot56 = ColorSpot56.Value;
+            colorSpots.ColorSpot57 = ColorSpot57.Value;
+            colorSpots.ColorSpot58 = ColorSpot58.Value;
+            colorSpots.ColorSpot59 = ColorSpot59.Value;
+            colorSpots.ColorSpot60 = ColorSpot60.Value;
+            colorSpots.ColorSpot61 = ColorSpot61.Value;
+            colorSpots.ColorSpot62 = ColorSpot62.Value;
+            colorSpots.ColorSpot63 = ColorSpot63.Value;
+            colorSpots.ColorSpot64 = ColorSpot64.Value;
+            colorSpots.ColorSpot65 = ColorSpot65.Value;
+            colorSpots.ColorSpot66 = ColorSpot66.Value;
+            colorSpots.ColorSpot67 = ColorSpot67.Value;
+            colorSpots.ColorSpot68 = ColorSpot68.Value;
+            colorSpots.ColorSpot69 = ColorSpot69.Value;
+            colorSpots.ColorSpot70 = ColorSpot70.Value;
+            colorSpots.ColorSpot71 = ColorSpot71.Value;
+            colorSpots.ColorSpot72 = ColorSpot72.Value;
+            colorSpots.ColorSpot73 = ColorSpot73.Value;
+            colorSpots.ColorSpot74 = ColorSpot74.Value;
+            colorSpots.ColorSpot75 = ColorSpot75.Value;
+            colorSpots.ColorSpot76 = ColorSpot76.Value;
+            colorSpots.ColorSpot77 = ColorSpot77.Value;
+            colorSpots.ColorSpot78 = ColorSpot78.Value;
+            colorSpots.ColorSpot79 = ColorSpot79.Value;
+            colorSpots.ColorSpot80 = ColorSpot80.Value;
+            colorSpots.ColorSpot81 = ColorSpot81.Value;
+            colorSpots.ColorSpot82 = ColorSpot82.Value;
+            colorSpots.ColorSpot83 = ColorSpot83.Value;
+            colorSpots.ColorSpot84 = ColorSpot84.Value;
+            colorSpots.ColorSpot85 = ColorSpot85.Value;
+            colorSpots.ColorSpot86 = ColorSpot86.Value;
+            colorSpots.ColorSpot87 = ColorSpot87.Value;
+            colorSpots.ColorSpot88 = ColorSpot88.Value;
+            colorSpots.ColorSpot89 = ColorSpot89.Value;
+            colorSpots.ColorSpot90 = ColorSpot90.Value;
+            colorSpots.ColorSpot91 = ColorSpot91.Value;
+            colorSpots.ColorSpot92 = ColorSpot92.Value;
+            colorSpots.ColorSpot93 = ColorSpot93.Value;
+            colorSpots.ColorSpot94 = ColorSpot94.Value;
+            colorSpots.ColorSpot95 = ColorSpot95.Value;
+            colorSpots.ColorSpot96 = ColorSpot96.Value;
+            colorSpots.ColorSpot97 = ColorSpot97.Value;
+            colorSpots.ColorSpot98 = ColorSpot98.Value;
+            colorSpots.ColorSpot99 = ColorSpot99.Value;
         }
 
         public void OnNavigatedTo(NavigationContext navigationContext)
