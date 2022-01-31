@@ -17,6 +17,7 @@
     <UserControl.Resources>
         <converters:ToSolidColorBrushConverter x:Key="ColorToSolidColorBrush" />
         <converters:StringToPointConverter x:Key="StringToPoint" />
+        <converters:DoubleToStringConverter x:Key="DoubleToString" />
         <DataTemplate x:Key="GradientStopTemplate">
             <DockPanel>
                 <Button DockPanel.Dock="Left"
@@ -32,7 +33,7 @@
                 </Button>
                 <Label DockPanel.Dock="Left"
                                    Content="Offset" />
-                <TextBox Width="50" Text="{Binding Offset.Value, UpdateSourceTrigger=PropertyChanged}">
+                <TextBox Width="50" Text="{Binding Offset.Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DoubleToString}}">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="TextChanged">
                             <helper:EventToCommand Command="{Binding DataContext.TextChangedCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=local:LinearGradientBrushPicker}}" PassEventArgsToCommand="True" />
@@ -223,10 +224,17 @@
                     </i:Interaction.Triggers>
                 </TextBox>      
             </StackPanel>
-            <ListView ItemsSource="{Binding GradientStops}"
+            <ListView ItemsSource="{Binding GradientStops, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                       SelectedItem="{Binding SelectedGradientStop.Value}"
-                      dd:DragDropHelper.IsDropTarget="True" dd:DragDropHelper.IsDragSource="True"
+                      dd:DragDropHelper.IsDropTarget="True"
+                      dd:DragDropHelper.IsDragSource="True"
+                      dd:DragDropHelper.DragDropTemplate="{StaticResource GradientStopTemplate}"
                       ItemTemplate="{StaticResource GradientStopTemplate}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SelectionChanged">
+                        <helper:EventToCommand Command="{Binding SelectionChangedCommand}" PassEventArgsToCommand="True" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
             </ListView>
         </DockPanel>
     </DockPanel>
