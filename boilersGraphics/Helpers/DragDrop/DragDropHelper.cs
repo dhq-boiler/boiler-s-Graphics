@@ -388,6 +388,8 @@ namespace boilersGraphics.Helpers.DragDrop
             Debug.WriteLine("Adorner Left: " + left);
             double top = currentPosition.Y - this._initialMousePosition.Y + this._initialMouseOffset.Y;
             Debug.WriteLine("Adorner Top: " + top);
+            if (this._draggedAdorner.AdornedElement is ContentControl cc && cc.Content.GetType().FullName == "MS.Internal.NamedObject")
+                return;
             this._draggedAdorner.SetPosition(left, top);
         }
 
