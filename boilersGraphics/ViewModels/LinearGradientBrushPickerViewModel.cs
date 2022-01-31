@@ -29,6 +29,7 @@ namespace boilersGraphics.ViewModels
         public ReactivePropertySlim<Brush> TargetBrush { get; } = new ReactivePropertySlim<Brush>();
         //public ReactiveCommand OKCommand { get; }
         public ReactiveCommand<boilersGraphics.Models.GradientStop> SelectGradientStopColorCommand { get; } = new ReactiveCommand<boilersGraphics.Models.GradientStop>();
+        public ReactiveCommand<Models.GradientStop> RemoveGradientStopCommand { get; } = new ReactiveCommand<Models.GradientStop>();
         public ReactiveCommand SpotSelectCommand { get; } = new ReactiveCommand();
         public ReactiveCommand<RoutedEventArgs> LoadedCommand { get; } = new ReactiveCommand<RoutedEventArgs>();
         public ReactiveCommand OpenCloseColorPalleteCommand { get; } = new ReactiveCommand();
@@ -263,6 +264,12 @@ namespace boilersGraphics.ViewModels
             {
                 BuildTargetBrush();
                 args.Handled = false;
+            })
+            .AddTo(_disposables);
+            RemoveGradientStopCommand.Subscribe(x =>
+            {
+                GradientStops.Remove(x);
+                BuildTargetBrush();
             })
             .AddTo(_disposables);
 
