@@ -10,12 +10,40 @@
              xmlns:local="clr-namespace:boilersGraphics.Views"
              xmlns:views="clr-namespace:boilersGraphics.Views"
              xmlns:prism="http://prismlibrary.com/"
+             xmlns:dd="clr-namespace:boilersGraphics.Helpers.DragDrop"
              xmlns:converters="clr-namespace:boilersGraphics.Converters"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d">
     <UserControl.Resources>
         <converters:ToSolidColorBrushConverter x:Key="ColorToSolidColorBrush" />
         <converters:StringToPointConverter x:Key="StringToPoint" />
+        <DataTemplate x:Key="GradientStopTemplate">
+            <DockPanel>
+                <Button DockPanel.Dock="Left"
+                                    Command="{Binding DataContext.SelectGradientStopColorCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=local:LinearGradientBrushPicker}}"
+                                    CommandParameter="{Binding}">
+                    <Button.Template>
+                        <ControlTemplate>
+                            <Rectangle Fill="{Binding Color.Value, Converter={StaticResource ColorToSolidColorBrush}}"
+                                                   Width="20"
+                                                   Height="20" />
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+                <Label DockPanel.Dock="Left"
+                                   Content="Offset" />
+                <TextBox Width="50" Text="{Binding Offset.Value, UpdateSourceTrigger=PropertyChanged}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="TextChanged">
+                            <helper:EventToCommand Command="{Binding DataContext.TextChangedCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=local:LinearGradientBrushPicker}}" PassEventArgsToCommand="True" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </TextBox>
+                <Button DockPanel.Dock="Right"
+                                    Command="{Binding DataContext.RemoveGradientStopCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=local:LinearGradientBrushPicker}}"
+                                    CommandParameter="{Binding}">×</Button>
+            </DockPanel>
+        </DataTemplate>
     </UserControl.Resources>
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
@@ -196,36 +224,9 @@
                 </TextBox>      
             </StackPanel>
             <ListView ItemsSource="{Binding GradientStops}"
-                      SelectedItem="{Binding SelectedGradientStop.Value}">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <DockPanel>
-                            <Button DockPanel.Dock="Left"
-                                    Command="{Binding DataContext.SelectGradientStopColorCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=local:LinearGradientBrushPicker}}"
-                                    CommandParameter="{Binding}">
-                                <Button.Template>
-                                    <ControlTemplate>
-                                        <Rectangle Fill="{Binding Color.Value, Converter={StaticResource ColorToSolidColorBrush}}"
-                                                   Width="20"
-                                                   Height="20" />
-                                    </ControlTemplate>
-                                </Button.Template>
-                            </Button>
-                            <Label DockPanel.Dock="Left"
-                                   Content="Offset" />
-                            <TextBox Width="50" Text="{Binding Offset.Value, UpdateSourceTrigger=PropertyChanged}">
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="TextChanged">
-                                        <helper:EventToCommand Command="{Binding DataContext.TextChangedCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=local:LinearGradientBrushPicker}}" PassEventArgsToCommand="True" />
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-                            </TextBox>
-                            <Button DockPanel.Dock="Right"
-                                    Command="{Binding DataContext.RemoveGradientStopCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=local:LinearGradientBrushPicker}}"
-                                    CommandParameter="{Binding}">×</Button>
-                        </DockPanel>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
+                      SelectedItem="{Binding SelectedGradientStop.Value}"
+                      dd:DragDropHelper.IsDropTarget="True" dd:DragDropHelper.IsDragSource="True"
+                      ItemTemplate="{StaticResource GradientStopTemplate}">
             </ListView>
         </DockPanel>
     </DockPanel>
