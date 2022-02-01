@@ -16,7 +16,7 @@
              mc:Ignorable="d">
     <UserControl.Resources>
         <converter:IntToStringConverter x:Key="IntToStringConverter" />
-        <converter:ColorToStringConverter x:Key="ColorToStringConverter" />
+        <converter:BrushToStringConverter x:Key="BrushToStringConverter" />
         <converter:ToSolidColorBrushConverter x:Key="solidColorBrushConverter" />
         <converter:BoolToEnumConverter x:Key="BoolToEnumConverter" />
     </UserControl.Resources>
@@ -78,15 +78,15 @@
                             </VisualBrush.Visual>
                         </VisualBrush>
                     </Grid.Background>
-                    <Button Command="{Binding ChangeCanvasBackgroundCommand}" Content="{Binding EditTarget.Value.CanvasBackground.Value, Converter={StaticResource ColorToStringConverter}}">
+                    <Button Command="{Binding ChangeCanvasBackgroundCommand}" Content="{Binding EditTarget.Value.CanvasBackground.Value, Converter={StaticResource BrushToStringConverter}}">
                         <Button.Style>
                             <Style TargetType="{x:Type Button}">
                                 <Style.Triggers>
                                     <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter Property="Background" Value="{Binding EditTarget.Value.CanvasBackground.Value, Converter={StaticResource ColorToStringConverter}}" />
+                                        <Setter Property="Background" Value="{Binding EditTarget.Value.CanvasBackground.Value, Converter={StaticResource BrushToStringConverter}}" />
                                     </Trigger>
                                     <Trigger Property="IsMouseOver" Value="False">
-                                        <Setter Property="Background" Value="{Binding EditTarget.Value.CanvasBackground.Value, Converter={StaticResource ColorToStringConverter}}" />
+                                        <Setter Property="Background" Value="{Binding EditTarget.Value.CanvasBackground.Value, Converter={StaticResource BrushToStringConverter}}" />
                                     </Trigger>
                                 </Style.Triggers>
                             </Style>

@@ -48,6 +48,10 @@ namespace boilersGraphics.ViewModels
                                                    {
                                                        Old = EditTarget.Value.CanvasBackground.Value
                                                    }
+                                               },
+                                               {
+                                                   "ColorSpots",
+                                                   (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.ColorSpots.Value
                                                }
                                            },
                                            ret => result = ret);

@@ -4,16 +4,18 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
 
 namespace boilersGraphics.Converters
 {
-    public class ColorToStringConverter : IValueConverter
+    public class BrushToStringConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var color = (Color)value;
+            if (value == null) return DependencyProperty.UnsetValue;
+            var color = (Brush)value;
             return color.ToString();
         }
 
