@@ -232,14 +232,13 @@ namespace boilersGraphics.Helpers
             item.Height.Value = double.Parse(snapPointElm.Element("Height").Value);
             item.ZIndex.Value = Int32.Parse(snapPointElm.Element("ZIndex").Value);
             item.Matrix.Value = new Matrix();
-            var brushConverter = new BrushConverter();
             if (snapPointElm.Element("EdgeColor") != null)
             {
                 item.EdgeBrush.Value = new SolidColorBrush((Color)ColorConverter.ConvertFromString(snapPointElm.Element("EdgeColor").Value));
             }
             else
             {
-                item.EdgeBrush.Value = brushConverter.ConvertFromString(snapPointElm.Element("EdgeBrush").Value) as Brush;
+                item.EdgeBrush.Value = WpfObjectSerializer.Deserialize(snapPointElm.Element("EdgeBrush").Nodes().First().ToString()) as Brush;
             }
             if (snapPointElm.Element("FillColor") != null)
             {
@@ -247,7 +246,7 @@ namespace boilersGraphics.Helpers
             }
             else
             {
-                item.FillBrush.Value = brushConverter.ConvertFromString(snapPointElm.Element("FillBrush").Value) as Brush;
+                item.FillBrush.Value = WpfObjectSerializer.Deserialize(snapPointElm.Element("FillBrush").Nodes().First().ToString()) as Brush;
             }
             item.EdgeThickness.Value = double.Parse(snapPointElm.Element("EdgeThickness").Value);
             item.PathGeometry.Value = PathGeometry.CreateFromGeometry(PathGeometry.Parse(snapPointElm.Element("PathGeometry").Value));
@@ -269,8 +268,7 @@ namespace boilersGraphics.Helpers
                 item.AddPoints(diagramViewModel, Point.Parse(connectorElm.Element("BeginPoint").Value), Point.Parse(connectorElm.Element("EndPoint").Value));
             }
             item.ZIndex.Value = Int32.Parse(connectorElm.Element("ZIndex").Value);
-            var brushConverter = new BrushConverter();
-            item.EdgeBrush.Value = brushConverter.ConvertFromString(connectorElm.Element("EdgeBrush").Value) as Brush;
+            item.EdgeBrush.Value = WpfObjectSerializer.Deserialize(connectorElm.Element("EdgeBrush").Nodes().First().ToString()) as Brush;
             item.EdgeThickness.Value = double.Parse(connectorElm.Element("EdgeThickness").Value);
             item.LeftTop.Value = Point.Parse(connectorElm.Element("LeftTop").Value);
             if (item is StraightConnectorViewModel || item is BezierCurveViewModel)
@@ -318,14 +316,13 @@ namespace boilersGraphics.Helpers
             item.ParentID = Guid.Parse(designerItemElm.Element("ParentID").Value);
             item.ZIndex.Value = Int32.Parse(designerItemElm.Element("ZIndex").Value);
             //item.Matrix.Value = Matrix.Parse(designerItemElm.Element("Matrix").Value);
-            var brushConverter = new BrushConverter();
             if (designerItemElm.Element("EdgeColor") != null)
             {
                 item.EdgeBrush.Value = new SolidColorBrush((Color)ColorConverter.ConvertFromString(designerItemElm.Element("EdgeColor").Value));
             }
             else
             {
-                item.EdgeBrush.Value = brushConverter.ConvertFromString(designerItemElm.Element("EdgeBrush").Value) as Brush;
+                item.EdgeBrush.Value = WpfObjectSerializer.Deserialize(designerItemElm.Element("EdgeBrush").Nodes().First().ToString()) as Brush;
             }
             if (designerItemElm.Element("FillColor") != null)
             {
@@ -333,7 +330,7 @@ namespace boilersGraphics.Helpers
             }
             else
             {
-                item.FillBrush.Value = brushConverter.ConvertFromString(designerItemElm.Element("FillBrush").Value) as Brush;
+                item.FillBrush.Value = WpfObjectSerializer.Deserialize(designerItemElm.Element("FillBrush").Nodes().First().ToString()) as Brush;
             }
             item.EdgeThickness.Value = double.Parse(designerItemElm.Element("EdgeThickness").Value);
             item.PathGeometry.Value = PathGeometry.CreateFromGeometry(PathGeometry.Parse(designerItemElm.Element("PathGeometry").Value));
