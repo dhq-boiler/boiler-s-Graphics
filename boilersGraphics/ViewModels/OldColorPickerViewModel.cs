@@ -294,10 +294,11 @@ namespace boilersGraphics.ViewModels
                     {
                         _spots.ToList().ForEach(x => x.IsSelected.Value = false);
                         colorSpot.IsSelected.Value = true;
-                        var a = colorSpot.Color.A;
-                        var r = colorSpot.Color.R;
-                        var g = colorSpot.Color.G;
-                        var b = colorSpot.Color.B;
+                        var color = BrushHelper.ExtractColor(colorSpot.Brush);
+                        var a = color.A;
+                        var r = color.R;
+                        var g = color.G;
+                        var b = color.B;
                         _flag = false;
                         A.Value = a;
                         R.Value = r;
@@ -325,7 +326,7 @@ namespace boilersGraphics.ViewModels
                       .ToList()
                       .ForEach(x =>
                       {
-                          x.Color = Output.Value;
+                          x.Brush = new SolidColorBrush(Output.Value);
                       });
             }
         }
