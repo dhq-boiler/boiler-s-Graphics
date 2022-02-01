@@ -152,6 +152,7 @@ namespace boilersGraphics.ViewModels
                          .Subscribe(x =>
                          {
                              Sort(GradientStops);
+                             BuildTargetBrush();
                          })
                          .AddTo(_disposables);
 
@@ -485,6 +486,27 @@ namespace boilersGraphics.ViewModels
 
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
+            var brush = navigationContext.Parameters.GetValue<ColorExchange>("ColorExchange").Old;
+            var solidColorBrush = brush as SolidColorBrush;
+            if (solidColorBrush != null)
+            {
+                GradientStops.Add(new Models.GradientStop(solidColorBrush.Color, 0));
+                StartPoint.Value = new Point(0, 0);
+                EndPoint.Value = new Point(1, 1);
+            }
+
+            var linearGreadientBrush = brush as LinearGradientBrush;
+            if (linearGreadientBrush != null)
+            {
+                foreach (var gradientStop in linearGreadientBrush.GradientStops)
+                {
+                    GradientStops.Add(new Models.GradientStop(gradientStop.Color, gradientStop.Offset));
+                }
+                StartPoint.Value = linearGreadientBrush.StartPoint;
+                EndPoint.Value = linearGreadientBrush.EndPoint;
+            }
+            BuildTargetBrush();
+
             var colorspots = navigationContext.Parameters.GetValue<ColorSpots>("ColorSpots");
             this.ColorSpot0.Value = colorspots.ColorSpot0;
             this.ColorSpot1.Value = colorspots.ColorSpot1;

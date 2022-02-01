@@ -42,11 +42,6 @@ namespace boilersGraphics.ViewModels
             {
                 var source = x.Source;
                 _colorPicker = source as ColorPicker;
-                regionManager.RequestNavigate("ColorPickerRegion", nameof(SolidColorPicker), new NavigationParameters()
-                {
-                    { "ColorExchange", EditTarget.Value },
-                    { "ColorSpots", ColorSpots.Value }
-                });
             })
             .AddTo(disposables);
             UnloadedCommand.Subscribe(x =>
@@ -306,6 +301,31 @@ namespace boilersGraphics.ViewModels
             EditTarget.Value = parameters.GetValue<ColorExchange>("ColorExchange");
             ColorSpots.Value = parameters.GetValue<ColorSpots>("ColorSpots");
 
+            if (EditTarget.Value.Old is SolidColorBrush scb)
+            {
+                regionManager.RequestNavigate("ColorPickerRegion", nameof(SolidColorPicker), new NavigationParameters()
+                {
+                    { "ColorExchange", EditTarget.Value },
+                    { "ColorSpots", ColorSpots.Value }
+                });
+            }
+            else if (EditTarget.Value.Old is LinearGradientBrush lgb)
+            {
+                regionManager.RequestNavigate("ColorPickerRegion", nameof(LinearGradientBrushPicker), new NavigationParameters()
+                {
+                    { "ColorExchange", EditTarget.Value },
+                    { "ColorSpots", ColorSpots.Value }
+                });
+            }
+            else if (EditTarget.Value.Old is RadialGradientBrush rgb)
+            {
+                regionManager.RequestNavigate("ColorPickerRegion", nameof(RadialGradientBrushPicker), new NavigationParameters()
+                {
+                    { "ColorExchange", EditTarget.Value },
+                    { "ColorSpots", ColorSpots.Value }
+                });
+            }
+
             SelectSolidColorCommand.Subscribe(_ =>
             {
                 regionManager.RequestNavigate("ColorPickerRegion", nameof(SolidColorPicker), new NavigationParameters()
@@ -319,13 +339,18 @@ namespace boilersGraphics.ViewModels
             {
                 regionManager.RequestNavigate("ColorPickerRegion", nameof(LinearGradientBrushPicker), new NavigationParameters()
                 {
+                    { "ColorExchange", EditTarget.Value },
                     { "ColorSpots", ColorSpots.Value }
                 });
             })
             .AddTo(disposables);
             SelectRadialGradientCommand.Subscribe(_ =>
             {
-                regionManager.RequestNavigate("ColorPickerRegion", nameof(RadialGradientBrushPicker));
+                regionManager.RequestNavigate("ColorPickerRegion", nameof(RadialGradientBrushPicker), new NavigationParameters()
+                {
+                    { "ColorExchange", EditTarget.Value },
+                    { "ColorSpots", ColorSpots.Value }
+                });
             })
             .AddTo(disposables);
         }

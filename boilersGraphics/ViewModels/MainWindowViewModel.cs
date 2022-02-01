@@ -111,7 +111,7 @@ namespace boilersGraphics.ViewModels
                                                    "ColorExchange",
                                                    new ColorExchange()
                                                    {
-                                                       Old = DiagramViewModel.EdgeBrush.Value as SolidColorBrush
+                                                       Old = DiagramViewModel.EdgeBrush.Value
                                                    }
                                                },
                                                {

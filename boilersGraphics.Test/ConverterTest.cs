@@ -52,7 +52,7 @@ namespace boilersGraphics.Test
         public void DoubleToStringConverter_ConvertBack()
         {
             var converter = new DoubleToStringConverter();
-            Assert.That(converter.ConvertBack("", typeof(string), null, null), Is.EqualTo(0));
+            Assert.That(converter.ConvertBack("", typeof(string), null, null), Is.EqualTo(Binding.DoNothing));
             Assert.That(converter.ConvertBack("0.", typeof(string), null, null), Is.EqualTo(Binding.DoNothing));
             Assert.That(converter.ConvertBack("-", typeof(string), null, null), Is.EqualTo(Binding.DoNothing));
             Assert.That(converter.ConvertBack("0.0001", typeof(string), null, null), Is.EqualTo(0.0001));
