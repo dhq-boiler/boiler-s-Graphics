@@ -104,8 +104,8 @@ namespace boilersGraphics.ViewModels
             clone.Top.Value = Top.Value;
             clone.Width.Value = Width.Value;
             clone.Height.Value = Height.Value;
-            clone.EdgeColor.Value = EdgeColor.Value;
-            clone.FillColor.Value = FillColor.Value;
+            clone.EdgeBrush.Value = EdgeBrush.Value;
+            clone.FillBrush.Value = FillBrush.Value;
             clone.EdgeThickness.Value = EdgeThickness.Value;
             clone.RotationAngle.Value = RotationAngle.Value;
             clone.PenLineJoin.Value = PenLineJoin.Value;

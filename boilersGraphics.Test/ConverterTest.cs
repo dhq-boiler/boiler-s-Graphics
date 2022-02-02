@@ -16,22 +16,22 @@ namespace boilersGraphics.Test
     public class ConverterTest
     {
         [Test]
-        public void ColorToStringConverter_Convert()
+        public void BrushToStringConverter_Convert()
         {
-            var converter = new ColorToStringConverter();
-            Assert.That(converter.Convert(Colors.Red, typeof(Color), null, null), Is.EqualTo("#FFFF0000"));
-            Assert.That(converter.Convert(Colors.Lime, typeof(Color), null, null), Is.EqualTo("#FF00FF00"));
-            Assert.That(converter.Convert(Colors.Green, typeof(Color), null, null), Is.EqualTo("#FF008000"));
-            Assert.That(converter.Convert(Colors.Blue, typeof(Color), null, null), Is.EqualTo("#FF0000FF"));
-            Assert.That(converter.Convert(Colors.White, typeof(Color), null, null), Is.EqualTo("#FFFFFFFF"));
-            Assert.That(converter.Convert(Colors.Black, typeof(Color), null, null), Is.EqualTo("#FF000000"));
-            Assert.That(converter.Convert(Colors.Transparent, typeof(Color), null, null), Is.EqualTo("#00FFFFFF"));
+            var converter = new BrushToStringConverter();
+            Assert.That(converter.Convert(Brushes.Red, typeof(Brush), null, null), Is.EqualTo("#FFFF0000"));
+            Assert.That(converter.Convert(Brushes.Lime, typeof(Brush), null, null), Is.EqualTo("#FF00FF00"));
+            Assert.That(converter.Convert(Brushes.Green, typeof(Brush), null, null), Is.EqualTo("#FF008000"));
+            Assert.That(converter.Convert(Brushes.Blue, typeof(Brush), null, null), Is.EqualTo("#FF0000FF"));
+            Assert.That(converter.Convert(Brushes.White, typeof(Brush), null, null), Is.EqualTo("#FFFFFFFF"));
+            Assert.That(converter.Convert(Brushes.Black, typeof(Brush), null, null), Is.EqualTo("#FF000000"));
+            Assert.That(converter.Convert(Brushes.Transparent, typeof(Brush), null, null), Is.EqualTo("#00FFFFFF"));
         }
 
         [Test]
-        public void ColorToStringConverter_ConvertBack()
+        public void BrushToStringConverter_ConvertBack()
         {
-            var converter = new ColorToStringConverter();
+            var converter = new BrushToStringConverter();
             Assert.That(() => converter.ConvertBack("#FFFF0000", typeof(string), null, null), Throws.InstanceOf<NotImplementedException>());
         }
 
@@ -52,7 +52,7 @@ namespace boilersGraphics.Test
         public void DoubleToStringConverter_ConvertBack()
         {
             var converter = new DoubleToStringConverter();
-            Assert.That(converter.ConvertBack("", typeof(string), null, null), Is.EqualTo(0));
+            Assert.That(converter.ConvertBack("", typeof(string), null, null), Is.EqualTo(Binding.DoNothing));
             Assert.That(converter.ConvertBack("0.", typeof(string), null, null), Is.EqualTo(Binding.DoNothing));
             Assert.That(converter.ConvertBack("-", typeof(string), null, null), Is.EqualTo(Binding.DoNothing));
             Assert.That(converter.ConvertBack("0.0001", typeof(string), null, null), Is.EqualTo(0.0001));

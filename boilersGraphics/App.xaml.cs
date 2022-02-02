@@ -119,7 +119,13 @@ namespace boilersGraphics
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
+            containerRegistry.RegisterForNavigation<SolidColorPicker>();
+            containerRegistry.RegisterForNavigation<LinearGradientBrushPicker>();
+            containerRegistry.RegisterForNavigation<RadialGradientBrushPicker>();
+
             containerRegistry.RegisterDialog<ColorPicker, ViewModels.ColorPickerViewModel>();
+            containerRegistry.RegisterDialog<OldColorPicker, ViewModels.OldColorPickerViewModel>();
+            containerRegistry.RegisterDialog<SolidColorPicker, ViewModels.SolidColorPickerViewModel>();
             containerRegistry.RegisterDialog<LetterSetting, ViewModels.LetterSettingViewModel>();
             containerRegistry.RegisterDialog<LetterVerticalSetting, ViewModels.LetterVerticalSettingViewModel>();
             containerRegistry.RegisterDialog<Views.Preference, ViewModels.PreferenceViewModel>();

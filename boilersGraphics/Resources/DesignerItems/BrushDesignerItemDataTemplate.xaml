@@ -8,11 +8,11 @@
     <convereter:ToSolidColorBrushConverter x:Key="solidColorBrushConverter" />
     <DataTemplate DataType="{x:Type viewModel:BrushViewModel}">
         <Path Data="{Binding PathGeometry.Value}"
-              Fill="{Binding FillColor.Value, Converter={StaticResource solidColorBrushConverter}}"
+              Fill="{Binding FillBrush.Value}"
               Focusable="True"
               IsHitTestVisible="False"
               Stretch="None"
-              Stroke="{Binding EdgeColor.Value, Converter={StaticResource solidColorBrushConverter}}"
+              Stroke="{Binding EdgeBrush.Value}"
               StrokeThickness="{Binding EdgeThickness.Value}"
               StrokeLineJoin="{Binding PenLineJoin.Value}"
               StrokeDashArray="{Binding StrokeDashArray.Value}">

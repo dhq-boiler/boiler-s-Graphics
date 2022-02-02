@@ -232,8 +232,22 @@ namespace boilersGraphics.Helpers
             item.Height.Value = double.Parse(snapPointElm.Element("Height").Value);
             item.ZIndex.Value = Int32.Parse(snapPointElm.Element("ZIndex").Value);
             item.Matrix.Value = new Matrix();
-            item.EdgeColor.Value = (Color)ColorConverter.ConvertFromString(snapPointElm.Element("EdgeColor").Value);
-            item.FillColor.Value = (Color)ColorConverter.ConvertFromString(snapPointElm.Element("FillColor").Value);
+            if (snapPointElm.Element("EdgeColor") != null)
+            {
+                item.EdgeBrush.Value = new SolidColorBrush((Color)ColorConverter.ConvertFromString(snapPointElm.Element("EdgeColor").Value));
+            }
+            else
+            {
+                item.EdgeBrush.Value = WpfObjectSerializer.Deserialize(snapPointElm.Element("EdgeBrush").Nodes().First().ToString()) as Brush;
+            }
+            if (snapPointElm.Element("FillColor") != null)
+            {
+                item.FillBrush.Value = new SolidColorBrush((Color)ColorConverter.ConvertFromString(snapPointElm.Element("FillColor").Value));
+            }
+            else
+            {
+                item.FillBrush.Value = WpfObjectSerializer.Deserialize(snapPointElm.Element("FillBrush").Nodes().First().ToString()) as Brush;
+            }
             item.EdgeThickness.Value = double.Parse(snapPointElm.Element("EdgeThickness").Value);
             item.PathGeometry.Value = PathGeometry.CreateFromGeometry(PathGeometry.Parse(snapPointElm.Element("PathGeometry").Value));
             item.Opacity.Value = 0.5;
@@ -254,7 +268,7 @@ namespace boilersGraphics.Helpers
                 item.AddPoints(diagramViewModel, Point.Parse(connectorElm.Element("BeginPoint").Value), Point.Parse(connectorElm.Element("EndPoint").Value));
             }
             item.ZIndex.Value = Int32.Parse(connectorElm.Element("ZIndex").Value);
-            item.EdgeColor.Value = (Color)ColorConverter.ConvertFromString(connectorElm.Element("EdgeColor").Value);
+            item.EdgeBrush.Value = WpfObjectSerializer.Deserialize(connectorElm.Element("EdgeBrush").Nodes().First().ToString()) as Brush;
             item.EdgeThickness.Value = double.Parse(connectorElm.Element("EdgeThickness").Value);
             item.LeftTop.Value = Point.Parse(connectorElm.Element("LeftTop").Value);
             if (item is StraightConnectorViewModel || item is BezierCurveViewModel)
@@ -302,8 +316,22 @@ namespace boilersGraphics.Helpers
             item.ParentID = Guid.Parse(designerItemElm.Element("ParentID").Value);
             item.ZIndex.Value = Int32.Parse(designerItemElm.Element("ZIndex").Value);
             //item.Matrix.Value = Matrix.Parse(designerItemElm.Element("Matrix").Value);
-            item.EdgeColor.Value = (Color)ColorConverter.ConvertFromString(designerItemElm.Element("EdgeColor").Value);
-            item.FillColor.Value = (Color)ColorConverter.ConvertFromString(designerItemElm.Element("FillColor").Value);
+            if (designerItemElm.Element("EdgeColor") != null)
+            {
+                item.EdgeBrush.Value = new SolidColorBrush((Color)ColorConverter.ConvertFromString(designerItemElm.Element("EdgeColor").Value));
+            }
+            else
+            {
+                item.EdgeBrush.Value = WpfObjectSerializer.Deserialize(designerItemElm.Element("EdgeBrush").Nodes().First().ToString()) as Brush;
+            }
+            if (designerItemElm.Element("FillColor") != null)
+            {
+                item.FillBrush.Value = new SolidColorBrush((Color)ColorConverter.ConvertFromString(designerItemElm.Element("FillColor").Value));
+            }
+            else
+            {
+                item.FillBrush.Value = WpfObjectSerializer.Deserialize(designerItemElm.Element("FillBrush").Nodes().First().ToString()) as Brush;
+            }
             item.EdgeThickness.Value = double.Parse(designerItemElm.Element("EdgeThickness").Value);
             item.PathGeometry.Value = PathGeometry.CreateFromGeometry(PathGeometry.Parse(designerItemElm.Element("PathGeometry").Value));
             item.RotationAngle.Value = double.Parse(designerItemElm.Element("RotationAngle").Value);

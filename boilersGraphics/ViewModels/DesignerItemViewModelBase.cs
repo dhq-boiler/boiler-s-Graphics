@@ -1,5 +1,4 @@
-﻿using boilersGraphics.Controls;
-using boilersGraphics.Helpers;
+﻿using boilersGraphics.Helpers;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
@@ -8,7 +7,6 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Media;
-using static boilersGraphics.Helpers.SnapAction;
 
 namespace boilersGraphics.ViewModels
 {

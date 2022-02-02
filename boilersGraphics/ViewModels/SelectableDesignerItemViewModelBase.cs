@@ -60,7 +60,9 @@ namespace boilersGraphics.ViewModels
 
         public ReactivePropertySlim<int> ZIndex { get; } = new ReactivePropertySlim<int>();
 
-        public ReactivePropertySlim<Color> EdgeColor { get; } = new ReactivePropertySlim<Color>();
+        public ReactivePropertySlim<Brush> EdgeBrush { get; } = new ReactivePropertySlim<Brush>(Brushes.Transparent);
+
+        public ReactivePropertySlim<Brush> FillBrush { get; } = new ReactivePropertySlim<Brush>(Brushes.Transparent);
 
         public ReactivePropertySlim<double> EdgeThickness { get; } = new ReactivePropertySlim<double>();
 
@@ -74,8 +76,6 @@ namespace boilersGraphics.ViewModels
         public ReactivePropertySlim<bool> IsHitTestVisible { get; set; } = new ReactivePropertySlim<bool>();
 
         public ReactivePropertySlim<bool> CanDrag { get; set; } = new ReactivePropertySlim<bool>(true);
-
-        public ReactivePropertySlim<Color> FillColor { get; } = new ReactivePropertySlim<Color>();
 
         public ReactivePropertySlim<PenLineJoin> PenLineJoin { get; } = new ReactivePropertySlim<PenLineJoin>();
 

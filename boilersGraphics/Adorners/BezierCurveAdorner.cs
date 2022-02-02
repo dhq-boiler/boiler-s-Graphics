@@ -31,7 +31,7 @@ namespace boilersGraphics.Adorners
             _designerCanvas = designerCanvas;
             _startPoint = dragStartPoint;
             var parent = (AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel;
-            var brush = new SolidColorBrush(parent.EdgeColors.First());
+            var brush = parent.EdgeBrush.Value.Clone();
             brush.Opacity = 0.5;
             _bezierCurvePen = new Pen(brush, parent.EdgeThickness.Value.Value);
             _snapAction = new SnapAction();
@@ -77,7 +77,7 @@ namespace boilersGraphics.Adorners
                 points.Add(_endPoint.Value);
                 var item = new BezierCurveViewModel((AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel, _startPoint.Value, _endPoint.Value, BezierCurve.Evaluate(0.25, points), BezierCurve.Evaluate(0.75, points));
                 item.Owner = (AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel;
-                item.EdgeColor.Value = item.Owner.EdgeColors.First();
+                item.EdgeBrush.Value = item.Owner.EdgeBrush.Value.Clone();
                 item.EdgeThickness.Value = item.Owner.EdgeThickness.Value.Value;
                 item.ZIndex.Value = item.Owner.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).Count();
                 item.IsSelected.Value = true;

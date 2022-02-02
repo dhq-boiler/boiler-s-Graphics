@@ -25,6 +25,7 @@ using System.Reactive.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
+using System.Windows.Media;
 using TsOperationHistory;
 using TsOperationHistory.Extensions;
 
@@ -110,7 +111,7 @@ namespace boilersGraphics.ViewModels
                                                    "ColorExchange",
                                                    new ColorExchange()
                                                    {
-                                                       Old = DiagramViewModel.EdgeColors.FirstOrDefault()
+                                                       Old = DiagramViewModel.EdgeBrush.Value
                                                    }
                                                },
                                                {
@@ -125,14 +126,13 @@ namespace boilersGraphics.ViewModels
                     if (exchange != null)
                     {
                         Recorder.BeginRecode();
-                        DiagramViewModel.EdgeColors.ToClearOperation().ExecuteTo(Recorder.Current);
-                        DiagramViewModel.EdgeColors.ToAddOperation(exchange.New.Value).ExecuteTo(Recorder.Current);
+                        Recorder.Current.ExecuteSetProperty(DiagramViewModel, "EdgeBrush.Value", exchange.New);
                         foreach (var item in DiagramViewModel.SelectedItems.Value.OfType<SelectableDesignerItemViewModelBase>())
                         {
                             if (item is SnapPointViewModel snapPoint)
-                                Recorder.Current.ExecuteSetProperty(snapPoint.Parent.Value, "EdgeColor.Value", exchange.New.Value);
+                                Recorder.Current.ExecuteSetProperty(snapPoint.Parent.Value, "EdgeBrush.Value", exchange.New);
                             else
-                                Recorder.Current.ExecuteSetProperty(item, "EdgeColor.Value", exchange.New.Value);
+                                Recorder.Current.ExecuteSetProperty(item, "EdgeBrush.Value", exchange.New);
                         }
                         Recorder.EndRecode();
                     }
@@ -153,7 +153,7 @@ namespace boilersGraphics.ViewModels
                                                    "ColorExchange",
                                                    new ColorExchange()
                                                    {
-                                                       Old = DiagramViewModel.FillColors.FirstOrDefault()
+                                                       Old = DiagramViewModel.FillBrush.Value
                                                    }
                                                },
                                                {
@@ -168,11 +168,10 @@ namespace boilersGraphics.ViewModels
                     if (exchange != null)
                     {
                         Recorder.BeginRecode();
-                        DiagramViewModel.FillColors.ToClearOperation().ExecuteTo(Recorder.Current);
-                        DiagramViewModel.FillColors.ToAddOperation(exchange.New.Value).ExecuteTo(Recorder.Current);
+                        Recorder.Current.ExecuteSetProperty(DiagramViewModel, "FillBrush.Value", exchange.New);
                         foreach (var item in DiagramViewModel.SelectedItems.Value.OfType<DesignerItemViewModelBase>())
                         {
-                            Recorder.Current.ExecuteSetProperty(item, "FillColor.Value", exchange.New.Value);
+                            Recorder.Current.ExecuteSetProperty(item, "FillBrush.Value", exchange.New);
                         }
                         Recorder.EndRecode();
                     }

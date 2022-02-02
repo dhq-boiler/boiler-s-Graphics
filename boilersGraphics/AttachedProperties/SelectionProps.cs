@@ -101,8 +101,6 @@ namespace boilersGraphics.AttachedProperties
                 else
                 {
                     selectableDesignerItemViewModelBase.Owner.DeselectAll();
-                    selectableDesignerItemViewModelBase.Owner.EdgeColors.Clear();
-                    selectableDesignerItemViewModelBase.Owner.FillColors.Clear();
                     selectableDesignerItemViewModelBase.Owner.EdgeThickness.Value = double.NaN;
                     selectableDesignerItemViewModelBase.IsSelected.Value = true;
                     var view = App.Current.MainWindow.GetCorrespondingViews<FrameworkElement>(selectableDesignerItemViewModelBase)
@@ -126,19 +124,19 @@ namespace boilersGraphics.AttachedProperties
                         (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = $"({viewModel.Points[0].X}, {viewModel.Points[0].Y}) - ({viewModel.Points[1].X}, {viewModel.Points[1].Y})";
                     }
 
-                    Color edgeColor = Colors.Transparent;
-                    Color fillColor = Colors.Transparent;
+                    Brush edgeBrush = Brushes.Transparent;
+                    Brush fillBrush = Brushes.Transparent;
                     if (selectableDesignerItemViewModelBase is DesignerItemViewModelBase)
                     {
-                        edgeColor = (selectableDesignerItemViewModelBase as DesignerItemViewModelBase).EdgeColor.Value;
-                        fillColor = (selectableDesignerItemViewModelBase as DesignerItemViewModelBase).FillColor.Value;
+                        edgeBrush = (selectableDesignerItemViewModelBase as DesignerItemViewModelBase).EdgeBrush.Value;
+                        fillBrush = (selectableDesignerItemViewModelBase as DesignerItemViewModelBase).FillBrush.Value;
                     }
                     else if (selectableDesignerItemViewModelBase is ConnectorBaseViewModel)
                     {
-                        edgeColor = (selectableDesignerItemViewModelBase as ConnectorBaseViewModel).EdgeColor.Value;
+                        edgeBrush = (selectableDesignerItemViewModelBase as ConnectorBaseViewModel).EdgeBrush.Value;
                     }
-                    selectableDesignerItemViewModelBase.Owner.EdgeColors.Add(edgeColor);
-                    selectableDesignerItemViewModelBase.Owner.FillColors.Add(fillColor);
+                    selectableDesignerItemViewModelBase.Owner.EdgeBrush.Value = edgeBrush;
+                    selectableDesignerItemViewModelBase.Owner.FillBrush.Value = fillBrush;
 
                     var owner = selectableDesignerItemViewModelBase.Owner;
                     var edgeThicknesses = owner.SelectedItems.Value.Select(x =>

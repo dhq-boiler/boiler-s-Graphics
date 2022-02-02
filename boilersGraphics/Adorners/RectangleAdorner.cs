@@ -29,7 +29,7 @@ namespace boilersGraphics.Adorners
             _startPoint = dragStartPoint;
             this.item = item;
             var parent = (AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel;
-            var brush = new SolidColorBrush(parent.EdgeColors.First());
+            var brush = parent.EdgeBrush.Value.Clone();
             brush.Opacity = 0.5;
             _rectanglePen = new Pen(brush, parent.EdgeThickness.Value.Value);
             _snapAction = new SnapAction();
@@ -76,8 +76,8 @@ namespace boilersGraphics.Adorners
                 item.Top.Value = Math.Min(_startPoint.Value.Y, _endPoint.Value.Y);
                 item.Width.Value = Math.Max(_startPoint.Value.X - _endPoint.Value.X, _endPoint.Value.X - _startPoint.Value.X);
                 item.Height.Value = Math.Max(_startPoint.Value.Y - _endPoint.Value.Y, _endPoint.Value.Y - _startPoint.Value.Y);
-                item.EdgeColor.Value = item.Owner.EdgeColors.First();
-                item.FillColor.Value = item.Owner.FillColors.First();
+                item.EdgeBrush.Value = item.Owner.EdgeBrush.Value.Clone();
+                item.FillBrush.Value = item.Owner.FillBrush.Value.Clone();
                 item.EdgeThickness.Value = item.Owner.EdgeThickness.Value.Value;
                 item.ZIndex.Value = item.Owner.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).Count();
                 item.PathGeometry.Value = GeometryCreator.CreateRectangle(item);
@@ -134,7 +134,7 @@ namespace boilersGraphics.Adorners
             dc.DrawRectangle(Brushes.Transparent, null, new Rect(RenderSize));
 
             if (_startPoint.HasValue && _endPoint.HasValue)
-                dc.DrawRectangle(Brushes.Transparent, _rectanglePen, ShiftEdgeThickness());
+                dc.DrawRectangle(((AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel).FillBrush.Value.Clone(), _rectanglePen, ShiftEdgeThickness());
         }
 
         private Rect ShiftEdgeThickness()

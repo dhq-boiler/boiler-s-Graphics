@@ -1,25 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Data;
-using System.Windows.Media;
 
 namespace boilersGraphics.Converters
 {
-    public class ColorToStringConverter : IValueConverter
+    internal class StringToPointConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var color = (Color)value;
-            return color.ToString();
+            try
+            {
+                return Point.Parse(value.ToString());
+            }
+            catch (FormatException)
+            {
+                return DependencyProperty.UnsetValue;
+            }
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            throw new NotImplementedException();
+            return value;
         }
     }
 }

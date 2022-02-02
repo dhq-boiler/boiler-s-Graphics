@@ -599,7 +599,7 @@
                                     </Grid.RowDefinitions>
                                     <Line Grid.Row="0"
                                           Grid.Column="0"
-                                          Stroke="{Binding DataContext.DiagramViewModel.EdgeColors[0], Converter={StaticResource solidColorBrushConverter}, ElementName=EdgeThicknessComboBox}"
+                                          Stroke="{Binding DataContext.DiagramViewModel.EdgeBrush.Value, ElementName=EdgeThicknessComboBox}"
                                           StrokeThickness="{Binding}"
                                           X1="0"
                                           X2="75"
@@ -631,9 +631,45 @@
                                     <Rectangle Width="16"
                                                Height="16"
                                                Margin="2"
+                                               StrokeThickness="4">
+                                        <Rectangle.Stroke>
+                                            <VisualBrush Stretch="None"
+                                                     TileMode="Tile"
+                                                     Viewport="0,0,16,16"
+                                                     ViewportUnits="Absolute">
+                                                <VisualBrush.Visual>
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="8" />
+                                                            <ColumnDefinition Width="8" />
+                                                        </Grid.ColumnDefinitions>
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="8" />
+                                                            <RowDefinition Height="8" />
+                                                        </Grid.RowDefinitions>
+                                                        <Rectangle Grid.Row="0"
+                                                               Grid.Column="0"
+                                                               Fill="#EEE" />
+                                                        <Rectangle Grid.Row="0"
+                                                               Grid.Column="1"
+                                                               Fill="#AAA" />
+                                                        <Rectangle Grid.Row="1"
+                                                               Grid.Column="0"
+                                                               Fill="#AAA" />
+                                                        <Rectangle Grid.Row="1"
+                                                               Grid.Column="1"
+                                                               Fill="#EEE" />
+                                                    </Grid>
+                                                </VisualBrush.Visual>
+                                            </VisualBrush>
+                                        </Rectangle.Stroke>
+                                    </Rectangle>
+                                    <Rectangle Width="16"
+                                               Height="16"
+                                               Margin="2"
                                                Fill="Transparent"
-                                               Stroke="{Binding DiagramViewModel.EdgeColors, Converter={StaticResource StrokeColorConverter}}"
-                                               StrokeThickness="2" />
+                                               Stroke="{Binding DiagramViewModel.EdgeBrush.Value}"
+                                               StrokeThickness="4" />
                                 </Grid>
                             </ControlTemplate>
                         </Button.Template>
@@ -649,8 +685,43 @@
                                                StrokeThickness="1" />
                                     <Rectangle Width="16"
                                                Height="16"
+                                               Margin="2">
+                                        <Rectangle.Fill>
+                                            <VisualBrush Stretch="None"
+                                                     TileMode="Tile"
+                                                     Viewport="0,0,16,16"
+                                                     ViewportUnits="Absolute">
+                                                <VisualBrush.Visual>
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="8" />
+                                                            <ColumnDefinition Width="8" />
+                                                        </Grid.ColumnDefinitions>
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="8" />
+                                                            <RowDefinition Height="8" />
+                                                        </Grid.RowDefinitions>
+                                                        <Rectangle Grid.Row="0"
+                                                               Grid.Column="0"
+                                                               Fill="#EEE" />
+                                                        <Rectangle Grid.Row="0"
+                                                               Grid.Column="1"
+                                                               Fill="#AAA" />
+                                                        <Rectangle Grid.Row="1"
+                                                               Grid.Column="0"
+                                                               Fill="#AAA" />
+                                                        <Rectangle Grid.Row="1"
+                                                               Grid.Column="1"
+                                                               Fill="#EEE" />
+                                                    </Grid>
+                                                </VisualBrush.Visual>
+                                            </VisualBrush>
+                                        </Rectangle.Fill>
+                                    </Rectangle>
+                                    <Rectangle Width="16"
+                                               Height="16"
                                                Margin="2"
-                                               Fill="{Binding DiagramViewModel.FillColors, Converter={StaticResource StrokeColorConverter}}" />
+                                               Fill="{Binding DiagramViewModel.FillBrush.Value}" />
                                 </Grid>
                             </ControlTemplate>
                         </Button.Template>

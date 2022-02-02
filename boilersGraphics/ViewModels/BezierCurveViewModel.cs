@@ -139,7 +139,8 @@ namespace boilersGraphics.ViewModels
         {
             var clone = new BezierCurveViewModel(Owner, Points[0], Points[1], ControlPoint1.Value, ControlPoint2.Value);
             clone.Owner = Owner;
-            clone.EdgeColor.Value = EdgeColor.Value;
+            clone.EdgeBrush.Value = EdgeBrush.Value;
+            clone.FillBrush.Value = FillBrush.Value;
             clone.EdgeThickness.Value = EdgeThickness.Value;
             clone.PathGeometry.Value = GeometryCreator.CreateBezierCurve(clone);
             clone.StrokeStartLineCap.Value = StrokeStartLineCap.Value;

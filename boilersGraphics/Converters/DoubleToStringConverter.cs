@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Data;
 
 namespace boilersGraphics.Converters
@@ -19,7 +16,7 @@ namespace boilersGraphics.Converters
         {
             var str = value as string;
             if (string.IsNullOrEmpty(str))
-                return 0;
+                return Binding.DoNothing;
             if (str.Last() == '.' || str.Last() == '-')
                 return Binding.DoNothing;
             try

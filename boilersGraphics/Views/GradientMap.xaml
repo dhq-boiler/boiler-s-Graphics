@@ -1,0 +1,43 @@
+﻿<UserControl x:Class="boilersGraphics.Views.GradientMap"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:boilersGraphics.Views"
+             mc:Ignorable="d"
+             x:Name="gradientMap"
+             Width="256"
+             Height="256">
+    <UserControl.Background>
+        <VisualBrush Stretch="None"
+                     TileMode="Tile"
+                     Viewport="0,0,16,16"
+                     ViewportUnits="Absolute">
+            <VisualBrush.Visual>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="8" />
+                        <ColumnDefinition Width="8" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="8" />
+                        <RowDefinition Height="8" />
+                    </Grid.RowDefinitions>
+                    <Rectangle Grid.Row="0"
+                               Grid.Column="0"
+                               Fill="#EEE" />
+                    <Rectangle Grid.Row="0"
+                               Grid.Column="1"
+                               Fill="#AAA" />
+                    <Rectangle Grid.Row="1"
+                               Grid.Column="0"
+                               Fill="#AAA" />
+                    <Rectangle Grid.Row="1"
+                               Grid.Column="1"
+                               Fill="#EEE" />
+                </Grid>
+            </VisualBrush.Visual>
+        </VisualBrush>
+    </UserControl.Background>
+    <DockPanel Background="{Binding Fill, ElementName=gradientMap}" />
+</UserControl>

@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Windows;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Xml.Linq;
 
@@ -77,8 +78,8 @@ namespace boilersGraphics.Helpers
                 list.Add(new XElement("Height", designerItem.Height.Value));
                 list.Add(new XElement("ZIndex", designerItem.ZIndex.Value));
                 //list.Add(new XElement("Matrix", designerItem.Matrix.Value));
-                list.Add(new XElement("EdgeColor", designerItem.EdgeColor.Value));
-                list.Add(new XElement("FillColor", designerItem.FillColor.Value));
+                list.Add(new XElement("EdgeBrush", XElement.Parse(WpfObjectSerializer.Serialize(designerItem.EdgeBrush.Value))));
+                list.Add(new XElement("FillBrush", XElement.Parse(WpfObjectSerializer.Serialize(designerItem.FillBrush.Value))));
                 list.Add(new XElement("EdgeThickness", designerItem.EdgeThickness.Value));
                 list.Add(new XElement("PathGeometry", designerItem.PathGeometry.Value));
                 list.Add(new XElement("RotationAngle", designerItem.RotationAngle.Value));
@@ -129,8 +130,8 @@ namespace boilersGraphics.Helpers
                     list.Add(new XElement("EndPoint", connectorItem.Points[1]));
                 }
                 list.Add(new XElement("ZIndex", connectorItem.ZIndex.Value));
-                list.Add(new XElement("EdgeColor", connectorItem.EdgeColor));
-                list.Add(new XElement("EdgeThickness", connectorItem.EdgeThickness));
+                list.Add(new XElement("EdgeBrush", XElement.Parse(WpfObjectSerializer.Serialize(connectorItem.EdgeBrush.Value))));
+                list.Add(new XElement("EdgeThickness", connectorItem.EdgeThickness.Value));
                 list.Add(new XElement("PathGeometry", connectorItem.PathGeometry.Value));
                 list.Add(new XElement("LeftTop", connectorItem.LeftTop.Value));
                 if (connectorItem is BezierCurveViewModel)
@@ -158,8 +159,8 @@ namespace boilersGraphics.Helpers
                 list.Add(new XElement("Opacity", snapPointItem.Opacity.Value));
                 list.Add(new XElement("ZIndex", snapPointItem.ZIndex.Value));
                 list.Add(new XElement("Matrix", snapPointItem.Matrix.Value));
-                list.Add(new XElement("EdgeColor", snapPointItem.EdgeColor.Value));
-                list.Add(new XElement("FillColor", snapPointItem.FillColor.Value));
+                list.Add(new XElement("EdgeBrush", XElement.Parse(WpfObjectSerializer.Serialize(snapPointItem.EdgeBrush.Value))));
+                list.Add(new XElement("FillBrush", XElement.Parse(WpfObjectSerializer.Serialize(snapPointItem.FillBrush.Value))));
                 list.Add(new XElement("EdgeThickness", snapPointItem.EdgeThickness.Value));
                 list.Add(new XElement("PathGeometry", snapPointItem.PathGeometry.Value));
                 var snappointItemXML = new XElement("SnapPointItem", list);
@@ -195,7 +196,7 @@ namespace boilersGraphics.Helpers
                                new XElement("BeginPoint", connection.Points[0]),
                                new XElement("EndPoint", connection.Points[1]),
                                new XElement("ZIndex", connection.ZIndex.Value),
-                               new XElement("EdgeColor", connection.EdgeColor.Value),
+                               new XElement("EdgeBrush", XElement.Parse(WpfObjectSerializer.Serialize(connection.EdgeBrush.Value))),
                                new XElement("EdgeThickness", connection.EdgeThickness.Value),
                                new XElement("PathGeometry", connection.PathGeometry.Value)
                     ))
@@ -212,7 +213,7 @@ namespace boilersGraphics.Helpers
                                     new XElement("BeginPoint", connection.Points[0]),
                                     new XElement("EndPoint", connection.Points[1]),
                                     new XElement("ZIndex", connection.ZIndex.Value),
-                                    new XElement("EdgeColor", connection.EdgeColor.Value),
+                                    new XElement("EdgeBrush", XElement.Parse(WpfObjectSerializer.Serialize(connection.EdgeBrush.Value))),
                                     new XElement("EdgeThickness", connection.EdgeThickness.Value),
                                     new XElement("ControlPoint1", (connection as BezierCurveViewModel).ControlPoint1.Value),
                                     new XElement("ControlPoint2", (connection as BezierCurveViewModel).ControlPoint2.Value),
@@ -222,112 +223,113 @@ namespace boilersGraphics.Helpers
 
         public static IEnumerable<XElement> SerializeConfiguration(DiagramViewModel diagramViewModel)
         {
+            var brushConverter = new BrushConverter();
             var colorSpots = new XElement("ColorSpots");
-            colorSpots.Add(new XElement("ColorSpot0", diagramViewModel.ColorSpots.Value.ColorSpot0));
-            colorSpots.Add(new XElement("ColorSpot1", diagramViewModel.ColorSpots.Value.ColorSpot1));
-            colorSpots.Add(new XElement("ColorSpot2", diagramViewModel.ColorSpots.Value.ColorSpot2));
-            colorSpots.Add(new XElement("ColorSpot3", diagramViewModel.ColorSpots.Value.ColorSpot3));
-            colorSpots.Add(new XElement("ColorSpot4", diagramViewModel.ColorSpots.Value.ColorSpot4));
-            colorSpots.Add(new XElement("ColorSpot5", diagramViewModel.ColorSpots.Value.ColorSpot5));
-            colorSpots.Add(new XElement("ColorSpot6", diagramViewModel.ColorSpots.Value.ColorSpot6));
-            colorSpots.Add(new XElement("ColorSpot7", diagramViewModel.ColorSpots.Value.ColorSpot7));
-            colorSpots.Add(new XElement("ColorSpot8", diagramViewModel.ColorSpots.Value.ColorSpot8));
-            colorSpots.Add(new XElement("ColorSpot9", diagramViewModel.ColorSpots.Value.ColorSpot9));
-            colorSpots.Add(new XElement("ColorSpot10", diagramViewModel.ColorSpots.Value.ColorSpot10));
-            colorSpots.Add(new XElement("ColorSpot11", diagramViewModel.ColorSpots.Value.ColorSpot11));
-            colorSpots.Add(new XElement("ColorSpot12", diagramViewModel.ColorSpots.Value.ColorSpot12));
-            colorSpots.Add(new XElement("ColorSpot13", diagramViewModel.ColorSpots.Value.ColorSpot13));
-            colorSpots.Add(new XElement("ColorSpot14", diagramViewModel.ColorSpots.Value.ColorSpot14));
-            colorSpots.Add(new XElement("ColorSpot15", diagramViewModel.ColorSpots.Value.ColorSpot15));
-            colorSpots.Add(new XElement("ColorSpot16", diagramViewModel.ColorSpots.Value.ColorSpot16));
-            colorSpots.Add(new XElement("ColorSpot17", diagramViewModel.ColorSpots.Value.ColorSpot17));
-            colorSpots.Add(new XElement("ColorSpot18", diagramViewModel.ColorSpots.Value.ColorSpot18));
-            colorSpots.Add(new XElement("ColorSpot19", diagramViewModel.ColorSpots.Value.ColorSpot19));
-            colorSpots.Add(new XElement("ColorSpot20", diagramViewModel.ColorSpots.Value.ColorSpot20));
-            colorSpots.Add(new XElement("ColorSpot21", diagramViewModel.ColorSpots.Value.ColorSpot21));
-            colorSpots.Add(new XElement("ColorSpot22", diagramViewModel.ColorSpots.Value.ColorSpot22));
-            colorSpots.Add(new XElement("ColorSpot23", diagramViewModel.ColorSpots.Value.ColorSpot23));
-            colorSpots.Add(new XElement("ColorSpot24", diagramViewModel.ColorSpots.Value.ColorSpot24));
-            colorSpots.Add(new XElement("ColorSpot25", diagramViewModel.ColorSpots.Value.ColorSpot25));
-            colorSpots.Add(new XElement("ColorSpot26", diagramViewModel.ColorSpots.Value.ColorSpot26));
-            colorSpots.Add(new XElement("ColorSpot27", diagramViewModel.ColorSpots.Value.ColorSpot27));
-            colorSpots.Add(new XElement("ColorSpot28", diagramViewModel.ColorSpots.Value.ColorSpot28));
-            colorSpots.Add(new XElement("ColorSpot29", diagramViewModel.ColorSpots.Value.ColorSpot29));
-            colorSpots.Add(new XElement("ColorSpot30", diagramViewModel.ColorSpots.Value.ColorSpot30));
-            colorSpots.Add(new XElement("ColorSpot31", diagramViewModel.ColorSpots.Value.ColorSpot31));
-            colorSpots.Add(new XElement("ColorSpot32", diagramViewModel.ColorSpots.Value.ColorSpot32));
-            colorSpots.Add(new XElement("ColorSpot33", diagramViewModel.ColorSpots.Value.ColorSpot33));
-            colorSpots.Add(new XElement("ColorSpot34", diagramViewModel.ColorSpots.Value.ColorSpot34));
-            colorSpots.Add(new XElement("ColorSpot35", diagramViewModel.ColorSpots.Value.ColorSpot35));
-            colorSpots.Add(new XElement("ColorSpot36", diagramViewModel.ColorSpots.Value.ColorSpot36));
-            colorSpots.Add(new XElement("ColorSpot37", diagramViewModel.ColorSpots.Value.ColorSpot37));
-            colorSpots.Add(new XElement("ColorSpot38", diagramViewModel.ColorSpots.Value.ColorSpot38));
-            colorSpots.Add(new XElement("ColorSpot39", diagramViewModel.ColorSpots.Value.ColorSpot39));
-            colorSpots.Add(new XElement("ColorSpot40", diagramViewModel.ColorSpots.Value.ColorSpot40));
-            colorSpots.Add(new XElement("ColorSpot41", diagramViewModel.ColorSpots.Value.ColorSpot41));
-            colorSpots.Add(new XElement("ColorSpot42", diagramViewModel.ColorSpots.Value.ColorSpot42));
-            colorSpots.Add(new XElement("ColorSpot43", diagramViewModel.ColorSpots.Value.ColorSpot43));
-            colorSpots.Add(new XElement("ColorSpot44", diagramViewModel.ColorSpots.Value.ColorSpot44));
-            colorSpots.Add(new XElement("ColorSpot45", diagramViewModel.ColorSpots.Value.ColorSpot45));
-            colorSpots.Add(new XElement("ColorSpot46", diagramViewModel.ColorSpots.Value.ColorSpot46));
-            colorSpots.Add(new XElement("ColorSpot47", diagramViewModel.ColorSpots.Value.ColorSpot47));
-            colorSpots.Add(new XElement("ColorSpot48", diagramViewModel.ColorSpots.Value.ColorSpot48));
-            colorSpots.Add(new XElement("ColorSpot49", diagramViewModel.ColorSpots.Value.ColorSpot49));
-            colorSpots.Add(new XElement("ColorSpot50", diagramViewModel.ColorSpots.Value.ColorSpot50));
-            colorSpots.Add(new XElement("ColorSpot51", diagramViewModel.ColorSpots.Value.ColorSpot51));
-            colorSpots.Add(new XElement("ColorSpot52", diagramViewModel.ColorSpots.Value.ColorSpot52));
-            colorSpots.Add(new XElement("ColorSpot53", diagramViewModel.ColorSpots.Value.ColorSpot53));
-            colorSpots.Add(new XElement("ColorSpot54", diagramViewModel.ColorSpots.Value.ColorSpot54));
-            colorSpots.Add(new XElement("ColorSpot55", diagramViewModel.ColorSpots.Value.ColorSpot55));
-            colorSpots.Add(new XElement("ColorSpot56", diagramViewModel.ColorSpots.Value.ColorSpot56));
-            colorSpots.Add(new XElement("ColorSpot57", diagramViewModel.ColorSpots.Value.ColorSpot57));
-            colorSpots.Add(new XElement("ColorSpot58", diagramViewModel.ColorSpots.Value.ColorSpot58));
-            colorSpots.Add(new XElement("ColorSpot59", diagramViewModel.ColorSpots.Value.ColorSpot59));
-            colorSpots.Add(new XElement("ColorSpot60", diagramViewModel.ColorSpots.Value.ColorSpot60));
-            colorSpots.Add(new XElement("ColorSpot61", diagramViewModel.ColorSpots.Value.ColorSpot61));
-            colorSpots.Add(new XElement("ColorSpot62", diagramViewModel.ColorSpots.Value.ColorSpot62));
-            colorSpots.Add(new XElement("ColorSpot63", diagramViewModel.ColorSpots.Value.ColorSpot63));
-            colorSpots.Add(new XElement("ColorSpot64", diagramViewModel.ColorSpots.Value.ColorSpot64));
-            colorSpots.Add(new XElement("ColorSpot65", diagramViewModel.ColorSpots.Value.ColorSpot65));
-            colorSpots.Add(new XElement("ColorSpot66", diagramViewModel.ColorSpots.Value.ColorSpot66));
-            colorSpots.Add(new XElement("ColorSpot67", diagramViewModel.ColorSpots.Value.ColorSpot67));
-            colorSpots.Add(new XElement("ColorSpot68", diagramViewModel.ColorSpots.Value.ColorSpot68));
-            colorSpots.Add(new XElement("ColorSpot69", diagramViewModel.ColorSpots.Value.ColorSpot69));
-            colorSpots.Add(new XElement("ColorSpot70", diagramViewModel.ColorSpots.Value.ColorSpot70));
-            colorSpots.Add(new XElement("ColorSpot71", diagramViewModel.ColorSpots.Value.ColorSpot71));
-            colorSpots.Add(new XElement("ColorSpot72", diagramViewModel.ColorSpots.Value.ColorSpot72));
-            colorSpots.Add(new XElement("ColorSpot73", diagramViewModel.ColorSpots.Value.ColorSpot73));
-            colorSpots.Add(new XElement("ColorSpot74", diagramViewModel.ColorSpots.Value.ColorSpot74));
-            colorSpots.Add(new XElement("ColorSpot75", diagramViewModel.ColorSpots.Value.ColorSpot75));
-            colorSpots.Add(new XElement("ColorSpot76", diagramViewModel.ColorSpots.Value.ColorSpot76));
-            colorSpots.Add(new XElement("ColorSpot77", diagramViewModel.ColorSpots.Value.ColorSpot77));
-            colorSpots.Add(new XElement("ColorSpot78", diagramViewModel.ColorSpots.Value.ColorSpot78));
-            colorSpots.Add(new XElement("ColorSpot79", diagramViewModel.ColorSpots.Value.ColorSpot79));
-            colorSpots.Add(new XElement("ColorSpot80", diagramViewModel.ColorSpots.Value.ColorSpot80));
-            colorSpots.Add(new XElement("ColorSpot81", diagramViewModel.ColorSpots.Value.ColorSpot81));
-            colorSpots.Add(new XElement("ColorSpot82", diagramViewModel.ColorSpots.Value.ColorSpot82));
-            colorSpots.Add(new XElement("ColorSpot83", diagramViewModel.ColorSpots.Value.ColorSpot83));
-            colorSpots.Add(new XElement("ColorSpot84", diagramViewModel.ColorSpots.Value.ColorSpot84));
-            colorSpots.Add(new XElement("ColorSpot85", diagramViewModel.ColorSpots.Value.ColorSpot85));
-            colorSpots.Add(new XElement("ColorSpot86", diagramViewModel.ColorSpots.Value.ColorSpot86));
-            colorSpots.Add(new XElement("ColorSpot87", diagramViewModel.ColorSpots.Value.ColorSpot87));
-            colorSpots.Add(new XElement("ColorSpot88", diagramViewModel.ColorSpots.Value.ColorSpot88));
-            colorSpots.Add(new XElement("ColorSpot89", diagramViewModel.ColorSpots.Value.ColorSpot89));
-            colorSpots.Add(new XElement("ColorSpot90", diagramViewModel.ColorSpots.Value.ColorSpot90));
-            colorSpots.Add(new XElement("ColorSpot91", diagramViewModel.ColorSpots.Value.ColorSpot91));
-            colorSpots.Add(new XElement("ColorSpot92", diagramViewModel.ColorSpots.Value.ColorSpot92));
-            colorSpots.Add(new XElement("ColorSpot93", diagramViewModel.ColorSpots.Value.ColorSpot93));
-            colorSpots.Add(new XElement("ColorSpot94", diagramViewModel.ColorSpots.Value.ColorSpot94));
-            colorSpots.Add(new XElement("ColorSpot95", diagramViewModel.ColorSpots.Value.ColorSpot95));
-            colorSpots.Add(new XElement("ColorSpot96", diagramViewModel.ColorSpots.Value.ColorSpot96));
-            colorSpots.Add(new XElement("ColorSpot97", diagramViewModel.ColorSpots.Value.ColorSpot97));
-            colorSpots.Add(new XElement("ColorSpot98", diagramViewModel.ColorSpots.Value.ColorSpot98));
-            colorSpots.Add(new XElement("ColorSpot99", diagramViewModel.ColorSpots.Value.ColorSpot99));
+            colorSpots.Add(new XElement("ColorSpot0", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot0))));
+            colorSpots.Add(new XElement("ColorSpot1", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot1))));
+            colorSpots.Add(new XElement("ColorSpot2", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot2))));
+            colorSpots.Add(new XElement("ColorSpot3", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot3))));
+            colorSpots.Add(new XElement("ColorSpot4", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot4))));
+            colorSpots.Add(new XElement("ColorSpot5", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot5))));
+            colorSpots.Add(new XElement("ColorSpot6", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot6))));
+            colorSpots.Add(new XElement("ColorSpot7", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot7))));
+            colorSpots.Add(new XElement("ColorSpot8", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot8))));
+            colorSpots.Add(new XElement("ColorSpot9", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot9))));
+            colorSpots.Add(new XElement("ColorSpot10", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot10))));
+            colorSpots.Add(new XElement("ColorSpot11", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot11))));
+            colorSpots.Add(new XElement("ColorSpot12", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot12))));
+            colorSpots.Add(new XElement("ColorSpot13", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot13))));
+            colorSpots.Add(new XElement("ColorSpot14", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot14))));
+            colorSpots.Add(new XElement("ColorSpot15", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot15))));
+            colorSpots.Add(new XElement("ColorSpot16", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot16))));
+            colorSpots.Add(new XElement("ColorSpot17", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot17))));
+            colorSpots.Add(new XElement("ColorSpot18", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot18))));
+            colorSpots.Add(new XElement("ColorSpot19", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot19))));
+            colorSpots.Add(new XElement("ColorSpot20", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot20))));
+            colorSpots.Add(new XElement("ColorSpot21", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot21))));
+            colorSpots.Add(new XElement("ColorSpot22", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot22))));
+            colorSpots.Add(new XElement("ColorSpot23", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot23))));
+            colorSpots.Add(new XElement("ColorSpot24", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot24))));
+            colorSpots.Add(new XElement("ColorSpot25", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot25))));
+            colorSpots.Add(new XElement("ColorSpot26", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot26))));
+            colorSpots.Add(new XElement("ColorSpot27", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot27))));
+            colorSpots.Add(new XElement("ColorSpot28", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot28))));
+            colorSpots.Add(new XElement("ColorSpot29", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot29))));
+            colorSpots.Add(new XElement("ColorSpot30", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot30))));
+            colorSpots.Add(new XElement("ColorSpot31", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot31))));
+            colorSpots.Add(new XElement("ColorSpot32", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot32))));
+            colorSpots.Add(new XElement("ColorSpot33", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot33))));
+            colorSpots.Add(new XElement("ColorSpot34", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot34))));
+            colorSpots.Add(new XElement("ColorSpot35", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot35))));
+            colorSpots.Add(new XElement("ColorSpot36", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot36))));
+            colorSpots.Add(new XElement("ColorSpot37", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot37))));
+            colorSpots.Add(new XElement("ColorSpot38", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot38))));
+            colorSpots.Add(new XElement("ColorSpot39", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot39))));
+            colorSpots.Add(new XElement("ColorSpot40", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot40))));
+            colorSpots.Add(new XElement("ColorSpot41", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot41))));
+            colorSpots.Add(new XElement("ColorSpot42", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot42))));
+            colorSpots.Add(new XElement("ColorSpot43", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot43))));
+            colorSpots.Add(new XElement("ColorSpot44", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot44))));
+            colorSpots.Add(new XElement("ColorSpot45", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot45))));
+            colorSpots.Add(new XElement("ColorSpot46", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot46))));
+            colorSpots.Add(new XElement("ColorSpot47", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot47))));
+            colorSpots.Add(new XElement("ColorSpot48", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot48))));
+            colorSpots.Add(new XElement("ColorSpot49", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot49))));
+            colorSpots.Add(new XElement("ColorSpot50", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot50))));
+            colorSpots.Add(new XElement("ColorSpot51", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot51))));
+            colorSpots.Add(new XElement("ColorSpot52", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot52))));
+            colorSpots.Add(new XElement("ColorSpot53", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot53))));
+            colorSpots.Add(new XElement("ColorSpot54", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot54))));
+            colorSpots.Add(new XElement("ColorSpot55", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot55))));
+            colorSpots.Add(new XElement("ColorSpot56", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot56))));
+            colorSpots.Add(new XElement("ColorSpot57", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot57))));
+            colorSpots.Add(new XElement("ColorSpot58", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot58))));
+            colorSpots.Add(new XElement("ColorSpot59", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot59))));
+            colorSpots.Add(new XElement("ColorSpot60", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot60))));
+            colorSpots.Add(new XElement("ColorSpot61", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot61))));
+            colorSpots.Add(new XElement("ColorSpot62", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot62))));
+            colorSpots.Add(new XElement("ColorSpot63", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot63))));
+            colorSpots.Add(new XElement("ColorSpot64", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot64))));
+            colorSpots.Add(new XElement("ColorSpot65", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot65))));
+            colorSpots.Add(new XElement("ColorSpot66", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot66))));
+            colorSpots.Add(new XElement("ColorSpot67", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot67))));
+            colorSpots.Add(new XElement("ColorSpot68", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot68))));
+            colorSpots.Add(new XElement("ColorSpot69", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot69))));
+            colorSpots.Add(new XElement("ColorSpot70", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot70))));
+            colorSpots.Add(new XElement("ColorSpot71", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot71))));
+            colorSpots.Add(new XElement("ColorSpot72", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot72))));
+            colorSpots.Add(new XElement("ColorSpot73", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot73))));
+            colorSpots.Add(new XElement("ColorSpot74", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot74))));
+            colorSpots.Add(new XElement("ColorSpot75", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot75))));
+            colorSpots.Add(new XElement("ColorSpot76", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot76))));
+            colorSpots.Add(new XElement("ColorSpot77", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot77))));
+            colorSpots.Add(new XElement("ColorSpot78", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot78))));
+            colorSpots.Add(new XElement("ColorSpot79", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot79))));
+            colorSpots.Add(new XElement("ColorSpot80", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot80))));
+            colorSpots.Add(new XElement("ColorSpot81", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot81))));
+            colorSpots.Add(new XElement("ColorSpot82", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot82))));
+            colorSpots.Add(new XElement("ColorSpot83", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot83))));
+            colorSpots.Add(new XElement("ColorSpot84", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot84))));
+            colorSpots.Add(new XElement("ColorSpot85", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot85))));
+            colorSpots.Add(new XElement("ColorSpot86", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot86))));
+            colorSpots.Add(new XElement("ColorSpot87", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot87))));
+            colorSpots.Add(new XElement("ColorSpot88", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot88))));
+            colorSpots.Add(new XElement("ColorSpot89", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot89))));
+            colorSpots.Add(new XElement("ColorSpot90", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot90))));
+            colorSpots.Add(new XElement("ColorSpot91", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot91))));
+            colorSpots.Add(new XElement("ColorSpot92", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot92))));
+            colorSpots.Add(new XElement("ColorSpot93", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot93))));
+            colorSpots.Add(new XElement("ColorSpot94", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot94))));
+            colorSpots.Add(new XElement("ColorSpot95", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot95))));
+            colorSpots.Add(new XElement("ColorSpot96", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot96))));
+            colorSpots.Add(new XElement("ColorSpot97", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot97))));
+            colorSpots.Add(new XElement("ColorSpot98", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot98))));
+            colorSpots.Add(new XElement("ColorSpot99", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot99))));
             return new XElement[]
             {
                 new XElement("Width", diagramViewModel.Width),
                 new XElement("Height", diagramViewModel.Height),
-                new XElement("CanvasBackground", diagramViewModel.CanvasBackground.Value),
+                new XElement("CanvasBackground", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.CanvasBackground.Value))),
                 new XElement("EnablePointSnap", diagramViewModel.EnablePointSnap.Value),
                 new XElement("SnapPower", diagramViewModel.MainWindowVM.SnapPower.Value),
                 colorSpots

@@ -14,6 +14,9 @@
              xmlns:selector="clr-namespace:boilersGraphics.StyleSelectors"
              xmlns:view="clr-namespace:boilersGraphics.Views"
              xmlns:viewModel="clr-namespace:boilersGraphics.ViewModels"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:c="clr-namespace:CalcBinding;assembly=CalcBinding"
+             xmlns:helpers="clr-namespace:boilersGraphics.Helpers"
              x:Name="diagramControl"
              d:DesignHeight="450"
              d:DesignWidth="800"
@@ -101,6 +104,8 @@
                             <Setter Property="attached:ItemConnectProps.EnabledForConnection" Value="True" />
                             <Setter Property="Width" Value="{Binding Width.Value}" />
                             <Setter Property="Height" Value="{Binding Height.Value}" />
+                            <Setter Property="MaxWidth" Value="{x:Static sys:Double.PositiveInfinity}" />
+                            <Setter Property="MaxHeight" Value="{x:Static sys:Double.PositiveInfinity}" />
                             <Setter Property="Visibility" Value="{Binding IsVisible.Value, Converter={StaticResource BoolToVisibilityConverter}}" />
                             <Setter Property="SnapsToDevicePixels" Value="True" />
                             <Setter Property="IsHitTestVisible" Value="{Binding IsHitTestVisible.Value}" />
@@ -176,7 +181,7 @@
                                                 </Canvas.Style>
                                                 <Line x:Name="straightline"
                                                       IsHitTestVisible="{Binding IsHitTestVisible.Value}"
-                                                      Stroke="{Binding EdgeColor.Value, Converter={StaticResource solidColorBrushConverter}}"
+                                                      Stroke="{Binding EdgeBrush.Value}"
                                                       StrokeThickness="{Binding EdgeThickness.Value}"
                                                       StrokeStartLineCap="{Binding StrokeStartLineCap.Value}"
                                                       StrokeEndLineCap="{Binding StrokeEndLineCap.Value}"
@@ -214,7 +219,7 @@
                                                       Canvas.Top="{Binding LeftTop.Value.Y}"
                                                       IsHitTestVisible="True"
                                                       Stretch="Fill"
-                                                      Stroke="{Binding EdgeColor.Value, Converter={StaticResource solidColorBrushConverter}}"
+                                                      Stroke="{Binding EdgeBrush.Value}"
                                                       StrokeThickness="{Binding EdgeThickness.Value}"
                                                       StrokeStartLineCap="{Binding StrokeStartLineCap.Value}"
                                                       StrokeEndLineCap="{Binding StrokeEndLineCap.Value}"
@@ -318,7 +323,7 @@
                                                       Canvas.Top="{Binding LeftTop.Value.Y}"
                                                       IsHitTestVisible="True"
                                                       Stretch="Fill"
-                                                      Stroke="{Binding EdgeColor.Value, Converter={StaticResource solidColorBrushConverter}}"
+                                                      Stroke="{Binding EdgeBrush.Value}"
                                                       StrokeThickness="{Binding EdgeThickness.Value}"
                                                       StrokeStartLineCap="{Binding StrokeStartLineCap.Value}"
                                                       StrokeEndLineCap="{Binding StrokeEndLineCap.Value}"
@@ -360,6 +365,8 @@
                             <control:DesignerCanvas x:Name="designerCanvas"
                                                     Width="{Binding Width}"
                                                     Height="{Binding Height}"
+                                                    MaxWidth="{x:Static sys:Double.PositiveInfinity}"
+                                                    MaxHeight="{x:Static sys:Double.PositiveInfinity}"
                                                     AllowDrop="True"
                                                     AutomationProperties.Name="designerCanvas"
                                                     Background="Transparent" />

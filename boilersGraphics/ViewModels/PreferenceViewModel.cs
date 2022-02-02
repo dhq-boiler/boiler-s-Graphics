@@ -9,6 +9,7 @@ using System;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Windows.Media;
 
 namespace boilersGraphics.ViewModels
 {
@@ -47,6 +48,10 @@ namespace boilersGraphics.ViewModels
                                                    {
                                                        Old = EditTarget.Value.CanvasBackground.Value
                                                    }
+                                               },
+                                               {
+                                                   "ColorSpots",
+                                                   (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.ColorSpots.Value
                                                }
                                            },
                                            ret => result = ret);
@@ -55,7 +60,7 @@ namespace boilersGraphics.ViewModels
                     var exchange = result.Parameters.GetValue<ColorExchange>("ColorExchange");
                     if (exchange != null)
                     {
-                        EditTarget.Value.CanvasBackground.Value = exchange.New.Value;
+                        EditTarget.Value.CanvasBackground.Value = exchange.New;
                     }
                 }
             })

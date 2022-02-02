@@ -64,7 +64,8 @@ namespace boilersGraphics.ViewModels
         {
             var clone = new StraightConnectorViewModel(Owner, Points[0]);
             clone.Owner = Owner;
-            clone.EdgeColor.Value = EdgeColor.Value;
+            clone.EdgeBrush.Value = EdgeBrush.Value;
+            clone.FillBrush.Value = FillBrush.Value;
             clone.EdgeThickness.Value = EdgeThickness.Value;
             clone.AddPointP2(Owner, Points[1]);
             clone.StrokeStartLineCap.Value = StrokeStartLineCap.Value;

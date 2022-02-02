@@ -109,7 +109,14 @@ namespace boilersGraphics.Models
                         .Select(x => x.IsSelected.ToUnit())
                         .Merge())
                     .Switch();
-            return ox1.Merge(ox2);
+            var ox3 = Children.CollectionChangedAsObservable()
+                              .Select(_ => Children.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                                  .OfType<LayerItem>()
+                                  .Select(x => x.Item.Value)
+                                  .Select(x => x.IsSelected.ToUnit())
+                                  .Merge())
+                              .Switch();
+            return ox1.Merge(ox2).Merge(ox3);
         }
 
         public void AddItem(MainWindowViewModel mainWindowViewModel, DiagramViewModel diagramViewModel, SelectableDesignerItemViewModelBase item)
