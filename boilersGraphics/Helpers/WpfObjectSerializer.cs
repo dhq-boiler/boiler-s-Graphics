@@ -5,7 +5,6 @@
 using System;
 using System.IO;
 using System.Text;
-using System.Windows;
 using System.Windows.Markup;
 using System.Xml;
 
@@ -27,10 +26,6 @@ namespace boilersGraphics.Helpers
 			try
 			{
 				writer.WriteLine(text);
-			}
-			catch (Exception ex)
-			{
-				MessageBox.Show(ex.Message);
 			}
 			finally
 			{
@@ -64,10 +59,6 @@ namespace boilersGraphics.Helpers
 
 				System.Windows.Markup.XamlWriter.Save(obj, manager);
 			}
-			catch (Exception ex)
-			{
-				MessageBox.Show(ex.Message);
-			}
 			finally
 			{
 				if (writer != null)
@@ -96,10 +87,6 @@ namespace boilersGraphics.Helpers
 			{
 				text = reader.ReadToEnd();
 			}
-			catch (Exception ex)
-			{
-				MessageBox.Show(ex.Message);
-			}
 			finally
 			{
 				if (reader != null)
@@ -118,27 +105,8 @@ namespace boilersGraphics.Helpers
 		public static object Deserialize(string xamlText)
 		{
 			var doc = new XmlDocument();
-
-			try
-			{
-				doc.LoadXml(xamlText);
-			}
-			catch (Exception ex)
-			{
-				MessageBox.Show(ex.Message);
-			}
-
-			object obj = null;
-
-			try
-			{
-				obj = System.Windows.Markup.XamlReader.Load(new XmlNodeReader(doc));
-			}
-			catch (Exception ex)
-			{
-				MessageBox.Show(ex.Message);
-			}
-
+			doc.LoadXml(xamlText);
+			object obj = System.Windows.Markup.XamlReader.Load(new XmlNodeReader(doc));
 			return obj;
 		}
 
