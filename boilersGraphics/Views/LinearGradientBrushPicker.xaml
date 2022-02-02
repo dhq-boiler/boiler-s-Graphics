@@ -203,7 +203,7 @@
                             <Image RenderOptions.BitmapScalingMode="HighQuality" Source="pack://application:,,,/Assets/img/art-pallete.png" />
                         </StackPanel>
                     </Button>
-                    <Button Width="50" Content="Add" Command="{Binding AddGradientStopCommand}" />
+                    <Button Width="50" Margin="5" Content="Add" Command="{Binding AddGradientStopCommand}" />
                 </StackPanel>
             </DockPanel>
             <StackPanel DockPanel.Dock="Top"

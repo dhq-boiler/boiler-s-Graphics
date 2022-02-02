@@ -309,12 +309,12 @@
                         <Setter Property="Height" Value="50" />
                     </Style>
                 </StackPanel.Resources>
-                <Button Content="SolidColor" Command="{Binding SelectSolidColorCommand}">
+                <Button Content="Solid" Foreground="White" Command="{Binding SelectSolidColorCommand}">
                     <Button.Background>
                         <SolidColorBrush Color="Gray" />
                     </Button.Background>
                 </Button>
-                <Button Content="LinearGradient" Command="{Binding SelectLinearGradientCommand}">
+                <Button Content="Linear" Foreground="White" Command="{Binding SelectLinearGradientCommand}">
                     <Button.Background>
                         <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
                             <GradientStop Color="White" Offset="0" />
@@ -322,7 +322,7 @@
                         </LinearGradientBrush>
                     </Button.Background>
                 </Button>
-                <Button Content="RadialGradient" Command="{Binding SelectRadialGradientCommand}">
+                <Button Content="Radial" Foreground="White" Command="{Binding SelectRadialGradientCommand}">
                     <Button.Background>
                         <RadialGradientBrush GradientOrigin="0.5,0.5"
                                              Center="0.5,0.5"

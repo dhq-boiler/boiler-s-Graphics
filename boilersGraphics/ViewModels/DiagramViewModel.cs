@@ -729,13 +729,13 @@ namespace boilersGraphics.ViewModels
 
         private void InitialSetting(MainWindowViewModel mainwindowViewModel, bool addingLayer = false, bool initCanvasBackground = false)
         {
-            mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "EdgeBrush.Value", new SolidColorBrush(Colors.Black));
-            mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "FillBrush.Value", new SolidColorBrush(Colors.White));
+            mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "EdgeBrush.Value", Brushes.Black);
+            mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "FillBrush.Value", Brushes.White);
             mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "EdgeThickness.Value", 1.0);
             mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "CanvasBorderThickness", 0.0);
             if (initCanvasBackground)
             {
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "CanvasBackground.Value", new SolidColorBrush(Colors.White));
+                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "CanvasBackground.Value", Brushes.White);
             }
             mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value", new BackgroundViewModel());
             mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.ZIndex.Value", -1);
@@ -745,7 +745,7 @@ namespace boilersGraphics.ViewModels
             mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.Width.Value", (double)Width);
             mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.Height.Value", (double)Height);
             mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.Owner", this);
-            mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.EdgeBrush.Value", new SolidColorBrush(Colors.Black));
+            mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.EdgeBrush.Value", Brushes.Black);
             mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.EdgeThickness.Value", 1d);
             mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.EnableForSelection.Value", false);
             mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.IsVisible.Value", true);
