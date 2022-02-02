@@ -306,17 +306,23 @@ namespace boilersGraphics.ViewModels
                     {
                         _spots.ToList().ForEach(x => x.IsSelected.Value = false);
                         colorSpot.IsSelected.Value = true;
-                        var color = BrushHelper.ExtractColor(colorSpot.Brush);
-                        var a = color.A;
-                        var r = color.R;
-                        var g = color.G;
-                        var b = color.B;
-                        _flag = false;
-                        A.Value = a;
-                        R.Value = r;
-                        G.Value = g;
-                        B.Value = b;
-                        _flag = true;
+                        try
+                        {
+                            var color = BrushHelper.ExtractColor(colorSpot.Brush);
+                            var a = color.A;
+                            var r = color.R;
+                            var g = color.G;
+                            var b = color.B;
+                            _flag = false;
+                            A.Value = a;
+                            R.Value = r;
+                            G.Value = g;
+                            B.Value = b;
+                            _flag = true;
+                        }
+                        catch (NotSupportedException)
+                        {
+                        }
                     }
                 }
             })

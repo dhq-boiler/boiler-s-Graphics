@@ -192,7 +192,13 @@ namespace boilersGraphics.ViewModels
                         colorSpot.IsSelected.Value = true;
                         if (SelectedGradientStop.Value != null)
                         {
-                            SelectedGradientStop.Value.Color.Value = BrushHelper.ExtractColor(colorSpot.Brush);
+                            try
+                            {
+                                SelectedGradientStop.Value.Color.Value = BrushHelper.ExtractColor(colorSpot.Brush);
+                            }
+                            catch (NotSupportedException)
+                            {
+                            }
                             BuildTargetBrush();
                         }
                     }

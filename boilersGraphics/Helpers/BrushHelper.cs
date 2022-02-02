@@ -18,11 +18,11 @@ namespace boilersGraphics.Helpers
             }
             else if (brush is LinearGradientBrush lgb)
             {
-                return lgb.GradientStops.FirstOrDefault().Color;
+                throw new NotSupportedException();
             }
             else if (brush is RadialGradientBrush rgb)
             {
-                return rgb.GradientStops.FirstOrDefault().Color;
+                throw new NotSupportedException();
             }
             throw new UnexpectedException("No brush");
         }
