@@ -164,7 +164,13 @@
             </control:SimpleGrid>
         </DockPanel>
         <DockPanel DockPanel.Dock="Left">
-            <local:GradientMap Margin="5" Fill="{Binding TargetBrush.Value}" />
+            <Button Command="{Binding PickBrushCommand}" CommandParameter="{Binding DataContext.TargetBrush.Value, RelativeSource={RelativeSource FindAncestor, AncestorType=views:LinearGradientBrushPicker}}">
+                <Button.ContentTemplate>
+                    <DataTemplate>
+                        <local:GradientMap Fill="{Binding DataContext.TargetBrush.Value, RelativeSource={RelativeSource FindAncestor, AncestorType=views:LinearGradientBrushPicker}}" />
+                    </DataTemplate>
+                </Button.ContentTemplate>
+            </Button>
         </DockPanel>
         <DockPanel>
             <DockPanel DockPanel.Dock="Bottom">

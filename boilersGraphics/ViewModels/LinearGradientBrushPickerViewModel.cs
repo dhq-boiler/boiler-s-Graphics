@@ -36,6 +36,7 @@ namespace boilersGraphics.ViewModels
         public ReactiveCommand AddGradientStopCommand { get; } = new ReactiveCommand();
         public ReactiveCommand<TextChangedEventArgs> TextChangedCommand { get; } = new ReactiveCommand<TextChangedEventArgs>();
         public ReactiveCommand<SelectionChangedEventArgs> SelectionChangedCommand { get; } = new ReactiveCommand<SelectionChangedEventArgs>();
+        public ReactiveCommand<Brush> PickBrushCommand { get; } = new ReactiveCommand<Brush>();
         public ReactiveCollection<boilersGraphics.Models.GradientStop> GradientStops { get; set; } = new ReactiveCollection<Models.GradientStop>();
         public ReactivePropertySlim<Visibility> ColorPalleteVisibility { get; } = new ReactivePropertySlim<Visibility>(Visibility.Collapsed);
         public ReactivePropertySlim<ColorSpots> ColorSpots { get; } = new ReactivePropertySlim<ColorSpots>();
@@ -344,6 +345,14 @@ namespace boilersGraphics.ViewModels
                     {
                         ColorSpots.Value = _colorSpots;
                     }
+                }
+            })
+            .AddTo(_disposables);
+            PickBrushCommand.Subscribe(brush =>
+            {
+                if (_spots != null && _spots.Where(x => x.IsSelected.Value == true).Count() > 0)
+                {
+                    _spots.Where(x => x.IsSelected.Value == true).ToList().ForEach(x => x.Brush = brush);
                 }
             })
             .AddTo(_disposables);
