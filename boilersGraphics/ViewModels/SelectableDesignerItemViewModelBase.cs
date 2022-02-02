@@ -60,9 +60,9 @@ namespace boilersGraphics.ViewModels
 
         public ReactivePropertySlim<int> ZIndex { get; } = new ReactivePropertySlim<int>();
 
-        public ReactivePropertySlim<Brush> EdgeBrush { get; } = new ReactivePropertySlim<Brush>();
+        public ReactivePropertySlim<Brush> EdgeBrush { get; } = new ReactivePropertySlim<Brush>(Brushes.Transparent);
 
-        public ReactivePropertySlim<Brush> FillBrush { get; } = new ReactivePropertySlim<Brush>();
+        public ReactivePropertySlim<Brush> FillBrush { get; } = new ReactivePropertySlim<Brush>(Brushes.Transparent);
 
         public ReactivePropertySlim<double> EdgeThickness { get; } = new ReactivePropertySlim<double>();
 
