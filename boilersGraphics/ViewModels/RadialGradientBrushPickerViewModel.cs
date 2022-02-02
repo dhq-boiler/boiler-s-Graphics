@@ -395,6 +395,7 @@ namespace boilersGraphics.ViewModels
             brush.Center = Center.Value;
             brush.RadiusX = RadiusX.Value;
             brush.RadiusY = RadiusY.Value;
+            brush.MappingMode = BrushMappingMode.RelativeToBoundingBox;
             TargetBrush.Value = brush;
             
         }
@@ -518,8 +519,8 @@ namespace boilersGraphics.ViewModels
                 GradientStops.Add(new Models.GradientStop(solidColorBrush.Color, 0));
                 GradientOrigin.Value = new Point(0.5, 0.5);
                 Center.Value = new Point(0.5, 0.5);
-                RadiusX.Value = 1;
-                RadiusY.Value = 1;
+                RadiusX.Value = 0.5;
+                RadiusY.Value = 0.5;
             }
 
             var linearGreadientBrush = brush as LinearGradientBrush;
@@ -531,8 +532,8 @@ namespace boilersGraphics.ViewModels
                 }
                 GradientOrigin.Value = new Point(0.5, 0.5);
                 Center.Value = new Point(0.5, 0.5);
-                RadiusX.Value = 1;
-                RadiusY.Value = 1;
+                RadiusX.Value = 0.5;
+                RadiusY.Value = 0.5;
             }
             
             var radialGradientBrush = brush as RadialGradientBrush;

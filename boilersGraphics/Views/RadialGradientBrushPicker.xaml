@@ -238,7 +238,7 @@
                         </Style>
                     </StackPanel.Resources>
                     <Label Content="RadiusX:" Foreground="White" />
-                    <TextBox Text="{Binding RadiusX.Value, UpdateSourceTrigger=PropertyChanged}">
+                    <TextBox Text="{Binding RadiusX.Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DoubleToString}}">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="TextChanged">
                                 <helper:EventToCommand Command="{Binding TextChangedCommand}" PassEventArgsToCommand="True" />
@@ -246,7 +246,7 @@
                         </i:Interaction.Triggers>
                     </TextBox>
                     <Label Content="RadiusY:" Foreground="White" />
-                    <TextBox Text="{Binding RadiusY.Value, UpdateSourceTrigger=PropertyChanged}">
+                    <TextBox Text="{Binding RadiusY.Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DoubleToString}}">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="TextChanged">
                                 <helper:EventToCommand Command="{Binding TextChangedCommand}" PassEventArgsToCommand="True" />
