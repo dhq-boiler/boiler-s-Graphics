@@ -256,8 +256,10 @@ namespace boilersGraphics.ViewModels
             ShowPrivacyPolicyCommand = new DelegateCommand(() =>
             {
                 var currentState = PickoutPrivacyPolicyAgreementTop1AgreeOrDisagree();
+                var latestDate = PickoutLatestPrivacyPolicyDateOfEnactment();
                 IDialogParameters dialogParameters = new DialogParameters();
                 dialogParameters.Add("CurrentStatus", currentState);
+                dialogParameters.Add("latestDate", latestDate);
                 IDialogResult dialogResult = null;
                 dlgService.ShowDialog(nameof(PrivacyPolicy), dialogParameters, ret => dialogResult = ret);
             });
@@ -326,6 +328,7 @@ namespace boilersGraphics.ViewModels
                     currentState = PickoutPrivacyPolicyAgreementTop1AgreeOrDisagree();
                     IDialogParameters dialogParameters = new DialogParameters();
                     dialogParameters.Add("CurrentStatus", currentState);
+                    dialogParameters.Add("latestDate", latestDate);
                     IDialogResult dialogResult = null;
                     dlgService.ShowDialog(nameof(PrivacyPolicy), dialogParameters, ret => dialogResult = ret);
                     if (dialogResult != null)
