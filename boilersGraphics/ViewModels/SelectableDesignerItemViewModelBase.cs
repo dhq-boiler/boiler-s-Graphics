@@ -282,7 +282,7 @@ namespace boilersGraphics.ViewModels
                 BindingFlags.Public
                 | BindingFlags.Instance);
 
-            foreach (var property in properties)
+            foreach (var property in properties.Except(new PropertyInfo[] { GetType().GetProperty("Parent") }))
             {
                 ret += $"{property.Name}={property.GetValue(this)},";
             }
