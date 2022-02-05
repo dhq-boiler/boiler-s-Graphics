@@ -299,5 +299,10 @@ namespace boilersGraphics.ViewModels
             ret += $"}}";
             return ret;
         }
+
+        public override string ToString()
+        {
+            return ShowPropertiesAndFields();
+        }
     }
 }

@@ -2806,12 +2806,28 @@ namespace boilersGraphics.ViewModels
             }
 
             var selectedConnectors = (from item in items.OfType<SnapPointViewModel>().Select(x => x.Parent.Value).OfType<ConnectorBaseViewModel>()
-                                     orderby item.ZIndex.Value ascending
-                                     select item).Distinct();
+                                      orderby item.ZIndex.Value ascending
+                                      select item).Distinct();
 
             foreach (var connector in selectedConnectors)
             {
                 DuplicateConnector(oldNewList, connector);
+            }
+
+            EssentialCodeForBugAvoidance();
+        }
+
+        private void EssentialCodeForBugAvoidance()
+        {
+            var list = new List<LayerTreeViewItemBase>();
+            foreach (var layer in Layers)
+            {
+                list.Add(layer);
+            }
+            Layers.Clear();
+            foreach (var item in list)
+            {
+                Layers.Add(item);
             }
         }
 
@@ -2820,6 +2836,8 @@ namespace boilersGraphics.ViewModels
             if (item is GroupItemViewModel groupItem)
             {
                 var cloneGroup = groupItem.Clone() as GroupItemViewModel;
+                cloneGroup.IsHitTestVisible.Value = true;
+                cloneGroup.CanDrag.Value = true;
                 if (parent != null)
                 {
                     cloneGroup.ParentID = parent.ID;
@@ -2858,13 +2876,20 @@ namespace boilersGraphics.ViewModels
                 clone.ZIndex.Value = Layers.SelectMany(x => x.Children).Count();
                 clone.EdgeThickness.Value = item.EdgeThickness.Value;
                 clone.IsHitTestVisible.Value = true;
+                clone.IsVisible.Value = true;
                 if (parent != null)
                 {
                     clone.ParentID = parent.ID;
                     clone.EnableForSelection.Value = false;
                     parent.AddGroup(MainWindowVM.Recorder, clone);
                     var parentLayerItem = Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).OfType<LayerItem>().First(x => x.Item.Value.ID == clone.ParentID);
-                    parentLayerItem.Children.Add(new LayerItem(clone, parentLayerItem, layerItemName));
+                    var newLayerItem = new LayerItem(clone, parentLayerItem, layerItemName);
+                    newLayerItem.Color.Value = Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).OfType<LayerItem>().First(x => x.Item.Value.ID == item.ID).Color.Value;
+                    parentLayerItem.Children.Add(newLayerItem);
+                }
+                else
+                {
+                    Add(clone);
                 }
                 oldNewList.Add(new Tuple<SelectableDesignerItemViewModelBase, SelectableDesignerItemViewModelBase>(item, clone));
             }
@@ -2883,9 +2908,15 @@ namespace boilersGraphics.ViewModels
                 clone.EnableForSelection.Value = false;
                 groupItem.AddGroup(MainWindowVM.Recorder, clone);
                 var parentLayerItem = Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).OfType<LayerItem>().First(x => x.Item.Value.ID == clone.ParentID);
-                parentLayerItem.Children.Add(new LayerItem(clone, parentLayerItem, layerItemName));
+                var newLayerItem = new LayerItem(clone, parentLayerItem, layerItemName);
+                newLayerItem.Color.Value = Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).OfType<LayerItem>().First(x => x.Item.Value.ID == connector.ID).Color.Value;
+                parentLayerItem.Children.Add(newLayerItem);
             }
-            Add(clone);
+            else
+            {
+                Add(clone);
+            }
+            oldNewList.Add(new Tuple<SelectableDesignerItemViewModelBase, SelectableDesignerItemViewModelBase>(connector, clone));
         }
 
         [Obsolete]

@@ -9,6 +9,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:prism="http://prismlibrary.com/"
              xmlns:views="clr-namespace:boilersGraphics.Views"
+             xmlns:c="clr-namespace:CalcBinding;assembly=CalcBinding"
+             xmlns:controls="clr-namespace:boilersGraphics.Controls"
              d:DesignHeight="450"
              d:DesignWidth="800"
              prism:ViewModelLocator.AutoWireViewModel="True"
@@ -219,10 +221,18 @@
                                                                     <Border BorderBrush="{Binding IsSelected.Value, Converter={StaticResource IsSelectedToBorderBrushConverter}}" BorderThickness="1">
                                                                         <Border.ToolTip>
                                                                             <ToolTip x:Name="Appearance_ToolTip">
-                                                                                <Image Width="100"
-                                                                                       Height="100"
-                                                                                       RenderOptions.BitmapScalingMode="HighQuality"
-                                                                                       Source="{Binding Appearance.Value}" />
+                                                                                <StackPanel Orientation="Vertical">
+                                                                                    <Image Width="100"
+                                                                                           Height="100"
+                                                                                           RenderOptions.BitmapScalingMode="HighQuality"
+                                                                                           Source="{Binding Appearance.Value}" />
+                                                                                    <DockPanel Visibility="Collapsed">
+                                                                                        <Label>
+                                                                                            <TextBlock Text="{Binding}"
+                                                                                                        TextWrapping="Wrap" />
+                                                                                        </Label>
+                                                                                    </DockPanel>
+                                                                                </StackPanel>
                                                                             </ToolTip>
                                                                         </Border.ToolTip>
                                                                         <Image Width="25"
