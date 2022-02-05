@@ -1,4 +1,5 @@
 ﻿using boilersGraphics.Models;
+using boilersGraphics.Properties;
 using boilersGraphics.ViewModels;
 using Moq;
 using NUnit.Framework;
@@ -20,7 +21,7 @@ namespace boilersGraphics.Test
             var diagramVM = new DiagramViewModel(mainWindowViewModel, 1000, 1000);
             diagramVM.Layers.Clear();
             var layer1 = new Layer();
-            layer1.Name.Value = "レイヤー1";
+            layer1.Name.Value = $"{Resources.Name_Layer}1";
             diagramVM.Layers.Add(layer1);
             layer1.IsSelected.Value = true; //レイヤー1を選択状態にする
 
@@ -47,9 +48,9 @@ namespace boilersGraphics.Test
             diagramVM.GroupCommand.Execute();
 
             Assert.That(diagramVM.Layers[0].Children, Has.Count.EqualTo(1));
-            Assert.That(diagramVM.Layers[0].Children[0].Name.Value, Is.EqualTo("アイテム3"));
-            Assert.That(diagramVM.Layers[0].Children[0].Children[0].Name.Value, Is.EqualTo("アイテム1"));
-            Assert.That(diagramVM.Layers[0].Children[0].Children[1].Name.Value, Is.EqualTo("アイテム2"));
+            Assert.That(diagramVM.Layers[0].Children[0].Name.Value, Is.EqualTo($"{Resources.Name_Item}3"));
+            Assert.That(diagramVM.Layers[0].Children[0].Children[0].Name.Value, Is.EqualTo($"{Resources.Name_Item}1"));
+            Assert.That(diagramVM.Layers[0].Children[0].Children[1].Name.Value, Is.EqualTo($"{Resources.Name_Item}2"));
         }
 
         [Test]
@@ -61,7 +62,7 @@ namespace boilersGraphics.Test
             var diagramVM = new DiagramViewModel(mainWindowViewModel, 1000, 1000);
             diagramVM.Layers.Clear();
             var layer1 = new Layer();
-            layer1.Name.Value = "レイヤー1";
+            layer1.Name.Value = $"{Resources.Name_Layer}1";
             diagramVM.Layers.Add(layer1);
             layer1.IsSelected.Value = true; //レイヤー1を選択状態にする
 
@@ -136,7 +137,7 @@ namespace boilersGraphics.Test
             var diagramVM = new DiagramViewModel(mainWindowViewModel, 1000, 1000);
             diagramVM.Layers.Clear();
             var layer1 = new Layer();
-            layer1.Name.Value = "レイヤー1";
+            layer1.Name.Value = $"{Resources.Name_Layer}1";
             diagramVM.Layers.Add(layer1);
             layer1.IsSelected.Value = true; //レイヤー1を選択状態にする
 
@@ -163,9 +164,9 @@ namespace boilersGraphics.Test
             diagramVM.GroupCommand.Execute();
 
             Assert.That(diagramVM.Layers[0].Children, Has.Count.EqualTo(1));
-            Assert.That(diagramVM.Layers[0].Children[0].Name.Value, Is.EqualTo("アイテム3"));
-            Assert.That(diagramVM.Layers[0].Children[0].Children[0].Name.Value, Is.EqualTo("アイテム1"));
-            Assert.That(diagramVM.Layers[0].Children[0].Children[1].Name.Value, Is.EqualTo("アイテム2"));
+            Assert.That(diagramVM.Layers[0].Children[0].Name.Value, Is.EqualTo($"{Resources.Name_Item}3"));
+            Assert.That(diagramVM.Layers[0].Children[0].Children[0].Name.Value, Is.EqualTo($"{Resources.Name_Item}1"));
+            Assert.That(diagramVM.Layers[0].Children[0].Children[1].Name.Value, Is.EqualTo($"{Resources.Name_Item}2"));
 
             var group = diagramVM.AllItems.Value.First(x => x is GroupItemViewModel) as GroupItemViewModel;
             Assert.That(group, Is.TypeOf<GroupItemViewModel>());
@@ -179,12 +180,12 @@ namespace boilersGraphics.Test
             diagramVM.DuplicateCommand.Execute();
 
             Assert.That(diagramVM.Layers[0].Children, Has.Count.EqualTo(2));
-            Assert.That(diagramVM.Layers[0].Children[0].Name.Value, Is.EqualTo("アイテム3"));
-            Assert.That(diagramVM.Layers[0].Children[0].Children[0].Name.Value, Is.EqualTo("アイテム1"));
-            Assert.That(diagramVM.Layers[0].Children[0].Children[1].Name.Value, Is.EqualTo("アイテム2"));
-            Assert.That(diagramVM.Layers[0].Children[1].Name.Value, Is.EqualTo("アイテム4"));
-            Assert.That(diagramVM.Layers[0].Children[1].Children[0].Name.Value, Is.EqualTo("アイテム1"));
-            Assert.That(diagramVM.Layers[0].Children[1].Children[1].Name.Value, Is.EqualTo("アイテム2"));
+            Assert.That(diagramVM.Layers[0].Children[0].Name.Value, Is.EqualTo($"{Resources.Name_Item}3"));
+            Assert.That(diagramVM.Layers[0].Children[0].Children[0].Name.Value, Is.EqualTo($"{Resources.Name_Item}1"));
+            Assert.That(diagramVM.Layers[0].Children[0].Children[1].Name.Value, Is.EqualTo($"{Resources.Name_Item}2"));
+            Assert.That(diagramVM.Layers[0].Children[1].Name.Value, Is.EqualTo($"{Resources.Name_Item}4"));
+            Assert.That(diagramVM.Layers[0].Children[1].Children[0].Name.Value, Is.EqualTo($"{Resources.Name_Item}1"));
+            Assert.That(diagramVM.Layers[0].Children[1].Children[1].Name.Value, Is.EqualTo($"{Resources.Name_Item}2"));
         }
 
 
@@ -197,7 +198,7 @@ namespace boilersGraphics.Test
             var diagramVM = new DiagramViewModel(mainWindowViewModel, 1000, 1000);
             diagramVM.Layers.Clear();
             var layer1 = new Layer();
-            layer1.Name.Value = "レイヤー1";
+            layer1.Name.Value = $"{Resources.Name_Layer}1";
             diagramVM.Layers.Add(layer1);
             layer1.IsSelected.Value = true; //レイヤー1を選択状態にする
 
@@ -224,9 +225,9 @@ namespace boilersGraphics.Test
             diagramVM.GroupCommand.Execute();
 
             Assert.That(diagramVM.Layers[0].Children, Has.Count.EqualTo(1));
-            Assert.That(diagramVM.Layers[0].Children[0].Name.Value, Is.EqualTo("アイテム3"));
-            Assert.That(diagramVM.Layers[0].Children[0].Children[0].Name.Value, Is.EqualTo("アイテム1"));
-            Assert.That(diagramVM.Layers[0].Children[0].Children[1].Name.Value, Is.EqualTo("アイテム2"));
+            Assert.That(diagramVM.Layers[0].Children[0].Name.Value, Is.EqualTo($"{Resources.Name_Item}3"));
+            Assert.That(diagramVM.Layers[0].Children[0].Children[0].Name.Value, Is.EqualTo($"{Resources.Name_Item}1"));
+            Assert.That(diagramVM.Layers[0].Children[0].Children[1].Name.Value, Is.EqualTo($"{Resources.Name_Item}2"));
 
             var group = diagramVM.AllItems.Value.First(x => x is GroupItemViewModel) as GroupItemViewModel;
             Assert.That(group, Is.TypeOf<GroupItemViewModel>());
@@ -240,12 +241,12 @@ namespace boilersGraphics.Test
             diagramVM.DuplicateCommand.Execute();
 
             Assert.That(diagramVM.Layers[0].Children, Has.Count.EqualTo(2));
-            Assert.That(diagramVM.Layers[0].Children[0].Name.Value, Is.EqualTo("アイテム3"));
-            Assert.That(diagramVM.Layers[0].Children[0].Children[0].Name.Value, Is.EqualTo("アイテム1"));
-            Assert.That(diagramVM.Layers[0].Children[0].Children[1].Name.Value, Is.EqualTo("アイテム2"));
-            Assert.That(diagramVM.Layers[0].Children[1].Name.Value, Is.EqualTo("アイテム4"));
-            Assert.That(diagramVM.Layers[0].Children[1].Children[0].Name.Value, Is.EqualTo("アイテム1"));
-            Assert.That(diagramVM.Layers[0].Children[1].Children[1].Name.Value, Is.EqualTo("アイテム2"));
+            Assert.That(diagramVM.Layers[0].Children[0].Name.Value, Is.EqualTo($"{Resources.Name_Item}3"));
+            Assert.That(diagramVM.Layers[0].Children[0].Children[0].Name.Value, Is.EqualTo($"{Resources.Name_Item}1"));
+            Assert.That(diagramVM.Layers[0].Children[0].Children[1].Name.Value, Is.EqualTo($"{Resources.Name_Item}2"));
+            Assert.That(diagramVM.Layers[0].Children[1].Name.Value, Is.EqualTo($"{Resources.Name_Item}4"));
+            Assert.That(diagramVM.Layers[0].Children[1].Children[0].Name.Value, Is.EqualTo($"{Resources.Name_Item}1"));
+            Assert.That(diagramVM.Layers[0].Children[1].Children[1].Name.Value, Is.EqualTo($"{Resources.Name_Item}2"));
 
             var secondGroup = diagramVM.AllItems.Value.Skip(1).First(x => x is GroupItemViewModel) as GroupItemViewModel;
             Assert.That(secondGroup, Is.TypeOf<GroupItemViewModel>());
@@ -272,7 +273,7 @@ namespace boilersGraphics.Test
             var diagramVM = new DiagramViewModel(mainWindowViewModel, 1000, 1000);
             diagramVM.Layers.Clear();
             var layer1 = new Layer();
-            layer1.Name.Value = "レイヤー1";
+            layer1.Name.Value = $"{Resources.Name_Layer}1";
             diagramVM.Layers.Add(layer1);
             layer1.IsSelected.Value = true; //レイヤー1を選択状態にする
 
@@ -299,9 +300,9 @@ namespace boilersGraphics.Test
             diagramVM.GroupCommand.Execute();
 
             Assert.That(diagramVM.Layers[0].Children, Has.Count.EqualTo(1));
-            Assert.That(diagramVM.Layers[0].Children[0].Name.Value, Is.EqualTo("アイテム3"));
-            Assert.That(diagramVM.Layers[0].Children[0].Children[0].Name.Value, Is.EqualTo("アイテム1"));
-            Assert.That(diagramVM.Layers[0].Children[0].Children[1].Name.Value, Is.EqualTo("アイテム2"));
+            Assert.That(diagramVM.Layers[0].Children[0].Name.Value, Is.EqualTo($"{Resources.Name_Item}3"));
+            Assert.That(diagramVM.Layers[0].Children[0].Children[0].Name.Value, Is.EqualTo($"{Resources.Name_Item}1"));
+            Assert.That(diagramVM.Layers[0].Children[0].Children[1].Name.Value, Is.EqualTo($"{Resources.Name_Item}2"));
 
             var group = diagramVM.AllItems.Value.First(x => x is GroupItemViewModel) as GroupItemViewModel;
             Assert.That(group, Is.TypeOf<GroupItemViewModel>());
@@ -315,12 +316,12 @@ namespace boilersGraphics.Test
             diagramVM.DuplicateCommand.Execute();
 
             Assert.That(diagramVM.Layers[0].Children, Has.Count.EqualTo(2));
-            Assert.That(diagramVM.Layers[0].Children[0].Name.Value, Is.EqualTo("アイテム3"));
-            Assert.That(diagramVM.Layers[0].Children[0].Children[0].Name.Value, Is.EqualTo("アイテム1"));
-            Assert.That(diagramVM.Layers[0].Children[0].Children[1].Name.Value, Is.EqualTo("アイテム2"));
-            Assert.That(diagramVM.Layers[0].Children[1].Name.Value, Is.EqualTo("アイテム4"));
-            Assert.That(diagramVM.Layers[0].Children[1].Children[0].Name.Value, Is.EqualTo("アイテム1"));
-            Assert.That(diagramVM.Layers[0].Children[1].Children[1].Name.Value, Is.EqualTo("アイテム2"));
+            Assert.That(diagramVM.Layers[0].Children[0].Name.Value, Is.EqualTo($"{Resources.Name_Item}3"));
+            Assert.That(diagramVM.Layers[0].Children[0].Children[0].Name.Value, Is.EqualTo($"{Resources.Name_Item}1"));
+            Assert.That(diagramVM.Layers[0].Children[0].Children[1].Name.Value, Is.EqualTo($"{Resources.Name_Item}2"));
+            Assert.That(diagramVM.Layers[0].Children[1].Name.Value, Is.EqualTo($"{Resources.Name_Item}4"));
+            Assert.That(diagramVM.Layers[0].Children[1].Children[0].Name.Value, Is.EqualTo($"{Resources.Name_Item}1"));
+            Assert.That(diagramVM.Layers[0].Children[1].Children[1].Name.Value, Is.EqualTo($"{Resources.Name_Item}2"));
         }
     }
 }
