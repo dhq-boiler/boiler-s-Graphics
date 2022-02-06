@@ -53,7 +53,6 @@ namespace boilersGraphics.ViewModels
             DisagreeCommand.Subscribe(_ =>
             {
                 InsertOrUpdate(false);
-                GoogleAnalyticsUtil.Beacon(TerminalInfo.Value, BeaconPlace.DisagreePrivacyPolicy);
                 RequestClose.Invoke(new DialogResult(ButtonResult.No));
             })
             .AddTo(disposables);
