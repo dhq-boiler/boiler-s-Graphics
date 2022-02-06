@@ -267,6 +267,7 @@ namespace boilersGraphics.ViewModels
             SnapPower.Value = 10;
 
             IncrementNumberOfBoots();
+            TerminalInfo.Value = CreateTerminalInfo();
 
             DiagramViewModel.Initialize();
 
@@ -329,6 +330,7 @@ namespace boilersGraphics.ViewModels
                     IDialogParameters dialogParameters = new DialogParameters();
                     dialogParameters.Add("CurrentStatus", currentState);
                     dialogParameters.Add("latestDate", latestDate);
+                    dialogParameters.Add("terminalInfo", TerminalInfo.Value);
                     IDialogResult dialogResult = null;
                     dlgService.ShowDialog(nameof(PrivacyPolicy), dialogParameters, ret => dialogResult = ret);
                     if (dialogResult != null)
@@ -435,6 +437,7 @@ namespace boilersGraphics.ViewModels
             dvManager.RegisterChangePlan(new ChangePlan_bG_Version2());
             dvManager.RegisterChangePlan(new ChangePlan_bG_Version3());
             dvManager.RegisterChangePlan(new ChangePlan_bG_Version4());
+            dvManager.RegisterChangePlan(new ChangePlan_bG_Version5());
             dvManager.FinishedToUpgradeTo += DvManager_FinishedToUpgradeTo;
 
             dvManager.UpgradeToTargetVersion();
@@ -453,21 +456,55 @@ namespace boilersGraphics.ViewModels
         private void IncrementNumberOfBoots()
         {
             var id = Guid.Parse("00000000-0000-0000-0000-000000000000");
-            var dao = new StatisticsDao();
-            var statistics = dao.FindBy(new Dictionary<string, object>() { { "ID", id } });
+            var statisticsDao = new StatisticsDao();
+            var statistics = statisticsDao.FindBy(new Dictionary<string, object>() { { "ID", id } });
             if (statistics.Count() == 0)
             {
                 var newStatistics = new Models.Statistics();
                 newStatistics.ID = id;
                 newStatistics.NumberOfBoots = 1;
-                dao.Insert(newStatistics);
+                statisticsDao.Insert(newStatistics);
             }
             else
             {
                 var existStatistics = statistics.First();
                 existStatistics.NumberOfBoots += 1;
-                dao.Update(existStatistics);
+                statisticsDao.Update(existStatistics);
             }
+        }
+
+        private TerminalInfo CreateTerminalInfo()
+        {
+            var id = Guid.Parse("00000000-0000-0000-0000-000000000000");
+            var terminalInfoDao = new TerminalInfoDao();
+            var terminalInfos = terminalInfoDao.FindBy(new Dictionary<string, object>() { { "ID", id } });
+            if (terminalInfos.Count() == 0)
+            {
+                var newTerminalInfo = new Models.TerminalInfo();
+                newTerminalInfo.ID = id;
+                newTerminalInfo.TerminalId = Guid.NewGuid();
+                newTerminalInfo.BuildComposition = GetBuildComposition();
+                terminalInfoDao.Insert(newTerminalInfo);
+
+                GoogleAnalyticsUtil.Beacon(newTerminalInfo, BeaconPlace.FirstLaunch);
+
+                return newTerminalInfo;
+            }
+            else
+            {
+                var terminalInfo = terminalInfos.First();
+                GoogleAnalyticsUtil.Beacon(terminalInfo, BeaconPlace.Launch);
+                return terminalInfo;
+            }
+        }
+
+        private string GetBuildComposition()
+        {
+#if DEBUG
+            return "Debug";
+#else
+            return "Production";
+#endif
         }
 
         public void ClearCurrentOperationAndDetails()
@@ -500,6 +537,8 @@ namespace boilersGraphics.ViewModels
         public ReactivePropertySlim<string> Title { get; } = new ReactivePropertySlim<string>();
 
         public ReactivePropertySlim<Models.Statistics> Statistics { get; } = new ReactivePropertySlim<Models.Statistics>();
+
+        public ReactivePropertySlim<TerminalInfo> TerminalInfo { get; } = new ReactivePropertySlim<TerminalInfo>();
 
         public IOperationController Controller { get; } = new OperationController();
 
@@ -542,7 +581,7 @@ namespace boilersGraphics.ViewModels
             }
         }
 
-        #region IDisposable
+#region IDisposable
 
         public void Dispose()
         {
@@ -550,6 +589,6 @@ namespace boilersGraphics.ViewModels
             Instance = null;
         }
 
-        #endregion //IDisposable
+#endregion //IDisposable
     }
 }
