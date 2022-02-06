@@ -25,6 +25,8 @@ namespace boilersGraphics.Helpers
 
         private static string GetBuildComposition()
         {
+            if (App.IsTest)
+                return "TEST";
 #if DEBUG
             return "Debug";
 #else
