@@ -131,9 +131,10 @@ namespace boilersGraphics.ViewModels
         public void OnDialogOpened(IDialogParameters parameters)
         {
             var currentState = parameters.GetValue<PrivacyPolicyAgreement>("CurrentStatus");
+            var latestDate = parameters.GetValue<DateTime?>("latestDate");
             CurrentPrivacyPolicyAgreement.Value = currentState;
-            AgreeDisagreeVisibility.Value = currentState == null || !currentState.IsAgree ? Visibility.Visible : Visibility.Collapsed;
-            OKVisibility.Value = currentState == null || !currentState.IsAgree ? Visibility.Collapsed : Visibility.Visible;
+            AgreeDisagreeVisibility.Value = (currentState == null || currentState.DateOfEnactment < latestDate || !currentState.IsAgree) ? Visibility.Visible : Visibility.Collapsed;
+            OKVisibility.Value = (currentState == null || currentState.DateOfEnactment < latestDate || !currentState.IsAgree) ? Visibility.Collapsed : Visibility.Visible;
 
             if (OKVisibility.Value == Visibility.Visible)
             {

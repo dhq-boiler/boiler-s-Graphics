@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -185,9 +186,35 @@ namespace boilersGraphics.Models
             return visual;
         }
 
+        public string ShowPropertiesAndFields()
+        {
+            string ret = $"<{GetType().Name}>{{";
+
+            PropertyInfo[] properties = GetType().GetProperties(
+                BindingFlags.Public
+                | BindingFlags.Instance);
+
+            foreach (var property in properties)
+            {
+                ret += $"{property.Name}={property.GetValue(this)},";
+            }
+
+            FieldInfo[] fields = GetType().GetFields(
+                BindingFlags.Public
+                | BindingFlags.Instance);
+
+            foreach (var field in fields)
+            {
+                ret += $"{field.Name}={field.GetValue(this)},";
+            }
+            ret = ret.Remove(ret.Length - 1, 1);
+            ret += $"}}";
+            return ret;
+        }
+
         public override string ToString()
         {
-            return $"Name={Name.Value}, IsSelected={IsSelected.Value}, ZIndex={Item.Value.ZIndex.Value}, Parent={{{Parent.Value}}}";
+            return $"Name={Name.Value}, ZIndex={Item.Value.ZIndex.Value}, IsSelected={IsSelected.Value}, IsVisible={IsVisible.Value}, ZIndex={Item.Value.ZIndex.Value}, ID={Item.Value.ID}, ParentID={Item.Value.ParentID}, Item={Item.Value}";
         }
 
         protected override void Dispose(bool disposing)

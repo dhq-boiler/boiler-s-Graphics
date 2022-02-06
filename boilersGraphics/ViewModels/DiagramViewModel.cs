@@ -1440,7 +1440,12 @@ namespace boilersGraphics.ViewModels
             }
         }
 
-        private void Add(SelectableDesignerItemViewModelBase item)
+        private void Add(SelectableDesignerItemViewModelBase item, string layerItemName = null)
+        {
+            SelectedLayers.Value.First().AddItem(MainWindowVM, this, item, layerItemName);
+        }
+
+        private void Add(LayerItem item)
         {
             SelectedLayers.Value.First().AddItem(MainWindowVM, this, item);
             LogManager.GetCurrentClassLogger().Info($"Add item {item.ShowPropertiesAndFields()}");
@@ -1811,7 +1816,10 @@ namespace boilersGraphics.ViewModels
         {
             MainWindowVM.Recorder.BeginRecode();
 
-            var items = SelectedItems.Value.Where(x => Guid.Equals(x.ParentID, Guid.Empty)).ToList();
+            var items = SelectedItems.Value.Select(x => x is SnapPointViewModel sp
+                                                        ? sp.Parent.Value
+                                                        : x
+                                                  ).Distinct().Where(x => Guid.Equals(x.ParentID, Guid.Empty)).ToList();
 
             var rect = GetBoundingRectangle(items);
 
@@ -2348,7 +2356,7 @@ namespace boilersGraphics.ViewModels
             dao.Update(statistics);
         }
 
-        private void Sort(ReactiveCollection<LayerTreeViewItemBase> target)
+        public static void Sort(ReactiveCollection<LayerTreeViewItemBase> target)
         {
             var list = target.ToList();
 
@@ -2787,6 +2795,7 @@ namespace boilersGraphics.ViewModels
         private void ExecuteDuplicateCommand()
         {
             DuplicateObjects(SelectedItems.Value);
+            Sort(Layers);
         }
 
         private void DuplicateObjects(IEnumerable<SelectableDesignerItemViewModelBase> items)
@@ -2803,20 +2812,38 @@ namespace boilersGraphics.ViewModels
             }
 
             var selectedConnectors = (from item in items.OfType<SnapPointViewModel>().Select(x => x.Parent.Value).OfType<ConnectorBaseViewModel>()
-                                     orderby item.ZIndex.Value ascending
-                                     select item).Distinct();
+                                      orderby item.ZIndex.Value ascending
+                                      select item).Distinct();
 
             foreach (var connector in selectedConnectors)
             {
                 DuplicateConnector(oldNewList, connector);
             }
+
+            EssentialCodeForBugAvoidance();
         }
 
-        private void DuplicateDesignerItem(IOrderedEnumerable<DesignerItemViewModelBase> selectedItems, List<Tuple<SelectableDesignerItemViewModelBase, SelectableDesignerItemViewModelBase>> oldNewList, DesignerItemViewModelBase item, GroupItemViewModel parent = null)
+        private void EssentialCodeForBugAvoidance()
+        {
+            var list = new List<LayerTreeViewItemBase>();
+            foreach (var layer in Layers)
+            {
+                list.Add(layer);
+            }
+            Layers.Clear();
+            foreach (var item in list)
+            {
+                Layers.Add(item);
+            }
+        }
+
+        private void DuplicateDesignerItem(IOrderedEnumerable<DesignerItemViewModelBase> selectedItems, List<Tuple<SelectableDesignerItemViewModelBase, SelectableDesignerItemViewModelBase>> oldNewList, SelectableDesignerItemViewModelBase item, GroupItemViewModel parent = null, string layerItemName = null, LayerItem parentLayerItem = null)
         {
             if (item is GroupItemViewModel groupItem)
             {
                 var cloneGroup = groupItem.Clone() as GroupItemViewModel;
+                cloneGroup.IsHitTestVisible.Value = true;
+                cloneGroup.CanDrag.Value = true;
                 if (parent != null)
                 {
                     cloneGroup.ParentID = parent.ID;
@@ -2824,51 +2851,72 @@ namespace boilersGraphics.ViewModels
                     parent.AddGroup(MainWindowVM.Recorder, cloneGroup);
                 }
 
-                var children = from it in Layers.SelectMany(x => x.Children).OfType<DesignerItemViewModelBase>()
-                               where it.ParentID == item.ID
-                               orderby it.ZIndex.Value ascending
-                               select it;
+                var items = Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children);
+                var children = (from it in items.OfType<LayerItem>().Where(x => x.Item.Value is DesignerItemViewModelBase)
+                                where it.Item.Value.ParentID.Equals(groupItem.ID)
+                                orderby it.Item.Value.ZIndex.Value ascending
+                                select new { DesignerItem = it.Item.Value, LayerItemName = it.Name.Value }).ToList();
 
-                foreach (var child in children)
-                {
-                    DuplicateDesignerItem(selectedItems, oldNewList, child, cloneGroup);
-                }
-
-                var childrenConnectors = from it in Layers.SelectMany(x => x.Children).OfType<ConnectorBaseViewModel>()
-                                         where it.ParentID == item.ID
-                                         orderby it.ZIndex.Value ascending
-                                         select it;
-
-                foreach (var connector in childrenConnectors)
-                {
-                    //DuplicateConnector(childrenConnectedItems, oldNewList, connector, cloneGroup);
-                }
+                var childrenConnectors = (from it in items.OfType<LayerItem>().Where(x => x.Item.Value is ConnectorBaseViewModel)
+                                          where it.Item.Value.ParentID.Equals(groupItem.ID)
+                                          orderby it.Item.Value.ZIndex.Value ascending
+                                          select new { DesignerItem = it.Item.Value, LayerItemName = it.Name.Value }).ToList();
+                var unions = children.Union(childrenConnectors)
+                                     .OrderBy(x => x.DesignerItem.ZIndex.Value);
 
                 oldNewList.Add(new Tuple<SelectableDesignerItemViewModelBase, SelectableDesignerItemViewModelBase>(groupItem, cloneGroup));
-                cloneGroup.ZIndex.Value = Layers.SelectMany(x => x.Children).Count();
-                Add(cloneGroup);
+                var groupItemName = Name.GetNewLayerItemName(this);
+                var _parentLayerItem = new LayerItem(cloneGroup, SelectedLayers.Value.First(), groupItemName);
+
+                foreach (var u in unions)
+                {
+                    if (u.DesignerItem is DesignerItemViewModelBase)
+                    {
+                        DuplicateDesignerItem(selectedItems, oldNewList, u.DesignerItem, cloneGroup, u.LayerItemName, _parentLayerItem);
+                    }
+                    else if (u.DesignerItem is ConnectorBaseViewModel)
+                    {
+                        DuplicateConnector(oldNewList, u.DesignerItem, cloneGroup, u.LayerItemName, _parentLayerItem);
+                    }
+                }
+
+                Add(_parentLayerItem);
+                cloneGroup.ZIndex.Value = Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).OfType<LayerItem>().Where(x => x.Item.Value.ParentID == cloneGroup.ID).Max(x => x.Item.Value.ZIndex.Value) + 1;
             }
             else
             {
                 var clone = item.Clone() as DesignerItemViewModelBase;
-                clone.ZIndex.Value = Layers.SelectMany(x => x.Children).Count();
+                var items = Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children);
+                items = items.Union(parentLayerItem.Children.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children));
+                clone.ZIndex.Value = items.OfType<LayerItem>().Max(x => x.Item.Value.ZIndex.Value) + 1;
                 clone.EdgeThickness.Value = item.EdgeThickness.Value;
                 clone.IsHitTestVisible.Value = true;
+                clone.EnableForSelection.Value = true;
+                clone.IsVisible.Value = true;
+                clone.CanDrag.Value = true;
                 if (parent != null)
                 {
                     clone.ParentID = parent.ID;
                     clone.EnableForSelection.Value = false;
                     parent.AddGroup(MainWindowVM.Recorder, clone);
+                    var newLayerItem = new LayerItem(clone, parentLayerItem, layerItemName);
+                    newLayerItem.Color.Value = Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).OfType<LayerItem>().First(x => x.Item.Value.ID == item.ID).Color.Value;
+                    parentLayerItem.Children.Add(newLayerItem);
+                }
+                else
+                {
+                    Add(clone);
                 }
                 oldNewList.Add(new Tuple<SelectableDesignerItemViewModelBase, SelectableDesignerItemViewModelBase>(item, clone));
-                Add(clone);
             }
         }
 
-        private void DuplicateConnector(List<Tuple<SelectableDesignerItemViewModelBase, SelectableDesignerItemViewModelBase>> oldNewList, ConnectorBaseViewModel connector, GroupItemViewModel groupItem = null)
+        private void DuplicateConnector(List<Tuple<SelectableDesignerItemViewModelBase, SelectableDesignerItemViewModelBase>> oldNewList, SelectableDesignerItemViewModelBase connector, GroupItemViewModel groupItem = null, string layerItemName = null, LayerItem parentLayerItem = null)
         {
             var clone = connector.Clone() as ConnectorBaseViewModel;
-            clone.ZIndex.Value = Layers.SelectMany(x => x.Children).Count();
+            var items = Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children);
+            items = items.Union(parentLayerItem.Children.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children));
+            clone.ZIndex.Value = items.OfType<LayerItem>().Max(x => x.Item.Value.ZIndex.Value) + 1;
             clone.IsHitTestVisible.Value = true;
             clone.SnapPoint0VM.Value.IsHitTestVisible.Value = true;
             clone.SnapPoint1VM.Value.IsHitTestVisible.Value = true;
@@ -2877,8 +2925,15 @@ namespace boilersGraphics.ViewModels
                 clone.ParentID = groupItem.ID;
                 clone.EnableForSelection.Value = false;
                 groupItem.AddGroup(MainWindowVM.Recorder, clone);
+                var newLayerItem = new LayerItem(clone, parentLayerItem, layerItemName);
+                newLayerItem.Color.Value = Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).OfType<LayerItem>().First(x => x.Item.Value.ID == connector.ID).Color.Value;
+                parentLayerItem.Children.Add(newLayerItem);
             }
-            Add(clone);
+            else
+            {
+                Add(clone);
+            }
+            oldNewList.Add(new Tuple<SelectableDesignerItemViewModelBase, SelectableDesignerItemViewModelBase>(connector, clone));
         }
 
         [Obsolete]

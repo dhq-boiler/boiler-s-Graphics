@@ -119,14 +119,27 @@ namespace boilersGraphics.Models
             return ox1.Merge(ox2).Merge(ox3);
         }
 
-        public void AddItem(MainWindowViewModel mainWindowViewModel, DiagramViewModel diagramViewModel, SelectableDesignerItemViewModelBase item)
+        public void AddItem(MainWindowViewModel mainWindowViewModel, DiagramViewModel diagramViewModel, SelectableDesignerItemViewModelBase item, string layerItemName = null)
         {
-            var layerItem = new LayerItem(item, this, boilersGraphics.Helpers.Name.GetNewLayerItemName(diagramViewModel));
+            if (layerItemName == null)
+            {
+                layerItemName = boilersGraphics.Helpers.Name.GetNewLayerItemName(diagramViewModel);
+            }
+            var layerItem = new LayerItem(item, this, layerItemName);
             layerItem.IsVisible.Value = true;
             layerItem.Parent.Value = this;
             Random rand = new Random();
             layerItem.Color.Value = Randomizer.RandomColor(rand);
             mainWindowViewModel.Recorder.Current.ExecuteAdd(Children, layerItem);
+        }
+
+        public void AddItem(MainWindowViewModel mainWindowVM, DiagramViewModel diagramViewModel, LayerItem item)
+        {
+            item.IsVisible.Value = true;
+            item.Parent.Value = this;
+            Random rand = new Random();
+            item.Color.Value = Randomizer.RandomColor(rand);
+            mainWindowVM.Recorder.Current.ExecuteAdd(Children, item);
         }
 
         public void RemoveItem(MainWindowViewModel mainWindowViewModel, SelectableDesignerItemViewModelBase item)

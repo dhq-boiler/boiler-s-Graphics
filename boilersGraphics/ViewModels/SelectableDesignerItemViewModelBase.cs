@@ -48,39 +48,27 @@ namespace boilersGraphics.ViewModels
         public DelegateCommand<object> SelectItemCommand { get; private set; }
         public int Id { get; set; }
 
+        // ↓ Flags ↓
+        
         public ReactivePropertySlim<bool> IsSelected { get; } = new ReactivePropertySlim<bool>();
+        public ReactivePropertySlim<bool> EnableForSelection { get; } = new ReactivePropertySlim<bool>();
+        public ReactivePropertySlim<bool> EnablePathGeometryUpdate { get; set; } = new ReactivePropertySlim<bool>();
+        public ReactivePropertySlim<bool> IsVisible { get; } = new ReactivePropertySlim<bool>();
+        public ReactivePropertySlim<bool> IsHitTestVisible { get; set; } = new ReactivePropertySlim<bool>();
+        public ReactivePropertySlim<bool> CanDrag { get; set; } = new ReactivePropertySlim<bool>(true);
+        
+        // ↑ Flags ↑
 
         public ReactivePropertySlim<int> SelectedOrder { get; } = new ReactivePropertySlim<int>();
-
         public ReactivePropertySlim<Matrix> Matrix { get; } = new ReactivePropertySlim<Matrix>(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe | ReactivePropertyMode.DistinctUntilChanged);
-
         public ReactivePropertySlim<double> RotationAngle { get; } = new ReactivePropertySlim<double>(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe | ReactivePropertyMode.DistinctUntilChanged);
-
-        public ReactivePropertySlim<bool> EnableForSelection { get; } = new ReactivePropertySlim<bool>();
-
         public ReactivePropertySlim<int> ZIndex { get; } = new ReactivePropertySlim<int>();
-
         public ReactivePropertySlim<Brush> EdgeBrush { get; } = new ReactivePropertySlim<Brush>(Brushes.Transparent);
-
         public ReactivePropertySlim<Brush> FillBrush { get; } = new ReactivePropertySlim<Brush>(Brushes.Transparent);
-
         public ReactivePropertySlim<double> EdgeThickness { get; } = new ReactivePropertySlim<double>();
-
         public ReactivePropertySlim<PathGeometry> PathGeometry { get; set; } = new ReactivePropertySlim<PathGeometry>();
-
-        public ReactivePropertySlim<bool> EnablePathGeometryUpdate { get; set; } = new ReactivePropertySlim<bool>();
-
-        public ReactivePropertySlim<bool> IsVisible { get; } = new ReactivePropertySlim<bool>();
-
-
-        public ReactivePropertySlim<bool> IsHitTestVisible { get; set; } = new ReactivePropertySlim<bool>();
-
-        public ReactivePropertySlim<bool> CanDrag { get; set; } = new ReactivePropertySlim<bool>(true);
-
         public ReactivePropertySlim<PenLineJoin> PenLineJoin { get; } = new ReactivePropertySlim<PenLineJoin>();
-
         public ReactiveCollection<PenLineJoin> PenLineJoins { get; private set; }
-
         public ReactivePropertySlim<DoubleCollection> StrokeDashArray { get; } = new ReactivePropertySlim<DoubleCollection>();
 
         public string Name { get; set; }
@@ -282,7 +270,11 @@ namespace boilersGraphics.ViewModels
                 BindingFlags.Public
                 | BindingFlags.Instance);
 
-            foreach (var property in properties)
+            foreach (var property in properties.Except(new PropertyInfo[] 
+                                                           {
+                                                               GetType().GetProperty("Parent"),
+                                                               GetType().GetProperty("SelectedItems")
+                                                           }))
             {
                 ret += $"{property.Name}={property.GetValue(this)},";
             }
@@ -298,6 +290,11 @@ namespace boilersGraphics.ViewModels
             ret = ret.Remove(ret.Length - 1, 1);
             ret += $"}}";
             return ret;
+        }
+
+        public override string ToString()
+        {
+            return ShowPropertiesAndFields();
         }
     }
 }
