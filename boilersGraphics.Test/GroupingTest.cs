@@ -4,6 +4,8 @@ using boilersGraphics.ViewModels;
 using Moq;
 using NUnit.Framework;
 using Prism.Services.Dialogs;
+using Reactive.Bindings;
+using System;
 using System.Linq;
 using System.Reactive.Linq;
 
@@ -315,13 +317,35 @@ namespace boilersGraphics.Test
 
             diagramVM.DuplicateCommand.Execute();
 
+            DisplayTree(diagramVM.Layers);
+
             Assert.That(diagramVM.Layers[0].Children, Has.Count.EqualTo(2));
             Assert.That(diagramVM.Layers[0].Children[0].Name.Value, Is.EqualTo($"{Resources.Name_Item}3"));
+            Assert.That((diagramVM.Layers[0].Children[0] as LayerItem).Item.Value.ZIndex.Value, Is.EqualTo(2));
             Assert.That(diagramVM.Layers[0].Children[0].Children[0].Name.Value, Is.EqualTo($"{Resources.Name_Item}1"));
+            Assert.That((diagramVM.Layers[0].Children[0].Children[0] as LayerItem).Item.Value.ZIndex.Value, Is.EqualTo(0));
             Assert.That(diagramVM.Layers[0].Children[0].Children[1].Name.Value, Is.EqualTo($"{Resources.Name_Item}2"));
+            Assert.That((diagramVM.Layers[0].Children[0].Children[1] as LayerItem).Item.Value.ZIndex.Value, Is.EqualTo(1));
             Assert.That(diagramVM.Layers[0].Children[1].Name.Value, Is.EqualTo($"{Resources.Name_Item}4"));
+            Assert.That((diagramVM.Layers[0].Children[1] as LayerItem).Item.Value.ZIndex.Value, Is.EqualTo(5));
             Assert.That(diagramVM.Layers[0].Children[1].Children[0].Name.Value, Is.EqualTo($"{Resources.Name_Item}1"));
+            Assert.That((diagramVM.Layers[0].Children[1].Children[0] as LayerItem).Item.Value.ZIndex.Value, Is.EqualTo(3));
             Assert.That(diagramVM.Layers[0].Children[1].Children[1].Name.Value, Is.EqualTo($"{Resources.Name_Item}2"));
+            Assert.That((diagramVM.Layers[0].Children[1].Children[1] as LayerItem).Item.Value.ZIndex.Value, Is.EqualTo(4));
+        }
+
+        private void DisplayTree(ReactiveCollection<LayerTreeViewItemBase> layers, int offset = 0)
+        {
+            foreach (var layer in layers)
+            {
+                string offsetStr = string.Empty;
+                for (int i = 0; i < offset; i++)
+                {
+                    offsetStr += " ";
+                }
+                Console.WriteLine($"{offsetStr}{layer.ToString()}");
+                DisplayTree(layer.Children, offset + 2);
+            }
         }
     }
 }

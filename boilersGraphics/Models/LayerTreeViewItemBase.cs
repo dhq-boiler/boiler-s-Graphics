@@ -133,6 +133,15 @@ namespace boilersGraphics.Models
             mainWindowViewModel.Recorder.Current.ExecuteAdd(Children, layerItem);
         }
 
+        public void AddItem(MainWindowViewModel mainWindowVM, DiagramViewModel diagramViewModel, LayerItem item)
+        {
+            item.IsVisible.Value = true;
+            item.Parent.Value = this;
+            Random rand = new Random();
+            item.Color.Value = Randomizer.RandomColor(rand);
+            mainWindowVM.Recorder.Current.ExecuteAdd(Children, item);
+        }
+
         public void RemoveItem(MainWindowViewModel mainWindowViewModel, SelectableDesignerItemViewModelBase item)
         {
             var layerItems = Children.Where(x => (x as LayerItem).Item.Value == item);
