@@ -11,5 +11,6 @@ namespace boilersGraphics.Helpers
         public static readonly string FirstLaunch = "FirstLaunch";
         public static readonly string Launch = "Launch";
         public static readonly string AgreePrivacyPolicy = "AgreePrivacyPolicy";
+        public static readonly string DisagreePrivacyPolicy = "DisagreePrivacyPolicy";
     }
 }
