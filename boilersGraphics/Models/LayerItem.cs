@@ -214,7 +214,7 @@ namespace boilersGraphics.Models
 
         public override string ToString()
         {
-            return $"Name={Name.Value}, IsSelected={IsSelected.Value}, IsVisible={IsVisible.Value}, ZIndex={Item.Value.ZIndex.Value}, ID={Item.Value.ID}, ParentID={Item.Value.ParentID}, Item={Item.Value}";
+            return $"Name={Name.Value}, ZIndex={Item.Value.ZIndex.Value}, IsSelected={IsSelected.Value}, IsVisible={IsVisible.Value}, ZIndex={Item.Value.ZIndex.Value}, ID={Item.Value.ID}, ParentID={Item.Value.ParentID}, Item={Item.Value}";
         }
 
         protected override void Dispose(bool disposing)
