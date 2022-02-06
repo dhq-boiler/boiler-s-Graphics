@@ -2857,9 +2857,8 @@ namespace boilersGraphics.ViewModels
                                           select new { DesignerItem = it.Item.Value, LayerItemName = it.Name.Value }).ToList();
 
                 oldNewList.Add(new Tuple<SelectableDesignerItemViewModelBase, SelectableDesignerItemViewModelBase>(groupItem, cloneGroup));
-                cloneGroup.ZIndex.Value = Layers.SelectMany(x => x.Children).Count();
-                Add(cloneGroup, Name.GetNewLayerItemName(this));
-
+                var groupItemName = Name.GetNewLayerItemName(this);
+                Add(cloneGroup, groupItemName);
                 foreach (var child in children)
                 {
                     DuplicateDesignerItem(selectedItems, oldNewList, child.DesignerItem, cloneGroup, child.LayerItemName);
@@ -2869,14 +2868,17 @@ namespace boilersGraphics.ViewModels
                 {
                     DuplicateConnector(oldNewList, connector.DesignerItem, cloneGroup, connector.LayerItemName);
                 }
+                cloneGroup.ZIndex.Value = Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).Count();
             }
             else
             {
                 var clone = item.Clone() as DesignerItemViewModelBase;
-                clone.ZIndex.Value = Layers.SelectMany(x => x.Children).Count();
+                clone.ZIndex.Value = Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).Count();
                 clone.EdgeThickness.Value = item.EdgeThickness.Value;
                 clone.IsHitTestVisible.Value = true;
+                clone.EnableForSelection.Value = true;
                 clone.IsVisible.Value = true;
+                clone.CanDrag.Value = true;
                 if (parent != null)
                 {
                     clone.ParentID = parent.ID;
