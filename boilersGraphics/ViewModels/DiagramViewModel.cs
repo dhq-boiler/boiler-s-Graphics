@@ -2815,6 +2815,7 @@ namespace boilersGraphics.ViewModels
             }
 
             EssentialCodeForBugAvoidance();
+            Sort(Layers);
         }
 
         private void EssentialCodeForBugAvoidance()
