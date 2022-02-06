@@ -39,11 +39,14 @@ namespace boilersGraphics.ViewModels
 
         public ReactivePropertySlim<string> Message { get; } = new ReactivePropertySlim<string>();
 
+        public ReactivePropertySlim<TerminalInfo> TerminalInfo { get; } = new ReactivePropertySlim<TerminalInfo>();
+
         public PrivacyPolicyViewModel()
         {
             AgreeCommand.Subscribe(_ =>
             {
                 InsertOrUpdate(true);
+                GoogleAnalyticsUtil.Beacon(TerminalInfo.Value, BeaconPlace.AgreePrivacyPolicy);
                 RequestClose.Invoke(new DialogResult(ButtonResult.Yes));
             })
             .AddTo(disposables);
@@ -132,6 +135,7 @@ namespace boilersGraphics.ViewModels
         {
             var currentState = parameters.GetValue<PrivacyPolicyAgreement>("CurrentStatus");
             var latestDate = parameters.GetValue<DateTime?>("latestDate");
+            TerminalInfo.Value = parameters.GetValue<TerminalInfo>("terminalInfo");
             CurrentPrivacyPolicyAgreement.Value = currentState;
             AgreeDisagreeVisibility.Value = (currentState == null || currentState.DateOfEnactment < latestDate || !currentState.IsAgree) ? Visibility.Visible : Visibility.Collapsed;
             OKVisibility.Value = (currentState == null || currentState.DateOfEnactment < latestDate || !currentState.IsAgree) ? Visibility.Collapsed : Visibility.Visible;
