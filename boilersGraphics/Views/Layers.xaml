@@ -226,7 +226,7 @@
                                                                                            Height="100"
                                                                                            RenderOptions.BitmapScalingMode="HighQuality"
                                                                                            Source="{Binding Appearance.Value}" />
-                                                                                    <DockPanel Visibility="Collapsed">
+                                                                                    <DockPanel Visibility="Visible">
                                                                                         <Label>
                                                                                             <TextBlock Text="{Binding}"
                                                                                                         TextWrapping="Wrap" />

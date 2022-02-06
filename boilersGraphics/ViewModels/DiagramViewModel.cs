@@ -2356,7 +2356,7 @@ namespace boilersGraphics.ViewModels
             dao.Update(statistics);
         }
 
-        private void Sort(ReactiveCollection<LayerTreeViewItemBase> target)
+        public static void Sort(ReactiveCollection<LayerTreeViewItemBase> target)
         {
             var list = target.ToList();
 

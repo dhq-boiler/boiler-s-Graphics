@@ -46,7 +46,7 @@ namespace boilersGraphics.Controls
             if (!designerItem.CanDrag.Value)
                 return;
 
-            if (designerItem != null && (designerItem.IsSelected.Value || (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.AllItems.Value.First(x => x.ID == designerItem.ParentID).IsSelected.Value))
+            if (designerItem != null)
             {
                 (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = boilersGraphics.Properties.Resources.String_Move;
 
