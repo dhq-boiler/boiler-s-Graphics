@@ -1,6 +1,8 @@
 ﻿using boilersGraphics.Helpers;
+using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -29,7 +31,8 @@ namespace boilersGraphics.ViewModels
                 };
                 GroupTransformObserversOnNext(notification);
                 _leftOld = l;
-            });
+            })
+            .AddTo(_CompositeDisposable);
             Top.Subscribe(t =>
             {
                 var notification = new GroupTransformNotification()
@@ -39,7 +42,8 @@ namespace boilersGraphics.ViewModels
                 };
                 GroupTransformObserversOnNext(notification);
                 _topOld = t;
-            });
+            })
+            .AddTo(_CompositeDisposable);
             Width.Subscribe(w =>
             {
                 var notification = new GroupTransformNotification()
@@ -52,7 +56,8 @@ namespace boilersGraphics.ViewModels
                 };
                 GroupTransformObserversOnNext(notification);
                 _widthOld = w;
-            });
+            })
+            .AddTo(_CompositeDisposable);
             Height.Subscribe(h =>
             {
                 var notification = new GroupTransformNotification()
@@ -65,7 +70,8 @@ namespace boilersGraphics.ViewModels
                 };
                 GroupTransformObserversOnNext(notification);
                 _heightOld = h;
-            });
+            })
+            .AddTo(_CompositeDisposable);
             RotationAngle.Subscribe(a =>
             {
                 var notification = new GroupTransformNotification()
@@ -78,7 +84,8 @@ namespace boilersGraphics.ViewModels
                 GroupTransformObserversOnNext(notification);
 
                 _lotateAngleOld = a;
-            });
+            })
+            .AddTo(_CompositeDisposable);
             EnablePathGeometryUpdate.Value = false;
         }
 
