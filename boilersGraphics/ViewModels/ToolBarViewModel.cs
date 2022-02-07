@@ -78,7 +78,7 @@ namespace boilersGraphics.ViewModels
                 {
                     Behaviors.Add(RubberbandBehavior);
                 }
-                ChangeHitTestToEnable();
+                ChangeHitTestToDisable();
                 SelectOneToolItem("lasso");
             })));
             ToolItems.Add(new ToolItemData("straightline", "pack://application:,,,/Assets/img/straightline.png", Resources.Tool_StraightLine, new DelegateCommand(() =>

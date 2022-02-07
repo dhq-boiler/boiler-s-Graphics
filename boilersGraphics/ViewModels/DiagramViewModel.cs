@@ -1474,9 +1474,15 @@ namespace boilersGraphics.ViewModels
 
         private void ExecuteClearSelectedItemsCommand(object parameter)
         {
-            foreach (LayerItem layerItem in Layers.SelectMany(x => x.Children))
+            foreach (var layerItem in Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                                            .OfType<LayerItem>())
             {
                 layerItem.Item.Value.IsSelected.Value = false;
+                if (layerItem.Item.Value is ConnectorBaseViewModel c)
+                {
+                    c.SnapPoint0VM.Value.IsSelected.Value = false;
+                    c.SnapPoint1VM.Value.IsSelected.Value = false;
+                }
             }
         }
 
