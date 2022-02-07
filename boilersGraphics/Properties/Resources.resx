@@ -438,6 +438,9 @@
   <data name="MenuItem_File" xml:space="preserve">
     <value>File(_F)</value>
   </data>
+  <data name="MenuItem_FitCanvas" xml:space="preserve">
+    <value>Fit the canvas to the objects</value>
+  </data>
   <data name="MenuItem_Help" xml:space="preserve">
     <value>Help(_H)</value>
   </data>

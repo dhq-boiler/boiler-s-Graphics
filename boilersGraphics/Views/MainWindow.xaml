@@ -158,6 +158,7 @@
                             </MenuItem>
                             <MenuItem Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.MenuItem_Canvas, Mode=OneWay}">
                                 <MenuItem Command="{Binding DiagramViewModel.ClipCommand}" Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.MenuItem_Clip, Mode=OneWay}" />
+                                <MenuItem Command="{Binding DiagramViewModel.FitCanvasCommand}" Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.MenuItem_FitCanvas, Mode=OneWay}" />
                                 <MenuItem Command="{Binding DiagramViewModel.SettingCommand}" Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.MenuItem_Preference, Mode=OneWay}" />
                             </MenuItem>
                             <MenuItem Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.MenuItem_View, Mode=OneWay}">
