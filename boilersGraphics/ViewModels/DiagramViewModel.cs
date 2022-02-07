@@ -1392,8 +1392,14 @@ namespace boilersGraphics.ViewModels
             foreach (var layerItem in Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
                                             .Where(x => x is LayerItem))
             {
-                (layerItem as LayerItem).Item.Value.IsSelected.Value = false;
-                (layerItem as LayerItem).IsSelected.Value = false;
+                var li = layerItem as LayerItem;
+                li.Item.Value.IsSelected.Value = false;
+                li.IsSelected.Value = false;
+                if (li.Item.Value is ConnectorBaseViewModel c)
+                {
+                    c.SnapPoint0VM.Value.IsSelected.Value = false;
+                    c.SnapPoint1VM.Value.IsSelected.Value = false;
+                }
             }
         }
 
