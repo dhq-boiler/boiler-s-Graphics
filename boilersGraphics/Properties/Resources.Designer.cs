@@ -1024,6 +1024,15 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Fit the canvas to the objects に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_FitCanvas {
+            get {
+                return ResourceManager.GetString("MenuItem_FitCanvas", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Help(_H) に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string MenuItem_Help {
