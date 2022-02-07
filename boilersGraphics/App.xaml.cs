@@ -1,5 +1,7 @@
 ﻿using boilersGraphics.Extensions;
+using boilersGraphics.Helpers;
 using boilersGraphics.Models;
+using boilersGraphics.ViewModels;
 using boilersGraphics.Views;
 using NLog;
 using Prism.Commands;
@@ -91,6 +93,7 @@ namespace boilersGraphics
             }))});
             IDialogResult dialogResult = new DialogResult();
             Container.Resolve<IDialogService>().ShowDialog(nameof(CustomMessageBox), dialogParameters, ret => dialogResult = ret);
+            GoogleAnalyticsUtil.Beacon((App.Current.MainWindow.DataContext as MainWindowViewModel).TerminalInfo.Value, BeaconPlace.Crash);
             throw e.Exception;
         }
 
