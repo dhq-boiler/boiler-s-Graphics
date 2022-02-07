@@ -2887,7 +2887,10 @@ namespace boilersGraphics.ViewModels
             {
                 var clone = item.Clone() as DesignerItemViewModelBase;
                 var items = Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children);
-                items = items.Union(parentLayerItem.Children.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children));
+                if (parentLayerItem != null)
+                {
+                    items = items.Union(parentLayerItem.Children.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children));
+                }
                 clone.ZIndex.Value = items.OfType<LayerItem>().Max(x => x.Item.Value.ZIndex.Value) + 1;
                 clone.EdgeThickness.Value = item.EdgeThickness.Value;
                 clone.IsHitTestVisible.Value = true;
@@ -2915,7 +2918,10 @@ namespace boilersGraphics.ViewModels
         {
             var clone = connector.Clone() as ConnectorBaseViewModel;
             var items = Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children);
-            items = items.Union(parentLayerItem.Children.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children));
+            if (parentLayerItem != null)
+            {
+                items = items.Union(parentLayerItem.Children.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children));
+            }
             clone.ZIndex.Value = items.OfType<LayerItem>().Max(x => x.Item.Value.ZIndex.Value) + 1;
             clone.IsHitTestVisible.Value = true;
             clone.SnapPoint0VM.Value.IsHitTestVisible.Value = true;
