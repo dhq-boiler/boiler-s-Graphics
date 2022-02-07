@@ -99,6 +99,7 @@ namespace boilersGraphics.ViewModels
         public DelegateCommand<System.Windows.Shapes.Path> MouseDownBezierCurveCommand { get; private set; }
         public DelegateCommand<System.Windows.Shapes.Path> MouseDownPolyBezierCommand { get; private set; }
         public DelegateCommand LoadedCommand { get; private set; }
+        public DelegateCommand FitCanvasCommand { get; private set; }
 
         #region Property
 
@@ -373,6 +374,59 @@ namespace boilersGraphics.ViewModels
                 //ExecuteLoadCommand(filename, false);
                 //BackgroundItem.Value.FillColor.Value = Colors.Red;
             });
+            FitCanvasCommand = new DelegateCommand(() =>
+            {
+                double horizontalGap = AllItems.Value.OfType<DesignerItemViewModelBase>().Except(new DesignerItemViewModelBase[] { BackgroundItem.Value }).Count() > 0
+                                     ? AllItems.Value.OfType<DesignerItemViewModelBase>().Except(new DesignerItemViewModelBase[] { BackgroundItem.Value }).Min(x => x.Left.Value)
+                                     : 0;
+                double verticalGap = AllItems.Value.OfType<DesignerItemViewModelBase>().Except(new DesignerItemViewModelBase[] { BackgroundItem.Value }).Count() > 0
+                                   ? AllItems.Value.OfType<DesignerItemViewModelBase>().Except(new DesignerItemViewModelBase[] { BackgroundItem.Value }).Min(x => x.Top.Value)
+                                   : 0;
+                foreach (var item in AllItems.Value.OfType<ConnectorBaseViewModel>())
+                {
+                    foreach (var p in item.Points)
+                    {
+                        horizontalGap = Math.Min(p.X, horizontalGap);
+                        verticalGap = Math.Min(p.Y, verticalGap);
+                    }
+                }
+
+                foreach (var item in AllItems.Value.OfType<DesignerItemViewModelBase>().Except(new DesignerItemViewModelBase[] { BackgroundItem.Value }))
+                {
+                    item.Left.Value += -horizontalGap;
+                    item.Top.Value += -verticalGap;
+                }
+
+                foreach (var item in AllItems.Value.OfType<ConnectorBaseViewModel>())
+                {
+                    for (int i = 0; i < item.Points.Count; i++)
+                    {
+                        var p = item.Points[i];
+                        var newP = new Point(p.X - horizontalGap, p.Y - verticalGap);
+                        item.Points[i] = newP;
+                    }
+                }
+
+                double horizontalMax = AllItems.Value.OfType<DesignerItemViewModelBase>().Except(new DesignerItemViewModelBase[] { BackgroundItem.Value }).Count() > 0
+                                     ? AllItems.Value.OfType<DesignerItemViewModelBase>().Except(new DesignerItemViewModelBase[] { BackgroundItem.Value }).Max(x => x.Right.Value)
+                                     : 0;
+                double verticalMax = AllItems.Value.OfType<DesignerItemViewModelBase>().Except(new DesignerItemViewModelBase[] { BackgroundItem.Value }).Count() > 0
+                                     ? AllItems.Value.OfType<DesignerItemViewModelBase>().Except(new DesignerItemViewModelBase[] { BackgroundItem.Value }).Max(x => x.Bottom.Value)
+                                     : 0;
+                foreach (var item in AllItems.Value.OfType<ConnectorBaseViewModel>())
+                {
+                    foreach (var p in item.Points)
+                    {
+                        horizontalMax = Math.Max(p.X, horizontalMax);
+                        verticalMax = Math.Max(p.Y, verticalMax);
+                    }
+                }
+
+                Width = (int)Math.Round(horizontalMax);
+                Height = (int)Math.Round(verticalMax);
+                BackgroundItem.Value.Width.Value = Width;
+                BackgroundItem.Value.Height.Value = Height;
+            }, () => AllItems.Value.OfType<DesignerItemViewModelBase>().Except(new DesignerItemViewModelBase[] { BackgroundItem.Value }).Count() + AllItems.Value.OfType<ConnectorBaseViewModel>().Count() > 0);
 
             //EdgeColors.CollectionChangedAsObservable()
             //    .Subscribe(_ => RaisePropertyChanged("EdgeColors"))
@@ -400,6 +454,7 @@ namespace boilersGraphics.ViewModels
 
             AllItems.Subscribe(x =>
             {
+                FitCanvasCommand.RaiseCanExecuteChanged();
                 LogManager.GetCurrentClassLogger().Trace($"{x.Length} items in AllItems.");
                 LogManager.GetCurrentClassLogger().Trace(string.Join(", ", x.Select(y => y?.ToString() ?? "null")));
             })
