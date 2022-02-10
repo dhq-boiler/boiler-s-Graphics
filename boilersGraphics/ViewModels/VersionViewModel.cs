@@ -103,7 +103,7 @@ namespace boilersGraphics.ViewModels
 
         private string LicenseReadToEnd()
         {
-            var filename = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "dhq_boiler\\boilersGraphics\\LICENSE");
+            var filename = System.IO.Path.Combine(boilersGraphics.Helpers.Path.GetRoamingDirectory(), "dhq_boiler\\boilersGraphics\\LICENSE");
             var str = ReadFileToEnd(filename);
             if (!string.IsNullOrEmpty(str))
                 return str;
@@ -169,7 +169,7 @@ namespace boilersGraphics.ViewModels
 
         private string LicenseMdReadToEnd()
         {
-            var filename = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "dhq_boiler\\boilersGraphics\\LICENSE.md");
+            var filename = System.IO.Path.Combine(boilersGraphics.Helpers.Path.GetRoamingDirectory(), "dhq_boiler\\boilersGraphics\\LICENSE.md");
             var str = ReadFileToEnd(filename);
             if (!string.IsNullOrEmpty(str))
                 return str;

@@ -585,7 +585,7 @@ namespace boilersGraphics.ViewModels
                 AutoSaveFiles.ClearOnScheduler();
             try
             {
-                var files = Directory.EnumerateFiles(System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "dhq_boiler\\boilersGraphics\\AutoSave"), "AutoSave-*-*-*-*-*-*.xml");
+                var files = Directory.EnumerateFiles(System.IO.Path.Combine(boilersGraphics.Helpers.Path.GetRoamingDirectory(), "dhq_boiler\\boilersGraphics\\AutoSave"), "AutoSave-*-*-*-*-*-*.xml");
                 foreach (var file in files.OrderByDescending(x => new FileInfo(x).LastWriteTime))
                 {
                     AutoSaveFiles.AddOnScheduler(file);
@@ -676,8 +676,8 @@ namespace boilersGraphics.ViewModels
             }
 
             AutoSavedDateTime.Value = DateTime.Now;
-            var path = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), $"dhq_boiler\\boilersGraphics\\AutoSave\\AutoSave-{AutoSavedDateTime.Value.Year}-{AutoSavedDateTime.Value.Month}-{AutoSavedDateTime.Value.Day}-{AutoSavedDateTime.Value.Hour}-{AutoSavedDateTime.Value.Minute}-{AutoSavedDateTime.Value.Second}.xml");
-            var autoSaveDir = Path.GetDirectoryName(path);
+            var path = System.IO.Path.Combine(boilersGraphics.Helpers.Path.GetRoamingDirectory(), $"dhq_boiler\\boilersGraphics\\AutoSave\\AutoSave-{AutoSavedDateTime.Value.Year}-{AutoSavedDateTime.Value.Month}-{AutoSavedDateTime.Value.Day}-{AutoSavedDateTime.Value.Hour}-{AutoSavedDateTime.Value.Minute}-{AutoSavedDateTime.Value.Second}.xml");
+            var autoSaveDir = System.IO.Path.GetDirectoryName(path);
             if (!Directory.Exists(autoSaveDir))
             {
                 Directory.CreateDirectory(autoSaveDir);

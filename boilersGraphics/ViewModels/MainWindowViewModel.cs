@@ -57,8 +57,8 @@ namespace boilersGraphics.ViewModels
             }
             else
             {
-                var dbDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"dhq_boiler\boilersGraphics");
-                var dbFilePath = Path.Combine(dbDirectory, "bg.db");
+                var dbDirectory = System.IO.Path.Combine(boilersGraphics.Helpers.Path.GetRoamingDirectory(), @"dhq_boiler\boilersGraphics");
+                var dbFilePath = System.IO.Path.Combine(dbDirectory, "bg.db");
                 Directory.CreateDirectory(dbDirectory);
                 ConnectionManager.SetDefaultConnection($"DataSource={dbFilePath}", typeof(SQLiteConnection));
             }
@@ -201,7 +201,7 @@ namespace boilersGraphics.ViewModels
             ShowLogCommand = new DelegateCommand(() =>
             {
                 var p = new Process();
-                p.StartInfo = new ProcessStartInfo(System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "dhq_boiler\\boilersGraphics\\Logs\\boilersGraphics.log"))
+                p.StartInfo = new ProcessStartInfo(System.IO.Path.Combine(boilersGraphics.Helpers.Path.GetRoamingDirectory(), "dhq_boiler\\boilersGraphics\\Logs\\boilersGraphics.log"))
                 {
                     UseShellExecute = true
                 };
