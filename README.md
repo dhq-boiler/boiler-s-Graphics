@@ -14,7 +14,7 @@ boiler's Graphics は生まれたてのベクターグラフィックスドロ�
 
 # Features
 
-* 環境としては最新の.NET 6
+* .NET 5
 * 64bitアプリケーション
 * 使い方の幅が広がるレイヤー機能
 * 描画を補助するポイントスナップ機能
@@ -22,7 +22,7 @@ boiler's Graphics は生まれたてのベクターグラフィックスドロ�
 
 # Requirement
 
-boiler's Graphicsを動作させるには Windows 7 SP1 以降の Windows OS が必要です。
+boiler's Graphicsを動作させるには Windows 10.0.22000.0 以降の Windows OS が必要です。
 
 # How to install
 
