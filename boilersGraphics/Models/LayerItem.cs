@@ -57,13 +57,12 @@ namespace boilersGraphics.Models
                 ChildrenSwitchVisibility(isVisible);
             })
             .AddTo(_disposable);
-            IsSelected = this.ObserveProperty(x => x.Item.Value.IsSelected)
-                             .Select(x => x.Value)
-                             .ToReactiveProperty()
-                             .AddTo(_disposable);
-            IsSelected.Subscribe(x =>
+            this.ObserveProperty(x => x.Item.Value.IsSelected.Value)
+                //.Select(x => x.Value)
+                .Subscribe(x =>
             {
-                Item.Value.IsSelected.Value = x;
+                //Item.Value.IsSelected.Value = x;
+                this.IsSelected.Value = x;
                 if (x)
                 {
                     Item.Value.SelectedOrder.Value = SelectableDesignerItemViewModelBase.SelectedOrderCount++ + 1;

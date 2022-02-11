@@ -37,6 +37,8 @@ namespace boilersGraphics.ViewModels
 
         public DelegateCommand RemoveLayerCommand { get; }
 
+        public ReactiveCommand<KeyEventArgs> PreviewKeyDownCommand { get; } = new ReactiveCommand<KeyEventArgs>();
+
         public ICommand DropCommand { get; }
 
 
@@ -91,6 +93,7 @@ namespace boilersGraphics.ViewModels
                             x.IsSelected.Value = true;
                             if ((x as LayerItem).Item.Value is ConnectorBaseViewModel connector)
                             {
+                                connector.IsSelected.Value = true;
                                 connector.SnapPoint0VM.Value.IsSelected.Value = true;
                                 connector.SnapPoint1VM.Value.IsSelected.Value = true;
                             }
@@ -104,6 +107,7 @@ namespace boilersGraphics.ViewModels
                             x.IsSelected.Value = false;
                             if ((x as LayerItem).Item.Value is ConnectorBaseViewModel connector)
                             {
+                                connector.IsSelected.Value = false;
                                 connector.SnapPoint0VM.Value.IsSelected.Value = false;
                                 connector.SnapPoint1VM.Value.IsSelected.Value = false;
                             }
@@ -117,7 +121,6 @@ namespace boilersGraphics.ViewModels
                     var selectedLayer = newItem as Layer;
                     selectedLayer.IsSelected.Value = true;
                     selectedLayer.ChildrenSwitchIsHitTestVisible(true);
-
                     selectedLayer.UpdateAppearance(selectedLayer.Children.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(xx => xx.Children).Select(x => (x as LayerItem).Item.Value));
                     selectedLayer.Children.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
                                           .ToList()
@@ -186,6 +189,12 @@ namespace boilersGraphics.ViewModels
             })
             .AddTo(_disposables);
             DropCommand = new DelegateCommand<DropArguments>(Drop);
+            PreviewKeyDownCommand.Subscribe(args =>
+            {
+                mainWindowVM.DiagramViewModel.PreviewKeyDownCommand.Execute(args);
+                args.Handled = true;
+            })
+            .AddTo(_disposables);
         }
 
         private static void UpdateStatisticsCountNewLayer(MainWindowViewModel mainWindowVM)

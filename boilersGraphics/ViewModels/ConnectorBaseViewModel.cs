@@ -69,20 +69,20 @@ namespace boilersGraphics.ViewModels
 
         public void InitIsSelectedOnSnapPoints()
         {
-            IsSelected.Subscribe(x =>
-            {
-                if (x)
-                {
-                    SnapPoint0VM.Value.IsSelected.Value = true;
-                    SnapPoint1VM.Value.IsSelected.Value = true;
-                }
-                if (!x)
-                {
-                    SnapPoint0VM.Value.IsSelected.Value = false;
-                    SnapPoint1VM.Value.IsSelected.Value = false;
-                }
-            })
-            .AddTo(_CompositeDisposable);
+            //IsSelected.Subscribe(x =>
+            //{
+            //    if (x)
+            //    {
+            //        SnapPoint0VM.Value.IsSelected.Value = true;
+            //        SnapPoint1VM.Value.IsSelected.Value = true;
+            //    }
+            //    if (!x)
+            //    {
+            //        SnapPoint0VM.Value.IsSelected.Value = false;
+            //        SnapPoint1VM.Value.IsSelected.Value = false;
+            //    }
+            //})
+            //.AddTo(_CompositeDisposable);
         }
 
         public ReactiveProperty<Point> LeftTop { get; set; }

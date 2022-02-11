@@ -20,8 +20,8 @@ namespace boilersGraphics.Helpers
             }
             catch (Exception)
             {
+                LogManager.GetCurrentClassLogger().Debug($"Failed Windows.Storage.ApplicationData.Current.RoamingFolder. Get path from Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)");
                 path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-                LogManager.GetCurrentClassLogger().Debug($"Failed Windows.Storage.ApplicationData.Current.RoamingFolder.");
             }
             return path;
         }

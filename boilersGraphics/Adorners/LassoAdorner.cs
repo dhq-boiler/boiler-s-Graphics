@@ -68,6 +68,7 @@ namespace boilersGraphics.Adorners
             AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(_designerCanvas);
             if (adornerLayer != null)
                 adornerLayer.Remove(this);
+            UpdateSelection();
             UpdateStatisticsCount();
 
             (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "";
@@ -115,37 +116,49 @@ namespace boilersGraphics.Adorners
             Rect lassoRect = new Rect(_startPoint.Value, _endPoint.Value);
             ItemsControl itemsControl = GetParent<ItemsControl>(typeof(ItemsControl), _designerCanvas);
 
-            foreach (SelectableDesignerItemViewModelBase item in vm.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
-                                                                          .Where(x => x is LayerItem)
-                                                                          .Select(x => (x as LayerItem).Item.Value))
+            foreach (var item in vm.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                                                                          .OfType<Layer>()
+                                                                          .Where(x => x.IsSelected.Value == true)
+                                                                          .SelectMany(x => x.Children)
+                                                                          .OfType<LayerItem>())
             {
-                if (item is SelectableDesignerItemViewModelBase)
+                if (!(item.Item.Value is SelectableDesignerItemViewModelBase))
+                    continue;
+
+                if (item.Item.Value is ConnectorBaseViewModel connector)
                 {
-                    if (item is ConnectorBaseViewModel connector)
+                    var snapPoint0VM = connector.SnapPoint0VM.Value;
+                    UpdateSelectionSnapPoint(lassoRect, snapPoint0VM);
+                    var snapPoint1VM = connector.SnapPoint1VM.Value;
+                    UpdateSelectionSnapPoint(lassoRect, snapPoint1VM);
+                    if (snapPoint0VM.IsSelected.Value == true && snapPoint1VM.IsSelected.Value == true)
                     {
-                        var snapPointVM = connector.SnapPoint0VM.Value;
-                        UpdateSelectionSnapPoint(lassoRect, snapPointVM);
-                        snapPointVM = connector.SnapPoint1VM.Value;
-                        UpdateSelectionSnapPoint(lassoRect, snapPointVM);
+                        item.IsSelected.Value = true;
+                        item.Item.Value.IsSelected.Value = true;
+                    }
+                    if (snapPoint0VM.IsSelected.Value == false && snapPoint1VM.IsSelected.Value == false)
+                    {
+                        item.IsSelected.Value = false;
+                        item.Item.Value.IsSelected.Value = false;
+                    }
+                }
+                else
+                {
+                    DependencyObject container = itemsControl.ItemContainerGenerator.ContainerFromItem(item.Item.Value);
+
+                    Rect itemRect = VisualTreeHelper.GetDescendantBounds((Visual)container);
+                    Rect itemBounds = ((Visual)container).TransformToAncestor(_designerCanvas).TransformBounds(itemRect);
+
+                    if (lassoRect.Contains(itemBounds))
+                    {
+                        item.IsSelected.Value = true;
+                        sets.Add(item.Item.Value);
                     }
                     else
                     {
-                        DependencyObject container = itemsControl.ItemContainerGenerator.ContainerFromItem(item);
-
-                        Rect itemRect = VisualTreeHelper.GetDescendantBounds((Visual)container);
-                        Rect itemBounds = ((Visual)container).TransformToAncestor(_designerCanvas).TransformBounds(itemRect);
-
-                        if (lassoRect.Contains(itemBounds))
+                        if (!(Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
                         {
-                            item.IsSelected.Value = true;
-                            sets.Add(item);
-                        }
-                        else
-                        {
-                            if (!(Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
-                            {
-                                item.IsSelected.Value = false;
-                            }
+                            item.IsSelected.Value = false;
                         }
                     }
                 }

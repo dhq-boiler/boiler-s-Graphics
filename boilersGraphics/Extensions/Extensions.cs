@@ -613,5 +613,22 @@ namespace boilersGraphics.Extensions
             }
             return child;
         }
+
+        public static Rect GetRect(this IEnumerable<Point> points)
+        {
+            var rect = new Rect();
+            foreach (var point in points)
+            {
+                if (point.X < rect.X)
+                    rect.X = point.X;
+                if (point.Y < rect.Y)
+                    rect.Y = point.Y;
+                if (rect.X + rect.Width <= point.X)
+                    rect.Width = point.X - rect.X;
+                if (rect.Y + rect.Height <= point.Y)
+                    rect.Height = point.Y - rect.Y;
+            }
+            return rect;
+        }
     }
 }

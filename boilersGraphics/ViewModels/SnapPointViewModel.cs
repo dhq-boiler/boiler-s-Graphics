@@ -24,18 +24,19 @@ namespace boilersGraphics.ViewModels
             Width.Value = width;
             Height.Value = height;
 
-            IsSelected.Subscribe(x =>
-            {
-                if (x)
-                    parent.IsSelected.Value = true;
-            })
-            .AddTo(_CompositeDisposable);
+            //IsSelected.Subscribe(x =>
+            //{
+            //    //if (x)
+            //    parent.IsSelected.Value = x;
+            //})
+            //.AddTo(_CompositeDisposable);
             Left.Subscribe(x =>
             {
                 if (parent.Points.Count() < index + 1)
                     return;
                 var point = parent.Points[index];
-                point.X = x;
+                point = new Point(x, point.Y);
+                parent.Points[index] = point;
             })
             .AddTo(_CompositeDisposable);
             Top.Subscribe(y =>
@@ -43,7 +44,8 @@ namespace boilersGraphics.ViewModels
                 if (parent.Points.Count() < index + 1)
                     return;
                 var point = parent.Points[index];
-                point.Y = y;
+                point = new Point(point.X, y);
+                parent.Points[index] = point;
             })
             .AddTo(_CompositeDisposable);
         }
