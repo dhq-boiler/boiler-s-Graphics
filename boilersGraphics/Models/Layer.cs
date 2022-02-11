@@ -25,7 +25,7 @@ namespace boilersGraphics.Models
 
         public ReactiveCommand SwitchVisibilityCommand { get; } = new ReactiveCommand();
 
-        public Layer()
+        public Layer(bool isPreview = false)
         {
             SwitchVisibilityCommand.Subscribe(_ =>
             {
@@ -39,34 +39,37 @@ namespace boilersGraphics.Models
             })
             .AddTo(_disposable);
 
-            var temp = Children.ObserveElementProperty(x => (x as LayerItem).Item.Value)
-                 .ToUnit()
-                 .Merge(Children.ObserveElementObservableProperty(x => x.IsSelected).ToUnit())
-                 .ToUnit()
-                 .Merge(Children.ObserveElementObservableProperty(x => x.IsVisible).ToUnit())
-                 .ToUnit()
-                 .Merge(Children.ObserveElementObservableProperty(x => (x as LayerItem).Item.Value.EdgeBrush).ToUnit())
-                 .ToUnit()
-                 .Merge(Children.ObserveElementObservableProperty(x => (x as LayerItem).Item.Value.EdgeThickness).ToUnit())
-                 .ToUnit()
-                 .Merge(Children.ObserveElementObservableProperty(x => (x as LayerItem).Item.Value.FillBrush).ToUnit());
-
-            if (!App.IsTest)
+            if (!isPreview)
             {
-                temp = temp.Where(_ => !MainWindowViewModel.Instance.ToolBarViewModel.Behaviors.Contains(MainWindowViewModel.Instance.ToolBarViewModel.BrushBehavior));
+                var temp = Children.ObserveElementProperty(x => (x as LayerItem).Item.Value)
+                     .ToUnit()
+                     .Merge(Children.ObserveElementObservableProperty(x => x.IsSelected).ToUnit())
+                     .ToUnit()
+                     .Merge(Children.ObserveElementObservableProperty(x => x.IsVisible).ToUnit())
+                     .ToUnit()
+                     .Merge(Children.ObserveElementObservableProperty(x => (x as LayerItem).Item.Value.EdgeBrush).ToUnit())
+                     .ToUnit()
+                     .Merge(Children.ObserveElementObservableProperty(x => (x as LayerItem).Item.Value.EdgeThickness).ToUnit())
+                     .ToUnit()
+                     .Merge(Children.ObserveElementObservableProperty(x => (x as LayerItem).Item.Value.FillBrush).ToUnit());
+
+                if (!App.IsTest)
+                {
+                    temp = temp.Where(_ => !MainWindowViewModel.Instance.ToolBarViewModel.Behaviors.Contains(MainWindowViewModel.Instance.ToolBarViewModel.BrushBehavior));
+                }
+
+                temp.Delay(TimeSpan.FromMilliseconds(100))
+                .ObserveOn(new DispatcherScheduler(Dispatcher.CurrentDispatcher, DispatcherPriority.ApplicationIdle))
+                .Subscribe(x =>
+                {
+                    LogManager.GetCurrentClassLogger().Trace("detected Layer changes. run Layer.UpdateAppearance().");
+                    UpdateAppearance(Children.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(xx => xx.Children).Select(x => (x as LayerItem).Item.Value));
+                    Children.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                            .ToList()
+                            .ForEach(x => (x as LayerItem).UpdateAppearance(IfGroupBringChildren((x as LayerItem).Item.Value)));
+                })
+                .AddTo(_disposable);
             }
-
-            temp.Delay(TimeSpan.FromMilliseconds(100))
-            .ObserveOn(new DispatcherScheduler(Dispatcher.CurrentDispatcher, DispatcherPriority.ApplicationIdle))
-            .Subscribe(x =>
-            {
-                LogManager.GetCurrentClassLogger().Trace("detected Layer changes. run Layer.UpdateAppearance().");
-                UpdateAppearance(Children.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(xx => xx.Children).Select(x => (x as LayerItem).Item.Value));
-                Children.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
-                        .ToList()
-                        .ForEach(x => (x as LayerItem).UpdateAppearance(IfGroupBringChildren((x as LayerItem).Item.Value)));
-            })
-            .AddTo(_disposable);
 
             IsVisible.Value = true;
         }

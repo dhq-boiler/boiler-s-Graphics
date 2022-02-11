@@ -269,7 +269,7 @@ namespace boilersGraphics.ViewModels
             IncrementNumberOfBoots();
             TerminalInfo.Value = CreateTerminalInfo();
 
-            DiagramViewModel.Initialize();
+            DiagramViewModel.Initialize(false);
 
             var updateTicks = 0L;
 

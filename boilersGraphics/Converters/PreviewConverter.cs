@@ -10,7 +10,7 @@ namespace boilersGraphics.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var diagramViewModel = new DiagramViewModel(App.Current.MainWindow.DataContext as MainWindowViewModel, 1000, 1000);
+            var diagramViewModel = new DiagramViewModel(App.Current.MainWindow.DataContext as MainWindowViewModel, 1000, 1000, true);
             diagramViewModel.Preview(value as string);
             var previewDiagramControl = new PreviewDiagramControl();
             previewDiagramControl.DataContext = diagramViewModel;
