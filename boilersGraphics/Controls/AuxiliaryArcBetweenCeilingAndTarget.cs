@@ -81,7 +81,7 @@ namespace boilersGraphics.Controls
             }
             rotationAngle = roundDegree;
             var pie = GeometryCreator.CreatePie(_centerPoint, 20, beginDegree, endDegree, DecideSweepDirection(angleType, rotationAngle));
-            _Arc.Child = new Path()
+            _Arc.Child = new System.Windows.Shapes.Path()
             {
                 Data = pie,
                 Stroke = Brushes.Blue,
@@ -124,7 +124,7 @@ namespace boilersGraphics.Controls
             }
             rotationAngle = roundDegree;
             var pie = GeometryCreator.CreatePie(_centerPoint, 20, beginDegree, endDegree, sweepDirection);
-            _Arc.Child = new Path()
+            _Arc.Child = new System.Windows.Shapes.Path()
             {
                 Data = pie,
                 Stroke = Brushes.Blue,

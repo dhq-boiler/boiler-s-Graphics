@@ -60,7 +60,7 @@ namespace boilersGraphics
             var title = Uri.EscapeDataString(e.Exception.Message);
             var body = boilersGraphics.Properties.Resources.String_ErrorReporting + "\n" +
                        boilersGraphics.Properties.Resources.String_ErrorReporting1 + "\n" +
-                       boilersGraphics.Properties.Resources.String_ErrorReporting2 + System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "dhq_boiler\\boilersGraphics\\Logs\\boilersGraphics.log") + "\n" +
+                       boilersGraphics.Properties.Resources.String_ErrorReporting2 + System.IO.Path.Combine(boilersGraphics.Helpers.Path.GetRoamingDirectory(), "dhq_boiler\\boilersGraphics\\Logs\\boilersGraphics.log") + "\n" +
                        boilersGraphics.Properties.Resources.String_ErrorReporting3 + "\n" +
                        e.Exception.ToString();
             dialogParameters.Add("Text", body);
@@ -93,7 +93,8 @@ namespace boilersGraphics
             }))});
             IDialogResult dialogResult = new DialogResult();
             Container.Resolve<IDialogService>().ShowDialog(nameof(CustomMessageBox), dialogParameters, ret => dialogResult = ret);
-            GoogleAnalyticsUtil.Beacon((App.Current.MainWindow.DataContext as MainWindowViewModel).TerminalInfo.Value, BeaconPlace.Crash);
+            string message = GoogleAnalyticsUtil.GetStringLimit500Bytes(e.Exception.Message);
+            GoogleAnalyticsUtil.Beacon((App.Current.MainWindow.DataContext as MainWindowViewModel).TerminalInfo.Value, BeaconPlace.Crash, message);
             throw e.Exception;
         }
 

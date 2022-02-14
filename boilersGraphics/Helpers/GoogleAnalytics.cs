@@ -9,7 +9,7 @@ namespace boilersGraphics.Helpers
 {
     internal static class GoogleAnalytics
     {
-        public static void Beacon(string uniqueUserIdentifier, string category, string action)
+        public static void Beacon(string uniqueUserIdentifier, string category, string action, string label = null)
         {
             var request = (HttpWebRequest)WebRequest.Create("https://www.google-analytics.com/collect");
             request.Method = "POST";
@@ -22,8 +22,12 @@ namespace boilersGraphics.Helpers
                  { "cid", uniqueUserIdentifier }, //unique user identifier 
                  { "t", "event" }, //event type 
                  { "ec", category },
-                 { "ea", action },
+                 { "ea", action }
             };
+            if (!string.IsNullOrEmpty(label))
+            {
+                postData.Add("el", label);
+            }
 
             var postDataString = postData
              .Aggregate("", (data, next) => string.Format("{0}&{1}={2}", data, next.Key,

@@ -114,7 +114,8 @@
                                                         <ToolTip Width="Auto"
                                                                  Height="Auto"
                                                                  Content="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}, Converter={StaticResource PreviewConverter}}"
-                                                                 Placement="Right" />
+                                                                 Placement="Right"
+                                                                 ToolTipService.ShowDuration="6000" />
                                                     </Setter.Value>
                                                 </Setter>
                                             </Style>

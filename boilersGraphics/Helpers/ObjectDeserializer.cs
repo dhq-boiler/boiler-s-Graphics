@@ -81,14 +81,14 @@ namespace boilersGraphics.Helpers
             }
         }
 
-        public static void ReadObjectsFromXML(DiagramViewModel diagramViewModel, XElement root)
+        public static void ReadObjectsFromXML(DiagramViewModel diagramViewModel, XElement root, bool isPreview = false)
         {
             var layers = root.Elements().Where(x => x.Name == "Layers").FirstOrDefault();
             if (layers != null)
             {
                 foreach (var layer in layers.Elements("Layer"))
                 {
-                    var layerObj = new Layer();
+                    var layerObj = new Layer(isPreview);
                     layerObj.Color.Value = (Color)ColorConverter.ConvertFromString(layer.Element("Color").Value);
                     layerObj.IsVisible.Value = bool.Parse(layer.Element("IsVisible").Value);
                     layerObj.Name.Value = layer.Element("Name").Value;

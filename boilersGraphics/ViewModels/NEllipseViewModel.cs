@@ -59,7 +59,7 @@ namespace boilersGraphics.ViewModels
         }
         public override Type GetViewType()
         {
-            return typeof(Path);
+            return typeof(System.Windows.Shapes.Path);
         }
 
         #region IClonable

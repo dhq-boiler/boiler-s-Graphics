@@ -220,351 +220,375 @@ namespace boilersGraphics.ViewModels
 
         #endregion //Property
 
-        public DiagramViewModel(MainWindowViewModel mainWindowViewModel, int width, int height)
+        public DiagramViewModel(MainWindowViewModel mainWindowViewModel, int width, int height, bool isPreview = false)
         {
             MainWindowVM = mainWindowViewModel;
 
-            AddItemCommand = new DelegateCommand<object>(p => ExecuteAddItemCommand(p));
-            RemoveItemCommand = new DelegateCommand<object>(p => ExecuteRemoveItemCommand(p));
-            ClearSelectedItemsCommand = new DelegateCommand<object>(p => ExecuteClearSelectedItemsCommand(p));
-            CreateNewDiagramCommand = new DelegateCommand<object>(p => ExecuteCreateNewDiagramCommand(p));
-            LoadCommand = new DelegateCommand(() => ExecuteLoadCommand());
-            LoadFileCommand = new DelegateCommand<string>(file => ExecuteLoadCommand(file));
-            SaveCommand = new DelegateCommand(() => ExecuteSaveCommand());
-            OverwriteCommand = new DelegateCommand(() => ExecuteOverwriteCommand());
-            ExportCommand = new DelegateCommand(() => ExecuteExportCommand());
-            GroupCommand = new DelegateCommand(() => ExecuteGroupItemsCommand(), () => CanExecuteGroup());
-            UngroupCommand = new DelegateCommand(() => ExecuteUngroupItemsCommand(), () => CanExecuteUngroup());
-            BringForwardCommand = new DelegateCommand(() => ExecuteBringForwardCommand(), () => CanExecuteOrder());
-            SendBackwardCommand = new DelegateCommand(() => ExecuteSendBackwardCommand(), () => CanExecuteOrder());
-            BringForegroundCommand = new DelegateCommand(() => ExecuteBringForegroundCommand(), () => CanExecuteOrder());
-            SendBackgroundCommand = new DelegateCommand(() => ExecuteSendBackgroundCommand(), () => CanExecuteOrder());
-            AlignTopCommand = new DelegateCommand(() => ExecuteAlignTopCommand(), () => CanExecuteAlign());
-            AlignVerticalCenterCommand = new DelegateCommand(() => ExecuteAlignVerticalCenterCommand(), () => CanExecuteAlign());
-            AlignBottomCommand = new DelegateCommand(() => ExecuteAlignBottomCommand(), () => CanExecuteAlign());
-            AlignLeftCommand = new DelegateCommand(() => ExecuteAlignLeftCommand(), () => CanExecuteAlign());
-            AlignHorizontalCenterCommand = new DelegateCommand(() => ExecuteAlignHorizontalCenterCommand(), () => CanExecuteAlign());
-            AlignRightCommand = new DelegateCommand(() => ExecuteAlignRightCommand(), () => CanExecuteAlign());
-            DistributeHorizontalCommand = new DelegateCommand(() => ExecuteDistributeHorizontalCommand(), () => CanExecuteDistribute());
-            DistributeVerticalCommand = new DelegateCommand(() => ExecuteDistributeVerticalCommand(), () => CanExecuteDistribute());
-            SelectAllCommand = new DelegateCommand(() => ExecuteSelectAllCommand());
-            SettingCommand = new DelegateCommand(() => ExecuteSettingCommand());
-            UniformWidthCommand = new DelegateCommand(() => ExecuteUniformWidthCommand(), () => CanExecuteUniform());
-            UniformHeightCommand = new DelegateCommand(() => ExecuteUniformHeightCommand(), () => CanExecuteUniform());
-            DuplicateCommand = new DelegateCommand(() => ExecuteDuplicateCommand(), () => CanExecuteDuplicate());
-            CutCommand = new DelegateCommand(() => ExecuteCutCommand(), () => CanExecuteCut());
-            CopyCommand = new DelegateCommand(() => ExecuteCopyCommand(), () => CanExecuteCopy());
-            PasteCommand = new DelegateCommand(() => ExecutePasteCommand(), () => CanExecutePaste());
-            UnionCommand = new DelegateCommand(() => ExecuteUnionCommand(), () => CanExecuteUnion());
-            IntersectCommand = new DelegateCommand(() => ExecuteIntersectCommand(), () => CanExecuteIntersect());
-            XorCommand = new DelegateCommand(() => ExecuteXorCommand(), () => CanExecuteXor());
-            ExcludeCommand = new DelegateCommand(() => ExecuteExcludeCommand(), () => CanExecuteExclude());
-            ClipCommand = new DelegateCommand(() => ExecuteClipCommand(), () => CanExecuteClip());
-            UndoCommand = new DelegateCommand(() => ExecuteUndoCommand(), () => CanExecuteUndo());
-            RedoCommand = new DelegateCommand(() => ExecuteRedoCommand(), () => CanExecuteRedo());
-            MouseWheelCommand = new DelegateCommand<MouseWheelEventArgs>(args =>
+            if (!isPreview)
             {
-                var diagramControl = App.Current.MainWindow.GetChildOfType<DiagramControl>();
-                var zoomBox = diagramControl.GetChildOfType<ZoomBox>();
-                if (args.Delta > 0)
-                    zoomBox.ZoomSliderPlus();
-                else if (args.Delta < 0)
-                    zoomBox.ZoomSliderMinus();
-                args.Handled = true;
-            });
-            PreviewMouseDownCommand = new DelegateCommand<MouseEventArgs>(args =>
-            {
-                if (args.MiddleButton == MouseButtonState.Pressed)
+                AddItemCommand = new DelegateCommand<object>(p => ExecuteAddItemCommand(p));
+                RemoveItemCommand = new DelegateCommand<object>(p => ExecuteRemoveItemCommand(p));
+                ClearSelectedItemsCommand = new DelegateCommand<object>(p => ExecuteClearSelectedItemsCommand(p));
+                CreateNewDiagramCommand = new DelegateCommand<object>(p => ExecuteCreateNewDiagramCommand(p));
+                LoadCommand = new DelegateCommand(() => ExecuteLoadCommand());
+                LoadFileCommand = new DelegateCommand<string>(file => ExecuteLoadCommand(file));
+                SaveCommand = new DelegateCommand(() => ExecuteSaveCommand());
+                OverwriteCommand = new DelegateCommand(() => ExecuteOverwriteCommand());
+                ExportCommand = new DelegateCommand(() => ExecuteExportCommand());
+                GroupCommand = new DelegateCommand(() => ExecuteGroupItemsCommand(), () => CanExecuteGroup());
+                UngroupCommand = new DelegateCommand(() => ExecuteUngroupItemsCommand(), () => CanExecuteUngroup());
+                BringForwardCommand = new DelegateCommand(() => ExecuteBringForwardCommand(), () => CanExecuteOrder());
+                SendBackwardCommand = new DelegateCommand(() => ExecuteSendBackwardCommand(), () => CanExecuteOrder());
+                BringForegroundCommand = new DelegateCommand(() => ExecuteBringForegroundCommand(), () => CanExecuteOrder());
+                SendBackgroundCommand = new DelegateCommand(() => ExecuteSendBackgroundCommand(), () => CanExecuteOrder());
+                AlignTopCommand = new DelegateCommand(() => ExecuteAlignTopCommand(), () => CanExecuteAlign());
+                AlignVerticalCenterCommand = new DelegateCommand(() => ExecuteAlignVerticalCenterCommand(), () => CanExecuteAlign());
+                AlignBottomCommand = new DelegateCommand(() => ExecuteAlignBottomCommand(), () => CanExecuteAlign());
+                AlignLeftCommand = new DelegateCommand(() => ExecuteAlignLeftCommand(), () => CanExecuteAlign());
+                AlignHorizontalCenterCommand = new DelegateCommand(() => ExecuteAlignHorizontalCenterCommand(), () => CanExecuteAlign());
+                AlignRightCommand = new DelegateCommand(() => ExecuteAlignRightCommand(), () => CanExecuteAlign());
+                DistributeHorizontalCommand = new DelegateCommand(() => ExecuteDistributeHorizontalCommand(), () => CanExecuteDistribute());
+                DistributeVerticalCommand = new DelegateCommand(() => ExecuteDistributeVerticalCommand(), () => CanExecuteDistribute());
+                SelectAllCommand = new DelegateCommand(() => ExecuteSelectAllCommand());
+                SettingCommand = new DelegateCommand(() => ExecuteSettingCommand());
+                UniformWidthCommand = new DelegateCommand(() => ExecuteUniformWidthCommand(), () => CanExecuteUniform());
+                UniformHeightCommand = new DelegateCommand(() => ExecuteUniformHeightCommand(), () => CanExecuteUniform());
+                DuplicateCommand = new DelegateCommand(() => ExecuteDuplicateCommand(), () => CanExecuteDuplicate());
+                CutCommand = new DelegateCommand(() => ExecuteCutCommand(), () => CanExecuteCut());
+                CopyCommand = new DelegateCommand(() => ExecuteCopyCommand(), () => CanExecuteCopy());
+                PasteCommand = new DelegateCommand(() => ExecutePasteCommand(), () => CanExecutePaste());
+                UnionCommand = new DelegateCommand(() => ExecuteUnionCommand(), () => CanExecuteUnion());
+                IntersectCommand = new DelegateCommand(() => ExecuteIntersectCommand(), () => CanExecuteIntersect());
+                XorCommand = new DelegateCommand(() => ExecuteXorCommand(), () => CanExecuteXor());
+                ExcludeCommand = new DelegateCommand(() => ExecuteExcludeCommand(), () => CanExecuteExclude());
+                ClipCommand = new DelegateCommand(() => ExecuteClipCommand(), () => CanExecuteClip());
+                UndoCommand = new DelegateCommand(() => ExecuteUndoCommand(), () => CanExecuteUndo());
+                RedoCommand = new DelegateCommand(() => ExecuteRedoCommand(), () => CanExecuteRedo());
+                MouseWheelCommand = new DelegateCommand<MouseWheelEventArgs>(args =>
                 {
-                    _MiddleButtonIsPressed = true;
+                    LogManager.GetCurrentClassLogger().Trace($"MouseWheelCommand");
                     var diagramControl = App.Current.MainWindow.GetChildOfType<DiagramControl>();
-                    _MousePointerPosition = args.GetPosition(diagramControl);
-                    diagramControl.Cursor = Cursors.SizeAll;
-                }
-            });
-            PreviewMouseUpCommand = new DelegateCommand<MouseEventArgs>(args =>
-            {
-                ReleaseMiddleButton(args);
-            });
-            MouseMoveCommand = new DelegateCommand<MouseEventArgs>(args =>
-            {
-                if (_MiddleButtonIsPressed)
+                    var zoomBox = diagramControl.GetChildOfType<ZoomBox>();
+                    if (args.Delta > 0)
+                        zoomBox.ZoomSliderPlus();
+                    else if (args.Delta < 0)
+                        zoomBox.ZoomSliderMinus();
+                    args.Handled = true;
+                });
+                PreviewMouseDownCommand = new DelegateCommand<MouseEventArgs>(args =>
                 {
-                    var diagramControl = App.Current.MainWindow.GetChildOfType<DiagramControl>();
-                    var scrollViewer = diagramControl.GetChildOfType<ScrollViewer>();
-                    var newMousePointerPosition = args.GetPosition(diagramControl);
-                    var diff = newMousePointerPosition - _MousePointerPosition;
-                    scrollViewer.ScrollToVerticalOffset(scrollViewer.VerticalOffset - diff.Y);
-                    scrollViewer.ScrollToHorizontalOffset(scrollViewer.HorizontalOffset - diff.X);
-                    _MousePointerPosition = newMousePointerPosition;
-                }
-            });
-            MouseLeaveCommand = new DelegateCommand<MouseEventArgs>(args =>
-            {
-                if (_MiddleButtonIsPressed)
+                    LogManager.GetCurrentClassLogger().Trace($"PreviewMouseDownCommand");
+                    if (args.MiddleButton == MouseButtonState.Pressed)
+                    {
+                        _MiddleButtonIsPressed = true;
+                        var diagramControl = App.Current.MainWindow.GetChildOfType<DiagramControl>();
+                        _MousePointerPosition = args.GetPosition(diagramControl);
+                        diagramControl.Cursor = Cursors.SizeAll;
+                    }
+                });
+                PreviewMouseUpCommand = new DelegateCommand<MouseEventArgs>(args =>
                 {
+                    LogManager.GetCurrentClassLogger().Trace($"PreviewMouseUpCommand");
                     ReleaseMiddleButton(args);
-                }
-            });
-            MouseEnterCommand = new DelegateCommand<MouseEventArgs>(args =>
-            {
-                if (_MiddleButtonIsPressed)
+                });
+                MouseMoveCommand = new DelegateCommand<MouseEventArgs>(args =>
                 {
-                    ReleaseMiddleButton(args);
-                }
-            });
-            PreviewKeyDownCommand = new DelegateCommand<KeyEventArgs>(args =>
-            {
-                switch (args.Key)
-                {
-                    case Key.Left:
-                        MoveSelectedItems(-1, 0);
-                        args.Handled = true;
-                        break;
-                    case Key.Up:
-                        MoveSelectedItems(0, -1);
-                        args.Handled = true;
-                        break;
-                    case Key.Right:
-                        MoveSelectedItems(1, 0);
-                        args.Handled = true;
-                        break;
-                    case Key.Down:
-                        MoveSelectedItems(0, 1);
-                        args.Handled = true;
-                        break;
-                }
-            });
-            EditMenuOpenedCommand = new DelegateCommand(() =>
-            {
-                CutCommand.RaiseCanExecuteChanged();
-                CopyCommand.RaiseCanExecuteChanged();
-                PasteCommand.RaiseCanExecuteChanged();
-            });
-            PropertyCommand = new DelegateCommand(() =>
-            {
-                var first = SelectedItems.Value.First();
-                first.OpenPropertyDialog();
-            },
-            () => CanOpenPropertyDialog());
-            MouseDownStraightLineCommand = new DelegateCommand<System.Windows.Shapes.Line>(line =>
-            {
-                var straightLineVM = line.DataContext as StraightConnectorViewModel;
-                straightLineVM.IsSelected.Value = true;
-                straightLineVM.SnapPoint0VM.Value.IsSelected.Value = true;
-                straightLineVM.SnapPoint1VM.Value.IsSelected.Value = true;
-            });
-            MouseDownBezierCurveCommand = new DelegateCommand<System.Windows.Shapes.Path>(line =>
-            {
-                var bezierCurveVM = line.DataContext as BezierCurveViewModel;
-                bezierCurveVM.IsSelected.Value = true;
-                bezierCurveVM.SnapPoint0VM.Value.IsSelected.Value = true;
-                bezierCurveVM.SnapPoint1VM.Value.IsSelected.Value = true;
-            });
-            MouseDownPolyBezierCommand = new DelegateCommand<System.Windows.Shapes.Path>(line =>
-            {
-                var polyBezierVM = line.DataContext as PolyBezierViewModel;
-                polyBezierVM.IsSelected.Value = true;
-                polyBezierVM.SnapPoint0VM.Value.IsSelected.Value = true;
-                polyBezierVM.SnapPoint1VM.Value.IsSelected.Value = true;
-            });
-            LoadedCommand = new DelegateCommand(() =>
-            {
-                //var filename = @"Z:\Git\boilersGraphics\boilersGraphics.Test\bin\Debug\XmlFiles\checker_pattern.xml";
-                //ExecuteLoadCommand(filename, false);
-                //BackgroundItem.Value.FillColor.Value = Colors.Red;
-            });
-            FitCanvasCommand = new DelegateCommand(() =>
-            {
-                double horizontalGap = AllItems.Value.OfType<DesignerItemViewModelBase>().Except(new DesignerItemViewModelBase[] { BackgroundItem.Value }).Count() > 0
-                                     ? AllItems.Value.OfType<DesignerItemViewModelBase>().Except(new DesignerItemViewModelBase[] { BackgroundItem.Value }).Min(x => x.Left.Value)
-                                     : 0;
-                double verticalGap = AllItems.Value.OfType<DesignerItemViewModelBase>().Except(new DesignerItemViewModelBase[] { BackgroundItem.Value }).Count() > 0
-                                   ? AllItems.Value.OfType<DesignerItemViewModelBase>().Except(new DesignerItemViewModelBase[] { BackgroundItem.Value }).Min(x => x.Top.Value)
-                                   : 0;
-                foreach (var item in AllItems.Value.OfType<ConnectorBaseViewModel>())
-                {
-                    foreach (var p in item.Points)
+                    LogManager.GetCurrentClassLogger().Trace($"MouseMoveCommand");
+                    if (_MiddleButtonIsPressed)
                     {
-                        horizontalGap = Math.Min(p.X, horizontalGap);
-                        verticalGap = Math.Min(p.Y, verticalGap);
+                        var diagramControl = App.Current.MainWindow.GetChildOfType<DiagramControl>();
+                        var scrollViewer = diagramControl.GetChildOfType<ScrollViewer>();
+                        var newMousePointerPosition = args.GetPosition(diagramControl);
+                        var diff = newMousePointerPosition - _MousePointerPosition;
+                        scrollViewer.ScrollToVerticalOffset(scrollViewer.VerticalOffset - diff.Y);
+                        scrollViewer.ScrollToHorizontalOffset(scrollViewer.HorizontalOffset - diff.X);
+                        _MousePointerPosition = newMousePointerPosition;
                     }
-                }
-
-                foreach (var item in AllItems.Value.OfType<DesignerItemViewModelBase>().Except(new DesignerItemViewModelBase[] { BackgroundItem.Value }))
+                });
+                MouseLeaveCommand = new DelegateCommand<MouseEventArgs>(args =>
                 {
-                    item.Left.Value += -horizontalGap;
-                    item.Top.Value += -verticalGap;
-                }
-
-                foreach (var item in AllItems.Value.OfType<ConnectorBaseViewModel>())
-                {
-                    for (int i = 0; i < item.Points.Count; i++)
+                    LogManager.GetCurrentClassLogger().Trace($"MouseLeaveCommand");
+                    if (_MiddleButtonIsPressed)
                     {
-                        var p = item.Points[i];
-                        var newP = new Point(p.X - horizontalGap, p.Y - verticalGap);
-                        item.Points[i] = newP;
+                        ReleaseMiddleButton(args);
                     }
-                }
-
-                double horizontalMax = AllItems.Value.OfType<DesignerItemViewModelBase>().Except(new DesignerItemViewModelBase[] { BackgroundItem.Value }).Count() > 0
-                                     ? AllItems.Value.OfType<DesignerItemViewModelBase>().Except(new DesignerItemViewModelBase[] { BackgroundItem.Value }).Max(x => x.Right.Value)
-                                     : 0;
-                double verticalMax = AllItems.Value.OfType<DesignerItemViewModelBase>().Except(new DesignerItemViewModelBase[] { BackgroundItem.Value }).Count() > 0
-                                     ? AllItems.Value.OfType<DesignerItemViewModelBase>().Except(new DesignerItemViewModelBase[] { BackgroundItem.Value }).Max(x => x.Bottom.Value)
-                                     : 0;
-                foreach (var item in AllItems.Value.OfType<ConnectorBaseViewModel>())
+                });
+                MouseEnterCommand = new DelegateCommand<MouseEventArgs>(args =>
                 {
-                    foreach (var p in item.Points)
+                    LogManager.GetCurrentClassLogger().Trace($"MouseEnterCommand");
+                    if (_MiddleButtonIsPressed)
                     {
-                        horizontalMax = Math.Max(p.X, horizontalMax);
-                        verticalMax = Math.Max(p.Y, verticalMax);
+                        ReleaseMiddleButton(args);
                     }
-                }
+                });
+                PreviewKeyDownCommand = new DelegateCommand<KeyEventArgs>(args =>
+                {
+                    LogManager.GetCurrentClassLogger().Trace($"PreviewKeyDownCommand");
+                    switch (args.Key)
+                    {
+                        case Key.Left:
+                            MoveSelectedItems(-1, 0);
+                            args.Handled = true;
+                            break;
+                        case Key.Up:
+                            MoveSelectedItems(0, -1);
+                            args.Handled = true;
+                            break;
+                        case Key.Right:
+                            MoveSelectedItems(1, 0);
+                            args.Handled = true;
+                            break;
+                        case Key.Down:
+                            MoveSelectedItems(0, 1);
+                            args.Handled = true;
+                            break;
+                    }
+                });
+                EditMenuOpenedCommand = new DelegateCommand(() =>
+                {
+                    LogManager.GetCurrentClassLogger().Trace($"EditMenuOpenedCommand");
+                    CutCommand.RaiseCanExecuteChanged();
+                    CopyCommand.RaiseCanExecuteChanged();
+                    PasteCommand.RaiseCanExecuteChanged();
+                });
+                PropertyCommand = new DelegateCommand(() =>
+                {
+                    LogManager.GetCurrentClassLogger().Trace($"PropertyCommand");
+                    var first = SelectedItems.Value.First();
+                    first.OpenPropertyDialog();
+                },
+                () => CanOpenPropertyDialog());
+                MouseDownStraightLineCommand = new DelegateCommand<System.Windows.Shapes.Line>(line =>
+                {
+                    LogManager.GetCurrentClassLogger().Trace($"MouseDownStraightLineCommand");
+                    var straightLineVM = line.DataContext as StraightConnectorViewModel;
+                    straightLineVM.IsSelected.Value = true;
+                    straightLineVM.SnapPoint0VM.Value.IsSelected.Value = true;
+                    straightLineVM.SnapPoint1VM.Value.IsSelected.Value = true;
+                });
+                MouseDownBezierCurveCommand = new DelegateCommand<System.Windows.Shapes.Path>(line =>
+                {
+                    LogManager.GetCurrentClassLogger().Trace($"MouseDownBezierCurveCommand");
+                    var bezierCurveVM = line.DataContext as BezierCurveViewModel;
+                    bezierCurveVM.IsSelected.Value = true;
+                    bezierCurveVM.SnapPoint0VM.Value.IsSelected.Value = true;
+                    bezierCurveVM.SnapPoint1VM.Value.IsSelected.Value = true;
+                });
+                MouseDownPolyBezierCommand = new DelegateCommand<System.Windows.Shapes.Path>(line =>
+                {
+                    LogManager.GetCurrentClassLogger().Trace($"MouseDownPolyBezierCommand");
+                    var polyBezierVM = line.DataContext as PolyBezierViewModel;
+                    polyBezierVM.IsSelected.Value = true;
+                    polyBezierVM.SnapPoint0VM.Value.IsSelected.Value = true;
+                    polyBezierVM.SnapPoint1VM.Value.IsSelected.Value = true;
+                });
+                LoadedCommand = new DelegateCommand(() =>
+                {
+                    LogManager.GetCurrentClassLogger().Trace($"LoadedCommand");
+                    //var filename = @"Z:\Git\boilersGraphics\boilersGraphics.Test\bin\Debug\XmlFiles\checker_pattern.xml";
+                    //ExecuteLoadCommand(filename, false);
+                    //BackgroundItem.Value.FillColor.Value = Colors.Red;
+                });
+                FitCanvasCommand = new DelegateCommand(() =>
+                {
+                    LogManager.GetCurrentClassLogger().Trace($"FitCanvasCommand");
+                    double horizontalGap = AllItems.Value.OfType<DesignerItemViewModelBase>().Except(new DesignerItemViewModelBase[] { BackgroundItem.Value }).Count() > 0
+                                         ? AllItems.Value.OfType<DesignerItemViewModelBase>().Except(new DesignerItemViewModelBase[] { BackgroundItem.Value }).Min(x => x.Left.Value)
+                                         : 0;
+                    double verticalGap = AllItems.Value.OfType<DesignerItemViewModelBase>().Except(new DesignerItemViewModelBase[] { BackgroundItem.Value }).Count() > 0
+                                       ? AllItems.Value.OfType<DesignerItemViewModelBase>().Except(new DesignerItemViewModelBase[] { BackgroundItem.Value }).Min(x => x.Top.Value)
+                                       : 0;
+                    foreach (var item in AllItems.Value.OfType<ConnectorBaseViewModel>())
+                    {
+                        foreach (var p in item.Points)
+                        {
+                            horizontalGap = Math.Min(p.X, horizontalGap);
+                            verticalGap = Math.Min(p.Y, verticalGap);
+                        }
+                    }
 
-                Width = (int)Math.Round(horizontalMax);
-                Height = (int)Math.Round(verticalMax);
-                BackgroundItem.Value.Width.Value = Width;
-                BackgroundItem.Value.Height.Value = Height;
-            }, () => AllItems.Value.OfType<DesignerItemViewModelBase>().Except(new DesignerItemViewModelBase[] { BackgroundItem.Value }).Count() + AllItems.Value.OfType<ConnectorBaseViewModel>().Count() > 0);
+                    foreach (var item in AllItems.Value.OfType<DesignerItemViewModelBase>().Except(new DesignerItemViewModelBase[] { BackgroundItem.Value }))
+                    {
+                        item.Left.Value += -horizontalGap;
+                        item.Top.Value += -verticalGap;
+                    }
 
-            //EdgeColors.CollectionChangedAsObservable()
-            //    .Subscribe(_ => RaisePropertyChanged("EdgeColors"))
-            //    .AddTo(_CompositeDisposable);
-            //FillColors.CollectionChangedAsObservable()
-            //    .Subscribe(_ => RaisePropertyChanged("FillColors"))
-            //    .AddTo(_CompositeDisposable);
+                    foreach (var item in AllItems.Value.OfType<ConnectorBaseViewModel>())
+                    {
+                        for (int i = 0; i < item.Points.Count; i++)
+                        {
+                            var p = item.Points[i];
+                            var newP = new Point(p.X - horizontalGap, p.Y - verticalGap);
+                            item.Points[i] = newP;
+                        }
+                    }
+
+                    double horizontalMax = AllItems.Value.OfType<DesignerItemViewModelBase>().Except(new DesignerItemViewModelBase[] { BackgroundItem.Value }).Count() > 0
+                                         ? AllItems.Value.OfType<DesignerItemViewModelBase>().Except(new DesignerItemViewModelBase[] { BackgroundItem.Value }).Max(x => x.Right.Value)
+                                         : 0;
+                    double verticalMax = AllItems.Value.OfType<DesignerItemViewModelBase>().Except(new DesignerItemViewModelBase[] { BackgroundItem.Value }).Count() > 0
+                                         ? AllItems.Value.OfType<DesignerItemViewModelBase>().Except(new DesignerItemViewModelBase[] { BackgroundItem.Value }).Max(x => x.Bottom.Value)
+                                         : 0;
+                    foreach (var item in AllItems.Value.OfType<ConnectorBaseViewModel>())
+                    {
+                        foreach (var p in item.Points)
+                        {
+                            horizontalMax = Math.Max(p.X, horizontalMax);
+                            verticalMax = Math.Max(p.Y, verticalMax);
+                        }
+                    }
+
+                    Width = (int)Math.Round(horizontalMax);
+                    Height = (int)Math.Round(verticalMax);
+                    BackgroundItem.Value.Width.Value = Width;
+                    BackgroundItem.Value.Height.Value = Height;
+                }, () => AllItems.Value.OfType<DesignerItemViewModelBase>().Except(new DesignerItemViewModelBase[] { BackgroundItem.Value }).Count() + AllItems.Value.OfType<ConnectorBaseViewModel>().Count() > 0);
+
+                //EdgeColors.CollectionChangedAsObservable()
+                //    .Subscribe(_ => RaisePropertyChanged("EdgeColors"))
+                //    .AddTo(_CompositeDisposable);
+                //FillColors.CollectionChangedAsObservable()
+                //    .Subscribe(_ => RaisePropertyChanged("FillColors"))
+                //    .AddTo(_CompositeDisposable);
+            }
 
             Layers = RootLayer.Value.Children.CollectionChangedAsObservable()
-                           .Select(_ => RootLayer.Value.LayerChangedAsObservable())
-                           .Switch()
-                           .SelectMany(_ => RootLayer.Value.Children)
-                           .ToReactiveCollection();
+                            .Select(_ => RootLayer.Value.LayerChangedAsObservable())
+                            .Switch()
+                            .SelectMany(_ => RootLayer.Value.Children)
+                            .ToReactiveCollection();
 
             AllItems = Layers.CollectionChangedAsObservable()
-                             .Select(_ => Layers.Select(x => x.LayerItemsChangedAsObservable()).Merge()
+                                .Select(_ => Layers.Select(x => x.LayerItemsChangedAsObservable()).Merge()
                                 .Merge(this.ObserveProperty(y => y.BackgroundItem.Value).ToUnit()))
-                             .Switch()
-                             .Select(_ => Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                                .Switch()
+                                .Select(_ => Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
                                                 .Where(x => x.GetType() == typeof(LayerItem))
                                                 .Select(y => (y as LayerItem).Item.Value)
                                                 .Union(new SelectableDesignerItemViewModelBase[] { BackgroundItem.Value })
                                                 .ToArray())
-                             .ToReadOnlyReactivePropertySlim(Array.Empty<SelectableDesignerItemViewModelBase>());
+                                .ToReadOnlyReactivePropertySlim(Array.Empty<SelectableDesignerItemViewModelBase>());
 
-            AllItems.Subscribe(x =>
+            if (!isPreview)
             {
-                FitCanvasCommand.RaiseCanExecuteChanged();
-                LogManager.GetCurrentClassLogger().Trace($"{x.Length} items in AllItems.");
-                LogManager.GetCurrentClassLogger().Trace(string.Join(", ", x.Select(y => y?.ToString() ?? "null")));
-            })
-            .AddTo(_CompositeDisposable);
+                AllItems.Subscribe(x =>
+                {
+                    FitCanvasCommand.RaiseCanExecuteChanged();
+                    LogManager.GetCurrentClassLogger().Trace($"{x.Length} items in AllItems.");
+                    LogManager.GetCurrentClassLogger().Trace(string.Join(", ", x.Select(y => y?.ToString() ?? "null")));
+                })
+                .AddTo(_CompositeDisposable);
 
-            SelectedItems = Layers
-                .CollectionChangedAsObservable()
-                .Select(_ =>
-                    Layers
-                        .Select(x => x.SelectedLayerItemsChangedAsObservable())
-                        .Merge()
-                )
-                .Switch()
-                .Do(x => LogManager.GetCurrentClassLogger().Debug("SelectedItems updated"))
-                .Select(_ => Layers
-                    .SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
-                    .Where(x => x is LayerItem)
-                    .Select(y => (y as LayerItem).Item.Value)
-                    .Except(Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
-                        .Where(x => x.GetType() == typeof(LayerItem))
-                        .Select(y => (y as LayerItem).Item.Value)
-                        .OfType<ConnectorBaseViewModel>())
-                    .Union(Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
-                        .Where(x => x.GetType() == typeof(LayerItem))
-                        .Select(y => (y as LayerItem).Item.Value)
-                        .OfType<ConnectorBaseViewModel>()
-                        .SelectMany(x => new[] { x.SnapPoint0VM.Value, x.SnapPoint1VM.Value }.Where(y => y.IsSelected.Value))
+                SelectedItems = Layers
+                    .CollectionChangedAsObservable()
+                    .Select(_ =>
+                        Layers
+                            .Select(x => x.SelectedLayerItemsChangedAsObservable())
+                            .Merge()
                     )
-                    .Where(z => z.IsSelected.Value == true)
-                    .OrderBy(z => z.SelectedOrder.Value)
-                    .ToArray()
-                ).ToReadOnlyReactivePropertySlim(Array.Empty<SelectableDesignerItemViewModelBase>());
+                    .Switch()
+                    .Do(x => LogManager.GetCurrentClassLogger().Debug("SelectedItems updated"))
+                    .Select(_ => Layers
+                        .SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                        .OfType<LayerItem>()
+                        .Select(y => y.Item.Value)
+                        .Except(Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                            .OfType<LayerItem>()
+                            .Select(y => y.Item.Value)
+                            .OfType<ConnectorBaseViewModel>())
+                        .Union(Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                            .OfType<LayerItem>()
+                            .Select(y => y.Item.Value)
+                            .OfType<ConnectorBaseViewModel>()
+                            .SelectMany(x => new[] { x.SnapPoint0VM.Value, x.SnapPoint1VM.Value })
+                            .Where(y => y.IsSelected.Value == true)
+                        )
+                        .Where(z => z.IsSelected.Value == true)
+                        .OrderBy(z => z.SelectedOrder.Value)
+                        .ToArray()
+                    ).ToReadOnlyReactivePropertySlim(Array.Empty<SelectableDesignerItemViewModelBase>());
 
-            SelectedItems.Subscribe(selectedItems =>
-            {
-                LogManager.GetCurrentClassLogger().Trace($"SelectedItems changed {string.Join(", ", selectedItems.Select(x => x?.ToString() ?? "null"))}");
+                SelectedItems.Subscribe(selectedItems =>
+                {
+                    LogManager.GetCurrentClassLogger().Debug($"SelectedItems changed {string.Join(", ", selectedItems.Select(x => x?.ToString() ?? "null"))}");
 
-                GroupCommand.RaiseCanExecuteChanged();
-                UngroupCommand.RaiseCanExecuteChanged();
-                BringForwardCommand.RaiseCanExecuteChanged();
-                SendBackwardCommand.RaiseCanExecuteChanged();
-                BringForegroundCommand.RaiseCanExecuteChanged();
-                SendBackgroundCommand.RaiseCanExecuteChanged();
+                    GroupCommand.RaiseCanExecuteChanged();
+                    UngroupCommand.RaiseCanExecuteChanged();
+                    BringForwardCommand.RaiseCanExecuteChanged();
+                    SendBackwardCommand.RaiseCanExecuteChanged();
+                    BringForegroundCommand.RaiseCanExecuteChanged();
+                    SendBackgroundCommand.RaiseCanExecuteChanged();
 
-                AlignTopCommand.RaiseCanExecuteChanged();
-                AlignVerticalCenterCommand.RaiseCanExecuteChanged();
-                AlignBottomCommand.RaiseCanExecuteChanged();
-                AlignLeftCommand.RaiseCanExecuteChanged();
-                AlignHorizontalCenterCommand.RaiseCanExecuteChanged();
-                AlignRightCommand.RaiseCanExecuteChanged();
-                DistributeHorizontalCommand.RaiseCanExecuteChanged();
-                DistributeVerticalCommand.RaiseCanExecuteChanged();
+                    AlignTopCommand.RaiseCanExecuteChanged();
+                    AlignVerticalCenterCommand.RaiseCanExecuteChanged();
+                    AlignBottomCommand.RaiseCanExecuteChanged();
+                    AlignLeftCommand.RaiseCanExecuteChanged();
+                    AlignHorizontalCenterCommand.RaiseCanExecuteChanged();
+                    AlignRightCommand.RaiseCanExecuteChanged();
+                    DistributeHorizontalCommand.RaiseCanExecuteChanged();
+                    DistributeVerticalCommand.RaiseCanExecuteChanged();
 
-                UniformWidthCommand.RaiseCanExecuteChanged();
-                UniformHeightCommand.RaiseCanExecuteChanged();
+                    UniformWidthCommand.RaiseCanExecuteChanged();
+                    UniformHeightCommand.RaiseCanExecuteChanged();
 
-                UnionCommand.RaiseCanExecuteChanged();
-                IntersectCommand.RaiseCanExecuteChanged();
-                XorCommand.RaiseCanExecuteChanged();
-                ExcludeCommand.RaiseCanExecuteChanged();
+                    UnionCommand.RaiseCanExecuteChanged();
+                    IntersectCommand.RaiseCanExecuteChanged();
+                    XorCommand.RaiseCanExecuteChanged();
+                    ExcludeCommand.RaiseCanExecuteChanged();
 
-                PropertyCommand.RaiseCanExecuteChanged();
-            })
-            .AddTo(_CompositeDisposable);
+                    PropertyCommand.RaiseCanExecuteChanged();
+                })
+                .AddTo(_CompositeDisposable);
 
-            SelectedLayers = Layers.ObserveElementObservableProperty(x => x.IsSelected)
-                                   .Select(_ => Layers.Where(x => x.IsSelected.Value == true).ToArray())
-                                   .ToReadOnlyReactivePropertySlim(Array.Empty<LayerTreeViewItemBase>());
+                SelectedLayers = Layers.ObserveElementObservableProperty(x => x.IsSelected)
+                                       .Select(_ => Layers.Where(x => x.IsSelected.Value == true).ToArray())
+                                       .ToReadOnlyReactivePropertySlim(Array.Empty<LayerTreeViewItemBase>());
 
-            SelectedLayers.Subscribe(x =>
-            {
-                LogManager.GetCurrentClassLogger().Trace($"SelectedLayers changed {string.Join(", ", x.Select(x => x.ToString()))}");
-            })
-            .AddTo(_CompositeDisposable);
+                SelectedLayers.Subscribe(x =>
+                {
+                    LogManager.GetCurrentClassLogger().Trace($"SelectedLayers changed {string.Join(", ", x.Select(x => x.ToString()))}");
+                })
+                .AddTo(_CompositeDisposable);
 
-            Layers.ObserveAddChanged()
-                  .Subscribe(x =>
-                  {
-                      RootLayer.Value.Children = new ReactiveCollection<LayerTreeViewItemBase>(Layers.Cast<LayerTreeViewItemBase>().ToObservable());
-                      x.SetParentToChildren(RootLayer.Value);
-                  })
-            .AddTo(_CompositeDisposable);
+                Layers.ObserveAddChanged()
+                      .Subscribe(x =>
+                      {
+                          RootLayer.Value.Children = new ReactiveCollection<LayerTreeViewItemBase>(Layers.Cast<LayerTreeViewItemBase>().ToObservable());
+                          x.SetParentToChildren(RootLayer.Value);
+                      })
+                .AddTo(_CompositeDisposable);
+            }
 
             Width = width;
             Height = height;
 
-            EnableAutoSave.Subscribe(x =>
+            if (!isPreview)
             {
-                if (!x && _AutoSaveTimerDisposableObj != null)
-                    _AutoSaveTimerDisposableObj.Dispose();
-            })
-            .AddTo(_CompositeDisposable);
-            EnableAutoSave.Value = true;
-            AutoSaveType.Value = Models.AutoSaveType.SetInterval;
-            AutoSaveInterval.Value = TimeSpan.FromSeconds(30);
+                EnableAutoSave.Subscribe(x =>
+                {
+                    if (!x && _AutoSaveTimerDisposableObj != null)
+                        _AutoSaveTimerDisposableObj.Dispose();
+                })
+                .AddTo(_CompositeDisposable);
+                EnableAutoSave.Value = true;
+                AutoSaveType.Value = Models.AutoSaveType.SetInterval;
+                AutoSaveInterval.Value = TimeSpan.FromSeconds(30);
 
-            var id = Guid.Parse("00000000-0000-0000-0000-000000000000");
-            var dao = new LogSettingDao();
-            var logSettings = dao.FindBy(new Dictionary<string, object>() { { "ID", id } });
-            if (logSettings.Count() == 0)
-            {
-                var newLogSetting = new Models.LogSetting();
-                newLogSetting.ID = id;
-                newLogSetting.LogLevel = NLog.LogLevel.Info.ToString();
-                dao.Insert(newLogSetting);
+                var id = Guid.Parse("00000000-0000-0000-0000-000000000000");
+                var dao = new LogSettingDao();
+                var logSettings = dao.FindBy(new Dictionary<string, object>() { { "ID", id } });
+                if (logSettings.Count() == 0)
+                {
+                    var newLogSetting = new Models.LogSetting();
+                    newLogSetting.ID = id;
+                    newLogSetting.LogLevel = NLog.LogLevel.Info.ToString();
+                    dao.Insert(newLogSetting);
+                }
+                logSettings = dao.FindBy(new Dictionary<string, object>() { { "ID", id } });
+                var logSetting = logSettings.First();
+                MainWindowVM.LogLevel.Value = NLog.LogLevel.FromString(logSetting.LogLevel);
+                PackAutoSaveFiles();
             }
-            logSettings = dao.FindBy(new Dictionary<string, object>() { { "ID", id } });
-            var logSetting = logSettings.First();
-            MainWindowVM.LogLevel.Value = NLog.LogLevel.FromString(logSetting.LogLevel);
-            PackAutoSaveFiles();
 
             AngleType.Value = Helpers.AngleType.Minus180To180;
             EnableImageEmbedding.Value = true;
@@ -585,7 +609,7 @@ namespace boilersGraphics.ViewModels
                 AutoSaveFiles.ClearOnScheduler();
             try
             {
-                var files = Directory.EnumerateFiles(System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "dhq_boiler\\boilersGraphics\\AutoSave"), "AutoSave-*-*-*-*-*-*.xml");
+                var files = Directory.EnumerateFiles(System.IO.Path.Combine(boilersGraphics.Helpers.Path.GetRoamingDirectory(), "dhq_boiler\\boilersGraphics\\AutoSave"), "AutoSave-*-*-*-*-*-*.xml");
                 foreach (var file in files.OrderByDescending(x => new FileInfo(x).LastWriteTime))
                 {
                     AutoSaveFiles.AddOnScheduler(file);
@@ -621,11 +645,11 @@ namespace boilersGraphics.ViewModels
 
         private IDisposable _AutoSaveTimerDisposableObj;
 
-        public void Initialize()
+        public void Initialize(bool isPreview = false)
         {
             MainWindowVM.Recorder.BeginRecode();
 
-            InitialSetting(MainWindowVM, true, true);
+            InitialSetting(MainWindowVM, true, true, isPreview);
 
             MainWindowVM.Recorder.EndRecode();
 
@@ -676,8 +700,8 @@ namespace boilersGraphics.ViewModels
             }
 
             AutoSavedDateTime.Value = DateTime.Now;
-            var path = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), $"dhq_boiler\\boilersGraphics\\AutoSave\\AutoSave-{AutoSavedDateTime.Value.Year}-{AutoSavedDateTime.Value.Month}-{AutoSavedDateTime.Value.Day}-{AutoSavedDateTime.Value.Hour}-{AutoSavedDateTime.Value.Minute}-{AutoSavedDateTime.Value.Second}.xml");
-            var autoSaveDir = Path.GetDirectoryName(path);
+            var path = System.IO.Path.Combine(boilersGraphics.Helpers.Path.GetRoamingDirectory(), $"dhq_boiler\\boilersGraphics\\AutoSave\\AutoSave-{AutoSavedDateTime.Value.Year}-{AutoSavedDateTime.Value.Month}-{AutoSavedDateTime.Value.Day}-{AutoSavedDateTime.Value.Hour}-{AutoSavedDateTime.Value.Minute}-{AutoSavedDateTime.Value.Second}.xml");
+            var autoSaveDir = System.IO.Path.GetDirectoryName(path);
             if (!Directory.Exists(autoSaveDir))
             {
                 Directory.CreateDirectory(autoSaveDir);
@@ -782,7 +806,7 @@ namespace boilersGraphics.ViewModels
             OpenCvSharpHelper.ImShow("DebugPrint", rtb);
         }
 
-        private void InitialSetting(MainWindowViewModel mainwindowViewModel, bool addingLayer = false, bool initCanvasBackground = false)
+        private void InitialSetting(MainWindowViewModel mainwindowViewModel, bool addingLayer = false, bool initCanvasBackground = false, bool isPreview = false)
         {
             mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "EdgeBrush.Value", Brushes.Black as Brush);
             mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "FillBrush.Value", Brushes.White as Brush);
@@ -812,7 +836,7 @@ namespace boilersGraphics.ViewModels
             Layers.ToClearOperation().ExecuteTo(mainwindowViewModel.Recorder.Current);
             if (addingLayer)
             {
-                var layer = new Layer();
+                var layer = new Layer(isPreview);
                 layer.IsVisible.Value = true;
                 layer.IsSelected.Value = true;
                 layer.Name.Value = Name.GetNewLayerName(this);
@@ -1390,10 +1414,15 @@ namespace boilersGraphics.ViewModels
         public void DeselectAll()
         {
             foreach (var layerItem in Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
-                                            .Where(x => x is LayerItem))
+                                            .OfType<LayerItem>())
             {
-                (layerItem as LayerItem).Item.Value.IsSelected.Value = false;
-                (layerItem as LayerItem).IsSelected.Value = false;
+                layerItem.Item.Value.IsSelected.Value = false;
+                layerItem.IsSelected.Value = false;
+                if (layerItem.Item.Value is ConnectorBaseViewModel c)
+                {
+                    c.SnapPoint0VM.Value.IsSelected.Value = false;
+                    c.SnapPoint1VM.Value.IsSelected.Value = false;
+                }
             }
         }
 
@@ -1468,9 +1497,15 @@ namespace boilersGraphics.ViewModels
 
         private void ExecuteClearSelectedItemsCommand(object parameter)
         {
-            foreach (LayerItem layerItem in Layers.SelectMany(x => x.Children))
+            foreach (var layerItem in Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                                            .OfType<LayerItem>())
             {
                 layerItem.Item.Value.IsSelected.Value = false;
+                if (layerItem.Item.Value is ConnectorBaseViewModel c)
+                {
+                    c.SnapPoint0VM.Value.IsSelected.Value = false;
+                    c.SnapPoint1VM.Value.IsSelected.Value = false;
+                }
             }
         }
 
@@ -1648,14 +1683,14 @@ namespace boilersGraphics.ViewModels
             if (result == MessageBoxResult.Cancel)
                 return;
             var (root, filename) = LoadSerializedDataFromFile();
-            LoadInternal(root, filename);
+            LoadInternal(root, filename, false);
             var statistics = MainWindowVM.Statistics.Value;
             statistics.NumberOfTimesTheFileWasOpenedBySpecifyingIt++;
             var dao = new StatisticsDao();
             dao.Update(statistics);
         }
 
-        private void LoadInternal(XElement root, string filename)
+        private void LoadInternal(XElement root, string filename, bool isPreview = false)
         {
             if (root == null)
             {
@@ -1793,9 +1828,9 @@ namespace boilersGraphics.ViewModels
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this.ColorSpots.Value, "ColorSpot99", WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot99").Nodes().First().ToString()));
                 }
 
-                InitialSetting(mainwindowViewModel, false, false);
+                InitialSetting(mainwindowViewModel, false, false, isPreview);
 
-                ObjectDeserializer.ReadObjectsFromXML(this, root);
+                ObjectDeserializer.ReadObjectsFromXML(this, root, isPreview);
             }
             catch (Exception)
             {
@@ -1826,7 +1861,7 @@ namespace boilersGraphics.ViewModels
             }
             FileName.Value = file;
             var root = XElement.Load(file);
-            LoadInternal(root, file);
+            LoadInternal(root, file, false);
             var statistics = MainWindowVM.Statistics.Value;
             statistics.NumberOfTimesTheAutoSaveFileIsSpecifiedAndOpened++;
             var dao = new StatisticsDao();
@@ -1836,7 +1871,7 @@ namespace boilersGraphics.ViewModels
         public void Preview(string file)
         {
             var root = XElement.Load(file);
-            LoadInternal(root, file);
+            LoadInternal(root, file, true);
         }
 
         private (XElement, string) LoadSerializedDataFromFile()
