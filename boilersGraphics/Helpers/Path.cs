@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace boilersGraphics.Helpers
 {
-    internal static class Path
+    public static class Path
     {
         public static string GetRoamingDirectory()
         {
