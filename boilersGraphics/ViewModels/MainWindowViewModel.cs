@@ -22,6 +22,7 @@ using System.Linq;
 using System.Net;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
@@ -50,6 +51,8 @@ namespace boilersGraphics.ViewModels
         {
             Instance = this;
             this.dlgService = dialogService;
+
+            ConfigureNLog();
 
             if (App.IsTest)
             {
@@ -369,6 +372,46 @@ namespace boilersGraphics.ViewModels
                       .AddTo(_CompositeDisposable);
 
             ResourceService.Current.ChangeCulture(CultureInfo.CurrentCulture.Name);
+        }
+
+        private static void ConfigureNLog()
+        {
+            var config = new NLog.Config.LoggingConfiguration();
+            NLog.Targets.FileTarget fileTarget = new NLog.Targets.FileTarget("fileTarget")
+            {
+                FileName = $"{Helpers.Path.GetRoamingDirectory()}\\dhq_boiler\\boilersGraphics\\Logs\\boilersGraphics.log",
+                ArchiveEvery = NLog.Targets.FileArchivePeriod.Day,
+                ArchiveFileName = $"{Helpers.Path.GetRoamingDirectory()}\\dhq_boiler\\boilersGraphics\\Logs\\boilersGraphics_{{#}}.log",
+                ArchiveNumbering = NLog.Targets.ArchiveNumberingMode.Date,
+                ArchiveDateFormat = "yyyy-MM-dd",
+                Encoding = Encoding.UTF8
+            };
+            config.AddTarget(fileTarget);
+            config.AddRule(NLog.LogLevel.Info, NLog.LogLevel.Fatal, fileTarget);
+            NLog.Targets.FileTarget fileErrTarget = new NLog.Targets.FileTarget("fileErrTarget")
+            {
+                FileName = $"{Helpers.Path.GetRoamingDirectory()}\\dhq_boiler\\boilersGraphics\\Logs\\boilersGraphics_error.log",
+                ArchiveEvery = NLog.Targets.FileArchivePeriod.Day,
+                ArchiveFileName = $"{Helpers.Path.GetRoamingDirectory()}\\dhq_boiler\\boilersGraphics\\Logs\\boilersGraphics_error_{{#}}.log",
+                ArchiveNumbering = NLog.Targets.ArchiveNumberingMode.Date,
+                ArchiveDateFormat = "yyyy-MM-dd",
+                Encoding = Encoding.UTF8
+            };
+            config.AddTarget(fileErrTarget);
+            config.AddRule(NLog.LogLevel.Error, NLog.LogLevel.Fatal, fileErrTarget);
+            NLog.Targets.ConsoleTarget consoleTarget = new NLog.Targets.ConsoleTarget("consoleTarget")
+            {
+                Layout = "${longdate}[${level}]${message}"
+            };
+            config.AddTarget(consoleTarget);
+            config.AddRule(NLog.LogLevel.Info, NLog.LogLevel.Fatal, consoleTarget);
+            NLog.Targets.DebuggerTarget debuggerTarget = new NLog.Targets.DebuggerTarget("debuggerTarget")
+            {
+                Layout = "${longdate}[${level}]${message}"
+            };
+            config.AddTarget(debuggerTarget);
+            config.AddRule(NLog.LogLevel.Info, NLog.LogLevel.Fatal, debuggerTarget);
+            NLog.LogManager.Configuration = config;
         }
 
         private DateTime? PickoutLatestPrivacyPolicyDateOfEnactment()
