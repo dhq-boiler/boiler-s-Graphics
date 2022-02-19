@@ -952,6 +952,15 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Clear canvas に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_ClearCanvas {
+            get {
+                return ResourceManager.GetString("MenuItem_ClearCanvas", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Set clip に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string MenuItem_Clip {

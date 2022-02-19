@@ -100,6 +100,7 @@ namespace boilersGraphics.ViewModels
         public DelegateCommand<System.Windows.Shapes.Path> MouseDownPolyBezierCommand { get; private set; }
         public DelegateCommand LoadedCommand { get; private set; }
         public DelegateCommand FitCanvasCommand { get; private set; }
+        public DelegateCommand ClearCanvasCommand { get; private set; }
 
         #region Property
 
@@ -443,13 +444,10 @@ namespace boilersGraphics.ViewModels
                     BackgroundItem.Value.Width.Value = Width;
                     BackgroundItem.Value.Height.Value = Height;
                 }, () => AllItems.Value.OfType<DesignerItemViewModelBase>().Except(new DesignerItemViewModelBase[] { BackgroundItem.Value }).Count() + AllItems.Value.OfType<ConnectorBaseViewModel>().Count() > 0);
-
-                //EdgeColors.CollectionChangedAsObservable()
-                //    .Subscribe(_ => RaisePropertyChanged("EdgeColors"))
-                //    .AddTo(_CompositeDisposable);
-                //FillColors.CollectionChangedAsObservable()
-                //    .Subscribe(_ => RaisePropertyChanged("FillColors"))
-                //    .AddTo(_CompositeDisposable);
+                ClearCanvasCommand = new DelegateCommand(() =>
+                {
+                    InitialSetting(mainWindowViewModel, true, false, false);
+                });
             }
 
             Layers = RootLayer.Value.Children.CollectionChangedAsObservable()
