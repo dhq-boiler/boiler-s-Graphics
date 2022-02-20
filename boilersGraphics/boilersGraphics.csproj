@@ -47,6 +47,7 @@
   <ItemGroup>
     <Resource Include="Assets\img\art-pallete.png" />
     <Resource Include="Assets\img\dropper.png" />
+    <Resource Include="Assets\img\minimap.png" />
     <Resource Include="Assets\img\poly_bezier.png" />
     <Resource Include="Assets\img\FoldingFan.png" />
     <Resource Include="Assets\img\rectangle.png" />
@@ -196,6 +197,7 @@
   <ItemGroup>
     <None Remove="Assets\img\art-pallete.png" />
     <None Remove="Assets\img\dropper.png" />
+    <None Remove="Assets\img\minimap.png" />
     <None Remove="Assets\img\poly_bezier.png" />
   </ItemGroup>
   <ItemGroup>

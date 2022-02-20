@@ -74,7 +74,8 @@ namespace boilersGraphics.ViewModels
 
             DiagramViewModel = new DiagramViewModel(this, this.dlgService, 1000, 1000);
             _CompositeDisposable.Add(DiagramViewModel);
-            ToolBarViewModel = new ToolBarViewModel(dialogService);
+            DiagramViewModel.EnableMiniMap.Value = true;
+            ToolBarViewModel = new ToolBarViewModel(dialogService, this);
 
             DiagramViewModel.EnableMiniMap.Value = true;
             DiagramViewModel.EnableBrushThickness.Value = true;
@@ -192,6 +193,7 @@ namespace boilersGraphics.ViewModels
             SwitchMiniMapCommand = new DelegateCommand(() =>
             {
                 DiagramViewModel.EnableMiniMap.Value = !DiagramViewModel.EnableMiniMap.Value;
+                ToolBarViewModel.ToolItems2.First(x => x.Name.Value == "minimap").IsChecked = DiagramViewModel.EnableMiniMap.Value;
             });
             SwitchBrushThicknessCommand = new DelegateCommand(() =>
             {
