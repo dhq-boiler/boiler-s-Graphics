@@ -29,7 +29,9 @@
     <Border BorderBrush="LightGray" BorderThickness="1">
         <Grid>
             <DockPanel>
-                <ToolBarTray DockPanel.Dock="Right" Orientation="Vertical">
+                <ToolBarTray x:Name="ToolItems2_Tray"
+                             DockPanel.Dock="Right"
+                             Orientation="Vertical">
                     <ToolBar ItemsSource="{Binding MainWindowVM.ToolBarViewModel.ToolItems2}">
                         <ToolBar.ItemTemplate>
                             <DataTemplate>
