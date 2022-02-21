@@ -484,7 +484,8 @@
                                             Visibility="{Binding EnableMiniMap.Value, Converter={StaticResource BoolToVisibilityConverter}}" />
                         <control:Combine x:Name="combine"
                                             Width="180"
-                                            Margin="0,5,25,0" />
+                                            Margin="0,5,25,0"
+                                            Visibility="{Binding EnableCombine.Value, Converter={StaticResource BoolToVisibilityConverter}}" />
                         <view:Layers x:Name="layers"
                                         Width="180"
                                         MaxHeight="350"

@@ -420,6 +420,9 @@
   <data name="MenuItem_Clip" xml:space="preserve">
     <value>クリップを設定</value>
   </data>
+  <data name="MenuItem_Combine" xml:space="preserve">
+    <value>結合</value>
+  </data>
   <data name="MenuItem_Copy" xml:space="preserve">
     <value>コピー(_C)</value>
   </data>

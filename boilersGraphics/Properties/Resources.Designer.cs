@@ -970,6 +970,15 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Combine に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_Combine {
+            get {
+                return ResourceManager.GetString("MenuItem_Combine", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Copy(_C) に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string MenuItem_Copy {

@@ -195,6 +195,11 @@ namespace boilersGraphics.ViewModels
                 DiagramViewModel.EnableMiniMap.Value = !DiagramViewModel.EnableMiniMap.Value;
                 ToolBarViewModel.ToolItems2.First(x => x.Name.Value == "minimap").IsChecked = DiagramViewModel.EnableMiniMap.Value;
             });
+            SwitchCombineCommand = new DelegateCommand(() =>
+            {
+                DiagramViewModel.EnableCombine.Value = !DiagramViewModel.EnableCombine.Value;
+                ToolBarViewModel.ToolItems2.First(x => x.Name.Value == "combine").IsChecked = DiagramViewModel.EnableCombine.Value;
+            });
             SwitchBrushThicknessCommand = new DelegateCommand(() =>
             {
                 DiagramViewModel.EnableBrushThickness.Value = !DiagramViewModel.EnableBrushThickness.Value;
@@ -600,6 +605,8 @@ namespace boilersGraphics.ViewModels
         public DelegateCommand ExitApplicationCommand { get; }
 
         public DelegateCommand SwitchMiniMapCommand { get; }
+
+        public DelegateCommand SwitchCombineCommand { get; }
 
         public DelegateCommand SwitchBrushThicknessCommand { get; }
 

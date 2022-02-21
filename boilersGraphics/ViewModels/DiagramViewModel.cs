@@ -120,6 +120,8 @@ namespace boilersGraphics.ViewModels
 
         public ReactivePropertySlim<bool> EnableMiniMap { get; } = new ReactivePropertySlim<bool>();
 
+        public ReactivePropertySlim<bool> EnableCombine { get; } = new ReactivePropertySlim<bool>();
+
         public ReactivePropertySlim<bool> EnableBrushThickness { get; } = new ReactivePropertySlim<bool>();
 
         public ReactivePropertySlim<string> FileName { get; } = new ReactivePropertySlim<string>();
@@ -591,6 +593,7 @@ namespace boilersGraphics.ViewModels
             AngleType.Value = Helpers.AngleType.Minus180To180;
             EnableImageEmbedding.Value = true;
             ColorSpots.Value = new ColorSpots();
+            EnableCombine.Value = true;
 
             SettingIfDebug();
         }
@@ -3139,6 +3142,7 @@ namespace boilersGraphics.ViewModels
                     SelectedItems.Dispose();
                     EdgeThickness.Dispose();
                     EnableMiniMap.Dispose();
+                    EnableCombine.Dispose();
                     FileName.Dispose();
                     CanvasBackground.Dispose();
                     EnablePointSnap.Dispose();

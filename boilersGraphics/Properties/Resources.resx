@@ -420,6 +420,9 @@
   <data name="MenuItem_Clip" xml:space="preserve">
     <value>Set clip</value>
   </data>
+  <data name="MenuItem_Combine" xml:space="preserve">
+    <value>Combine</value>
+  </data>
   <data name="MenuItem_Copy" xml:space="preserve">
     <value>Copy(_C)</value>
   </data>

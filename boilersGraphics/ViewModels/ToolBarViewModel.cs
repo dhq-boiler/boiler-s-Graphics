@@ -292,6 +292,12 @@ namespace boilersGraphics.ViewModels
             }));
             ToolItems2.Add(toolItemData);
             toolItemData.IsChecked = mainWindowViewModel.DiagramViewModel.EnableMiniMap.Value;
+            toolItemData = new ToolItemData("combine", "pack://application:,,,/Assets/img/icon_Combine_union.png", null, new DelegateCommand(() =>
+            {
+                mainWindowViewModel.DiagramViewModel.EnableCombine.Value = !mainWindowViewModel.DiagramViewModel.EnableCombine.Value;
+            }));
+            ToolItems2.Add(toolItemData);
+            toolItemData.IsChecked = mainWindowViewModel.DiagramViewModel.EnableCombine.Value;
         }
 
         public void FinalizeToolItems()

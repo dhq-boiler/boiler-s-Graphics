@@ -168,6 +168,9 @@
                                     <MenuItem Command="{Binding SwitchMiniMapCommand}"
                                               Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.MenuItem_MiniMap, Mode=OneWay}"
                                               IsChecked="{Binding DiagramViewModel.EnableMiniMap.Value, Mode=TwoWay}" />
+                                    <MenuItem Command="{Binding SwitchCombineCommand}"
+                                              Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.MenuItem_Combine, Mode=OneWay}"
+                                              IsChecked="{Binding DiagramViewModel.EnableCombine.Value, Mode=TwoWay}" />
                                     <MenuItem Command="{Binding SwitchBrushThicknessCommand}"
                                               Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.MenuItem_BrushThickness, Mode=OneWay}"
                                               IsChecked="{Binding DiagramViewModel.EnableBrushThickness.Value, Mode=TwoWay}" />
