@@ -489,10 +489,11 @@
                                             Margin="0,5,25,0"
                                             Visibility="{Binding EnableCombine.Value, Converter={StaticResource BoolToVisibilityConverter}}" />
                         <view:Layers x:Name="layers"
-                                        Width="180"
-                                        MaxHeight="350"
-                                        Margin="0,5,25,0"
-                                        ScrollViewer.VerticalScrollBarVisibility="Auto" />
+                                     Width="180"
+                                     MaxHeight="350"
+                                     Margin="0,5,25,0"
+                                     ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                     Visibility="{Binding DataContext.EnableLayers.Value, Converter={StaticResource BoolToVisibilityConverter}, RelativeSource={RelativeSource FindAncestor, AncestorType=local:DiagramControl}}"/>
                     </StackPanel>
                 </Grid>
             </DockPanel>

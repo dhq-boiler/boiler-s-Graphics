@@ -171,6 +171,9 @@
                                     <MenuItem Command="{Binding SwitchCombineCommand}"
                                               Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.MenuItem_Combine, Mode=OneWay}"
                                               IsChecked="{Binding DiagramViewModel.EnableCombine.Value, Mode=TwoWay}" />
+                                    <MenuItem Command="{Binding SwitchLayersCommand}"
+                                              Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.MenuItem_Layering, Mode=OneWay}"
+                                              IsChecked="{Binding DiagramViewModel.EnableLayers.Value, Mode=TwoWay}" />
                                     <MenuItem Command="{Binding SwitchBrushThicknessCommand}"
                                               Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.MenuItem_BrushThickness, Mode=OneWay}"
                                               IsChecked="{Binding DiagramViewModel.EnableBrushThickness.Value, Mode=TwoWay}" />

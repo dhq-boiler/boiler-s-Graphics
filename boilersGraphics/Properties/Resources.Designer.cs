@@ -1078,6 +1078,15 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Layering に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_Layering {
+            get {
+                return ResourceManager.GetString("MenuItem_Layering", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Log に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string MenuItem_Log {
@@ -1456,7 +1465,7 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
-        ///   Layer に類似しているローカライズされた文字列を検索します。
+        ///   Layering に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string PaneTitle_Layer {
             get {

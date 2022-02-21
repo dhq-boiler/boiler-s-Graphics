@@ -456,6 +456,9 @@
   <data name="MenuItem_Language" xml:space="preserve">
     <value>Language</value>
   </data>
+  <data name="MenuItem_Layering" xml:space="preserve">
+    <value>Layering</value>
+  </data>
   <data name="MenuItem_Log" xml:space="preserve">
     <value>Log</value>
   </data>
@@ -565,7 +568,7 @@
     <value>Combine</value>
   </data>
   <data name="PaneTitle_Layer" xml:space="preserve">
-    <value>Layer</value>
+    <value>Layering</value>
   </data>
   <data name="Pane_Combine_Exclude" xml:space="preserve">
     <value>Exclude</value>
