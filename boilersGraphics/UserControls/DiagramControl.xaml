@@ -395,86 +395,25 @@
                             </ItemsControl.ItemsPanel>
                         </ItemsControl>
                         <ScrollViewer.ContextMenu>
-                            <ContextMenu Visibility="{Binding ContextMenuVisibility.Value}">
-                                <MenuItem Command="{Binding PropertyCommand}" Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.MenuItem_Property, Mode=OneWay}" />
-                                <MenuItem Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Grouping, Mode=OneWay}">
-                                    <MenuItem Command="{Binding GroupCommand}" Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Command_Group, Mode=OneWay}">
-                                        <MenuItem.Icon>
-                                            <Image Source="{StaticResource Icon_Group}" />
-                                        </MenuItem.Icon>
-                                    </MenuItem>
-                                    <MenuItem Command="{Binding UngroupCommand}" Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Command_Ungroup, Mode=OneWay}">
-                                        <MenuItem.Icon>
-                                            <Image Source="{StaticResource Icon_Ungroup}" />
-                                        </MenuItem.Icon>
-                                    </MenuItem>
-                                </MenuItem>
-                                <MenuItem Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Ordering, Mode=OneWay}">
-                                    <MenuItem Command="{Binding BringForegroundCommand}" Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Command_BringForeground, Mode=OneWay}">
-                                        <MenuItem.Icon>
-                                            <Image Source="{StaticResource Icon_BringToFront}" />
-                                        </MenuItem.Icon>
-                                    </MenuItem>
-                                    <MenuItem Command="{Binding BringForwardCommand}" Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Command_BringForward, Mode=OneWay}">
-                                        <MenuItem.Icon>
-                                            <Image Source="{StaticResource Icon_BringForward}" />
-                                        </MenuItem.Icon>
-                                    </MenuItem>
-                                    <MenuItem Command="{Binding SendBackwardCommand}" Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Command_SendBackward, Mode=OneWay}">
-                                        <MenuItem.Icon>
-                                            <Image Source="{StaticResource Icon_SendBackward}" />
-                                        </MenuItem.Icon>
-                                    </MenuItem>
-                                    <MenuItem Command="{Binding SendBackgroundCommand}" Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Command_SendBackground, Mode=OneWay}">
-                                        <MenuItem.Icon>
-                                            <Image Source="{StaticResource Icon_SendToBack}" />
-                                        </MenuItem.Icon>
-                                    </MenuItem>
-                                </MenuItem>
-                                <MenuItem Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Alignment, Mode=OneWay}">
-                                    <MenuItem Command="{Binding AlignTopCommand}" Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Command_AlignTop, Mode=OneWay}">
-                                        <MenuItem.Icon>
-                                            <Image Source="{StaticResource Icon_AlignTop}" />
-                                        </MenuItem.Icon>
-                                    </MenuItem>
-                                    <MenuItem Command="{Binding AlignVerticalCenterCommand}" Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Command_AlignVerticalCenter, Mode=OneWay}">
-                                        <MenuItem.Icon>
-                                            <Image Source="{StaticResource Icon_AlignCenteredVertical}" />
-                                        </MenuItem.Icon>
-                                    </MenuItem>
-                                    <MenuItem Command="{Binding AlignBottomCommand}" Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Command_AlignBottom, Mode=OneWay}">
-                                        <MenuItem.Icon>
-                                            <Image Source="{StaticResource Icon_AlignBottom}" />
-                                        </MenuItem.Icon>
-                                    </MenuItem>
-                                    <Separator />
-                                    <MenuItem Command="{Binding AlignLeftCommand}" Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Command_AlignLeft, Mode=OneWay}">
-                                        <MenuItem.Icon>
-                                            <Image Source="{StaticResource Icon_AlignLeft}" />
-                                        </MenuItem.Icon>
-                                    </MenuItem>
-                                    <MenuItem Command="{Binding AlignHorizontalCenterCommand}" Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Command_AlignHorizontalCenter, Mode=OneWay}">
-                                        <MenuItem.Icon>
-                                            <Image Source="{StaticResource Icon_AlignCenteredHorizontal}" />
-                                        </MenuItem.Icon>
-                                    </MenuItem>
-                                    <MenuItem Command="{Binding AlignRightCommand}" Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Command_AlignRight, Mode=OneWay}">
-                                        <MenuItem.Icon>
-                                            <Image Source="{StaticResource Icon_AlignRight}" />
-                                        </MenuItem.Icon>
-                                    </MenuItem>
-                                    <Separator />
-                                    <MenuItem Command="{Binding DistributeHorizontalCommand}" Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Command_DistributeHorizontal, Mode=OneWay}">
-                                        <MenuItem.Icon>
-                                            <Image Source="{StaticResource Icon_DistributeHorizontal}" />
-                                        </MenuItem.Icon>
-                                    </MenuItem>
-                                    <MenuItem Command="{Binding DistributeVerticalCommand}" Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Command_DistributeVertical, Mode=OneWay}">
-                                        <MenuItem.Icon>
-                                            <Image Source="{StaticResource Icon_DistributeVertical}" />
-                                        </MenuItem.Icon>
-                                    </MenuItem>
-                                </MenuItem>
+                            <ContextMenu Visibility="{Binding ContextMenuVisibility.Value}"
+                                         ItemsSource="{Binding ContextMenuItems}">
+                                <ContextMenu.ItemContainerStyle>
+                                    <Style TargetType="MenuItem">
+                                        <Setter Property="Header" Value="{Binding Path=DisplayName}"/>
+                                        <Setter Property="Command" Value="{Binding Path=Command}"/>
+                                    </Style>
+                                </ContextMenu.ItemContainerStyle>
+                                <ContextMenu.Style>
+                                    <Style TargetType="ContextMenu">
+                                        <Setter Property="ItemsPanel">
+                                            <Setter.Value>
+                                                <ItemsPanelTemplate>
+                                                    <VirtualizingStackPanel Orientation="Vertical" />
+                                                </ItemsPanelTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </ContextMenu.Style>
                             </ContextMenu>
                         </ScrollViewer.ContextMenu>
                     </ScrollViewer>

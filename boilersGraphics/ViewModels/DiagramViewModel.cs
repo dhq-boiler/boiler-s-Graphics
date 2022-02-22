@@ -153,6 +153,8 @@ namespace boilersGraphics.ViewModels
         public ReactivePropertySlim<Brush> EdgeBrush { get; } = new ReactivePropertySlim<Brush>();
         public ReactivePropertySlim<Brush> FillBrush { get; } = new ReactivePropertySlim<Brush>();
 
+        public ReactiveCollection<MenuItem> ContextMenuItems { get; } = new ReactiveCollection<MenuItem>();
+
         public int Width
         {
             get { return _Width; }
@@ -539,6 +541,7 @@ namespace boilersGraphics.ViewModels
                     ExcludeCommand.RaiseCanExecuteChanged();
 
                     PropertyCommand.RaiseCanExecuteChanged();
+                    ReallocateContextMenuItems();
                 })
                 .AddTo(_CompositeDisposable);
 
@@ -599,6 +602,116 @@ namespace boilersGraphics.ViewModels
             EnableLayers.Value = true;
 
             SettingIfDebug();
+        }
+
+        private void ReallocateContextMenuItems()
+        {
+            var diagramControl = App.Current.MainWindow.GetCorrespondingViews<DiagramControl>(this).FirstOrDefault();
+            ContextMenuItems.Clear();
+            ContextMenuItems.Add(new MenuItem()
+            {
+                Command = PropertyCommand,
+                Header = Resources.MenuItem_Property
+            });
+            var grouping = new MenuItem()
+            {
+                Header = Resources.Grouping
+            };
+            grouping.Items.Add(new MenuItem()
+            {
+                Header = Resources.Command_Group,
+                Command = GroupCommand,
+                Icon = new Image() { Source = diagramControl != null ? (ImageSource)diagramControl.FindResource("Icon_Group") : null }
+            });
+            grouping.Items.Add(new MenuItem()
+            {
+                Header = Resources.Command_Ungroup,
+                Command = UngroupCommand,
+                Icon = new Image() { Source = diagramControl != null ? (ImageSource)diagramControl.FindResource("Icon_Ungroup") : null }
+            });
+            ContextMenuItems.Add(grouping);
+            var ordering = new MenuItem()
+            {
+                Header = Resources.Ordering
+            };
+            ordering.Items.Add(new MenuItem()
+            {
+                Header = Resources.Command_BringForeground,
+                Command = BringForegroundCommand,
+                Icon = new Image() { Source = diagramControl != null ? (ImageSource)diagramControl.FindResource("Icon_BringToFront") : null }
+            });
+            ordering.Items.Add(new MenuItem()
+            {
+                Header = Resources.Command_BringForward,
+                Command = BringForwardCommand,
+                Icon = new Image() { Source = diagramControl != null ? (ImageSource)diagramControl.FindResource("Icon_BringForward") : null }
+            });
+            ordering.Items.Add(new MenuItem()
+            {
+                Header = Resources.Command_SendBackward,
+                Command = SendBackwardCommand,
+                Icon = new Image() { Source = diagramControl != null ? (ImageSource)diagramControl.FindResource("Icon_SendBackward") : null }
+            });
+            ordering.Items.Add(new MenuItem()
+            {
+                Header = Resources.Command_SendBackground,
+                Command = SendBackgroundCommand,
+                Icon = new Image() { Source = diagramControl != null ? (ImageSource)diagramControl.FindResource("Icon_SendToBack") : null }
+            });
+            ContextMenuItems.Add(ordering);
+            var alignment = new MenuItem()
+            {
+                Header = Resources.Alignment
+            };
+            alignment.Items.Add(new MenuItem()
+            {
+                Header = Resources.Command_AlignTop,
+                Command = AlignTopCommand,
+                Icon = new Image() { Source = diagramControl != null ? (ImageSource)diagramControl.FindResource("Icon_AlignTop") : null }
+            });
+            alignment.Items.Add(new MenuItem()
+            {
+                Header = Resources.Command_AlignVerticalCenter,
+                Command = AlignVerticalCenterCommand,
+                Icon = new Image() { Source = diagramControl != null ? (ImageSource)diagramControl.FindResource("Icon_AlignCenteredVertical") : null }
+            });
+            alignment.Items.Add(new MenuItem()
+            {
+                Header = Resources.Command_AlignBottom,
+                Command = AlignBottomCommand,
+                Icon = new Image() { Source = diagramControl != null ? (ImageSource)diagramControl.FindResource("Icon_AlignBottom") : null }
+            });
+            alignment.Items.Add(new MenuItem()
+            {
+                Header = Resources.Command_AlignLeft,
+                Command = AlignLeftCommand,
+                Icon = new Image() { Source = diagramControl != null ? (ImageSource)diagramControl.FindResource("Icon_AlignLeft") : null }
+            });
+            alignment.Items.Add(new MenuItem()
+            {
+                Header = Resources.Command_AlignHorizontalCenter,
+                Command = AlignHorizontalCenterCommand,
+                Icon = new Image() { Source = diagramControl != null ? (ImageSource)diagramControl.FindResource("Icon_AlignCenteredHorizontal") : null }
+            });
+            alignment.Items.Add(new MenuItem()
+            {
+                Header = Resources.Command_AlignRight,
+                Command = AlignRightCommand,
+                Icon = new Image() { Source = diagramControl != null ? (ImageSource)diagramControl.FindResource("Icon_AlignRight") : null }
+            });
+            alignment.Items.Add(new MenuItem()
+            {
+                Header = Resources.Command_DistributeHorizontal,
+                Command = DistributeHorizontalCommand,
+                Icon = new Image() { Source = diagramControl != null ? (ImageSource)diagramControl.FindResource("Icon_DistributeHorizontal") : null }
+            });
+            alignment.Items.Add(new MenuItem()
+            {
+                Header = Resources.Command_DistributeVertical,
+                Command = DistributeVerticalCommand,
+                Icon = new Image() { Source = diagramControl != null ? (ImageSource)diagramControl.FindResource("Icon_DistributeVertical") : null }
+            });
+            ContextMenuItems.Add(alignment);
         }
 
         [Conditional("DEBUG")]
