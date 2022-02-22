@@ -4,17 +4,40 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace boilersGraphics.Extensions
 {
     public static class Extensions
     {
+        public static void Save(this BitmapSource bitmap, string filename)
+        {
+            using (FileStream stream5 = new FileStream(filename, FileMode.Create))
+            {
+                PngBitmapEncoder encoder5 = new PngBitmapEncoder();
+                encoder5.Frames.Add(BitmapFrame.Create(bitmap));
+                encoder5.Save(stream5);
+            }
+        }
+
+        public static void Save(this BitmapImage image, string filename)
+        {
+            BitmapEncoder encoder = new PngBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(image));
+
+            using (var fileStream = new System.IO.FileStream(filename, System.IO.FileMode.Create))
+            {
+                encoder.Save(fileStream);
+            }
+        }
+
         /*
          * https://stackoverflow.com/questions/10279092/how-to-get-children-of-a-wpf-container-by-type
          */

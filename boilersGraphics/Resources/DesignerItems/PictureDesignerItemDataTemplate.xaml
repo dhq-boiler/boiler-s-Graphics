@@ -9,7 +9,7 @@
         <Border BorderBrush="{Binding EdgeBrush.Value}" BorderThickness="{Binding EdgeThickness.Value}">
             <Image Clip="{Binding Clip.Value}"
                    IsHitTestVisible="False"
-                   Source="{Binding Converter={StaticResource ToFileNameOrBitmapImage}}"
+                   Source="{Binding Converter={StaticResource ToFileNameOrBitmapImage}, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
                    Stretch="Fill"
                    Tag="picture" />
         </Border>

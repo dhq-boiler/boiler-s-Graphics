@@ -9,6 +9,7 @@ using boilersGraphics.UserControls;
 using boilersGraphics.Views;
 using Microsoft.Win32;
 using NLog;
+using OpenCvSharp.WpfExtensions;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
@@ -23,6 +24,7 @@ using System.IO;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -101,6 +103,7 @@ namespace boilersGraphics.ViewModels
         public DelegateCommand LoadedCommand { get; private set; }
         public DelegateCommand FitCanvasCommand { get; private set; }
         public DelegateCommand ClearCanvasCommand { get; private set; }
+        public DelegateCommand VectorImagingCommand { get; private set; }
 
         #region Property
 
@@ -454,6 +457,30 @@ namespace boilersGraphics.ViewModels
                 {
                     InitialSetting(mainWindowViewModel, true, false, false);
                 });
+                VectorImagingCommand = new DelegateCommand(() =>
+                {
+                    var selectedItem = SelectedItems.Value.First() as PictureDesignerItemViewModel;
+                    using (OpenCvSharp.Mat target = EnableImageEmbedding.Value ? selectedItem.EmbeddedImage.Value.ToMat() : new OpenCvSharp.Mat(selectedItem.FileName))
+                    using (OpenCvSharp.Mat output = new OpenCvSharp.Mat())
+                    {
+                        const int MAX_CLUSTERS = 32;
+                        Kmeans(target, output, MAX_CLUSTERS);
+                        Remove(selectedItem);
+                        var newpic = new PictureDesignerItemViewModel();
+                        newpic.Left.Value = selectedItem.Left.Value;
+                        newpic.Top.Value = selectedItem.Top.Value;
+                        newpic.Width.Value = selectedItem.Width.Value;
+                        newpic.Height.Value = selectedItem.Height.Value;
+                        SetAlpha255(output);
+                        newpic.EmbeddedImage.Value = ConvertWriteableBitmapToBitmapImage(output.ToWriteableBitmap(96, 96, PixelFormats.Pbgra32, null));
+                        newpic.Owner = this;
+                        newpic.ZIndex.Value = Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).Count();
+                        newpic.IsVisible.Value = true;
+                        newpic.FileWidth = selectedItem.Width.Value;
+                        newpic.FileHeight = selectedItem.Height.Value;
+                        ExecuteAddItemCommand(newpic);
+                    }
+                });
             }
 
             Layers = RootLayer.Value.Children.CollectionChangedAsObservable()
@@ -604,6 +631,111 @@ namespace boilersGraphics.ViewModels
             SettingIfDebug();
         }
 
+        private unsafe void SetAlpha255(OpenCvSharp.Mat output)
+        {
+            for (int y = 0; y < output.Height; y++)
+            {
+                byte* p = (byte*)output.Ptr(y);
+                for (int x = 0; x < output.Width; x++)
+                {
+                    *(p + x * 4 + 3) = 255;
+                }
+            }
+        }
+
+        public BitmapImage ConvertWriteableBitmapToBitmapImage(WriteableBitmap wbm)
+        {
+            BitmapImage bmImage = new BitmapImage();
+            using (MemoryStream stream = new MemoryStream())
+            {
+                PngBitmapEncoder encoder = new PngBitmapEncoder();
+                encoder.Frames.Add(BitmapFrame.Create(wbm));
+                encoder.Save(stream);
+                bmImage.BeginInit();
+                bmImage.CacheOption = BitmapCacheOption.OnLoad;
+                bmImage.StreamSource = stream;
+                bmImage.EndInit();
+                bmImage.Freeze();
+            }
+            return bmImage;
+        }
+
+        /// <summary>
+        /// Color Quantization using K-Means Clustering in OpenCVSharp.
+        /// The process of Color Quantization is used for reducing the number of colors in an image.
+        /// </summary>
+        /// <param name="input">Input image.</param>
+        /// <param name="output">Output image applying the number of colors defined for required clusters.</param>
+        /// <param name="k">Number of clusters required.</param>
+        public static void Kmeans(OpenCvSharp.Mat input, OpenCvSharp.Mat output, int k)
+        {
+            using (OpenCvSharp.Mat points = new OpenCvSharp.Mat())
+            {
+                using (OpenCvSharp.Mat labels = new OpenCvSharp.Mat())
+                {
+                    using (OpenCvSharp.Mat centers = new OpenCvSharp.Mat())
+                    {
+                        int width = input.Cols;
+                        int height = input.Rows;
+
+                        points.Create(width * height, 1, OpenCvSharp.MatType.CV_32FC3);
+                        centers.Create(k, 1, points.Type());
+                        output.Create(height, width, input.Type());
+
+                        // Input Image Data
+                        Parallel.For(0, height, y =>
+                        {
+                            for (int x = 0; x < width; x++)
+                            {
+                                var i = y * width + x;
+                                OpenCvSharp.Vec3f vec3f = new OpenCvSharp.Vec3f
+                                {
+                                    Item0 = input.At<OpenCvSharp.Vec3b>(y, x).Item0,
+                                    Item1 = input.At<OpenCvSharp.Vec3b>(y, x).Item1,
+                                    Item2 = input.At<OpenCvSharp.Vec3b>(y, x).Item2
+                                };
+                                points.Set<OpenCvSharp.Vec3f>(i, vec3f);
+                            }
+                        });
+
+                        // Criteria:
+                        // – Stop the algorithm iteration if specified accuracy, epsilon, is reached.
+                        // – Stop the algorithm after the specified number of iterations, MaxIter.
+                        var criteria = new OpenCvSharp.TermCriteria(type: OpenCvSharp.CriteriaTypes.Eps | OpenCvSharp.CriteriaTypes.MaxIter, maxCount: 10, epsilon: 1.0);
+
+                        // Finds centers of clusters and groups input samples around the clusters.
+                        OpenCvSharp.Cv2.Kmeans(data: points, k: k, bestLabels: labels, criteria: criteria, attempts: 3, flags: OpenCvSharp.KMeansFlags.PpCenters, centers: centers);
+
+                        // Output Image Data
+                        Parallel.For(0, height, y =>
+                        {
+                            for (int x = 0; x < width; x++)
+                            {
+                                var i = y * width + x;
+                                int index = labels.Get<int>(i);
+
+                                OpenCvSharp.Vec3b vec3b = new OpenCvSharp.Vec3b();
+
+                                int firstComponent = Convert.ToInt32(Math.Round(centers.At<OpenCvSharp.Vec3f>(index).Item0));
+                                firstComponent = firstComponent > 255 ? 255 : firstComponent < 0 ? 0 : firstComponent;
+                                vec3b.Item0 = Convert.ToByte(firstComponent);
+
+                                int secondComponent = Convert.ToInt32(Math.Round(centers.At<OpenCvSharp.Vec3f>(index).Item1));
+                                secondComponent = secondComponent > 255 ? 255 : secondComponent < 0 ? 0 : secondComponent;
+                                vec3b.Item1 = Convert.ToByte(secondComponent);
+
+                                int thirdComponent = Convert.ToInt32(Math.Round(centers.At<OpenCvSharp.Vec3f>(index).Item2));
+                                thirdComponent = thirdComponent > 255 ? 255 : thirdComponent < 0 ? 0 : thirdComponent;
+                                vec3b.Item2 = Convert.ToByte(thirdComponent);
+
+                                output.Set<OpenCvSharp.Vec3b>(y, x, vec3b);
+                            }
+                        });
+                    }
+                }
+            }
+        }
+
         private void ReallocateContextMenuItems()
         {
             var diagramControl = App.Current.MainWindow.GetCorrespondingViews<DiagramControl>(this).FirstOrDefault();
@@ -613,6 +745,14 @@ namespace boilersGraphics.ViewModels
                 Command = PropertyCommand,
                 Header = Resources.MenuItem_Property
             });
+            if (SelectedItems.Value.Count() > 0 && SelectedItems.Value.First() is PictureDesignerItemViewModel)
+            {
+                ContextMenuItems.Add(new MenuItem()
+                {
+                    Command = VectorImagingCommand,
+                    Header = "ベクター画像に変換"
+                });
+            }
             var grouping = new MenuItem()
             {
                 Header = Resources.Grouping
