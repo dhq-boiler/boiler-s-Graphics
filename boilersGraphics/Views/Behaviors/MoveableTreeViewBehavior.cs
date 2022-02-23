@@ -8,6 +8,7 @@ using NLog;
 using Reactive.Bindings;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows;
@@ -177,7 +178,7 @@ namespace boilersGraphics.Views.Behaviors
             var sourceItemParent = sourceItem.Parent.Value;
             var targetItemParent = targetItem.Parent.Value;
             var diagramVM = (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel;
-            ReactiveCollection<LayerTreeViewItemBase> children = sourceItemParent.Children;
+            ObservableCollection<LayerTreeViewItemBase> children = sourceItemParent.Children;
             if (sourceItemParent == diagramVM.RootLayer.Value)
             {
                 children = diagramVM.Layers;

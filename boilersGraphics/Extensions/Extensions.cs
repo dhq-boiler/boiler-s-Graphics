@@ -1,12 +1,14 @@
 using boilersGraphics.Models;
 using boilersGraphics.ViewModels;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -593,14 +595,21 @@ namespace boilersGraphics.Extensions
         //https://stackoverflow.com/questions/41608665/linq-recursive-parent-child
         public static IEnumerable<T2> SelectRecursive<T1, T2>(this IEnumerable<T1> source, Func<T2, IEnumerable<T2>> selector) where T1 : class where T2 : class
         {
-            foreach (var parent in source)
+            var ret = new ConcurrentBag<T2>();
+            Parallel.For(0, source.Count(), i =>
             {
-                yield return parent as T2;
+                var parent = source.ElementAt(i);
+                ret.Add(parent as T2);
 
                 var children = selector(parent as T2);
-                foreach (var child in SelectRecursive(children, selector))
-                    yield return child;
-            }
+                var c = SelectRecursive(children, selector);
+                for (int j = 0; j < c.Count(); j++)
+                {
+                    var child = c.ElementAt(j);
+                    ret.Add(child);
+                }
+            });
+            return ret;
         }
 
         public static bool HasAsAncestor(this LayerTreeViewItemBase layerItem, LayerTreeViewItemBase ancestor)

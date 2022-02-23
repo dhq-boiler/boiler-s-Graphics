@@ -161,6 +161,7 @@ namespace boilersGraphics.Helpers
                         oneIntersection = intersection;
                         beginI = i;
                         endJ = j;
+                        return;
                     }
                 }
             }

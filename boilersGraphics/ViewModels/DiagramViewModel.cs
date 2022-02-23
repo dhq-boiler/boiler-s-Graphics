@@ -16,6 +16,7 @@ using Prism.Services.Dialogs;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -109,13 +110,13 @@ namespace boilersGraphics.ViewModels
 
         public ReactivePropertySlim<LayerTreeViewItemBase> RootLayer { get; set; } = new ReactivePropertySlim<LayerTreeViewItemBase>(new LayerTreeViewItemBase());
 
-        public ReactiveCollection<LayerTreeViewItemBase> Layers { get; }
+        public ReactiveCollection<LayerTreeViewItemBase> Layers { get; set; }
 
-        public ReadOnlyReactivePropertySlim<LayerTreeViewItemBase[]> SelectedLayers { get; }
+        public ReadOnlyReactivePropertySlim<LayerTreeViewItemBase[]> SelectedLayers { get; set; }
 
-        public ReadOnlyReactivePropertySlim<SelectableDesignerItemViewModelBase[]> AllItems { get; }
+        public ReadOnlyReactivePropertySlim<SelectableDesignerItemViewModelBase[]> AllItems { get; set; }
 
-        public ReadOnlyReactivePropertySlim<SelectableDesignerItemViewModelBase[]> SelectedItems { get; }
+        public ReadOnlyReactivePropertySlim<SelectableDesignerItemViewModelBase[]> SelectedItems { get; set; }
 
         public ReactivePropertySlim<BackgroundViewModel> BackgroundItem { get; } = new ReactivePropertySlim<BackgroundViewModel>();
 
@@ -460,136 +461,95 @@ namespace boilersGraphics.ViewModels
                 VectorImagingCommand = new DelegateCommand(() =>
                 {
                     var selectedItem = SelectedItems.Value.First() as PictureDesignerItemViewModel;
+                    Remove(selectedItem);
                     using (OpenCvSharp.Mat target = EnableImageEmbedding.Value ? selectedItem.EmbeddedImage.Value.ToMat() : new OpenCvSharp.Mat(selectedItem.FileName))
                     using (OpenCvSharp.Mat output = new OpenCvSharp.Mat())
                     {
-                        const int MAX_CLUSTERS = 32;
-                        Kmeans(target, output, MAX_CLUSTERS);
-                        Remove(selectedItem);
-                        var newpic = new PictureDesignerItemViewModel();
-                        newpic.Left.Value = selectedItem.Left.Value;
-                        newpic.Top.Value = selectedItem.Top.Value;
-                        newpic.Width.Value = selectedItem.Width.Value;
-                        newpic.Height.Value = selectedItem.Height.Value;
+                        const int MAX_CLUSTERS = 8;
+                        Kmeans(target, output, MAX_CLUSTERS, out var sets);
                         SetAlpha255(output);
-                        newpic.EmbeddedImage.Value = ConvertWriteableBitmapToBitmapImage(output.ToWriteableBitmap(96, 96, PixelFormats.Pbgra32, null));
-                        newpic.Owner = this;
-                        newpic.ZIndex.Value = Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).Count();
-                        newpic.IsVisible.Value = true;
-                        newpic.FileWidth = selectedItem.Width.Value;
-                        newpic.FileHeight = selectedItem.Height.Value;
-                        ExecuteAddItemCommand(newpic);
+                        var bag = new ConcurrentBag<SelectableDesignerItemViewModelBase>();
+                        ParallelOptions options = new ParallelOptions();
+                        options.MaxDegreeOfParallelism = Environment.ProcessorCount;
+                        Parallel.For(0, sets.Count(), options, i =>
+                        //for (int i = 0; i < sets.Count(); ++i)
+                        {
+                            Stopwatch sw = Stopwatch.StartNew();
+                            Debug.WriteLine($"{i} / {sets.Count()} BEGIN PROCESS");
+                            var color = sets.ElementAt(i);
+                            //extract
+                            var extracted = ExtractColor(output, color);
+                            //grayscale
+                            using (var grayscaled = new OpenCvSharp.Mat())
+                            {
+                                OpenCvSharp.Cv2.CvtColor(extracted, grayscaled, OpenCvSharp.ColorConversionCodes.BGRA2GRAY);
+                                //threshold
+                                using (var thresholded = new OpenCvSharp.Mat())
+                                {
+                                    OpenCvSharp.Cv2.Threshold(grayscaled, thresholded, 128, 255, OpenCvSharp.ThresholdTypes.Otsu);
+                                    //OpenCvSharp.Cv2.ImShow("TEST", thresholded);
+                                    //findcontours
+                                    OpenCvSharp.Cv2.FindContours(thresholded, out var contours, out var hierarchy, OpenCvSharp.RetrievalModes.List, OpenCvSharp.ContourApproximationModes.ApproxNone);
+                                    //Parallel.For(0, contours.Count(), j =>
+                                    for (int j = 0; j < contours.Count(); ++j)
+                                    {
+                                        Stopwatch sw1 = Stopwatch.StartNew();
+                                        Debug.WriteLine($"{i} {j}/{contours.Count()} BEGIN");
+                                        var array = contours[j];
+                                        var polyBezier = new PolyBezierViewModel();
+                                        polyBezier.Owner = this;
+                                        for (int k = 0; k < array.Count(); k++)
+                                        {
+                                            var contour = array[k];
+                                            polyBezier.Points.Add(new Point(contour.X, contour.Y));
+                                        }
+                                        //polyBezier.Points.AddRange(array.Select(p => new Point(p.X, p.Y)));
+                                        polyBezier.EdgeBrush.Value = Brushes.Transparent;
+                                        polyBezier.EdgeThickness.Value = 0;
+                                        polyBezier.LeftTop.Value = new Point(polyBezier.Points.Select(x => x.X).Min() - polyBezier.Owner.EdgeThickness.Value.Value / 2, polyBezier.Points.Select(x => x.Y).Min() - polyBezier.Owner.EdgeThickness.Value.Value / 2);
+                                        polyBezier.ZIndex.Value = Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).Count();
+                                        polyBezier.IsSelected.Value = true;
+                                        polyBezier.IsVisible.Value = true;
+                                        var union = Combine(GeometryCombineMode.Union, polyBezier);
+                                        var fillbrush = new SolidColorBrush(Color.FromRgb(color.Item2, color.Item1, color.Item0));
+                                        fillbrush.Freeze();
+                                        union.FillBrush.Value = fillbrush;
+                                        union.IsSelected.Value = false;
+                                        union.PathGeometry.Value.Freeze();
+                                        bag.Add(union);
+                                        sw1.Stop();
+                                        Debug.WriteLine($"{i} {j}/{contours.Count()} END {sw1.ElapsedMilliseconds}ms");
+                                    }
+                                }
+                            }
+                            sw.Stop();
+                            Debug.WriteLine($"{i} / {sets.Count()} end process {sw.ElapsedMilliseconds}ms");
+                        });
+                        List<LayerTreeViewItemBase> l = new List<LayerTreeViewItemBase>();
+                        while (bag.TryTake(out var item))
+                        {
+                            Stopwatch sw = Stopwatch.StartNew();
+                            Debug.WriteLine($"adding item. remain:{bag.Count()}");
+                            var i = new LayerItem(item.Clone() as SelectableDesignerItemViewModelBase, SelectedLayers.Value.First(), Name.GetNewLayerItemName(this));
+                            i.Color.Value = Randomizer.RandomColor(new Random());
+                            i.IsSelected.Value = false;
+                            l.Add(i);
+                            sw.Stop();
+                            Debug.WriteLine($"added item. {sw.ElapsedMilliseconds}ms");
+                        }
+                        DisposeProperties();
+                        InitializeProperties(false);
+                        AddNewLayer(mainWindowViewModel, false);
+                        var firstSelectedLayer = SelectedLayers.Value.First();
+                        firstSelectedLayer.Children = new ObservableCollection<LayerTreeViewItemBase>(l);
+                        SetSubscribes(false);
                     }
                 });
             }
 
-            Layers = RootLayer.Value.Children.CollectionChangedAsObservable()
-                            .Select(_ => RootLayer.Value.LayerChangedAsObservable())
-                            .Switch()
-                            .SelectMany(_ => RootLayer.Value.Children)
-                            .ToReactiveCollection();
-
-            AllItems = Layers.CollectionChangedAsObservable()
-                                .Select(_ => Layers.Select(x => x.LayerItemsChangedAsObservable()).Merge()
-                                .Merge(this.ObserveProperty(y => y.BackgroundItem.Value).ToUnit()))
-                                .Switch()
-                                .Select(_ => Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
-                                                .Where(x => x.GetType() == typeof(LayerItem))
-                                                .Select(y => (y as LayerItem).Item.Value)
-                                                .Union(new SelectableDesignerItemViewModelBase[] { BackgroundItem.Value })
-                                                .ToArray())
-                                .ToReadOnlyReactivePropertySlim(Array.Empty<SelectableDesignerItemViewModelBase>());
-
-            if (!isPreview)
-            {
-                AllItems.Subscribe(x =>
-                {
-                    FitCanvasCommand.RaiseCanExecuteChanged();
-                    LogManager.GetCurrentClassLogger().Trace($"{x.Length} items in AllItems.");
-                    LogManager.GetCurrentClassLogger().Trace(string.Join(", ", x.Select(y => y?.ToString() ?? "null")));
-                })
-                .AddTo(_CompositeDisposable);
-
-                SelectedItems = Layers
-                    .CollectionChangedAsObservable()
-                    .Select(_ =>
-                        Layers
-                            .Select(x => x.SelectedLayerItemsChangedAsObservable())
-                            .Merge()
-                    )
-                    .Switch()
-                    .Do(x => LogManager.GetCurrentClassLogger().Debug("SelectedItems updated"))
-                    .Select(_ => Layers
-                        .SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
-                        .OfType<LayerItem>()
-                        .Select(y => y.Item.Value)
-                        .Except(Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
-                            .OfType<LayerItem>()
-                            .Select(y => y.Item.Value)
-                            .OfType<ConnectorBaseViewModel>())
-                        .Union(Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
-                            .OfType<LayerItem>()
-                            .Select(y => y.Item.Value)
-                            .OfType<ConnectorBaseViewModel>()
-                            .SelectMany(x => new[] { x.SnapPoint0VM.Value, x.SnapPoint1VM.Value })
-                            .Where(y => y.IsSelected.Value == true)
-                        )
-                        .Where(z => z.IsSelected.Value == true)
-                        .OrderBy(z => z.SelectedOrder.Value)
-                        .ToArray()
-                    ).ToReadOnlyReactivePropertySlim(Array.Empty<SelectableDesignerItemViewModelBase>());
-
-                SelectedItems.Subscribe(selectedItems =>
-                {
-                    LogManager.GetCurrentClassLogger().Debug($"SelectedItems changed {string.Join(", ", selectedItems.Select(x => x?.ToString() ?? "null"))}");
-
-                    GroupCommand.RaiseCanExecuteChanged();
-                    UngroupCommand.RaiseCanExecuteChanged();
-                    BringForwardCommand.RaiseCanExecuteChanged();
-                    SendBackwardCommand.RaiseCanExecuteChanged();
-                    BringForegroundCommand.RaiseCanExecuteChanged();
-                    SendBackgroundCommand.RaiseCanExecuteChanged();
-
-                    AlignTopCommand.RaiseCanExecuteChanged();
-                    AlignVerticalCenterCommand.RaiseCanExecuteChanged();
-                    AlignBottomCommand.RaiseCanExecuteChanged();
-                    AlignLeftCommand.RaiseCanExecuteChanged();
-                    AlignHorizontalCenterCommand.RaiseCanExecuteChanged();
-                    AlignRightCommand.RaiseCanExecuteChanged();
-                    DistributeHorizontalCommand.RaiseCanExecuteChanged();
-                    DistributeVerticalCommand.RaiseCanExecuteChanged();
-
-                    UniformWidthCommand.RaiseCanExecuteChanged();
-                    UniformHeightCommand.RaiseCanExecuteChanged();
-
-                    UnionCommand.RaiseCanExecuteChanged();
-                    IntersectCommand.RaiseCanExecuteChanged();
-                    XorCommand.RaiseCanExecuteChanged();
-                    ExcludeCommand.RaiseCanExecuteChanged();
-
-                    PropertyCommand.RaiseCanExecuteChanged();
-                    ReallocateContextMenuItems();
-                })
-                .AddTo(_CompositeDisposable);
-
-                SelectedLayers = Layers.ObserveElementObservableProperty(x => x.IsSelected)
-                                       .Select(_ => Layers.Where(x => x.IsSelected.Value == true).ToArray())
-                                       .ToReadOnlyReactivePropertySlim(Array.Empty<LayerTreeViewItemBase>());
-
-                SelectedLayers.Subscribe(x =>
-                {
-                    LogManager.GetCurrentClassLogger().Trace($"SelectedLayers changed {string.Join(", ", x.Select(x => x.ToString()))}");
-                })
-                .AddTo(_CompositeDisposable);
-
-                Layers.ObserveAddChanged()
-                      .Subscribe(x =>
-                      {
-                          RootLayer.Value.Children = new ReactiveCollection<LayerTreeViewItemBase>(Layers.Cast<LayerTreeViewItemBase>().ToObservable());
-                          x.SetParentToChildren(RootLayer.Value);
-                      })
-                .AddTo(_CompositeDisposable);
-            }
+            DisposeProperties();
+            InitializeProperties(isPreview);
+            SetSubscribes(isPreview);
 
             Width = width;
             Height = height;
@@ -631,6 +591,197 @@ namespace boilersGraphics.ViewModels
             SettingIfDebug();
         }
 
+        private void InitializeProperties(bool isPreview)
+        {
+            SetLayers();
+            SetAllItems();
+
+            if (!isPreview)
+            {
+                SetSelectedItems();
+                SetSelectedLayers();
+            }
+        }
+
+        private void SetSubscribes(bool isPreview)
+        {
+            if (!isPreview)
+            {
+                SetAllItemsSubscribe();
+                SetSelectedItemsSubscribe();
+                SetSelectedLayersSubscribe();
+                SetLayersObserveAddChanged();
+            }
+        }
+
+        public void DisposeProperties()
+        {
+            if (Layers != null)
+                Layers.Dispose(); 
+            if (AllItems != null)
+                AllItems.Dispose();
+            if (SelectedItems != null)
+                SelectedItems.Dispose();
+            if (SelectedLayers != null)
+                SelectedLayers.Dispose();
+        }
+
+        private void SetLayersObserveAddChanged()
+        {
+            Layers.ObserveAddChanged()
+                                  .Subscribe(x =>
+                                  {
+                                      RootLayer.Value.Children = new ReactiveCollection<LayerTreeViewItemBase>(Layers.Cast<LayerTreeViewItemBase>().ToObservable());
+                                      x.SetParentToChildren(RootLayer.Value);
+                                  })
+                            .AddTo(_CompositeDisposable);
+        }
+
+        private void SetSelectedLayersSubscribe()
+        {
+            SelectedLayers.Subscribe(x =>
+            {
+                LogManager.GetCurrentClassLogger().Trace($"SelectedLayers changed {string.Join(", ", x.Select(x => x.ToString()))}");
+            })
+            .AddTo(_CompositeDisposable);
+        }
+
+        private void SetSelectedLayers()
+        {
+            SelectedLayers = Layers.ObserveElementObservableProperty(x => x.IsSelected)
+                                                   .Select(_ => Layers.Where(x => x.IsSelected.Value == true).ToArray())
+                                                   .ToReadOnlyReactivePropertySlim(Array.Empty<LayerTreeViewItemBase>());
+        }
+
+        private void SetSelectedItemsSubscribe()
+        {
+            SelectedItems.Subscribe(selectedItems =>
+            {
+                LogManager.GetCurrentClassLogger().Debug($"SelectedItems changed {string.Join(", ", selectedItems.Select(x => x?.ToString() ?? "null"))}");
+
+                GroupCommand.RaiseCanExecuteChanged();
+                UngroupCommand.RaiseCanExecuteChanged();
+                BringForwardCommand.RaiseCanExecuteChanged();
+                SendBackwardCommand.RaiseCanExecuteChanged();
+                BringForegroundCommand.RaiseCanExecuteChanged();
+                SendBackgroundCommand.RaiseCanExecuteChanged();
+
+                AlignTopCommand.RaiseCanExecuteChanged();
+                AlignVerticalCenterCommand.RaiseCanExecuteChanged();
+                AlignBottomCommand.RaiseCanExecuteChanged();
+                AlignLeftCommand.RaiseCanExecuteChanged();
+                AlignHorizontalCenterCommand.RaiseCanExecuteChanged();
+                AlignRightCommand.RaiseCanExecuteChanged();
+                DistributeHorizontalCommand.RaiseCanExecuteChanged();
+                DistributeVerticalCommand.RaiseCanExecuteChanged();
+
+                UniformWidthCommand.RaiseCanExecuteChanged();
+                UniformHeightCommand.RaiseCanExecuteChanged();
+
+                UnionCommand.RaiseCanExecuteChanged();
+                IntersectCommand.RaiseCanExecuteChanged();
+                XorCommand.RaiseCanExecuteChanged();
+                ExcludeCommand.RaiseCanExecuteChanged();
+
+                PropertyCommand.RaiseCanExecuteChanged();
+                ReallocateContextMenuItems();
+            })
+                            .AddTo(_CompositeDisposable);
+        }
+
+        private void SetSelectedItems()
+        {
+            SelectedItems = Layers
+                                .CollectionChangedAsObservable()
+                                .Select(_ =>
+                                    Layers
+                                        .Select(x => x.SelectedLayerItemsChangedAsObservable())
+                                        .Merge()
+                                )
+                                .Switch()
+                                .Do(x => LogManager.GetCurrentClassLogger().Debug("SelectedItems updated"))
+                                .Select(_ => Layers
+                                    .SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                                    .OfType<LayerItem>()
+                                    .Select(y => y.Item.Value)
+                                    .Where(z => z.IsSelected.Value == true)
+                                    .Except(Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                                        .OfType<LayerItem>()
+                                        .Select(y => y.Item.Value)
+                                        .OfType<ConnectorBaseViewModel>())
+                                    .Union(Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                                        .OfType<LayerItem>()
+                                        .Select(y => y.Item.Value)
+                                        .OfType<ConnectorBaseViewModel>()
+                                        .SelectMany(x => new[] { x.SnapPoint0VM.Value, x.SnapPoint1VM.Value })
+                                        .Where(y => y.IsSelected.Value == true)
+                                    )
+                                    .Where(z => z.IsSelected.Value == true)
+                                    .OrderBy(z => z.SelectedOrder.Value)
+                                    .ToArray()
+                                ).ToReadOnlyReactivePropertySlim(Array.Empty<SelectableDesignerItemViewModelBase>());
+        }
+
+        private void SetAllItemsSubscribe()
+        {
+            AllItems.Subscribe(x =>
+            {
+                FitCanvasCommand.RaiseCanExecuteChanged();
+                LogManager.GetCurrentClassLogger().Trace($"{x.Length} items in AllItems.");
+                LogManager.GetCurrentClassLogger().Trace(string.Join(", ", x.Select(y => y?.ToString() ?? "null")));
+            })
+                            .AddTo(_CompositeDisposable);
+        }
+
+        private void SetAllItems()
+        {
+            AllItems = Layers.CollectionChangedAsObservable()
+                                            .Select(_ => Layers.Select(x => x.LayerItemsChangedAsObservable()).Merge()
+                                            .Merge(this.ObserveProperty(y => y.BackgroundItem.Value).ToUnit()))
+                                            .Switch()
+                                            .Select(_ => Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                                                            .Where(x => x.GetType() == typeof(LayerItem))
+                                                            .Select(y => (y as LayerItem).Item.Value)
+                                                            .Union(new SelectableDesignerItemViewModelBase[] { BackgroundItem.Value })
+                                                            .ToArray())
+                                            .ToReadOnlyReactivePropertySlim(Array.Empty<SelectableDesignerItemViewModelBase>());
+        }
+
+        private void SetLayers()
+        {
+            Layers = RootLayer.Value.Children.CollectionChangedAsObservable()
+                                        .Select(_ => RootLayer.Value.LayerChangedAsObservable())
+                                        .Switch()
+                                        .SelectMany(_ => RootLayer.Value.Children)
+                                        .ToReactiveCollection();
+        }
+
+        private static unsafe OpenCvSharp.Mat ExtractColor(OpenCvSharp.Mat output, OpenCvSharp.Vec3b color)
+        {
+            var ret = output.Clone();
+            Debug.Assert(output.Type() == OpenCvSharp.MatType.CV_8UC4);
+            Parallel.For(0, ret.Height, y =>
+            {
+                byte* p = (byte*)ret.Ptr(y);
+                for (int x = 0; x < ret.Width; ++x)
+                {
+                    var b = *(p + x * 4 + 0);
+                    var g = *(p + x * 4 + 1);
+                    var r = *(p + x * 4 + 2);
+                    var a = *(p + x * 4 + 3);
+                    if (b == color.Item0 && g == color.Item1 && r == color.Item2)
+                    {
+                        *(p + x * 4 + 3) = 255;
+                    }
+                    else
+                    {
+                        *(p + x * 4 + 3) = 0;
+                    }
+                }
+            });
+            return ret;
+        }
+
         private static unsafe void SetAlpha255(OpenCvSharp.Mat output)
         {
             for (int y = 0; y < output.Height; y++)
@@ -667,7 +818,7 @@ namespace boilersGraphics.ViewModels
         /// <param name="input">Input image.</param>
         /// <param name="output">Output image applying the number of colors defined for required clusters.</param>
         /// <param name="k">Number of clusters required.</param>
-        public static void Kmeans(OpenCvSharp.Mat input, OpenCvSharp.Mat output, int k)
+        public static void Kmeans(OpenCvSharp.Mat input, OpenCvSharp.Mat output, int k, out HashSet<OpenCvSharp.Vec3b> sets)
         {
             using (OpenCvSharp.Mat points = new OpenCvSharp.Mat())
             {
@@ -706,6 +857,8 @@ namespace boilersGraphics.ViewModels
                         // Finds centers of clusters and groups input samples around the clusters.
                         OpenCvSharp.Cv2.Kmeans(data: points, k: k, bestLabels: labels, criteria: criteria, attempts: 3, flags: OpenCvSharp.KMeansFlags.PpCenters, centers: centers);
 
+                        var ret = new ConcurrentBag<OpenCvSharp.Vec3b>();
+
                         // Output Image Data
                         Parallel.For(0, height, y =>
                         {
@@ -729,8 +882,10 @@ namespace boilersGraphics.ViewModels
                                 vec3b.Item2 = Convert.ToByte(thirdComponent);
 
                                 output.Set<OpenCvSharp.Vec3b>(y, x, vec3b);
+                                ret.Add(vec3b);
                             }
                         });
+                        sets = new HashSet<OpenCvSharp.Vec3b>(ret);
                     }
                 }
             }
@@ -1093,14 +1248,19 @@ namespace boilersGraphics.ViewModels
             Layers.ToClearOperation().ExecuteTo(mainwindowViewModel.Recorder.Current);
             if (addingLayer)
             {
-                var layer = new Layer(isPreview);
-                layer.IsVisible.Value = true;
-                layer.IsSelected.Value = true;
-                layer.Name.Value = Name.GetNewLayerName(this);
-                Random rand = new Random();
-                layer.Color.Value = Randomizer.RandomColor(rand);
-                mainwindowViewModel.Recorder.Current.ExecuteAdd(Layers, layer);
+                AddNewLayer(mainwindowViewModel, isPreview);
             }
+        }
+
+        private void AddNewLayer(MainWindowViewModel mainwindowViewModel, bool isPreview)
+        {
+            var layer = new Layer(isPreview);
+            layer.IsVisible.Value = true;
+            layer.IsSelected.Value = true;
+            layer.Name.Value = Name.GetNewLayerName(this);
+            Random rand = new Random();
+            layer.Color.Value = Randomizer.RandomColor(rand);
+            mainwindowViewModel.Recorder.Current.ExecuteAdd(Layers, layer);
         }
 
         private void ExecuteRedoCommand()
@@ -1318,6 +1478,66 @@ namespace boilersGraphics.ViewModels
                 Add(combine);
             }
             MainWindowVM.Recorder.EndRecode();
+        }
+
+        private SelectableDesignerItemViewModelBase Combine(GeometryCombineMode mode, SelectableDesignerItemViewModelBase item1, SelectableDesignerItemViewModelBase item2 = null)
+        {
+            int count = 0;
+            if (item1 != null)
+                count++;
+            if (item2 != null)
+                count++;
+            if (count == 1 && item1 is PolyBezierViewModel pb)
+            {
+                //Remove(pb);
+                var combine = new CombineGeometryViewModel();
+                combine.EdgeBrush.Value = pb.EdgeBrush.Value;
+                combine.EdgeThickness.Value = pb.EdgeThickness.Value;
+                combine.IsSelected.Value = true;
+                combine.Owner = this;
+                combine.ZIndex.Value = Layers.SelectMany(x => x.Children).Count();
+                combine.IsHitTestVisible.Value = MainWindowVM.ToolBarViewModel.CurrentHitTestVisibleState.Value;
+                combine.PathGeometry.Value = GeometryCreator.CreateCombineGeometry(pb);
+                combine.Left.Value = combine.PathGeometry.Value.Bounds.Left;
+                combine.Top.Value = combine.PathGeometry.Value.Bounds.Top;
+                combine.Width.Value = combine.PathGeometry.Value.Bounds.Width;
+                combine.Height.Value = combine.PathGeometry.Value.Bounds.Height;
+                //Add(combine);
+                return combine;
+            }
+            else
+            {
+                var combine = new CombineGeometryViewModel();
+                //Remove(item1);
+                //Remove(item2);
+                combine.EdgeBrush.Value = item1.EdgeBrush.Value;
+                combine.EdgeThickness.Value = item1.EdgeThickness.Value;
+                combine.IsSelected.Value = true;
+                combine.Owner = this;
+                combine.ZIndex.Value = Layers.SelectMany(x => x.Children).Count();
+                combine.IsHitTestVisible.Value = MainWindowVM.ToolBarViewModel.CurrentHitTestVisibleState.Value;
+                combine.PathGeometry.Value = GeometryCreator.CreateCombineGeometry(item1, item2);
+                if (combine.PathGeometry.Value == null || combine.PathGeometry.Value.Figures.Count() == 0)
+                {
+                    var item1PathGeometry = item1.PathGeometry.Value;
+                    var item2PathGeometry = item2.PathGeometry.Value;
+
+                    if (item1 is DesignerItemViewModelBase designerItem1 && item1.RotationAngle.Value != 0)
+                        item1PathGeometry = designerItem1.RotatePathGeometry.Value;
+                    if (item2 is DesignerItemViewModelBase designerItem2 && item2.RotationAngle.Value != 0)
+                        item2PathGeometry = designerItem2.RotatePathGeometry.Value;
+
+                    CastToLetterAndSetTransform(item1, item2, item1PathGeometry, item2PathGeometry);
+
+                    combine.PathGeometry.Value = Geometry.Combine(item1PathGeometry, item2PathGeometry, mode, null);
+                }
+                combine.Left.Value = combine.PathGeometry.Value.Bounds.Left;
+                combine.Top.Value = combine.PathGeometry.Value.Bounds.Top;
+                combine.Width.Value = combine.PathGeometry.Value.Bounds.Width;
+                combine.Height.Value = combine.PathGeometry.Value.Bounds.Height;
+                //Add(combine);
+                return combine;
+            }
         }
 
         private SelectableDesignerItemViewModelBase GetSelectedItemFirst()
@@ -1787,9 +2007,9 @@ namespace boilersGraphics.ViewModels
             }
         }
 
-        private void Add(SelectableDesignerItemViewModelBase item, string layerItemName = null)
+        private void Add(SelectableDesignerItemViewModelBase item, bool isRecording = true, string layerItemName = null)
         {
-            SelectedLayers.Value.First().AddItem(MainWindowVM, this, item, layerItemName);
+            SelectedLayers.Value.First().AddItem(MainWindowVM, this, item, isRecording, layerItemName: layerItemName);
         }
 
         private void Add(LayerItem item)
@@ -2703,7 +2923,7 @@ namespace boilersGraphics.ViewModels
             dao.Update(statistics);
         }
 
-        public static void Sort(ReactiveCollection<LayerTreeViewItemBase> target)
+        public static void Sort(ObservableCollection<LayerTreeViewItemBase> target)
         {
             var list = target.ToList();
 

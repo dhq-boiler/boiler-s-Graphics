@@ -40,10 +40,11 @@ namespace TsOperationHistory
 
         public void RollForward()
         {
+            var list = get_list();
             if(_insertIndex < 0)
-                get_list().Add(_property);
+                list.Add(_property);
             else
-                get_list().Insert(_insertIndex,_property);
+                list.Insert(_insertIndex,_property);
         }
 
         public void Rollback()

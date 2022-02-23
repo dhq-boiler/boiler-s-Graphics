@@ -11,6 +11,7 @@ using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Disposables;
@@ -204,7 +205,7 @@ namespace boilersGraphics.ViewModels
             dao.Update(statistics);
         }
 
-        private IEnumerable<SelectableDesignerItemViewModelBase> IfGroupBringChildren(ReactiveCollection<LayerTreeViewItemBase> Children, SelectableDesignerItemViewModelBase value)
+        private IEnumerable<SelectableDesignerItemViewModelBase> IfGroupBringChildren(ObservableCollection<LayerTreeViewItemBase> Children, SelectableDesignerItemViewModelBase value)
         {
             if (value is GroupItemViewModel groupItemVM)
             {

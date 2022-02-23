@@ -3,6 +3,7 @@ using boilersGraphics.ViewModels;
 using Reactive.Bindings;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,7 +14,7 @@ namespace boilersGraphics.Helpers
 {
     public static class LayerTreeViewItemCollection
     {
-        public static void InsertBeforeChildren(OperationRecorder recorder, ReactiveCollection<LayerTreeViewItemBase> layers, ReactiveCollection<LayerTreeViewItemBase> children, LayerTreeViewItemBase from, LayerTreeViewItemBase to)
+        public static void InsertBeforeChildren(OperationRecorder recorder, ReactiveCollection<LayerTreeViewItemBase> layers, ObservableCollection<LayerTreeViewItemBase> children, LayerTreeViewItemBase from, LayerTreeViewItemBase to)
         {
             var index = children.IndexOf(to);
             if (index < 0)
@@ -23,7 +24,7 @@ namespace boilersGraphics.Helpers
             Rearrangement(recorder, layers);
         }
 
-        public static void InsertAfterChildren(OperationRecorder recorder, ReactiveCollection<LayerTreeViewItemBase> layers, ReactiveCollection<LayerTreeViewItemBase> children, LayerTreeViewItemBase from, LayerTreeViewItemBase to)
+        public static void InsertAfterChildren(OperationRecorder recorder, ReactiveCollection<LayerTreeViewItemBase> layers, ObservableCollection<LayerTreeViewItemBase> children, LayerTreeViewItemBase from, LayerTreeViewItemBase to)
         {
             var index = children.IndexOf(to);
             if (index < 0)
@@ -33,7 +34,7 @@ namespace boilersGraphics.Helpers
             Rearrangement(recorder, layers);
         }
 
-        public static void AddChildren(OperationRecorder recorder, ReactiveCollection<LayerTreeViewItemBase> layers, ReactiveCollection<LayerTreeViewItemBase> children, LayerTreeViewItemBase to)
+        public static void AddChildren(OperationRecorder recorder, ReactiveCollection<LayerTreeViewItemBase> layers, ObservableCollection<LayerTreeViewItemBase> children, LayerTreeViewItemBase to)
         {
             recorder.Current.ExecuteAdd(children, to);
             Rearrangement(recorder, layers);

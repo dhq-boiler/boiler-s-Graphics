@@ -9,6 +9,7 @@ using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
@@ -46,7 +47,7 @@ namespace boilersGraphics.Models
 
         public ReactivePropertySlim<Visibility> AfterSeparatorVisibility { get; } = new ReactivePropertySlim<Visibility>(Visibility.Hidden);
 
-        public ReactiveCollection<LayerTreeViewItemBase> Children { get; set; } = new ReactiveCollection<LayerTreeViewItemBase>();
+        public ObservableCollection<LayerTreeViewItemBase> Children { get; set; } = new ObservableCollection<LayerTreeViewItemBase>();
 
         public ReactiveCollection<Control> LayerTreeViewItemContextMenu { get; } = new ReactiveCollection<Control>();
 
@@ -90,7 +91,7 @@ namespace boilersGraphics.Models
         {
             return Children.ObserveElementObservableProperty(x => (x as LayerItem).Item)
                         .ToUnit()
-                        .Merge(Children.CollectionChangedAsObservable().Where(x => x.Action == NotifyCollectionChangedAction.Remove || x.Action == NotifyCollectionChangedAction.Reset).ToUnit());
+                        .Merge(Children.CollectionChangedAsObservable().Where(x => x.Action == NotifyCollectionChangedAction.Add || x.Action == NotifyCollectionChangedAction.Remove || x.Action == NotifyCollectionChangedAction.Reset).ToUnit());
         }
 
         public IObservable<Unit> SelectedLayerItemsChangedAsObservable()
@@ -119,7 +120,7 @@ namespace boilersGraphics.Models
             return ox1.Merge(ox2).Merge(ox3);
         }
 
-        public void AddItem(MainWindowViewModel mainWindowViewModel, DiagramViewModel diagramViewModel, SelectableDesignerItemViewModelBase item, string layerItemName = null)
+        public void AddItem(MainWindowViewModel mainWindowViewModel, DiagramViewModel diagramViewModel, SelectableDesignerItemViewModelBase item, bool isRecording = true, string layerItemName = null)
         {
             if (layerItemName == null)
             {
@@ -130,7 +131,10 @@ namespace boilersGraphics.Models
             layerItem.Parent.Value = this;
             Random rand = new Random();
             layerItem.Color.Value = Randomizer.RandomColor(rand);
-            mainWindowViewModel.Recorder.Current.ExecuteAdd(Children, layerItem);
+            if (isRecording)
+                mainWindowViewModel.Recorder.Current.ExecuteAdd(Children, layerItem);
+            else
+                Children.Add(layerItem);
         }
 
         public void AddItem(MainWindowViewModel mainWindowVM, DiagramViewModel diagramViewModel, LayerItem item)
@@ -246,9 +250,11 @@ namespace boilersGraphics.Models
                     Color.Dispose();
                     BeforeSeparatorVisibility.Dispose();
                     AfterSeparatorVisibility.Dispose();
-                    Children.Dispose();
                     LayerTreeViewItemContextMenu.Dispose();
                     ChangeNameCommand.Dispose();
+
+                    Children.Clear();
+                    Children = null;
                 }
 
                 disposedValue = true;

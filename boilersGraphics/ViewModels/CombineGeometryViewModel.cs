@@ -1,4 +1,5 @@
-﻿using System;
+﻿using boilersGraphics.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -59,7 +60,7 @@ namespace boilersGraphics.ViewModels
 
         public override Type GetViewType()
         {
-            return typeof(Path);
+            return typeof(System.Windows.Shapes.Path);
         }
 
         #region IClonable
