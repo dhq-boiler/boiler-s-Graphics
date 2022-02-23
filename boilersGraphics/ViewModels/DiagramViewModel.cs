@@ -631,7 +631,7 @@ namespace boilersGraphics.ViewModels
             SettingIfDebug();
         }
 
-        private unsafe void SetAlpha255(OpenCvSharp.Mat output)
+        private static unsafe void SetAlpha255(OpenCvSharp.Mat output)
         {
             for (int y = 0; y < output.Height; y++)
             {
@@ -643,7 +643,7 @@ namespace boilersGraphics.ViewModels
             }
         }
 
-        public BitmapImage ConvertWriteableBitmapToBitmapImage(WriteableBitmap wbm)
+        public static BitmapImage ConvertWriteableBitmapToBitmapImage(WriteableBitmap wbm)
         {
             BitmapImage bmImage = new BitmapImage();
             using (MemoryStream stream = new MemoryStream())
