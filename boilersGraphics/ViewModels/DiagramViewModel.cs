@@ -462,9 +462,13 @@ namespace boilersGraphics.ViewModels
                 {
                     var selectedItem = SelectedItems.Value.First() as PictureDesignerItemViewModel;
                     Remove(selectedItem);
-                    using (OpenCvSharp.Mat target = EnableImageEmbedding.Value ? selectedItem.EmbeddedImage.Value.ToMat() : new OpenCvSharp.Mat(selectedItem.FileName))
+                    using (OpenCvSharp.Mat target = EnableImageEmbedding.Value && selectedItem.EmbeddedImage.Value != null ? selectedItem.EmbeddedImage.Value.ToMat() : new OpenCvSharp.Mat(selectedItem.FileName))
                     using (OpenCvSharp.Mat output = new OpenCvSharp.Mat())
                     {
+                        if (target.Type() == OpenCvSharp.MatType.CV_8UC3)
+                        {
+                            OpenCvSharp.Cv2.CvtColor(target, target, OpenCvSharp.ColorConversionCodes.BGR2BGRA);
+                        }
                         const int MAX_CLUSTERS = 8;
                         Kmeans(target, output, MAX_CLUSTERS, out var sets);
                         SetAlpha255(output);
