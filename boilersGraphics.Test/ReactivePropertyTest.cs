@@ -1,5 +1,9 @@
-﻿using boilersGraphics.ViewModels;
+﻿using boilersGraphics.Models;
+using boilersGraphics.Properties;
+using boilersGraphics.ViewModels;
+using Moq;
 using NUnit.Framework;
+using Prism.Services.Dialogs;
 using Reactive.Bindings;
 using System;
 using System.Collections.Generic;
@@ -42,6 +46,33 @@ namespace boilersGraphics.Test
             var rectangle = new NRectangleViewModel();
             var rectangleRP = rectangle.ToReactiveProperty();
             Assert.That(rectangleRP.Value, Is.Not.EqualTo(null));
+        }
+
+        [Test]
+        public void Children代入()
+        {
+            boilersGraphics.App.IsTest = true;
+            var dlgService = new Mock<IDialogService>();
+            MainWindowViewModel mainWindowViewModel = new MainWindowViewModel(dlgService.Object);
+            var diagramVM = new DiagramViewModel(mainWindowViewModel, 1000, 1000);
+            diagramVM.Layers.Clear();
+            var layer1 = new Layer();
+            layer1.Name.Value = $"{Resources.Name_Layer}1";
+            diagramVM.Layers.Add(layer1);
+            layer1.IsSelected.Value = true; //レイヤー1を選択状態にする
+
+            diagramVM.DisposeProperties();
+            diagramVM.InitializeProperties_Layers(false);
+            diagramVM.AddNewLayer(mainWindowViewModel, false);
+            var firstSelectedLayer = diagramVM.SelectedLayers.Value.First();
+            var item = new NRectangleViewModel();
+            var layerItem = new LayerItem(item, firstSelectedLayer, "TEST");
+            Assert.That(firstSelectedLayer.Name.Value, Is.EqualTo("レイヤー1"));
+            firstSelectedLayer.Children = new System.Collections.ObjectModel.ObservableCollection<LayerTreeViewItemBase>(new LayerItem[] { layerItem });
+            diagramVM.InitializeProperties_Items(false);
+            diagramVM.SetSubscribes(false);
+
+            Assert.That(diagramVM.AllItems.Value, Has.Member(item));
         }
     }
 }

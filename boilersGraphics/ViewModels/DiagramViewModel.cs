@@ -542,17 +542,19 @@ namespace boilersGraphics.ViewModels
                             Debug.WriteLine($"added item. {sw.ElapsedMilliseconds}ms");
                         }
                         DisposeProperties();
-                        InitializeProperties(false);
+                        InitializeProperties_Layers(isPreview);
                         AddNewLayer(mainWindowViewModel, false);
                         var firstSelectedLayer = SelectedLayers.Value.First();
                         firstSelectedLayer.Children = new ObservableCollection<LayerTreeViewItemBase>(l);
+                        InitializeProperties_Items(isPreview);
                         SetSubscribes(false);
                     }
                 });
             }
 
             DisposeProperties();
-            InitializeProperties(isPreview);
+            InitializeProperties_Layers(isPreview);
+            InitializeProperties_Items(isPreview);
             SetSubscribes(isPreview);
 
             Width = width;
@@ -595,19 +597,28 @@ namespace boilersGraphics.ViewModels
             SettingIfDebug();
         }
 
-        private void InitializeProperties(bool isPreview)
+        public void InitializeProperties_Layers(bool isPreview)
         {
+            RootLayer.Value = new LayerTreeViewItemBase();
             SetLayers();
+
+            if (!isPreview)
+            {
+                SetSelectedLayers();
+            }
+        }
+
+        public void InitializeProperties_Items(bool isPreview)
+        {
             SetAllItems();
 
             if (!isPreview)
             {
                 SetSelectedItems();
-                SetSelectedLayers();
             }
         }
 
-        private void SetSubscribes(bool isPreview)
+        public void SetSubscribes(bool isPreview)
         {
             if (!isPreview)
             {
@@ -621,7 +632,7 @@ namespace boilersGraphics.ViewModels
         public void DisposeProperties()
         {
             if (Layers != null)
-                Layers.Dispose(); 
+                Layers.Dispose();
             if (AllItems != null)
                 AllItems.Dispose();
             if (SelectedItems != null)
@@ -633,12 +644,12 @@ namespace boilersGraphics.ViewModels
         private void SetLayersObserveAddChanged()
         {
             Layers.ObserveAddChanged()
-                                  .Subscribe(x =>
-                                  {
-                                      RootLayer.Value.Children = new ReactiveCollection<LayerTreeViewItemBase>(Layers.Cast<LayerTreeViewItemBase>().ToObservable());
-                                      x.SetParentToChildren(RootLayer.Value);
-                                  })
-                            .AddTo(_CompositeDisposable);
+                  .Subscribe(x =>
+                  {
+                      RootLayer.Value.Children = new ObservableCollection<LayerTreeViewItemBase>(Layers.Cast<LayerTreeViewItemBase>());
+                      x.SetParentToChildren(RootLayer.Value);
+                  })
+                  .AddTo(_CompositeDisposable);
         }
 
         private void SetSelectedLayersSubscribe()
@@ -653,8 +664,8 @@ namespace boilersGraphics.ViewModels
         private void SetSelectedLayers()
         {
             SelectedLayers = Layers.ObserveElementObservableProperty(x => x.IsSelected)
-                                                   .Select(_ => Layers.Where(x => x.IsSelected.Value == true).ToArray())
-                                                   .ToReadOnlyReactivePropertySlim(Array.Empty<LayerTreeViewItemBase>());
+                                   .Select(_ => Layers.Where(x => x.IsSelected.Value == true).ToArray())
+                                   .ToReadOnlyReactivePropertySlim(Array.Empty<LayerTreeViewItemBase>());
         }
 
         private void SetSelectedItemsSubscribe()
@@ -695,35 +706,34 @@ namespace boilersGraphics.ViewModels
 
         private void SetSelectedItems()
         {
-            SelectedItems = Layers
-                                .CollectionChangedAsObservable()
-                                .Select(_ =>
-                                    Layers
-                                        .Select(x => x.SelectedLayerItemsChangedAsObservable())
-                                        .Merge()
-                                )
-                                .Switch()
-                                .Do(x => LogManager.GetCurrentClassLogger().Debug("SelectedItems updated"))
-                                .Select(_ => Layers
-                                    .SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
-                                    .OfType<LayerItem>()
-                                    .Select(y => y.Item.Value)
-                                    .Where(z => z.IsSelected.Value == true)
-                                    .Except(Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
-                                        .OfType<LayerItem>()
-                                        .Select(y => y.Item.Value)
-                                        .OfType<ConnectorBaseViewModel>())
-                                    .Union(Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
-                                        .OfType<LayerItem>()
-                                        .Select(y => y.Item.Value)
-                                        .OfType<ConnectorBaseViewModel>()
-                                        .SelectMany(x => new[] { x.SnapPoint0VM.Value, x.SnapPoint1VM.Value })
-                                        .Where(y => y.IsSelected.Value == true)
-                                    )
-                                    .Where(z => z.IsSelected.Value == true)
-                                    .OrderBy(z => z.SelectedOrder.Value)
-                                    .ToArray()
-                                ).ToReadOnlyReactivePropertySlim(Array.Empty<SelectableDesignerItemViewModelBase>());
+            SelectedItems = Layers.CollectionChangedAsObservable()
+                                  .Select(_ =>
+                                      Layers
+                                          .Select(x => x.SelectedLayerItemsChangedAsObservable())
+                                          .Merge()
+                                  )
+                                  .Switch()
+                                  .Do(x => LogManager.GetCurrentClassLogger().Debug("SelectedItems updated"))
+                                  .Select(_ => Layers
+                                      .SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                                      .OfType<LayerItem>()
+                                      .Select(y => y.Item.Value)
+                                      .Where(z => z.IsSelected.Value == true)
+                                      .Except(Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                                          .OfType<LayerItem>()
+                                          .Select(y => y.Item.Value)
+                                          .OfType<ConnectorBaseViewModel>())
+                                      .Union(Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                                          .OfType<LayerItem>()
+                                          .Select(y => y.Item.Value)
+                                          .OfType<ConnectorBaseViewModel>()
+                                          .SelectMany(x => new[] { x.SnapPoint0VM.Value, x.SnapPoint1VM.Value })
+                                          .Where(y => y.IsSelected.Value == true)
+                                      )
+                                      .Where(z => z.IsSelected.Value == true)
+                                      .OrderBy(z => z.SelectedOrder.Value)
+                                      .ToArray()
+                                  ).ToReadOnlyReactivePropertySlim(Array.Empty<SelectableDesignerItemViewModelBase>());
         }
 
         private void SetAllItemsSubscribe()
@@ -734,30 +744,32 @@ namespace boilersGraphics.ViewModels
                 LogManager.GetCurrentClassLogger().Trace($"{x.Length} items in AllItems.");
                 LogManager.GetCurrentClassLogger().Trace(string.Join(", ", x.Select(y => y?.ToString() ?? "null")));
             })
-                            .AddTo(_CompositeDisposable);
+            .AddTo(_CompositeDisposable);
         }
 
         private void SetAllItems()
         {
+            var x = Layers.CollectionChangedAsObservable();
             AllItems = Layers.CollectionChangedAsObservable()
-                                            .Select(_ => Layers.Select(x => x.LayerItemsChangedAsObservable()).Merge()
-                                            .Merge(this.ObserveProperty(y => y.BackgroundItem.Value).ToUnit()))
-                                            .Switch()
-                                            .Select(_ => Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
-                                                            .Where(x => x.GetType() == typeof(LayerItem))
-                                                            .Select(y => (y as LayerItem).Item.Value)
-                                                            .Union(new SelectableDesignerItemViewModelBase[] { BackgroundItem.Value })
-                                                            .ToArray())
-                                            .ToReadOnlyReactivePropertySlim(Array.Empty<SelectableDesignerItemViewModelBase>());
+                             .Select(_ => Layers.Select(x => x.LayerItemsChangedAsObservable()).Merge()
+                                                .Merge(this.ObserveProperty(y => y.BackgroundItem.Value).ToUnit()))
+                             .Switch()
+                             .Do(_ => Debug.WriteLine(String.Concat("debug ", string.Join(", ", Layers.Select(x => x?.ToString() ?? "null")))))
+                             .Select(_ => Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                                                .Where(x => x.GetType() == typeof(LayerItem))
+                                                .Select(y => (y as LayerItem).Item.Value)
+                                                .Union(new SelectableDesignerItemViewModelBase[] { BackgroundItem.Value })
+                                                .ToArray())
+                             .ToReadOnlyReactivePropertySlim(Array.Empty<SelectableDesignerItemViewModelBase>());
         }
 
         private void SetLayers()
         {
             Layers = RootLayer.Value.Children.CollectionChangedAsObservable()
-                                        .Select(_ => RootLayer.Value.LayerChangedAsObservable())
-                                        .Switch()
-                                        .SelectMany(_ => RootLayer.Value.Children)
-                                        .ToReactiveCollection();
+                                             .Select(_ => RootLayer.Value.LayerChangedAsObservable())
+                                             .Switch()
+                                             .SelectMany(_ => RootLayer.Value.Children)
+                                             .ToReactiveCollection();
         }
 
         private static unsafe OpenCvSharp.Mat ExtractColor(OpenCvSharp.Mat output, OpenCvSharp.Vec3b color)
@@ -788,6 +800,7 @@ namespace boilersGraphics.ViewModels
 
         private static unsafe void SetAlpha255(OpenCvSharp.Mat output)
         {
+            Debug.Assert(output.Type() == OpenCvSharp.MatType.CV_8UC4);
             for (int y = 0; y < output.Height; y++)
             {
                 byte* p = (byte*)output.Ptr(y);
@@ -897,6 +910,8 @@ namespace boilersGraphics.ViewModels
 
         private void ReallocateContextMenuItems()
         {
+            if (App.IsTest)
+                return;
             var diagramControl = App.Current.MainWindow.GetCorrespondingViews<DiagramControl>(this).FirstOrDefault();
             ContextMenuItems.Clear();
             ContextMenuItems.Add(new MenuItem()
@@ -1256,7 +1271,7 @@ namespace boilersGraphics.ViewModels
             }
         }
 
-        private void AddNewLayer(MainWindowViewModel mainwindowViewModel, bool isPreview)
+        public void AddNewLayer(MainWindowViewModel mainwindowViewModel, bool isPreview)
         {
             var layer = new Layer(isPreview);
             layer.IsVisible.Value = true;

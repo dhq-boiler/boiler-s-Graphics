@@ -84,14 +84,23 @@ namespace boilersGraphics.Models
             return this.Children.CollectionChangedAsObservable()
                                 .Where(x => x.Action == NotifyCollectionChangedAction.Remove || x.Action == NotifyCollectionChangedAction.Reset)
                                 .ToUnit()
-                                .Merge(this.Children.Select(x => x.LayerChangedAsObservable()).Merge());
+                                .Merge(this.Children.Select(x => x.LayerChangedAsObservable()).Merge())
+                                .Merge(this.ObserveProperty(x => x.Children).ToUnit());
         }
 
         public IObservable<Unit> LayerItemsChangedAsObservable()
         {
-            return Children.ObserveElementObservableProperty(x => (x as LayerItem).Item)
+            var ox1 = Children.ObserveElementObservableProperty(x => (x as LayerItem).Item)
                         .ToUnit()
-                        .Merge(Children.CollectionChangedAsObservable().Where(x => x.Action == NotifyCollectionChangedAction.Add || x.Action == NotifyCollectionChangedAction.Remove || x.Action == NotifyCollectionChangedAction.Reset).ToUnit());
+                        .Merge(Children.CollectionChangedAsObservable().Where(x => x.Action == NotifyCollectionChangedAction.Remove || x.Action == NotifyCollectionChangedAction.Reset).ToUnit());
+            var ox2 = Children.ObserveElementObservableProperty(x => (x as LayerItem).Item)
+                        .ToUnit()
+                        .Merge(Children.Select(x => x.LayerItemsChangedAsObservable()).Merge())
+                        .Merge(this.ObserveProperty(x => x.Children).ToUnit());
+            var ox3 = Children.ObserveElementObservableProperty(x => (x as LayerItem).Item)
+                        .ToUnit()
+                        .Merge(this.ObserveProperty(x => x.Children).ToUnit());
+            return ox1.Merge(ox2).Merge(ox3);
         }
 
         public IObservable<Unit> SelectedLayerItemsChangedAsObservable()
