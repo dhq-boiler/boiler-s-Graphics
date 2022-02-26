@@ -46,7 +46,7 @@ namespace boilersGraphics.Helpers
                         foreach (var layerItem in layerItemsInternal.Descendants("LayerItem"))
                         {
                             LayerItem layerItemObj = ReadLayerItemFromXML(diagramViewModel, layerObj, layerItem);
-                            layerObj.Children.Add(layerItemObj);
+                            layerObj.Children.Value.Add(layerItemObj);
                         }
                     }
 
@@ -65,7 +65,7 @@ namespace boilersGraphics.Helpers
                         continue;
                     var layerItemObj = new LayerItem(designerItemObj, layerObj, layerItem.Element("Name").Value);
                     layerItemObj.IsVisible.Value = bool.Parse(layerItem.Element("IsVisible").Value);
-                    layerObj.Children.Add(layerItemObj);
+                    layerObj.Children.Value.Add(layerItemObj);
                 }
                 foreach (var layerItem in layerItems.Descendants("LayerItem"))
                 {
@@ -76,7 +76,7 @@ namespace boilersGraphics.Helpers
                         continue;
                     var layerItemObj = new LayerItem(connectorObj, layerObj, layerItem.Element("Name").Value);
                     layerItemObj.IsVisible.Value = bool.Parse(layerItem.Element("IsVisible").Value);
-                    layerObj.Children.Add(layerItemObj);
+                    layerObj.Children.Value.Add(layerItemObj);
                 }
             }
         }
@@ -98,7 +98,7 @@ namespace boilersGraphics.Helpers
                         foreach (var layerItem in layerItemsInternal.Elements("LayerItem"))
                         {
                             LayerItem layerItemObj = ReadLayerItemFromXML(diagramViewModel, layerObj, layerItem);
-                            layerObj.Children.Add(layerItemObj);
+                            layerObj.Children.Value.Add(layerItemObj);
                         }
                     }
 
@@ -121,7 +121,7 @@ namespace boilersGraphics.Helpers
                         var item = ExtractDesignerItemViewModelBase(diagramViewModel, designerItem);
                         var layerItem = new LayerItem(item, layerObj, Name.GetNewLayerItemName(diagramViewModel));
                         layerItem.Color.Value = Randomizer.RandomColor(rand);
-                        layerObj.Children.Add(layerItem);
+                        layerObj.Children.Value.Add(layerItem);
                     }
                 }
                 foreach (var connections in root.Elements("Connections"))
@@ -131,7 +131,7 @@ namespace boilersGraphics.Helpers
                         var item = ExtractConnectorBaseViewModel(diagramViewModel, connector);
                         var layerItem = new LayerItem(item, layerObj, Name.GetNewLayerItemName(diagramViewModel));
                         layerItem.Color.Value = Randomizer.RandomColor(rand);
-                        layerObj.Children.Add(layerItem);
+                        layerObj.Children.Value.Add(layerItem);
                     }
                 }
 
@@ -170,7 +170,7 @@ namespace boilersGraphics.Helpers
                                        select li);
             foreach (var c in children_layerItems)
             {
-                layerItemObj.Children.Add(c);
+                layerItemObj.Children.Value.Add(c);
 
                 //グループの場合、子をグループに追加する
                 if (item is GroupItemViewModel groupItemVM)

@@ -536,7 +536,7 @@ namespace boilersGraphics.Extensions
 
         public static IEnumerable<SelectableDesignerItemViewModelBase> Items(this ObservableCollection<Layer> layers)
         {
-            return layers.SelectMany(x => x.Children).Select(x => (x as LayerItem).Item.Value);
+            return layers.SelectMany(x => x.Children.Value).Select(x => (x as LayerItem).Item.Value);
         }
 
         public static T GetParent<T>(this DependencyObject obj)

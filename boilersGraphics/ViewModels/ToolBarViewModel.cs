@@ -328,7 +328,7 @@ namespace boilersGraphics.ViewModels
         {
             var diagramViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel;
             diagramViewModel.SelectedLayers.Value.ToList().ForEach(x => 
-                (x as Layer).Children.ToList().ForEach(y =>
+                (x as Layer).Children.Value.ToList().ForEach(y =>
                 {
                     var layerItem = y as LayerItem;
                     layerItem.Item.Value.IsHitTestVisible.Value = true;

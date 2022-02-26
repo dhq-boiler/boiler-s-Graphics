@@ -88,7 +88,7 @@ namespace boilersGraphics.Adorners
                 item.EdgeBrush.Value = item.Owner.EdgeBrush.Value.Clone();
                 item.FillBrush.Value = item.Owner.FillBrush.Value.Clone();
                 item.EdgeThickness.Value = item.Owner.EdgeThickness.Value.Value;
-                item.ZIndex.Value = item.Owner.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).Count();
+                item.ZIndex.Value = item.Owner.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children.Value).Count();
                 item.Data.Value = _data;
                 item.SnapPoints.Clear();
                 _corners.ToList().ForEach(x => LogManager.GetCurrentClassLogger().Debug($"corner:{x.Point.  Value}"));

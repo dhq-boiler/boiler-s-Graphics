@@ -82,7 +82,7 @@ namespace boilersGraphics.Adorners
                 _item.LeftTop.Value = new Point(_item.Points.Select(x => x.X).Min() - _item.Owner.EdgeThickness.Value.Value / 2, _item.Points.Select(x => x.Y).Min() - _item.Owner.EdgeThickness.Value.Value / 2);
                 _item.EdgeBrush.Value = _item.Owner.EdgeBrush.Value.Clone();
                 _item.EdgeThickness.Value = _item.Owner.EdgeThickness.Value.Value;
-                _item.ZIndex.Value = _item.Owner.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).Count();
+                _item.ZIndex.Value = _item.Owner.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children.Value).Count();
                 _item.IsSelected.Value = true;
                 _item.PathGeometry.Value = GeometryCreator.CreatePolyBezier(_item);
                 _item.IsVisible.Value = true;

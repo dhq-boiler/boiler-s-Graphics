@@ -66,7 +66,7 @@ namespace boilersGraphics.AttachedProperties
                     var diagramVM = (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel;
                     diagramVM.Layers.ToList().ForEach(x => x.IsSelected.Value = false);
                     
-                    var layerItem = diagramVM.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                    var layerItem = diagramVM.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children.Value)
                                                     .First(x => x is LayerItem && (x as LayerItem).Item.Value == selectableDesignerItemViewModelBase);
                     layerItem.IsSelected.Value = true;
                     diagramVM.Layers.Where(x => layerItem.HasAsAncestor(x)).ToList().ForEach(x => x.IsSelected.Value = true);
@@ -108,7 +108,7 @@ namespace boilersGraphics.AttachedProperties
                     view.Focus();
                     var diagramVM = (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel;
                     diagramVM.Layers.ToList().ForEach(x => x.IsSelected.Value = false);
-                    var layerItem = diagramVM.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                    var layerItem = diagramVM.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children.Value)
                                                     .First(x => x is LayerItem && (x as LayerItem).Item.Value == selectableDesignerItemViewModelBase);
                     layerItem.IsSelected.Value = true;
                     diagramVM.Layers.Where(x => layerItem.HasAsAncestor(x)).ToList().ForEach(x => x.IsSelected.Value = true);

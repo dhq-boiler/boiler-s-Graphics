@@ -124,14 +124,14 @@ namespace boilersGraphics.Test
             var layer = diagramVM.Layers[0];
             Assert.That(layer.Name.Value, Is.EqualTo("レイヤー1"));
             Assert.That(layer.Color.Value, Is.EqualTo((Color)ColorConverter.ConvertFromString("#FF044CE6")));
-            Assert.That(layer.Children.Count, Is.EqualTo(1));
-            var layerItem = layer.Children[0];
+            Assert.That(layer.Children.Value.Count, Is.EqualTo(1));
+            var layerItem = layer.Children.Value[0];
             Assert.That(layerItem.Name.Value, Is.EqualTo("アイテム6"));
             Assert.That(layerItem.Color.Value, Is.EqualTo((Color)ColorConverter.ConvertFromString("#FFD7AB14")));
             var layerItemChildren = layerItem.Children;
-            Assert.That(layerItemChildren.Count, Is.EqualTo(2));
-            Assert.That(layerItemChildren[0].Name.Value, Is.EqualTo("アイテム4"));
-            Assert.That(layerItemChildren[1].Name.Value, Is.EqualTo("アイテム5"));
+            Assert.That(layerItemChildren.Value.Count, Is.EqualTo(2));
+            Assert.That(layerItemChildren.Value[0].Name.Value, Is.EqualTo("アイテム4"));
+            Assert.That(layerItemChildren.Value[1].Name.Value, Is.EqualTo("アイテム5"));
         }
     }
 }

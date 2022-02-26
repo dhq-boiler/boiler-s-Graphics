@@ -10,6 +10,7 @@ using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Reflection;
@@ -108,6 +109,7 @@ namespace boilersGraphics.Models
                 }
             })
             .AddTo(_disposable);
+            Children.Value = new ObservableCollection<LayerTreeViewItemBase>();
         }
 
         public void UpdateAppearance(IEnumerable<SelectableDesignerItemViewModelBase> items)

@@ -5,10 +5,10 @@ using Moq;
 using NUnit.Framework;
 using Prism.Services.Dialogs;
 using Reactive.Bindings;
-using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
 
 namespace boilersGraphics.Test
@@ -68,11 +68,31 @@ namespace boilersGraphics.Test
             var item = new NRectangleViewModel();
             var layerItem = new LayerItem(item, firstSelectedLayer, "TEST");
             Assert.That(firstSelectedLayer.Name.Value, Is.EqualTo("レイヤー1"));
-            firstSelectedLayer.Children = new System.Collections.ObjectModel.ObservableCollection<LayerTreeViewItemBase>(new LayerItem[] { layerItem });
             diagramVM.InitializeProperties_Items(false);
+            firstSelectedLayer.Children.Value = new System.Collections.ObjectModel.ObservableCollection<LayerTreeViewItemBase>(new LayerItem[] { layerItem });
             diagramVM.SetSubscribes(false);
 
             Assert.That(diagramVM.AllItems.Value, Has.Member(item));
+        }
+
+        [Test]
+        public void ReactiveCollection初期化()
+        {
+            boilersGraphics.App.IsTest = true;
+            var bag = new ConcurrentBag<SelectableDesignerItemViewModelBase>();
+            const int count = 100000;
+            Parallel.For(0, count, i =>
+            {
+                bag.Add(new NRectangleViewModel() { });
+            });
+            var l = new List<LayerTreeViewItemBase>();
+            while (bag.TryTake(out var item))
+            {
+                var i = new LayerItem(item, null, null);
+                l.Add(i);
+            }
+            var reactiveCollection = new ReactiveCollection<LayerTreeViewItemBase>(l.ToObservable());
+            Assert.That(reactiveCollection, Has.Count.EqualTo(100000));
         }
     }
 }

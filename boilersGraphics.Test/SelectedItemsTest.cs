@@ -55,7 +55,7 @@ namespace boilersGraphics.Test
             var item3 = new NRectangleViewModel();
             viewModel.AddItemCommand.Execute(item3);
 
-            layer1.Children[0].IsSelected.Value = true;
+            layer1.Children.Value[0].IsSelected.Value = true;
 
             Assert.That(viewModel.SelectedItems.Value.ToList(), Has.Count.EqualTo(1));
         }
@@ -80,8 +80,8 @@ namespace boilersGraphics.Test
             var item3 = new NRectangleViewModel();
             viewModel.AddItemCommand.Execute(item3); //アイテム3
 
-            layer1.Children[0].IsSelected.Value = true;
-            layer1.Children[1].IsSelected.Value = true;
+            layer1.Children.Value[0].IsSelected.Value = true;
+            layer1.Children.Value[1].IsSelected.Value = true;
 
             Assert.That(viewModel.SelectedItems.Value.ToList(), Has.Count.EqualTo(2));
             var selectedItems = viewModel.SelectedItems.Value.ToList();
@@ -109,8 +109,8 @@ namespace boilersGraphics.Test
             var item3 = new NRectangleViewModel();
             viewModel.AddItemCommand.Execute(item3); //アイテム3
 
-            layer1.Children[1].IsSelected.Value = true;
-            layer1.Children[0].IsSelected.Value = true;
+            layer1.Children.Value[1].IsSelected.Value = true;
+            layer1.Children.Value[0].IsSelected.Value = true;
 
             Assert.That(viewModel.SelectedItems.Value.ToList(), Has.Count.EqualTo(2));
             var selectedItems = viewModel.SelectedItems.Value.ToList();
@@ -138,10 +138,10 @@ namespace boilersGraphics.Test
             var item3 = new NRectangleViewModel();
             viewModel.AddItemCommand.Execute(item3); //アイテム3
 
-            layer1.Children[0].IsSelected.Value = true;
-            layer1.Children[1].IsSelected.Value = true;
-            layer1.Children[0].IsSelected.Value = false;
-            layer1.Children[2].IsSelected.Value = true;
+            layer1.Children.Value[0].IsSelected.Value = true;
+            layer1.Children.Value[1].IsSelected.Value = true;
+            layer1.Children.Value[0].IsSelected.Value = false;
+            layer1.Children.Value[2].IsSelected.Value = true;
 
             Assert.That(viewModel.SelectedItems.Value.ToList(), Has.Count.EqualTo(2));
             var selectedItems = viewModel.SelectedItems.Value.ToList();
@@ -165,7 +165,7 @@ namespace boilersGraphics.Test
             var item1 = new StraightConnectorViewModel(viewModel, new Point(10, 10), new Point(20, 20));
             viewModel.AddItemCommand.Execute(item1);
 
-            layer1.Children[0].IsSelected.Value = false;
+            layer1.Children.Value[0].IsSelected.Value = false;
 
             Assert.That(viewModel.SelectedItems.Value.ToList(), Has.Count.EqualTo(0));
         }
@@ -186,7 +186,7 @@ namespace boilersGraphics.Test
             var item1 = new StraightConnectorViewModel(viewModel, new Point(10, 10), new Point(20, 20));
             viewModel.AddItemCommand.Execute(item1);
 
-            layer1.Children[0].IsSelected.Value = true;
+            layer1.Children.Value[0].IsSelected.Value = true;
 
             Assert.That(viewModel.SelectedItems.Value.ToList(), Has.Count.EqualTo(2));
             Assert.That(viewModel.SelectedItems.Value.ElementAt(0).IsSelected.Value, Is.True);
@@ -209,7 +209,7 @@ namespace boilersGraphics.Test
             var item1 = new StraightConnectorViewModel(viewModel, new Point(10, 10), new Point(20, 20));
             viewModel.AddItemCommand.Execute(item1);
 
-            layer1.Children[0].IsSelected.Value = true;
+            layer1.Children.Value[0].IsSelected.Value = true;
             item1.SnapPoint0VM.Value.IsSelected.Value = true;
             item1.SnapPoint1VM.Value.IsSelected.Value = true;
 
@@ -234,7 +234,7 @@ namespace boilersGraphics.Test
             var item1 = new StraightConnectorViewModel(viewModel, new Point(10, 10), new Point(20, 20));
             viewModel.AddItemCommand.Execute(item1);
 
-            layer1.Children[0].IsSelected.Value = true;
+            layer1.Children.Value[0].IsSelected.Value = true;
             item1.SnapPoint0VM.Value.IsSelected.Value = true;
             item1.SnapPoint1VM.Value.IsSelected.Value = false;
 

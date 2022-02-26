@@ -82,7 +82,7 @@ namespace boilersGraphics.ViewModels
                         x.ChildrenSwitchIsHitTestVisible(false);
                     });
 
-                    var layerItems = layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                    var layerItems = layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children.Value)
                                            .Where(x => x is LayerItem);
 
                     layerItems.ToList().ForEach(x =>
@@ -119,10 +119,10 @@ namespace boilersGraphics.ViewModels
                     selectedLayer.IsSelected.Value = true;
                     selectedLayer.ChildrenSwitchIsHitTestVisible(true);
 
-                    selectedLayer.UpdateAppearance(selectedLayer.Children.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(xx => xx.Children).Select(x => (x as LayerItem).Item.Value));
-                    selectedLayer.Children.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                    selectedLayer.UpdateAppearance(selectedLayer.Children.Value.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(xx => xx.Children.Value).Select(x => (x as LayerItem).Item.Value));
+                    selectedLayer.Children.Value.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children.Value)
                                           .ToList()
-                                          .ForEach(x => (x as LayerItem).UpdateAppearance(IfGroupBringChildren(selectedLayer.Children, (x as LayerItem).Item.Value)));
+                                          .ForEach(x => (x as LayerItem).UpdateAppearance(IfGroupBringChildren(selectedLayer.Children.Value, (x as LayerItem).Item.Value)));
                 }
                 else if (newItem.GetType() == typeof(LayerItem))
                 {
@@ -133,7 +133,7 @@ namespace boilersGraphics.ViewModels
                         Layers.ToList().ForEach(x => x.IsSelected.Value = false);
                     }
 
-                    var layerItems = layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                    var layerItems = layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children.Value)
                                            .Where(x => x is LayerItem);
                     layerItems.ToList().ForEach(x =>
                     {
@@ -182,7 +182,7 @@ namespace boilersGraphics.ViewModels
                     }
                     temp.IsSelected.Value = true;
 
-                    selectedItem.UpdateAppearance(IfGroupBringChildren(selectedItem.Children, selectedItem.Item.Value));
+                    selectedItem.UpdateAppearance(IfGroupBringChildren(selectedItem.Children.Value, selectedItem.Item.Value));
                 }
             })
             .AddTo(_disposables);
@@ -209,7 +209,7 @@ namespace boilersGraphics.ViewModels
         {
             if (value is GroupItemViewModel groupItemVM)
             {
-                var children = Children.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                var children = Children.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children.Value)
                                        .Select(x => (x as LayerItem).Item.Value)
                                        .Where(x => x.ParentID == groupItemVM.ID);
                 return children;

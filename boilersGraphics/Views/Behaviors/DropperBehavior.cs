@@ -193,7 +193,7 @@ namespace boilersGraphics.Views.Behaviors
             {
                 foreach (var item in diagramViewModel.AllItems.Value.Except(new SelectableDesignerItemViewModelBase[] { background }))
                 {
-                    var layerItems = diagramViewModel.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children);
+                    var layerItems = diagramViewModel.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children.Value);
                     if (!layerItems.OfType<LayerItem>().First(x => x.Item.Value == item).IsVisible.Value)
                         continue;
                     var views = designerCanvas.GetCorrespondingViews<FrameworkElement>(item);

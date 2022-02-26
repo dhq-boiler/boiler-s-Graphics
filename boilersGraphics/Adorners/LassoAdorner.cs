@@ -115,7 +115,7 @@ namespace boilersGraphics.Adorners
             Rect lassoRect = new Rect(_startPoint.Value, _endPoint.Value);
             ItemsControl itemsControl = GetParent<ItemsControl>(typeof(ItemsControl), _designerCanvas);
 
-            foreach (SelectableDesignerItemViewModelBase item in vm.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+            foreach (SelectableDesignerItemViewModelBase item in vm.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children.Value)
                                                                           .Where(x => x is LayerItem)
                                                                           .Select(x => (x as LayerItem).Item.Value))
             {

@@ -60,8 +60,8 @@ namespace boilersGraphics.Test
             viewModel.AddItemCommand.Execute(item3);
 
 
-            viewModel.Layers[0].Children[0].IsSelected.Value = true;
-            viewModel.Layers[0].Children[1].IsSelected.Value = true;
+            viewModel.Layers[0].Children.Value[0].IsSelected.Value = true;
+            viewModel.Layers[0].Children.Value[1].IsSelected.Value = true;
 
             Assert.That(viewModel.CanExecuteAlign(), Is.True);
         }
@@ -92,8 +92,8 @@ namespace boilersGraphics.Test
             viewModel.AddItemCommand.Execute(item3);
 
 
-            viewModel.Layers[0].Children[0].IsSelected.Value = true;
-            viewModel.Layers[0].Children[1].IsSelected.Value = true;
+            viewModel.Layers[0].Children.Value[0].IsSelected.Value = true;
+            viewModel.Layers[0].Children.Value[1].IsSelected.Value = true;
 
             Assert.That(viewModel.CanExecuteDistribute(), Is.True);
         }
@@ -124,8 +124,8 @@ namespace boilersGraphics.Test
             viewModel.AddItemCommand.Execute(item3);
 
 
-            viewModel.Layers[0].Children[0].IsSelected.Value = true;
-            viewModel.Layers[0].Children[1].IsSelected.Value = true;
+            viewModel.Layers[0].Children.Value[0].IsSelected.Value = true;
+            viewModel.Layers[0].Children.Value[1].IsSelected.Value = true;
 
             Assert.That(viewModel.CanExecuteClip(), Is.True);
         }
@@ -156,7 +156,7 @@ namespace boilersGraphics.Test
             viewModel.AddItemCommand.Execute(item3);
 
 
-            viewModel.Layers[0].Children[0].IsSelected.Value = true;
+            viewModel.Layers[0].Children.Value[0].IsSelected.Value = true;
 
             Assert.That(viewModel.CanExecuteCopy(), Is.True);
         }
@@ -186,11 +186,11 @@ namespace boilersGraphics.Test
             var item3 = new NRectangleViewModel();
             viewModel.AddItemCommand.Execute(item3);
 
-            viewModel.Layers[0].Children[0].IsSelected.Value = true;
+            viewModel.Layers[0].Children.Value[0].IsSelected.Value = true;
 
             Assert.That(viewModel.CanExecuteCut(), Is.True);
 
-            viewModel.Layers[0].Children[0].IsSelected.Value = false;
+            viewModel.Layers[0].Children.Value[0].IsSelected.Value = false;
 
             Assert.That(viewModel.CanExecuteCut(), Is.True);
 
@@ -225,7 +225,7 @@ namespace boilersGraphics.Test
             viewModel.AddItemCommand.Execute(item3);
 
 
-            viewModel.Layers[0].Children[0].IsSelected.Value = true;
+            viewModel.Layers[0].Children.Value[0].IsSelected.Value = true;
 
             Assert.That(viewModel.CanExecuteDuplicate(), Is.True);
         }
@@ -258,19 +258,19 @@ namespace boilersGraphics.Test
             var item4 = new NRectangleViewModel();
             viewModel.AddItemCommand.Execute(item4);
 
-            viewModel.Layers[0].Children[0].IsSelected.Value = true;
+            viewModel.Layers[0].Children.Value[0].IsSelected.Value = true;
 
             Assert.That(viewModel.CanExecuteExclude(), Is.False);
 
-            viewModel.Layers[0].Children[1].IsSelected.Value = true;
-            viewModel.Layers[0].Children[2].IsSelected.Value = true;
+            viewModel.Layers[0].Children.Value[1].IsSelected.Value = true;
+            viewModel.Layers[0].Children.Value[2].IsSelected.Value = true;
 
             Assert.That(viewModel.CanExecuteExclude(), Is.False);
 
-            viewModel.Layers[0].Children[0].IsSelected.Value = true;
-            viewModel.Layers[0].Children[1].IsSelected.Value = false;
-            viewModel.Layers[0].Children[2].IsSelected.Value = false;
-            viewModel.Layers[0].Children[3].IsSelected.Value = true;
+            viewModel.Layers[0].Children.Value[0].IsSelected.Value = true;
+            viewModel.Layers[0].Children.Value[1].IsSelected.Value = false;
+            viewModel.Layers[0].Children.Value[2].IsSelected.Value = false;
+            viewModel.Layers[0].Children.Value[3].IsSelected.Value = true;
 
             Assert.That(viewModel.CanExecuteExclude(), Is.True);
         }
@@ -300,8 +300,8 @@ namespace boilersGraphics.Test
             var item3 = new NRectangleViewModel();
             viewModel.AddItemCommand.Execute(item3);
 
-            viewModel.Layers[0].Children[0].IsSelected.Value = true;
-            viewModel.Layers[0].Children[1].IsSelected.Value = true;
+            viewModel.Layers[0].Children.Value[0].IsSelected.Value = true;
+            viewModel.Layers[0].Children.Value[1].IsSelected.Value = true;
 
             Assert.That(viewModel.CanExecuteGroup(), Is.True);
         }
@@ -334,19 +334,19 @@ namespace boilersGraphics.Test
             var item4 = new NRectangleViewModel();
             viewModel.AddItemCommand.Execute(item4);
 
-            viewModel.Layers[0].Children[0].IsSelected.Value = true;
+            viewModel.Layers[0].Children.Value[0].IsSelected.Value = true;
 
             Assert.That(viewModel.CanExecuteIntersect(), Is.False);
 
-            viewModel.Layers[0].Children[1].IsSelected.Value = true;
-            viewModel.Layers[0].Children[2].IsSelected.Value = true;
+            viewModel.Layers[0].Children.Value[1].IsSelected.Value = true;
+            viewModel.Layers[0].Children.Value[2].IsSelected.Value = true;
 
             Assert.That(viewModel.CanExecuteIntersect(), Is.False);
 
-            viewModel.Layers[0].Children[0].IsSelected.Value = true;
-            viewModel.Layers[0].Children[1].IsSelected.Value = false;
-            viewModel.Layers[0].Children[2].IsSelected.Value = false;
-            viewModel.Layers[0].Children[3].IsSelected.Value = true;
+            viewModel.Layers[0].Children.Value[0].IsSelected.Value = true;
+            viewModel.Layers[0].Children.Value[1].IsSelected.Value = false;
+            viewModel.Layers[0].Children.Value[2].IsSelected.Value = false;
+            viewModel.Layers[0].Children.Value[3].IsSelected.Value = true;
 
             Assert.That(viewModel.CanExecuteIntersect(), Is.True);
         }
@@ -377,8 +377,8 @@ namespace boilersGraphics.Test
             viewModel.AddItemCommand.Execute(item3);
 
 
-            viewModel.Layers[0].Children[0].IsSelected.Value = true;
-            viewModel.Layers[0].Children[1].IsSelected.Value = true;
+            viewModel.Layers[0].Children.Value[0].IsSelected.Value = true;
+            viewModel.Layers[0].Children.Value[1].IsSelected.Value = true;
 
             Assert.That(viewModel.CanExecuteOrder(), Is.True);
         }
@@ -425,8 +425,8 @@ namespace boilersGraphics.Test
             viewModel.AddItemCommand.Execute(item3);
 
 
-            viewModel.Layers[0].Children[0].IsSelected.Value = true;
-            viewModel.Layers[0].Children[1].IsSelected.Value = true;
+            viewModel.Layers[0].Children.Value[0].IsSelected.Value = true;
+            viewModel.Layers[0].Children.Value[1].IsSelected.Value = true;
 
             viewModel.CopyCommand.Execute();
 
@@ -593,12 +593,12 @@ namespace boilersGraphics.Test
             var item3 = new NRectangleViewModel();
             viewModel.AddItemCommand.Execute(item3);
 
-            viewModel.Layers[0].Children[0].IsSelected.Value = true;
-            viewModel.Layers[0].Children[1].IsSelected.Value = true;
+            viewModel.Layers[0].Children.Value[0].IsSelected.Value = true;
+            viewModel.Layers[0].Children.Value[1].IsSelected.Value = true;
 
             viewModel.GroupCommand.Execute();
 
-            viewModel.Layers[0].Children[0].IsSelected.Value = true;
+            viewModel.Layers[0].Children.Value[0].IsSelected.Value = true;
 
             Assert.That(viewModel.CanExecuteUngroup(), Is.EqualTo(true));
         }
@@ -628,8 +628,8 @@ namespace boilersGraphics.Test
             var item3 = new NRectangleViewModel();
             viewModel.AddItemCommand.Execute(item3);
 
-            viewModel.Layers[0].Children[0].IsSelected.Value = true;
-            viewModel.Layers[0].Children[1].IsSelected.Value = true;
+            viewModel.Layers[0].Children.Value[0].IsSelected.Value = true;
+            viewModel.Layers[0].Children.Value[1].IsSelected.Value = true;
 
             Assert.That(viewModel.CanExecuteUniform(), Is.True);
         }
@@ -662,19 +662,19 @@ namespace boilersGraphics.Test
             var item4 = new NRectangleViewModel();
             viewModel.AddItemCommand.Execute(item4);
 
-            viewModel.Layers[0].Children[0].IsSelected.Value = true;
+            viewModel.Layers[0].Children.Value[0].IsSelected.Value = true;
 
             Assert.That(viewModel.CanExecuteUnion(), Is.False);
 
-            viewModel.Layers[0].Children[1].IsSelected.Value = true;
-            viewModel.Layers[0].Children[2].IsSelected.Value = true;
+            viewModel.Layers[0].Children.Value[1].IsSelected.Value = true;
+            viewModel.Layers[0].Children.Value[2].IsSelected.Value = true;
 
             Assert.That(viewModel.CanExecuteUnion(), Is.False);
 
-            viewModel.Layers[0].Children[0].IsSelected.Value = true;
-            viewModel.Layers[0].Children[1].IsSelected.Value = false;
-            viewModel.Layers[0].Children[2].IsSelected.Value = false;
-            viewModel.Layers[0].Children[3].IsSelected.Value = true;
+            viewModel.Layers[0].Children.Value[0].IsSelected.Value = true;
+            viewModel.Layers[0].Children.Value[1].IsSelected.Value = false;
+            viewModel.Layers[0].Children.Value[2].IsSelected.Value = false;
+            viewModel.Layers[0].Children.Value[3].IsSelected.Value = true;
 
             Assert.That(viewModel.CanExecuteUnion(), Is.True);
         }
@@ -707,19 +707,19 @@ namespace boilersGraphics.Test
             var item4 = new NRectangleViewModel();
             viewModel.AddItemCommand.Execute(item4);
 
-            viewModel.Layers[0].Children[0].IsSelected.Value = true;
+            viewModel.Layers[0].Children.Value[0].IsSelected.Value = true;
 
             Assert.That(viewModel.CanExecuteXor(), Is.False);
 
-            viewModel.Layers[0].Children[1].IsSelected.Value = true;
-            viewModel.Layers[0].Children[2].IsSelected.Value = true;
+            viewModel.Layers[0].Children.Value[1].IsSelected.Value = true;
+            viewModel.Layers[0].Children.Value[2].IsSelected.Value = true;
 
             Assert.That(viewModel.CanExecuteXor(), Is.False);
 
-            viewModel.Layers[0].Children[0].IsSelected.Value = true;
-            viewModel.Layers[0].Children[1].IsSelected.Value = false;
-            viewModel.Layers[0].Children[2].IsSelected.Value = false;
-            viewModel.Layers[0].Children[3].IsSelected.Value = true;
+            viewModel.Layers[0].Children.Value[0].IsSelected.Value = true;
+            viewModel.Layers[0].Children.Value[1].IsSelected.Value = false;
+            viewModel.Layers[0].Children.Value[2].IsSelected.Value = false;
+            viewModel.Layers[0].Children.Value[3].IsSelected.Value = true;
 
             Assert.That(viewModel.CanExecuteXor(), Is.True);
         }
@@ -758,10 +758,10 @@ namespace boilersGraphics.Test
             item4.Height.Value = 20;
             viewModel.AddItemCommand.Execute(item4);
 
-            viewModel.Layers[0].Children[0].IsSelected.Value = true;
-            viewModel.Layers[0].Children[1].IsSelected.Value = false;
-            viewModel.Layers[0].Children[2].IsSelected.Value = false;
-            viewModel.Layers[0].Children[3].IsSelected.Value = true;
+            viewModel.Layers[0].Children.Value[0].IsSelected.Value = true;
+            viewModel.Layers[0].Children.Value[1].IsSelected.Value = false;
+            viewModel.Layers[0].Children.Value[2].IsSelected.Value = false;
+            viewModel.Layers[0].Children.Value[3].IsSelected.Value = true;
 
             viewModel.UnionCommand.Execute();
             Assert.That(viewModel.AllItems.Value.Where(x => x != null).Last(), Is.InstanceOf<CombineGeometryViewModel>());
@@ -801,10 +801,10 @@ namespace boilersGraphics.Test
             item4.Height.Value = 20;
             viewModel.AddItemCommand.Execute(item4);
 
-            viewModel.Layers[0].Children[0].IsSelected.Value = true;
-            viewModel.Layers[0].Children[1].IsSelected.Value = false;
-            viewModel.Layers[0].Children[2].IsSelected.Value = false;
-            viewModel.Layers[0].Children[3].IsSelected.Value = true;
+            viewModel.Layers[0].Children.Value[0].IsSelected.Value = true;
+            viewModel.Layers[0].Children.Value[1].IsSelected.Value = false;
+            viewModel.Layers[0].Children.Value[2].IsSelected.Value = false;
+            viewModel.Layers[0].Children.Value[3].IsSelected.Value = true;
 
             viewModel.IntersectCommand.Execute();
             Assert.That(viewModel.AllItems.Value.Where(x => x != null).Last(), Is.InstanceOf<CombineGeometryViewModel>());
@@ -844,10 +844,10 @@ namespace boilersGraphics.Test
             item4.Height.Value = 20;
             viewModel.AddItemCommand.Execute(item4);
 
-            viewModel.Layers[0].Children[0].IsSelected.Value = true;
-            viewModel.Layers[0].Children[1].IsSelected.Value = false;
-            viewModel.Layers[0].Children[2].IsSelected.Value = false;
-            viewModel.Layers[0].Children[3].IsSelected.Value = true;
+            viewModel.Layers[0].Children.Value[0].IsSelected.Value = true;
+            viewModel.Layers[0].Children.Value[1].IsSelected.Value = false;
+            viewModel.Layers[0].Children.Value[2].IsSelected.Value = false;
+            viewModel.Layers[0].Children.Value[3].IsSelected.Value = true;
 
             viewModel.XorCommand.Execute();
             Assert.That(viewModel.AllItems.Value.Where(x => x != null).Last(), Is.InstanceOf<CombineGeometryViewModel>());
@@ -887,10 +887,10 @@ namespace boilersGraphics.Test
             item4.Height.Value = 20;
             viewModel.AddItemCommand.Execute(item4);
 
-            viewModel.Layers[0].Children[0].IsSelected.Value = true;
-            viewModel.Layers[0].Children[1].IsSelected.Value = false;
-            viewModel.Layers[0].Children[2].IsSelected.Value = false;
-            viewModel.Layers[0].Children[3].IsSelected.Value = true;
+            viewModel.Layers[0].Children.Value[0].IsSelected.Value = true;
+            viewModel.Layers[0].Children.Value[1].IsSelected.Value = false;
+            viewModel.Layers[0].Children.Value[2].IsSelected.Value = false;
+            viewModel.Layers[0].Children.Value[3].IsSelected.Value = true;
 
             viewModel.ExcludeCommand.Execute();
             Assert.That(viewModel.AllItems.Value.Where(x => x != null).Last(), Is.InstanceOf<CombineGeometryViewModel>());
@@ -930,10 +930,10 @@ namespace boilersGraphics.Test
             item4.Height.Value = 20;
             viewModel.AddItemCommand.Execute(item4);
 
-            viewModel.Layers[0].Children[0].IsSelected.Value = false;
-            viewModel.Layers[0].Children[1].IsSelected.Value = false;
-            viewModel.Layers[0].Children[2].IsSelected.Value = false;
-            viewModel.Layers[0].Children[3].IsSelected.Value = false;
+            viewModel.Layers[0].Children.Value[0].IsSelected.Value = false;
+            viewModel.Layers[0].Children.Value[1].IsSelected.Value = false;
+            viewModel.Layers[0].Children.Value[2].IsSelected.Value = false;
+            viewModel.Layers[0].Children.Value[3].IsSelected.Value = false;
 
             viewModel.AlignBottomCommand.Execute();
 
@@ -986,10 +986,10 @@ namespace boilersGraphics.Test
             item4.Height.Value = 20;
             viewModel.AddItemCommand.Execute(item4);
 
-            viewModel.Layers[0].Children[0].IsSelected.Value = true;
-            viewModel.Layers[0].Children[1].IsSelected.Value = false;
-            viewModel.Layers[0].Children[2].IsSelected.Value = false;
-            viewModel.Layers[0].Children[3].IsSelected.Value = true;
+            viewModel.Layers[0].Children.Value[0].IsSelected.Value = true;
+            viewModel.Layers[0].Children.Value[1].IsSelected.Value = false;
+            viewModel.Layers[0].Children.Value[2].IsSelected.Value = false;
+            viewModel.Layers[0].Children.Value[3].IsSelected.Value = true;
 
             viewModel.AlignBottomCommand.Execute();
             
@@ -1042,10 +1042,10 @@ namespace boilersGraphics.Test
             item4.Height.Value = 20;
             viewModel.AddItemCommand.Execute(item4);
 
-            viewModel.Layers[0].Children[0].IsSelected.Value = true;
-            viewModel.Layers[0].Children[1].IsSelected.Value = false;
-            viewModel.Layers[0].Children[2].IsSelected.Value = false;
-            viewModel.Layers[0].Children[3].IsSelected.Value = true;
+            viewModel.Layers[0].Children.Value[0].IsSelected.Value = true;
+            viewModel.Layers[0].Children.Value[1].IsSelected.Value = false;
+            viewModel.Layers[0].Children.Value[2].IsSelected.Value = false;
+            viewModel.Layers[0].Children.Value[3].IsSelected.Value = true;
 
             viewModel.AlignLeftCommand.Execute();
 
@@ -1098,10 +1098,10 @@ namespace boilersGraphics.Test
             item4.Height.Value = 20;
             viewModel.AddItemCommand.Execute(item4);
 
-            viewModel.Layers[0].Children[0].IsSelected.Value = false;
-            viewModel.Layers[0].Children[1].IsSelected.Value = false;
-            viewModel.Layers[0].Children[2].IsSelected.Value = false;
-            viewModel.Layers[0].Children[3].IsSelected.Value = false;
+            viewModel.Layers[0].Children.Value[0].IsSelected.Value = false;
+            viewModel.Layers[0].Children.Value[1].IsSelected.Value = false;
+            viewModel.Layers[0].Children.Value[2].IsSelected.Value = false;
+            viewModel.Layers[0].Children.Value[3].IsSelected.Value = false;
 
             viewModel.AlignLeftCommand.Execute();
 
@@ -1154,10 +1154,10 @@ namespace boilersGraphics.Test
             item4.Height.Value = 20;
             viewModel.AddItemCommand.Execute(item4);
 
-            viewModel.Layers[0].Children[0].IsSelected.Value = false;
-            viewModel.Layers[0].Children[1].IsSelected.Value = false;
-            viewModel.Layers[0].Children[2].IsSelected.Value = false;
-            viewModel.Layers[0].Children[3].IsSelected.Value = false;
+            viewModel.Layers[0].Children.Value[0].IsSelected.Value = false;
+            viewModel.Layers[0].Children.Value[1].IsSelected.Value = false;
+            viewModel.Layers[0].Children.Value[2].IsSelected.Value = false;
+            viewModel.Layers[0].Children.Value[3].IsSelected.Value = false;
 
             viewModel.AlignRightCommand.Execute();
 
@@ -1210,10 +1210,10 @@ namespace boilersGraphics.Test
             item4.Height.Value = 20;
             viewModel.AddItemCommand.Execute(item4);
 
-            viewModel.Layers[0].Children[0].IsSelected.Value = true;
-            viewModel.Layers[0].Children[1].IsSelected.Value = false;
-            viewModel.Layers[0].Children[2].IsSelected.Value = false;
-            viewModel.Layers[0].Children[3].IsSelected.Value = true;
+            viewModel.Layers[0].Children.Value[0].IsSelected.Value = true;
+            viewModel.Layers[0].Children.Value[1].IsSelected.Value = false;
+            viewModel.Layers[0].Children.Value[2].IsSelected.Value = false;
+            viewModel.Layers[0].Children.Value[3].IsSelected.Value = true;
 
             viewModel.AlignRightCommand.Execute();
 
@@ -1266,10 +1266,10 @@ namespace boilersGraphics.Test
             item4.Height.Value = 20;
             viewModel.AddItemCommand.Execute(item4);
 
-            viewModel.Layers[0].Children[0].IsSelected.Value = false;
-            viewModel.Layers[0].Children[1].IsSelected.Value = false;
-            viewModel.Layers[0].Children[2].IsSelected.Value = false;
-            viewModel.Layers[0].Children[3].IsSelected.Value = false;
+            viewModel.Layers[0].Children.Value[0].IsSelected.Value = false;
+            viewModel.Layers[0].Children.Value[1].IsSelected.Value = false;
+            viewModel.Layers[0].Children.Value[2].IsSelected.Value = false;
+            viewModel.Layers[0].Children.Value[3].IsSelected.Value = false;
 
             viewModel.AlignTopCommand.Execute();
 
@@ -1322,10 +1322,10 @@ namespace boilersGraphics.Test
             item4.Height.Value = 20;
             viewModel.AddItemCommand.Execute(item4);
 
-            viewModel.Layers[0].Children[0].IsSelected.Value = true;
-            viewModel.Layers[0].Children[1].IsSelected.Value = false;
-            viewModel.Layers[0].Children[2].IsSelected.Value = false;
-            viewModel.Layers[0].Children[3].IsSelected.Value = true;
+            viewModel.Layers[0].Children.Value[0].IsSelected.Value = true;
+            viewModel.Layers[0].Children.Value[1].IsSelected.Value = false;
+            viewModel.Layers[0].Children.Value[2].IsSelected.Value = false;
+            viewModel.Layers[0].Children.Value[3].IsSelected.Value = true;
 
             viewModel.AlignTopCommand.Execute();
 

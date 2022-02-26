@@ -47,7 +47,7 @@ namespace boilersGraphics.Models
 
         public ReactivePropertySlim<Visibility> AfterSeparatorVisibility { get; } = new ReactivePropertySlim<Visibility>(Visibility.Hidden);
 
-        public ObservableCollection<LayerTreeViewItemBase> Children { get; set; } = new ObservableCollection<LayerTreeViewItemBase>();
+        public ReactivePropertySlim<ObservableCollection<LayerTreeViewItemBase>> Children { get; set; } = new ReactivePropertySlim<ObservableCollection<LayerTreeViewItemBase>>();
 
         public ReactiveCollection<Control> LayerTreeViewItemContextMenu { get; } = new ReactiveCollection<Control>();
 
@@ -77,41 +77,43 @@ namespace boilersGraphics.Models
                     Command = ChangeNameCommand
                 });
             }
+            Children.Value = new ObservableCollection<LayerTreeViewItemBase>();
         }
 
         public IObservable<Unit> LayerChangedAsObservable()
         {
-            return this.Children.CollectionChangedAsObservable()
+            return this.Children.Value
+                                .CollectionChangedAsObservable()
                                 .Where(x => x.Action == NotifyCollectionChangedAction.Remove || x.Action == NotifyCollectionChangedAction.Reset)
                                 .ToUnit()
-                                .Merge(this.Children.Select(x => x.LayerChangedAsObservable()).Merge())
+                                .Merge(this.Children.Value.Select(x => x.LayerChangedAsObservable()).Merge())
                                 .Merge(this.ObserveProperty(x => x.Children).ToUnit());
         }
 
         public IObservable<Unit> LayerItemsChangedAsObservable()
         {
-            var ox1 = Children.ObserveElementObservableProperty(x => (x as LayerItem).Item)
+            var ox1 = Children.Value.ObserveElementObservableProperty(x => (x as LayerItem).Item)
                         .ToUnit()
-                        .Merge(Children.CollectionChangedAsObservable().Where(x => x.Action == NotifyCollectionChangedAction.Remove || x.Action == NotifyCollectionChangedAction.Reset).ToUnit());
-            var ox2 = Children.ObserveElementObservableProperty(x => (x as LayerItem).Item)
+                        .Merge(Children.Value
+                                       .CollectionChangedAsObservable()
+                                       .Where(x => x.Action == NotifyCollectionChangedAction.Remove || x.Action == NotifyCollectionChangedAction.Reset)
+                                       .ToUnit());
+            var ox2 = Children.Value.ObserveElementObservableProperty(x => (x as LayerItem).Item)
                         .ToUnit()
-                        .Merge(Children.Select(x => x.LayerItemsChangedAsObservable()).Merge())
-                        .Merge(this.ObserveProperty(x => x.Children).ToUnit());
-            var ox3 = Children.ObserveElementObservableProperty(x => (x as LayerItem).Item)
-                        .ToUnit()
-                        .Merge(this.ObserveProperty(x => x.Children).ToUnit());
+                        .Merge(Children.Value.Select(x => x.LayerItemsChangedAsObservable()).Merge());
+            var ox3 = this.ObserveProperty(x => x.Children.Value).ToUnit();
             return ox1.Merge(ox2).Merge(ox3);
         }
 
         public IObservable<Unit> SelectedLayerItemsChangedAsObservable()
         {
-            var ox1 = Children
+            var ox1 = Children.Value
                 .ObserveElementObservableProperty(x => (x as LayerItem).Item.Value.IsSelected)
                 .ToUnit()
-                .Merge(Children.CollectionChangedAsObservable().Where(x => x.Action == NotifyCollectionChangedAction.Remove || x.Action == NotifyCollectionChangedAction.Reset).ToUnit());
+                .Merge(Children.Value.CollectionChangedAsObservable().Where(x => x.Action == NotifyCollectionChangedAction.Remove || x.Action == NotifyCollectionChangedAction.Reset).ToUnit());
 
-            var ox2 = Children.CollectionChangedAsObservable()
-                    .Select(_ => Children.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+            var ox2 = Children.Value.CollectionChangedAsObservable()
+                    .Select(_ => Children.Value.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children.Value)
                         .OfType<LayerItem>()
                         .Select(x => x.Item.Value)
                         .OfType<ConnectorBaseViewModel>()
@@ -119,8 +121,8 @@ namespace boilersGraphics.Models
                         .Select(x => x.IsSelected.ToUnit())
                         .Merge())
                     .Switch();
-            var ox3 = Children.CollectionChangedAsObservable()
-                              .Select(_ => Children.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+            var ox3 = Children.Value.CollectionChangedAsObservable()
+                              .Select(_ => Children.Value.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children.Value)
                                   .OfType<LayerItem>()
                                   .Select(x => x.Item.Value)
                                   .Select(x => x.IsSelected.ToUnit())
@@ -141,9 +143,9 @@ namespace boilersGraphics.Models
             Random rand = new Random();
             layerItem.Color.Value = Randomizer.RandomColor(rand);
             if (isRecording)
-                mainWindowViewModel.Recorder.Current.ExecuteAdd(Children, layerItem);
+                mainWindowViewModel.Recorder.Current.ExecuteAdd(Children.Value, layerItem);
             else
-                Children.Add(layerItem);
+                Children.Value.Add(layerItem);
         }
 
         public void AddItem(MainWindowViewModel mainWindowVM, DiagramViewModel diagramViewModel, LayerItem item)
@@ -152,22 +154,22 @@ namespace boilersGraphics.Models
             item.Parent.Value = this;
             Random rand = new Random();
             item.Color.Value = Randomizer.RandomColor(rand);
-            mainWindowVM.Recorder.Current.ExecuteAdd(Children, item);
+            mainWindowVM.Recorder.Current.ExecuteAdd(Children.Value, item);
         }
 
         public void RemoveItem(MainWindowViewModel mainWindowViewModel, SelectableDesignerItemViewModelBase item)
         {
-            var layerItems = Children.Where(x => (x as LayerItem).Item.Value == item);
+            var layerItems = Children.Value.Where(x => (x as LayerItem).Item.Value == item);
             layerItems.ToList().ForEach(x =>
             {
-                mainWindowViewModel.Recorder.Current.ExecuteRemove(Children, x);
-                LogManager.GetCurrentClassLogger().Trace($"{x} removed from {Children}");
+                mainWindowViewModel.Recorder.Current.ExecuteRemove(Children.Value, x);
+                LogManager.GetCurrentClassLogger().Trace($"{x} removed from {Children.Value}");
             });
         }
 
         public void ChildrenSwitchIsHitTestVisible(bool isVisible)
         {
-            Children.ToList().ForEach(x =>
+            Children.Value.ToList().ForEach(x =>
             {
                 if (x is LayerItem layerItem)
                 {
@@ -180,7 +182,7 @@ namespace boilersGraphics.Models
 
         public void ChildrenSwitchVisibility(bool isVisible)
         {
-            Children.ToList().ForEach(x =>
+            Children.Value.ToList().ForEach(x =>
             {
                 x.IsVisible.Value = isVisible;
                 x.ChildrenSwitchVisibility(isVisible); 
@@ -191,9 +193,9 @@ namespace boilersGraphics.Models
         {
             Parent.Value = parent;
 
-            if (Children == null)
+            if (Children.Value == null)
                 return;
-            foreach (var child in Children)
+            foreach (var child in Children.Value)
             {
                 child.SetParentToChildren(this);
             }
@@ -201,30 +203,30 @@ namespace boilersGraphics.Models
 
         public void InsertBeforeChildren(LayerTreeViewItemBase from, LayerTreeViewItemBase to)
         {
-            var index = Children.IndexOf(to);
+            var index = Children.Value.IndexOf(to);
             if (index < 0)
                 return;
 
-            Children.Insert(index, from);
+            Children.Value.Insert(index, from);
         }
 
         public void InsertAfterChildren(LayerTreeViewItemBase from, LayerTreeViewItemBase to)
         {
-            var index = Children.IndexOf(to);
+            var index = Children.Value.IndexOf(to);
             if (index < 0)
                 return;
 
-            Children.Insert(index + 1, from);
+            Children.Value.Insert(index + 1, from);
         }
 
         public void AddChildren(OperationRecorder recorder, LayerTreeViewItemBase infoBase)
         {
-            recorder.Current.ExecuteAdd(Children, infoBase);
+            recorder.Current.ExecuteAdd(Children.Value, infoBase);
         }
 
         public void RemoveChildren(OperationRecorder recorder, LayerTreeViewItemBase infoBase)
         {
-            recorder.Current.ExecuteRemove(Children, infoBase);
+            recorder.Current.ExecuteRemove(Children.Value, infoBase);
         }
 
         public bool ContainsParent(LayerTreeViewItemBase infoBase)
@@ -245,7 +247,7 @@ namespace boilersGraphics.Models
             {
                 if (disposing)
                 {
-                    foreach (var child in Children)
+                    foreach (var child in Children.Value)
                     {
                         child.Dispose();
                     }
@@ -262,8 +264,8 @@ namespace boilersGraphics.Models
                     LayerTreeViewItemContextMenu.Dispose();
                     ChangeNameCommand.Dispose();
 
-                    Children.Clear();
-                    Children = null;
+                    Children.Value.Clear();
+                    Children.Value = null;
                 }
 
                 disposedValue = true;
@@ -306,9 +308,9 @@ namespace boilersGraphics.Models
 
         public int GetNewZIndex(IEnumerable<LayerTreeViewItemBase> layers)
         {
-            var layerItems = layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+            var layerItems = layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children.Value)
                                    .Where(x => x is LayerItem);
-            var zindexes = Children.Union(layerItems).Cast<LayerItem>().Select(x => x.Item.Value.ZIndex.Value);
+            var zindexes = Children.Value.Union(layerItems).Cast<LayerItem>().Select(x => x.Item.Value.ZIndex.Value);
             if (zindexes.Count() == 0)
                 return 0;
             return zindexes.Max() + 1;
@@ -316,7 +318,7 @@ namespace boilersGraphics.Models
 
         public void PushZIndex(OperationRecorder recorder, int newZIndex)
         {
-            var targetChildren = Children.Cast<LayerItem>().Where(x => x.Item.Value.ZIndex.Value >= newZIndex);
+            var targetChildren = Children.Value.Cast<LayerItem>().Where(x => x.Item.Value.ZIndex.Value >= newZIndex);
             foreach (var target in targetChildren)
             {
                 recorder.Current.ExecuteSetProperty(target.Item.Value, "ZIndex.Value", target.Item.Value.ZIndex.Value + 1);
@@ -331,7 +333,7 @@ namespace boilersGraphics.Models
             }
 
             int zindex = foregroundZIndex;
-            foreach (var child in Children)
+            foreach (var child in Children.Value)
             {
                 zindex = child.SetZIndex(recorder, zindex);
             }

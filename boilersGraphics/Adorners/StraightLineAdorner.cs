@@ -86,7 +86,7 @@ namespace boilersGraphics.Adorners
                 item.Owner = viewModel;
                 item.EdgeBrush.Value = item.Owner.EdgeBrush.Value.Clone();
                 item.EdgeThickness.Value = item.Owner.EdgeThickness.Value.Value;
-                item.ZIndex.Value = item.Owner.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).Count();
+                item.ZIndex.Value = item.Owner.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children.Value).Count();
                 item.IsSelected.Value = true;
                 item.IsVisible.Value = true;
                 item.AddPointP2(viewModel, _endPoint.Value);

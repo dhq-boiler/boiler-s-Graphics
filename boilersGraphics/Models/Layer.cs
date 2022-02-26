@@ -41,17 +41,17 @@ namespace boilersGraphics.Models
 
             if (!isPreview)
             {
-                var temp = Children.ObserveElementProperty(x => (x as LayerItem).Item.Value)
+                var temp = Children.Value.ObserveElementProperty(x => (x as LayerItem).Item.Value)
                      .ToUnit()
-                     .Merge(Children.ObserveElementObservableProperty(x => x.IsSelected).ToUnit())
+                     .Merge(Children.Value.ObserveElementObservableProperty(x => x.IsSelected).ToUnit())
                      .ToUnit()
-                     .Merge(Children.ObserveElementObservableProperty(x => x.IsVisible).ToUnit())
+                     .Merge(Children.Value.ObserveElementObservableProperty(x => x.IsVisible).ToUnit())
                      .ToUnit()
-                     .Merge(Children.ObserveElementObservableProperty(x => (x as LayerItem).Item.Value.EdgeBrush).ToUnit())
+                     .Merge(Children.Value.ObserveElementObservableProperty(x => (x as LayerItem).Item.Value.EdgeBrush).ToUnit())
                      .ToUnit()
-                     .Merge(Children.ObserveElementObservableProperty(x => (x as LayerItem).Item.Value.EdgeThickness).ToUnit())
+                     .Merge(Children.Value.ObserveElementObservableProperty(x => (x as LayerItem).Item.Value.EdgeThickness).ToUnit())
                      .ToUnit()
-                     .Merge(Children.ObserveElementObservableProperty(x => (x as LayerItem).Item.Value.FillBrush).ToUnit());
+                     .Merge(Children.Value.ObserveElementObservableProperty(x => (x as LayerItem).Item.Value.FillBrush).ToUnit());
 
                 if (!App.IsTest)
                 {
@@ -63,8 +63,8 @@ namespace boilersGraphics.Models
                 .Subscribe(x =>
                 {
                     LogManager.GetCurrentClassLogger().Trace("detected Layer changes. run Layer.UpdateAppearance().");
-                    UpdateAppearance(Children.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(xx => xx.Children).Select(x => (x as LayerItem).Item.Value));
-                    Children.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                    UpdateAppearance(Children.Value.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(xx => xx.Children.Value).Select(x => (x as LayerItem).Item.Value));
+                    Children.Value.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children.Value)
                             .ToList()
                             .ForEach(x => (x as LayerItem).UpdateAppearance(IfGroupBringChildren((x as LayerItem).Item.Value)));
                 })
@@ -78,7 +78,7 @@ namespace boilersGraphics.Models
         {
             if (value is GroupItemViewModel groupItemVM)
             {
-                var children = Children.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                var children = Children.Value.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children.Value)
                                        .Select(x => (x as LayerItem).Item.Value)
                                        .Where(x => x.ParentID == groupItemVM.ID);
                 return children;
@@ -184,7 +184,7 @@ namespace boilersGraphics.Models
             if (other == null)
                 return 1;
             else
-                return Children.OfType<LayerItem>().Max(x => x.Item.Value.ZIndex.Value).CompareTo(other.OfType<LayerItem>().Max(x => x.Item.Value.ZIndex.Value));
+                return Children.Value.OfType<LayerItem>().Max(x => x.Item.Value.ZIndex.Value).CompareTo(other.OfType<LayerItem>().Max(x => x.Item.Value.ZIndex.Value));
         }
 
         public int CompareTo(object obj)
@@ -195,8 +195,8 @@ namespace boilersGraphics.Models
                 return 1;
             else
             {
-                int otherInt = other.Children.OfType<LayerItem>().Max(x => x.Item.Value.ZIndex.Value);
-                return Children.OfType<LayerItem>().Max(x => x.Item.Value.ZIndex.Value).CompareTo(otherInt);
+                int otherInt = other.Children.Value.OfType<LayerItem>().Max(x => x.Item.Value.ZIndex.Value);
+                return Children.Value.OfType<LayerItem>().Max(x => x.Item.Value.ZIndex.Value).CompareTo(otherInt);
             }
         }
 

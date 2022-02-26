@@ -178,7 +178,7 @@ namespace boilersGraphics.Views.Behaviors
             var sourceItemParent = sourceItem.Parent.Value;
             var targetItemParent = targetItem.Parent.Value;
             var diagramVM = (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel;
-            ObservableCollection<LayerTreeViewItemBase> children = sourceItemParent.Children;
+            ObservableCollection<LayerTreeViewItemBase> children = sourceItemParent.Children.Value;
             if (sourceItemParent == diagramVM.RootLayer.Value)
             {
                 children = diagramVM.Layers;
@@ -189,7 +189,7 @@ namespace boilersGraphics.Views.Behaviors
                 case InsertType.Before:
                     if (sourceItemParent != diagramVM.RootLayer.Value)
                     {
-                        children = targetItemParent.Children;
+                        children = targetItemParent.Children.Value;
                     }
                     LayerTreeViewItemCollection.InsertBeforeChildren(mainWindowViewModel.Recorder, diagramVM.Layers, children, sourceItem, targetItem);
                     sourceItem.Parent.Value = targetItemParent;
@@ -198,14 +198,14 @@ namespace boilersGraphics.Views.Behaviors
                 case InsertType.After:
                     if (sourceItemParent != diagramVM.RootLayer.Value)
                     {
-                        children = targetItemParent.Children;
+                        children = targetItemParent.Children.Value;
                     }
                     LayerTreeViewItemCollection.InsertAfterChildren(mainWindowViewModel.Recorder, diagramVM.Layers, children, sourceItem, targetItem);
                     sourceItem.Parent.Value = targetItemParent;
                     sourceItem.IsSelected.Value = true;
                     break;
                 case InsertType.Children:
-                    children = targetItem.Children;
+                    children = targetItem.Children.Value;
                     LayerTreeViewItemCollection.AddChildren(mainWindowViewModel.Recorder, diagramVM.Layers, children, sourceItem);
                     targetItem.IsExpanded.Value = true;
                     sourceItem.IsSelected.Value = true;
@@ -267,7 +267,7 @@ namespace boilersGraphics.Views.Behaviors
         private static LayerTreeViewItemBase GetParentLastChild(LayerTreeViewItemBase infoBase)
         {
             var targetParent = infoBase.Parent.Value;
-            var last = targetParent?.Children.LastOrDefault();
+            var last = targetParent?.Children.Value.LastOrDefault();
             return last;
         }
 

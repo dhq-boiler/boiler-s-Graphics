@@ -34,7 +34,7 @@ namespace boilersGraphics.Helpers
 
         private static IEnumerable<XElement> ExtractLayerItemFromLayer(LayerTreeViewItemBase layer)
         {
-            var layerItemsXML = from layerItem in layer.Children
+            var layerItemsXML = from layerItem in layer.Children.Value
                                 select ExtractLayerItem(layerItem as LayerItem);
             return layerItemsXML;
         }
@@ -55,7 +55,7 @@ namespace boilersGraphics.Helpers
                                 new XElement("Name", layerItem.Name.Value),
                                 new XElement("Color", layerItem.Color.Value),
                                 new XElement("Item", ExtractItem(layerItem.Item.Value)),
-                                new XElement("Children", (from child in layerItem.Children
+                                new XElement("Children", (from child in layerItem.Children.Value
                                                           select ExtractLayerItem(child as LayerItem))
                                             )
                                 );
@@ -184,7 +184,7 @@ namespace boilersGraphics.Helpers
 
         public static IEnumerable<XElement> SerializeConnections(DiagramViewModel dialogViewModel, IEnumerable<SelectableDesignerItemViewModelBase> items)
         {
-            return (from connection in items.WithPickupChildren(dialogViewModel.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+            return (from connection in items.WithPickupChildren(dialogViewModel.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children.Value)
                                                                                       .Where(x => x is LayerItem)
                                                                                       .Select(x => (x as LayerItem).Item.Value)
                                                                ).OfType<ConnectorBaseViewModel>()
@@ -201,7 +201,7 @@ namespace boilersGraphics.Helpers
                                new XElement("PathGeometry", connection.PathGeometry.Value)
                     ))
                     .Union(
-                        from connection in items.WithPickupChildren(dialogViewModel.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                        from connection in items.WithPickupChildren(dialogViewModel.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children.Value)
                                                                                       .Where(x => x is LayerItem)
                                                                                       .Select(x => (x as LayerItem).Item.Value)
                                                                    ).OfType<ConnectorBaseViewModel>()

@@ -146,7 +146,7 @@ namespace boilersGraphics.Adorners
                     _item.EdgeBrush.Value = _item.Owner.EdgeBrush.Value.Clone();
                     _item.FillBrush.Value = _item.Owner.FillBrush.Value.Clone();
                     _item.EdgeThickness.Value = _item.Owner.EdgeThickness.Value.Value;
-                    _item.ZIndex.Value = _item.Owner.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).Count();
+                    _item.ZIndex.Value = _item.Owner.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children.Value).Count();
                     var geometry = GeometryCreator.CreateDonut(_firstDragStartPoint.Value, _RadiusVector.Length - _MinusRaidus, _RadiusVector.Length, _StartAngle, _EndAngle, GetSweepDirection());
                     _item.PieCenterPoint.Value = _firstDragStartPoint.Value;
                     _item.DonutWidth.Value = _RadiusVector.Length - _MinusRaidus;
