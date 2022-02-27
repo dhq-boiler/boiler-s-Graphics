@@ -68,8 +68,8 @@ namespace boilersGraphics.Test
             var item = new NRectangleViewModel();
             var layerItem = new LayerItem(item, firstSelectedLayer, "TEST");
             Assert.That(firstSelectedLayer.Name.Value, Is.EqualTo("レイヤー1"));
-            diagramVM.InitializeProperties_Items(false);
             firstSelectedLayer.Children.Value = new System.Collections.ObjectModel.ObservableCollection<LayerTreeViewItemBase>(new LayerItem[] { layerItem });
+            diagramVM.InitializeProperties_Items(false);
             diagramVM.SetSubscribes(false);
 
             Assert.That(diagramVM.AllItems.Value, Has.Member(item));

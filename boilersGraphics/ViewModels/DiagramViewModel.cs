@@ -750,7 +750,6 @@ namespace boilersGraphics.ViewModels
 
         private void SetAllItems()
         {
-            var x = Layers.CollectionChangedAsObservable();
             AllItems = Layers.CollectionChangedAsObservable()
                              .Select(_ => Layers.Select(x => x.LayerItemsChangedAsObservable()).Merge()
                                                 .Merge(this.ObserveProperty(y => y.BackgroundItem.Value).ToUnit()))
