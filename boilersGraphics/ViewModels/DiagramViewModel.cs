@@ -519,6 +519,7 @@ namespace boilersGraphics.ViewModels
                                         fillbrush.Freeze();
                                         union.FillBrush.Value = fillbrush;
                                         union.IsSelected.Value = false;
+                                        union.IsVisible.Value = true;
                                         union.PathGeometry.Value.Freeze();
                                         bag.Add(union);
                                         sw1.Stop();
@@ -529,12 +530,13 @@ namespace boilersGraphics.ViewModels
                             sw.Stop();
                             Debug.WriteLine($"{i} / {sets.Count()} end process {sw.ElapsedMilliseconds}ms");
                         });
+                        var firstSelectedLayer = SelectedLayers.Value.First();
                         List<LayerTreeViewItemBase> l = new List<LayerTreeViewItemBase>();
                         while (bag.TryTake(out var item))
                         {
                             Stopwatch sw = Stopwatch.StartNew();
                             Debug.WriteLine($"adding item. remain:{bag.Count()}");
-                            var i = new LayerItem(item.Clone() as SelectableDesignerItemViewModelBase, SelectedLayers.Value.First(), Name.GetNewLayerItemName(this));
+                            var i = new LayerItem(item.Clone() as SelectableDesignerItemViewModelBase, firstSelectedLayer, Name.GetNewLayerItemName(this));
                             i.Color.Value = Randomizer.RandomColor(new Random());
                             i.IsVisible.Value = true;
                             i.IsSelected.Value = false;
@@ -542,13 +544,7 @@ namespace boilersGraphics.ViewModels
                             sw.Stop();
                             Debug.WriteLine($"added item. {sw.ElapsedMilliseconds}ms");
                         }
-                        DisposeProperties();
-                        InitializeProperties_Layers(isPreview);
-                        AddNewLayer(mainWindowViewModel, false);
-                        var firstSelectedLayer = SelectedLayers.Value.First();
                         firstSelectedLayer.Children.Value = new ObservableCollection<LayerTreeViewItemBase>(l);
-                        InitializeProperties_Items(isPreview);
-                        SetSubscribes(false);
                     }
                 });
             }
@@ -756,9 +752,10 @@ namespace boilersGraphics.ViewModels
                              .Switch()
                              .Do(_ => Debug.WriteLine(String.Concat("debug ", string.Join(", ", Layers.Select(x => x?.ToString() ?? "null")))))
                              .Select(_ => Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children.Value)
-                                                .Where(x => x.GetType() == typeof(LayerItem))
-                                                .Select(y => (y as LayerItem).Item.Value)
+                                                    .OfType<LayerItem>()
+                                                .Select(y => y.Item.Value)
                                                 .Union(new SelectableDesignerItemViewModelBase[] { BackgroundItem.Value })
+                                                .Where(x => x != null)
                                                 .ToArray())
                              .ToReadOnlyReactivePropertySlim(Array.Empty<SelectableDesignerItemViewModelBase>());
         }
