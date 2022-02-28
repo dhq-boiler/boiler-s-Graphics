@@ -494,6 +494,13 @@
                                      Margin="0,5,25,0"
                                      ScrollViewer.VerticalScrollBarVisibility="Auto"
                                      Visibility="{Binding DataContext.EnableLayers.Value, Converter={StaticResource BoolToVisibilityConverter}, RelativeSource={RelativeSource FindAncestor, AncestorType=local:DiagramControl}}"/>
+                        <view:UndoStack x:Name="UndoStack"
+                                        Width="500"
+                                        MaxHeight="350"
+                                        Margin="0,5,25,0"
+                                        DataContext="{Binding MainWindowVM.Controller.Operations}"
+                                        ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                        Visibility="Visible"/>
                     </StackPanel>
                 </Grid>
             </DockPanel>

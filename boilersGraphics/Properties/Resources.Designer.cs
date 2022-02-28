@@ -1474,6 +1474,15 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Work history に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PaneTitle_UndoStack {
+            get {
+                return ResourceManager.GetString("PaneTitle_UndoStack", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   You agreed to the privacy policy on {0:yyyy/MM/dd}. に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string PrivacyPolicy_AgreedMessage {

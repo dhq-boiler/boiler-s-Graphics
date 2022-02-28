@@ -53,7 +53,7 @@ namespace TsOperationHistory
             LogManager.GetCurrentClassLogger().Trace(message);
             var controller = _stack.Pop();
             var operation = controller.Operations.ToCompositeOperation();
-            operation.Message = message;
+            operation.Message.Value = message;
             Current.Push(operation);
         }
     }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Reactive.Bindings;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -11,7 +12,7 @@ namespace TsOperationHistory
     /// </summary>
     public class InsertOperation<T> : IOperation
     {
-        public string Message { get; set; }
+        public ReactivePropertySlim<string> Message { get; } = new ReactivePropertySlim<string>();
 
         private readonly Func<IList<T>> _generator;
         private readonly IList<T> _list;
@@ -30,12 +31,13 @@ namespace TsOperationHistory
             _insertIndex = insertIndex;
         }
 
-        public InsertOperation(IList<T> list, T insertValue, int insertIndex = -1)
+        public InsertOperation(IList<T> list, T insertValue, int insertIndex = -1, string message = null)
         {
             Debug.Assert(list != null);
             _list = list;
             _property = insertValue;
             _insertIndex = insertIndex;
+            Message.Value = message;
         }
 
         public void RollForward()
@@ -59,7 +61,7 @@ namespace TsOperationHistory
     /// </summary>
     public class RemoveOperation<T> : IOperation
     {
-        public string Message { get; set; }
+        public ReactivePropertySlim<string> Message { get; } = new ReactivePropertySlim<string>();
 
         private readonly Func<IList<T>> _generator;
         private readonly IList<T> _list;
@@ -76,11 +78,12 @@ namespace TsOperationHistory
             _property = removeValue;
         }
 
-        public RemoveOperation(IList<T> list, T removeValue)
+        public RemoveOperation(IList<T> list, T removeValue, string message = null)
         {
             Debug.Assert(list != null);
             _list = list;
             _property = removeValue;
+            Message.Value = message;
         }
 
         public void RollForward()
@@ -108,7 +111,7 @@ namespace TsOperationHistory
     /// </summary>
     public class RemoveAtOperation : IOperation
     {
-        public string Message { get; set; }
+        public ReactivePropertySlim<string> Message { get; } = new ReactivePropertySlim<string>();
 
         private readonly Func<IList> _generator;
         private readonly IList _list;
@@ -152,7 +155,7 @@ namespace TsOperationHistory
     /// </summary>
     public class ClearOperation<T> : IOperation
     {
-        public string Message { get; set; }
+        public ReactivePropertySlim<string> Message { get; } = new ReactivePropertySlim<string>();
 
         private readonly Func<IList<T>> _generator;
         private readonly IList<T> _list;

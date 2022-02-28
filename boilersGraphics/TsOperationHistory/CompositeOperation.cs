@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Reactive.Bindings;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace TsOperationHistory
@@ -19,12 +20,12 @@ namespace TsOperationHistory
 
         public IEnumerable<IOperation> Operations => _operations;
 
-        public CompositeOperation(params IOperation[] operations)
+        public CompositeOperation(string message = null, params IOperation[] operations)
         {
+            Message.Value = message;
             Add(operations);
         }
-
-        public string Message { get; set; }
+        public ReactivePropertySlim<string> Message { get; } = new ReactivePropertySlim<string>();
 
         public void RollForward()
         {

@@ -570,6 +570,9 @@
   <data name="PaneTitle_Layer" xml:space="preserve">
     <value>Layering</value>
   </data>
+  <data name="PaneTitle_UndoStack" xml:space="preserve">
+    <value>Work history</value>
+  </data>
   <data name="Pane_Combine_Exclude" xml:space="preserve">
     <value>Exclude</value>
   </data>

@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Reactive.Bindings;
+using System;
 using System.Collections.Generic;
+using TsOperationHistory.Internal;
 
 namespace TsOperationHistory
 {
@@ -11,7 +13,7 @@ namespace TsOperationHistory
         /// <summary>
         /// メッセージ
         /// </summary>
-        string Message { get; set; }
+        ReactivePropertySlim<string> Message { get; }
 
         /// <summary>
         /// 実行 / 前進回帰

@@ -1,10 +1,11 @@
-﻿using System.Collections;
+﻿using Prism.Mvvm;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace TsOperationHistory.Internal
 {
-    internal class UndoStack<T> : IStack<T>
+    internal class UndoStack<T> : BindableBase, IStack<T>
     {
         private readonly IStack<T> _undoStack;
         private readonly IStack<T> _redoStack;
@@ -19,6 +20,8 @@ namespace TsOperationHistory.Internal
             _undoStack = new CapacityStack<T>(capacity);
             _redoStack = new CapacityStack<T>(capacity);
         }
+
+        public IStack<T> Stack { get { return _undoStack; } }
 
         public T Undo()
         {

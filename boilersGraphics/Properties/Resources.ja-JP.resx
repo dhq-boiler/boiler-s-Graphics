@@ -570,6 +570,9 @@
   <data name="PaneTitle_Layer" xml:space="preserve">
     <value>レイヤリング</value>
   </data>
+  <data name="PaneTitle_UndoStack" xml:space="preserve">
+    <value>作業履歴</value>
+  </data>
   <data name="Pane_Combine_Exclude" xml:space="preserve">
     <value>Exclude</value>
   </data>

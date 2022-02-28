@@ -101,10 +101,8 @@ namespace TsOperationHistory
             public IOperation Build()
             {
                 Debug.Assert(_canBuild,ErrorMessages.InvalidOperation);
-                var operation = new MergeableOperation<T>(_function, _new, _prev, _mergeJudge)
-                {
-                    Message = _name
-                };
+                var operation = new MergeableOperation<T>(_function, _new, _prev, _mergeJudge);
+                operation.Message.Value = _name;
                 return _eventEventBinder.BindEvents(operation);
             }
         }
@@ -168,7 +166,7 @@ namespace TsOperationHistory
                 Debug.Assert(_canBuild, ErrorMessages.InvalidOperation);
 
                 var operation = _sender.GenerateSetPropertyOperation(_propertyName, _newValue, _throttleTimeSpan);
-                operation.Message = _name;
+                operation.Message.Value = _name;
                 return _eventEventBinder.BindEvents(operation);
             }
         }
@@ -336,7 +334,7 @@ namespace TsOperationHistory
 
             public IOperationBuilder Message(string name)
             {
-                _operation.Message = name;
+                _operation.Message.Value = name;
                 return this;
             }
 
@@ -387,7 +385,7 @@ namespace TsOperationHistory
 
             public IMergeableOperationBuilder SetActionName(string executeAction, string rollbackAction)
             {
-                _mergeableOperation.Message = executeAction;
+                _mergeableOperation.Message.Value = executeAction;
                 return this;
             }
         }
