@@ -195,7 +195,7 @@ namespace boilersGraphics.ViewModels
                     {
                         rect = SliceRect.Value.Value;
                         var intersectSrc = new Rect(designerItem.Left.Value, designerItem.Top.Value, bounds.Width, bounds.Height);
-                        rect = Rect.Union(rect, intersectSrc);
+                        rect = Rect.Intersect(rect, intersectSrc);
                         if (rect != Rect.Empty)
                         {
                             rect.X -= SliceRect.Value.Value.X;
@@ -217,7 +217,7 @@ namespace boilersGraphics.ViewModels
                     {
                         rect = SliceRect.Value.Value;
                         var intersectSrc = new Rect(connector.LeftTop.Value, bounds.Size);
-                        rect = Rect.Union(rect, intersectSrc);
+                        rect = Rect.Intersect(rect, intersectSrc);
                         if (rect != Rect.Empty)
                         {
                             rect.X -= SliceRect.Value.Value.X;
