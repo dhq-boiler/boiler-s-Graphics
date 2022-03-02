@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace TsOperationHistory.Internal
 {
-    internal class UndoStack<T> : BindableBase, IStack<T>
+    public class UndoStack<T> : BindableBase, IStack<T>
     {
         private readonly IStack<T> _undoStack;
         private readonly IStack<T> _redoStack;

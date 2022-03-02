@@ -18,9 +18,9 @@ namespace boilersGraphics.Views
     /// <summary>
     /// UndoStack.xaml の相互作用ロジック
     /// </summary>
-    public partial class UndoStack : UserControl
+    public partial class UndoHistory : UserControl
     {
-        public UndoStack()
+        public UndoHistory()
         {
             InitializeComponent();
         }

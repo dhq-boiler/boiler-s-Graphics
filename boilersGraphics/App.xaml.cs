@@ -151,6 +151,7 @@ namespace boilersGraphics
             containerRegistry.RegisterDialog<Views.PrivacyPolicy, ViewModels.PrivacyPolicyViewModel>();
             containerRegistry.RegisterDialog<Views.DetailPie, ViewModels.DetailPieViewModel>();
             containerRegistry.RegisterDialog<Views.DetailPolyBezier, ViewModels.DetailPolyBezierViewModel>();
+            containerRegistry.RegisterDialog<Views.UndoHistory, ViewModels.UndoHistoryViewModel>();
         }
 
         protected override Window CreateShell()

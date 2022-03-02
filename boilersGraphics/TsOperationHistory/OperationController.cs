@@ -104,7 +104,7 @@ namespace TsOperationHistory
         }
         #endregion
 
-        public IEnumerable<IOperation> Operations => _undoStack;
+        public UndoStack<IOperation> Operations => _undoStack;
 
         public bool IsOperating =>_preStackChangedCall != 0;
     }
