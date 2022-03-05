@@ -541,14 +541,14 @@ namespace boilersGraphics.ViewModels
                 newTerminalInfo.BuildComposition = GetBuildComposition();
                 terminalInfoDao.Insert(newTerminalInfo);
 
-                GoogleAnalyticsUtil.Beacon(newTerminalInfo, BeaconPlace.FirstLaunch);
+                GoogleAnalyticsUtil.Beacon(newTerminalInfo, BeaconPlace.FirstLaunch, BeaconPath.FirstLaunch);
 
                 return newTerminalInfo;
             }
             else
             {
                 var terminalInfo = terminalInfos.First();
-                GoogleAnalyticsUtil.Beacon(terminalInfo, BeaconPlace.Launch);
+                GoogleAnalyticsUtil.Beacon(terminalInfo, BeaconPlace.Launch, BeaconPath.Launch);
                 return terminalInfo;
             }
         }

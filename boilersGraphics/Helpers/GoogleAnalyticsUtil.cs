@@ -7,11 +7,11 @@ namespace boilersGraphics.Helpers
 {
     public static class GoogleAnalyticsUtil
     {
-        public static void Beacon(TerminalInfo terminalInfo, string action, string label = null)
+        public static void Beacon(TerminalInfo terminalInfo, string action, string path, string label = null)
         {
             try
             {
-                GoogleAnalytics.Beacon(terminalInfo.TerminalId.ToString(), GetBuildComposition(), action, label);
+                GoogleAnalytics.Beacon(terminalInfo.TerminalId.ToString(), GetBuildComposition(), action, path, label);
             }
             catch (Exception ex)
             {
