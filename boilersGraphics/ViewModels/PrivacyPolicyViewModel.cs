@@ -46,7 +46,7 @@ namespace boilersGraphics.ViewModels
             AgreeCommand.Subscribe(_ =>
             {
                 InsertOrUpdate(true);
-                GoogleAnalyticsUtil.Beacon(TerminalInfo.Value, BeaconPlace.AgreePrivacyPolicy);
+                GoogleAnalyticsUtil.Beacon(TerminalInfo.Value, BeaconPlace.AgreePrivacyPolicy, BeaconPath.AgreePrivacyPolicy);
                 RequestClose.Invoke(new DialogResult(ButtonResult.Yes));
             })
             .AddTo(disposables);
