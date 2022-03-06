@@ -23,7 +23,8 @@ namespace boilersGraphics.ViewModels
     public class ToolBarViewModel
     {
         private IDialogService dlgService = null;
-        public ObservableCollection<ToolItemData> ToolItems { get; } = new ObservableCollection<ToolItemData>();
+        public ReactiveCollection<ToolItemData> ToolItems { get; } = new ReactiveCollection<ToolItemData>();
+        public ReactiveCollection<ToolItemData> ToolItems2 { get; } = new ReactiveCollection<ToolItemData>();
 
         public BehaviorCollection Behaviors { get { return Interaction.GetBehaviors(App.GetCurrentApp().MainWindow.GetChildOfType<DesignerCanvas>()); } }
 
@@ -48,10 +49,11 @@ namespace boilersGraphics.ViewModels
 
         public NDrawPolyBezierBehavior PolyBezierBehavior { get; } = new NDrawPolyBezierBehavior();
 
-        public ToolBarViewModel(IDialogService dialogService)
+        public ToolBarViewModel(IDialogService dialogService, MainWindowViewModel mainWindowViewModel)
         {
             this.dlgService = dialogService;
             InitializeToolItems(dialogService);
+            InitializeToolItems2(mainWindowViewModel);
         }
 
         public void InitializeToolItems(IDialogService dialogService)
@@ -280,6 +282,28 @@ namespace boilersGraphics.ViewModels
                 ChangeHitTestToDisable();
                 SelectOneToolItem("dropper");
             })));
+        }
+
+        private void InitializeToolItems2(MainWindowViewModel mainWindowViewModel)
+        {
+            var toolItemData = new ToolItemData("minimap", "pack://application:,,,/Assets/img/minimap.png", Resources.MenuItem_MiniMap, new DelegateCommand(() =>
+            {
+                mainWindowViewModel.DiagramViewModel.EnableMiniMap.Value = !mainWindowViewModel.DiagramViewModel.EnableMiniMap.Value;
+            }));
+            ToolItems2.Add(toolItemData);
+            toolItemData.IsChecked = mainWindowViewModel.DiagramViewModel.EnableMiniMap.Value;
+            toolItemData = new ToolItemData("combine", "pack://application:,,,/Assets/img/icon_Combine_union.png", Resources.MenuItem_Combine, new DelegateCommand(() =>
+            {
+                mainWindowViewModel.DiagramViewModel.EnableCombine.Value = !mainWindowViewModel.DiagramViewModel.EnableCombine.Value;
+            }));
+            ToolItems2.Add(toolItemData);
+            toolItemData.IsChecked = mainWindowViewModel.DiagramViewModel.EnableCombine.Value;
+            toolItemData = new ToolItemData("layers", "pack://application:,,,/Assets/img/icon_Layers.png", Resources.MenuItem_Layering, new DelegateCommand(() =>
+            {
+                mainWindowViewModel.DiagramViewModel.EnableLayers.Value = !mainWindowViewModel.DiagramViewModel.EnableLayers.Value;
+            }));
+            ToolItems2.Add(toolItemData);
+            toolItemData.IsChecked = mainWindowViewModel.DiagramViewModel.EnableLayers.Value;
         }
 
         public void FinalizeToolItems()

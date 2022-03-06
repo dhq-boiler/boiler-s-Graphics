@@ -952,11 +952,29 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Clear canvas に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_ClearCanvas {
+            get {
+                return ResourceManager.GetString("MenuItem_ClearCanvas", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Set clip に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string MenuItem_Clip {
             get {
                 return ResourceManager.GetString("MenuItem_Clip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Combine に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_Combine {
+            get {
+                return ResourceManager.GetString("MenuItem_Combine", resourceCulture);
             }
         }
         
@@ -1056,6 +1074,15 @@ namespace boilersGraphics.Properties {
         public static string MenuItem_Language {
             get {
                 return ResourceManager.GetString("MenuItem_Language", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Layering に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_Layering {
+            get {
+                return ResourceManager.GetString("MenuItem_Layering", resourceCulture);
             }
         }
         
@@ -1438,7 +1465,7 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
-        ///   Layer に類似しているローカライズされた文字列を検索します。
+        ///   Layering に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string PaneTitle_Layer {
             get {

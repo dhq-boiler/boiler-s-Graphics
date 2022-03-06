@@ -112,10 +112,10 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Alignment" xml:space="preserve">
     <value>配置</value>
@@ -414,8 +414,14 @@
   <data name="MenuItem_Canvas" xml:space="preserve">
     <value>キャンパス(_C)</value>
   </data>
+  <data name="MenuItem_ClearCanvas" xml:space="preserve">
+    <value>キャンパスをクリア</value>
+  </data>
   <data name="MenuItem_Clip" xml:space="preserve">
     <value>クリップを設定</value>
+  </data>
+  <data name="MenuItem_Combine" xml:space="preserve">
+    <value>結合</value>
   </data>
   <data name="MenuItem_Copy" xml:space="preserve">
     <value>コピー(_C)</value>
@@ -449,6 +455,9 @@
   </data>
   <data name="MenuItem_Language" xml:space="preserve">
     <value>言語</value>
+  </data>
+  <data name="MenuItem_Layering" xml:space="preserve">
+    <value>レイヤリング</value>
   </data>
   <data name="MenuItem_Log" xml:space="preserve">
     <value>ログ</value>
@@ -559,7 +568,7 @@
     <value>結合</value>
   </data>
   <data name="PaneTitle_Layer" xml:space="preserve">
-    <value>レイヤー</value>
+    <value>レイヤリング</value>
   </data>
   <data name="Pane_Combine_Exclude" xml:space="preserve">
     <value>Exclude</value>

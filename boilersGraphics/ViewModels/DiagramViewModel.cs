@@ -100,6 +100,7 @@ namespace boilersGraphics.ViewModels
         public DelegateCommand<System.Windows.Shapes.Path> MouseDownPolyBezierCommand { get; private set; }
         public DelegateCommand LoadedCommand { get; private set; }
         public DelegateCommand FitCanvasCommand { get; private set; }
+        public DelegateCommand ClearCanvasCommand { get; private set; }
 
         #region Property
 
@@ -118,6 +119,10 @@ namespace boilersGraphics.ViewModels
         public ReactivePropertySlim<double?> EdgeThickness { get; } = new ReactivePropertySlim<double?>();
 
         public ReactivePropertySlim<bool> EnableMiniMap { get; } = new ReactivePropertySlim<bool>();
+
+        public ReactivePropertySlim<bool> EnableCombine { get; } = new ReactivePropertySlim<bool>();
+
+        public ReactivePropertySlim<bool> EnableLayers { get; } = new ReactivePropertySlim<bool>();
 
         public ReactivePropertySlim<bool> EnableBrushThickness { get; } = new ReactivePropertySlim<bool>();
 
@@ -443,13 +448,10 @@ namespace boilersGraphics.ViewModels
                     BackgroundItem.Value.Width.Value = Width;
                     BackgroundItem.Value.Height.Value = Height;
                 }, () => AllItems.Value.OfType<DesignerItemViewModelBase>().Except(new DesignerItemViewModelBase[] { BackgroundItem.Value }).Count() + AllItems.Value.OfType<ConnectorBaseViewModel>().Count() > 0);
-
-                //EdgeColors.CollectionChangedAsObservable()
-                //    .Subscribe(_ => RaisePropertyChanged("EdgeColors"))
-                //    .AddTo(_CompositeDisposable);
-                //FillColors.CollectionChangedAsObservable()
-                //    .Subscribe(_ => RaisePropertyChanged("FillColors"))
-                //    .AddTo(_CompositeDisposable);
+                ClearCanvasCommand = new DelegateCommand(() =>
+                {
+                    InitialSetting(mainWindowViewModel, true, false, false);
+                });
             }
 
             Layers = RootLayer.Value.Children.CollectionChangedAsObservable()
@@ -593,6 +595,8 @@ namespace boilersGraphics.ViewModels
             AngleType.Value = Helpers.AngleType.Minus180To180;
             EnableImageEmbedding.Value = true;
             ColorSpots.Value = new ColorSpots();
+            EnableCombine.Value = true;
+            EnableLayers.Value = true;
 
             SettingIfDebug();
         }
@@ -3141,6 +3145,8 @@ namespace boilersGraphics.ViewModels
                     SelectedItems.Dispose();
                     EdgeThickness.Dispose();
                     EnableMiniMap.Dispose();
+                    EnableCombine.Dispose();
+                    EnableLayers.Dispose();
                     FileName.Dispose();
                     CanvasBackground.Dispose();
                     EnablePointSnap.Dispose();

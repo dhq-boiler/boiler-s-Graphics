@@ -94,7 +94,7 @@ namespace boilersGraphics
             IDialogResult dialogResult = new DialogResult();
             Container.Resolve<IDialogService>().ShowDialog(nameof(CustomMessageBox), dialogParameters, ret => dialogResult = ret);
             string message = GoogleAnalyticsUtil.GetStringLimit500Bytes(e.Exception.Message);
-            GoogleAnalyticsUtil.Beacon((App.Current.MainWindow.DataContext as MainWindowViewModel).TerminalInfo.Value, BeaconPlace.Crash, message);
+            GoogleAnalyticsUtil.Beacon((App.Current.MainWindow.DataContext as MainWindowViewModel).TerminalInfo.Value, BeaconPlace.Crash, BeaconPath.Crash, message);
             throw e.Exception;
         }
 

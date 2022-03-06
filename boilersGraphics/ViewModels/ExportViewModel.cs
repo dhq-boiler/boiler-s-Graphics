@@ -190,21 +190,43 @@ namespace boilersGraphics.ViewModels
                 Rect rect = new Rect();
                 if (item is DesignerItemViewModelBase designerItem)
                 {
-                    var bounds = VisualTreeHelper.GetDescendantBounds(view);
-                    if (SliceRect.Value.HasValue)
+                    if (item is PictureDesignerItemViewModel picture)
                     {
-                        rect = SliceRect.Value.Value;
-                        var intersectSrc = new Rect(designerItem.Left.Value, designerItem.Top.Value, bounds.Width, bounds.Height);
-                        rect = Rect.Intersect(rect, intersectSrc);
-                        if (rect != Rect.Empty)
+                        var bounds = VisualTreeHelper.GetDescendantBounds(view);
+                        if (SliceRect.Value.HasValue)
                         {
-                            rect.X -= SliceRect.Value.Value.X;
-                            rect.Y -= SliceRect.Value.Value.Y;
+                            rect = SliceRect.Value.Value;
+                            var intersectSrc = new Rect(designerItem.Left.Value, designerItem.Top.Value, bounds.Width, bounds.Height);
+                            rect = Rect.Union(rect, intersectSrc);
+                            if (rect != Rect.Empty)
+                            {
+                                rect.X -= SliceRect.Value.Value.X;
+                                rect.Y -= SliceRect.Value.Value.Y;
+                            }
+                        }
+                        else
+                        {
+                            rect = new Rect(designerItem.Left.Value, designerItem.Top.Value, designerItem.Width.Value, designerItem.Height.Value);
                         }
                     }
                     else
                     {
-                        rect = new Rect(designerItem.Left.Value, designerItem.Top.Value, designerItem.Width.Value, designerItem.Height.Value);
+                        var bounds = VisualTreeHelper.GetDescendantBounds(view);
+                        if (SliceRect.Value.HasValue)
+                        {
+                            rect = SliceRect.Value.Value;
+                            var intersectSrc = new Rect(designerItem.Left.Value, designerItem.Top.Value, bounds.Width, bounds.Height);
+                            rect = Rect.Intersect(rect, intersectSrc);
+                            if (rect != Rect.Empty)
+                            {
+                                rect.X -= SliceRect.Value.Value.X;
+                                rect.Y -= SliceRect.Value.Value.Y;
+                            }
+                        }
+                        else
+                        {
+                            rect = new Rect(designerItem.Left.Value, designerItem.Top.Value, designerItem.Width.Value, designerItem.Height.Value);
+                        }
                     }
                     context.PushTransform(new RotateTransform(item.RotationAngle.Value, (item as DesignerItemViewModelBase).CenterX.Value, (item as DesignerItemViewModelBase).CenterY.Value));
                     context.DrawRectangle(brush, null, rect);

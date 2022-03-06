@@ -74,7 +74,8 @@ namespace boilersGraphics.ViewModels
 
             DiagramViewModel = new DiagramViewModel(this, this.dlgService, 1000, 1000);
             _CompositeDisposable.Add(DiagramViewModel);
-            ToolBarViewModel = new ToolBarViewModel(dialogService);
+            DiagramViewModel.EnableMiniMap.Value = true;
+            ToolBarViewModel = new ToolBarViewModel(dialogService, this);
 
             DiagramViewModel.EnableMiniMap.Value = true;
             DiagramViewModel.EnableBrushThickness.Value = true;
@@ -192,6 +193,17 @@ namespace boilersGraphics.ViewModels
             SwitchMiniMapCommand = new DelegateCommand(() =>
             {
                 DiagramViewModel.EnableMiniMap.Value = !DiagramViewModel.EnableMiniMap.Value;
+                ToolBarViewModel.ToolItems2.First(x => x.Name.Value == "minimap").IsChecked = DiagramViewModel.EnableMiniMap.Value;
+            });
+            SwitchCombineCommand = new DelegateCommand(() =>
+            {
+                DiagramViewModel.EnableCombine.Value = !DiagramViewModel.EnableCombine.Value;
+                ToolBarViewModel.ToolItems2.First(x => x.Name.Value == "combine").IsChecked = DiagramViewModel.EnableCombine.Value;
+            });
+            SwitchLayersCommand = new DelegateCommand(() =>
+            {
+                DiagramViewModel.EnableLayers.Value = !DiagramViewModel.EnableLayers.Value;
+                ToolBarViewModel.ToolItems2.First(x => x.Name.Value == "layers").IsChecked = DiagramViewModel.EnableLayers.Value;
             });
             SwitchBrushThicknessCommand = new DelegateCommand(() =>
             {
@@ -529,14 +541,14 @@ namespace boilersGraphics.ViewModels
                 newTerminalInfo.BuildComposition = GetBuildComposition();
                 terminalInfoDao.Insert(newTerminalInfo);
 
-                GoogleAnalyticsUtil.Beacon(newTerminalInfo, BeaconPlace.FirstLaunch);
+                GoogleAnalyticsUtil.Beacon(newTerminalInfo, BeaconPlace.FirstLaunch, BeaconPath.FirstLaunch);
 
                 return newTerminalInfo;
             }
             else
             {
                 var terminalInfo = terminalInfos.First();
-                GoogleAnalyticsUtil.Beacon(terminalInfo, BeaconPlace.Launch);
+                GoogleAnalyticsUtil.Beacon(terminalInfo, BeaconPlace.Launch, BeaconPath.Launch);
                 return terminalInfo;
             }
         }
@@ -598,6 +610,10 @@ namespace boilersGraphics.ViewModels
         public DelegateCommand ExitApplicationCommand { get; }
 
         public DelegateCommand SwitchMiniMapCommand { get; }
+
+        public DelegateCommand SwitchCombineCommand { get; }
+
+        public DelegateCommand SwitchLayersCommand { get; }
 
         public DelegateCommand SwitchBrushThicknessCommand { get; }
 
