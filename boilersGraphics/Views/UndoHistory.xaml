@@ -142,7 +142,7 @@
                             <Expander Background="Transparent" IsExpanded="True">
                                 <DockPanel>
                                     <TreeView x:Name="UndoStackTreeView"
-                                              ItemsSource="{Binding Operations.Value.Stack, UpdateSourceTrigger=PropertyChanged, diag:PresentationTraceSources.TraceLevel=High}"
+                                              ItemsSource="{Binding Operations.Value.History.Value, UpdateSourceTrigger=PropertyChanged, diag:PresentationTraceSources.TraceLevel=High}"
                                               ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                                         <TreeView.Resources>
                                             <Style TargetType="TreeViewItem">
@@ -233,7 +233,8 @@
                                                         <views:AutoScrollingLabel x:Name="autoScrollingLabel"
                                                                                   Width="180"
                                                                                   Height="25"
-                                                                                  Text="{Binding Message.Value}">
+                                                                                  Text="{Binding Message.Value}"
+                                                                                  Tag="{Binding DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=views:UndoHistory}}">
                                                             <i:Interaction.Triggers>
                                                                 <i:EventTrigger EventName="MouseEnter">
                                                                     <helper:EventToCommand Command="{Binding DataContext.MouseEnterCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=views:UndoHistory}}" CommandParameter="{Binding ElementName=autoScrollingLabel}" />
@@ -242,6 +243,17 @@
                                                                     <helper:EventToCommand Command="{Binding DataContext.MouseLeaveCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=views:UndoHistory}}" CommandParameter="{Binding ElementName=autoScrollingLabel}" />
                                                                 </i:EventTrigger>
                                                             </i:Interaction.Triggers>
+                                                            <views:AutoScrollingLabel.ContextMenu>
+                                                                <ContextMenu Tag="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
+                                                                    <i:Interaction.Triggers>
+                                                                        <i:EventTrigger EventName="Opened">
+                                                                            <helper:EventToCommand Command="{Binding Tag.ContextMenuOpenedCommand}" />
+                                                                        </i:EventTrigger>
+                                                                    </i:Interaction.Triggers>
+                                                                    <MenuItem Header="元に戻す" Command="{Binding Path=Tag.UndoCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}" CommandParameter="{Binding}" />
+                                                                    <MenuItem Header="やり直す" Command="{Binding Path=Tag.RedoCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}" CommandParameter="{Binding}" />
+                                                                </ContextMenu>
+                                                            </views:AutoScrollingLabel.ContextMenu>
                                                         </views:AutoScrollingLabel>
                                                     </StackPanel>
                                                 </StackPanel>

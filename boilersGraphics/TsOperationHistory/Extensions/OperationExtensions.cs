@@ -59,7 +59,7 @@ namespace TsOperationHistory.Extensions
         /// </summary>
         public static IOperation ExecuteAndCombineTop(this IOperation @this, IOperationController controller)
         {
-            if (controller.Operations.Any())
+            if (controller.UndoStack.Any())
             {
                 var prev = controller.Pop();
                 @this.RollForward();

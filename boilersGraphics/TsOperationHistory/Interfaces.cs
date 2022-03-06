@@ -208,7 +208,7 @@ namespace TsOperationHistory
         /// <summary>
         /// 実行された操作一覧を取得する
         /// </summary>
-        UndoStack<IOperation> Operations { get; }
+        UndoStack<IOperation> UndoStack { get; }
 
         /// <summary>
         /// ロールフォワード対象を取得する

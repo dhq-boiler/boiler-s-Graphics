@@ -1,36 +1,44 @@
 ﻿using Prism.Mvvm;
+using Reactive.Bindings;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Reactive.Linq;
 
 namespace TsOperationHistory.Internal
 {
     public class UndoStack<T> : BindableBase, IStack<T>
     {
-        private readonly IStack<T> _undoStack;
-        private readonly IStack<T> _redoStack;
+        public bool CanUndo => Undos.Value.Any();
+        public bool CanRedo => Redos.Value.Any();
 
-        public bool CanUndo => _undoStack.Any();
-        public bool CanRedo => _redoStack.Any();
-
-        public int Count => _undoStack.Count();
+        public int Count => Undos.Value.Count();
 
         public UndoStack(int capacity)
         {
-            _undoStack = new CapacityStack<T>(capacity);
-            _redoStack = new CapacityStack<T>(capacity);
+            Undos.Value = new CapacityStack<T>(capacity);
+            Redos.Value = new CapacityStack<T>(capacity);
+            Redos.Subscribe(x =>
+            {
+                Debug.WriteLine(string.Join(", ", Redos.Select(y => y?.ToString() ?? "null")));
+            });
+            History = Observable.Concat(Undos, Redos).ToReadOnlyReactivePropertySlim();
         }
 
-        public IStack<T> Stack { get { return _undoStack; } }
+        public ReactivePropertySlim<IStack<T>> Undos { get; } = new ReactivePropertySlim<IStack<T>>();
+        public ReactivePropertySlim<IStack<T>> Redos { get; } = new ReactivePropertySlim<IStack<T>>();
+        public ReadOnlyReactivePropertySlim<IStack<T>> History { get; }
 
         public T Undo()
         {
-            return _redoStack.Push(_undoStack.Pop());
+            return Redos.Value.Push(Undos.Value.Pop());
         }
 
         public T Redo()
         {
-            return  _undoStack.Push(_redoStack.Pop());
+            return  Undos.Value.Push(Redos.Value.Pop());
         }
 
         public T Peek()
@@ -38,34 +46,34 @@ namespace TsOperationHistory.Internal
             if (CanUndo is false)
                 return default(T);
 
-            return _undoStack.Peek();
+            return Undos.Value.Peek();
         }
 
         public T Push(T item)
         {
-            _redoStack.Clear();
-            return _undoStack.Push(item);
+            Redos.Value.Clear();
+            return Undos.Value.Push(item);
         }
 
         public T Pop()
         {
-            _redoStack.Clear();
+            Redos.Value.Clear();
 
             if (CanUndo is false)
                 return default(T);
 
-            return _undoStack.Pop();
+            return Undos.Value.Pop();
         }
 
         public void Clear()
         {
-            _undoStack.Clear();
-            _redoStack.Clear();
+            Undos.Value.Clear();
+            Redos.Value.Clear();
         }
 
         public IEnumerator<T> GetEnumerator()
         {
-            return _undoStack.GetEnumerator();
+            return Undos.Value.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -73,6 +81,6 @@ namespace TsOperationHistory.Internal
             return GetEnumerator();
         }
 
-        public IEnumerable<T> RedoStack => _redoStack;
+        public IEnumerable<T> RedoStack => Redos.Value;
     }
 }

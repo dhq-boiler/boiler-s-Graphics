@@ -19,6 +19,10 @@ namespace TsOperationHistory.Internal
     {
         public CapacityStack(int capacity) { Capacity = capacity; }
 
+        public CapacityStack(IEnumerable<T> collection)
+            : base(collection)
+        { }
+
         public int Capacity { get; }
 
         public T Push(T item)
