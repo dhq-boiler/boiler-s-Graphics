@@ -48,7 +48,7 @@ namespace boilersGraphics.ViewModels
             UndoCommand.Subscribe(operation =>
             {
                 var mainWindowViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel);
-                List<IOperation> operations = mainWindowViewModel.Controller.UndoStack.ToList();
+                List<IOperation> operations = mainWindowViewModel.Controller.UndoStack.Undos.Value.ToList();
                 var index = operations.IndexOf(operation);
                 var undoList = operations.Skip(index).Take(operations.Count() - index);
                 undoList = undoList.Reverse().ToList();

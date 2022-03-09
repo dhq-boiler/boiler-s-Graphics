@@ -159,6 +159,15 @@ namespace boilersGraphics.Helpers
             m_UnderLyingLinkedList.RemoveLast();
             OnNotifyCollectionChanged();
         }
+
+        public T this[int index]
+        {
+            get
+            {
+                return m_UnderLyingLinkedList.ElementAt(index);
+            }
+        }
+
         #endregion
 
         #region INotifyCollectionChanged Members

@@ -3,11 +3,12 @@ using Prism.Mvvm;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Linq;
 
 namespace TsOperationHistory.Internal
 {
-    public interface IStack<T> : IEnumerable<T>
+    public interface IStack<T> : IEnumerable<T>, INotifyCollectionChanged
     {
         T Push(T item);
         T Peek();
