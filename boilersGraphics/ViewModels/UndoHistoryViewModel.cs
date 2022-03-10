@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using TsOperationHistory;
@@ -27,9 +28,10 @@ namespace boilersGraphics.ViewModels
         public ReactiveCommand<IOperation> UndoCommand { get; } = new ReactiveCommand<IOperation>();
         public ReactiveCommand<IOperation> RedoCommand { get; } = new ReactiveCommand<IOperation>();
         public ReactiveCollection<MenuItem> ContextMenuItems { get; } = new ReactiveCollection<MenuItem>();
-        public ReactiveCommand ContextMenuOpenedCommand { get; } = new ReactiveCommand();
+        public ReactiveCommand<RoutedEventArgs> ContextMenuOpeningCommand { get; } = new ReactiveCommand<RoutedEventArgs>();
         public ReadOnlyReactivePropertySlim<UndoStack<IOperation>> Operations { get; }
         public ReactivePropertySlim<int> CurrentPosition { get; } = new ReactivePropertySlim<int>();
+        public ReactivePropertySlim<object> SelectedOperation { get; } = new ReactivePropertySlim<object>();
 
         public string Title => "";
 
@@ -70,12 +72,15 @@ namespace boilersGraphics.ViewModels
                 //var redoList = 
             })
             .AddTo(compositeDisposable);
-            ContextMenuOpenedCommand.Subscribe(_ =>
+            ContextMenuOpeningCommand.Subscribe(args =>
             {
                 ContextMenuItems.Clear();
-                var menuItem = new MenuItem() { Header = "元に戻す", Command = this.UndoCommand };
-                menuItem.SetBinding(MenuItem.CommandParameterProperty, new Binding());
-                ContextMenuItems.Add(menuItem);
+                if (this.Operations.Value.Undos.Value.Contains(SelectedOperation.Value))
+                {
+                    var menuItem = new MenuItem() { Header = "元に戻す", Command = this.UndoCommand };
+                    menuItem.SetBinding(MenuItem.CommandParameterProperty, new Binding());
+                    ContextMenuItems.Add(menuItem);
+                }
             })
             .AddTo(compositeDisposable);
             Operations = Observable.Return((App.Current.MainWindow.DataContext as MainWindowViewModel).Controller.UndoStack)

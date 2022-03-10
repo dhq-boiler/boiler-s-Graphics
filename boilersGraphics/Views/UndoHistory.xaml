@@ -141,10 +141,11 @@
                                 CornerRadius="1">
                             <Expander Background="Transparent" IsExpanded="True">
                                 <DockPanel>
-                                    <TreeView x:Name="UndoStackTreeView"
-                                              ItemsSource="{Binding Operations.Value.History.Value, UpdateSourceTrigger=PropertyChanged, diag:PresentationTraceSources.TraceLevel=High}"
-                                              ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-                                        <TreeView.Resources>
+                                    <local:BindableSelectedItemTreeView x:Name="UndoStackTreeView"
+                                                                        ItemsSource="{Binding Operations.Value.History.Value, UpdateSourceTrigger=PropertyChanged}"
+                                                                        BindableSelectedItem="{Binding SelectedOperation.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                                        ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                        <local:BindableSelectedItemTreeView.Resources>
                                             <Style TargetType="TreeViewItem">
                                                 <Setter Property="Template">
                                                     <Setter.Value>
@@ -225,8 +226,8 @@
                                                     </Setter.Value>
                                                 </Setter>
                                             </Style>
-                                        </TreeView.Resources>
-                                        <TreeView.ItemTemplate>
+                                        </local:BindableSelectedItemTreeView.Resources>
+                                        <local:BindableSelectedItemTreeView.ItemTemplate>
                                             <DataTemplate>
                                                 <StackPanel Orientation="Vertical">
                                                     <StackPanel Orientation="Horizontal">
@@ -244,22 +245,21 @@
                                                                 </i:EventTrigger>
                                                             </i:Interaction.Triggers>
                                                             <views:AutoScrollingLabel.ContextMenu>
-                                                                <ContextMenu Tag="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
+                                                                <ContextMenu Tag="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource Self}}"
+                                                                             ItemsSource="{Binding Tag.ContextMenuItems, RelativeSource={RelativeSource Self}}">
                                                                     <i:Interaction.Triggers>
                                                                         <i:EventTrigger EventName="Opened">
-                                                                            <helper:EventToCommand Command="{Binding Tag.ContextMenuOpenedCommand}" />
+                                                                            <helper:EventToCommand Command="{Binding Tag.ContextMenuOpeningCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}, diag:PresentationTraceSources.TraceLevel=High}" PassEventArgsToCommand="True" />
                                                                         </i:EventTrigger>
                                                                     </i:Interaction.Triggers>
-                                                                    <MenuItem Header="元に戻す" Command="{Binding Path=Tag.UndoCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}" CommandParameter="{Binding}" />
-                                                                    <MenuItem Header="やり直す" Command="{Binding Path=Tag.RedoCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}" CommandParameter="{Binding}" />
                                                                 </ContextMenu>
                                                             </views:AutoScrollingLabel.ContextMenu>
                                                         </views:AutoScrollingLabel>
                                                     </StackPanel>
                                                 </StackPanel>
                                             </DataTemplate>
-                                        </TreeView.ItemTemplate>
-                                    </TreeView>
+                                        </local:BindableSelectedItemTreeView.ItemTemplate>
+                                    </local:BindableSelectedItemTreeView>
                                 </DockPanel>
                                 <Expander.Header>
                                     <DockPanel>
