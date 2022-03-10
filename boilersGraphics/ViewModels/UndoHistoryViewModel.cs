@@ -81,6 +81,12 @@ namespace boilersGraphics.ViewModels
                     menuItem.SetBinding(MenuItem.CommandParameterProperty, new Binding());
                     ContextMenuItems.Add(menuItem);
                 }
+                if (this.Operations.Value.Redos.Value.Contains(SelectedOperation.Value))
+                {
+                    var menuItem = new MenuItem() { Header = "やり直す", Command = this.RedoCommand };
+                    menuItem.SetBinding(MenuItem.CommandParameterProperty, new Binding());
+                    ContextMenuItems.Add(menuItem);
+                }
             })
             .AddTo(compositeDisposable);
             Operations = Observable.Return((App.Current.MainWindow.DataContext as MainWindowViewModel).Controller.UndoStack)
