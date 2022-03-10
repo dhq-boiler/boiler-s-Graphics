@@ -7,7 +7,7 @@ namespace TsOperationHistory.Extensions
     {
         public static void MoveTo(this IOperationController controller, IOperation target)
         {
-            var isRollBack    = controller.Operations.Contains(target);
+            var isRollBack    = controller.UndoStack.Contains(target);
 
             var isRollForward = controller.RollForwardTargets.Contains(target);
 
@@ -44,7 +44,7 @@ namespace TsOperationHistory.Extensions
             Func<T, T, IOperation> generateMergedOperation)
             where T : class, IMergeableOperation
         {
-            var operations = controller.Operations.ToList();
+            var operations = controller.UndoStack.ToList();
 
             var mergeable = operations
                 .OfType<T>()

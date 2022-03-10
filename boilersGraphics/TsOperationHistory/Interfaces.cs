@@ -1,5 +1,8 @@
-﻿using System;
+﻿using Reactive.Bindings;
+using System;
 using System.Collections.Generic;
+using System.Windows;
+using TsOperationHistory.Internal;
 
 namespace TsOperationHistory
 {
@@ -11,7 +14,12 @@ namespace TsOperationHistory
         /// <summary>
         /// メッセージ
         /// </summary>
-        string Message { get; set; }
+        ReactivePropertySlim<string> Message { get; }
+
+        /// <summary>
+        /// インデックス
+        /// </summary>
+        ReactivePropertySlim<Visibility> ArrowVisibility { get; }
 
         /// <summary>
         /// 実行 / 前進回帰
@@ -206,7 +214,7 @@ namespace TsOperationHistory
         /// <summary>
         /// 実行された操作一覧を取得する
         /// </summary>
-        IEnumerable<IOperation> Operations { get; }
+        UndoStack<IOperation> UndoStack { get; }
 
         /// <summary>
         /// ロールフォワード対象を取得する
