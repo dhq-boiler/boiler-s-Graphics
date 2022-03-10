@@ -124,6 +124,8 @@ namespace boilersGraphics.ViewModels
 
         public ReactivePropertySlim<bool> EnableLayers { get; } = new ReactivePropertySlim<bool>();
 
+        public ReactivePropertySlim<bool> EnableWorkHistory { get; } = new ReactivePropertySlim<bool>();
+
         public ReactivePropertySlim<bool> EnableBrushThickness { get; } = new ReactivePropertySlim<bool>();
 
         public ReactivePropertySlim<string> FileName { get; } = new ReactivePropertySlim<string>();
@@ -597,6 +599,7 @@ namespace boilersGraphics.ViewModels
             ColorSpots.Value = new ColorSpots();
             EnableCombine.Value = true;
             EnableLayers.Value = true;
+            EnableWorkHistory.Value = true;
 
             SettingIfDebug();
         }

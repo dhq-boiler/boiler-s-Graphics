@@ -205,6 +205,11 @@ namespace boilersGraphics.ViewModels
                 DiagramViewModel.EnableLayers.Value = !DiagramViewModel.EnableLayers.Value;
                 ToolBarViewModel.ToolItems2.First(x => x.Name.Value == "layers").IsChecked = DiagramViewModel.EnableLayers.Value;
             });
+            SwitchWorkHistoryCommand = new DelegateCommand(() =>
+            {
+                DiagramViewModel.EnableWorkHistory.Value = !DiagramViewModel.EnableWorkHistory.Value;
+                ToolBarViewModel.ToolItems2.First(x => x.Name.Value == "workHistory").IsChecked = DiagramViewModel.EnableWorkHistory.Value;
+            });
             SwitchBrushThicknessCommand = new DelegateCommand(() =>
             {
                 DiagramViewModel.EnableBrushThickness.Value = !DiagramViewModel.EnableBrushThickness.Value;
@@ -614,6 +619,8 @@ namespace boilersGraphics.ViewModels
         public DelegateCommand SwitchCombineCommand { get; }
 
         public DelegateCommand SwitchLayersCommand { get; }
+
+        public DelegateCommand SwitchWorkHistoryCommand { get; }
 
         public DelegateCommand SwitchBrushThicknessCommand { get; }
 

@@ -1348,6 +1348,15 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Work history に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_WorkHistory {
+            get {
+                return ResourceManager.GetString("MenuItem_WorkHistory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   It was saved automatically. に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Message_Autosaved {

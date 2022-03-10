@@ -546,6 +546,9 @@
   <data name="MenuItem_Window" xml:space="preserve">
     <value>ウインドウ(_W)</value>
   </data>
+  <data name="MenuItem_WorkHistory" xml:space="preserve">
+    <value>作業履歴</value>
+  </data>
   <data name="Message_Autosaved" xml:space="preserve">
     <value>自動保存しました。</value>
   </data>

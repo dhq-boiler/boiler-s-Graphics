@@ -499,7 +499,7 @@
                                           MaxHeight="200"
                                           Margin="0,5,25,0"
                                           ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                          Visibility="Visible"/>
+                                          Visibility="{Binding DataContext.EnableWorkHistory.Value, Converter={StaticResource BoolToVisibilityConverter}, RelativeSource={RelativeSource FindAncestor, AncestorType=local:DiagramControl}}"/>
                     </StackPanel>
                 </Grid>
             </DockPanel>

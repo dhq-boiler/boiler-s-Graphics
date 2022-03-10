@@ -546,6 +546,9 @@
   <data name="MenuItem_Window" xml:space="preserve">
     <value>Window(_W)</value>
   </data>
+  <data name="MenuItem_WorkHistory" xml:space="preserve">
+    <value>Work history</value>
+  </data>
   <data name="Message_Autosaved" xml:space="preserve">
     <value>It was saved automatically.</value>
   </data>
