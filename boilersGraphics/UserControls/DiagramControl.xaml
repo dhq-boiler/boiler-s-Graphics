@@ -496,7 +496,7 @@
                                      Visibility="{Binding DataContext.EnableLayers.Value, Converter={StaticResource BoolToVisibilityConverter}, RelativeSource={RelativeSource FindAncestor, AncestorType=local:DiagramControl}}"/>
                         <view:UndoHistory x:Name="UndoStack"
                                           Width="180"
-                                          MaxHeight="350"
+                                          MaxHeight="200"
                                           Margin="0,5,25,0"
                                           ScrollViewer.VerticalScrollBarVisibility="Auto"
                                           Visibility="Visible"/>

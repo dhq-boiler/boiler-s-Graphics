@@ -1,6 +1,7 @@
 ﻿using Reactive.Bindings;
 using System;
 using System.Diagnostics;
+using System.Windows;
 
 namespace TsOperationHistory
 {
@@ -21,6 +22,7 @@ namespace TsOperationHistory
         }
 
         public ReactivePropertySlim<string> Message { get; } = new ReactivePropertySlim<string>();
+        public ReactivePropertySlim<Visibility> ArrowVisibility { get; } = new ReactivePropertySlim<Visibility>(Visibility.Hidden);
 
         public void RollForward()
         {
@@ -47,6 +49,7 @@ namespace TsOperationHistory
         }
 
         public ReactivePropertySlim<string> Message { get; } = new ReactivePropertySlim<string>();
+        public ReactivePropertySlim<Visibility> ArrowVisibility { get; } = new ReactivePropertySlim<Visibility>(Visibility.Hidden);
 
         public void RollForward()
         {

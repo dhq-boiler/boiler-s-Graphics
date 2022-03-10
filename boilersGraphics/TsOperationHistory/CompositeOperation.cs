@@ -1,6 +1,7 @@
 ﻿using Reactive.Bindings;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows;
 
 namespace TsOperationHistory
 {
@@ -26,6 +27,7 @@ namespace TsOperationHistory
             Add(operations);
         }
         public ReactivePropertySlim<string> Message { get; } = new ReactivePropertySlim<string>();
+        public ReactivePropertySlim<Visibility> ArrowVisibility { get; } = new ReactivePropertySlim<Visibility>(Visibility.Hidden);
 
         public void RollForward()
         {

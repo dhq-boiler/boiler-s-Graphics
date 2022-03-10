@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Windows;
 using TsOperationHistory.Internal;
 
 namespace TsOperationHistory.Extensions
@@ -17,6 +18,7 @@ namespace TsOperationHistory.Extensions
                 Message.Value = "Empty Operation";
             }
             public ReactivePropertySlim<string> Message { get; } = new ReactivePropertySlim<string>();
+            public ReactivePropertySlim<Visibility> ArrowVisibility { get; } = new ReactivePropertySlim<Visibility>(Visibility.Hidden);
             public void RollForward() { }
             public void Rollback() { }
         }

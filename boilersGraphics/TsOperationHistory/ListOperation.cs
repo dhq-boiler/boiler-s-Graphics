@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Windows;
 
 namespace TsOperationHistory
 {
@@ -13,6 +14,7 @@ namespace TsOperationHistory
     public class InsertOperation<T> : IOperation
     {
         public ReactivePropertySlim<string> Message { get; } = new ReactivePropertySlim<string>();
+        public ReactivePropertySlim<Visibility> ArrowVisibility { get; } = new ReactivePropertySlim<Visibility>(Visibility.Hidden);
 
         private readonly Func<IList<T>> _generator;
         private readonly IList<T> _list;
@@ -62,6 +64,7 @@ namespace TsOperationHistory
     public class RemoveOperation<T> : IOperation
     {
         public ReactivePropertySlim<string> Message { get; } = new ReactivePropertySlim<string>();
+        public ReactivePropertySlim<Visibility> ArrowVisibility { get; } = new ReactivePropertySlim<Visibility>(Visibility.Hidden);
 
         private readonly Func<IList<T>> _generator;
         private readonly IList<T> _list;
@@ -112,6 +115,7 @@ namespace TsOperationHistory
     public class RemoveAtOperation : IOperation
     {
         public ReactivePropertySlim<string> Message { get; } = new ReactivePropertySlim<string>();
+        public ReactivePropertySlim<Visibility> ArrowVisibility { get; } = new ReactivePropertySlim<Visibility>(Visibility.Hidden);
 
         private readonly Func<IList> _generator;
         private readonly IList _list;
@@ -156,6 +160,7 @@ namespace TsOperationHistory
     public class ClearOperation<T> : IOperation
     {
         public ReactivePropertySlim<string> Message { get; } = new ReactivePropertySlim<string>();
+        public ReactivePropertySlim<Visibility> ArrowVisibility { get; } = new ReactivePropertySlim<Visibility>(Visibility.Hidden);
 
         private readonly Func<IList<T>> _generator;
         private readonly IList<T> _list;

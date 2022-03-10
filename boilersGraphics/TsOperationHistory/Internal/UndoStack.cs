@@ -4,7 +4,6 @@ using Reactive.Bindings.Extensions;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
@@ -12,7 +11,7 @@ using System.Reactive.Linq;
 
 namespace TsOperationHistory.Internal
 {
-    public class UndoStack<T> : BindableBase, IStack<T>
+    public class UndoStack<T> : BindableBase, IStack<T> where T : IOperation
     {
         public bool CanUndo => Undos.Value.Any();
         public bool CanRedo => Redos.Value.Any();
@@ -60,6 +59,7 @@ namespace TsOperationHistory.Internal
         public T Push(T item)
         {
             Redos.Value.Clear();
+            item.Message.Value = $"#{Undos.Value.Count() + 1} {item.Message.Value}";
             return Undos.Value.Push(item);
         }
 

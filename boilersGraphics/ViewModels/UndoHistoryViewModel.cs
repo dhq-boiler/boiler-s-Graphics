@@ -52,7 +52,7 @@ namespace boilersGraphics.ViewModels
                 var mainWindowViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel);
                 List<IOperation> operations = mainWindowViewModel.Controller.UndoStack.Undos.Value.ToList();
                 var index = operations.IndexOf(operation);
-                var undoList = operations.Skip(index).Take(operations.Count() - index);
+                var undoList = operations.Skip(index + 1).Take(operations.Count() - index);
                 undoList = undoList.Reverse().ToList();
                 foreach (var undo in undoList)
                 {
@@ -69,8 +69,7 @@ namespace boilersGraphics.ViewModels
                 var mainWindowViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel);
                 List<IOperation> operations = mainWindowViewModel.Controller.UndoStack.Redos.Value.ToList();
                 var index = operations.IndexOf(operation);
-                var redoList = operations.Take(operations.Count() - index);
-                redoList = redoList.Reverse().ToList();
+                var redoList = A(operations, index);
                 foreach (var redo in redoList)
                 {
                     var poped = mainWindowViewModel.Controller.UndoStack.Redos.Value.Pop();
@@ -78,6 +77,7 @@ namespace boilersGraphics.ViewModels
                     poped.RollForward();
                     mainWindowViewModel.Controller.UndoStack.Undos.Value.Push(redo);
                 }
+                CurrentPosition.Value = mainWindowViewModel.Controller.UndoStack.Undos.Value.Count() - 1;
             })
             .AddTo(compositeDisposable);
             ContextMenuOpeningCommand.Subscribe(args =>
@@ -99,6 +99,40 @@ namespace boilersGraphics.ViewModels
             .AddTo(compositeDisposable);
             Operations = Observable.Return((App.Current.MainWindow.DataContext as MainWindowViewModel).Controller.UndoStack)
                                    .ToReadOnlyReactivePropertySlim();
+            CurrentPosition.Subscribe(cp =>
+            {
+                var mainWindowViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel);
+                var history = mainWindowViewModel.Controller.UndoStack.History.Value;
+                for (int i = 0; i < history.Count(); i++)
+                {
+                    var record = history.ElementAt(i);
+                    if (i == cp)
+                        record.ArrowVisibility.Value = Visibility.Visible;
+                    else
+                        record.ArrowVisibility.Value = Visibility.Hidden;
+                }
+            })
+            .AddTo(compositeDisposable);
+            Operations.Value.History.Subscribe(_ =>
+            {
+                if (Operations.Value.Count() == Operations.Value.Undos.Value.Count())
+                {
+                    CurrentPosition.Value = Operations.Value.Count() - 1;
+                }
+            })
+            .AddTo(compositeDisposable);
+        }
+
+        private List<IOperation> A(List<IOperation> operations, int index)
+        {
+            var ret = new List<IOperation>();
+            for (int i = 0; i < operations.Count(); i++)
+            {
+                if (i >= index)
+                    ret.Add(operations[i]);
+            }
+            ret.Reverse();
+            return ret;
         }
 
         public bool CanCloseDialog()

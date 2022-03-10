@@ -1,6 +1,7 @@
 ﻿using Reactive.Bindings;
 using System;
 using System.Collections.Generic;
+using System.Windows;
 using TsOperationHistory.Internal;
 
 namespace TsOperationHistory
@@ -14,6 +15,11 @@ namespace TsOperationHistory
         /// メッセージ
         /// </summary>
         ReactivePropertySlim<string> Message { get; }
+
+        /// <summary>
+        /// インデックス
+        /// </summary>
+        ReactivePropertySlim<Visibility> ArrowVisibility { get; }
 
         /// <summary>
         /// 実行 / 前進回帰
