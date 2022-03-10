@@ -66,10 +66,18 @@ namespace boilersGraphics.ViewModels
             .AddTo(compositeDisposable);
             RedoCommand.Subscribe(operation =>
             {
-                //var mainWindowViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel);
-                //List<IOperation> operations = mainWindowViewModel.Controller.Operations.ToList();
-                //var index = operations.IndexOf(operation);
-                //var redoList = 
+                var mainWindowViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel);
+                List<IOperation> operations = mainWindowViewModel.Controller.UndoStack.Redos.Value.ToList();
+                var index = operations.IndexOf(operation);
+                var redoList = operations.Take(operations.Count() - index);
+                redoList = redoList.Reverse().ToList();
+                foreach (var redo in redoList)
+                {
+                    var poped = mainWindowViewModel.Controller.UndoStack.Redos.Value.Pop();
+                    Debug.Assert(poped == redo);
+                    poped.RollForward();
+                    mainWindowViewModel.Controller.UndoStack.Undos.Value.Push(redo);
+                }
             })
             .AddTo(compositeDisposable);
             ContextMenuOpeningCommand.Subscribe(args =>
