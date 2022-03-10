@@ -292,18 +292,27 @@ namespace boilersGraphics.ViewModels
             }));
             ToolItems2.Add(toolItemData);
             toolItemData.IsChecked = mainWindowViewModel.DiagramViewModel.EnableMiniMap.Value;
+            
             toolItemData = new ToolItemData("combine", "pack://application:,,,/Assets/img/icon_Combine_union.png", Resources.MenuItem_Combine, new DelegateCommand(() =>
             {
                 mainWindowViewModel.DiagramViewModel.EnableCombine.Value = !mainWindowViewModel.DiagramViewModel.EnableCombine.Value;
             }));
             ToolItems2.Add(toolItemData);
             toolItemData.IsChecked = mainWindowViewModel.DiagramViewModel.EnableCombine.Value;
+            
             toolItemData = new ToolItemData("layers", "pack://application:,,,/Assets/img/icon_Layers.png", Resources.MenuItem_Layering, new DelegateCommand(() =>
             {
                 mainWindowViewModel.DiagramViewModel.EnableLayers.Value = !mainWindowViewModel.DiagramViewModel.EnableLayers.Value;
             }));
             ToolItems2.Add(toolItemData);
             toolItemData.IsChecked = mainWindowViewModel.DiagramViewModel.EnableLayers.Value;
+
+            toolItemData = new ToolItemData("workHistory", "pack://application:,,,/Assets/img/work_history.png", Resources.MenuItem_WorkHistory, new DelegateCommand(() =>
+            {
+                mainWindowViewModel.DiagramViewModel.EnableWorkHistory.Value = !mainWindowViewModel.DiagramViewModel.EnableWorkHistory.Value;
+            }));
+            ToolItems2.Add(toolItemData);
+            toolItemData.IsChecked = mainWindowViewModel.DiagramViewModel.EnableWorkHistory.Value;
         }
 
         public void FinalizeToolItems()

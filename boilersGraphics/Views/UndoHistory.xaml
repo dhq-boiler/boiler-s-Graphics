@@ -1,0 +1,251 @@
+﻿<UserControl x:Class="boilersGraphics.Views.UndoHistory"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:converter="clr-namespace:boilersGraphics.Converters"
+             xmlns:views="clr-namespace:boilersGraphics.Views"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:helper="clr-namespace:boilersGraphics.Helpers"
+             xmlns:behavior="clr-namespace:boilersGraphics.Views.Behaviors"
+             xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
+             xmlns:local="clr-namespace:boilersGraphics.Views"
+             xmlns:prism="http://prismlibrary.com/"
+             xmlns:viewModels="clr-namespace:boilersGraphics.ViewModels"
+             xmlns:c="clr-namespace:CalcBinding;assembly=CalcBinding"
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             mc:Ignorable="d"
+             x:Name="undoStack"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <Style x:Key="ToggleButtonStyle" TargetType="ToggleButton">
+            <Setter Property="SnapsToDevicePixels" Value="true" />
+            <Setter Property="OverridesDefaultStyle" Value="true" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <Border x:Name="Border" Background="{StaticResource NormalBrush}">
+                            <ContentPresenter />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter TargetName="Border" Property="Background" Value="{StaticResource DarkBrush}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="Expander">
+            <Setter Property="SnapsToDevicePixels" Value="true" />
+            <Setter Property="OverridesDefaultStyle" Value="true" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Expander">
+                        <DockPanel>
+                            <ToggleButton HorizontalContentAlignment="Left"
+                                              VerticalContentAlignment="Center"
+                                              DockPanel.Dock="Top"
+                                              IsChecked="{Binding Path=IsExpanded, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                              Style="{StaticResource ToggleButtonStyle}">
+                                <ToggleButton.Content>
+                                    <Grid Margin="4">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="20" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Path Name="Arrow"
+                                                  Grid.Column="0"
+                                                  HorizontalAlignment="Center"
+                                                  VerticalAlignment="Center"
+                                                  Data="M 0 0 L 0 8 L 5 4 Z"
+                                                  Fill="{TemplateBinding Foreground}"
+                                                  RenderTransformOrigin="0.5,0.5"
+                                                  SnapsToDevicePixels="True"
+                                                  Stroke="{TemplateBinding Foreground}"
+                                                  StrokeThickness="0.5">
+                                            <Path.RenderTransform>
+                                                <RotateTransform Angle="0" />
+                                            </Path.RenderTransform>
+                                        </Path>
+                                        <ContentPresenter Name="HeaderContent"
+                                                              Grid.Column="1"
+                                                              ContentSource="Header" />
+                                    </Grid>
+                                </ToggleButton.Content>
+                            </ToggleButton>
+                            <Border Name="Content">
+                                <Border.LayoutTransform>
+                                    <ScaleTransform ScaleY="0" />
+                                </Border.LayoutTransform>
+                                <ContentPresenter Content="{TemplateBinding Content}" />
+                            </Border>
+                        </DockPanel>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="Expander.IsExpanded" Value="True">
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="Content"
+                                                                 Storyboard.TargetProperty="LayoutTransform.ScaleY"
+                                                                 To="1"
+                                                                 Duration="0:0:0.3" />
+                                            <DoubleAnimation Storyboard.TargetName="Content"
+                                                                 Storyboard.TargetProperty="Opacity"
+                                                                 To="1"
+                                                                 Duration="0:0:0.3" />
+                                            <DoubleAnimation DecelerationRatio="1"
+                                                                 Storyboard.TargetName="Arrow"
+                                                                 Storyboard.TargetProperty="(FrameworkElement.RenderTransform).(RotateTransform.Angle)"
+                                                                 To="90"
+                                                                 Duration="0:0:0.2" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+                                <Trigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="Content"
+                                                                 Storyboard.TargetProperty="LayoutTransform.ScaleY"
+                                                                 To="0"
+                                                                 Duration="0:0:0.3" />
+                                            <DoubleAnimation Storyboard.TargetName="Content"
+                                                                 Storyboard.TargetProperty="Opacity"
+                                                                 To="0"
+                                                                 Duration="0:0:0.3" />
+                                            <DoubleAnimation AccelerationRatio="1"
+                                                                 Storyboard.TargetName="Arrow"
+                                                                 Storyboard.TargetProperty="(FrameworkElement.RenderTransform).(RotateTransform.Angle)"
+                                                                 Duration="0:0:0.2" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.ExitActions>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <converter:IsSelectedToBorderBrushConverter x:Key="IsSelectedToBorderBrushConverter" />
+        <converter:ToSolidColorBrushConverter x:Key="ToSolidColorBrushConverter" />
+    </UserControl.Resources>
+    <UserControl.Style>
+        <Style TargetType="{x:Type views:UndoHistory}">
+            <Setter Property="SnapsToDevicePixels" Value="true" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type views:UndoHistory}">
+                        <Border Background="#EEE"
+                                BorderBrush="DimGray"
+                                BorderThickness="1"
+                                CornerRadius="1">
+                            <Expander Background="Transparent" IsExpanded="True">
+                                <DockPanel>
+                                    <local:BindableSelectedItemTreeView x:Name="UndoStackTreeView"
+                                                                        ItemsSource="{Binding Operations.Value.History.Value, UpdateSourceTrigger=PropertyChanged}"
+                                                                        BindableSelectedItem="{Binding SelectedOperation.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                                        ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                        <local:BindableSelectedItemTreeView.Resources>
+                                            <Style TargetType="TreeViewItem">
+                                                <Setter Property="Template">
+                                                    <Setter.Value>
+                                                        <ControlTemplate TargetType="TreeViewItem">
+                                                            <Border Name="BackBorder"
+                                                                    Padding="0,0,0,0"
+                                                                    Background="{TemplateBinding Panel.Background}"
+                                                                    BorderBrush="LightGray"
+                                                                    BorderThickness="0,0,0,0">
+                                                                <Grid>
+                                                                    <Grid.ColumnDefinitions>
+                                                                        <ColumnDefinition Width="20" />
+                                                                        <ColumnDefinition Width="Auto" />
+                                                                        <ColumnDefinition Width="Auto" />
+                                                                        <ColumnDefinition Width="*" />
+                                                                    </Grid.ColumnDefinitions>
+                                                                    <Grid.RowDefinitions>
+                                                                        <RowDefinition Height="Auto" />
+                                                                        <RowDefinition Height="Auto" />
+                                                                    </Grid.RowDefinitions>
+                                                                    <StackPanel Grid.Column="0"
+                                                                                Orientation="Horizontal">
+                                                                        <Image Source="pack://application:,,,/Assets/img/right_arrow.png"
+                                                                               Width="20"
+                                                                               Height="20"
+                                                                               Visibility="{Binding ArrowVisibility.Value}"/>
+                                                                    </StackPanel>
+                                                                    <StackPanel Grid.Column="1"
+                                                                                Orientation="Horizontal">
+                                                                            <ContentPresenter Name="PART_Header"
+                                                                                          HorizontalAlignment="Stretch"
+                                                                                          Content="{TemplateBinding HeaderedContentControl.Header}"
+                                                                                          ContentSource="Header"
+                                                                                          ContentStringFormat="{TemplateBinding HeaderedItemsControl.HeaderStringFormat}"
+                                                                                          ContentTemplate="{TemplateBinding HeaderedContentControl.HeaderTemplate}" />
+                                                                    </StackPanel>
+                                                                    <ItemsPresenter Name="ItemsHost"
+                                                                                    Grid.Row="1"
+                                                                                    Grid.Column="1" />
+                                                                </Grid>
+                                                            </Border>
+                                                            <ControlTemplate.Triggers>
+                                                                <Trigger Property="IsExpanded" Value="False">
+                                                                    <Setter TargetName="ItemsHost" Property="Visibility" Value="Collapsed" />
+                                                                </Trigger>
+                                                                <Trigger Property="IsSelected" Value="True">
+                                                                    <Setter TargetName="BackBorder" Property="Background" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
+                                                                    <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.HighlightTextBrushKey}}" />
+                                                                </Trigger>
+                                                            </ControlTemplate.Triggers>
+                                                        </ControlTemplate>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Style>
+                                        </local:BindableSelectedItemTreeView.Resources>
+                                        <local:BindableSelectedItemTreeView.ItemTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Vertical">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <views:AutoScrollingLabel x:Name="autoScrollingLabel"
+                                                                                  Width="180"
+                                                                                  Height="25"
+                                                                                  Text="{Binding Message.Value}"
+                                                                                  Tag="{Binding DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=views:UndoHistory}}">
+                                                            <i:Interaction.Triggers>
+                                                                <i:EventTrigger EventName="MouseEnter">
+                                                                    <helper:EventToCommand Command="{Binding DataContext.MouseEnterCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=views:UndoHistory}}" CommandParameter="{Binding ElementName=autoScrollingLabel}" />
+                                                                </i:EventTrigger>
+                                                                <i:EventTrigger EventName="MouseLeave">
+                                                                    <helper:EventToCommand Command="{Binding DataContext.MouseLeaveCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=views:UndoHistory}}" CommandParameter="{Binding ElementName=autoScrollingLabel}" />
+                                                                </i:EventTrigger>
+                                                            </i:Interaction.Triggers>
+                                                            <views:AutoScrollingLabel.ContextMenu>
+                                                                <ContextMenu Tag="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource Self}}"
+                                                                             ItemsSource="{Binding Tag.ContextMenuItems, RelativeSource={RelativeSource Self}}">
+                                                                    <i:Interaction.Triggers>
+                                                                        <i:EventTrigger EventName="Opened">
+                                                                            <helper:EventToCommand Command="{Binding Tag.ContextMenuOpeningCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}, diag:PresentationTraceSources.TraceLevel=High}" PassEventArgsToCommand="True" />
+                                                                        </i:EventTrigger>
+                                                                    </i:Interaction.Triggers>
+                                                                </ContextMenu>
+                                                            </views:AutoScrollingLabel.ContextMenu>
+                                                        </views:AutoScrollingLabel>
+                                                    </StackPanel>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </local:BindableSelectedItemTreeView.ItemTemplate>
+                                    </local:BindableSelectedItemTreeView>
+                                </DockPanel>
+                                <Expander.Header>
+                                    <DockPanel>
+                                        <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.PaneTitle_UndoStack}" />
+                                    </DockPanel>
+                                </Expander.Header>
+                            </Expander>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Style>
+</UserControl>

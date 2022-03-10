@@ -1240,6 +1240,15 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Redo に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_Redo_NoShortcut {
+            get {
+                return ResourceManager.GetString("MenuItem_Redo_NoShortcut", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Save as に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string MenuItem_SaveAs {
@@ -1303,6 +1312,15 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Undo に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_Undo_NoShortcut {
+            get {
+                return ResourceManager.GetString("MenuItem_Undo_NoShortcut", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Version information of boiler&apos;s Graphics(_I) に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string MenuItem_Version {
@@ -1326,6 +1344,15 @@ namespace boilersGraphics.Properties {
         public static string MenuItem_Window {
             get {
                 return ResourceManager.GetString("MenuItem_Window", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Work history に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_WorkHistory {
+            get {
+                return ResourceManager.GetString("MenuItem_WorkHistory", resourceCulture);
             }
         }
         
@@ -1470,6 +1497,15 @@ namespace boilersGraphics.Properties {
         public static string PaneTitle_Layer {
             get {
                 return ResourceManager.GetString("PaneTitle_Layer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Work history に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PaneTitle_UndoStack {
+            get {
+                return ResourceManager.GetString("PaneTitle_UndoStack", resourceCulture);
             }
         }
         

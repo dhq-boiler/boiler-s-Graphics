@@ -52,8 +52,8 @@ namespace TsOperationHistory
             string message = $"{className}.{callerMemberName}() => EndRecode()";
             LogManager.GetCurrentClassLogger().Trace(message);
             var controller = _stack.Pop();
-            var operation = controller.Operations.ToCompositeOperation();
-            operation.Message = message;
+            var operation = controller.UndoStack.ToCompositeOperation();
+            operation.Message.Value = message;
             Current.Push(operation);
         }
     }

@@ -510,6 +510,9 @@
   <data name="MenuItem_Redo" xml:space="preserve">
     <value>Redo(_R)</value>
   </data>
+  <data name="MenuItem_Redo_NoShortcut" xml:space="preserve">
+    <value>Redo</value>
+  </data>
   <data name="MenuItem_SaveAs" xml:space="preserve">
     <value>Save as</value>
   </data>
@@ -531,6 +534,9 @@
   <data name="MenuItem_Undo" xml:space="preserve">
     <value>Undo(_U)</value>
   </data>
+  <data name="MenuItem_Undo_NoShortcut" xml:space="preserve">
+    <value>Undo</value>
+  </data>
   <data name="MenuItem_Version" xml:space="preserve">
     <value>Version information of boiler's Graphics(_I)</value>
   </data>
@@ -539,6 +545,9 @@
   </data>
   <data name="MenuItem_Window" xml:space="preserve">
     <value>Window(_W)</value>
+  </data>
+  <data name="MenuItem_WorkHistory" xml:space="preserve">
+    <value>Work history</value>
   </data>
   <data name="Message_Autosaved" xml:space="preserve">
     <value>It was saved automatically.</value>
@@ -569,6 +578,9 @@
   </data>
   <data name="PaneTitle_Layer" xml:space="preserve">
     <value>Layering</value>
+  </data>
+  <data name="PaneTitle_UndoStack" xml:space="preserve">
+    <value>Work history</value>
   </data>
   <data name="Pane_Combine_Exclude" xml:space="preserve">
     <value>Exclude</value>

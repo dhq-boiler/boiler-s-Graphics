@@ -510,6 +510,9 @@
   <data name="MenuItem_Redo" xml:space="preserve">
     <value>やり直し(_R)</value>
   </data>
+  <data name="MenuItem_Redo_NoShortcut" xml:space="preserve">
+    <value>やり直し</value>
+  </data>
   <data name="MenuItem_SaveAs" xml:space="preserve">
     <value>名前を付けて保存</value>
   </data>
@@ -531,6 +534,9 @@
   <data name="MenuItem_Undo" xml:space="preserve">
     <value>元に戻す(_U)</value>
   </data>
+  <data name="MenuItem_Undo_NoShortcut" xml:space="preserve">
+    <value>元に戻す</value>
+  </data>
   <data name="MenuItem_Version" xml:space="preserve">
     <value>boiler's Graphics のバージョン情報(_I)</value>
   </data>
@@ -539,6 +545,9 @@
   </data>
   <data name="MenuItem_Window" xml:space="preserve">
     <value>ウインドウ(_W)</value>
+  </data>
+  <data name="MenuItem_WorkHistory" xml:space="preserve">
+    <value>作業履歴</value>
   </data>
   <data name="Message_Autosaved" xml:space="preserve">
     <value>自動保存しました。</value>
@@ -569,6 +578,9 @@
   </data>
   <data name="PaneTitle_Layer" xml:space="preserve">
     <value>レイヤリング</value>
+  </data>
+  <data name="PaneTitle_UndoStack" xml:space="preserve">
+    <value>作業履歴</value>
   </data>
   <data name="Pane_Combine_Exclude" xml:space="preserve">
     <value>Exclude</value>

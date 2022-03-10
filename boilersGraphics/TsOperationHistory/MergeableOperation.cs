@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Reactive.Bindings;
+using System;
 using System.Diagnostics;
+using System.Windows;
 
 namespace TsOperationHistory
 {
@@ -57,8 +59,8 @@ namespace TsOperationHistory
 
             MergeJudge = mergeJudge;
         }
-
-        public string Message { get; set; }
+        public ReactivePropertySlim<string> Message { get; } = new ReactivePropertySlim<string>();
+        public ReactivePropertySlim<Visibility> ArrowVisibility { get; } = new ReactivePropertySlim<Visibility>(Visibility.Hidden);
 
         public void RollForward()
         {
@@ -143,7 +145,8 @@ namespace TsOperationHistory
             Action<T> setter,
             T newValue,
             T oldValue,
-            IMergeJudge mergeJudge = null)
+            IMergeJudge mergeJudge = null,
+            string message = null)
         {
             Debug.Assert(setter != null);
 
@@ -151,9 +154,11 @@ namespace TsOperationHistory
             PrevProperty = oldValue;
             Property = newValue;
             MergeJudge = mergeJudge;
+            Message.Value = message;
         }
 
-        public string Message { get; set; }
+        public ReactivePropertySlim<string> Message { get; } = new ReactivePropertySlim<string>();
+        public ReactivePropertySlim<Visibility> ArrowVisibility { get; } = new ReactivePropertySlim<Visibility>(Visibility.Hidden);
 
         public void RollForward()
         {
@@ -242,7 +247,8 @@ namespace TsOperationHistory
             RegenerateAction = regenerateAction;
         }
 
-        public string Message { get; set; }
+        public ReactivePropertySlim<string> Message { get; } = new ReactivePropertySlim<string>();
+        public ReactivePropertySlim<Visibility> ArrowVisibility { get; } = new ReactivePropertySlim<Visibility>(Visibility.Hidden);
 
         public void RollForward()
         {

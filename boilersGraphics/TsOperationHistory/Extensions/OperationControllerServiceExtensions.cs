@@ -17,7 +17,7 @@ namespace TsOperationHistory.Extensions
         
         public static void ExecuteInsert<T>(this IOperationController controller, IList<T> list, T value , int index)
         {
-            var operation = new InsertOperation<T>(@list, value , index);
+            var operation = new InsertOperation<T>(@list, value , index, $"Add {value} to {list}");
             controller.Execute(operation);
         }
         

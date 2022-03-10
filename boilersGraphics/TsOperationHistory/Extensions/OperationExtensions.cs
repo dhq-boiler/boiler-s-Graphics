@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Reactive.Bindings;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Windows;
 using TsOperationHistory.Internal;
 
 namespace TsOperationHistory.Extensions
@@ -11,7 +13,12 @@ namespace TsOperationHistory.Extensions
     {
         private class EmptyOperation : IOperation
         {
-            public string Message { get; set; } = "Empty Operation";
+            public EmptyOperation()
+            {
+                Message.Value = "Empty Operation";
+            }
+            public ReactivePropertySlim<string> Message { get; } = new ReactivePropertySlim<string>();
+            public ReactivePropertySlim<Visibility> ArrowVisibility { get; } = new ReactivePropertySlim<Visibility>(Visibility.Hidden);
             public void RollForward() { }
             public void Rollback() { }
         }
@@ -54,12 +61,12 @@ namespace TsOperationHistory.Extensions
         /// </summary>
         public static IOperation ExecuteAndCombineTop(this IOperation @this, IOperationController controller)
         {
-            if (controller.Operations.Any())
+            if (controller.UndoStack.Any())
             {
                 var prev = controller.Pop();
                 @this.RollForward();
                 var newOperation = prev.CombineOperations(@this).ToCompositeOperation();
-                newOperation.Message = @this.Message;
+                newOperation.Message.Value = @this.Message.Value;
                 return controller.Push(newOperation);
             }
 
@@ -131,7 +138,8 @@ namespace TsOperationHistory.Extensions
             return new MergeableOperation<TProperty>(
                 x => { FastReflection.SetProperty(@this, propertyName, x); },
                 newValue,
-                oldValue, new ThrottleMergeJudge<TMergeKey>(mergeKey, timeSpan));
+                oldValue, new ThrottleMergeJudge<TMergeKey>(mergeKey, timeSpan),
+                $"{propertyName}: {(oldValue != null ? oldValue : "null")}→{(newValue != null ? newValue : "null")}");
         }
 
         public static IMergeableOperation GenerateAutoMergeOperation<TProperty, TMergeKey>(this Type @class, string propertyName, TProperty newValue, TProperty oldValue, TMergeKey mergeKey, TimeSpan timeSpan)
@@ -139,7 +147,8 @@ namespace TsOperationHistory.Extensions
             return new MergeableOperation<TProperty>(
                 x => { FastReflection.SetStaticProperty(@class, propertyName, x); },
                 newValue,
-                oldValue, new ThrottleMergeJudge<TMergeKey>(mergeKey, timeSpan));
+                oldValue, new ThrottleMergeJudge<TMergeKey>(mergeKey, timeSpan),
+                $"{propertyName}: {(oldValue != null ? oldValue : "null")}→{(newValue != null ? newValue : "null")}");
         }
 
         /// <summary>
@@ -232,13 +241,13 @@ namespace TsOperationHistory.Extensions
         /// 値の追加オペレーションを作成する
         /// </summary>
         public static IOperation ToAddOperation<T>(this IList<T> @this, T value)
-            => new InsertOperation<T>(@this, value);
+            => new InsertOperation<T>(@this, value, message: $"Add {value} to {@this}");
 
         /// <summary>
         /// 値の削除オペレーションを作成する
         /// </summary>
         public static IOperation ToRemoveOperation<T>(this IList<T> @this, T value)
-            => new RemoveOperation<T>(@this, value);
+            => new RemoveOperation<T>(@this, value, $"Remove {value} from {@this}");
 
         /// <summary>
         /// 値のインデックス指定削除オペレーションを作成する
@@ -255,7 +264,7 @@ namespace TsOperationHistory.Extensions
         public static IOperation ToAddRangeOperation<T>(this IList<T> @this, IEnumerable<T> values)
         {
             return values
-                .Select(x => new InsertOperation<T>(@this, x))
+                .Select(x => new InsertOperation<T>(@this, x, message: $"Add {x} to {@this}"))
                 .ToCompositeOperation();
         }
 
@@ -268,7 +277,7 @@ namespace TsOperationHistory.Extensions
         public static IOperation ToRemoveRangeOperation<T>(this IList<T> @this, IEnumerable<T> values)
         {
             return values
-                .Select(x => new RemoveOperation<T>(@this, x))
+                .Select(x => new RemoveOperation<T>(@this, x, $"Remove {x} from {@this}"))
                 .ToCompositeOperation();
         }
 
@@ -286,7 +295,7 @@ namespace TsOperationHistory.Extensions
         /// </summary>
         public static ICompositeOperation ToCompositeOperation(this IEnumerable<IOperation> operations)
         {
-            return new CompositeOperation(operations.ToArray());
+            return new CompositeOperation($"{operations}", operations.ToArray());
         }
 
         /// <summary>
@@ -294,7 +303,7 @@ namespace TsOperationHistory.Extensions
         /// </summary>
         public static ICompositeOperation Union(this IOperation @this, params IOperation[] operations)
         {
-            return new CompositeOperation(@this.CombineOperations(operations).ToArray());
+            return new CompositeOperation($"{operations}", @this.CombineOperations(operations).ToArray());
         }
 
         public static ICompositeOperation Union(this IOperation @this, IEnumerable<IOperation> operations)

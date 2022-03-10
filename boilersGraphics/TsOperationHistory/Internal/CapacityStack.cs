@@ -1,10 +1,14 @@
-﻿using System.Collections;
+﻿using boilersGraphics.Helpers;
+using Prism.Mvvm;
+using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Linq;
 
 namespace TsOperationHistory.Internal
 {
-    internal interface IStack<T> : IEnumerable<T>
+    public interface IStack<T> : IEnumerable<T>, INotifyCollectionChanged
     {
         T Push(T item);
         T Peek();
@@ -12,33 +16,30 @@ namespace TsOperationHistory.Internal
         void Clear();
     }
 
-    internal class CapacityStack<T> : IStack<T>
+    internal class CapacityStack<T> : ObservableLinkedList<T>, IStack<T>
     {
-        private readonly LinkedList<T> _collection = new LinkedList<T>();
-
         public CapacityStack(int capacity) { Capacity = capacity; }
+
+        public CapacityStack(IEnumerable<T> collection)
+            : base(collection)
+        { }
 
         public int Capacity { get; }
 
         public T Push(T item)
         {
-            _collection.AddLast(item);
-            if (_collection.Count > Capacity)
-                _collection.RemoveFirst();
+            AddLast(item);
+            if (Count > Capacity)
+                RemoveFirst();
             return item;
         }
-        public T Peek() => _collection.Last();
+        public T Peek() => this.Last.Value;
 
         public T Pop()
         {
-            var item = _collection.Last();
-            _collection.RemoveLast();
+            var item = this.Last.Value;
+            RemoveLast();
             return item;
         }
-
-        public void Clear() => _collection.Clear();
-
-        public IEnumerator<T> GetEnumerator() => _collection.GetEnumerator();
-        IEnumerator IEnumerable.GetEnumerator() => _collection.GetEnumerator();
     }
 }

@@ -56,6 +56,7 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\img\pointer.png" />
+    <Resource Include="Assets\img\right_arrow.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\img\straightline.png" />
@@ -117,6 +118,7 @@
     <Resource Include="Assets\img\exclude.png" />
     <Resource Include="Assets\img\intersect.png" />
     <Resource Include="Assets\img\union.png" />
+    <Resource Include="Assets\img\work_history.png" />
     <Resource Include="Assets\img\xor.png" />
   </ItemGroup>
   <ItemGroup>
@@ -206,6 +208,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="Assets\img\FoldingFan.png" />
+    <None Remove="Assets\img\right_arrow.png" />
+    <None Remove="Assets\img\work_history.png" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Properties\Resources.Designer.cs">
