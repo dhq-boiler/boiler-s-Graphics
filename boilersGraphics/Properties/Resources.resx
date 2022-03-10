@@ -510,6 +510,9 @@
   <data name="MenuItem_Redo" xml:space="preserve">
     <value>Redo(_R)</value>
   </data>
+  <data name="MenuItem_Redo_NoShortcut" xml:space="preserve">
+    <value>Redo</value>
+  </data>
   <data name="MenuItem_SaveAs" xml:space="preserve">
     <value>Save as</value>
   </data>
@@ -530,6 +533,9 @@
   </data>
   <data name="MenuItem_Undo" xml:space="preserve">
     <value>Undo(_U)</value>
+  </data>
+  <data name="MenuItem_Undo_NoShortcut" xml:space="preserve">
+    <value>Undo</value>
   </data>
   <data name="MenuItem_Version" xml:space="preserve">
     <value>Version information of boiler's Graphics(_I)</value>

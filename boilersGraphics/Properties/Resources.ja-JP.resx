@@ -510,6 +510,9 @@
   <data name="MenuItem_Redo" xml:space="preserve">
     <value>やり直し(_R)</value>
   </data>
+  <data name="MenuItem_Redo_NoShortcut" xml:space="preserve">
+    <value>やり直し</value>
+  </data>
   <data name="MenuItem_SaveAs" xml:space="preserve">
     <value>名前を付けて保存</value>
   </data>
@@ -530,6 +533,9 @@
   </data>
   <data name="MenuItem_Undo" xml:space="preserve">
     <value>元に戻す(_U)</value>
+  </data>
+  <data name="MenuItem_Undo_NoShortcut" xml:space="preserve">
+    <value>元に戻す</value>
   </data>
   <data name="MenuItem_Version" xml:space="preserve">
     <value>boiler's Graphics のバージョン情報(_I)</value>

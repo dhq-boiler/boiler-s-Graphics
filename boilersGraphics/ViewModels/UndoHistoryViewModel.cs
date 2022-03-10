@@ -1,4 +1,6 @@
-﻿using boilersGraphics.Views;
+﻿using boilersGraphics.Helpers;
+using boilersGraphics.Properties;
+using boilersGraphics.Views;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
 using Reactive.Bindings;
@@ -85,13 +87,13 @@ namespace boilersGraphics.ViewModels
                 ContextMenuItems.Clear();
                 if (this.Operations.Value.Undos.Value.Contains(SelectedOperation.Value))
                 {
-                    var menuItem = new MenuItem() { Header = "元に戻す", Command = this.UndoCommand };
+                    var menuItem = new MenuItem() { Header = Resources.MenuItem_Undo_NoShortcut, Command = this.UndoCommand };
                     menuItem.SetBinding(MenuItem.CommandParameterProperty, new Binding());
                     ContextMenuItems.Add(menuItem);
                 }
                 if (this.Operations.Value.Redos.Value.Contains(SelectedOperation.Value))
                 {
-                    var menuItem = new MenuItem() { Header = "やり直す", Command = this.RedoCommand };
+                    var menuItem = new MenuItem() { Header = Resources.MenuItem_Redo_NoShortcut, Command = this.RedoCommand };
                     menuItem.SetBinding(MenuItem.CommandParameterProperty, new Binding());
                     ContextMenuItems.Add(menuItem);
                 }

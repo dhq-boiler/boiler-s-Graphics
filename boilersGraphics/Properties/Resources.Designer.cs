@@ -1240,6 +1240,15 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Redo に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_Redo_NoShortcut {
+            get {
+                return ResourceManager.GetString("MenuItem_Redo_NoShortcut", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Save as に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string MenuItem_SaveAs {
@@ -1299,6 +1308,15 @@ namespace boilersGraphics.Properties {
         public static string MenuItem_Undo {
             get {
                 return ResourceManager.GetString("MenuItem_Undo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Undo に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_Undo_NoShortcut {
+            get {
+                return ResourceManager.GetString("MenuItem_Undo_NoShortcut", resourceCulture);
             }
         }
         
