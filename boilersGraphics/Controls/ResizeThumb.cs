@@ -82,6 +82,12 @@ namespace boilersGraphics.Controls
                                             where item is DesignerItemViewModelBase
                                             select item;
 
+                if (designerItem.Owner.BackgroundItem.Value.EdgeBrush.Value == Brushes.Magenta
+                    && designerItem.Owner.BackgroundItem.Value.EdgeThickness.Value == 10)
+                {
+                    selectedDesignerItems = selectedDesignerItems.Union(new SelectableDesignerItemViewModelBase[] { designerItem.Owner.BackgroundItem.Value });
+                }
+
                 CalculateDragLimits(selectedDesignerItems, out minLeft, out minTop,
                                     out minDeltaHorizontal, out minDeltaVertical);
 

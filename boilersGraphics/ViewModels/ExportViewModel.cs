@@ -172,7 +172,7 @@ namespace boilersGraphics.ViewModels
             }
             else
             {
-                size = new Size(diagramViewModel.Width, diagramViewModel.Height);
+                size = new Size(diagramViewModel.BackgroundItem.Value.Width.Value, diagramViewModel.BackgroundItem.Value.Height.Value);
             }
             return size;
         }

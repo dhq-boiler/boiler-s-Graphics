@@ -155,17 +155,8 @@ namespace boilersGraphics.ViewModels
         public ReactivePropertySlim<Brush> EdgeBrush { get; } = new ReactivePropertySlim<Brush>();
         public ReactivePropertySlim<Brush> FillBrush { get; } = new ReactivePropertySlim<Brush>();
 
-        public int Width
-        {
-            get { return _Width; }
-            set { SetProperty(ref _Width, value); }
-        }
-
-        public int Height
-        {
-            get { return _Height; }
-            set { SetProperty(ref _Height, value); }
-        }
+        public ReadOnlyReactivePropertySlim<double> RenderWidth { get; }
+        public ReadOnlyReactivePropertySlim<double> RenderHeight { get; } 
 
         /// <summary>
         /// 現在ポインティングしている座標
@@ -230,6 +221,15 @@ namespace boilersGraphics.ViewModels
         public DiagramViewModel(MainWindowViewModel mainWindowViewModel, int width, int height, bool isPreview = false)
         {
             MainWindowVM = mainWindowViewModel;
+
+            RenderWidth = Observable.Return(App.Current.MainWindow.GetChildOfType<DiagramControl>())
+                                    .Where(x => x != null)
+                                    .Select(x => x.ActualWidth)
+                                    .ToReadOnlyReactivePropertySlim(1000);
+            RenderHeight = Observable.Return(App.Current.MainWindow.GetChildOfType<DiagramControl>())
+                                    .Where(x => x != null)
+                                    .Select(x => x.ActualHeight)
+                                    .ToReadOnlyReactivePropertySlim(1000);
 
             if (!isPreview)
             {
@@ -445,10 +445,8 @@ namespace boilersGraphics.ViewModels
                         }
                     }
 
-                    Width = (int)Math.Round(horizontalMax);
-                    Height = (int)Math.Round(verticalMax);
-                    BackgroundItem.Value.Width.Value = Width;
-                    BackgroundItem.Value.Height.Value = Height;
+                    BackgroundItem.Value.Width.Value = Math.Round(horizontalMax);
+                    BackgroundItem.Value.Height.Value = Math.Round(verticalMax);
                 }, () => AllItems.Value.OfType<DesignerItemViewModelBase>().Except(new DesignerItemViewModelBase[] { BackgroundItem.Value }).Count() + AllItems.Value.OfType<ConnectorBaseViewModel>().Count() > 0);
                 ClearCanvasCommand = new DelegateCommand(() =>
                 {
@@ -562,9 +560,6 @@ namespace boilersGraphics.ViewModels
                       })
                 .AddTo(_CompositeDisposable);
             }
-
-            Width = width;
-            Height = height;
 
             if (!isPreview)
             {
@@ -823,13 +818,13 @@ namespace boilersGraphics.ViewModels
             {
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "CanvasBackground.Value", Brushes.White as Brush);
             }
-            mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value", new BackgroundViewModel());
+            mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value", new BackgroundViewModel(this));
             mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.ZIndex.Value", -1);
             mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.FillBrush.Value", CanvasBackground.Value);
             mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.Left.Value", 0d);
             mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.Top.Value", 0d);
-            mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.Width.Value", (double)Width);
-            mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.Height.Value", (double)Height);
+            mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.Width.Value", 1000d);
+            mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.Height.Value", 1000d);
             mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.Owner", this);
             mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.EdgeBrush.Value", Brushes.Black as Brush);
             mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.EdgeThickness.Value", 1d);
@@ -1358,8 +1353,8 @@ namespace boilersGraphics.ViewModels
         {
             IDialogResult result = null;
             var preferences = new Models.Preference();
-            preferences.Width.Value = this.Width;
-            preferences.Height.Value = this.Height;
+            preferences.Width.Value = (int)this.BackgroundItem.Value.Width.Value;
+            preferences.Height.Value = (int)this.BackgroundItem.Value.Height.Value;
             Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
                                                      .Where(x => x.GetType() == typeof(LayerItem))
                                                      .Select(y => (y as LayerItem).Item.Value)
@@ -1368,8 +1363,8 @@ namespace boilersGraphics.ViewModels
                                                      .ToList()
                                                      .ForEach(z =>
                                                      {
-                                                         z.Width.Value = this.Width;
-                                                         z.Height.Value = this.Height;
+                                                         z.Width.Value = this.BackgroundItem.Value.Width.Value;
+                                                         z.Height.Value = this.BackgroundItem.Value.Height.Value;
                                                      });
             preferences.CanvasBackground.Value = this.CanvasBackground.Value;
             preferences.EnablePointSnap.Value = this.EnablePointSnap.Value;
@@ -1383,14 +1378,12 @@ namespace boilersGraphics.ViewModels
             if (result != null && result.Result == ButtonResult.OK)
             {
                 var s = result.Parameters.GetValue<Models.Preference>("Preferences");
-                Width = s.Width.Value;
-                Height = s.Height.Value;
                 CanvasBackground.Value = s.CanvasBackground.Value;
                 BackgroundItem.Value.FillBrush.Value = CanvasBackground.Value;
                 EnablePointSnap.Value = s.EnablePointSnap.Value;
                 (App.Current.MainWindow.DataContext as MainWindowViewModel).SnapPower.Value = s.SnapPower.Value;
-                BackgroundItem.Value.Width.Value = Width;
-                BackgroundItem.Value.Height.Value = Height;
+                BackgroundItem.Value.Width.Value = s.Width.Value;
+                BackgroundItem.Value.Height.Value = s.Height.Value;
                 EnableAutoSave.Value = s.EnableAutoSave.Value;
                 AutoSaveType.Value = s.AutoSaveType.Value;
                 AutoSaveInterval.Value = s.AutoSaveInterval.Value;

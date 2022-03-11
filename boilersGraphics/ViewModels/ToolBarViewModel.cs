@@ -46,6 +46,7 @@ namespace boilersGraphics.ViewModels
         public SliceBehavior SliceBehavior { get; private set; }
         public NDrawPieBehavior NDrawPieBehavior { get; } = new NDrawPieBehavior();
         public DropperBehavior DropperBehavior { get; } = new DropperBehavior();
+        public CanvasModifierBehavior CanvasModifierBehavior { get; } = new CanvasModifierBehavior();
 
         public NDrawPolyBezierBehavior PolyBezierBehavior { get; } = new NDrawPolyBezierBehavior();
 
@@ -281,6 +282,18 @@ namespace boilersGraphics.ViewModels
                 }
                 ChangeHitTestToDisable();
                 SelectOneToolItem("dropper");
+            })));
+            ToolItems.Add(new ToolItemData("canvasModifier", null, null, new DelegateCommand(() =>
+            {
+                var mainWindowViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel);
+                mainWindowViewModel.ClearCurrentOperationAndDetails();
+                Behaviors.Clear();
+                if (!Behaviors.Contains(CanvasModifierBehavior))
+                {
+                    Behaviors.Add(CanvasModifierBehavior);
+                }
+                //ChangeHitTestToDisable();
+                SelectOneToolItem("canvasModifier");
             })));
         }
 

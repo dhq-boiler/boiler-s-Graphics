@@ -109,7 +109,9 @@ namespace boilersGraphics.AttachedProperties
                     var diagramVM = (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel;
                     diagramVM.Layers.ToList().ForEach(x => x.IsSelected.Value = false);
                     var layerItem = diagramVM.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
-                                                    .First(x => x is LayerItem && (x as LayerItem).Item.Value == selectableDesignerItemViewModelBase);
+                                                    .FirstOrDefault(x => x is LayerItem && (x as LayerItem).Item.Value == selectableDesignerItemViewModelBase);
+                    if (layerItem == null)
+                        return;
                     layerItem.IsSelected.Value = true;
                     diagramVM.Layers.Where(x => layerItem.HasAsAncestor(x)).ToList().ForEach(x => x.IsSelected.Value = true);
 
