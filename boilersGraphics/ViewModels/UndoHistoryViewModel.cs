@@ -1,4 +1,5 @@
-﻿using boilersGraphics.Helpers;
+﻿using boilersGraphics.Extensions;
+using boilersGraphics.Helpers;
 using boilersGraphics.Properties;
 using boilersGraphics.Views;
 using Prism.Mvvm;
@@ -23,6 +24,8 @@ namespace boilersGraphics.ViewModels
     {
         private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
+        public static UndoHistoryViewModel Instance { get; private set; }
+
         public event Action<IDialogResult> RequestClose;
 
         public ReactiveCommand<AutoScrollingLabel> MouseEnterCommand { get; } = new ReactiveCommand<AutoScrollingLabel>();
@@ -39,6 +42,7 @@ namespace boilersGraphics.ViewModels
 
         public UndoHistoryViewModel()
         {
+            Instance = this;
             MouseEnterCommand.Subscribe(label =>
             {
                 label.EnableAutoScroll();

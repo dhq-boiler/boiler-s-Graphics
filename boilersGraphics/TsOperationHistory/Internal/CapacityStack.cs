@@ -1,10 +1,6 @@
 ﻿using boilersGraphics.Helpers;
-using Prism.Mvvm;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.Linq;
 
 namespace TsOperationHistory.Internal
 {

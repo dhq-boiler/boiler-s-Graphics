@@ -1,4 +1,9 @@
-﻿using Prism.Mvvm;
+﻿using boilersGraphics;
+using boilersGraphics.Extensions;
+using boilersGraphics.Helpers;
+using boilersGraphics.ViewModels;
+using boilersGraphics.Views;
+using Prism.Mvvm;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
@@ -7,12 +12,17 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Windows.Controls;
 
 namespace TsOperationHistory.Internal
 {
-    public class UndoStack<T> : BindableBase, IStack<T> where T : IOperation
+    public class UndoStack<T> : BindableBase, IStack<T>, IDisposable where T : IOperation
     {
+        private CompositeDisposable disposables = new CompositeDisposable();
+        private bool disposedValue;
+
         public bool CanUndo => Undos.Value.Any();
         public bool CanRedo => Redos.Value.Any();
 
@@ -29,7 +39,29 @@ namespace TsOperationHistory.Internal
             History = Undos.Value.CollectionChangedAsObservable()
                                  .Merge(Redos.Value.CollectionChangedAsObservable())
                                  .Select(_ => (IStack<T>)new CapacityStack<T>(Undos.Value.Union(Redos.Value.Reverse())))
+                                 .Do(x => ScrollToCurrentPosition())
                                  .ToReadOnlyReactivePropertySlim();
+        }
+
+        private void ScrollToCurrentPosition()
+        {
+            var undoHistoryVM = UndoHistoryViewModel.Instance;
+            if (undoHistoryVM == null)
+                return;
+            var treeview = App.Current.MainWindow.GetCorrespondingViews<BindableSelectedItemTreeView>(undoHistoryVM).FirstOrDefault();
+            if (treeview == null)
+                return;
+            var scrollViewer = treeview.GetChildOfType<ScrollViewer>();
+            if (scrollViewer == null)
+                return;
+            if (History.Value == null)
+                return;
+            var h = scrollViewer.ViewportHeight;
+            var hunit = h / History.Value.Count();
+            if (History.Value.Count() == 0 || double.IsNaN(hunit))
+                hunit = 0d;
+            var targetH = hunit * undoHistoryVM.CurrentPosition.Value;
+            scrollViewer.ScrollToVerticalOffset(targetH);
         }
 
         public ReactivePropertySlim<IStack<T>> Undos { get; } = new ReactivePropertySlim<IStack<T>>();
@@ -98,5 +130,28 @@ namespace TsOperationHistory.Internal
         }
 
         public IEnumerable<T> RedoStack => Redos.Value;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    Undos.Dispose();
+                    Redos.Dispose();
+                    History.Dispose();
+                    disposables.Dispose();
+                }
+                disposables = null;
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            // このコードを変更しないでください。クリーンアップ コードを 'Dispose(bool disposing)' メソッドに記述します
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        }
     }
 }
