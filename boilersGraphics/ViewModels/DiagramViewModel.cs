@@ -1430,7 +1430,9 @@ namespace boilersGraphics.ViewModels
         {
             if (parameter is SelectableDesignerItemViewModelBase item)
             {
-                var targetLayer = SelectedLayers.Value.First();
+                var targetLayer = GetSelectedLayer();
+                if (targetLayer == null)
+                    return;
                 var newZIndex = targetLayer.GetNewZIndex(Layers.TakeWhile(x => x != targetLayer));
                 Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
                       .Where(x => x != targetLayer)
@@ -1440,6 +1442,19 @@ namespace boilersGraphics.ViewModels
                 item.Owner = this;
                 Add(item);
             }
+        }
+
+        private LayerTreeViewItemBase GetSelectedLayer()
+        {
+            var targetLayer = SelectedLayers.Value.FirstOrDefault();
+            if (targetLayer == null)
+                targetLayer = Layers.FirstOrDefault();
+            if (targetLayer == null)
+            {
+                LogManager.GetCurrentClassLogger().Warn($"レイヤーが選択されていません。");
+                return null;
+            }
+            return targetLayer;
         }
 
         private void ExecuteRemoveItemCommand(object parameter)
@@ -1532,7 +1547,8 @@ namespace boilersGraphics.ViewModels
 
         private void Add(SelectableDesignerItemViewModelBase item, string layerItemName = null)
         {
-            SelectedLayers.Value.First().AddItem(MainWindowVM, this, item, layerItemName);
+            var selectedLayer = GetSelectedLayer();
+            selectedLayer.AddItem(MainWindowVM, this, item, layerItemName);
         }
 
         private void Add(LayerItem item)
