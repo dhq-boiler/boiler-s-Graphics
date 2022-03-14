@@ -56,10 +56,12 @@ namespace TsOperationHistory.Internal
                 return;
             if (History.Value == null)
                 return;
-            var h = scrollViewer.ViewportHeight;
+            var h = scrollViewer.ExtentHeight;
+            if (History.Value.Count() == 0)
+                return;
             var hunit = h / History.Value.Count();
-            if (History.Value.Count() == 0 || double.IsNaN(hunit))
-                hunit = 0d;
+            if (double.IsNaN(hunit))
+                return;
             var targetH = hunit * undoHistoryVM.CurrentPosition.Value;
             scrollViewer.ScrollToVerticalOffset(targetH);
         }
