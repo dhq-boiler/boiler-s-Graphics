@@ -327,6 +327,8 @@ namespace boilersGraphics.Helpers
             colorSpots.Add(new XElement("ColorSpot99", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot99))));
             return new XElement[]
             {
+                new XElement("Left", diagramViewModel.BackgroundItem.Value.Left.Value),
+                new XElement("Top", diagramViewModel.BackgroundItem.Value.Top.Value),
                 new XElement("Width", diagramViewModel.BackgroundItem.Value.Width.Value),
                 new XElement("Height", diagramViewModel.BackgroundItem.Value.Height.Value),
                 new XElement("CanvasBackground", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.CanvasBackground.Value))),

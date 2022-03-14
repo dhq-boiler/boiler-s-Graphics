@@ -1743,9 +1743,7 @@ namespace boilersGraphics.ViewModels
                 mainwindowViewModel.Recorder.BeginRecode();
 
                 var configuration = root.Element("Configuration");
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "Width", int.Parse(configuration.Element("Width").Value));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "Height", int.Parse(configuration.Element("Height").Value));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "CanvasBackground.Value", WpfObjectSerializer.Deserialize(configuration.Element("CanvasBackground").Nodes().First().ToString()));
+                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "CanvasBackground.Value", WpfObjectSerializer.Deserialize(configuration.Element("CanvasBackground").Nodes().First().ToString()) ?? new SolidColorBrush((Color)ColorConverter.ConvertFromString(configuration.Element("CanvasBackground").Nodes().First().ToString())));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "EnablePointSnap.Value", bool.Parse(configuration.Element("EnablePointSnap").Value));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(mainwindowViewModel, "SnapPower.Value", double.Parse(configuration.Element("SnapPower").Value));
                 if (configuration.Element("ColorSpots") != null)
@@ -1854,6 +1852,23 @@ namespace boilersGraphics.ViewModels
                 }
 
                 InitialSetting(mainwindowViewModel, false, false, isPreview);
+
+                if (configuration.Element("Left") != null)
+                {
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.Left.Value", int.Parse(configuration.Element("Left").Value));
+                }
+                if (configuration.Element("Top") != null)
+                {
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.Top.Value", int.Parse(configuration.Element("Top").Value));
+                }
+                if (configuration.Element("Width") != null)
+                {
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.Width.Value", double.Parse(configuration.Element("Width").Value));
+                }
+                if (configuration.Element("Height") != null)
+                {
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.Height.Value", double.Parse(configuration.Element("Height").Value));
+                }
 
                 ObjectDeserializer.ReadObjectsFromXML(this, root, isPreview);
             }

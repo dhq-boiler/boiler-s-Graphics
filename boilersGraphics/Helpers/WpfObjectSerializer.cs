@@ -104,10 +104,17 @@ namespace boilersGraphics.Helpers
 		// 戻り値   : WPF オブジェクト（オブジェクトの内容に応じて型キャストする）
 		public static object Deserialize(string xamlText)
 		{
-			var doc = new XmlDocument();
-			doc.LoadXml(xamlText);
-			object obj = System.Windows.Markup.XamlReader.Load(new XmlNodeReader(doc));
-			return obj;
+			try
+			{
+				var doc = new XmlDocument();
+				doc.LoadXml(xamlText);
+				object obj = System.Windows.Markup.XamlReader.Load(new XmlNodeReader(doc));
+				return obj;
+			}
+			catch (XmlException)
+            {
+				return null;
+            }
 		}
 
 	} // end of WpfObjectSerializer class
