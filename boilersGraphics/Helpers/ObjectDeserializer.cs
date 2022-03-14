@@ -334,7 +334,7 @@ namespace boilersGraphics.Helpers
             }
             item.EdgeThickness.Value = double.Parse(designerItemElm.Element("EdgeThickness").Value);
             item.PathGeometry.Value = PathGeometry.CreateFromGeometry(PathGeometry.Parse(designerItemElm.Element("PathGeometry").Value));
-            item.RotationAngle.Value = double.Parse(designerItemElm.Element("RotationAngle").Value);
+            item.RotationAngle.Value = designerItemElm.Element("RotationAngle") != null ? double.Parse(designerItemElm.Element("RotationAngle").Value) : 0;
             item.Owner = diagramViewModel;
             if (item is PictureDesignerItemViewModel)
             {
