@@ -445,6 +445,15 @@ namespace boilersGraphics.ViewModels
                         }
                     }
 
+                    double horizontalMin = AllItems.Value.OfType<DesignerItemViewModelBase>().Except(new DesignerItemViewModelBase[] { BackgroundItem.Value }).Count() > 0
+                                         ? AllItems.Value.OfType<DesignerItemViewModelBase>().Except(new DesignerItemViewModelBase[] { BackgroundItem.Value }).Min(x => x.Left.Value)
+                                         : 0;
+                    double verticalMin = AllItems.Value.OfType<DesignerItemViewModelBase>().Except(new DesignerItemViewModelBase[] { BackgroundItem.Value }).Count() > 0
+                                         ? AllItems.Value.OfType<DesignerItemViewModelBase>().Except(new DesignerItemViewModelBase[] { BackgroundItem.Value }).Min(x => x.Top.Value)
+                                         : 0;
+
+                    BackgroundItem.Value.Left.Value = Math.Round(horizontalMin);
+                    BackgroundItem.Value.Top.Value = Math.Round(verticalMin);
                     BackgroundItem.Value.Width.Value = Math.Round(horizontalMax);
                     BackgroundItem.Value.Height.Value = Math.Round(verticalMax);
                 }, () => AllItems.Value.OfType<DesignerItemViewModelBase>().Except(new DesignerItemViewModelBase[] { BackgroundItem.Value }).Count() + AllItems.Value.OfType<ConnectorBaseViewModel>().Count() > 0);
