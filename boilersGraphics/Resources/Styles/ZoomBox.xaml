@@ -1,6 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:control="clr-namespace:boilersGraphics.Controls">
+                    xmlns:control="clr-namespace:boilersGraphics.Controls"
+                    xmlns:usercontrol="clr-namespace:boilersGraphics.UserControls">
 
     <Style TargetType="{x:Type control:ZoomBox}">
 
@@ -161,7 +162,33 @@
                             <Border Height="180"
                                     Padding="0"
                                     BorderBrush="DimGray"
-                                    BorderThickness="0,1,0,0">
+                                    BorderThickness="0,1,0,0"
+                                    ToolTipService.ShowDuration="10000000">
+                                <Border.ToolTip>
+                                    <TextBlock>
+                                        <Run Text="DiagramControlの大きさ：(" />
+                                        <Run Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=DiagramControl.ActualWidth, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                                        <Run Text="," />
+                                        <Run Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=DiagramControl.ActualHeight, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                                        <Run Text=")" />
+                                        <LineBreak />
+                                        <Run Text="キャンパス:(" />
+                                        <Run Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=DesignerCanvas.ActualWidth, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                                        <Run Text="," />
+                                        <Run Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=DesignerCanvas.ActualHeight, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                                        <Run Text=")" />
+                                        <LineBreak />
+                                        <Run Text="注視エリア：(" />
+                                        <Run Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ZoomThumb.(Canvas.Left), Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                                        <Run Text="," />
+                                        <Run Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ZoomThumb.(Canvas.Top), Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                                        <Run Text="," />
+                                        <Run Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ZoomThumb.ActualWidth, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                                        <Run Text="," />
+                                        <Run Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ZoomThumb.ActualHeight, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                                        <Run Text="）" />
+                                    </TextBlock>
+                                </Border.ToolTip>
                                 <Grid>
                                     <Canvas Name="PART_ZoomCanvas"
                                             Margin="5"

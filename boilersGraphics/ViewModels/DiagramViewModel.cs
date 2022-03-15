@@ -832,6 +832,22 @@ namespace boilersGraphics.ViewModels
             mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.FillBrush.Value", CanvasBackground.Value);
             mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.Left.Value", 0d);
             mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.Top.Value", 0d);
+            BackgroundItem.Value.Width.Subscribe(width =>
+            {
+                var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
+                if (designerCanvas == null)
+                    return;
+                designerCanvas.Width = width;
+            })
+            .AddTo(_CompositeDisposable);
+            BackgroundItem.Value.Height.Subscribe(height =>
+            {
+                var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
+                if (designerCanvas == null)
+                    return;
+                designerCanvas.Height = height;
+            })
+            .AddTo(_CompositeDisposable);
             mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.Width.Value", 1000d);
             mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.Height.Value", 1000d);
             mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.Owner", this);

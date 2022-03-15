@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using boilersGraphics.Extensions;
+using boilersGraphics.UserControls;
+using System;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -13,7 +13,6 @@ namespace boilersGraphics.Controls
 {
     public class ZoomBox : Control
     {
-        private Thumb _zoomThumb;
         private Canvas _zoomCanvas;
         private Slider _zoomSlider;
         private ScaleTransform _scaleTransform;
@@ -30,6 +29,19 @@ namespace boilersGraphics.Controls
         public static readonly DependencyProperty ScrollViewerProperty =
             DependencyProperty.Register("ScrollViewer", typeof(ScrollViewer), typeof(ZoomBox));
         #endregion
+
+        public static readonly DependencyProperty ZoomThumbProperty = DependencyProperty.Register("ZoomThumb", typeof(Thumb), typeof(ZoomBox));
+
+        public Thumb ZoomThumb
+        {
+            get { return (Thumb)GetValue(ZoomThumbProperty); }
+            set { SetValue(ZoomThumbProperty, value); }
+        }
+
+        public DiagramControl DiagramControl
+        {
+            get { return App.Current.MainWindow.GetChildOfType<DiagramControl>(); }
+        }
 
         #region DesignerCanvas
 
@@ -83,8 +95,8 @@ namespace boilersGraphics.Controls
             if (this.ScrollViewer == null)
                 return;
 
-            _zoomThumb = Template.FindName("PART_ZoomThumb", this) as Thumb;
-            if (_zoomThumb == null)
+            ZoomThumb = Template.FindName("PART_ZoomThumb", this) as Thumb;
+            if (ZoomThumb == null)
                 throw new Exception("PART_ZoomThumb template is missing!");
 
             _zoomCanvas = Template.FindName("PART_ZoomCanvas", this) as Canvas;
@@ -95,7 +107,7 @@ namespace boilersGraphics.Controls
             if (_zoomSlider == null)
                 throw new Exception("PART_ZoomSlider template is missing!");
 
-            _zoomThumb.DragDelta += new DragDeltaEventHandler(this.Thumb_DragDelta);
+            ZoomThumb.DragDelta += new DragDeltaEventHandler(this.Thumb_DragDelta);
             _zoomSlider.ValueChanged += new RoutedPropertyChangedEventHandler<double>(this.ZoomSlider_ValueChanged);
             _scaleTransform = new ScaleTransform();
         }
@@ -145,10 +157,10 @@ namespace boilersGraphics.Controls
         {
             double scale, xOffset, yOffset;
             this.InvalidateScale(out scale, out xOffset, out yOffset);
-            _zoomThumb.Width = this.ScrollViewer.ViewportWidth * scale;
-            _zoomThumb.Height = this.ScrollViewer.ViewportHeight * scale;
-            Canvas.SetLeft(_zoomThumb, xOffset + this.ScrollViewer.HorizontalOffset * scale);
-            Canvas.SetTop(_zoomThumb, yOffset + this.ScrollViewer.VerticalOffset * scale);
+            ZoomThumb.Width = this.ScrollViewer.ViewportWidth * scale;
+            ZoomThumb.Height = this.ScrollViewer.ViewportHeight * scale;
+            Canvas.SetLeft(ZoomThumb, xOffset + this.ScrollViewer.HorizontalOffset * scale);
+            Canvas.SetTop(ZoomThumb, yOffset + this.ScrollViewer.VerticalOffset * scale);
         }
 
         private void DesignerCanvas_MouseWheel(object sender, EventArgs e)
