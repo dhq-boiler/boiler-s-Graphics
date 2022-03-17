@@ -1,7 +1,9 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:control="clr-namespace:boilersGraphics.Controls"
-                    xmlns:usercontrol="clr-namespace:boilersGraphics.UserControls">
+                    xmlns:usercontrol="clr-namespace:boilersGraphics.UserControls"
+                    xmlns:c="clr-namespace:CalcBinding;assembly=CalcBinding"
+                    xmlns:converters="clr-namespace:boilersGraphics.Converters">
 
     <Style TargetType="{x:Type control:ZoomBox}">
 
@@ -147,7 +149,7 @@
                     </Setter.Value>
                 </Setter>
             </Style>
-
+            <converters:MiniMapTargetRectConverter x:Key="MiniMapTargetRect" />
         </Style.Resources>
 
         <Setter Property="SnapsToDevicePixels" Value="true" />
@@ -179,13 +181,29 @@
                                         <Run Text=")" />
                                         <LineBreak />
                                         <Run Text="注視エリア：(" />
-                                        <Run Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ZoomThumb.(Canvas.Left), Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                                        <Run>
+                                            <Run.Text>
+                                                <MultiBinding Converter="{StaticResource MiniMapTargetRect}">
+                                                    <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="ZoomThumb.(Canvas.Left)" UpdateSourceTrigger="PropertyChanged" Mode="OneWay" />
+                                                    <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="ZoomCanvas.ActualWidth" UpdateSourceTrigger="PropertyChanged" Mode="OneWay" />
+                                                    <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="DesignerCanvas.ActualWidth" UpdateSourceTrigger="PropertyChanged" Mode="OneWay" />
+                                                </MultiBinding>
+                                            </Run.Text>
+                                        </Run>
                                         <Run Text="," />
-                                        <Run Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ZoomThumb.(Canvas.Top), Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                                        <Run>
+                                            <Run.Text>
+                                                <MultiBinding Converter="{StaticResource MiniMapTargetRect}">
+                                                    <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="ZoomThumb.(Canvas.Top)" UpdateSourceTrigger="PropertyChanged" Mode="OneWay" />
+                                                    <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="ZoomCanvas.ActualHeight" UpdateSourceTrigger="PropertyChanged" Mode="OneWay" />
+                                                    <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="DesignerCanvas.ActualHeight" UpdateSourceTrigger="PropertyChanged" Mode="OneWay" />
+                                                </MultiBinding>
+                                            </Run.Text>
+                                        </Run>
                                         <Run Text="," />
-                                        <Run Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ZoomThumb.ActualWidth, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                                        <Run Text="{c:Binding RelativeSource={RelativeSource TemplatedParent}, Path=ZoomThumb.ActualWidth/ZoomCanvas.ActualWidth*DesignerCanvas.ActualWidth, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
                                         <Run Text="," />
-                                        <Run Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ZoomThumb.ActualHeight, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                                        <Run Text="{c:Binding RelativeSource={RelativeSource TemplatedParent}, Path=ZoomThumb.ActualHeight/ZoomCanvas.ActualHeight*DesignerCanvas.ActualHeight, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
                                         <Run Text="）" />
                                     </TextBlock>
                                 </Border.ToolTip>
