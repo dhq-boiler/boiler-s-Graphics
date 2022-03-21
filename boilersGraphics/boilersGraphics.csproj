@@ -47,6 +47,7 @@
   <ItemGroup>
     <Resource Include="Assets\img\art-pallete.png" />
     <Resource Include="Assets\img\dropper.png" />
+    <Resource Include="Assets\img\icons8-canvas-64.png" />
     <Resource Include="Assets\img\icon_Combine_union.png" />
     <Resource Include="Assets\img\icon_Layers.png" />
     <Resource Include="Assets\img\minimap.png" />
@@ -201,6 +202,7 @@
   <ItemGroup>
     <None Remove="Assets\img\art-pallete.png" />
     <None Remove="Assets\img\dropper.png" />
+    <None Remove="Assets\img\icons8-canvas-64.png" />
     <None Remove="Assets\img\icon_Combine_union.png" />
     <None Remove="Assets\img\icon_Layers.png" />
     <None Remove="Assets\img\minimap.png" />

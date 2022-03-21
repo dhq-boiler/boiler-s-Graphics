@@ -2050,6 +2050,15 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Canvas resize tool に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Tool_CanvasResize {
+            get {
+                return ResourceManager.GetString("Tool_CanvasResize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ellipse tool に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Tool_Ellipse {

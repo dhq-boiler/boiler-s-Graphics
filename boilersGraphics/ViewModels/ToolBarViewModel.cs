@@ -283,7 +283,7 @@ namespace boilersGraphics.ViewModels
                 ChangeHitTestToDisable();
                 SelectOneToolItem("dropper");
             })));
-            ToolItems.Add(new ToolItemData("canvasModifier", null, null, new DelegateCommand(() =>
+            ToolItems.Add(new ToolItemData("canvasModifier", "pack://application:,,,/Assets/img/icons8-canvas-64.png", Resources.Tool_CanvasResize, new DelegateCommand(() =>
             {
                 var mainWindowViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel);
                 mainWindowViewModel.ClearCurrentOperationAndDetails();
