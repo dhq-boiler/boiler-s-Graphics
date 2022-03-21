@@ -46,6 +46,17 @@ namespace boilersGraphics.ViewModels
         {
             var mainWindow = App.Current.MainWindow;
             var mainWindowViewModel = mainWindow.DataContext as MainWindowViewModel;
+
+            var background = mainWindowViewModel.DiagramViewModel.BackgroundItem.Value;
+            background.EdgeBrush.Value = Brushes.Black;
+            background.EdgeThickness.Value = 1;
+            background.FillBrush.Value.Opacity = mainWindowViewModel.ToolBarViewModel.CanvasModifierBehavior.SavedOpacity;
+            background.ZIndex.Value = -1;
+            background.CanDrag.Value = false;
+            background.IsHitTestVisible.Value = false;
+            background.EnableForSelection.Value = false;
+            background.IsSelected.Value = false;
+
             var designerCanvas = mainWindow.GetChildOfType<DesignerCanvas>();
             var diagramViewModel = mainWindow.GetChildOfType<DiagramControl>().DataContext as DiagramViewModel;
             PathFinderCommand = new ReactiveCommand();
@@ -228,6 +239,8 @@ namespace boilersGraphics.ViewModels
                             rect = new Rect(designerItem.Left.Value, designerItem.Top.Value, designerItem.Width.Value, designerItem.Height.Value);
                         }
                     }
+                    rect.X -= background.Left.Value;
+                    rect.Y -= background.Top.Value;
                     context.PushTransform(new RotateTransform(item.RotationAngle.Value, (item as DesignerItemViewModelBase).CenterX.Value, (item as DesignerItemViewModelBase).CenterY.Value));
                     context.DrawRectangle(brush, null, rect);
                     context.Pop();
@@ -250,18 +263,20 @@ namespace boilersGraphics.ViewModels
                     {
                         rect = new Rect(connector.LeftTop.Value, bounds.Size);
                     }
+                    rect.X -= background.Left.Value;
+                    rect.Y -= background.Top.Value;
                     context.DrawRectangle(brush, null, rect);
                 }
 
-                var size = GetRenderSize(diagramViewModel);
-                var rtb = new RenderTargetBitmap((int)size.Width, (int)size.Height, 96, 96, PixelFormats.Pbgra32);
-                DrawingVisual visual = new DrawingVisual();
-                using (DrawingContext context2 = visual.RenderOpen())
-                {
-                    context2.DrawRectangle(new SolidColorBrush(Colors.Green), null, new Rect(new Point(0, 0), size));
-                    context2.DrawRectangle(brush, null, rect);
-                }
-                rtb.Render(visual);
+                //var size = GetRenderSize(diagramViewModel);
+                //var rtb = new RenderTargetBitmap((int)size.Width, (int)size.Height, 96, 96, PixelFormats.Pbgra32);
+                //DrawingVisual visual = new DrawingVisual();
+                //using (DrawingContext context2 = visual.RenderOpen())
+                //{
+                //    context2.DrawRectangle(new SolidColorBrush(Colors.Green), null, new Rect(new Point(0, 0), size));
+                //    context2.DrawRectangle(brush, null, rect);
+                //}
+                //rtb.Render(visual);
                 //OpenCvSharpHelper.ImShow("Foreground", rtb);
             }
         }
