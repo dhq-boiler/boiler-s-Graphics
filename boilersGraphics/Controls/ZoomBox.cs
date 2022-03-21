@@ -1,8 +1,11 @@
-﻿using System;
+﻿using boilersGraphics.Extensions;
+using boilersGraphics.UserControls;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Reactive.Linq;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -11,10 +14,8 @@ using System.Windows.Media;
 
 namespace boilersGraphics.Controls
 {
-    public class ZoomBox : Control
+    public class ZoomBox : Control, INotifyPropertyChanged
     {
-        private Thumb _zoomThumb;
-        private Canvas _zoomCanvas;
         private Slider _zoomSlider;
         private ScaleTransform _scaleTransform;
 
@@ -31,21 +32,69 @@ namespace boilersGraphics.Controls
             DependencyProperty.Register("ScrollViewer", typeof(ScrollViewer), typeof(ZoomBox));
         #endregion
 
-        #region DesignerCanvas
+        public static readonly DependencyProperty ZoomThumbProperty = DependencyProperty.Register("ZoomThumb", typeof(Thumb), typeof(ZoomBox), new FrameworkPropertyMetadata(null, new PropertyChangedCallback(OnZoomThumbChanged)));
 
 
-        public static readonly DependencyProperty DesignerCanvasProperty =
-            DependencyProperty.Register("DesignerCanvas", typeof(DesignerCanvas), typeof(ZoomBox),
-                new FrameworkPropertyMetadata(null,
-                    new PropertyChangedCallback(OnDesignerCanvasChanged)));
+        public static readonly DependencyProperty ZoomCanvasProperty = DependencyProperty.Register("ZoomCanvas", typeof(Canvas), typeof(ZoomBox), new FrameworkPropertyMetadata(null, new PropertyChangedCallback(OnZoomCanvasChanged)));
 
+
+        public static readonly DependencyProperty ScaleProperty = DependencyProperty.Register("Scale", typeof(double), typeof(ZoomBox));
+
+        public static readonly DependencyProperty DesignerCanvasProperty = DependencyProperty.Register("DesignerCanvas", typeof(DesignerCanvas), typeof(ZoomBox), new FrameworkPropertyMetadata(null, new PropertyChangedCallback(OnDesignerCanvasChanged)));
+
+        public static readonly DependencyProperty TargetRectProperty = DependencyProperty.Register("TargetRect", typeof(Rect), typeof(ZoomBox));
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public DesignerCanvas DesignerCanvas
         {
             get { return (DesignerCanvas)GetValue(DesignerCanvasProperty); }
             set { SetValue(DesignerCanvasProperty, value); }
         }
+        public Thumb ZoomThumb
+        {
+            get { return (Thumb)GetValue(ZoomThumbProperty); }
+            set { SetValue(ZoomThumbProperty, value); }
+        }
 
+        public Canvas ZoomCanvas
+        {
+            get { return (Canvas)GetValue(ZoomCanvasProperty); }
+            set { SetValue(ZoomCanvasProperty, value); }
+        }
+
+        public double Scale
+        {
+            get { return (double)GetValue(ScaleProperty); }
+            set { SetValue(ScaleProperty, value); }
+        }
+
+        public Rect TargetRect
+        {
+            get { return (Rect)GetValue(TargetRectProperty); }
+            set { SetValue(TargetRectProperty, value); }
+        }
+
+        public DiagramControl DiagramControl
+        {
+            get { return App.Current.MainWindow.GetChildOfType<DiagramControl>(); }
+        }
+
+        #region DesignerCanvas
+
+        private static void OnZoomThumbChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            ZoomBox zoomBox = (ZoomBox)d;
+            zoomBox.RaisePropertyChanged("ZoomThumb");
+            zoomBox.RaisePropertyChanged("");
+        }
+
+        private static void OnZoomCanvasChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            ZoomBox zoomBox = (ZoomBox)d;
+            zoomBox.RaisePropertyChanged("ZoomCanvas");
+            zoomBox.RaisePropertyChanged("");
+        }
 
         private static void OnDesignerCanvasChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -53,6 +102,8 @@ namespace boilersGraphics.Controls
             DesignerCanvas oldDesignerCanvas = (DesignerCanvas)e.OldValue;
             DesignerCanvas newDesignerCanvas = target.DesignerCanvas;
             target.OnDesignerCanvasChanged(oldDesignerCanvas, newDesignerCanvas);
+            target.RaisePropertyChanged("DesignerCanvas");
+            target.RaisePropertyChanged("");
         }
 
 
@@ -83,19 +134,19 @@ namespace boilersGraphics.Controls
             if (this.ScrollViewer == null)
                 return;
 
-            _zoomThumb = Template.FindName("PART_ZoomThumb", this) as Thumb;
-            if (_zoomThumb == null)
+            ZoomThumb = Template.FindName("PART_ZoomThumb", this) as Thumb;
+            if (ZoomThumb == null)
                 throw new Exception("PART_ZoomThumb template is missing!");
 
-            _zoomCanvas = Template.FindName("PART_ZoomCanvas", this) as Canvas;
-            if (_zoomCanvas == null)
+            ZoomCanvas = Template.FindName("PART_ZoomCanvas", this) as Canvas;
+            if (ZoomCanvas == null)
                 throw new Exception("PART_ZoomCanvas template is missing!");
 
             _zoomSlider = Template.FindName("PART_ZoomSlider", this) as Slider;
             if (_zoomSlider == null)
                 throw new Exception("PART_ZoomSlider template is missing!");
 
-            _zoomThumb.DragDelta += new DragDeltaEventHandler(this.Thumb_DragDelta);
+            ZoomThumb.DragDelta += new DragDeltaEventHandler(this.Thumb_DragDelta);
             _zoomSlider.ValueChanged += new RoutedPropertyChangedEventHandler<double>(this.ZoomSlider_ValueChanged);
             _scaleTransform = new ScaleTransform();
         }
@@ -109,6 +160,7 @@ namespace boilersGraphics.Controls
             double newHorizontalOffset = ((this.ScrollViewer.HorizontalOffset + halfViewportWidth) * scale - halfViewportWidth);
             _scaleTransform.ScaleX *= scale;
             _scaleTransform.ScaleY *= scale;
+            Scale = Math.Min(_scaleTransform.ScaleX, _scaleTransform.ScaleY);
             this.ScrollViewer.ScrollToHorizontalOffset(newHorizontalOffset);
             this.ScrollViewer.ScrollToVerticalOffset(newVerticalOffset);
         }
@@ -137,6 +189,7 @@ namespace boilersGraphics.Controls
         {
             double scale, xOffset, yOffset;
             this.InvalidateScale(out scale, out xOffset, out yOffset);
+            Scale = scale;
             this.ScrollViewer.ScrollToHorizontalOffset(this.ScrollViewer.HorizontalOffset + e.HorizontalChange / scale);
             this.ScrollViewer.ScrollToVerticalOffset(this.ScrollViewer.VerticalOffset + e.VerticalChange / scale);
         }
@@ -145,10 +198,11 @@ namespace boilersGraphics.Controls
         {
             double scale, xOffset, yOffset;
             this.InvalidateScale(out scale, out xOffset, out yOffset);
-            _zoomThumb.Width = this.ScrollViewer.ViewportWidth * scale;
-            _zoomThumb.Height = this.ScrollViewer.ViewportHeight * scale;
-            Canvas.SetLeft(_zoomThumb, xOffset + this.ScrollViewer.HorizontalOffset * scale);
-            Canvas.SetTop(_zoomThumb, yOffset + this.ScrollViewer.VerticalOffset * scale);
+            Scale = scale;
+            ZoomThumb.Width = Math.Max(0.0, this.ScrollViewer.ViewportWidth * scale);
+            ZoomThumb.Height = Math.Max(0.0, this.ScrollViewer.ViewportHeight * scale);
+            Canvas.SetLeft(ZoomThumb, xOffset + this.ScrollViewer.HorizontalOffset * scale);
+            Canvas.SetTop(ZoomThumb, yOffset + this.ScrollViewer.VerticalOffset * scale);
         }
 
         private void DesignerCanvas_MouseWheel(object sender, EventArgs e)
@@ -167,13 +221,111 @@ namespace boilersGraphics.Controls
             double h = DesignerCanvas.ActualHeight * _scaleTransform.ScaleY;
 
             // zoom canvas size
-            double x = _zoomCanvas.ActualWidth;
-            double y = _zoomCanvas.ActualHeight;
+            double x = ZoomCanvas.ActualWidth;
+            double y = ZoomCanvas.ActualHeight;
             double scaleX = x / w;
             double scaleY = y / h;
             scale = (scaleX < scaleY) ? scaleX : scaleY;
             xOffset = (x - scale * w) / 2;
             yOffset = (y - scale * h) / 2;
+        }
+        //
+        // 概要:
+        //     Checks if a property already matches a desired value. Sets the property and notifies
+        //     listeners only when necessary.
+        //
+        // パラメーター:
+        //   storage:
+        //     Reference to a property with both getter and setter.
+        //
+        //   value:
+        //     Desired value for the property.
+        //
+        //   propertyName:
+        //     Name of the property used to notify listeners. This value is optional and can
+        //     be provided automatically when invoked from compilers that support CallerMemberName.
+        //
+        // 型パラメーター:
+        //   T:
+        //     Type of the property.
+        //
+        // 戻り値:
+        //     True if the value was changed, false if the existing value matched the desired
+        //     value.
+        protected virtual bool SetProperty<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
+        {
+            if (EqualityComparer<T>.Default.Equals(storage, value))
+            {
+                return false;
+            }
+
+            storage = value;
+            RaisePropertyChanged(propertyName);
+            return true;
+        }
+
+        //
+        // 概要:
+        //     Checks if a property already matches a desired value. Sets the property and notifies
+        //     listeners only when necessary.
+        //
+        // パラメーター:
+        //   storage:
+        //     Reference to a property with both getter and setter.
+        //
+        //   value:
+        //     Desired value for the property.
+        //
+        //   propertyName:
+        //     Name of the property used to notify listeners. This value is optional and can
+        //     be provided automatically when invoked from compilers that support CallerMemberName.
+        //
+        //   onChanged:
+        //     Action that is called after the property value has been changed.
+        //
+        // 型パラメーター:
+        //   T:
+        //     Type of the property.
+        //
+        // 戻り値:
+        //     True if the value was changed, false if the existing value matched the desired
+        //     value.
+        protected virtual bool SetProperty<T>(ref T storage, T value, Action onChanged, [CallerMemberName] string propertyName = null)
+        {
+            if (EqualityComparer<T>.Default.Equals(storage, value))
+            {
+                return false;
+            }
+
+            storage = value;
+            onChanged?.Invoke();
+            RaisePropertyChanged(propertyName);
+            return true;
+        }
+
+        //
+        // 概要:
+        //     Raises this object's PropertyChanged event.
+        //
+        // パラメーター:
+        //   propertyName:
+        //     Name of the property used to notify listeners. This value is optional and can
+        //     be provided automatically when invoked from compilers that support System.Runtime.CompilerServices.CallerMemberNameAttribute.
+        protected void RaisePropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+        }
+
+        //
+        // 概要:
+        //     Raises this object's PropertyChanged event.
+        //
+        // パラメーター:
+        //   args:
+        //     The PropertyChangedEventArgs
+        protected virtual void OnPropertyChanged(PropertyChangedEventArgs args)
+        {
+            this.PropertyChanged?.Invoke(this, args);
         }
     }
 }

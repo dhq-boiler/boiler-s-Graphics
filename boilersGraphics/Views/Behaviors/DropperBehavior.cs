@@ -172,7 +172,7 @@ namespace boilersGraphics.Views.Behaviors
         {
             var diagramViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel;
             var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-            RenderTargetBitmap renderTargetBitmap = new RenderTargetBitmap(diagramViewModel.Width, diagramViewModel.Height, 96, 96, PixelFormats.Pbgra32);
+            RenderTargetBitmap renderTargetBitmap = new RenderTargetBitmap((int)diagramViewModel.BackgroundItem.Value.Width.Value, (int)diagramViewModel.BackgroundItem.Value.Height.Value, 96, 96, PixelFormats.Pbgra32);
             DrawingVisual visual = new DrawingVisual();
             var background = diagramViewModel.BackgroundItem.Value;
 

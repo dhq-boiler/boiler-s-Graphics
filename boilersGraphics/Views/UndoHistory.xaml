@@ -172,7 +172,8 @@
                                                                         <Image Source="pack://application:,,,/Assets/img/right_arrow.png"
                                                                                Width="20"
                                                                                Height="20"
-                                                                               Visibility="{Binding ArrowVisibility.Value}"/>
+                                                                               Visibility="{Binding ArrowVisibility.Value}"
+                                                                               RenderOptions.BitmapScalingMode="HighQuality" />
                                                                     </StackPanel>
                                                                     <StackPanel Grid.Column="1"
                                                                                 Orientation="Horizontal">

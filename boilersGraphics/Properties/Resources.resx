@@ -780,6 +780,12 @@
   <data name="Tool_Brush" xml:space="preserve">
     <value>Brush tool</value>
   </data>
+  <data name="Tool_CanvasResize" xml:space="preserve">
+    <value>Canvas resize tool</value>
+  </data>
+  <data name="Tool_Dropper" xml:space="preserve">
+    <value>Dropper</value>
+  </data>
   <data name="Tool_Ellipse" xml:space="preserve">
     <value>Ellipse tool</value>
   </data>

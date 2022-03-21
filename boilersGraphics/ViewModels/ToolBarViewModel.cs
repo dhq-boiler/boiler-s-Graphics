@@ -46,6 +46,7 @@ namespace boilersGraphics.ViewModels
         public SliceBehavior SliceBehavior { get; private set; }
         public NDrawPieBehavior NDrawPieBehavior { get; } = new NDrawPieBehavior();
         public DropperBehavior DropperBehavior { get; } = new DropperBehavior();
+        public CanvasModifierBehavior CanvasModifierBehavior { get; } = new CanvasModifierBehavior();
 
         public NDrawPolyBezierBehavior PolyBezierBehavior { get; } = new NDrawPolyBezierBehavior();
 
@@ -270,7 +271,7 @@ namespace boilersGraphics.ViewModels
                 SelectOneToolItem("pie");
                 (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = Resources.String_Pie_DetermineCenterPoint;
             })));
-            ToolItems.Add(new ToolItemData("dropper", "pack://application:,,,/Assets/img/dropper.png", null, new DelegateCommand(() =>
+            ToolItems.Add(new ToolItemData("dropper", "pack://application:,,,/Assets/img/dropper.png", Resources.Tool_Dropper, new DelegateCommand(() =>
             {
                 var mainWindowViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel);
                 mainWindowViewModel.ClearCurrentOperationAndDetails();
@@ -281,6 +282,17 @@ namespace boilersGraphics.ViewModels
                 }
                 ChangeHitTestToDisable();
                 SelectOneToolItem("dropper");
+            })));
+            ToolItems.Add(new ToolItemData("canvasModifier", "pack://application:,,,/Assets/img/icons8-canvas-64.png", Resources.Tool_CanvasResize, new DelegateCommand(() =>
+            {
+                var mainWindowViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel);
+                mainWindowViewModel.ClearCurrentOperationAndDetails();
+                Behaviors.Clear();
+                if (!Behaviors.Contains(CanvasModifierBehavior))
+                {
+                    Behaviors.Add(CanvasModifierBehavior);
+                }
+                SelectOneToolItem("canvasModifier");
             })));
         }
 

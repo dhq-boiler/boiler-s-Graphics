@@ -155,17 +155,8 @@ namespace boilersGraphics.ViewModels
         public ReactivePropertySlim<Brush> EdgeBrush { get; } = new ReactivePropertySlim<Brush>();
         public ReactivePropertySlim<Brush> FillBrush { get; } = new ReactivePropertySlim<Brush>();
 
-        public int Width
-        {
-            get { return _Width; }
-            set { SetProperty(ref _Width, value); }
-        }
-
-        public int Height
-        {
-            get { return _Height; }
-            set { SetProperty(ref _Height, value); }
-        }
+        public ReadOnlyReactivePropertySlim<double> RenderWidth { get; }
+        public ReadOnlyReactivePropertySlim<double> RenderHeight { get; } 
 
         /// <summary>
         /// 現在ポインティングしている座標
@@ -230,6 +221,18 @@ namespace boilersGraphics.ViewModels
         public DiagramViewModel(MainWindowViewModel mainWindowViewModel, int width, int height, bool isPreview = false)
         {
             MainWindowVM = mainWindowViewModel;
+
+            if (!App.IsTest)
+            {
+                RenderWidth = Observable.Return(App.Current.MainWindow.GetChildOfType<DiagramControl>())
+                                        .Where(x => x != null)
+                                        .Select(x => x.ActualWidth)
+                                        .ToReadOnlyReactivePropertySlim(1000);
+                RenderHeight = Observable.Return(App.Current.MainWindow.GetChildOfType<DiagramControl>())
+                                        .Where(x => x != null)
+                                        .Select(x => x.ActualHeight)
+                                        .ToReadOnlyReactivePropertySlim(1000);
+            }
 
             if (!isPreview)
             {
@@ -445,10 +448,17 @@ namespace boilersGraphics.ViewModels
                         }
                     }
 
-                    Width = (int)Math.Round(horizontalMax);
-                    Height = (int)Math.Round(verticalMax);
-                    BackgroundItem.Value.Width.Value = Width;
-                    BackgroundItem.Value.Height.Value = Height;
+                    double horizontalMin = AllItems.Value.OfType<DesignerItemViewModelBase>().Except(new DesignerItemViewModelBase[] { BackgroundItem.Value }).Count() > 0
+                                         ? AllItems.Value.OfType<DesignerItemViewModelBase>().Except(new DesignerItemViewModelBase[] { BackgroundItem.Value }).Min(x => x.Left.Value)
+                                         : 0;
+                    double verticalMin = AllItems.Value.OfType<DesignerItemViewModelBase>().Except(new DesignerItemViewModelBase[] { BackgroundItem.Value }).Count() > 0
+                                         ? AllItems.Value.OfType<DesignerItemViewModelBase>().Except(new DesignerItemViewModelBase[] { BackgroundItem.Value }).Min(x => x.Top.Value)
+                                         : 0;
+
+                    BackgroundItem.Value.Left.Value = Math.Round(horizontalMin);
+                    BackgroundItem.Value.Top.Value = Math.Round(verticalMin);
+                    BackgroundItem.Value.Width.Value = Math.Round(horizontalMax);
+                    BackgroundItem.Value.Height.Value = Math.Round(verticalMax);
                 }, () => AllItems.Value.OfType<DesignerItemViewModelBase>().Except(new DesignerItemViewModelBase[] { BackgroundItem.Value }).Count() + AllItems.Value.OfType<ConnectorBaseViewModel>().Count() > 0);
                 ClearCanvasCommand = new DelegateCommand(() =>
                 {
@@ -562,9 +572,6 @@ namespace boilersGraphics.ViewModels
                       })
                 .AddTo(_CompositeDisposable);
             }
-
-            Width = width;
-            Height = height;
 
             if (!isPreview)
             {
@@ -823,13 +830,33 @@ namespace boilersGraphics.ViewModels
             {
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "CanvasBackground.Value", Brushes.White as Brush);
             }
-            mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value", new BackgroundViewModel());
+            mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value", new BackgroundViewModel(this));
             mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.ZIndex.Value", -1);
             mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.FillBrush.Value", CanvasBackground.Value);
             mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.Left.Value", 0d);
             mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.Top.Value", 0d);
-            mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.Width.Value", (double)Width);
-            mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.Height.Value", (double)Height);
+            BackgroundItem.Value.Width.Subscribe(width =>
+            {
+                if (App.Current == null || App.Current.MainWindow == null)
+                    return;
+                var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
+                if (designerCanvas == null)
+                    return;
+                designerCanvas.Width = width;
+            })
+            .AddTo(_CompositeDisposable);
+            BackgroundItem.Value.Height.Subscribe(height =>
+            {
+                if (App.Current == null || App.Current.MainWindow == null)
+                    return;
+                var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
+                if (designerCanvas == null)
+                    return;
+                designerCanvas.Height = height;
+            })
+            .AddTo(_CompositeDisposable);
+            mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.Width.Value", 1000d);
+            mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.Height.Value", 1000d);
             mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.Owner", this);
             mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.EdgeBrush.Value", Brushes.Black as Brush);
             mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.EdgeThickness.Value", 1d);
@@ -1358,8 +1385,8 @@ namespace boilersGraphics.ViewModels
         {
             IDialogResult result = null;
             var preferences = new Models.Preference();
-            preferences.Width.Value = this.Width;
-            preferences.Height.Value = this.Height;
+            preferences.Width.Value = (int)this.BackgroundItem.Value.Width.Value;
+            preferences.Height.Value = (int)this.BackgroundItem.Value.Height.Value;
             Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
                                                      .Where(x => x.GetType() == typeof(LayerItem))
                                                      .Select(y => (y as LayerItem).Item.Value)
@@ -1368,8 +1395,8 @@ namespace boilersGraphics.ViewModels
                                                      .ToList()
                                                      .ForEach(z =>
                                                      {
-                                                         z.Width.Value = this.Width;
-                                                         z.Height.Value = this.Height;
+                                                         z.Width.Value = this.BackgroundItem.Value.Width.Value;
+                                                         z.Height.Value = this.BackgroundItem.Value.Height.Value;
                                                      });
             preferences.CanvasBackground.Value = this.CanvasBackground.Value;
             preferences.EnablePointSnap.Value = this.EnablePointSnap.Value;
@@ -1383,14 +1410,12 @@ namespace boilersGraphics.ViewModels
             if (result != null && result.Result == ButtonResult.OK)
             {
                 var s = result.Parameters.GetValue<Models.Preference>("Preferences");
-                Width = s.Width.Value;
-                Height = s.Height.Value;
                 CanvasBackground.Value = s.CanvasBackground.Value;
                 BackgroundItem.Value.FillBrush.Value = CanvasBackground.Value;
                 EnablePointSnap.Value = s.EnablePointSnap.Value;
                 (App.Current.MainWindow.DataContext as MainWindowViewModel).SnapPower.Value = s.SnapPower.Value;
-                BackgroundItem.Value.Width.Value = Width;
-                BackgroundItem.Value.Height.Value = Height;
+                BackgroundItem.Value.Width.Value = s.Width.Value;
+                BackgroundItem.Value.Height.Value = s.Height.Value;
                 EnableAutoSave.Value = s.EnableAutoSave.Value;
                 AutoSaveType.Value = s.AutoSaveType.Value;
                 AutoSaveInterval.Value = s.AutoSaveInterval.Value;
@@ -1437,7 +1462,9 @@ namespace boilersGraphics.ViewModels
         {
             if (parameter is SelectableDesignerItemViewModelBase item)
             {
-                var targetLayer = SelectedLayers.Value.First();
+                var targetLayer = GetSelectedLayer();
+                if (targetLayer == null)
+                    return;
                 var newZIndex = targetLayer.GetNewZIndex(Layers.TakeWhile(x => x != targetLayer));
                 Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
                       .Where(x => x != targetLayer)
@@ -1447,6 +1474,19 @@ namespace boilersGraphics.ViewModels
                 item.Owner = this;
                 Add(item);
             }
+        }
+
+        private LayerTreeViewItemBase GetSelectedLayer()
+        {
+            var targetLayer = SelectedLayers.Value.FirstOrDefault();
+            if (targetLayer == null)
+                targetLayer = Layers.FirstOrDefault();
+            if (targetLayer == null)
+            {
+                LogManager.GetCurrentClassLogger().Warn($"レイヤーが選択されていません。");
+                return null;
+            }
+            return targetLayer;
         }
 
         private void ExecuteRemoveItemCommand(object parameter)
@@ -1539,7 +1579,8 @@ namespace boilersGraphics.ViewModels
 
         private void Add(SelectableDesignerItemViewModelBase item, string layerItemName = null)
         {
-            SelectedLayers.Value.First().AddItem(MainWindowVM, this, item, layerItemName);
+            var selectedLayer = GetSelectedLayer();
+            selectedLayer.AddItem(MainWindowVM, this, item, layerItemName);
         }
 
         private void Add(LayerItem item)
@@ -1725,9 +1766,7 @@ namespace boilersGraphics.ViewModels
                 mainwindowViewModel.Recorder.BeginRecode();
 
                 var configuration = root.Element("Configuration");
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "Width", int.Parse(configuration.Element("Width").Value));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "Height", int.Parse(configuration.Element("Height").Value));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "CanvasBackground.Value", WpfObjectSerializer.Deserialize(configuration.Element("CanvasBackground").Nodes().First().ToString()));
+                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "CanvasBackground.Value", WpfObjectSerializer.Deserialize(configuration.Element("CanvasBackground").Nodes().First().ToString()) ?? new SolidColorBrush((Color)ColorConverter.ConvertFromString(configuration.Element("CanvasBackground").Nodes().First().ToString())));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "EnablePointSnap.Value", bool.Parse(configuration.Element("EnablePointSnap").Value));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(mainwindowViewModel, "SnapPower.Value", double.Parse(configuration.Element("SnapPower").Value));
                 if (configuration.Element("ColorSpots") != null)
@@ -1836,6 +1875,23 @@ namespace boilersGraphics.ViewModels
                 }
 
                 InitialSetting(mainwindowViewModel, false, false, isPreview);
+
+                if (configuration.Element("Left") != null)
+                {
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.Left.Value", int.Parse(configuration.Element("Left").Value));
+                }
+                if (configuration.Element("Top") != null)
+                {
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.Top.Value", int.Parse(configuration.Element("Top").Value));
+                }
+                if (configuration.Element("Width") != null)
+                {
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.Width.Value", double.Parse(configuration.Element("Width").Value));
+                }
+                if (configuration.Element("Height") != null)
+                {
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.Height.Value", double.Parse(configuration.Element("Height").Value));
+                }
 
                 ObjectDeserializer.ReadObjectsFromXML(this, root, isPreview);
             }
