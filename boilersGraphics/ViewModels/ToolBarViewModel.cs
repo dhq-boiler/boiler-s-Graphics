@@ -292,7 +292,6 @@ namespace boilersGraphics.ViewModels
                 {
                     Behaviors.Add(CanvasModifierBehavior);
                 }
-                //ChangeHitTestToDisable();
                 SelectOneToolItem("canvasModifier");
             })));
         }
