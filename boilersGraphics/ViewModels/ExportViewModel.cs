@@ -47,15 +47,19 @@ namespace boilersGraphics.ViewModels
             var mainWindow = App.Current.MainWindow;
             var mainWindowViewModel = mainWindow.DataContext as MainWindowViewModel;
 
-            var background = mainWindowViewModel.DiagramViewModel.BackgroundItem.Value;
-            background.EdgeBrush.Value = Brushes.Black;
-            background.EdgeThickness.Value = 1;
-            background.FillBrush.Value.Opacity = mainWindowViewModel.ToolBarViewModel.CanvasModifierBehavior.SavedOpacity;
-            background.ZIndex.Value = -1;
-            background.CanDrag.Value = false;
-            background.IsHitTestVisible.Value = false;
-            background.EnableForSelection.Value = false;
-            background.IsSelected.Value = false;
+            if (mainWindowViewModel.ToolBarViewModel.Behaviors.Contains(mainWindowViewModel.ToolBarViewModel.CanvasModifierBehavior))
+            {
+                var background = mainWindowViewModel.DiagramViewModel.BackgroundItem.Value;
+                background.EdgeBrush.Value = Brushes.Black;
+                background.EdgeThickness.Value = 1;
+                background.FillBrush.Value = background.FillBrush.Value.Clone();
+                background.FillBrush.Value.Opacity = mainWindowViewModel.ToolBarViewModel.CanvasModifierBehavior.SavedOpacity;
+                background.ZIndex.Value = -1;
+                background.CanDrag.Value = false;
+                background.IsHitTestVisible.Value = false;
+                background.EnableForSelection.Value = false;
+                background.IsSelected.Value = false;
+            }
 
             var designerCanvas = mainWindow.GetChildOfType<DesignerCanvas>();
             var diagramViewModel = mainWindow.GetChildOfType<DiagramControl>().DataContext as DiagramViewModel;
