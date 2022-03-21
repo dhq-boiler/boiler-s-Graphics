@@ -222,14 +222,17 @@ namespace boilersGraphics.ViewModels
         {
             MainWindowVM = mainWindowViewModel;
 
-            RenderWidth = Observable.Return(App.Current.MainWindow.GetChildOfType<DiagramControl>())
-                                    .Where(x => x != null)
-                                    .Select(x => x.ActualWidth)
-                                    .ToReadOnlyReactivePropertySlim(1000);
-            RenderHeight = Observable.Return(App.Current.MainWindow.GetChildOfType<DiagramControl>())
-                                    .Where(x => x != null)
-                                    .Select(x => x.ActualHeight)
-                                    .ToReadOnlyReactivePropertySlim(1000);
+            if (!App.IsTest)
+            {
+                RenderWidth = Observable.Return(App.Current.MainWindow.GetChildOfType<DiagramControl>())
+                                        .Where(x => x != null)
+                                        .Select(x => x.ActualWidth)
+                                        .ToReadOnlyReactivePropertySlim(1000);
+                RenderHeight = Observable.Return(App.Current.MainWindow.GetChildOfType<DiagramControl>())
+                                        .Where(x => x != null)
+                                        .Select(x => x.ActualHeight)
+                                        .ToReadOnlyReactivePropertySlim(1000);
+            }
 
             if (!isPreview)
             {
@@ -834,6 +837,8 @@ namespace boilersGraphics.ViewModels
             mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.Top.Value", 0d);
             BackgroundItem.Value.Width.Subscribe(width =>
             {
+                if (App.Current == null || App.Current.MainWindow == null)
+                    return;
                 var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
                 if (designerCanvas == null)
                     return;
@@ -842,6 +847,8 @@ namespace boilersGraphics.ViewModels
             .AddTo(_CompositeDisposable);
             BackgroundItem.Value.Height.Subscribe(height =>
             {
+                if (App.Current == null || App.Current.MainWindow == null)
+                    return;
                 var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
                 if (designerCanvas == null)
                     return;

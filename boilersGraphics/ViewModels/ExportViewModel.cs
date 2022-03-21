@@ -243,8 +243,11 @@ namespace boilersGraphics.ViewModels
                             rect = new Rect(designerItem.Left.Value, designerItem.Top.Value, designerItem.Width.Value, designerItem.Height.Value);
                         }
                     }
-                    rect.X -= background.Left.Value;
-                    rect.Y -= background.Top.Value;
+                    if (rect != Rect.Empty)
+                    {
+                        rect.X -= background.Left.Value;
+                        rect.Y -= background.Top.Value;
+                    }
                     context.PushTransform(new RotateTransform(item.RotationAngle.Value, (item as DesignerItemViewModelBase).CenterX.Value, (item as DesignerItemViewModelBase).CenterY.Value));
                     context.DrawRectangle(brush, null, rect);
                     context.Pop();
