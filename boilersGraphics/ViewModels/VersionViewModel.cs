@@ -142,6 +142,8 @@ namespace boilersGraphics.ViewModels
                 return (true, false, false);
             if (productVersion.Contains("unstable"))
                 return (false, true, false);
+            if (productVersion.Contains("feature"))
+                return (false, false, true);
             throw new UnexpectedException("ProductVersionをパースできませんでした。");
         }
 
