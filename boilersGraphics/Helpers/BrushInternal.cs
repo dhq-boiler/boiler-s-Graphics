@@ -20,8 +20,8 @@ namespace boilersGraphics.Helpers
             currentBrush.Owner = (AssociatedObject as DesignerCanvas).DataContext as IDiagramViewModel;
             currentBrush.Left.Value = 0;
             currentBrush.Top.Value = 0;
-            currentBrush.Width.Value = currentBrush.Owner.Width;
-            currentBrush.Height.Value = currentBrush.Owner.Height;
+            currentBrush.Width.Value = currentBrush.Owner.BackgroundItem.Value.Width.Value;
+            currentBrush.Height.Value = currentBrush.Owner.BackgroundItem.Value.Height.Value;
             currentBrush.FillBrush.Value = currentBrush.Owner.FillBrush.Value.Clone();
             currentBrush.EdgeBrush.Value = currentBrush.Owner.EdgeBrush.Value.Clone();
             currentBrush.EdgeThickness.Value = currentBrush.Owner.EdgeThickness.Value.Value;

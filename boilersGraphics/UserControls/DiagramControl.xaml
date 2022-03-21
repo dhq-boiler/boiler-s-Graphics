@@ -384,8 +384,8 @@
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <control:DesignerCanvas x:Name="designerCanvas"
-                                                        Width="{Binding Width}"
-                                                        Height="{Binding Height}"
+                                                        Width="{Binding RenderWidth.Value}"
+                                                        Height="{Binding RenderHeight.Value}"
                                                         MaxWidth="{x:Static sys:Double.PositiveInfinity}"
                                                         MaxHeight="{x:Static sys:Double.PositiveInfinity}"
                                                         AllowDrop="True"

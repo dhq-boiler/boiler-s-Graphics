@@ -340,6 +340,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
+# Icons8
+
+[Canvas](https://icons8.com/icon/zz30T8SbSj71/canvas) icon by [Icons8](https://icons8.com)
+
+CC BY-ND 3.0
+
 # MdXaml
 
 Copyright (c) 2020 Bevan Arps, Whistyun

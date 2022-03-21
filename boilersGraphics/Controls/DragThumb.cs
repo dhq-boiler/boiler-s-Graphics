@@ -58,6 +58,12 @@ namespace boilersGraphics.Controls
                 // we only move DesignerItems
                 var designerItems = designerItem.SelectedItems.OfType<DesignerItemViewModelBase>();
 
+                if (designerItem.Owner.BackgroundItem.Value.EdgeBrush.Value == Brushes.Magenta
+                 && designerItem.Owner.BackgroundItem.Value.EdgeThickness.Value == 10)
+                {
+                    designerItems = designerItems.Union(new DesignerItemViewModelBase[] { designerItem.Owner.BackgroundItem.Value });
+                }
+
                 foreach (var item in designerItems)
                 {
                     double left = item.Left.Value;

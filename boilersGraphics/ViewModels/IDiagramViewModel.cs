@@ -17,8 +17,7 @@ namespace boilersGraphics.ViewModels
         ReactivePropertySlim<Brush> FillBrush { get; }
         ReactivePropertySlim<double?> EdgeThickness { get; }
         ReactiveCollection<LayerTreeViewItemBase> Layers { get; }
-        int Width { get; }
-        int Height { get; }
+        ReactivePropertySlim<BackgroundViewModel> BackgroundItem { get; }
 
         void DeselectAll();
     }
