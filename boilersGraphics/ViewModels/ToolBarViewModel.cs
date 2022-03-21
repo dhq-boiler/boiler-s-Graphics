@@ -271,7 +271,7 @@ namespace boilersGraphics.ViewModels
                 SelectOneToolItem("pie");
                 (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = Resources.String_Pie_DetermineCenterPoint;
             })));
-            ToolItems.Add(new ToolItemData("dropper", "pack://application:,,,/Assets/img/dropper.png", null, new DelegateCommand(() =>
+            ToolItems.Add(new ToolItemData("dropper", "pack://application:,,,/Assets/img/dropper.png", Resources.Tool_Dropper, new DelegateCommand(() =>
             {
                 var mainWindowViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel);
                 mainWindowViewModel.ClearCurrentOperationAndDetails();

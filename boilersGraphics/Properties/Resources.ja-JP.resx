@@ -783,6 +783,9 @@
   <data name="Tool_CanvasResize" xml:space="preserve">
     <value>キャンバスリサイズツール</value>
   </data>
+  <data name="Tool_Dropper" xml:space="preserve">
+    <value>スポイトツール</value>
+  </data>
   <data name="Tool_Ellipse" xml:space="preserve">
     <value>円ツール</value>
   </data>

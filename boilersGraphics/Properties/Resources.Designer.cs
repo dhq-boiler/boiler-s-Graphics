@@ -2059,6 +2059,15 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Dropper に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Tool_Dropper {
+            get {
+                return ResourceManager.GetString("Tool_Dropper", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ellipse tool に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Tool_Ellipse {
