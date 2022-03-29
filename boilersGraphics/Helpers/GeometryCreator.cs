@@ -43,12 +43,12 @@ namespace boilersGraphics.Helpers
 
         public static PathGeometry CreateRectangle(NRectangleViewModel item)
         {
-            return PathGeometry.CreateFromGeometry(new RectangleGeometry(new Rect(new Point(item.Left.Value, item.Top.Value), new Point(item.Left.Value + item.Width.Value, item.Top.Value + item.Height.Value))));
+            return PathGeometry.CreateFromGeometry(new RectangleGeometry(new Rect(new Point(), new Point(item.Left.Value + item.Width.Value, item.Top.Value + item.Height.Value))));
         }
 
         public static PathGeometry CreateRectangle(NRectangleViewModel item, double angle)
         {
-            return PathGeometry.CreateFromGeometry(new RectangleGeometry(new Rect(new Point(item.Left.Value, item.Top.Value), new Point(item.Left.Value + item.Width.Value, item.Top.Value + item.Height.Value)), 0, 0, new RotateTransform(angle, item.CenterPoint.Value.X, item.CenterPoint.Value.Y)));
+            return PathGeometry.CreateFromGeometry(new RectangleGeometry(new Rect(new Point(), new Point(item.Left.Value + item.Width.Value, item.Top.Value + item.Height.Value)), 0, 0, new RotateTransform(angle, item.CenterPoint.Value.X, item.CenterPoint.Value.Y)));
         }
 
         public static PathGeometry CreateRectangle(NRectangleViewModel item, double offsetX, double offsetY)
