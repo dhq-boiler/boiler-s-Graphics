@@ -13,7 +13,7 @@ namespace boilersGraphics.Helpers
     {
         public static PathGeometry CreateEllipse(NEllipseViewModel item)
         {
-            return PathGeometry.CreateFromGeometry(new EllipseGeometry(new Point(item.Left.Value + item.Width.Value / 2, item.Top.Value + item.Height.Value / 2), item.Width.Value / 2, item.Height.Value / 2));
+            return PathGeometry.CreateFromGeometry(new EllipseGeometry(new Point(item.Width.Value / 2, item.Height.Value / 2), item.Width.Value / 2 - item.EdgeThickness.Value / 2, item.Height.Value / 2 - item.EdgeThickness.Value / 2));
         }
 
         public static PathGeometry CreateEllipse(double centerX, double centerY, Thickness thickness)
