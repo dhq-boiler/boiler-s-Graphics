@@ -1073,11 +1073,11 @@ namespace boilersGraphics.ViewModels
                 MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "Owner", this);
                 MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "ZIndex.Value", Layers.SelectMany(x => x.Children).Count());
                 MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "IsHitTestVisible.Value", MainWindowVM.ToolBarViewModel.CurrentHitTestVisibleState.Value);
-                MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "PathGeometry.Value", GeometryCreator.CreateCombineGeometry(item1, item2));
-                if (combine.PathGeometry.Value == null || combine.PathGeometry.Value.Figures.Count() == 0)
+                MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "PathGeometryNoRotate.Value", GeometryCreator.CreateCombineGeometry(item1, item2));
+                if (combine.PathGeometryNoRotate.Value == null || combine.PathGeometryNoRotate.Value.Figures.Count() == 0)
                 {
-                    var item1PathGeometry = item1.PathGeometry.Value;
-                    var item2PathGeometry = item2.PathGeometry.Value;
+                    var item1PathGeometry = item1.PathGeometryNoRotate.Value;
+                    var item2PathGeometry = item2.PathGeometryNoRotate.Value;
 
                     if (item1 is DesignerItemViewModelBase designerItem1 && item1.RotationAngle.Value != 0)
                         item1PathGeometry = designerItem1.RotatePathGeometry.Value;
@@ -1086,12 +1086,12 @@ namespace boilersGraphics.ViewModels
 
                     CastToLetterAndSetTransform(item1, item2, item1PathGeometry, item2PathGeometry);
 
-                    MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "PathGeometry.Value", Geometry.Combine(item1PathGeometry, item2PathGeometry, mode, null));
+                    MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "PathGeometryNoRotate.Value", Geometry.Combine(item1PathGeometry, item2PathGeometry, mode, null));
                 }
-                MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "Left.Value", combine.PathGeometry.Value.Bounds.Left);
-                MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "Top.Value", combine.PathGeometry.Value.Bounds.Top);
-                MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "Width.Value", combine.PathGeometry.Value.Bounds.Width);
-                MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "Height.Value", combine.PathGeometry.Value.Bounds.Height);
+                MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "Left.Value", combine.PathGeometryNoRotate.Value.Bounds.Left);
+                MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "Top.Value", combine.PathGeometryNoRotate.Value.Bounds.Top);
+                MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "Width.Value", combine.PathGeometryNoRotate.Value.Bounds.Width);
+                MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "Height.Value", combine.PathGeometryNoRotate.Value.Bounds.Height);
                 Add(combine);
             }
             MainWindowVM.Recorder.EndRecode();

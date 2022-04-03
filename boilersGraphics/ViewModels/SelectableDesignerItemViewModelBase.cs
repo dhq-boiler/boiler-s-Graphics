@@ -66,7 +66,8 @@ namespace boilersGraphics.ViewModels
         public ReactivePropertySlim<Brush> EdgeBrush { get; } = new ReactivePropertySlim<Brush>(Brushes.Transparent);
         public ReactivePropertySlim<Brush> FillBrush { get; } = new ReactivePropertySlim<Brush>(Brushes.Transparent);
         public ReactivePropertySlim<double> EdgeThickness { get; } = new ReactivePropertySlim<double>(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe);
-        public ReactivePropertySlim<PathGeometry> PathGeometry { get; set; } = new ReactivePropertySlim<PathGeometry>();
+        public ReadOnlyReactivePropertySlim<PathGeometry> PathGeometry { get; set; }
+        public ReactivePropertySlim<PathGeometry> PathGeometryNoRotate { get; } = new ReactivePropertySlim<PathGeometry>();
         public ReactivePropertySlim<PenLineJoin> PenLineJoin { get; } = new ReactivePropertySlim<PenLineJoin>();
         public ReactiveCollection<PenLineJoin> PenLineJoins { get; private set; }
         public ReactivePropertySlim<DoubleCollection> StrokeDashArray { get; } = new ReactivePropertySlim<DoubleCollection>();

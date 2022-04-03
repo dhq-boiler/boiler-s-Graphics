@@ -150,7 +150,7 @@ namespace boilersGraphics.ViewModels
             }
             else
             {
-                PathGeometry.Value = new PathGeometry();
+                PathGeometryNoRotate.Value = new PathGeometry();
             }
         }
 

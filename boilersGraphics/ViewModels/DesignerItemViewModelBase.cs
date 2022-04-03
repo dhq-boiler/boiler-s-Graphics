@@ -140,6 +140,8 @@ namespace boilersGraphics.ViewModels
                 .Subscribe(x => UpdateTransform(nameof(EdgeThickness), x.OldItem, x.NewItem))
                 .AddTo(_CompositeDisposable);
 
+            PathGeometry = PathGeometryNoRotate.ToReadOnlyReactivePropertySlim();
+
             Matrix.Value = new Matrix();
         }
 
@@ -199,10 +201,11 @@ namespace boilersGraphics.ViewModels
             {
                 if (RotationAngle.Value == 0)
                 {
-                    PathGeometry.Value = CreateGeometry();
+                    PathGeometryNoRotate.Value = CreateGeometry();
                 }
                 else
                 {
+                    PathGeometryNoRotate.Value = CreateGeometry();
                     RotatePathGeometry.Value = CreateGeometry(RotationAngle.Value);
                 }
             }

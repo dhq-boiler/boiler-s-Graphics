@@ -37,7 +37,7 @@ namespace boilersGraphics.Helpers
 
         public static PathGeometry CreateEllipse(NEllipseViewModel item, double angle)
         {
-            var ellipse = new EllipseGeometry(new Point(item.Left.Value + item.Width.Value / 2, item.Top.Value + item.Height.Value / 2), item.Width.Value / 2, item.Height.Value / 2, new RotateTransform(angle, item.CenterPoint.Value.X, item.CenterPoint.Value.Y));
+            var ellipse = new EllipseGeometry(new Point(item.Width.Value / 2, item.Height.Value / 2), item.Width.Value / 2 - item.EdgeThickness.Value / 2, item.Height.Value / 2 - item.EdgeThickness.Value / 2, new RotateTransform(angle, item.CenterPoint.Value.X, item.CenterPoint.Value.Y));
             return PathGeometry.CreateFromGeometry(ellipse);
         }
 
