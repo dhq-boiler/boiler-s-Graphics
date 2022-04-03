@@ -13,16 +13,16 @@ namespace boilersGraphics.Helpers
 {
     public static class EraserInternal
     {
-        public static void Erase(MainWindowViewModel mainWindowViewModel, ref SelectableDesignerItemViewModelBase currentBrush, Point point, IEnumerable<FrameworkElement> views, Func<PathGeometry> template)
+        public static void Erase(MainWindowViewModel mainWindowViewModel, ref SelectableDesignerItemViewModelBase currentBrush, Point point, IEnumerable<FrameworkElement> views, Func<Point, PathGeometry> template)
         {
             var item = views.First().DataContext as SelectableDesignerItemViewModelBase;
-            mainWindowViewModel.Recorder.Current.ExecuteSetProperty(item, "PathGeometry.Value", Geometry.Combine(item.PathGeometry.Value, template.Invoke(), GeometryCombineMode.Exclude, null));
+            mainWindowViewModel.Recorder.Current.ExecuteSetProperty(item, "PathGeometry.Value", Geometry.Combine(item.PathGeometry.Value, template.Invoke(point), GeometryCombineMode.Exclude, null));
             currentBrush = item;
         }
 
-        public static void Erase(MainWindowViewModel mainWindowViewModel, ref SelectableDesignerItemViewModelBase currentBrush, Point point, Func<PathGeometry> template)
+        public static void Erase(MainWindowViewModel mainWindowViewModel, ref SelectableDesignerItemViewModelBase currentBrush, Point point, Func<Point, PathGeometry> template)
         {
-            mainWindowViewModel.Recorder.Current.ExecuteSetProperty(currentBrush, "PathGeometry.Value", Geometry.Combine(currentBrush.PathGeometry.Value, template.Invoke(), GeometryCombineMode.Exclude, null));
+            mainWindowViewModel.Recorder.Current.ExecuteSetProperty(currentBrush, "PathGeometry.Value", Geometry.Combine(currentBrush.PathGeometry.Value, template.Invoke(point), GeometryCombineMode.Exclude, null));
         }
 
         public static void Down(MainWindowViewModel mainWindowViewModel, DesignerCanvas AssociatedObject, ref SelectableDesignerItemViewModelBase currentBrush, RoutedEventArgs e, Point point)
@@ -32,20 +32,11 @@ namespace boilersGraphics.Helpers
             {
                 var views = AssociatedObject.GetCorrespondingViews<FrameworkElement>(selectedDataContext.First());
                 var filtered = views.Where(x => x.GetType() == selectedDataContext.First().GetViewType());
-                if (currentBrush is BrushViewModel bvm)
+                if (selectedDataContext.First() is DesignerItemViewModelBase designer && currentBrush is BrushViewModel bvm)
                 {
                     if (filtered.Any())
                     {
-                        Erase(mainWindowViewModel, ref currentBrush, point, views, () => GeometryCreator.CreateEllipse(point.X - bvm.Width.Value / 2 - bvm.EdgeThickness.Value, point.Y - bvm.Height.Value / 2 - bvm.EdgeThickness.Value, bvm.Thickness.Value));
-                        e.Handled = true;
-                    }
-                }
-                else
-                {
-                    var tempBrush = currentBrush;
-                    if (filtered.Any())
-                    {
-                        Erase(mainWindowViewModel, ref currentBrush, point, views, () => tempBrush.PathGeometry.Value);
+                        Erase(mainWindowViewModel, ref currentBrush, new Point(point.X - designer.Left.Value + ((point.X - designer.Left.Value) / designer.Width.Value) * designer.Left.Value, point.Y - designer.Top.Value + ((point.Y - designer.Top.Value) / designer.Height.Value) * designer.Top.Value), views, (p) => GeometryCreator.CreateEllipse(p.X, p.Y, bvm.Thickness.Value));
                         e.Handled = true;
                     }
                 }
