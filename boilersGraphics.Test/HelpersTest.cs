@@ -186,7 +186,8 @@ namespace boilersGraphics.Test
 
             BrushInternal.Draw(mainWindowViewModel, ref vm, new System.Windows.Point() { X = 100, Y = 100 });
 
-            EraserInternal.Erase(mainWindowViewModel, ref vm, new System.Windows.Point() { X = 100, Y = 100 });
+            SelectableDesignerItemViewModelBase selectable = vm as SelectableDesignerItemViewModelBase;
+            EraserInternal.Erase(mainWindowViewModel, ref selectable, new System.Windows.Point() { X = 100, Y = 100 }, (p) => GeometryCreator.CreateEllipse(p.X, p.Y, vm.Thickness.Value));
 
             Assert.That(vm.PathGeometry.Value.ToString(), Is.EqualTo("F1M101,99C101,99.55228424072266,100.77613830566406,100.05228424072266,100.41421508789062,100.41421508789062C100.05228424072266,100.77613830566406,99.55228424072266,101,99,101C100.10456848144531,101,101,100.10456848144531,101,99z M97,99C97,100.10456848144531,97.89543151855469,101,99,101C98.44771575927734,101,97.94771575927734,100.77613830566406,97.58578491210938,100.41421508789062C97.22386169433594,100.05228424072266,97,99.55228424072266,97,99z M99,97C97.89543151855469,97 97,97.89543151855469 97,99 97,98.44771575927734 97.22386169433594,97.94771575927734 97.58578491210938,97.58578491210938C97.94771575927734,97.22386169433594,98.44771575927734,97,99,97z M99,97C99.55228424072266,97 100.05228424072266,97.22386169433594 100.41421508789062,97.58578491210938 100.77613830566406,97.94771575927734 101,98.44771575927734 101,99C101,97.89543151855469,100.10456848144531,97,99,97z"));
         }
@@ -220,9 +221,10 @@ namespace boilersGraphics.Test
 
             BrushInternal.Draw(mainWindowViewModel, ref vm, new System.Windows.Point() { X = 100, Y = 100 });
 
+            SelectableDesignerItemViewModelBase selectable = vm as SelectableDesignerItemViewModelBase;
             EraserInternal.Down(mainWindowViewModel,
                                 designerCanvas,
-                                ref vm,
+                                ref selectable,
                                 new System.Windows.Input.MouseButtonEventArgs(InputManager.Current.PrimaryMouseDevice, 0, MouseButton.Left) { RoutedEvent = Mouse.MouseDownEvent },
                                 new Point() { X = 100, Y = 100 });
 

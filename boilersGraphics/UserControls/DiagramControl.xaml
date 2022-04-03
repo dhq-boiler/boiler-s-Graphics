@@ -152,6 +152,7 @@
                                                     <ContentPresenter x:Name="PART_ContentPresenter"
                                                                       HorizontalAlignment="Stretch"
                                                                       VerticalAlignment="Stretch"
+                                                                      ClipToBounds="False"
                                                                       Content="{TemplateBinding Content}" />
                                                     <!--  DEBUG  -->
                                                     <!--<TextBlock VerticalAlignment="Center"

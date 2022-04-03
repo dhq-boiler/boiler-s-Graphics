@@ -135,6 +135,10 @@ namespace boilersGraphics.ViewModels
                        .AddTo(_CompositeDisposable);
             CenterPoint = CenterX.CombineLatest(CenterY, (x, y) => new Point(x, y))
                                  .ToReactiveProperty();
+            EdgeThickness
+                .Zip(EdgeThickness.Skip(1), (Old, New) => new { OldItem = Old, NewItem = New })
+                .Subscribe(x => UpdateTransform(nameof(EdgeThickness), x.OldItem, x.NewItem))
+                .AddTo(_CompositeDisposable);
 
             Matrix.Value = new Matrix();
         }
@@ -181,6 +185,7 @@ namespace boilersGraphics.ViewModels
                 case "Height":
                 case "RotationAngle":
                 case "Matrix":
+                case "EdgeThickness":
                     UpdatePathGeometryIfEnable();
                     break;
                 default:
