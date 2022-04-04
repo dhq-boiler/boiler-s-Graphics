@@ -28,6 +28,7 @@ namespace boilersGraphics.ViewModels
             Left.Value = left;
             Top.Value = top;
             Width.Value = width;
+            PathGeometryNoRotate.Value = null;
             Height.Value = height;
         }
 

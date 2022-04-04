@@ -12,6 +12,7 @@ namespace boilersGraphics.ViewModels
         {
             this.diagramViewModel = diagramViewModel;
             Width.Value = 1000;
+            PathGeometryNoRotate.Value = null;
             Height.Value = 1000;
         }
 

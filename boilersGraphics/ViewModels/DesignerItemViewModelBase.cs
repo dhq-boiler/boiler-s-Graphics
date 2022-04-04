@@ -71,8 +71,6 @@ namespace boilersGraphics.ViewModels
 
         public ReadOnlyReactivePropertySlim<double> Bottom { get; private set; }
 
-        public ReactivePropertySlim<PathGeometry> RotatePathGeometry { get; } = new ReactivePropertySlim<PathGeometry>();
-
         public ReactivePropertySlim<double> CenterX { get; } = new ReactivePropertySlim<double>();
         public ReactivePropertySlim<double> CenterY { get; } = new ReactivePropertySlim<double>();
 
@@ -199,14 +197,10 @@ namespace boilersGraphics.ViewModels
         {
             if (EnablePathGeometryUpdate.Value)
             {
-                if (RotationAngle.Value == 0)
+                PathGeometryNoRotate.Value = CreateGeometry();
+                if (RotationAngle.Value != 0)
                 {
-                    PathGeometryNoRotate.Value = CreateGeometry();
-                }
-                else
-                {
-                    PathGeometryNoRotate.Value = CreateGeometry();
-                    RotatePathGeometry.Value = CreateGeometry(RotationAngle.Value);
+                    PathGeometryRotate.Value = CreateGeometry(RotationAngle.Value);
                 }
             }
         }

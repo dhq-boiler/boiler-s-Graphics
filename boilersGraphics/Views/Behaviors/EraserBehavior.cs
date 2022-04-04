@@ -147,9 +147,13 @@ namespace boilersGraphics.Views.Behaviors
             {
                 return;
             }
+            if (selectable is null)
+            {
+                return;
+            }
             var designer = selectable as DesignerItemViewModelBase;
             //var selectable = currentBrush as SelectableDesignerItemViewModelBase;
-            EraserInternal.Erase((AssociatedObject.DataContext as DiagramViewModel).MainWindowVM, ref selectable, new Point(point.X - designer.Left.Value + ((point.X - designer.Left.Value) / designer.Width.Value) * designer.Left.Value, point.Y - designer.Top.Value + ((point.Y - designer.Top.Value) / designer.Height.Value) * designer.Top.Value), (p) => GeometryCreator.CreateEllipse(p.X, p.Y, currentBrush.Thickness.Value));
+            EraserInternal.Erase((AssociatedObject.DataContext as DiagramViewModel).MainWindowVM, ref selectable, new Point(point.X - designer.Left.Value, point.Y - designer.Top.Value), (p) => GeometryCreator.CreateEllipse(p.X, p.Y, currentBrush.Thickness.Value));
         }
 
         private void AssociatedObject_StylusMove(object sender, StylusEventArgs e)
@@ -163,7 +167,7 @@ namespace boilersGraphics.Views.Behaviors
             var point = e.GetPosition(AssociatedObject);
             var selectable = currentBrush as SelectableDesignerItemViewModelBase;
             var designer = selectable as DesignerItemViewModelBase;
-            EraserInternal.Erase((AssociatedObject.DataContext as DiagramViewModel).MainWindowVM, ref selectable, new Point(point.X - designer.Left.Value + ((point.X - designer.Left.Value) / designer.Width.Value) * designer.Left.Value, point.Y - designer.Top.Value + ((point.Y - designer.Top.Value) / designer.Height.Value) * designer.Top.Value), (p) => GeometryCreator.CreateEllipse(p.X, p.Y, currentBrush.Thickness.Value));
+            EraserInternal.Erase((AssociatedObject.DataContext as DiagramViewModel).MainWindowVM, ref selectable, new Point(point.X - designer.Left.Value, point.Y - designer.Top.Value), (p) => GeometryCreator.CreateEllipse(p.X, p.Y, currentBrush.Thickness.Value));
         }
 
         private void AssociatedObject_MouseUp(object sender, MouseButtonEventArgs e)

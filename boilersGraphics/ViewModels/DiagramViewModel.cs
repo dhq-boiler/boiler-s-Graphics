@@ -1080,9 +1080,9 @@ namespace boilersGraphics.ViewModels
                     var item2PathGeometry = item2.PathGeometryNoRotate.Value;
 
                     if (item1 is DesignerItemViewModelBase designerItem1 && item1.RotationAngle.Value != 0)
-                        item1PathGeometry = designerItem1.RotatePathGeometry.Value;
+                        item1PathGeometry = designerItem1.PathGeometryRotate.Value;
                     if (item2 is DesignerItemViewModelBase designerItem2 && item2.RotationAngle.Value != 0)
-                        item2PathGeometry = designerItem2.RotatePathGeometry.Value;
+                        item2PathGeometry = designerItem2.PathGeometryRotate.Value;
 
                     CastToLetterAndSetTransform(item1, item2, item1PathGeometry, item2PathGeometry);
 
