@@ -13,13 +13,21 @@ namespace boilersGraphics.Helpers
 {
     public static class EraserInternal
     {
-        public static void Erase(MainWindowViewModel mainWindowViewModel, ref SelectableDesignerItemViewModelBase currentBrush, Point point, IEnumerable<FrameworkElement> views, Func<Point, PathGeometry> template)
+        public static void EraseAtDown(MainWindowViewModel mainWindowViewModel, ref SelectableDesignerItemViewModelBase currentBrush, Point point, IEnumerable<FrameworkElement> views, Func<Point, PathGeometry> template)
         {
+            var item = views.First().DataContext as DesignerItemViewModelBase;
             if (currentBrush is DesignerItemViewModelBase designer)
             {
-                point = RotatePoint(point, designer.CenterPoint.Value, -designer.RotationAngle.Value);
+                if (item.RotationAngle.Value == 0)
+                {
+                    point = RotatePoint(point, item.CenterPoint.Value, -item.RotationAngle.Value);
+                }
+                else
+                {
+                    point = new RotateTransform(-item.RotationAngle.Value, item.CenterPoint.Value.X, item.CenterPoint.Value.Y).Transform(point);
+                    point = new TranslateTransform(-item.Left.Value, -item.Top.Value).Transform(point);
+                }
             }
-            var item = views.First().DataContext as SelectableDesignerItemViewModelBase;
             mainWindowViewModel.Recorder.Current.ExecuteSetProperty(item, "PathGeometryNoRotate.Value", Geometry.Combine(item.PathGeometryNoRotate.Value, template.Invoke(point), GeometryCombineMode.Exclude, null));
             if (currentBrush.RotationAngle.Value != 0)
             {
@@ -32,7 +40,15 @@ namespace boilersGraphics.Helpers
         {
             if (currentBrush is DesignerItemViewModelBase designer)
             {
-                point = RotatePoint(point, designer.CenterPoint.Value, -designer.RotationAngle.Value);
+                if (designer.RotationAngle.Value == 0)
+                {
+                    point = new Point(point.X - designer.Left.Value, point.Y - designer.Top.Value);
+                }
+                else
+                {
+                    point = new RotateTransform(-designer.RotationAngle.Value, designer.CenterPoint.Value.X, designer.CenterPoint.Value.Y).Transform(point);
+                    point = new TranslateTransform(-designer.Left.Value, -designer.Top.Value).Transform(point);
+                }
             }
             mainWindowViewModel.Recorder.Current.ExecuteSetProperty(currentBrush, "PathGeometryNoRotate.Value", Geometry.Combine(currentBrush.PathGeometryNoRotate.Value, template.Invoke(point), GeometryCombineMode.Exclude, null));
             if (currentBrush.RotationAngle.Value != 0)
@@ -59,7 +75,7 @@ namespace boilersGraphics.Helpers
                 {
                     if (filtered.Any())
                     {
-                        Erase(mainWindowViewModel, ref currentBrush, new Point(point.X - designer.Left.Value, point.Y - designer.Top.Value), views, (p) => GeometryCreator.CreateEllipse(p.X, p.Y, bvm.Thickness.Value));
+                        EraseAtDown(mainWindowViewModel, ref currentBrush, point, views, (p) => GeometryCreator.CreateEllipse(p.X, p.Y, bvm.Thickness.Value));
                         e.Handled = true;
                     }
                 }
