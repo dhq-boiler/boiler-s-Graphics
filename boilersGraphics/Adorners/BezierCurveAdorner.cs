@@ -81,7 +81,7 @@ namespace boilersGraphics.Adorners
                 item.EdgeThickness.Value = item.Owner.EdgeThickness.Value.Value;
                 item.ZIndex.Value = item.Owner.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).Count();
                 item.IsSelected.Value = true;
-                item.PathGeometry.Value = GeometryCreator.CreateBezierCurve(item);
+                item.PathGeometryNoRotate.Value = GeometryCreator.CreateBezierCurve(item);
                 item.IsVisible.Value = true;
                 item.SnapPoint0VM.Value.IsSelected.Value = true;
                 item.SnapPoint1VM.Value.IsSelected.Value = true;

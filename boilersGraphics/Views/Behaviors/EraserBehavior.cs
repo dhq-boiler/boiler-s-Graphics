@@ -3,7 +3,9 @@ using boilersGraphics.Dao;
 using boilersGraphics.Helpers;
 using boilersGraphics.ViewModels;
 using Microsoft.Xaml.Behaviors;
+using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace boilersGraphics.Views.Behaviors
 {
@@ -13,6 +15,7 @@ namespace boilersGraphics.Views.Behaviors
 
         public EraserBehavior()
         {
+            currentBrush = BrushViewModel.CreateInstance();
         }
 
         protected override void OnAttached()
@@ -49,10 +52,21 @@ namespace boilersGraphics.Views.Behaviors
             if (e.Source == AssociatedObject)
             {
                 (AssociatedObject.DataContext as DiagramViewModel).MainWindowVM.Recorder.BeginRecode();
-
+                if (!(Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
+                {
+                    currentBrush.CloseThicknessDialog();
+                    currentBrush.Dispose();
+                    currentBrush = null;
+                }
                 e.StylusDevice.Capture(AssociatedObject);
                 var point = e.GetPosition(AssociatedObject);
-                EraserInternal.Down((AssociatedObject.DataContext as DiagramViewModel).MainWindowVM, AssociatedObject, ref currentBrush, e, point);
+                if (currentBrush == null)
+                {
+                    currentBrush = BrushViewModel.CreateInstance();
+                    currentBrush.OpenThicknessDialog();
+                }
+                var selectable = currentBrush as SelectableDesignerItemViewModelBase;
+                EraserInternal.Down((AssociatedObject.DataContext as DiagramViewModel).MainWindowVM, AssociatedObject, ref selectable, e, point);
                 downFlag = true;
                 e.Handled = true;
             }
@@ -66,11 +80,22 @@ namespace boilersGraphics.Views.Behaviors
             if (e.Source == AssociatedObject)
             {
                 (AssociatedObject.DataContext as DiagramViewModel).MainWindowVM.Recorder.BeginRecode();
-
+                if (!(Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
+                {
+                    currentBrush.CloseThicknessDialog();
+                    currentBrush.Dispose();
+                    currentBrush = null;
+                }
                 e.TouchDevice.Capture(AssociatedObject);
                 var touchPoint = e.GetTouchPoint(AssociatedObject);
                 var point = touchPoint.Position;
-                EraserInternal.Down((AssociatedObject.DataContext as DiagramViewModel).MainWindowVM, AssociatedObject, ref currentBrush, e, point);
+                if (currentBrush == null)
+                {
+                    currentBrush = BrushViewModel.CreateInstance();
+                    currentBrush.OpenThicknessDialog();
+                }
+                var selectable = currentBrush as SelectableDesignerItemViewModelBase;
+                EraserInternal.Down((AssociatedObject.DataContext as DiagramViewModel).MainWindowVM, AssociatedObject, ref selectable, e, point);
                 downFlag = true;
             }
         }
@@ -85,9 +110,21 @@ namespace boilersGraphics.Views.Behaviors
                 if (e.Source == AssociatedObject)
                 {
                     (AssociatedObject.DataContext as DiagramViewModel).MainWindowVM.Recorder.BeginRecode();
-
+                    if (!(Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
+                    {
+                        currentBrush.CloseThicknessDialog();
+                        currentBrush.Dispose();
+                        currentBrush = null;
+                    }
+                    e.MouseDevice.Capture(AssociatedObject);
                     var point = e.GetPosition(AssociatedObject);
-                    EraserInternal.Down((AssociatedObject.DataContext as DiagramViewModel).MainWindowVM, AssociatedObject, ref currentBrush, e, point);
+                    if (currentBrush == null)
+                    {
+                        currentBrush = BrushViewModel.CreateInstance();
+                        currentBrush.OpenThicknessDialog();
+                    }
+                    var selectable = currentBrush as SelectableDesignerItemViewModelBase;
+                    EraserInternal.Down((AssociatedObject.DataContext as DiagramViewModel).MainWindowVM, AssociatedObject, ref selectable, e, point);
                     downFlag = true;
                 }
             }
@@ -105,7 +142,17 @@ namespace boilersGraphics.Views.Behaviors
                 return;
 
             var point = e.GetPosition(AssociatedObject);
-            EraserInternal.Erase((AssociatedObject.DataContext as DiagramViewModel).MainWindowVM, ref currentBrush, point);
+            var selectable = (VisualTreeHelper.HitTest(this.AssociatedObject, point)?.VisualHit as FrameworkElement)?.DataContext as SelectableDesignerItemViewModelBase;
+            if (selectable is BackgroundViewModel)
+            {
+                return;
+            }
+            if (selectable is null)
+            {
+                return;
+            }
+            var designer = selectable as DesignerItemViewModelBase;
+            EraserInternal.Erase((AssociatedObject.DataContext as DiagramViewModel).MainWindowVM, ref selectable, point, (p) => GeometryCreator.CreateEllipse(p.X, p.Y, currentBrush.Thickness.Value));
         }
 
         private void AssociatedObject_StylusMove(object sender, StylusEventArgs e)
@@ -117,7 +164,9 @@ namespace boilersGraphics.Views.Behaviors
                 return;
 
             var point = e.GetPosition(AssociatedObject);
-            EraserInternal.Erase((AssociatedObject.DataContext as DiagramViewModel).MainWindowVM, ref currentBrush, point);
+            var selectable = currentBrush as SelectableDesignerItemViewModelBase;
+            var designer = selectable as DesignerItemViewModelBase;
+            EraserInternal.Erase((AssociatedObject.DataContext as DiagramViewModel).MainWindowVM, ref selectable, point, (p) => GeometryCreator.CreateEllipse(p.X, p.Y, currentBrush.Thickness.Value));
         }
 
         private void AssociatedObject_MouseUp(object sender, MouseButtonEventArgs e)

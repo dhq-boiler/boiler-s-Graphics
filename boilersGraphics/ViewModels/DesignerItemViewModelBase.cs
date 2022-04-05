@@ -71,8 +71,6 @@ namespace boilersGraphics.ViewModels
 
         public ReadOnlyReactivePropertySlim<double> Bottom { get; private set; }
 
-        public ReactivePropertySlim<PathGeometry> RotatePathGeometry { get; } = new ReactivePropertySlim<PathGeometry>();
-
         public ReactivePropertySlim<double> CenterX { get; } = new ReactivePropertySlim<double>();
         public ReactivePropertySlim<double> CenterY { get; } = new ReactivePropertySlim<double>();
 
@@ -135,6 +133,12 @@ namespace boilersGraphics.ViewModels
                        .AddTo(_CompositeDisposable);
             CenterPoint = CenterX.CombineLatest(CenterY, (x, y) => new Point(x, y))
                                  .ToReactiveProperty();
+            EdgeThickness
+                .Zip(EdgeThickness.Skip(1), (Old, New) => new { OldItem = Old, NewItem = New })
+                .Subscribe(x => UpdateTransform(nameof(EdgeThickness), x.OldItem, x.NewItem))
+                .AddTo(_CompositeDisposable);
+
+            PathGeometry = PathGeometryNoRotate.ToReadOnlyReactivePropertySlim();
 
             Matrix.Value = new Matrix();
         }
@@ -181,6 +185,7 @@ namespace boilersGraphics.ViewModels
                 case "Height":
                 case "RotationAngle":
                 case "Matrix":
+                case "EdgeThickness":
                     UpdatePathGeometryIfEnable();
                     break;
                 default:
@@ -192,13 +197,10 @@ namespace boilersGraphics.ViewModels
         {
             if (EnablePathGeometryUpdate.Value)
             {
-                if (RotationAngle.Value == 0)
+                PathGeometryNoRotate.Value = CreateGeometry();
+                if (RotationAngle.Value != 0)
                 {
-                    PathGeometry.Value = CreateGeometry();
-                }
-                else
-                {
-                    RotatePathGeometry.Value = CreateGeometry(RotationAngle.Value);
+                    PathGeometryRotate.Value = CreateGeometry(RotationAngle.Value);
                 }
             }
         }

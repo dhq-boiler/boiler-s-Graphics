@@ -249,7 +249,7 @@ namespace boilersGraphics.Helpers
                 item.FillBrush.Value = WpfObjectSerializer.Deserialize(snapPointElm.Element("FillBrush").Nodes().First().ToString()) as Brush;
             }
             item.EdgeThickness.Value = double.Parse(snapPointElm.Element("EdgeThickness").Value);
-            item.PathGeometry.Value = PathGeometry.CreateFromGeometry(PathGeometry.Parse(snapPointElm.Element("PathGeometry").Value));
+            item.PathGeometryNoRotate.Value = PathGeometry.CreateFromGeometry(PathGeometry.Parse(snapPointElm.Element("PathGeometry").Value));
             item.Opacity.Value = 0.5;
             item.Owner = diagramViewModel;
             return item;
@@ -273,13 +273,13 @@ namespace boilersGraphics.Helpers
             item.LeftTop.Value = Point.Parse(connectorElm.Element("LeftTop").Value);
             if (item is StraightConnectorViewModel || item is BezierCurveViewModel)
             {
-                item.PathGeometry.Value = PathGeometry.CreateFromGeometry(Geometry.Parse(connectorElm.Element("PathGeometry").Value));
+                item.PathGeometryNoRotate.Value = PathGeometry.CreateFromGeometry(Geometry.Parse(connectorElm.Element("PathGeometry").Value));
             }
             else if (item is PolyBezierViewModel poly)
             {
                 poly.Points = StrToPoints(connectorElm.Element("Points").Value);
                 poly.InitializeSnapPoints(poly.Points.First(), poly.Points.Last());
-                item.PathGeometry.Value = GeometryCreator.CreatePolyBezier(poly);
+                item.PathGeometryNoRotate.Value = GeometryCreator.CreatePolyBezier(poly);
             }
             item.Owner = diagramViewModel;
             if (item is BezierCurveViewModel bezier)
@@ -333,7 +333,7 @@ namespace boilersGraphics.Helpers
                 item.FillBrush.Value = WpfObjectSerializer.Deserialize(designerItemElm.Element("FillBrush").Nodes().First().ToString()) as Brush;
             }
             item.EdgeThickness.Value = double.Parse(designerItemElm.Element("EdgeThickness").Value);
-            item.PathGeometry.Value = PathGeometry.CreateFromGeometry(PathGeometry.Parse(designerItemElm.Element("PathGeometry").Value));
+            item.PathGeometryNoRotate.Value = PathGeometry.CreateFromGeometry(PathGeometry.Parse(designerItemElm.Element("PathGeometry").Value));
             item.RotationAngle.Value = designerItemElm.Element("RotationAngle") != null ? double.Parse(designerItemElm.Element("RotationAngle").Value) : 0;
             item.Owner = diagramViewModel;
             if (item is PictureDesignerItemViewModel)

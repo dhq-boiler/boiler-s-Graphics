@@ -12,6 +12,7 @@ namespace boilersGraphics.ViewModels
         {
             this.diagramViewModel = diagramViewModel;
             Width.Value = 1000;
+            PathGeometryNoRotate.Value = null;
             Height.Value = 1000;
         }
 
@@ -28,7 +29,7 @@ namespace boilersGraphics.ViewModels
             clone.EdgeThickness.Value = EdgeThickness.Value;
             clone.Matrix.Value = Matrix.Value;
             clone.RotationAngle.Value = RotationAngle.Value;
-            clone.PathGeometry.Value = GeometryCreator.CreateRectangle(clone);
+            clone.PathGeometryNoRotate.Value = GeometryCreator.CreateRectangle(clone);
             return clone;
         }
 

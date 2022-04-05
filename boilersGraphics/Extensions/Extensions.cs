@@ -40,11 +40,12 @@ namespace boilersGraphics.Extensions
             {
                 var child = VisualTreeHelper.GetChild(depObj, i);
 
-                var result = (child as IEnumerable<T>) ?? EnumerateChildOfType<T>(child);
+                var result = ((child as IEnumerable<T>) ?? EnumerateChildOfType<T>(child)).ToList();
                 if (result != null)
                 {
-                    foreach (var item in result)
+                    for (int j = 0; j < result.Count(); j++)
                     {
+                        var item = result.ElementAt(j);
                         if (item != null)
                             yield return item;
                     }

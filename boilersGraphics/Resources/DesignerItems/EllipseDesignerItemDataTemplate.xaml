@@ -5,13 +5,18 @@
                     xmlns:viewModel="clr-namespace:boilersGraphics.ViewModels">
     <convereter:ToSolidColorBrushConverter x:Key="solidColorBrushConverter" />
     <DataTemplate DataType="{x:Type viewModel:NEllipseViewModel}">
-        <Path Data="{Binding PathGeometry.Value}"
+        <Grid Width="{Binding Width.Value}"
+              Height="{Binding Height.Value}">
+            <Path Data="{Binding PathGeometry.Value}"
               Fill="{Binding FillBrush.Value}"
               IsHitTestVisible="False"
-              Stretch="Fill"
+              Stretch="None"
+              Width="{Binding Width.Value}"
+              Height="{Binding Height.Value}"
               Stroke="{Binding EdgeBrush.Value}"
               StrokeThickness="{Binding EdgeThickness.Value}"
               StrokeLineJoin="{Binding PenLineJoin.Value}"
               StrokeDashArray="{Binding StrokeDashArray.Value}" />
+        </Grid>
     </DataTemplate>
 </ResourceDictionary>

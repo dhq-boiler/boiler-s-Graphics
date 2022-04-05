@@ -122,7 +122,7 @@ namespace boilersGraphics.ViewModels
             viewModel.Top.Value = PieCenterPoint.Value.Y - Distance.Value;
             viewModel.Width.Value = Distance.Value * 2;
             viewModel.Height.Value = Distance.Value * 2;
-            viewModel.PathGeometry.Value = GeometryCreator.CreateEllipse(PieCenterPoint.Value.X, PieCenterPoint.Value.Y, new System.Windows.Thickness(PieCenterPoint.Value.X - Distance.Value, PieCenterPoint.Value.Y - Distance.Value, PieCenterPoint.Value.X + Distance.Value, PieCenterPoint.Value.Y + Distance.Value));
+            viewModel.PathGeometryNoRotate.Value = GeometryCreator.CreateEllipse(PieCenterPoint.Value.X, PieCenterPoint.Value.Y, new System.Windows.Thickness(PieCenterPoint.Value.X - Distance.Value, PieCenterPoint.Value.Y - Distance.Value, PieCenterPoint.Value.X + Distance.Value, PieCenterPoint.Value.Y + Distance.Value));
             return viewModel;
         }
 
@@ -133,7 +133,7 @@ namespace boilersGraphics.ViewModels
             viewModel.Top.Value = PieCenterPoint.Value.Y - (Distance.Value - DonutWidth.Value);
             viewModel.Width.Value = (Distance.Value - DonutWidth.Value) * 2;
             viewModel.Height.Value = (Distance.Value - DonutWidth.Value) * 2;
-            viewModel.PathGeometry.Value = GeometryCreator.CreateEllipse(PieCenterPoint.Value.X, PieCenterPoint.Value.Y, new System.Windows.Thickness(PieCenterPoint.Value.X - Distance.Value, PieCenterPoint.Value.Y - Distance.Value, PieCenterPoint.Value.X + Distance.Value, PieCenterPoint.Value.Y + Distance.Value));
+            viewModel.PathGeometryNoRotate.Value = GeometryCreator.CreateEllipse(PieCenterPoint.Value.X, PieCenterPoint.Value.Y, new System.Windows.Thickness(PieCenterPoint.Value.X - Distance.Value, PieCenterPoint.Value.Y - Distance.Value, PieCenterPoint.Value.X + Distance.Value, PieCenterPoint.Value.Y + Distance.Value));
             return viewModel;
         }
 
@@ -156,7 +156,7 @@ namespace boilersGraphics.ViewModels
             clone.FillBrush.Value = FillBrush.Value;
             clone.EdgeThickness.Value = EdgeThickness.Value;
             clone.RotationAngle.Value = RotationAngle.Value;
-            clone.PathGeometry.Value = CreateGeometry();
+            clone.PathGeometryNoRotate.Value = CreateGeometry();
             clone.PieCenterPoint.Value = PieCenterPoint.Value;
             clone.DonutWidth.Value = DonutWidth.Value;
             clone.Distance.Value = Distance.Value;

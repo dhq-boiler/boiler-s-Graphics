@@ -30,7 +30,7 @@ namespace boilersGraphics.ViewModels
         public override void WithLineBreak(GlyphTypeface glyphTypeface)
         {
             //refresh path geometry
-            PathGeometry.Value = new PathGeometry();
+            PathGeometryNoRotate.Value = new PathGeometry();
             var listLineBreak = new List<PathGeometry>();
             double width = 0d;
             double offsetY = 0d;
@@ -102,7 +102,7 @@ namespace boilersGraphics.ViewModels
             var l = new List<PathGeometry>();
             var list = new List<PathGeometry>();
             //refresh path geometry
-            PathGeometry.Value = new PathGeometry();
+            PathGeometryNoRotate.Value = new PathGeometry();
             double maxHeight = 0d;
             foreach (var @char in LetterString)
             {

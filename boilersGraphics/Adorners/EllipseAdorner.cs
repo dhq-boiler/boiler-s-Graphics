@@ -126,7 +126,7 @@ namespace boilersGraphics.Adorners
                 item.EdgeThickness.Value = item.Owner.EdgeThickness.Value.Value;
                 item.FillBrush.Value = item.Owner.FillBrush.Value.Clone();
                 item.ZIndex.Value = item.Owner.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).Count();
-                item.PathGeometry.Value = GeometryCreator.CreateEllipse(item);
+                item.PathGeometryNoRotate.Value = GeometryCreator.CreateEllipse(item);
                 item.IsSelected.Value = true;
                 item.IsVisible.Value = true;
                 item.Owner.DeselectAll();
