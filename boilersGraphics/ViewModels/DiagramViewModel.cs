@@ -1878,11 +1878,11 @@ namespace boilersGraphics.ViewModels
 
                 if (configuration.Element("Left") != null)
                 {
-                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.Left.Value", int.Parse(configuration.Element("Left").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.Left.Value", double.Parse(configuration.Element("Left").Value));
                 }
                 if (configuration.Element("Top") != null)
                 {
-                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.Top.Value", int.Parse(configuration.Element("Top").Value));
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.Top.Value", double.Parse(configuration.Element("Top").Value));
                 }
                 if (configuration.Element("Width") != null)
                 {
