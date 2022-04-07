@@ -3,7 +3,9 @@ using NLog;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
+using System.Text;
 using System.Windows;
 using System.Windows.Media;
 
@@ -51,6 +53,18 @@ namespace boilersGraphics.Helpers
             }
             var rhs = PathGeometry.CreateFromGeometry(new RectangleGeometry(new Rect(new Point(item.EdgeThickness.Value / 2, item.EdgeThickness.Value / 2), new Point(item.Width.Value - item.EdgeThickness.Value / 2, item.Height.Value - item.EdgeThickness.Value / 2))));
             rhs.FillRule = FillRule.Nonzero;
+            if (item.Width.Value != item.PathGeometryNoRotate.Value.Bounds.Width || item.Height.Value != item.PathGeometryNoRotate.Value.Bounds.Height)
+            {
+                var lhs = item.PathGeometryNoRotate.Value.Clone();
+                var diffWidth = rhs.Bounds.Width - lhs.Bounds.Width;
+                var diffHeight = rhs.Bounds.Height - lhs.Bounds.Height;
+                var coefficientWidth = rhs.Bounds.Width / lhs.Bounds.Width;
+                var coefficientHeight = rhs.Bounds.Height / lhs.Bounds.Height;
+                if (double.IsNaN(coefficientWidth) || double.IsNaN(coefficientHeight))
+                    return rhs;
+                var newlhs = Scale(lhs, coefficientWidth, coefficientHeight);
+                return newlhs;
+            }
             var result = Geometry.Combine(
                 item.PathGeometryNoRotate.Value,
                 rhs,
@@ -747,6 +761,105 @@ namespace boilersGraphics.Helpers
             string[] split = beginPointStr.Split(',');
             Point beginPoint = new Point(double.Parse(split[0]), double.Parse(split[1]));
             return beginPoint;
+        }
+
+        public static PathGeometry Scale(PathGeometry target, double scaleX, double scaleY)
+        {
+            string entire = target.ToString();
+            string[] split = Split(entire, 'M', ',', ' ', 'L', 'H', 'V', 'C', 'Q', 'S', 'T', 'A', 'z');
+            var sb = new StringBuilder();
+            ParseAndScale(split, sb, scaleX, scaleY);
+            return PathGeometry.CreateFromGeometry(Geometry.Parse(sb.ToString()));
+        }
+
+        private static string[] Split(string target, params char[] splitchars)
+        {
+            List<string> result = new List<string>();
+            string tmp = "";
+
+            for (int i = 0; i < target.Length; i++)
+            {
+                var c = target[i];
+                if (splitchars.Contains(c))
+                {
+                    result.Add(tmp);
+                    result.Add($"{c}");
+                    tmp = "";
+                }
+                else
+                {
+                    tmp += c;
+                }
+            }
+            if (tmp != string.Empty)
+            {
+                result.Add(tmp);
+            }
+            return result.ToArray();
+        }
+
+        private static void ParseAndScale(string[] split, StringBuilder sb, double scaleX, double scaleY)
+        {
+            int flag = 0;
+            bool Cflag = false;
+            for (int i = 0; i < split.Length; i++)
+            {
+                var sp = split[i];
+                switch (sp)
+                {
+                    case "F0":
+                    case "F1":
+                        sb.Append(sp);
+                        sb.Append(' ');
+                        break;
+                    case "M":
+                        sb.Append(sp);
+                        break;
+                    case ",":
+                        if (!Cflag)
+                        {
+                            flag = 1;
+                        }
+                        sb.Append(sp);
+                        continue;
+                    case " ":
+                        flag = 0;
+                        sb.Append(sp);
+                        continue;
+                    case "":
+                        continue;
+                    case "L":
+                    case "H":
+                    case "V":
+                    case "Q":
+                    case "S":
+                    case "T":
+                    case "A":
+                        sb.Append(sp);
+                        Cflag = false;
+                        break;
+                    case "C":
+                        sb.Append(sp);
+                        Cflag = true;
+                        break;
+                    case "z":
+                        sb.Append(sp);
+                        break;
+                    default:
+                        if (flag == 0)
+                        {
+                            sb.Append(double.Parse(sp) * scaleX);
+                            flag = 1;
+                        }
+                        else if (flag == 1)
+                        {
+                            sb.Append(double.Parse(sp) * scaleY);
+                            flag = 0;
+                        }
+                        break;
+                }
+                //sb.Append()
+            }
         }
 
         private static int GetNextTopCharIndex(string entire)

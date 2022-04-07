@@ -309,6 +309,7 @@ namespace boilersGraphics.Controls
                                         break;
                                 }
                             }
+                            viewModel.UpdatePathGeometryIfEnable();
                         }
 
                         (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = $"(w, h) = ({viewModel.Width.Value}, {viewModel.Height.Value})";
