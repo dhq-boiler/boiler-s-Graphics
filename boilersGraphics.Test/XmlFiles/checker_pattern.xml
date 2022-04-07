@@ -28,7 +28,7 @@
                 <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FF000000</SolidColorBrush>
               </FillBrush>
               <EdgeThickness>1</EdgeThickness>
-              <PathGeometry>M0,0L100,0 100,100 0,100z</PathGeometry>
+              <PathGeometryNoRotate>M0,0L100,0 100,100 0,100z</PathGeometryNoRotate>
               <RotationAngle>0</RotationAngle>
             </DesignerItem>
           </Item>
@@ -55,7 +55,7 @@
                 <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FF000000</SolidColorBrush>
               </FillBrush>
               <EdgeThickness>1</EdgeThickness>
-              <PathGeometry>M900,900L1000,900 1000,1000 900,1000z</PathGeometry>
+              <PathGeometryNoRotate>M900,900L1000,900 1000,1000 900,1000z</PathGeometryNoRotate>
               <RotationAngle>0</RotationAngle>
             </DesignerItem>
           </Item>
@@ -82,7 +82,7 @@
                 <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FF000000</SolidColorBrush>
               </FillBrush>
               <EdgeThickness>1</EdgeThickness>
-              <PathGeometry>M100,100L200,100 200,200 100,200z</PathGeometry>
+              <PathGeometryNoRotate>M100,100L200,100 200,200 100,200z</PathGeometryNoRotate>
               <RotationAngle>0</RotationAngle>
             </DesignerItem>
           </Item>
@@ -109,7 +109,7 @@
                 <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FF000000</SolidColorBrush>
               </FillBrush>
               <EdgeThickness>1</EdgeThickness>
-              <PathGeometry>M200,200L300,200 300,300 200,300z</PathGeometry>
+              <PathGeometryNoRotate>M200,200L300,200 300,300 200,300z</PathGeometryNoRotate>
               <RotationAngle>0</RotationAngle>
             </DesignerItem>
           </Item>
@@ -136,7 +136,7 @@
                 <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FF000000</SolidColorBrush>
               </FillBrush>
               <EdgeThickness>1</EdgeThickness>
-              <PathGeometry>M300,300L400,300 400,400 300,400z</PathGeometry>
+              <PathGeometryNoRotate>M300,300L400,300 400,400 300,400z</PathGeometryNoRotate>
               <RotationAngle>0</RotationAngle>
             </DesignerItem>
           </Item>
@@ -163,7 +163,7 @@
                 <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FF000000</SolidColorBrush>
               </FillBrush>
               <EdgeThickness>1</EdgeThickness>
-              <PathGeometry>M400,400L500,400 500,500 400,500z</PathGeometry>
+              <PathGeometryNoRotate>M400,400L500,400 500,500 400,500z</PathGeometryNoRotate>
               <RotationAngle>0</RotationAngle>
             </DesignerItem>
           </Item>
@@ -190,7 +190,7 @@
                 <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FF000000</SolidColorBrush>
               </FillBrush>
               <EdgeThickness>1</EdgeThickness>
-              <PathGeometry>M500,500L600,500 600,600 500,600z</PathGeometry>
+              <PathGeometryNoRotate>M500,500L600,500 600,600 500,600z</PathGeometryNoRotate>
               <RotationAngle>0</RotationAngle>
             </DesignerItem>
           </Item>
@@ -217,7 +217,7 @@
                 <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FF000000</SolidColorBrush>
               </FillBrush>
               <EdgeThickness>1</EdgeThickness>
-              <PathGeometry>M600,600L700,600 700,700 600,700z</PathGeometry>
+              <PathGeometryNoRotate>M600,600L700,600 700,700 600,700z</PathGeometryNoRotate>
               <RotationAngle>0</RotationAngle>
             </DesignerItem>
           </Item>
@@ -244,7 +244,7 @@
                 <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FF000000</SolidColorBrush>
               </FillBrush>
               <EdgeThickness>1</EdgeThickness>
-              <PathGeometry>M700,700L800,700 800,800 700,800z</PathGeometry>
+              <PathGeometryNoRotate>M700,700L800,700 800,800 700,800z</PathGeometryNoRotate>
               <RotationAngle>0</RotationAngle>
             </DesignerItem>
           </Item>
@@ -271,7 +271,7 @@
                 <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FF000000</SolidColorBrush>
               </FillBrush>
               <EdgeThickness>1</EdgeThickness>
-              <PathGeometry>M800,800L900,800 900,900 800,900z</PathGeometry>
+              <PathGeometryNoRotate>M800,800L900,800 900,900 800,900z</PathGeometryNoRotate>
               <RotationAngle>0</RotationAngle>
             </DesignerItem>
           </Item>
