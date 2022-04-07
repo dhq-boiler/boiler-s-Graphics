@@ -193,11 +193,15 @@ namespace boilersGraphics.ViewModels
             }
         }
 
-        public void UpdatePathGeometryIfEnable()
+        public void UpdatePathGeometryIfEnable(bool flag = false)
         {
             if (EnablePathGeometryUpdate.Value)
             {
-                PathGeometryNoRotate.Value = CreateGeometry();
+                if (!flag)
+                {
+                    PathGeometryNoRotate.Value = CreateGeometry(flag);
+                }
+
                 if (RotationAngle.Value != 0)
                 {
                     PathGeometryRotate.Value = CreateGeometry(RotationAngle.Value);
@@ -205,7 +209,7 @@ namespace boilersGraphics.ViewModels
             }
         }
 
-        public abstract PathGeometry CreateGeometry();
+        public abstract PathGeometry CreateGeometry(bool flag = false);
 
         public abstract PathGeometry CreateGeometry(double angle);
 

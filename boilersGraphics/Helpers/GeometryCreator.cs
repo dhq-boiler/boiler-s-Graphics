@@ -43,13 +43,23 @@ namespace boilersGraphics.Helpers
             return PathGeometry.CreateFromGeometry(ellipse);
         }
 
-        public static PathGeometry CreateRectangle(NRectangleViewModel item)
+        public static PathGeometry CreateRectangle(NRectangleViewModel item, bool flag = false)
         {
+            if (item.PathGeometryNoRotate.Value is null && item is BackgroundViewModel)
+            {
+                var lhs = PathGeometry.CreateFromGeometry(new RectangleGeometry(new Rect(new Point(item.EdgeThickness.Value / 2, item.EdgeThickness.Value / 2), new Point(item.Width.Value - item.EdgeThickness.Value / 2, item.Height.Value - item.EdgeThickness.Value / 2))));
+                lhs.FillRule = FillRule.Nonzero;
+                return lhs;
+            }
             if (item.PathGeometryNoRotate.Value is null)
             {
                 var lhs = PathGeometry.CreateFromGeometry(new RectangleGeometry(new Rect(new Point(item.EdgeThickness.Value / 2, item.EdgeThickness.Value / 2), new Point(item.Width.Value - item.EdgeThickness.Value / 2, item.Height.Value - item.EdgeThickness.Value / 2))));
                 lhs.FillRule = FillRule.Nonzero;
                 return lhs;
+            }
+            if (flag)
+            {
+                return item.PathGeometryNoRotate.Value;
             }
             var rhs = PathGeometry.CreateFromGeometry(new RectangleGeometry(new Rect(new Point(item.EdgeThickness.Value / 2, item.EdgeThickness.Value / 2), new Point(item.Width.Value - item.EdgeThickness.Value / 2, item.Height.Value - item.EdgeThickness.Value / 2))));
             rhs.FillRule = FillRule.Nonzero;

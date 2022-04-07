@@ -47,7 +47,7 @@ namespace boilersGraphics.ViewModels
             this.ShowConnectors = false;
         }
 
-        public override PathGeometry CreateGeometry()
+        public override PathGeometry CreateGeometry(bool flag = false)
         {
             throw new NotSupportedException("combine figures is not supported.");
         }

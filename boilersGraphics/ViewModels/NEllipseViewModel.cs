@@ -48,7 +48,7 @@ namespace boilersGraphics.ViewModels
             EnablePathGeometryUpdate.Value = true;
         }
 
-        public override PathGeometry CreateGeometry()
+        public override PathGeometry CreateGeometry(bool flag = false)
         {
             return GeometryCreator.CreateEllipse(this);
         }

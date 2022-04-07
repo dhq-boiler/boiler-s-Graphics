@@ -384,7 +384,7 @@ namespace boilersGraphics.Helpers
                 var polygon = item as NPolygonViewModel;
                 polygon.Data.Value = designerItemElm.Element("Data").Value;
             }
-            item.UpdatePathGeometryIfEnable();
+            item.UpdatePathGeometryIfEnable(true);
             return item;
         }
 

@@ -81,7 +81,8 @@ namespace boilersGraphics.Helpers
                 list.Add(new XElement("EdgeBrush", XElement.Parse(WpfObjectSerializer.Serialize(designerItem.EdgeBrush.Value))));
                 list.Add(new XElement("FillBrush", XElement.Parse(WpfObjectSerializer.Serialize(designerItem.FillBrush.Value))));
                 list.Add(new XElement("EdgeThickness", designerItem.EdgeThickness.Value));
-                list.Add(new XElement("PathGeometry", designerItem.PathGeometry.Value));
+                list.Add(new XElement("PathGeometryNoRotate", designerItem.PathGeometryNoRotate.Value));
+                list.Add(new XElement("PathGeometryRotate", designerItem.PathGeometryRotate.Value));
                 list.Add(new XElement("RotationAngle", designerItem.RotationAngle.Value));
                 if (designerItem is PictureDesignerItemViewModel picture)
                 {

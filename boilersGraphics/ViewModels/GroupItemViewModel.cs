@@ -99,7 +99,7 @@ namespace boilersGraphics.ViewModels
             recorder.Current.ExecuteSetProperty(viewModel, "GroupDisposable", Subscribe(viewModel));
         }
 
-        public override PathGeometry CreateGeometry()
+        public override PathGeometry CreateGeometry(bool flag = false)
         {
             return null;
         }

@@ -12,7 +12,7 @@ namespace boilersGraphics.ViewModels
 
         public override bool SupportsPropertyDialog => false;
 
-        public override PathGeometry CreateGeometry()
+        public override PathGeometry CreateGeometry(bool flag = false)
         {
             throw new NotSupportedException();
         }

@@ -59,7 +59,7 @@ namespace boilersGraphics.ViewModels
             EnablePathGeometryUpdate.Value = false;
         }
 
-        public override PathGeometry CreateGeometry()
+        public override PathGeometry CreateGeometry(bool flag = false)
         {
             throw new NotSupportedException("picture is not supported.");
         }

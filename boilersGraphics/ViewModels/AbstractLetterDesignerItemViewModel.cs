@@ -157,7 +157,7 @@ namespace boilersGraphics.ViewModels
         public abstract void WithLineBreak(GlyphTypeface glyphTypeface);
         public abstract void WithoutLineBreak(GlyphTypeface glyphTypeface);
 
-        public override PathGeometry CreateGeometry()
+        public override PathGeometry CreateGeometry(bool flag = false)
         {
             RenderLetter();
             return PathGeometry.Value;

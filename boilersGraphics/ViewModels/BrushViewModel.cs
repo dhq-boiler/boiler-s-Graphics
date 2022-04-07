@@ -128,7 +128,7 @@ namespace boilersGraphics.ViewModels
             return clone;
         }
 
-        public override PathGeometry CreateGeometry()
+        public override PathGeometry CreateGeometry(bool flag = false)
         {
             throw new NotSupportedException("brush is not supported.");
         }

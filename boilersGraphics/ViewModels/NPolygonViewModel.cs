@@ -59,7 +59,7 @@ namespace boilersGraphics.ViewModels
 
         public override bool SupportsPropertyDialog => true;
 
-        public override PathGeometry CreateGeometry()
+        public override PathGeometry CreateGeometry(bool flag = false)
         {
             return System.Windows.Media.PathGeometry.CreateFromGeometry(Geometry.Parse(Data.Value));
         }
