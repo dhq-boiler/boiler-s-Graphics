@@ -898,7 +898,6 @@ namespace boilersGraphics.Helpers
                         }
                         break;
                 }
-                //sb.Append()
             }
         }
 
