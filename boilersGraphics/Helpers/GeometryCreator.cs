@@ -30,8 +30,6 @@ namespace boilersGraphics.Helpers
             if (item.Width.Value != item.PathGeometryNoRotate.Value.Bounds.Width || item.Height.Value != item.PathGeometryNoRotate.Value.Bounds.Height)
             {
                 var lhs = item.PathGeometryNoRotate.Value.Clone();
-                var diffWidth = rhs.Bounds.Width - lhs.Bounds.Width;
-                var diffHeight = rhs.Bounds.Height - lhs.Bounds.Height;
                 var coefficientWidth = rhs.Bounds.Width / lhs.Bounds.Width;
                 var coefficientHeight = rhs.Bounds.Height / lhs.Bounds.Height;
                 if (double.IsNaN(coefficientWidth) || double.IsNaN(coefficientHeight))
@@ -86,8 +84,6 @@ namespace boilersGraphics.Helpers
             if (item.Width.Value != item.PathGeometryNoRotate.Value.Bounds.Width || item.Height.Value != item.PathGeometryNoRotate.Value.Bounds.Height)
             {
                 var lhs = item.PathGeometryNoRotate.Value.Clone();
-                var diffWidth = rhs.Bounds.Width - lhs.Bounds.Width;
-                var diffHeight = rhs.Bounds.Height - lhs.Bounds.Height;
                 var coefficientWidth = rhs.Bounds.Width / lhs.Bounds.Width;
                 var coefficientHeight = rhs.Bounds.Height / lhs.Bounds.Height;
                 if (double.IsNaN(coefficientWidth) || double.IsNaN(coefficientHeight))
