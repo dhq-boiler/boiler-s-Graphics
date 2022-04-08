@@ -5,7 +5,6 @@ using Prism.Services.Dialogs;
 using Prism.Unity;
 using System;
 using System.Windows.Media;
-using System.Windows.Shapes;
 
 namespace boilersGraphics.ViewModels
 {
