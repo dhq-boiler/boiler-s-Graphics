@@ -32,6 +32,10 @@ namespace boilersGraphics.Helpers
                 var lhs = item.PathGeometryNoRotate.Value.Clone();
                 var coefficientWidth = rhs.Bounds.Width / lhs.Bounds.Width;
                 var coefficientHeight = rhs.Bounds.Height / lhs.Bounds.Height;
+                if (coefficientWidth == 0)
+                    coefficientWidth = 1;
+                if (coefficientHeight == 0)
+                    coefficientHeight = 1;
                 if (double.IsNaN(coefficientWidth) || double.IsNaN(coefficientHeight))
                     return rhs;
                 var newlhs = Scale(lhs, coefficientWidth, coefficientHeight);
@@ -86,6 +90,10 @@ namespace boilersGraphics.Helpers
                 var lhs = item.PathGeometryNoRotate.Value.Clone();
                 var coefficientWidth = rhs.Bounds.Width / lhs.Bounds.Width;
                 var coefficientHeight = rhs.Bounds.Height / lhs.Bounds.Height;
+                if (coefficientWidth == 0)
+                    coefficientWidth = 1;
+                if (coefficientHeight == 0)
+                    coefficientHeight = 1;
                 if (double.IsNaN(coefficientWidth) || double.IsNaN(coefficientHeight))
                     return rhs;
                 var newlhs = Scale(lhs, coefficientWidth, coefficientHeight);
