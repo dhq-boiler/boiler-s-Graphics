@@ -13,9 +13,38 @@ namespace boilersGraphics.Helpers
 {
     public static class GeometryCreator
     {
-        public static PathGeometry CreateEllipse(NEllipseViewModel item)
+        public static PathGeometry CreateEllipse(NEllipseViewModel item, bool flag = false)
         {
-            return PathGeometry.CreateFromGeometry(new EllipseGeometry(new Point(item.Width.Value / 2, item.Height.Value / 2), item.Width.Value / 2 - item.EdgeThickness.Value / 2, item.Height.Value / 2 - item.EdgeThickness.Value / 2));
+            if (item.PathGeometryNoRotate.Value is null)
+            {
+                var lhs = PathGeometry.CreateFromGeometry(new EllipseGeometry(new Point(item.Width.Value / 2, item.Height.Value / 2), item.Width.Value / 2 - item.EdgeThickness.Value / 2, item.Height.Value / 2 - item.EdgeThickness.Value / 2));
+                lhs.FillRule = FillRule.Nonzero;
+                return lhs;
+            }
+            if (flag)
+            {
+                return item.PathGeometryNoRotate.Value;
+            }
+            var rhs = PathGeometry.CreateFromGeometry(new EllipseGeometry(new Point(item.Width.Value / 2, item.Height.Value / 2), item.Width.Value / 2 - item.EdgeThickness.Value / 2, item.Height.Value / 2 - item.EdgeThickness.Value / 2));
+            rhs.FillRule = FillRule.Nonzero;
+            if (item.Width.Value != item.PathGeometryNoRotate.Value.Bounds.Width || item.Height.Value != item.PathGeometryNoRotate.Value.Bounds.Height)
+            {
+                var lhs = item.PathGeometryNoRotate.Value.Clone();
+                var diffWidth = rhs.Bounds.Width - lhs.Bounds.Width;
+                var diffHeight = rhs.Bounds.Height - lhs.Bounds.Height;
+                var coefficientWidth = rhs.Bounds.Width / lhs.Bounds.Width;
+                var coefficientHeight = rhs.Bounds.Height / lhs.Bounds.Height;
+                if (double.IsNaN(coefficientWidth) || double.IsNaN(coefficientHeight))
+                    return rhs;
+                var newlhs = Scale(lhs, coefficientWidth, coefficientHeight);
+                return newlhs;
+            }
+            var result = Geometry.Combine(
+                item.PathGeometryNoRotate.Value,
+                rhs,
+                GeometryCombineMode.Intersect,
+                null);
+            return result;
         }
 
         public static PathGeometry CreateEllipse(double centerX, double centerY, Thickness thickness)
@@ -23,24 +52,15 @@ namespace boilersGraphics.Helpers
             return PathGeometry.CreateFromGeometry(new EllipseGeometry(new Point(centerX - thickness.Left, centerY - thickness.Top), thickness.Left + thickness.Right, thickness.Top + thickness.Bottom));
         }
 
-        public static PathGeometry CreatePolyBezier(PolyBezierViewModel clone)
-        {
-            var geometry = new PathGeometry();
-            var pathFigure = new PathFigure();
-            pathFigure.StartPoint = clone.Points.First();
-            var pathFigureCollection = new PathFigureCollection();
-            var pathSegmentCollection = new PathSegmentCollection();
-            pathSegmentCollection.Add(new PolyBezierSegment(clone.Points.Skip(1), true));
-            pathFigure.Segments = pathSegmentCollection;
-            pathFigureCollection.Add(pathFigure);
-            geometry.Figures = pathFigureCollection;
-            return geometry;
-        }
-
         public static PathGeometry CreateEllipse(NEllipseViewModel item, double angle)
         {
-            var ellipse = new EllipseGeometry(new Point(item.Width.Value / 2, item.Height.Value / 2), item.Width.Value / 2 - item.EdgeThickness.Value / 2, item.Height.Value / 2 - item.EdgeThickness.Value / 2, new RotateTransform(angle, item.CenterPoint.Value.X, item.CenterPoint.Value.Y));
-            return PathGeometry.CreateFromGeometry(ellipse);
+            if (item.PathGeometryRotate.Value is null)
+            {
+                return PathGeometry.CreateFromGeometry(new EllipseGeometry(new Point(item.Width.Value / 2, item.Height.Value / 2), item.Width.Value / 2 - item.EdgeThickness.Value / 2, item.Height.Value / 2 - item.EdgeThickness.Value / 2, new RotateTransform(angle, item.CenterPoint.Value.X, item.CenterPoint.Value.Y)));
+            }
+            var temp = item.PathGeometryRotate.Value.Clone();
+            temp.Transform = new RotateTransform(angle, item.CenterPoint.Value.X, item.CenterPoint.Value.Y);
+            return Geometry.Combine(temp, PathGeometry.CreateFromGeometry(new EllipseGeometry(new Point(item.Width.Value / 2, item.Height.Value / 2), item.Width.Value / 2 - item.EdgeThickness.Value / 2, item.Height.Value / 2 - item.EdgeThickness.Value / 2, new RotateTransform(angle, item.CenterPoint.Value.X, item.CenterPoint.Value.Y))), GeometryCombineMode.Intersect, null);
         }
 
         public static PathGeometry CreateRectangle(NRectangleViewModel item, bool flag = false)
@@ -135,6 +155,20 @@ namespace boilersGraphics.Helpers
             }
             geometry.Freeze();
             return PathGeometry.CreateFromGeometry(geometry);
+        }
+
+        public static PathGeometry CreatePolyBezier(PolyBezierViewModel clone)
+        {
+            var geometry = new PathGeometry();
+            var pathFigure = new PathFigure();
+            pathFigure.StartPoint = clone.Points.First();
+            var pathFigureCollection = new PathFigureCollection();
+            var pathSegmentCollection = new PathSegmentCollection();
+            pathSegmentCollection.Add(new PolyBezierSegment(clone.Points.Skip(1), true));
+            pathFigure.Segments = pathSegmentCollection;
+            pathFigureCollection.Add(pathFigure);
+            geometry.Figures = pathFigureCollection;
+            return geometry;
         }
 
         public static PathGeometry CreateBezierCurve(BezierCurveViewModel item)

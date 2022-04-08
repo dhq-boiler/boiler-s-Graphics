@@ -98,6 +98,7 @@ namespace boilersGraphics.Adorners
                     item.Left.Value = Math.Min(_startPoint.Value.X, _endPoint.Value.X);
                     item.Top.Value = Math.Min(_startPoint.Value.Y, _endPoint.Value.Y);
                     item.Width.Value = Math.Max(_startPoint.Value.X - _endPoint.Value.X, _endPoint.Value.X - _startPoint.Value.X);
+                    item.PathGeometryNoRotate.Value = null;
                     item.Height.Value = Math.Max(_startPoint.Value.Y - _endPoint.Value.Y, _endPoint.Value.Y - _startPoint.Value.Y);
                 }
                 else if ((Keyboard.GetKeyStates(Key.LeftAlt) & KeyStates.Down) == KeyStates.Down ||
@@ -110,6 +111,7 @@ namespace boilersGraphics.Adorners
                     item.Left.Value = leftTop.X;
                     item.Top.Value = leftTop.Y;
                     item.Width.Value = Math.Max(_startPoint.Value.X - _endPoint.Value.X, _endPoint.Value.X - _startPoint.Value.X);
+                    item.PathGeometryNoRotate.Value = null;
                     item.Height.Value = Math.Max(_startPoint.Value.Y - _endPoint.Value.Y, _endPoint.Value.Y - _startPoint.Value.Y);
                 }
                 else
@@ -117,6 +119,7 @@ namespace boilersGraphics.Adorners
                     item.Left.Value = Math.Min(_startPoint.Value.X, _endPoint.Value.X);
                     item.Top.Value = Math.Min(_startPoint.Value.Y, _endPoint.Value.Y);
                     item.Width.Value = Math.Max(_startPoint.Value.X - _endPoint.Value.X, _endPoint.Value.X - _startPoint.Value.X);
+                    item.PathGeometryNoRotate.Value = null;
                     item.Height.Value = Math.Max(_startPoint.Value.Y - _endPoint.Value.Y, _endPoint.Value.Y - _startPoint.Value.Y);
                 }
 

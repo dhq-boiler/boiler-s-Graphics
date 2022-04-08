@@ -50,7 +50,7 @@ namespace boilersGraphics.ViewModels
 
         public override PathGeometry CreateGeometry(bool flag = false)
         {
-            return GeometryCreator.CreateEllipse(this);
+            return GeometryCreator.CreateEllipse(this, flag);
         }
 
         public override PathGeometry CreateGeometry(double angle)
