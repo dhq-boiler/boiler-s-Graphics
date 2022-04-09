@@ -161,6 +161,46 @@ namespace boilersGraphics.Helpers
             return PathGeometry.CreateFromGeometry(geometry);
         }
 
+        public static PathGeometry CreatePolygon(NPolygonViewModel item, string data, bool flag)
+        {
+            if (data is null)
+            {
+                return null;
+            }
+            if (item.PathGeometryNoRotate.Value is null)
+            {
+                var lhs = PathGeometry.CreateFromGeometry(Geometry.Parse(data));
+                lhs.FillRule = FillRule.Nonzero;
+                return lhs;
+            }
+            if (flag)
+            {
+                return item.PathGeometryNoRotate.Value;
+            }
+            var rhs = PathGeometry.CreateFromGeometry(Geometry.Parse(data));
+            rhs.FillRule = FillRule.Nonzero;
+            if (item.Width.Value != item.PathGeometryNoRotate.Value.Bounds.Width || item.Height.Value != item.PathGeometryNoRotate.Value.Bounds.Height)
+            {
+                var lhs = item.PathGeometryNoRotate.Value.Clone();
+                var coefficientWidth = rhs.Bounds.Width / lhs.Bounds.Width;
+                var coefficientHeight = rhs.Bounds.Height / lhs.Bounds.Height;
+                if (coefficientWidth == 0)
+                    coefficientWidth = 1;
+                if (coefficientHeight == 0)
+                    coefficientHeight = 1;
+                if (double.IsNaN(coefficientWidth) || double.IsNaN(coefficientHeight))
+                    return rhs;
+                var newlhs = Scale(lhs, coefficientWidth, coefficientHeight);
+                return newlhs;
+            }
+            var result = Geometry.Combine(
+                item.PathGeometryNoRotate.Value,
+                rhs,
+                GeometryCombineMode.Intersect,
+                null);
+            return result;
+        }
+
         public static PathGeometry CreatePolyBezier(PolyBezierViewModel clone)
         {
             var geometry = new PathGeometry();
@@ -820,6 +860,15 @@ namespace boilersGraphics.Helpers
             return PathGeometry.CreateFromGeometry(Geometry.Parse(sb.ToString()));
         }
 
+        public static PathGeometry Translate(PathGeometry target, double translateX, double translateY)
+        {
+            string entire = target.ToString();
+            string[] split = Split(entire, 'M', ',', ' ', 'L', 'H', 'V', 'C', 'Q', 'S', 'T', 'A', 'z');
+            var sb = new StringBuilder();
+            ParseAndTranslate(split, sb, translateX, translateY);
+            return PathGeometry.CreateFromGeometry(Geometry.Parse(sb.ToString()));
+        }
+
         private static string[] Split(string target, params char[] splitchars)
         {
             List<string> result = new List<string>();
@@ -902,6 +951,69 @@ namespace boilersGraphics.Helpers
                         else if (flag == 1)
                         {
                             sb.Append(double.Parse(sp) * scaleY);
+                            flag = 0;
+                        }
+                        break;
+                }
+            }
+        }
+
+        private static void ParseAndTranslate(string[] split, StringBuilder sb, double translateX, double translateY)
+        {
+            int flag = 0;
+            bool Cflag = false;
+            for (int i = 0; i < split.Length; i++)
+            {
+                var sp = split[i];
+                switch (sp)
+                {
+                    case "F0":
+                    case "F1":
+                        sb.Append(sp);
+                        sb.Append(' ');
+                        break;
+                    case "M":
+                        sb.Append(sp);
+                        break;
+                    case ",":
+                        if (!Cflag)
+                        {
+                            flag = 1;
+                        }
+                        sb.Append(sp);
+                        continue;
+                    case " ":
+                        flag = 0;
+                        sb.Append(sp);
+                        continue;
+                    case "":
+                        continue;
+                    case "L":
+                    case "H":
+                    case "V":
+                    case "Q":
+                    case "S":
+                    case "T":
+                    case "A":
+                        sb.Append(sp);
+                        Cflag = false;
+                        break;
+                    case "C":
+                        sb.Append(sp);
+                        Cflag = true;
+                        break;
+                    case "z":
+                        sb.Append(sp);
+                        break;
+                    default:
+                        if (flag == 0)
+                        {
+                            sb.Append(double.Parse(sp) + translateX);
+                            flag = 1;
+                        }
+                        else if (flag == 1)
+                        {
+                            sb.Append(double.Parse(sp) + translateY);
                             flag = 0;
                         }
                         break;

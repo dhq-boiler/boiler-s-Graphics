@@ -193,7 +193,7 @@ namespace boilersGraphics.ViewModels
             }
         }
 
-        public void UpdatePathGeometryIfEnable(bool flag = false)
+        public virtual void UpdatePathGeometryIfEnable(bool flag = false)
         {
             if (EnablePathGeometryUpdate.Value)
             {

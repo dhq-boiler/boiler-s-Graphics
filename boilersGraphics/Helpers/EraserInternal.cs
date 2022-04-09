@@ -75,7 +75,8 @@ namespace boilersGraphics.Helpers
                 {
                     if (filtered.Any())
                     {
-                        EraseAtDown(mainWindowViewModel, ref currentBrush, point, views, (p) => GeometryCreator.CreateEllipse(p.X, p.Y, bvm.Thickness.Value));
+                        var selectable = selectedDataContext.First();
+                        EraseAtDown(mainWindowViewModel, ref selectable, point, views, (p) => GeometryCreator.CreateEllipse(p.X, p.Y, bvm.Thickness.Value));
                         e.Handled = true;
                     }
                 }
