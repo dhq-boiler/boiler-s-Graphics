@@ -1,13 +1,12 @@
 ﻿using boilersGraphics.Controls;
+using boilersGraphics.Helpers;
 using boilersGraphics.Views;
 using Prism.Ioc;
 using Prism.Services.Dialogs;
 using Prism.Unity;
 using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
 using System;
 using System.Windows.Media;
-using System.Windows.Shapes;
 
 namespace boilersGraphics.ViewModels
 {
@@ -48,20 +47,51 @@ namespace boilersGraphics.ViewModels
         {
             this.ShowConnectors = false;
             EnablePathGeometryUpdate.Value = true;
-            Data.Subscribe(_ =>
-            {
-                UpdatePathGeometryIfEnable();
-            })
-            .AddTo(_CompositeDisposable);
         }
 
         public ReactivePropertySlim<string> Data { get; set; } = new ReactivePropertySlim<string>();
 
         public override bool SupportsPropertyDialog => true;
 
-        public override PathGeometry CreateGeometry()
+        public override void UpdatePathGeometryIfEnable(bool flag = false)
         {
-            return System.Windows.Media.PathGeometry.CreateFromGeometry(Geometry.Parse(Data.Value));
+            if (EnablePathGeometryUpdate.Value)
+            {
+                if (!flag)
+                {
+                    if (Left.Value != 0 && Top.Value != 0 && Width.Value != 0 && Height.Value != 0)
+                    {
+                        PathGeometryNoRotate.Value = CreateGeometry(flag);
+                        if (Width.Value != PathGeometryNoRotate.Value.Bounds.Width || Height.Value != PathGeometryNoRotate.Value.Bounds.Height)
+                        {
+                            var lhs = PathGeometryNoRotate.Value.Clone();
+                            var coefficientWidth = Width.Value / lhs.Bounds.Width;
+                            var coefficientHeight = Height.Value / lhs.Bounds.Height;
+                            if (coefficientWidth == 0)
+                                coefficientWidth = 1;
+                            if (coefficientHeight == 0)
+                                coefficientHeight = 1;
+                            var newlhs = GeometryCreator.Scale(lhs, coefficientWidth, coefficientHeight);
+                            newlhs = GeometryCreator.Translate(newlhs, -newlhs.Bounds.Left, -newlhs.Bounds.Top);
+                            PathGeometryNoRotate.Value = newlhs;
+                        }
+                    }
+                    if (!(PathGeometryNoRotate.Value is null))
+                    {
+                        Data.Value = PathGeometryNoRotate.Value.ToString();
+                    }
+                }
+
+                if (RotationAngle.Value != 0)
+                {
+                    PathGeometryRotate.Value = CreateGeometry(RotationAngle.Value);
+                }
+            }
+        }
+
+        public override PathGeometry CreateGeometry(bool flag = false)
+        {
+            return GeometryCreator.CreatePolygon(this, Data.Value, flag);
         }
 
         public override PathGeometry CreateGeometry(double angle)
@@ -73,7 +103,7 @@ namespace boilersGraphics.ViewModels
         }
         public override Type GetViewType()
         {
-            return typeof(Path);
+            return typeof(System.Windows.Shapes.Path);
         }
 
         #region IClonable

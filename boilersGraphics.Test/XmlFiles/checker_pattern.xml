@@ -5,15 +5,15 @@
     <Layer>
       <IsVisible>true</IsVisible>
       <Name>レイヤー1</Name>
-      <Color>#FFB0D15E</Color>
+      <Color>#FFB2A3C0</Color>
       <Children>
         <LayerItem>
           <IsVisible>true</IsVisible>
           <Name>アイテム1</Name>
-          <Color>#FF61AC47</Color>
+          <Color>#FF02D641</Color>
           <Item>
             <DesignerItem>
-              <ID>69a190e3-7e84-4534-aae7-094cfe4c4365</ID>
+              <ID>e4128c86-ed5d-4d08-8eff-82636c57a99b</ID>
               <ParentID>00000000-0000-0000-0000-000000000000</ParentID>
               <Type>boilersGraphics.ViewModels.NRectangleViewModel</Type>
               <Left>0</Left>
@@ -27,8 +27,9 @@
               <FillBrush>
                 <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FF000000</SolidColorBrush>
               </FillBrush>
-              <EdgeThickness>1</EdgeThickness>
-              <PathGeometry>M0,0L100,0 100,100 0,100z</PathGeometry>
+              <EdgeThickness>0</EdgeThickness>
+              <PathGeometryNoRotate>F1M0.3436418752388968,0.38461520859446835L100.34364288385669,0.38461520859446835 100.34364288385669,100.38461731027188 0.3436418752388968,100.38461731027188 0.3436418752388968,0.38461520859446835z</PathGeometryNoRotate>
+              <PathGeometryRotate></PathGeometryRotate>
               <RotationAngle>0</RotationAngle>
             </DesignerItem>
           </Item>
@@ -37,14 +38,14 @@
         <LayerItem>
           <IsVisible>true</IsVisible>
           <Name>アイテム2</Name>
-          <Color>#FF56F1E6</Color>
+          <Color>#FF38D0E5</Color>
           <Item>
             <DesignerItem>
-              <ID>684ab2d1-8230-4d5a-a12e-36c46692e84e</ID>
+              <ID>4c0d7e65-700a-4ddf-9dd2-dbf3df7584f3</ID>
               <ParentID>00000000-0000-0000-0000-000000000000</ParentID>
               <Type>boilersGraphics.ViewModels.NRectangleViewModel</Type>
-              <Left>900</Left>
-              <Top>900</Top>
+              <Left>100</Left>
+              <Top>100</Top>
               <Width>100</Width>
               <Height>100</Height>
               <ZIndex>1</ZIndex>
@@ -54,8 +55,9 @@
               <FillBrush>
                 <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FF000000</SolidColorBrush>
               </FillBrush>
-              <EdgeThickness>1</EdgeThickness>
-              <PathGeometry>M900,900L1000,900 1000,1000 900,1000z</PathGeometry>
+              <EdgeThickness>0</EdgeThickness>
+              <PathGeometryNoRotate>F1M0.4484310857652711,0.47619024989515313L100.44843149317302,0.47619024989515313 100.44843149317302,100.47619063865851 0.4484310857652711,100.47619063865851 0.4484310857652711,0.47619024989515313z</PathGeometryNoRotate>
+              <PathGeometryRotate></PathGeometryRotate>
               <RotationAngle>0</RotationAngle>
             </DesignerItem>
           </Item>
@@ -63,15 +65,15 @@
         </LayerItem>
         <LayerItem>
           <IsVisible>true</IsVisible>
-          <Name>アイテム4</Name>
-          <Color>#FF1A6F25</Color>
+          <Name>アイテム3</Name>
+          <Color>#FF9A9C35</Color>
           <Item>
             <DesignerItem>
-              <ID>8fec01a5-04a1-4c83-b02d-aba7631f7222</ID>
+              <ID>15f0ccae-aaa1-4738-9b47-4657429952a3</ID>
               <ParentID>00000000-0000-0000-0000-000000000000</ParentID>
               <Type>boilersGraphics.ViewModels.NRectangleViewModel</Type>
-              <Left>100</Left>
-              <Top>100</Top>
+              <Left>200</Left>
+              <Top>200</Top>
               <Width>100</Width>
               <Height>100</Height>
               <ZIndex>2</ZIndex>
@@ -81,8 +83,9 @@
               <FillBrush>
                 <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FF000000</SolidColorBrush>
               </FillBrush>
-              <EdgeThickness>1</EdgeThickness>
-              <PathGeometry>M100,100L200,100 200,200 100,200z</PathGeometry>
+              <EdgeThickness>0</EdgeThickness>
+              <PathGeometryNoRotate>F1M0.4694831802607643,0.4807693869498677L100.46948441407457,0.4807693869498677 100.46948441407457,100.48076593780019 0.4694831802607643,100.48076593780019 0.4694831802607643,0.4807693869498677z</PathGeometryNoRotate>
+              <PathGeometryRotate></PathGeometryRotate>
               <RotationAngle>0</RotationAngle>
             </DesignerItem>
           </Item>
@@ -90,15 +93,15 @@
         </LayerItem>
         <LayerItem>
           <IsVisible>true</IsVisible>
-          <Name>アイテム5</Name>
-          <Color>#FF623BF0</Color>
+          <Name>アイテム4</Name>
+          <Color>#FFA747BF</Color>
           <Item>
             <DesignerItem>
-              <ID>50a926a2-46e6-428c-8a0d-652d97fa0f3e</ID>
+              <ID>9c18eac8-6c2b-4797-9d1d-beae7c038a15</ID>
               <ParentID>00000000-0000-0000-0000-000000000000</ParentID>
               <Type>boilersGraphics.ViewModels.NRectangleViewModel</Type>
-              <Left>200</Left>
-              <Top>200</Top>
+              <Left>300</Left>
+              <Top>300</Top>
               <Width>100</Width>
               <Height>100</Height>
               <ZIndex>3</ZIndex>
@@ -108,8 +111,9 @@
               <FillBrush>
                 <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FF000000</SolidColorBrush>
               </FillBrush>
-              <EdgeThickness>1</EdgeThickness>
-              <PathGeometry>M200,200L300,200 300,300 200,300z</PathGeometry>
+              <EdgeThickness>0</EdgeThickness>
+              <PathGeometryNoRotate>F1M0.45662097312781574,0.4807690417771634L100.45662007580061,0.4807690417771634 100.45662007580061,100.48076566614918 0.45662097312781574,100.48076566614918 0.45662097312781574,0.4807690417771634z</PathGeometryNoRotate>
+              <PathGeometryRotate></PathGeometryRotate>
               <RotationAngle>0</RotationAngle>
             </DesignerItem>
           </Item>
@@ -117,15 +121,15 @@
         </LayerItem>
         <LayerItem>
           <IsVisible>true</IsVisible>
-          <Name>アイテム6</Name>
-          <Color>#FF9E42B9</Color>
+          <Name>アイテム5</Name>
+          <Color>#FF27A3D1</Color>
           <Item>
             <DesignerItem>
-              <ID>e68b2cfe-9fa6-41ce-9be3-d8decc1fee39</ID>
+              <ID>83c52c7e-964b-41a3-8875-7c61180f6847</ID>
               <ParentID>00000000-0000-0000-0000-000000000000</ParentID>
               <Type>boilersGraphics.ViewModels.NRectangleViewModel</Type>
-              <Left>300</Left>
-              <Top>300</Top>
+              <Left>400</Left>
+              <Top>400</Top>
               <Width>100</Width>
               <Height>100</Height>
               <ZIndex>4</ZIndex>
@@ -135,8 +139,9 @@
               <FillBrush>
                 <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FF000000</SolidColorBrush>
               </FillBrush>
-              <EdgeThickness>1</EdgeThickness>
-              <PathGeometry>M300,300L400,300 400,400 300,400z</PathGeometry>
+              <EdgeThickness>0</EdgeThickness>
+              <PathGeometryNoRotate>F1M0,0L100.00000217982702,0 100.00000217982702,99.9999973871937 0,99.9999973871937z</PathGeometryNoRotate>
+              <PathGeometryRotate></PathGeometryRotate>
               <RotationAngle>0</RotationAngle>
             </DesignerItem>
           </Item>
@@ -144,15 +149,15 @@
         </LayerItem>
         <LayerItem>
           <IsVisible>true</IsVisible>
-          <Name>アイテム7</Name>
-          <Color>#FF4E1E7C</Color>
+          <Name>アイテム6</Name>
+          <Color>#FFAB7908</Color>
           <Item>
             <DesignerItem>
-              <ID>9890d1ea-3632-4ac4-9b84-c7a49bf942cf</ID>
+              <ID>42f822cb-d7d0-452d-b262-dec01ac47123</ID>
               <ParentID>00000000-0000-0000-0000-000000000000</ParentID>
               <Type>boilersGraphics.ViewModels.NRectangleViewModel</Type>
-              <Left>400</Left>
-              <Top>400</Top>
+              <Left>500</Left>
+              <Top>500</Top>
               <Width>100</Width>
               <Height>100</Height>
               <ZIndex>5</ZIndex>
@@ -162,8 +167,9 @@
               <FillBrush>
                 <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FF000000</SolidColorBrush>
               </FillBrush>
-              <EdgeThickness>1</EdgeThickness>
-              <PathGeometry>M400,400L500,400 500,500 400,500z</PathGeometry>
+              <EdgeThickness>0</EdgeThickness>
+              <PathGeometryNoRotate>F1M0,0L100.00000210756747,0 100.00000210756747,99.9999999999999 0,99.9999999999999z</PathGeometryNoRotate>
+              <PathGeometryRotate></PathGeometryRotate>
               <RotationAngle>0</RotationAngle>
             </DesignerItem>
           </Item>
@@ -171,15 +177,15 @@
         </LayerItem>
         <LayerItem>
           <IsVisible>true</IsVisible>
-          <Name>アイテム8</Name>
-          <Color>#FF20D828</Color>
+          <Name>アイテム7</Name>
+          <Color>#FF78D72D</Color>
           <Item>
             <DesignerItem>
-              <ID>64e9ab3b-50bb-40a0-b0f0-9a024a46e0ba</ID>
+              <ID>89c404bc-717e-46d6-8b9d-0b1c96cfea4e</ID>
               <ParentID>00000000-0000-0000-0000-000000000000</ParentID>
               <Type>boilersGraphics.ViewModels.NRectangleViewModel</Type>
-              <Left>500</Left>
-              <Top>500</Top>
+              <Left>600</Left>
+              <Top>600</Top>
               <Width>100</Width>
               <Height>100</Height>
               <ZIndex>6</ZIndex>
@@ -189,8 +195,9 @@
               <FillBrush>
                 <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FF000000</SolidColorBrush>
               </FillBrush>
-              <EdgeThickness>1</EdgeThickness>
-              <PathGeometry>M500,500L600,500 600,600 500,600z</PathGeometry>
+              <EdgeThickness>0</EdgeThickness>
+              <PathGeometryNoRotate>F1M0,0L100,0 100,99.99999738719364 0,99.99999738719364z</PathGeometryNoRotate>
+              <PathGeometryRotate></PathGeometryRotate>
               <RotationAngle>0</RotationAngle>
             </DesignerItem>
           </Item>
@@ -198,15 +205,15 @@
         </LayerItem>
         <LayerItem>
           <IsVisible>true</IsVisible>
-          <Name>アイテム9</Name>
-          <Color>#FF5647B1</Color>
+          <Name>アイテム8</Name>
+          <Color>#FFD58A2B</Color>
           <Item>
             <DesignerItem>
-              <ID>928c526b-c153-480d-a817-9cf1190fbdb8</ID>
+              <ID>d804f306-bd05-466d-8d27-f1652cd78454</ID>
               <ParentID>00000000-0000-0000-0000-000000000000</ParentID>
               <Type>boilersGraphics.ViewModels.NRectangleViewModel</Type>
-              <Left>600</Left>
-              <Top>600</Top>
+              <Left>700</Left>
+              <Top>700</Top>
               <Width>100</Width>
               <Height>100</Height>
               <ZIndex>7</ZIndex>
@@ -216,8 +223,9 @@
               <FillBrush>
                 <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FF000000</SolidColorBrush>
               </FillBrush>
-              <EdgeThickness>1</EdgeThickness>
-              <PathGeometry>M600,600L700,600 700,700 600,700z</PathGeometry>
+              <EdgeThickness>0</EdgeThickness>
+              <PathGeometryNoRotate>F1M0,0L99.99999753890499,0 99.99999753890499,100.00000247707618 0,100.00000247707618z</PathGeometryNoRotate>
+              <PathGeometryRotate></PathGeometryRotate>
               <RotationAngle>0</RotationAngle>
             </DesignerItem>
           </Item>
@@ -225,15 +233,15 @@
         </LayerItem>
         <LayerItem>
           <IsVisible>true</IsVisible>
-          <Name>アイテム10</Name>
-          <Color>#FFB39C48</Color>
+          <Name>アイテム9</Name>
+          <Color>#FF2DB02A</Color>
           <Item>
             <DesignerItem>
-              <ID>2a1913c8-a84c-44a8-ad29-c18eed25689c</ID>
+              <ID>044cc09d-f6ec-4c9b-8dca-1ea5ef66af40</ID>
               <ParentID>00000000-0000-0000-0000-000000000000</ParentID>
               <Type>boilersGraphics.ViewModels.NRectangleViewModel</Type>
-              <Left>700</Left>
-              <Top>700</Top>
+              <Left>800</Left>
+              <Top>800</Top>
               <Width>100</Width>
               <Height>100</Height>
               <ZIndex>8</ZIndex>
@@ -243,8 +251,9 @@
               <FillBrush>
                 <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FF000000</SolidColorBrush>
               </FillBrush>
-              <EdgeThickness>1</EdgeThickness>
-              <PathGeometry>M700,700L800,700 800,800 700,800z</PathGeometry>
+              <EdgeThickness>0</EdgeThickness>
+              <PathGeometryNoRotate>F1M0,0L100.0000024297434,0 100.0000024297434,100.0000012052756 0,100.0000012052756z</PathGeometryNoRotate>
+              <PathGeometryRotate></PathGeometryRotate>
               <RotationAngle>0</RotationAngle>
             </DesignerItem>
           </Item>
@@ -252,15 +261,15 @@
         </LayerItem>
         <LayerItem>
           <IsVisible>true</IsVisible>
-          <Name>アイテム11</Name>
-          <Color>#FF0E53AB</Color>
+          <Name>アイテム10</Name>
+          <Color>#FF89339E</Color>
           <Item>
             <DesignerItem>
-              <ID>901bc747-f37d-4775-966b-d0ef806ad094</ID>
+              <ID>5f50ae71-b2b9-4aba-bb8b-1ea9d70005f0</ID>
               <ParentID>00000000-0000-0000-0000-000000000000</ParentID>
               <Type>boilersGraphics.ViewModels.NRectangleViewModel</Type>
-              <Left>800</Left>
-              <Top>800</Top>
+              <Left>900</Left>
+              <Top>900</Top>
               <Width>100</Width>
               <Height>100</Height>
               <ZIndex>9</ZIndex>
@@ -270,8 +279,9 @@
               <FillBrush>
                 <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FF000000</SolidColorBrush>
               </FillBrush>
-              <EdgeThickness>1</EdgeThickness>
-              <PathGeometry>M800,800L900,800 900,900 800,900z</PathGeometry>
+              <EdgeThickness>0</EdgeThickness>
+              <PathGeometryNoRotate>F1M0.5050500160990337,0.5050500160990337L100.50504905279163,0.5050500160990337 100.50504905279163,100.50504905279163 0.5050500160990337,100.50504905279163 0.5050500160990337,0.5050500160990337z</PathGeometryNoRotate>
+              <PathGeometryRotate></PathGeometryRotate>
               <RotationAngle>0</RotationAngle>
             </DesignerItem>
           </Item>
@@ -281,6 +291,8 @@
     </Layer>
   </Layers>
   <Configuration>
+    <Left>0</Left>
+    <Top>0</Top>
     <Width>1000</Width>
     <Height>1000</Height>
     <CanvasBackground>

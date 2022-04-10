@@ -118,13 +118,13 @@
                             <ItemsControl.Resources>
 
                                 <Style x:Key="designerItemStyle" TargetType="{x:Type ContentPresenter}">
-                                    <Setter Property="Canvas.Top" Value="{Binding Top.Value}" />
-                                    <Setter Property="Canvas.Left" Value="{Binding Left.Value}" />
+                                    <Setter Property="Canvas.Top" Value="{c:Binding Top.Value}" />
+                                    <Setter Property="Canvas.Left" Value="{c:Binding Left.Value}" />
                                     <Setter Property="Panel.ZIndex" Value="{Binding ZIndex.Value}" />
                                     <Setter Property="attached:SelectionProps.EnabledForSelection" Value="{Binding EnableForSelection.Value}" />
                                     <Setter Property="attached:ItemConnectProps.EnabledForConnection" Value="True" />
-                                    <Setter Property="Width" Value="{Binding Width.Value}" />
-                                    <Setter Property="Height" Value="{Binding Height.Value}" />
+                                    <Setter Property="Width" Value="{c:Binding Width.Value}" />
+                                    <Setter Property="Height" Value="{c:Binding Height.Value}" />
                                     <Setter Property="MaxWidth" Value="{x:Static sys:Double.PositiveInfinity}" />
                                     <Setter Property="MaxHeight" Value="{x:Static sys:Double.PositiveInfinity}" />
                                     <Setter Property="Visibility" Value="{Binding IsVisible.Value, Converter={StaticResource BoolToVisibilityConverter}}" />
@@ -147,12 +147,13 @@
                                                     <control:DragThumb x:Name="PART_DragThumb" Cursor="SizeAll" />
                                                     <!--  PART_ResizeDecorator  -->
                                                     <Control x:Name="PART_ResizeDecorator"
-                                                            Template="{StaticResource ResizeDecoratorTemplate}"
-                                                            Visibility="Collapsed" />
+                                                             Template="{StaticResource ResizeDecoratorTemplate}"
+                                                             Visibility="Collapsed" />
                                                     <ContentPresenter x:Name="PART_ContentPresenter"
-                                                                    HorizontalAlignment="Stretch"
-                                                                    VerticalAlignment="Stretch"
-                                                                    Content="{TemplateBinding Content}" />
+                                                                      HorizontalAlignment="Stretch"
+                                                                      VerticalAlignment="Stretch"
+                                                                      ClipToBounds="False"
+                                                                      Content="{TemplateBinding Content}" />
                                                     <!--  DEBUG  -->
                                                     <!--<TextBlock VerticalAlignment="Center"
                                                             HorizontalAlignment="Center">

@@ -142,7 +142,7 @@ namespace boilersGraphics.ViewModels
             clone.EdgeBrush.Value = EdgeBrush.Value;
             clone.FillBrush.Value = FillBrush.Value;
             clone.EdgeThickness.Value = EdgeThickness.Value;
-            clone.PathGeometry.Value = GeometryCreator.CreateBezierCurve(clone);
+            clone.PathGeometryNoRotate.Value = GeometryCreator.CreateBezierCurve(clone);
             clone.StrokeStartLineCap.Value = StrokeStartLineCap.Value;
             clone.StrokeEndLineCap.Value = StrokeEndLineCap.Value;
             clone.PenLineJoin.Value = PenLineJoin.Value;

@@ -3,7 +3,9 @@ using NLog;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
+using System.Text;
 using System.Windows;
 using System.Windows.Media;
 
@@ -11,9 +13,40 @@ namespace boilersGraphics.Helpers
 {
     public static class GeometryCreator
     {
-        public static PathGeometry CreateEllipse(NEllipseViewModel item)
+        public static PathGeometry CreateEllipse(NEllipseViewModel item, bool flag = false)
         {
-            return PathGeometry.CreateFromGeometry(new EllipseGeometry(new Point(item.Left.Value + item.Width.Value / 2, item.Top.Value + item.Height.Value / 2), item.Width.Value / 2, item.Height.Value / 2));
+            if (item.PathGeometryNoRotate.Value is null)
+            {
+                var lhs = PathGeometry.CreateFromGeometry(new EllipseGeometry(new Point(item.Width.Value / 2, item.Height.Value / 2), item.Width.Value / 2 - item.EdgeThickness.Value / 2, item.Height.Value / 2 - item.EdgeThickness.Value / 2));
+                lhs.FillRule = FillRule.Nonzero;
+                return lhs;
+            }
+            if (flag)
+            {
+                return item.PathGeometryNoRotate.Value;
+            }
+            var rhs = PathGeometry.CreateFromGeometry(new EllipseGeometry(new Point(item.Width.Value / 2, item.Height.Value / 2), item.Width.Value / 2 - item.EdgeThickness.Value / 2, item.Height.Value / 2 - item.EdgeThickness.Value / 2));
+            rhs.FillRule = FillRule.Nonzero;
+            if (item.Width.Value != item.PathGeometryNoRotate.Value.Bounds.Width || item.Height.Value != item.PathGeometryNoRotate.Value.Bounds.Height)
+            {
+                var lhs = item.PathGeometryNoRotate.Value.Clone();
+                var coefficientWidth = rhs.Bounds.Width / lhs.Bounds.Width;
+                var coefficientHeight = rhs.Bounds.Height / lhs.Bounds.Height;
+                if (coefficientWidth == 0)
+                    coefficientWidth = 1;
+                if (coefficientHeight == 0)
+                    coefficientHeight = 1;
+                if (double.IsNaN(coefficientWidth) || double.IsNaN(coefficientHeight))
+                    return rhs;
+                var newlhs = Scale(lhs, coefficientWidth, coefficientHeight);
+                return newlhs;
+            }
+            var result = Geometry.Combine(
+                item.PathGeometryNoRotate.Value,
+                rhs,
+                GeometryCombineMode.Intersect,
+                null);
+            return result;
         }
 
         public static PathGeometry CreateEllipse(double centerX, double centerY, Thickness thickness)
@@ -21,34 +54,68 @@ namespace boilersGraphics.Helpers
             return PathGeometry.CreateFromGeometry(new EllipseGeometry(new Point(centerX - thickness.Left, centerY - thickness.Top), thickness.Left + thickness.Right, thickness.Top + thickness.Bottom));
         }
 
-        public static PathGeometry CreatePolyBezier(PolyBezierViewModel clone)
-        {
-            var geometry = new PathGeometry();
-            var pathFigure = new PathFigure();
-            pathFigure.StartPoint = clone.Points.First();
-            var pathFigureCollection = new PathFigureCollection();
-            var pathSegmentCollection = new PathSegmentCollection();
-            pathSegmentCollection.Add(new PolyBezierSegment(clone.Points.Skip(1), true));
-            pathFigure.Segments = pathSegmentCollection;
-            pathFigureCollection.Add(pathFigure);
-            geometry.Figures = pathFigureCollection;
-            return geometry;
-        }
-
         public static PathGeometry CreateEllipse(NEllipseViewModel item, double angle)
         {
-            var ellipse = new EllipseGeometry(new Point(item.Left.Value + item.Width.Value / 2, item.Top.Value + item.Height.Value / 2), item.Width.Value / 2, item.Height.Value / 2, new RotateTransform(angle, item.CenterPoint.Value.X, item.CenterPoint.Value.Y));
-            return PathGeometry.CreateFromGeometry(ellipse);
+            if (item.PathGeometryRotate.Value is null)
+            {
+                return PathGeometry.CreateFromGeometry(new EllipseGeometry(new Point(item.Width.Value / 2, item.Height.Value / 2), item.Width.Value / 2 - item.EdgeThickness.Value / 2, item.Height.Value / 2 - item.EdgeThickness.Value / 2, new RotateTransform(angle, item.CenterPoint.Value.X, item.CenterPoint.Value.Y)));
+            }
+            var temp = item.PathGeometryRotate.Value.Clone();
+            temp.Transform = new RotateTransform(angle, item.CenterPoint.Value.X, item.CenterPoint.Value.Y);
+            return Geometry.Combine(temp, PathGeometry.CreateFromGeometry(new EllipseGeometry(new Point(item.Width.Value / 2, item.Height.Value / 2), item.Width.Value / 2 - item.EdgeThickness.Value / 2, item.Height.Value / 2 - item.EdgeThickness.Value / 2, new RotateTransform(angle, item.CenterPoint.Value.X, item.CenterPoint.Value.Y))), GeometryCombineMode.Intersect, null);
         }
 
-        public static PathGeometry CreateRectangle(NRectangleViewModel item)
+        public static PathGeometry CreateRectangle(NRectangleViewModel item, bool flag = false)
         {
-            return PathGeometry.CreateFromGeometry(new RectangleGeometry(new Rect(new Point(item.Left.Value, item.Top.Value), new Point(item.Left.Value + item.Width.Value, item.Top.Value + item.Height.Value))));
+            if (item.PathGeometryNoRotate.Value is null && item is BackgroundViewModel)
+            {
+                var lhs = PathGeometry.CreateFromGeometry(new RectangleGeometry(new Rect(new Point(item.EdgeThickness.Value / 2, item.EdgeThickness.Value / 2), new Point(item.Width.Value - item.EdgeThickness.Value / 2, item.Height.Value - item.EdgeThickness.Value / 2))));
+                lhs.FillRule = FillRule.Nonzero;
+                return lhs;
+            }
+            if (item.PathGeometryNoRotate.Value is null)
+            {
+                var lhs = PathGeometry.CreateFromGeometry(new RectangleGeometry(new Rect(new Point(item.EdgeThickness.Value / 2, item.EdgeThickness.Value / 2), new Point(item.Width.Value - item.EdgeThickness.Value / 2, item.Height.Value - item.EdgeThickness.Value / 2))));
+                lhs.FillRule = FillRule.Nonzero;
+                return lhs;
+            }
+            if (flag)
+            {
+                return item.PathGeometryNoRotate.Value;
+            }
+            var rhs = PathGeometry.CreateFromGeometry(new RectangleGeometry(new Rect(new Point(item.EdgeThickness.Value / 2, item.EdgeThickness.Value / 2), new Point(item.Width.Value - item.EdgeThickness.Value / 2, item.Height.Value - item.EdgeThickness.Value / 2))));
+            rhs.FillRule = FillRule.Nonzero;
+            if (item.Width.Value != item.PathGeometryNoRotate.Value.Bounds.Width || item.Height.Value != item.PathGeometryNoRotate.Value.Bounds.Height)
+            {
+                var lhs = item.PathGeometryNoRotate.Value.Clone();
+                var coefficientWidth = rhs.Bounds.Width / lhs.Bounds.Width;
+                var coefficientHeight = rhs.Bounds.Height / lhs.Bounds.Height;
+                if (coefficientWidth == 0)
+                    coefficientWidth = 1;
+                if (coefficientHeight == 0)
+                    coefficientHeight = 1;
+                if (double.IsNaN(coefficientWidth) || double.IsNaN(coefficientHeight))
+                    return rhs;
+                var newlhs = Scale(lhs, coefficientWidth, coefficientHeight);
+                return newlhs;
+            }
+            var result = Geometry.Combine(
+                item.PathGeometryNoRotate.Value,
+                rhs,
+                GeometryCombineMode.Intersect,
+                null);
+            return result;
         }
 
         public static PathGeometry CreateRectangle(NRectangleViewModel item, double angle)
         {
-            return PathGeometry.CreateFromGeometry(new RectangleGeometry(new Rect(new Point(item.Left.Value, item.Top.Value), new Point(item.Left.Value + item.Width.Value, item.Top.Value + item.Height.Value)), 0, 0, new RotateTransform(angle, item.CenterPoint.Value.X, item.CenterPoint.Value.Y)));
+            if (item.PathGeometryRotate.Value is null)
+            {
+                return PathGeometry.CreateFromGeometry(new RectangleGeometry(new Rect(new Point(item.EdgeThickness.Value / 2, item.EdgeThickness.Value / 2), new Point(item.Width.Value - item.EdgeThickness.Value / 2, item.Height.Value - item.EdgeThickness.Value / 2)), 0, 0, new RotateTransform(angle, item.CenterPoint.Value.X, item.CenterPoint.Value.Y)));
+            }
+            var temp = item.PathGeometryRotate.Value.Clone();
+            temp.Transform = new RotateTransform(angle, item.CenterPoint.Value.X, item.CenterPoint.Value.Y);
+            return Geometry.Combine(temp, PathGeometry.CreateFromGeometry(new RectangleGeometry(new Rect(new Point(item.EdgeThickness.Value / 2, item.EdgeThickness.Value / 2), new Point(item.Width.Value - item.EdgeThickness.Value / 2, item.Height.Value - item.EdgeThickness.Value / 2)), 0, 0, new RotateTransform(angle, item.CenterPoint.Value.X, item.CenterPoint.Value.Y))), GeometryCombineMode.Intersect, null);
         }
 
         public static PathGeometry CreateRectangle(NRectangleViewModel item, double offsetX, double offsetY)
@@ -92,6 +159,60 @@ namespace boilersGraphics.Helpers
             }
             geometry.Freeze();
             return PathGeometry.CreateFromGeometry(geometry);
+        }
+
+        public static PathGeometry CreatePolygon(NPolygonViewModel item, string data, bool flag)
+        {
+            if (data is null)
+            {
+                return null;
+            }
+            if (item.PathGeometryNoRotate.Value is null)
+            {
+                var lhs = PathGeometry.CreateFromGeometry(Geometry.Parse(data));
+                lhs.FillRule = FillRule.Nonzero;
+                return lhs;
+            }
+            if (flag)
+            {
+                return item.PathGeometryNoRotate.Value;
+            }
+            var rhs = PathGeometry.CreateFromGeometry(Geometry.Parse(data));
+            rhs.FillRule = FillRule.Nonzero;
+            if (item.Width.Value != item.PathGeometryNoRotate.Value.Bounds.Width || item.Height.Value != item.PathGeometryNoRotate.Value.Bounds.Height)
+            {
+                var lhs = item.PathGeometryNoRotate.Value.Clone();
+                var coefficientWidth = rhs.Bounds.Width / lhs.Bounds.Width;
+                var coefficientHeight = rhs.Bounds.Height / lhs.Bounds.Height;
+                if (coefficientWidth == 0)
+                    coefficientWidth = 1;
+                if (coefficientHeight == 0)
+                    coefficientHeight = 1;
+                if (double.IsNaN(coefficientWidth) || double.IsNaN(coefficientHeight))
+                    return rhs;
+                var newlhs = Scale(lhs, coefficientWidth, coefficientHeight);
+                return newlhs;
+            }
+            var result = Geometry.Combine(
+                item.PathGeometryNoRotate.Value,
+                rhs,
+                GeometryCombineMode.Intersect,
+                null);
+            return result;
+        }
+
+        public static PathGeometry CreatePolyBezier(PolyBezierViewModel clone)
+        {
+            var geometry = new PathGeometry();
+            var pathFigure = new PathFigure();
+            pathFigure.StartPoint = clone.Points.First();
+            var pathFigureCollection = new PathFigureCollection();
+            var pathSegmentCollection = new PathSegmentCollection();
+            pathSegmentCollection.Add(new PolyBezierSegment(clone.Points.Skip(1), true));
+            pathFigure.Segments = pathSegmentCollection;
+            pathFigureCollection.Add(pathFigure);
+            geometry.Figures = pathFigureCollection;
+            return geometry;
         }
 
         public static PathGeometry CreateBezierCurve(BezierCurveViewModel item)
@@ -608,6 +729,47 @@ namespace boilersGraphics.Helpers
             return PathGeometry.CreateFromGeometry(geometry);
         }
 
+        public static PathGeometry CreateDonut(NPieViewModel item, Point center, double width, double distance, double startDeg, double stopDeg, SweepDirection direction, bool flag = false)
+        {
+            if (item.PathGeometryNoRotate.Value is null)
+            {
+                var lhs = CreateDonut(center, width, distance, startDeg, stopDeg, direction);
+                lhs.FillRule = FillRule.Nonzero;
+                return lhs;
+            }
+            if (flag)
+            {
+                return item.PathGeometryNoRotate.Value;
+            }
+            var rhs = CreateDonut(center, width, distance, startDeg, stopDeg, direction);
+            rhs.FillRule = FillRule.Nonzero;
+            if (item.Width.Value != item.PathGeometryNoRotate.Value.Bounds.Width || item.Height.Value != item.PathGeometryNoRotate.Value.Bounds.Height)
+            {
+                var lhs = item.PathGeometryNoRotate.Value.Clone();
+                var coefficientWidth = item.Width.Value / lhs.Bounds.Width;
+                var coefficientHeight = item.Height.Value / lhs.Bounds.Height;
+                if (coefficientWidth == 0)
+                    coefficientWidth = 1;
+                if (coefficientHeight == 0)
+                    coefficientHeight = 1;
+                if (double.IsNaN(coefficientWidth) || double.IsNaN(coefficientHeight))
+                    return rhs;
+                var newlhs = Scale(lhs, coefficientWidth, coefficientHeight);
+                var res = Geometry.Combine(
+                    newlhs,
+                    newlhs,
+                    GeometryCombineMode.Intersect,
+                    null);
+                return res;
+            }
+            var result = Geometry.Combine(
+                item.PathGeometryNoRotate.Value,
+                rhs,
+                GeometryCombineMode.Intersect,
+                null);
+            return result;
+        }
+
         /// <summary>
         /// ドーナツ形、アーチ形のPathGeometry作成
         /// </summary>
@@ -728,6 +890,233 @@ namespace boilersGraphics.Helpers
             string[] split = beginPointStr.Split(',');
             Point beginPoint = new Point(double.Parse(split[0]), double.Parse(split[1]));
             return beginPoint;
+        }
+
+        public static PathGeometry Scale(PathGeometry target, double scaleX, double scaleY)
+        {
+            string entire = target.ToString();
+            string[] split = Split(entire, 'M', ',', ' ', 'L', 'H', 'V', 'C', 'Q', 'S', 'T', 'A', 'z');
+            var sb = new StringBuilder();
+            ParseAndScale(split, sb, scaleX, scaleY);
+            return PathGeometry.CreateFromGeometry(Geometry.Parse(sb.ToString()));
+        }
+
+        public static PathGeometry Translate(PathGeometry target, double translateX, double translateY)
+        {
+            string entire = target.ToString();
+            string[] split = Split(entire, 'M', ',', ' ', 'L', 'H', 'V', 'C', 'Q', 'S', 'T', 'A', 'z');
+            var sb = new StringBuilder();
+            ParseAndTranslate(split, sb, translateX, translateY);
+            return PathGeometry.CreateFromGeometry(Geometry.Parse(sb.ToString()));
+        }
+
+        private static string[] Split(string target, params char[] splitchars)
+        {
+            List<string> result = new List<string>();
+            string tmp = "";
+
+            for (int i = 0; i < target.Length; i++)
+            {
+                var c = target[i];
+                if (splitchars.Contains(c))
+                {
+                    result.Add(tmp);
+                    result.Add($"{c}");
+                    tmp = "";
+                }
+                else
+                {
+                    tmp += c;
+                }
+            }
+            if (tmp != string.Empty)
+            {
+                result.Add(tmp);
+            }
+            return result.ToArray();
+        }
+
+        private static void ParseAndScale(string[] split, StringBuilder sb, double scaleX, double scaleY)
+        {
+            List<string> debug = new List<string>();
+            int flag = 0;
+            bool Cflag = false;
+            int Aflag = 0;
+            for (int i = 0; i < split.Length; i++)
+            {
+                var sp = split[i];
+                switch (sp)
+                {
+                    case "F0":
+                    case "F1":
+                        debug.Add(sp);
+                        debug.Add(" ");
+                        sb.Append(sp);
+                        sb.Append(' ');
+                        break;
+                    case "M":
+                        sb.Append(sp);
+                        break;
+                    case ",":
+                        if (!Cflag)
+                        {
+                            flag = 1;
+                        }
+                        if (Aflag > 0)
+                        {
+                            Aflag++;
+                        }
+                        debug.Add(sp);
+                        sb.Append(sp);
+                        continue;
+                    case " ":
+                        flag = 0;
+                        debug.Add(sp);
+                        sb.Append(sp);
+                        continue;
+                    case "":
+                        continue;
+                    case "L":
+                    case "H":
+                    case "V":
+                    case "Q":
+                    case "S":
+                    case "T":
+                        debug.Add(sp);
+                        sb.Append(sp);
+                        Aflag = 0;
+                        Cflag = false;
+                        break;
+                    case "A":
+                        debug.Add(sp);
+                        sb.Append(sp);
+                        Aflag = 1;
+                        Cflag = false;
+                        break;
+                    case "C":
+                        debug.Add(sp);
+                        sb.Append(sp);
+                        Aflag = 0;
+                        Cflag = true;
+                        break;
+                    case "z":
+                        debug.Add(sp);
+                        sb.Append(sp);
+                        break;
+                    default:
+                        if (Aflag == 1) //size x
+                        {
+                            debug.Add((double.Parse(sp) * scaleX).ToString());
+                            sb.Append(double.Parse(sp) * scaleX);
+                        }
+                        else if (Aflag == 2) //size y
+                        {
+                            debug.Add((double.Parse(sp) * scaleY).ToString());
+                            sb.Append(double.Parse(sp) * scaleY);
+                        }
+                        else if (Aflag == 3) //rotationAngle
+                        {
+                            debug.Add((double.Parse(sp)).ToString());
+                            sb.Append(double.Parse(sp));
+                        }
+                        else if (Aflag == 4) //isLargeArgFlag
+                        {
+                            debug.Add((double.Parse(sp)).ToString());
+                            sb.Append(double.Parse(sp));
+                        }
+                        else if (Aflag == 5) //sweepDirectionFlag
+                        {
+                            debug.Add((double.Parse(sp)).ToString());
+                            sb.Append(double.Parse(sp));
+                        }
+                        else if (Aflag == 6) // endPoint x
+                        {
+                            debug.Add((double.Parse(sp) * scaleX).ToString());
+                            sb.Append(double.Parse(sp) * scaleX);
+                        }
+                        else if (Aflag == 7) // endPoint y
+                        {
+                            debug.Add((double.Parse(sp) * scaleY).ToString());
+                            sb.Append(double.Parse(sp) * scaleY);
+                        }
+                        else if (flag == 0)
+                        {
+                            debug.Add((double.Parse(sp) * scaleX).ToString());
+                            sb.Append(double.Parse(sp) * scaleX);
+                            flag = 1;
+                        }
+                        else if (flag == 1)
+                        {
+                            debug.Add((double.Parse(sp) * scaleY).ToString());
+                            sb.Append(double.Parse(sp) * scaleY);
+                            flag = 0;
+                        }
+                        break;
+                }
+            }
+        }
+
+        private static void ParseAndTranslate(string[] split, StringBuilder sb, double translateX, double translateY)
+        {
+            int flag = 0;
+            bool Cflag = false;
+            for (int i = 0; i < split.Length; i++)
+            {
+                var sp = split[i];
+                switch (sp)
+                {
+                    case "F0":
+                    case "F1":
+                        sb.Append(sp);
+                        sb.Append(' ');
+                        break;
+                    case "M":
+                        sb.Append(sp);
+                        break;
+                    case ",":
+                        if (!Cflag)
+                        {
+                            flag = 1;
+                        }
+                        sb.Append(sp);
+                        continue;
+                    case " ":
+                        flag = 0;
+                        sb.Append(sp);
+                        continue;
+                    case "":
+                        continue;
+                    case "L":
+                    case "H":
+                    case "V":
+                    case "Q":
+                    case "S":
+                    case "T":
+                    case "A":
+                        sb.Append(sp);
+                        Cflag = false;
+                        break;
+                    case "C":
+                        sb.Append(sp);
+                        Cflag = true;
+                        break;
+                    case "z":
+                        sb.Append(sp);
+                        break;
+                    default:
+                        if (flag == 0)
+                        {
+                            sb.Append(double.Parse(sp) + translateX);
+                            flag = 1;
+                        }
+                        else if (flag == 1)
+                        {
+                            sb.Append(double.Parse(sp) + translateY);
+                            flag = 0;
+                        }
+                        break;
+                }
+            }
         }
 
         private static int GetNextTopCharIndex(string entire)

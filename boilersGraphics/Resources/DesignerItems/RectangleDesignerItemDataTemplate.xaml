@@ -3,6 +3,7 @@
                     xmlns:convereter="clr-namespace:boilersGraphics.Converters"
                     xmlns:helper="clr-namespace:boilersGraphics.Helpers"
                     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+                    xmlns:c="clr-namespace:CalcBinding;assembly=CalcBinding"
                     xmlns:viewModel="clr-namespace:boilersGraphics.ViewModels">
     <convereter:ToSolidColorBrushConverter x:Key="solidColorBrushConverter" />
     <DataTemplate DataType="{x:Type viewModel:NRectangleViewModel}">
@@ -13,14 +14,19 @@
                     <!--<helper:DebugAction />-->
                 </i:EventTrigger>
             </i:Interaction.Triggers>
-            <Path Data="{Binding PathGeometry.Value}"
-                  Fill="{Binding FillBrush.Value}"
-                  IsHitTestVisible="False"
-                  Stretch="Fill"
-                  Stroke="{Binding EdgeBrush.Value}"
-                  StrokeThickness="{Binding EdgeThickness.Value}"
-                  StrokeLineJoin="{Binding PenLineJoin.Value}"
-                  StrokeDashArray="{Binding StrokeDashArray.Value}" />
+            <Grid Width="{Binding Width.Value}"
+                  Height="{Binding Height.Value}">
+                <Path Data="{Binding PathGeometry.Value}"
+                      Fill="{Binding FillBrush.Value}"
+                      IsHitTestVisible="False"
+                      Stretch="None"
+                      Width="{Binding Width.Value}"
+                      Height="{Binding Height.Value}"
+                      Stroke="{Binding EdgeBrush.Value}"
+                      StrokeThickness="{Binding EdgeThickness.Value}"
+                      StrokeLineJoin="{Binding PenLineJoin.Value}"
+                      StrokeDashArray="{Binding StrokeDashArray.Value}" />
+            </Grid>
         </ContentControl>
     </DataTemplate>
 </ResourceDictionary>

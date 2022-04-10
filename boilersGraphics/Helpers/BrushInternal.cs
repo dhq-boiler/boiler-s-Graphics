@@ -26,7 +26,7 @@ namespace boilersGraphics.Helpers
             currentBrush.EdgeBrush.Value = currentBrush.Owner.EdgeBrush.Value.Clone();
             currentBrush.EdgeThickness.Value = currentBrush.Owner.EdgeThickness.Value.Value;
             currentBrush.ZIndex.Value = currentBrush.Owner.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).Count();
-            currentBrush.PathGeometry.Value = GeometryCreator.CreateEllipse(point.X, point.Y, currentBrush.Thickness.Value);
+            currentBrush.PathGeometryNoRotate.Value = GeometryCreator.CreateEllipse(point.X, point.Y, currentBrush.Thickness.Value);
             currentBrush.IsSelected.Value = true;
             currentBrush.IsVisible.Value = true;
             currentBrush.CanDrag.Value = false;

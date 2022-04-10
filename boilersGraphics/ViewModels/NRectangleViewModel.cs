@@ -28,6 +28,7 @@ namespace boilersGraphics.ViewModels
             Left.Value = left;
             Top.Value = top;
             Width.Value = width;
+            PathGeometryNoRotate.Value = null;
             Height.Value = height;
         }
 
@@ -79,9 +80,9 @@ namespace boilersGraphics.ViewModels
             }
         }
 
-        public override PathGeometry CreateGeometry()
+        public override PathGeometry CreateGeometry(bool flag = false)
         {
-            return GeometryCreator.CreateRectangle(this);
+            return GeometryCreator.CreateRectangle(this, flag);
         }
 
         public override PathGeometry CreateGeometry(double angle)

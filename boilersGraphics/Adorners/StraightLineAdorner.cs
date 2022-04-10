@@ -90,7 +90,7 @@ namespace boilersGraphics.Adorners
                 item.IsSelected.Value = true;
                 item.IsVisible.Value = true;
                 item.AddPointP2(viewModel, _endPoint.Value);
-                item.PathGeometry.Value = GeometryCreator.CreateLine(item);
+                item.PathGeometryNoRotate.Value = GeometryCreator.CreateLine(item);
                 item.SnapPoint0VM.Value.IsSelected.Value = true;
                 item.SnapPoint1VM.Value.IsSelected.Value = true;
                 item.SnapPoint0VM.Value.IsHitTestVisible.Value = true;

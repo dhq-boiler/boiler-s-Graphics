@@ -71,8 +71,6 @@ namespace boilersGraphics.ViewModels
 
         public ReadOnlyReactivePropertySlim<double> Bottom { get; private set; }
 
-        public ReactivePropertySlim<PathGeometry> RotatePathGeometry { get; } = new ReactivePropertySlim<PathGeometry>();
-
         public ReactivePropertySlim<double> CenterX { get; } = new ReactivePropertySlim<double>();
         public ReactivePropertySlim<double> CenterY { get; } = new ReactivePropertySlim<double>();
 
@@ -135,6 +133,12 @@ namespace boilersGraphics.ViewModels
                        .AddTo(_CompositeDisposable);
             CenterPoint = CenterX.CombineLatest(CenterY, (x, y) => new Point(x, y))
                                  .ToReactiveProperty();
+            EdgeThickness
+                .Zip(EdgeThickness.Skip(1), (Old, New) => new { OldItem = Old, NewItem = New })
+                .Subscribe(x => UpdateTransform(nameof(EdgeThickness), x.OldItem, x.NewItem))
+                .AddTo(_CompositeDisposable);
+
+            PathGeometry = PathGeometryNoRotate.ToReadOnlyReactivePropertySlim();
 
             Matrix.Value = new Matrix();
         }
@@ -181,6 +185,7 @@ namespace boilersGraphics.ViewModels
                 case "Height":
                 case "RotationAngle":
                 case "Matrix":
+                case "EdgeThickness":
                     UpdatePathGeometryIfEnable();
                     break;
                 default:
@@ -188,22 +193,23 @@ namespace boilersGraphics.ViewModels
             }
         }
 
-        public void UpdatePathGeometryIfEnable()
+        public virtual void UpdatePathGeometryIfEnable(bool flag = false)
         {
             if (EnablePathGeometryUpdate.Value)
             {
-                if (RotationAngle.Value == 0)
+                if (!flag)
                 {
-                    PathGeometry.Value = CreateGeometry();
+                    PathGeometryNoRotate.Value = CreateGeometry(flag);
                 }
-                else
+
+                if (RotationAngle.Value != 0)
                 {
-                    RotatePathGeometry.Value = CreateGeometry(RotationAngle.Value);
+                    PathGeometryRotate.Value = CreateGeometry(RotationAngle.Value);
                 }
             }
         }
 
-        public abstract PathGeometry CreateGeometry();
+        public abstract PathGeometry CreateGeometry(bool flag = false);
 
         public abstract PathGeometry CreateGeometry(double angle);
 

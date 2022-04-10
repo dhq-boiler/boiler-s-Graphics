@@ -81,15 +81,17 @@ namespace boilersGraphics.Adorners
             {
                 var item = new NPolygonViewModel();
                 item.Owner = (AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel;
+                item.Data.Value = _data;
                 item.Left.Value = Math.Min(_dragStartPoint.Value.X, _dragEndPoint.Value.X);
                 item.Top.Value = Math.Min(_dragStartPoint.Value.Y, _dragEndPoint.Value.Y);
                 item.Width.Value = Math.Max(_dragStartPoint.Value.X - _dragEndPoint.Value.X, _dragEndPoint.Value.X - _dragStartPoint.Value.X);
+                item.PathGeometryNoRotate.Value = null;
                 item.Height.Value = Math.Max(_dragStartPoint.Value.Y - _dragEndPoint.Value.Y, _dragEndPoint.Value.Y - _dragStartPoint.Value.Y);
+                item.UpdatePathGeometryIfEnable();
                 item.EdgeBrush.Value = item.Owner.EdgeBrush.Value.Clone();
                 item.FillBrush.Value = item.Owner.FillBrush.Value.Clone();
                 item.EdgeThickness.Value = item.Owner.EdgeThickness.Value.Value;
                 item.ZIndex.Value = item.Owner.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).Count();
-                item.Data.Value = _data;
                 item.SnapPoints.Clear();
                 _corners.ToList().ForEach(x => LogManager.GetCurrentClassLogger().Debug($"corner:{x.Point.  Value}"));
                 item.SnapPoints.AddRange(_corners.Select(x =>

@@ -75,12 +75,13 @@ namespace boilersGraphics.Adorners
                 item.Left.Value = Math.Min(_startPoint.Value.X, _endPoint.Value.X);
                 item.Top.Value = Math.Min(_startPoint.Value.Y, _endPoint.Value.Y);
                 item.Width.Value = Math.Max(_startPoint.Value.X - _endPoint.Value.X, _endPoint.Value.X - _startPoint.Value.X);
+                item.PathGeometryNoRotate.Value = null;
                 item.Height.Value = Math.Max(_startPoint.Value.Y - _endPoint.Value.Y, _endPoint.Value.Y - _startPoint.Value.Y);
                 item.EdgeBrush.Value = item.Owner.EdgeBrush.Value.Clone();
                 item.FillBrush.Value = item.Owner.FillBrush.Value.Clone();
                 item.EdgeThickness.Value = item.Owner.EdgeThickness.Value.Value;
                 item.ZIndex.Value = item.Owner.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).Count();
-                item.PathGeometry.Value = GeometryCreator.CreateRectangle(item);
+                item.PathGeometryNoRotate.Value = GeometryCreator.CreateRectangle(item);
                 item.IsSelected.Value = true;
                 item.IsVisible.Value = true;
                 item.Owner.DeselectAll();

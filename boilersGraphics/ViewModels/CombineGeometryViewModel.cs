@@ -47,7 +47,7 @@ namespace boilersGraphics.ViewModels
             this.ShowConnectors = false;
         }
 
-        public override PathGeometry CreateGeometry()
+        public override PathGeometry CreateGeometry(bool flag = false)
         {
             throw new NotSupportedException("combine figures is not supported.");
         }
@@ -76,7 +76,7 @@ namespace boilersGraphics.ViewModels
             clone.FillBrush.Value = FillBrush.Value;
             clone.EdgeThickness.Value = EdgeThickness.Value;
             clone.RotationAngle.Value = RotationAngle.Value;
-            clone.PathGeometry.Value = PathGeometry.Value;
+            clone.PathGeometryNoRotate.Value = PathGeometryNoRotate.Value;
             clone.PenLineJoin.Value = PenLineJoin.Value;
             return clone;
         }

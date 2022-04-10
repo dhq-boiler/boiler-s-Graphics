@@ -11,13 +11,16 @@ namespace boilersGraphics.Controls
 {
     public class DesignerCanvas : Canvas
     {
+        private static DesignerCanvas _instance;
+
         public static DesignerCanvas GetInstance()
         {
-            return App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
+            return _instance;
         }
 
         public DesignerCanvas()
         {
+            _instance = this;
             this.AllowDrop = true;
             Mediator.Instance.Register(this);
         }

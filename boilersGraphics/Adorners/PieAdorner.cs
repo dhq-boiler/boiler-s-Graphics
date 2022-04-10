@@ -154,10 +154,11 @@ namespace boilersGraphics.Adorners
                     _item.StartDegree.Value = _StartAngle;
                     _item.EndDegree.Value = _EndAngle;
                     _item.SweepDirection.Value = GetSweepDirection();
-                    _item.PathGeometry.Value = geometry;
+                    _item.PathGeometryNoRotate.Value = geometry;
                     _item.Left.Value = geometry.Bounds.X;
                     _item.Top.Value = geometry.Bounds.Y;
                     _item.Width.Value = geometry.Bounds.Width;
+                    _item.PathGeometryNoRotate.Value = null;
                     _item.Height.Value = geometry.Bounds.Height;
                     _item.IsVisible.Value = true;
                     _item.IsSelected.Value = true;
