@@ -101,7 +101,28 @@ namespace boilersGraphics.ViewModels
 
         public ReactivePropertySlim<SweepDirection> SweepDirection { get; } = new ReactivePropertySlim<SweepDirection>();
 
+        public override void UpdatePathGeometryIfEnable(bool flag = false)
+        {
+            if (EnablePathGeometryUpdate.Value)
+            {
+                if (!flag)
+                {
+                    if (Left.Value != 0 && Top.Value != 0 && Width.Value != 0 && Height.Value != 0)
+                    {
+                        var geometry = CreateGeometry(flag);
+                        if (!geometry.IsEmpty())
+                        {
+                            PathGeometryNoRotate.Value = geometry;
+                        }
+                    }
+                }
 
+                if (RotationAngle.Value != 0)
+                {
+                    PathGeometryRotate.Value = CreateGeometry(RotationAngle.Value);
+                }
+            }
+        }
 
         public override PathGeometry CreateGeometry(bool flag = false)
         {
