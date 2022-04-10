@@ -105,7 +105,9 @@ namespace boilersGraphics.ViewModels
 
         public override PathGeometry CreateGeometry(bool flag = false)
         {
-            return GeometryCreator.CreateDonut(PieCenterPoint.Value, DonutWidth.Value, Distance.Value, StartDegree.Value, EndDegree.Value, SweepDirection.Value);
+            var ret = GeometryCreator.CreateDonut(this, PieCenterPoint.Value, DonutWidth.Value, Distance.Value, StartDegree.Value, EndDegree.Value, SweepDirection.Value, flag);
+            ret.Transform = new TranslateTransform(-ret.Bounds.Left, -ret.Bounds.Top);
+            return ret;
         }
 
         public override PathGeometry CreateGeometry(double angle)

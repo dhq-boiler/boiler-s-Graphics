@@ -158,6 +158,7 @@ namespace boilersGraphics.Adorners
                     _item.Left.Value = geometry.Bounds.X;
                     _item.Top.Value = geometry.Bounds.Y;
                     _item.Width.Value = geometry.Bounds.Width;
+                    _item.PathGeometryNoRotate.Value = null;
                     _item.Height.Value = geometry.Bounds.Height;
                     _item.IsVisible.Value = true;
                     _item.IsSelected.Value = true;

@@ -5,7 +5,7 @@
         <Path Data="{Binding PathGeometry.Value}"
               Fill="{Binding FillBrush.Value}"
               IsHitTestVisible="False"
-              Stretch="Fill"
+              Stretch="None"
               Stroke="{Binding EdgeBrush.Value}"
               StrokeThickness="{Binding EdgeThickness.Value}"
               StrokeLineJoin="{Binding PenLineJoin.Value}"

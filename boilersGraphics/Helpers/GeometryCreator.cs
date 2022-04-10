@@ -729,6 +729,42 @@ namespace boilersGraphics.Helpers
             return PathGeometry.CreateFromGeometry(geometry);
         }
 
+        public static PathGeometry CreateDonut(NPieViewModel item, Point center, double width, double distance, double startDeg, double stopDeg, SweepDirection direction, bool flag = false)
+        {
+            if (item.PathGeometryNoRotate.Value is null)
+            {
+                var lhs = CreateDonut(center, width, distance, startDeg, stopDeg, direction);
+                lhs.FillRule = FillRule.Nonzero;
+                return lhs;
+            }
+            if (flag)
+            {
+                return item.PathGeometryNoRotate.Value;
+            }
+            var rhs = CreateDonut(center, width, distance, startDeg, stopDeg, direction);
+            rhs.FillRule = FillRule.Nonzero;
+            if (item.Width.Value != item.PathGeometryNoRotate.Value.Bounds.Width || item.Height.Value != item.PathGeometryNoRotate.Value.Bounds.Height)
+            {
+                var lhs = item.PathGeometryNoRotate.Value.Clone();
+                var coefficientWidth = item.Width.Value / lhs.Bounds.Width;
+                var coefficientHeight = item.Height.Value / lhs.Bounds.Height;
+                if (coefficientWidth == 0)
+                    coefficientWidth = 1;
+                if (coefficientHeight == 0)
+                    coefficientHeight = 1;
+                if (double.IsNaN(coefficientWidth) || double.IsNaN(coefficientHeight))
+                    return rhs;
+                var newlhs = Scale(lhs, coefficientWidth, coefficientHeight);
+                return newlhs;
+            }
+            var result = Geometry.Combine(
+                item.PathGeometryNoRotate.Value,
+                rhs,
+                GeometryCombineMode.Intersect,
+                null);
+            return result;
+        }
+
         /// <summary>
         /// ドーナツ形、アーチ形のPathGeometry作成
         /// </summary>
@@ -897,8 +933,10 @@ namespace boilersGraphics.Helpers
 
         private static void ParseAndScale(string[] split, StringBuilder sb, double scaleX, double scaleY)
         {
+            List<string> debug = new List<string>();
             int flag = 0;
             bool Cflag = false;
+            int Aflag = 0;
             for (int i = 0; i < split.Length; i++)
             {
                 var sp = split[i];
@@ -906,6 +944,8 @@ namespace boilersGraphics.Helpers
                 {
                     case "F0":
                     case "F1":
+                        debug.Add(sp);
+                        debug.Add(" ");
                         sb.Append(sp);
                         sb.Append(' ');
                         break;
@@ -917,10 +957,16 @@ namespace boilersGraphics.Helpers
                         {
                             flag = 1;
                         }
+                        if (Aflag > 0)
+                        {
+                            Aflag++;
+                        }
+                        debug.Add(sp);
                         sb.Append(sp);
                         continue;
                     case " ":
                         flag = 0;
+                        debug.Add(sp);
                         sb.Append(sp);
                         continue;
                     case "":
@@ -931,25 +977,72 @@ namespace boilersGraphics.Helpers
                     case "Q":
                     case "S":
                     case "T":
-                    case "A":
+                        debug.Add(sp);
                         sb.Append(sp);
+                        Aflag = 0;
+                        Cflag = false;
+                        break;
+                    case "A":
+                        debug.Add(sp);
+                        sb.Append(sp);
+                        Aflag = 1;
                         Cflag = false;
                         break;
                     case "C":
+                        debug.Add(sp);
                         sb.Append(sp);
+                        Aflag = 0;
                         Cflag = true;
                         break;
                     case "z":
+                        debug.Add(sp);
                         sb.Append(sp);
                         break;
                     default:
-                        if (flag == 0)
+                        if (Aflag == 1) //size x
                         {
+                            debug.Add((double.Parse(sp) * scaleX).ToString());
+                            sb.Append(double.Parse(sp) * scaleX);
+                        }
+                        else if (Aflag == 2) //size y
+                        {
+                            debug.Add((double.Parse(sp) * scaleY).ToString());
+                            sb.Append(double.Parse(sp) * scaleY);
+                        }
+                        else if (Aflag == 3) //rotationAngle
+                        {
+                            debug.Add((double.Parse(sp)).ToString());
+                            sb.Append(double.Parse(sp));
+                        }
+                        else if (Aflag == 4) //isLargeArgFlag
+                        {
+                            debug.Add((double.Parse(sp)).ToString());
+                            sb.Append(double.Parse(sp));
+                        }
+                        else if (Aflag == 5) //sweepDirectionFlag
+                        {
+                            debug.Add((double.Parse(sp)).ToString());
+                            sb.Append(double.Parse(sp));
+                        }
+                        else if (Aflag == 6) // endPoint x
+                        {
+                            debug.Add((double.Parse(sp) * scaleX).ToString());
+                            sb.Append(double.Parse(sp) * scaleX);
+                        }
+                        else if (Aflag == 7) // endPoint y
+                        {
+                            debug.Add((double.Parse(sp) * scaleY).ToString());
+                            sb.Append(double.Parse(sp) * scaleY);
+                        }
+                        else if (flag == 0)
+                        {
+                            debug.Add((double.Parse(sp) * scaleX).ToString());
                             sb.Append(double.Parse(sp) * scaleX);
                             flag = 1;
                         }
                         else if (flag == 1)
                         {
+                            debug.Add((double.Parse(sp) * scaleY).ToString());
                             sb.Append(double.Parse(sp) * scaleY);
                             flag = 0;
                         }
