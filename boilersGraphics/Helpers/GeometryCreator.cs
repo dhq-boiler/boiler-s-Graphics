@@ -755,7 +755,12 @@ namespace boilersGraphics.Helpers
                 if (double.IsNaN(coefficientWidth) || double.IsNaN(coefficientHeight))
                     return rhs;
                 var newlhs = Scale(lhs, coefficientWidth, coefficientHeight);
-                return newlhs;
+                var res = Geometry.Combine(
+                    newlhs,
+                    newlhs,
+                    GeometryCombineMode.Intersect,
+                    null);
+                return res;
             }
             var result = Geometry.Combine(
                 item.PathGeometryNoRotate.Value,
