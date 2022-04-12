@@ -924,21 +924,26 @@ namespace boilersGraphics.ViewModels
 
         private void ExecuteClipCommand()
         {
+            MainWindowVM.Recorder.BeginRecode();
             var picture = SelectedItems.Value.OfType<PictureDesignerItemViewModel>().First();
             var other = SelectedItems.Value.OfType<DesignerItemViewModelBase>().Last();
             var pathGeometry = GeometryCreator.CreateRectangle(other as NRectangleViewModel, picture.Left.Value, picture.Top.Value);
-            (picture.TransformNortification.Value.Sender as PictureDesignerItemViewModel).Clip.Value = pathGeometry;
-            (picture.TransformNortification.Value.Sender as PictureDesignerItemViewModel).ClipObject.Value = other;
-            picture.TransformNortification.Zip(picture.TransformNortification.Skip(1), (Old, New) => new { OldItem = Old, NewItem = New })
-            .Where(x => x.NewItem.PropertyName == "Width" || x.NewItem.PropertyName == "Height")
-            .Subscribe(x =>
-            {
-                var _other = picture.ClipObject.Value;
-                var _pathGeometry = GeometryCreator.CreateRectangle(_other as NRectangleViewModel, picture.Left.Value, picture.Top.Value, x.NewItem.PropertyName, (double)x.NewItem.OldValue, (double)x.NewItem.NewValue);
-                picture.Clip.Value = _pathGeometry;
-            })
-            .AddTo(_CompositeDisposable);
+            double left = -(other.Left.Value - picture.Left.Value);
+            double top = -(other.Top.Value - picture.Top.Value);
+            double right = -(picture.Right.Value - other.Right.Value);
+            double bottom = -(picture.Bottom.Value - other.Bottom.Value);
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(picture, "Left.Value", picture.Left.Value + pathGeometry.Bounds.X);
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(picture, "Top.Value", picture.Top.Value + pathGeometry.Bounds.Y);
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(picture, "Width.Value", other.Width.Value);
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(picture, "Height.Value", other.Height.Value);
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(picture, "Margin.Value", new System.Windows.Thickness(left, top, right, bottom));
+            MainWindowVM.Recorder.Current.ExecuteSetProperty<PictureDesignerItemViewModel, PathGeometry>(picture, "PathGeometryNoRotate.Value", null);
+            var sender = picture.TransformNortification.Value.Sender as PictureDesignerItemViewModel;
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(sender, "PathGeometryNoRotate.Value", pathGeometry);
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(sender, "ClipObject.Value", other);
+
             Remove(other);
+            MainWindowVM.Recorder.EndRecode();
         }
 
         public bool CanExecuteClip()

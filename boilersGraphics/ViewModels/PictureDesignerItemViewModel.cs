@@ -1,4 +1,7 @@
-﻿using boilersGraphics.Views;
+﻿using boilersGraphics.Helpers;
+using boilersGraphics.Views;
+using OpenCvSharp;
+using OpenCvSharp.WpfExtensions;
 using Prism.Ioc;
 using Prism.Services.Dialogs;
 using Prism.Unity;
@@ -34,7 +37,7 @@ namespace boilersGraphics.ViewModels
             set { SetProperty(ref _FileHeight, value); }
         }
 
-        public ReactivePropertySlim<Geometry> Clip { get; set; } = new ReactivePropertySlim<Geometry>();
+        public ReactivePropertySlim<System.Windows.Thickness> Margin { get; } = new ReactivePropertySlim<System.Windows.Thickness>();
 
         public ReactivePropertySlim<SelectableDesignerItemViewModelBase> ClipObject { get; set; } = new ReactivePropertySlim<SelectableDesignerItemViewModelBase>();
 
@@ -56,17 +59,17 @@ namespace boilersGraphics.ViewModels
         private void Init()
         {
             this.ShowConnectors = false;
-            EnablePathGeometryUpdate.Value = false;
+            EnablePathGeometryUpdate.Value = true;
         }
 
         public override PathGeometry CreateGeometry(bool flag = false)
         {
-            throw new NotSupportedException("picture is not supported.");
+            return GeometryCreator.CreateRectangle(this, flag);
         }
 
         public override PathGeometry CreateGeometry(double angle)
         {
-            throw new NotSupportedException("picture is not supported.");
+            return GeometryCreator.CreateRectangle(this, angle);
         }
 
         public override Type GetViewType()
@@ -88,7 +91,8 @@ namespace boilersGraphics.ViewModels
             clone.FillBrush.Value = FillBrush.Value;
             clone.EdgeThickness.Value = EdgeThickness.Value;
             clone.RotationAngle.Value = RotationAngle.Value;
-            clone.Clip.Value = Clip.Value;
+            clone.PathGeometryNoRotate.Value = PathGeometryNoRotate.Value;
+            clone.PathGeometryRotate.Value = PathGeometryRotate.Value;
             clone.FileName = FileName;
             clone.FileWidth = FileWidth;
             clone.FileHeight = FileHeight;

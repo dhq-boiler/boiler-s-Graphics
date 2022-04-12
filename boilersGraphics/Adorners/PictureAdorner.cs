@@ -85,6 +85,7 @@ namespace boilersGraphics.Adorners
                 itemBase.Left.Value = Math.Min(_startPoint.Value.X, _endPoint.Value.X);
                 itemBase.Top.Value = Math.Min(_startPoint.Value.Y, _endPoint.Value.Y);
                 itemBase.Width.Value = Math.Max(_startPoint.Value.X - _endPoint.Value.X, _endPoint.Value.X - _startPoint.Value.X);
+                itemBase.PathGeometryNoRotate.Value = null;
                 itemBase.Height.Value = Math.Max(_startPoint.Value.Y - _endPoint.Value.Y, _endPoint.Value.Y - _startPoint.Value.Y);
                 itemBase.IsSelected.Value = true;
                 itemBase.IsVisible.Value = true;

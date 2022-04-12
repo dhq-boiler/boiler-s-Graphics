@@ -65,7 +65,7 @@ namespace boilersGraphics.Helpers
             return Geometry.Combine(temp, PathGeometry.CreateFromGeometry(new EllipseGeometry(new Point(item.Width.Value / 2, item.Height.Value / 2), item.Width.Value / 2 - item.EdgeThickness.Value / 2, item.Height.Value / 2 - item.EdgeThickness.Value / 2, new RotateTransform(angle, item.CenterPoint.Value.X, item.CenterPoint.Value.Y))), GeometryCombineMode.Intersect, null);
         }
 
-        public static PathGeometry CreateRectangle(NRectangleViewModel item, bool flag = false)
+        public static PathGeometry CreateRectangle(DesignerItemViewModelBase item, bool flag = false)
         {
             if (item.PathGeometryNoRotate.Value is null && item is BackgroundViewModel)
             {
@@ -107,7 +107,7 @@ namespace boilersGraphics.Helpers
             return result;
         }
 
-        public static PathGeometry CreateRectangle(NRectangleViewModel item, double angle)
+        public static PathGeometry CreateRectangle(DesignerItemViewModelBase item, double angle)
         {
             if (item.PathGeometryRotate.Value is null)
             {
