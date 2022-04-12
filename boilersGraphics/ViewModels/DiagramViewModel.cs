@@ -927,11 +927,12 @@ namespace boilersGraphics.ViewModels
             MainWindowVM.Recorder.BeginRecode();
             var picture = SelectedItems.Value.OfType<PictureDesignerItemViewModel>().First();
             var other = SelectedItems.Value.OfType<DesignerItemViewModelBase>().Last();
-            var pathGeometry = GeometryCreator.CreateRectangle(other as NRectangleViewModel, picture.Left.Value, picture.Top.Value);
+            var pathGeometry = other.PathGeometry.Value;
             double left = -(other.Left.Value - picture.Left.Value);
             double top = -(other.Top.Value - picture.Top.Value);
             double right = -(picture.Right.Value - other.Right.Value);
             double bottom = -(picture.Bottom.Value - other.Bottom.Value);
+            pathGeometry = GeometryCreator.Translate(pathGeometry, -left, -top);
             MainWindowVM.Recorder.Current.ExecuteSetProperty(picture, "Left.Value", picture.Left.Value + pathGeometry.Bounds.X);
             MainWindowVM.Recorder.Current.ExecuteSetProperty(picture, "Top.Value", picture.Top.Value + pathGeometry.Bounds.Y);
             MainWindowVM.Recorder.Current.ExecuteSetProperty(picture, "Width.Value", other.Width.Value);
