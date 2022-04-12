@@ -1,7 +1,5 @@
 ﻿using boilersGraphics.Helpers;
 using boilersGraphics.Views;
-using OpenCvSharp;
-using OpenCvSharp.WpfExtensions;
 using Prism.Ioc;
 using Prism.Services.Dialogs;
 using Prism.Unity;
