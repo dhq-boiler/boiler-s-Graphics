@@ -12,7 +12,8 @@
                    IsHitTestVisible="False"
                    Source="{Binding Converter={StaticResource ToFileNameOrBitmapImage}}"
                    Stretch="Fill"
-                   Tag="picture" />
+                   Tag="picture"
+                   RenderOptions.BitmapScalingMode="HighQuality" />
         </Border>
     </DataTemplate>
 </ResourceDictionary>
