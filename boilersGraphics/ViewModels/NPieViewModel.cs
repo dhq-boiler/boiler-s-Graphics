@@ -101,7 +101,7 @@ namespace boilersGraphics.ViewModels
 
         public ReactivePropertySlim<SweepDirection> SweepDirection { get; } = new ReactivePropertySlim<SweepDirection>();
 
-        public override void UpdatePathGeometryIfEnable(bool flag = false)
+        public override void UpdatePathGeometryIfEnable(string propertyName, object oldValue, object newValue, bool flag = false)
         {
             if (EnablePathGeometryUpdate.Value)
             {

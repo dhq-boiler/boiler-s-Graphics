@@ -395,8 +395,8 @@ namespace boilersGraphics.ViewModels
                 LoadedCommand = new DelegateCommand(() =>
                 {
                     LogManager.GetCurrentClassLogger().Trace($"LoadedCommand");
-                    //var filename = @"Z:\Git\boilersGraphics\boilersGraphics.Test\bin\Debug\XmlFiles\checker_pattern.xml";
-                    //ExecuteLoadCommand(filename, false);
+                    var filename = @"C:\Users\boiler\Desktop\test.xml";
+                    ExecuteLoadCommand(filename, false);
                     //BackgroundItem.Value.FillColor.Value = Colors.Red;
                 });
                 FitCanvasCommand = new DelegateCommand(() =>
@@ -549,6 +549,8 @@ namespace boilersGraphics.ViewModels
                     IntersectCommand.RaiseCanExecuteChanged();
                     XorCommand.RaiseCanExecuteChanged();
                     ExcludeCommand.RaiseCanExecuteChanged();
+
+                    ClipCommand.RaiseCanExecuteChanged();
 
                     PropertyCommand.RaiseCanExecuteChanged();
                 })
@@ -933,11 +935,17 @@ namespace boilersGraphics.ViewModels
             double right = -(picture.Right.Value - other.Right.Value);
             double bottom = -(picture.Bottom.Value - other.Bottom.Value);
             pathGeometry = GeometryCreator.Translate(pathGeometry, -left, -top);
-            MainWindowVM.Recorder.Current.ExecuteSetProperty(picture, "Left.Value", picture.Left.Value + pathGeometry.Bounds.X);
-            MainWindowVM.Recorder.Current.ExecuteSetProperty(picture, "Top.Value", picture.Top.Value + pathGeometry.Bounds.Y);
-            MainWindowVM.Recorder.Current.ExecuteSetProperty(picture, "Width.Value", other.Width.Value);
-            MainWindowVM.Recorder.Current.ExecuteSetProperty(picture, "Height.Value", other.Height.Value);
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(picture, "ClippingOriginRect.Value", new Rect(picture.Left.Value, picture.Top.Value, picture.Width.Value, picture.Height.Value));
+            //MainWindowVM.Recorder.Current.ExecuteSetProperty(picture, "WidthInClipping.Value", picture.Width.Value);
+            //MainWindowVM.Recorder.Current.ExecuteSetProperty(picture, "HeightInClipping.Value", picture.Height.Value);
             MainWindowVM.Recorder.Current.ExecuteSetProperty(picture, "Margin.Value", new System.Windows.Thickness(left, top, right, bottom));
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(picture, "Pool.Value", "IsInitializing");
+            //MainWindowVM.Recorder.Current.ExecuteSetProperty(picture, "Left.Value", 0d);
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(picture, "Left.Value", picture.Left.Value + pathGeometry.Bounds.X);
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(picture, "Width.Value", other.Width.Value);
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(picture, "Top.Value", picture.Top.Value + pathGeometry.Bounds.Y);
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(picture, "Height.Value", other.Height.Value);
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(picture, "Pool.Value", string.Empty);
             MainWindowVM.Recorder.Current.ExecuteSetProperty<PictureDesignerItemViewModel, PathGeometry>(picture, "PathGeometryNoRotate.Value", null);
             var sender = picture.TransformNortification.Value.Sender as PictureDesignerItemViewModel;
             MainWindowVM.Recorder.Current.ExecuteSetProperty(sender, "PathGeometryNoRotate.Value", pathGeometry);
@@ -1257,6 +1265,7 @@ namespace boilersGraphics.ViewModels
                 pic.Left.Value = 0;
                 pic.Top.Value = 0;
                 pic.Width.Value = bImg.PixelWidth;
+                pic.PathGeometryNoRotate.Value = null;
                 pic.Height.Value = bImg.PixelHeight;
                 pic.FileWidth = bImg.PixelWidth;
                 pic.FileHeight = bImg.PixelHeight;

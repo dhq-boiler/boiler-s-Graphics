@@ -63,6 +63,8 @@ namespace boilersGraphics.ViewModels
             }
         }
 
+        public ReactivePropertySlim<string> Pool { get; } = new ReactivePropertySlim<string>();
+
         public ReactivePropertySlim<double> Left { get; } = new ReactivePropertySlim<double>(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe | ReactivePropertyMode.DistinctUntilChanged);
 
         public ReactivePropertySlim<double> Top { get; } = new ReactivePropertySlim<double>(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe | ReactivePropertyMode.DistinctUntilChanged);
@@ -160,6 +162,9 @@ namespace boilersGraphics.ViewModels
             Top.Value = value - Height.Value / 2;
         }
 
+        public virtual void UpdateMargin(string propertyName, object oldValue, object newValue)
+        { }
+
         public void UpdateTransform(string propertyName, object oldValue, object newValue)
         {
             switch (propertyName)
@@ -171,11 +176,12 @@ namespace boilersGraphics.ViewModels
                     UpdateCenterPoint();
                     break;
             }
+            UpdateMargin(propertyName, oldValue, newValue);
             TransformObserversOnNext(propertyName, oldValue, newValue);
-            UpdatePathGeometryInCase(propertyName);
+            UpdatePathGeometryInCase(propertyName, oldValue, newValue);
         }
 
-        private void UpdatePathGeometryInCase(string propertyName)
+        private void UpdatePathGeometryInCase(string propertyName, object oldValue, object newValue)
         {
             switch (propertyName)
             {
@@ -186,14 +192,14 @@ namespace boilersGraphics.ViewModels
                 case "RotationAngle":
                 case "Matrix":
                 case "EdgeThickness":
-                    UpdatePathGeometryIfEnable();
+                    UpdatePathGeometryIfEnable(propertyName, oldValue, newValue);
                     break;
                 default:
                     break;
             }
         }
 
-        public virtual void UpdatePathGeometryIfEnable(bool flag = false)
+        public virtual void UpdatePathGeometryIfEnable(string propertyName, object oldValue, object newValue, bool flag = false)
         {
             if (EnablePathGeometryUpdate.Value)
             {

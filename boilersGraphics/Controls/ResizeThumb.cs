@@ -251,8 +251,10 @@ namespace boilersGraphics.Controls
                                         case VerticalAlignment.Top:
                                             double top = viewModel.Top.Value;
                                             dragDeltaVertical = Math.Min(Math.Max(-minTop, e.VerticalChange), minDeltaVertical);
+                                            viewModel.Pool.Value = "Top";
                                             viewModel.Top.Value = top + dragDeltaVertical;
                                             viewModel.Height.Value = viewModel.Height.Value - dragDeltaVertical;
+                                            viewModel.Pool.Value = string.Empty;
                                             break;
                                         default:
                                             break;
@@ -263,8 +265,10 @@ namespace boilersGraphics.Controls
                                         case HorizontalAlignment.Left:
                                             double left = viewModel.Left.Value;
                                             dragDeltaHorizontal = Math.Min(Math.Max(-minLeft, e.HorizontalChange), minDeltaHorizontal);
+                                            viewModel.Pool.Value = "Left";
                                             viewModel.Left.Value = left + dragDeltaHorizontal;
                                             viewModel.Width.Value = viewModel.Width.Value - dragDeltaHorizontal;
+                                            viewModel.Pool.Value = string.Empty;
                                             break;
                                         case HorizontalAlignment.Right:
                                             dragDeltaHorizontal = Math.Min(-e.HorizontalChange, minDeltaHorizontal);
@@ -309,7 +313,7 @@ namespace boilersGraphics.Controls
                                         break;
                                 }
                             }
-                            viewModel.UpdatePathGeometryIfEnable();
+                            viewModel.UpdatePathGeometryIfEnable(string.Empty, 0, 0);
                         }
 
                         (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = $"(w, h) = ({viewModel.Width.Value}, {viewModel.Height.Value})";
