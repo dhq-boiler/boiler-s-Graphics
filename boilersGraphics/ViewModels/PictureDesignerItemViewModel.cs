@@ -68,6 +68,8 @@ namespace boilersGraphics.ViewModels
 
         public override void UpdatePathGeometryIfEnable(string propertyName, object oldValue, object newValue, bool flag = false)
         {
+            if (propertyName == "EdgeThickness")
+                return;
             if (EnablePathGeometryUpdate.Value)
             {
                 if (!flag)
@@ -82,65 +84,100 @@ namespace boilersGraphics.ViewModels
                             if (Margin.Value != new System.Windows.Thickness())
                             {
                                 var α = (double)newValue - (double)oldValue;
-                                var left = Margin.Value.Left;
-                                var top = Margin.Value.Top;
-                                var right = Margin.Value.Right;
-                                var bottom = Margin.Value.Bottom;
                                 if ("IsInitializing" != Pool.Value)
                                 {
                                     switch (propertyName)
                                     {
                                         case "Left":
-                                            left -= PathGeometryNoRotate.Value.Bounds.X - (double)left;
+                                            {
+                                                var left = Margin.Value.Left;
+                                                var top = Margin.Value.Top;
+                                                var right = Margin.Value.Right;
+                                                var bottom = Margin.Value.Bottom;
+                                                left -= PathGeometryNoRotate.Value.Bounds.X - (double)left;
+                                                Margin.Value = new System.Windows.Thickness(
+                                                    left,
+                                                    top,
+                                                    right,
+                                                    bottom);
+                                            }
                                             break;
                                         case "Top":
-                                            top -= PathGeometryNoRotate.Value.Bounds.Y - (double)top;
+                                            {
+                                                var left = Margin.Value.Left;
+                                                var top = Margin.Value.Top;
+                                                var right = Margin.Value.Right;
+                                                var bottom = Margin.Value.Bottom;
+                                                top -= PathGeometryNoRotate.Value.Bounds.Y - (double)top;
+                                                Margin.Value = new System.Windows.Thickness(
+                                                    left,
+                                                    top,
+                                                    right,
+                                                    bottom);
+                                            }
                                             break;
                                         case "Width":
-                                            var newWidth = Width.Value + α;
-                                            if (Width.Value <= 0)
                                             {
-                                                break;
+                                                var left = Margin.Value.Left;
+                                                var top = Margin.Value.Top;
+                                                var right = Margin.Value.Right;
+                                                var bottom = Margin.Value.Bottom;
+                                                var newWidth = Width.Value + α;
+                                                if (Width.Value <= 0)
+                                                {
+                                                    break;
+                                                }
+                                                var coefficient = newWidth / Width.Value;
+                                                if (coefficient <= 0d)
+                                                {
+                                                    coefficient = 1d;
+                                                }
+                                                var newRect = new Rect(ClippingOriginRect.Value.Left,
+                                                                        ClippingOriginRect.Value.Top,
+                                                                        ClippingOriginRect.Value.Width * coefficient,
+                                                                        ClippingOriginRect.Value.Height);
+                                                ClippingOriginRect.Value = newRect;
+                                                left -= PathGeometryNoRotate.Value.Bounds.Right - ((double)newValue - left);
+                                                right = -(ClippingOriginRect.Value.Width - newWidth + left);
+                                                Margin.Value = new System.Windows.Thickness(
+                                                    left,
+                                                    top,
+                                                    right,
+                                                    bottom);
                                             }
-                                            var coefficient = newWidth / Width.Value;
-                                            if (coefficient <= 0d)
-                                            {
-                                                coefficient = 1d;
-                                            }
-                                            var newRect = new Rect(ClippingOriginRect.Value.Left,
-                                                                    ClippingOriginRect.Value.Top,
-                                                                    ClippingOriginRect.Value.Width * coefficient,
-                                                                    ClippingOriginRect.Value.Height);
-                                            ClippingOriginRect.Value = newRect;
-                                            left -= PathGeometryNoRotate.Value.Bounds.Right - ((double)newValue - left);
-                                            right = -(ClippingOriginRect.Value.Width - newWidth + left);
                                             break;
                                         case "Height":
-                                            var newHeight = Height.Value + α;
-                                            if (Height.Value <= 0)
                                             {
-                                                break;
+                                                var left = Margin.Value.Left;
+                                                var top = Margin.Value.Top;
+                                                var right = Margin.Value.Right;
+                                                var bottom = Margin.Value.Bottom;
+                                                var newHeight = Height.Value + α;
+                                                if (Height.Value <= 0)
+                                                {
+                                                    break;
+                                                }
+                                                var coefficient = newHeight / Height.Value;
+                                                if (coefficient <= 0d)
+                                                {
+                                                    coefficient = 1d;
+                                                }
+                                                var newRect = new Rect(ClippingOriginRect.Value.Left,
+                                                                        ClippingOriginRect.Value.Top,
+                                                                        ClippingOriginRect.Value.Width,
+                                                                        ClippingOriginRect.Value.Height * coefficient);
+                                                ClippingOriginRect.Value = newRect;
+                                                top -= PathGeometryNoRotate.Value.Bounds.Bottom - ((double)newValue - top);
+                                                bottom = -(ClippingOriginRect.Value.Height - newHeight + top);
+                                                Margin.Value = new System.Windows.Thickness(
+                                                    left,
+                                                    top,
+                                                    right,
+                                                    bottom);
                                             }
-                                            coefficient = newHeight / Height.Value;
-                                            if (coefficient <= 0d)
-                                            {
-                                                coefficient = 1d;
-                                            }
-                                            newRect = new Rect(ClippingOriginRect.Value.Left,
-                                                                    ClippingOriginRect.Value.Top,
-                                                                    ClippingOriginRect.Value.Width,
-                                                                    ClippingOriginRect.Value.Height * coefficient);
-                                            ClippingOriginRect.Value = newRect;
-                                            top -= PathGeometryNoRotate.Value.Bounds.Bottom - ((double)newValue - top);
-                                            bottom = -(ClippingOriginRect.Value.Height - newHeight + top);
                                             break;
                                     }
                                 }
-                                Margin.Value = new System.Windows.Thickness(
-                                    left,
-                                    top,
-                                    right,
-                                    bottom);
                                 LogManager.GetCurrentClassLogger().Trace($"Margin:{Margin.Value.ToString()}");
                                 LogManager.GetCurrentClassLogger().Trace($"ClippingOriginRect:{ClippingOriginRect.Value.ToString()}");
                             }
