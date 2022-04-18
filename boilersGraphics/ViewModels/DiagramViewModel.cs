@@ -1045,6 +1045,23 @@ namespace boilersGraphics.ViewModels
             UpdateStatisticsCountUnion();
         }
 
+        public bool CanExecuteUnion()
+        {
+            var countIsCorrent = GetCountIsCorrent();
+            if (countIsCorrent)
+            {
+                var firstElementTypeIsCorrect = SelectedItems.ElementAt(0).GetType() != typeof(PictureDesignerItemViewModel);
+                var secondElementTypeIsCorrect = SelectedItems.ElementAt(1).GetType() != typeof(PictureDesignerItemViewModel);
+                return countIsCorrent && firstElementTypeIsCorrect && secondElementTypeIsCorrect;
+            }
+            var polyBezier = GetSelectedItemsForCombine().FirstOrDefault() as PolyBezierViewModel;
+            if (polyBezier != null)
+            {
+                return true;
+            }
+            return false;
+        }
+
         private void UpdateStatisticsCountUnion()
         {
             var statistics = MainWindowVM.Statistics.Value;
@@ -1187,23 +1204,6 @@ namespace boilersGraphics.ViewModels
                 MainWindowVM.Recorder.Current.ExecuteSetPropertyWithEnforcePropertyType<PathGeometry, Transform>(itemPathGeometry, "Transform", transformGroup);
                 item_.CloseLetterSettingDialog();
             }
-        }
-
-        public bool CanExecuteUnion()
-        {
-            var countIsCorrent = GetCountIsCorrent();
-            if (countIsCorrent)
-            {
-                var firstElementTypeIsCorrect = SelectedItems.ElementAt(0).GetType() != typeof(PictureDesignerItemViewModel);
-                var secondElementTypeIsCorrect = SelectedItems.ElementAt(1).GetType() != typeof(PictureDesignerItemViewModel);
-                return countIsCorrent && firstElementTypeIsCorrect && secondElementTypeIsCorrect;
-            }
-            var polyBezier = GetSelectedItemsForCombine().FirstOrDefault() as PolyBezierViewModel;
-            if (polyBezier != null)
-            {
-                return true;
-            }
-            return false;
         }
 
         private bool GetCountIsCorrent()
