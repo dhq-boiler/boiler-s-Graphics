@@ -113,6 +113,14 @@ namespace boilersGraphics.Helpers
                 PathGeometry lhs = null;
                 PathGeometry newlhs = null;
                 lhs = item.PathGeometryNoRotate.Value.Clone();
+                if (double.IsInfinity(rhs.Bounds.Width) || double.IsNegativeInfinity(rhs.Bounds.Width))
+                {
+                    return lhs;
+                }
+                if (double.IsInfinity(rhs.Bounds.Height) || double.IsNegativeInfinity(rhs.Bounds.Height))
+                {
+                    return lhs;
+                }
                 var coefficientWidth = rhs.Bounds.Width / lhs.Bounds.Width;
                 var coefficientHeight = rhs.Bounds.Height / lhs.Bounds.Height;
                 try
