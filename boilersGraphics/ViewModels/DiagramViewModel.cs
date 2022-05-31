@@ -395,9 +395,6 @@ namespace boilersGraphics.ViewModels
                 LoadedCommand = new DelegateCommand(() =>
                 {
                     LogManager.GetCurrentClassLogger().Trace($"LoadedCommand");
-                    var filename = @"C:\Users\boiler\Desktop\test.xml";
-                    ExecuteLoadCommand(filename, false);
-                    //BackgroundItem.Value.FillColor.Value = Colors.Red;
                 });
                 FitCanvasCommand = new DelegateCommand(() =>
                 {
