@@ -6,6 +6,7 @@ using OpenQA.Selenium.Appium.Windows;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -22,6 +23,19 @@ namespace boilersGraphics.Test.UITests
         private static readonly string AppPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "boilersGraphics.exe");//"Microsoft.WindowsCalculator_8wekyb3d8bbwe!App";
 
         protected static WindowsDriver<WindowsElement> session;
+        private static Process wad;
+
+        [OneTimeSetUp]
+        public static void OneTimeSetUp()
+        {
+            wad = Process.Start(new ProcessStartInfo(@"C:\Program Files\Windows Application Driver\WinAppDriver.exe"));
+        }
+
+        [OneTimeTearDown]
+        public static void OneTimeTearDown()
+        {
+            wad.Kill();
+        }
 
         [SetUp]
         public static void Setup()
