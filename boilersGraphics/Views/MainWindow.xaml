@@ -15,12 +15,17 @@
         WindowStyle="None"
         mc:Ignorable="d">
     <Window.Resources>
-        <converter:StrokeColorConverter x:Key="StrokeColorConverter" />
-        <converter:WindowStateToVisibilityConverter x:Key="WindowStateToVisibilityConverter" />
-        <converter:LogLevelToBoolConverter x:Key="LogLevelToBool" />
-        <converter:PreviewConverter x:Key="PreviewConverter" />
-        <converter:FilenameWithFileSizeConverter x:Key="FilenameWithFileSize" />
-        <converter:CultureToBool x:Key="CultureToBool" />
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/Theme.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <converter:StrokeColorConverter x:Key="StrokeColorConverter" />
+            <converter:WindowStateToVisibilityConverter x:Key="WindowStateToVisibilityConverter" />
+            <converter:LogLevelToBoolConverter x:Key="LogLevelToBool" />
+            <converter:PreviewConverter x:Key="PreviewConverter" />
+            <converter:FilenameWithFileSizeConverter x:Key="FilenameWithFileSize" />
+            <converter:CultureToBool x:Key="CultureToBool" />
+        </ResourceDictionary>
     </Window.Resources>
     <Window.CommandBindings>
         <CommandBinding CanExecute="CommandBinding_CanExecute_Close"
@@ -78,8 +83,8 @@
     <Window.Template>
         <ControlTemplate TargetType="Window">
             <Border x:Name="border"
-                    Background="#ffffff"
-                    BorderBrush="#cccccc"
+                    Background="{StaticResource ControlDarkerBackground}"
+                    BorderBrush="{StaticResource ControlDarkerBorderBrush}"
                     BorderThickness="1">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -89,16 +94,22 @@
                     <DockPanel Grid.Row="0">
                         <DockPanel.Resources>
                             <Style TargetType="MenuItem">
-                                <Setter Property="Background" Value="White" />
+                                <Setter Property="WindowChrome.IsHitTestVisibleInChrome" Value="True" />
+                            </Style>
+                        </DockPanel.Resources>
+                        <!--<DockPanel.Resources>
+                            <Style TargetType="MenuItem">
                                 <Setter Property="BorderThickness" Value="0" />
                                 <Setter Property="Height" Value="26" />
                                 <Setter Property="WindowChrome.IsHitTestVisibleInChrome" Value="True" />
+                                <Setter Property="Background" Value="{StaticResource ControlDarkerBackground}" />
+                                <Setter Property="BorderBrush" Value="{StaticResource ControlDarkerBorderBrush}" />
                             </Style>
                             <Style x:Key="{x:Static MenuItem.SeparatorStyleKey}" TargetType="Separator">
-                                <Setter Property="Background" Value="White" />
-                                <Setter Property="BorderBrush" Value="White" />
+                                <Setter Property="Background" Value="{StaticResource ControlDarkerBackground}" />
+                                <Setter Property="BorderBrush" Value="{StaticResource ControlDarkerBorderBrush}" />
                             </Style>
-                        </DockPanel.Resources>
+                        </DockPanel.Resources>-->
                         <Menu DockPanel.Dock="Left">
                             <MenuItem Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.MenuItem_File, Mode=OneWay}">
                                 <MenuItem Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.MenuItem_Open, Mode=OneWay}">

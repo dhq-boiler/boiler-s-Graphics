@@ -142,9 +142,6 @@
     <ProjectReference Include="..\Btl\Controls\Btl.Controls.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Resources\Themes\" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Assets\img\Square150x150Logo.scale-200.png" />
   </ItemGroup>
   <ItemGroup>

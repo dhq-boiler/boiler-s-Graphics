@@ -7,7 +7,7 @@
     <prism:PrismApplication.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Views/Theme.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/Theme.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/Styles.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/Icons.xaml" />
 
@@ -39,6 +39,7 @@
                 <ResourceDictionary Source="/Btl.Controls.MyControls;component/Resources/brush.scroll.down.xaml" />
                 <ResourceDictionary Source="/Btl.Controls.MyControls;component/Resources/brush.scroll.up.xaml" />
                 <ResourceDictionary Source="/Btl.Controls.MyControls;component/Themes/ShortTimeSpanControl.Generic.xaml" />
+                <ResourceDictionary Source="Resources/Themes/DarkTheme.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <Style x:Key="window_common" TargetType="Window">
                 <Setter Property="Icon" Value="/Assets/img/Square150x150Logo.scale-200.png" />
