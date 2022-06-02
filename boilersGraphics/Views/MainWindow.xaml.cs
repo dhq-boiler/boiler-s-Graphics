@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 
 namespace boilersGraphics.Views
 {
@@ -30,8 +31,8 @@ namespace boilersGraphics.Views
         /// <summary>DPI Scale for current display</summary>
         private const double DPI_SCALE = 1.0;
         private const int HTMAXBUTTON = 9;
-        private SolidColorBrush _bgNormal = new SolidColorBrush(Color.FromArgb(0xff, 0xbe, 0xe6, 0xfe));
-        private SolidColorBrush _bgMouseHover = new SolidColorBrush(Color.FromArgb(0xff, 0xdd, 0xdd, 0xdd));
+        private SolidColorBrush _bgNormal = new SolidColorBrush(Color.FromArgb(0xff, 0x2a, 0x2a, 0x2a));
+        private SolidColorBrush _bgMouseHover = new SolidColorBrush(Color.FromArgb(0xff, 0x00, 0xff, 0x00));
         private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
             switch (msg)
@@ -48,11 +49,19 @@ namespace boilersGraphics.Views
                         if (rectx.Contains(new Point(xl, yl)))
                         {
                             handled = true;
-                            _btn1.Background = _bgMouseHover;
+                            ColorAnimationUsingKeyFrames colorAnimationUsingKeyFrames = new ColorAnimationUsingKeyFrames();
+                            colorAnimationUsingKeyFrames.KeyFrames.Add(new EasingColorKeyFrame(Colors.Lime, KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(500))));
+                            _btn1.Background.BeginAnimation(SolidColorBrush.ColorProperty, colorAnimationUsingKeyFrames);
                         }
                         else
                         {
-                            _btn1.Background = _bgNormal;
+                            if (_btn1.Background is null)
+                            {
+                                _btn1.Background = _bgNormal;
+                            }
+                            ColorAnimationUsingKeyFrames colorAnimationUsingKeyFrames = new ColorAnimationUsingKeyFrames();
+                            colorAnimationUsingKeyFrames.KeyFrames.Add(new EasingColorKeyFrame(Color.FromArgb(0xff, 0x2a, 0x2a, 0x2a), KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(100))));
+                            _btn1.Background.BeginAnimation(SolidColorBrush.ColorProperty, colorAnimationUsingKeyFrames);
                         }
                         return new IntPtr(HTMAXBUTTON);
                     }

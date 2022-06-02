@@ -12,7 +12,7 @@
         <Setter Property="Width" Value="{x:Static SystemParameters.WindowCaptionButtonWidth}" />
         <Setter Property="Height" Value="{x:Static SystemParameters.WindowCaptionButtonHeight}" />
         <Setter Property="WindowChrome.IsHitTestVisibleInChrome" Value="True" />
-        <Setter Property="Template">
+        <!--<Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
                     <Border x:Name="border"
@@ -64,7 +64,7 @@
                     </Border>
                 </ControlTemplate>
             </Setter.Value>
-        </Setter>
+        </Setter>-->
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
     </Style>
 </ResourceDictionary>
