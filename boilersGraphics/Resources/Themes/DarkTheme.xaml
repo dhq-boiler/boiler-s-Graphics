@@ -1018,18 +1018,16 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ToggleButton}">
                     <Border Padding="{TemplateBinding Padding}">
-                        <Grid Background="Transparent" SnapsToDevicePixels="False">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="19"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <Ellipse x:Name="circle" Fill="{DynamicResource ControlDefaultBackground}" HorizontalAlignment="Center" Height="19"
+                        <DockPanel Background="Transparent" SnapsToDevicePixels="False" LastChildFill="True">
+                            <Grid DockPanel.Dock="Left">
+                                <Ellipse x:Name="circle" Fill="{DynamicResource ControlDefaultBackground}" HorizontalAlignment="Center" Height="19"
                                      Stroke="{StaticResource ControlDefaultBorderBrush}" VerticalAlignment="Center" Width="19"/>
-                            <Path x:Name="arrow" Data="M 1,1.5 L 4.5,5 L 8,1.5" HorizontalAlignment="Center" SnapsToDevicePixels="false" 
+                                <Path x:Name="arrow" Data="M 1,1.5 L 4.5,5 L 8,1.5" HorizontalAlignment="Center" SnapsToDevicePixels="false" 
                                   Stroke="{DynamicResource ControlDefaultForeground}" StrokeThickness="2" VerticalAlignment="Center"/>
-                            <ContentPresenter Grid.Column="1" HorizontalAlignment="Left" Margin="4,0,0,0" RecognizesAccessKey="True" 
+                            </Grid>
+                            <ContentPresenter Margin="4,0,0,0" RecognizesAccessKey="True" 
                                               SnapsToDevicePixels="True" VerticalAlignment="Center"/>
-                        </Grid>
+                        </DockPanel>
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsChecked" Value="true">
