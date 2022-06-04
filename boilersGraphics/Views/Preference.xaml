@@ -1,19 +1,21 @@
-﻿<UserControl x:Class="boilersGraphics.Views.Preference"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:btl="clr-namespace:Btl.Controls;assembly=Btl.Controls.MyControls"
-             xmlns:converter="clr-namespace:boilersGraphics.Converters"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-             xmlns:local="clr-namespace:boilersGraphics.Views"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:helper="clr-namespace:boilersGraphics.Helpers"
-             xmlns:controls="clr-namespace:boilersGraphics.Controls"
-             xmlns:prism="http://prismlibrary.com/"
-             d:DesignHeight="450"
-             d:DesignWidth="800"
-             prism:ViewModelLocator.AutoWireViewModel="True"
-             mc:Ignorable="d">
+﻿<UserControl
+    x:Class="boilersGraphics.Views.Preference"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:btl="clr-namespace:Btl.Controls;assembly=Btl.Controls.MyControls"
+    xmlns:controls="clr-namespace:boilersGraphics.Controls"
+    xmlns:converter="clr-namespace:boilersGraphics.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helper="clr-namespace:boilersGraphics.Helpers"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:local="clr-namespace:boilersGraphics.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:prism="http://prismlibrary.com/"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    prism:ViewModelLocator.AutoWireViewModel="True"
+    Background="{StaticResource ControlDarkerBackground}"
+    mc:Ignorable="d">
     <UserControl.Resources>
         <converter:IntToStringConverter x:Key="IntToStringConverter" />
         <converter:BrushToStringConverter x:Key="BrushToStringConverter" />
@@ -21,37 +23,46 @@
         <converter:BoolToEnumConverter x:Key="BoolToEnumConverter" />
     </UserControl.Resources>
     <DockPanel>
-        <StackPanel HorizontalAlignment="Right"
-                    DockPanel.Dock="Bottom"
-                    Orientation="Horizontal">
-            <Button Width="100"
-                    Height="25"
-                    Margin="5"
-                    Command="{Binding OkCommand.Value}"
-                    Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_OK, Mode=OneWay}" />
-            <Button Width="100"
-                    Height="25"
-                    Margin="5"
-                    Command="{Binding CancelCommand}"
-                    Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_Cancel, Mode=OneWay}" />
+        <StackPanel
+            HorizontalAlignment="Right"
+            DockPanel.Dock="Bottom"
+            Orientation="Horizontal">
+            <Button
+                Width="100"
+                Height="25"
+                Margin="5"
+                Command="{Binding OkCommand.Value}"
+                Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_OK, Mode=OneWay}" />
+            <Button
+                Width="100"
+                Height="25"
+                Margin="5"
+                Command="{Binding CancelCommand}"
+                Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_Cancel, Mode=OneWay}" />
         </StackPanel>
         <StackPanel Orientation="Vertical">
-            <controls:SimpleGrid Rows="10" Columns="2" Orientation="Horizontal">
+            <controls:SimpleGrid
+                Columns="2"
+                Orientation="Horizontal"
+                Rows="10">
                 <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_CanvasWidth, Mode=OneWay}" />
-                <TextBox HorizontalAlignment="Stretch"
-                         HorizontalContentAlignment="Right"
-                         Text="{Binding EditTarget.Value.Width.Value, Converter={StaticResource IntToStringConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox
+                    HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Right"
+                    Text="{Binding EditTarget.Value.Width.Value, Converter={StaticResource IntToStringConverter}, UpdateSourceTrigger=PropertyChanged}" />
                 <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_CanvasHeight, Mode=OneWay}" />
-                <TextBox HorizontalAlignment="Stretch"
-                         HorizontalContentAlignment="Right"
-                         Text="{Binding EditTarget.Value.Height.Value, Converter={StaticResource IntToStringConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox
+                    HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Right"
+                    Text="{Binding EditTarget.Value.Height.Value, Converter={StaticResource IntToStringConverter}, UpdateSourceTrigger=PropertyChanged}" />
                 <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_CanvasBackground, Mode=OneWay}" />
                 <Grid>
                     <Grid.Background>
-                        <VisualBrush Stretch="None"
-                                     TileMode="Tile"
-                                     Viewport="0,0,16,16"
-                                     ViewportUnits="Absolute">
+                        <VisualBrush
+                            Stretch="None"
+                            TileMode="Tile"
+                            Viewport="0,0,16,16"
+                            ViewportUnits="Absolute">
                             <VisualBrush.Visual>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
@@ -62,18 +73,22 @@
                                         <RowDefinition Height="8" />
                                         <RowDefinition Height="8" />
                                     </Grid.RowDefinitions>
-                                    <Rectangle Grid.Row="0"
-                                               Grid.Column="0"
-                                               Fill="#EEE" />
-                                    <Rectangle Grid.Row="0"
-                                               Grid.Column="1"
-                                               Fill="#AAA" />
-                                    <Rectangle Grid.Row="1"
-                                               Grid.Column="0"
-                                               Fill="#AAA" />
-                                    <Rectangle Grid.Row="1"
-                                               Grid.Column="1"
-                                               Fill="#EEE" />
+                                    <Rectangle
+                                        Grid.Row="0"
+                                        Grid.Column="0"
+                                        Fill="#EEE" />
+                                    <Rectangle
+                                        Grid.Row="0"
+                                        Grid.Column="1"
+                                        Fill="#AAA" />
+                                    <Rectangle
+                                        Grid.Row="1"
+                                        Grid.Column="0"
+                                        Fill="#AAA" />
+                                    <Rectangle
+                                        Grid.Row="1"
+                                        Grid.Column="1"
+                                        Fill="#EEE" />
                                 </Grid>
                             </VisualBrush.Visual>
                         </VisualBrush>
@@ -93,15 +108,19 @@
                         </Button.Style>
                     </Button>
                 </Grid>
-                <CheckBox x:Name="enablePointSnap"
-                          Margin="5"
-                          IsChecked="{Binding EditTarget.Value.EnablePointSnap.Value}"
-                          Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_SnapPoint, Mode=OneWay}" />
+                <CheckBox
+                    x:Name="enablePointSnap"
+                    Margin="5"
+                    Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_SnapPoint, Mode=OneWay}"
+                    IsChecked="{Binding EditTarget.Value.EnablePointSnap.Value}" />
                 <DockPanel>
-                <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_SnapRange, Mode=OneWay}" />
-                    <TextBox HorizontalAlignment="Stretch"
-                             HorizontalContentAlignment="Right"
-                             Text="{Binding EditTarget.Value.SnapPower.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_SnapRange, Mode=OneWay}" />
+                    <TextBox
+                        HorizontalAlignment="Stretch"
+                        HorizontalContentAlignment="Right"
+                        Background="{StaticResource ControlDarkerBackground}"
+                        Foreground="{StaticResource ControlDefaultForeground}"
+                        Text="{Binding EditTarget.Value.SnapPower.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                         <TextBox.Style>
                             <Style TargetType="{x:Type TextBox}">
                                 <Style.Triggers>
@@ -118,35 +137,39 @@
                         </TextBox.Style>
                     </TextBox>
                 </DockPanel>
-                <CheckBox x:Name="enableAutoSave"
-                          Margin="5"
-                          IsChecked="{Binding EditTarget.Value.EnableAutoSave.Value}"
-                          Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_AutoSave, Mode=OneWay}"/>
+                <CheckBox
+                    x:Name="enableAutoSave"
+                    Margin="5"
+                    Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_AutoSave, Mode=OneWay}"
+                    IsChecked="{Binding EditTarget.Value.EnableAutoSave.Value}" />
                 <StackPanel Orientation="Vertical">
-                    <RadioButton Margin="5"
-                                 IsChecked="{Binding EditTarget.Value.AutoSaveType.Value, Converter={StaticResource BoolToEnumConverter}, Mode=TwoWay, ConverterParameter=EveryTimeCampusChanges}"
-                                 Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_AutoSaveEveryTimeYouChangeCamvas, Mode=OneWay}" />
-                    <RadioButton Margin="5"
-                                 IsChecked="{Binding EditTarget.Value.AutoSaveType.Value, Converter={StaticResource BoolToEnumConverter}, Mode=TwoWay, ConverterParameter=SetInterval}"
-                                 Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_SetInterval, Mode=OneWay}" />
+                    <RadioButton
+                        Margin="5"
+                        Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_AutoSaveEveryTimeYouChangeCamvas, Mode=OneWay}"
+                        IsChecked="{Binding EditTarget.Value.AutoSaveType.Value, Converter={StaticResource BoolToEnumConverter}, Mode=TwoWay, ConverterParameter=EveryTimeCampusChanges}" />
+                    <RadioButton
+                        Margin="5"
+                        Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_SetInterval, Mode=OneWay}"
+                        IsChecked="{Binding EditTarget.Value.AutoSaveType.Value, Converter={StaticResource BoolToEnumConverter}, Mode=TwoWay, ConverterParameter=SetInterval}" />
                 </StackPanel>
                 <DockPanel />
                 <StackPanel Orientation="Horizontal">
                     <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_Interval, Mode=OneWay}" />
-                    <btl:ShortTimeSpanControl x:Name="shortTimeSpanControl1"
-                                              Background="LightGray"
-                                              IsEnable="{Binding EditTarget.Value.AutoSaveType.Value, Converter={StaticResource BoolToEnumConverter}, Mode=TwoWay, ConverterParameter=SetInterval}"
-                                              Value="{Binding EditTarget.Value.AutoSaveInterval.Value}" />
+                    <btl:ShortTimeSpanControl
+                        x:Name="shortTimeSpanControl1"
+                        IsEnable="{Binding EditTarget.Value.AutoSaveType.Value, Converter={StaticResource BoolToEnumConverter}, Mode=TwoWay, ConverterParameter=SetInterval}"
+                        Value="{Binding EditTarget.Value.AutoSaveInterval.Value}" />
                 </StackPanel>
-                <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_RotationAngleType, Mode=OneWay}"/>
-                <ComboBox SelectedValuePath="Tag" SelectedValue="{Binding EditTarget.Value.AngleType.Value}">
+                <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_RotationAngleType, Mode=OneWay}" />
+                <ComboBox SelectedValue="{Binding EditTarget.Value.AngleType.Value}" SelectedValuePath="Tag">
                     <ComboBoxItem Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_RotationAngleType_Minus180To180, Mode=OneWay}" Tag="{x:Static helper:AngleType.Minus180To180}" />
                     <ComboBoxItem Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_RotationAngleType_ZeroTo360, Mode=OneWay}" Tag="{x:Static helper:AngleType.ZeroTo360}" />
                 </ComboBox>
-                <CheckBox x:Name="enableImageEmbedding"
-                          Margin="5"
-                          IsChecked="{Binding EditTarget.Value.EnableImageEmbedding.Value}"
-                          Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_EnableImageEmbedding, Mode=OneWay}"/>
+                <CheckBox
+                    x:Name="enableImageEmbedding"
+                    Margin="5"
+                    Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_EnableImageEmbedding, Mode=OneWay}"
+                    IsChecked="{Binding EditTarget.Value.EnableImageEmbedding.Value}" />
             </controls:SimpleGrid>
         </StackPanel>
     </DockPanel>
