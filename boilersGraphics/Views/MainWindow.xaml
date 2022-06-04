@@ -2394,7 +2394,8 @@
             </ToolBar>
         </ToolBarTray>
 
-        <StatusBar DockPanel.Dock="Bottom">
+        <StatusBar DockPanel.Dock="Bottom"
+                   Background="{StaticResource ControlDarkerBackground}">
             <StatusBarItem>
                 <TextBlock Width="80">
                     <Run>(</Run>
