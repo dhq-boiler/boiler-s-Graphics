@@ -7,8 +7,7 @@ namespace REghZyFramework.Themes
     {
         public enum ThemeTypes
         {
-            Light, ColourfulLight,
-            Dark, ColourfulDark
+            Dark,
         }
 
         public static ThemeTypes CurrentTheme { get; set; }
@@ -30,9 +29,6 @@ namespace REghZyFramework.Themes
             switch (theme)
             {
                 case ThemeTypes.Dark: themeName = "DarkTheme"; break;
-                case ThemeTypes.Light: themeName = "LightTheme"; break;
-                case ThemeTypes.ColourfulDark: themeName = "ColourfulDarkTheme"; break;
-                case ThemeTypes.ColourfulLight: themeName = "ColourfulLightTheme"; break;
             }
 
             try
