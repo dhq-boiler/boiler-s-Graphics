@@ -28,13 +28,21 @@ namespace boilersGraphics.Test.UITests
         [OneTimeSetUp]
         public static void OneTimeSetUp()
         {
-            wad = Process.Start(new ProcessStartInfo(@"C:\Program Files\Windows Application Driver\WinAppDriver.exe"));
+            var environmentVariable = Environment.GetEnvironmentVariable("BOILERSGRAPHICS_TEST_IS_VALID");
+            if (environmentVariable == "true")
+            {
+                wad = Process.Start(new ProcessStartInfo(@"C:\Program Files\Windows Application Driver\WinAppDriver.exe"));
+            }
         }
 
         [OneTimeTearDown]
         public static void OneTimeTearDown()
         {
-            wad.Kill();
+            var environmentVariable = Environment.GetEnvironmentVariable("BOILERSGRAPHICS_TEST_IS_VALID");
+            if (environmentVariable == "true")
+            {
+                wad.Kill();
+            }
         }
 
         [SetUp]
