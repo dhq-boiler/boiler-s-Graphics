@@ -67,7 +67,7 @@ namespace boilersGraphics.Test.UITests
                 }
 
                 SkipPrivacyPolicyIfExists();
-                session.SwitchTo().Window(session.WindowHandles.First()).Manage().Window.Maximize();
+                session.Manage().Window.Size = new System.Drawing.Size(1920, 1080);
             }
         }
 
