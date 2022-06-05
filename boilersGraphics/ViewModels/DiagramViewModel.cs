@@ -1931,6 +1931,7 @@ namespace boilersGraphics.ViewModels
             finally
             {
                 mainwindowViewModel.Recorder.EndRecode();
+                mainwindowViewModel.Controller.Flush();
             }
 
             var layersViewModel = App.Current.MainWindow.GetChildOfType<Views.Layers>().DataContext as LayersViewModel;
