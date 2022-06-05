@@ -75,7 +75,16 @@ namespace boilersGraphics.Test.UITests
                 }
 
                 SkipPrivacyPolicyIfExists();
-                session.Manage().Window.Size = new System.Drawing.Size(1920, 1080);
+
+                var environmentVariable = Environment.GetEnvironmentVariable("BOILERSGRAPHICS_TEST_IS_VALID");
+                if (environmentVariable == "true")
+                {
+                    session.Manage().Window.Size = new System.Drawing.Size(1920, 1080);
+                }
+                else
+                {
+                    session.SwitchTo().Window(session.WindowHandles.First()).Manage().Window.Maximize();
+                }
             }
         }
 
