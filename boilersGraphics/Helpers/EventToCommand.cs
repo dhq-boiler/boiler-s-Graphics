@@ -24,7 +24,7 @@ using Microsoft.Xaml.Behaviors;
 
 namespace boilersGraphics.Helpers
 {
-    class EventToCommand : TriggerAction<DependencyObject>
+    public class EventToCommand : TriggerAction<DependencyObject>
     {
         /// <summary>
         /// Identifies the <see cref="CommandParameter" /> dependency property
