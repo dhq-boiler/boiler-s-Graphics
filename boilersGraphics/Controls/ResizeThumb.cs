@@ -190,6 +190,7 @@ namespace boilersGraphics.Controls
                                 foreach (var snapPoint in snapPoints)
                                 {
                                     var p = GetPosition(rect, base.VerticalAlignment, base.HorizontalAlignment);
+                                    var oppositeP = GetPosition(rect, OppositeVertical(base.VerticalAlignment), OppositeHorizontal(base.HorizontalAlignment));
                                     if (p.X > snapPoint.Item2.X - mainWindowVM.SnapPower.Value
                                      && p.X < snapPoint.Item2.X + mainWindowVM.SnapPower.Value
                                      && p.Y > snapPoint.Item2.Y - mainWindowVM.SnapPower.Value
@@ -251,8 +252,10 @@ namespace boilersGraphics.Controls
                                         case VerticalAlignment.Top:
                                             double top = viewModel.Top.Value;
                                             dragDeltaVertical = Math.Min(Math.Max(-minTop, e.VerticalChange), minDeltaVertical);
+                                            viewModel.Pool.Value = "Top";
                                             viewModel.Top.Value = top + dragDeltaVertical;
                                             viewModel.Height.Value = viewModel.Height.Value - dragDeltaVertical;
+                                            viewModel.Pool.Value = string.Empty;
                                             break;
                                         default:
                                             break;
@@ -263,8 +266,10 @@ namespace boilersGraphics.Controls
                                         case HorizontalAlignment.Left:
                                             double left = viewModel.Left.Value;
                                             dragDeltaHorizontal = Math.Min(Math.Max(-minLeft, e.HorizontalChange), minDeltaHorizontal);
+                                            viewModel.Pool.Value = "Left";
                                             viewModel.Left.Value = left + dragDeltaHorizontal;
                                             viewModel.Width.Value = viewModel.Width.Value - dragDeltaHorizontal;
+                                            viewModel.Pool.Value = string.Empty;
                                             break;
                                         case HorizontalAlignment.Right:
                                             dragDeltaHorizontal = Math.Min(-e.HorizontalChange, minDeltaHorizontal);
@@ -280,14 +285,24 @@ namespace boilersGraphics.Controls
                                 switch (base.VerticalAlignment)
                                 {
                                     case VerticalAlignment.Bottom:
-                                        dragDeltaVertical = Math.Min(-e.VerticalChange, minDeltaVertical);
-                                        viewModel.Height.Value = viewModel.Height.Value - dragDeltaVertical;
+                                        {
+                                            dragDeltaVertical = Math.Min(-e.VerticalChange, minDeltaVertical);
+                                            var old = viewModel.Top.Value;
+                                            viewModel.Height.Value = viewModel.Height.Value - dragDeltaVertical;
+                                            viewModel.UpdatePathGeometryIfEnable("Height", viewModel.Height.Value, old);
+                                        }
                                         break;
                                     case VerticalAlignment.Top:
-                                        double top = viewModel.Top.Value;
-                                        dragDeltaVertical = Math.Min(Math.Max(-minTop, e.VerticalChange), minDeltaVertical);
-                                        viewModel.Top.Value = top + dragDeltaVertical;
-                                        viewModel.Height.Value = viewModel.Height.Value - dragDeltaVertical;
+                                        {
+                                            double top = viewModel.Top.Value;
+                                            dragDeltaVertical = Math.Min(Math.Max(-minTop, e.VerticalChange), minDeltaVertical);
+                                            var old = viewModel.Top.Value;
+                                            viewModel.Top.Value = top + dragDeltaVertical;
+                                            viewModel.UpdatePathGeometryIfEnable("Top", viewModel.Top.Value, old);
+                                            old = viewModel.Height.Value;
+                                            viewModel.Height.Value = viewModel.Height.Value - dragDeltaVertical;
+                                            viewModel.UpdatePathGeometryIfEnable("Height", viewModel.Height.Value, old);
+                                        }
                                         break;
                                     default:
                                         break;
@@ -296,20 +311,29 @@ namespace boilersGraphics.Controls
                                 switch (base.HorizontalAlignment)
                                 {
                                     case HorizontalAlignment.Left:
-                                        double left = viewModel.Left.Value;
-                                        dragDeltaHorizontal = Math.Min(Math.Max(-minLeft, e.HorizontalChange), minDeltaHorizontal);
-                                        viewModel.Left.Value = left + dragDeltaHorizontal;
-                                        viewModel.Width.Value = viewModel.Width.Value - dragDeltaHorizontal;
+                                        {
+                                            double left = viewModel.Left.Value;
+                                            dragDeltaHorizontal = Math.Min(Math.Max(-minLeft, e.HorizontalChange), minDeltaHorizontal);
+                                            var old = viewModel.Left.Value;
+                                            viewModel.Left.Value = left + dragDeltaHorizontal;
+                                            viewModel.UpdatePathGeometryIfEnable("Left", viewModel.Left.Value, old);
+                                            old = viewModel.Width.Value;
+                                            viewModel.Width.Value = viewModel.Width.Value - dragDeltaHorizontal;
+                                            viewModel.UpdatePathGeometryIfEnable("Width", viewModel.Width.Value, old);
+                                        }
                                         break;
                                     case HorizontalAlignment.Right:
-                                        dragDeltaHorizontal = Math.Min(-e.HorizontalChange, minDeltaHorizontal);
-                                        viewModel.Width.Value = viewModel.Width.Value - dragDeltaHorizontal;
+                                        {
+                                            dragDeltaHorizontal = Math.Min(-e.HorizontalChange, minDeltaHorizontal);
+                                            var old = viewModel.Width.Value;
+                                            viewModel.Width.Value = viewModel.Width.Value - dragDeltaHorizontal;
+                                            viewModel.UpdatePathGeometryIfEnable("Width", viewModel.Width.Value, old);
+                                        }
                                         break;
                                     default:
                                         break;
                                 }
                             }
-                            viewModel.UpdatePathGeometryIfEnable();
                         }
 
                         (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = $"(w, h) = ({viewModel.Width.Value}, {viewModel.Height.Value})";
@@ -317,6 +341,22 @@ namespace boilersGraphics.Controls
                 }
                 e.Handled = true;
             }
+        }
+
+        private VerticalAlignment OppositeVertical(VerticalAlignment verticalAlignment)
+        {
+            if (verticalAlignment == VerticalAlignment.Top)
+                return VerticalAlignment.Bottom;
+            else // verticalAlignment == VerticalAlignment.Bottom
+                return VerticalAlignment.Top;
+        }
+
+        private HorizontalAlignment OppositeHorizontal(HorizontalAlignment horizontalAlignment)
+        {
+            if (horizontalAlignment == HorizontalAlignment.Left)
+                return HorizontalAlignment.Right;
+            else // verticalAlignment == VerticalAlignment.Right
+                return HorizontalAlignment.Left;
         }
 
         private SnapPointPosition GetSnapPointPosition(VerticalAlignment verticalAlignment, HorizontalAlignment horizontalAlignment)

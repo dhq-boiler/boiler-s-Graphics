@@ -72,7 +72,7 @@ namespace boilersGraphics.ViewModels
                 ChangeHitTestToEnable();
                 SelectOneToolItem("pointer");
             })));
-            ToolItems.Add(new ToolItemData("lasso", "pack://application:,,,/Assets/img/rubberband.png", Resources.Tool_Lasso, new DelegateCommand(() =>
+            ToolItems.Add(new ToolItemData("lasso", "pack://application:,,,/Assets/img/rubberband_dark.png", Resources.Tool_Lasso, new DelegateCommand(() =>
             {
                 var mainWindowViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel);
                 mainWindowViewModel.ClearCurrentOperationAndDetails();
@@ -84,7 +84,7 @@ namespace boilersGraphics.ViewModels
                 ChangeHitTestToDisable();
                 SelectOneToolItem("lasso");
             })));
-            ToolItems.Add(new ToolItemData("straightline", "pack://application:,,,/Assets/img/straightline.png", Resources.Tool_StraightLine, new DelegateCommand(() =>
+            ToolItems.Add(new ToolItemData("straightline", "pack://application:,,,/Assets/img/straightline_dark.png", Resources.Tool_StraightLine, new DelegateCommand(() =>
             {
                 var mainWindowViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel);
                 mainWindowViewModel.ClearCurrentOperationAndDetails();
@@ -96,7 +96,7 @@ namespace boilersGraphics.ViewModels
                 ChangeHitTestToDisable();
                 SelectOneToolItem("straightline");
             })));
-            ToolItems.Add(new ToolItemData("rectangle", "pack://application:,,,/Assets/img/rectangle.png", Resources.Tool_Rectangle, new DelegateCommand(() =>
+            ToolItems.Add(new ToolItemData("rectangle", "pack://application:,,,/Assets/img/rectangle_dark.png", Resources.Tool_Rectangle, new DelegateCommand(() =>
             {
                 var mainWindowViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel);
                 mainWindowViewModel.ClearCurrentOperationAndDetails();
@@ -108,7 +108,7 @@ namespace boilersGraphics.ViewModels
                 ChangeHitTestToDisable();
                 SelectOneToolItem("rectangle");
             })));
-            ToolItems.Add(new ToolItemData("ellipse", "pack://application:,,,/Assets/img/ellipse.png", Resources.Tool_Ellipse, new DelegateCommand(() =>
+            ToolItems.Add(new ToolItemData("ellipse", "pack://application:,,,/Assets/img/ellipse_dark.png", Resources.Tool_Ellipse, new DelegateCommand(() =>
             {
                 var mainWindowViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel);
                 mainWindowViewModel.ClearCurrentOperationAndDetails();
@@ -120,7 +120,7 @@ namespace boilersGraphics.ViewModels
                 ChangeHitTestToDisable();
                 SelectOneToolItem("ellipse");
             })));
-            ToolItems.Add(new ToolItemData("picture", "pack://application:,,,/Assets/img/Picture.png", Resources.Tool_Picture, new DelegateCommand(() =>
+            ToolItems.Add(new ToolItemData("picture", "pack://application:,,,/Assets/img/Picture_dark.png", Resources.Tool_Picture, new DelegateCommand(() =>
             {
                 var mainWindowViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel);
                 mainWindowViewModel.ClearCurrentOperationAndDetails();
@@ -140,7 +140,7 @@ namespace boilersGraphics.ViewModels
                     SelectOneToolItem("picture");
                 }
             })));
-            ToolItems.Add(new ToolItemData("letter", "pack://application:,,,/Assets/img/A.png", Resources.Tool_Lettering, new DelegateCommand(() =>
+            ToolItems.Add(new ToolItemData("letter", "pack://application:,,,/Assets/img/A_dark.png", Resources.Tool_Lettering, new DelegateCommand(() =>
             {
                 var mainWindowViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel);
                 mainWindowViewModel.ClearCurrentOperationAndDetails();
@@ -152,7 +152,7 @@ namespace boilersGraphics.ViewModels
                 ChangeHitTestToDisable();
                 SelectOneToolItem("letter");
             })));
-            ToolItems.Add(new ToolItemData("letter-vertical", "pack://application:,,,/Assets/img/A_Vertical.png", Resources.Tool_VerticalLettering, new DelegateCommand(() =>
+            ToolItems.Add(new ToolItemData("letter-vertical", "pack://application:,,,/Assets/img/A_Vertical_dark.png", Resources.Tool_VerticalLettering, new DelegateCommand(() =>
             {
                 var mainWindowViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel);
                 mainWindowViewModel.ClearCurrentOperationAndDetails();
@@ -164,7 +164,7 @@ namespace boilersGraphics.ViewModels
                 ChangeHitTestToDisable();
                 SelectOneToolItem("letter-vertical");
             })));
-            ToolItems.Add(new ToolItemData("polygon", "pack://application:,,,/Assets/img/polygon.png", Resources.Tool_Polygon, new DelegateCommand(() =>
+            ToolItems.Add(new ToolItemData("polygon", "pack://application:,,,/Assets/img/polygon_dark.png", Resources.Tool_Polygon, new DelegateCommand(() =>
             {
                 var mainWindowViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel);
                 mainWindowViewModel.ClearCurrentOperationAndDetails();
@@ -184,7 +184,7 @@ namespace boilersGraphics.ViewModels
                     SelectOneToolItem("polygon");
                 }
             })));
-            ToolItems.Add(new ToolItemData("bezier", "pack://application:,,,/Assets/img/BezierCurve.png", Resources.Tool_BezierCurve, new DelegateCommand(() =>
+            ToolItems.Add(new ToolItemData("bezier", "pack://application:,,,/Assets/img/BezierCurve_dark.png", Resources.Tool_BezierCurve, new DelegateCommand(() =>
             {
                 var mainWindowViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel);
                 mainWindowViewModel.ClearCurrentOperationAndDetails();
@@ -196,7 +196,7 @@ namespace boilersGraphics.ViewModels
                 ChangeHitTestToDisable();
                 SelectOneToolItem("bezier");
             })));
-            ToolItems.Add(new ToolItemData("snappoint", "pack://application:,,,/Assets/img/SnapPoint.png", Resources.Tool_SnapPoint, new DelegateCommand(() =>
+            ToolItems.Add(new ToolItemData("snappoint", "pack://application:,,,/Assets/img/SnapPoint_dark.png", Resources.Tool_SnapPoint, new DelegateCommand(() =>
             {
                 var mainWindowViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel);
                 mainWindowViewModel.ClearCurrentOperationAndDetails();
@@ -208,7 +208,7 @@ namespace boilersGraphics.ViewModels
                 ChangeHitTestToDisable();
                 SelectOneToolItem("snappoint");
             })));
-            ToolItems.Add(new ToolItemData("brush", "pack://application:,,,/Assets/img/brush.png", Resources.Tool_Brush, new DelegateCommand(() =>
+            ToolItems.Add(new ToolItemData("brush", "pack://application:,,,/Assets/img/brush_dark.png", Resources.Tool_Brush, new DelegateCommand(() =>
             {
                 var mainWindowViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel);
                 mainWindowViewModel.ClearCurrentOperationAndDetails();
@@ -222,7 +222,7 @@ namespace boilersGraphics.ViewModels
                 ChangeHitTestToDisable();
                 SelectOneToolItem("brush");
             })));
-            ToolItems.Add(new ToolItemData("eraser", "pack://application:,,,/Assets/img/eraser.png", Resources.Tool_Eraser, new DelegateCommand(() =>
+            ToolItems.Add(new ToolItemData("eraser", "pack://application:,,,/Assets/img/eraser_dark.png", Resources.Tool_Eraser, new DelegateCommand(() =>
             {
                 var mainWindowViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel);
                 mainWindowViewModel.ClearCurrentOperationAndDetails();
@@ -234,7 +234,7 @@ namespace boilersGraphics.ViewModels
                 ChangeHitTestToDisable();
                 SelectOneToolItem("eraser");
             })));
-            ToolItems.Add(new ToolItemData("slice", "pack://application:,,,/Assets/img/slice_tool.png", Resources.Tool_Slice, new DelegateCommand(() =>
+            ToolItems.Add(new ToolItemData("slice", "pack://application:,,,/Assets/img/slice_tool_dark.png", Resources.Tool_Slice, new DelegateCommand(() =>
             {
                 var mainWindowViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel);
                 mainWindowViewModel.ClearCurrentOperationAndDetails();
@@ -246,7 +246,7 @@ namespace boilersGraphics.ViewModels
                 ChangeHitTestToDisable();
                 SelectOneToolItem("slice");
             })));
-            ToolItems.Add(new ToolItemData("polybezier", "pack://application:,,,/Assets/img/poly_bezier.png", Resources.Tool_FreeHand, new DelegateCommand(() =>
+            ToolItems.Add(new ToolItemData("polybezier", "pack://application:,,,/Assets/img/poly_bezier_dark.png", Resources.Tool_FreeHand, new DelegateCommand(() =>
             {
                 var mainWindowViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel);
                 mainWindowViewModel.ClearCurrentOperationAndDetails();
@@ -258,7 +258,7 @@ namespace boilersGraphics.ViewModels
                 ChangeHitTestToDisable();
                 SelectOneToolItem("polybezier");
             })));
-            ToolItems.Add(new ToolItemData("pie", "pack://application:,,,/Assets/img/FoldingFan.png", Resources.Tool_Pie, new DelegateCommand(() =>
+            ToolItems.Add(new ToolItemData("pie", "pack://application:,,,/Assets/img/FoldingFan_dark.png", Resources.Tool_Pie, new DelegateCommand(() =>
             {
                 var mainWindowViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel);
                 mainWindowViewModel.ClearCurrentOperationAndDetails();
@@ -271,7 +271,7 @@ namespace boilersGraphics.ViewModels
                 SelectOneToolItem("pie");
                 (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = Resources.String_Pie_DetermineCenterPoint;
             })));
-            ToolItems.Add(new ToolItemData("dropper", "pack://application:,,,/Assets/img/dropper.png", Resources.Tool_Dropper, new DelegateCommand(() =>
+            ToolItems.Add(new ToolItemData("dropper", "pack://application:,,,/Assets/img/dropper_dark.png", Resources.Tool_Dropper, new DelegateCommand(() =>
             {
                 var mainWindowViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel);
                 mainWindowViewModel.ClearCurrentOperationAndDetails();
@@ -283,7 +283,7 @@ namespace boilersGraphics.ViewModels
                 ChangeHitTestToDisable();
                 SelectOneToolItem("dropper");
             })));
-            ToolItems.Add(new ToolItemData("canvasModifier", "pack://application:,,,/Assets/img/icons8-canvas-64.png", Resources.Tool_CanvasResize, new DelegateCommand(() =>
+            ToolItems.Add(new ToolItemData("canvasModifier", "pack://application:,,,/Assets/img/icons8-canvas-64_dark.png", Resources.Tool_CanvasResize, new DelegateCommand(() =>
             {
                 var mainWindowViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel);
                 mainWindowViewModel.ClearCurrentOperationAndDetails();
@@ -305,7 +305,7 @@ namespace boilersGraphics.ViewModels
             ToolItems2.Add(toolItemData);
             toolItemData.IsChecked = mainWindowViewModel.DiagramViewModel.EnableMiniMap.Value;
             
-            toolItemData = new ToolItemData("combine", "pack://application:,,,/Assets/img/icon_Combine_union.png", Resources.MenuItem_Combine, new DelegateCommand(() =>
+            toolItemData = new ToolItemData("combine", "pack://application:,,,/Assets/img/icon_Combine_union_dark.png", Resources.MenuItem_Combine, new DelegateCommand(() =>
             {
                 mainWindowViewModel.DiagramViewModel.EnableCombine.Value = !mainWindowViewModel.DiagramViewModel.EnableCombine.Value;
             }));
@@ -319,7 +319,7 @@ namespace boilersGraphics.ViewModels
             ToolItems2.Add(toolItemData);
             toolItemData.IsChecked = mainWindowViewModel.DiagramViewModel.EnableLayers.Value;
 
-            toolItemData = new ToolItemData("workHistory", "pack://application:,,,/Assets/img/work_history.png", Resources.MenuItem_WorkHistory, new DelegateCommand(() =>
+            toolItemData = new ToolItemData("workHistory", "pack://application:,,,/Assets/img/work_history_dark.png", Resources.MenuItem_WorkHistory, new DelegateCommand(() =>
             {
                 mainWindowViewModel.DiagramViewModel.EnableWorkHistory.Value = !mainWindowViewModel.DiagramViewModel.EnableWorkHistory.Value;
             }));

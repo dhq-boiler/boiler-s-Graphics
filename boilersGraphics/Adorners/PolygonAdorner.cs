@@ -87,7 +87,7 @@ namespace boilersGraphics.Adorners
                 item.Width.Value = Math.Max(_dragStartPoint.Value.X - _dragEndPoint.Value.X, _dragEndPoint.Value.X - _dragStartPoint.Value.X);
                 item.PathGeometryNoRotate.Value = null;
                 item.Height.Value = Math.Max(_dragStartPoint.Value.Y - _dragEndPoint.Value.Y, _dragEndPoint.Value.Y - _dragStartPoint.Value.Y);
-                item.UpdatePathGeometryIfEnable();
+                item.UpdatePathGeometryIfEnable(string.Empty, 0, 0);
                 item.EdgeBrush.Value = item.Owner.EdgeBrush.Value.Clone();
                 item.FillBrush.Value = item.Owner.FillBrush.Value.Clone();
                 item.EdgeThickness.Value = item.Owner.EdgeThickness.Value.Value;

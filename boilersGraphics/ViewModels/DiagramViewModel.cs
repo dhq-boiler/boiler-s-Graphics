@@ -395,9 +395,6 @@ namespace boilersGraphics.ViewModels
                 LoadedCommand = new DelegateCommand(() =>
                 {
                     LogManager.GetCurrentClassLogger().Trace($"LoadedCommand");
-                    //var filename = @"Z:\Git\boilersGraphics\boilersGraphics.Test\bin\Debug\XmlFiles\checker_pattern.xml";
-                    //ExecuteLoadCommand(filename, false);
-                    //BackgroundItem.Value.FillColor.Value = Colors.Red;
                 });
                 FitCanvasCommand = new DelegateCommand(() =>
                 {
@@ -549,6 +546,8 @@ namespace boilersGraphics.ViewModels
                     IntersectCommand.RaiseCanExecuteChanged();
                     XorCommand.RaiseCanExecuteChanged();
                     ExcludeCommand.RaiseCanExecuteChanged();
+
+                    ClipCommand.RaiseCanExecuteChanged();
 
                     PropertyCommand.RaiseCanExecuteChanged();
                 })
@@ -924,21 +923,33 @@ namespace boilersGraphics.ViewModels
 
         private void ExecuteClipCommand()
         {
+            MainWindowVM.Recorder.BeginRecode();
             var picture = SelectedItems.Value.OfType<PictureDesignerItemViewModel>().First();
             var other = SelectedItems.Value.OfType<DesignerItemViewModelBase>().Last();
-            var pathGeometry = GeometryCreator.CreateRectangle(other as NRectangleViewModel, picture.Left.Value, picture.Top.Value);
-            (picture.TransformNortification.Value.Sender as PictureDesignerItemViewModel).Clip.Value = pathGeometry;
-            (picture.TransformNortification.Value.Sender as PictureDesignerItemViewModel).ClipObject.Value = other;
-            picture.TransformNortification.Zip(picture.TransformNortification.Skip(1), (Old, New) => new { OldItem = Old, NewItem = New })
-            .Where(x => x.NewItem.PropertyName == "Width" || x.NewItem.PropertyName == "Height")
-            .Subscribe(x =>
-            {
-                var _other = picture.ClipObject.Value;
-                var _pathGeometry = GeometryCreator.CreateRectangle(_other as NRectangleViewModel, picture.Left.Value, picture.Top.Value, x.NewItem.PropertyName, (double)x.NewItem.OldValue, (double)x.NewItem.NewValue);
-                picture.Clip.Value = _pathGeometry;
-            })
-            .AddTo(_CompositeDisposable);
+            var pathGeometry = other.PathGeometry.Value;
+            double left = -(other.Left.Value - picture.Left.Value);
+            double top = -(other.Top.Value - picture.Top.Value);
+            double right = -(picture.Right.Value - other.Right.Value);
+            double bottom = -(picture.Bottom.Value - other.Bottom.Value);
+            pathGeometry = GeometryCreator.Translate(pathGeometry, -left, -top);
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(picture, "ClippingOriginRect.Value", new Rect(picture.Left.Value, picture.Top.Value, picture.Width.Value, picture.Height.Value));
+            //MainWindowVM.Recorder.Current.ExecuteSetProperty(picture, "WidthInClipping.Value", picture.Width.Value);
+            //MainWindowVM.Recorder.Current.ExecuteSetProperty(picture, "HeightInClipping.Value", picture.Height.Value);
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(picture, "Margin.Value", new System.Windows.Thickness(left, top, right, bottom));
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(picture, "Pool.Value", "IsInitializing");
+            //MainWindowVM.Recorder.Current.ExecuteSetProperty(picture, "Left.Value", 0d);
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(picture, "Left.Value", picture.Left.Value + pathGeometry.Bounds.X);
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(picture, "Width.Value", other.Width.Value);
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(picture, "Top.Value", picture.Top.Value + pathGeometry.Bounds.Y);
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(picture, "Height.Value", other.Height.Value);
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(picture, "Pool.Value", string.Empty);
+            MainWindowVM.Recorder.Current.ExecuteSetProperty<PictureDesignerItemViewModel, PathGeometry>(picture, "PathGeometryNoRotate.Value", null);
+            var sender = picture.TransformNortification.Value.Sender as PictureDesignerItemViewModel;
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(sender, "PathGeometryNoRotate.Value", pathGeometry);
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(sender, "ClipObject.Value", other);
+
             Remove(other);
+            MainWindowVM.Recorder.EndRecode();
         }
 
         public bool CanExecuteClip()
@@ -1031,6 +1042,23 @@ namespace boilersGraphics.ViewModels
             UpdateStatisticsCountUnion();
         }
 
+        public bool CanExecuteUnion()
+        {
+            var countIsCorrent = GetCountIsCorrent();
+            if (countIsCorrent)
+            {
+                var firstElementTypeIsCorrect = SelectedItems.ElementAt(0).GetType() != typeof(PictureDesignerItemViewModel);
+                var secondElementTypeIsCorrect = SelectedItems.ElementAt(1).GetType() != typeof(PictureDesignerItemViewModel);
+                return countIsCorrent && firstElementTypeIsCorrect && secondElementTypeIsCorrect;
+            }
+            var polyBezier = GetSelectedItemsForCombine().FirstOrDefault() as PolyBezierViewModel;
+            if (polyBezier != null)
+            {
+                return true;
+            }
+            return false;
+        }
+
         private void UpdateStatisticsCountUnion()
         {
             var statistics = MainWindowVM.Statistics.Value;
@@ -1079,10 +1107,24 @@ namespace boilersGraphics.ViewModels
                     var item1PathGeometry = item1.PathGeometryNoRotate.Value;
                     var item2PathGeometry = item2.PathGeometryNoRotate.Value;
 
-                    if (item1 is DesignerItemViewModelBase designerItem1 && item1.RotationAngle.Value != 0)
-                        item1PathGeometry = designerItem1.PathGeometryRotate.Value;
-                    if (item2 is DesignerItemViewModelBase designerItem2 && item2.RotationAngle.Value != 0)
-                        item2PathGeometry = designerItem2.PathGeometryRotate.Value;
+                    if (item1 is DesignerItemViewModelBase designerItem1)
+                    {
+                        if (item1.RotationAngle.Value != 0)
+                        {
+                            item1PathGeometry = designerItem1.PathGeometryRotate.Value;
+                        }
+                        item1PathGeometry = GeometryCreator.Translate(item1PathGeometry, designerItem1.Left.Value, designerItem1.Top.Value);
+                    }
+
+                    if (item2 is DesignerItemViewModelBase designerItem2)
+                    {
+                        if (item2.RotationAngle.Value != 0)
+                        {
+                            item2PathGeometry = designerItem2.PathGeometryRotate.Value;
+                        }
+                        item2PathGeometry = GeometryCreator.Translate(item2PathGeometry, designerItem2.Left.Value, designerItem2.Top.Value);
+                    }
+
 
                     CastToLetterAndSetTransform(item1, item2, item1PathGeometry, item2PathGeometry);
 
@@ -1161,23 +1203,6 @@ namespace boilersGraphics.ViewModels
             }
         }
 
-        public bool CanExecuteUnion()
-        {
-            var countIsCorrent = GetCountIsCorrent();
-            if (countIsCorrent)
-            {
-                var firstElementTypeIsCorrect = SelectedItems.ElementAt(0).GetType() != typeof(PictureDesignerItemViewModel);
-                var secondElementTypeIsCorrect = SelectedItems.ElementAt(1).GetType() != typeof(PictureDesignerItemViewModel);
-                return countIsCorrent && firstElementTypeIsCorrect && secondElementTypeIsCorrect;
-            }
-            var polyBezier = GetSelectedItemsForCombine().FirstOrDefault() as PolyBezierViewModel;
-            if (polyBezier != null)
-            {
-                return true;
-            }
-            return false;
-        }
-
         private bool GetCountIsCorrent()
         {
             List<SelectableDesignerItemViewModelBase> newlist = GetSelectedItemsForCombine();
@@ -1251,6 +1276,7 @@ namespace boilersGraphics.ViewModels
                 pic.Left.Value = 0;
                 pic.Top.Value = 0;
                 pic.Width.Value = bImg.PixelWidth;
+                pic.PathGeometryNoRotate.Value = null;
                 pic.Height.Value = bImg.PixelHeight;
                 pic.FileWidth = bImg.PixelWidth;
                 pic.FileHeight = bImg.PixelHeight;

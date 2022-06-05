@@ -39,9 +39,32 @@
                                       Width="40"
                                       Height="40"
                                       Padding="3"
+                                      BorderBrush="Transparent"
+                                      BorderThickness="0"
                                       ToolTip="{Binding Tooltip.Value}"
                                       Command="{Binding Command}"
                                       IsChecked="{Binding IsChecked}">
+                                    <ToggleButton.Style>
+                                        <Style TargetType="ToggleButton">
+                                            <Style.Triggers>
+                                                <Trigger Property="IsChecked" Value="True">
+                                                    <Setter Property="Background" Value="#FFBCDDEE" />
+                                                </Trigger>
+                                                <Trigger Property="IsChecked" Value="False">
+                                                    <Setter Property="Background" Value="#FF2A2A2A" />
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </ToggleButton.Style>
+                                    <ToggleButton.Template>
+                                        <ControlTemplate TargetType="ToggleButton">
+                                            <Border BorderBrush="{TemplateBinding BorderBrush}"
+                                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                                    Background="{TemplateBinding Background}">
+                                                <ContentPresenter x:Name="ToggleButtonContent" />
+                                            </Border>
+                                        </ControlTemplate>
+                                    </ToggleButton.Template>
                                     <Image RenderOptions.BitmapScalingMode="HighQuality" Source="{Binding ImageUrl}" />
                                 </ToggleButton>
                             </DataTemplate>

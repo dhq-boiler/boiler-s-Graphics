@@ -12,6 +12,7 @@ using Prism.Mvvm;
 using Prism.Services.Dialogs;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
+using REghZyFramework.Themes;
 using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
@@ -388,6 +389,7 @@ namespace boilersGraphics.ViewModels
                       .AddTo(_CompositeDisposable);
 
             ResourceService.Current.ChangeCulture(CultureInfo.CurrentCulture.Name);
+            ThemesController.SetTheme(ThemesController.ThemeTypes.Dark);
         }
 
         private static void ConfigureNLog()

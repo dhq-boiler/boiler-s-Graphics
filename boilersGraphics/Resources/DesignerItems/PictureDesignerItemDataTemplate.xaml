@@ -7,11 +7,13 @@
             <converters:ToFileNameOrBitmapImage x:Key="ToFileNameOrBitmapImage" />
         </DataTemplate.Resources>
         <Border BorderBrush="{Binding EdgeBrush.Value}" BorderThickness="{Binding EdgeThickness.Value}">
-            <Image Clip="{Binding Clip.Value}"
+            <Image Clip="{Binding PathGeometry.Value}"
+                   Margin="{Binding Margin.Value}"
                    IsHitTestVisible="False"
                    Source="{Binding Converter={StaticResource ToFileNameOrBitmapImage}}"
                    Stretch="Fill"
-                   Tag="picture" />
+                   Tag="picture"
+                   RenderOptions.BitmapScalingMode="HighQuality" />
         </Border>
     </DataTemplate>
 </ResourceDictionary>

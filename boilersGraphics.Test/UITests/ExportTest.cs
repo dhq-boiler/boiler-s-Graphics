@@ -197,7 +197,7 @@ namespace boilersGraphics.Test.UITests
             var designerCanvas = GetElementBy(By.XPath("//Pane[@Name=\"DesignerScrollViewer\"][@AutomationId=\"DesignerScrollViewer\"]"));
             GetElementByName("slice").Click();
             action = new Actions(session);
-            action.MoveToElement(designerCanvas, 500, 100);
+            action.MoveToElement(designerCanvas, 503, 102);
             action.ClickAndHold();
             for (int i = 1; i < 200; ++i)
                 action.MoveByOffset(1, 1);

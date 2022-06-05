@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net5.0-windows10.0.22000.0</TargetFramework>
+    <TargetFramework>net6.0-windows10.0.22000.0</TargetFramework>
     <OutputType>WinExe</OutputType>
     <LangVersion>latest</LangVersion>
     <PublishUrl>publish\</PublishUrl>
@@ -46,18 +46,38 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\img\art-pallete.png" />
+    <Resource Include="Assets\img\A_dark.png" />
+    <Resource Include="Assets\img\A_Vertical_dark.png" />
+    <Resource Include="Assets\img\BezierCurve_dark.png" />
+    <Resource Include="Assets\img\brush_dark.png" />
     <Resource Include="Assets\img\dropper.png" />
+    <Resource Include="Assets\img\dropper_dark.png" />
+    <Resource Include="Assets\img\ellipse_dark.png" />
+    <Resource Include="Assets\img\eraser_dark.png" />
+    <Resource Include="Assets\img\Export_dark.png" />
+    <Resource Include="Assets\img\FoldingFan_dark.png" />
+    <Resource Include="Assets\img\Gear_dark.png" />
     <Resource Include="Assets\img\icons8-canvas-64.png" />
+    <Resource Include="Assets\img\icons8-canvas-64_dark.png" />
     <Resource Include="Assets\img\icon_Combine_union.png" />
+    <Resource Include="Assets\img\icon_Combine_union_dark.png" />
     <Resource Include="Assets\img\icon_Layers.png" />
     <Resource Include="Assets\img\minimap.png" />
+    <Resource Include="Assets\img\picture_dark.png" />
+    <Resource Include="Assets\img\polygon_dark.png" />
     <Resource Include="Assets\img\poly_bezier.png" />
     <Resource Include="Assets\img\FoldingFan.png" />
+    <Resource Include="Assets\img\poly_bezier_dark.png" />
     <Resource Include="Assets\img\rectangle.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\img\pointer.png" />
+    <Resource Include="Assets\img\rectangle_dark.png" />
     <Resource Include="Assets\img\right_arrow.png" />
+    <Resource Include="Assets\img\right_arrow_dark.png" />
+    <Resource Include="Assets\img\rubberband_dark.png" />
+    <Resource Include="Assets\img\slice_tool_dark.png" />
+    <Resource Include="Assets\img\SnapPoint_dark.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\img\straightline.png" />
@@ -82,6 +102,7 @@
     <Resource Include="Assets\img\Group.png" />
     <Resource Include="Assets\img\SendBackward.png" />
     <Resource Include="Assets\img\SendToBack.png" />
+    <Resource Include="Assets\img\straightline_dark.png" />
     <Resource Include="Assets\img\Ungroup.png" />
   </ItemGroup>
   <ItemGroup>
@@ -120,6 +141,7 @@
     <Resource Include="Assets\img\intersect.png" />
     <Resource Include="Assets\img\union.png" />
     <Resource Include="Assets\img\work_history.png" />
+    <Resource Include="Assets\img\work_history_dark.png" />
     <Resource Include="Assets\img\xor.png" />
   </ItemGroup>
   <ItemGroup>
@@ -140,9 +162,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Btl\Controls\Btl.Controls.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Resources\Themes\" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\img\Square150x150Logo.scale-200.png" />
@@ -176,7 +195,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Homura" Version="3.4.2" />
-    <PackageReference Include="MdXaml" Version="1.12.0" />
+    <PackageReference Include="MdXaml" Version="1.15.0" />
     <PackageReference Include="Microsoft.Windows.CsWinRT" Version="1.4.1" />
     <PackageReference Include="NLog" Version="4.7.13" />
     <PackageReference Include="NLog.Schema" Version="4.7.13" />
@@ -201,17 +220,39 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="Assets\img\art-pallete.png" />
+    <None Remove="Assets\img\A_dark.png" />
+    <None Remove="Assets\img\A_Vertical_dark.png" />
+    <None Remove="Assets\img\BezierCurve_dark.png" />
+    <None Remove="Assets\img\brush_dark.png" />
     <None Remove="Assets\img\dropper.png" />
+    <None Remove="Assets\img\dropper_dark.png" />
+    <None Remove="Assets\img\ellipse_dark.png" />
+    <None Remove="Assets\img\eraser_dark.png" />
+    <None Remove="Assets\img\Export_dark.png" />
+    <None Remove="Assets\img\FoldingFan_dark.png" />
+    <None Remove="Assets\img\Gear_dark.png" />
     <None Remove="Assets\img\icons8-canvas-64.png" />
+    <None Remove="Assets\img\icons8-canvas-64_dark.png" />
     <None Remove="Assets\img\icon_Combine_union.png" />
+    <None Remove="Assets\img\icon_Combine_union_dark.png" />
     <None Remove="Assets\img\icon_Layers.png" />
     <None Remove="Assets\img\minimap.png" />
+    <None Remove="Assets\img\picture_dark.png" />
+    <None Remove="Assets\img\polygon_dark.png" />
     <None Remove="Assets\img\poly_bezier.png" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Assets\img\FoldingFan.png" />
+    <None Remove="Assets\img\poly_bezier_dark.png" />
+    <None Remove="Assets\img\rectangle_dark.png" />
     <None Remove="Assets\img\right_arrow.png" />
+    <None Remove="Assets\img\right_arrow_dark.png" />
+    <None Remove="Assets\img\rubberband_dark.png" />
+    <None Remove="Assets\img\slice_tool_dark.png" />
+    <None Remove="Assets\img\SnapPoint_dark.png" />
+    <None Remove="Assets\img\straightline_dark.png" />
     <None Remove="Assets\img\work_history.png" />
+    <None Remove="Assets\img\work_history_dark.png" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Properties\Resources.Designer.cs">
