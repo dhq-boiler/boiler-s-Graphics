@@ -41,11 +41,12 @@
                 <Label Content="{Binding LicenseMessage.Value}" />
             </StackPanel>
             <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_SourceCodeLicense, Mode=OneWay}" />
-            <mdxam:MarkdownScrollViewer
-                xml:space="preserve"
-                Foreground="{StaticResource ControlDefaultForeground}"
-                Markdown="{Binding License.Value}"
-                ScrollViewer.VerticalScrollBarVisibility="Hidden" />
+            <DockPanel Background="White">
+                <mdxam:MarkdownScrollViewer
+                    xml:space="preserve"
+                    Markdown="{Binding License.Value}"
+                    ScrollViewer.VerticalScrollBarVisibility="Hidden" />
+            </DockPanel>
         </StackPanel>
         <StackPanel
             HorizontalAlignment="Right"
