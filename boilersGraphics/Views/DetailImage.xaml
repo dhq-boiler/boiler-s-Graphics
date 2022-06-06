@@ -1,17 +1,25 @@
-﻿<UserControl x:Class="boilersGraphics.Views.DetailImage"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:control="clr-namespace:boilersGraphics.Controls"
-             xmlns:converter="clr-namespace:boilersGraphics.Converters"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:prism="http://prismlibrary.com/"
-             xmlns:viewmodels="clr-namespace:boilersGraphics.ViewModels"
-             d:DataContext="{d:DesignInstance Type=viewmodels:PictureDesignerItemViewModel}"
-             prism:ViewModelLocator.AutoWireViewModel="True"
-             mc:Ignorable="d">
+﻿<UserControl
+    x:Class="boilersGraphics.Views.DetailImage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:control="clr-namespace:boilersGraphics.Controls"
+    xmlns:converter="clr-namespace:boilersGraphics.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:prism="http://prismlibrary.com/"
+    xmlns:viewmodels="clr-namespace:boilersGraphics.ViewModels"
+    d:DataContext="{d:DesignInstance Type=viewmodels:PictureDesignerItemViewModel}"
+    prism:ViewModelLocator.AutoWireViewModel="True"
+    Background="{StaticResource BackgroundColour}"
+    mc:Ignorable="d">
     <UserControl.Resources>
-        <converter:ExtractRectConverter x:Key="ExtractRect" />
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/Theme.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/Themes/DarkTheme.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <converter:ExtractRectConverter x:Key="ExtractRect" />
+        </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
         <Grid>
@@ -34,44 +42,49 @@
                 <RowDefinition Height="1" />
                 <RowDefinition Height="100" />
             </Grid.RowDefinitions>
-            <Line Grid.Row="1"
-                  Grid.Column="1"
-                  Grid.ColumnSpan="3"
-                  Margin="-20"
-                  Stretch="Fill"
-                  Stroke="Red"
-                  StrokeDashArray="2 2"
-                  X2="1" />
-            <Line Grid.Row="3"
-                  Grid.Column="1"
-                  Grid.ColumnSpan="3"
-                  Margin="-20"
-                  Stretch="Fill"
-                  Stroke="Red"
-                  StrokeDashArray="2 2"
-                  X2="1" />
-            <Line Grid.Row="1"
-                  Grid.RowSpan="3"
-                  Grid.Column="1"
-                  Margin="-20"
-                  Stretch="Fill"
-                  Stroke="Red"
-                  StrokeDashArray="2 2"
-                  Y2="1" />
-            <Line Grid.Row="1"
-                  Grid.RowSpan="3"
-                  Grid.Column="3"
-                  Margin="-20"
-                  Stretch="Fill"
-                  Stroke="Red"
-                  StrokeDashArray="2 2"
-                  Y2="1" />
-            <Path Grid.Row="2"
-                  Grid.Column="2"
-                  IsHitTestVisible="False"
-                  Stretch="Fill"
-                  Stroke="{Binding EdgeColor.Value, Converter={StaticResource solidColorBrushConverter}}"
-                  StrokeThickness="{Binding EdgeThickness.Value}">
+            <Line
+                Grid.Row="1"
+                Grid.Column="1"
+                Grid.ColumnSpan="3"
+                Margin="-20"
+                Stretch="Fill"
+                Stroke="Red"
+                StrokeDashArray="2 2"
+                X2="1" />
+            <Line
+                Grid.Row="3"
+                Grid.Column="1"
+                Grid.ColumnSpan="3"
+                Margin="-20"
+                Stretch="Fill"
+                Stroke="Red"
+                StrokeDashArray="2 2"
+                X2="1" />
+            <Line
+                Grid.Row="1"
+                Grid.RowSpan="3"
+                Grid.Column="1"
+                Margin="-20"
+                Stretch="Fill"
+                Stroke="Red"
+                StrokeDashArray="2 2"
+                Y2="1" />
+            <Line
+                Grid.Row="1"
+                Grid.RowSpan="3"
+                Grid.Column="3"
+                Margin="-20"
+                Stretch="Fill"
+                Stroke="Red"
+                StrokeDashArray="2 2"
+                Y2="1" />
+            <Path
+                Grid.Row="2"
+                Grid.Column="2"
+                IsHitTestVisible="False"
+                Stretch="Fill"
+                Stroke="{Binding EdgeColor.Value, Converter={StaticResource solidColorBrushConverter}}"
+                StrokeThickness="{Binding EdgeThickness.Value}">
                 <Path.Data>
                     <RectangleGeometry Rect="{Binding Converter={StaticResource ExtractRect}}" />
                 </Path.Data>
@@ -79,11 +92,12 @@
                     <ImageBrush ImageSource="{Binding FileName}" />
                 </Path.Fill>
             </Path>
-            <Ellipse Grid.Row="2"
-                     Grid.Column="2"
-                     Width="5"
-                     Height="5"
-                     Fill="Red" />
+            <Ellipse
+                Grid.Row="2"
+                Grid.Column="2"
+                Width="5"
+                Height="5"
+                Fill="Red" />
         </Grid>
         <Grid>
             <Grid.Resources>
@@ -106,57 +120,67 @@
                 <RowDefinition Height="85" />
             </Grid.RowDefinitions>
             <DockPanel Grid.Row="1" Grid.Column="0">
-                <StackPanel HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            Orientation="Horizontal">
+                <StackPanel
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Orientation="Horizontal">
                     <Label Content="Top" />
                     <control:DoubleTextBox VerticalContentAlignment="Center" DoubleText="{Binding Top.Value, Mode=TwoWay}" />
                 </StackPanel>
             </DockPanel>
-            <DockPanel Grid.Row="0"
-                       Grid.Column="1"
-                       Grid.ColumnSpan="2">
-                <StackPanel HorizontalAlignment="Left"
-                            VerticalAlignment="Center"
-                            Orientation="Horizontal">
+            <DockPanel
+                Grid.Row="0"
+                Grid.Column="1"
+                Grid.ColumnSpan="2">
+                <StackPanel
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    Orientation="Horizontal">
                     <Label Content="Left" />
                     <control:DoubleTextBox VerticalContentAlignment="Center" DoubleText="{Binding Left.Value, Mode=TwoWay}" />
                 </StackPanel>
             </DockPanel>
             <DockPanel Grid.Row="4" Grid.Column="2">
-                <StackPanel HorizontalAlignment="Center"
-                            VerticalAlignment="Top"
-                            Orientation="Horizontal">
+                <StackPanel
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Top"
+                    Orientation="Horizontal">
                     <Label Content="Width" />
                     <control:DoubleTextBox VerticalContentAlignment="Center" DoubleText="{Binding Width.Value, Mode=TwoWay}" />
                 </StackPanel>
             </DockPanel>
             <DockPanel Grid.Row="2" Grid.Column="4">
-                <StackPanel HorizontalAlignment="Left"
-                            VerticalAlignment="Center"
-                            Orientation="Horizontal">
+                <StackPanel
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    Orientation="Horizontal">
                     <Label Content="Height" />
                     <control:DoubleTextBox VerticalContentAlignment="Center" DoubleText="{Binding Height.Value, Mode=TwoWay}" />
                 </StackPanel>
             </DockPanel>
-            <DockPanel Grid.Row="2"
-                       Grid.Column="2"
-                       Margin="0,50,0,0">
-                <StackPanel HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            Orientation="Horizontal">
-                    <Label Background="White"
-                           Content="Center"
-                           FontWeight="Bold"
-                           Foreground="Red" />
-                    <control:DoubleTextBox Margin="5,0,5,0"
-                                           VerticalContentAlignment="Center"
-                                           DoubleText="{Binding CenterX.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                           Foreground="Red" />
-                    <control:DoubleTextBox Margin="5,0,5,0"
-                                           VerticalContentAlignment="Center"
-                                           DoubleText="{Binding CenterY.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                           Foreground="Red" />
+            <DockPanel
+                Grid.Row="2"
+                Grid.Column="2"
+                Margin="0,50,0,0">
+                <StackPanel
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Orientation="Horizontal">
+                    <Label
+                        Background="White"
+                        Content="Center"
+                        FontWeight="Bold"
+                        Foreground="Red" />
+                    <control:DoubleTextBox
+                        Margin="5,0,5,0"
+                        VerticalContentAlignment="Center"
+                        DoubleText="{Binding CenterX.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        Foreground="Red" />
+                    <control:DoubleTextBox
+                        Margin="5,0,5,0"
+                        VerticalContentAlignment="Center"
+                        DoubleText="{Binding CenterY.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        Foreground="Red" />
                 </StackPanel>
             </DockPanel>
         </Grid>

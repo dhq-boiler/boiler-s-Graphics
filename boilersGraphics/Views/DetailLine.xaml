@@ -1,20 +1,28 @@
-﻿<UserControl x:Class="boilersGraphics.Views.DetailLine"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:control="clr-namespace:boilersGraphics.Controls"
-             xmlns:converter="clr-namespace:boilersGraphics.Converters"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:boilersGraphics.Views"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:view="clr-namespace:boilersGraphics.Views"
-             xmlns:viewmodel="clr-namespace:boilersGraphics.ViewModels"
-             xmlns:c="clr-namespace:CalcBinding;assembly=CalcBinding"
-             mc:Ignorable="d">
+﻿<UserControl
+    x:Class="boilersGraphics.Views.DetailLine"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:c="clr-namespace:CalcBinding;assembly=CalcBinding"
+    xmlns:control="clr-namespace:boilersGraphics.Controls"
+    xmlns:converter="clr-namespace:boilersGraphics.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:boilersGraphics.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:view="clr-namespace:boilersGraphics.Views"
+    xmlns:viewmodel="clr-namespace:boilersGraphics.ViewModels"
+    Background="{StaticResource BackgroundColour}"
+    mc:Ignorable="d">
     <UserControl.Resources>
-        <converter:StraightLineBaseShiftConverter x:Key="Shift" />
-        <converter:ShiftPointConverter x:Key="ShiftPoint" />
-        <converter:DoubleCollectionToStringConverter x:Key="DoubleCollectionToString" />
-        <converter:ToPointCollectionConverter x:Key="ToPointCollection" />
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/Theme.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/Themes/DarkTheme.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <converter:StraightLineBaseShiftConverter x:Key="Shift" />
+            <converter:ShiftPointConverter x:Key="ShiftPoint" />
+            <converter:DoubleCollectionToStringConverter x:Key="DoubleCollectionToString" />
+            <converter:ToPointCollectionConverter x:Key="ToPointCollection" />
+        </ResourceDictionary>
     </UserControl.Resources>
     <UserControl.ContentTemplateSelector>
         <local:ItemsControlTemplateSelector>
@@ -24,27 +32,25 @@
                         <StackPanel Orientation="Horizontal">
                             <DockPanel>
                                 <Label DockPanel.Dock="Left">StrokeStartLineCap</Label>
-                                <ComboBox ItemsSource="{Binding PenLineCaps}"
-                                          SelectedValue="{Binding StrokeStartLineCap.Value}" />
+                                <ComboBox ItemsSource="{Binding PenLineCaps}" SelectedValue="{Binding StrokeStartLineCap.Value}" />
                             </DockPanel>
                             <DockPanel>
                                 <Label DockPanel.Dock="Left">StrokeEndLineCap</Label>
-                                <ComboBox ItemsSource="{Binding PenLineCaps}"
-                                          SelectedValue="{Binding StrokeEndLineCap.Value}" />
+                                <ComboBox ItemsSource="{Binding PenLineCaps}" SelectedValue="{Binding StrokeEndLineCap.Value}" />
                             </DockPanel>
                             <DockPanel>
                                 <Label DockPanel.Dock="Left">StrokeDashArray</Label>
-                                <TextBox Text="{Binding StrokeDashArray.Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DoubleCollectionToString}}"
-                                         Width="100"/>
+                                <TextBox Width="100" Text="{Binding StrokeDashArray.Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DoubleCollectionToString}}" />
                             </DockPanel>
                         </StackPanel>
                     </DockPanel>
                     <Canvas>
-                        <Line Stroke="{Binding EdgeColor.Value, Converter={StaticResource solidColorBrushConverter}}"
-                              StrokeThickness="{Binding EdgeThickness.Value}"
-                              StrokeStartLineCap="{Binding StrokeStartLineCap.Value}"
-                              StrokeEndLineCap="{Binding StrokeEndLineCap.Value}"
-                              StrokeDashArray="{Binding StrokeDashArray.Value}">
+                        <Line
+                            Stroke="{Binding EdgeColor.Value, Converter={StaticResource solidColorBrushConverter}}"
+                            StrokeDashArray="{Binding StrokeDashArray.Value}"
+                            StrokeEndLineCap="{Binding StrokeEndLineCap.Value}"
+                            StrokeStartLineCap="{Binding StrokeStartLineCap.Value}"
+                            StrokeThickness="{Binding EdgeThickness.Value}">
                             <Line.Style>
                                 <Style TargetType="Line">
                                     <Setter Property="X1">
@@ -82,9 +88,10 @@
                                 </Style>
                             </Line.Style>
                         </Line>
-                        <Ellipse Width="10"
-                                 Height="10"
-                                 Fill="Red">
+                        <Ellipse
+                            Width="10"
+                            Height="10"
+                            Fill="Red">
                             <Canvas.Left>
                                 <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="X5">
                                     <Binding Path="Points[0].X" />
@@ -98,9 +105,10 @@
                                 </MultiBinding>
                             </Canvas.Top>
                         </Ellipse>
-                        <Ellipse Width="10"
-                                 Height="10"
-                                 Fill="Red">
+                        <Ellipse
+                            Width="10"
+                            Height="10"
+                            Fill="Red">
                             <Canvas.Left>
                                 <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="X7">
                                     <Binding Path="Points[1].X" />
@@ -119,9 +127,10 @@
                                 <Style TargetType="Grid">
                                     <Setter Property="Canvas.Left">
                                         <Setter.Value>
-                                            <MultiBinding Converter="{StaticResource Shift}"
-                                                          ConverterParameter="X9"
-                                                          Mode="OneTime">
+                                            <MultiBinding
+                                                Converter="{StaticResource Shift}"
+                                                ConverterParameter="X9"
+                                                Mode="OneTime">
                                                 <Binding Path="P1X.Value" />
                                                 <Binding Path="DataContext.ViewModel.Value" RelativeSource="{RelativeSource AncestorType=view:DetailStraightLine}" />
                                             </MultiBinding>
@@ -129,9 +138,10 @@
                                     </Setter>
                                     <Setter Property="Canvas.Top">
                                         <Setter.Value>
-                                            <MultiBinding Converter="{StaticResource Shift}"
-                                                          ConverterParameter="Y10"
-                                                          Mode="OneTime">
+                                            <MultiBinding
+                                                Converter="{StaticResource Shift}"
+                                                ConverterParameter="Y10"
+                                                Mode="OneTime">
                                                 <Binding Path="P1Y.Value" />
                                                 <Binding Path="DataContext.ViewModel.Value" RelativeSource="{RelativeSource AncestorType=view:DetailStraightLine}" />
                                             </MultiBinding>
@@ -146,13 +156,15 @@
                             </Grid.Resources>
                             <StackPanel Orientation="Horizontal">
                                 <Label Content="X" />
-                                <control:DoubleTextBox HorizontalContentAlignment="Right"
-                                                       VerticalContentAlignment="Center"
-                                                       DoubleText="{Binding P1X.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <control:DoubleTextBox
+                                    HorizontalContentAlignment="Right"
+                                    VerticalContentAlignment="Center"
+                                    DoubleText="{Binding P1X.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                 <Label Content="Y" />
-                                <control:DoubleTextBox HorizontalContentAlignment="Right"
-                                                       VerticalContentAlignment="Center"
-                                                       DoubleText="{Binding P1Y.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <control:DoubleTextBox
+                                    HorizontalContentAlignment="Right"
+                                    VerticalContentAlignment="Center"
+                                    DoubleText="{Binding P1Y.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                             </StackPanel>
                         </Grid>
                         <Grid>
@@ -160,9 +172,10 @@
                                 <Style TargetType="Grid">
                                     <Setter Property="Canvas.Left">
                                         <Setter.Value>
-                                            <MultiBinding Converter="{StaticResource Shift}"
-                                                          ConverterParameter="X11"
-                                                          Mode="OneTime">
+                                            <MultiBinding
+                                                Converter="{StaticResource Shift}"
+                                                ConverterParameter="X11"
+                                                Mode="OneTime">
                                                 <Binding Path="P2X.Value" />
                                                 <Binding Path="DataContext.ViewModel.Value" RelativeSource="{RelativeSource AncestorType=view:DetailStraightLine}" />
                                             </MultiBinding>
@@ -170,9 +183,10 @@
                                     </Setter>
                                     <Setter Property="Canvas.Top">
                                         <Setter.Value>
-                                            <MultiBinding Converter="{StaticResource Shift}"
-                                                          ConverterParameter="Y12"
-                                                          Mode="OneTime">
+                                            <MultiBinding
+                                                Converter="{StaticResource Shift}"
+                                                ConverterParameter="Y12"
+                                                Mode="OneTime">
                                                 <Binding Path="P2Y.Value" />
                                                 <Binding Path="DataContext.ViewModel.Value" RelativeSource="{RelativeSource AncestorType=view:DetailStraightLine}" />
                                             </MultiBinding>
@@ -187,13 +201,15 @@
                             </Grid.Resources>
                             <StackPanel Orientation="Horizontal">
                                 <Label Content="X" />
-                                <control:DoubleTextBox HorizontalContentAlignment="Right"
-                                                       VerticalContentAlignment="Center"
-                                                       DoubleText="{Binding P2X.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <control:DoubleTextBox
+                                    HorizontalContentAlignment="Right"
+                                    VerticalContentAlignment="Center"
+                                    DoubleText="{Binding P2X.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                 <Label Content="Y" />
-                                <control:DoubleTextBox HorizontalContentAlignment="Right"
-                                                       VerticalContentAlignment="Center"
-                                                       DoubleText="{Binding P2Y.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <control:DoubleTextBox
+                                    HorizontalContentAlignment="Right"
+                                    VerticalContentAlignment="Center"
+                                    DoubleText="{Binding P2Y.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                             </StackPanel>
                         </Grid>
                     </Canvas>
@@ -205,27 +221,25 @@
                         <StackPanel Orientation="Horizontal">
                             <DockPanel>
                                 <Label DockPanel.Dock="Left">StrokeStartLineCap</Label>
-                                <ComboBox ItemsSource="{Binding PenLineCaps}"
-                                          SelectedValue="{Binding StrokeStartLineCap.Value}" />
+                                <ComboBox ItemsSource="{Binding PenLineCaps}" SelectedValue="{Binding StrokeStartLineCap.Value}" />
                             </DockPanel>
                             <DockPanel>
                                 <Label DockPanel.Dock="Left">StrokeEndLineCap</Label>
-                                <ComboBox ItemsSource="{Binding PenLineCaps}"
-                                          SelectedValue="{Binding StrokeEndLineCap.Value}" />
+                                <ComboBox ItemsSource="{Binding PenLineCaps}" SelectedValue="{Binding StrokeEndLineCap.Value}" />
                             </DockPanel>
                             <DockPanel>
                                 <Label DockPanel.Dock="Left">StrokeDashArray</Label>
-                                <TextBox Text="{Binding StrokeDashArray.Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DoubleCollectionToString}}"
-                                         Width="100"/>
+                                <TextBox Width="100" Text="{Binding StrokeDashArray.Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DoubleCollectionToString}}" />
                             </DockPanel>
                         </StackPanel>
                     </DockPanel>
                     <Canvas>
-                        <Path Stroke="{Binding EdgeColor.Value, Converter={StaticResource solidColorBrushConverter}}"
-                              StrokeThickness="{Binding EdgeThickness.Value}"
-                              StrokeStartLineCap="{Binding StrokeStartLineCap.Value}"
-                              StrokeEndLineCap="{Binding StrokeEndLineCap.Value}"
-                              StrokeDashArray="{Binding StrokeDashArray.Value}">
+                        <Path
+                            Stroke="{Binding EdgeColor.Value, Converter={StaticResource solidColorBrushConverter}}"
+                            StrokeDashArray="{Binding StrokeDashArray.Value}"
+                            StrokeEndLineCap="{Binding StrokeEndLineCap.Value}"
+                            StrokeStartLineCap="{Binding StrokeStartLineCap.Value}"
+                            StrokeThickness="{Binding EdgeThickness.Value}">
                             <Path.Data>
                                 <PathGeometry>
                                     <PathGeometry.Figures>
@@ -233,9 +247,10 @@
                                             <PathFigure StartPoint="{Binding Converter={StaticResource ShiftPoint}, ConverterParameter=Point0}">
                                                 <PathFigure.Segments>
                                                     <PathSegmentCollection>
-                                                        <BezierSegment Point1="{Binding Converter={StaticResource ShiftPoint}, ConverterParameter=ControlPoint1}"
-                                                                       Point2="{Binding Converter={StaticResource ShiftPoint}, ConverterParameter=ControlPoint2}"
-                                                                       Point3="{Binding Converter={StaticResource ShiftPoint}, ConverterParameter=Point1}" />
+                                                        <BezierSegment
+                                                            Point1="{Binding Converter={StaticResource ShiftPoint}, ConverterParameter=ControlPoint1}"
+                                                            Point2="{Binding Converter={StaticResource ShiftPoint}, ConverterParameter=ControlPoint2}"
+                                                            Point3="{Binding Converter={StaticResource ShiftPoint}, ConverterParameter=Point1}" />
                                                     </PathSegmentCollection>
                                                 </PathFigure.Segments>
                                             </PathFigure>
@@ -244,8 +259,7 @@
                                 </PathGeometry>
                             </Path.Data>
                         </Path>
-                        <Line Stroke="Blue"
-                              StrokeDashArray="2 2">
+                        <Line Stroke="Blue" StrokeDashArray="2 2">
                             <Line.X1>
                                 <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="X13">
                                     <Binding Path="Points[0].X" />
@@ -271,8 +285,7 @@
                                 </MultiBinding>
                             </Line.Y2>
                         </Line>
-                        <Line Stroke="Blue"
-                              StrokeDashArray="2 2">
+                        <Line Stroke="Blue" StrokeDashArray="2 2">
                             <Line.X1>
                                 <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="X17">
                                     <Binding Path="Points[1].X" />
@@ -298,9 +311,10 @@
                                 </MultiBinding>
                             </Line.Y2>
                         </Line>
-                        <Ellipse Width="10"
-                                 Height="10"
-                                 Fill="Red">
+                        <Ellipse
+                            Width="10"
+                            Height="10"
+                            Fill="Red">
                             <Canvas.Left>
                                 <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="X21">
                                     <Binding Path="Points[0].X" />
@@ -314,9 +328,10 @@
                                 </MultiBinding>
                             </Canvas.Top>
                         </Ellipse>
-                        <Ellipse Width="10"
-                                 Height="10"
-                                 Fill="Red">
+                        <Ellipse
+                            Width="10"
+                            Height="10"
+                            Fill="Red">
                             <Canvas.Left>
                                 <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="X23">
                                     <Binding Path="Points[1].X" />
@@ -330,9 +345,10 @@
                                 </MultiBinding>
                             </Canvas.Top>
                         </Ellipse>
-                        <Ellipse Width="10"
-                                 Height="10"
-                                 Fill="Lime">
+                        <Ellipse
+                            Width="10"
+                            Height="10"
+                            Fill="Lime">
                             <Canvas.Left>
                                 <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="X25">
                                     <Binding Path="ControlPoint1.Value.X" />
@@ -346,9 +362,10 @@
                                 </MultiBinding>
                             </Canvas.Top>
                         </Ellipse>
-                        <Ellipse Width="10"
-                                 Height="10"
-                                 Fill="Lime">
+                        <Ellipse
+                            Width="10"
+                            Height="10"
+                            Fill="Lime">
                             <Canvas.Left>
                                 <MultiBinding Converter="{StaticResource Shift}" ConverterParameter="X27">
                                     <Binding Path="ControlPoint2.Value.X" />
@@ -367,9 +384,10 @@
                                 <Style TargetType="Grid">
                                     <Setter Property="Canvas.Left">
                                         <Setter.Value>
-                                            <MultiBinding Converter="{StaticResource Shift}"
-                                                          ConverterParameter="X29"
-                                                          Mode="OneTime">
+                                            <MultiBinding
+                                                Converter="{StaticResource Shift}"
+                                                ConverterParameter="X29"
+                                                Mode="OneTime">
                                                 <Binding Path="P1X.Value" />
                                                 <Binding Path="DataContext.ViewModel.Value" RelativeSource="{RelativeSource AncestorType=view:DetailBezier}" />
                                             </MultiBinding>
@@ -377,9 +395,10 @@
                                     </Setter>
                                     <Setter Property="Canvas.Top">
                                         <Setter.Value>
-                                            <MultiBinding Converter="{StaticResource Shift}"
-                                                          ConverterParameter="Y30"
-                                                          Mode="OneTime">
+                                            <MultiBinding
+                                                Converter="{StaticResource Shift}"
+                                                ConverterParameter="Y30"
+                                                Mode="OneTime">
                                                 <Binding Path="P1Y.Value" />
                                                 <Binding Path="DataContext.ViewModel.Value" RelativeSource="{RelativeSource AncestorType=view:DetailBezier}" />
                                             </MultiBinding>
@@ -394,13 +413,15 @@
                             </Grid.Resources>
                             <StackPanel Orientation="Horizontal">
                                 <Label Content="X" />
-                                <control:DoubleTextBox HorizontalContentAlignment="Right"
-                                                       VerticalContentAlignment="Center"
-                                                       DoubleText="{Binding P1X.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <control:DoubleTextBox
+                                    HorizontalContentAlignment="Right"
+                                    VerticalContentAlignment="Center"
+                                    DoubleText="{Binding P1X.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                 <Label Content="Y" />
-                                <control:DoubleTextBox HorizontalContentAlignment="Right"
-                                                       VerticalContentAlignment="Center"
-                                                       DoubleText="{Binding P1Y.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <control:DoubleTextBox
+                                    HorizontalContentAlignment="Right"
+                                    VerticalContentAlignment="Center"
+                                    DoubleText="{Binding P1Y.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                             </StackPanel>
                         </Grid>
                         <Grid>
@@ -408,9 +429,10 @@
                                 <Style TargetType="Grid">
                                     <Setter Property="Canvas.Left">
                                         <Setter.Value>
-                                            <MultiBinding Converter="{StaticResource Shift}"
-                                                          ConverterParameter="X31"
-                                                          Mode="OneTime">
+                                            <MultiBinding
+                                                Converter="{StaticResource Shift}"
+                                                ConverterParameter="X31"
+                                                Mode="OneTime">
                                                 <Binding Path="P2X.Value" />
                                                 <Binding Path="DataContext.ViewModel.Value" RelativeSource="{RelativeSource AncestorType=view:DetailBezier}" />
                                             </MultiBinding>
@@ -418,9 +440,10 @@
                                     </Setter>
                                     <Setter Property="Canvas.Top">
                                         <Setter.Value>
-                                            <MultiBinding Converter="{StaticResource Shift}"
-                                                          ConverterParameter="Y32"
-                                                          Mode="OneTime">
+                                            <MultiBinding
+                                                Converter="{StaticResource Shift}"
+                                                ConverterParameter="Y32"
+                                                Mode="OneTime">
                                                 <Binding Path="P2Y.Value" />
                                                 <Binding Path="DataContext.ViewModel.Value" RelativeSource="{RelativeSource AncestorType=view:DetailBezier}" />
                                             </MultiBinding>
@@ -435,13 +458,15 @@
                             </Grid.Resources>
                             <StackPanel Orientation="Horizontal">
                                 <Label Content="X" />
-                                <control:DoubleTextBox HorizontalContentAlignment="Right"
-                                                       VerticalContentAlignment="Center"
-                                                       DoubleText="{Binding P2X.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <control:DoubleTextBox
+                                    HorizontalContentAlignment="Right"
+                                    VerticalContentAlignment="Center"
+                                    DoubleText="{Binding P2X.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                 <Label Content="Y" />
-                                <control:DoubleTextBox HorizontalContentAlignment="Right"
-                                                       VerticalContentAlignment="Center"
-                                                       DoubleText="{Binding P2Y.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <control:DoubleTextBox
+                                    HorizontalContentAlignment="Right"
+                                    VerticalContentAlignment="Center"
+                                    DoubleText="{Binding P2Y.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                             </StackPanel>
                         </Grid>
                         <Grid>
@@ -449,9 +474,10 @@
                                 <Style TargetType="Grid">
                                     <Setter Property="Canvas.Left">
                                         <Setter.Value>
-                                            <MultiBinding Converter="{StaticResource Shift}"
-                                                          ConverterParameter="X33"
-                                                          Mode="OneTime">
+                                            <MultiBinding
+                                                Converter="{StaticResource Shift}"
+                                                ConverterParameter="X33"
+                                                Mode="OneTime">
                                                 <Binding Path="C1X.Value" />
                                                 <Binding Path="DataContext.ViewModel.Value" RelativeSource="{RelativeSource AncestorType=view:DetailBezier}" />
                                             </MultiBinding>
@@ -459,9 +485,10 @@
                                     </Setter>
                                     <Setter Property="Canvas.Top">
                                         <Setter.Value>
-                                            <MultiBinding Converter="{StaticResource Shift}"
-                                                          ConverterParameter="Y34"
-                                                          Mode="OneTime">
+                                            <MultiBinding
+                                                Converter="{StaticResource Shift}"
+                                                ConverterParameter="Y34"
+                                                Mode="OneTime">
                                                 <Binding Path="C1Y.Value" />
                                                 <Binding Path="DataContext.ViewModel.Value" RelativeSource="{RelativeSource AncestorType=view:DetailBezier}" />
                                             </MultiBinding>
@@ -476,13 +503,15 @@
                             </Grid.Resources>
                             <StackPanel Orientation="Horizontal">
                                 <Label Content="X" />
-                                <control:DoubleTextBox HorizontalContentAlignment="Right"
-                                                       VerticalContentAlignment="Center"
-                                                       DoubleText="{Binding C1X.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <control:DoubleTextBox
+                                    HorizontalContentAlignment="Right"
+                                    VerticalContentAlignment="Center"
+                                    DoubleText="{Binding C1X.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                 <Label Content="Y" />
-                                <control:DoubleTextBox HorizontalContentAlignment="Right"
-                                                       VerticalContentAlignment="Center"
-                                                       DoubleText="{Binding C1Y.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <control:DoubleTextBox
+                                    HorizontalContentAlignment="Right"
+                                    VerticalContentAlignment="Center"
+                                    DoubleText="{Binding C1Y.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                             </StackPanel>
                         </Grid>
                         <Grid>
@@ -490,9 +519,10 @@
                                 <Style TargetType="Grid">
                                     <Setter Property="Canvas.Left">
                                         <Setter.Value>
-                                            <MultiBinding Converter="{StaticResource Shift}"
-                                                          ConverterParameter="X35"
-                                                          Mode="OneTime">
+                                            <MultiBinding
+                                                Converter="{StaticResource Shift}"
+                                                ConverterParameter="X35"
+                                                Mode="OneTime">
                                                 <Binding Path="C2X.Value" />
                                                 <Binding Path="DataContext.ViewModel.Value" RelativeSource="{RelativeSource AncestorType=view:DetailBezier}" />
                                             </MultiBinding>
@@ -500,9 +530,10 @@
                                     </Setter>
                                     <Setter Property="Canvas.Top">
                                         <Setter.Value>
-                                            <MultiBinding Converter="{StaticResource Shift}"
-                                                          ConverterParameter="Y36"
-                                                          Mode="OneTime">
+                                            <MultiBinding
+                                                Converter="{StaticResource Shift}"
+                                                ConverterParameter="Y36"
+                                                Mode="OneTime">
                                                 <Binding Path="C2Y.Value" />
                                                 <Binding Path="DataContext.ViewModel.Value" RelativeSource="{RelativeSource AncestorType=view:DetailBezier}" />
                                             </MultiBinding>
@@ -517,13 +548,15 @@
                             </Grid.Resources>
                             <StackPanel Orientation="Horizontal">
                                 <Label Content="X" />
-                                <control:DoubleTextBox HorizontalContentAlignment="Right"
-                                                       VerticalContentAlignment="Center"
-                                                       DoubleText="{Binding C2X.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <control:DoubleTextBox
+                                    HorizontalContentAlignment="Right"
+                                    VerticalContentAlignment="Center"
+                                    DoubleText="{Binding C2X.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                 <Label Content="Y" />
-                                <control:DoubleTextBox HorizontalContentAlignment="Right"
-                                                       VerticalContentAlignment="Center"
-                                                       DoubleText="{Binding C2Y.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <control:DoubleTextBox
+                                    HorizontalContentAlignment="Right"
+                                    VerticalContentAlignment="Center"
+                                    DoubleText="{Binding C2Y.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                             </StackPanel>
                         </Grid>
                     </Canvas>
@@ -535,32 +568,30 @@
                         <StackPanel Orientation="Horizontal">
                             <DockPanel>
                                 <Label DockPanel.Dock="Left">StrokeStartLineCap</Label>
-                                <ComboBox ItemsSource="{Binding PenLineCaps}"
-                                          SelectedValue="{Binding StrokeStartLineCap.Value}" />
+                                <ComboBox ItemsSource="{Binding PenLineCaps}" SelectedValue="{Binding StrokeStartLineCap.Value}" />
                             </DockPanel>
                             <DockPanel>
                                 <Label DockPanel.Dock="Left">StrokeEndLineCap</Label>
-                                <ComboBox ItemsSource="{Binding PenLineCaps}"
-                                          SelectedValue="{Binding StrokeEndLineCap.Value}" />
+                                <ComboBox ItemsSource="{Binding PenLineCaps}" SelectedValue="{Binding StrokeEndLineCap.Value}" />
                             </DockPanel>
                             <DockPanel>
                                 <Label DockPanel.Dock="Left">StrokeDashArray</Label>
-                                <TextBox Text="{Binding StrokeDashArray.Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DoubleCollectionToString}}"
-                                         Width="100"/>
+                                <TextBox Width="100" Text="{Binding StrokeDashArray.Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DoubleCollectionToString}}" />
                             </DockPanel>
                         </StackPanel>
                     </DockPanel>
                     <Canvas>
-                        <Path x:Name="polyBezier"
-                              Canvas.Left="{Binding LeftTop.Value.X}"
-                              Canvas.Top="{Binding LeftTop.Value.Y}"
-                              IsHitTestVisible="True"
-                              Stretch="Fill"
-                              Stroke="{Binding EdgeColor.Value, Converter={StaticResource solidColorBrushConverter}}"
-                              StrokeThickness="{Binding EdgeThickness.Value}"
-                              StrokeStartLineCap="{Binding StrokeStartLineCap.Value}"
-                              StrokeEndLineCap="{Binding StrokeEndLineCap.Value}"
-                              StrokeDashArray="{Binding StrokeDashArray.Value}">
+                        <Path
+                            x:Name="polyBezier"
+                            Canvas.Left="{Binding LeftTop.Value.X}"
+                            Canvas.Top="{Binding LeftTop.Value.Y}"
+                            IsHitTestVisible="True"
+                            Stretch="Fill"
+                            Stroke="{Binding EdgeColor.Value, Converter={StaticResource solidColorBrushConverter}}"
+                            StrokeDashArray="{Binding StrokeDashArray.Value}"
+                            StrokeEndLineCap="{Binding StrokeEndLineCap.Value}"
+                            StrokeStartLineCap="{Binding StrokeStartLineCap.Value}"
+                            StrokeThickness="{Binding EdgeThickness.Value}">
                             <Path.Data>
                                 <PathGeometry>
                                     <PathFigure StartPoint="{Binding Points[0]}">
