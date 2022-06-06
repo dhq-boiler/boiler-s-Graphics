@@ -35,7 +35,10 @@
     <SolidColorBrush x:Key="ControlDisabledGlythColour" Color="#FFA0A0A0" />
 
     <!--  Colourful theme  Colours  -->
-
+    <SolidColorBrush x:Key="ControlPrimaryColourBackground" Color="#FF2084E8" />
+    <SolidColorBrush x:Key="ControlPrimaryColourBorderBrush" Color="#FF3294E8" />
+    <SolidColorBrush x:Key="ControlBrightPrimaryColourBackground" Color="#FF3296FA" />
+    <SolidColorBrush x:Key="ControlBrightPrimaryColourBorderBrush" Color="#FF50A4FA" />
     <SolidColorBrush x:Key="ControlPrimaryDarkerBackground" Color="#FF1565C0" />
     <SolidColorBrush x:Key="ControlPrimaryDarkerBorderBrush" Color="#FF1976D2" />
     <SolidColorBrush x:Key="ControlPrimaryDefaultBackground" Color="#FF2084E8" />
