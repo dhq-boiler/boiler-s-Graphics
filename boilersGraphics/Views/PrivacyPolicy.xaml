@@ -25,7 +25,7 @@
             <Setter Property="Height" Value="600" />
         </Style>
     </prism:Dialog.WindowStyle>
-    <DockPanel>
+    <DockPanel Background="{StaticResource BackgroundColour}">
         <StackPanel
             HorizontalAlignment="Right"
             DockPanel.Dock="Bottom"
@@ -107,9 +107,11 @@
             Content="{Binding Message.Value}"
             DockPanel.Dock="Bottom"
             Visibility="{Binding OKVisibility.Value}" />
-        <mdxam:MarkdownScrollViewer
-            Margin="5"
-            xml:space="preserve"
-            Markdown="{Binding Markdown.Value}" />
+        <DockPanel Background="White">
+            <mdxam:MarkdownScrollViewer
+                Margin="5"
+                xml:space="preserve"
+                Markdown="{Binding Markdown.Value}" />
+        </DockPanel>
     </DockPanel>
 </UserControl>

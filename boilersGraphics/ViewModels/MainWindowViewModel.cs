@@ -2,6 +2,7 @@
 using boilersGraphics.Dao.Migration.Plan;
 using boilersGraphics.Helpers;
 using boilersGraphics.Models;
+using boilersGraphics.Properties;
 using boilersGraphics.Views;
 using Homura.Core;
 using Homura.ORM;
@@ -275,13 +276,22 @@ namespace boilersGraphics.ViewModels
             });
             ShowPrivacyPolicyCommand = new DelegateCommand(() =>
             {
-                var currentState = PickoutPrivacyPolicyAgreementTop1AgreeOrDisagree();
-                var latestDate = PickoutLatestPrivacyPolicyDateOfEnactment();
-                IDialogParameters dialogParameters = new DialogParameters();
-                dialogParameters.Add("CurrentStatus", currentState);
-                dialogParameters.Add("latestDate", latestDate);
-                IDialogResult dialogResult = null;
-                dlgService.ShowDialog(nameof(PrivacyPolicy), dialogParameters, ret => dialogResult = ret);
+                try
+                {
+                    var currentState = PickoutPrivacyPolicyAgreementTop1AgreeOrDisagree();
+                    var latestDate = PickoutLatestPrivacyPolicyDateOfEnactment();
+                    IDialogParameters dialogParameters = new DialogParameters();
+                    dialogParameters.Add("CurrentStatus", currentState);
+                    dialogParameters.Add("latestDate", latestDate);
+                    IDialogResult dialogResult = null;
+                    dlgService.ShowDialog(nameof(PrivacyPolicy), dialogParameters, ret => dialogResult = ret);
+                }
+                catch (WebException e)
+                {
+                    MessageBox.Show(Resources.Message_CantDownloadPrivacyPolicy);
+                    LogManager.GetCurrentClassLogger().Warn(e);
+                    LogManager.GetCurrentClassLogger().Warn("インターネットに接続されていないため、最新のプライバシーポリシーを確認できませんでした。");
+                }
             });
 
             SnapPower.Value = 10;

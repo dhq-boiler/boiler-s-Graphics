@@ -112,10 +112,10 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Alignment" xml:space="preserve">
     <value>配置</value>
@@ -426,6 +426,9 @@
   <data name="MenuItem_Copy" xml:space="preserve">
     <value>コピー(_C)</value>
   </data>
+  <data name="MenuItem_CopyCanvasToClipboard" xml:space="preserve">
+    <value>キャンバスをクリップボードにコピー</value>
+  </data>
   <data name="MenuItem_Cut" xml:space="preserve">
     <value>切り取り(_T)</value>
   </data>
@@ -553,7 +556,7 @@
     <value>自動保存しました。</value>
   </data>
   <data name="Message_CantDownloadPrivacyPolicy" xml:space="preserve">
-    <value>**インターネットに接続されていないため、最新のプライバシーポリシーを確認できませんでした。**</value>
+    <value>インターネットに接続されていないため、最新のプライバシーポリシーを確認できませんでした。</value>
   </data>
   <data name="Message_CanvasWillDiscardedConfirm" xml:space="preserve">
     <value>現在のキャンパスは破棄されますが、よろしいですか？</value>
