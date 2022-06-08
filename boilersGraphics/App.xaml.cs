@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
 using System.Windows;
+using System.Windows.Threading;
 using Unity;
 using Windows.Services.Store;
 using WinRT;
@@ -35,6 +36,7 @@ namespace boilersGraphics
         {
             Instance = this;
             this.DispatcherUnhandledException += App_DispatcherUnhandledException;
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
         }
 
         public static Application GetCurrentApp()
@@ -52,25 +54,36 @@ namespace boilersGraphics
             return null;
         }
 
+
+        /// <summary>
+        /// WPF UIスレッドでの未処理例外スロー時のイベントハンドラ
+        /// </summary>
         private void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
-            LogManager.GetCurrentClassLogger().Fatal(e.Exception);
+            ReportUnhandledException(e.Exception);
+            e.Handled = true;
+            throw e.Exception;
+        }
+
+        private void ReportUnhandledException(Exception e)
+        {
+            LogManager.GetCurrentClassLogger().Fatal(e);
             IDialogParameters dialogParameters = new DialogParameters();
             dialogParameters.Add("Title", boilersGraphics.Properties.Resources.DialogTitle_Error);
-            var title = Uri.EscapeDataString(e.Exception.Message);
+            var title = Uri.EscapeDataString(e.Message);
             var body = boilersGraphics.Properties.Resources.String_ErrorReporting + "\n" +
                        boilersGraphics.Properties.Resources.String_ErrorReporting1 + "\n" +
                        boilersGraphics.Properties.Resources.String_ErrorReporting2 + System.IO.Path.Combine(boilersGraphics.Helpers.Path.GetRoamingDirectory(), "dhq_boiler\\boilersGraphics\\Logs\\boilersGraphics.log") + "\n" +
                        boilersGraphics.Properties.Resources.String_ErrorReporting3 + "\n" +
-                       e.Exception.ToString();
+                       e.ToString();
             dialogParameters.Add("Text", body);
-            body = Uri.EscapeDataString(e.Exception.ToString());
+            body = Uri.EscapeDataString(e.ToString());
             dialogParameters.Add("Buttons", new List<Button>() {new Button(boilersGraphics.Properties.Resources.Button_PostIssue, new DelegateCommand(() =>
             {
                 body = boilersGraphics.Properties.Resources.String_PleaseDescribeError +
                        Environment.NewLine +
                        Environment.NewLine +
-                       e.Exception.ToString();
+                       e.ToString();
                 const int maxExceptionDetailsLength = 4000;
                 if (body.Length > maxExceptionDetailsLength)
                 {
@@ -93,15 +106,22 @@ namespace boilersGraphics
             }))});
             IDialogResult dialogResult = new DialogResult();
             Container.Resolve<IDialogService>().ShowDialog(nameof(CustomMessageBox), dialogParameters, ret => dialogResult = ret);
-            string message = GoogleAnalyticsUtil.GetStringLimit500Bytes(e.Exception.Message);
+            string message = GoogleAnalyticsUtil.GetStringLimit500Bytes(e.Message);
             GoogleAnalyticsUtil.Beacon((App.Current.MainWindow.DataContext as MainWindowViewModel).TerminalInfo.Value, BeaconPlace.Crash, BeaconPath.Crash, message);
-            throw e.Exception;
+        }
+
+        /// <summary>
+        /// UIスレッド以外の未処理例外スロー時のイベントハンドラ
+        /// </summary>
+        private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            this.ReportUnhandledException(e.ExceptionObject as Exception);
         }
 
         protected override void OnStartup(StartupEventArgs e)
         {
             var version = Assembly.GetExecutingAssembly().GetName().Version;
-            LogManager.GetCurrentClassLogger().Info($"boiler's Graphics {version}");
+            LogManager.GetCurrentClassLogger().Info($"{GetAppNameAndVersion()}");
             LogManager.GetCurrentClassLogger().Info($"Copyright (C) dhq_boiler 2018-2022. All rights reserved.");
             LogManager.GetCurrentClassLogger().Info($"boiler's Graphics IS LAUNCHING");
 
@@ -111,6 +131,16 @@ namespace boilersGraphics
             StoreContext = context;
 
             base.OnStartup(e);
+        }
+
+        protected override void OnExit(ExitEventArgs e)
+        {
+            LogManager.GetCurrentClassLogger().Info("boiler's Graphics IS SHUTTING DOWN");
+
+            this.DispatcherUnhandledException -= App_DispatcherUnhandledException;
+            AppDomain.CurrentDomain.UnhandledException -= CurrentDomain_UnhandledException;
+
+            base.OnExit(e);
         }
 
         protected override IContainerExtension CreateContainerExtension()

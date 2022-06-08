@@ -556,7 +556,7 @@
     <value>自動保存しました。</value>
   </data>
   <data name="Message_CantDownloadPrivacyPolicy" xml:space="preserve">
-    <value>**インターネットに接続されていないため、最新のプライバシーポリシーを確認できませんでした。**</value>
+    <value>インターネットに接続されていないため、最新のプライバシーポリシーを確認できませんでした。</value>
   </data>
   <data name="Message_CanvasWillDiscardedConfirm" xml:space="preserve">
     <value>現在のキャンパスは破棄されますが、よろしいですか？</value>

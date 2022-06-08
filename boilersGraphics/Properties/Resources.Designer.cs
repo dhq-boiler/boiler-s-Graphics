@@ -1375,7 +1375,7 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
-        ///   **App couldn&apos;t check the latest privacy policy because App is not connected to the internet.** に類似しているローカライズされた文字列を検索します。
+        ///   App couldn&apos;t check the latest privacy policy because App is not connected to the internet. に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Message_CantDownloadPrivacyPolicy {
             get {
