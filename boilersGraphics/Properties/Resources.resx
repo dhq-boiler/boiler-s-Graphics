@@ -112,10 +112,10 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Alignment" xml:space="preserve">
     <value>Alignment</value>
@@ -425,6 +425,9 @@
   </data>
   <data name="MenuItem_Copy" xml:space="preserve">
     <value>Copy(_C)</value>
+  </data>
+  <data name="MenuItem_CopyCanvasToClipboard" xml:space="preserve">
+    <value>Copy canvas to clipboard</value>
   </data>
   <data name="MenuItem_Cut" xml:space="preserve">
     <value>Cut(_T)</value>

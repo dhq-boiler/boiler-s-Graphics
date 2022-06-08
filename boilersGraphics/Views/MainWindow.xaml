@@ -727,6 +727,7 @@
                             <MenuItem Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.MenuItem_Canvas, Mode=OneWay}">
                                 <MenuItem Command="{Binding DiagramViewModel.ClipCommand}" Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.MenuItem_Clip, Mode=OneWay}" />
                                 <MenuItem Command="{Binding DiagramViewModel.FitCanvasCommand}" Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.MenuItem_FitCanvas, Mode=OneWay}" />
+                                <MenuItem Command="{Binding DiagramViewModel.CopyCanvasToClipboardCommand}" Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.MenuItem_CopyCanvasToClipboard, Mode=OneWay}" />
                                 <MenuItem Command="{Binding DiagramViewModel.ClearCanvasCommand}" Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.MenuItem_ClearCanvas, Mode=OneWay}" />
                                 <MenuItem Command="{Binding DiagramViewModel.SettingCommand}" Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.MenuItem_Preference, Mode=OneWay}" />
                             </MenuItem>
@@ -2394,8 +2395,7 @@
             </ToolBar>
         </ToolBarTray>
 
-        <StatusBar DockPanel.Dock="Bottom"
-                   Background="{StaticResource ControlDarkerBackground}">
+        <StatusBar Background="{StaticResource ControlDarkerBackground}" DockPanel.Dock="Bottom">
             <StatusBarItem>
                 <TextBlock Width="80">
                     <Run>(</Run>

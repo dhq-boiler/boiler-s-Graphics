@@ -988,6 +988,15 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Copy canvas to clipboard に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MenuItem_CopyCanvasToClipboard {
+            get {
+                return ResourceManager.GetString("MenuItem_CopyCanvasToClipboard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Cut(_T) に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string MenuItem_Cut {

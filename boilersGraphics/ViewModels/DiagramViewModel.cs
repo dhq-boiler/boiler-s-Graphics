@@ -78,6 +78,7 @@ namespace boilersGraphics.ViewModels
         public DelegateCommand DuplicateCommand { get; private set; }
         public DelegateCommand CutCommand { get; private set; }
         public DelegateCommand CopyCommand { get; private set; }
+        public DelegateCommand CopyCanvasToClipboardCommand { get; private set; }
         public DelegateCommand PasteCommand { get; private set; }
         public DelegateCommand EditMenuOpenedCommand { get; private set; }
         public DelegateCommand UnionCommand { get; private set; }
@@ -266,6 +267,7 @@ namespace boilersGraphics.ViewModels
                 DuplicateCommand = new DelegateCommand(() => ExecuteDuplicateCommand(), () => CanExecuteDuplicate());
                 CutCommand = new DelegateCommand(() => ExecuteCutCommand(), () => CanExecuteCut());
                 CopyCommand = new DelegateCommand(() => ExecuteCopyCommand(), () => CanExecuteCopy());
+                CopyCanvasToClipboardCommand = new DelegateCommand(() => ExecuteCopyCanvasToClipboardCommand());
                 PasteCommand = new DelegateCommand(() => ExecutePasteCommand(), () => CanExecutePaste());
                 UnionCommand = new DelegateCommand(() => ExecuteUnionCommand(), () => CanExecuteUnion());
                 IntersectCommand = new DelegateCommand(() => ExecuteIntersectCommand(), () => CanExecuteIntersect());
@@ -608,6 +610,12 @@ namespace boilersGraphics.ViewModels
             EnableWorkHistory.Value = true;
 
             SettingIfDebug();
+        }
+
+        private void ExecuteCopyCanvasToClipboardCommand()
+        {
+            var bitmap = Renderer.Render(null, DesignerCanvas.GetInstance(), this, this.BackgroundItem.Value);
+            Clipboard.SetImage(bitmap);
         }
 
         [Conditional("DEBUG")]
