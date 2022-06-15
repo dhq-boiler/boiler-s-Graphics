@@ -13,6 +13,7 @@ namespace boilersGraphics.Test.UITests
     public class ExportTest : AppSession
     {
         [Test]
+        [Retry(3)]
         public void 真っ白なキャンパスをエクスポートする()
         {
             var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
@@ -38,6 +39,7 @@ namespace boilersGraphics.Test.UITests
         }
 
         [Test]
+        [Retry(3)]
         public void チェッカーパターンを読み込んでエクスポートする()
         {
             LogManager.GetCurrentClassLogger().Info("A");
@@ -162,6 +164,7 @@ namespace boilersGraphics.Test.UITests
         }
 
         [Test]
+        [Retry(3)]
         public void スライス()
         {
             var action = new Actions(session);
