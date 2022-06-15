@@ -133,7 +133,7 @@ namespace boilersGraphics.Helpers
                 list.Add(new XElement("ZIndex", connectorItem.ZIndex.Value));
                 list.Add(new XElement("EdgeBrush", XElement.Parse(WpfObjectSerializer.Serialize(connectorItem.EdgeBrush.Value))));
                 list.Add(new XElement("EdgeThickness", connectorItem.EdgeThickness.Value));
-                list.Add(new XElement("PathGeometry", connectorItem.PathGeometry.Value));
+                list.Add(new XElement("PathGeometry", connectorItem.PathGeometryNoRotate.Value));
                 list.Add(new XElement("LeftTop", connectorItem.LeftTop.Value));
                 if (connectorItem is BezierCurveViewModel)
                 {
