@@ -308,6 +308,18 @@ namespace boilersGraphics.Helpers
             if (!(DeserializeInstance(designerItemElm) is DesignerItemViewModelBase))
                 return null;
             var item = (DesignerItemViewModelBase)DeserializeInstance(designerItemElm);
+            if (designerItemElm.Element("PathGeometry") != null)
+            {
+                item.PathGeometryNoRotate.Value = PathGeometry.CreateFromGeometry(PathGeometry.Parse(designerItemElm.Element("PathGeometry").Value));
+            }
+            if (designerItemElm.Element("PathGeometryNoRotate") != null)
+            {
+                item.PathGeometryNoRotate.Value = PathGeometry.CreateFromGeometry(PathGeometry.Parse(designerItemElm.Element("PathGeometryNoRotate").Value));
+            }
+            if (designerItemElm.Element("PathGeometryRotate") != null)
+            {
+                item.PathGeometryRotate.Value = PathGeometry.CreateFromGeometry(PathGeometry.Parse(designerItemElm.Element("PathGeometryRotate").Value));
+            }
             item.Left.Value = double.Parse(designerItemElm.Element("Left").Value);
             item.Top.Value = double.Parse(designerItemElm.Element("Top").Value);
             item.Width.Value = double.Parse(designerItemElm.Element("Width").Value);
@@ -333,18 +345,6 @@ namespace boilersGraphics.Helpers
                 item.FillBrush.Value = WpfObjectSerializer.Deserialize(designerItemElm.Element("FillBrush").Nodes().First().ToString()) as Brush;
             }
             item.EdgeThickness.Value = double.Parse(designerItemElm.Element("EdgeThickness").Value);
-            if (designerItemElm.Element("PathGeometry") != null)
-            {
-                item.PathGeometryNoRotate.Value = PathGeometry.CreateFromGeometry(PathGeometry.Parse(designerItemElm.Element("PathGeometry").Value));
-            }
-            if (designerItemElm.Element("PathGeometryNoRotate") != null)
-            {
-                item.PathGeometryNoRotate.Value = PathGeometry.CreateFromGeometry(PathGeometry.Parse(designerItemElm.Element("PathGeometryNoRotate").Value));
-            }
-            if (designerItemElm.Element("PathGeometryRotate") != null)
-            {
-                item.PathGeometryRotate.Value = PathGeometry.CreateFromGeometry(PathGeometry.Parse(designerItemElm.Element("PathGeometryRotate").Value));
-            }
             item.RotationAngle.Value = designerItemElm.Element("RotationAngle") != null ? double.Parse(designerItemElm.Element("RotationAngle").Value) : 0;
             item.Owner = diagramViewModel;
             if (item is PictureDesignerItemViewModel)
