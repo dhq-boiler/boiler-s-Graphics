@@ -21,7 +21,7 @@ namespace boilersGraphics.Test
             boilersGraphics.App.IsTest = true;
             var dlgService = new Mock<IDialogService>();
             MainWindowViewModel mainWindowViewModel = new MainWindowViewModel(dlgService.Object);
-            var diagramVM = new DiagramViewModel(mainWindowViewModel, 1000, 1000);
+            var diagramVM = new DiagramViewModel(mainWindowViewModel);
             diagramVM.Layers.Clear();
             var layer1 = new Layer();
             layer1.Name.Value = "レイヤー1";
@@ -50,7 +50,7 @@ namespace boilersGraphics.Test
             boilersGraphics.App.IsTest = true;
             var dlgService = new Mock<IDialogService>();
             MainWindowViewModel mainWindowViewModel = new MainWindowViewModel(dlgService.Object);
-            var diagramVM = new DiagramViewModel(mainWindowViewModel, 1000, 1000);
+            var diagramVM = new DiagramViewModel(mainWindowViewModel);
             diagramVM.Layers.Clear();
             var layer1 = new Layer();
             layer1.Name.Value = "レイヤー1";
@@ -100,7 +100,7 @@ namespace boilersGraphics.Test
             boilersGraphics.App.IsTest = true;
             var dlgService = new Mock<IDialogService>();
             MainWindowViewModel mainWindowViewModel = new MainWindowViewModel(dlgService.Object);
-            var diagramVM = new DiagramViewModel(mainWindowViewModel, 1000, 1000);
+            var diagramVM = new DiagramViewModel(mainWindowViewModel);
             diagramVM.Layers.Clear();
             var layer1 = new Layer();
             layer1.Name.Value = "レイヤー1";
@@ -156,7 +156,7 @@ namespace boilersGraphics.Test
             boilersGraphics.App.IsTest = true;
             var dlgService = new Mock<IDialogService>();
             MainWindowViewModel mainWindowViewModel = new MainWindowViewModel(dlgService.Object);
-            var diagramVM = new DiagramViewModel(mainWindowViewModel, 1000, 1000);
+            var diagramVM = new DiagramViewModel(mainWindowViewModel);
             diagramVM.Layers.Clear();
             var layer1 = new Layer();
             layer1.Name.Value = "レイヤー1";
@@ -212,7 +212,7 @@ namespace boilersGraphics.Test
             boilersGraphics.App.IsTest = true;
             var dlgService = new Mock<IDialogService>();
             MainWindowViewModel mainWindowViewModel = new MainWindowViewModel(dlgService.Object);
-            var viewModel = new DiagramViewModel(mainWindowViewModel, 1000, 1000);
+            var viewModel = new DiagramViewModel(mainWindowViewModel);
             viewModel.Layers.Clear();
 
             Layer layer1 = new Layer();
@@ -263,7 +263,7 @@ namespace boilersGraphics.Test
             boilersGraphics.App.IsTest = true;
             var dlgService = new Mock<IDialogService>();
             MainWindowViewModel mainWindowViewModel = new MainWindowViewModel(dlgService.Object);
-            var viewModel = new DiagramViewModel(mainWindowViewModel, 1000, 1000);
+            var viewModel = new DiagramViewModel(mainWindowViewModel);
             viewModel.Layers.Clear();
 
             Layer layer1 = new Layer();
@@ -353,7 +353,7 @@ namespace boilersGraphics.Test
             boilersGraphics.App.IsTest = true;
             var dlgService = new Mock<IDialogService>();
             MainWindowViewModel mainWindowViewModel = new MainWindowViewModel(dlgService.Object);
-            var viewModel = new DiagramViewModel(mainWindowViewModel, 1000, 1000);
+            var viewModel = new DiagramViewModel(mainWindowViewModel);
             viewModel.Layers.Clear();
 
             Layer layer1 = new Layer();
@@ -444,7 +444,7 @@ namespace boilersGraphics.Test
             boilersGraphics.App.IsTest = true;
             var dlgService = new Mock<IDialogService>();
             MainWindowViewModel mainWindowViewModel = new MainWindowViewModel(dlgService.Object);
-            var viewModel = new DiagramViewModel(mainWindowViewModel, 1000, 1000);
+            var viewModel = new DiagramViewModel(mainWindowViewModel);
             viewModel.Layers.Clear();
 
             Layer layer1 = new Layer();
@@ -535,7 +535,7 @@ namespace boilersGraphics.Test
             boilersGraphics.App.IsTest = true;
             var dlgService = new Mock<IDialogService>();
             MainWindowViewModel mainWindowViewModel = new MainWindowViewModel(dlgService.Object);
-            var viewModel = new DiagramViewModel(mainWindowViewModel, 1000, 1000);
+            var viewModel = new DiagramViewModel(mainWindowViewModel);
             viewModel.Layers.Clear();
 
             Layer layer1 = new Layer();
@@ -626,7 +626,7 @@ namespace boilersGraphics.Test
             boilersGraphics.App.IsTest = true;
             var dlgService = new Mock<IDialogService>();
             MainWindowViewModel mainWindowViewModel = new MainWindowViewModel(dlgService.Object);
-            var viewModel = new DiagramViewModel(mainWindowViewModel, 1000, 1000);
+            var viewModel = new DiagramViewModel(mainWindowViewModel);
             viewModel.Layers.Clear();
 
             Layer layer1 = new Layer();

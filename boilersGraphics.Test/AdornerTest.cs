@@ -25,7 +25,7 @@ namespace boilersGraphics.Test
             boilersGraphics.App.IsTest = true;
             var dlgService = new Mock<IDialogService>();
             MainWindowViewModel mainWindowViewModel = new MainWindowViewModel(dlgService.Object);
-            var diagramViewModel = new DiagramViewModel(mainWindowViewModel, 100, 100);
+            var diagramViewModel = new DiagramViewModel(mainWindowViewModel);
             var designerCanvas = new DesignerCanvas();
             designerCanvas.DataContext = diagramViewModel;
             diagramViewModel.EdgeBrush.Value = new SolidColorBrush(Colors.Red);

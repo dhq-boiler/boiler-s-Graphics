@@ -219,7 +219,7 @@ namespace boilersGraphics.ViewModels
 
         #endregion //Property
 
-        public DiagramViewModel(MainWindowViewModel mainWindowViewModel, int width, int height, bool isPreview = false)
+        public DiagramViewModel(MainWindowViewModel mainWindowViewModel, bool isPreview = false)
         {
             MainWindowVM = mainWindowViewModel;
 
@@ -1469,8 +1469,8 @@ namespace boilersGraphics.ViewModels
             }
         }
 
-        public DiagramViewModel(MainWindowViewModel MainWindowVM, IDialogService dlgService, int width, int height)
-            : this(MainWindowVM, width, height)
+        public DiagramViewModel(MainWindowViewModel MainWindowVM, IDialogService dlgService)
+            : this(MainWindowVM)
         {
             this.dlgService = dlgService;
 
