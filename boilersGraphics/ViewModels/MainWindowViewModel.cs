@@ -73,7 +73,7 @@ namespace boilersGraphics.ViewModels
 
             Recorder = new OperationRecorder(Controller);
 
-            DiagramViewModel = new DiagramViewModel(this, this.dlgService, 1000, 1000);
+            DiagramViewModel = new DiagramViewModel(this, this.dlgService);
             _CompositeDisposable.Add(DiagramViewModel);
             DiagramViewModel.EnableMiniMap.Value = true;
             ToolBarViewModel = new ToolBarViewModel(dialogService, this);

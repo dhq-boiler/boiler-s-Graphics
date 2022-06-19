@@ -116,7 +116,7 @@ namespace boilersGraphics.Test
 
             var dlgService = new Mock<IDialogService>();
             MainWindowViewModel mainWindowViewModel = new MainWindowViewModel(dlgService.Object);
-            var diagramVM = new DiagramViewModel(mainWindowViewModel, 1000, 1000);
+            var diagramVM = new DiagramViewModel(mainWindowViewModel);
             var root = XElement.Parse(xml);
             diagramVM.Layers.Clear();
             ObjectDeserializer.ReadObjectsFromXML(diagramVM, root);
