@@ -13,6 +13,7 @@ using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Windows;
 
 namespace boilersGraphics.Test.UITests
 {
@@ -62,17 +63,6 @@ namespace boilersGraphics.Test.UITests
                 // Set implicit timeout to 1.5 seconds to make element search to retry every 500 ms for at most three times
 
                 //session.Manage().Timeouts().ImplicitWait = TimeSpan.FromMinutes(1);
-
-                while (GetCurrentKeyboardLayout().Name != "en-US")
-                {
-                    var actions = new Actions(session);
-                    actions.KeyDown(OpenQA.Selenium.Keys.Command);
-                    actions.SendKeys(OpenQA.Selenium.Keys.Space);
-                    actions.Release();
-                    actions.Build();
-                    actions.Perform();
-                    actions.Perform();
-                }
 
                 SkipPrivacyPolicyIfExists();
 
@@ -152,6 +142,12 @@ namespace boilersGraphics.Test.UITests
                 Assert.Fail("Failed to WaitForObject.. Check screenshots");
                 return waitElement;
             }
+        }
+
+        public static void InjectText(WindowsElement element, string text)
+        {
+            Clipboard.SetText(text);
+            element.SendKeys(Keys.Control + "v" + Keys.Control);
         }
 
         public static WindowsElement GetElementByAutomationID(string automationId, int timeOut = 10000)
@@ -264,6 +260,9 @@ namespace boilersGraphics.Test.UITests
                 });
             }
             catch (WebDriverTimeoutException ex)
+            {
+            }
+            catch (WebDriverException ex)
             {
             }
 
