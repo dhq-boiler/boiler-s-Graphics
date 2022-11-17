@@ -17,6 +17,7 @@ using System.Windows;
 
 namespace boilersGraphics.Test.UITests
 {
+    [Obsolete]
     public class AppSession
     {
         // Note: append /wd/hub to the URL if you're directing the test at Appium

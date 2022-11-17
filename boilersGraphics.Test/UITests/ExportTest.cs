@@ -10,7 +10,7 @@ using System.Threading;
 namespace boilersGraphics.Test.UITests
 {
     [TestFixture]
-    public class ExportTest : AppSession
+    public class ExportTest : E2ETest
     {
         [Test, Apartment(ApartmentState.STA)]
         [Retry(3)]
@@ -52,14 +52,14 @@ namespace boilersGraphics.Test.UITests
             {
                 LogManager.GetCurrentClassLogger().Info("B");
                 TakeScreenShot("SCREENSHOT_B.png");
-                session.FindElementByAccessibilityId("Load").Click();
+                Session.FindElementByAccessibilityId("Load").Click();
                 LogManager.GetCurrentClassLogger().Info("C");
                 TakeScreenShot("SCREENSHOT_C.png");
                 //「現在のキャンパスは破棄されますが、よろしいですか？」→OK（"1"）
-                session.FindElementByAccessibilityId("1").Click();
+                Session.FindElementByAccessibilityId("1").Click();
                 LogManager.GetCurrentClassLogger().Info("D");
                 TakeScreenShot("SCREENSHOT_D.png");
-                var action = new Actions(session);
+                var action = new Actions(Session);
                 action.SendKeys(Keys.Alt + "N" + Keys.Alt);
                 action.Perform();
                 LogManager.GetCurrentClassLogger().Info("F");
@@ -82,11 +82,11 @@ namespace boilersGraphics.Test.UITests
             {
                 if (IsElementPresent(By.Name("開く")))
                 {
-                    session.FindElementByName("開く").FindElementByAccessibilityId("2").Click();
+                    Session.FindElementByName("開く").FindElementByAccessibilityId("2").Click();
                 }
                 if (IsElementPresent(By.Name("Open")))
                 {
-                    session.FindElementByName("Open").FindElementByAccessibilityId("2").Click();
+                    Session.FindElementByName("Open").FindElementByAccessibilityId("2").Click();
                 }
             }
 
@@ -169,7 +169,7 @@ namespace boilersGraphics.Test.UITests
         [Retry(3)]
         public void スライス()
         {
-            var action = new Actions(session);
+            var action = new Actions(Session);
             var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var loadFilePath = $"{dir}\\XmlFiles\\checker_pattern.xml";
 
@@ -179,7 +179,7 @@ namespace boilersGraphics.Test.UITests
 
             Thread.Sleep(1000);
 
-            action = new Actions(session);
+            action = new Actions(Session);
             action.SendKeys(Keys.Alt + "N" + Keys.Alt);
             //ファイル名（コンボボックス、"1148"）に入力
             action.InjectText(GetElementByAutomationID("1148"), loadFilePath);
@@ -189,7 +189,7 @@ namespace boilersGraphics.Test.UITests
 
             if (ExistsElementByAutomationID("1"))
             {
-                action = new Actions(session);
+                action = new Actions(Session);
                 action.SendKeys(Keys.Alt + "N" + Keys.Alt);
                 //ファイル名（コンボボックス、"1148"）に入力
                 action.InjectText(GetElementByAutomationID("1148"), loadFilePath);
@@ -201,8 +201,8 @@ namespace boilersGraphics.Test.UITests
             TakeScreenShot("SCREENSHOT_GetDesignerCanvas.png");
             var designerCanvas = GetElementBy(By.XPath("//Pane[@Name=\"DesignerScrollViewer\"][@AutomationId=\"DesignerScrollViewer\"]"));
             GetElementByName("slice").Click();
-            action = new Actions(session);
-            action.MoveToElement(designerCanvas, 503, 102);
+            action = new Actions(Session);
+            action.MoveToElement(designerCanvas, 533, 102);
             action.ClickAndHold();
             for (int i = 1; i < 200; ++i)
                 action.MoveByOffset(1, 1);
