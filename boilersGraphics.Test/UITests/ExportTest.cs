@@ -12,6 +12,16 @@ namespace boilersGraphics.Test.UITests
     [TestFixture]
     public class ExportTest : E2ETest
     {
+        public override void DoAfterBoot()
+        {
+            //プライバシーポリシー同意画面が出たら
+            if (ExistsElementByAutomationID("Agree"))
+            {
+                //同意ボタンを押下する
+                GetElementByAutomationID("Agree").Click();
+            }
+        }
+
         [Test, Apartment(ApartmentState.STA)]
         [Retry(3)]
         public void 真っ白なキャンパスをエクスポートする()
