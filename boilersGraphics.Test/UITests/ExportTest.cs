@@ -209,10 +209,10 @@ namespace boilersGraphics.Test.UITests
             }
 
             TakeScreenShot("SCREENSHOT_GetDesignerCanvas.png");
-            var designerCanvas = GetElementBy(By.XPath("//Pane[@Name=\"DesignerScrollViewer\"][@AutomationId=\"DesignerScrollViewer\"]"));
+            var canvas = GetElementBy(By.XPath("//Pane[@Name=\"DesignerScrollViewer\"][@AutomationId=\"DesignerScrollViewer\"]/Thumb[@AutomationId=\"PART_DragThumb\"]"));
             GetElementByName("slice").Click();
             action = new Actions(Session);
-            action.MoveToElement(designerCanvas, 533, 102);
+            action.MoveToElement(canvas, 100, 100);
             action.ClickAndHold();
             for (int i = 1; i < 200; ++i)
                 action.MoveByOffset(1, 1);
