@@ -87,6 +87,7 @@ namespace TsOperationHistory.Test
         /// 基本的なUndoRedoのテスト
         /// </summary>
         [Test]
+        [Retry(3)]
         public void BasicTest()
         {
             IOperationController controller = new OperationController();
@@ -112,6 +113,7 @@ namespace TsOperationHistory.Test
         /// スタティックプロパティのUndoRedoのテスト
         /// </summary>
         [Test]
+        [Retry(3)]
         public async Task StaticPropertyTest()
         {
             IOperationController controller = new OperationController();
@@ -142,6 +144,7 @@ namespace TsOperationHistory.Test
         /// リスト操作のテスト
         /// </summary>
         [Test]
+        [Retry(3)]
         public void ListTest()
         {
             IOperationController controller = new OperationController();
@@ -182,6 +185,7 @@ namespace TsOperationHistory.Test
         /// PropertyChangedを自動的にOperation化するテスト
         /// </summary>
         [Test]
+        [Retry(3)]
         public void ObservePropertyChangedTest()
         {
             IOperationController controller = new OperationController();
@@ -237,6 +241,7 @@ namespace TsOperationHistory.Test
         
         
         [Test]
+        [Retry(3)]
         public void RecorderTest()
         {
             IOperationController controller = new OperationController();
@@ -278,6 +283,7 @@ namespace TsOperationHistory.Test
         }
 
         [Test]
+        [Retry(3)]
         public void DisposeTest()
         {
             IOperationController controller = new OperationController();
@@ -306,6 +312,7 @@ namespace TsOperationHistory.Test
         }
 
         [Test]
+        [Retry(3)]
         public async Task MultiLayeredPropertyTest()
         {
             IOperationController controller = new OperationController();
@@ -337,6 +344,7 @@ namespace TsOperationHistory.Test
         }
 
         [Test]
+        [Retry(3)]
         public void MultiLayeredPropertyTest2()
         {
             IOperationController controller = new OperationController();
