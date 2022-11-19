@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace boilersGraphics.Test.UITests
 {
-    public class E2ETest : UITestFixture
+    public class E2ETest : E2ETestFixture
     {
         public override string AppPath => Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "boilersGraphics.exe");
 

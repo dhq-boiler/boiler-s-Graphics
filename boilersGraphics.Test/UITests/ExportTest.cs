@@ -1,8 +1,11 @@
+using boilersE2E;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel.Engine;
 using NLog;
 using NUnit.Framework;
 using OpenCvSharp;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
+using System;
 using System.IO;
 using System.Reflection;
 using System.Threading;
@@ -31,7 +34,7 @@ namespace boilersGraphics.Test.UITests
 
             GetElementByAutomationID("Export").Click();
             //GetElementByAutomationID("filename").SendKeys(exportFilePath);
-            InjectText(GetElementByAutomationID("filename"), exportFilePath);
+            InputText(GetElementByAutomationID("filename"), exportFilePath);
             GetElementByAutomationID("PerformExport").Click();
             Thread.Sleep(1000);
             LogManager.GetCurrentClassLogger().Info(exportFilePath);
@@ -76,7 +79,7 @@ namespace boilersGraphics.Test.UITests
                 TakeScreenShot("SCREENSHOT_F.png");
                 //ファイル名（コンボボックス、"1148"）に入力
                 //GetElementByAutomationID("1148").SendKeys(loadFilePath);
-                InjectText(GetElementByAutomationID("1148"), loadFilePath);
+                InputText(GetElementByAutomationID("1148"), loadFilePath);
                 LogManager.GetCurrentClassLogger().Info("G");
                 TakeScreenShot("SCREENSHOT_G.png");
                 //開く（O)ボタン（"1")をクリック
@@ -107,7 +110,7 @@ namespace boilersGraphics.Test.UITests
             LogManager.GetCurrentClassLogger().Info("I");
             TakeScreenShot("SCREENSHOT_I.png");
 
-            InjectText(GetElementByAutomationID("filename"), exportFilePath);
+            InputText(GetElementByAutomationID("filename"), exportFilePath);
                 
             LogManager.GetCurrentClassLogger().Info("J");
             TakeScreenShot("SCREENSHOT_J.png");
@@ -192,7 +195,7 @@ namespace boilersGraphics.Test.UITests
             action = new Actions(Session);
             action.SendKeys(Keys.Alt + "N" + Keys.Alt);
             //ファイル名（コンボボックス、"1148"）に入力
-            action.InjectText(GetElementByAutomationID("1148"), loadFilePath);
+            action.InputText(GetElementByAutomationID("1148"), loadFilePath);
             //開く（O)ボタン（"1")をクリック
             action.Click(GetElementByAutomationID("1"));
             action.Perform();
@@ -202,7 +205,7 @@ namespace boilersGraphics.Test.UITests
                 action = new Actions(Session);
                 action.SendKeys(Keys.Alt + "N" + Keys.Alt);
                 //ファイル名（コンボボックス、"1148"）に入力
-                action.InjectText(GetElementByAutomationID("1148"), loadFilePath);
+                action.InputText(GetElementByAutomationID("1148"), loadFilePath);
                 //開く（O)ボタン（"1")をクリック
                 action.Click(GetElementByAutomationID("1"));
                 action.Perform();
@@ -233,7 +236,7 @@ namespace boilersGraphics.Test.UITests
             var exportFilePath = $"{dir}\\ExportTest4.jpg";
 
             //GetElementByAutomationID("filename").SendKeys(exportFilePath);
-            InjectText(GetElementByAutomationID("filename"), exportFilePath);
+            InputText(GetElementByAutomationID("filename"), exportFilePath);
             GetElementByAutomationID("PerformExport").Click();
             Assert.That(exportFilePath, Does.Exist.After(5000, 50));
             TestContext.AddTestAttachment(exportFilePath);
