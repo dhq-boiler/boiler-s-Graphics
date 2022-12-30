@@ -19,6 +19,9 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+	<GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
+	<GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
+	<GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <UseWindowsForms>true</UseWindowsForms>
     <UseWPF>true</UseWPF>
     <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
