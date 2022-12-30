@@ -52,15 +52,15 @@ using System.Windows;
 // 既定値にすることができます:
 // [assembly: AssemblyVersion("1.0.*")]
 
-[assembly: AssemblyVersion(ThisAssembly.Git.BaseVersion.Major + "." + ThisAssembly.Git.BaseVersion.Minor + "." + ThisAssembly.Git.BaseVersion.Patch + "." + ThisAssembly.Git.Commits)]
+[assembly: AssemblyVersion(boilersGraphics.ThisAssembly.Git.BaseVersion.Major + "." + boilersGraphics.ThisAssembly.Git.BaseVersion.Minor + "." + boilersGraphics.ThisAssembly.Git.BaseVersion.Patch)]
 
-[assembly: AssemblyFileVersion(ThisAssembly.Git.SemVer.Major + "." + ThisAssembly.Git.SemVer.Minor + "." + ThisAssembly.Git.SemVer.Patch + "." + ThisAssembly.Git.Commits)]
+[assembly: AssemblyFileVersion(boilersGraphics.ThisAssembly.Git.SemVer.Major + "." + boilersGraphics.ThisAssembly.Git.SemVer.Minor + "." + boilersGraphics.ThisAssembly.Git.SemVer.Patch)]
 
 [assembly: AssemblyInformationalVersion(
     "v" +
-    ThisAssembly.Git.SemVer.Major + "." +
-    ThisAssembly.Git.SemVer.Minor + "." +
-    ThisAssembly.Git.SemVer.Patch + "." +
-    ThisAssembly.Git.Commits + "-" +
-    ThisAssembly.Git.Branch + "+" +
-    ThisAssembly.Git.Commit)]
+    boilersGraphics.ThisAssembly.Git.SemVer.Major + "." +
+    boilersGraphics.ThisAssembly.Git.SemVer.Minor + "." +
+    boilersGraphics.ThisAssembly.Git.SemVer.Patch + "." +
+    boilersGraphics.ThisAssembly.Git.Commits + "-" +
+    boilersGraphics.ThisAssembly.Git.Branch + "+" +
+    boilersGraphics.ThisAssembly.Git.Commit)]
