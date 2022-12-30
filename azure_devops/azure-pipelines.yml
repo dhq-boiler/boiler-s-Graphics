@@ -13,6 +13,8 @@ variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
+  dotNetFrameworks: 'net7.0'
+  dotNetVersion: '7.0.x'
   disable.coverage.autogenerate: 'true'
   System.Debug: True
   TargetSolution: '$(Build.SourcesDirectory)\boilersGraphics.sln'
@@ -23,7 +25,7 @@ steps:
 - task: UseDotNet@2
   displayName: 'Use .NET 7'
   inputs:
-    version: '7.0.x'
+    version: $(dotNetVersion)
     includePreviewVersions: true
 
 - task: NuGetToolInstaller@1
