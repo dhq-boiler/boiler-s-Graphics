@@ -23,7 +23,7 @@ namespace boilersGraphics.Test.UITests
             }
             if (ExistsElementByAutomationID("OK"))
             {
-                //同意ボタンを押下する
+                //OKボタンを押下する
                 GetElementByAutomationID("OK").Click();
             }
         }
