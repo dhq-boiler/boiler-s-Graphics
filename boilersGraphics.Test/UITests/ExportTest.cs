@@ -13,7 +13,7 @@ namespace boilersGraphics.Test.UITests
     [TestFixture]
     public class ExportTest : E2ETest
     {
-        public override void DoAfterBoot()
+        public override void DoAfterSettingWindowSize()
         {
             //プライバシーポリシー同意画面が出たら
             if (ExistsElementByAutomationID("Agree"))
