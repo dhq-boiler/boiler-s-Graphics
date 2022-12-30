@@ -31,14 +31,14 @@ steps:
 - task: DotNetCoreCLI@2
   displayName: 'NuGet パッケージの復元'
   inputs:
-    command: 'restore'
+    command: 'dotnet restore'
     projects: '$(TargetSolution)'
     feedsToUse: 'select'
 
 - task: DotNetCoreCLI@2
   displayName: 'アプリケーションのビルド'
   inputs:
-    command: 'build'
+    command: 'dotnet build'
     projects: '$(TargetSolution)'
     arguments: '--configuration $(BuildConfiguration)'  
 
@@ -50,7 +50,7 @@ steps:
 - task: DotNetCoreCLI@2
   displayName: 'dotnet test'
   inputs:
-    command: 'test'
+    command: 'dotnet test'
     arguments: '--configuration $(BuildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura -- RunConfiguration.DisableAppDomain=true'
     publishTestResults: true
     projects: 'boilersGraphics.Test'
