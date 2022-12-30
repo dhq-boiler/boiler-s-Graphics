@@ -192,10 +192,10 @@
     <PackageReference Include="Dapper.StrongName" Version="2.0.123" />
     <PackageReference Include="GitInfo" Version="2.3.0" />
     <PackageReference Include="Homura" Version="3.4.2" />
-    <PackageReference Include="MdXaml" Version="1.15.0" />
+    <PackageReference Include="MdXaml" Version="1.16.2" />
     <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.0.1" />
-    <PackageReference Include="NLog" Version="4.7.13" />
-    <PackageReference Include="NLog.Schema" Version="4.7.13" />
+    <PackageReference Include="NLog" Version="5.1.1" />
+    <PackageReference Include="NLog.Schema" Version="5.1.1" />
     <PackageReference Include="OpenCvSharp4.Windows" Version="4.5.3.20211207" />
     <PackageReference Include="Prism.Unity" Version="8.1.97" />
     <PackageReference Include="ReactiveProperty" Version="8.0.3" />
