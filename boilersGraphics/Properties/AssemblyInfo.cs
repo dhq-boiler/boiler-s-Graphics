@@ -12,7 +12,7 @@ using System.Windows;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("boiler's Graphics")]
-[assembly: AssemblyCopyright("Copyright ©dhq_boiler 2018-2021")]
+[assembly: AssemblyCopyright("Copyright ©dhq_boiler 2018-2023")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
