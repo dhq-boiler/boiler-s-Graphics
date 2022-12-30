@@ -21,6 +21,11 @@ namespace boilersGraphics.Test.UITests
                 //同意ボタンを押下する
                 GetElementByAutomationID("Agree").Click();
             }
+            if (ExistsElementByAutomationID("OK"))
+            {
+                //同意ボタンを押下する
+                GetElementByAutomationID("OK").Click();
+            }
         }
 
         [Test, Apartment(ApartmentState.STA)]
