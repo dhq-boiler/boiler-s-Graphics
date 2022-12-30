@@ -193,7 +193,7 @@
   <ItemGroup>
     <PackageReference Include="CalcBinding" Version="2.5.2" />
     <PackageReference Include="Dapper.StrongName" Version="2.0.123" />
-    <PackageReference Include="GitInfo" Version="2.3.0" />
+    <PackageReference Include="GitInfo" Version="2.2.0" />
     <PackageReference Include="Homura" Version="3.4.2" />
     <PackageReference Include="MdXaml" Version="1.16.2" />
     <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.0.1" />
