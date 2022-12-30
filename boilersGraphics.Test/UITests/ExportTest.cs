@@ -32,6 +32,7 @@ namespace boilersGraphics.Test.UITests
         [Retry(3)]
         public void 真っ白なキャンパスをエクスポートする()
         {
+            TakeScreenShot("SCREENSHOT_A.png");
             var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var exportFilePath = $"{dir}\\ExportTest.jpg";
 
@@ -59,6 +60,7 @@ namespace boilersGraphics.Test.UITests
         [Retry(3)]
         public void チェッカーパターンを読み込んでエクスポートする()
         {
+            TakeScreenShot("SCREENSHOT_A.png");
             LogManager.GetCurrentClassLogger().Info("A");
             var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var loadFilePath = $"{dir}\\XmlFiles\\checker_pattern.xml";
@@ -185,6 +187,7 @@ namespace boilersGraphics.Test.UITests
         [Retry(3)]
         public void スライス()
         {
+            TakeScreenShot("SCREENSHOT_A.png");
             var action = new Actions(Session);
             var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var loadFilePath = $"{dir}\\XmlFiles\\checker_pattern.xml";
