@@ -19,6 +19,13 @@ variables:
   TestProjects: '$(Build.SourcesDirectory)\boilersGraphics.Test\*.Test.csproj'
 
 steps:
+
+- task: UseDotNet@2
+  displayName: 'Use .NET 7'
+  inputs:
+    version: '7.0.x'
+    includePreviewVersions: true
+
 - task: NuGetToolInstaller@1
 
 - powershell: |
