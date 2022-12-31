@@ -53,16 +53,16 @@ using System.Windows;
 // 既定値にすることができます:
 // [assembly: AssemblyVersion("1.0.*")]
 
-[assembly: boilersGraphics.Helpers.AssemblyErrorLog(boilersGraphics.ThisAssembly.Git.BaseVersion.Major + "." + boilersGraphics.ThisAssembly.Git.BaseVersion.Minor + "." + boilersGraphics.ThisAssembly.Git.BaseVersion.Patch)]
-//[assembly: AssemblyVersion(boilersGraphics.ThisAssembly.Git.BaseVersion.Major + "." + boilersGraphics.ThisAssembly.Git.BaseVersion.Minor + "." + boilersGraphics.ThisAssembly.Git.BaseVersion.Patch)]
+//[assembly: boilersGraphics.Helpers.AssemblyErrorLog(boilersGraphics.ThisAssembly.Git.BaseVersion.Major + "." + boilersGraphics.ThisAssembly.Git.BaseVersion.Minor + "." + boilersGraphics.ThisAssembly.Git.BaseVersion.Patch)]
+[assembly: AssemblyVersion(boilersGraphics.ThisAssembly.Git.BaseVersion.Major + "." + boilersGraphics.ThisAssembly.Git.BaseVersion.Minor + "." + boilersGraphics.ThisAssembly.Git.BaseVersion.Patch)]
 
-//[assembly: AssemblyFileVersion(boilersGraphics.ThisAssembly.Git.SemVer.Major + "." + boilersGraphics.ThisAssembly.Git.SemVer.Minor + "." + boilersGraphics.ThisAssembly.Git.SemVer.Patch)]
+[assembly: AssemblyFileVersion(boilersGraphics.ThisAssembly.Git.SemVer.Major + "." + boilersGraphics.ThisAssembly.Git.SemVer.Minor + "." + boilersGraphics.ThisAssembly.Git.SemVer.Patch)]
 
-//[assembly: AssemblyInformationalVersion(
-//    "v" +
-//    boilersGraphics.ThisAssembly.Git.SemVer.Major + "." +
-//    boilersGraphics.ThisAssembly.Git.SemVer.Minor + "." +
-//    boilersGraphics.ThisAssembly.Git.SemVer.Patch + "." +
-//    boilersGraphics.ThisAssembly.Git.Commits + "-" +
-//    boilersGraphics.ThisAssembly.Git.Branch + "+" +
-//    boilersGraphics.ThisAssembly.Git.Commit)]
+[assembly: AssemblyInformationalVersion(
+    "v" +
+    boilersGraphics.ThisAssembly.Git.SemVer.Major + "." +
+    boilersGraphics.ThisAssembly.Git.SemVer.Minor + "." +
+    boilersGraphics.ThisAssembly.Git.SemVer.Patch + "." +
+    boilersGraphics.ThisAssembly.Git.Commits + "-" +
+    boilersGraphics.ThisAssembly.Git.Branch + "+" +
+    boilersGraphics.ThisAssembly.Git.Commit)]
