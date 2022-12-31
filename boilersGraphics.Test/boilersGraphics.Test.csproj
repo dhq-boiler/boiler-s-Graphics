@@ -28,8 +28,8 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Appium.WebDriver" Version="4.4.0" />
-    <PackageReference Include="boilersE2E.Core" Version="3.1.2" />
-    <PackageReference Include="boilersE2E.NUnit" Version="3.1.2" />
+    <PackageReference Include="boilersE2E.Core" Version="4.0.1" />
+    <PackageReference Include="boilersE2E.NUnit" Version="4.0.1" />
     <PackageReference Include="coverlet.collector" Version="3.1.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
