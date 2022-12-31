@@ -1,9 +1,8 @@
-﻿using NLog;
+﻿
+#define DEBUG
+
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace boilersGraphics.Helpers
 {
@@ -12,7 +11,7 @@ namespace boilersGraphics.Helpers
     {
         public AssemblyErrorLogAttribute(string log)
         {
-            Console.Error.WriteLine($"output by AssemblyErrorLogAttribute : {log}");
+            Debug.Fail(log);
         }
     }
 }
