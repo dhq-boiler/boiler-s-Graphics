@@ -1,33 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net6.0-windows10.0.22000.0</TargetFramework>
+    <TargetFramework>net7.0-windows10.0.22000.0</TargetFramework>
     <OutputType>WinExe</OutputType>
     <LangVersion>latest</LangVersion>
-    <PublishUrl>publish\</PublishUrl>
-    <Install>true</Install>
-    <InstallFrom>Disk</InstallFrom>
-    <UpdateEnabled>false</UpdateEnabled>
-    <UpdateMode>Foreground</UpdateMode>
-    <UpdateInterval>7</UpdateInterval>
-    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
-    <UpdatePeriodically>false</UpdatePeriodically>
-    <UpdateRequired>false</UpdateRequired>
-    <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
-    <UseApplicationTrust>false</UseApplicationTrust>
-    <BootstrapperEnabled>true</BootstrapperEnabled>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <UseWindowsForms>true</UseWindowsForms>
+    <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
-    <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-	<PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <RuntimeIdentifiers>win-x64;win-x86</RuntimeIdentifiers>
+    <ThisAssemblyNamespace>boilersGraphics</ThisAssemblyNamespace>
   </PropertyGroup>
   <PropertyGroup>
-  	<ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
+    <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>square150x150logo_scale_200_Qpf_icon.ico</ApplicationIcon>
@@ -69,8 +55,6 @@
     <Resource Include="Assets\img\FoldingFan.png" />
     <Resource Include="Assets\img\poly_bezier_dark.png" />
     <Resource Include="Assets\img\rectangle.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Assets\img\pointer.png" />
     <Resource Include="Assets\img\rectangle_dark.png" />
     <Resource Include="Assets\img\right_arrow.png" />
@@ -78,17 +62,9 @@
     <Resource Include="Assets\img\rubberband_dark.png" />
     <Resource Include="Assets\img\slice_tool_dark.png" />
     <Resource Include="Assets\img\SnapPoint_dark.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Assets\img\straightline.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Assets\img\ellipse.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Assets\img\rubberband.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Assets\img\AlignObjectsBottom.png" />
     <Resource Include="Assets\img\AlignObjectsCenteredHorizontal.png" />
     <Resource Include="Assets\img\AlignObjectsCenteredVertical.png" />
@@ -104,101 +80,46 @@
     <Resource Include="Assets\img\SendToBack.png" />
     <Resource Include="Assets\img\straightline_dark.png" />
     <Resource Include="Assets\img\Ungroup.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Assets\img\UniformHeight.png" />
     <Resource Include="Assets\img\UniformWidth.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Assets\img\Save.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Assets\img\OpenFolder.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Assets\img\Export.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Assets\img\picture.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Assets\img\A.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Assets\img\A_Vertical.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Assets\img\Gear.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Assets\img\pentagon.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Assets\img\BezierCurve.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Assets\img\exclude.png" />
     <Resource Include="Assets\img\intersect.png" />
     <Resource Include="Assets\img\union.png" />
     <Resource Include="Assets\img\work_history.png" />
     <Resource Include="Assets\img\work_history_dark.png" />
     <Resource Include="Assets\img\xor.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Assets\img\Eye.png" />
     <Resource Include="Assets\img\EyeSlash.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Assets\img\SnapPoint.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Assets\img\brush.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Assets\img\eraser.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Assets\img\polygon.png" />
+    <Resource Include="Assets\img\Square150x150Logo.scale-200.png" />
+    <Resource Include="Assets\img\square150x150logo_scale_200_Qpf_icon.ico" />
+    <Resource Include="square150x150logo_scale_200_Qpf_icon.ico" />
+    <Resource Include="Assets\img\slice_tool.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Btl\Controls\Btl.Controls.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Assets\img\Square150x150Logo.scale-200.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <BootstrapperPackage Include=".NETFramework,Version=v4.8">
-      <Visible>False</Visible>
-      <ProductName>Microsoft .NET Framework 4.8 %28x86 および x64%29</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Assets\img\square150x150logo_scale_200_Qpf_icon.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="square150x150logo_scale_200_Qpf_icon.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Assets\img\slice_tool.png" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="CalcBinding" Version="2.5.2" />
     <PackageReference Include="Dapper.StrongName" Version="2.0.123" />
-    <PackageReference Include="GitVersion.MsBuild" Version="5.8.1">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
+    <PackageReference Include="GitInfo" Version="2.3.0" />
     <PackageReference Include="Homura" Version="3.4.2" />
-    <PackageReference Include="MdXaml" Version="1.15.0" />
-    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="1.4.1" />
-    <PackageReference Include="NLog" Version="4.7.13" />
-    <PackageReference Include="NLog.Schema" Version="4.7.13" />
+    <PackageReference Include="MdXaml" Version="1.16.2" />
+    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.0.1" />
+    <PackageReference Include="NLog" Version="5.1.1" />
+    <PackageReference Include="NLog.Schema" Version="5.1.1" />
     <PackageReference Include="OpenCvSharp4.Windows" Version="4.5.3.20211207" />
     <PackageReference Include="Prism.Unity" Version="8.1.97" />
     <PackageReference Include="ReactiveProperty" Version="8.0.3" />
@@ -214,9 +135,6 @@
     <PackageReference Include="Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers" Version="0.3.256001">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Remove="RubberbandAdorner.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Assets\img\art-pallete.png" />
@@ -240,8 +158,6 @@
     <None Remove="Assets\img\picture_dark.png" />
     <None Remove="Assets\img\polygon_dark.png" />
     <None Remove="Assets\img\poly_bezier.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Remove="Assets\img\FoldingFan.png" />
     <None Remove="Assets\img\poly_bezier_dark.png" />
     <None Remove="Assets\img\rectangle_dark.png" />

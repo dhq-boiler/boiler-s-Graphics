@@ -13,12 +13,21 @@ variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
+  dotNetFrameworks: 'net7.0'
+  dotNetVersion: '7.0.x'
   disable.coverage.autogenerate: 'true'
   System.Debug: True
   TargetSolution: '$(Build.SourcesDirectory)\boilersGraphics.sln'
   TestProjects: '$(Build.SourcesDirectory)\boilersGraphics.Test\*.Test.csproj'
 
 steps:
+
+- task: UseDotNet@2
+  displayName: 'Use .NET 7'
+  inputs:
+    version: $(dotNetVersion)
+    includePreviewVersions: true
+
 - task: NuGetToolInstaller@1
 
 - powershell: |
@@ -116,7 +125,7 @@ steps:
 - task: ArchiveFiles@2
   condition: always()
   inputs:
-    rootFolderOrFile: '$(System.DefaultWorkingDirectory)\boilersGraphics\bin\Release\net6.0-windows10.0.22000.0' 
+    rootFolderOrFile: '$(System.DefaultWorkingDirectory)\boilersGraphics\bin\Release\net7.0-windows10.0.22000.0' 
     includeRootFolder: false
     archiveType: 'zip' # Options: zip, 7z, tar, wim
     tarCompression: 'gz' # Optional. Options: gz, bz2, xz, none

@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Diagnostics;
+using System.Reflection;
 using System.Resources;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -12,7 +13,7 @@ using System.Windows;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("boiler's Graphics")]
-[assembly: AssemblyCopyright("Copyright ©dhq_boiler 2018-2021")]
+[assembly: AssemblyCopyright("Copyright ©dhq_boiler 2018-2023")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -51,3 +52,17 @@ using System.Windows;
 // すべての値を指定するか、次を使用してビルド番号とリビジョン番号を既定に設定できます
 // 既定値にすることができます:
 // [assembly: AssemblyVersion("1.0.*")]
+
+//[assembly: boilersGraphics.Helpers.AssemblyErrorLog(boilersGraphics.ThisAssembly.Git.BaseVersion.Major + "." + boilersGraphics.ThisAssembly.Git.BaseVersion.Minor + "." + boilersGraphics.ThisAssembly.Git.BaseVersion.Patch)]
+[assembly: AssemblyVersion(boilersGraphics.ThisAssembly.Git.BaseVersion.Major + "." + boilersGraphics.ThisAssembly.Git.BaseVersion.Minor + "." + boilersGraphics.ThisAssembly.Git.BaseVersion.Patch)]
+
+[assembly: AssemblyFileVersion(boilersGraphics.ThisAssembly.Git.SemVer.Major + "." + boilersGraphics.ThisAssembly.Git.SemVer.Minor + "." + boilersGraphics.ThisAssembly.Git.SemVer.Patch)]
+
+[assembly: AssemblyInformationalVersion(
+    "v" +
+    boilersGraphics.ThisAssembly.Git.SemVer.Major + "." +
+    boilersGraphics.ThisAssembly.Git.SemVer.Minor + "." +
+    boilersGraphics.ThisAssembly.Git.SemVer.Patch + "." +
+    boilersGraphics.ThisAssembly.Git.Commits + "-" +
+    boilersGraphics.ThisAssembly.Git.Branch + "+" +
+    boilersGraphics.ThisAssembly.Git.Commit)]
