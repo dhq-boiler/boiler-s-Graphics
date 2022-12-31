@@ -10,10 +10,9 @@ namespace boilersGraphics.Helpers
     [AttributeUsage(AttributeTargets.Assembly, Inherited = false)]
     public class AssemblyErrorLogAttribute : Attribute
     {
-        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         public AssemblyErrorLogAttribute(string log)
         {
-            logger.Error($"output by AssemblyErrorLogAttribute : {log}");
+            Console.Error.WriteLine($"output by AssemblyErrorLogAttribute : {log}");
         }
     }
 }
