@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Diagnostics;
+using System.Reflection;
 using System.Resources;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -52,6 +53,7 @@ using System.Windows;
 // 既定値にすることができます:
 // [assembly: AssemblyVersion("1.0.*")]
 
+[assembly: boilersGraphics.Helpers.AssemblyErrorLog(boilersGraphics.ThisAssembly.Git.BaseVersion.Major + "." + boilersGraphics.ThisAssembly.Git.BaseVersion.Minor + "." + boilersGraphics.ThisAssembly.Git.BaseVersion.Patch)]
 [assembly: AssemblyVersion(boilersGraphics.ThisAssembly.Git.BaseVersion.Major + "." + boilersGraphics.ThisAssembly.Git.BaseVersion.Minor + "." + boilersGraphics.ThisAssembly.Git.BaseVersion.Patch)]
 
 [assembly: AssemblyFileVersion(boilersGraphics.ThisAssembly.Git.SemVer.Major + "." + boilersGraphics.ThisAssembly.Git.SemVer.Minor + "." + boilersGraphics.ThisAssembly.Git.SemVer.Patch)]
