@@ -19,7 +19,7 @@ namespace boilersGraphics.Test.UITests
 
         static E2ETest()
         {
-            boilersE2ETestEnvironmentVariableName = "BOILERSGRAPHICS_TEST_IS_VALID";
+            EnvironmentVariableNameWhereWinAppDriverRunAutomatically = "BOILERSGRAPHICS_TEST_IS_VALID";
         }
     }
 }
