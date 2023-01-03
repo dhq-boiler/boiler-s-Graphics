@@ -21,19 +21,16 @@ namespace boilersGraphics.Test.UITests.PageObjects
 
         public void Focus_FileName()
         {
-            //Session.SwitchTo().Window(Session.WindowHandles.First());
             action.SendKeys(Keys.Alt + "N" + Keys.Alt);
         }
 
         public void Input_FileName(string filename)
         {
-            //InputText(GetElementByAutomationID("1148"), filename);
             action.InputText(GetElementByAutomationID("1148"), filename);
         }
 
         public void Click_OpenButton()
         {
-            //GetElementByAutomationID("1").Click();
             action.Click(GetElementByAutomationID("1"));
         }
 
