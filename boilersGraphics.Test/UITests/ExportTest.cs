@@ -1,4 +1,5 @@
 using boilersE2E;
+using boilersGraphics.Test.UITests.PageObjects;
 using NLog;
 using NUnit.Framework;
 using OpenCvSharp;
@@ -15,16 +16,14 @@ namespace boilersGraphics.Test.UITests
     {
         public override void DoAfterSettingWindowSize()
         {
-            //プライバシーポリシー同意画面が出たら
-            if (ExistsElementByAutomationID("Agree"))
+            var privacyPolicyPO = new PrivacyPolicy(Session);
+            var agreeOrOKButtonClicked = privacyPolicyPO.Click_AgreeButton_IfExists();
+            agreeOrOKButtonClicked = agreeOrOKButtonClicked | privacyPolicyPO.Click_OKButton_IfExists();
+            if (agreeOrOKButtonClicked)
             {
-                //同意ボタンを押下する
-                GetElementByAutomationID("Agree").Click();
-            }
-            if (ExistsElementByAutomationID("OK"))
-            {
-                //OKボタンを押下する
-                GetElementByAutomationID("OK").Click();
+                //プライバシーポリシー画面の同意ボタンかOKボタンを押して画面を閉じた後
+                //メインウィンドウを最大化する
+                MaximizeWindow();
             }
         }
 
