@@ -2,7 +2,6 @@
 using OpenQA.Selenium;
 using OpenQA.Selenium.Appium.Windows;
 using OpenQA.Selenium.Interactions;
-using System.Linq;
 
 namespace boilersGraphics.Test.UITests.PageObjects
 {
