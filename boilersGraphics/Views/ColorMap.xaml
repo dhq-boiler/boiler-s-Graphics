@@ -78,8 +78,8 @@
             StylusUp="Image_StylusUp" />
         <Thumb
             x:Name="Thumb"
-            Canvas.Left="{Binding X, RelativeSource={RelativeSource AncestorType={x:Type local:ColorMap}}}"
-            Canvas.Top="{Binding Y, RelativeSource={RelativeSource AncestorType={x:Type local:ColorMap}}}"
+            Canvas.Left="{Binding X, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:ColorMap}}}"
+            Canvas.Top="{Binding Y, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:ColorMap}}}"
             Width="11"
             Height="11"
             AutomationProperties.AutomationId="ColorMapThumb"
