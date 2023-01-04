@@ -204,6 +204,10 @@ namespace boilersGraphics.Views
 
             tooltip.HorizontalOffset = 0 + 10;
             tooltip.VerticalOffset = 0 + 10;
+
+            //ロードした彩度、輝度を元にThumbの座標を初期設定
+            X = -(Thumb.Width / 2) + Saturation;
+            Y = -(Thumb.Height / 2) + (ActualHeight - Value);
         }
 
         private void Thumb_ToolTipOpening(object sender, ToolTipEventArgs e)

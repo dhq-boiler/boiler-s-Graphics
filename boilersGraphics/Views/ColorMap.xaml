@@ -1,16 +1,18 @@
-﻿<UserControl x:Class="boilersGraphics.Views.ColorMap"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:converter="clr-namespace:boilersGraphics.Converters"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:boilersGraphics.Views"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:viewModel="clr-namespace:boilersGraphics.ViewModels"
-             Width="256"
-             Height="256"
-             d:DataContext="{d:DesignInstance {x:Type viewModel:ColorPickerViewModel}}"
-             Loaded="UserControl_Loaded"
-             mc:Ignorable="d">
+﻿<UserControl
+    x:Class="boilersGraphics.Views.ColorMap"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converter="clr-namespace:boilersGraphics.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:boilersGraphics.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModel="clr-namespace:boilersGraphics.ViewModels"
+    Width="256"
+    Height="256"
+    d:DataContext="{d:DesignInstance {x:Type viewModel:ColorPickerViewModel}}"
+    AutomationProperties.AutomationId="ColorMap"
+    Loaded="UserControl_Loaded"
+    mc:Ignorable="d">
     <UserControl.Resources>
         <Style TargetType="{x:Type Thumb}">
             <Setter Property="Template">
@@ -18,9 +20,10 @@
                     <ControlTemplate TargetType="{x:Type Thumb}">
                         <Grid Background="Transparent">
                             <Ellipse Stroke="Black" StrokeThickness="1" />
-                            <Ellipse Stroke="White"
-                                     StrokeDashArray="1 1"
-                                     StrokeThickness="1" />
+                            <Ellipse
+                                Stroke="White"
+                                StrokeDashArray="1 1"
+                                StrokeThickness="1" />
                         </Grid>
                     </ControlTemplate>
                 </Setter.Value>
@@ -28,10 +31,11 @@
         </Style>
     </UserControl.Resources>
     <UserControl.Background>
-        <VisualBrush Stretch="None"
-                     TileMode="Tile"
-                     Viewport="0,0,16,16"
-                     ViewportUnits="Absolute">
+        <VisualBrush
+            Stretch="None"
+            TileMode="Tile"
+            Viewport="0,0,16,16"
+            ViewportUnits="Absolute">
             <VisualBrush.Visual>
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -42,48 +46,55 @@
                         <RowDefinition Height="8" />
                         <RowDefinition Height="8" />
                     </Grid.RowDefinitions>
-                    <Rectangle Grid.Row="0"
-                               Grid.Column="0"
-                               Fill="#EEE" />
-                    <Rectangle Grid.Row="0"
-                               Grid.Column="1"
-                               Fill="#AAA" />
-                    <Rectangle Grid.Row="1"
-                               Grid.Column="0"
-                               Fill="#AAA" />
-                    <Rectangle Grid.Row="1"
-                               Grid.Column="1"
-                               Fill="#EEE" />
+                    <Rectangle
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        Fill="#EEE" />
+                    <Rectangle
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        Fill="#AAA" />
+                    <Rectangle
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        Fill="#AAA" />
+                    <Rectangle
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Fill="#EEE" />
                 </Grid>
             </VisualBrush.Visual>
         </VisualBrush>
     </UserControl.Background>
     <Canvas>
-        <Image x:Name="Image"
-               PreviewMouseDown="Image_PreviewMouseDown"
-               MouseDown="Image_MouseDown"
-               MouseMove="Image_MouseMove"
-               MouseUp="Image_MouseUp"
-               StylusDown="Image_StylusDown"
-               StylusUp="Image_StylusUp"
-               Source="{Binding Source, RelativeSource={RelativeSource AncestorType={x:Type local:ColorMap}}}" />
-        <Thumb x:Name="Thumb"
-               Canvas.Left="{Binding X, RelativeSource={RelativeSource AncestorType={x:Type local:ColorMap}}}"
-               Canvas.Top="{Binding Y, RelativeSource={RelativeSource AncestorType={x:Type local:ColorMap}}}"
-               Width="11"
-               Height="11"
-               MouseMove="Thumb_MouseMove"
-               DragDelta="Thumb_DragDelta"
-               MouseUp="Thumb_MouseUp"
-               StylusUp="Thumb_StylusUp"
-               PreviewMouseDown="Thumb_PreviewMouseDown"
-               PreviewMouseUp="Thumb_PreviewMouseUp"
-               PreviewStylusDown="Thumb_PreviewStylusDown"
-               PreviewStylusUp="Thumb_PreviewStylusUp"
-               ToolTipClosing="Thumb_ToolTipClosing"
-               ToolTipOpening="Thumb_ToolTipOpening"
-               ToolTipService.BetweenShowDelay="0"
-               ToolTipService.InitialShowDelay="0">
+        <Image
+            x:Name="Image"
+            MouseDown="Image_MouseDown"
+            MouseMove="Image_MouseMove"
+            MouseUp="Image_MouseUp"
+            PreviewMouseDown="Image_PreviewMouseDown"
+            Source="{Binding Source, RelativeSource={RelativeSource AncestorType={x:Type local:ColorMap}}}"
+            StylusDown="Image_StylusDown"
+            StylusUp="Image_StylusUp" />
+        <Thumb
+            x:Name="Thumb"
+            Canvas.Left="{Binding X, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:ColorMap}}}"
+            Canvas.Top="{Binding Y, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:ColorMap}}}"
+            Width="11"
+            Height="11"
+            AutomationProperties.AutomationId="ColorMapThumb"
+            DragDelta="Thumb_DragDelta"
+            MouseMove="Thumb_MouseMove"
+            MouseUp="Thumb_MouseUp"
+            PreviewMouseDown="Thumb_PreviewMouseDown"
+            PreviewMouseUp="Thumb_PreviewMouseUp"
+            PreviewStylusDown="Thumb_PreviewStylusDown"
+            PreviewStylusUp="Thumb_PreviewStylusUp"
+            StylusUp="Thumb_StylusUp"
+            ToolTipClosing="Thumb_ToolTipClosing"
+            ToolTipOpening="Thumb_ToolTipOpening"
+            ToolTipService.BetweenShowDelay="0"
+            ToolTipService.InitialShowDelay="0">
             <Thumb.ToolTip>
                 <ToolTip DataContext="{Binding Path=PlacementTarget.DataContext, RelativeSource={x:Static RelativeSource.Self}}">
                     <TextBlock>

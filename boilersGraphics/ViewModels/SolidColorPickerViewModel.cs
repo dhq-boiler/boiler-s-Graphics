@@ -40,130 +40,6 @@ namespace boilersGraphics.ViewModels
 
         public SolidColorPickerViewModel()
         {
-            //OKCommand = Color
-            //    .Where(x => x != null)
-            //    .Select(_ => true)
-            //    .ToReactiveCommand();
-
-            //OKCommand
-            //    .Subscribe(_ =>
-            //    {
-            //        var colorSpots = new ColorSpots();
-            //        colorSpots.ColorSpot0 = ColorSpot0.Value;
-            //        colorSpots.ColorSpot1 = ColorSpot1.Value;
-            //        colorSpots.ColorSpot2 = ColorSpot2.Value;
-            //        colorSpots.ColorSpot3 = ColorSpot3.Value;
-            //        colorSpots.ColorSpot4 = ColorSpot4.Value;
-            //        colorSpots.ColorSpot5 = ColorSpot5.Value;
-            //        colorSpots.ColorSpot6 = ColorSpot6.Value;
-            //        colorSpots.ColorSpot7 = ColorSpot7.Value;
-            //        colorSpots.ColorSpot8 = ColorSpot8.Value;
-            //        colorSpots.ColorSpot9 = ColorSpot9.Value;
-            //        colorSpots.ColorSpot10 = ColorSpot10.Value;
-            //        colorSpots.ColorSpot11 = ColorSpot11.Value;
-            //        colorSpots.ColorSpot12 = ColorSpot12.Value;
-            //        colorSpots.ColorSpot13 = ColorSpot13.Value;
-            //        colorSpots.ColorSpot14 = ColorSpot14.Value;
-            //        colorSpots.ColorSpot15 = ColorSpot15.Value;
-            //        colorSpots.ColorSpot16 = ColorSpot16.Value;
-            //        colorSpots.ColorSpot17 = ColorSpot17.Value;
-            //        colorSpots.ColorSpot18 = ColorSpot18.Value;
-            //        colorSpots.ColorSpot19 = ColorSpot19.Value;
-            //        colorSpots.ColorSpot20 = ColorSpot20.Value;
-            //        colorSpots.ColorSpot21 = ColorSpot21.Value;
-            //        colorSpots.ColorSpot22 = ColorSpot22.Value;
-            //        colorSpots.ColorSpot23 = ColorSpot23.Value;
-            //        colorSpots.ColorSpot24 = ColorSpot24.Value;
-            //        colorSpots.ColorSpot25 = ColorSpot25.Value;
-            //        colorSpots.ColorSpot26 = ColorSpot26.Value;
-            //        colorSpots.ColorSpot27 = ColorSpot27.Value;
-            //        colorSpots.ColorSpot28 = ColorSpot28.Value;
-            //        colorSpots.ColorSpot29 = ColorSpot29.Value;
-            //        colorSpots.ColorSpot30 = ColorSpot30.Value;
-            //        colorSpots.ColorSpot31 = ColorSpot31.Value;
-            //        colorSpots.ColorSpot32 = ColorSpot32.Value;
-            //        colorSpots.ColorSpot33 = ColorSpot33.Value;
-            //        colorSpots.ColorSpot34 = ColorSpot34.Value;
-            //        colorSpots.ColorSpot35 = ColorSpot35.Value;
-            //        colorSpots.ColorSpot36 = ColorSpot36.Value;
-            //        colorSpots.ColorSpot37 = ColorSpot37.Value;
-            //        colorSpots.ColorSpot38 = ColorSpot38.Value;
-            //        colorSpots.ColorSpot39 = ColorSpot39.Value;
-            //        colorSpots.ColorSpot40 = ColorSpot40.Value;
-            //        colorSpots.ColorSpot41 = ColorSpot41.Value;
-            //        colorSpots.ColorSpot42 = ColorSpot42.Value;
-            //        colorSpots.ColorSpot43 = ColorSpot43.Value;
-            //        colorSpots.ColorSpot44 = ColorSpot44.Value;
-            //        colorSpots.ColorSpot45 = ColorSpot45.Value;
-            //        colorSpots.ColorSpot46 = ColorSpot46.Value;
-            //        colorSpots.ColorSpot47 = ColorSpot47.Value;
-            //        colorSpots.ColorSpot48 = ColorSpot48.Value;
-            //        colorSpots.ColorSpot49 = ColorSpot49.Value;
-            //        colorSpots.ColorSpot50 = ColorSpot50.Value;
-            //        colorSpots.ColorSpot51 = ColorSpot51.Value;
-            //        colorSpots.ColorSpot52 = ColorSpot52.Value;
-            //        colorSpots.ColorSpot53 = ColorSpot53.Value;
-            //        colorSpots.ColorSpot54 = ColorSpot54.Value;
-            //        colorSpots.ColorSpot55 = ColorSpot55.Value;
-            //        colorSpots.ColorSpot56 = ColorSpot56.Value;
-            //        colorSpots.ColorSpot57 = ColorSpot57.Value;
-            //        colorSpots.ColorSpot58 = ColorSpot58.Value;
-            //        colorSpots.ColorSpot59 = ColorSpot59.Value;
-            //        colorSpots.ColorSpot60 = ColorSpot60.Value;
-            //        colorSpots.ColorSpot61 = ColorSpot61.Value;
-            //        colorSpots.ColorSpot62 = ColorSpot62.Value;
-            //        colorSpots.ColorSpot63 = ColorSpot63.Value;
-            //        colorSpots.ColorSpot64 = ColorSpot64.Value;
-            //        colorSpots.ColorSpot65 = ColorSpot65.Value;
-            //        colorSpots.ColorSpot66 = ColorSpot66.Value;
-            //        colorSpots.ColorSpot67 = ColorSpot67.Value;
-            //        colorSpots.ColorSpot68 = ColorSpot68.Value;
-            //        colorSpots.ColorSpot69 = ColorSpot69.Value;
-            //        colorSpots.ColorSpot70 = ColorSpot70.Value;
-            //        colorSpots.ColorSpot71 = ColorSpot71.Value;
-            //        colorSpots.ColorSpot72 = ColorSpot72.Value;
-            //        colorSpots.ColorSpot73 = ColorSpot73.Value;
-            //        colorSpots.ColorSpot74 = ColorSpot74.Value;
-            //        colorSpots.ColorSpot75 = ColorSpot75.Value;
-            //        colorSpots.ColorSpot76 = ColorSpot76.Value;
-            //        colorSpots.ColorSpot77 = ColorSpot77.Value;
-            //        colorSpots.ColorSpot78 = ColorSpot78.Value;
-            //        colorSpots.ColorSpot79 = ColorSpot79.Value;
-            //        colorSpots.ColorSpot80 = ColorSpot80.Value;
-            //        colorSpots.ColorSpot81 = ColorSpot81.Value;
-            //        colorSpots.ColorSpot82 = ColorSpot82.Value;
-            //        colorSpots.ColorSpot83 = ColorSpot83.Value;
-            //        colorSpots.ColorSpot84 = ColorSpot84.Value;
-            //        colorSpots.ColorSpot85 = ColorSpot85.Value;
-            //        colorSpots.ColorSpot86 = ColorSpot86.Value;
-            //        colorSpots.ColorSpot87 = ColorSpot87.Value;
-            //        colorSpots.ColorSpot88 = ColorSpot88.Value;
-            //        colorSpots.ColorSpot89 = ColorSpot89.Value;
-            //        colorSpots.ColorSpot90 = ColorSpot90.Value;
-            //        colorSpots.ColorSpot91 = ColorSpot91.Value;
-            //        colorSpots.ColorSpot92 = ColorSpot92.Value;
-            //        colorSpots.ColorSpot93 = ColorSpot93.Value;
-            //        colorSpots.ColorSpot94 = ColorSpot94.Value;
-            //        colorSpots.ColorSpot95 = ColorSpot95.Value;
-            //        colorSpots.ColorSpot96 = ColorSpot96.Value;
-            //        colorSpots.ColorSpot97 = ColorSpot97.Value;
-            //        colorSpots.ColorSpot98 = ColorSpot98.Value;
-            //        colorSpots.ColorSpot99 = ColorSpot99.Value;
-
-            //        EditTarget.Value.New = Output.Value;
-            //        if (RequestClose != null)
-            //        {
-            //            var parameters = new DialogParameters()
-            //            {
-            //                { "ColorExchange", EditTarget },
-            //                { "ColorSpots",  colorSpots }
-            //            };
-            //            var ret = new DialogResult(ButtonResult.OK, parameters);
-            //            RequestClose.Invoke(ret);
-            //        }
-            //    })
-            //    .AddTo(_disposables);
-
             Hue
                 .Subscribe(_ =>
                 {
@@ -224,6 +100,7 @@ namespace boilersGraphics.ViewModels
                         RecalcHue();
                         RecalcValue();
                         RecalcSaturation();
+                        _bgr2hsv = false;
                     }
                     SetColorToSpot();
                     EditTarget.Value.New = new SolidColorBrush(System.Windows.Media.Color.FromArgb(A.Value, R.Value, G.Value, B.Value));
@@ -265,20 +142,6 @@ namespace boilersGraphics.ViewModels
                     EditTarget.Value.New = new SolidColorBrush(System.Windows.Media.Color.FromArgb(A.Value, R.Value, G.Value, B.Value));
                 })
                 .AddTo(_disposables);
-
-            //Color
-            //    .Subscribe(newColor =>
-            //    {
-            //        if (!_hsv2bgr && !_bgr2hsv)
-            //        {
-            //            _hsv2bgr = true;
-            //            _bgr2hsv = true;
-            //            SetRGB();
-            //            _hsv2bgr = false;
-            //            _bgr2hsv = false;
-            //        }
-            //    })
-            //    .AddTo(_disposables);
 
             GenerateHueSelectorMat();
             GenerateSaturationValueMat();
@@ -682,19 +545,19 @@ namespace boilersGraphics.ViewModels
         /// <summary>
         /// 0 ≦ Hue ≦ 180
         /// </summary>
-        public ReactivePropertySlim<byte> Hue { get; } = new ReactivePropertySlim<byte>();
+        public ReactivePropertySlim<byte> Hue { get; } = new ReactivePropertySlim<byte>(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe);
 
-        public ReactivePropertySlim<byte> Saturation { get; } = new ReactivePropertySlim<byte>();
+        public ReactivePropertySlim<byte> Saturation { get; } = new ReactivePropertySlim<byte>(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe);
 
-        public ReactivePropertySlim<byte> Value { get; } = new ReactivePropertySlim<byte>();
+        public ReactivePropertySlim<byte> Value { get; } = new ReactivePropertySlim<byte>(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe);
 
-        public ReactivePropertySlim<byte> A { get; } = new ReactivePropertySlim<byte>();
+        public ReactivePropertySlim<byte> A { get; } = new ReactivePropertySlim<byte>(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe);
 
-        public ReactivePropertySlim<byte> R { get; } = new ReactivePropertySlim<byte>();
+        public ReactivePropertySlim<byte> R { get; } = new ReactivePropertySlim<byte>(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe);
 
-        public ReactivePropertySlim<byte> G { get; } = new ReactivePropertySlim<byte>();
+        public ReactivePropertySlim<byte> G { get; } = new ReactivePropertySlim<byte>(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe);
 
-        public ReactivePropertySlim<byte> B { get; } = new ReactivePropertySlim<byte>();
+        public ReactivePropertySlim<byte> B { get; } = new ReactivePropertySlim<byte>(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe);
 
         public ReactivePropertySlim<Brush> Color { get; } = new ReactivePropertySlim<Brush>(Brushes.Transparent);
 

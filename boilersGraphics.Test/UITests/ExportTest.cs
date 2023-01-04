@@ -1,9 +1,7 @@
-using boilersE2E;
+using boilersGraphics.Test.UITests.PageObjects;
 using NLog;
 using NUnit.Framework;
 using OpenCvSharp;
-using OpenQA.Selenium;
-using OpenQA.Selenium.Interactions;
 using System.IO;
 using System.Reflection;
 using System.Threading;
@@ -13,33 +11,19 @@ namespace boilersGraphics.Test.UITests
     [TestFixture]
     public class ExportTest : E2ETest
     {
-        public override void DoAfterSettingWindowSize()
-        {
-            //プライバシーポリシー同意画面が出たら
-            if (ExistsElementByAutomationID("Agree"))
-            {
-                //同意ボタンを押下する
-                GetElementByAutomationID("Agree").Click();
-            }
-            if (ExistsElementByAutomationID("OK"))
-            {
-                //OKボタンを押下する
-                GetElementByAutomationID("OK").Click();
-            }
-        }
-
         [Test, Apartment(ApartmentState.STA)]
         [Retry(3)]
         public void 真っ白なキャンパスをエクスポートする()
         {
+            var mainwindowPO = new MainWindowPO(Session);
+
             TakeScreenShot("SCREENSHOT_A.png");
             var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var exportFilePath = $"{dir}\\ExportTest.jpg";
 
-            GetElementByAutomationID("Export").Click();
-            //GetElementByAutomationID("filename").SendKeys(exportFilePath);
-            InputText(GetElementByAutomationID("filename"), exportFilePath);
-            GetElementByAutomationID("PerformExport").Click();
+            var exportDialogPO = mainwindowPO.Click_ExportButton();
+            exportDialogPO.Input_FileName(exportFilePath);
+            exportDialogPO.Click_PerformExportButton();
             Thread.Sleep(1000);
             LogManager.GetCurrentClassLogger().Info(exportFilePath);
             Assert.That(exportFilePath, Does.Exist.After(5000, 50));
@@ -60,66 +44,40 @@ namespace boilersGraphics.Test.UITests
         [Retry(3)]
         public void チェッカーパターンを読み込んでエクスポートする()
         {
+            var mainwindowPO = new MainWindowPO(Session);
+
             TakeScreenShot("SCREENSHOT_A.png");
             LogManager.GetCurrentClassLogger().Info("A");
             var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var loadFilePath = $"{dir}\\XmlFiles\\checker_pattern.xml";
             var exportFilePath = $"{dir}\\ExportTest2.jpg";
 
-            try
-            {
-                LogManager.GetCurrentClassLogger().Info("B");
-                TakeScreenShot("SCREENSHOT_B.png");
-                Session.FindElementByAccessibilityId("Load").Click();
-                LogManager.GetCurrentClassLogger().Info("C");
-                TakeScreenShot("SCREENSHOT_C.png");
-                //「現在のキャンパスは破棄されますが、よろしいですか？」→OK（"1"）
-                Session.FindElementByAccessibilityId("1").Click();
-                LogManager.GetCurrentClassLogger().Info("D");
-                TakeScreenShot("SCREENSHOT_D.png");
-                var action = new Actions(Session);
-                action.SendKeys(Keys.Alt + "N" + Keys.Alt);
-                action.Perform();
-                LogManager.GetCurrentClassLogger().Info("F");
-                TakeScreenShot("SCREENSHOT_F.png");
-                //ファイル名（コンボボックス、"1148"）に入力
-                //GetElementByAutomationID("1148").SendKeys(loadFilePath);
-                InputText(GetElementByAutomationID("1148"), loadFilePath);
-                LogManager.GetCurrentClassLogger().Info("G");
-                TakeScreenShot("SCREENSHOT_G.png");
-                //開く（O)ボタン（"1")をクリック
-                GetElementByAutomationID("1").Click();
-                //開くボタンが押されない場合があるので、"1"がまだ存在していたら再度押し直す
-                if (ExistsElementByAutomationID("1"))
-                {
-                    LogManager.GetCurrentClassLogger().Info("GG");
-                    GetElementByAutomationID("1").Click();
-                }
-            }
-            finally
-            {
-                if (IsElementPresent(By.Name("開く")))
-                {
-                    Session.FindElementByName("開く").FindElementByAccessibilityId("2").Click();
-                }
-                if (IsElementPresent(By.Name("Open")))
-                {
-                    Session.FindElementByName("Open").FindElementByAccessibilityId("2").Click();
-                }
-            }
+            LogManager.GetCurrentClassLogger().Info("B");
+            TakeScreenShot("SCREENSHOT_B.png");
+            var msgboxPO = mainwindowPO.Click_LoadButton();
+            LogManager.GetCurrentClassLogger().Info("C");
+            TakeScreenShot("SCREENSHOT_C.png");
+            var loaddialogPO = msgboxPO.Click_OKButton();
+            LogManager.GetCurrentClassLogger().Info("D");
+            TakeScreenShot("SCREENSHOT_D.png");
+            loaddialogPO.InitializeActions();
+            loaddialogPO.Focus_FileName();
+            loaddialogPO.Input_FileName(loadFilePath);
+            loaddialogPO.Click_OpenButton();
+            loaddialogPO.Perform();
 
             LogManager.GetCurrentClassLogger().Info("H");
             TakeScreenShot("SCREENSHOT_H.png");
-            GetElementByAutomationID("Export").Click();
+            var exportdialogPO = mainwindowPO.Click_ExportButton();
 
             LogManager.GetCurrentClassLogger().Info("I");
             TakeScreenShot("SCREENSHOT_I.png");
 
-            InputText(GetElementByAutomationID("filename"), exportFilePath);
+            exportdialogPO.Input_FileName(exportFilePath);
                 
             LogManager.GetCurrentClassLogger().Info("J");
             TakeScreenShot("SCREENSHOT_J.png");
-            GetElementByAutomationID("PerformExport").Click();
+            exportdialogPO.Click_PerformExportButton();
 
             LogManager.GetCurrentClassLogger().Info("K");
             TakeScreenShot("SCREENSHOT_K.png");
@@ -188,45 +146,28 @@ namespace boilersGraphics.Test.UITests
         public void スライス()
         {
             TakeScreenShot("SCREENSHOT_A.png");
-            var action = new Actions(Session);
+            var mainwindowPO = new MainWindowPO(Session);
             var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var loadFilePath = $"{dir}\\XmlFiles\\checker_pattern.xml";
 
-            GetElementByAutomationID("Load").Click();
-            //「現在のキャンパスは破棄されますが、よろしいですか？」→OK（"1"）
-            GetElementByAutomationID("1").Click();
+            var msgboxPO = mainwindowPO.Click_LoadButton();
+            var loaddialogPO = msgboxPO.Click_OKButton();
 
-            Thread.Sleep(1000);
-
-            action = new Actions(Session);
-            action.SendKeys(Keys.Alt + "N" + Keys.Alt);
-            //ファイル名（コンボボックス、"1148"）に入力
-            action.InputText(GetElementByAutomationID("1148"), loadFilePath);
-            //開く（O)ボタン（"1")をクリック
-            action.Click(GetElementByAutomationID("1"));
-            action.Perform();
-
-            if (ExistsElementByAutomationID("1"))
-            {
-                action = new Actions(Session);
-                action.SendKeys(Keys.Alt + "N" + Keys.Alt);
-                //ファイル名（コンボボックス、"1148"）に入力
-                action.InputText(GetElementByAutomationID("1148"), loadFilePath);
-                //開く（O)ボタン（"1")をクリック
-                action.Click(GetElementByAutomationID("1"));
-                action.Perform();
-            }
+            loaddialogPO.InitializeActions();
+            loaddialogPO.Focus_FileName();
+            loaddialogPO.Input_FileName(loadFilePath);
+            loaddialogPO.Click_OpenButton();
+            loaddialogPO.Perform();
 
             TakeScreenShot("SCREENSHOT_GetDesignerCanvas.png");
-            var canvas = GetElementBy(By.XPath("//Pane[@Name=\"DesignerScrollViewer\"][@AutomationId=\"DesignerScrollViewer\"]/Thumb[@AutomationId=\"PART_DragThumb\"]"));
-            GetElementByName("slice").Click();
-            action = new Actions(Session);
-            action.MoveToElement(canvas, 100, 100);
-            action.ClickAndHold();
+            mainwindowPO.Click_SliceTool();
+            mainwindowPO.InitializeActions();
+            mainwindowPO.MoveToElement(100, 100);
+            mainwindowPO.ClickAndHold();
             for (int i = 1; i < 200; ++i)
-                action.MoveByOffset(1, 1);
-            action.Release();
-            action.Perform();
+                mainwindowPO.MoveByOffset(1, 1);
+            mainwindowPO.Release();
+            mainwindowPO.Perform();
 
             var previewFilePath = $"{dir}\\ExportTest3.jpg";
 
@@ -234,16 +175,16 @@ namespace boilersGraphics.Test.UITests
 
             TakeScreenShot("SCREENSHOT_PREVIEW.png");
 
-            
-            GetElementBy(By.XPath($"//*/Image[@Name=\"Preview\"][@AutomationId=\"Preview\"]")).GetScreenshot().SaveAsFile(previewFilePath);
+            var previewdialogPO = new PreviewDialogPO(Session);
+
+            previewdialogPO.ScreenShot_PreviewImage(previewFilePath);
             Assert.That(previewFilePath, Does.Exist.After(5000, 50));
             TestContext.AddTestAttachment(previewFilePath);
 
             var exportFilePath = $"{dir}\\ExportTest4.jpg";
 
-            //GetElementByAutomationID("filename").SendKeys(exportFilePath);
-            InputText(GetElementByAutomationID("filename"), exportFilePath);
-            GetElementByAutomationID("PerformExport").Click();
+            previewdialogPO.Input_FileName(exportFilePath);
+            previewdialogPO.Click_PerformExportButton();
             Assert.That(exportFilePath, Does.Exist.After(5000, 50));
             TestContext.AddTestAttachment(exportFilePath);
 
