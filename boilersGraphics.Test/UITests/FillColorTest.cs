@@ -61,6 +61,50 @@ namespace boilersGraphics.Test.UITests
             var mainwindowPO = new MainWindowPO(Session);
             var selectFillColorDialogPO = mainwindowPO.Click_SelectFillColorButton();
             selectFillColorDialogPO.Click_Solid();
+            selectFillColorDialogPO.BlueDADA.Initialize();
+            selectFillColorDialogPO.BlueDADA.MoveTo(182, 10);
+            selectFillColorDialogPO.BlueDADA.ClickAndHold();
+            selectFillColorDialogPO.BlueDADA.MoveTo(0, 10);
+            selectFillColorDialogPO.BlueDADA.Release();
+            selectFillColorDialogPO.BlueDADA.Perform();
+            selectFillColorDialogPO.GreenDADA.Initialize();
+            selectFillColorDialogPO.GreenDADA.MoveTo(182, 10);
+            selectFillColorDialogPO.GreenDADA.ClickAndHold();
+            selectFillColorDialogPO.GreenDADA.MoveTo(0, 10);
+            selectFillColorDialogPO.GreenDADA.Release();
+            selectFillColorDialogPO.GreenDADA.Perform();
+            selectFillColorDialogPO.RedDADA.Initialize();
+            selectFillColorDialogPO.RedDADA.MoveTo(182, 10);
+            selectFillColorDialogPO.RedDADA.ClickAndHold();
+            selectFillColorDialogPO.RedDADA.MoveTo(182, 10);
+            selectFillColorDialogPO.RedDADA.Release();
+            selectFillColorDialogPO.RedDADA.Perform();
+            selectFillColorDialogPO.Click_OK();
+
+            mainwindowPO.Click_RectangleTool();
+
+            mainwindowPO.InitializeActions();
+            mainwindowPO.MoveToElement(100, 100);
+            mainwindowPO.ClickAndHold();
+            for (int i = 1; i < 100; ++i)
+                mainwindowPO.MoveByOffset(1, 1);
+            mainwindowPO.Release();
+            mainwindowPO.Perform();
+
+            var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var filename = $"{dir}\\Canvas.jpg";
+            mainwindowPO.SaveCanvas(filename);
+
+            using (var mat = new Mat(filename))
+            {
+                PixelIsRed(mat, 150, 150);
+            }
+        }
+
+        {
+            var mainwindowPO = new MainWindowPO(Session);
+            var selectFillColorDialogPO = mainwindowPO.Click_SelectFillColorButton();
+            selectFillColorDialogPO.Click_Solid();
             selectFillColorDialogPO.HueDADA.Initialize();
             selectFillColorDialogPO.HueDADA.MoveTo(35, 10);
             selectFillColorDialogPO.HueDADA.ClickAndHold();
