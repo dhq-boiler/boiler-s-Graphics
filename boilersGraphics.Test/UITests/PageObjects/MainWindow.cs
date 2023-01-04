@@ -4,6 +4,7 @@ using OpenQA.Selenium.Appium;
 using OpenQA.Selenium.Appium.Windows;
 using OpenQA.Selenium.Interactions;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace boilersGraphics.Test.UITests.PageObjects
 {
@@ -12,6 +13,11 @@ namespace boilersGraphics.Test.UITests.PageObjects
         public MainWindow(WindowsDriver<WindowsElement> session)
             : base(session)
         { }
+
+        public void SaveCanvas(string filename)
+        {
+            Canvas.GetScreenshot().SaveAsFile(filename);
+        }
 
         public MessageBox Click_LoadButton()
         {
@@ -23,6 +29,50 @@ namespace boilersGraphics.Test.UITests.PageObjects
         {
             GetElementByAutomationID("Export").Click();
             return new ExportDialog(Session);
+        }
+
+        public void Click_EdgeThicknessComboBox()
+        {
+            GetElementByAutomationID("EdgeThickness").Click();
+        }
+
+        //public enum EdgeThicknessComboBoxItem
+        //{
+        //    ET0 = 0,
+        //    ET1 = 1,
+        //    ET2 = 2,
+        //    ET3 = 3,
+        //    ET4 = 4,
+        //    ET5 = 5,
+        //    ET10 = 10,
+        //    ET15 = 15,
+        //    ET20 = 20,
+        //    ET25 = 25,
+        //    ET30 = 30,
+        //    ET35 = 35,
+        //    ET40 = 40,
+        //    ET45 = 45,
+        //    ET50 = 50,
+        //    ET100 = 100,
+        //}
+
+        public ReadOnlyCollection<WindowsElement> EdgeThicknessComboBoxItem => Session.FindElements(By.XPath("//Window[@ClassName=\"Popup\"]/ListItem[@ClassName=\"ListBoxItem\"]"));
+
+        public void Click_EdgeThicknessComboBoxItem(int index)
+        {
+            EdgeThicknessComboBoxItem.ElementAt(index).Click();
+        }
+
+        public void Click_SelectEdgeColorButton()
+        {
+            GetElementByAutomationID("SelectEdgeColor").Click();
+            //TODO
+        }
+
+        public void Click_SelectFillColorButton()
+        {
+            GetElementByAutomationID("SelectFillColor").Click();
+            //TODO
         }
 
         public WindowsElement Canvas => GetElementBy(By.XPath("//Pane[@Name=\"DesignerScrollViewer\"][@AutomationId=\"DesignerScrollViewer\"]/Thumb[@AutomationId=\"PART_DragThumb\"]"));
