@@ -63,10 +63,10 @@ namespace boilersGraphics.Test.UITests.PageObjects
             EdgeThicknessComboBoxItem.ElementAt(index).Click();
         }
 
-        public void Click_SelectEdgeColorButton()
+        public SelectEdgeColorDialog Click_SelectEdgeColorButton()
         {
             GetElementByAutomationID("SelectEdgeColor").Click();
-            //TODO
+            return new SelectEdgeColorDialog(Session);
         }
 
         public void Click_SelectFillColorButton()

@@ -318,6 +318,7 @@
                     </Style>
                 </StackPanel.Resources>
                 <Button
+                    AutomationProperties.AutomationId="Solid"
                     Command="{Binding SelectSolidColorCommand}"
                     Content="Solid"
                     Foreground="White">
@@ -326,6 +327,7 @@
                     </Button.Background>
                 </Button>
                 <Button
+                    AutomationProperties.AutomationId="Linear"
                     Command="{Binding SelectLinearGradientCommand}"
                     Content="Linear"
                     Foreground="White">
@@ -337,6 +339,7 @@
                     </Button.Background>
                 </Button>
                 <Button
+                    AutomationProperties.AutomationId="Radial"
                     Command="{Binding SelectRadialGradientCommand}"
                     Content="Radial"
                     Foreground="White">
