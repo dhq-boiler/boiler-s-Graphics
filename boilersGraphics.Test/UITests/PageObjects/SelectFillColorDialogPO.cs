@@ -3,7 +3,7 @@ using OpenQA.Selenium.Interactions;
 
 namespace boilersGraphics.Test.UITests.PageObjects
 {
-    public class SelectFillColorDialog : PageObjectBase
+    public class SelectFillColorDialogPO : PageObjectBase
     {
         private DragAndDropAction _ColorMapDADA;
         private DragAndDropAction _HueDADA;
@@ -12,7 +12,7 @@ namespace boilersGraphics.Test.UITests.PageObjects
         private DragAndDropAction _GreenDADA;
         private DragAndDropAction _BlueDADA;
 
-        public SelectFillColorDialog(WindowsDriver<WindowsElement> session)
+        public SelectFillColorDialogPO(WindowsDriver<WindowsElement> session)
             : base(session)
         { }
 

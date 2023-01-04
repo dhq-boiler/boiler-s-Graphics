@@ -3,9 +3,9 @@ using OpenQA.Selenium.Appium.Windows;
 
 namespace boilersGraphics.Test.UITests.PageObjects
 {
-    public class PreviewDialog : PageObjectBase
+    public class PreviewDialogPO : PageObjectBase
     {
-        public PreviewDialog(WindowsDriver<WindowsElement> session)
+        public PreviewDialogPO(WindowsDriver<WindowsElement> session)
             : base(session)
         { }
 

@@ -18,7 +18,7 @@ namespace boilersGraphics.Test.UITests
         [Test, Apartment(ApartmentState.STA)]
         public void エッジ色を赤指定して矩形描画()
         {
-            var mainwindowPO = new MainWindow(Session);
+            var mainwindowPO = new MainWindowPO(Session);
             var selectEdgeColorDialogPO = mainwindowPO.Click_SelectEdgeColorButton();
             selectEdgeColorDialogPO.Click_Solid();
             selectEdgeColorDialogPO.ColorMapDADA.Initialize();

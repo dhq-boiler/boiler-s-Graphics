@@ -3,11 +3,11 @@ using OpenQA.Selenium.Interactions;
 
 namespace boilersGraphics.Test.UITests.PageObjects
 {
-    public class SelectEdgeColorDialog : PageObjectBase
+    public class SelectEdgeColorDialogPO : PageObjectBase
     {
         private DragAndDropAction _ColorMapDADA;
 
-        public SelectEdgeColorDialog(WindowsDriver<WindowsElement> session)
+        public SelectEdgeColorDialogPO(WindowsDriver<WindowsElement> session)
             : base(session)
         { }
 

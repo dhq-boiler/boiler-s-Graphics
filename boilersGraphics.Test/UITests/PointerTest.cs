@@ -12,7 +12,7 @@ namespace boilersGraphics.Test.UITests
         [Test, Apartment(ApartmentState.STA)]
         public void 四角形を選択する()
         {
-            var mainwindowPO = new MainWindow(Session);
+            var mainwindowPO = new MainWindowPO(Session);
             var msgboxPO = mainwindowPO.Click_LoadButton();
             var loaddialogPO = msgboxPO.Click_OKButton();
             loaddialogPO.InitializeActions();
@@ -38,7 +38,7 @@ namespace boilersGraphics.Test.UITests
         [Test, Apartment(ApartmentState.STA)]
         public void 四角形ー楕円ー星型の順で選択する()
         {
-            var mainwindowPO = new MainWindow(Session);
+            var mainwindowPO = new MainWindowPO(Session);
             var msgboxPO = mainwindowPO.Click_LoadButton();
             var loaddialogPO = msgboxPO.Click_OKButton();
             loaddialogPO.InitializeActions();
@@ -76,7 +76,7 @@ namespace boilersGraphics.Test.UITests
         [Test, Apartment(ApartmentState.STA)]
         public void 四角形を選択した後選択解除する()
         {
-            var mainwindowPO = new MainWindow(Session);
+            var mainwindowPO = new MainWindowPO(Session);
             var msgboxPO = mainwindowPO.Click_LoadButton();
             var loaddialogPO = msgboxPO.Click_OKButton();
             loaddialogPO.InitializeActions();

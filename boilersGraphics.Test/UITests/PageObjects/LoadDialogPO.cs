@@ -6,9 +6,9 @@ using OpenQA.Selenium.Interactions;
 
 namespace boilersGraphics.Test.UITests.PageObjects
 {
-    public class PictureOpenFileDialog : PageObjectBase
+    public class LoadDialogPO : PageObjectBase
     {
-        public PictureOpenFileDialog(WindowsDriver<WindowsElement> session)
+        public LoadDialogPO(WindowsDriver<WindowsElement> session)
             : base(session)
         { }
 

@@ -2,9 +2,9 @@
 
 namespace boilersGraphics.Test.UITests.PageObjects
 {
-    public class ExportDialog : PageObjectBase
+    public class ExportDialogPO : PageObjectBase
     {
-        public ExportDialog(WindowsDriver<WindowsElement> session)
+        public ExportDialogPO(WindowsDriver<WindowsElement> session)
             : base(session)
         { }
 

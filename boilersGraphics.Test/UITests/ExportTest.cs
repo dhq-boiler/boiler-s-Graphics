@@ -15,7 +15,7 @@ namespace boilersGraphics.Test.UITests
         [Retry(3)]
         public void 真っ白なキャンパスをエクスポートする()
         {
-            var mainwindowPO = new MainWindow(Session);
+            var mainwindowPO = new MainWindowPO(Session);
 
             TakeScreenShot("SCREENSHOT_A.png");
             var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
@@ -44,7 +44,7 @@ namespace boilersGraphics.Test.UITests
         [Retry(3)]
         public void チェッカーパターンを読み込んでエクスポートする()
         {
-            var mainwindowPO = new MainWindow(Session);
+            var mainwindowPO = new MainWindowPO(Session);
 
             TakeScreenShot("SCREENSHOT_A.png");
             LogManager.GetCurrentClassLogger().Info("A");
@@ -146,7 +146,7 @@ namespace boilersGraphics.Test.UITests
         public void スライス()
         {
             TakeScreenShot("SCREENSHOT_A.png");
-            var mainwindowPO = new MainWindow(Session);
+            var mainwindowPO = new MainWindowPO(Session);
             var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var loadFilePath = $"{dir}\\XmlFiles\\checker_pattern.xml";
 
@@ -175,7 +175,7 @@ namespace boilersGraphics.Test.UITests
 
             TakeScreenShot("SCREENSHOT_PREVIEW.png");
 
-            var previewdialogPO = new PreviewDialog(Session);
+            var previewdialogPO = new PreviewDialogPO(Session);
 
             previewdialogPO.ScreenShot_PreviewImage(previewFilePath);
             Assert.That(previewFilePath, Does.Exist.After(5000, 50));

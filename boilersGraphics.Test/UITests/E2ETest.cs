@@ -19,7 +19,7 @@ namespace boilersGraphics.Test.UITests
 
         public override void DoAfterSettingWindowSize()
         {
-            var privacyPolicyPO = new PrivacyPolicy(Session);
+            var privacyPolicyPO = new PrivacyPolicyPO(Session);
             var agreeOrOKButtonClicked = privacyPolicyPO.Click_AgreeButton_IfExists();
             agreeOrOKButtonClicked = agreeOrOKButtonClicked | privacyPolicyPO.Click_OKButton_IfExists();
             if (agreeOrOKButtonClicked)

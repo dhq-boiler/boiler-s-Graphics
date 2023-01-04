@@ -14,7 +14,7 @@ namespace boilersGraphics.Test.UITests
         [Test, Apartment(ApartmentState.STA)]
         public void 塗りつぶし色を赤指定して矩形描画()
         {
-            var mainwindowPO = new MainWindow(Session);
+            var mainwindowPO = new MainWindowPO(Session);
             var selectFillColorDialogPO = mainwindowPO.Click_SelectFillColorButton();
             selectFillColorDialogPO.Click_Solid();
             selectFillColorDialogPO.HueDADA.Initialize();

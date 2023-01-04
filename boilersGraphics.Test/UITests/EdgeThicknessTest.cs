@@ -13,7 +13,7 @@ namespace boilersGraphics.Test.UITests
         [Test, Apartment(ApartmentState.STA)]
         public void エッジ太さ5ptを選択して描画()
         {
-            var mainwindowPO = new MainWindow(Session);
+            var mainwindowPO = new MainWindowPO(Session);
 
             mainwindowPO.Click_EdgeThicknessComboBox();
             mainwindowPO.Click_EdgeThicknessComboBoxItem(6);

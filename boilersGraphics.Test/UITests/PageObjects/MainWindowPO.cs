@@ -8,9 +8,9 @@ using System.Linq;
 
 namespace boilersGraphics.Test.UITests.PageObjects
 {
-    public class MainWindow : PageObjectBase
+    public class MainWindowPO : PageObjectBase
     {
-        public MainWindow(WindowsDriver<WindowsElement> session)
+        public MainWindowPO(WindowsDriver<WindowsElement> session)
             : base(session)
         { }
 
@@ -19,16 +19,16 @@ namespace boilersGraphics.Test.UITests.PageObjects
             Canvas.GetScreenshot().SaveAsFile(filename);
         }
 
-        public MessageBox Click_LoadButton()
+        public MessageBoxPO Click_LoadButton()
         {
             GetElementByAutomationID("Load").Click();
-            return new MessageBox(Session);
+            return new MessageBoxPO(Session);
         }
 
-        public ExportDialog Click_ExportButton()
+        public ExportDialogPO Click_ExportButton()
         {
             GetElementByAutomationID("Export").Click();
-            return new ExportDialog(Session);
+            return new ExportDialogPO(Session);
         }
 
         public void Click_EdgeThicknessComboBox()
@@ -63,16 +63,16 @@ namespace boilersGraphics.Test.UITests.PageObjects
             EdgeThicknessComboBoxItem.ElementAt(index).Click();
         }
 
-        public SelectEdgeColorDialog Click_SelectEdgeColorButton()
+        public SelectEdgeColorDialogPO Click_SelectEdgeColorButton()
         {
             GetElementByAutomationID("SelectEdgeColor").Click();
-            return new SelectEdgeColorDialog(Session);
+            return new SelectEdgeColorDialogPO(Session);
         }
 
-        public SelectFillColorDialog Click_SelectFillColorButton()
+        public SelectFillColorDialogPO Click_SelectFillColorButton()
         {
             GetElementByAutomationID("SelectFillColor").Click();
-            return new SelectFillColorDialog(Session);
+            return new SelectFillColorDialogPO(Session);
         }
 
         public WindowsElement Canvas => GetElementBy(By.XPath("//Pane[@Name=\"DesignerScrollViewer\"][@AutomationId=\"DesignerScrollViewer\"]/Thumb[@AutomationId=\"PART_DragThumb\"]"));
@@ -106,10 +106,10 @@ namespace boilersGraphics.Test.UITests.PageObjects
             GetElementByName("ellipse").Click();
         }
 
-        public PictureOpenFileDialog Click_PictureTool()
+        public PictureOpenFileDialogPO Click_PictureTool()
         {
             GetElementByName("picture").Click();
-            return new PictureOpenFileDialog(Session);
+            return new PictureOpenFileDialogPO(Session);
         }
 
         public void Click_LetterTool()

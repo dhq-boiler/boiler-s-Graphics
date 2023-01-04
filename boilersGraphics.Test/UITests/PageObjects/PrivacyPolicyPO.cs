@@ -2,9 +2,9 @@
 
 namespace boilersGraphics.Test.UITests.PageObjects
 {
-    public class PrivacyPolicy : PageObjectBase
+    public class PrivacyPolicyPO : PageObjectBase
     {
-        public PrivacyPolicy(WindowsDriver<WindowsElement> Session)
+        public PrivacyPolicyPO(WindowsDriver<WindowsElement> Session)
             : base(Session)
         { }
 
