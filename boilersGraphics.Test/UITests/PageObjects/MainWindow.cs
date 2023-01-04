@@ -69,10 +69,10 @@ namespace boilersGraphics.Test.UITests.PageObjects
             return new SelectEdgeColorDialog(Session);
         }
 
-        public void Click_SelectFillColorButton()
+        public SelectFillColorDialog Click_SelectFillColorButton()
         {
             GetElementByAutomationID("SelectFillColor").Click();
-            //TODO
+            return new SelectFillColorDialog(Session);
         }
 
         public WindowsElement Canvas => GetElementBy(By.XPath("//Pane[@Name=\"DesignerScrollViewer\"][@AutomationId=\"DesignerScrollViewer\"]/Thumb[@AutomationId=\"PART_DragThumb\"]"));

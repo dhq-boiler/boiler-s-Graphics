@@ -804,6 +804,7 @@
                     <local:ColorSlider
                         x:Name="Hue_Slider"
                         VerticalAlignment="Center"
+                        AutomationProperties.AutomationId="Hue"
                         BackgroundBitmapSource="{Binding HueSelector}"
                         Maximum="180"
                         Minimum="0"
@@ -823,6 +824,7 @@
                     <local:ColorSlider
                         x:Name="A_Slider"
                         VerticalAlignment="Center"
+                        AutomationProperties.AutomationId="Alpha"
                         BackgroundBitmapSource="{Binding ASelector}"
                         Maximum="255"
                         Minimum="0"
@@ -843,6 +845,7 @@
                     <local:ColorSlider
                         x:Name="Red_Slider"
                         VerticalAlignment="Center"
+                        AutomationProperties.AutomationId="Red"
                         BackgroundBitmapSource="{Binding RedSelector}"
                         Maximum="255"
                         Minimum="0"
@@ -863,6 +866,7 @@
                     <local:ColorSlider
                         x:Name="Green_Slider"
                         VerticalAlignment="Center"
+                        AutomationProperties.AutomationId="Green"
                         BackgroundBitmapSource="{Binding GreenSelector}"
                         Maximum="255"
                         Minimum="0"
@@ -883,6 +887,7 @@
                     <local:ColorSlider
                         x:Name="Blue_Slider"
                         VerticalAlignment="Center"
+                        AutomationProperties.AutomationId="Blue"
                         BackgroundBitmapSource="{Binding BlueSelector}"
                         Maximum="255"
                         Minimum="0"

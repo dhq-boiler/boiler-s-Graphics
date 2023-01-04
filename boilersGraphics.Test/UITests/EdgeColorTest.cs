@@ -46,6 +46,7 @@ namespace boilersGraphics.Test.UITests
                 PixelIsRed(mat, 100, 100);
             }
         }
+
         private void PixelIsRed(Mat mat, int y, int x)
         {
             Vec3b pic = mat.At<Vec3b>(y, x);
