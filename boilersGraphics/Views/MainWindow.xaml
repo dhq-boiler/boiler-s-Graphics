@@ -2397,7 +2397,7 @@
 
         <StatusBar Background="{StaticResource ControlDarkerBackground}" DockPanel.Dock="Bottom">
             <StatusBarItem>
-                <TextBlock Width="80">
+                <TextBlock Width="80" AutomationProperties.AutomationId="Coordinate">
                     <Run>(</Run>
                     <Run Text="{Binding DiagramViewModel.CurrentPoint.X, StringFormat=##0.##}" />
                     <Run xml:space="preserve" Text=",&#x09;" />
@@ -2407,17 +2407,23 @@
             </StatusBarItem>
             <Separator />
             <StatusBarItem>
-                <TextBlock Width="100" TextAlignment="Center">
+                <TextBlock
+                    Width="100"
+                    AutomationProperties.AutomationId="CurrentOperation"
+                    TextAlignment="Center">
                     <Run Text="{Binding CurrentOperation.Value}" />
                 </TextBlock>
             </StatusBarItem>
             <Separator />
             <StatusBarItem>
-                <TextBlock Width="Auto" TextAlignment="Left">
+                <TextBlock
+                    Width="Auto"
+                    AutomationProperties.AutomationId="Details"
+                    TextAlignment="Left">
                     <Run Text="{Binding Details.Value}" />
                 </TextBlock>
             </StatusBarItem>
-            <StatusBarItem HorizontalAlignment="Right">
+            <StatusBarItem HorizontalAlignment="Right" AutomationProperties.AutomationId="Message">
                 <TextBlock Width="Auto" TextAlignment="Right">
                     <Run Text="{Binding Message.Value}" />
                 </TextBlock>

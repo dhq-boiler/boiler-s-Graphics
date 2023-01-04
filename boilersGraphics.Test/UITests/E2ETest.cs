@@ -1,13 +1,8 @@
-﻿using boilersE2E;
-using boilersE2E.NUnit;
-using System;
-using System.Collections.Generic;
+﻿using boilersE2E.NUnit;
+using boilersGraphics.Test.UITests.PageObjects;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace boilersGraphics.Test.UITests
 {
@@ -20,6 +15,19 @@ namespace boilersGraphics.Test.UITests
         static E2ETest()
         {
             EnvironmentVariableNameWhereWinAppDriverRunAutomatically = "BOILERSGRAPHICS_TEST_IS_VALID";
+        }
+
+        public override void DoAfterSettingWindowSize()
+        {
+            var privacyPolicyPO = new PrivacyPolicy(Session);
+            var agreeOrOKButtonClicked = privacyPolicyPO.Click_AgreeButton_IfExists();
+            agreeOrOKButtonClicked = agreeOrOKButtonClicked | privacyPolicyPO.Click_OKButton_IfExists();
+            if (agreeOrOKButtonClicked)
+            {
+                //プライバシーポリシー画面の同意ボタンかOKボタンを押して画面を閉じた後
+                //メインウィンドウを最大化する
+                MaximizeWindow();
+            }
         }
     }
 }

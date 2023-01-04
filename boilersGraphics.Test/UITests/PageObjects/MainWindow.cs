@@ -1,6 +1,9 @@
-﻿using OpenQA.Selenium;
+﻿using NUnit.Framework;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Appium;
 using OpenQA.Selenium.Appium.Windows;
 using OpenQA.Selenium.Interactions;
+using System.Collections.ObjectModel;
 
 namespace boilersGraphics.Test.UITests.PageObjects
 {
@@ -23,6 +26,10 @@ namespace boilersGraphics.Test.UITests.PageObjects
         }
 
         public WindowsElement Canvas => GetElementBy(By.XPath("//Pane[@Name=\"DesignerScrollViewer\"][@AutomationId=\"DesignerScrollViewer\"]/Thumb[@AutomationId=\"PART_DragThumb\"]"));
+
+        public WindowsElement DesignerScrollViewer => GetElementBy(By.XPath("//Pane[@Name=\"DesignerScrollViewer\"][@AutomationId=\"DesignerScrollViewer\"]"));
+
+        public ReadOnlyCollection<AppiumWebElement> Items => DesignerScrollViewer.FindElements(By.ClassName("Thumb"));
 
         public void Click_PointerTool()
         {
@@ -124,32 +131,61 @@ namespace boilersGraphics.Test.UITests.PageObjects
 
         public void MoveToElement(int x, int y)
         {
+            if (action is null)
+            {
+                Assert.Fail($"まずInitializeActionsメソッドでアクションを初期化する必要があります。");
+            }
             action.MoveToElement(Canvas, x, y);
         }
 
         public void Click()
         {
+            if (action is null)
+            {
+                Assert.Fail($"まずInitializeActionsメソッドでアクションを初期化する必要があります。");
+            }
             action.Click();
         }
 
         public void ClickAndHold()
         {
+            if (action is null)
+            {
+                Assert.Fail($"まずInitializeActionsメソッドでアクションを初期化する必要があります。");
+            }
             action.ClickAndHold();
         }
 
         public void Release()
         {
+            if (action is null)
+            {
+                Assert.Fail($"まずInitializeActionsメソッドでアクションを初期化する必要があります。");
+            }
             action.Release();
         }
 
         public void MoveByOffset(int x, int y)
         {
+            if (action is null)
+            {
+                Assert.Fail($"まずInitializeActionsメソッドでアクションを初期化する必要があります。");
+            }
             action.MoveByOffset(x, y);
         }
 
         public void Perform()
         {
+            if (action is null)
+            {
+                Assert.Fail($"まずInitializeActionsメソッドでアクションを初期化する必要があります。");
+            }
             action.Perform();
         }
+
+        public string Coordinate => GetElementByAutomationID("Coordinate").Text;
+        public string CurrentOperation => GetElementByAutomationID("CurrentOperation").Text;
+        public string Details => GetElementByAutomationID("Details").Text;
+        public string Message => GetElementByAutomationID("Message").Text;
     }
 }

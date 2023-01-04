@@ -11,19 +11,6 @@ namespace boilersGraphics.Test.UITests
     [TestFixture]
     public class ExportTest : E2ETest
     {
-        public override void DoAfterSettingWindowSize()
-        {
-            var privacyPolicyPO = new PrivacyPolicy(Session);
-            var agreeOrOKButtonClicked = privacyPolicyPO.Click_AgreeButton_IfExists();
-            agreeOrOKButtonClicked = agreeOrOKButtonClicked | privacyPolicyPO.Click_OKButton_IfExists();
-            if (agreeOrOKButtonClicked)
-            {
-                //プライバシーポリシー画面の同意ボタンかOKボタンを押して画面を閉じた後
-                //メインウィンドウを最大化する
-                MaximizeWindow();
-            }
-        }
-
         [Test, Apartment(ApartmentState.STA)]
         [Retry(3)]
         public void 真っ白なキャンパスをエクスポートする()
