@@ -18,7 +18,7 @@ namespace boilersGraphics.Test.UITests
         public void DPI96であることを確認()
         {
             Assert.That(GetDpiForSystem(),  Is.EqualTo(96), "DPI==96");
-            Assert.That(Screen.PrimaryScreen.Bounds.Width, Is.EqualTo(1980), "Screen.PrimaryScreen.Bounds.Width==1980");
+            Assert.That(Screen.PrimaryScreen.Bounds.Width, Is.EqualTo(1920), "Screen.PrimaryScreen.Bounds.Width==1920");
             Assert.That(Screen.PrimaryScreen.Bounds.Height, Is.EqualTo(1080), "Screen.PrimaryScreen.Bounds.Height==1080");
         }
     }
