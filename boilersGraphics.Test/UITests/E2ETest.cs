@@ -14,7 +14,8 @@ namespace boilersGraphics.Test.UITests
 
         static E2ETest()
         {
-            EnvironmentVariableNameWhereWinAppDriverRunAutomatically = "BOILERSGRAPHICS_TEST_IS_VALID";
+            EnvironmentVariableNameWhereWinAppDriverRunAutomatically = "WINAPPDRIVER_AUTORUN";
+            EnvironmentVariableNameWhereSetWindowSizeManually = "BOILERSGRAPHICS_WINDOWSIZE_SET_MANUAL";
         }
 
         public override void DoAfterSettingWindowSize()

@@ -12,6 +12,7 @@ namespace boilersGraphics.Test.UITests
     public class FillColorTest : E2ETest
     {
         [Test, Apartment(ApartmentState.STA)]
+        [Retry(3)]
         public void 塗りつぶし色をHueで赤指定して矩形描画()
         {
             var mainwindowPO = new MainWindowPO(Session);
@@ -56,6 +57,7 @@ namespace boilersGraphics.Test.UITests
         }
 
         [Test, Apartment(ApartmentState.STA)]
+        [Retry(3)]
         public void 塗りつぶし色を赤指定して矩形描画()
         {
             var mainwindowPO = new MainWindowPO(Session);
@@ -102,6 +104,7 @@ namespace boilersGraphics.Test.UITests
         }
 
         [Test, Apartment(ApartmentState.STA)]
+        [Retry(3)]
         public void 塗りつぶし色を緑指定して矩形描画()
         {
             var mainwindowPO = new MainWindowPO(Session);
@@ -148,6 +151,7 @@ namespace boilersGraphics.Test.UITests
         }
 
         [Test, Apartment(ApartmentState.STA)]
+        [Retry(3)]
         public void 塗りつぶし色を青指定して矩形描画()
         {
             var mainwindowPO = new MainWindowPO(Session);

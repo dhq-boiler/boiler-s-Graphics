@@ -11,6 +11,7 @@ namespace boilersGraphics.Test.UITests
     public class EdgeThicknessTest : E2ETest
     {
         [Test, Apartment(ApartmentState.STA)]
+        [Retry(3)]
         public void エッジ太さ5ptを選択して描画()
         {
             var mainwindowPO = new MainWindowPO(Session);

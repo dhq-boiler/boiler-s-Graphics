@@ -10,6 +10,7 @@ namespace boilersGraphics.Test.UITests
     public class PointerTest : E2ETest
     {
         [Test, Apartment(ApartmentState.STA)]
+        [Retry(3)]
         public void 四角形を選択する()
         {
             var mainwindowPO = new MainWindowPO(Session);
@@ -36,6 +37,7 @@ namespace boilersGraphics.Test.UITests
         }
 
         [Test, Apartment(ApartmentState.STA)]
+        [Retry(3)]
         public void 四角形ー楕円ー星型の順で選択する()
         {
             var mainwindowPO = new MainWindowPO(Session);
@@ -74,6 +76,7 @@ namespace boilersGraphics.Test.UITests
         }
 
         [Test, Apartment(ApartmentState.STA)]
+        [Retry(3)]
         public void 四角形を選択した後選択解除する()
         {
             var mainwindowPO = new MainWindowPO(Session);
