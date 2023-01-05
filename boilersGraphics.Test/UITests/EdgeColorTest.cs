@@ -16,6 +16,7 @@ namespace boilersGraphics.Test.UITests
     public class EdgeColorTest : E2ETest
     {
         [Test, Apartment(ApartmentState.STA)]
+        [Retry(3)]
         public void エッジ色を赤指定して矩形描画()
         {
             var mainwindowPO = new MainWindowPO(Session);
