@@ -13,6 +13,7 @@
     x:Name="MainWindowInstance"
     Title="{Binding Title.Value}"
     prism:ViewModelLocator.AutoWireViewModel="True"
+    SnapsToDevicePixels="True"
     WindowStyle="None"
     mc:Ignorable="d">
     <Window.Resources>
