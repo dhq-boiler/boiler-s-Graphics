@@ -13,8 +13,6 @@
     x:Name="MainWindowInstance"
     Title="{Binding Title.Value}"
     prism:ViewModelLocator.AutoWireViewModel="True"
-    RenderOptions.BitmapScalingMode="NearestNeighbor"
-    RenderOptions.EdgeMode="Aliased"
     WindowStyle="None"
     mc:Ignorable="d">
     <Window.Resources>
