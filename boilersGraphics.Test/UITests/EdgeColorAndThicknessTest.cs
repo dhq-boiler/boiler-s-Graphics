@@ -2,22 +2,18 @@
 using NUnit.Framework;
 using OpenCvSharp;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace boilersGraphics.Test.UITests
 {
     [TestFixture]
-    public class EdgeColorTest : E2ETest
+    public class EdgeColorAndThicknessTest : E2ETest
     {
         [Test, Apartment(ApartmentState.STA)]
         [Retry(3)]
-        public void エッジ色を赤指定して矩形描画()
+        public void エッジを赤太さ25ptを選択して描画()
         {
             var mainwindowPO = new MainWindowPO(Session);
             var selectEdgeColorDialogPO = mainwindowPO.Click_SelectEdgeColorButton();
@@ -44,6 +40,9 @@ namespace boilersGraphics.Test.UITests
             TakeScreenShot("カラーダイアログ結果.png");
             selectEdgeColorDialogPO.Click_OK();
 
+            mainwindowPO.Click_EdgeThicknessComboBox();
+            mainwindowPO.Click_EdgeThicknessComboBoxItem(10); //25pt
+
             mainwindowPO.Click_RectangleTool();
 
             mainwindowPO.InitializeActions();
@@ -57,23 +56,31 @@ namespace boilersGraphics.Test.UITests
             var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var filename = $"{dir}\\Canvas.jpg";
             mainwindowPO.SaveCanvas(filename);
-            TestContext.AddTestAttachment(filename);
 
             using (var mat = new Mat(filename))
             {
-                PixelIs(mat, 100, 100, 191, 191, 255);
-                PixelIs(mat, 101, 100, 127, 127, 255);
-                PixelIs(mat, 100, 101, 127, 127, 255);
-                PixelIs(mat, 101, 101, 64, 64, 255);
+                for (int i = 102; i <= 123; i++)
+                {
+                    PixelIs(mat, i, i, 0, 0, 255);
+                }
             }
         }
 
-        private void PixelIsRed(Mat mat, int y, int x)
+        private void PixelIsBlack(Mat mat, int y, int x)
         {
             Vec3b pic = mat.At<Vec3b>(y, x);
-            Console.WriteLine($"(b, g, r) = ({pic.Item0}, {pic.Item1}, {pic.Item2})");
+
             Assert.That(pic.Item0, Is.EqualTo(0), "{0},{1}", y, x);
             Assert.That(pic.Item1, Is.EqualTo(0), "{0},{1}", y, x);
+            Assert.That(pic.Item2, Is.EqualTo(0), "{0},{1}", y, x);
+        }
+
+        private void PixelIsWhite(Mat mat, int y, int x)
+        {
+            Vec3b pic = mat.At<Vec3b>(y, x);
+
+            Assert.That(pic.Item0, Is.EqualTo(255), "{0},{1}", y, x);
+            Assert.That(pic.Item1, Is.EqualTo(255), "{0},{1}", y, x);
             Assert.That(pic.Item2, Is.EqualTo(255), "{0},{1}", y, x);
         }
 
