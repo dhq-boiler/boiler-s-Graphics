@@ -1,14 +1,16 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:viewModel="clr-namespace:boilersGraphics.ViewModels">
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:viewModel="clr-namespace:boilersGraphics.ViewModels">
     <DataTemplate DataType="{x:Type viewModel:NPieViewModel}">
-        <Path Data="{Binding PathGeometry.Value}"
-              Fill="{Binding FillBrush.Value}"
-              IsHitTestVisible="False"
-              Stretch="None"
-              Stroke="{Binding EdgeBrush.Value}"
-              StrokeThickness="{Binding EdgeThickness.Value}"
-              StrokeLineJoin="{Binding PenLineJoin.Value}"
-              StrokeDashArray="{Binding StrokeDashArray.Value}" />
+        <Path
+            Data="{Binding PathGeometry.Value}"
+            Fill="{Binding FillBrush.Value}"
+            IsHitTestVisible="False"
+            Stretch="None"
+            Stroke="{Binding EdgeBrush.Value}"
+            StrokeDashArray="{Binding StrokeDashArray.Value}"
+            StrokeLineJoin="{Binding PenLineJoin.Value}"
+            StrokeThickness="{Binding EdgeThickness.Value}" />
     </DataTemplate>
 </ResourceDictionary>

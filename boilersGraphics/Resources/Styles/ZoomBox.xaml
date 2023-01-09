@@ -1,9 +1,9 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:c="clr-namespace:CalcBinding;assembly=CalcBinding"
     xmlns:control="clr-namespace:boilersGraphics.Controls"
-    xmlns:converters="clr-namespace:boilersGraphics.Converters"
-    xmlns:c="clr-namespace:CalcBinding;assembly=CalcBinding">
+    xmlns:converters="clr-namespace:boilersGraphics.Converters">
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="/Resources/Themes/DarkTheme.xaml" />
     </ResourceDictionary.MergedDictionaries>

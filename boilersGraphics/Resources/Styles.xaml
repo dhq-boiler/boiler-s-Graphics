@@ -42,7 +42,9 @@
         </Setter>
     </Style>
 
-    --><!--  Control colors.  --><!--
+    -->
+    <!--  Control colors.  -->
+    <!--
     <Color x:Key="WindowColor">#FFE8EDF9</Color>
     <Color x:Key="ContentAreaColorLight">#FFC5CBF9</Color>
     <Color x:Key="ContentAreaColorDark">#FF7381F9</Color>
@@ -65,7 +67,9 @@
     <Color x:Key="GlyphColor">#FF444444</Color>
     <Color x:Key="GlyphMouseOver">sc#1, 0.004391443, 0.002428215, 0.242281124</Color>
 
-    --><!--  Border colors  --><!--
+    -->
+    <!--  Border colors  -->
+    <!--
     <Color x:Key="BorderLightColor">#FFCCCCCC</Color>
     <Color x:Key="BorderMediumColor">#FF888888</Color>
     <Color x:Key="BorderDarkColor">#FF444444</Color>-->
@@ -78,7 +82,9 @@
 
     <Color x:Key="DefaultBorderBrushDarkColor">Black</Color>
 
-    --><!--  Control-specific resources.  --><!--
+    -->
+    <!--  Control-specific resources.  -->
+    <!--
     <Color x:Key="HeaderTopColor">#FFC5CBF9</Color>
     <Color x:Key="DatagridCurrentCellBorderColor">Black</Color>
     <Color x:Key="SliderTrackDarkColor">#FFC5CBF9</Color>

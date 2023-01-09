@@ -19,19 +19,21 @@
 
                         <ScrollContentPresenter Grid.Column="1" />
 
-                        <ScrollBar Name="PART_VerticalScrollBar"
-                                   Maximum="{TemplateBinding ScrollableHeight}"
-                                   ViewportSize="{TemplateBinding ViewportHeight}"
-                                   Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}"
-                                   Value="{TemplateBinding VerticalOffset}" />
-                        <ScrollBar Name="PART_HorizontalScrollBar"
-                                   Grid.Row="1"
-                                   Grid.Column="1"
-                                   Maximum="{TemplateBinding ScrollableWidth}"
-                                   Orientation="Horizontal"
-                                   ViewportSize="{TemplateBinding ViewportWidth}"
-                                   Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}"
-                                   Value="{TemplateBinding HorizontalOffset}" />
+                        <ScrollBar
+                            Name="PART_VerticalScrollBar"
+                            Maximum="{TemplateBinding ScrollableHeight}"
+                            ViewportSize="{TemplateBinding ViewportHeight}"
+                            Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}"
+                            Value="{TemplateBinding VerticalOffset}" />
+                        <ScrollBar
+                            Name="PART_HorizontalScrollBar"
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            Maximum="{TemplateBinding ScrollableWidth}"
+                            Orientation="Horizontal"
+                            ViewportSize="{TemplateBinding ViewportWidth}"
+                            Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}"
+                            Value="{TemplateBinding HorizontalOffset}" />
 
                     </Grid>
                 </ControlTemplate>

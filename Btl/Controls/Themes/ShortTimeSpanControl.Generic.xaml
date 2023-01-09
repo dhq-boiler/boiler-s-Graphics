@@ -1,9 +1,10 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:btl="clr-namespace:Btl.Controls"
-                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                    mc:Ignorable="d">
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:btl="clr-namespace:Btl.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="/Btl.Controls.MyControls;component/Resources/AllBrushes.xaml" />
     </ResourceDictionary.MergedDictionaries>
@@ -30,28 +31,31 @@
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
 
-                        <btl:SpinnerControl Width="60"
-                                            Change="1"
-                                            IsEnable="{Binding IsEnable, RelativeSource={RelativeSource TemplatedParent}}"
-                                            Maximum="23"
-                                            Minimum="0"
-                                            Value="{Binding Path=Hours, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" />
+                        <btl:SpinnerControl
+                            Width="60"
+                            Change="1"
+                            IsEnable="{Binding IsEnable, RelativeSource={RelativeSource TemplatedParent}}"
+                            Maximum="23"
+                            Minimum="0"
+                            Value="{Binding Path=Hours, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" />
                         <Label Grid.Column="1" Content="h" />
-                        <btl:SpinnerControl Grid.Column="2"
-                                            Width="60"
-                                            Change="1"
-                                            IsEnable="{Binding IsEnable, RelativeSource={RelativeSource TemplatedParent}}"
-                                            Maximum="59"
-                                            Minimum="0"
-                                            Value="{Binding Path=Minutes, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" />
+                        <btl:SpinnerControl
+                            Grid.Column="2"
+                            Width="60"
+                            Change="1"
+                            IsEnable="{Binding IsEnable, RelativeSource={RelativeSource TemplatedParent}}"
+                            Maximum="59"
+                            Minimum="0"
+                            Value="{Binding Path=Minutes, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" />
                         <Label Grid.Column="3" Content="m" />
-                        <btl:SpinnerControl Grid.Column="4"
-                                            Width="60"
-                                            Change="1"
-                                            IsEnable="{Binding IsEnable, RelativeSource={RelativeSource TemplatedParent}}"
-                                            Maximum="59"
-                                            Minimum="0"
-                                            Value="{Binding Path=Seconds, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" />
+                        <btl:SpinnerControl
+                            Grid.Column="4"
+                            Width="60"
+                            Change="1"
+                            IsEnable="{Binding IsEnable, RelativeSource={RelativeSource TemplatedParent}}"
+                            Maximum="59"
+                            Minimum="0"
+                            Value="{Binding Path=Seconds, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" />
                         <Label Grid.Column="5" Content="s" />
 
 

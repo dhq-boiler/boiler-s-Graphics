@@ -1,19 +1,21 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:convereter="clr-namespace:boilersGraphics.Converters"
-                    xmlns:helper="clr-namespace:boilersGraphics.Helpers"
-                    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-                    xmlns:viewModel="clr-namespace:boilersGraphics.ViewModels">
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:convereter="clr-namespace:boilersGraphics.Converters"
+    xmlns:helper="clr-namespace:boilersGraphics.Helpers"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:viewModel="clr-namespace:boilersGraphics.ViewModels">
     <convereter:ToSolidColorBrushConverter x:Key="solidColorBrushConverter" />
     <DataTemplate DataType="{x:Type viewModel:LetterDesignerItemViewModel}">
-        <Path Data="{Binding PathGeometry.Value}"
-              Fill="{Binding FillBrush.Value}"
-              Focusable="True"
-              IsHitTestVisible="False"
-              Stroke="{Binding EdgeBrush.Value}"
-              StrokeThickness="{Binding EdgeThickness.Value}"
-              StrokeLineJoin="{Binding PenLineJoin.Value}"
-              StrokeDashArray="{Binding StrokeDashArray.Value}">
+        <Path
+            Data="{Binding PathGeometry.Value}"
+            Fill="{Binding FillBrush.Value}"
+            Focusable="True"
+            IsHitTestVisible="False"
+            Stroke="{Binding EdgeBrush.Value}"
+            StrokeDashArray="{Binding StrokeDashArray.Value}"
+            StrokeLineJoin="{Binding PenLineJoin.Value}"
+            StrokeThickness="{Binding EdgeThickness.Value}">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="GotFocus">
                     <helper:EventToCommand Command="{Binding GotFocusCommand}" />

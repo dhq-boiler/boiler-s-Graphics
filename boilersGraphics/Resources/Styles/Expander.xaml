@@ -7,16 +7,18 @@
     <!--  SimpleStyles: Expander  -->
 
     <ControlTemplate x:Key="ExpanderToggleButton" TargetType="ToggleButton">
-        <Border Name="Border"
-                Background="Transparent"
-                BorderBrush="{StaticResource NormalBorderBrush}"
-                BorderThickness="0,0,0,0"
-                CornerRadius="2,0,0,0">
-            <Path Name="Arrow"
-                  HorizontalAlignment="Center"
-                  VerticalAlignment="Center"
-                  Data="M 0 0 L 4 4 L 8 0 Z"
-                  Fill="{StaticResource GlyphBrush}" />
+        <Border
+            Name="Border"
+            Background="Transparent"
+            BorderBrush="{StaticResource NormalBorderBrush}"
+            BorderThickness="0,0,0,0"
+            CornerRadius="2,0,0,0">
+            <Path
+                Name="Arrow"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Data="M 0 0 L 4 4 L 8 0 Z"
+                Fill="{StaticResource GlyphBrush}" />
         </Border>
         <ControlTemplate.Triggers>
             <Trigger Property="ToggleButton.IsMouseOver" Value="true">
@@ -49,33 +51,37 @@
                             <RowDefinition Height="Auto" />
                             <RowDefinition Name="ContentRow" Height="0" />
                         </Grid.RowDefinitions>
-                        <Border Name="Border"
-                                Grid.Row="0"
-                                Background="{StaticResource LightBrush}"
-                                BorderBrush="{StaticResource NormalBorderBrush}"
-                                BorderThickness="1"
-                                CornerRadius="2,2,0,0">
+                        <Border
+                            Name="Border"
+                            Grid.Row="0"
+                            Background="{StaticResource LightBrush}"
+                            BorderBrush="{StaticResource NormalBorderBrush}"
+                            BorderThickness="1"
+                            CornerRadius="2,2,0,0">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="20" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-                                <ToggleButton Background="{StaticResource NormalBrush}"
-                                              IsChecked="{Binding Path=IsExpanded, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
-                                              OverridesDefaultStyle="True"
-                                              Template="{StaticResource ExpanderToggleButton}" />
-                                <ContentPresenter Grid.Column="1"
-                                                  Margin="4"
-                                                  ContentSource="Header"
-                                                  RecognizesAccessKey="True" />
+                                <ToggleButton
+                                    Background="{StaticResource NormalBrush}"
+                                    IsChecked="{Binding Path=IsExpanded, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                    OverridesDefaultStyle="True"
+                                    Template="{StaticResource ExpanderToggleButton}" />
+                                <ContentPresenter
+                                    Grid.Column="1"
+                                    Margin="4"
+                                    ContentSource="Header"
+                                    RecognizesAccessKey="True" />
                             </Grid>
                         </Border>
-                        <Border Name="Content"
-                                Grid.Row="1"
-                                Background="{StaticResource WindowBackgroundBrush}"
-                                BorderBrush="{StaticResource SolidBorderBrush}"
-                                BorderThickness="1,0,1,1"
-                                CornerRadius="0,0,2,2">
+                        <Border
+                            Name="Content"
+                            Grid.Row="1"
+                            Background="{StaticResource WindowBackgroundBrush}"
+                            BorderBrush="{StaticResource SolidBorderBrush}"
+                            BorderThickness="1,0,1,1"
+                            CornerRadius="0,0,2,2">
                             <ContentPresenter Margin="4" />
                         </Border>
                     </Grid>
