@@ -173,15 +173,7 @@
                                     <Setter Property="ContentTemplate">
                                         <Setter.Value>
                                             <DataTemplate>
-                                                <Grid x:Name="selectedGrid" Margin="-1,-1,0,0">
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="1" />
-                                                        <ColumnDefinition Width="Auto" />
-                                                    </Grid.ColumnDefinitions>
-                                                    <Grid.RowDefinitions>
-                                                        <RowDefinition Height="1" />
-                                                        <RowDefinition Height="Auto" />
-                                                    </Grid.RowDefinitions>
+                                                <Grid>
                                                     <Grid.Style>
                                                         <Style TargetType="{x:Type Grid}">
                                                             <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
@@ -192,30 +184,22 @@
                                                             </Setter>
                                                         </Style>
                                                     </Grid.Style>
-                                                    <control:DragThumb
-                                                        x:Name="PART_DragThumb"
-                                                        Grid.Row="0"
-                                                        Grid.RowSpan="2"
-                                                        Grid.Column="0"
-                                                        Grid.ColumnSpan="2"
-                                                        Cursor="SizeAll" />
+                                                    <control:DragThumb x:Name="PART_DragThumb" Cursor="SizeAll" />
                                                     <!--  PART_ResizeDecorator  -->
                                                     <Control
                                                         x:Name="PART_ResizeDecorator"
-                                                        Grid.Row="0"
-                                                        Grid.RowSpan="2"
-                                                        Grid.Column="0"
-                                                        Grid.ColumnSpan="2"
                                                         Template="{StaticResource ResizeDecoratorTemplate}"
                                                         Visibility="Collapsed" />
                                                     <ContentPresenter
                                                         x:Name="PART_ContentPresenter"
-                                                        Grid.Row="1"
-                                                        Grid.Column="1"
                                                         HorizontalAlignment="Stretch"
                                                         VerticalAlignment="Stretch"
                                                         ClipToBounds="False"
-                                                        Content="{TemplateBinding Content}" />
+                                                        Content="{TemplateBinding Content}">
+                                                        <ContentPresenter.RenderTransform>
+                                                            <TranslateTransform X="{c:Binding HalfEdgeThickness.Value}" Y="{c:Binding HalfEdgeThickness.Value}" />
+                                                        </ContentPresenter.RenderTransform>
+                                                    </ContentPresenter>
                                                     <!--  DEBUG  -->
                                                     <!--<TextBlock VerticalAlignment="Center"
                                                             HorizontalAlignment="Center">

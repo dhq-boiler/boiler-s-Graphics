@@ -66,6 +66,10 @@ namespace boilersGraphics.ViewModels
         public ReactivePropertySlim<Brush> EdgeBrush { get; } = new ReactivePropertySlim<Brush>(Brushes.Transparent);
         public ReactivePropertySlim<Brush> FillBrush { get; } = new ReactivePropertySlim<Brush>(Brushes.Transparent);
         public ReactivePropertySlim<double> EdgeThickness { get; } = new ReactivePropertySlim<double>(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe);
+        public ReadOnlyReactivePropertySlim<double> HalfEdgeThickness
+        {
+            get { return EdgeThickness.Select(x => x / 2).ToReadOnlyReactivePropertySlim(); }
+        }
         public ReadOnlyReactivePropertySlim<PathGeometry> PathGeometry { get; set; }
         public ReactivePropertySlim<PathGeometry> PathGeometryNoRotate { get; } = new ReactivePropertySlim<PathGeometry>();
         public ReactivePropertySlim<PathGeometry> PathGeometryRotate { get; } = new ReactivePropertySlim<PathGeometry>();
