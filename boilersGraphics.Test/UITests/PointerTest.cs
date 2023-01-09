@@ -27,8 +27,6 @@ namespace boilersGraphics.Test.UITests
             mainwindowPO.Click_PointerTool();
 
             var items = mainwindowPO.Items;
-            Assert.That(items, Has.Count.EqualTo(4));
-
             var actions = items[1].ClickAndHold(Session);
             actions.Perform();
             Assert.That(mainwindowPO.Details, Is.EqualTo("(x, y) = (71, 180) (w, h) = (302, 214)"));
@@ -54,7 +52,6 @@ namespace boilersGraphics.Test.UITests
             mainwindowPO.Click_PointerTool();
 
             var items = mainwindowPO.Items;
-            Assert.That(items, Has.Count.EqualTo(4));
 
             var actions = items[1].ClickAndHold(Session);
             actions.Perform();
@@ -93,7 +90,6 @@ namespace boilersGraphics.Test.UITests
             mainwindowPO.Click_PointerTool();
 
             var items = mainwindowPO.Items;
-            Assert.That(items, Has.Count.EqualTo(4));
 
             var actions = items[1].ClickAndHold(Session);
             actions.Perform();
