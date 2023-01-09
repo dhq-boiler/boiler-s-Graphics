@@ -89,7 +89,10 @@
                                                                 <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" Value="False">
                                                                     <Setter Property="Content">
                                                                         <Setter.Value>
-                                                                            <Image Width="16" Height="16" RenderOptions.BitmapScalingMode="HighQuality">
+                                                                            <Image
+                                                                                Width="16"
+                                                                                Height="16"
+                                                                                RenderOptions.BitmapScalingMode="HighQuality">
                                                                                 <Image.Source>
                                                                                     <FormatConvertedBitmap DestinationFormat="Gray32Float" Source="{StaticResource Icon_Union}" />
                                                                                 </Image.Source>
@@ -138,7 +141,10 @@
                                                                 <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" Value="False">
                                                                     <Setter Property="Content">
                                                                         <Setter.Value>
-                                                                            <Image Width="16" Height="16" RenderOptions.BitmapScalingMode="HighQuality">
+                                                                            <Image
+                                                                                Width="16"
+                                                                                Height="16"
+                                                                                RenderOptions.BitmapScalingMode="HighQuality">
                                                                                 <Image.Source>
                                                                                     <FormatConvertedBitmap DestinationFormat="Gray32Float" Source="{StaticResource Icon_Intersect}" />
                                                                                 </Image.Source>
@@ -187,7 +193,10 @@
                                                                 <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" Value="False">
                                                                     <Setter Property="Content">
                                                                         <Setter.Value>
-                                                                            <Image Width="16" Height="16" RenderOptions.BitmapScalingMode="HighQuality">
+                                                                            <Image
+                                                                                Width="16"
+                                                                                Height="16"
+                                                                                RenderOptions.BitmapScalingMode="HighQuality">
                                                                                 <Image.Source>
                                                                                     <FormatConvertedBitmap DestinationFormat="Gray32Float" Source="{StaticResource Icon_Xor}" />
                                                                                 </Image.Source>
@@ -236,7 +245,10 @@
                                                                 <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" Value="False">
                                                                     <Setter Property="Content">
                                                                         <Setter.Value>
-                                                                            <Image Width="16" Height="16" RenderOptions.BitmapScalingMode="HighQuality">
+                                                                            <Image
+                                                                                Width="16"
+                                                                                Height="16"
+                                                                                RenderOptions.BitmapScalingMode="HighQuality">
                                                                                 <Image.Source>
                                                                                     <FormatConvertedBitmap DestinationFormat="Gray32Float" Source="{StaticResource Icon_Exclude}" />
                                                                                 </Image.Source>

@@ -35,12 +35,10 @@ namespace boilersGraphics.Test.UITests
 
             using (var mat = new Mat(filename))
             {
-                PixelIsBlack(mat, 98, 98);
-                PixelIsBlack(mat, 100, 98);
-                PixelIsBlack(mat, 98, 100);
-                PixelIsBlack(mat, 100, 100);
-                PixelIsBlack(mat, 102, 100);
-                PixelIsBlack(mat, 100, 102);
+                PixelIsBlack(mat, 101, 101);
+                PixelIsBlack(mat, 102, 102);
+                PixelIsBlack(mat, 103, 103);
+                PixelIsBlack(mat, 104, 104);
             }
         }
 

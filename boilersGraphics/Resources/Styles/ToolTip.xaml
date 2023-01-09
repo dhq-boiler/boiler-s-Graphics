@@ -11,15 +11,17 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ToolTip">
-                    <Border Name="Border"
-                            Width="{TemplateBinding Width}"
-                            Height="{TemplateBinding Height}"
-                            Background="{StaticResource LightBrush}"
-                            BorderBrush="{StaticResource SolidBorderBrush}"
-                            BorderThickness="1">
-                        <ContentPresenter Margin="4"
-                                          HorizontalAlignment="Left"
-                                          VerticalAlignment="Top" />
+                    <Border
+                        Name="Border"
+                        Width="{TemplateBinding Width}"
+                        Height="{TemplateBinding Height}"
+                        Background="{StaticResource LightBrush}"
+                        BorderBrush="{StaticResource SolidBorderBrush}"
+                        BorderThickness="1">
+                        <ContentPresenter
+                            Margin="4"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Top" />
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="HasDropShadow" Value="true">

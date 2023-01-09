@@ -47,6 +47,10 @@ namespace boilersGraphics.ViewModels
 
         public ReactivePropertySlim<double> Height { get; } = new ReactivePropertySlim<double>(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe | ReactivePropertyMode.DistinctUntilChanged);
 
+        public ReadOnlyReactivePropertySlim<Size> Size => Width.CombineLatest(Height, (w, h) => new Size(w, h)).ToReadOnlyReactivePropertySlim();
+        
+        public ReadOnlyReactivePropertySlim<Size> SizeIncludeFrame => Width.CombineLatest(Height, (w, h) => new Size(w + 1, h + 1)).ToReadOnlyReactivePropertySlim();
+
         public bool ShowConnectors
         {
             get
