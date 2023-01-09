@@ -161,6 +161,7 @@
         <Style TargetType="{x:Type Slider}">
             <Setter Property="SnapsToDevicePixels" Value="true" />
             <Setter Property="OverridesDefaultStyle" Value="true" />
+            <Setter Property="IsMoveToPointEnabled" Value="True" />
             <Style.Triggers>
                 <Trigger Property="Orientation" Value="Horizontal">
                     <Setter Property="MinWidth" Value="104" />
