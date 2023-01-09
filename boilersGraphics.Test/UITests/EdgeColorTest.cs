@@ -61,7 +61,10 @@ namespace boilersGraphics.Test.UITests
 
             using (var mat = new Mat(filename))
             {
-                PixelIsRed(mat, 100, 100);
+                PixelIs(mat, 100, 100, 191, 191, 255);
+                PixelIs(mat, 101, 100, 127, 127, 255);
+                PixelIs(mat, 100, 101, 127, 127, 255);
+                PixelIs(mat, 101, 101, 64, 64, 255);
             }
         }
 
@@ -72,6 +75,15 @@ namespace boilersGraphics.Test.UITests
             Assert.That(pic.Item0, Is.EqualTo(0), "{0},{1}", y, x);
             Assert.That(pic.Item1, Is.EqualTo(0), "{0},{1}", y, x);
             Assert.That(pic.Item2, Is.EqualTo(255), "{0},{1}", y, x);
+        }
+
+        private void PixelIs(Mat mat, int y, int x, int b, int g, int r)
+        {
+            Vec3b pic = mat.At<Vec3b>(y, x);
+            Console.WriteLine($"(b, g, r) = ({pic.Item0}, {pic.Item1}, {pic.Item2})");
+            Assert.That(pic.Item0, Is.EqualTo(b), "{0},{1}", y, x);
+            Assert.That(pic.Item1, Is.EqualTo(g), "{0},{1}", y, x);
+            Assert.That(pic.Item2, Is.EqualTo(r), "{0},{1}", y, x);
         }
     }
 }
