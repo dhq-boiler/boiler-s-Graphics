@@ -31,9 +31,10 @@ namespace boilersGraphics.Test.UITests
             {
                 selectFillColorDialogPO.ColorMapDADA.MoveByOffset(1, 0);
             }
-            selectFillColorDialogPO.ColorMapDADA.MoveByOffset(0, -1);
+            selectFillColorDialogPO.ColorMapDADA.MoveByOffset(0, -2);
             selectFillColorDialogPO.ColorMapDADA.Release();
             selectFillColorDialogPO.ColorMapDADA.Perform();
+            TakeScreenShot("カラーダイアログ結果.png");
             selectFillColorDialogPO.Click_OK();
 
             mainwindowPO.Click_RectangleTool();

@@ -6,6 +6,11 @@ namespace boilersGraphics.Test.UITests.PageObjects
     public class SelectEdgeColorDialogPO : PageObjectBase
     {
         private DragAndDropAction _ColorMapDADA;
+        private DragAndDropAction _HueDADA;
+        private DragAndDropAction _AlphaDADA;
+        private DragAndDropAction _RedDADA;
+        private DragAndDropAction _GreenDADA;
+        private DragAndDropAction _BlueDADA;
 
         public SelectEdgeColorDialogPO(WindowsDriver<WindowsElement> session)
             : base(session)
@@ -15,6 +20,11 @@ namespace boilersGraphics.Test.UITests.PageObjects
         {
             GetElementByAutomationID("Solid").Click();
             _ColorMapDADA = new DragAndDropAction(ColorMap);
+            _HueDADA = new DragAndDropAction(Hue);
+            _AlphaDADA = new DragAndDropAction(Alpha);
+            _RedDADA = new DragAndDropAction(Red);
+            _GreenDADA = new DragAndDropAction(Green);
+            _BlueDADA = new DragAndDropAction(Blue);
         }
         
         public void Click_Linear()
@@ -35,8 +45,18 @@ namespace boilersGraphics.Test.UITests.PageObjects
         public WindowsElement ColorMap => GetElementByAutomationID("ColorMap");
 
         public WindowsElement ColorMapThumb => GetElementByAutomationID("ColorMapThumb");
+        public WindowsElement Hue => GetElementByAutomationID("Hue");
+        public WindowsElement Alpha => GetElementByAutomationID("Alpha");
+        public WindowsElement Red => GetElementByAutomationID("Red");
+        public WindowsElement Green => GetElementByAutomationID("Green");
+        public WindowsElement Blue => GetElementByAutomationID("Blue");
 
         public DragAndDropAction ColorMapDADA { get { return _ColorMapDADA; } }
+        public DragAndDropAction HueDADA { get { return _HueDADA; } }
+        public DragAndDropAction AlphaDADA { get { return _AlphaDADA; } }
+        public DragAndDropAction RedDADA { get { return _RedDADA; } }
+        public DragAndDropAction GreenDADA { get { return _GreenDADA; } }
+        public DragAndDropAction BlueDADA { get { return _BlueDADA; } }
 
         public class DragAndDropAction
         {
