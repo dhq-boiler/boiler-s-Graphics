@@ -5,9 +5,7 @@ using Prism.Ioc;
 using Prism.Services.Dialogs;
 using Prism.Unity;
 using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
 using System;
-using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -244,12 +242,12 @@ namespace boilersGraphics.ViewModels
 
         public override PathGeometry CreateGeometry(bool flag = false)
         {
-            return GeometryCreator.CreateRectangle(this, flag);
+            return GeometryCreator.CreateRectangle(this, 0d, 0d, flag);
         }
 
         public override PathGeometry CreateGeometry(double angle)
         {
-            return GeometryCreator.CreateRectangle(this, angle);
+            return GeometryCreator.CreateRectangleWithAngle(this, 0d, 0d, angle);
         }
 
         public override Type GetViewType()

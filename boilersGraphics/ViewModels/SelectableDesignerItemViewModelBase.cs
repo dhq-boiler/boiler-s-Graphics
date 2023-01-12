@@ -143,10 +143,12 @@ namespace boilersGraphics.ViewModels
                 }
             })
             .AddTo(_CompositeDisposable);
-            PenLineJoins = new ReactiveCollection<PenLineJoin>();
-            PenLineJoins.Add(System.Windows.Media.PenLineJoin.Miter);
-            PenLineJoins.Add(System.Windows.Media.PenLineJoin.Bevel);
-            PenLineJoins.Add(System.Windows.Media.PenLineJoin.Round);
+            PenLineJoins = new ReactiveCollection<PenLineJoin>
+            {
+                System.Windows.Media.PenLineJoin.Miter,
+                System.Windows.Media.PenLineJoin.Bevel,
+                System.Windows.Media.PenLineJoin.Round
+            };
             StrokeDashArray.Value = new DoubleCollection();
         }
 

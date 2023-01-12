@@ -81,7 +81,7 @@ namespace boilersGraphics.Adorners
                 item.FillBrush.Value = item.Owner.FillBrush.Value.Clone();
                 item.EdgeThickness.Value = item.Owner.EdgeThickness.Value.Value;
                 item.ZIndex.Value = item.Owner.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).Count();
-                item.PathGeometryNoRotate.Value = GeometryCreator.CreateRectangle(item);
+                item.PathGeometryNoRotate.Value = GeometryCreator.CreateRectangle(item, item.RadiusX.Value, item.RadiusY.Value);
                 item.IsSelected.Value = true;
                 item.IsVisible.Value = true;
                 item.Owner.DeselectAll();

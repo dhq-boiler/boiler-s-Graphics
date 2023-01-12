@@ -64,7 +64,7 @@ namespace boilersGraphics.Helpers
             return Geometry.Combine(temp, PathGeometry.CreateFromGeometry(new EllipseGeometry(new Point(item.Width.Value / 2, item.Height.Value / 2), item.Width.Value / 2 - item.EdgeThickness.Value / 2, item.Height.Value / 2 - item.EdgeThickness.Value / 2, new RotateTransform(angle, item.CenterPoint.Value.X, item.CenterPoint.Value.Y))), GeometryCombineMode.Intersect, null);
         }
 
-        public static PathGeometry CreateRectangle(DesignerItemViewModelBase item, bool flag = false)
+        public static PathGeometry CreateRectangle(DesignerItemViewModelBase item, double radiusX, double radiusY, bool flag = false)
         {
             if (item.PathGeometryNoRotate.Value is null && item is BackgroundViewModel)
             {
@@ -156,7 +156,7 @@ namespace boilersGraphics.Helpers
             }
         }
 
-        public static PathGeometry CreateRectangle(DesignerItemViewModelBase item, double angle)
+        public static PathGeometry CreateRectangleWithAngle(DesignerItemViewModelBase item, double radiusX, double radiusY, double angle)
         {
             if (item.PathGeometryRotate.Value is null)
             {
@@ -167,7 +167,7 @@ namespace boilersGraphics.Helpers
             return Geometry.Combine(temp, PathGeometry.CreateFromGeometry(new RectangleGeometry(new Rect(new Point(item.EdgeThickness.Value / 2, item.EdgeThickness.Value / 2), new Point(item.Width.Value - item.EdgeThickness.Value / 2, item.Height.Value - item.EdgeThickness.Value / 2)), 0, 0, new RotateTransform(angle, item.CenterPoint.Value.X, item.CenterPoint.Value.Y))), GeometryCombineMode.Intersect, null);
         }
 
-        public static PathGeometry CreateRectangle(NRectangleViewModel item, double offsetX, double offsetY)
+        public static PathGeometry CreateRectangleWithOffset(NRectangleViewModel item, double offsetX, double offsetY)
         {
             var geometry = new StreamGeometry();
             geometry.FillRule = FillRule.EvenOdd;

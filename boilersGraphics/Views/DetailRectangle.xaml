@@ -5,8 +5,9 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:boilersGraphics.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:prism="http://prismlibrary.com/"
-    prism:ViewModelLocator.AutoWireViewModel="True"
+    xmlns:viewModels="clr-namespace:boilersGraphics.ViewModels"
+    xmlns:views="clr-namespace:boilersGraphics.Views"
+    d:DataContext="{d:DesignInstance viewModels:DetailRectangleViewModel}"
     Background="{StaticResource BackgroundColour}"
     mc:Ignorable="d">
     <UserControl.Resources>
@@ -28,6 +29,95 @@
                     OK
                 </Button>
             </DockPanel>
+        </DockPanel>
+        <DockPanel Width="200" DockPanel.Dock="Right">
+            <ListView ItemsSource="{Binding Properties}">
+                <ListView.View>
+                    <GridView>
+                        <GridView.Columns>
+                            <GridViewColumn
+                                Width="Auto"
+                                DisplayMemberBinding="{Binding Path=PropertyName.Value}"
+                                Header="PropertyName" />
+                            <GridViewColumn Width="Auto" Header="PropertyValue">
+                                <GridViewColumn.CellTemplateSelector>
+                                    <views:OptionsContentTemplateSelector>
+                                        <views:OptionsContentTemplateSelector.ComboBoxTemplate>
+                                            <DataTemplate>
+                                                <ComboBox
+                                                    HorizontalAlignment="Stretch"
+                                                    ItemsSource="{Binding Options}"
+                                                    SelectedValue="{Binding PropertyValue, Mode=TwoWay}" />
+                                            </DataTemplate>
+                                        </views:OptionsContentTemplateSelector.ComboBoxTemplate>
+                                        <views:OptionsContentTemplateSelector.TextBoxTemplate>
+                                            <DataTemplate>
+                                                <TextBox HorizontalAlignment="Stretch" Text="{Binding PropertyValue, Mode=TwoWay}" />
+                                            </DataTemplate>
+                                        </views:OptionsContentTemplateSelector.TextBoxTemplate>
+                                    </views:OptionsContentTemplateSelector>
+                                </GridViewColumn.CellTemplateSelector>
+                            </GridViewColumn>
+                        </GridView.Columns>
+                    </GridView>
+                </ListView.View>
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListViewItem}">
+                        <Setter Property="SnapsToDevicePixels" Value="True" />
+                        <Setter Property="Padding" Value="4,1" />
+                        <Setter Property="HorizontalAlignment" Value="Stretch" />
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                        <Setter Property="VerticalContentAlignment" Value="{Binding VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />
+                        <Setter Property="Background" Value="Transparent" />
+                        <Setter Property="BorderBrush" Value="Transparent" />
+                        <Setter Property="BorderThickness" Value="1" />
+                        <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                    <Border
+                                        x:Name="Bd"
+                                        Padding="2"
+                                        Background="{TemplateBinding Background}"
+                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                        BorderThickness="{TemplateBinding BorderThickness}"
+                                        SnapsToDevicePixels="true">
+                                        <GridViewRowPresenter HorizontalAlignment="{TemplateBinding HorizontalAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <MultiTrigger>
+                                            <MultiTrigger.Conditions>
+                                                <Condition Property="IsMouseOver" Value="True" />
+                                            </MultiTrigger.Conditions>
+                                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource ControlMouseOverBackground}" />
+                                            <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource ControlMouseOverBorderBrush}" />
+                                        </MultiTrigger>
+                                        <MultiTrigger>
+                                            <MultiTrigger.Conditions>
+                                                <Condition Property="Selector.IsSelectionActive" Value="False" />
+                                                <Condition Property="IsSelected" Value="True" />
+                                            </MultiTrigger.Conditions>
+                                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource ControlDefaultBackground}" />
+                                            <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource ControlDefaultBorderBrush}" />
+                                        </MultiTrigger>
+                                        <MultiTrigger>
+                                            <MultiTrigger.Conditions>
+                                                <Condition Property="Selector.IsSelectionActive" Value="True" />
+                                                <Condition Property="IsSelected" Value="True" />
+                                            </MultiTrigger.Conditions>
+                                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource ControlSelectedBackground}" />
+                                            <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource ControlSelectedBorderBrush}" />
+                                        </MultiTrigger>
+                                        <Trigger Property="IsEnabled" Value="False">
+                                            <Setter TargetName="Bd" Property="TextElement.Foreground" Value="{StaticResource ControlDisabledGlythColour}" />
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ListView.ItemContainerStyle>
+            </ListView>
         </DockPanel>
         <local:DetailPathGeometry DataContext="{Binding ViewModel.Value}" Stretch="Fill" />
     </DockPanel>

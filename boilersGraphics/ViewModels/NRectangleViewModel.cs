@@ -9,11 +9,10 @@ using Reactive.Bindings.Extensions;
 using System;
 using System.Reactive.Linq;
 using System.Windows.Media;
-using System.Windows.Shapes;
 
 namespace boilersGraphics.ViewModels
 {
-    public class NRectangleViewModel : DesignerItemViewModelBase
+    public class NRectangleViewModel : DesignerItemViewModelBase, IRadius
     {
         public NRectangleViewModel()
             : base()
@@ -49,6 +48,10 @@ namespace boilersGraphics.ViewModels
 
         public override bool SupportsPropertyDialog => true;
 
+        public ReactivePropertySlim<double> RadiusX { get; } = new ReactivePropertySlim<double>();
+
+        public ReactivePropertySlim<double> RadiusY { get; } =  new ReactivePropertySlim<double>();
+
         private void Init()
         {
             this.ShowConnectors = false;
@@ -82,12 +85,12 @@ namespace boilersGraphics.ViewModels
 
         public override PathGeometry CreateGeometry(bool flag = false)
         {
-            return GeometryCreator.CreateRectangle(this, flag);
+            return GeometryCreator.CreateRectangle(this, RadiusX.Value, RadiusY.Value, flag);
         }
 
         public override PathGeometry CreateGeometry(double angle)
         {
-            return GeometryCreator.CreateRectangle(this, angle);
+            return GeometryCreator.CreateRectangleWithAngle(this, RadiusX.Value, RadiusY.Value, angle);
         }
 
         public override Type GetViewType()
