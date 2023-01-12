@@ -52,7 +52,10 @@
                                         </views:OptionsContentTemplateSelector.ComboBoxTemplate>
                                         <views:OptionsContentTemplateSelector.TextBoxTemplate>
                                             <DataTemplate>
-                                                <TextBox HorizontalAlignment="Stretch" Text="{Binding PropertyValue, Mode=TwoWay}" />
+                                                <TextBox
+                                                    HorizontalAlignment="Stretch"
+                                                    HorizontalContentAlignment="{Binding HorizontalContentAlignment.Value}"
+                                                    Text="{Binding PropertyValue, Mode=TwoWay}" />
                                             </DataTemplate>
                                         </views:OptionsContentTemplateSelector.TextBoxTemplate>
                                     </views:OptionsContentTemplateSelector>

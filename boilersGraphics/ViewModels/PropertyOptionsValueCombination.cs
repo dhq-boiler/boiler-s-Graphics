@@ -3,6 +3,7 @@ using Reactive.Bindings;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
+using System.Windows;
 
 namespace boilersGraphics.ViewModels
 {
@@ -68,8 +69,21 @@ namespace boilersGraphics.ViewModels
             Options.AddRange(options);
         }
 
+        public PropertyOptionsValueCombinationClass(E obj, string name, HorizontalAlignment horizontalContentAlignment, V[] options)
+            : this(obj, name, options)
+        {
+            HorizontalContentAlignment.Value = horizontalContentAlignment;
+        }
+
+        public PropertyOptionsValueCombinationClass(E obj, string name, HorizontalAlignment horizontalContentAlignment)
+            : this(obj, name)
+        {
+            HorizontalContentAlignment.Value = horizontalContentAlignment;
+        }
+
         public ReactivePropertySlim<E> Object { get; set; } = new ReactivePropertySlim<E>();
         public ReactiveCollection<V> Options { get; set; } = new ReactiveCollection<V>();
+        public ReactivePropertySlim<HorizontalAlignment> HorizontalContentAlignment { get; set; } = new ReactivePropertySlim<HorizontalAlignment>();
         public V PropertyValue
         {
             get
@@ -101,8 +115,21 @@ namespace boilersGraphics.ViewModels
             Options.AddRange(options);
         }
 
+        public PropertyOptionsValueCombinationStruct(E obj, string name, HorizontalAlignment horizontalContentAlignment, V[] options)
+            : this(obj, name, options)
+        {
+            HorizontalContentAlignment.Value = horizontalContentAlignment;
+        }
+
+        public PropertyOptionsValueCombinationStruct(E obj, string name, HorizontalAlignment horizontalContentAlignment)
+            : this(obj, name)
+        {
+            HorizontalContentAlignment.Value = horizontalContentAlignment;
+        }
+
         public ReactivePropertySlim<E> Object { get; } = new ReactivePropertySlim<E>();
         public ReactiveCollection<V> Options { get; } = new ReactiveCollection<V>();
+        public ReactivePropertySlim<HorizontalAlignment> HorizontalContentAlignment { get; set; } = new ReactivePropertySlim<HorizontalAlignment>();
         public V PropertyValue
         {
             get
@@ -112,7 +139,8 @@ namespace boilersGraphics.ViewModels
 
             set
             {
-                (typeof(E).GetProperty(PropertyName.Value).GetValue(Object.Value) as ReactivePropertySlim<V>).Value = value;
+                var rps = typeof(E).GetProperty(PropertyName.Value).GetValue(Object.Value) as ReactivePropertySlim<V>;
+                rps.Value = value;
             }
         }
 

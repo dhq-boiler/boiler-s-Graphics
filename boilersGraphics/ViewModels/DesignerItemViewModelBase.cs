@@ -196,6 +196,8 @@ namespace boilersGraphics.ViewModels
                 case "RotationAngle":
                 case "Matrix":
                 case "EdgeThickness":
+                case "RadiusX":
+                case "RadiusY":
                     UpdatePathGeometryIfEnable(propertyName, oldValue, newValue);
                     break;
                 default:

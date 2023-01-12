@@ -48,9 +48,9 @@ namespace boilersGraphics.ViewModels
 
         public override bool SupportsPropertyDialog => true;
 
-        public ReactivePropertySlim<double> RadiusX { get; } = new ReactivePropertySlim<double>();
+        public ReactivePropertySlim<double> RadiusX { get; } = new ReactivePropertySlim<double>(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe | ReactivePropertyMode.DistinctUntilChanged);
 
-        public ReactivePropertySlim<double> RadiusY { get; } =  new ReactivePropertySlim<double>();
+        public ReactivePropertySlim<double> RadiusY { get; } =  new ReactivePropertySlim<double>(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe | ReactivePropertyMode.DistinctUntilChanged);
 
         private void Init()
         {
@@ -61,6 +61,14 @@ namespace boilersGraphics.ViewModels
                 OpenPropertyDialog();
             })
             .AddTo(_CompositeDisposable);
+            RadiusX
+                .Zip(RadiusX.Skip(1), (Old, New) => new { OldItem = Old, NewItem = New })
+                .Subscribe(x => UpdateTransform(nameof(RadiusX), x.OldItem, x.NewItem))
+                .AddTo(_CompositeDisposable);
+            RadiusY
+                .Zip(RadiusY.Skip(1), (Old, New) => new { OldItem = Old, NewItem = New })
+                .Subscribe(x => UpdateTransform(nameof(RadiusY), x.OldItem, x.NewItem))
+                .AddTo(_CompositeDisposable);
         }
 
         public override void OpenPropertyDialog()
@@ -80,6 +88,8 @@ namespace boilersGraphics.ViewModels
                 this.RotationAngle.Value = viewModel.RotationAngle.Value;
                 this.PenLineJoin.Value = viewModel.PenLineJoin.Value;
                 this.StrokeDashArray.Value = viewModel.StrokeDashArray.Value;
+                this.RadiusX.Value = viewModel.RadiusX.Value;
+                this.RadiusY.Value = viewModel.RadiusY.Value;
             }
         }
 
@@ -114,6 +124,8 @@ namespace boilersGraphics.ViewModels
             clone.RotationAngle.Value = RotationAngle.Value;
             clone.PenLineJoin.Value = PenLineJoin.Value;
             clone.StrokeDashArray.Value = StrokeDashArray.Value;
+            clone.RadiusX.Value = RadiusX.Value;
+            clone.RadiusY.Value = RadiusY.Value;
             return clone;
         }
 

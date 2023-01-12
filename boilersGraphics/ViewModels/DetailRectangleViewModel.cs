@@ -1,4 +1,5 @@
-﻿using System.Windows.Media;
+﻿using System.Windows;
+using System.Windows.Media;
 
 namespace boilersGraphics.ViewModels
 {
@@ -11,7 +12,9 @@ namespace boilersGraphics.ViewModels
                 System.Windows.Media.PenLineJoin.Bevel,
                 System.Windows.Media.PenLineJoin.Round
             }));
-            Properties.Add(new PropertyOptionsValueCombinationClass<NRectangleViewModel, DoubleCollection>(ViewModel.Value, "StrokeDashArray"));
+            Properties.Add(new PropertyOptionsValueCombinationClass<NRectangleViewModel, DoubleCollection>(ViewModel.Value, "StrokeDashArray", HorizontalAlignment.Left));
+            Properties.Add(new PropertyOptionsValueCombinationStruct<NRectangleViewModel, double>(ViewModel.Value, "RadiusX", HorizontalAlignment.Right));
+            Properties.Add(new PropertyOptionsValueCombinationStruct<NRectangleViewModel, double>(ViewModel.Value, "RadiusY", HorizontalAlignment.Right));
         }
     }
 }
