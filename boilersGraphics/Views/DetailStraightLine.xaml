@@ -96,7 +96,7 @@
                                                                         <ColumnDefinition Width="50" />
                                                                     </Grid.ColumnDefinitions>
                                                                     <Grid.RowDefinitions>
-                                                                        <RowDefinition Height="Auto" />
+                                                                        <RowDefinition Height="30" />
                                                                     </Grid.RowDefinitions>
                                                                     <Line
                                                                         Grid.Row="0"
