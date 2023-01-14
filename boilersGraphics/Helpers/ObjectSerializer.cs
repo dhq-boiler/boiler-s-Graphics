@@ -93,7 +93,7 @@ namespace boilersGraphics.Helpers
                 }
                 if (designerItem is PictureDesignerItemViewModel picture)
                 {
-                    list.Add(new XElement("FileName", (designerItem as PictureDesignerItemViewModel).FileName));
+                    list.Add(new XElement("FileName", picture.FileName));
                     var enableImageEmbedding = (App.GetCurrentApp().MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.EnableImageEmbedding.Value;
                     list.Add(new XElement("EnableImageEmbedding", enableImageEmbedding));
                     if (enableImageEmbedding)
@@ -109,19 +109,19 @@ namespace boilersGraphics.Helpers
                         }
                     }
                 }
-                if (designerItem is ILetterDesignerItemViewModel)
+                if (designerItem is ILetterDesignerItemViewModel letter)
                 {
-                    list.Add(new XElement("LetterString", (designerItem as ILetterDesignerItemViewModel).LetterString));
-                    list.Add(new XElement("SelectedFontFamily", (designerItem as ILetterDesignerItemViewModel).SelectedFontFamily));
-                    list.Add(new XElement("IsBold", (designerItem as ILetterDesignerItemViewModel).IsBold));
-                    list.Add(new XElement("IsItalic", (designerItem as ILetterDesignerItemViewModel).IsItalic));
-                    list.Add(new XElement("FontSize", (designerItem as ILetterDesignerItemViewModel).FontSize));
+                    list.Add(new XElement("LetterString", letter.LetterString));
+                    list.Add(new XElement("SelectedFontFamily", letter.SelectedFontFamily));
+                    list.Add(new XElement("IsBold", letter.IsBold));
+                    list.Add(new XElement("IsItalic", letter.IsItalic));
+                    list.Add(new XElement("FontSize", letter.FontSize));
                     //list.Add(new XElement("PathGeometry", (designerItem as ILetterDesignerItemViewModel).PathGeometry));
-                    list.Add(new XElement("AutoLineBreak", (designerItem as ILetterDesignerItemViewModel).AutoLineBreak));
+                    list.Add(new XElement("AutoLineBreak", letter.AutoLineBreak));
                 }
-                if (designerItem is NPolygonViewModel)
+                if (designerItem is NPolygonViewModel polygon)
                 {
-                    list.Add(new XElement("Data", (designerItem as NPolygonViewModel).Data.Value));
+                    list.Add(new XElement("Data", polygon.Data.Value));
                 }
                 var designerItemXML = new XElement("DesignerItem", list);
                 return designerItemXML;
@@ -142,12 +142,12 @@ namespace boilersGraphics.Helpers
                 list.Add(new XElement("EdgeThickness", connectorItem.EdgeThickness.Value));
                 list.Add(new XElement("PathGeometry", connectorItem.PathGeometryNoRotate.Value));
                 list.Add(new XElement("LeftTop", connectorItem.LeftTop.Value));
-                if (connectorItem is BezierCurveViewModel)
+                if (connectorItem is BezierCurveViewModel bezier)
                 {
-                    list.Add(new XElement("ControlPoint1", (connectorItem as BezierCurveViewModel).ControlPoint1.Value));
-                    list.Add(new XElement("ControlPoint2", (connectorItem as BezierCurveViewModel).ControlPoint2.Value));
+                    list.Add(new XElement("ControlPoint1", bezier.ControlPoint1.Value));
+                    list.Add(new XElement("ControlPoint2", bezier.ControlPoint2.Value));
                 }
-                if (connectorItem is PolyBezierViewModel)
+                if (connectorItem is PolyBezierViewModel polyBezier)
                 {
                     list.Add(new XElement("Points", PointsToStr(connectorItem.Points)));
                 }
