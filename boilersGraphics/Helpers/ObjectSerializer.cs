@@ -231,7 +231,21 @@ namespace boilersGraphics.Helpers
 
         public static IEnumerable<XElement> SerializeConfiguration(DiagramViewModel diagramViewModel)
         {
-            var brushConverter = new BrushConverter();
+            return new XElement[]
+            {
+                new XElement("Left", diagramViewModel.BackgroundItem.Value.Left.Value),
+                new XElement("Top", diagramViewModel.BackgroundItem.Value.Top.Value),
+                new XElement("Width", diagramViewModel.BackgroundItem.Value.Width.Value),
+                new XElement("Height", diagramViewModel.BackgroundItem.Value.Height.Value),
+                new XElement("CanvasBackground", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.CanvasBackground.Value))),
+                new XElement("EnablePointSnap", diagramViewModel.EnablePointSnap.Value),
+                new XElement("SnapPower", diagramViewModel.MainWindowVM.SnapPower.Value),
+                XElement_ColorSpots(diagramViewModel)
+            };
+        }
+
+        private static XElement XElement_ColorSpots(DiagramViewModel diagramViewModel)
+        {
             var colorSpots = new XElement("ColorSpots");
             colorSpots.Add(new XElement("ColorSpot0", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot0))));
             colorSpots.Add(new XElement("ColorSpot1", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot1))));
@@ -333,17 +347,7 @@ namespace boilersGraphics.Helpers
             colorSpots.Add(new XElement("ColorSpot97", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot97))));
             colorSpots.Add(new XElement("ColorSpot98", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot98))));
             colorSpots.Add(new XElement("ColorSpot99", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot99))));
-            return new XElement[]
-            {
-                new XElement("Left", diagramViewModel.BackgroundItem.Value.Left.Value),
-                new XElement("Top", diagramViewModel.BackgroundItem.Value.Top.Value),
-                new XElement("Width", diagramViewModel.BackgroundItem.Value.Width.Value),
-                new XElement("Height", diagramViewModel.BackgroundItem.Value.Height.Value),
-                new XElement("CanvasBackground", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.CanvasBackground.Value))),
-                new XElement("EnablePointSnap", diagramViewModel.EnablePointSnap.Value),
-                new XElement("SnapPower", diagramViewModel.MainWindowVM.SnapPower.Value),
-                colorSpots
-            };
+            return colorSpots;
         }
     }
 }
