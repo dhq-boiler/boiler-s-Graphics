@@ -31,7 +31,7 @@ namespace boilersGraphics.Helpers
             var layerItems = copyObjs.Elements().Where(x => x.Name == "LayerItems").FirstOrDefault();
             if (layers is null && layerItems is null)
                 throw new UnexpectedException("must be layers is not null or items is not null");
-            if (layers != null)
+            if (layers is not null)
             {
                 foreach (var layer in layers.Descendants("Layer"))
                 {
@@ -52,7 +52,7 @@ namespace boilersGraphics.Helpers
                     diagramViewModel.Layers.Add(layerObj);
                 }
             }
-            else if (layerItems != null)
+            else if (layerItems is not null)
             {
                 var layerObj = diagramViewModel.SelectedLayers.Value.First();
                 foreach (var layerItem in layerItems.Descendants("LayerItem"))
@@ -60,7 +60,7 @@ namespace boilersGraphics.Helpers
                     if (layerItem.Descendants("Item").First().Descendants("DesignerItem").Count() == 0)
                         break;
                     var designerItemObj = ExtractDesignerItemViewModelBase(diagramViewModel, layerItem.Descendants("Item").First().Descendants("DesignerItem").First());
-                    if (designerItemObj == null)
+                    if (designerItemObj is null)
                         continue;
                     var layerItemObj = new LayerItem(designerItemObj, layerObj, layerItem.Element("Name").Value);
                     layerItemObj.IsVisible.Value = bool.Parse(layerItem.Element("IsVisible").Value);
@@ -71,7 +71,7 @@ namespace boilersGraphics.Helpers
                     if (layerItem.Descendants("Item").First().Descendants("ConnectorItem").Count() == 0)
                         break;
                     var connectorObj = ExtractConnectorBaseViewModel(diagramViewModel, layerItem.Descendants("Item").First().Descendants("ConnectorItem").First());
-                    if (connectorObj == null)
+                    if (connectorObj is null)
                         continue;
                     var layerItemObj = new LayerItem(connectorObj, layerObj, layerItem.Element("Name").Value);
                     layerItemObj.IsVisible.Value = bool.Parse(layerItem.Element("IsVisible").Value);
@@ -140,7 +140,7 @@ namespace boilersGraphics.Helpers
 
         private static LayerItem ReadLayerItemFromXML(DiagramViewModel diagramViewModel, Layer layerObj, XElement layerItem)
         {
-            if (layerItem == null)
+            if (layerItem is null)
                 return null;
             DesignerItemViewModelBase designerItemObj = null;
             ConnectorBaseViewModel connectorObj = null;
@@ -345,7 +345,7 @@ namespace boilersGraphics.Helpers
                 item.FillBrush.Value = WpfObjectSerializer.Deserialize(designerItemElm.Element("FillBrush").Nodes().First().ToString()) as Brush;
             }
             item.EdgeThickness.Value = double.Parse(designerItemElm.Element("EdgeThickness").Value);
-            item.RotationAngle.Value = designerItemElm.Element("RotationAngle") != null ? double.Parse(designerItemElm.Element("RotationAngle").Value) : 0;
+            item.RotationAngle.Value = designerItemElm.Element("RotationAngle") is not null ? double.Parse(designerItemElm.Element("RotationAngle").Value) : 0;
             item.Owner = diagramViewModel;
             if (item is NRectangleViewModel rectangle)
             {
