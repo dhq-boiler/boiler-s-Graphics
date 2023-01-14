@@ -11,6 +11,11 @@
     prism:ViewModelLocator.AutoWireViewModel="True"
     Background="{StaticResource BackgroundColour}"
     mc:Ignorable="d">
+    <prism:Dialog.WindowStyle>
+        <Style TargetType="{x:Type Window}">
+            <Setter Property="SizeToContent" Value="WidthAndHeight" />
+        </Style>
+    </prism:Dialog.WindowStyle>
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -19,12 +24,6 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <prism:Dialog.WindowStyle>
-        <Style TargetType="Window">
-            <Setter Property="Width" Value="640" />
-            <Setter Property="Height" Value="480" />
-        </Style>
-    </prism:Dialog.WindowStyle>
     <DockPanel LastChildFill="True">
         <DockPanel DockPanel.Dock="Bottom">
             <DockPanel DockPanel.Dock="Right">
@@ -37,7 +36,7 @@
                 </Button>
             </DockPanel>
         </DockPanel>
-        <DockPanel Width="Auto" DockPanel.Dock="Right">
+        <DockPanel Width="Auto">
             <ListView ItemsSource="{Binding Properties}">
                 <ListView.View>
                     <GridView>
@@ -198,6 +197,5 @@
                 </ListView.ItemContainerStyle>
             </ListView>
         </DockPanel>
-        <local:DetailLine Content="{Binding}" DataContext="{Binding ViewModel.Value}" />
     </DockPanel>
 </UserControl>

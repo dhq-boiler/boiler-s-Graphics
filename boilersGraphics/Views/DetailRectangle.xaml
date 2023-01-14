@@ -8,6 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModels="clr-namespace:boilersGraphics.ViewModels"
     xmlns:views="clr-namespace:boilersGraphics.Views"
+    xmlns:prism="http://prismlibrary.com/"
     d:DataContext="{d:DesignInstance viewModels:DetailRectangleViewModel}"
     Background="{StaticResource BackgroundColour}"
     mc:Ignorable="d">
@@ -19,6 +20,11 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
+    <prism:Dialog.WindowStyle>
+        <Style TargetType="{x:Type Window}">
+            <Setter Property="SizeToContent" Value="WidthAndHeight" />
+        </Style>
+    </prism:Dialog.WindowStyle>
     <DockPanel>
         <DockPanel DockPanel.Dock="Bottom">
             <DockPanel DockPanel.Dock="Right">
@@ -31,7 +37,7 @@
                 </Button>
             </DockPanel>
         </DockPanel>
-        <DockPanel Width="Auto" DockPanel.Dock="Right">
+        <DockPanel Width="Auto">
             <ListView ItemsSource="{Binding Properties}">
                 <ListView.View>
                     <GridView>
@@ -160,6 +166,5 @@
                 </ListView.ItemContainerStyle>
             </ListView>
         </DockPanel>
-        <local:DetailPathGeometry DataContext="{Binding ViewModel.Value}" Stretch="Fill" />
     </DockPanel>
 </UserControl>
