@@ -7,11 +7,8 @@ using Prism.Unity;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
-using System.Diagnostics;
-using System.Linq;
 using System.Reactive.Linq;
 using System.Windows;
-using System.Windows.Shapes;
 
 namespace boilersGraphics.ViewModels
 {
