@@ -1,7 +1,6 @@
 ﻿using boilersGraphics.Exceptions;
 using boilersGraphics.Models;
 using boilersGraphics.ViewModels;
-using Reactive.Bindings;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -26,12 +25,12 @@ namespace boilersGraphics.Helpers
         public static void ReadCopyObjectsFromXML(DiagramViewModel diagramViewModel, XElement root)
         {
             var copyObjs = root.Elements().Where(x => x.Name == "CopyObjects").FirstOrDefault();
-            if (copyObjs == null)
-                throw new UnexpectedException("must be copyObjs != null");
+            if (copyObjs is null)
+                throw new UnexpectedException("must be copyObjs is not null");
             var layers = copyObjs.Elements().Where(x => x.Name == "Layers").FirstOrDefault();
             var layerItems = copyObjs.Elements().Where(x => x.Name == "LayerItems").FirstOrDefault();
-            if (layers == null && layerItems == null)
-                throw new UnexpectedException("must be layers != null or items != null");
+            if (layers is null && layerItems is null)
+                throw new UnexpectedException("must be layers is not null or items is not null");
             if (layers != null)
             {
                 foreach (var layer in layers.Descendants("Layer"))
@@ -84,7 +83,7 @@ namespace boilersGraphics.Helpers
         public static void ReadObjectsFromXML(DiagramViewModel diagramViewModel, XElement root, bool isPreview = false)
         {
             var layers = root.Elements().Where(x => x.Name == "Layers").FirstOrDefault();
-            if (layers != null)
+            if (layers is not null)
             {
                 foreach (var layer in layers.Elements("Layer"))
                 {
@@ -159,7 +158,7 @@ namespace boilersGraphics.Helpers
                 snapPointObj = ExtractSnapPointViewModel(diagramViewModel, layerItem.Descendants("Item").First().Descendants("SnapPointItem").First());
             }
             var item = EitherNotNull(designerItemObj, EitherNotNull(connectorObj, snapPointObj));
-            if (item == null)
+            if (item is null)
                 throw new UnexpectedException("All of them are null.");
             var layerItemObj = new LayerItem(item, layerObj, layerItem.Element("Name").Value);
             layerItemObj.Color.Value = (Color)ColorConverter.ConvertFromString(layerItem.Element("Color").Value);
@@ -183,11 +182,11 @@ namespace boilersGraphics.Helpers
 
         private static SelectableDesignerItemViewModelBase EitherNotNull(SelectableDesignerItemViewModelBase left, SelectableDesignerItemViewModelBase right)
         {
-            if (left != null && right != null)
+            if (left is not null && right is not null)
                 return null;
-            else if (left != null)
+            else if (left is not null)
                 return left;
-            else if (right != null)
+            else if (right is not null)
                 return right;
             else
                 return null;
@@ -232,7 +231,7 @@ namespace boilersGraphics.Helpers
             item.Height.Value = double.Parse(snapPointElm.Element("Height").Value);
             item.ZIndex.Value = Int32.Parse(snapPointElm.Element("ZIndex").Value);
             item.Matrix.Value = new Matrix();
-            if (snapPointElm.Element("EdgeColor") != null)
+            if (snapPointElm.Element("EdgeColor") is not null)
             {
                 item.EdgeBrush.Value = new SolidColorBrush((Color)ColorConverter.ConvertFromString(snapPointElm.Element("EdgeColor").Value));
             }
@@ -240,7 +239,7 @@ namespace boilersGraphics.Helpers
             {
                 item.EdgeBrush.Value = WpfObjectSerializer.Deserialize(snapPointElm.Element("EdgeBrush").Nodes().First().ToString()) as Brush;
             }
-            if (snapPointElm.Element("FillColor") != null)
+            if (snapPointElm.Element("FillColor") is not null)
             {
                 item.FillBrush.Value = new SolidColorBrush((Color)ColorConverter.ConvertFromString(snapPointElm.Element("FillColor").Value));
             }
@@ -257,9 +256,10 @@ namespace boilersGraphics.Helpers
 
         private static ConnectorBaseViewModel ExtractConnectorBaseViewModel(DiagramViewModel diagramViewModel, XElement connectorElm)
         {
-            if (!(DeserializeInstance(connectorElm) is ConnectorBaseViewModel))
+            var instance = DeserializeInstance(connectorElm);
+            if (instance is not ConnectorBaseViewModel)
                 return null;
-            var item = (ConnectorBaseViewModel)DeserializeInstance(connectorElm);
+            var item = instance as ConnectorBaseViewModel;
             item.ID = Guid.Parse(connectorElm.Element("ID").Value);
             item.ParentID = Guid.Parse(connectorElm.Element("ParentID").Value);
             item.Points = new ObservableCollection<Point>();
@@ -308,17 +308,17 @@ namespace boilersGraphics.Helpers
             if (!(DeserializeInstance(designerItemElm) is DesignerItemViewModelBase))
                 return null;
             var item = (DesignerItemViewModelBase)DeserializeInstance(designerItemElm);
-            if (designerItemElm.Element("PathGeometry") != null)
+            if (designerItemElm.Element("PathGeometry") is not null)
             {
-                item.PathGeometryNoRotate.Value = PathGeometry.CreateFromGeometry(PathGeometry.Parse(designerItemElm.Element("PathGeometry").Value));
+                item.PathGeometryNoRotate.Value = PathGeometry.CreateFromGeometry(Geometry.Parse(designerItemElm.Element("PathGeometry").Value));
             }
-            if (designerItemElm.Element("PathGeometryNoRotate") != null)
+            if (designerItemElm.Element("PathGeometryNoRotate") is not null)
             {
-                item.PathGeometryNoRotate.Value = PathGeometry.CreateFromGeometry(PathGeometry.Parse(designerItemElm.Element("PathGeometryNoRotate").Value));
+                item.PathGeometryNoRotate.Value = PathGeometry.CreateFromGeometry(Geometry.Parse(designerItemElm.Element("PathGeometryNoRotate").Value));
             }
-            if (designerItemElm.Element("PathGeometryRotate") != null)
+            if (designerItemElm.Element("PathGeometryRotate") is not null)
             {
-                item.PathGeometryRotate.Value = PathGeometry.CreateFromGeometry(PathGeometry.Parse(designerItemElm.Element("PathGeometryRotate").Value));
+                item.PathGeometryRotate.Value = PathGeometry.CreateFromGeometry(Geometry.Parse(designerItemElm.Element("PathGeometryRotate").Value));
             }
             item.Left.Value = double.Parse(designerItemElm.Element("Left").Value);
             item.Top.Value = double.Parse(designerItemElm.Element("Top").Value);
@@ -328,7 +328,7 @@ namespace boilersGraphics.Helpers
             item.ParentID = Guid.Parse(designerItemElm.Element("ParentID").Value);
             item.ZIndex.Value = Int32.Parse(designerItemElm.Element("ZIndex").Value);
             //item.Matrix.Value = Matrix.Parse(designerItemElm.Element("Matrix").Value);
-            if (designerItemElm.Element("EdgeColor") != null)
+            if (designerItemElm.Element("EdgeColor") is not null)
             {
                 item.EdgeBrush.Value = new SolidColorBrush((Color)ColorConverter.ConvertFromString(designerItemElm.Element("EdgeColor").Value));
             }
@@ -336,7 +336,7 @@ namespace boilersGraphics.Helpers
             {
                 item.EdgeBrush.Value = WpfObjectSerializer.Deserialize(designerItemElm.Element("EdgeBrush").Nodes().First().ToString()) as Brush;
             }
-            if (designerItemElm.Element("FillColor") != null)
+            if (designerItemElm.Element("FillColor") is not null)
             {
                 item.FillBrush.Value = new SolidColorBrush((Color)ColorConverter.ConvertFromString(designerItemElm.Element("FillColor").Value));
             }
@@ -366,9 +366,8 @@ namespace boilersGraphics.Helpers
                     rectangle.RadiusY.Value = double.Parse(designerItemElm.Element("RadiusY").Value);
                 }
             }
-            if (item is PictureDesignerItemViewModel)
+            if (item is PictureDesignerItemViewModel picture)
             {
-                var picture = item as PictureDesignerItemViewModel;
                 if (designerItemElm.Elements("EnableImageEmbedding").Any() && bool.TryParse(designerItemElm.Element("EnableImageEmbedding").Value, out var enableImageEmbedding))
                 {
                     picture.EmbeddedImage.Value = Base64StringToBitmap(designerItemElm.Element("EmbeddedImageBase64").Value);
@@ -378,9 +377,8 @@ namespace boilersGraphics.Helpers
                     picture.FileName = designerItemElm.Element("FileName").Value;
                 }
             }
-            if (item is LetterDesignerItemViewModel)
+            if (item is LetterDesignerItemViewModel letter)
             {
-                var letter = item as LetterDesignerItemViewModel;
                 letter.LetterString = designerItemElm.Element("LetterString").Value;
                 letter.SelectedFontFamily = new FontFamilyEx(designerItemElm.Element("SelectedFontFamily").Value);
                 letter.IsBold = bool.Parse(designerItemElm.Element("IsBold").Value);
@@ -388,19 +386,17 @@ namespace boilersGraphics.Helpers
                 letter.FontSize = int.Parse(designerItemElm.Element("FontSize").Value);
                 letter.AutoLineBreak = bool.Parse(designerItemElm.Element("AutoLineBreak").Value);
             }
-            if (item is LetterVerticalDesignerItemViewModel)
+            if (item is LetterVerticalDesignerItemViewModel letterV)
             {
-                var letter = item as LetterVerticalDesignerItemViewModel;
-                letter.LetterString = designerItemElm.Element("LetterString").Value;
-                letter.SelectedFontFamily = new FontFamilyEx(designerItemElm.Element("SelectedFontFamily").Value);
-                letter.IsBold = bool.Parse(designerItemElm.Element("IsBold").Value);
-                letter.IsItalic = bool.Parse(designerItemElm.Element("IsItalic").Value);
-                letter.FontSize = int.Parse(designerItemElm.Element("FontSize").Value);
-                letter.AutoLineBreak = bool.Parse(designerItemElm.Element("AutoLineBreak").Value);
+                letterV.LetterString = designerItemElm.Element("LetterString").Value;
+                letterV.SelectedFontFamily = new FontFamilyEx(designerItemElm.Element("SelectedFontFamily").Value);
+                letterV.IsBold = bool.Parse(designerItemElm.Element("IsBold").Value);
+                letterV.IsItalic = bool.Parse(designerItemElm.Element("IsItalic").Value);
+                letterV.FontSize = int.Parse(designerItemElm.Element("FontSize").Value);
+                letterV.AutoLineBreak = bool.Parse(designerItemElm.Element("AutoLineBreak").Value);
             }
-            if (item is NPolygonViewModel)
+            if (item is NPolygonViewModel polygon)
             {
-                var polygon = item as NPolygonViewModel;
                 polygon.Data.Value = designerItemElm.Element("Data").Value;
             }
             item.UpdatePathGeometryIfEnable(string.Empty, 0, 0, true);

@@ -7,7 +7,6 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Windows;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Xml.Linq;
 
@@ -196,7 +195,7 @@ namespace boilersGraphics.Helpers
                                                                                       .Where(x => x is LayerItem)
                                                                                       .Select(x => (x as LayerItem).Item.Value)
                                                                ).OfType<ConnectorBaseViewModel>()
-                    where connection.GetType() != typeof(BezierCurveViewModel)
+                    where connection is not BezierCurveViewModel
                     select new XElement("Connection",
                                new XElement("ID", connection.ID),
                                new XElement("ParentID", connection.ParentID),
@@ -212,8 +211,7 @@ namespace boilersGraphics.Helpers
                         from connection in items.WithPickupChildren(dialogViewModel.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
                                                                                       .Where(x => x is LayerItem)
                                                                                       .Select(x => (x as LayerItem).Item.Value)
-                                                                   ).OfType<ConnectorBaseViewModel>()
-                        where connection.GetType() == typeof(BezierCurveViewModel)
+                                                                   ).OfType<BezierCurveViewModel>()
                         select new XElement("Connection",
                                     new XElement("ID", connection.ID),
                                     new XElement("ParentID", connection.ParentID),
@@ -223,8 +221,8 @@ namespace boilersGraphics.Helpers
                                     new XElement("ZIndex", connection.ZIndex.Value),
                                     new XElement("EdgeBrush", XElement.Parse(WpfObjectSerializer.Serialize(connection.EdgeBrush.Value))),
                                     new XElement("EdgeThickness", connection.EdgeThickness.Value),
-                                    new XElement("ControlPoint1", (connection as BezierCurveViewModel).ControlPoint1.Value),
-                                    new XElement("ControlPoint2", (connection as BezierCurveViewModel).ControlPoint2.Value),
+                                    new XElement("ControlPoint1", connection.ControlPoint1.Value),
+                                    new XElement("ControlPoint2", connection.ControlPoint2.Value),
                                     new XElement("PathGeometry", connection.PathGeometry.Value)
                     ));
         }
