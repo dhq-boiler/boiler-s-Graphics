@@ -711,6 +711,12 @@
   <data name="String_PleaseDescribeError" xml:space="preserve">
     <value>**Please describe the details of the error**</value>
   </data>
+  <data name="String_PropertyName" xml:space="preserve">
+    <value>PropertyName</value>
+  </data>
+  <data name="String_PropertyValue" xml:space="preserve">
+    <value>PropertyValue</value>
+  </data>
   <data name="String_QualityLevel" xml:space="preserve">
     <value>Quality level</value>
   </data>
