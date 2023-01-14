@@ -3,6 +3,8 @@ using Prism.Services.Dialogs;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Reactive.Disposables;
 
 namespace boilersGraphics.ViewModels
@@ -47,6 +49,9 @@ namespace boilersGraphics.ViewModels
         {
             ViewModel.Value = parameters.GetValue<T>("ViewModel");
             SetProperties();
+            var properties = Properties.OrderBy(x => x.PropertyName.Value).ToList();
+            Properties.Clear();
+            Properties.AddRange(properties);
         }
 
         protected virtual void Dispose(bool disposing)
