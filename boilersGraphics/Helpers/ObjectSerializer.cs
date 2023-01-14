@@ -84,6 +84,13 @@ namespace boilersGraphics.Helpers
                 list.Add(new XElement("PathGeometryNoRotate", designerItem.PathGeometryNoRotate.Value));
                 list.Add(new XElement("PathGeometryRotate", designerItem.PathGeometryRotate.Value));
                 list.Add(new XElement("RotationAngle", designerItem.RotationAngle.Value));
+                if (designerItem is NRectangleViewModel rectangle)
+                {
+                    list.Add(new XElement("PenLineJoin", rectangle.PenLineJoin.Value));
+                    list.Add(new XElement("StrokeDashArray", rectangle.StrokeDashArray.Value.ToString()));
+                    list.Add(new XElement("RadiusX", rectangle.RadiusX.Value));
+                    list.Add(new XElement("RadiusY", rectangle.RadiusY.Value));
+                }
                 if (designerItem is PictureDesignerItemViewModel picture)
                 {
                     list.Add(new XElement("FileName", (designerItem as PictureDesignerItemViewModel).FileName));
