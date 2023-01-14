@@ -7,6 +7,11 @@ namespace boilersGraphics.ViewModels
     {
         public override void SetProperties()
         {
+            Properties.Add(new PropertyOptionsValueCombinationStruct<BezierCurveViewModel, PenLineJoin>(ViewModel.Value, "StrokeLineJoin", new PenLineJoin[] {
+                PenLineJoin.Miter,
+                PenLineJoin.Bevel,
+                PenLineJoin.Round
+            }));
             Properties.Add(new PropertyOptionsValueCombinationStruct<BezierCurveViewModel, PenLineCap>(ViewModel.Value, "StrokeStartLineCap", new PenLineCap[]
             {
                 PenLineCap.Flat,
@@ -22,6 +27,7 @@ namespace boilersGraphics.ViewModels
                 PenLineCap.Triangle,
             }));
             Properties.Add(new PropertyOptionsValueCombinationClass<BezierCurveViewModel, DoubleCollection>(ViewModel.Value, "StrokeDashArray", HorizontalAlignment.Left));
+            Properties.Add(new PropertyOptionsValueCombinationStruct<BezierCurveViewModel, double>(ViewModel.Value, "StrokeMiterLimit", HorizontalAlignment.Right));
         }
     }
 }

@@ -86,10 +86,11 @@ namespace boilersGraphics.ViewModels
                 this.CenterX.Value = viewModel.CenterX.Value;
                 this.CenterY.Value = viewModel.CenterY.Value;
                 this.RotationAngle.Value = viewModel.RotationAngle.Value;
-                this.PenLineJoin.Value = viewModel.PenLineJoin.Value;
+                this.StrokeLineJoin.Value = viewModel.StrokeLineJoin.Value;
                 this.StrokeDashArray.Value = viewModel.StrokeDashArray.Value;
                 this.RadiusX.Value = viewModel.RadiusX.Value;
                 this.RadiusY.Value = viewModel.RadiusY.Value;
+                this.StrokeMiterLimit.Value = viewModel.StrokeMiterLimit.Value;
             }
         }
 
@@ -122,10 +123,11 @@ namespace boilersGraphics.ViewModels
             clone.FillBrush.Value = FillBrush.Value;
             clone.EdgeThickness.Value = EdgeThickness.Value;
             clone.RotationAngle.Value = RotationAngle.Value;
-            clone.PenLineJoin.Value = PenLineJoin.Value;
+            clone.StrokeLineJoin.Value = StrokeLineJoin.Value;
             clone.StrokeDashArray.Value = StrokeDashArray.Value;
             clone.RadiusX.Value = RadiusX.Value;
             clone.RadiusY.Value = RadiusY.Value;
+            clone.StrokeMiterLimit.Value = StrokeMiterLimit.Value;
             return clone;
         }
 

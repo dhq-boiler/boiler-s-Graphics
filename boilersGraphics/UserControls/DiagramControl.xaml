@@ -254,6 +254,8 @@
                                                             Stroke="{Binding EdgeBrush.Value}"
                                                             StrokeDashArray="{Binding StrokeDashArray.Value}"
                                                             StrokeEndLineCap="{Binding StrokeEndLineCap.Value}"
+                                                            StrokeLineJoin="{Binding StrokeLineJoin.Value}"
+                                                            StrokeMiterLimit="{Binding StrokeMiterLimit.Value}"
                                                             StrokeStartLineCap="{Binding StrokeStartLineCap.Value}"
                                                             StrokeThickness="{Binding EdgeThickness.Value}"
                                                             X1="{Binding Points[0].X}"
@@ -294,6 +296,8 @@
                                                             Stroke="{Binding EdgeBrush.Value}"
                                                             StrokeDashArray="{Binding StrokeDashArray.Value}"
                                                             StrokeEndLineCap="{Binding StrokeEndLineCap.Value}"
+                                                            StrokeLineJoin="{Binding StrokeLineJoin.Value}"
+                                                            StrokeMiterLimit="{Binding StrokeMiterLimit.Value}"
                                                             StrokeStartLineCap="{Binding StrokeStartLineCap.Value}"
                                                             StrokeThickness="{Binding EdgeThickness.Value}">
                                                             <Path.Data>
@@ -405,6 +409,8 @@
                                                             Stroke="{Binding EdgeBrush.Value}"
                                                             StrokeDashArray="{Binding StrokeDashArray.Value}"
                                                             StrokeEndLineCap="{Binding StrokeEndLineCap.Value}"
+                                                            StrokeLineJoin="{Binding StrokeLineJoin.Value}"
+                                                            StrokeMiterLimit="{Binding StrokeMiterLimit.Value}"
                                                             StrokeStartLineCap="{Binding StrokeStartLineCap.Value}"
                                                             StrokeThickness="{Binding EdgeThickness.Value}">
                                                             <Path.Data>

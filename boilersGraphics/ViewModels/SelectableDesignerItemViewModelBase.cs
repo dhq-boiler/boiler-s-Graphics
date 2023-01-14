@@ -73,9 +73,10 @@ namespace boilersGraphics.ViewModels
         public ReadOnlyReactivePropertySlim<PathGeometry> PathGeometry { get; set; }
         public ReactivePropertySlim<PathGeometry> PathGeometryNoRotate { get; } = new ReactivePropertySlim<PathGeometry>();
         public ReactivePropertySlim<PathGeometry> PathGeometryRotate { get; } = new ReactivePropertySlim<PathGeometry>();
-        public ReactivePropertySlim<PenLineJoin> PenLineJoin { get; } = new ReactivePropertySlim<PenLineJoin>();
+        public ReactivePropertySlim<PenLineJoin> StrokeLineJoin { get; } = new ReactivePropertySlim<PenLineJoin>();
         public ReactiveCollection<PenLineJoin> PenLineJoins { get; private set; }
         public ReactivePropertySlim<DoubleCollection> StrokeDashArray { get; } = new ReactivePropertySlim<DoubleCollection>();
+        public ReactivePropertySlim<double> StrokeMiterLimit { get; } = new ReactivePropertySlim<double>();
 
         public string Name { get; set; }
 

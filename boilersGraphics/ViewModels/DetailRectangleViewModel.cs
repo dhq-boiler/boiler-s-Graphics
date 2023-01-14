@@ -7,7 +7,7 @@ namespace boilersGraphics.ViewModels
     {
         public override void SetProperties()
         {
-            Properties.Add(new PropertyOptionsValueCombinationStruct<NRectangleViewModel, PenLineJoin>(ViewModel.Value, "PenLineJoin", new PenLineJoin[] {
+            Properties.Add(new PropertyOptionsValueCombinationStruct<NRectangleViewModel, PenLineJoin>(ViewModel.Value, "StrokeLineJoin", new PenLineJoin[] {
                 PenLineJoin.Miter,
                 PenLineJoin.Bevel,
                 PenLineJoin.Round
@@ -15,6 +15,7 @@ namespace boilersGraphics.ViewModels
             Properties.Add(new PropertyOptionsValueCombinationClass<NRectangleViewModel, DoubleCollection>(ViewModel.Value, "StrokeDashArray", HorizontalAlignment.Left));
             Properties.Add(new PropertyOptionsValueCombinationStruct<NRectangleViewModel, double>(ViewModel.Value, "RadiusX", HorizontalAlignment.Right));
             Properties.Add(new PropertyOptionsValueCombinationStruct<NRectangleViewModel, double>(ViewModel.Value, "RadiusY", HorizontalAlignment.Right));
+            Properties.Add(new PropertyOptionsValueCombinationStruct<NRectangleViewModel, double>(ViewModel.Value, "StrokeMiterLimit", HorizontalAlignment.Right));
         }
     }
 }

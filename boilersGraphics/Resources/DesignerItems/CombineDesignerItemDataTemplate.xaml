@@ -14,6 +14,7 @@
             Stroke="{Binding EdgeBrush.Value}"
             StrokeDashArray="{Binding StrokeDashArray.Value}"
             StrokeLineJoin="{Binding PenLineJoin.Value}"
+            StrokeMiterLimit="{Binding StrokeMiterLimit.Value}"
             StrokeThickness="{Binding EdgeThickness.Value}" />
     </DataTemplate>
 </ResourceDictionary>

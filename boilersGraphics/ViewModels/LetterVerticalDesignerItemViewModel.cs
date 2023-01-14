@@ -205,8 +205,9 @@ namespace boilersGraphics.ViewModels
             clone.FontSize = FontSize;
             clone.PathGeometry = PathGeometry;
             clone.AutoLineBreak = AutoLineBreak;
-            clone.PenLineJoin.Value = PenLineJoin.Value;
+            clone.StrokeLineJoin.Value = StrokeLineJoin.Value;
             clone.StrokeDashArray.Value = StrokeDashArray.Value;
+            clone.StrokeMiterLimit.Value = StrokeMiterLimit.Value;
             return clone;
         }
 
@@ -226,8 +227,9 @@ namespace boilersGraphics.ViewModels
                 this.Height.Value = viewModel.Height.Value;
                 this.CenterX.Value = viewModel.CenterX.Value;
                 this.CenterY.Value = viewModel.CenterY.Value;
-                this.PenLineJoin.Value = viewModel.PenLineJoin.Value;
+                this.StrokeLineJoin.Value = viewModel.StrokeLineJoin.Value;
                 this.StrokeDashArray.Value = viewModel.StrokeDashArray.Value;
+                this.StrokeMiterLimit.Value = viewModel.StrokeMiterLimit.Value;
             }
         }
 

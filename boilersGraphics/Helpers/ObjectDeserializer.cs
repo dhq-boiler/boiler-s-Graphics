@@ -349,19 +349,23 @@ namespace boilersGraphics.Helpers
             {
                 item.FillBrush.Value = WpfObjectSerializer.Deserialize(designerItemElm.Element("FillBrush").Nodes().First().ToString()) as Brush;
             }
+            if (designerItemElm.Elements("StrokeLineJoin").Any())
+            {
+                item.StrokeLineJoin.Value = Enum.Parse<PenLineJoin>(designerItemElm.Element("StrokeLineJoin").Value);
+            }
+            if (designerItemElm.Elements("StrokeMiterLimit").Any())
+            {
+                item.StrokeMiterLimit.Value = double.Parse(designerItemElm.Element("StrokeMiterLimit").Value);
+            }
+            if (designerItemElm.Elements("StrokeDashArray").Any())
+            {
+                item.StrokeDashArray.Value = DoubleCollection.Parse(designerItemElm.Element("StrokeDashArray").Value);
+            }
             item.EdgeThickness.Value = double.Parse(designerItemElm.Element("EdgeThickness").Value);
             item.RotationAngle.Value = designerItemElm.Element("RotationAngle") is not null ? double.Parse(designerItemElm.Element("RotationAngle").Value) : 0;
             item.Owner = diagramViewModel;
             if (item is NRectangleViewModel rectangle)
             {
-                if (designerItemElm.Elements("PenLineJoin").Any())
-                {
-                    rectangle.PenLineJoin.Value = Enum.Parse<PenLineJoin>(designerItemElm.Element("PenLineJoin").Value);
-                }
-                if (designerItemElm.Elements("StrokeDashArray").Any())
-                {
-                    rectangle.StrokeDashArray.Value = DoubleCollection.Parse(designerItemElm.Element("StrokeDashArray").Value);
-                }
                 if (designerItemElm.Elements("RadiusX").Any())
                 {
                     rectangle.RadiusX.Value = double.Parse(designerItemElm.Element("RadiusX").Value);
