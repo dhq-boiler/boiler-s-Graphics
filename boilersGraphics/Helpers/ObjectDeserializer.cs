@@ -45,6 +45,8 @@ namespace boilersGraphics.Helpers
                         foreach (var layerItem in layerItemsInternal.Descendants("LayerItem"))
                         {
                             LayerItem layerItemObj = ReadLayerItemFromXML(diagramViewModel, layerObj, layerItem);
+                            if (layerItemObj is null)
+                                continue;
                             layerObj.Children.Add(layerItemObj);
                         }
                     }
@@ -97,6 +99,8 @@ namespace boilersGraphics.Helpers
                         foreach (var layerItem in layerItemsInternal.Elements("LayerItem"))
                         {
                             LayerItem layerItemObj = ReadLayerItemFromXML(diagramViewModel, layerObj, layerItem);
+                            if (layerItemObj is null)
+                                continue;
                             layerObj.Children.Add(layerItemObj);
                         }
                     }
@@ -166,6 +170,7 @@ namespace boilersGraphics.Helpers
             var children = layerItem.Elements("Children").Descendants("LayerItem");
             var children_layerItems = (from child in children
                                        let li = ReadLayerItemFromXML(diagramViewModel, layerObj, child)
+                                       where li is not null
                                        select li);
             foreach (var c in children_layerItems)
             {
