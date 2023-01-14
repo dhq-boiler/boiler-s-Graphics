@@ -50,38 +50,40 @@
                                                     HorizontalAlignment="Stretch"
                                                     ItemsSource="{Binding Options}"
                                                     SelectedValue="{Binding PropertyValue, Mode=TwoWay}">
-                                                    <ComboBox.ItemTemplate>
-                                                        <DataTemplate>
-                                                            <Grid>
-                                                                <Grid.ColumnDefinitions>
-                                                                    <ColumnDefinition Width="50" />
-                                                                    <ColumnDefinition Width="50" />
-                                                                </Grid.ColumnDefinitions>
-                                                                <Grid.RowDefinitions>
-                                                                    <RowDefinition Height="60" />
-                                                                </Grid.RowDefinitions>
-                                                                <Polyline
-                                                                    Grid.Row="0"
-                                                                    Grid.Column="0"
-                                                                    HorizontalAlignment="Center"
-                                                                    VerticalAlignment="Center"
-                                                                    Points="10,20 20,5 30,40 40,20"
-                                                                    Stroke="{Binding DataContext.Object.Value.EdgeBrush.Value, ElementName=ComboBox_PropertyValue}"
-                                                                    StrokeLineJoin="{Binding}"
-                                                                    StrokeThickness="10" />
-                                                                <Label
-                                                                    Grid.Row="0"
-                                                                    Grid.Column="1"
-                                                                    VerticalAlignment="Center">
-                                                                    <Label.Content>
-                                                                        <TextBlock>
-                                                                            <Run Text="{Binding Mode=OneWay}" />
-                                                                        </TextBlock>
-                                                                    </Label.Content>
-                                                                </Label>
-                                                            </Grid>
-                                                        </DataTemplate>
-                                                    </ComboBox.ItemTemplate>
+                                                    <ComboBox.ItemTemplateSelector>
+                                                        <views:ComboBoxItemTemplateSelector>
+                                                            <DataTemplate DataType="{x:Type PenLineJoin}">
+                                                                <Grid>
+                                                                    <Grid.ColumnDefinitions>
+                                                                        <ColumnDefinition Width="50" />
+                                                                        <ColumnDefinition Width="50" />
+                                                                    </Grid.ColumnDefinitions>
+                                                                    <Grid.RowDefinitions>
+                                                                        <RowDefinition Height="60" />
+                                                                    </Grid.RowDefinitions>
+                                                                    <Polyline
+                                                                        Grid.Row="0"
+                                                                        Grid.Column="0"
+                                                                        HorizontalAlignment="Center"
+                                                                        VerticalAlignment="Center"
+                                                                        Points="10,20 20,5 30,40 40,20"
+                                                                        Stroke="{Binding DataContext.Object.Value.EdgeBrush.Value, ElementName=ComboBox_PropertyValue}"
+                                                                        StrokeLineJoin="{Binding}"
+                                                                        StrokeThickness="10" />
+                                                                    <Label
+                                                                        Grid.Row="0"
+                                                                        Grid.Column="1"
+                                                                        VerticalAlignment="Center">
+                                                                        <Label.Content>
+                                                                            <TextBlock>
+                                                                                <Run Text="{Binding Mode=OneWay}" />
+                                                                            </TextBlock>
+                                                                        </Label.Content>
+                                                                    </Label>
+                                                                </Grid>
+                                                            </DataTemplate>
+                                                        </views:ComboBoxItemTemplateSelector>
+                                                    </ComboBox.ItemTemplateSelector>
                                                 </ComboBox>
                                             </DataTemplate>
                                         </views:OptionsContentTemplateSelector.ComboBoxTemplate>
