@@ -53,7 +53,7 @@
                                                     <ComboBox.ItemTemplateSelector>
                                                         <views:ComboBoxItemTemplateSelector>
                                                             <DataTemplate DataType="{x:Type PenLineJoin}">
-                                                                <Grid>
+                                                                <Grid Background="White">
                                                                     <Grid.ColumnDefinitions>
                                                                         <ColumnDefinition Width="50" />
                                                                         <ColumnDefinition Width="50" />
@@ -73,9 +73,10 @@
                                                                     <Label
                                                                         Grid.Row="0"
                                                                         Grid.Column="1"
-                                                                        VerticalAlignment="Center">
+                                                                        VerticalAlignment="Center"
+                                                                        Foreground="Black">
                                                                         <Label.Content>
-                                                                            <TextBlock>
+                                                                            <TextBlock Foreground="Black">
                                                                                 <Run Text="{Binding Mode=OneWay}" />
                                                                             </TextBlock>
                                                                         </Label.Content>
