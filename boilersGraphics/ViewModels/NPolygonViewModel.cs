@@ -112,6 +112,7 @@ namespace boilersGraphics.ViewModels
         {
             var clone = new NPolygonViewModel();
             clone.Owner = Owner;
+            clone.Data.Value = Data.Value;
             clone.Left.Value = Left.Value;
             clone.Top.Value = Top.Value;
             clone.Width.Value = Width.Value;
@@ -120,7 +121,6 @@ namespace boilersGraphics.ViewModels
             clone.FillBrush.Value = FillBrush.Value;
             clone.EdgeThickness.Value = EdgeThickness.Value;
             clone.RotationAngle.Value = RotationAngle.Value;
-            clone.Data.Value = Data.Value;
             clone.StrokeLineJoin.Value = StrokeLineJoin.Value;
             clone.StrokeDashArray.Value = StrokeDashArray.Value;
             clone.StrokeMiterLimit.Value = StrokeMiterLimit.Value;

@@ -242,9 +242,11 @@ namespace boilersGraphics.Helpers
             }
             var rhs = PathGeometry.CreateFromGeometry(Geometry.Parse(data));
             rhs.FillRule = FillRule.Nonzero;
-            if (item.Width.Value != item.PathGeometryNoRotate.Value.Bounds.Width || item.Height.Value != item.PathGeometryNoRotate.Value.Bounds.Height)
+            //if (item.Width.Value != item.PathGeometryNoRotate.Value.Bounds.Width || item.Height.Value != item.PathGeometryNoRotate.Value.Bounds.Height)
+            if (true)
             {
-                var lhs = item.PathGeometryNoRotate.Value.Clone();
+                //var lhs = item.PathGeometryNoRotate.Value.Clone();
+                var lhs = rhs.Clone();
                 var coefficientWidth = rhs.Bounds.Width / lhs.Bounds.Width;
                 var coefficientHeight = rhs.Bounds.Height / lhs.Bounds.Height;
                 if (coefficientWidth == 0)
