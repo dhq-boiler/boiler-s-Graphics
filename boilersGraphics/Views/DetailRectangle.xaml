@@ -31,7 +31,7 @@
                 </Button>
             </DockPanel>
         </DockPanel>
-        <DockPanel Width="200" DockPanel.Dock="Right">
+        <DockPanel Width="Auto" DockPanel.Dock="Right">
             <ListView ItemsSource="{Binding Properties}">
                 <ListView.View>
                     <GridView>
@@ -46,9 +46,43 @@
                                         <views:OptionsContentTemplateSelector.ComboBoxTemplate>
                                             <DataTemplate>
                                                 <ComboBox
+                                                    x:Name="ComboBox_PropertyValue"
                                                     HorizontalAlignment="Stretch"
                                                     ItemsSource="{Binding Options}"
-                                                    SelectedValue="{Binding PropertyValue, Mode=TwoWay}" />
+                                                    SelectedValue="{Binding PropertyValue, Mode=TwoWay}">
+                                                    <ComboBox.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Grid>
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="50" />
+                                                                    <ColumnDefinition Width="50" />
+                                                                </Grid.ColumnDefinitions>
+                                                                <Grid.RowDefinitions>
+                                                                    <RowDefinition Height="60" />
+                                                                </Grid.RowDefinitions>
+                                                                <Polyline
+                                                                    Grid.Row="0"
+                                                                    Grid.Column="0"
+                                                                    HorizontalAlignment="Center"
+                                                                    VerticalAlignment="Center"
+                                                                    Points="10,20 20,5 30,40 40,20"
+                                                                    Stroke="{Binding DataContext.Object.Value.EdgeBrush.Value, ElementName=ComboBox_PropertyValue}"
+                                                                    StrokeLineJoin="{Binding}"
+                                                                    StrokeThickness="10" />
+                                                                <Label
+                                                                    Grid.Row="0"
+                                                                    Grid.Column="1"
+                                                                    VerticalAlignment="Center">
+                                                                    <Label.Content>
+                                                                        <TextBlock>
+                                                                            <Run Text="{Binding Mode=OneWay}" />
+                                                                        </TextBlock>
+                                                                    </Label.Content>
+                                                                </Label>
+                                                            </Grid>
+                                                        </DataTemplate>
+                                                    </ComboBox.ItemTemplate>
+                                                </ComboBox>
                                             </DataTemplate>
                                         </views:OptionsContentTemplateSelector.ComboBoxTemplate>
                                         <views:OptionsContentTemplateSelector.TextBoxTemplate>
