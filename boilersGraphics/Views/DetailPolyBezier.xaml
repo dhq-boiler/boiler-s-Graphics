@@ -93,7 +93,7 @@
                                                                 <Grid Background="White">
                                                                     <Grid.ColumnDefinitions>
                                                                         <ColumnDefinition Width="65" />
-                                                                        <ColumnDefinition Width="50" />
+                                                                        <ColumnDefinition Width="60" />
                                                                     </Grid.ColumnDefinitions>
                                                                     <Grid.RowDefinitions>
                                                                         <RowDefinition Height="30" />
