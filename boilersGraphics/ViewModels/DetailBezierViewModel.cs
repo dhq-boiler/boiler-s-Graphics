@@ -28,6 +28,14 @@ namespace boilersGraphics.ViewModels
             }));
             Properties.Add(new PropertyOptionsValueCombinationClass<BezierCurveViewModel, DoubleCollection>(ViewModel.Value, "StrokeDashArray", HorizontalAlignment.Left));
             Properties.Add(new PropertyOptionsValueCombinationStruct<BezierCurveViewModel, double>(ViewModel.Value, "StrokeMiterLimit", HorizontalAlignment.Right));
+            Properties.Add(new PropertyOptionsValueCombinationStructRP<BezierCurveViewModel, double>(ViewModel.Value, "P1X", HorizontalAlignment.Right));
+            Properties.Add(new PropertyOptionsValueCombinationStructRP<BezierCurveViewModel, double>(ViewModel.Value, "P1Y", HorizontalAlignment.Right));
+            Properties.Add(new PropertyOptionsValueCombinationStructRP<BezierCurveViewModel, double>(ViewModel.Value, "P2X", HorizontalAlignment.Right));
+            Properties.Add(new PropertyOptionsValueCombinationStructRP<BezierCurveViewModel, double>(ViewModel.Value, "P2Y", HorizontalAlignment.Right));
+            Properties.Add(new PropertyOptionsValueCombinationStructRP<BezierCurveViewModel, double>(ViewModel.Value, "C1X", HorizontalAlignment.Right));
+            Properties.Add(new PropertyOptionsValueCombinationStructRP<BezierCurveViewModel, double>(ViewModel.Value, "C1Y", HorizontalAlignment.Right));
+            Properties.Add(new PropertyOptionsValueCombinationStructRP<BezierCurveViewModel, double>(ViewModel.Value, "C2X", HorizontalAlignment.Right));
+            Properties.Add(new PropertyOptionsValueCombinationStructRP<BezierCurveViewModel, double>(ViewModel.Value, "C2Y", HorizontalAlignment.Right));
         }
     }
 }

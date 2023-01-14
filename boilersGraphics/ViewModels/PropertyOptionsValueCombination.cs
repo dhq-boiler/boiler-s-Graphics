@@ -146,4 +146,51 @@ namespace boilersGraphics.ViewModels
 
         public override string Type => (Options.Count() > 0) ? "ComboBox" : "TextBox";
     }
+
+    public class PropertyOptionsValueCombinationStructRP<E, V> : PropertyOptionsValueCombination where V : struct
+    {
+        public PropertyOptionsValueCombinationStructRP(E obj, string name) : base(name)
+        {
+            Object.Value = obj;
+        }
+
+        public PropertyOptionsValueCombinationStructRP(E obj, string name, V[] options)
+            : base(name)
+        {
+            Object.Value = obj;
+            Options.Clear();
+            Options.AddRange(options);
+        }
+
+        public PropertyOptionsValueCombinationStructRP(E obj, string name, HorizontalAlignment horizontalContentAlignment, V[] options)
+            : this(obj, name, options)
+        {
+            HorizontalContentAlignment.Value = horizontalContentAlignment;
+        }
+
+        public PropertyOptionsValueCombinationStructRP(E obj, string name, HorizontalAlignment horizontalContentAlignment)
+            : this(obj, name)
+        {
+            HorizontalContentAlignment.Value = horizontalContentAlignment;
+        }
+
+        public ReactivePropertySlim<E> Object { get; } = new ReactivePropertySlim<E>();
+        public ReactiveCollection<V> Options { get; } = new ReactiveCollection<V>();
+        public ReactivePropertySlim<HorizontalAlignment> HorizontalContentAlignment { get; set; } = new ReactivePropertySlim<HorizontalAlignment>();
+        public V PropertyValue
+        {
+            get
+            {
+                return ((ReactiveProperty<V>)typeof(E).GetProperty(PropertyName.Value).GetValue(Object.Value)).Value;
+            }
+
+            set
+            {
+                var rps = typeof(E).GetProperty(PropertyName.Value).GetValue(Object.Value) as ReactiveProperty<V>;
+                rps.Value = value;
+            }
+        }
+
+        public override string Type => (Options.Count() > 0) ? "ComboBox" : "TextBox";
+    }
 }

@@ -22,6 +22,10 @@ namespace boilersGraphics.ViewModels
                 PenLineCap.Triangle,
             }));
             Properties.Add(new PropertyOptionsValueCombinationClass<StraightConnectorViewModel, DoubleCollection>(ViewModel.Value, "StrokeDashArray", HorizontalAlignment.Left));
+            Properties.Add(new PropertyOptionsValueCombinationStructRP<StraightConnectorViewModel, double>(ViewModel.Value, "P1X", HorizontalAlignment.Right));
+            Properties.Add(new PropertyOptionsValueCombinationStructRP<StraightConnectorViewModel, double>(ViewModel.Value, "P1Y", HorizontalAlignment.Right));
+            Properties.Add(new PropertyOptionsValueCombinationStructRP<StraightConnectorViewModel, double>(ViewModel.Value, "P2X", HorizontalAlignment.Right));
+            Properties.Add(new PropertyOptionsValueCombinationStructRP<StraightConnectorViewModel, double>(ViewModel.Value, "P2Y", HorizontalAlignment.Right));
         }
     }
 }
