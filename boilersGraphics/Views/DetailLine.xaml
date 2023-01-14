@@ -201,22 +201,6 @@
             </DataTemplate>
             <DataTemplate DataType="{x:Type viewmodel:BezierCurveViewModel}">
                 <DockPanel>
-                    <DockPanel DockPanel.Dock="Top">
-                        <StackPanel Orientation="Horizontal">
-                            <DockPanel>
-                                <Label DockPanel.Dock="Left">StrokeStartLineCap</Label>
-                                <ComboBox ItemsSource="{Binding PenLineCaps}" SelectedValue="{Binding StrokeStartLineCap.Value}" />
-                            </DockPanel>
-                            <DockPanel>
-                                <Label DockPanel.Dock="Left">StrokeEndLineCap</Label>
-                                <ComboBox ItemsSource="{Binding PenLineCaps}" SelectedValue="{Binding StrokeEndLineCap.Value}" />
-                            </DockPanel>
-                            <DockPanel>
-                                <Label DockPanel.Dock="Left">StrokeDashArray</Label>
-                                <TextBox Width="100" Text="{Binding StrokeDashArray.Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DoubleCollectionToString}}" />
-                            </DockPanel>
-                        </StackPanel>
-                    </DockPanel>
                     <Canvas>
                         <Path
                             Stroke="{Binding EdgeColor.Value, Converter={StaticResource solidColorBrushConverter}}"
