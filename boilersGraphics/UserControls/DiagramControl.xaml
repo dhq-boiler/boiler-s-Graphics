@@ -31,6 +31,7 @@
             </ResourceDictionary.MergedDictionaries>
             <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
             <converter:ToPointCollectionConverter x:Key="ToPointCollection" />
+            <converter:ObjectToTypeConverter x:Key="Obj2TypeConverter" />
         </ResourceDictionary>
     </UserControl.Resources>
     <Border BorderBrush="LightGray" BorderThickness="1">
@@ -196,9 +197,19 @@
                                                         VerticalAlignment="Stretch"
                                                         ClipToBounds="False"
                                                         Content="{TemplateBinding Content}">
-                                                        <ContentPresenter.RenderTransform>
-                                                            <TranslateTransform X="{c:Binding HalfEdgeThickness.Value}" Y="{c:Binding HalfEdgeThickness.Value}" />
-                                                        </ContentPresenter.RenderTransform>
+                                                        <ContentPresenter.Style>
+                                                            <Style TargetType="{x:Type ContentPresenter}">
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding Converter={StaticResource Obj2TypeConverter}}" Value="{x:Type viewModel:NEllipseViewModel}">
+                                                                        <Setter Property="RenderTransform">
+                                                                            <Setter.Value>
+                                                                                <TranslateTransform X="{c:Binding HalfEdgeThickness.Value}" Y="{c:Binding HalfEdgeThickness.Value}" />
+                                                                            </Setter.Value>
+                                                                        </Setter>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </ContentPresenter.Style>
                                                     </ContentPresenter>
                                                     <!--  DEBUG  -->
                                                     <!--<TextBlock VerticalAlignment="Center"
