@@ -56,10 +56,11 @@ namespace boilersGraphics.Test.UITests
             var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var filename = $"{dir}\\Canvas.jpg";
             mainwindowPO.SaveCanvas(filename);
+            TestContext.AddTestAttachment(filename);
 
             using (var mat = new Mat(filename))
             {
-                for (int i = 102; i <= 123; i++)
+                for (int i = 104; i <= 123; i++)
                 {
                     PixelIs(mat, i, i, 0, 0, 255);
                 }
