@@ -321,6 +321,19 @@
                                                                     </PathFigure>
                                                                 </PathGeometry>
                                                             </Path.Data>
+                                                            <Path.Style>
+                                                                <Style TargetType="{x:Type Path}">
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding Converter={StaticResource Obj2TypeConverter}}" Value="{x:Type viewModel:BezierCurveViewModel}">
+                                                                            <Setter Property="RenderTransform">
+                                                                                <Setter.Value>
+                                                                                    <TranslateTransform X="{c:Binding -HalfEdgeThickness.Value}" Y="{c:Binding -HalfEdgeThickness.Value}" />
+                                                                                </Setter.Value>
+                                                                            </Setter>
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </Path.Style>
                                                             <i:Interaction.Triggers>
                                                                 <i:EventTrigger EventName="MouseDown">
                                                                     <helper:EventToCommand Command="{Binding DataContext.MouseDownBezierCurveCommand, ElementName=diagramControl}" CommandParameter="{Binding ElementName=bezierCurve}" />
