@@ -10,6 +10,7 @@ namespace boilersGraphics.ViewModels
     public class PropertyOptionsValueCombination : BindableBase
     {
         public ReactivePropertySlim<string> PropertyName { get; set; } = new ReactivePropertySlim<string>();
+        public ReactivePropertySlim<int> TabIndex { get; set; } = new ReactivePropertySlim<int>();
 
         public PropertyOptionsValueCombination(string name)
         {

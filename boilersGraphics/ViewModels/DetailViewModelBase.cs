@@ -17,6 +17,7 @@ namespace boilersGraphics.ViewModels
         public string Title => "プロパティ";
 
         public ReactiveCommand OKCommand { get; } = new ReactiveCommand();
+        public ReactivePropertySlim<int> OKTabIndex { get; } = new ReactivePropertySlim<int>();
 
         public event Action<IDialogResult> RequestClose;
 
@@ -52,6 +53,9 @@ namespace boilersGraphics.ViewModels
             var properties = Properties.OrderBy(x => x.PropertyName.Value).ToList();
             Properties.Clear();
             Properties.AddRange(properties);
+            var i = 0;
+            properties.ForEach(x => { x.TabIndex.Value = i++; });
+            OKTabIndex.Value = i++;
         }
 
         protected virtual void Dispose(bool disposing)
