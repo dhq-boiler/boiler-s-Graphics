@@ -199,11 +199,15 @@ namespace boilersGraphics.ViewModels
                 case "RadiusX":
                 case "RadiusY":
                     UpdatePathGeometryIfEnable(propertyName, oldValue, newValue);
+                    AfterUpdatePathGeometry(propertyName, oldValue, newValue);
                     break;
                 default:
                     break;
             }
         }
+
+        protected virtual void AfterUpdatePathGeometry(string propertyName, object oldValue, object newValue)
+        { }
 
         public virtual void UpdatePathGeometryIfEnable(string propertyName, object oldValue, object newValue, bool flag = false)
         {

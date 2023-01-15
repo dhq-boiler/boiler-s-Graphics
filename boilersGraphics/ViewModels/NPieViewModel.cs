@@ -1,5 +1,6 @@
 ﻿using boilersGraphics.Helpers;
 using boilersGraphics.Views;
+using NLog;
 using Prism.Ioc;
 using Prism.Services.Dialogs;
 using Prism.Unity;
@@ -123,6 +124,22 @@ namespace boilersGraphics.ViewModels
                     PathGeometryRotate.Value = CreateGeometry(RotationAngle.Value);
                 }
             }
+        }
+
+        protected override void AfterUpdatePathGeometry(string propertyName, object oldValue, object newValue)
+        {
+            if (PathGeometryNoRotate.Value is null)
+                return;
+            //if (propertyName != "EdgeThickness")
+            //    return;
+            //var diff = (double)newValue - (double)oldValue;
+            //PathGeometryNoRotate.Value = GeometryCreator.Scale(PathGeometryNoRotate.Value, PathGeometryNoRotate.Value.Bounds.Width / (Width.Value + diff), PathGeometryNoRotate.Value.Bounds.Height / (Height.Value + diff));
+            PathGeometryNoRotate.Value = GeometryCreator.Scale(PathGeometryNoRotate.Value, PathGeometryNoRotate.Value.Bounds.Width / (Width.Value + EdgeThickness.Value), PathGeometryNoRotate.Value.Bounds.Height / (Height.Value + EdgeThickness.Value));
+            //var k = 4d / -4d;
+            //PathGeometryNoRotate.Value.Transform = new TranslateTransform(Left.Value * k, Top.Value * k);
+            //LogManager.GetCurrentClassLogger().Debug(Left.Value);
+            var geometry = PathGeometryNoRotate.Value;
+            geometry.Transform = new TranslateTransform(-geometry.Bounds.Left, -geometry.Bounds.Top);
         }
 
         public override PathGeometry CreateGeometry(bool flag = false)
