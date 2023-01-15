@@ -173,7 +173,7 @@
                                     <Setter Property="ContentTemplate">
                                         <Setter.Value>
                                             <DataTemplate>
-                                                <Grid>
+                                                <Grid x:Name="selectedGrid">
                                                     <Grid.Style>
                                                         <Style TargetType="{x:Type Grid}">
                                                             <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
