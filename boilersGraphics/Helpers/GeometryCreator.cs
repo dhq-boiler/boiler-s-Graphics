@@ -331,6 +331,108 @@ namespace boilersGraphics.Helpers
             return PathGeometry.CreateFromGeometry(geometry);
         }
 
+        public static PathGeometry CreatePicture(PictureDesignerItemViewModel item, bool flag = false)
+        {
+            if (item.PathGeometryNoRotate.Value is null)
+            {
+                PathGeometry lhs = null;
+                try
+                {
+                    lhs = PathGeometry.CreateFromGeometry(new RectangleGeometry(new Rect(new Point(0, 0), new Point(item.Width.Value - item.EdgeThickness.Value / 2, item.Height.Value - item.EdgeThickness.Value / 2))));
+                    lhs.FillRule = FillRule.Nonzero;
+                    return lhs;
+                }
+                finally
+                {
+                    LogManager.GetCurrentClassLogger().Debug($"item.PathGeometryNoRotate.Value is null => {lhs.ToString()}");
+                }
+            }
+            if (flag)
+            {
+                try
+                {
+                    return item.PathGeometryNoRotate.Value;
+                }
+                finally
+                {
+                    LogManager.GetCurrentClassLogger().Debug($"flag => item.PathGeometryNoRotate.Value[{item.PathGeometryNoRotate.Value.ToString()}");
+                }
+            }
+            if (item.PathGeometryNoRotate.Value is not null && (item.PathGeometryNoRotate.Value.Bounds.Width == 0 || item.PathGeometryNoRotate.Value.Bounds.Height == 0))
+            {
+                PathGeometry lhs = null;
+                try
+                {
+                    lhs = PathGeometry.CreateFromGeometry(new RectangleGeometry(new Rect(new Point(0, 0), new Point(item.Width.Value - item.EdgeThickness.Value / 2, item.Height.Value - item.EdgeThickness.Value / 2))));
+                    lhs.FillRule = FillRule.Nonzero;
+                    return lhs;
+                }
+                finally
+                {
+                    LogManager.GetCurrentClassLogger().Debug($"item.PathGeometryNoRotate.Value is null => {lhs.ToString()}");
+                }
+            }
+            var rhs = PathGeometry.CreateFromGeometry(new RectangleGeometry(new Rect(new Point(0, 0), new Point(item.Width.Value - item.EdgeThickness.Value / 2, item.Height.Value - item.EdgeThickness.Value / 2))));
+            rhs.FillRule = FillRule.Nonzero;
+            //if (item.Width.Value != item.PathGeometryNoRotate.Value.Bounds.Width || item.Height.Value != item.PathGeometryNoRotate.Value.Bounds.Height)
+            if (true)
+            {
+                PathGeometry lhs = null;
+                PathGeometry newlhs = null;
+                lhs = rhs.Clone();
+                if (double.IsInfinity(rhs.Bounds.Width) || double.IsNegativeInfinity(rhs.Bounds.Width))
+                {
+                    return lhs;
+                }
+                if (double.IsInfinity(rhs.Bounds.Height) || double.IsNegativeInfinity(rhs.Bounds.Height))
+                {
+                    return lhs;
+                }
+                var coefficientWidth = rhs.Bounds.Width / lhs.Bounds.Width;
+                var coefficientHeight = rhs.Bounds.Height / lhs.Bounds.Height;
+                try
+                {
+                    if (lhs.Bounds.Width == 0 || coefficientWidth == 0)
+                        coefficientWidth = 1;
+                    if (lhs.Bounds.Height == 0 || coefficientHeight == 0)
+                        coefficientHeight = 1;
+                    if (double.IsNaN(coefficientWidth) || double.IsNaN(coefficientHeight))
+                        return rhs;
+                    newlhs = Scale(lhs, coefficientWidth, coefficientHeight);
+                    return newlhs;
+                }
+                finally
+                {
+                    LogManager.GetCurrentClassLogger().Debug($"item.Width.Value != item.PathGeometryNoRotate.Value.Bounds.Width || item.Height.Value != item.PathGeometryNoRotate.Value.Bounds.Height => newlhs[{newlhs.ToString()}]");
+                }
+            }
+
+            PathGeometry result = null;
+            try
+            {
+                result = Geometry.Combine(
+                    item.PathGeometryNoRotate.Value,
+                    rhs,
+                    GeometryCombineMode.Intersect,
+                    null);
+                return result;
+            }
+            finally
+            {
+                LogManager.GetCurrentClassLogger().Debug($"=> result[{result.ToString()}]");
+            }
+        }
+        public static PathGeometry CreatePictureWithAngle(PictureDesignerItemViewModel item, double angle)
+        {
+            if (item.PathGeometryRotate.Value is null)
+            {
+                return PathGeometry.CreateFromGeometry(new RectangleGeometry(new Rect(new Point(0, 0), new Point(item.Width.Value - item.EdgeThickness.Value / 2, item.Height.Value - item.EdgeThickness.Value / 2)), 0, 0, new RotateTransform(angle, item.CenterPoint.Value.X, item.CenterPoint.Value.Y)));
+            }
+            var temp = item.PathGeometryRotate.Value.Clone();
+            temp.Transform = new RotateTransform(angle, item.CenterPoint.Value.X, item.CenterPoint.Value.Y);
+            return Geometry.Combine(temp, PathGeometry.CreateFromGeometry(new RectangleGeometry(new Rect(new Point(0, 0), new Point(item.Width.Value - item.EdgeThickness.Value / 2, item.Height.Value - item.EdgeThickness.Value / 2)), 0, 0, new RotateTransform(angle, item.CenterPoint.Value.X, item.CenterPoint.Value.Y))), GeometryCombineMode.Intersect, null);
+        }
+
         private static void DetectIntersections(PolyBezierViewModel pb, ref Point oneIntersection, ref int beginI, ref int endJ)
         {
             for (int i = 0; i < pb.Points.Count - 1; i++)

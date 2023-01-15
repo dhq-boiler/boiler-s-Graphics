@@ -21,6 +21,7 @@ namespace boilersGraphics.ViewModels
             Properties.Add(new PropertyOptionsValueCombinationStruct<PictureDesignerItemViewModel, double>(ViewModel.Value, "CenterX", HorizontalAlignment.Right));
             Properties.Add(new PropertyOptionsValueCombinationStruct<PictureDesignerItemViewModel, double>(ViewModel.Value, "CenterY", HorizontalAlignment.Right));
             Properties.Add(new PropertyOptionsValueCombinationStruct<PictureDesignerItemViewModel, double>(ViewModel.Value, "RotationAngle", HorizontalAlignment.Right));
+            Properties.Add(new PropertyOptionsValueCombinationStruct<PictureDesignerItemViewModel, Thickness>(ViewModel.Value, "Margin", HorizontalAlignment.Right));
         }
     }
 }

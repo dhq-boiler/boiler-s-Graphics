@@ -66,8 +66,6 @@ namespace boilersGraphics.ViewModels
 
         public override void UpdatePathGeometryIfEnable(string propertyName, object oldValue, object newValue, bool flag = false)
         {
-            if (propertyName == "EdgeThickness")
-                return;
             if (EnablePathGeometryUpdate.Value)
             {
                 if (!flag)
@@ -242,12 +240,12 @@ namespace boilersGraphics.ViewModels
 
         public override PathGeometry CreateGeometry(bool flag = false)
         {
-            return GeometryCreator.CreateRectangle(this, 0d, 0d, flag);
+            return GeometryCreator.CreatePicture(this, flag);
         }
 
         public override PathGeometry CreateGeometry(double angle)
         {
-            return GeometryCreator.CreateRectangleWithAngle(this, 0d, 0d, angle);
+            return GeometryCreator.CreatePictureWithAngle(this, angle);
         }
 
         public override Type GetViewType()
