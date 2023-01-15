@@ -75,7 +75,7 @@
                                                                         HorizontalAlignment="Center"
                                                                         VerticalAlignment="Center"
                                                                         Points="10,20 20,5 30,40 40,20"
-                                                                        Stroke="{Binding DataContext.Object.Value.EdgeBrush.Value, ElementName=ComboBox_PropertyValue}"
+                                                                        Stroke="Black"
                                                                         StrokeLineJoin="{Binding}"
                                                                         StrokeThickness="10" />
                                                                     <Label
@@ -103,7 +103,7 @@
                                                                     <Line
                                                                         Grid.Row="0"
                                                                         Grid.Column="0"
-                                                                        Stroke="{Binding DataContext.Object.Value.EdgeBrush.Value, ElementName=ComboBox_PropertyValue}"
+                                                                        Stroke="Black"
                                                                         StrokeEndLineCap="{Binding}"
                                                                         StrokeThickness="20"
                                                                         X1="0"
