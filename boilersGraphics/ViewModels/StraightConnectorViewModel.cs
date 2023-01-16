@@ -81,7 +81,7 @@ namespace boilersGraphics.ViewModels
             var dialogService = new DialogService((App.Current as PrismApplication).Container as IContainerExtension);
             IDialogResult result = null;
             var parameters = new DialogParameters() { { "ViewModel", (StraightConnectorViewModel)this.Clone() } };
-            dialogService.ShowDialog(nameof(DetailStraightLine), parameters, ret => result = ret);
+            dialogService.Show(nameof(DetailStraightLine), parameters, ret => result = ret);
             if (result != null && result.Result == ButtonResult.OK)
             {
                 var viewModel = result.Parameters.GetValue<StraightConnectorViewModel>("ViewModel");

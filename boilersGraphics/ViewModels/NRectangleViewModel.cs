@@ -75,7 +75,7 @@ namespace boilersGraphics.ViewModels
         {
             var dialogService = new DialogService((App.Current as PrismApplication).Container as IContainerExtension);
             IDialogResult result = null;
-            dialogService.ShowDialog(nameof(DetailRectangle), new DialogParameters() { { "ViewModel", (NRectangleViewModel)this.Clone() } }, ret => result = ret);
+            dialogService.Show(nameof(DetailRectangle), new DialogParameters() { { "ViewModel", (NRectangleViewModel)this.Clone() } }, ret => result = ret);
             if (result != null && result.Result == ButtonResult.OK)
             {
                 var viewModel = result.Parameters.GetValue<NRectangleViewModel>("ViewModel");
