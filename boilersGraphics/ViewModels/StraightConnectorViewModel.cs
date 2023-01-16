@@ -80,23 +80,8 @@ namespace boilersGraphics.ViewModels
         {
             var dialogService = new DialogService((App.Current as PrismApplication).Container as IContainerExtension);
             IDialogResult result = null;
-            var parameters = new DialogParameters() { { "ViewModel", (StraightConnectorViewModel)this.Clone() } };
+            var parameters = new DialogParameters() { { "ViewModel", this } };
             dialogService.Show(nameof(DetailStraightLine), parameters, ret => result = ret);
-            if (result != null && result.Result == ButtonResult.OK)
-            {
-                var viewModel = result.Parameters.GetValue<StraightConnectorViewModel>("ViewModel");
-                this.Points[0] = new Point(viewModel.P1X.Value, viewModel.P1Y.Value);
-                this.Points[1] = new Point(viewModel.P2X.Value, viewModel.P2Y.Value);
-                this.SnapPoint0VM.Value.Left.Value = viewModel.P1X.Value;
-                this.SnapPoint0VM.Value.Top.Value = viewModel.P1Y.Value;
-                this.SnapPoint1VM.Value.Left.Value = viewModel.P2X.Value;
-                this.SnapPoint1VM.Value.Top.Value = viewModel.P2Y.Value;
-                this.StrokeStartLineCap.Value = viewModel.StrokeStartLineCap.Value;
-                this.StrokeEndLineCap.Value = viewModel.StrokeEndLineCap.Value;
-                this.StrokeLineJoin.Value = viewModel.StrokeLineJoin.Value;
-                this.StrokeDashArray.Value = viewModel.StrokeDashArray.Value;
-                this.StrokeMiterLimit.Value = viewModel.StrokeMiterLimit.Value;
-            }
         }
 
         #endregion //IClonable

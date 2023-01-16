@@ -16,18 +16,12 @@ namespace boilersGraphics.ViewModels
 
         public string Title => "プロパティ";
 
-        public ReactiveCommand OKCommand { get; } = new ReactiveCommand();
         public ReactivePropertySlim<int> OKTabIndex { get; } = new ReactivePropertySlim<int>();
 
         public event Action<IDialogResult> RequestClose;
 
         public DetailViewModelBase()
         {
-            OKCommand.Subscribe(_ =>
-            {
-                RequestClose.Invoke(new DialogResult(ButtonResult.OK, new DialogParameters() { { "ViewModel", ViewModel.Value } }));
-            })
-            .AddTo(disposables);
         }
 
         public bool CanCloseDialog()
@@ -64,8 +58,8 @@ namespace boilersGraphics.ViewModels
             {
                 if (disposing)
                 {
-                    OKCommand.Dispose();
                     ViewModel.Dispose();
+                    Properties.Dispose();
                 }
 
                 disposedValue = true;

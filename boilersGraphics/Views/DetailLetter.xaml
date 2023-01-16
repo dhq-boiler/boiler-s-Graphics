@@ -26,18 +26,6 @@
         </Style>
     </prism:Dialog.WindowStyle>
     <DockPanel>
-        <DockPanel DockPanel.Dock="Bottom">
-            <DockPanel DockPanel.Dock="Right">
-                <Button
-                    Width="100"
-                    Margin="5"
-                    HorizontalAlignment="Right"
-                    Command="{Binding OKCommand}"
-                    IsTabStop="True">
-                    OK
-                </Button>
-            </DockPanel>
-        </DockPanel>
         <DockPanel Width="Auto">
             <ListView ItemsSource="{Binding Properties}" KeyboardNavigation.TabNavigation="Continue">
                 <ListView.View>
@@ -57,7 +45,7 @@
                                                     HorizontalAlignment="Stretch"
                                                     IsTabStop="True"
                                                     ItemsSource="{Binding Options}"
-                                                    SelectedValue="{Binding PropertyValue, Mode=TwoWay}">
+                                                    SelectedValue="{Binding PropertyValue.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                                                     <ComboBox.ItemTemplateSelector>
                                                         <views:ComboBoxItemTemplateSelector>
                                                             <DataTemplate DataType="{x:Type PenLineJoin}">
@@ -102,7 +90,7 @@
                                                     HorizontalAlignment="Stretch"
                                                     HorizontalContentAlignment="{Binding HorizontalContentAlignment.Value}"
                                                     IsTabStop="True"
-                                                    Text="{Binding PropertyValue, Mode=TwoWay}" />
+                                                    Text="{Binding PropertyValue.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                             </DataTemplate>
                                         </views:OptionsContentTemplateSelector.TextBoxTemplate>
                                     </views:OptionsContentTemplateSelector>

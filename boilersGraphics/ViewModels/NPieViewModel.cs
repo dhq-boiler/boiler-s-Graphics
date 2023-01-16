@@ -68,27 +68,7 @@ namespace boilersGraphics.ViewModels
         {
             var dialogService = new DialogService((App.Current as PrismApplication).Container as IContainerExtension);
             IDialogResult result = null;
-            dialogService.Show(nameof(DetailPie), new DialogParameters() { { "ViewModel", (NPieViewModel)this.Clone() } }, ret => result = ret);
-            if (result != null && result.Result == ButtonResult.OK)
-            {
-                var viewModel = result.Parameters.GetValue<NPieViewModel>("ViewModel");
-                this.Left.Value = viewModel.Left.Value;
-                this.Top.Value = viewModel.Top.Value;
-                this.Width.Value = viewModel.Width.Value;
-                this.Height.Value = viewModel.Height.Value;
-                this.CenterX.Value = viewModel.CenterX.Value;
-                this.CenterY.Value = viewModel.CenterY.Value;
-                this.RotationAngle.Value = viewModel.RotationAngle.Value;
-                this.PieCenterPoint.Value = viewModel.PieCenterPoint.Value;
-                this.DonutWidth.Value = viewModel.DonutWidth.Value;
-                this.Distance.Value = viewModel.Distance.Value;
-                this.StartDegree.Value = viewModel.StartDegree.Value;
-                this.EndDegree.Value = viewModel.EndDegree.Value;
-                this.SweepDirection.Value = viewModel.SweepDirection.Value;
-                this.StrokeLineJoin.Value = viewModel.StrokeLineJoin.Value;
-                this.StrokeDashArray.Value = viewModel.StrokeDashArray.Value;
-                this.StrokeMiterLimit.Value = viewModel.StrokeMiterLimit.Value;
-            }
+            dialogService.Show(nameof(DetailPie), new DialogParameters() { { "ViewModel", this } }, ret => result = ret);
         }
 
         public ReactivePropertySlim<Point> PieCenterPoint { get; } = new ReactivePropertySlim<Point>();

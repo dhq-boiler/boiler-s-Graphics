@@ -85,16 +85,11 @@ namespace boilersGraphics.ViewModels
         public ReactivePropertySlim<E> Object { get; set; } = new ReactivePropertySlim<E>();
         public ReactiveCollection<V> Options { get; set; } = new ReactiveCollection<V>();
         public ReactivePropertySlim<HorizontalAlignment> HorizontalContentAlignment { get; set; } = new ReactivePropertySlim<HorizontalAlignment>();
-        public V PropertyValue
+        public ReactivePropertySlim<V> PropertyValue
         {
             get
             {
-                return (typeof(E).GetProperty(PropertyName.Value).GetValue(Object.Value) as ReactivePropertySlim<V>).Value as V;
-            }
-
-            set
-            {
-                typeof(E).GetProperty(PropertyName.Value).GetValue(Object.Value).GetType().GetProperty("Value").SetValue(typeof(E).GetProperty(PropertyName.Value).GetValue(Object.Value), value);
+                return ((ReactivePropertySlim<V>)typeof(E).GetProperty(PropertyName.Value).GetValue(Object.Value));
             }
         }
 
@@ -131,17 +126,11 @@ namespace boilersGraphics.ViewModels
         public ReactivePropertySlim<E> Object { get; } = new ReactivePropertySlim<E>();
         public ReactiveCollection<V> Options { get; } = new ReactiveCollection<V>();
         public ReactivePropertySlim<HorizontalAlignment> HorizontalContentAlignment { get; set; } = new ReactivePropertySlim<HorizontalAlignment>();
-        public V PropertyValue
+        public ReactivePropertySlim<V> PropertyValue
         {
             get
             {
-                return ((ReactivePropertySlim<V>)typeof(E).GetProperty(PropertyName.Value).GetValue(Object.Value)).Value;
-            }
-
-            set
-            {
-                var rps = typeof(E).GetProperty(PropertyName.Value).GetValue(Object.Value) as ReactivePropertySlim<V>;
-                rps.Value = value;
+                return ((ReactivePropertySlim<V>)typeof(E).GetProperty(PropertyName.Value).GetValue(Object.Value));
             }
         }
 
@@ -178,17 +167,11 @@ namespace boilersGraphics.ViewModels
         public ReactivePropertySlim<E> Object { get; } = new ReactivePropertySlim<E>();
         public ReactiveCollection<V> Options { get; } = new ReactiveCollection<V>();
         public ReactivePropertySlim<HorizontalAlignment> HorizontalContentAlignment { get; set; } = new ReactivePropertySlim<HorizontalAlignment>();
-        public V PropertyValue
+        public ReactivePropertySlim<V> PropertyValue
         {
             get
             {
-                return ((ReactiveProperty<V>)typeof(E).GetProperty(PropertyName.Value).GetValue(Object.Value)).Value;
-            }
-
-            set
-            {
-                var rps = typeof(E).GetProperty(PropertyName.Value).GetValue(Object.Value) as ReactiveProperty<V>;
-                rps.Value = value;
+                return ((ReactivePropertySlim<V>)typeof(E).GetProperty(PropertyName.Value).GetValue(Object.Value));
             }
         }
 
