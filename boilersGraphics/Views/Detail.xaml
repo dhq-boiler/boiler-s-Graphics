@@ -44,6 +44,7 @@
                                                 <ComboBox
                                                     x:Name="ComboBox_PropertyValue"
                                                     HorizontalAlignment="Stretch"
+                                                    IsReadOnly="False"
                                                     IsTabStop="True"
                                                     ItemsSource="{Binding Options}"
                                                     SelectedValue="{Binding PropertyValue.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
@@ -117,15 +118,139 @@
                                                 </ComboBox>
                                             </DataTemplate>
                                         </views:OptionsContentTemplateSelector.ComboBoxTemplate>
-                                        <views:OptionsContentTemplateSelector.TextBoxTemplate>
+                                        <views:OptionsContentTemplateSelector.ReadOnlyComboBoxTemplate>
                                             <DataTemplate>
+                                                <ComboBox
+                                                    x:Name="ComboBox_PropertyValue"
+                                                    HorizontalAlignment="Stretch"
+                                                    IsReadOnly="True"
+                                                    IsTabStop="True"
+                                                    ItemsSource="{Binding Options}"
+                                                    SelectedValue="{Binding PropertyValue.Value, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+                                                    <ComboBox.ItemTemplateSelector>
+                                                        <views:ComboBoxItemTemplateSelector>
+                                                            <DataTemplate DataType="{x:Type PenLineJoin}">
+                                                                <Grid Background="White">
+                                                                    <Grid.ColumnDefinitions>
+                                                                        <ColumnDefinition Width="50" />
+                                                                        <ColumnDefinition Width="50" />
+                                                                    </Grid.ColumnDefinitions>
+                                                                    <Grid.RowDefinitions>
+                                                                        <RowDefinition Height="60" />
+                                                                    </Grid.RowDefinitions>
+                                                                    <Polyline
+                                                                        Grid.Row="0"
+                                                                        Grid.Column="0"
+                                                                        HorizontalAlignment="Center"
+                                                                        VerticalAlignment="Center"
+                                                                        Points="10,20 20,5 30,40 40,20"
+                                                                        Stroke="Black"
+                                                                        StrokeLineJoin="{Binding}"
+                                                                        StrokeThickness="10" />
+                                                                    <Label
+                                                                        Grid.Row="0"
+                                                                        Grid.Column="1"
+                                                                        VerticalAlignment="Center"
+                                                                        Foreground="Black">
+                                                                        <Label.Content>
+                                                                            <TextBlock Foreground="Black">
+                                                                                <Run Text="{Binding Mode=OneWay}" />
+                                                                            </TextBlock>
+                                                                        </Label.Content>
+                                                                    </Label>
+                                                                </Grid>
+                                                            </DataTemplate>
+                                                            <DataTemplate DataType="{x:Type PenLineCap}">
+                                                                <Grid Background="White">
+                                                                    <Grid.ColumnDefinitions>
+                                                                        <ColumnDefinition Width="65" />
+                                                                        <ColumnDefinition Width="60" />
+                                                                    </Grid.ColumnDefinitions>
+                                                                    <Grid.RowDefinitions>
+                                                                        <RowDefinition Height="30" />
+                                                                    </Grid.RowDefinitions>
+                                                                    <Line
+                                                                        Grid.Row="0"
+                                                                        Grid.Column="0"
+                                                                        Stroke="Black"
+                                                                        StrokeEndLineCap="{Binding}"
+                                                                        StrokeThickness="20"
+                                                                        X1="0"
+                                                                        X2="55"
+                                                                        Y1="15"
+                                                                        Y2="15" />
+                                                                    <Label
+                                                                        Grid.Row="0"
+                                                                        Grid.Column="1"
+                                                                        VerticalAlignment="Center"
+                                                                        Foreground="Black">
+                                                                        <Label.Content>
+                                                                            <TextBlock Foreground="Black">
+                                                                                <Run Text="{Binding Mode=OneWay}" />
+                                                                            </TextBlock>
+                                                                        </Label.Content>
+                                                                    </Label>
+                                                                </Grid>
+                                                            </DataTemplate>
+                                                        </views:ComboBoxItemTemplateSelector>
+                                                    </ComboBox.ItemTemplateSelector>
+                                                </ComboBox>
+                                            </DataTemplate>
+                                        </views:OptionsContentTemplateSelector.ReadOnlyComboBoxTemplate>
+                                        <views:OptionsContentTemplateSelector.TextBoxTemplate>
+                                            <!--<DataTemplate>
                                                 <TextBox
                                                     HorizontalAlignment="Stretch"
                                                     HorizontalContentAlignment="{Binding HorizontalContentAlignment.Value}"
                                                     IsTabStop="True"
                                                     Text="{Binding PropertyValue.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                            </DataTemplate>
+                                            </DataTemplate>-->
+                                            <HierarchicalDataTemplate ItemsSource="{Binding}">
+                                                <TextBox
+                                                    HorizontalAlignment="Stretch"
+                                                    HorizontalContentAlignment="{Binding HorizontalContentAlignment.Value}"
+                                                    IsReadOnly="False"
+                                                    IsTabStop="True"
+                                                    Text="{Binding PropertyValue.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                                <HierarchicalDataTemplate.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <TextBox
+                                                            HorizontalAlignment="Stretch"
+                                                            HorizontalContentAlignment="{Binding HorizontalContentAlignment.Value}"
+                                                            IsReadOnly="False"
+                                                            IsTabStop="True"
+                                                            Text="{Binding PropertyValue.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                                    </DataTemplate>
+                                                </HierarchicalDataTemplate.ItemTemplate>
+                                            </HierarchicalDataTemplate>
                                         </views:OptionsContentTemplateSelector.TextBoxTemplate>
+                                        <views:OptionsContentTemplateSelector.ReadOnlyTextBoxTemplate>
+                                            <!--<DataTemplate>
+                                                <TextBox
+                                                    HorizontalAlignment="Stretch"
+                                                    HorizontalContentAlignment="{Binding HorizontalContentAlignment.Value}"
+                                                    IsTabStop="True"
+                                                    Text="{Binding PropertyValue.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                            </DataTemplate>-->
+                                            <HierarchicalDataTemplate ItemsSource="{Binding}">
+                                                <TextBox
+                                                    HorizontalAlignment="Stretch"
+                                                    HorizontalContentAlignment="{Binding HorizontalContentAlignment.Value}"
+                                                    IsReadOnly="True"
+                                                    IsTabStop="True"
+                                                    Text="{Binding PropertyValue.Value, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                                                <HierarchicalDataTemplate.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <TextBox
+                                                            HorizontalAlignment="Stretch"
+                                                            HorizontalContentAlignment="{Binding HorizontalContentAlignment.Value}"
+                                                            IsReadOnly="True"
+                                                            IsTabStop="True"
+                                                            Text="{Binding PropertyValue.Value, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                                                    </DataTemplate>
+                                                </HierarchicalDataTemplate.ItemTemplate>
+                                            </HierarchicalDataTemplate>
+                                        </views:OptionsContentTemplateSelector.ReadOnlyTextBoxTemplate>
                                     </views:OptionsContentTemplateSelector>
                                 </GridViewColumn.CellTemplateSelector>
                             </GridViewColumn>

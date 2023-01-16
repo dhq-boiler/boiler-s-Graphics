@@ -6,6 +6,7 @@ using Prism.Services.Dialogs;
 using Prism.Unity;
 using Reactive.Bindings;
 using System;
+using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -37,15 +38,15 @@ namespace boilersGraphics.ViewModels
             set { SetProperty(ref _FileHeight, value); }
         }
 
-        public ReactivePropertySlim<Rect> ClippingOriginRect { get; } = new ReactivePropertySlim<Rect>();
+        public ReactivePropertySlim<Rect> ClippingOriginRect { get; set; } = new ReactivePropertySlim<Rect>();
 
-        public ReactivePropertySlim<System.Windows.Thickness> Margin { get; } = new ReactivePropertySlim<System.Windows.Thickness>();
+        public ReactivePropertySlim<System.Windows.Thickness> Margin { get; set; } = new ReactivePropertySlim<System.Windows.Thickness>();
 
-        public ReactivePropertySlim<SelectableDesignerItemViewModelBase> ClipObject { get; set; } = new ReactivePropertySlim<SelectableDesignerItemViewModelBase>();
+        public ReactivePropertySlim<DesignerItemViewModelBase> ClipObject { get; set; } = new ReactivePropertySlim<DesignerItemViewModelBase>();
 
         public override bool SupportsPropertyDialog => true;
 
-        public ReactivePropertySlim<BitmapImage> EmbeddedImage { get; } = new ReactivePropertySlim<BitmapImage>();
+        public ReactivePropertySlim<BitmapImage> EmbeddedImage { get; set; } = new ReactivePropertySlim<BitmapImage>();
 
         public PictureDesignerItemViewModel(int id, DiagramViewModel parent, double left, double top)
             : base(id, parent, left, top)
@@ -86,11 +87,12 @@ namespace boilersGraphics.ViewModels
                                     {
                                         case "Left":
                                             {
-                                                var left = Margin.Value.Left;
-                                                var top = Margin.Value.Top;
-                                                var right = Margin.Value.Right;
-                                                var bottom = Margin.Value.Bottom;
-                                                left -= PathGeometryNoRotate.Value.Bounds.X - (double)left;
+                                                var left = -(ClipObject.Value.Left.Value - ClippingOriginRect.Value.Left);
+                                                var top = -(ClipObject.Value.Top.Value - ClippingOriginRect.Value.Top);
+                                                var right = -(ClippingOriginRect.Value.Right - ClipObject.Value.Right.Value);
+                                                var bottom = -(ClippingOriginRect.Value.Bottom - ClipObject.Value.Bottom.Value);
+                                                //Left.Value = -left;
+                                                //Top.Value = -top;
                                                 Margin.Value = new System.Windows.Thickness(
                                                     left,
                                                     top,
@@ -100,11 +102,12 @@ namespace boilersGraphics.ViewModels
                                             break;
                                         case "Top":
                                             {
-                                                var left = Margin.Value.Left;
-                                                var top = Margin.Value.Top;
-                                                var right = Margin.Value.Right;
-                                                var bottom = Margin.Value.Bottom;
-                                                top -= PathGeometryNoRotate.Value.Bounds.Y - (double)top;
+                                                var left = -(ClipObject.Value.Left.Value - ClippingOriginRect.Value.Left);
+                                                var top = -(ClipObject.Value.Top.Value - ClippingOriginRect.Value.Top);
+                                                var right = -(ClippingOriginRect.Value.Right - ClipObject.Value.Right.Value);
+                                                var bottom = -(ClippingOriginRect.Value.Bottom - ClipObject.Value.Bottom.Value);
+                                                //Left.Value = -left;
+                                                //Top.Value = -top;
                                                 Margin.Value = new System.Windows.Thickness(
                                                     left,
                                                     top,
@@ -114,62 +117,62 @@ namespace boilersGraphics.ViewModels
                                             break;
                                         case "Width":
                                             {
-                                                var left = Margin.Value.Left;
-                                                var top = Margin.Value.Top;
-                                                var right = Margin.Value.Right;
-                                                var bottom = Margin.Value.Bottom;
-                                                var newWidth = Width.Value + α;
-                                                if (Width.Value <= 0)
-                                                {
-                                                    break;
-                                                }
-                                                var coefficient = newWidth / Width.Value;
-                                                if (coefficient <= 0d)
-                                                {
-                                                    coefficient = 1d;
-                                                }
-                                                var newRect = new Rect(ClippingOriginRect.Value.Left,
-                                                                        ClippingOriginRect.Value.Top,
-                                                                        ClippingOriginRect.Value.Width * coefficient,
-                                                                        ClippingOriginRect.Value.Height);
-                                                ClippingOriginRect.Value = newRect;
-                                                left -= PathGeometryNoRotate.Value.Bounds.Right - ((double)newValue - left);
-                                                right = -(ClippingOriginRect.Value.Width - newWidth + left);
-                                                Margin.Value = new System.Windows.Thickness(
-                                                    left,
-                                                    top,
-                                                    right,
-                                                    bottom);
+                                                //var left = Margin.Value.Left;
+                                                //var top = Margin.Value.Top;
+                                                //var right = Margin.Value.Right;
+                                                //var bottom = Margin.Value.Bottom;
+                                                //var newWidth = Width.Value + α;
+                                                //if (Width.Value <= 0)
+                                                //{
+                                                //    break;
+                                                //}
+                                                //var coefficient = newWidth / Width.Value;
+                                                //if (coefficient <= 0d)
+                                                //{
+                                                //    coefficient = 1d;
+                                                //}
+                                                //var newRect = new Rect(ClippingOriginRect.Value.Left,
+                                                //                        ClippingOriginRect.Value.Top,
+                                                //                        ClippingOriginRect.Value.Width * coefficient,
+                                                //                        ClippingOriginRect.Value.Height);
+                                                //ClippingOriginRect.Value = newRect;
+                                                //left -= PathGeometryNoRotate.Value.Bounds.Right - ((double)newValue - left);
+                                                //right = -(ClippingOriginRect.Value.Width - newWidth + left);
+                                                //Margin.Value = new System.Windows.Thickness(
+                                                //    left,
+                                                //    top,
+                                                //    right,
+                                                //    bottom);
                                             }
                                             break;
                                         case "Height":
                                             {
-                                                var left = Margin.Value.Left;
-                                                var top = Margin.Value.Top;
-                                                var right = Margin.Value.Right;
-                                                var bottom = Margin.Value.Bottom;
-                                                var newHeight = Height.Value + α;
-                                                if (Height.Value <= 0)
-                                                {
-                                                    break;
-                                                }
-                                                var coefficient = newHeight / Height.Value;
-                                                if (coefficient <= 0d)
-                                                {
-                                                    coefficient = 1d;
-                                                }
-                                                var newRect = new Rect(ClippingOriginRect.Value.Left,
-                                                                        ClippingOriginRect.Value.Top,
-                                                                        ClippingOriginRect.Value.Width,
-                                                                        ClippingOriginRect.Value.Height * coefficient);
-                                                ClippingOriginRect.Value = newRect;
-                                                top -= PathGeometryNoRotate.Value.Bounds.Bottom - ((double)newValue - top);
-                                                bottom = -(ClippingOriginRect.Value.Height - newHeight + top);
-                                                Margin.Value = new System.Windows.Thickness(
-                                                    left,
-                                                    top,
-                                                    right,
-                                                    bottom);
+                                                //var left = Margin.Value.Left;
+                                                //var top = Margin.Value.Top;
+                                                //var right = Margin.Value.Right;
+                                                //var bottom = Margin.Value.Bottom;
+                                                //var newHeight = Height.Value + α;
+                                                //if (Height.Value <= 0)
+                                                //{
+                                                //    break;
+                                                //}
+                                                //var coefficient = newHeight / Height.Value;
+                                                //if (coefficient <= 0d)
+                                                //{
+                                                //    coefficient = 1d;
+                                                //}
+                                                //var newRect = new Rect(ClippingOriginRect.Value.Left,
+                                                //                        ClippingOriginRect.Value.Top,
+                                                //                        ClippingOriginRect.Value.Width,
+                                                //                        ClippingOriginRect.Value.Height * coefficient);
+                                                //ClippingOriginRect.Value = newRect;
+                                                //top -= PathGeometryNoRotate.Value.Bounds.Bottom - ((double)newValue - top);
+                                                //bottom = -(ClippingOriginRect.Value.Height - newHeight + top);
+                                                //Margin.Value = new System.Windows.Thickness(
+                                                //    left,
+                                                //    top,
+                                                //    right,
+                                                //    bottom);
                                             }
                                             break;
                                     }
