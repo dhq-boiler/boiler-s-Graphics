@@ -1,10 +1,15 @@
-﻿using System.Windows;
+﻿using Prism.Regions;
+using System.Windows;
 using System.Windows.Media;
 
 namespace boilersGraphics.ViewModels
 {
     class DetailEllipseViewModel : DetailViewModelBase<NEllipseViewModel>
     {
+        public DetailEllipseViewModel(IRegionManager regionManager) : base(regionManager)
+        {
+        }
+
         public override void SetProperties()
         {
             Properties.Add(new PropertyOptionsValueCombinationStruct<NEllipseViewModel, PenLineJoin>(ViewModel.Value, "StrokeLineJoin", new PenLineJoin[] {

@@ -1,5 +1,4 @@
-﻿using Prism.Regions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,14 +16,13 @@ using System.Windows.Shapes;
 namespace boilersGraphics.Views
 {
     /// <summary>
-    /// DetailPathGeometry.xaml の相互作用ロジック
+    /// Detail.xaml の相互作用ロジック
     /// </summary>
-    public partial class DetailPicture: UserControl
+    public partial class Detail : UserControl
     {
-        public DetailPicture(IRegionManager regionManager)
+        public Detail()
         {
             InitializeComponent();
-            RegionManager.SetRegionManager(_DetailRegion, regionManager);
         }
     }
 }

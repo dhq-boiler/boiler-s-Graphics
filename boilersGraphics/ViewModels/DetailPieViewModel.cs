@@ -1,10 +1,15 @@
-﻿using System.Windows;
+﻿using Prism.Regions;
+using System.Windows;
 using System.Windows.Media;
 
 namespace boilersGraphics.ViewModels
 {
     class DetailPieViewModel : DetailViewModelBase<NPieViewModel>
     {
+        public DetailPieViewModel(IRegionManager regionManager) : base(regionManager)
+        {
+        }
+
         public override void SetProperties()
         {
             Properties.Add(new PropertyOptionsValueCombinationStruct<NPieViewModel, PenLineJoin>(ViewModel.Value, "StrokeLineJoin", new PenLineJoin[] {

@@ -1,7 +1,8 @@
-﻿using Prism.Mvvm;
+﻿using boilersGraphics.Views;
+using Prism.Mvvm;
+using Prism.Regions;
 using Prism.Services.Dialogs;
 using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -9,10 +10,11 @@ using System.Reactive.Disposables;
 
 namespace boilersGraphics.ViewModels
 {
-    public class DetailViewModelBase<T> : BindableBase, IDialogAware, IDisposable where T : SelectableDesignerItemViewModelBase
+    public class DetailViewModelBase<T> : BindableBase, IDialogAware, INavigationAware, IDisposable where T : SelectableDesignerItemViewModelBase
     {
         private CompositeDisposable disposables = new CompositeDisposable();
         private bool disposedValue;
+        private readonly IRegionManager regionManager;
 
         public string Title => "プロパティ";
 
@@ -20,8 +22,9 @@ namespace boilersGraphics.ViewModels
 
         public event Action<IDialogResult> RequestClose;
 
-        public DetailViewModelBase()
+        public DetailViewModelBase(IRegionManager regionManager)
         {
+            this.regionManager = regionManager;
         }
 
         public bool CanCloseDialog()
@@ -38,11 +41,13 @@ namespace boilersGraphics.ViewModels
 
         public void OnDialogClosed()
         {
+            regionManager.Regions.Remove("DetailRegion");
         }
 
         public void OnDialogOpened(IDialogParameters parameters)
         {
             ViewModel.Value = parameters.GetValue<T>("ViewModel");
+            regionManager.RequestNavigate("DetailRegion", nameof(Detail));
             SetProperties();
             var properties = Properties.OrderBy(x => x.PropertyName.Value).ToList();
             Properties.Clear();
@@ -71,6 +76,19 @@ namespace boilersGraphics.ViewModels
             // このコードを変更しないでください。クリーンアップ コードを 'Dispose(bool disposing)' メソッドに記述します
             Dispose(disposing: true);
             GC.SuppressFinalize(this);
+        }
+
+        public void OnNavigatedTo(NavigationContext navigationContext)
+        {
+        }
+
+        public bool IsNavigationTarget(NavigationContext navigationContext)
+        {
+            return false;
+        }
+
+        public void OnNavigatedFrom(NavigationContext navigationContext)
+        {
         }
     }
 }

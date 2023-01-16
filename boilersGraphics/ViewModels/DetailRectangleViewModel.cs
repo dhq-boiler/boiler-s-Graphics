@@ -1,10 +1,15 @@
-﻿using System.Windows;
+﻿using Prism.Regions;
+using System.Windows;
 using System.Windows.Media;
 
 namespace boilersGraphics.ViewModels
 {
     public class DetailRectangleViewModel : DetailViewModelBase<NRectangleViewModel>
     {
+        public DetailRectangleViewModel(IRegionManager regionManager) : base(regionManager)
+        {
+        }
+
         public override void SetProperties()
         {
             Properties.Add(new PropertyOptionsValueCombinationStruct<NRectangleViewModel, PenLineJoin>(ViewModel.Value, "StrokeLineJoin", new PenLineJoin[] {
