@@ -85,12 +85,6 @@ namespace boilersGraphics.ViewModels
             HorizontalContentAlignment.Value = horizontalContentAlignment;
         }
 
-        public PropertyOptionsValueCombinationClass(E obj, string parent, string name, HorizontalAlignment horizontalContentAlignment)
-            : this(obj, name, horizontalContentAlignment)
-        {
-            Parent = new ReactivePropertySlim<string>(parent);
-        }
-
         public ReactivePropertySlim<E> Object { get; set; } = new ReactivePropertySlim<E>();
         public ReactiveCollection<V> Options { get; set; } = new ReactiveCollection<V>();
         public ReactivePropertySlim<HorizontalAlignment> HorizontalContentAlignment { get; set; } = new ReactivePropertySlim<HorizontalAlignment>();
@@ -98,34 +92,33 @@ namespace boilersGraphics.ViewModels
         {
             get
             {
-                if (Parent is not null && !string.IsNullOrEmpty(Parent.Value))
+                var splits = PropertyName.Value.Split('.');
+                object obj = Object.Value;
+                foreach (var split in splits.Except(new string[] { splits.Last() }))
                 {
-                    var a = ((IReactiveProperty)typeof(E).GetProperty(Parent.Value).GetValue(Object.Value)).Value;
-                    return a is null ? null : ((ReactivePropertySlim<V>)a.GetType().GetProperty(PropertyName.Value).GetValue(a));
+                    var a = ((IReactiveProperty)typeof(E).GetProperty(split).GetValue(obj)).Value;
+                    obj = a;
                 }
-                return ((ReactivePropertySlim<V>)typeof(E).GetProperty(PropertyName.Value).GetValue(Object.Value));
+                if (obj is null)
+                    return null;
+                return ((ReactivePropertySlim<V>)typeof(E).GetProperty(splits.Last()).GetValue(obj));
             }
             set
             {
-                if (Parent is not null && !string.IsNullOrEmpty(Parent.Value))
+                var splits = PropertyName.Value.Split('.');
+                object obj = Object.Value;
+                foreach (var split in splits.Except(new string[] { splits.Last() }))
                 {
-                    var a = ((IReactiveProperty)typeof(E).GetProperty(Parent.Value).GetValue(Object.Value)).Value;
-                    if (a is null)
-                    {
-
-                    }
-                    else
-                    {
-                        a.GetType().GetProperty(PropertyName.Value).SetValue(a, value);
-                    }
+                    var a = ((IReactiveProperty)typeof(E).GetProperty(split).GetValue(obj)).Value;
+                    obj = a;
                 }
-                typeof(E).GetProperty(PropertyName.Value).SetValue(Object.Value, value);
+                if (obj is null)
+                    return;
+                typeof(E).GetProperty(splits.Last()).SetValue(obj, value);
             }
         }
 
         public override string Type => (Options.Count() > 0) ? "ComboBox" : "TextBox";
-
-        public ReactivePropertySlim<string> Parent { get; }
     }
 
     public class PropertyOptionsValueCombinationStruct<E, V> : PropertyOptionsValueCombination where V : struct
@@ -155,12 +148,6 @@ namespace boilersGraphics.ViewModels
             HorizontalContentAlignment.Value = horizontalContentAlignment;
         }
 
-        public PropertyOptionsValueCombinationStruct(E obj, string parent, string name, HorizontalAlignment horizontalContentAlignment)
-            : this(obj, name, horizontalContentAlignment)
-        {
-            Parent = new ReactivePropertySlim<string>(parent);
-        }
-
         public ReactivePropertySlim<E> Object { get; } = new ReactivePropertySlim<E>();
         public ReactiveCollection<V> Options { get; } = new ReactiveCollection<V>();
         public ReactivePropertySlim<HorizontalAlignment> HorizontalContentAlignment { get; set; } = new ReactivePropertySlim<HorizontalAlignment>();
@@ -168,34 +155,33 @@ namespace boilersGraphics.ViewModels
         {
             get
             {
-                if (Parent is not null && !string.IsNullOrEmpty(Parent.Value))
+                var splits = PropertyName.Value.Split('.');
+                object obj = Object.Value;
+                foreach (var split in splits.Except(new string[] { splits.Last() }))
                 {
-                    var a = ((IReactiveProperty)typeof(E).GetProperty(Parent.Value).GetValue(Object.Value)).Value;
-                    return a is null ? default : ((ReactivePropertySlim<V>)a.GetType().GetProperty(PropertyName.Value).GetValue(a));
+                    var a = ((IReactiveProperty)typeof(E).GetProperty(split).GetValue(obj)).Value;
+                    obj = a;
                 }
-                return ((ReactivePropertySlim<V>)typeof(E).GetProperty(PropertyName.Value).GetValue(Object.Value));
+                if (obj is null)
+                    return null;
+                return ((ReactivePropertySlim<V>)typeof(E).GetProperty(splits.Last()).GetValue(obj));
             }
             set
             {
-                if (Parent is not null && !string.IsNullOrEmpty(Parent.Value))
+                var splits = PropertyName.Value.Split('.');
+                object obj = Object.Value;
+                foreach (var split in splits.Except(new string[] { splits.Last() }))
                 {
-                    var a = ((IReactiveProperty)typeof(E).GetProperty(Parent.Value).GetValue(Object.Value)).Value;
-                    if (a is null)
-                    {
-
-                    }
-                    else
-                    {
-                        a.GetType().GetProperty(PropertyName.Value).SetValue(a, value);
-                    }
+                    var a = ((IReactiveProperty)typeof(E).GetProperty(split).GetValue(obj)).Value;
+                    obj = a;
                 }
-                typeof(E).GetProperty(PropertyName.Value).SetValue(Object.Value, value);
+                if (obj is null)
+                    return;
+                typeof(E).GetProperty(splits.Last()).SetValue(obj, value);
             }
         }
 
         public override string Type => (Options.Count() > 0) ? "ComboBox" : "TextBox";
-
-        public ReactivePropertySlim<string> Parent { get; }
     }
 
     public class PropertyOptionsValueCombinationReadOnlyStruct<E, V> : PropertyOptionsValueCombination where V : struct
@@ -225,12 +211,6 @@ namespace boilersGraphics.ViewModels
             HorizontalContentAlignment.Value = horizontalContentAlignment;
         }
 
-        public PropertyOptionsValueCombinationReadOnlyStruct(E obj, string parent, string name, HorizontalAlignment horizontalContentAlignment)
-            : this(obj, name, horizontalContentAlignment)
-        {
-            Parent = new ReactivePropertySlim<string>(parent);
-        }
-
         public ReactivePropertySlim<E> Object { get; } = new ReactivePropertySlim<E>();
         public ReactiveCollection<V> Options { get; } = new ReactiveCollection<V>();
         public ReactivePropertySlim<HorizontalAlignment> HorizontalContentAlignment { get; set; } = new ReactivePropertySlim<HorizontalAlignment>();
@@ -238,12 +218,16 @@ namespace boilersGraphics.ViewModels
         {
             get
             {
-                if (Parent is not null && !string.IsNullOrEmpty(Parent.Value))
+                var splits = PropertyName.Value.Split('.');
+                object obj = Object.Value;
+                foreach (var split in splits.Except(new string[] { splits.Last() }))
                 {
-                    var a = ((IReactiveProperty)typeof(E).GetProperty(Parent.Value).GetValue(Object.Value)).Value;
-                    return a is null ? default : ((ReadOnlyReactivePropertySlim<V>)a.GetType().GetProperty(PropertyName.Value).GetValue(a));
+                    var a = ((IReactiveProperty)typeof(E).GetProperty(split).GetValue(obj)).Value;
+                    obj = a;
                 }
-                return ((ReadOnlyReactivePropertySlim<V>)typeof(E).GetProperty(PropertyName.Value).GetValue(Object.Value));
+                if (obj is null)
+                    return null;
+                return ((ReadOnlyReactivePropertySlim<V>)typeof(E).GetProperty(splits.Last()).GetValue(obj));
             }
             set
             {
@@ -252,8 +236,6 @@ namespace boilersGraphics.ViewModels
         }
 
         public override string Type => (Options.Count() > 0) ? "ReadOnlyComboBox" : "ReadOnlyTextBox";
-
-        public ReactivePropertySlim<string> Parent { get; }
     }
 
     public class PropertyOptionsValueCombinationStructRP<E, V> : PropertyOptionsValueCombination where V : struct
@@ -283,54 +265,40 @@ namespace boilersGraphics.ViewModels
             HorizontalContentAlignment.Value = horizontalContentAlignment;
         }
 
-        public PropertyOptionsValueCombinationStructRP(E obj, string parent, string name, HorizontalAlignment horizontalContentAlignment)
-            : this(obj, name, horizontalContentAlignment)
-        {
-            Parent = new ReactivePropertySlim<string>(parent);
-        }
-
         public ReactivePropertySlim<E> Object { get; } = new ReactivePropertySlim<E>();
         public ReactiveCollection<V> Options { get; } = new ReactiveCollection<V>();
         public ReactivePropertySlim<HorizontalAlignment> HorizontalContentAlignment { get; set; } = new ReactivePropertySlim<HorizontalAlignment>();
-        //public ReactiveProperty<V> PropertyValue
-        //{
-        //    get
-        //    {
-        //        return ((ReactiveProperty<V>)typeof(E).GetProperty(PropertyName.Value).GetValue(Object.Value));
-        //    }
-        //}
         public ReactiveProperty<V> PropertyValue
         {
             get
             {
-                if (Parent is not null && !string.IsNullOrEmpty(Parent.Value))
+                var splits = PropertyName.Value.Split('.');
+                object obj = Object.Value;
+                foreach (var split in splits.Except(new string[] { splits.Last() }))
                 {
-                    var a = ((IReactiveProperty)typeof(E).GetProperty(Parent.Value).GetValue(Object.Value)).Value;
-                    return a is null ? default : ((ReactiveProperty<V>)a.GetType().GetProperty(PropertyName.Value).GetValue(a));
+                    var a = ((IReactiveProperty)typeof(E).GetProperty(split).GetValue(obj)).Value;
+                    obj = a;
                 }
-                return ((ReactiveProperty<V>)typeof(E).GetProperty(PropertyName.Value).GetValue(Object.Value));
+                if (obj is null)
+                    return null;
+                return ((ReactiveProperty<V>)typeof(E).GetProperty(splits.Last()).GetValue(obj));
             }
             set
             {
-                if (Parent is not null && !string.IsNullOrEmpty(Parent.Value))
+                var splits = PropertyName.Value.Split('.');
+                object obj = Object.Value;
+                foreach (var split in splits.Except(new string[] { splits.Last() }))
                 {
-                    var a = ((IReactiveProperty)typeof(E).GetProperty(Parent.Value).GetValue(Object.Value)).Value;
-                    if (a is null)
-                    {
-
-                    }
-                    else
-                    {
-                        a.GetType().GetProperty(PropertyName.Value).SetValue(a, value);
-                    }
+                    var a = ((IReactiveProperty)typeof(E).GetProperty(split).GetValue(obj)).Value;
+                    obj = a;
                 }
-                typeof(E).GetProperty(PropertyName.Value).SetValue(Object.Value, value);
+                if (obj is null)
+                    return;
+                typeof(E).GetProperty(splits.Last()).SetValue(obj, value);
             }
         }
 
         public override string Type => (Options.Count() > 0) ? "ComboBox" : "TextBox";
-
-        public ReactivePropertySlim<string> Parent { get; }
     }
 
     public class PropertyOptionsValueCombinationReadOnlyStructRP<E, V> : PropertyOptionsValueCombination where V : struct
@@ -360,32 +328,23 @@ namespace boilersGraphics.ViewModels
             HorizontalContentAlignment.Value = horizontalContentAlignment;
         }
 
-        public PropertyOptionsValueCombinationReadOnlyStructRP(E obj, string parent, string name, HorizontalAlignment horizontalContentAlignment)
-            : this(obj, name, horizontalContentAlignment)
-        {
-            Parent = new ReactivePropertySlim<string>(parent);
-        }
-
         public ReactivePropertySlim<E> Object { get; } = new ReactivePropertySlim<E>();
         public ReactiveCollection<V> Options { get; } = new ReactiveCollection<V>();
         public ReactivePropertySlim<HorizontalAlignment> HorizontalContentAlignment { get; set; } = new ReactivePropertySlim<HorizontalAlignment>();
-        //public ReactiveProperty<V> PropertyValue
-        //{
-        //    get
-        //    {
-        //        return ((ReactiveProperty<V>)typeof(E).GetProperty(PropertyName.Value).GetValue(Object.Value));
-        //    }
-        //}
         public ReadOnlyReactiveProperty<V> PropertyValue
         {
             get
             {
-                if (Parent is not null && !string.IsNullOrEmpty(Parent.Value))
+                var splits = PropertyName.Value.Split('.');
+                object obj = Object.Value;
+                foreach (var split in splits.Except(new string[] { splits.Last() }))
                 {
-                    var a = ((IReactiveProperty)typeof(E).GetProperty(Parent.Value).GetValue(Object.Value)).Value;
-                    return a is null ? default : ((ReadOnlyReactiveProperty<V>)a.GetType().GetProperty(PropertyName.Value).GetValue(a));
+                    var a = ((IReactiveProperty)typeof(E).GetProperty(split).GetValue(obj)).Value;
+                    obj = a;
                 }
-                return ((ReadOnlyReactiveProperty<V>)typeof(E).GetProperty(PropertyName.Value).GetValue(Object.Value));
+                if (obj is null)
+                    return null;
+                return ((ReadOnlyReactiveProperty<V>)typeof(E).GetProperty(splits.Last()).GetValue(obj));
             }
             set
             {
@@ -393,7 +352,5 @@ namespace boilersGraphics.ViewModels
         }
 
         public override string Type => (Options.Count() > 0) ? "ReadOnlyComboBox" : "ReadOnlyTextBox";
-
-        public ReactivePropertySlim<string> Parent { get; }
     }
 }
