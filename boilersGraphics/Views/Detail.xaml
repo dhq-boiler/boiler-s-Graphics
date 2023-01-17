@@ -151,9 +151,9 @@
                                                                         Grid.Row="0"
                                                                         Grid.Column="1"
                                                                         VerticalAlignment="Center"
-                                                                        Foreground="Black">
+                                                                        Foreground="Gray">
                                                                         <Label.Content>
-                                                                            <TextBlock Foreground="Black">
+                                                                            <TextBlock Foreground="Gray">
                                                                                 <Run Text="{Binding Mode=OneWay}" />
                                                                             </TextBlock>
                                                                         </Label.Content>
@@ -236,6 +236,7 @@
                                                 <TextBox
                                                     HorizontalAlignment="Stretch"
                                                     HorizontalContentAlignment="{Binding HorizontalContentAlignment.Value}"
+                                                    Foreground="Gray"
                                                     IsReadOnly="True"
                                                     IsTabStop="True"
                                                     Text="{Binding PropertyValue.Value, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
@@ -244,6 +245,7 @@
                                                         <TextBox
                                                             HorizontalAlignment="Stretch"
                                                             HorizontalContentAlignment="{Binding HorizontalContentAlignment.Value}"
+                                                            Foreground="Gray"
                                                             IsReadOnly="True"
                                                             IsTabStop="True"
                                                             Text="{Binding PropertyValue.Value, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
