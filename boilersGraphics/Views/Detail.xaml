@@ -222,6 +222,24 @@
                                                     Text="{Binding PropertyValue.Value, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
                                             </DataTemplate>
                                         </views:OptionsContentTemplateSelector.ReadOnlyTextBoxTemplate>
+                                        <views:OptionsContentTemplateSelector.CheckBoxTemplate>
+                                            <DataTemplate>
+                                                <CheckBox
+                                                    HorizontalContentAlignment="{Binding HorizontalContentAlignment.Value}"
+                                                    IsChecked="{Binding PropertyValue.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                    IsEnabled="True"
+                                                    IsTabStop="True" />
+                                            </DataTemplate>
+                                        </views:OptionsContentTemplateSelector.CheckBoxTemplate>
+                                        <views:OptionsContentTemplateSelector.ReadOnlyCheckBoxTemplate>
+                                            <DataTemplate>
+                                                <CheckBox
+                                                    HorizontalContentAlignment="{Binding HorizontalContentAlignment.Value}"
+                                                    IsChecked="{Binding PropertyValue.Value, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                                    IsEnabled="False"
+                                                    IsTabStop="True" />
+                                            </DataTemplate>
+                                        </views:OptionsContentTemplateSelector.ReadOnlyCheckBoxTemplate>
                                     </views:OptionsContentTemplateSelector>
                                 </GridViewColumn.CellTemplateSelector>
                             </GridViewColumn>

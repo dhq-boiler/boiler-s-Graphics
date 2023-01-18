@@ -16,8 +16,10 @@ namespace boilersGraphics.Views
         }
         public DataTemplate ComboBoxTemplate { get; set; }
         public DataTemplate TextBoxTemplate { get; set; }
+        public DataTemplate CheckBoxTemplate { get; set; }
         public DataTemplate ReadOnlyComboBoxTemplate { get; set; }
         public DataTemplate ReadOnlyTextBoxTemplate { get; set; }
+        public DataTemplate ReadOnlyCheckBoxTemplate { get; set; }
 
         public override DataTemplate SelectTemplate(object item, DependencyObject container)
         {
@@ -34,6 +36,10 @@ namespace boilersGraphics.Views
             {
                 return ReadOnlyTextBoxTemplate;
             }
+            else if (propertyOptionsValueCombination.Type == "ReadOnlyCheckBox")
+            {
+                return ReadOnlyCheckBoxTemplate;
+            }
             if (propertyOptionsValueCombination.Type == "ComboBox")
             {
                 return ComboBoxTemplate;
@@ -41,6 +47,10 @@ namespace boilersGraphics.Views
             else if (propertyOptionsValueCombination.Type == "TextBox")
             {
                 return TextBoxTemplate;
+            }
+            else if (propertyOptionsValueCombination.Type == "CheckBox")
+            {
+                return CheckBoxTemplate;
             }
             else
             {

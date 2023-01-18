@@ -120,7 +120,7 @@ namespace boilersGraphics.ViewModels
             }
         }
 
-        public override string Type => (Options.Count() > 0) ? "ComboBox" : "TextBox";
+        public override string Type => typeof(V) == typeof(bool) ? "CheckBox" : (Options.Count() > 0) ? "ComboBox" : "TextBox";
     }
 
     public class PropertyOptionsValueCombinationReadOnlyClass<E, V> : PropertyOptionsValueCombination where V : class
@@ -175,7 +175,7 @@ namespace boilersGraphics.ViewModels
             }
         }
 
-        public override string Type => (Options.Count() > 0) ? "ReadOnlyComboBox" : "ReadOnlyTextBox";
+        public override string Type => typeof(V) == typeof(bool) ? "ReadOnlyCheckBox" : (Options.Count() > 0) ? "ReadOnlyComboBox" : "ReadOnlyTextBox";
     }
 
     public class PropertyOptionsValueCombinationStruct<E, V> : PropertyOptionsValueCombination where V : struct
@@ -240,7 +240,7 @@ namespace boilersGraphics.ViewModels
             }
         }
 
-        public override string Type => (Options.Count() > 0) ? "ComboBox" : "TextBox";
+        public override string Type => typeof(V) == typeof(bool) ? "CheckBox" : (Options.Count() > 0) ? "ComboBox" : "TextBox";
     }
 
     public class PropertyOptionsValueCombinationReadOnlyStruct<E, V> : PropertyOptionsValueCombination where V : struct
@@ -297,7 +297,7 @@ namespace boilersGraphics.ViewModels
             }
         }
 
-        public override string Type => (Options.Count() > 0) ? "ReadOnlyComboBox" : "ReadOnlyTextBox";
+        public override string Type => typeof(V) == typeof(bool) ? "ReadOnlyCheckBox" : (Options.Count() > 0) ? "ReadOnlyComboBox" : "ReadOnlyTextBox";
     }
 
     public class PropertyOptionsValueCombinationStructRP<E, V> : PropertyOptionsValueCombination where V : struct
@@ -362,7 +362,7 @@ namespace boilersGraphics.ViewModels
             }
         }
 
-        public override string Type => (Options.Count() > 0) ? "ComboBox" : "TextBox";
+        public override string Type => typeof(V) == typeof(bool) ? "CheckBox" : (Options.Count() > 0) ? "ComboBox" : "TextBox";
     }
 
     public class PropertyOptionsValueCombinationReadOnlyStructRP<E, V> : PropertyOptionsValueCombination where V : struct
@@ -417,6 +417,6 @@ namespace boilersGraphics.ViewModels
             }
         }
 
-        public override string Type => (Options.Count() > 0) ? "ReadOnlyComboBox" : "ReadOnlyTextBox";
+        public override string Type => typeof(V) == typeof(bool) ? "ReadOnlyCheckBox" : (Options.Count() > 0) ? "ReadOnlyComboBox" : "ReadOnlyTextBox";
     }
 }
