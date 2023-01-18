@@ -43,6 +43,7 @@
                                             <DataTemplate>
                                                 <ComboBox
                                                     x:Name="ComboBox_PropertyValue"
+                                                    MaxWidth="500"
                                                     HorizontalAlignment="Stretch"
                                                     IsReadOnly="False"
                                                     IsTabStop="True"
@@ -122,6 +123,7 @@
                                             <DataTemplate>
                                                 <ComboBox
                                                     x:Name="ComboBox_PropertyValue"
+                                                    MaxWidth="500"
                                                     HorizontalAlignment="Stretch"
                                                     IsReadOnly="True"
                                                     IsTabStop="True"
@@ -200,6 +202,7 @@
                                         <views:OptionsContentTemplateSelector.TextBoxTemplate>
                                             <DataTemplate>
                                                 <TextBox
+                                                    MaxWidth="500"
                                                     HorizontalAlignment="Stretch"
                                                     HorizontalContentAlignment="{Binding HorizontalContentAlignment.Value}"
                                                     IsReadOnly="False"
@@ -210,6 +213,7 @@
                                         <views:OptionsContentTemplateSelector.ReadOnlyTextBoxTemplate>
                                             <DataTemplate>
                                                 <TextBox
+                                                    MaxWidth="500"
                                                     HorizontalAlignment="Stretch"
                                                     HorizontalContentAlignment="{Binding HorizontalContentAlignment.Value}"
                                                     Foreground="Gray"
