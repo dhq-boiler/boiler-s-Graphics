@@ -388,21 +388,21 @@ namespace boilersGraphics.Helpers
             }
             if (item is LetterDesignerItemViewModel letter)
             {
-                letter.LetterString = designerItemElm.Element("LetterString").Value;
-                letter.SelectedFontFamily = new FontFamilyEx(designerItemElm.Element("SelectedFontFamily").Value);
-                letter.IsBold = bool.Parse(designerItemElm.Element("IsBold").Value);
-                letter.IsItalic = bool.Parse(designerItemElm.Element("IsItalic").Value);
-                letter.FontSize = int.Parse(designerItemElm.Element("FontSize").Value);
-                letter.AutoLineBreak = bool.Parse(designerItemElm.Element("AutoLineBreak").Value);
+                letter.LetterString.Value = designerItemElm.Element("LetterString").Value;
+                letter.SelectedFontFamily.Value = new FontFamilyEx(designerItemElm.Element("SelectedFontFamily").Value);
+                letter.IsBold.Value = bool.Parse(designerItemElm.Element("IsBold").Value);
+                letter.IsItalic.Value = bool.Parse(designerItemElm.Element("IsItalic").Value);
+                letter.FontSize.Value = int.Parse(designerItemElm.Element("FontSize").Value);
+                letter.IsAutoLineBreak.Value = bool.Parse(designerItemElm.Element("AutoLineBreak").Value);
             }
             if (item is LetterVerticalDesignerItemViewModel letterV)
             {
-                letterV.LetterString = designerItemElm.Element("LetterString").Value;
-                letterV.SelectedFontFamily = new FontFamilyEx(designerItemElm.Element("SelectedFontFamily").Value);
-                letterV.IsBold = bool.Parse(designerItemElm.Element("IsBold").Value);
-                letterV.IsItalic = bool.Parse(designerItemElm.Element("IsItalic").Value);
-                letterV.FontSize = int.Parse(designerItemElm.Element("FontSize").Value);
-                letterV.AutoLineBreak = bool.Parse(designerItemElm.Element("AutoLineBreak").Value);
+                letterV.LetterString.Value = designerItemElm.Element("LetterString").Value;
+                letterV.SelectedFontFamily.Value = new FontFamilyEx(designerItemElm.Element("SelectedFontFamily").Value);
+                letterV.IsBold.Value = bool.Parse(designerItemElm.Element("IsBold").Value);
+                letterV.IsItalic.Value = bool.Parse(designerItemElm.Element("IsItalic").Value);
+                letterV.FontSize.Value = int.Parse(designerItemElm.Element("FontSize").Value);
+                letterV.IsAutoLineBreak.Value = bool.Parse(designerItemElm.Element("AutoLineBreak").Value);
             }
             if (item is NPolygonViewModel polygon)
             {

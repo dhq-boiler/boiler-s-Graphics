@@ -1,21 +1,17 @@
 ﻿using boilersGraphics.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Reactive.Bindings;
 
 namespace boilersGraphics.ViewModels
 {
     interface ILetterDesignerItemViewModel
     {
-        bool LetterSettingDialogIsOpen { get; set; }
-        string LetterString { get; set; }
-        FontFamilyEx SelectedFontFamily { get; set; }
-        bool IsBold { get; set; }
-        bool IsItalic { get; set; }
-        int FontSize { get; set; }
-        bool AutoLineBreak { get; set; }
+        ReactivePropertySlim<bool> LetterSettingDialogIsOpen { get; }
+        ReactivePropertySlim<string> LetterString { get;}
+        ReactivePropertySlim<FontFamilyEx> SelectedFontFamily { get; }
+        ReactivePropertySlim<bool> IsBold { get; }
+        ReactivePropertySlim<bool> IsItalic { get; }
+        ReactivePropertySlim<int> FontSize { get; }
+        ReactivePropertySlim<bool> IsAutoLineBreak { get; }
 
         void CloseLetterSettingDialog();
     }

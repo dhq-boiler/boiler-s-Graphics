@@ -49,7 +49,7 @@ namespace boilersGraphics.ViewModels
         public void OnDialogClosed()
         {
             ViewModel.LetterSettingDialogClose -= ViewModel_LetterSettingDialogClose;
-            ViewModel.LetterSettingDialogIsOpen = false;
+            ViewModel.LetterSettingDialogIsOpen.Value = false;
         }
 
         public void OnDialogOpened(IDialogParameters parameters)

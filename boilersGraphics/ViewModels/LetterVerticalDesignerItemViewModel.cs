@@ -36,10 +36,10 @@ namespace boilersGraphics.ViewModels
             double offsetX = 0d;
             int next = 0;
             int allcount = 0;
-            while (allcount < LetterString.Count() && Height.Value > 0)
+            while (allcount < LetterString.Value.Count() && Height.Value > 0)
             {
                 double maxWidth = 0d;
-                var letterString = LetterString.Skip(allcount);
+                var letterString = LetterString.Value.Skip(allcount);
 
                 listLineBreak.Clear();
                 height = 0d;
@@ -50,7 +50,7 @@ namespace boilersGraphics.ViewModels
                     var @char = letterString.ElementAt(i);
                     ushort glyphIndex;
                     glyphTypeface.CharacterToGlyphMap.TryGetValue((int)@char, out glyphIndex);
-                    Geometry geometry = glyphTypeface.GetGlyphOutline(glyphIndex, FontSize, FontSize);
+                    Geometry geometry = glyphTypeface.GetGlyphOutline(glyphIndex, FontSize.Value, FontSize.Value);
                     PathGeometry pg = geometry.GetOutlinedPathGeometry();
                     
                     if (@char == '-' || @char == 'ー'
@@ -72,7 +72,7 @@ namespace boilersGraphics.ViewModels
 
                     if (double.IsInfinity(pg.Bounds.Height))
                     {
-                        var spaceHeight = glyphTypeface.GetAvgHeight(FontSize);
+                        var spaceHeight = glyphTypeface.GetAvgHeight(FontSize.Value);
                         if (height + spaceHeight > Height.Value)
                             break;
                         height += spaceHeight;
@@ -98,7 +98,7 @@ namespace boilersGraphics.ViewModels
                         break;
                     if (double.IsInfinity(pg.Bounds.Height))
                     {
-                        var spaceHeight = glyphTypeface.GetAvgWidth(FontSize);
+                        var spaceHeight = glyphTypeface.GetAvgWidth(FontSize.Value);
                         heightClone += spaceHeight;
                     }
                     else
@@ -116,7 +116,7 @@ namespace boilersGraphics.ViewModels
                         matrix.RotateAt(90, 0.5, 0.5);
                         matrix.Translate(0, -pg.Bounds.Height);
                     }
-                    matrix.Translate(Width.Value - maxWidth - offsetX, list.SumHeightExceptInfinity(glyphTypeface, FontSize) + pg.Bounds.Height);
+                    matrix.Translate(Width.Value - maxWidth - offsetX, list.SumHeightExceptInfinity(glyphTypeface, FontSize.Value) + pg.Bounds.Height);
                     matrixTransform.Matrix = matrix;
                     pg.Transform = matrixTransform;
                     PathGeometry.Value.AddGeometry(pg);
@@ -135,11 +135,11 @@ namespace boilersGraphics.ViewModels
             //refresh path geometry
             PathGeometryNoRotate.Value = new PathGeometry();
             double maxWidth = 0d;
-            foreach (var @char in LetterString)
+            foreach (var @char in LetterString.Value)
             {
                 ushort glyphIndex;
                 glyphTypeface.CharacterToGlyphMap.TryGetValue((int)@char, out glyphIndex);
-                Geometry geometry = glyphTypeface.GetGlyphOutline(glyphIndex, FontSize, FontSize);
+                Geometry geometry = glyphTypeface.GetGlyphOutline(glyphIndex, FontSize.Value, FontSize.Value);
                 PathGeometry pg = geometry.GetOutlinedPathGeometry();
                 
                 if (@char == '-' || @char == 'ー'
@@ -176,7 +176,7 @@ namespace boilersGraphics.ViewModels
                     matrix.RotateAt(90, 0.5, 0.5);
                     matrix.Translate(0, -pg.Bounds.Height);
                 }
-                matrix.Translate(Width.Value - maxWidth, list.SumHeightExceptInfinity(glyphTypeface, FontSize) + pg.Bounds.Height);
+                matrix.Translate(Width.Value - maxWidth, list.SumHeightExceptInfinity(glyphTypeface, FontSize.Value) + pg.Bounds.Height);
                 matrixTransform.Matrix = matrix;
                 pg.Transform = matrixTransform;
                 PathGeometry.Value.AddGeometry(pg);
@@ -198,13 +198,14 @@ namespace boilersGraphics.ViewModels
             clone.FillBrush.Value = FillBrush.Value;
             clone.EdgeThickness.Value = EdgeThickness.Value;
             clone.RotationAngle.Value = RotationAngle.Value;
-            clone.LetterString = LetterString;
-            clone.SelectedFontFamily = SelectedFontFamily;
-            clone.IsBold = IsBold;
-            clone.IsItalic = IsItalic;
-            clone.FontSize = FontSize;
+            clone.LetterString.Value = LetterString.Value;
+            clone.SelectedFontFamily.Value = SelectedFontFamily.Value;
+            clone.IsBold.Value = IsBold.Value;
+            clone.IsItalic.Value = IsItalic.Value;
+            clone.FontSize.Value = FontSize.Value;
             clone.PathGeometry = PathGeometry;
-            clone.AutoLineBreak = AutoLineBreak;
+            clone.PathGeometryNoRotate.Value = PathGeometryNoRotate.Value;
+            clone.IsAutoLineBreak.Value = IsAutoLineBreak.Value;
             clone.StrokeLineJoin.Value = StrokeLineJoin.Value;
             clone.StrokeDashArray.Value = StrokeDashArray.Value;
             clone.StrokeMiterLimit.Value = StrokeMiterLimit.Value;
@@ -227,7 +228,7 @@ namespace boilersGraphics.ViewModels
             dialogService.Show(nameof(LetterVerticalSetting), new DialogParameters() { { "ViewModel", this } }, ret => result = ret);
             var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
             designerCanvas.Focus();
-            LetterSettingDialogIsOpen = true;
+            LetterSettingDialogIsOpen.Value = true;
         }
     }
 }

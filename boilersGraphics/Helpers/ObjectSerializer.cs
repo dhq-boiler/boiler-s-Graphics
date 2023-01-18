@@ -111,13 +111,13 @@ namespace boilersGraphics.Helpers
                 }
                 if (designerItem is ILetterDesignerItemViewModel letter)
                 {
-                    list.Add(new XElement("LetterString", letter.LetterString));
-                    list.Add(new XElement("SelectedFontFamily", letter.SelectedFontFamily));
-                    list.Add(new XElement("IsBold", letter.IsBold));
-                    list.Add(new XElement("IsItalic", letter.IsItalic));
-                    list.Add(new XElement("FontSize", letter.FontSize));
+                    list.Add(new XElement("LetterString", letter.LetterString.Value));
+                    list.Add(new XElement("SelectedFontFamily", letter.SelectedFontFamily.Value));
+                    list.Add(new XElement("IsBold", letter.IsBold.Value));
+                    list.Add(new XElement("IsItalic", letter.IsItalic.Value));
+                    list.Add(new XElement("FontSize", letter.FontSize.Value));
                     //list.Add(new XElement("PathGeometry", (designerItem as ILetterDesignerItemViewModel).PathGeometry));
-                    list.Add(new XElement("AutoLineBreak", letter.AutoLineBreak));
+                    list.Add(new XElement("AutoLineBreak", letter.IsAutoLineBreak.Value));
                 }
                 if (designerItem is NPolygonViewModel polygon)
                 {
