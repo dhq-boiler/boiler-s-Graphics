@@ -242,42 +242,8 @@ namespace boilersGraphics.Controls
                                     RemoveAllAdornerFromAdornerLayerAndDictionary(designerCanvas);
 
                                     viewModel.snapPointPosition = GetSnapPointPosition(VerticalAlignment, HorizontalAlignment);
-
-                                    switch (base.VerticalAlignment)
-                                    {
-                                        case VerticalAlignment.Bottom:
-                                            dragDeltaVertical = Math.Min(-e.VerticalChange, minDeltaVertical);
-                                            viewModel.Height.Value = viewModel.Height.Value - dragDeltaVertical;
-                                            break;
-                                        case VerticalAlignment.Top:
-                                            double top = viewModel.Top.Value;
-                                            dragDeltaVertical = Math.Min(Math.Max(-minTop, e.VerticalChange), minDeltaVertical);
-                                            viewModel.Pool.Value = "Top";
-                                            viewModel.Top.Value = top + dragDeltaVertical;
-                                            viewModel.Height.Value = viewModel.Height.Value - dragDeltaVertical;
-                                            viewModel.Pool.Value = string.Empty;
-                                            break;
-                                        default:
-                                            break;
-                                    }
-
-                                    switch (base.HorizontalAlignment)
-                                    {
-                                        case HorizontalAlignment.Left:
-                                            double left = viewModel.Left.Value;
-                                            dragDeltaHorizontal = Math.Min(Math.Max(-minLeft, e.HorizontalChange), minDeltaHorizontal);
-                                            viewModel.Pool.Value = "Left";
-                                            viewModel.Left.Value = left + dragDeltaHorizontal;
-                                            viewModel.Width.Value = viewModel.Width.Value - dragDeltaHorizontal;
-                                            viewModel.Pool.Value = string.Empty;
-                                            break;
-                                        case HorizontalAlignment.Right:
-                                            dragDeltaHorizontal = Math.Min(-e.HorizontalChange, minDeltaHorizontal);
-                                            viewModel.Width.Value = viewModel.Width.Value - dragDeltaHorizontal;
-                                            break;
-                                        default:
-                                            break;
-                                    }
+                                    dragDeltaHorizontal = AffectHorizontal(e, base.HorizontalAlignment, minLeft, minDeltaHorizontal, viewModel);
+                                    dragDeltaVertical = AffectVertical(e, base.VerticalAlignment, minTop, minDeltaVertical, viewModel);
                                 }
                             }
                             else
@@ -341,6 +307,51 @@ namespace boilersGraphics.Controls
                 }
                 e.Handled = true;
             }
+        }
+
+        public static double AffectHorizontal(DragDeltaEventArgs e, HorizontalAlignment horizontalAlignment, double minLeft, double minDeltaHorizontal, DesignerItemViewModelBase? viewModel)
+        {
+            var dragDeltaHorizontal = default(double);
+            switch (horizontalAlignment)
+            {
+                case HorizontalAlignment.Left:
+                    double left = viewModel.Left.Value;
+                    dragDeltaHorizontal = Math.Min(Math.Max(-minLeft, e.HorizontalChange), minDeltaHorizontal);
+                    viewModel.Pool.Value = "Left";
+                    viewModel.Left.Value = left + dragDeltaHorizontal;
+                    viewModel.Width.Value = viewModel.Width.Value - dragDeltaHorizontal;
+                    viewModel.Pool.Value = string.Empty;
+                    break;
+                case HorizontalAlignment.Right:
+                    dragDeltaHorizontal = Math.Min(-e.HorizontalChange, minDeltaHorizontal);
+                    viewModel.Width.Value = viewModel.Width.Value - dragDeltaHorizontal;
+                    break;
+                default:
+                    break;
+            }
+            return dragDeltaHorizontal;
+        }
+
+        public static double AffectVertical(DragDeltaEventArgs e, VerticalAlignment verticalAlignment, double minTop, double minDeltaVertical, DesignerItemViewModelBase? viewModel)
+        {
+            var dragDeltaVertical = default(double);
+            switch (verticalAlignment)
+            {
+                case VerticalAlignment.Bottom:
+                    dragDeltaVertical = Math.Min(-e.VerticalChange, minDeltaVertical);
+                    viewModel.Height.Value = viewModel.Height.Value - dragDeltaVertical;
+                    break;
+                case VerticalAlignment.Top:
+                    dragDeltaVertical = Math.Min(Math.Max(-minTop, e.VerticalChange), minDeltaVertical);
+                    viewModel.Pool.Value = "Top";
+                    viewModel.Top.Value += dragDeltaVertical;
+                    viewModel.Height.Value = viewModel.Height.Value - dragDeltaVertical;
+                    viewModel.Pool.Value = string.Empty;
+                    break;
+                default:
+                    break;
+            }
+            return dragDeltaVertical;
         }
 
         private VerticalAlignment OppositeVertical(VerticalAlignment verticalAlignment)

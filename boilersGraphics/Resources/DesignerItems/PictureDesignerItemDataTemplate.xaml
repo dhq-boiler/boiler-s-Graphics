@@ -9,8 +9,6 @@
         </DataTemplate.Resources>
         <Border BorderBrush="{Binding EdgeBrush.Value}" BorderThickness="{Binding EdgeThickness.Value}">
             <Image
-                Margin="{Binding Margin.Value}"
-                Clip="{Binding PathGeometry.Value}"
                 IsHitTestVisible="False"
                 RenderOptions.BitmapScalingMode="HighQuality"
                 Source="{Binding Converter={StaticResource ToFileNameOrBitmapImage}}"

@@ -23,11 +23,13 @@ namespace boilersGraphics.ViewModels
         {
             Left.Value = left;
             Top.Value = top;
+            Rect = Left.CombineLatest(Top, Width, Height, (left, top, width, height) => new System.Windows.Rect(left, top, width, height)).ToReadOnlyReactivePropertySlim();
             Init();
         }
 
         public DesignerItemViewModelBase() : base()
         {
+            Rect = Left.CombineLatest(Top, Width, Height, (left, top, width, height) => new System.Windows.Rect(left, top, width, height)).ToReadOnlyReactivePropertySlim();
             Init();
         }
 
@@ -76,6 +78,8 @@ namespace boilersGraphics.ViewModels
         public ReadOnlyReactivePropertySlim<double> Right { get; private set; }
 
         public ReadOnlyReactivePropertySlim<double> Bottom { get; private set; }
+        
+        public ReadOnlyReactivePropertySlim<Rect> Rect { get; set; }
 
         public ReactivePropertySlim<double> CenterX { get; } = new ReactivePropertySlim<double>();
         public ReactivePropertySlim<double> CenterY { get; } = new ReactivePropertySlim<double>();

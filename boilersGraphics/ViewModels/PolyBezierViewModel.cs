@@ -87,21 +87,7 @@ namespace boilersGraphics.ViewModels
         {
             var dialogService = new DialogService((App.Current as PrismApplication).Container as IContainerExtension);
             IDialogResult result = null;
-            dialogService.ShowDialog(nameof(DetailPolyBezier), new DialogParameters() { { "ViewModel", (PolyBezierViewModel)this.Clone() } }, ret => result = ret);
-            if (result != null && result.Result == ButtonResult.OK)
-            {
-                var viewModel = result.Parameters.GetValue<PolyBezierViewModel>("ViewModel");
-                this.Points = viewModel.Points;
-                this.SnapPoint0VM.Value.Left.Value = viewModel.Points.First().X;
-                this.SnapPoint0VM.Value.Top.Value = viewModel.Points.First().Y;
-                this.SnapPoint1VM.Value.Left.Value = viewModel.Points.Last().X;
-                this.SnapPoint1VM.Value.Top.Value = viewModel.Points.Last().Y;
-                this.StrokeStartLineCap.Value = viewModel.StrokeStartLineCap.Value;
-                this.StrokeEndLineCap.Value = viewModel.StrokeEndLineCap.Value;
-                this.StrokeLineJoin.Value = viewModel.StrokeLineJoin.Value;
-                this.StrokeDashArray.Value = viewModel.StrokeDashArray.Value;
-                this.StrokeMiterLimit.Value = viewModel.StrokeMiterLimit.Value;
-            }
+            dialogService.Show(nameof(DetailPolyBezier), new DialogParameters() { { "ViewModel", this } }, ret => result = ret);
         }
     }
 }

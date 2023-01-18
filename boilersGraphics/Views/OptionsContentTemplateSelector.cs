@@ -16,6 +16,8 @@ namespace boilersGraphics.Views
         }
         public DataTemplate ComboBoxTemplate { get; set; }
         public DataTemplate TextBoxTemplate { get; set; }
+        public DataTemplate ReadOnlyComboBoxTemplate { get; set; }
+        public DataTemplate ReadOnlyTextBoxTemplate { get; set; }
 
         public override DataTemplate SelectTemplate(object item, DependencyObject container)
         {
@@ -24,6 +26,14 @@ namespace boilersGraphics.Views
 
             var propertyOptionsValueCombination = item as PropertyOptionsValueCombination;
 
+            if (propertyOptionsValueCombination.Type == "ReadOnlyComboBox")
+            {
+                return ReadOnlyComboBoxTemplate;
+            }
+            else if (propertyOptionsValueCombination.Type == "ReadOnlyTextBox")
+            {
+                return ReadOnlyTextBoxTemplate;
+            }
             if (propertyOptionsValueCombination.Type == "ComboBox")
             {
                 return ComboBoxTemplate;

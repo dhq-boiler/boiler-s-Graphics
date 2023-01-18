@@ -1,10 +1,15 @@
-﻿using System.Windows;
+﻿using Prism.Regions;
+using System.Windows;
 using System.Windows.Media;
 
 namespace boilersGraphics.ViewModels
 {
     class DetailPolyBezierViewModel : DetailViewModelBase<PolyBezierViewModel>
     {
+        public DetailPolyBezierViewModel(IRegionManager regionManager) : base(regionManager)
+        {
+        }
+
         public override void SetProperties()
         {
             Properties.Add(new PropertyOptionsValueCombinationStruct<PolyBezierViewModel, PenLineJoin>(ViewModel.Value, "StrokeLineJoin", new PenLineJoin[] {

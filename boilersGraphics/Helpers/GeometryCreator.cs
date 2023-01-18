@@ -338,7 +338,7 @@ namespace boilersGraphics.Helpers
                 PathGeometry lhs = null;
                 try
                 {
-                    lhs = PathGeometry.CreateFromGeometry(new RectangleGeometry(new Rect(new Point(0, 0), new Point(item.Width.Value - item.EdgeThickness.Value / 2, item.Height.Value - item.EdgeThickness.Value / 2))));
+                    lhs = PathGeometry.CreateFromGeometry(new RectangleGeometry(new Rect(new Point(-item.Margin.Value.Left, -item.Margin.Value.Top), new Point(item.Width.Value - item.EdgeThickness.Value / 2, item.Height.Value - item.EdgeThickness.Value / 2))));
                     lhs.FillRule = FillRule.Nonzero;
                     return lhs;
                 }
@@ -363,7 +363,7 @@ namespace boilersGraphics.Helpers
                 PathGeometry lhs = null;
                 try
                 {
-                    lhs = PathGeometry.CreateFromGeometry(new RectangleGeometry(new Rect(new Point(0, 0), new Point(item.Width.Value - item.EdgeThickness.Value / 2, item.Height.Value - item.EdgeThickness.Value / 2))));
+                    lhs = PathGeometry.CreateFromGeometry(new RectangleGeometry(new Rect(new Point(-item.Margin.Value.Left, -item.Margin.Value.Top), new Point(item.Width.Value - item.EdgeThickness.Value / 2, item.Height.Value - item.EdgeThickness.Value / 2))));
                     lhs.FillRule = FillRule.Nonzero;
                     return lhs;
                 }
@@ -373,6 +373,7 @@ namespace boilersGraphics.Helpers
                 }
             }
             var rhs = PathGeometry.CreateFromGeometry(new RectangleGeometry(new Rect(new Point(0, 0), new Point(item.Width.Value - item.EdgeThickness.Value / 2, item.Height.Value - item.EdgeThickness.Value / 2))));
+            rhs = GeometryCreator.Translate(rhs, -item.Margin.Value.Left, -item.Margin.Value.Top);
             rhs.FillRule = FillRule.Nonzero;
             //if (item.Width.Value != item.PathGeometryNoRotate.Value.Bounds.Width || item.Height.Value != item.PathGeometryNoRotate.Value.Bounds.Height)
             if (true)
@@ -398,7 +399,7 @@ namespace boilersGraphics.Helpers
                         coefficientHeight = 1;
                     if (double.IsNaN(coefficientWidth) || double.IsNaN(coefficientHeight))
                         return rhs;
-                    newlhs = Scale(lhs, coefficientWidth, coefficientHeight);
+                    newlhs = Scale(rhs, coefficientWidth, coefficientHeight);
                     return newlhs;
                 }
                 finally

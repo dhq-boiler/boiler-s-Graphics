@@ -156,23 +156,7 @@ namespace boilersGraphics.ViewModels
         {
             var dialogService = new DialogService((App.Current as PrismApplication).Container as IContainerExtension);
             IDialogResult result = null;
-            dialogService.ShowDialog(nameof(DetailBezier), new DialogParameters() { { "ViewModel", (BezierCurveViewModel)this.Clone() } }, ret => result = ret);
-            if (result != null && result.Result == ButtonResult.OK)
-            {
-                var viewModel = result.Parameters.GetValue<BezierCurveViewModel>("ViewModel");
-                this.Points[0] = new Point(viewModel.P1X.Value, viewModel.P1Y.Value);
-                this.Points[1] = new Point(viewModel.P2X.Value, viewModel.P2Y.Value);
-                this.ControlPoint1.Value = new Point(viewModel.C1X.Value, viewModel.C1Y.Value);
-                this.ControlPoint2.Value = new Point(viewModel.C2X.Value, viewModel.C2Y.Value);
-                this.SnapPoint0VM.Value.Left.Value = viewModel.P1X.Value;
-                this.SnapPoint0VM.Value.Top.Value = viewModel.P1Y.Value;
-                this.SnapPoint1VM.Value.Left.Value = viewModel.P2X.Value;
-                this.SnapPoint1VM.Value.Top.Value = viewModel.P2Y.Value;
-                this.StrokeStartLineCap.Value = viewModel.StrokeStartLineCap.Value;
-                this.StrokeEndLineCap.Value = viewModel.StrokeEndLineCap.Value;
-                this.StrokeLineJoin.Value = viewModel.StrokeLineJoin.Value;
-                this.StrokeDashArray.Value = viewModel.StrokeDashArray.Value;
-            }
+            dialogService.Show(nameof(DetailBezier), new DialogParameters() { { "ViewModel", this } }, ret => result = ret);
         }
     }
 }

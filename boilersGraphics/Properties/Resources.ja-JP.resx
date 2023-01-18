@@ -418,7 +418,7 @@
     <value>キャンパスをクリア</value>
   </data>
   <data name="MenuItem_Clip" xml:space="preserve">
-    <value>クリップを設定</value>
+    <value>画像を切り抜く</value>
   </data>
   <data name="MenuItem_Combine" xml:space="preserve">
     <value>結合</value>
