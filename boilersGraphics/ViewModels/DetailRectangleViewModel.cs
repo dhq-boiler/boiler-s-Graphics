@@ -28,6 +28,8 @@ namespace boilersGraphics.ViewModels
             Properties.Add(new PropertyOptionsValueCombinationStruct<NRectangleViewModel, double>(ViewModel.Value, "CenterX", HorizontalAlignment.Right));
             Properties.Add(new PropertyOptionsValueCombinationStruct<NRectangleViewModel, double>(ViewModel.Value, "CenterY", HorizontalAlignment.Right));
             Properties.Add(new PropertyOptionsValueCombinationStruct<NRectangleViewModel, double>(ViewModel.Value, "RotationAngle", HorizontalAlignment.Right));
+            Properties.Add(new PropertyOptionsValueCombinationClass<NRectangleViewModel, PathGeometry>(ViewModel.Value, "PathGeometryNoRotate", HorizontalAlignment.Left));
+            Properties.Add(new PropertyOptionsValueCombinationReadOnlyClass<NRectangleViewModel, PathGeometry>(ViewModel.Value, "PathGeometry", HorizontalAlignment.Left));
         }
     }
 }

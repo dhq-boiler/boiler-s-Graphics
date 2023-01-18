@@ -26,6 +26,8 @@ namespace boilersGraphics.ViewModels
             Properties.Add(new PropertyOptionsValueCombinationStruct<NPolygonViewModel, double>(ViewModel.Value, "CenterX", HorizontalAlignment.Right));
             Properties.Add(new PropertyOptionsValueCombinationStruct<NPolygonViewModel, double>(ViewModel.Value, "CenterY", HorizontalAlignment.Right));
             Properties.Add(new PropertyOptionsValueCombinationStruct<NPolygonViewModel, double>(ViewModel.Value, "RotationAngle", HorizontalAlignment.Right));
+            Properties.Add(new PropertyOptionsValueCombinationClass<NPolygonViewModel, PathGeometry>(ViewModel.Value, "PathGeometryNoRotate", HorizontalAlignment.Left));
+            Properties.Add(new PropertyOptionsValueCombinationReadOnlyClass<NPolygonViewModel, PathGeometry>(ViewModel.Value, "PathGeometry", HorizontalAlignment.Left));
         }
     }
 }

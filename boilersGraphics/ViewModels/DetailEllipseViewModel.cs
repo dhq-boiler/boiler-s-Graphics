@@ -26,6 +26,8 @@ namespace boilersGraphics.ViewModels
             Properties.Add(new PropertyOptionsValueCombinationStruct<NEllipseViewModel, double>(ViewModel.Value, "CenterX", HorizontalAlignment.Right));
             Properties.Add(new PropertyOptionsValueCombinationStruct<NEllipseViewModel, double>(ViewModel.Value, "CenterY", HorizontalAlignment.Right));
             Properties.Add(new PropertyOptionsValueCombinationStruct<NEllipseViewModel, double>(ViewModel.Value, "RotationAngle", HorizontalAlignment.Right));
+            Properties.Add(new PropertyOptionsValueCombinationClass<NEllipseViewModel, PathGeometry>(ViewModel.Value, "PathGeometryNoRotate", HorizontalAlignment.Left));
+            Properties.Add(new PropertyOptionsValueCombinationReadOnlyClass<NEllipseViewModel, PathGeometry>(ViewModel.Value, "PathGeometry", HorizontalAlignment.Left));
         }
     }
 }
