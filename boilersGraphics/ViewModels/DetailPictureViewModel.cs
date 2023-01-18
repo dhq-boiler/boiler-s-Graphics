@@ -29,6 +29,8 @@ namespace boilersGraphics.ViewModels
             Properties.Add(new PropertyOptionsValueCombinationStruct<PictureDesignerItemViewModel, Thickness>(ViewModel.Value, "Margin", HorizontalAlignment.Right));
             Properties.Add(new PropertyOptionsValueCombinationReadOnlyStruct<PictureDesignerItemViewModel, Rect>(ViewModel.Value, "ClipObject.Rect", HorizontalAlignment.Right));
             Properties.Add(new PropertyOptionsValueCombinationStruct<PictureDesignerItemViewModel, Rect>(ViewModel.Value, "ClippingOriginRect", HorizontalAlignment.Right));
+            Properties.Add(new PropertyOptionsValueCombinationClass<PictureDesignerItemViewModel, PathGeometry>(ViewModel.Value, "PathGeometryNoRotate", HorizontalAlignment.Left));
+            Properties.Add(new PropertyOptionsValueCombinationReadOnlyClass<PictureDesignerItemViewModel, PathGeometry>(ViewModel.Value, "PathGeometry", HorizontalAlignment.Left));
         }
     }
 }

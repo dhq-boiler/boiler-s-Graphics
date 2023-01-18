@@ -198,41 +198,17 @@
                                             </DataTemplate>
                                         </views:OptionsContentTemplateSelector.ReadOnlyComboBoxTemplate>
                                         <views:OptionsContentTemplateSelector.TextBoxTemplate>
-                                            <!--<DataTemplate>
-                                                <TextBox
-                                                    HorizontalAlignment="Stretch"
-                                                    HorizontalContentAlignment="{Binding HorizontalContentAlignment.Value}"
-                                                    IsTabStop="True"
-                                                    Text="{Binding PropertyValue.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                            </DataTemplate>-->
-                                            <HierarchicalDataTemplate ItemsSource="{Binding}">
+                                            <DataTemplate>
                                                 <TextBox
                                                     HorizontalAlignment="Stretch"
                                                     HorizontalContentAlignment="{Binding HorizontalContentAlignment.Value}"
                                                     IsReadOnly="False"
                                                     IsTabStop="True"
                                                     Text="{Binding PropertyValue.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                                <HierarchicalDataTemplate.ItemTemplate>
-                                                    <DataTemplate>
-                                                        <TextBox
-                                                            HorizontalAlignment="Stretch"
-                                                            HorizontalContentAlignment="{Binding HorizontalContentAlignment.Value}"
-                                                            IsReadOnly="False"
-                                                            IsTabStop="True"
-                                                            Text="{Binding PropertyValue.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                                    </DataTemplate>
-                                                </HierarchicalDataTemplate.ItemTemplate>
-                                            </HierarchicalDataTemplate>
+                                            </DataTemplate>
                                         </views:OptionsContentTemplateSelector.TextBoxTemplate>
                                         <views:OptionsContentTemplateSelector.ReadOnlyTextBoxTemplate>
-                                            <!--<DataTemplate>
-                                                <TextBox
-                                                    HorizontalAlignment="Stretch"
-                                                    HorizontalContentAlignment="{Binding HorizontalContentAlignment.Value}"
-                                                    IsTabStop="True"
-                                                    Text="{Binding PropertyValue.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                            </DataTemplate>-->
-                                            <HierarchicalDataTemplate ItemsSource="{Binding}">
+                                            <DataTemplate>
                                                 <TextBox
                                                     HorizontalAlignment="Stretch"
                                                     HorizontalContentAlignment="{Binding HorizontalContentAlignment.Value}"
@@ -240,18 +216,7 @@
                                                     IsReadOnly="True"
                                                     IsTabStop="True"
                                                     Text="{Binding PropertyValue.Value, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
-                                                <HierarchicalDataTemplate.ItemTemplate>
-                                                    <DataTemplate>
-                                                        <TextBox
-                                                            HorizontalAlignment="Stretch"
-                                                            HorizontalContentAlignment="{Binding HorizontalContentAlignment.Value}"
-                                                            Foreground="Gray"
-                                                            IsReadOnly="True"
-                                                            IsTabStop="True"
-                                                            Text="{Binding PropertyValue.Value, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
-                                                    </DataTemplate>
-                                                </HierarchicalDataTemplate.ItemTemplate>
-                                            </HierarchicalDataTemplate>
+                                            </DataTemplate>
                                         </views:OptionsContentTemplateSelector.ReadOnlyTextBoxTemplate>
                                     </views:OptionsContentTemplateSelector>
                                 </GridViewColumn.CellTemplateSelector>
