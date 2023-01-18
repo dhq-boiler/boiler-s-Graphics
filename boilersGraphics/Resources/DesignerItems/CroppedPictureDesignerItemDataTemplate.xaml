@@ -3,7 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:converters="clr-namespace:boilersGraphics.Converters"
     xmlns:viewModel="clr-namespace:boilersGraphics.ViewModels">
-    <DataTemplate DataType="{x:Type viewModel:PictureDesignerItemViewModel}">
+    <DataTemplate DataType="{x:Type viewModel:CroppedPictureDesignerItemViewModel}">
         <DataTemplate.Resources>
             <converters:ToFileNameOrBitmapImage x:Key="ToFileNameOrBitmapImage" />
         </DataTemplate.Resources>
