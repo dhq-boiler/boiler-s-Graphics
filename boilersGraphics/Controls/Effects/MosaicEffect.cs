@@ -17,9 +17,6 @@ namespace boilersGraphics.Controls.Effects
 
             this.PixelShader = ps;
             UpdateShaderValue(InputProperty);
-            //UpdateShaderValue(WidthProperty);
-            //UpdateShaderValue(HeightProperty);
-            //UpdateShaderValue(BytecodeProperty);
         }
 
         public Brush Input
@@ -83,21 +80,6 @@ namespace boilersGraphics.Controls.Effects
                 typeof(double),
                 typeof(MosaicEffect),
                 new PropertyMetadata(0.0, PixelShaderConstantCallback(3)));
-
-
-        //public double Time
-        //{
-        //    get { return (double)GetValue(TimeProperty); }
-        //    set { SetValue(TimeProperty, value); }
-        //}
-
-        //// Using a DependencyProperty as the backing store for Time.  This enables animation, styling, binding, etc...
-        //public static readonly DependencyProperty TimeProperty =
-        //    DependencyProperty.Register(
-        //        "Time",
-        //        typeof(double),
-        //        typeof(MosaicEffect),
-        //        new PropertyMetadata(0.0, PixelShaderConstantCallback(2)));
 
         public IList<byte> Bytecode
         {
