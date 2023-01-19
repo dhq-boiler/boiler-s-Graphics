@@ -47,6 +47,7 @@ namespace boilersGraphics.ViewModels
         public NDrawPieBehavior NDrawPieBehavior { get; } = new NDrawPieBehavior();
         public DropperBehavior DropperBehavior { get; } = new DropperBehavior();
         public CanvasModifierBehavior CanvasModifierBehavior { get; } = new CanvasModifierBehavior();
+        public MosaicBehavior MosaicBehavior { get; } = new MosaicBehavior();
 
         public NDrawPolyBezierBehavior PolyBezierBehavior { get; } = new NDrawPolyBezierBehavior();
 
@@ -293,6 +294,17 @@ namespace boilersGraphics.ViewModels
                     Behaviors.Add(CanvasModifierBehavior);
                 }
                 SelectOneToolItem("canvasModifier");
+            })));
+            ToolItems.Add(new ToolItemData("mosaic", null, null, new DelegateCommand(() =>
+            {
+                var mainWindowViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel);
+                mainWindowViewModel.ClearCurrentOperationAndDetails();
+                Behaviors.Clear();
+                if (!Behaviors.Contains(MosaicBehavior))
+                {
+                    Behaviors.Add(MosaicBehavior);
+                }
+                SelectOneToolItem("mosaic");
             })));
         }
 

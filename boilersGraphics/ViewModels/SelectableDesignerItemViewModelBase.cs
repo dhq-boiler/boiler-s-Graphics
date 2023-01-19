@@ -5,6 +5,7 @@ using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
@@ -304,6 +305,12 @@ namespace boilersGraphics.ViewModels
         public override string ToString()
         {
             return ShowPropertiesAndFields();
+        }
+
+        public virtual IDisposable BeginMonitor(Action action)
+        {
+            var compositeDisposable = new CompositeDisposable();
+            return compositeDisposable;
         }
     }
 }

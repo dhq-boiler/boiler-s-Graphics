@@ -1,0 +1,20 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="clr-namespace:boilersGraphics.Converters"
+    xmlns:effects="clr-namespace:boilersGraphics.Controls.Effects"
+    xmlns:viewModel="clr-namespace:boilersGraphics.ViewModels">
+    <DataTemplate DataType="{x:Type viewModel:MosaicViewModel}">
+        <Image x:Name="baseGrid" Source="{Binding Bitmap.Value, UpdateSourceTrigger=PropertyChanged}">
+            <Image.Effect>
+                <effects:MosaicEffect
+                    x:Name="shader"
+                    Width="{Binding ElementName=baseGrid, Path=ActualWidth, UpdateSourceTrigger=PropertyChanged}"
+                    Height="{Binding ElementName=baseGrid, Path=ActualHeight, UpdateSourceTrigger=PropertyChanged}"
+                    Bytecode="{Binding Path=Bytecode.Value, UpdateSourceTrigger=PropertyChanged}"
+                    ColumnPixels="{Binding ColumnPixels.Value, UpdateSourceTrigger=PropertyChanged}"
+                    RowPixels="{Binding RowPixels.Value, UpdateSourceTrigger=PropertyChanged}" />
+            </Image.Effect>
+        </Image>
+    </DataTemplate>
+</ResourceDictionary>

@@ -31,6 +31,7 @@ namespace boilersGraphics.ViewModels
             Properties.Add(new PropertyOptionsValueCombinationStructRP<StraightConnectorViewModel, double>(ViewModel.Value, "P1Y", HorizontalAlignment.Right));
             Properties.Add(new PropertyOptionsValueCombinationStructRP<StraightConnectorViewModel, double>(ViewModel.Value, "P2X", HorizontalAlignment.Right));
             Properties.Add(new PropertyOptionsValueCombinationStructRP<StraightConnectorViewModel, double>(ViewModel.Value, "P2Y", HorizontalAlignment.Right));
+            Properties.Add(new PropertyOptionsValueCombinationStruct<StraightConnectorViewModel, int>(ViewModel.Value, "ZIndex", HorizontalAlignment.Right));
         }
     }
 }
