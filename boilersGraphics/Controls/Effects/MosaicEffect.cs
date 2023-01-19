@@ -59,27 +59,27 @@ namespace boilersGraphics.Controls.Effects
                 typeof(MosaicEffect),
                 new PropertyMetadata(0.0, PixelShaderConstantCallback(1)));
 
-        public double ColumnPixels
+        public double Cp
         {
-            get { return (double)GetValue(ColumnPixelsProperty); }
-            set { SetValue(ColumnPixelsProperty, value); }
+            get { return (double)GetValue(CpProperty); }
+            set { SetValue(CpProperty, value); }
         }
 
-        public static readonly DependencyProperty ColumnPixelsProperty =
+        public static readonly DependencyProperty CpProperty =
             DependencyProperty.Register(
-                "ColumnPixels",
+                "Cp",
                 typeof(double),
                 typeof(MosaicEffect),
                 new PropertyMetadata(0.0, PixelShaderConstantCallback(2)));
-        public double RowPixels
+        public double Rp
         {
-            get { return (double)GetValue(RowPixelsProperty); }
-            set { SetValue(RowPixelsProperty, value); }
+            get { return (double)GetValue(RpProperty); }
+            set { SetValue(RpProperty, value); }
         }
 
-        public static readonly DependencyProperty RowPixelsProperty =
+        public static readonly DependencyProperty RpProperty =
             DependencyProperty.Register(
-                "RowPixels",
+                "Rp",
                 typeof(double),
                 typeof(MosaicEffect),
                 new PropertyMetadata(0.0, PixelShaderConstantCallback(3)));

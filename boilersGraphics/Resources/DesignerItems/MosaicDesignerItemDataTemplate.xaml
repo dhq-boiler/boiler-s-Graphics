@@ -12,8 +12,8 @@
                     Width="{Binding ElementName=baseGrid, Path=ActualWidth, UpdateSourceTrigger=PropertyChanged}"
                     Height="{Binding ElementName=baseGrid, Path=ActualHeight, UpdateSourceTrigger=PropertyChanged}"
                     Bytecode="{Binding Path=Bytecode.Value, UpdateSourceTrigger=PropertyChanged}"
-                    ColumnPixels="{Binding ColumnPixels.Value, UpdateSourceTrigger=PropertyChanged}"
-                    RowPixels="{Binding RowPixels.Value, UpdateSourceTrigger=PropertyChanged}" />
+                    Cp="{Binding ColumnPixels.Value, UpdateSourceTrigger=PropertyChanged}"
+                    Rp="{Binding RowPixels.Value, UpdateSourceTrigger=PropertyChanged}" />
             </Image.Effect>
         </Image>
     </DataTemplate>

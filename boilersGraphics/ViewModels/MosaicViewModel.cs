@@ -36,11 +36,13 @@ namespace boilersGraphics.ViewModels
 sampler2D input : register(s0);
 float width : register(c0);
 float height : register(c1);
+float cp : register(c2);
+float rp : register(c3);
 
 float4 main(float2 uv : TEXCOORD) : COLOR
 {
-    float x = 30.0;
-    float y = 30.0;
+    float x = cp;
+    float y = rp;
     float l = 0.0;
     if (width > height)
     {
