@@ -275,6 +275,18 @@ namespace boilersGraphics.Helpers
             item.ZIndex.Value = Int32.Parse(connectorElm.Element("ZIndex").Value);
             item.EdgeBrush.Value = WpfObjectSerializer.Deserialize(connectorElm.Element("EdgeBrush").Nodes().First().ToString()) as Brush;
             item.EdgeThickness.Value = double.Parse(connectorElm.Element("EdgeThickness").Value);
+            if (connectorElm.Elements("StrokeLineJoin").Any())
+            {
+                item.StrokeLineJoin.Value = Enum.Parse<PenLineJoin>(connectorElm.Element("StrokeLineJoin").Value);
+            }
+            if (connectorElm.Elements("StrokeMiterLimit").Any())
+            {
+                item.StrokeMiterLimit.Value = double.Parse(connectorElm.Element("StrokeMiterLimit").Value);
+            }
+            if (connectorElm.Elements("StrokeDashArray").Any())
+            {
+                item.StrokeDashArray.Value = DoubleCollection.Parse(connectorElm.Element("StrokeDashArray").Value);
+            }
             item.LeftTop.Value = Point.Parse(connectorElm.Element("LeftTop").Value);
             if (item is StraightConnectorViewModel || item is BezierCurveViewModel)
             {
