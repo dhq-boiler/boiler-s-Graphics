@@ -295,7 +295,7 @@ namespace boilersGraphics.ViewModels
                 }
                 SelectOneToolItem("canvasModifier");
             })));
-            ToolItems.Add(new ToolItemData("mosaic", null, null, new DelegateCommand(() =>
+            ToolItems.Add(new ToolItemData("mosaic", "pack://application:,,,/Assets/img/mosaic.png", Resources.Tool_Mosaic, new DelegateCommand(() =>
             {
                 var mainWindowViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel);
                 mainWindowViewModel.ClearCurrentOperationAndDetails();

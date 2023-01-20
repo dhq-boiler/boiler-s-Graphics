@@ -52,6 +52,7 @@
     <Resource Include="Assets\img\icon_Combine_union_dark.png" />
     <Resource Include="Assets\img\icon_Layers.png" />
     <Resource Include="Assets\img\minimap.png" />
+    <Resource Include="Assets\img\mosaic.png" />
     <Resource Include="Assets\img\picture_dark.png" />
     <Resource Include="Assets\img\polygon_dark.png" />
     <Resource Include="Assets\img\poly_bezier.png" />
@@ -159,6 +160,7 @@
     <None Remove="Assets\img\icon_Combine_union_dark.png" />
     <None Remove="Assets\img\icon_Layers.png" />
     <None Remove="Assets\img\minimap.png" />
+    <None Remove="Assets\img\mosaic.png" />
     <None Remove="Assets\img\picture_dark.png" />
     <None Remove="Assets\img\polygon_dark.png" />
     <None Remove="Assets\img\poly_bezier.png" />
