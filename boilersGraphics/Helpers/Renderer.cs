@@ -62,7 +62,8 @@ namespace boilersGraphics.Helpers
 
         private static void RenderForeground(Rect? sliceRect, DiagramViewModel diagramViewModel, DesignerCanvas designerCanvas, DrawingContext context, BackgroundViewModel background)
         {
-            foreach (var item in diagramViewModel.AllItems.Value.Except(new SelectableDesignerItemViewModelBase[] { background }))
+            var except = new SelectableDesignerItemViewModelBase[] { background, mosaic }.Where(x => x is not null);
+            foreach (var item in diagramViewModel.AllItems.Value.Except(except).Where(x => x.IsVisible.Value))
             {
                 var views = designerCanvas.GetCorrespondingViews<FrameworkElement>(item);
                 var view = views.First(x => x.GetType() == item.GetViewType());
