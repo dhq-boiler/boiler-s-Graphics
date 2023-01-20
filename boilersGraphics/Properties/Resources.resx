@@ -810,6 +810,9 @@
   <data name="Tool_Lettering" xml:space="preserve">
     <value>Lettering tool</value>
   </data>
+  <data name="Tool_Mosaic" xml:space="preserve">
+    <value>Mosaic tool</value>
+  </data>
   <data name="Tool_Picture" xml:space="preserve">
     <value>Picture tool</value>
   </data>

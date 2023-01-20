@@ -15,7 +15,7 @@ namespace boilersGraphics.Helpers
 {
     public static class Renderer
     {
-        public static RenderTargetBitmap Render(Rect? sliceRect, DesignerCanvas designerCanvas, DiagramViewModel diagramViewModel, BackgroundViewModel backgroundItem)
+        public static RenderTargetBitmap Render(Rect? sliceRect, DesignerCanvas designerCanvas, DiagramViewModel diagramViewModel, BackgroundViewModel backgroundItem, MosaicViewModel mosaic = null)
         {
             Size size = GetRenderSize(sliceRect, diagramViewModel);
 
@@ -35,7 +35,7 @@ namespace boilersGraphics.Helpers
 
             using (DrawingContext context = visual.RenderOpen())
             {
-                RenderForeground(sliceRect, diagramViewModel, designerCanvas, context, backgroundItem);
+                RenderForeground(sliceRect, diagramViewModel, designerCanvas, context, backgroundItem, mosaic);
             }
             rtb.Render(visual);
 
@@ -60,13 +60,15 @@ namespace boilersGraphics.Helpers
             return size;
         }
 
-        private static void RenderForeground(Rect? sliceRect, DiagramViewModel diagramViewModel, DesignerCanvas designerCanvas, DrawingContext context, BackgroundViewModel background)
+        private static void RenderForeground(Rect? sliceRect, DiagramViewModel diagramViewModel, DesignerCanvas designerCanvas, DrawingContext context, BackgroundViewModel background, MosaicViewModel mosaic = null)
         {
             var except = new SelectableDesignerItemViewModelBase[] { background, mosaic }.Where(x => x is not null);
             foreach (var item in diagramViewModel.AllItems.Value.Except(except).Where(x => x.IsVisible.Value))
             {
                 var views = designerCanvas.GetCorrespondingViews<FrameworkElement>(item);
-                var view = views.First(x => x.GetType() == item.GetViewType());
+                var view = views.FirstOrDefault(x => x.GetType() == item.GetViewType());
+                if (view is null)
+                    continue;
                 view.SnapsToDevicePixels = true;
                 VisualBrush brush = new VisualBrush(view);
                 brush.Stretch = Stretch.None;

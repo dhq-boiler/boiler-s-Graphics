@@ -33,6 +33,7 @@ namespace boilersGraphics.ViewModels
             }));
             Properties.Add(new PropertyOptionsValueCombinationClass<PolyBezierViewModel, DoubleCollection>(ViewModel.Value, "StrokeDashArray", HorizontalAlignment.Left));
             Properties.Add(new PropertyOptionsValueCombinationStruct<PolyBezierViewModel, double>(ViewModel.Value, "StrokeMiterLimit", HorizontalAlignment.Right));
+            Properties.Add(new PropertyOptionsValueCombinationStruct<PolyBezierViewModel, int>(ViewModel.Value, "ZIndex", HorizontalAlignment.Right));
         }
     }
 }

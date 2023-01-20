@@ -1,9 +1,11 @@
 ﻿using boilersGraphics.Helpers;
+using Homura.QueryBuilder.Iso.Dml;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Media;
@@ -107,19 +109,35 @@ namespace boilersGraphics.ViewModels
 
             Left
                 .Zip(Left.Skip(1), (Old, New) => new { OldItem = Old, NewItem = New })
-                .Subscribe(x => UpdateTransform(nameof(Left), x.OldItem, x.NewItem))
+                .Subscribe(x =>
+                {
+                    UpdateTransform(nameof(Left), x.OldItem, x.NewItem);
+                    OnRectChanged(new System.Windows.Rect(Left.Value, Top.Value, Width.Value, Height.Value));
+                })
                 .AddTo(_CompositeDisposable);
             Top
                 .Zip(Top.Skip(1), (Old, New) => new { OldItem = Old, NewItem = New })
-                .Subscribe(x => UpdateTransform(nameof(Top), x.OldItem, x.NewItem))
+                .Subscribe(x =>
+                {
+                    UpdateTransform(nameof(Top), x.OldItem, x.NewItem);
+                    OnRectChanged(new System.Windows.Rect(Left.Value, Top.Value, Width.Value, Height.Value));
+                })
                 .AddTo(_CompositeDisposable);
             Width
                 .Zip(Width.Skip(1), (Old, New) => new { OldItem = Old, NewItem = New })
-                .Subscribe(x => UpdateTransform(nameof(Width), x.OldItem, x.NewItem))
+                .Subscribe(x =>
+                {
+                    UpdateTransform(nameof(Width), x.OldItem, x.NewItem);
+                    OnRectChanged(new System.Windows.Rect(Left.Value, Top.Value, Width.Value, Height.Value));
+                })
                 .AddTo(_CompositeDisposable);
             Height
                 .Zip(Height.Skip(1), (Old, New) => new { OldItem = Old, NewItem = New })
-                .Subscribe(x => UpdateTransform(nameof(Height), x.OldItem, x.NewItem))
+                .Subscribe(x =>
+                {
+                    UpdateTransform(nameof(Height), x.OldItem, x.NewItem);
+                    OnRectChanged(new System.Windows.Rect(Left.Value, Top.Value, Width.Value, Height.Value));
+                })
                 .AddTo(_CompositeDisposable);
             RotationAngle
                 .Zip(RotationAngle.Skip(1), (Old, New) => new { OldItem = Old, NewItem = New })
@@ -151,6 +169,15 @@ namespace boilersGraphics.ViewModels
             PathGeometry = PathGeometryNoRotate.ToReadOnlyReactivePropertySlim();
 
             Matrix.Value = new Matrix();
+
+            EnablePathGeometryUpdate.Where(isEnable => isEnable).Subscribe(isEnable =>
+            {
+                UpdatePathGeometryIfEnable(nameof(EnablePathGeometryUpdate), false, true);
+            }).AddTo(_CompositeDisposable);
+        }
+
+        public virtual void OnRectChanged(Rect rect)
+        {
         }
 
         private void UpdateMatrix(double oldAngle, double newAngle)
@@ -278,6 +305,20 @@ namespace boilersGraphics.ViewModels
                     Matrix.Value = matrix;
                     break;
             }
+        }
+
+        private bool isMonitored = false;
+
+        public override IDisposable BeginMonitor(Action action)
+        {
+            var compositeDisposable = new CompositeDisposable();
+            base.BeginMonitor(action).AddTo(compositeDisposable);
+            if (!isMonitored)
+            {
+                Rect.Subscribe(_ => action()).AddTo(compositeDisposable);
+                isMonitored = true;
+            }
+            return compositeDisposable;
         }
     }
 }

@@ -28,6 +28,7 @@ namespace boilersGraphics.ViewModels
             Properties.Add(new PropertyOptionsValueCombinationStruct<NPieViewModel, double>(ViewModel.Value, "RotationAngle", HorizontalAlignment.Right));
             Properties.Add(new PropertyOptionsValueCombinationClass<NPieViewModel, PathGeometry>(ViewModel.Value, "PathGeometryNoRotate", HorizontalAlignment.Left));
             Properties.Add(new PropertyOptionsValueCombinationReadOnlyClass<NPieViewModel, PathGeometry>(ViewModel.Value, "PathGeometry", HorizontalAlignment.Left));
+            Properties.Add(new PropertyOptionsValueCombinationStruct<NPieViewModel, int>(ViewModel.Value, "ZIndex", HorizontalAlignment.Right));
         }
     }
 }

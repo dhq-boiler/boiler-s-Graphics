@@ -2140,6 +2140,15 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Mosaic tool に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Tool_Mosaic {
+            get {
+                return ResourceManager.GetString("Tool_Mosaic", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Picture tool に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Tool_Picture {

@@ -41,6 +41,7 @@ namespace boilersGraphics.ViewModels
             Properties.Add(new PropertyOptionsValueCombinationStructRP<BezierCurveViewModel, double>(ViewModel.Value, "C1Y", HorizontalAlignment.Right));
             Properties.Add(new PropertyOptionsValueCombinationStructRP<BezierCurveViewModel, double>(ViewModel.Value, "C2X", HorizontalAlignment.Right));
             Properties.Add(new PropertyOptionsValueCombinationStructRP<BezierCurveViewModel, double>(ViewModel.Value, "C2Y", HorizontalAlignment.Right));
+            Properties.Add(new PropertyOptionsValueCombinationStruct<BezierCurveViewModel, int>(ViewModel.Value, "ZIndex", HorizontalAlignment.Right));
         }
     }
 }

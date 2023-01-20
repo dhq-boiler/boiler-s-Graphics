@@ -41,6 +41,7 @@ namespace boilersGraphics.ViewModels
             Properties.Add(new PropertyOptionsValueCombinationStruct<AbstractLetterDesignerItemViewModel, bool>(ViewModel.Value, "IsItalic", HorizontalAlignment.Left));
             Properties.Add(new PropertyOptionsValueCombinationStruct<AbstractLetterDesignerItemViewModel, int>(ViewModel.Value, "FontSize", HorizontalAlignment.Right));
             Properties.Add(new PropertyOptionsValueCombinationStruct<AbstractLetterDesignerItemViewModel, bool>(ViewModel.Value, "IsAutoLineBreak", HorizontalAlignment.Left));
+            Properties.Add(new PropertyOptionsValueCombinationStruct<AbstractLetterDesignerItemViewModel, int>(ViewModel.Value, "ZIndex", HorizontalAlignment.Right));
         }
     }
 }

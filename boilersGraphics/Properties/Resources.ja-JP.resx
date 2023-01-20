@@ -810,6 +810,9 @@
   <data name="Tool_Lettering" xml:space="preserve">
     <value>文字ツール</value>
   </data>
+  <data name="Tool_Mosaic" xml:space="preserve">
+    <value>モザイクツール</value>
+  </data>
   <data name="Tool_Picture" xml:space="preserve">
     <value>画像ツール</value>
   </data>
