@@ -418,7 +418,7 @@
     <value>キャンパスをクリア</value>
   </data>
   <data name="MenuItem_Clip" xml:space="preserve">
-    <value>クリップを設定</value>
+    <value>画像を切り抜く</value>
   </data>
   <data name="MenuItem_Combine" xml:space="preserve">
     <value>結合</value>
@@ -711,6 +711,12 @@
   <data name="String_PleaseDescribeError" xml:space="preserve">
     <value>**エラーの詳細を説明してください**</value>
   </data>
+  <data name="String_PropertyName" xml:space="preserve">
+    <value>プロパティ名</value>
+  </data>
+  <data name="String_PropertyValue" xml:space="preserve">
+    <value>プロパティ値</value>
+  </data>
   <data name="String_QualityLevel" xml:space="preserve">
     <value>クオリティレベル</value>
   </data>
@@ -803,6 +809,9 @@
   </data>
   <data name="Tool_Lettering" xml:space="preserve">
     <value>文字ツール</value>
+  </data>
+  <data name="Tool_Mosaic" xml:space="preserve">
+    <value>モザイクツール</value>
   </data>
   <data name="Tool_Picture" xml:space="preserve">
     <value>画像ツール</value>

@@ -24,7 +24,8 @@
                 Stretch="None"
                 Stroke="{Binding EdgeBrush.Value}"
                 StrokeDashArray="{Binding StrokeDashArray.Value}"
-                StrokeLineJoin="{Binding PenLineJoin.Value}"
+                StrokeLineJoin="{Binding StrokeLineJoin.Value}"
+                StrokeMiterLimit="{Binding StrokeMiterLimit.Value}"
                 StrokeThickness="{Binding EdgeThickness.Value}" />
         </ContentControl>
     </DataTemplate>

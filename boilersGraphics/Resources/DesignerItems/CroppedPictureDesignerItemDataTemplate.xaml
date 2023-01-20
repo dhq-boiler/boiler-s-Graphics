@@ -1,0 +1,32 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:c="clr-namespace:CalcBinding;assembly=CalcBinding"
+    xmlns:converters="clr-namespace:boilersGraphics.Converters"
+    xmlns:viewModel="clr-namespace:boilersGraphics.ViewModels">
+    <DataTemplate DataType="{x:Type viewModel:CroppedPictureDesignerItemViewModel}">
+        <DataTemplate.Resources>
+            <converters:ToFileNameOrBitmapImage x:Key="ToFileNameOrBitmapImage" />
+        </DataTemplate.Resources>
+        <Grid>
+            <Image
+                IsHitTestVisible="False"
+                RenderOptions.BitmapScalingMode="HighQuality"
+                Source="{Binding Converter={StaticResource ToFileNameOrBitmapImage}}"
+                Stretch="Fill"
+                Tag="picture" />
+            <Path
+                Width="{c:Binding Width.Value-EdgeThickness.Value}"
+                Height="{c:Binding Height.Value-EdgeThickness.Value}"
+                Data="{Binding PathGeometry.Value}"
+                Fill="{Binding FillBrush.Value}"
+                IsHitTestVisible="False"
+                Stretch="Fill"
+                Stroke="{Binding EdgeBrush.Value}"
+                StrokeDashArray="{Binding StrokeDashArray.Value}"
+                StrokeLineJoin="{Binding StrokeLineJoin.Value}"
+                StrokeMiterLimit="{Binding StrokeMiterLimit.Value}"
+                StrokeThickness="{Binding EdgeThickness.Value}" />
+        </Grid>
+    </DataTemplate>
+</ResourceDictionary>

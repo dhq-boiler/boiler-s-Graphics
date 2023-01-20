@@ -70,8 +70,9 @@ namespace boilersGraphics.ViewModels
             clone.AddPointP2(Owner, Points[1]);
             clone.StrokeStartLineCap.Value = StrokeStartLineCap.Value;
             clone.StrokeEndLineCap.Value = StrokeEndLineCap.Value;
-            clone.PenLineJoin.Value = PenLineJoin.Value;
+            clone.StrokeLineJoin.Value = StrokeLineJoin.Value;
             clone.StrokeDashArray.Value = StrokeDashArray.Value;
+            clone.StrokeMiterLimit.Value = StrokeMiterLimit.Value;
             return clone;
         }
 
@@ -79,22 +80,8 @@ namespace boilersGraphics.ViewModels
         {
             var dialogService = new DialogService((App.Current as PrismApplication).Container as IContainerExtension);
             IDialogResult result = null;
-            var parameters = new DialogParameters() { { "ViewModel", (StraightConnectorViewModel)this.Clone() } };
-            dialogService.ShowDialog(nameof(DetailStraightLine), parameters, ret => result = ret);
-            if (result != null && result.Result == ButtonResult.OK)
-            {
-                var viewModel = result.Parameters.GetValue<StraightConnectorViewModel>("ViewModel");
-                this.Points[0] = new Point(viewModel.P1X.Value, viewModel.P1Y.Value);
-                this.Points[1] = new Point(viewModel.P2X.Value, viewModel.P2Y.Value);
-                this.SnapPoint0VM.Value.Left.Value = viewModel.P1X.Value;
-                this.SnapPoint0VM.Value.Top.Value = viewModel.P1Y.Value;
-                this.SnapPoint1VM.Value.Left.Value = viewModel.P2X.Value;
-                this.SnapPoint1VM.Value.Top.Value = viewModel.P2Y.Value;
-                this.StrokeStartLineCap.Value = viewModel.StrokeStartLineCap.Value;
-                this.StrokeEndLineCap.Value = viewModel.StrokeEndLineCap.Value;
-                this.PenLineJoin.Value = viewModel.PenLineJoin.Value;
-                this.StrokeDashArray.Value = viewModel.StrokeDashArray.Value;
-            }
+            var parameters = new DialogParameters() { { "ViewModel", this } };
+            dialogService.Show(nameof(DetailStraightLine), parameters, ret => result = ret);
         }
 
         #endregion //IClonable

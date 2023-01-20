@@ -6,18 +6,17 @@
     xmlns:viewModel="clr-namespace:boilersGraphics.ViewModels">
     <convereter:ToSolidColorBrushConverter x:Key="solidColorBrushConverter" />
     <DataTemplate DataType="{x:Type viewModel:NEllipseViewModel}">
-        <Grid>
-            <Path
-                Width="{Binding Width.Value}"
-                Height="{Binding Height.Value}"
-                Data="{Binding PathGeometry.Value}"
-                Fill="{Binding FillBrush.Value}"
-                IsHitTestVisible="False"
-                Stretch="None"
-                Stroke="{Binding EdgeBrush.Value}"
-                StrokeDashArray="{Binding StrokeDashArray.Value}"
-                StrokeLineJoin="{Binding PenLineJoin.Value}"
-                StrokeThickness="{Binding EdgeThickness.Value}" />
-        </Grid>
+        <Path
+            Width="{Binding Width.Value}"
+            Height="{Binding Height.Value}"
+            Data="{Binding PathGeometry.Value}"
+            Fill="{Binding FillBrush.Value}"
+            IsHitTestVisible="False"
+            Stretch="None"
+            Stroke="{Binding EdgeBrush.Value}"
+            StrokeDashArray="{Binding StrokeDashArray.Value}"
+            StrokeLineJoin="{Binding StrokeLineJoin.Value}"
+            StrokeMiterLimit="{Binding StrokeMiterLimit.Value}"
+            StrokeThickness="{Binding EdgeThickness.Value}" />
     </DataTemplate>
 </ResourceDictionary>

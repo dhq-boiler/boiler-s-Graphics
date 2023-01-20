@@ -112,6 +112,7 @@ namespace boilersGraphics.ViewModels
         {
             var clone = new NPolygonViewModel();
             clone.Owner = Owner;
+            clone.Data.Value = Data.Value;
             clone.Left.Value = Left.Value;
             clone.Top.Value = Top.Value;
             clone.Width.Value = Width.Value;
@@ -120,9 +121,9 @@ namespace boilersGraphics.ViewModels
             clone.FillBrush.Value = FillBrush.Value;
             clone.EdgeThickness.Value = EdgeThickness.Value;
             clone.RotationAngle.Value = RotationAngle.Value;
-            clone.Data.Value = Data.Value;
-            clone.PenLineJoin.Value = PenLineJoin.Value;
+            clone.StrokeLineJoin.Value = StrokeLineJoin.Value;
             clone.StrokeDashArray.Value = StrokeDashArray.Value;
+            clone.StrokeMiterLimit.Value = StrokeMiterLimit.Value;
             return clone;
         }
 
@@ -132,20 +133,7 @@ namespace boilersGraphics.ViewModels
         {
             var dialogService = new DialogService((App.Current as PrismApplication).Container as IContainerExtension);
             IDialogResult result = null;
-            dialogService.ShowDialog(nameof(DetailPolygon), new DialogParameters() { { "ViewModel", (NPolygonViewModel)this.Clone() } }, ret => result = ret);
-            if (result != null && result.Result == ButtonResult.OK)
-            {
-                var viewModel = result.Parameters.GetValue<NPolygonViewModel>("ViewModel");
-                this.Left.Value = viewModel.Left.Value;
-                this.Top.Value = viewModel.Top.Value;
-                this.Width.Value = viewModel.Width.Value;
-                this.Height.Value = viewModel.Height.Value;
-                this.CenterX.Value = viewModel.CenterX.Value;
-                this.CenterY.Value = viewModel.CenterY.Value;
-                this.RotationAngle.Value = viewModel.RotationAngle.Value;
-                this.PenLineJoin.Value = viewModel.PenLineJoin.Value;
-                this.StrokeDashArray.Value = viewModel.StrokeDashArray.Value;
-            }
+            dialogService.Show(nameof(DetailPolygon), new DialogParameters() { { "ViewModel", this } }, ret => result = ret);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using boilersGraphics.Helpers;
 using boilersGraphics.Views;
+using NLog;
 using Prism.Ioc;
 using Prism.Services.Dialogs;
 using Prism.Unity;
@@ -67,26 +68,7 @@ namespace boilersGraphics.ViewModels
         {
             var dialogService = new DialogService((App.Current as PrismApplication).Container as IContainerExtension);
             IDialogResult result = null;
-            dialogService.ShowDialog(nameof(DetailPie), new DialogParameters() { { "ViewModel", (NPieViewModel)this.Clone() } }, ret => result = ret);
-            if (result != null && result.Result == ButtonResult.OK)
-            {
-                var viewModel = result.Parameters.GetValue<NPieViewModel>("ViewModel");
-                this.Left.Value = viewModel.Left.Value;
-                this.Top.Value = viewModel.Top.Value;
-                this.Width.Value = viewModel.Width.Value;
-                this.Height.Value = viewModel.Height.Value;
-                this.CenterX.Value = viewModel.CenterX.Value;
-                this.CenterY.Value = viewModel.CenterY.Value;
-                this.RotationAngle.Value = viewModel.RotationAngle.Value;
-                this.PieCenterPoint.Value = viewModel.PieCenterPoint.Value;
-                this.DonutWidth.Value = viewModel.DonutWidth.Value;
-                this.Distance.Value = viewModel.Distance.Value;
-                this.StartDegree.Value = viewModel.StartDegree.Value;
-                this.EndDegree.Value = viewModel.EndDegree.Value;
-                this.SweepDirection.Value = viewModel.SweepDirection.Value;
-                this.PenLineJoin.Value = viewModel.PenLineJoin.Value;
-                this.StrokeDashArray.Value = viewModel.StrokeDashArray.Value;
-            }
+            dialogService.Show(nameof(DetailPie), new DialogParameters() { { "ViewModel", this } }, ret => result = ret);
         }
 
         public ReactivePropertySlim<Point> PieCenterPoint { get; } = new ReactivePropertySlim<Point>();
@@ -122,6 +104,15 @@ namespace boilersGraphics.ViewModels
                     PathGeometryRotate.Value = CreateGeometry(RotationAngle.Value);
                 }
             }
+        }
+
+        protected override void AfterUpdatePathGeometry(string propertyName, object oldValue, object newValue)
+        {
+            if (PathGeometryNoRotate.Value is null)
+                return;
+            PathGeometryNoRotate.Value = GeometryCreator.Scale(PathGeometryNoRotate.Value, PathGeometryNoRotate.Value.Bounds.Width / (Width.Value + EdgeThickness.Value), PathGeometryNoRotate.Value.Bounds.Height / (Height.Value + EdgeThickness.Value));
+            var geometry = PathGeometryNoRotate.Value;
+            geometry.Transform = new TranslateTransform(-geometry.Bounds.Left, -geometry.Bounds.Top);
         }
 
         public override PathGeometry CreateGeometry(bool flag = false)
@@ -186,8 +177,9 @@ namespace boilersGraphics.ViewModels
             clone.StartDegree.Value = StartDegree.Value;
             clone.EndDegree.Value = EndDegree.Value;
             clone.SweepDirection.Value = SweepDirection.Value;
-            clone.PenLineJoin.Value = PenLineJoin.Value;
+            clone.StrokeLineJoin.Value = StrokeLineJoin.Value;
             clone.StrokeDashArray.Value = StrokeDashArray.Value;
+            clone.StrokeMiterLimit.Value = StrokeMiterLimit.Value;
             return clone;
         }
 

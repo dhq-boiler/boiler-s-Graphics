@@ -22,18 +22,6 @@
     <UserControl.ContentTemplate>
         <DataTemplate>
             <DockPanel>
-                <DockPanel DockPanel.Dock="Top">
-                    <StackPanel Orientation="Horizontal">
-                        <DockPanel>
-                            <Label DockPanel.Dock="Left">PenLineJoin</Label>
-                            <ComboBox ItemsSource="{Binding DataContext.PenLineJoins, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}" SelectedValue="{Binding DataContext.PenLineJoin.Value, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}" />
-                        </DockPanel>
-                        <DockPanel>
-                            <Label DockPanel.Dock="Left">StrokeDashArray</Label>
-                            <TextBox Width="100" Text="{Binding DataContext.StrokeDashArray.Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DoubleCollectionToString}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}" />
-                        </DockPanel>
-                    </StackPanel>
-                </DockPanel>
                 <Grid x:Name="DPGRoot">
                     <Grid>
                         <Grid.Resources>

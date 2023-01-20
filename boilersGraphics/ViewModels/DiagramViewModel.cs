@@ -934,30 +934,70 @@ namespace boilersGraphics.ViewModels
             MainWindowVM.Recorder.BeginRecode();
             var picture = SelectedItems.Value.OfType<PictureDesignerItemViewModel>().First();
             var other = SelectedItems.Value.OfType<DesignerItemViewModelBase>().Last();
-            var pathGeometry = other.PathGeometry.Value;
             double left = -(other.Left.Value - picture.Left.Value);
             double top = -(other.Top.Value - picture.Top.Value);
             double right = -(picture.Right.Value - other.Right.Value);
             double bottom = -(picture.Bottom.Value - other.Bottom.Value);
-            pathGeometry = GeometryCreator.Translate(pathGeometry, -left, -top);
-            MainWindowVM.Recorder.Current.ExecuteSetProperty(picture, "ClippingOriginRect.Value", new Rect(picture.Left.Value, picture.Top.Value, picture.Width.Value, picture.Height.Value));
-            //MainWindowVM.Recorder.Current.ExecuteSetProperty(picture, "WidthInClipping.Value", picture.Width.Value);
-            //MainWindowVM.Recorder.Current.ExecuteSetProperty(picture, "HeightInClipping.Value", picture.Height.Value);
-            MainWindowVM.Recorder.Current.ExecuteSetProperty(picture, "Margin.Value", new System.Windows.Thickness(left, top, right, bottom));
-            MainWindowVM.Recorder.Current.ExecuteSetProperty(picture, "Pool.Value", "IsInitializing");
-            //MainWindowVM.Recorder.Current.ExecuteSetProperty(picture, "Left.Value", 0d);
-            MainWindowVM.Recorder.Current.ExecuteSetProperty(picture, "Left.Value", picture.Left.Value + pathGeometry.Bounds.X);
-            MainWindowVM.Recorder.Current.ExecuteSetProperty(picture, "Width.Value", other.Width.Value);
-            MainWindowVM.Recorder.Current.ExecuteSetProperty(picture, "Top.Value", picture.Top.Value + pathGeometry.Bounds.Y);
-            MainWindowVM.Recorder.Current.ExecuteSetProperty(picture, "Height.Value", other.Height.Value);
-            MainWindowVM.Recorder.Current.ExecuteSetProperty(picture, "Pool.Value", string.Empty);
-            MainWindowVM.Recorder.Current.ExecuteSetProperty<PictureDesignerItemViewModel, PathGeometry>(picture, "PathGeometryNoRotate.Value", null);
-            var sender = picture.TransformNortification.Value.Sender as PictureDesignerItemViewModel;
-            MainWindowVM.Recorder.Current.ExecuteSetProperty(sender, "PathGeometryNoRotate.Value", pathGeometry);
-            MainWindowVM.Recorder.Current.ExecuteSetProperty(sender, "ClipObject.Value", other);
-
+            var image = new Image();
+            image.BeginInit();
+            image.Width = picture.Width.Value;
+            image.Height = picture.Height.Value;
+            image.Source = picture.EmbeddedImage.Value != null ? picture.EmbeddedImage.Value : ToBitmapSource(picture.FileName);
+            var g = GeometryCreator.Translate(other.PathGeometry.Value, -left, -top);
+            image.Clip = g;
+            image.Stretch = Stretch.Fill;
+            image.EndInit();
+            var canvas = new Canvas();
+            canvas.Width = picture.Width.Value;
+            canvas.Height = picture.Height.Value;
+            canvas.Children.Add(image);
+            var size = new Size(canvas.Width + other.EdgeThickness.Value, canvas.Height + other.EdgeThickness.Value);
+            canvas.Measure(size);
+            canvas.Arrange(new Rect(size));
+            canvas.RenderTransform = new TranslateTransform(left, top);
+            canvas.UpdateLayout();
+            var newCroppedPicture = new CroppedPictureDesignerItemViewModel();
+            newCroppedPicture.PathGeometryNoRotate.Value = other.PathGeometryNoRotate.Value;
+            newCroppedPicture.PathGeometryRotate.Value = other.PathGeometryRotate.Value;
+            newCroppedPicture.EnablePathGeometryUpdate.Value = false;
+            newCroppedPicture.Left.Value = other.Left.Value;
+            newCroppedPicture.Top.Value = other.Top.Value;
+            newCroppedPicture.Width.Value = other.Width.Value;
+            newCroppedPicture.Height.Value = other.Height.Value;
+            newCroppedPicture.EnablePathGeometryUpdate.Value = true;
+            newCroppedPicture.EdgeBrush.Value = other.EdgeBrush.Value;
+            newCroppedPicture.EdgeThickness.Value = other.EdgeThickness.Value;
+            newCroppedPicture.FillBrush.Value = new SolidColorBrush(Colors.Transparent);
+            var encoder = new PngBitmapEncoder();
+            RenderTargetBitmap bitmap = new RenderTargetBitmap((int)other.Width.Value, (int)other.Height.Value, 96, 96, PixelFormats.Pbgra32);
+            bitmap.Render(canvas);
+            OpenCvSharpHelper.ImShow("Clipping", bitmap);
+            BitmapFrame frame = BitmapFrame.Create(bitmap);
+            encoder.Frames.Add(frame);
+            var bitmapImage = new BitmapImage();
+            using (var stream = new MemoryStream())
+            {
+                encoder.Save(stream);
+                stream.Seek(0, SeekOrigin.Begin);
+                bitmapImage.BeginInit();
+                bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+                bitmapImage.StreamSource = stream;
+                bitmapImage.EndInit();
+            }
+            newCroppedPicture.EmbeddedImage.Value = bitmapImage;
+            newCroppedPicture.Owner = this;
+            Add(newCroppedPicture);
+            Remove(picture);
             Remove(other);
             MainWindowVM.Recorder.EndRecode();
+        }
+
+        private BitmapSource ToBitmapSource(string fileName)
+        {
+            using (var stream = System.IO.File.OpenRead(fileName))
+            {
+                return BitmapFrame.Create(stream, BitmapCreateOptions.None, BitmapCacheOption.OnLoad);
+            }
         }
 
         public bool CanExecuteClip()
@@ -1121,7 +1161,10 @@ namespace boilersGraphics.ViewModels
                         {
                             item1PathGeometry = designerItem1.PathGeometryRotate.Value;
                         }
-                        item1PathGeometry = GeometryCreator.Translate(item1PathGeometry, designerItem1.Left.Value, designerItem1.Top.Value);
+                        if (designerItem1 is not CombineGeometryViewModel)
+                        {
+                            item1PathGeometry = GeometryCreator.Translate(item1PathGeometry, designerItem1.Left.Value, designerItem1.Top.Value);
+                        }
                     }
 
                     if (item2 is DesignerItemViewModelBase designerItem2)
@@ -1130,7 +1173,11 @@ namespace boilersGraphics.ViewModels
                         {
                             item2PathGeometry = designerItem2.PathGeometryRotate.Value;
                         }
-                        item2PathGeometry = GeometryCreator.Translate(item2PathGeometry, designerItem2.Left.Value, designerItem2.Top.Value);
+
+                        if (designerItem2 is not CombineGeometryViewModel)
+                        {
+                            item2PathGeometry = GeometryCreator.Translate(item2PathGeometry, designerItem2.Left.Value, designerItem2.Top.Value);
+                        }
                     }
 
 

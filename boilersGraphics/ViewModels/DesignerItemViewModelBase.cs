@@ -1,9 +1,11 @@
 ﻿using boilersGraphics.Helpers;
+using Homura.QueryBuilder.Iso.Dml;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Media;
@@ -23,11 +25,13 @@ namespace boilersGraphics.ViewModels
         {
             Left.Value = left;
             Top.Value = top;
+            Rect = Left.CombineLatest(Top, Width, Height, (left, top, width, height) => new System.Windows.Rect(left, top, width, height)).ToReadOnlyReactivePropertySlim();
             Init();
         }
 
         public DesignerItemViewModelBase() : base()
         {
+            Rect = Left.CombineLatest(Top, Width, Height, (left, top, width, height) => new System.Windows.Rect(left, top, width, height)).ToReadOnlyReactivePropertySlim();
             Init();
         }
 
@@ -76,6 +80,8 @@ namespace boilersGraphics.ViewModels
         public ReadOnlyReactivePropertySlim<double> Right { get; private set; }
 
         public ReadOnlyReactivePropertySlim<double> Bottom { get; private set; }
+        
+        public ReadOnlyReactivePropertySlim<Rect> Rect { get; set; }
 
         public ReactivePropertySlim<double> CenterX { get; } = new ReactivePropertySlim<double>();
         public ReactivePropertySlim<double> CenterY { get; } = new ReactivePropertySlim<double>();
@@ -103,19 +109,35 @@ namespace boilersGraphics.ViewModels
 
             Left
                 .Zip(Left.Skip(1), (Old, New) => new { OldItem = Old, NewItem = New })
-                .Subscribe(x => UpdateTransform(nameof(Left), x.OldItem, x.NewItem))
+                .Subscribe(x =>
+                {
+                    UpdateTransform(nameof(Left), x.OldItem, x.NewItem);
+                    OnRectChanged(new System.Windows.Rect(Left.Value, Top.Value, Width.Value, Height.Value));
+                })
                 .AddTo(_CompositeDisposable);
             Top
                 .Zip(Top.Skip(1), (Old, New) => new { OldItem = Old, NewItem = New })
-                .Subscribe(x => UpdateTransform(nameof(Top), x.OldItem, x.NewItem))
+                .Subscribe(x =>
+                {
+                    UpdateTransform(nameof(Top), x.OldItem, x.NewItem);
+                    OnRectChanged(new System.Windows.Rect(Left.Value, Top.Value, Width.Value, Height.Value));
+                })
                 .AddTo(_CompositeDisposable);
             Width
                 .Zip(Width.Skip(1), (Old, New) => new { OldItem = Old, NewItem = New })
-                .Subscribe(x => UpdateTransform(nameof(Width), x.OldItem, x.NewItem))
+                .Subscribe(x =>
+                {
+                    UpdateTransform(nameof(Width), x.OldItem, x.NewItem);
+                    OnRectChanged(new System.Windows.Rect(Left.Value, Top.Value, Width.Value, Height.Value));
+                })
                 .AddTo(_CompositeDisposable);
             Height
                 .Zip(Height.Skip(1), (Old, New) => new { OldItem = Old, NewItem = New })
-                .Subscribe(x => UpdateTransform(nameof(Height), x.OldItem, x.NewItem))
+                .Subscribe(x =>
+                {
+                    UpdateTransform(nameof(Height), x.OldItem, x.NewItem);
+                    OnRectChanged(new System.Windows.Rect(Left.Value, Top.Value, Width.Value, Height.Value));
+                })
                 .AddTo(_CompositeDisposable);
             RotationAngle
                 .Zip(RotationAngle.Skip(1), (Old, New) => new { OldItem = Old, NewItem = New })
@@ -147,6 +169,15 @@ namespace boilersGraphics.ViewModels
             PathGeometry = PathGeometryNoRotate.ToReadOnlyReactivePropertySlim();
 
             Matrix.Value = new Matrix();
+
+            EnablePathGeometryUpdate.Where(isEnable => isEnable).Subscribe(isEnable =>
+            {
+                UpdatePathGeometryIfEnable(nameof(EnablePathGeometryUpdate), false, true);
+            }).AddTo(_CompositeDisposable);
+        }
+
+        public virtual void OnRectChanged(Rect rect)
+        {
         }
 
         private void UpdateMatrix(double oldAngle, double newAngle)
@@ -196,12 +227,18 @@ namespace boilersGraphics.ViewModels
                 case "RotationAngle":
                 case "Matrix":
                 case "EdgeThickness":
+                case "RadiusX":
+                case "RadiusY":
                     UpdatePathGeometryIfEnable(propertyName, oldValue, newValue);
+                    AfterUpdatePathGeometry(propertyName, oldValue, newValue);
                     break;
                 default:
                     break;
             }
         }
+
+        protected virtual void AfterUpdatePathGeometry(string propertyName, object oldValue, object newValue)
+        { }
 
         public virtual void UpdatePathGeometryIfEnable(string propertyName, object oldValue, object newValue, bool flag = false)
         {
@@ -268,6 +305,20 @@ namespace boilersGraphics.ViewModels
                     Matrix.Value = matrix;
                     break;
             }
+        }
+
+        private bool isMonitored = false;
+
+        public override IDisposable BeginMonitor(Action action)
+        {
+            var compositeDisposable = new CompositeDisposable();
+            base.BeginMonitor(action).AddTo(compositeDisposable);
+            if (!isMonitored)
+            {
+                Rect.Subscribe(_ => action()).AddTo(compositeDisposable);
+                isMonitored = true;
+            }
+            return compositeDisposable;
         }
     }
 }

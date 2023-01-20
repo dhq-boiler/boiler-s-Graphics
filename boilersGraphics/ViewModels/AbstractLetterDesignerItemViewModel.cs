@@ -10,55 +10,19 @@ namespace boilersGraphics.ViewModels
 {
     public abstract class AbstractLetterDesignerItemViewModel : DesignerItemViewModelBase
     {
-        private bool _LetterSettingDialogIsOpen = false;
-        private string _LetterString = string.Empty;
-        private FontFamilyEx _SelectedFontFamily;
-        private bool _IsBold;
-        private bool _IsItalic;
-        private int _FontSize;
-        private bool _AutoLineBreak;
+        public ReactivePropertySlim<bool> LetterSettingDialogIsOpen { get; } = new ReactivePropertySlim<bool>(false);
 
-        public bool LetterSettingDialogIsOpen
-        {
-            get { return _LetterSettingDialogIsOpen; }
-            set { SetProperty(ref _LetterSettingDialogIsOpen, value); }
-        }
+        public ReactivePropertySlim<string> LetterString { get; } = new ReactivePropertySlim<string>(string.Empty);
 
-        public string LetterString
-        {
-            get { return _LetterString; }
-            set { SetProperty(ref _LetterString, value); }
-        }
+        public ReactivePropertySlim<FontFamilyEx> SelectedFontFamily { get; } = new ReactivePropertySlim<FontFamilyEx>();
 
-        public FontFamilyEx SelectedFontFamily
-        {
-            get { return _SelectedFontFamily; }
-            set { SetProperty(ref _SelectedFontFamily, value); }
-        }
+        public ReactivePropertySlim<bool> IsBold { get; } = new ReactivePropertySlim<bool>();
 
-        public bool IsBold
-        {
-            get { return _IsBold; }
-            set { SetProperty(ref _IsBold, value); }
-        }
+        public ReactivePropertySlim<bool> IsItalic { get; } = new ReactivePropertySlim<bool>();
 
-        public bool IsItalic
-        {
-            get { return _IsItalic; }
-            set { SetProperty(ref _IsItalic, value); }
-        }
+        public ReactivePropertySlim<int> FontSize { get; } = new ReactivePropertySlim<int>();
 
-        public int FontSize
-        {
-            get { return _FontSize; }
-            set { SetProperty(ref _FontSize, value); }
-        }
-
-        public bool AutoLineBreak
-        {
-            get { return _AutoLineBreak; }
-            set { SetProperty(ref _AutoLineBreak, value); }
-        }
+        public ReactivePropertySlim<bool> IsAutoLineBreak { get; } = new ReactivePropertySlim<bool>();
 
         public event EventHandler LetterSettingDialogClose;
 
@@ -85,7 +49,7 @@ namespace boilersGraphics.ViewModels
         {
             GotFocusCommand.Subscribe(x =>
             {
-                if (!LetterSettingDialogIsOpen)
+                if (!LetterSettingDialogIsOpen.Value)
                 {
                     OpenSettingDialog();
                 }
@@ -93,32 +57,32 @@ namespace boilersGraphics.ViewModels
             .AddTo(_CompositeDisposable);
             LostFocusCommand.Subscribe(x =>
             {
-                if (LetterSettingDialogIsOpen)
+                if (LetterSettingDialogIsOpen.Value)
                 {
                     CloseLetterSettingDialog();
                 }
             })
             .AddTo(_CompositeDisposable);
             this.ShowConnectors = false;
-            this.ObserveProperty(x => x.LetterString)
+            this.ObserveProperty(x => x.LetterString.Value)
                 .Subscribe(_ => RenderLetter())
                 .AddTo(_CompositeDisposable);
-            this.ObserveProperty(x => x.SelectedFontFamily)
+            this.ObserveProperty(x => x.SelectedFontFamily.Value)
                 .Subscribe(_ => RenderLetter())
                 .AddTo(_CompositeDisposable);
-            this.ObserveProperty(x => x.IsBold)
+            this.ObserveProperty(x => x.IsBold.Value)
                 .Subscribe(_ => RenderLetter())
                 .AddTo(_CompositeDisposable);
-            this.ObserveProperty(x => x.IsItalic)
+            this.ObserveProperty(x => x.IsItalic.Value)
                 .Subscribe(_ => RenderLetter())
                 .AddTo(_CompositeDisposable);
-            this.ObserveProperty(x => x.FontSize)
+            this.ObserveProperty(x => x.FontSize.Value)
                 .Subscribe(_ => RenderLetter())
                 .AddTo(_CompositeDisposable);
             this.ObserveProperty(x => x.Width.Value)
                 .Subscribe(_ => RenderLetter())
                 .AddTo(_CompositeDisposable);
-            this.ObserveProperty(x => x.AutoLineBreak)
+            this.ObserveProperty(x => x.IsAutoLineBreak.Value)
                 .Subscribe(_ => RenderLetter())
                 .AddTo(_CompositeDisposable);
             EnablePathGeometryUpdate.Value = true;
@@ -126,24 +90,24 @@ namespace boilersGraphics.ViewModels
 
         public void CloseLetterSettingDialog()
         {
-            if (LetterSettingDialogIsOpen)
+            if (LetterSettingDialogIsOpen.Value)
             {
                 LetterSettingDialogClose?.Invoke(this, new EventArgs());
-                LetterSettingDialogIsOpen = false;
+                LetterSettingDialogIsOpen.Value = false;
             }
         }
 
         private void RenderLetter()
         {
-            if (SelectedFontFamily != null && FontSize > 0)
+            if (SelectedFontFamily.Value is not null && FontSize.Value > 0)
             {
-                var fontStyle = IsItalic ? FontStyles.Italic : FontStyles.Normal;
-                var fontWeight = IsBold ? FontWeights.Bold : FontWeights.Normal;
-                var typeface = new Typeface(new FontFamilyEx(SelectedFontFamily.FamilyName), fontStyle, fontWeight, FontStretches.Normal);
+                var fontStyle = IsItalic.Value ? FontStyles.Italic : FontStyles.Normal;
+                var fontWeight = IsBold.Value ? FontWeights.Bold : FontWeights.Normal;
+                var typeface = new Typeface(new FontFamilyEx(SelectedFontFamily.Value.FamilyName), fontStyle, fontWeight, FontStretches.Normal);
                 GlyphTypeface glyphTypeface;
                 if (!typeface.TryGetGlyphTypeface(out glyphTypeface))
                     return;
-                if (AutoLineBreak)
+                if (IsAutoLineBreak.Value)
                     WithLineBreak(glyphTypeface);
                 else
                     WithoutLineBreak(glyphTypeface);

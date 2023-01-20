@@ -7,11 +7,8 @@ using Prism.Unity;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
-using System.Diagnostics;
-using System.Linq;
 using System.Reactive.Linq;
 using System.Windows;
-using System.Windows.Shapes;
 
 namespace boilersGraphics.ViewModels
 {
@@ -145,7 +142,7 @@ namespace boilersGraphics.ViewModels
             clone.PathGeometryNoRotate.Value = GeometryCreator.CreateBezierCurve(clone);
             clone.StrokeStartLineCap.Value = StrokeStartLineCap.Value;
             clone.StrokeEndLineCap.Value = StrokeEndLineCap.Value;
-            clone.PenLineJoin.Value = PenLineJoin.Value;
+            clone.StrokeLineJoin.Value = StrokeLineJoin.Value;
             clone.StrokeDashArray.Value = StrokeDashArray.Value;
             return clone;
         }
@@ -159,23 +156,7 @@ namespace boilersGraphics.ViewModels
         {
             var dialogService = new DialogService((App.Current as PrismApplication).Container as IContainerExtension);
             IDialogResult result = null;
-            dialogService.ShowDialog(nameof(DetailBezier), new DialogParameters() { { "ViewModel", (BezierCurveViewModel)this.Clone() } }, ret => result = ret);
-            if (result != null && result.Result == ButtonResult.OK)
-            {
-                var viewModel = result.Parameters.GetValue<BezierCurveViewModel>("ViewModel");
-                this.Points[0] = new Point(viewModel.P1X.Value, viewModel.P1Y.Value);
-                this.Points[1] = new Point(viewModel.P2X.Value, viewModel.P2Y.Value);
-                this.ControlPoint1.Value = new Point(viewModel.C1X.Value, viewModel.C1Y.Value);
-                this.ControlPoint2.Value = new Point(viewModel.C2X.Value, viewModel.C2Y.Value);
-                this.SnapPoint0VM.Value.Left.Value = viewModel.P1X.Value;
-                this.SnapPoint0VM.Value.Top.Value = viewModel.P1Y.Value;
-                this.SnapPoint1VM.Value.Left.Value = viewModel.P2X.Value;
-                this.SnapPoint1VM.Value.Top.Value = viewModel.P2Y.Value;
-                this.StrokeStartLineCap.Value = viewModel.StrokeStartLineCap.Value;
-                this.StrokeEndLineCap.Value = viewModel.StrokeEndLineCap.Value;
-                this.PenLineJoin.Value = viewModel.PenLineJoin.Value;
-                this.StrokeDashArray.Value = viewModel.StrokeDashArray.Value;
-            }
+            dialogService.Show(nameof(DetailBezier), new DialogParameters() { { "ViewModel", this } }, ret => result = ret);
         }
     }
 }

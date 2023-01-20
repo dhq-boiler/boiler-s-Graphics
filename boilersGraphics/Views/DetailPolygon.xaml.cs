@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Prism.Regions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,9 +21,10 @@ namespace boilersGraphics.Views
     /// </summary>
     public partial class DetailPolygon : UserControl
     {
-        public DetailPolygon()
+        public DetailPolygon(IRegionManager regionManager)
         {
             InitializeComponent();
+            RegionManager.SetRegionManager(_DetailRegion, regionManager);
         }
     }
 }

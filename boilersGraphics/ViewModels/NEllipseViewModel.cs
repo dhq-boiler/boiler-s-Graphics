@@ -75,8 +75,9 @@ namespace boilersGraphics.ViewModels
             clone.FillBrush.Value = FillBrush.Value;
             clone.EdgeThickness.Value = EdgeThickness.Value;
             clone.RotationAngle.Value = RotationAngle.Value;
-            clone.PenLineJoin.Value = PenLineJoin.Value;
+            clone.StrokeLineJoin.Value = StrokeLineJoin.Value;
             clone.StrokeDashArray.Value = StrokeDashArray.Value;
+            clone.StrokeMiterLimit.Value = StrokeMiterLimit.Value;
             return clone;
         }
 
@@ -84,20 +85,7 @@ namespace boilersGraphics.ViewModels
         {
             var dialogService = new DialogService((App.Current as PrismApplication).Container as IContainerExtension);
             IDialogResult result = null;
-            dialogService.ShowDialog(nameof(DetailEllipse), new DialogParameters() { { "ViewModel", (NEllipseViewModel)this.Clone() } }, ret => result = ret);
-            if (result != null && result.Result == ButtonResult.OK)
-            {
-                var viewModel = result.Parameters.GetValue<NEllipseViewModel>("ViewModel");
-                this.Left.Value = viewModel.Left.Value;
-                this.Top.Value = viewModel.Top.Value;
-                this.Width.Value = viewModel.Width.Value;
-                this.Height.Value = viewModel.Height.Value;
-                this.CenterX.Value = viewModel.CenterX.Value;
-                this.CenterY.Value = viewModel.CenterY.Value;
-                this.RotationAngle.Value = viewModel.RotationAngle.Value;
-                this.PenLineJoin.Value = viewModel.PenLineJoin.Value;
-                this.StrokeDashArray.Value = viewModel.StrokeDashArray.Value;
-            }
+            dialogService.Show(nameof(DetailEllipse), new DialogParameters() { { "ViewModel", this } }, ret => result = ret);
         }
 
         #endregion //IClonable

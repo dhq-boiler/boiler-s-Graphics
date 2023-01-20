@@ -7,15 +7,25 @@
         <DataTemplate.Resources>
             <converters:ToFileNameOrBitmapImage x:Key="ToFileNameOrBitmapImage" />
         </DataTemplate.Resources>
-        <Border BorderBrush="{Binding EdgeBrush.Value}" BorderThickness="{Binding EdgeThickness.Value}">
+        <Grid>
             <Image
-                Margin="{Binding Margin.Value}"
-                Clip="{Binding PathGeometry.Value}"
                 IsHitTestVisible="False"
                 RenderOptions.BitmapScalingMode="HighQuality"
                 Source="{Binding Converter={StaticResource ToFileNameOrBitmapImage}}"
                 Stretch="Fill"
                 Tag="picture" />
-        </Border>
+            <Path
+                Width="{Binding Width.Value}"
+                Height="{Binding Height.Value}"
+                Data="{Binding PathGeometry.Value}"
+                Fill="{Binding FillBrush.Value}"
+                IsHitTestVisible="False"
+                Stretch="None"
+                Stroke="{Binding EdgeBrush.Value}"
+                StrokeDashArray="{Binding StrokeDashArray.Value}"
+                StrokeLineJoin="{Binding StrokeLineJoin.Value}"
+                StrokeMiterLimit="{Binding StrokeMiterLimit.Value}"
+                StrokeThickness="{Binding EdgeThickness.Value}" />
+        </Grid>
     </DataTemplate>
 </ResourceDictionary>

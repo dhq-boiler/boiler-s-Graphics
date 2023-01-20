@@ -5,6 +5,7 @@ using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
@@ -73,9 +74,10 @@ namespace boilersGraphics.ViewModels
         public ReadOnlyReactivePropertySlim<PathGeometry> PathGeometry { get; set; }
         public ReactivePropertySlim<PathGeometry> PathGeometryNoRotate { get; } = new ReactivePropertySlim<PathGeometry>();
         public ReactivePropertySlim<PathGeometry> PathGeometryRotate { get; } = new ReactivePropertySlim<PathGeometry>();
-        public ReactivePropertySlim<PenLineJoin> PenLineJoin { get; } = new ReactivePropertySlim<PenLineJoin>();
+        public ReactivePropertySlim<PenLineJoin> StrokeLineJoin { get; } = new ReactivePropertySlim<PenLineJoin>();
         public ReactiveCollection<PenLineJoin> PenLineJoins { get; private set; }
         public ReactivePropertySlim<DoubleCollection> StrokeDashArray { get; } = new ReactivePropertySlim<DoubleCollection>();
+        public ReactivePropertySlim<double> StrokeMiterLimit { get; } = new ReactivePropertySlim<double>();
 
         public string Name { get; set; }
 
@@ -143,10 +145,12 @@ namespace boilersGraphics.ViewModels
                 }
             })
             .AddTo(_CompositeDisposable);
-            PenLineJoins = new ReactiveCollection<PenLineJoin>();
-            PenLineJoins.Add(System.Windows.Media.PenLineJoin.Miter);
-            PenLineJoins.Add(System.Windows.Media.PenLineJoin.Bevel);
-            PenLineJoins.Add(System.Windows.Media.PenLineJoin.Round);
+            PenLineJoins = new ReactiveCollection<PenLineJoin>
+            {
+                System.Windows.Media.PenLineJoin.Miter,
+                System.Windows.Media.PenLineJoin.Bevel,
+                System.Windows.Media.PenLineJoin.Round
+            };
             StrokeDashArray.Value = new DoubleCollection();
         }
 
@@ -301,6 +305,12 @@ namespace boilersGraphics.ViewModels
         public override string ToString()
         {
             return ShowPropertiesAndFields();
+        }
+
+        public virtual IDisposable BeginMonitor(Action action)
+        {
+            var compositeDisposable = new CompositeDisposable();
+            return compositeDisposable;
         }
     }
 }

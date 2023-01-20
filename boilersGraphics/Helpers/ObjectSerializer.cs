@@ -7,7 +7,6 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Windows;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Xml.Linq;
 
@@ -84,9 +83,17 @@ namespace boilersGraphics.Helpers
                 list.Add(new XElement("PathGeometryNoRotate", designerItem.PathGeometryNoRotate.Value));
                 list.Add(new XElement("PathGeometryRotate", designerItem.PathGeometryRotate.Value));
                 list.Add(new XElement("RotationAngle", designerItem.RotationAngle.Value));
+                list.Add(new XElement("StrokeLineJoin", designerItem.StrokeLineJoin.Value));
+                list.Add(new XElement("StrokeMiterLimit", designerItem.StrokeMiterLimit.Value));
+                list.Add(new XElement("StrokeDashArray", designerItem.StrokeDashArray.Value.ToString()));
+                if (designerItem is NRectangleViewModel rectangle)
+                {
+                    list.Add(new XElement("RadiusX", rectangle.RadiusX.Value));
+                    list.Add(new XElement("RadiusY", rectangle.RadiusY.Value));
+                }
                 if (designerItem is PictureDesignerItemViewModel picture)
                 {
-                    list.Add(new XElement("FileName", (designerItem as PictureDesignerItemViewModel).FileName));
+                    list.Add(new XElement("FileName", picture.FileName));
                     var enableImageEmbedding = (App.GetCurrentApp().MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.EnableImageEmbedding.Value;
                     list.Add(new XElement("EnableImageEmbedding", enableImageEmbedding));
                     if (enableImageEmbedding)
@@ -102,19 +109,19 @@ namespace boilersGraphics.Helpers
                         }
                     }
                 }
-                if (designerItem is ILetterDesignerItemViewModel)
+                if (designerItem is ILetterDesignerItemViewModel letter)
                 {
-                    list.Add(new XElement("LetterString", (designerItem as ILetterDesignerItemViewModel).LetterString));
-                    list.Add(new XElement("SelectedFontFamily", (designerItem as ILetterDesignerItemViewModel).SelectedFontFamily));
-                    list.Add(new XElement("IsBold", (designerItem as ILetterDesignerItemViewModel).IsBold));
-                    list.Add(new XElement("IsItalic", (designerItem as ILetterDesignerItemViewModel).IsItalic));
-                    list.Add(new XElement("FontSize", (designerItem as ILetterDesignerItemViewModel).FontSize));
+                    list.Add(new XElement("LetterString", letter.LetterString.Value));
+                    list.Add(new XElement("SelectedFontFamily", letter.SelectedFontFamily.Value));
+                    list.Add(new XElement("IsBold", letter.IsBold.Value));
+                    list.Add(new XElement("IsItalic", letter.IsItalic.Value));
+                    list.Add(new XElement("FontSize", letter.FontSize.Value));
                     //list.Add(new XElement("PathGeometry", (designerItem as ILetterDesignerItemViewModel).PathGeometry));
-                    list.Add(new XElement("AutoLineBreak", (designerItem as ILetterDesignerItemViewModel).AutoLineBreak));
+                    list.Add(new XElement("AutoLineBreak", letter.IsAutoLineBreak.Value));
                 }
-                if (designerItem is NPolygonViewModel)
+                if (designerItem is NPolygonViewModel polygon)
                 {
-                    list.Add(new XElement("Data", (designerItem as NPolygonViewModel).Data.Value));
+                    list.Add(new XElement("Data", polygon.Data.Value));
                 }
                 var designerItemXML = new XElement("DesignerItem", list);
                 return designerItemXML;
@@ -133,14 +140,17 @@ namespace boilersGraphics.Helpers
                 list.Add(new XElement("ZIndex", connectorItem.ZIndex.Value));
                 list.Add(new XElement("EdgeBrush", XElement.Parse(WpfObjectSerializer.Serialize(connectorItem.EdgeBrush.Value))));
                 list.Add(new XElement("EdgeThickness", connectorItem.EdgeThickness.Value));
+                list.Add(new XElement("StrokeLineJoin", connectorItem.StrokeLineJoin.Value));
+                list.Add(new XElement("StrokeMiterLimit", connectorItem.StrokeMiterLimit.Value));
+                list.Add(new XElement("StrokeDashArray", connectorItem.StrokeDashArray.Value.ToString()));
                 list.Add(new XElement("PathGeometry", connectorItem.PathGeometryNoRotate.Value));
                 list.Add(new XElement("LeftTop", connectorItem.LeftTop.Value));
-                if (connectorItem is BezierCurveViewModel)
+                if (connectorItem is BezierCurveViewModel bezier)
                 {
-                    list.Add(new XElement("ControlPoint1", (connectorItem as BezierCurveViewModel).ControlPoint1.Value));
-                    list.Add(new XElement("ControlPoint2", (connectorItem as BezierCurveViewModel).ControlPoint2.Value));
+                    list.Add(new XElement("ControlPoint1", bezier.ControlPoint1.Value));
+                    list.Add(new XElement("ControlPoint2", bezier.ControlPoint2.Value));
                 }
-                if (connectorItem is PolyBezierViewModel)
+                if (connectorItem is PolyBezierViewModel polyBezier)
                 {
                     list.Add(new XElement("Points", PointsToStr(connectorItem.Points)));
                 }
@@ -189,7 +199,7 @@ namespace boilersGraphics.Helpers
                                                                                       .Where(x => x is LayerItem)
                                                                                       .Select(x => (x as LayerItem).Item.Value)
                                                                ).OfType<ConnectorBaseViewModel>()
-                    where connection.GetType() != typeof(BezierCurveViewModel)
+                    where connection is not BezierCurveViewModel
                     select new XElement("Connection",
                                new XElement("ID", connection.ID),
                                new XElement("ParentID", connection.ParentID),
@@ -205,8 +215,7 @@ namespace boilersGraphics.Helpers
                         from connection in items.WithPickupChildren(dialogViewModel.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
                                                                                       .Where(x => x is LayerItem)
                                                                                       .Select(x => (x as LayerItem).Item.Value)
-                                                                   ).OfType<ConnectorBaseViewModel>()
-                        where connection.GetType() == typeof(BezierCurveViewModel)
+                                                                   ).OfType<BezierCurveViewModel>()
                         select new XElement("Connection",
                                     new XElement("ID", connection.ID),
                                     new XElement("ParentID", connection.ParentID),
@@ -216,15 +225,29 @@ namespace boilersGraphics.Helpers
                                     new XElement("ZIndex", connection.ZIndex.Value),
                                     new XElement("EdgeBrush", XElement.Parse(WpfObjectSerializer.Serialize(connection.EdgeBrush.Value))),
                                     new XElement("EdgeThickness", connection.EdgeThickness.Value),
-                                    new XElement("ControlPoint1", (connection as BezierCurveViewModel).ControlPoint1.Value),
-                                    new XElement("ControlPoint2", (connection as BezierCurveViewModel).ControlPoint2.Value),
+                                    new XElement("ControlPoint1", connection.ControlPoint1.Value),
+                                    new XElement("ControlPoint2", connection.ControlPoint2.Value),
                                     new XElement("PathGeometry", connection.PathGeometry.Value)
                     ));
         }
 
         public static IEnumerable<XElement> SerializeConfiguration(DiagramViewModel diagramViewModel)
         {
-            var brushConverter = new BrushConverter();
+            return new XElement[]
+            {
+                new XElement("Left", diagramViewModel.BackgroundItem.Value.Left.Value),
+                new XElement("Top", diagramViewModel.BackgroundItem.Value.Top.Value),
+                new XElement("Width", diagramViewModel.BackgroundItem.Value.Width.Value),
+                new XElement("Height", diagramViewModel.BackgroundItem.Value.Height.Value),
+                new XElement("CanvasBackground", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.CanvasBackground.Value))),
+                new XElement("EnablePointSnap", diagramViewModel.EnablePointSnap.Value),
+                new XElement("SnapPower", diagramViewModel.MainWindowVM.SnapPower.Value),
+                XElement_ColorSpots(diagramViewModel)
+            };
+        }
+
+        private static XElement XElement_ColorSpots(DiagramViewModel diagramViewModel)
+        {
             var colorSpots = new XElement("ColorSpots");
             colorSpots.Add(new XElement("ColorSpot0", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot0))));
             colorSpots.Add(new XElement("ColorSpot1", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot1))));
@@ -326,17 +349,7 @@ namespace boilersGraphics.Helpers
             colorSpots.Add(new XElement("ColorSpot97", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot97))));
             colorSpots.Add(new XElement("ColorSpot98", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot98))));
             colorSpots.Add(new XElement("ColorSpot99", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot99))));
-            return new XElement[]
-            {
-                new XElement("Left", diagramViewModel.BackgroundItem.Value.Left.Value),
-                new XElement("Top", diagramViewModel.BackgroundItem.Value.Top.Value),
-                new XElement("Width", diagramViewModel.BackgroundItem.Value.Width.Value),
-                new XElement("Height", diagramViewModel.BackgroundItem.Value.Height.Value),
-                new XElement("CanvasBackground", XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.CanvasBackground.Value))),
-                new XElement("EnablePointSnap", diagramViewModel.EnablePointSnap.Value),
-                new XElement("SnapPower", diagramViewModel.MainWindowVM.SnapPower.Value),
-                colorSpots
-            };
+            return colorSpots;
         }
     }
 }

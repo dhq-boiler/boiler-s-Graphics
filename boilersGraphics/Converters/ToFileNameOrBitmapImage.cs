@@ -13,7 +13,7 @@ namespace boilersGraphics.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var viewModel = value as PictureDesignerItemViewModel;
+            var viewModel = value as IEmbeddedImage;
             return viewModel.EmbeddedImage.Value != null ? viewModel.EmbeddedImage.Value : viewModel.FileName;
         }
 

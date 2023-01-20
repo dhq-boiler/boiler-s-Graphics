@@ -1,6 +1,34 @@
-﻿namespace boilersGraphics.ViewModels
+﻿using Prism.Regions;
+using System.Windows;
+using System.Windows.Media;
+
+namespace boilersGraphics.ViewModels
 {
     class DetailPieViewModel : DetailViewModelBase<NPieViewModel>
     {
+        public DetailPieViewModel(IRegionManager regionManager) : base(regionManager)
+        {
+        }
+
+        public override void SetProperties()
+        {
+            Properties.Add(new PropertyOptionsValueCombinationStruct<NPieViewModel, PenLineJoin>(ViewModel.Value, "StrokeLineJoin", new PenLineJoin[] {
+                PenLineJoin.Miter,
+                PenLineJoin.Bevel,
+                PenLineJoin.Round
+            }));
+            Properties.Add(new PropertyOptionsValueCombinationClass<NPieViewModel, DoubleCollection>(ViewModel.Value, "StrokeDashArray", HorizontalAlignment.Left));
+            Properties.Add(new PropertyOptionsValueCombinationStruct<NPieViewModel, double>(ViewModel.Value, "StrokeMiterLimit", HorizontalAlignment.Right));
+            Properties.Add(new PropertyOptionsValueCombinationStruct<NPieViewModel, double>(ViewModel.Value, "Left", HorizontalAlignment.Right));
+            Properties.Add(new PropertyOptionsValueCombinationStruct<NPieViewModel, double>(ViewModel.Value, "Top", HorizontalAlignment.Right));
+            Properties.Add(new PropertyOptionsValueCombinationStruct<NPieViewModel, double>(ViewModel.Value, "Width", HorizontalAlignment.Right));
+            Properties.Add(new PropertyOptionsValueCombinationStruct<NPieViewModel, double>(ViewModel.Value, "Height", HorizontalAlignment.Right));
+            Properties.Add(new PropertyOptionsValueCombinationStruct<NPieViewModel, double>(ViewModel.Value, "CenterX", HorizontalAlignment.Right));
+            Properties.Add(new PropertyOptionsValueCombinationStruct<NPieViewModel, double>(ViewModel.Value, "CenterY", HorizontalAlignment.Right));
+            Properties.Add(new PropertyOptionsValueCombinationStruct<NPieViewModel, double>(ViewModel.Value, "RotationAngle", HorizontalAlignment.Right));
+            Properties.Add(new PropertyOptionsValueCombinationClass<NPieViewModel, PathGeometry>(ViewModel.Value, "PathGeometryNoRotate", HorizontalAlignment.Left));
+            Properties.Add(new PropertyOptionsValueCombinationReadOnlyClass<NPieViewModel, PathGeometry>(ViewModel.Value, "PathGeometry", HorizontalAlignment.Left));
+            Properties.Add(new PropertyOptionsValueCombinationStruct<NPieViewModel, int>(ViewModel.Value, "ZIndex", HorizontalAlignment.Right));
+        }
     }
 }

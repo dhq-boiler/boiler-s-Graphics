@@ -23,6 +23,9 @@
     <None Include="..\LICENSE">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Controls\Effects\fx\MosaicEffect.ps">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="LICENSE.md">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -49,6 +52,7 @@
     <Resource Include="Assets\img\icon_Combine_union_dark.png" />
     <Resource Include="Assets\img\icon_Layers.png" />
     <Resource Include="Assets\img\minimap.png" />
+    <Resource Include="Assets\img\mosaic.png" />
     <Resource Include="Assets\img\picture_dark.png" />
     <Resource Include="Assets\img\polygon_dark.png" />
     <Resource Include="Assets\img\poly_bezier.png" />
@@ -122,7 +126,8 @@
     <PackageReference Include="NLog.Schema" Version="5.1.1" />
     <PackageReference Include="OpenCvSharp4.Windows" Version="4.5.3.20211207" />
     <PackageReference Include="Prism.Unity" Version="8.1.97" />
-    <PackageReference Include="ReactiveProperty" Version="8.0.3" />
+    <PackageReference Include="ReactiveProperty.WPF" Version="8.2.0" />
+    <PackageReference Include="SharpDX.D3DCompiler" Version="4.2.0" />
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.115.5" />
     <PackageReference Include="System.Data.SQLite.Linq" Version="1.0.115.5" />
     <PackageReference Include="System.Reactive" Version="5.0.0" />
@@ -155,6 +160,7 @@
     <None Remove="Assets\img\icon_Combine_union_dark.png" />
     <None Remove="Assets\img\icon_Layers.png" />
     <None Remove="Assets\img\minimap.png" />
+    <None Remove="Assets\img\mosaic.png" />
     <None Remove="Assets\img\picture_dark.png" />
     <None Remove="Assets\img\polygon_dark.png" />
     <None Remove="Assets\img\poly_bezier.png" />

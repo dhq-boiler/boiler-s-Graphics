@@ -169,6 +169,12 @@ namespace boilersGraphics
             containerRegistry.RegisterDialog<SetSnapPoint, ViewModels.SetSnapPointViewModel>();
             containerRegistry.RegisterDialog<Views.Version, ViewModels.VersionViewModel>();
             containerRegistry.RegisterDialog<Views.Thickness, ViewModels.ThicknessViewModel>();
+            containerRegistry.RegisterDialog<Views.Statistics, ViewModels.StatisticsDialogViewModel>();
+            containerRegistry.RegisterDialog<Views.CustomMessageBox, ViewModels.CustomMessageBoxViewModel>();
+            containerRegistry.RegisterDialog<Views.PrivacyPolicy, ViewModels.PrivacyPolicyViewModel>();
+            containerRegistry.RegisterDialog<Views.UndoHistory, ViewModels.UndoHistoryViewModel>();
+
+            containerRegistry.RegisterForNavigation<Detail>();
             containerRegistry.RegisterDialog<Views.DetailRectangle, ViewModels.DetailRectangleViewModel>();
             containerRegistry.RegisterDialog<Views.DetailEllipse, ViewModels.DetailEllipseViewModel>();
             containerRegistry.RegisterDialog<Views.DetailPolygon, ViewModels.DetailPolygonViewModel>();
@@ -176,12 +182,9 @@ namespace boilersGraphics
             containerRegistry.RegisterDialog<Views.DetailBezier, ViewModels.DetailBezierViewModel>();
             containerRegistry.RegisterDialog<Views.DetailPicture, ViewModels.DetailPictureViewModel>();
             containerRegistry.RegisterDialog<Views.DetailLetter, ViewModels.DetailLetterViewModel>();
-            containerRegistry.RegisterDialog<Views.Statistics, ViewModels.StatisticsDialogViewModel>();
-            containerRegistry.RegisterDialog<Views.CustomMessageBox, ViewModels.CustomMessageBoxViewModel>();
-            containerRegistry.RegisterDialog<Views.PrivacyPolicy, ViewModels.PrivacyPolicyViewModel>();
             containerRegistry.RegisterDialog<Views.DetailPie, ViewModels.DetailPieViewModel>();
             containerRegistry.RegisterDialog<Views.DetailPolyBezier, ViewModels.DetailPolyBezierViewModel>();
-            containerRegistry.RegisterDialog<Views.UndoHistory, ViewModels.UndoHistoryViewModel>();
+            containerRegistry.RegisterDialog<Views.DetailMosaic, ViewModels.DetailMosaicViewModel>();
         }
 
         protected override Window CreateShell()

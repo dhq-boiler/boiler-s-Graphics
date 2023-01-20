@@ -29,7 +29,9 @@ namespace boilersGraphics.ViewModels
             clone.EdgeThickness.Value = EdgeThickness.Value;
             clone.Matrix.Value = Matrix.Value;
             clone.RotationAngle.Value = RotationAngle.Value;
-            clone.PathGeometryNoRotate.Value = GeometryCreator.CreateRectangle(clone);
+            clone.RadiusX.Value = RadiusX.Value;
+            clone.RadiusY.Value = RadiusY.Value;
+            clone.PathGeometryNoRotate.Value = GeometryCreator.CreateRectangleWithOffset(clone, 0d, 0d);
             return clone;
         }
 

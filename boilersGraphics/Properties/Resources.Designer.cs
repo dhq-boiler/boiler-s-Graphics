@@ -1843,6 +1843,24 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   PropertyName に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_PropertyName {
+            get {
+                return ResourceManager.GetString("String_PropertyName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   PropertyValue に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_PropertyValue {
+            get {
+                return ResourceManager.GetString("String_PropertyValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Quality level に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string String_QualityLevel {
@@ -2118,6 +2136,15 @@ namespace boilersGraphics.Properties {
         public static string Tool_Lettering {
             get {
                 return ResourceManager.GetString("Tool_Lettering", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Mosaic tool に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Tool_Mosaic {
+            get {
+                return ResourceManager.GetString("Tool_Mosaic", resourceCulture);
             }
         }
         

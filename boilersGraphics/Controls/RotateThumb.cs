@@ -40,7 +40,10 @@ namespace boilersGraphics.Controls
             (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = "";
 
             _canvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-            _ArcBetweenCeilingAndTarget.OnMouseUp();
+            if (_ArcBetweenCeilingAndTarget is not null)
+            {
+                _ArcBetweenCeilingAndTarget.OnMouseUp();
+            }
         }
 
         private void RotateThumb_DragStarted(object sender, DragStartedEventArgs e)

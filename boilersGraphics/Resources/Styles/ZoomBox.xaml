@@ -186,10 +186,10 @@
                                         IsMoveToPointEnabled="False"
                                         IsSnapToTickEnabled="True"
                                         LargeChange="25"
-                                        Maximum="500"
+                                        Maximum="10000"
                                         Minimum="25"
                                         SmallChange="25"
-                                        Ticks="25,50,75,100,125,150,200,300,400,500"
+                                        Ticks="25,50,75,100,125,150,200,300,400,500,600,700,800,900,1000,2000,3000,4000,5000,6000,7000,8000,9000,10000"
                                         Value="100">
                                         <Slider.Resources>
 
