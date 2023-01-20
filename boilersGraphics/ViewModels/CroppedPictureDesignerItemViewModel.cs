@@ -27,7 +27,10 @@ namespace boilersGraphics.ViewModels
         public override PathGeometry CreateGeometry(bool flag = false)
         {
             var pg = PathGeometryNoRotate.Value;
-            pg.Transform = new ScaleTransform(Width.Value / pg.Bounds.Width, Height.Value / pg.Bounds.Height);
+            var group = new TransformGroup();
+            group.Children.Add(new ScaleTransform((Width.Value - EdgeThickness.Value) / pg.Bounds.Width, (Height.Value - EdgeThickness.Value) / pg.Bounds.Height));
+            group.Children.Add(new TranslateTransform(EdgeThickness.Value / 2, EdgeThickness.Value / 2));
+            pg.Transform = group;
             return pg;
         }
 
