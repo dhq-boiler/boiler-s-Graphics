@@ -1153,7 +1153,10 @@ namespace boilersGraphics.ViewModels
                         {
                             item1PathGeometry = designerItem1.PathGeometryRotate.Value;
                         }
-                        item1PathGeometry = GeometryCreator.Translate(item1PathGeometry, designerItem1.Left.Value, designerItem1.Top.Value);
+                        if (designerItem1 is not CombineGeometryViewModel)
+                        {
+                            item1PathGeometry = GeometryCreator.Translate(item1PathGeometry, designerItem1.Left.Value, designerItem1.Top.Value);
+                        }
                     }
 
                     if (item2 is DesignerItemViewModelBase designerItem2)
@@ -1162,7 +1165,11 @@ namespace boilersGraphics.ViewModels
                         {
                             item2PathGeometry = designerItem2.PathGeometryRotate.Value;
                         }
-                        item2PathGeometry = GeometryCreator.Translate(item2PathGeometry, designerItem2.Left.Value, designerItem2.Top.Value);
+
+                        if (designerItem2 is not CombineGeometryViewModel)
+                        {
+                            item2PathGeometry = GeometryCreator.Translate(item2PathGeometry, designerItem2.Left.Value, designerItem2.Top.Value);
+                        }
                     }
 
 
