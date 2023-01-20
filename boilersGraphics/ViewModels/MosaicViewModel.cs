@@ -54,7 +54,7 @@ float4 main(float2 uv : TEXCOORD) : COLOR
         y = y * height / width;
         l = 0.5 / x;
     }
-    float2 uv2 = float2(floor(uv.x * x) / x, floor(uv.y * y) / y);
+    float2 uv2 = float2(0.5 * (floor(uv.x * x) + ceil(uv.x * x)) / x, 0.5 * (floor(uv.y * y) + ceil(uv.y * y)) / y);
     return tex2D(input, uv2);
 }
 ");
