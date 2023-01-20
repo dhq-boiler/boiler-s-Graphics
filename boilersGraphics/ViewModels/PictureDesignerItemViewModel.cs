@@ -59,7 +59,7 @@ namespace boilersGraphics.ViewModels
             Init();
         }
 
-        private void Init()
+        protected virtual void Init()
         {
             this.ShowConnectors = false;
             EnablePathGeometryUpdate.Value = true;

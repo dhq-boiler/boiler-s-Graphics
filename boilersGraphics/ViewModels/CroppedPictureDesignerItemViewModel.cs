@@ -1,4 +1,6 @@
-﻿using System.Windows.Media.Imaging;
+﻿using boilersGraphics.Helpers;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace boilersGraphics.ViewModels
 {
@@ -16,6 +18,24 @@ namespace boilersGraphics.ViewModels
             : base(id, parent, left, top)
         {
             EmbeddedImage.Value = bitmapImage;
+        }
+
+        protected override void Init()
+        {
+        }
+
+        public override PathGeometry CreateGeometry(bool flag = false)
+        {
+            var pg = PathGeometryNoRotate.Value;
+            pg.Transform = new ScaleTransform(Width.Value / pg.Bounds.Width, Height.Value / pg.Bounds.Height);
+            return pg;
+        }
+
+        public override PathGeometry CreateGeometry(double angle)
+        {
+            var pg = PathGeometryNoRotate.Value;
+            pg.Transform = new RotateTransform(RotationAngle.Value);
+            return pg;
         }
     }
 }

@@ -957,10 +957,14 @@ namespace boilersGraphics.ViewModels
             canvas.RenderTransform = new TranslateTransform(left, top);
             canvas.UpdateLayout();
             var newCroppedPicture = new CroppedPictureDesignerItemViewModel();
+            newCroppedPicture.PathGeometryNoRotate.Value = other.PathGeometryNoRotate.Value;
+            newCroppedPicture.PathGeometryRotate.Value = other.PathGeometryRotate.Value;
+            newCroppedPicture.EnablePathGeometryUpdate.Value = false;
             newCroppedPicture.Left.Value = other.Left.Value;
             newCroppedPicture.Top.Value = other.Top.Value;
             newCroppedPicture.Width.Value = other.Width.Value;
             newCroppedPicture.Height.Value = other.Height.Value;
+            newCroppedPicture.EnablePathGeometryUpdate.Value = true;
             var encoder = new PngBitmapEncoder();
             RenderTargetBitmap bitmap = new RenderTargetBitmap((int)other.Width.Value, (int)other.Height.Value, 96, 96, PixelFormats.Pbgra32);
             bitmap.Render(canvas);

@@ -1,4 +1,5 @@
 ﻿using boilersGraphics.Helpers;
+using Homura.QueryBuilder.Iso.Dml;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
@@ -168,6 +169,11 @@ namespace boilersGraphics.ViewModels
             PathGeometry = PathGeometryNoRotate.ToReadOnlyReactivePropertySlim();
 
             Matrix.Value = new Matrix();
+
+            EnablePathGeometryUpdate.Where(isEnable => isEnable).Subscribe(isEnable =>
+            {
+                UpdatePathGeometryIfEnable(nameof(EnablePathGeometryUpdate), false, true);
+            }).AddTo(_CompositeDisposable);
         }
 
         public virtual void OnRectChanged(Rect rect)
