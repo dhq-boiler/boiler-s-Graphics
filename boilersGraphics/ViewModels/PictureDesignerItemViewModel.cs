@@ -1,12 +1,10 @@
 ﻿using boilersGraphics.Helpers;
 using boilersGraphics.Views;
-using NLog;
 using Prism.Ioc;
 using Prism.Services.Dialogs;
 using Prism.Unity;
 using Reactive.Bindings;
 using System;
-using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -14,7 +12,7 @@ using System.Windows.Media.Imaging;
 
 namespace boilersGraphics.ViewModels
 {
-    public class PictureDesignerItemViewModel : DesignerItemViewModelBase
+    public class PictureDesignerItemViewModel : DesignerItemViewModelBase, IEmbeddedImage
     {
         private string _FileName;
         private double _FileWidth;
