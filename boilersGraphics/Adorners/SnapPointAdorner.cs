@@ -16,17 +16,22 @@ namespace boilersGraphics.Adorners
     internal class SnapPointAdorner : Adorner
     {
         private Point _point;
-        public SnapPointAdorner(UIElement element, Point point)
+        private readonly double size;
+        private readonly double thickness;
+
+        public SnapPointAdorner(UIElement element, Point point, double size, double thickness)
             : base(element)
         {
             _point = point;
+            this.size = size;
+            this.thickness = thickness;
             IsHitTestVisible = false;
         }
 
         protected override void OnRender(DrawingContext drawingContext)
         {
             base.OnRender(drawingContext);
-            drawingContext.DrawEllipse(Brushes.Blue, new Pen(Brushes.Blue, 1), _point, 2, 2);
+            drawingContext.DrawEllipse(Brushes.Blue, new Pen(Brushes.Blue, thickness), _point, size, size);
         }
     }
 }

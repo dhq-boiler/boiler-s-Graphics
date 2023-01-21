@@ -7,12 +7,15 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reflection;
+using System.Windows;
 using System.Windows.Media;
 using TsOperationHistory;
 using TsOperationHistory.Extensions;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace boilersGraphics.ViewModels
 {
@@ -87,6 +90,14 @@ namespace boilersGraphics.ViewModels
 
         public IDisposable GroupDisposable { get; set; }
 
+        public ReadOnlyReactivePropertySlim<double> SnapPointSize { get; } = Observable.Return(4).CombineLatest(DiagramViewModel.Instance.MagnificationRate, (standardSize, rate) => { return standardSize / (rate / 100d); }).ToReadOnlyReactivePropertySlim();
+        public ReadOnlyReactivePropertySlim<double> ThumbSize { get; } = Observable.Return(7).CombineLatest(DiagramViewModel.Instance.MagnificationRate, (standardSize, rate) => { return standardSize / (rate / 100d); }).ToReadOnlyReactivePropertySlim();
+        public ReadOnlyReactivePropertySlim<double> ThumbThickness { get; } = Observable.Return(1).CombineLatest(DiagramViewModel.Instance.MagnificationRate, (standardSize, rate) => { return standardSize / (rate / 100d); }).ToReadOnlyReactivePropertySlim();
+        public ReadOnlyReactivePropertySlim<Thickness> RotateThumbMargin { get; } = Observable.Return(-20).CombineLatest(DiagramViewModel.Instance.MagnificationRate, (standardSize, rate) => { return new Thickness(0, standardSize / (rate / 100d), 0, 0); }).ToReadOnlyReactivePropertySlim();
+        public ReadOnlyReactivePropertySlim<Thickness> RotateThumbConnectorMargin { get; } = Observable.Return(-11).CombineLatest(DiagramViewModel.Instance.MagnificationRate, (standardSize, rate) => { return new Thickness(0, standardSize / (rate / 100d), 0, 0); }).ToReadOnlyReactivePropertySlim();
+        public ReadOnlyReactivePropertySlim<double> RotateThumbConnectorY2 { get; } = Observable.Return(11).CombineLatest(DiagramViewModel.Instance.MagnificationRate, (standardSize, rate) => { return standardSize / (rate / 100d); }).ToReadOnlyReactivePropertySlim();
+        public ReadOnlyReactivePropertySlim<double> RotateThumbConnectorThickness { get; } = Observable.Return(1).CombineLatest(DiagramViewModel.Instance.MagnificationRate, (standardSize, rate) => { return standardSize / (rate / 100d); }).ToReadOnlyReactivePropertySlim();
+        public ReadOnlyReactivePropertySlim<Thickness> RotateThumbGridMargin { get; } = Observable.Return(-3).CombineLatest(DiagramViewModel.Instance.MagnificationRate, (standardSize, rate) => { return new Thickness(standardSize / (rate / 100d), standardSize / (rate / 100d), standardSize / (rate / 100d), standardSize / (rate / 100d)); }).ToReadOnlyReactivePropertySlim();
 
         public IDisposable Connect(SnapPointPosition snapPointEdgeTo, SnapPointPosition snapPointEdgeFrom, SelectableDesignerItemViewModelBase item)
         {
@@ -99,7 +110,9 @@ namespace boilersGraphics.ViewModels
         public static void Disconnect(DesignerItemViewModelBase designerItem)
         {
             if (designerItem.SnapObjs != null)
-                designerItem.SnapObjs.ForEach(x => x.Dispose());
+            {
+                designerItem.SnapObjs.Dispose();
+            }
         }
 
         public static void Disconnect(SnapPointViewModel snapPointViewModel)
@@ -178,8 +191,40 @@ namespace boilersGraphics.ViewModels
 
         #region IDisposable
 
-        public void Dispose()
+        public virtual void Dispose()
         {
+            IsSelected.Dispose();
+            EnableForSelection.Dispose();
+            EnablePathGeometryUpdate.Dispose();
+            IsVisible.Dispose();
+            IsHitTestVisible.Dispose();
+            CanDrag.Dispose();
+            SelectedOrder.Dispose();
+            Matrix.Dispose();
+            RotationAngle.Dispose();
+            ZIndex.Dispose();
+            EdgeBrush.Dispose();
+            FillBrush.Dispose();
+            EdgeThickness.Dispose();
+            HalfEdgeThickness.Dispose();
+            if (PathGeometry is not null)
+                PathGeometry.Dispose();
+            if (PathGeometryNoRotate is not null)
+                PathGeometryNoRotate.Dispose();
+            if (PathGeometryRotate is not null)
+                PathGeometryRotate.Dispose();
+            StrokeLineJoin.Dispose();
+            PenLineJoins.Dispose();
+            StrokeDashArray.Dispose();
+            StrokeMiterLimit.Dispose();
+            SnapPointSize.Dispose();
+            ThumbSize.Dispose();
+            ThumbThickness.Dispose();
+            RotateThumbMargin.Dispose();
+            RotateThumbConnectorMargin.Dispose();
+            RotateThumbConnectorY2.Dispose();
+            RotateThumbConnectorThickness.Dispose();
+            RotateThumbGridMargin.Dispose();
             if (_CompositeDisposable != null)
             {
                 _CompositeDisposable.Dispose();
