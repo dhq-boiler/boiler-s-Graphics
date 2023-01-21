@@ -133,7 +133,7 @@ namespace boilersGraphics.Helpers
                     {
                         if (!_adorners.ContainsKey(snapped.Item2))
                         {
-                            var adorner = new Adorners.SnapPointAdorner(designerCanvas, snapped.Item2);
+                            var adorner = new Adorners.SnapPointAdorner(designerCanvas, snapped.Item2, _SnapTargetDataContext.SnapPointSize.Value, _SnapTargetDataContext.ThumbThickness.Value);
                             if (adorner != null)
                             {
                                 adornerLayer.Add(adorner);
@@ -165,7 +165,7 @@ namespace boilersGraphics.Helpers
                     if (appendIntersectionPoints != null && appendIntersectionPoints.Count() > 0)
                     {
                         AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(designerCanvas);
-                        var adorner = new Adorners.SnapPointAdorner(designerCanvas, appendIntersectionPoints.First().Item1);
+                        var adorner = new Adorners.SnapPointAdorner(designerCanvas, appendIntersectionPoints.First().Item1, (appendIntersectionPoints.First().Item2 as SelectableDesignerItemViewModelBase).SnapPointSize.Value, (appendIntersectionPoints.First().Item2 as SelectableDesignerItemViewModelBase).ThumbThickness.Value);
                         if (adorner != null)
                         {
                             adornerLayer.Add(adorner);
@@ -220,7 +220,7 @@ namespace boilersGraphics.Helpers
                     {
                         if (!_adorners.ContainsKey(snapped.Item2))
                         {
-                            var adorner = new Adorners.SnapPointAdorner(designerCanvas, snapped.Item2);
+                            var adorner = new Adorners.SnapPointAdorner(designerCanvas, snapped.Item2, _SnapTargetDataContext.SnapPointSize.Value, _SnapTargetDataContext.ThumbThickness.Value);
                             if (adorner != null)
                             {
                                 adornerLayer.Add(adorner);
@@ -256,7 +256,7 @@ namespace boilersGraphics.Helpers
                     if (appendIntersectionPoints != null && appendIntersectionPoints.Count() > 0)
                     {
                         AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(designerCanvas);
-                        var adorner = new Adorners.SnapPointAdorner(designerCanvas, appendIntersectionPoints.First().Item1);
+                        var adorner = new Adorners.SnapPointAdorner(designerCanvas, appendIntersectionPoints.First().Item1, (appendIntersectionPoints.First().Item2 as SelectableDesignerItemViewModelBase).SnapPointSize.Value, (appendIntersectionPoints.First().Item2 as SelectableDesignerItemViewModelBase).ThumbThickness.Value);
                         if (adorner != null)
                         {
                             adornerLayer.Add(adorner);
@@ -310,7 +310,7 @@ namespace boilersGraphics.Helpers
                     {
                         if (!_adorners.ContainsKey(snapped.Item2))
                         {
-                            var adorner = new Adorners.SnapPointAdorner(designerCanvas, snapped.Item2);
+                            var adorner = new Adorners.SnapPointAdorner(designerCanvas, snapped.Item2, _SnapTargetDataContext.SnapPointSize.Value, _SnapTargetDataContext.ThumbThickness.Value);
                             if (adorner != null)
                             {
                                 adornerLayer.Add(adorner);

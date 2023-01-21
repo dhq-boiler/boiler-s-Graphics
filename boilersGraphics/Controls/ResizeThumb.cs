@@ -224,7 +224,7 @@ namespace boilersGraphics.Controls
                                         LogManager.GetCurrentClassLogger().Trace($"Snap={snapped.Item2}");
                                         if (!_adorners.ContainsKey(snapped.Item2))
                                         {
-                                            var adorner = new Adorners.SnapPointAdorner(designerCanvas, snapped.Item2);
+                                            var adorner = new Adorners.SnapPointAdorner(designerCanvas, snapped.Item2, viewModel.SnapPointSize.Value, viewModel.ThumbThickness.Value);
                                             if (adorner != null)
                                             {
                                                 adornerLayer.Add(adorner);

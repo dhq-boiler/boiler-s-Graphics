@@ -783,18 +783,18 @@ namespace boilersGraphics.ViewModels
             switch (snapPoint.Tag)
             {
                 case "左上":
-                    return new Point(leftTop.X + snapPoint.Width - 1, leftTop.Y + snapPoint.Height - 1);
+                    return new Point(leftTop.X + snapPoint.Width, leftTop.Y + snapPoint.Height);
                 case "右上":
-                    return new Point(leftTop.X + 1, leftTop.Y + snapPoint.Height - 1);
+                    return new Point(leftTop.X, leftTop.Y + snapPoint.Height);
                 case "左下":
-                    return new Point(leftTop.X + snapPoint.Width - 1, leftTop.Y + 1);
+                    return new Point(leftTop.X + snapPoint.Width, leftTop.Y);
                 case "右下":
-                    return new Point(leftTop.X + 1, leftTop.Y + 1);
+                    return new Point(leftTop.X, leftTop.Y);
                 case "左":
                 case "上":
                 case "右":
                 case "下":
-                    return new Point(leftTop.X, leftTop.Y);
+                    return new Point(leftTop.X + snapPoint.Width / 2, leftTop.Y + snapPoint.Height / 2);
                 case "中央":
                     return new Point(leftTop.X + snapPoint.Width / 2, leftTop.Y + snapPoint.Height / 2);
                 case "始点":

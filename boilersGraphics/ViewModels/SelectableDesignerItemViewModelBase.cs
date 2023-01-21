@@ -90,6 +90,7 @@ namespace boilersGraphics.ViewModels
 
         public IDisposable GroupDisposable { get; set; }
 
+        public ReadOnlyReactivePropertySlim<double> SnapPointSize { get; } = Observable.Return(4).CombineLatest(DiagramViewModel.Instance.MagnificationRate, (standardSize, rate) => { return standardSize / (rate / 100d); }).ToReadOnlyReactivePropertySlim();
         public ReadOnlyReactivePropertySlim<double> ThumbSize { get; } = Observable.Return(7).CombineLatest(DiagramViewModel.Instance.MagnificationRate, (standardSize, rate) => { return standardSize / (rate / 100d); }).ToReadOnlyReactivePropertySlim();
         public ReadOnlyReactivePropertySlim<double> ThumbThickness { get; } = Observable.Return(1).CombineLatest(DiagramViewModel.Instance.MagnificationRate, (standardSize, rate) => { return standardSize / (rate / 100d); }).ToReadOnlyReactivePropertySlim();
         public ReadOnlyReactivePropertySlim<Thickness> RotateThumbMargin { get; } = Observable.Return(-20).CombineLatest(DiagramViewModel.Instance.MagnificationRate, (standardSize, rate) => { return new Thickness(0, standardSize / (rate / 100d), 0, 0); }).ToReadOnlyReactivePropertySlim();
@@ -216,6 +217,7 @@ namespace boilersGraphics.ViewModels
             PenLineJoins.Dispose();
             StrokeDashArray.Dispose();
             StrokeMiterLimit.Dispose();
+            SnapPointSize.Dispose();
             ThumbSize.Dispose();
             ThumbThickness.Dispose();
             RotateThumbMargin.Dispose();
