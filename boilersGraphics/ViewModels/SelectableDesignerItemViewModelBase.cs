@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reflection;
@@ -108,7 +109,9 @@ namespace boilersGraphics.ViewModels
         public static void Disconnect(DesignerItemViewModelBase designerItem)
         {
             if (designerItem.SnapObjs != null)
-                designerItem.SnapObjs.ForEach(x => x.Dispose());
+            {
+                designerItem.SnapObjs.Dispose();
+            }
         }
 
         public static void Disconnect(SnapPointViewModel snapPointViewModel)
@@ -187,8 +190,39 @@ namespace boilersGraphics.ViewModels
 
         #region IDisposable
 
-        public void Dispose()
+        public virtual void Dispose()
         {
+            IsSelected.Dispose();
+            EnableForSelection.Dispose();
+            EnablePathGeometryUpdate.Dispose();
+            IsVisible.Dispose();
+            IsHitTestVisible.Dispose();
+            CanDrag.Dispose();
+            SelectedOrder.Dispose();
+            Matrix.Dispose();
+            RotationAngle.Dispose();
+            ZIndex.Dispose();
+            EdgeBrush.Dispose();
+            FillBrush.Dispose();
+            EdgeThickness.Dispose();
+            HalfEdgeThickness.Dispose();
+            if (PathGeometry is not null)
+                PathGeometry.Dispose();
+            if (PathGeometryNoRotate is not null)
+                PathGeometryNoRotate.Dispose();
+            if (PathGeometryRotate is not null)
+                PathGeometryRotate.Dispose();
+            StrokeLineJoin.Dispose();
+            PenLineJoins.Dispose();
+            StrokeDashArray.Dispose();
+            StrokeMiterLimit.Dispose();
+            ThumbSize.Dispose();
+            ThumbThickness.Dispose();
+            RotateThumbMargin.Dispose();
+            RotateThumbConnectorMargin.Dispose();
+            RotateThumbConnectorY2.Dispose();
+            RotateThumbConnectorThickness.Dispose();
+            RotateThumbGridMargin.Dispose();
             if (_CompositeDisposable != null)
             {
                 _CompositeDisposable.Dispose();

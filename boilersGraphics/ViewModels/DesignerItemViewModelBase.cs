@@ -96,8 +96,8 @@ namespace boilersGraphics.ViewModels
         public ReactivePropertySlim<TransformNotification> TransformNortification { get; } = new ReactivePropertySlim<TransformNotification>(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe | ReactivePropertyMode.DistinctUntilChanged);
 
         internal SnapPointPosition snapPointPosition { get; set; }
-
-        public List<IDisposable> SnapObjs { get; set; } = new List<IDisposable>();
+        
+        public CompositeDisposable SnapObjs { get; } = new CompositeDisposable();
 
         private void UpdateCenterPoint()
         {
@@ -330,5 +330,33 @@ namespace boilersGraphics.ViewModels
             }
             return compositeDisposable;
         }
+
+        #region IDisposable
+
+        public override void Dispose()
+        {
+            Width.Dispose();
+            Height.Dispose();
+            Size.Dispose();
+            SizeIncludeFrame.Dispose();
+            Pool.Dispose();
+            Left.Dispose();
+            Top.Dispose();
+            Right.Dispose();
+            Bottom.Dispose();
+            Rect.Dispose();
+            CenterX.Dispose();
+            CenterY.Dispose();
+            CenterPoint.Dispose();
+            MarginLeftTop.Dispose();
+            MarginLeftBottom.Dispose();
+            MarginRightTop.Dispose();
+            MarginRightBottom.Dispose();
+            TransformNortification.Dispose();
+            SnapObjs.Dispose();
+            base.Dispose();
+        }
+
+        #endregion
     }
 }
