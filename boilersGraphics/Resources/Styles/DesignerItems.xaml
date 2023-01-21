@@ -21,9 +21,9 @@
             Width="{Binding ThumbSize.Value, UpdateSourceTrigger=PropertyChanged}"
             Height="{Binding ThumbSize.Value, UpdateSourceTrigger=PropertyChanged}"
             Margin="{Binding ResizeHandleMargin.Value, UpdateSourceTrigger=PropertyChanged}"
-            Fill="White"
+            Fill="#1C9AEF"
             IsHitTestVisible="{Binding IsHitTestVisible.Value}"
-            Stroke="DimGray"
+            Stroke="Transparent"
             StrokeThickness="{Binding ThumbThickness.Value, UpdateSourceTrigger=PropertyChanged}" />
     </ControlTemplate>
 
@@ -32,25 +32,33 @@
             Width="{Binding ThumbSize.Value, UpdateSourceTrigger=PropertyChanged}"
             Height="{Binding ThumbSize.Value, UpdateSourceTrigger=PropertyChanged}"
             Margin="{Binding ResizeHandleMargin.Value, UpdateSourceTrigger=PropertyChanged}"
-            Fill="White"
-            Stroke="DimGray"
+            Fill="#1C9AEF"
+            Stroke="Transparent"
             StrokeThickness="{Binding ThumbThickness.Value, UpdateSourceTrigger=PropertyChanged}" />
     </ControlTemplate>
 
     <ControlTemplate x:Key="VerticalResizeHandleTemplate" TargetType="{x:Type Thumb}">
         <Rectangle
-            Width="2"
+            Width="{c:Binding ThumbSize.Value,
+                              UpdateSourceTrigger=PropertyChanged}"
+            Height="{c:Binding ThumbSize.Value*2,
+                               UpdateSourceTrigger=PropertyChanged}"
             VerticalAlignment="Stretch"
-            Fill="#6c809a"
-            Stroke="Transparent" />
+            Fill="#1C9AEF"
+            Stroke="#1C9AEF"
+            StrokeThickness="{Binding ThumbThickness.Value, UpdateSourceTrigger=PropertyChanged}" />
     </ControlTemplate>
 
     <ControlTemplate x:Key="HorizontalResizeHandleTemplate" TargetType="{x:Type Thumb}">
         <Rectangle
-            Height="2"
+            Width="{c:Binding ThumbSize.Value*2,
+                              UpdateSourceTrigger=PropertyChanged}"
+            Height="{c:Binding ThumbSize.Value,
+                               UpdateSourceTrigger=PropertyChanged}"
             HorizontalAlignment="Stretch"
-            Fill="#6c809a"
-            Stroke="Transparent" />
+            Fill="#1C9AEF"
+            Stroke="#1C9AEF"
+            StrokeThickness="{Binding ThumbThickness.Value, UpdateSourceTrigger=PropertyChanged}" />
     </ControlTemplate>
 
     <ControlTemplate x:Key="StraightLineResizeDecoratorTemplate" TargetType="{x:Type Control}">
@@ -220,6 +228,58 @@
                     Cursor="Hand"
                     Tag="回転ツマミ"
                     Template="{StaticResource RotateThumbTemplate}" />
+                <!--  左  -->
+                <control:ResizeThumb
+                    Width="{c:Binding ThumbSize.Value,
+                                      UpdateSourceTrigger=PropertyChanged}"
+                    Height="{c:Binding ThumbSize.Value*2,
+                                       UpdateSourceTrigger=PropertyChanged}"
+                    Margin="{Binding MarginLeft.Value, UpdateSourceTrigger=PropertyChanged}"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    Cursor="SizeWE"
+                    SnapPointPosition="Left"
+                    Tag="左"
+                    Template="{StaticResource VerticalResizeHandleTemplate}" />
+                <!--  上  -->
+                <control:ResizeThumb
+                    Width="{c:Binding ThumbSize.Value*2,
+                                      UpdateSourceTrigger=PropertyChanged}"
+                    Height="{c:Binding ThumbSize.Value,
+                                       UpdateSourceTrigger=PropertyChanged}"
+                    Margin="{Binding MarginTop.Value, UpdateSourceTrigger=PropertyChanged}"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Top"
+                    Cursor="SizeNS"
+                    SnapPointPosition="Top"
+                    Tag="上"
+                    Template="{StaticResource HorizontalResizeHandleTemplate}" />
+                <!--  右  -->
+                <control:ResizeThumb
+                    Width="{c:Binding ThumbSize.Value,
+                                      UpdateSourceTrigger=PropertyChanged}"
+                    Height="{c:Binding ThumbSize.Value*2,
+                                       UpdateSourceTrigger=PropertyChanged}"
+                    Margin="{Binding MarginRight.Value, UpdateSourceTrigger=PropertyChanged}"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Cursor="SizeWE"
+                    SnapPointPosition="Right"
+                    Tag="右"
+                    Template="{StaticResource VerticalResizeHandleTemplate}" />
+                <!--  下  -->
+                <control:ResizeThumb
+                    Width="{c:Binding ThumbSize.Value*2,
+                                      UpdateSourceTrigger=PropertyChanged}"
+                    Height="{c:Binding ThumbSize.Value,
+                                       UpdateSourceTrigger=PropertyChanged}"
+                    Margin="{Binding MarginBottom.Value, UpdateSourceTrigger=PropertyChanged}"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Bottom"
+                    Cursor="SizeNS"
+                    SnapPointPosition="Bottom"
+                    Tag="下"
+                    Template="{StaticResource HorizontalResizeHandleTemplate}" />
                 <!--  左上  -->
                 <control:ResizeThumb
                     Width="{Binding ThumbSize.Value, UpdateSourceTrigger=PropertyChanged}"

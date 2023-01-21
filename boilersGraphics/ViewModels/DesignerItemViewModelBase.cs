@@ -92,6 +92,10 @@ namespace boilersGraphics.ViewModels
         public ReadOnlyReactivePropertySlim<Thickness> MarginLeftBottom { get; private set; }
         public ReadOnlyReactivePropertySlim<Thickness> MarginRightTop { get; private set; }
         public ReadOnlyReactivePropertySlim<Thickness> MarginRightBottom { get; private set; }
+        public ReadOnlyReactivePropertySlim<Thickness> MarginLeft { get; private set; }
+        public ReadOnlyReactivePropertySlim<Thickness> MarginTop { get; private set; }
+        public ReadOnlyReactivePropertySlim<Thickness> MarginRight { get; private set; }
+        public ReadOnlyReactivePropertySlim<Thickness> MarginBottom { get; private set; }
 
         public ReactivePropertySlim<TransformNotification> TransformNortification { get; } = new ReactivePropertySlim<TransformNotification>(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe | ReactivePropertyMode.DistinctUntilChanged);
 
@@ -184,6 +188,10 @@ namespace boilersGraphics.ViewModels
             MarginLeftBottom = ThumbSize.Select(size => new Thickness(-size, 0, 0, -size)).ToReadOnlyReactivePropertySlim();
             MarginRightTop = ThumbSize.Select(size => new Thickness(0, -size, -size, 0)).ToReadOnlyReactivePropertySlim();
             MarginRightBottom = ThumbSize.Select(size => new Thickness(0, 0, -size, -size)).ToReadOnlyReactivePropertySlim();
+            MarginLeft = Observable.Return(3).CombineLatest(DiagramViewModel.Instance.MagnificationRate, (size, rate) => { return new Thickness(-size / (rate / 100d), 0, 0, 0); }).ToReadOnlyReactivePropertySlim();
+            MarginTop = Observable.Return(3).CombineLatest(DiagramViewModel.Instance.MagnificationRate, (size, rate) => { return new Thickness(0, -size / (rate / 100d), 0, 0); }).ToReadOnlyReactivePropertySlim();
+            MarginRight = Observable.Return(3).CombineLatest(DiagramViewModel.Instance.MagnificationRate, (size, rate) => { return new Thickness(0, 0, -size / (rate / 100d), 0); }).ToReadOnlyReactivePropertySlim();
+            MarginBottom = Observable.Return(3).CombineLatest(DiagramViewModel.Instance.MagnificationRate, (size, rate) => { return new Thickness(0, 0, 0, - size / (rate / 100d)); }).ToReadOnlyReactivePropertySlim();
         }
 
         public virtual void OnRectChanged(Rect rect)
@@ -352,6 +360,10 @@ namespace boilersGraphics.ViewModels
             MarginLeftBottom.Dispose();
             MarginRightTop.Dispose();
             MarginRightBottom.Dispose();
+            MarginLeft.Dispose();
+            MarginTop.Dispose();
+            MarginRight.Dispose();
+            MarginBottom.Dispose();
             TransformNortification.Dispose();
             SnapObjs.Dispose();
             base.Dispose();
