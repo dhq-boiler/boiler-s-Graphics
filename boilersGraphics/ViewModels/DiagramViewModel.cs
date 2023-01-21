@@ -36,6 +36,7 @@ namespace boilersGraphics.ViewModels
 {
     public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     {
+        public static DiagramViewModel Instance { get; private set; }
         public MainWindowViewModel MainWindowVM { get; private set; }
         private IDialogService dlgService;
         private Point _CurrentPoint;
@@ -195,6 +196,13 @@ namespace boilersGraphics.ViewModels
             }
         }
 
+        /// <summary>
+        /// 拡大率
+        /// </summary>
+        public ReactivePropertySlim<double> MagnificationRate { get; } = new ReactivePropertySlim<double>(100);
+
+        #endregion //Property
+
         public IEnumerable<Tuple<SnapPoint, Point>> GetSnapPoints(IEnumerable<SnapPoint> exceptSnapPoints)
         {
             var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
@@ -217,11 +225,10 @@ namespace boilersGraphics.ViewModels
             return sets;
         }
 
-        #endregion //Property
-
         public DiagramViewModel(MainWindowViewModel mainWindowViewModel, bool isPreview = false)
         {
             MainWindowVM = mainWindowViewModel;
+            Instance = this;
 
             if (!App.IsTest)
             {

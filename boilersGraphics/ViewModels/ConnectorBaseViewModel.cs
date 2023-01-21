@@ -105,6 +105,8 @@ namespace boilersGraphics.ViewModels
 
         public ReactivePropertySlim<PenLineCap> StrokeEndLineCap { get; } = new ReactivePropertySlim<PenLineCap>();
 
+        public ReadOnlyReactivePropertySlim<Thickness> ResizeHandleMargin { get; set; }
+
         private void Init()
         {
             _Points = new ObservableCollection<Point>();
@@ -126,6 +128,7 @@ namespace boilersGraphics.ViewModels
             PenLineCaps.Add(PenLineCap.Round);
             PenLineCaps.Add(PenLineCap.Square);
             PenLineCaps.Add(PenLineCap.Triangle);
+            ResizeHandleMargin = Observable.Return(3).Select(size => new System.Windows.Thickness(-size, -size, -size, -size)).ToReadOnlyReactivePropertySlim();
         }
 
         protected virtual void InitPathFinder() { }

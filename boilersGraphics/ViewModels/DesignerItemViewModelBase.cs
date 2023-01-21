@@ -88,6 +88,11 @@ namespace boilersGraphics.ViewModels
 
         public ReactiveProperty<Point> CenterPoint { get; private set; }
 
+        public ReadOnlyReactivePropertySlim<Thickness> MarginLeftTop { get; private set; }
+        public ReadOnlyReactivePropertySlim<Thickness> MarginLeftBottom { get; private set; }
+        public ReadOnlyReactivePropertySlim<Thickness> MarginRightTop { get; private set; }
+        public ReadOnlyReactivePropertySlim<Thickness> MarginRightBottom { get; private set; }
+
         public ReactivePropertySlim<TransformNotification> TransformNortification { get; } = new ReactivePropertySlim<TransformNotification>(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe | ReactivePropertyMode.DistinctUntilChanged);
 
         internal SnapPointPosition snapPointPosition { get; set; }
@@ -174,6 +179,11 @@ namespace boilersGraphics.ViewModels
             {
                 UpdatePathGeometryIfEnable(nameof(EnablePathGeometryUpdate), false, true);
             }).AddTo(_CompositeDisposable);
+
+            MarginLeftTop = ThumbSize.Select(size => new Thickness(-size, -size, 0, 0)).ToReadOnlyReactivePropertySlim();
+            MarginLeftBottom = ThumbSize.Select(size => new Thickness(-size, 0, 0, -size)).ToReadOnlyReactivePropertySlim();
+            MarginRightTop = ThumbSize.Select(size => new Thickness(0, -size, -size, 0)).ToReadOnlyReactivePropertySlim();
+            MarginRightBottom = ThumbSize.Select(size => new Thickness(0, 0, -size, -size)).ToReadOnlyReactivePropertySlim();
         }
 
         public virtual void OnRectChanged(Rect rect)

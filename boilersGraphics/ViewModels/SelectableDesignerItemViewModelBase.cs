@@ -10,9 +10,11 @@ using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reflection;
+using System.Windows;
 using System.Windows.Media;
 using TsOperationHistory;
 using TsOperationHistory.Extensions;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace boilersGraphics.ViewModels
 {
@@ -87,6 +89,13 @@ namespace boilersGraphics.ViewModels
 
         public IDisposable GroupDisposable { get; set; }
 
+        public ReadOnlyReactivePropertySlim<double> ThumbSize { get; } = Observable.Return(7).CombineLatest(DiagramViewModel.Instance.MagnificationRate, (standardSize, rate) => { return standardSize / (rate / 100d); }).ToReadOnlyReactivePropertySlim();
+        public ReadOnlyReactivePropertySlim<double> ThumbThickness { get; } = Observable.Return(1).CombineLatest(DiagramViewModel.Instance.MagnificationRate, (standardSize, rate) => { return standardSize / (rate / 100d); }).ToReadOnlyReactivePropertySlim();
+        public ReadOnlyReactivePropertySlim<Thickness> RotateThumbMargin { get; } = Observable.Return(-20).CombineLatest(DiagramViewModel.Instance.MagnificationRate, (standardSize, rate) => { return new Thickness(0, standardSize / (rate / 100d), 0, 0); }).ToReadOnlyReactivePropertySlim();
+        public ReadOnlyReactivePropertySlim<Thickness> RotateThumbConnectorMargin { get; } = Observable.Return(-11).CombineLatest(DiagramViewModel.Instance.MagnificationRate, (standardSize, rate) => { return new Thickness(0, standardSize / (rate / 100d), 0, 0); }).ToReadOnlyReactivePropertySlim();
+        public ReadOnlyReactivePropertySlim<double> RotateThumbConnectorY2 { get; } = Observable.Return(11).CombineLatest(DiagramViewModel.Instance.MagnificationRate, (standardSize, rate) => { return standardSize / (rate / 100d); }).ToReadOnlyReactivePropertySlim();
+        public ReadOnlyReactivePropertySlim<double> RotateThumbConnectorThickness { get; } = Observable.Return(1).CombineLatest(DiagramViewModel.Instance.MagnificationRate, (standardSize, rate) => { return standardSize / (rate / 100d); }).ToReadOnlyReactivePropertySlim();
+        public ReadOnlyReactivePropertySlim<Thickness> RotateThumbGridMargin { get; } = Observable.Return(-3).CombineLatest(DiagramViewModel.Instance.MagnificationRate, (standardSize, rate) => { return new Thickness(standardSize / (rate / 100d), standardSize / (rate / 100d), standardSize / (rate / 100d), standardSize / (rate / 100d)); }).ToReadOnlyReactivePropertySlim();
 
         public IDisposable Connect(SnapPointPosition snapPointEdgeTo, SnapPointPosition snapPointEdgeFrom, SelectableDesignerItemViewModelBase item)
         {
