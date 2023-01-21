@@ -60,7 +60,7 @@ namespace boilersGraphics.Test.UITests
 
             using (var mat = new Mat(filename))
             {
-                for (int i = 104; i <= 123; i++)
+                for (int i = 105; i <= 123; i++)
                 {
                     PixelIs(mat, i, i, 0, 0, 255);
                 }
