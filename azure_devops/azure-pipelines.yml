@@ -143,7 +143,6 @@ steps:
 # GitHub Release
 # Create, edit, or delete a GitHub release
 - task: GitHubRelease@0
-  condition: always()
   inputs:
     gitHubConnection: dhq-boiler-azure-devops
     repositoryName: '$(Build.Repository.Name)' 
