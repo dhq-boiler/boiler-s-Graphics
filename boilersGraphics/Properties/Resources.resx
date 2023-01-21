@@ -399,8 +399,20 @@
   <data name="Grouping" xml:space="preserve">
     <value>Grouping</value>
   </data>
+  <data name="Log_BeginLoadFromXml" xml:space="preserve">
+    <value>Begin loading from XML...</value>
+  </data>
+  <data name="Log_BeginPostProcessInFileLoadingSequence" xml:space="preserve">
+    <value>Begin post processes in file loading sequence...</value>
+  </data>
   <data name="Log_FileCannotOpenBecauseTooOldOrCorrupted" xml:space="preserve">
     <value>This file is too old or corrupted to open.</value>
+  </data>
+  <data name="Log_FinishLoadFromXml" xml:space="preserve">
+    <value>Finished loading from XML.</value>
+  </data>
+  <data name="Log_FinishPostProcessInFileLoadingSequence" xml:space="preserve">
+    <value>Finished post processes in file loading sequence.</value>
   </data>
   <data name="Log_ForceReadMode" xml:space="preserve">
     <value>Read the file in forced read mode. This mode is enforced when the Version element is not found.</value>

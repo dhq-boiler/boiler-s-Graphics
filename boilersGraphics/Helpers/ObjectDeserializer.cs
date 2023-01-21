@@ -398,6 +398,24 @@ namespace boilersGraphics.Helpers
                     picture.FileName = designerItemElm.Element("FileName").Value;
                 }
             }
+            if (item is CroppedPictureDesignerItemViewModel cropped)
+            {
+                if (designerItemElm.Elements("EnableImageEmbedding").Any() && bool.TryParse(designerItemElm.Element("EnableImageEmbedding").Value, out var enableImageEmbedding))
+                {
+                    cropped.EmbeddedImage.Value = Base64StringToBitmap(designerItemElm.Element("EmbeddedImageBase64").Value);
+                }
+            }
+            if (item is MosaicViewModel mosaic)
+            {
+                if (designerItemElm.Elements("ColumnPixels").Any())
+                {
+                    mosaic.ColumnPixels.Value = double.Parse(designerItemElm.Element("ColumnPixels").Value);
+                }
+                if (designerItemElm.Elements("RowPixels").Any())
+                {
+                    mosaic.RowPixels.Value = double.Parse(designerItemElm.Element("RowPixels").Value);
+                }
+            }
             if (item is LetterDesignerItemViewModel letter)
             {
                 letter.LetterString.Value = designerItemElm.Element("LetterString").Value;

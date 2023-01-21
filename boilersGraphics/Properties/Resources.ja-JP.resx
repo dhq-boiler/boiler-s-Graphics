@@ -399,8 +399,20 @@
   <data name="Grouping" xml:space="preserve">
     <value>グループ</value>
   </data>
+  <data name="Log_BeginLoadFromXml" xml:space="preserve">
+    <value>XMLからのロードを開始しています...。</value>
+  </data>
+  <data name="Log_BeginPostProcessInFileLoadingSequence" xml:space="preserve">
+    <value>ファイルローディングシークエンス内の後処理を開始しています...。</value>
+  </data>
   <data name="Log_FileCannotOpenBecauseTooOldOrCorrupted" xml:space="preserve">
     <value>【読み込みエラー】このファイルは古すぎるか壊れているため開けません。</value>
+  </data>
+  <data name="Log_FinishLoadFromXml" xml:space="preserve">
+    <value>XMLからのロードが完了しました。</value>
+  </data>
+  <data name="Log_FinishPostProcessInFileLoadingSequence" xml:space="preserve">
+    <value>ファイルローディングシークエンス内の後処理が完了しました。</value>
   </data>
   <data name="Log_ForceReadMode" xml:space="preserve">
     <value>強制読み込みモードでファイルを読み込みます。このモードはVersion要素が見つからない時に実施されます。</value>

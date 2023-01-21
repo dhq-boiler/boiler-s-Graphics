@@ -907,11 +907,47 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Begin loading from XML... に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Log_BeginLoadFromXml {
+            get {
+                return ResourceManager.GetString("Log_BeginLoadFromXml", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Begin post processes in file loading sequence... に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Log_BeginPostProcessInFileLoadingSequence {
+            get {
+                return ResourceManager.GetString("Log_BeginPostProcessInFileLoadingSequence", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   This file is too old or corrupted to open. に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Log_FileCannotOpenBecauseTooOldOrCorrupted {
             get {
                 return ResourceManager.GetString("Log_FileCannotOpenBecauseTooOldOrCorrupted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Finished loading from XML. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Log_FinishLoadFromXml {
+            get {
+                return ResourceManager.GetString("Log_FinishLoadFromXml", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Finished post processes in file loading sequence. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Log_FinishPostProcessInFileLoadingSequence {
+            get {
+                return ResourceManager.GetString("Log_FinishPostProcessInFileLoadingSequence", resourceCulture);
             }
         }
         
