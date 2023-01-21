@@ -17,7 +17,7 @@ namespace boilersGraphics.Helpers
         {
             Size size = GetRenderSize(sliceRect, diagramViewModel);
 
-            LogManager.GetCurrentClassLogger().Info($"SliceRect size:{size}");
+            LogManager.GetCurrentClassLogger().Debug($"SliceRect size:{size}");
 
             var rtb = new RenderTargetBitmap((int)size.Width, (int)size.Height, 96, 96, PixelFormats.Pbgra32);
 
