@@ -304,6 +304,7 @@ namespace boilersGraphics.ViewModels
                 {
                     Behaviors.Add(MosaicBehavior);
                 }
+                ChangeHitTestToDisable();
                 SelectOneToolItem("mosaic");
             })));
         }
