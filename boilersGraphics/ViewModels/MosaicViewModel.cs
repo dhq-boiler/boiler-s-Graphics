@@ -99,7 +99,6 @@ float4 main(float2 uv : TEXCOORD) : COLOR
                 {
                     item.BeginMonitor(() =>
                     {
-                        LogManager.GetCurrentClassLogger().Info("TEST 3");
                         Render();
                     }).AddTo(_CompositeDisposable);
                 }
@@ -171,7 +170,6 @@ float4 main(float2 uv : TEXCOORD) : COLOR
 
         public override void OnRectChanged(Rect rect)
         {
-            LogManager.GetCurrentClassLogger().Info("TEST 2");
             Render();
         }
 
