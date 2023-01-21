@@ -109,6 +109,28 @@ namespace boilersGraphics.Helpers
                         }
                     }
                 }
+                if (designerItem is CroppedPictureDesignerItemViewModel cropped)
+                {
+                    var enableImageEmbedding = (App.GetCurrentApp().MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.EnableImageEmbedding.Value;
+                    list.Add(new XElement("EnableImageEmbedding", enableImageEmbedding));
+                    if (enableImageEmbedding)
+                    {
+                        var image = !string.IsNullOrEmpty(cropped.FileName) ? new BitmapImage(new Uri(cropped.FileName)) : cropped.EmbeddedImage.Value;
+                        var writeableBitmap = new WriteableBitmap(image);
+                        using (var memStream = new MemoryStream())
+                        {
+                            var encoder = new PngBitmapEncoder();
+                            encoder.Frames.Add(BitmapFrame.Create(writeableBitmap));
+                            encoder.Save(memStream);
+                            list.Add(new XElement("EmbeddedImageBase64", Convert.ToBase64String(memStream.ToArray())));
+                        }
+                    }
+                }
+                if (designerItem is MosaicViewModel mosaic)
+                {
+                    list.Add(new XElement("ColumnPixels", mosaic.ColumnPixels.Value));
+                    list.Add(new XElement("RowPixels", mosaic.RowPixels.Value));
+                }
                 if (designerItem is ILetterDesignerItemViewModel letter)
                 {
                     list.Add(new XElement("LetterString", letter.LetterString.Value));

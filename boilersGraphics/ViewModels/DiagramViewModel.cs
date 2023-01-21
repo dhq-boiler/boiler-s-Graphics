@@ -23,6 +23,7 @@ using System.IO;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -1813,20 +1814,20 @@ namespace boilersGraphics.ViewModels
 
         #region Load
 
-        private void ExecuteLoadCommand()
+        private async Task ExecuteLoadCommand()
         {
             var result = MessageBox.Show(Resources.Message_CanvasWillDiscardedConfirm, Resources.DialogTitle_Confirm, MessageBoxButton.OKCancel);
             if (result == MessageBoxResult.Cancel)
                 return;
             var (root, filename) = LoadSerializedDataFromFile();
-            LoadInternal(root, filename, false);
+            await LoadInternal(root, filename, false);
             var statistics = MainWindowVM.Statistics.Value;
             statistics.NumberOfTimesTheFileWasOpenedBySpecifyingIt++;
             var dao = new StatisticsDao();
             dao.Update(statistics);
         }
 
-        private void LoadInternal(XElement root, string filename, bool isPreview = false)
+        private async Task LoadInternal(XElement root, string filename, bool isPreview = false)
         {
             if (root == null)
             {
@@ -1851,6 +1852,7 @@ namespace boilersGraphics.ViewModels
             var mainwindowViewModel = MainWindowVM;
             try
             {
+                LogManager.GetCurrentClassLogger().Info(Resources.Log_BeginLoadFromXml);
                 mainwindowViewModel.Recorder.BeginRecode();
 
                 var configuration = root.Element("Configuration");
@@ -1982,6 +1984,7 @@ namespace boilersGraphics.ViewModels
                 }
 
                 ObjectDeserializer.ReadObjectsFromXML(this, root, isPreview);
+                LogManager.GetCurrentClassLogger().Info(Resources.Log_FinishLoadFromXml);
             }
             catch (Exception)
             {
@@ -1996,11 +1999,40 @@ namespace boilersGraphics.ViewModels
                 mainwindowViewModel.Controller.Flush();
             }
 
+            await PostProcessInFileLoadingSequence(mainwindowViewModel).ConfigureAwait(false);
+
+            LogManager.GetCurrentClassLogger().Info(string.Format(Resources.Log_LoadedFile, filename));
+        }
+
+        private async Task PostProcessInFileLoadingSequence(MainWindowViewModel mainwindowViewModel)
+        {
+            LogManager.GetCurrentClassLogger().Info(Resources.Log_BeginPostProcessInFileLoadingSequence);
+
+            await Task.Delay(100).ContinueWith(t =>
+            {
+                ScanMosaicViewModelObjects();
+            }).ConfigureAwait(false);
+
             var layersViewModel = App.Current.MainWindow.GetChildOfType<Views.Layers>().DataContext as LayersViewModel;
             layersViewModel.InitializeHitTestVisible(mainwindowViewModel);
             Layers.First().IsSelected.Value = true;
 
-            LogManager.GetCurrentClassLogger().Info(string.Format(Resources.Log_LoadedFile, filename));
+            LogManager.GetCurrentClassLogger().Info(Resources.Log_FinishPostProcessInFileLoadingSequence);
+        }
+
+        /// <summary>
+        /// ファイルロード後にこのメソッドを実行することで、すべての MosaicViewModel オブジェクトをレンダリングします。
+        /// 注意：ZIndex の小さい方から順にレンダリングが実施されます。
+        /// </summary>
+        private void ScanMosaicViewModelObjects()
+        {
+            foreach (var item in AllItems.Value.OrderBy(x => x.ZIndex.Value))
+            {
+                if (item is MosaicViewModel mosaic)
+                {
+                    mosaic.Render();
+                }
+            }
         }
 
         private void ExecuteLoadCommand(string file, bool showConfirmDialog = true)

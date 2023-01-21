@@ -99,8 +99,7 @@ float4 main(float2 uv : TEXCOORD) : COLOR
                 {
                     item.BeginMonitor(() =>
                     {
-                        LogManager.GetCurrentClassLogger().Info("TEST 3");
-                        SetBitmap();
+                        Render();
                     }).AddTo(_CompositeDisposable);
                 }
             }).AddTo(_CompositeDisposable);
@@ -127,7 +126,7 @@ float4 main(float2 uv : TEXCOORD) : COLOR
                     _bytecode.Value = null;
                     _errorMessage.Value = string.Empty;
                 }
-                SetBitmap();
+                Render();
             }).AddTo(_CompositeDisposable);
             RowPixels.Subscribe(_ =>
             {
@@ -151,25 +150,27 @@ float4 main(float2 uv : TEXCOORD) : COLOR
                     _bytecode.Value = null;
                     _errorMessage.Value = string.Empty;
                 }
-                SetBitmap();
+                Render();
             }).AddTo(_CompositeDisposable);
         }
 
-        private void SetBitmap()
+        public void Render()
         {
             if (this.Width.Value <= 0 || this.Height.Value <= 0)
             {
                 return;
             }
 
-            RenderTargetBitmap rtb = Renderer.Render(new System.Windows.Rect(Left.Value, Top.Value, Width.Value, Height.Value), App.Current.MainWindow.GetChildOfType<DesignerCanvas>(), (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel, (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.BackgroundItem.Value, this);
-            Bitmap.Value = rtb;
+            App.Current.Dispatcher.Invoke(() =>
+            {
+                RenderTargetBitmap rtb = Renderer.Render(new System.Windows.Rect(Left.Value, Top.Value, Width.Value, Height.Value), App.Current.MainWindow.GetChildOfType<DesignerCanvas>(), (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel, (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.BackgroundItem.Value, this);
+                Bitmap.Value = rtb;
+            });
         }
 
         public override void OnRectChanged(Rect rect)
         {
-            LogManager.GetCurrentClassLogger().Info("TEST 2");
-            SetBitmap();
+            Render();
         }
 
         public ReactivePropertySlim<string> Source

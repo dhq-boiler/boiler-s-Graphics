@@ -2,11 +2,7 @@
 using boilersGraphics.Extensions;
 using boilersGraphics.ViewModels;
 using NLog;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -15,11 +11,13 @@ namespace boilersGraphics.Helpers
 {
     public static class Renderer
     {
+        private static readonly Logger s_logger = LogManager.GetCurrentClassLogger();
+
         public static RenderTargetBitmap Render(Rect? sliceRect, DesignerCanvas designerCanvas, DiagramViewModel diagramViewModel, BackgroundViewModel backgroundItem, MosaicViewModel mosaic = null)
         {
             Size size = GetRenderSize(sliceRect, diagramViewModel);
 
-            LogManager.GetCurrentClassLogger().Info($"SliceRect size:{size}");
+            LogManager.GetCurrentClassLogger().Debug($"SliceRect size:{size}");
 
             var rtb = new RenderTargetBitmap((int)size.Width, (int)size.Height, 96, 96, PixelFormats.Pbgra32);
 
@@ -162,7 +160,12 @@ namespace boilersGraphics.Helpers
         private static void RenderBackgroundViewModel(Rect? sliceRect, DesignerCanvas designerCanvas, DrawingContext context, BackgroundViewModel background)
         {
             var views = designerCanvas.GetCorrespondingViews<FrameworkElement>(background);
-            var view = views.First(x => x.GetType() == background.GetViewType());
+            var view = views.FirstOrDefault(x => x.GetType() == background.GetViewType());
+            if (view is null)
+            {
+                s_logger.Warn($"Not Found: view of {background}");
+                return;
+            }
             var bounds = VisualTreeHelper.GetDescendantBounds(view);
 
             Rect rect;
