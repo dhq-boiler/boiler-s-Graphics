@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Windows;
 using System.Windows.Media;
@@ -12,9 +11,6 @@ namespace boilersGraphics.Controls.Effects
         public MosaicEffect()
         {
             PixelShader ps = new PixelShader();
-            string path = System.IO.Path.GetFullPath(@".\Controls\Effects\fx\MosaicEffect.ps");
-            ps.UriSource = new Uri(path);
-
             this.PixelShader = ps;
             UpdateShaderValue(InputProperty);
         }

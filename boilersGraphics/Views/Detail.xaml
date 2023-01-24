@@ -7,6 +7,7 @@
     xmlns:local="clr-namespace:boilersGraphics.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib"
     xmlns:views="clr-namespace:boilersGraphics.Views"
     prism:ViewModelLocator.AutoWireViewModel="True"
     Background="{StaticResource BackgroundColour}"
@@ -44,6 +45,7 @@
                                                 <ComboBox
                                                     x:Name="ComboBox_PropertyValue"
                                                     MaxWidth="500"
+                                                    MaxHeight="100"
                                                     HorizontalAlignment="Stretch"
                                                     IsReadOnly="False"
                                                     IsTabStop="True"
@@ -51,6 +53,38 @@
                                                     SelectedValue="{Binding PropertyValue.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                                                     <ComboBox.ItemTemplateSelector>
                                                         <views:ComboBoxItemTemplateSelector>
+                                                            <DataTemplate DataType="{x:Type sys:Double}">
+                                                                <Grid Background="White">
+                                                                    <Grid.ColumnDefinitions>
+                                                                        <ColumnDefinition Width="75" />
+                                                                        <ColumnDefinition Width="50" />
+                                                                    </Grid.ColumnDefinitions>
+                                                                    <Grid.RowDefinitions>
+                                                                        <RowDefinition Height="Auto" MaxHeight="50" />
+                                                                    </Grid.RowDefinitions>
+                                                                    <Line
+                                                                        Grid.Row="0"
+                                                                        Grid.Column="0"
+                                                                        Stroke="Black"
+                                                                        StrokeThickness="{Binding}"
+                                                                        X1="0"
+                                                                        X2="75"
+                                                                        Y1="15"
+                                                                        Y2="15" />
+                                                                    <Label
+                                                                        Foreground="Black"
+                                                                        Grid.Row="0"
+                                                                        Grid.Column="1"
+                                                                        VerticalAlignment="Center">
+                                                                        <Label.Content>
+                                                                            <TextBlock Foreground="Black">
+                                                                                <Run Text="{Binding Mode=OneWay}" />
+                                                                                <Run Text="pt" />
+                                                                            </TextBlock>
+                                                                        </Label.Content>
+                                                                    </Label>
+                                                                </Grid>
+                                                            </DataTemplate>
                                                             <DataTemplate DataType="{x:Type PenLineJoin}">
                                                                 <Grid Background="White">
                                                                     <Grid.ColumnDefinitions>
