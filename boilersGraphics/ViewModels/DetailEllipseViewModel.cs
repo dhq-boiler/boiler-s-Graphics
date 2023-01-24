@@ -29,6 +29,26 @@ namespace boilersGraphics.ViewModels
             Properties.Add(new PropertyOptionsValueCombinationClass<NEllipseViewModel, PathGeometry>(ViewModel.Value, "PathGeometryNoRotate", HorizontalAlignment.Left));
             Properties.Add(new PropertyOptionsValueCombinationReadOnlyClass<NEllipseViewModel, PathGeometry>(ViewModel.Value, "PathGeometry", HorizontalAlignment.Left));
             Properties.Add(new PropertyOptionsValueCombinationStruct<NEllipseViewModel, int>(ViewModel.Value, "ZIndex", HorizontalAlignment.Right));
+            Properties.Add(new PropertyOptionsValueCombinationStruct<NEllipseViewModel, double>(ViewModel.Value, "EdgeThickness", HorizontalAlignment.Stretch,
+                new double[]
+                {
+                    0.0,
+                    1.0,
+                    2.0,
+                    3.0,
+                    4.0,
+                    5.0,
+                    10.0,
+                    15.0,
+                    20.0,
+                    25.0,
+                    30.0,
+                    35.0,
+                    40.0,
+                    45.0,
+                    50.0,
+                    100.0
+                }));
         }
     }
 }

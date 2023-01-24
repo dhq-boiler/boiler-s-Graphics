@@ -42,6 +42,26 @@ namespace boilersGraphics.ViewModels
             Properties.Add(new PropertyOptionsValueCombinationStructRP<BezierCurveViewModel, double>(ViewModel.Value, "C2X", HorizontalAlignment.Right));
             Properties.Add(new PropertyOptionsValueCombinationStructRP<BezierCurveViewModel, double>(ViewModel.Value, "C2Y", HorizontalAlignment.Right));
             Properties.Add(new PropertyOptionsValueCombinationStruct<BezierCurveViewModel, int>(ViewModel.Value, "ZIndex", HorizontalAlignment.Right));
+            Properties.Add(new PropertyOptionsValueCombinationStruct<BezierCurveViewModel, double>(ViewModel.Value, "EdgeThickness", HorizontalAlignment.Stretch,
+                new double[]
+                {
+                    0.0,
+                    1.0,
+                    2.0,
+                    3.0,
+                    4.0,
+                    5.0,
+                    10.0,
+                    15.0,
+                    20.0,
+                    25.0,
+                    30.0,
+                    35.0,
+                    40.0,
+                    45.0,
+                    50.0,
+                    100.0
+                }));
         }
     }
 }
