@@ -265,6 +265,7 @@ namespace boilersGraphics.Helpers
             if (instance is not ConnectorBaseViewModel)
                 return null;
             var item = instance as ConnectorBaseViewModel;
+            item.IsHitTestVisible.Value = true;
             item.ID = Guid.Parse(connectorElm.Element("ID").Value);
             item.ParentID = Guid.Parse(connectorElm.Element("ParentID").Value);
             item.Points = new ObservableCollection<Point>();
@@ -337,6 +338,7 @@ namespace boilersGraphics.Helpers
             {
                 item.PathGeometryRotate.Value = PathGeometry.CreateFromGeometry(Geometry.Parse(designerItemElm.Element("PathGeometryRotate").Value));
             }
+            item.IsHitTestVisible.Value = true;
             item.Left.Value = double.Parse(designerItemElm.Element("Left").Value);
             item.Top.Value = double.Parse(designerItemElm.Element("Top").Value);
             item.Width.Value = double.Parse(designerItemElm.Element("Width").Value);
