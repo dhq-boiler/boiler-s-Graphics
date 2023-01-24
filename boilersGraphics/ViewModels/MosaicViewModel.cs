@@ -22,6 +22,8 @@ namespace boilersGraphics.ViewModels
 {
     public class MosaicViewModel : DesignerItemViewModelBase
     {
+        private static readonly string ENTRY_POINT = "main";
+        private static readonly string PIXEL_SHADER_2_0 = "ps_2_0";
         private ReactivePropertySlim<IList<byte>> _bytecode = new ReactivePropertySlim<IList<byte>>();
         private ReactivePropertySlim<string> _errorMessage = new ReactivePropertySlim<string>();
 
@@ -69,7 +71,7 @@ float4 main(float2 uv : TEXCOORD) : COLOR
                     {
                         try
                         {
-                            return ShaderBytecode.Compile(value, "main", "ps_3_0");
+                            return ShaderBytecode.Compile(value, ENTRY_POINT, PIXEL_SHADER_2_0);
                         }
                         catch (Exception e)
                         {
@@ -109,7 +111,7 @@ float4 main(float2 uv : TEXCOORD) : COLOR
                 CompilationResult result = null;
                 try
                 {
-                    result = ShaderBytecode.Compile(Source.Value, "main", "ps_3_0");
+                    result = ShaderBytecode.Compile(Source.Value, ENTRY_POINT, PIXEL_SHADER_2_0);
                 }
                 catch (Exception e)
                 {
@@ -133,7 +135,7 @@ float4 main(float2 uv : TEXCOORD) : COLOR
                 CompilationResult result = null;
                 try
                 {
-                    result = ShaderBytecode.Compile(Source.Value, "main", "ps_3_0");
+                    result = ShaderBytecode.Compile(Source.Value, ENTRY_POINT, PIXEL_SHADER_2_0);
                 }
                 catch (Exception e)
                 {
