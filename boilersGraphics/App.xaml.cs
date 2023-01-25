@@ -185,6 +185,7 @@ namespace boilersGraphics
             containerRegistry.RegisterDialog<Views.DetailPie, ViewModels.DetailPieViewModel>();
             containerRegistry.RegisterDialog<Views.DetailPolyBezier, ViewModels.DetailPolyBezierViewModel>();
             containerRegistry.RegisterDialog<Views.DetailMosaic, ViewModels.DetailMosaicViewModel>();
+            containerRegistry.RegisterDialog<Views.DetailBlur, ViewModels.DetailBlurViewModel>();
         }
 
         protected override Window CreateShell()

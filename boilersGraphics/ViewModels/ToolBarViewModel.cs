@@ -48,6 +48,7 @@ namespace boilersGraphics.ViewModels
         public DropperBehavior DropperBehavior { get; } = new DropperBehavior();
         public CanvasModifierBehavior CanvasModifierBehavior { get; } = new CanvasModifierBehavior();
         public MosaicBehavior MosaicBehavior { get; } = new MosaicBehavior();
+        public BlurBehavior BlurBehavior { get; } = new BlurBehavior();
 
         public NDrawPolyBezierBehavior PolyBezierBehavior { get; } = new NDrawPolyBezierBehavior();
 
@@ -306,6 +307,18 @@ namespace boilersGraphics.ViewModels
                 }
                 ChangeHitTestToDisable();
                 SelectOneToolItem("mosaic");
+            })));
+            ToolItems.Add(new ToolItemData("blur", "pack://application:,,,/Assets/img/mosaic.png", Resources.Tool_Mosaic, new DelegateCommand(() =>
+            {
+                var mainWindowViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel);
+                mainWindowViewModel.ClearCurrentOperationAndDetails();
+                Behaviors.Clear();
+                if (!Behaviors.Contains(BlurBehavior))
+                {
+                    Behaviors.Add(BlurBehavior);
+                }
+                ChangeHitTestToDisable();
+                SelectOneToolItem("blur");
             })));
         }
 

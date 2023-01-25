@@ -13,7 +13,7 @@ namespace boilersGraphics.Helpers
     {
         private static readonly Logger s_logger = LogManager.GetCurrentClassLogger();
 
-        public static RenderTargetBitmap Render(Rect? sliceRect, DesignerCanvas designerCanvas, DiagramViewModel diagramViewModel, BackgroundViewModel backgroundItem, MosaicViewModel mosaic = null)
+        public static RenderTargetBitmap Render(Rect? sliceRect, DesignerCanvas designerCanvas, DiagramViewModel diagramViewModel, BackgroundViewModel backgroundItem, DesignerItemViewModelBase mosaic = null)
         {
             Size size = GetRenderSize(sliceRect, diagramViewModel);
 
@@ -58,7 +58,7 @@ namespace boilersGraphics.Helpers
             return size;
         }
 
-        private static void RenderForeground(Rect? sliceRect, DiagramViewModel diagramViewModel, DesignerCanvas designerCanvas, DrawingContext context, BackgroundViewModel background, MosaicViewModel mosaic = null)
+        private static void RenderForeground(Rect? sliceRect, DiagramViewModel diagramViewModel, DesignerCanvas designerCanvas, DrawingContext context, BackgroundViewModel background, DesignerItemViewModelBase mosaic = null)
         {
             var except = new SelectableDesignerItemViewModelBase[] { background, mosaic }.Where(x => x is not null);
             foreach (var item in diagramViewModel.AllItems.Value.Except(except).Where(x => x.IsVisible.Value))

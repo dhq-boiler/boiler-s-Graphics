@@ -37,6 +37,7 @@
                 <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/DesignerItems/PieDesignerItemDataTemplate.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/DesignerItems/MosaicDesignerItemDataTemplate.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/DesignerItems/CroppedPictureDesignerItemDataTemplate.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/DesignerItems/BlurDesignerItemDataTemplate.xaml" />
 
                 <ResourceDictionary Source="/Btl.Controls.MyControls;component/Resources/AllBrushes.xaml" />
                 <ResourceDictionary Source="/Btl.Controls.MyControls;component/Resources/brush.scroll.down.xaml" />
