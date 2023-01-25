@@ -2,17 +2,17 @@
 using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
 using boilersGraphics.Views;
-using NLog;
+using OpenCvSharp;
+using OpenCvSharp.WpfExtensions;
 using Prism.Ioc;
 using Prism.Services.Dialogs;
 using Prism.Unity;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
-using SharpDX.D3DCompiler;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reactive.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -22,79 +22,12 @@ namespace boilersGraphics.ViewModels
 {
     public class MosaicViewModel : DesignerItemViewModelBase
     {
-        private static readonly string ENTRY_POINT = "main";
-        private static readonly string PIXEL_SHADER_2_0 = "ps_2_0";
-        private ReactivePropertySlim<IList<byte>> _bytecode = new ReactivePropertySlim<IList<byte>>();
-        private ReactivePropertySlim<string> _errorMessage = new ReactivePropertySlim<string>();
-
-        public ReactivePropertySlim<RenderTargetBitmap> Bitmap { get; } = new ReactivePropertySlim<RenderTargetBitmap>();
-
+        public ReactivePropertySlim<WriteableBitmap> Bitmap { get; } = new ReactivePropertySlim<WriteableBitmap>();
         public ReactivePropertySlim<double> ColumnPixels { get; } = new ReactivePropertySlim<double>(30d);
         public ReactivePropertySlim<double> RowPixels { get; } = new ReactivePropertySlim<double>(30d);
 
         public MosaicViewModel()
         {
-            Source = new ReactivePropertySlim<string>(@"
-sampler2D input : register(s0);
-float width : register(c0);
-float height : register(c1);
-float cp : register(c2);
-float rp : register(c3);
-
-float4 main(float2 uv : TEXCOORD) : COLOR
-{
-    float x = cp;
-    float y = rp;
-    float l = 0.0;
-    if (width > height)
-    {
-        x = x * width / height;
-        l = 0.5 / y;
-    }
-    else
-    {
-        y = y * height / width;
-        l = 0.5 / x;
-    }
-    float2 uv2 = float2(0.5 * (floor(uv.x * x) + ceil(uv.x * x)) / x, 0.5 * (floor(uv.y * y) + ceil(uv.y * y)) / y);
-    return tex2D(input, uv2);
-}
-");
-            Bytecode = _bytecode.ToReadOnlyReactivePropertySlim();
-            ErrorMessage = _errorMessage.ToReadOnlyReactivePropertySlim();
-
-            Source
-                .Delay(TimeSpan.FromMilliseconds(500))
-                .Select(value =>
-                {
-                    if (!string.IsNullOrEmpty(value))
-                    {
-                        try
-                        {
-                            return ShaderBytecode.Compile(value, ENTRY_POINT, PIXEL_SHADER_2_0);
-                        }
-                        catch (Exception e)
-                        {
-                            return new CompilationResult(null, SharpDX.Result.Fail, e.StackTrace);
-                        }
-                    }
-                    return new CompilationResult(null, SharpDX.Result.Ok, string.Empty);
-                })
-                .ObserveOnDispatcher()
-                .Subscribe(value =>
-                {
-                    if (value != null)
-                    {
-                        _bytecode.Value = value.Bytecode?.Data;
-                        _errorMessage.Value = value.Message;
-                    }
-                    else
-                    {
-                        _bytecode.Value = null;
-                        _errorMessage.Value = string.Empty;
-                    }
-                });
-
             (Application.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.AllItems.Subscribe(items =>
             {
                 foreach (var item in items)
@@ -108,50 +41,10 @@ float4 main(float2 uv : TEXCOORD) : COLOR
 
             ColumnPixels.Subscribe(_ =>
             {
-                CompilationResult result = null;
-                try
-                {
-                    result = ShaderBytecode.Compile(Source.Value, ENTRY_POINT, PIXEL_SHADER_2_0);
-                }
-                catch (Exception e)
-                {
-                    result = new CompilationResult(null, SharpDX.Result.Fail, e.StackTrace);
-                }
-
-                if (result != null)
-                {
-                    _bytecode.Value = result.Bytecode?.Data;
-                    _errorMessage.Value = result.Message;
-                }
-                else
-                {
-                    _bytecode.Value = null;
-                    _errorMessage.Value = string.Empty;
-                }
                 Render();
             }).AddTo(_CompositeDisposable);
             RowPixels.Subscribe(_ =>
             {
-                CompilationResult result = null;
-                try
-                {
-                    result = ShaderBytecode.Compile(Source.Value, ENTRY_POINT, PIXEL_SHADER_2_0);
-                }
-                catch (Exception e)
-                {
-                    result = new CompilationResult(null, SharpDX.Result.Fail, e.StackTrace);
-                }
-
-                if (result != null)
-                {
-                    _bytecode.Value = result.Bytecode?.Data;
-                    _errorMessage.Value = result.Message;
-                }
-                else
-                {
-                    _bytecode.Value = null;
-                    _errorMessage.Value = string.Empty;
-                }
                 Render();
             }).AddTo(_CompositeDisposable);
         }
@@ -163,14 +56,88 @@ float4 main(float2 uv : TEXCOORD) : COLOR
                 return;
             }
 
-            App.Current.Dispatcher.Invoke(() =>
+            RenderTargetBitmap rtb = Renderer.Render(new System.Windows.Rect(Left.Value, Top.Value, Width.Value, Height.Value), App.Current.MainWindow.GetChildOfType<DesignerCanvas>(), (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel, (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.BackgroundItem.Value, this);
+            FormatConvertedBitmap newFormatedBitmapSource = new FormatConvertedBitmap();
+            newFormatedBitmapSource.BeginInit();
+            newFormatedBitmapSource.Source = rtb;
+            newFormatedBitmapSource.DestinationFormat = PixelFormats.Bgr24;
+            newFormatedBitmapSource.EndInit();
+
+            using (var mat = BitmapSourceConverter.ToMat(newFormatedBitmapSource))
+            using (var dest = mat.Clone())
             {
-                RenderTargetBitmap rtb = Renderer.Render(new System.Windows.Rect(Left.Value, Top.Value, Width.Value, Height.Value), App.Current.MainWindow.GetChildOfType<DesignerCanvas>(), (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel, (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.BackgroundItem.Value, this);
-                Bitmap.Value = rtb;
+                Mosaic(mat, dest, ColumnPixels.Value, RowPixels.Value);
+                Bitmap.Value = dest.ToWriteableBitmap();
+            }
+        }
+
+        private unsafe void Mosaic(Mat mat, Mat dest, double columnPixels, double rowPixels)
+        {
+            var column = columnPixels;
+            var row = rowPixels;
+            if (column <= 0 || row <= 0)
+            {
+                byte* _p_src = (byte*)mat.Data.ToPointer();
+                byte* _p_dst = (byte*)dest.Data.ToPointer();
+                int _channels = mat.Channels();
+                long _destStep = dest.Step();
+                long _srcStep = mat.Step();
+
+                Parallel.For(0, mat.Height, y =>
+                {
+                    for (int x = 0; x < mat.Width; x++)
+                    {
+                        for (int c = 0; c < _channels; c++)
+                        {
+                            *(_p_dst + y * _destStep + x * _channels + c) = *(_p_src + y * _srcStep + x * _channels + c);
+                        }
+                    }
+                });
+                return;
+            }
+            if (mat.Width > mat.Height)
+            {
+                column = column * mat.Width / mat.Height;
+            }
+            else
+            {
+                row = row * mat.Height / mat.Width;
+            }
+
+            byte* p_src = (byte*)mat.Data.ToPointer();
+            byte* p_dst = (byte*)dest.Data.ToPointer();
+            int channels = mat.Channels();
+            long destStep = dest.Step();
+            long srcStep = mat.Step();
+
+            Parallel.For(0, mat.Height, y =>
+            {
+                var yy = Y(y, row);
+                for (int x = 0; x < mat.Width; x++)
+                {
+                    var xx = X(x, column);
+                    for (int c = 0; c < channels; c++)
+                    {
+                        if (mat.Cols <= xx || mat.Rows <= yy)
+                        {
+                            continue;
+                        }
+                        *(p_dst + y * destStep + x * channels + c) = *(p_src + yy * srcStep + xx * channels + c);
+                    }
+                }
             });
         }
 
-        public override void OnRectChanged(Rect rect)
+        private long Y(int y, double row)
+        {
+            return (long)(0.5 * (Math.Floor((double)y / row) + Math.Ceiling((double)y / row)) * row);
+        }
+        private long X(int x, double column)
+        {
+            return (long)(0.5 * (Math.Floor((double)x / column) + Math.Ceiling((double)x / column)) * column);
+        }
+
+        public override void OnRectChanged(System.Windows.Rect rect)
         {
             Render();
         }

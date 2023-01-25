@@ -8,18 +8,9 @@
         <Border BorderBrush="{Binding EdgeBrush.Value}" BorderThickness="{Binding EdgeThickness.Value}">
             <Image
                 x:Name="baseGrid"
+                IsHitTestVisible="{Binding IsHitTestVisible.Value, UpdateSourceTrigger=PropertyChanged}"
                 RenderOptions.BitmapScalingMode="HighQuality"
-                Source="{Binding Bitmap.Value, UpdateSourceTrigger=PropertyChanged}">
-                <Image.Effect>
-                    <effects:MosaicEffect
-                        x:Name="shader"
-                        Width="{Binding ElementName=baseGrid, Path=ActualWidth, UpdateSourceTrigger=PropertyChanged}"
-                        Height="{Binding ElementName=baseGrid, Path=ActualHeight, UpdateSourceTrigger=PropertyChanged}"
-                        Bytecode="{Binding Path=Bytecode.Value, UpdateSourceTrigger=PropertyChanged}"
-                        Cp="{Binding ColumnPixels.Value, UpdateSourceTrigger=PropertyChanged}"
-                        Rp="{Binding RowPixels.Value, UpdateSourceTrigger=PropertyChanged}" />
-                </Image.Effect>
-            </Image>
+                Source="{Binding Bitmap.Value, UpdateSourceTrigger=PropertyChanged}" />
         </Border>
     </DataTemplate>
 </ResourceDictionary>
