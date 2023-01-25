@@ -308,7 +308,7 @@ namespace boilersGraphics.ViewModels
                 ChangeHitTestToDisable();
                 SelectOneToolItem("mosaic");
             })));
-            ToolItems.Add(new ToolItemData("blur", "pack://application:,,,/Assets/img/mosaic.png", Resources.Tool_Mosaic, new DelegateCommand(() =>
+            ToolItems.Add(new ToolItemData("blur", "pack://application:,,,/Assets/img/GaussianFilter.png", Resources.Tool_GaussianFilter, new DelegateCommand(() =>
             {
                 var mainWindowViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel);
                 mainWindowViewModel.ClearCurrentOperationAndDetails();

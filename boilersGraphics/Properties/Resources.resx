@@ -816,6 +816,9 @@
   <data name="Tool_FreeHand" xml:space="preserve">
     <value>Free hand tool</value>
   </data>
+  <data name="Tool_GaussianFilter" xml:space="preserve">
+    <value>Gaussian filter tool</value>
+  </data>
   <data name="Tool_Lasso" xml:space="preserve">
     <value>Lasso tool</value>
   </data>

@@ -816,6 +816,9 @@
   <data name="Tool_FreeHand" xml:space="preserve">
     <value>フリーハンドツール</value>
   </data>
+  <data name="Tool_GaussianFilter" xml:space="preserve">
+    <value>ガウシアンフィルタツール</value>
+  </data>
   <data name="Tool_Lasso" xml:space="preserve">
     <value>なげなわツール</value>
   </data>

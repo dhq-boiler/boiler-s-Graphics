@@ -2158,6 +2158,15 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Gaussian filter tool に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Tool_GaussianFilter {
+            get {
+                return ResourceManager.GetString("Tool_GaussianFilter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Lasso tool に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Tool_Lasso {

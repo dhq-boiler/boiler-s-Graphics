@@ -42,6 +42,7 @@
     <Resource Include="Assets\img\eraser_dark.png" />
     <Resource Include="Assets\img\Export_dark.png" />
     <Resource Include="Assets\img\FoldingFan_dark.png" />
+    <Resource Include="Assets\img\GaussianFilter.png" />
     <Resource Include="Assets\img\Gear_dark.png" />
     <Resource Include="Assets\img\icons8-canvas-64.png" />
     <Resource Include="Assets\img\icons8-canvas-64_dark.png" />
@@ -150,6 +151,7 @@
     <None Remove="Assets\img\eraser_dark.png" />
     <None Remove="Assets\img\Export_dark.png" />
     <None Remove="Assets\img\FoldingFan_dark.png" />
+    <None Remove="Assets\img\GaussianFilter.png" />
     <None Remove="Assets\img\Gear_dark.png" />
     <None Remove="Assets\img\icons8-canvas-64.png" />
     <None Remove="Assets\img\icons8-canvas-64_dark.png" />
