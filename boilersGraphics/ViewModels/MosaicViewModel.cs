@@ -56,19 +56,22 @@ namespace boilersGraphics.ViewModels
                 return;
             }
 
-            RenderTargetBitmap rtb = Renderer.Render(new System.Windows.Rect(Left.Value, Top.Value, Width.Value, Height.Value), App.Current.MainWindow.GetChildOfType<DesignerCanvas>(), (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel, (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.BackgroundItem.Value, this);
-            FormatConvertedBitmap newFormatedBitmapSource = new FormatConvertedBitmap();
-            newFormatedBitmapSource.BeginInit();
-            newFormatedBitmapSource.Source = rtb;
-            newFormatedBitmapSource.DestinationFormat = PixelFormats.Bgr24;
-            newFormatedBitmapSource.EndInit();
-
-            using (var mat = BitmapSourceConverter.ToMat(newFormatedBitmapSource))
-            using (var dest = mat.Clone())
+            App.Current.Dispatcher.Invoke(() =>
             {
-                Mosaic(mat, dest, ColumnPixels.Value, RowPixels.Value);
-                Bitmap.Value = dest.ToWriteableBitmap();
-            }
+                RenderTargetBitmap rtb = Renderer.Render(new System.Windows.Rect(Left.Value, Top.Value, Width.Value, Height.Value), App.Current.MainWindow.GetChildOfType<DesignerCanvas>(), (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel, (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.BackgroundItem.Value, this);
+                FormatConvertedBitmap newFormatedBitmapSource = new FormatConvertedBitmap();
+                newFormatedBitmapSource.BeginInit();
+                newFormatedBitmapSource.Source = rtb;
+                newFormatedBitmapSource.DestinationFormat = PixelFormats.Bgr24;
+                newFormatedBitmapSource.EndInit();
+
+                using (var mat = BitmapSourceConverter.ToMat(newFormatedBitmapSource))
+                using (var dest = mat.Clone())
+                {
+                    Mosaic(mat, dest, ColumnPixels.Value, RowPixels.Value);
+                    Bitmap.Value = dest.ToWriteableBitmap();
+                }
+            });
         }
 
         private unsafe void Mosaic(Mat mat, Mat dest, double columnPixels, double rowPixels)
