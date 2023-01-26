@@ -142,36 +142,45 @@ namespace boilersGraphics.ViewModels
             int srcCols = mat.Cols;
             int srcRows = mat.Rows;
 
-            Parallel.For(0, mat.Height, y =>
+            Parallel.For(0, srcRows, y =>
             {
-                var yy = Y(y, row);
-                for (int x = 0; x < mat.Width; x++)
-                {
-                    var xx = X(x, column);
-                    for (int c = 0; c < channels; c++)
-                    {
-                        if (srcCols <= xx || srcRows <= yy)
-                        {
-                            continue;
-                        }
-                        *(p_dst + y * destStep + x * channels + c) = *(p_src + yy * srcStep + xx * channels + c);
-                    }
-                }
+                ProcessRow(mat, y, column, row, p_src, p_dst, channels, destStep, srcStep, srcCols, srcRows);
             });
         }
 
-        private long Y(int y, double row)
+        private unsafe void ProcessRow(Mat mat, int y, double column, double row, byte* p_src, byte* p_dst, int channels, long destStep, long srcStep, int srcCols, int srcRows)
         {
-            return (long)(0.5 * (Math.Floor((double)y / row) + Math.Ceiling((double)y / row)) * row);
+            var yy = GetMosaicPixelIndex(y, row);
+            if (srcRows <= yy)
+            {
+                return;
+            }
+            for (int x = 0; x < srcCols; x++)
+            {
+                ProcessColumn(y, column, p_src, p_dst, channels, destStep, srcStep, srcCols, srcRows, yy, x);
+            }
         }
-        private long X(int x, double column)
+
+        private unsafe void ProcessColumn(int y, double column, byte* p_src, byte* p_dst, int channels, long destStep, long srcStep, int srcCols, int srcRows, long yy, int x)
         {
-            return (long)(0.5 * (Math.Floor((double)x / column) + Math.Ceiling((double)x / column)) * column);
+            var xx = GetMosaicPixelIndex(x, column);
+            for (int c = 0; c < channels; c++)
+            {
+                if (srcCols <= xx)
+                {
+                    continue;
+                }
+                *(p_dst + y * destStep + x * channels + c) = *(p_src + yy * srcStep + xx * channels + c);
+            }
+        }
+
+        private long GetMosaicPixelIndex(int a, double b)
+        {
+            return (long)(0.5 * (Math.Floor((double)a / b) + Math.Ceiling((double)a / b)) * b);
         }
 
         public override async Task OnRectChanged(System.Windows.Rect rect)
         {
-            //await Task.Delay(100).ContinueWith(async t => await RenderAsync().ConfigureAwait(false)).ConfigureAwait(false);
             await RenderAsync().ConfigureAwait(false);
         }
 
