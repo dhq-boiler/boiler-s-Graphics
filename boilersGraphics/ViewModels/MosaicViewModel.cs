@@ -32,21 +32,20 @@ namespace boilersGraphics.ViewModels
             {
                 foreach (var item in items)
                 {
-                    item.BeginMonitor(async () =>
+                    item.BeginMonitor(() =>
                     {
-                        //await RenderAsync().ConfigureAwait(false);
                         Render();
                     }).AddTo(_CompositeDisposable);
                 }
             }).AddTo(_CompositeDisposable);
 
-            ColumnPixels.Subscribe(async _ =>
+            ColumnPixels.Subscribe(_ =>
             {
-                await RenderAsync().ConfigureAwait(false);
+                Render();
             }).AddTo(_CompositeDisposable);
-            RowPixels.Subscribe(async _ =>
+            RowPixels.Subscribe(_ =>
             {
-                await RenderAsync().ConfigureAwait(false);
+                Render();
             }).AddTo(_CompositeDisposable);
         }
 
@@ -157,19 +156,19 @@ namespace boilersGraphics.ViewModels
             }
             for (int x = 0; x < srcCols; x++)
             {
-                ProcessColumn(y, column, p_src, p_dst, channels, destStep, srcStep, srcCols, srcRows, yy, x);
-            }
-        }
-
-        private unsafe void ProcessColumn(int y, double column, byte* p_src, byte* p_dst, int channels, long destStep, long srcStep, int srcCols, int srcRows, long yy, int x)
-        {
-            var xx = GetMosaicPixelIndex(x, column);
-            for (int c = 0; c < channels; c++)
-            {
+                var xx = GetMosaicPixelIndex(x, column);
                 if (srcCols <= xx)
                 {
                     continue;
                 }
+                ProcessColumn(y, column, p_src, p_dst, channels, destStep, srcStep, srcCols, srcRows, yy, x, xx);
+            }
+        }
+
+        private unsafe void ProcessColumn(int y, double column, byte* p_src, byte* p_dst, int channels, long destStep, long srcStep, int srcCols, int srcRows, long yy, int x, long xx)
+        {
+            for (int c = 0; c < channels; c++)
+            {
                 *(p_dst + y * destStep + x * channels + c) = *(p_src + yy * srcStep + xx * channels + c);
             }
         }
@@ -181,7 +180,7 @@ namespace boilersGraphics.ViewModels
 
         public override async Task OnRectChanged(System.Windows.Rect rect)
         {
-            await RenderAsync().ConfigureAwait(false);
+            Render();
         }
 
         public ReactivePropertySlim<string> Source

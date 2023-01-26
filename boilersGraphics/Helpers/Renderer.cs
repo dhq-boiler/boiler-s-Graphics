@@ -20,7 +20,18 @@ namespace boilersGraphics.Helpers
 
             LogManager.GetCurrentClassLogger().Debug($"SliceRect size:{size}");
 
-            var rtb = new RenderTargetBitmap((int)size.Width, (int)size.Height, 96, 96, PixelFormats.Pbgra32);
+            var width = (int)size.Width;
+            var height = (int)size.Height;
+            if (width <= 0)
+            {
+                width = 1;
+            }
+            if (height <= 0)
+            {
+                height = 1;
+            }
+
+            var rtb = new RenderTargetBitmap(width, height, 96, 96, PixelFormats.Pbgra32);
 
             var renderedCount = 0;
             DrawingVisual visual = new DrawingVisual();
