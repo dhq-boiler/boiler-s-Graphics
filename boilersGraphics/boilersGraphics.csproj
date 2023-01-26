@@ -128,6 +128,7 @@
     <PackageReference Include="SharpDX.D3DCompiler" Version="4.2.0" />
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.115.5" />
     <PackageReference Include="System.Data.SQLite.Linq" Version="1.0.115.5" />
+    <PackageReference Include="System.Linq.Async" Version="6.0.1" />
     <PackageReference Include="System.Reactive" Version="5.0.0" />
     <PackageReference Include="System.Reactive.Windows.Threading" Version="5.0.0" />
     <PackageReference Include="WriteableBitmapEx" Version="1.6.8" />

@@ -3,6 +3,7 @@ using boilersGraphics.Extensions;
 using boilersGraphics.ViewModels;
 using NLog;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -21,11 +22,15 @@ namespace boilersGraphics.Helpers
 
             var rtb = new RenderTargetBitmap((int)size.Width, (int)size.Height, 96, 96, PixelFormats.Pbgra32);
 
+            var renderedCount = 0;
             DrawingVisual visual = new DrawingVisual();
             using (DrawingContext context = visual.RenderOpen())
             {
                 //背景を描画
-                RenderBackgroundViewModel(sliceRect, designerCanvas, context, backgroundItem);
+                if (RenderBackgroundViewModel(sliceRect, designerCanvas, context, backgroundItem).GetAwaiter().GetResult())
+                {
+                    renderedCount++;
+                }
             }
             rtb.Render(visual);
 
@@ -33,13 +38,67 @@ namespace boilersGraphics.Helpers
 
             using (DrawingContext context = visual.RenderOpen())
             {
-                RenderForeground(sliceRect, diagramViewModel, designerCanvas, context, backgroundItem, mosaic);
+                renderedCount += RenderForeground(sliceRect, diagramViewModel, designerCanvas, context, backgroundItem, mosaic).GetAwaiter().GetResult();
             }
             rtb.Render(visual);
 
             //OpenCvSharpHelper.ImShow("step2. render foreground", rtb);
 
             rtb.Freeze();
+
+            if (renderedCount == 0)
+            {
+                LogManager.GetCurrentClassLogger().Warn($"レンダリングが試みられましたが、レンダリングされませんでした。");
+            }
+            else
+            {
+                LogManager.GetCurrentClassLogger().Debug($"レンダリングされました。");
+            }
+
+            return rtb;
+        }
+
+        public static async Task<RenderTargetBitmap> RenderAsync(Rect? sliceRect, DesignerCanvas designerCanvas, DiagramViewModel diagramViewModel, BackgroundViewModel backgroundItem, DesignerItemViewModelBase mosaic = null)
+        {
+            Size size = GetRenderSize(sliceRect, diagramViewModel);
+
+            LogManager.GetCurrentClassLogger().Debug($"SliceRect size:{size}");
+
+            var rtb = new RenderTargetBitmap((int)size.Width, (int)size.Height, 96, 96, PixelFormats.Pbgra32);
+            DrawingVisual visual = new DrawingVisual();
+            var renderedCount = 0;
+            await App.Current.Dispatcher.Invoke(async () =>
+            {
+                using (DrawingContext context = visual.RenderOpen())
+                {
+                    //背景を描画
+                    if (await RenderBackgroundViewModel(sliceRect, designerCanvas, context, backgroundItem))
+                    {
+                        renderedCount++;
+                    }
+                }
+                rtb.Render(visual);
+
+                //OpenCvSharpHelper.ImShow("step1. render background", rtb);
+
+                using (DrawingContext context = visual.RenderOpen())
+                {
+                    renderedCount += await RenderForeground(sliceRect, diagramViewModel, designerCanvas, context, backgroundItem, mosaic);
+                }
+                rtb.Render(visual);
+
+                //OpenCvSharpHelper.ImShow("step2. render foreground", rtb);
+                rtb.Freeze();
+            });
+
+            if (renderedCount == 0)
+            {
+                LogManager.GetCurrentClassLogger().Warn($"レンダリングが試みられましたが、レンダリングされませんでした。");
+            }
+            else
+            {
+                LogManager.GetCurrentClassLogger().Debug($"レンダリングされました。");
+            }
 
             return rtb;
         }
@@ -58,13 +117,15 @@ namespace boilersGraphics.Helpers
             return size;
         }
 
-        private static void RenderForeground(Rect? sliceRect, DiagramViewModel diagramViewModel, DesignerCanvas designerCanvas, DrawingContext context, BackgroundViewModel background, DesignerItemViewModelBase mosaic = null)
+        private static async Task<int> RenderForeground(Rect? sliceRect, DiagramViewModel diagramViewModel, DesignerCanvas designerCanvas, DrawingContext context, BackgroundViewModel background, DesignerItemViewModelBase mosaic = null)
         {
+            var renderedCount = 0;
             var except = new SelectableDesignerItemViewModelBase[] { background, mosaic }.Where(x => x is not null);
             foreach (var item in diagramViewModel.AllItems.Value.Except(except).Where(x => x.IsVisible.Value))
             {
-                var views = designerCanvas.GetCorrespondingViews<FrameworkElement>(item);
-                var view = views.FirstOrDefault(x => x.GetType() == item.GetViewType());
+                FrameworkElement view = default(FrameworkElement);
+                var views = await designerCanvas.GetCorrespondingViewsAsync<FrameworkElement>(item).ToListAsync();
+                view = views.FirstOrDefault(x => x.GetType() == item.GetViewType());
                 if (view is null)
                     continue;
                 view.SnapsToDevicePixels = true;
@@ -120,6 +181,7 @@ namespace boilersGraphics.Helpers
                     context.PushTransform(new RotateTransform(item.RotationAngle.Value, (item as DesignerItemViewModelBase).CenterX.Value, (item as DesignerItemViewModelBase).CenterY.Value));
                     context.DrawRectangle(brush, null, rect);
                     context.Pop();
+                    renderedCount++;
                 }
                 else if (item is ConnectorBaseViewModel connector)
                 {
@@ -142,6 +204,7 @@ namespace boilersGraphics.Helpers
                     rect.X -= background.Left.Value;
                     rect.Y -= background.Top.Value;
                     context.DrawRectangle(brush, null, rect);
+                    renderedCount++;
                 }
 
                 //var size = GetRenderSize(diagramViewModel);
@@ -155,17 +218,25 @@ namespace boilersGraphics.Helpers
                 //rtb.Render(visual);
                 //OpenCvSharpHelper.ImShow("Foreground", rtb);
             }
+            return renderedCount;
         }
 
-        private static void RenderBackgroundViewModel(Rect? sliceRect, DesignerCanvas designerCanvas, DrawingContext context, BackgroundViewModel background)
+        private static async Task<bool> RenderBackgroundViewModel(Rect? sliceRect, DesignerCanvas designerCanvas, DrawingContext context, BackgroundViewModel background)
         {
-            var views = designerCanvas.GetCorrespondingViews<FrameworkElement>(background);
-            var view = views.FirstOrDefault(x => x.GetType() == background.GetViewType());
-            if (view is null)
+            FrameworkElement view = default(FrameworkElement);
+            var result = await App.Current.Dispatcher.Invoke(async () =>
             {
-                s_logger.Warn($"Not Found: view of {background}");
-                return;
-            }
+                var views = await designerCanvas.GetCorrespondingViewsAsync<FrameworkElement>(background).ToListAsync();
+                view = views.FirstOrDefault(x => x.GetType() == background.GetViewType());
+                if (view is null)
+                {
+                    s_logger.Warn($"Not Found: view of {background}");
+                    return false;
+                }
+                return true;
+            });
+            if (!result)
+                return false;
             var bounds = VisualTreeHelper.GetDescendantBounds(view);
 
             Rect rect;
@@ -192,6 +263,8 @@ namespace boilersGraphics.Helpers
                 view.UpdateLayout();
                 context.DrawRectangle(brush, null, rect);
             }
+
+            return true;
         }
     }
 }

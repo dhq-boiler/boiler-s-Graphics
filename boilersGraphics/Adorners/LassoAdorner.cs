@@ -6,6 +6,7 @@ using boilersGraphics.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -152,7 +153,7 @@ namespace boilersGraphics.Adorners
             }
         }
 
-        private void UpdateSelectionSnapPoint(Rect lassoRect, SnapPointViewModel vm)
+        private async Task UpdateSelectionSnapPoint(Rect lassoRect, SnapPointViewModel vm)
         {
             LineResizeHandle container = App.Current.MainWindow.GetChildOfType<DesignerCanvas>().GetCorrespondingViews<LineResizeHandle>(vm).First();
 

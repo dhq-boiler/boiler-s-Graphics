@@ -32,20 +32,21 @@ namespace boilersGraphics.ViewModels
             {
                 foreach (var item in items)
                 {
-                    item.BeginMonitor(() =>
+                    item.BeginMonitor(async () =>
                     {
+                        //await RenderAsync().ConfigureAwait(false);
                         Render();
                     }).AddTo(_CompositeDisposable);
                 }
             }).AddTo(_CompositeDisposable);
 
-            ColumnPixels.Subscribe(_ =>
+            ColumnPixels.Subscribe(async _ =>
             {
-                Render();
+                await RenderAsync().ConfigureAwait(false);
             }).AddTo(_CompositeDisposable);
-            RowPixels.Subscribe(_ =>
+            RowPixels.Subscribe(async _ =>
             {
-                Render();
+                await RenderAsync().ConfigureAwait(false);
             }).AddTo(_CompositeDisposable);
         }
 
@@ -58,7 +59,8 @@ namespace boilersGraphics.ViewModels
 
             App.Current.Dispatcher.Invoke(() =>
             {
-                RenderTargetBitmap rtb = Renderer.Render(new System.Windows.Rect(Left.Value, Top.Value, Width.Value, Height.Value), App.Current.MainWindow.GetChildOfType<DesignerCanvas>(), (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel, (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.BackgroundItem.Value, this);
+                var mainWindowViewModel = App.Current.MainWindow.DataContext as MainWindowViewModel;
+                RenderTargetBitmap rtb = Renderer.Render(Rect.Value, App.Current.MainWindow.GetChildOfType<DesignerCanvas>(), mainWindowViewModel.DiagramViewModel, mainWindowViewModel.DiagramViewModel.BackgroundItem.Value, this);
                 FormatConvertedBitmap newFormatedBitmapSource = new FormatConvertedBitmap();
                 newFormatedBitmapSource.BeginInit();
                 newFormatedBitmapSource.Source = rtb;
@@ -72,6 +74,31 @@ namespace boilersGraphics.ViewModels
                     Bitmap.Value = dest.ToWriteableBitmap();
                 }
             });
+        }
+        public async Task RenderAsync()
+        {
+            if (this.Width.Value <= 0 || this.Height.Value <= 0)
+            {
+                return;
+            }
+
+            await App.Current.Dispatcher.Invoke(async () =>
+            {
+                var mainWindowViewModel = App.Current.MainWindow.DataContext as MainWindowViewModel;
+                RenderTargetBitmap rtb = await Renderer.RenderAsync(Rect.Value, App.Current.MainWindow.GetChildOfType<DesignerCanvas>(), mainWindowViewModel.DiagramViewModel, mainWindowViewModel.DiagramViewModel.BackgroundItem.Value, this);
+                FormatConvertedBitmap newFormatedBitmapSource = new FormatConvertedBitmap();
+                newFormatedBitmapSource.BeginInit();
+                newFormatedBitmapSource.Source = rtb;
+                newFormatedBitmapSource.DestinationFormat = PixelFormats.Bgr24;
+                newFormatedBitmapSource.EndInit();
+
+                using (var mat = BitmapSourceConverter.ToMat(newFormatedBitmapSource))
+                using (var dest = mat.Clone())
+                {
+                    Mosaic(mat, dest, ColumnPixels.Value, RowPixels.Value);
+                    Bitmap.Value = dest.ToWriteableBitmap();
+                }
+            }).ConfigureAwait(false);
         }
 
         private unsafe void Mosaic(Mat mat, Mat dest, double columnPixels, double rowPixels)
@@ -112,6 +139,8 @@ namespace boilersGraphics.ViewModels
             int channels = mat.Channels();
             long destStep = dest.Step();
             long srcStep = mat.Step();
+            int srcCols = mat.Cols;
+            int srcRows = mat.Rows;
 
             Parallel.For(0, mat.Height, y =>
             {
@@ -121,7 +150,7 @@ namespace boilersGraphics.ViewModels
                     var xx = X(x, column);
                     for (int c = 0; c < channels; c++)
                     {
-                        if (mat.Cols <= xx || mat.Rows <= yy)
+                        if (srcCols <= xx || srcRows <= yy)
                         {
                             continue;
                         }
@@ -140,9 +169,10 @@ namespace boilersGraphics.ViewModels
             return (long)(0.5 * (Math.Floor((double)x / column) + Math.Ceiling((double)x / column)) * column);
         }
 
-        public override void OnRectChanged(System.Windows.Rect rect)
+        public override async Task OnRectChanged(System.Windows.Rect rect)
         {
-            Render();
+            //await Task.Delay(100).ContinueWith(async t => await RenderAsync().ConfigureAwait(false)).ConfigureAwait(false);
+            await RenderAsync().ConfigureAwait(false);
         }
 
         public ReactivePropertySlim<string> Source

@@ -24,6 +24,7 @@
                             BorderThickness="1"
                             CornerRadius="2,2,0,0">
                             <ContentPresenter
+                                x:Name="GroupBox_Border_ContentPresenter"
                                 Margin="4"
                                 ContentSource="Header"
                                 RecognizesAccessKey="True" />
@@ -34,7 +35,7 @@
                             BorderBrush="{StaticResource SolidBorderBrush}"
                             BorderThickness="1,0,1,1"
                             CornerRadius="0,0,2,2">
-                            <ContentPresenter Margin="4" />
+                            <ContentPresenter x:Name="GroupBox_ContentPresenter" Margin="4" />
                         </Border>
                     </Grid>
                 </ControlTemplate>

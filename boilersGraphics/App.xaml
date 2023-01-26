@@ -82,6 +82,7 @@
                                         Content="Down" />
                                 </Grid>
                                 <ContentPresenter
+                                    x:Name="spinner_ContentPresenter"
                                     Grid.RowSpan="2"
                                     Grid.ColumnSpan="2"
                                     HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"

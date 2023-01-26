@@ -69,6 +69,7 @@
                                     OverridesDefaultStyle="True"
                                     Template="{StaticResource ExpanderToggleButton}" />
                                 <ContentPresenter
+                                    x:Name="Expander_Border_ContentPresenter"
                                     Grid.Column="1"
                                     Margin="4"
                                     ContentSource="Header"
@@ -82,7 +83,7 @@
                             BorderBrush="{StaticResource SolidBorderBrush}"
                             BorderThickness="1,0,1,1"
                             CornerRadius="0,0,2,2">
-                            <ContentPresenter Margin="4" />
+                            <ContentPresenter x:Name="Expander_Content_ContentPresenter" Margin="4" />
                         </Border>
                     </Grid>
                     <ControlTemplate.Triggers>

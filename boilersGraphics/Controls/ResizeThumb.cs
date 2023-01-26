@@ -93,7 +93,7 @@ namespace boilersGraphics.Controls
 
                 var mainWindowVM = (App.Current.MainWindow.DataContext as MainWindowViewModel);
                 var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-                var correspondingViews = designerCanvas.GetCorrespondingViews<ResizeThumb>(this.DataContext);
+                var correspondingViews = designerCanvas.GetCorrespondingViews<ResizeThumb>(this.DataContext).ToList();
                 var diagramVM = mainWindowVM.DiagramViewModel;
                 
                 foreach (var item in selectedDesignerItems)

@@ -1,5 +1,6 @@
 using boilersGraphics.Models;
 using boilersGraphics.ViewModels;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -15,6 +16,7 @@ namespace boilersGraphics.Extensions
 {
     public static class Extensions
     {
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         /*
          * https://stackoverflow.com/questions/10279092/how-to-get-children-of-a-wpf-container-by-type
          */
@@ -97,29 +99,84 @@ namespace boilersGraphics.Extensions
             return depObj;
         }
 
-        public static IEnumerable<T> FindVisualChildren<T>(this DependencyObject depObj) where T : DependencyObject
+        public static async IAsyncEnumerable<T> FindVisualChildrenAsync<T>(this DependencyObject depObj, int digCount = 0) where T : DependencyObject
         {
-            if (depObj != null)
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+            logger.Debug($"Begin FindVisualChildren(digCount={digCount})");
+            if (depObj is null)
             {
-                if (depObj is Prism.Services.Dialogs.DialogWindow dw)
+                sw.Stop();
+                logger.Debug($"Finish FindVisualChildren(digCount={digCount}) elapsed={sw.ElapsedMilliseconds}ms");
+                yield break;
+            }
+
+            if (depObj is ContentPresenter cp2)
+            {
+                //dig ContentPresenter.Content
+                var content = cp2.Content as DependencyObject;
+                if (content is T)
                 {
-                    var loadObj = dw.Template.LoadContent();
-                    foreach (var childOfChild in FindVisualChildren<DependencyObject>(loadObj))
+                    yield return (T)content;
+                }
+                if (content is not null)
+                {
+                    var list = await FindVisualChildrenAsync<DependencyObject>(content, digCount + 1).ToListAsync();
+                    foreach (var childOfChild2 in list)
+                    {
+                        if (childOfChild2 != null && childOfChild2 is T)
+                        {
+                            yield return (T)childOfChild2;
+                        }
+                    }
+                }
+                //dig ContentPresenter.ContentTemplate
+                if (cp2.ContentTemplate != null)
+                {
+                    var loadObj2 = cp2.ContentTemplate.LoadContent();
+                    if (loadObj2 is T)
+                    {
+                        yield return (T)loadObj2;
+                    }
+                    var list = await FindVisualChildrenAsync<DependencyObject>(loadObj2, digCount + 1).ToListAsync();
+                    foreach (var childOfChild2 in list)
+                    {
+                        if (childOfChild2 != null && childOfChild2 is T)
+                        {
+                            yield return (T)childOfChild2;
+                        }
+                    }
+                }
+            }
+            else if (depObj is Prism.Services.Dialogs.DialogWindow dw)
+            {
+                //dig DialogWindow.Template
+                var loadObj = dw.Template.LoadContent();
+                if (loadObj is not null)
+                {
+                    var list = await FindVisualChildrenAsync<DependencyObject>(loadObj, digCount + 1).ToListAsync();
+                    foreach (var childOfChild in list)
                     {
                         if (childOfChild is ContentPresenter cp)
                         {
+                            //dig ContentPresenter.Content
                             var content = cp.Content as DependencyObject;
                             if (content is T)
                             {
                                 yield return (T)content;
                             }
-                            foreach (var childOfChild2 in FindVisualChildren<DependencyObject>(content))
+                            if (content is not null)
                             {
-                                if (childOfChild2 != null && childOfChild2 is T)
+                                var list2 = await FindVisualChildrenAsync<DependencyObject>(content, digCount + 1).ToListAsync();
+                                foreach (var childOfChild2 in list2)
                                 {
-                                    yield return (T)childOfChild2;
+                                    if (childOfChild2 != null && childOfChild2 is T)
+                                    {
+                                        yield return (T)childOfChild2;
+                                    }
                                 }
                             }
+                            //dig ContentPresenter.ContentTemplate
                             if (cp.ContentTemplate != null)
                             {
                                 var loadObj2 = cp.ContentTemplate.LoadContent();
@@ -127,17 +184,22 @@ namespace boilersGraphics.Extensions
                                 {
                                     yield return (T)loadObj2;
                                 }
-                                foreach (var childOfChild2 in FindVisualChildren<DependencyObject>(loadObj2))
+                                if (loadObj2 is not null)
                                 {
-                                    if (childOfChild2 != null && childOfChild2 is T)
+                                    var list2 = await FindVisualChildrenAsync<DependencyObject>(loadObj2, digCount + 1).ToListAsync();
+                                    foreach (var childOfChild2 in list2)
                                     {
-                                        yield return (T)childOfChild2;
+                                        if (childOfChild2 != null && childOfChild2 is T)
+                                        {
+                                            yield return (T)childOfChild2;
+                                        }
                                     }
                                 }
                             }
                         }
                         if (childOfChild is Control c)
                         {
+                            //dig Control.Template
                             if (c.Template != null)
                             {
                                 var loadObj2 = c.Template.LoadContent();
@@ -145,17 +207,22 @@ namespace boilersGraphics.Extensions
                                 {
                                     yield return (T)loadObj2;
                                 }
-                                foreach (var childOfChild2 in FindVisualChildren<DependencyObject>(loadObj2))
+                                if (loadObj2 is not null)
                                 {
-                                    if (childOfChild2 != null && childOfChild2 is T)
+                                    var list2 = await FindVisualChildrenAsync<DependencyObject>(loadObj2, digCount + 1).ToListAsync();
+                                    foreach (var childOfChild2 in list2)
                                     {
-                                        yield return (T)childOfChild2;
+                                        if (childOfChild2 != null && childOfChild2 is T)
+                                        {
+                                            yield return (T)childOfChild2;
+                                        }
                                     }
                                 }
                             }
                         }
                         if (childOfChild is ContentControl cc)
                         {
+                            //dig ContentControl.Template
                             if (cc.Template != null)
                             {
                                 var loadObj2 = cc.Template.LoadContent();
@@ -163,15 +230,20 @@ namespace boilersGraphics.Extensions
                                 {
                                     yield return (T)loadObj2;
                                 }
-                                foreach (var childOfChild2 in FindVisualChildren<DependencyObject>(loadObj2))
+                                if (loadObj2 is not null)
                                 {
-                                    if (childOfChild2 != null && childOfChild2 is T)
+                                    var list2 = await FindVisualChildrenAsync<DependencyObject>(loadObj2, digCount + 1).ToListAsync();
+                                    foreach (var childOfChild2 in list2)
                                     {
-                                        yield return (T)childOfChild2;
+                                        if (childOfChild2 != null && childOfChild2 is T)
+                                        {
+                                            yield return (T)childOfChild2;
+                                        }
                                     }
                                 }
                             }
 
+                            //dig ContentControl.ContentTemplate
                             if (cc.ContentTemplate != null)
                             {
                                 var loadObj2 = cc.ContentTemplate.LoadContent();
@@ -179,11 +251,15 @@ namespace boilersGraphics.Extensions
                                 {
                                     yield return (T)loadObj2;
                                 }
-                                foreach (var childOfChild2 in FindVisualChildren<DependencyObject>(loadObj2))
+                                if (loadObj2 is not null)
                                 {
-                                    if (childOfChild2 != null && childOfChild2 is T)
+                                    var list2 = await FindVisualChildrenAsync<DependencyObject>(loadObj2, digCount + 1).ToListAsync();
+                                    foreach (var childOfChild2 in list2)
                                     {
-                                        yield return (T)childOfChild2;
+                                        if (childOfChild2 != null && childOfChild2 is T)
+                                        {
+                                            yield return (T)childOfChild2;
+                                        }
                                     }
                                 }
                             }
@@ -193,11 +269,15 @@ namespace boilersGraphics.Extensions
                             yield return (T)childOfChild;
                         }
                     }
-
-                    if (dw.ContentTemplate != null)
+                }
+                //dig Prism.Services.Dialogs.DialogWindow.ContentTemplate
+                if (dw.ContentTemplate != null)
+                {
+                    loadObj = dw.ContentTemplate.LoadContent();
+                    if (loadObj is not null)
                     {
-                        loadObj = dw.ContentTemplate.LoadContent();
-                        foreach (var childOfChild in FindVisualChildren<DependencyObject>(loadObj))
+                        var list2 = await FindVisualChildrenAsync<DependencyObject>(loadObj, digCount + 1).ToListAsync();
+                        foreach (var childOfChild in list2)
                         {
                             if (childOfChild != null && childOfChild is T)
                             {
@@ -206,34 +286,303 @@ namespace boilersGraphics.Extensions
                         }
                     }
                 }
-
-                for (int i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++)
+            }
+            
+            //dig Children
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++)
+            {
+                DependencyObject child = VisualTreeHelper.GetChild(depObj, i);
+                if (child != null && child is T)
                 {
-                    DependencyObject child = VisualTreeHelper.GetChild(depObj, i);
-                    if (child != null && child is T)
-                    {
-                        yield return (T)child;
-                    }
+                    yield return (T)child;
 
-                    if (child != null && child is ContentPresenter cp && cp.ContentTemplate != null)
+                    var list = await FindVisualChildrenAsync<T>(child, digCount + 1).ToListAsync();
+                    foreach (T childOfChild in list)
+                    {
+                        yield return childOfChild;
+                    }
+                }
+
+                if (child != null && child is ContentPresenter cp)
+                {
+                    //dig ContentPresenter.Content
+                    var content = cp.Content as DependencyObject;
+                    if (content is T)
+                    {
+                        yield return (T)content;
+                    }
+                    if (content is not null)
+                    {
+                        var list = await FindVisualChildrenAsync<DependencyObject>(content, digCount + 1).ToListAsync();
+                        foreach (var childOfChild2 in list)
+                        {
+                            if (childOfChild2 != null && childOfChild2 is T)
+                            {
+                                yield return (T)childOfChild2;
+                            }
+                        }
+                    }
+                    //dig ContentPresenter.ContentTemplate
+                    if (cp.ContentTemplate != null)
                     {
                         var dependencyObject = cp.ContentTemplate.LoadContent();
                         if (dependencyObject is T)
                         {
                             yield return (T)dependencyObject;
                         }
-                        foreach (T childOfChild in FindVisualChildren<T>(dependencyObject))
+                        var list = await FindVisualChildrenAsync<T>(dependencyObject, digCount + 1).ToListAsync();
+                        foreach (T childOfChild in list)
                         {
                             yield return childOfChild;
                         }
                     }
+                }
+            }
+            sw.Stop();
+            logger.Debug($"Finish FindVisualChildren(digCount={digCount}) elapsed={sw.ElapsedMilliseconds}ms");
+        }
 
-                    foreach (T childOfChild in FindVisualChildren<T>(child))
+        public static IEnumerable<T> FindVisualChildren<T>(this DependencyObject depObj, int digCount = 0) where T : DependencyObject
+        {
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+            logger.Debug($"Begin FindVisualChildren(digCount={digCount})");
+            if (depObj is null)
+            {
+                sw.Stop();
+                logger.Debug($"Finish FindVisualChildren(digCount={digCount}) elapsed={sw.ElapsedMilliseconds}ms");
+                yield break;
+            }
+
+            if (depObj is ContentPresenter cp2)
+            {
+                //dig ContentPresenter.Content
+                var content = cp2.Content as DependencyObject;
+                if (content is T)
+                {
+                    yield return (T)content;
+                }
+                if (content is not null)
+                {
+                    var list = FindVisualChildren<DependencyObject>(content, digCount + 1).ToList();
+                    foreach (var childOfChild2 in list)
+                    {
+                        if (childOfChild2 != null && childOfChild2 is T)
+                        {
+                            yield return (T)childOfChild2;
+                        }
+                    }
+                }
+                //dig ContentPresenter.ContentTemplate
+                if (cp2.ContentTemplate != null)
+                {
+                    var loadObj2 = cp2.ContentTemplate.LoadContent();
+                    if (loadObj2 is T)
+                    {
+                        yield return (T)loadObj2;
+                    }
+                    var list = FindVisualChildren<DependencyObject>(loadObj2, digCount + 1).ToList();
+                    foreach (var childOfChild2 in list)
+                    {
+                        if (childOfChild2 != null && childOfChild2 is T)
+                        {
+                            yield return (T)childOfChild2;
+                        }
+                    }
+                }
+            }
+            else if (depObj is Prism.Services.Dialogs.DialogWindow dw)
+            {
+                //dig DialogWindow.Template
+                var loadObj = dw.Template.LoadContent();
+                if (loadObj is not null)
+                {
+                    var list = FindVisualChildren<DependencyObject>(loadObj, digCount + 1).ToList();
+                    foreach (var childOfChild in list)
+                    {
+                        if (childOfChild is ContentPresenter cp)
+                        {
+                            //dig ContentPresenter.Content
+                            var content = cp.Content as DependencyObject;
+                            if (content is T)
+                            {
+                                yield return (T)content;
+                            }
+                            if (content is not null)
+                            {
+                                var list2 = FindVisualChildren<DependencyObject>(content, digCount + 1).ToList();
+                                foreach (var childOfChild2 in list2)
+                                {
+                                    if (childOfChild2 != null && childOfChild2 is T)
+                                    {
+                                        yield return (T)childOfChild2;
+                                    }
+                                }
+                            }
+                            //dig ContentPresenter.ContentTemplate
+                            if (cp.ContentTemplate != null)
+                            {
+                                var loadObj2 = cp.ContentTemplate.LoadContent();
+                                if (loadObj2 is T)
+                                {
+                                    yield return (T)loadObj2;
+                                }
+                                if (loadObj2 is not null)
+                                {
+                                    var list2 = FindVisualChildren<DependencyObject>(loadObj2, digCount + 1).ToList();
+                                    foreach (var childOfChild2 in list2)
+                                    {
+                                        if (childOfChild2 != null && childOfChild2 is T)
+                                        {
+                                            yield return (T)childOfChild2;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        if (childOfChild is Control c)
+                        {
+                            //dig Control.Template
+                            if (c.Template != null)
+                            {
+                                var loadObj2 = c.Template.LoadContent();
+                                if (loadObj2 is T)
+                                {
+                                    yield return (T)loadObj2;
+                                }
+                                if (loadObj2 is not null)
+                                {
+                                    var list2 = FindVisualChildren<DependencyObject>(loadObj2, digCount + 1).ToList();
+                                    foreach (var childOfChild2 in list2)
+                                    {
+                                        if (childOfChild2 != null && childOfChild2 is T)
+                                        {
+                                            yield return (T)childOfChild2;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        if (childOfChild is ContentControl cc)
+                        {
+                            //dig ContentControl.Template
+                            if (cc.Template != null)
+                            {
+                                var loadObj2 = cc.Template.LoadContent();
+                                if (loadObj2 is T)
+                                {
+                                    yield return (T)loadObj2;
+                                }
+                                if (loadObj2 is not null)
+                                {
+                                    var list2 = FindVisualChildren<DependencyObject>(loadObj2, digCount + 1).ToList();
+                                    foreach (var childOfChild2 in list2)
+                                    {
+                                        if (childOfChild2 != null && childOfChild2 is T)
+                                        {
+                                            yield return (T)childOfChild2;
+                                        }
+                                    }
+                                }
+                            }
+
+                            //dig ContentControl.ContentTemplate
+                            if (cc.ContentTemplate != null)
+                            {
+                                var loadObj2 = cc.ContentTemplate.LoadContent();
+                                if (loadObj2 is T)
+                                {
+                                    yield return (T)loadObj2;
+                                }
+                                if (loadObj2 is not null)
+                                {
+                                    var list2 = FindVisualChildren<DependencyObject>(loadObj2, digCount + 1).ToList();
+                                    foreach (var childOfChild2 in list2)
+                                    {
+                                        if (childOfChild2 != null && childOfChild2 is T)
+                                        {
+                                            yield return (T)childOfChild2;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        if (childOfChild != null && childOfChild is T)
+                        {
+                            yield return (T)childOfChild;
+                        }
+                    }
+                }
+                //dig Prism.Services.Dialogs.DialogWindow.ContentTemplate
+                if (dw.ContentTemplate != null)
+                {
+                    loadObj = dw.ContentTemplate.LoadContent();
+                    if (loadObj is not null)
+                    {
+                        var list2 = FindVisualChildren<DependencyObject>(loadObj, digCount + 1).ToList();
+                        foreach (var childOfChild in list2)
+                        {
+                            if (childOfChild != null && childOfChild is T)
+                            {
+                                yield return (T)childOfChild;
+                            }
+                        }
+                    }
+                }
+            }
+
+            //dig Children
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++)
+            {
+                DependencyObject child = VisualTreeHelper.GetChild(depObj, i);
+                if (child != null && child is T)
+                {
+                    yield return (T)child;
+
+                    var list = FindVisualChildren<T>(child, digCount + 1).ToList();
+                    foreach (T childOfChild in list)
                     {
                         yield return childOfChild;
                     }
                 }
+
+                if (child != null && child is ContentPresenter cp)
+                {
+                    //dig ContentPresenter.Content
+                    var content = cp.Content as DependencyObject;
+                    if (content is T)
+                    {
+                        yield return (T)content;
+                    }
+                    if (content is not null)
+                    {
+                        var list = FindVisualChildren<DependencyObject>(content, digCount + 1).ToList();
+                        foreach (var childOfChild2 in list)
+                        {
+                            if (childOfChild2 != null && childOfChild2 is T)
+                            {
+                                yield return (T)childOfChild2;
+                            }
+                        }
+                    }
+                    //dig ContentPresenter.ContentTemplate
+                    if (cp.ContentTemplate != null)
+                    {
+                        var dependencyObject = cp.ContentTemplate.LoadContent();
+                        if (dependencyObject is T)
+                        {
+                            yield return (T)dependencyObject;
+                        }
+                        var list = FindVisualChildren<T>(dependencyObject, digCount + 1).ToList();
+                        foreach (T childOfChild in list)
+                        {
+                            yield return childOfChild;
+                        }
+                    }
+                }
             }
+            sw.Stop();
+            logger.Debug($"Finish FindVisualChildren(digCount={digCount}) elapsed={sw.ElapsedMilliseconds}ms");
         }
 
         public static IEnumerable<FrameworkElement> GetChildren(this FrameworkElement parent)
@@ -295,6 +644,62 @@ namespace boilersGraphics.Extensions
             return foundChild;
         }
 
+        public static async IAsyncEnumerable<T> GetCorrespondingViewsAsync<T>(this FrameworkElement parent, object dataContext, bool parentInclude = false)
+            where T : FrameworkElement
+        {
+            if (parentInclude && parent.DataContext == dataContext)
+            {
+                if (parent is T)
+                    yield return parent as T;
+            }
+
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
+            {
+                var child = VisualTreeHelper.GetChild(parent, i);
+
+                IEnumerable<T> result = default(IEnumerable<T>);
+                if (child is IEnumerable<T> enumerable)
+                {
+                    result = enumerable;
+                }
+                else
+                {
+                    result = await FindVisualChildrenAsync<T>(child).ToListAsync();
+                }
+                //var result = (child as IEnumerable<T>) ?? FindVisualChildren<T>(child);
+                if (result != null)
+                {
+                    foreach (var item in result)
+                    {
+                        if (item != null && item.DataContext == dataContext)
+                            yield return item;
+                    }
+                }
+                var result2 = child as T;
+                if (result2 is not null && result2.DataContext == dataContext)
+                {
+                    yield return result2;
+                }
+                else
+                {
+                    var result3 = await FindVisualChildrenAsync<T>(result2).ToListAsync();
+                    if (result3 is not null)
+                    {
+                        foreach (var item in result3)
+                        {
+                            if (item is not null && item.DataContext == dataContext)
+                            {
+                                yield return item;
+                            }
+                        }
+                    }
+                }
+                //var result2 = (child as T) ?? GetChildOfType<T>(child);
+                //if (result2 != null && result2.DataContext == dataContext)
+                //    yield return result2;
+            }
+        }
+
         public static IEnumerable<T> GetCorrespondingViews<T>(this FrameworkElement parent, object dataContext, bool parentInclude = false)
             where T : FrameworkElement
         {
@@ -308,7 +713,16 @@ namespace boilersGraphics.Extensions
             {
                 var child = VisualTreeHelper.GetChild(parent, i);
 
-                var result = (child as IEnumerable<T>) ?? EnumerateChildOfType<T>(child);
+                IEnumerable<T> result = default(IEnumerable<T>);
+                if (child is IEnumerable<T> enumerable)
+                {
+                    result = enumerable;
+                }
+                else
+                {
+                    result = FindVisualChildren<T>(child).ToList();
+                }
+                //var result = (child as IEnumerable<T>) ?? FindVisualChildren<T>(child);
                 if (result != null)
                 {
                     foreach (var item in result)
@@ -317,12 +731,28 @@ namespace boilersGraphics.Extensions
                             yield return item;
                     }
                 }
-                var result2 = (child as T) ?? GetChildOfType<T>(child);
-                if (result2 != null && result2.DataContext == dataContext)
+                var result2 = child as T;
+                if (result2 is not null && result2.DataContext == dataContext)
+                {
                     yield return result2;
+                }
+                else
+                {
+                    var result3 = FindVisualChildren<T>(result2).ToList();
+                    if (result3 is not null)
+                    {
+                        foreach (var item in result3)
+                        {
+                            if (item is not null && item.DataContext == dataContext)
+                            {
+                                yield return item;
+                            }
+                        }
+                    }
+                }
             }
         }
-        
+
         public static IEnumerable<FrameworkElement> GetViewsHavingDataContext(this FrameworkElement parent, bool parentInclude = false)
         {
             if (parentInclude && !(parent.DataContext is null))

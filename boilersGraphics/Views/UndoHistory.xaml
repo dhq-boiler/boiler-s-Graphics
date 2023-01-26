@@ -2,17 +2,13 @@
     x:Class="boilersGraphics.Views.UndoHistory"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:behavior="clr-namespace:boilersGraphics.Views.Behaviors"
-    xmlns:c="clr-namespace:CalcBinding;assembly=CalcBinding"
     xmlns:converter="clr-namespace:boilersGraphics.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
     xmlns:helper="clr-namespace:boilersGraphics.Helpers"
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:local="clr-namespace:boilersGraphics.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
-    xmlns:viewModels="clr-namespace:boilersGraphics.ViewModels"
     xmlns:views="clr-namespace:boilersGraphics.Views"
     x:Name="undoStack"
     d:DesignHeight="450"
@@ -125,7 +121,7 @@
                                                                 <ContextMenu ItemsSource="{Binding Tag.ContextMenuItems, RelativeSource={RelativeSource Self}}" Tag="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
                                                                     <i:Interaction.Triggers>
                                                                         <i:EventTrigger EventName="Opened">
-                                                                            <helper:EventToCommand Command="{Binding Tag.ContextMenuOpeningCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}, diag:PresentationTraceSources.TraceLevel=High}" PassEventArgsToCommand="True" />
+                                                                            <helper:EventToCommand Command="{Binding Tag.ContextMenuOpeningCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}" PassEventArgsToCommand="True" />
                                                                         </i:EventTrigger>
                                                                     </i:Interaction.Triggers>
                                                                 </ContextMenu>

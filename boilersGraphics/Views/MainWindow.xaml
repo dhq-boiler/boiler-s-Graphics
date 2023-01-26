@@ -178,7 +178,10 @@
                                                     <RowDefinition Height="Auto" />
                                                 </Grid.RowDefinitions>
                                                 <Border Grid.Row="1" Grid.Column="0">
-                                                    <ScrollContentPresenter Margin="{TemplateBinding Padding}" CanContentScroll="{TemplateBinding CanContentScroll}" />
+                                                    <ScrollContentPresenter
+                                                        x:Name="ScrollViewer_ScrollContentPresenter"
+                                                        Margin="{TemplateBinding Padding}"
+                                                        CanContentScroll="{TemplateBinding CanContentScroll}" />
                                                 </Border>
                                                 <RepeatButton
                                                     Grid.Row="0"
@@ -255,6 +258,7 @@
                                             FlowDirection="LeftToRight"
                                             Visibility="Collapsed" />
                                         <ContentPresenter
+                                            x:Name="MenuItem_Header_ContentPresenter"
                                             Grid.Column="1"
                                             Margin="{TemplateBinding Padding}"
                                             ContentSource="Header"

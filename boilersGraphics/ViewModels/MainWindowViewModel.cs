@@ -8,6 +8,7 @@ using Homura.Core;
 using Homura.ORM;
 using Homura.ORM.Setup;
 using NLog;
+using NLog.Targets.Wrappers;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
@@ -414,8 +415,10 @@ namespace boilersGraphics.ViewModels
                 ArchiveDateFormat = "yyyy-MM-dd",
                 Encoding = Encoding.UTF8
             };
-            config.AddTarget(fileTarget);
-            config.AddRule(NLog.LogLevel.Info, NLog.LogLevel.Fatal, fileTarget);
+            var wrapper = new AsyncTargetWrapper(fileTarget, 5000, AsyncTargetWrapperOverflowAction.Grow);
+            wrapper.Name = "fileTarget";
+            config.AddTarget(wrapper);
+            config.AddRule(NLog.LogLevel.Info, NLog.LogLevel.Fatal, wrapper);
             NLog.Targets.FileTarget fileErrTarget = new NLog.Targets.FileTarget("fileErrTarget")
             {
                 FileName = $"{Helpers.Path.GetRoamingDirectory()}\\dhq_boiler\\boilersGraphics\\Logs\\boilersGraphics_error.log",
@@ -425,20 +428,26 @@ namespace boilersGraphics.ViewModels
                 ArchiveDateFormat = "yyyy-MM-dd",
                 Encoding = Encoding.UTF8
             };
-            config.AddTarget(fileErrTarget);
-            config.AddRule(NLog.LogLevel.Error, NLog.LogLevel.Fatal, fileErrTarget);
+            wrapper = new AsyncTargetWrapper(fileErrTarget, 5000, AsyncTargetWrapperOverflowAction.Grow);
+            wrapper.Name = "fileErrTarget";
+            config.AddTarget(wrapper);
+            config.AddRule(NLog.LogLevel.Error, NLog.LogLevel.Fatal, wrapper);
             NLog.Targets.ConsoleTarget consoleTarget = new NLog.Targets.ConsoleTarget("consoleTarget")
             {
                 Layout = "${longdate}[${level}]${message}"
             };
-            config.AddTarget(consoleTarget);
-            config.AddRule(NLog.LogLevel.Info, NLog.LogLevel.Fatal, consoleTarget);
+            wrapper = new AsyncTargetWrapper(consoleTarget, 5000, AsyncTargetWrapperOverflowAction.Grow);
+            wrapper.Name = "consoleTarget";
+            config.AddTarget(wrapper);
+            config.AddRule(NLog.LogLevel.Info, NLog.LogLevel.Fatal, wrapper);
             NLog.Targets.DebuggerTarget debuggerTarget = new NLog.Targets.DebuggerTarget("debuggerTarget")
             {
                 Layout = "${longdate}[${level}]${message}"
             };
-            config.AddTarget(debuggerTarget);
-            config.AddRule(NLog.LogLevel.Info, NLog.LogLevel.Fatal, debuggerTarget);
+            wrapper = new AsyncTargetWrapper(debuggerTarget, 5000, AsyncTargetWrapperOverflowAction.Grow);
+            wrapper.Name = "debuggerTarget";
+            config.AddTarget(wrapper);
+            config.AddRule(NLog.LogLevel.Info, NLog.LogLevel.Fatal, wrapper);
             NLog.LogManager.Configuration = config;
         }
 

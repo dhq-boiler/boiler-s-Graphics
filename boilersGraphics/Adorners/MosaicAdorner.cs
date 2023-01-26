@@ -61,7 +61,7 @@ namespace boilersGraphics.Adorners
             e.Handled = true;
         }
 
-        protected override void OnMouseUp(System.Windows.Input.MouseButtonEventArgs e)
+        protected override async void OnMouseUp(System.Windows.Input.MouseButtonEventArgs e)
         {
             // release mouse capture
             if (this.IsMouseCaptured) this.ReleaseMouseCapture();

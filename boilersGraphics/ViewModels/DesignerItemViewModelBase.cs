@@ -1,12 +1,11 @@
 ﻿using boilersGraphics.Helpers;
-using Homura.QueryBuilder.Iso.Dml;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 
@@ -118,34 +117,34 @@ namespace boilersGraphics.ViewModels
 
             Left
                 .Zip(Left.Skip(1), (Old, New) => new { OldItem = Old, NewItem = New })
-                .Subscribe(x =>
+                .Subscribe(async x =>
                 {
                     UpdateTransform(nameof(Left), x.OldItem, x.NewItem);
-                    OnRectChanged(new System.Windows.Rect(Left.Value, Top.Value, Width.Value, Height.Value));
+                    await OnRectChanged(new System.Windows.Rect(Left.Value, Top.Value, Width.Value, Height.Value));
                 })
                 .AddTo(_CompositeDisposable);
             Top
                 .Zip(Top.Skip(1), (Old, New) => new { OldItem = Old, NewItem = New })
-                .Subscribe(x =>
+                .Subscribe(async x =>
                 {
                     UpdateTransform(nameof(Top), x.OldItem, x.NewItem);
-                    OnRectChanged(new System.Windows.Rect(Left.Value, Top.Value, Width.Value, Height.Value));
+                    await OnRectChanged(new System.Windows.Rect(Left.Value, Top.Value, Width.Value, Height.Value));
                 })
                 .AddTo(_CompositeDisposable);
             Width
                 .Zip(Width.Skip(1), (Old, New) => new { OldItem = Old, NewItem = New })
-                .Subscribe(x =>
+                .Subscribe(async x =>
                 {
                     UpdateTransform(nameof(Width), x.OldItem, x.NewItem);
-                    OnRectChanged(new System.Windows.Rect(Left.Value, Top.Value, Width.Value, Height.Value));
+                    await OnRectChanged(new System.Windows.Rect(Left.Value, Top.Value, Width.Value, Height.Value));
                 })
                 .AddTo(_CompositeDisposable);
             Height
                 .Zip(Height.Skip(1), (Old, New) => new { OldItem = Old, NewItem = New })
-                .Subscribe(x =>
+                .Subscribe(async x =>
                 {
                     UpdateTransform(nameof(Height), x.OldItem, x.NewItem);
-                    OnRectChanged(new System.Windows.Rect(Left.Value, Top.Value, Width.Value, Height.Value));
+                    await OnRectChanged(new System.Windows.Rect(Left.Value, Top.Value, Width.Value, Height.Value));
                 })
                 .AddTo(_CompositeDisposable);
             RotationAngle
@@ -194,7 +193,7 @@ namespace boilersGraphics.ViewModels
             MarginBottom = Observable.Return(ThumbSize.Value / 2).CombineLatest(DiagramViewModel.Instance.MagnificationRate, (size, rate) => { return new Thickness(0, 0, 0, - size / (rate / 100d)); }).ToReadOnlyReactivePropertySlim();
         }
 
-        public virtual void OnRectChanged(Rect rect)
+        public virtual async Task OnRectChanged(Rect rect)
         {
         }
 

@@ -9,11 +9,10 @@ using Prism.Services.Dialogs;
 using Prism.Unity;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
-using SharpDX.D3DCompiler;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reactive.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -84,7 +83,7 @@ namespace boilersGraphics.ViewModels
             }
         }
 
-        public override void OnRectChanged(System.Windows.Rect rect)
+        public override async Task OnRectChanged(System.Windows.Rect rect)
         {
             Render();
         }
