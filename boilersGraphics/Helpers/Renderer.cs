@@ -126,9 +126,11 @@ namespace boilersGraphics.Helpers
                 if (view is null)
                     continue;
                 view.SnapsToDevicePixels = true;
-                VisualBrush brush = new VisualBrush(view);
-                brush.Stretch = Stretch.None;
-                brush.TileMode = TileMode.None;
+                VisualBrush brush = new VisualBrush(view)
+                {
+                    Stretch = Stretch.None,
+                    TileMode = TileMode.None
+                };
                 Rect rect = new Rect();
                 if (item is DesignerItemViewModelBase designerItem)
                 {
