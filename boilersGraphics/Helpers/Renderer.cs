@@ -237,9 +237,11 @@ public static class Renderer
             if (view is null)
                 continue;
             view.SnapsToDevicePixels = true;
-            var brush = new VisualBrush(view);
-            brush.Stretch = Stretch.None;
-            brush.TileMode = TileMode.None;
+            var brush = new VisualBrush(view)
+            {
+                Stretch = Stretch.None,
+                TileMode = TileMode.None
+            };
             var rect = new Rect();
             switch (item)
             {
