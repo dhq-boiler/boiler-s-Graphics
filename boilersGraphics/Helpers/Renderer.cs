@@ -120,37 +120,74 @@ public static class Renderer
                 TileMode = TileMode.None
             };
             var rect = new Rect();
-            if (item is DesignerItemViewModelBase designerItem)
+            switch (item)
             {
-                if (item is PictureDesignerItemViewModel picture)
+                case DesignerItemViewModelBase designerItem:
                 {
-                    var bounds = VisualTreeHelper.GetDescendantBounds(view);
-                    if (sliceRect.HasValue)
+                    if (designerItem is PictureDesignerItemViewModel picture)
                     {
-                        rect = sliceRect.Value;
-                        var intersectSrc = new Rect(designerItem.Left.Value, designerItem.Top.Value, bounds.Width,
-                            bounds.Height);
-                        rect = Rect.Union(rect, intersectSrc);
-                        if (rect != Rect.Empty)
+                        var bounds = VisualTreeHelper.GetDescendantBounds(view);
+                        if (sliceRect.HasValue)
                         {
-                            rect.X -= sliceRect.Value.X;
-                            rect.Y -= sliceRect.Value.Y;
+                            rect = sliceRect.Value;
+                            var intersectSrc = new Rect(designerItem.Left.Value, designerItem.Top.Value, bounds.Width,
+                                bounds.Height);
+                            rect = Rect.Union(rect, intersectSrc);
+                            if (rect != Rect.Empty)
+                            {
+                                rect.X -= sliceRect.Value.X;
+                                rect.Y -= sliceRect.Value.Y;
+                            }
+                        }
+                        else
+                        {
+                            rect = new Rect(designerItem.Left.Value, designerItem.Top.Value, designerItem.Width.Value,
+                                designerItem.Height.Value);
                         }
                     }
                     else
                     {
-                        rect = new Rect(designerItem.Left.Value, designerItem.Top.Value, designerItem.Width.Value,
-                            designerItem.Height.Value);
+                        var bounds = VisualTreeHelper.GetDescendantBounds(view);
+                        if (sliceRect.HasValue)
+                        {
+                            rect = sliceRect.Value;
+                            var intersectSrc = new Rect(designerItem.Left.Value, designerItem.Top.Value, bounds.Width,
+                                bounds.Height);
+                            rect = Rect.Intersect(rect, intersectSrc);
+                            if (rect != Rect.Empty)
+                            {
+                                rect.X -= sliceRect.Value.X;
+                                rect.Y -= sliceRect.Value.Y;
+                            }
+                        }
+                        else
+                        {
+                            rect = new Rect(designerItem.Left.Value, designerItem.Top.Value, designerItem.Width.Value,
+                                designerItem.Height.Value);
+                        }
                     }
+
+                    if (rect != Rect.Empty)
+                    {
+                        rect.X -= background.Left.Value;
+                        rect.Y -= background.Top.Value;
+                    }
+
+                    context.PushTransform(new RotateTransform(designerItem.RotationAngle.Value,
+                        designerItem.CenterX.Value,
+                        designerItem.CenterY.Value));
+                    context.DrawRectangle(brush, null, rect);
+                    context.Pop();
+                    renderedCount++;
+                    break;
                 }
-                else
+                case ConnectorBaseViewModel connector:
                 {
                     var bounds = VisualTreeHelper.GetDescendantBounds(view);
                     if (sliceRect.HasValue)
                     {
                         rect = sliceRect.Value;
-                        var intersectSrc = new Rect(designerItem.Left.Value, designerItem.Top.Value, bounds.Width,
-                            bounds.Height);
+                        var intersectSrc = new Rect(connector.LeftTop.Value, bounds.Size);
                         rect = Rect.Intersect(rect, intersectSrc);
                         if (rect != Rect.Empty)
                         {
@@ -160,47 +197,15 @@ public static class Renderer
                     }
                     else
                     {
-                        rect = new Rect(designerItem.Left.Value, designerItem.Top.Value, designerItem.Width.Value,
-                            designerItem.Height.Value);
+                        rect = new Rect(connector.LeftTop.Value, bounds.Size);
                     }
-                }
 
-                if (rect != Rect.Empty)
-                {
                     rect.X -= background.Left.Value;
                     rect.Y -= background.Top.Value;
+                    context.DrawRectangle(brush, null, rect);
+                    renderedCount++;
+                    break;
                 }
-
-                context.PushTransform(new RotateTransform(item.RotationAngle.Value,
-                    (item as DesignerItemViewModelBase).CenterX.Value,
-                    (item as DesignerItemViewModelBase).CenterY.Value));
-                context.DrawRectangle(brush, null, rect);
-                context.Pop();
-                renderedCount++;
-            }
-            else if (item is ConnectorBaseViewModel connector)
-            {
-                var bounds = VisualTreeHelper.GetDescendantBounds(view);
-                if (sliceRect.HasValue)
-                {
-                    rect = sliceRect.Value;
-                    var intersectSrc = new Rect(connector.LeftTop.Value, bounds.Size);
-                    rect = Rect.Intersect(rect, intersectSrc);
-                    if (rect != Rect.Empty)
-                    {
-                        rect.X -= sliceRect.Value.X;
-                        rect.Y -= sliceRect.Value.Y;
-                    }
-                }
-                else
-                {
-                    rect = new Rect(connector.LeftTop.Value, bounds.Size);
-                }
-
-                rect.X -= background.Left.Value;
-                rect.Y -= background.Top.Value;
-                context.DrawRectangle(brush, null, rect);
-                renderedCount++;
             }
 
             //var size = GetRenderSize(diagramViewModel);
@@ -236,37 +241,74 @@ public static class Renderer
             brush.Stretch = Stretch.None;
             brush.TileMode = TileMode.None;
             var rect = new Rect();
-            if (item is DesignerItemViewModelBase designerItem)
+            switch (item)
             {
-                if (item is PictureDesignerItemViewModel picture)
+                case DesignerItemViewModelBase designerItem:
                 {
-                    var bounds = VisualTreeHelper.GetDescendantBounds(view);
-                    if (sliceRect.HasValue)
+                    if (designerItem is PictureDesignerItemViewModel picture)
                     {
-                        rect = sliceRect.Value;
-                        var intersectSrc = new Rect(designerItem.Left.Value, designerItem.Top.Value, bounds.Width,
-                            bounds.Height);
-                        rect = Rect.Union(rect, intersectSrc);
-                        if (rect != Rect.Empty)
+                        var bounds = VisualTreeHelper.GetDescendantBounds(view);
+                        if (sliceRect.HasValue)
                         {
-                            rect.X -= sliceRect.Value.X;
-                            rect.Y -= sliceRect.Value.Y;
+                            rect = sliceRect.Value;
+                            var intersectSrc = new Rect(designerItem.Left.Value, designerItem.Top.Value, bounds.Width,
+                                bounds.Height);
+                            rect = Rect.Union(rect, intersectSrc);
+                            if (rect != Rect.Empty)
+                            {
+                                rect.X -= sliceRect.Value.X;
+                                rect.Y -= sliceRect.Value.Y;
+                            }
+                        }
+                        else
+                        {
+                            rect = new Rect(designerItem.Left.Value, designerItem.Top.Value, designerItem.Width.Value,
+                                designerItem.Height.Value);
                         }
                     }
                     else
                     {
-                        rect = new Rect(designerItem.Left.Value, designerItem.Top.Value, designerItem.Width.Value,
-                            designerItem.Height.Value);
+                        var bounds = VisualTreeHelper.GetDescendantBounds(view);
+                        if (sliceRect.HasValue)
+                        {
+                            rect = sliceRect.Value;
+                            var intersectSrc = new Rect(designerItem.Left.Value, designerItem.Top.Value, bounds.Width,
+                                bounds.Height);
+                            rect = Rect.Intersect(rect, intersectSrc);
+                            if (rect != Rect.Empty)
+                            {
+                                rect.X -= sliceRect.Value.X;
+                                rect.Y -= sliceRect.Value.Y;
+                            }
+                        }
+                        else
+                        {
+                            rect = new Rect(designerItem.Left.Value, designerItem.Top.Value, designerItem.Width.Value,
+                                designerItem.Height.Value);
+                        }
                     }
+
+                    if (rect != Rect.Empty)
+                    {
+                        rect.X -= background.Left.Value;
+                        rect.Y -= background.Top.Value;
+                    }
+
+                    context.PushTransform(new RotateTransform(designerItem.RotationAngle.Value,
+                        designerItem.CenterX.Value,
+                        designerItem.CenterY.Value));
+                    context.DrawRectangle(brush, null, rect);
+                    context.Pop();
+                    renderedCount++;
+                    break;
                 }
-                else
+                case ConnectorBaseViewModel connector:
                 {
                     var bounds = VisualTreeHelper.GetDescendantBounds(view);
                     if (sliceRect.HasValue)
                     {
                         rect = sliceRect.Value;
-                        var intersectSrc = new Rect(designerItem.Left.Value, designerItem.Top.Value, bounds.Width,
-                            bounds.Height);
+                        var intersectSrc = new Rect(connector.LeftTop.Value, bounds.Size);
                         rect = Rect.Intersect(rect, intersectSrc);
                         if (rect != Rect.Empty)
                         {
@@ -276,47 +318,15 @@ public static class Renderer
                     }
                     else
                     {
-                        rect = new Rect(designerItem.Left.Value, designerItem.Top.Value, designerItem.Width.Value,
-                            designerItem.Height.Value);
+                        rect = new Rect(connector.LeftTop.Value, bounds.Size);
                     }
-                }
 
-                if (rect != Rect.Empty)
-                {
                     rect.X -= background.Left.Value;
                     rect.Y -= background.Top.Value;
+                    context.DrawRectangle(brush, null, rect);
+                    renderedCount++;
+                    break;
                 }
-
-                context.PushTransform(new RotateTransform(item.RotationAngle.Value,
-                    (item as DesignerItemViewModelBase).CenterX.Value,
-                    (item as DesignerItemViewModelBase).CenterY.Value));
-                context.DrawRectangle(brush, null, rect);
-                context.Pop();
-                renderedCount++;
-            }
-            else if (item is ConnectorBaseViewModel connector)
-            {
-                var bounds = VisualTreeHelper.GetDescendantBounds(view);
-                if (sliceRect.HasValue)
-                {
-                    rect = sliceRect.Value;
-                    var intersectSrc = new Rect(connector.LeftTop.Value, bounds.Size);
-                    rect = Rect.Intersect(rect, intersectSrc);
-                    if (rect != Rect.Empty)
-                    {
-                        rect.X -= sliceRect.Value.X;
-                        rect.Y -= sliceRect.Value.Y;
-                    }
-                }
-                else
-                {
-                    rect = new Rect(connector.LeftTop.Value, bounds.Size);
-                }
-
-                rect.X -= background.Left.Value;
-                rect.Y -= background.Top.Value;
-                context.DrawRectangle(brush, null, rect);
-                renderedCount++;
             }
 
             //var size = GetRenderSize(diagramViewModel);
@@ -353,11 +363,7 @@ public static class Renderer
             return false;
         var bounds = VisualTreeHelper.GetDescendantBounds(view);
 
-        Rect rect;
-        if (sliceRect.HasValue)
-            rect = sliceRect.Value;
-        else
-            rect = bounds;
+        var rect = sliceRect ?? bounds;
 
         var brush = new VisualBrush(view)
         {
@@ -394,11 +400,7 @@ public static class Renderer
             return false;
         var bounds = VisualTreeHelper.GetDescendantBounds(view);
 
-        Rect rect;
-        if (sliceRect.HasValue)
-            rect = sliceRect.Value;
-        else
-            rect = bounds;
+        var rect = sliceRect ?? bounds;
 
         var brush = new VisualBrush(view)
         {
