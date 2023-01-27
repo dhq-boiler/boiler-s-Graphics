@@ -176,7 +176,24 @@ namespace boilersGraphics.ViewModels
         private static long GetMosaicPixelIndex(int a, double b)
         {
             var aDivideByB = a / b;
-            return (long)(0.5 * (Math.Floor(aDivideByB) + Math.Ceiling(aDivideByB)) * b);
+            var floor = 0d;
+            var ceiling = 0d;
+            var mod = aDivideByB % 1;
+            if (mod < 0.5)
+            {
+                //mod = 0.4 -> 1.4 -> (long)1.4 -> 1
+                floor = (long)aDivideByB + (long)(1d + mod);
+                //mod = 0.4 -> -0.1 -> (long)-0.1 -> 0
+                ceiling = (long)aDivideByB + (long)(mod - 0.5);
+            }
+            else
+            {
+                //mod = 0.6 -> 1.1 -> (long)1.1 -> 1
+                floor = (long)aDivideByB + (long)(0.5 + mod);
+                //mod = 0.6 -> -0.4 -> (long)-0.4 -> 0
+                ceiling = (long)aDivideByB + (long)(mod - 1);
+            }
+            return (long)(0.5 * (floor + ceiling) * b);
         }
 
         public override async Task OnRectChanged(System.Windows.Rect rect)
