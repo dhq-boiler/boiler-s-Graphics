@@ -357,14 +357,8 @@ namespace boilersGraphics.Helpers
             {
                 rect.X = 0;
                 rect.Y = 0;
-                view.UpdateLayout();
-                context.DrawRectangle(brush, null, rect);
             }
-            else
-            {
-                view.UpdateLayout();
-                context.DrawRectangle(brush, null, rect);
-            }
+            context.DrawRectangle(brush, null, rect);
 
             return true;
         }
