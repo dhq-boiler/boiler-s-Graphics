@@ -1,179 +1,154 @@
-﻿using boilersGraphics.Controls;
-using boilersGraphics.Helpers;
-using boilersGraphics.ViewModels;
-using Microsoft.Xaml.Behaviors;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
+using boilersGraphics.Adorners;
+using boilersGraphics.Controls;
+using boilersGraphics.Helpers;
+using boilersGraphics.Properties;
+using boilersGraphics.ViewModels;
+using Microsoft.Xaml.Behaviors;
 
-namespace boilersGraphics.Views.Behaviors
+namespace boilersGraphics.Views.Behaviors;
+
+public class MosaicBehavior : Behavior<DesignerCanvas>
 {
-    public class MosaicBehavior : Behavior<DesignerCanvas>
+    private Point? _rectangleStartPoint;
+    private MosaicViewModel item;
+    private readonly SnapAction snapAction;
+
+    public MosaicBehavior()
     {
-        private Point? _rectangleStartPoint;
-        private SnapAction snapAction;
-        private MosaicViewModel item;
+        snapAction = new SnapAction();
+    }
 
-        public MosaicBehavior()
+    protected override void OnAttached()
+    {
+        AssociatedObject.StylusDown += AssociatedObject_StylusDown;
+        AssociatedObject.StylusMove += AssociatedObject_StylusMove;
+        AssociatedObject.TouchDown += AssociatedObject_TouchDown;
+        AssociatedObject.MouseDown += AssociatedObject_MouseDown;
+        AssociatedObject.MouseMove += AssociatedObject_MouseMove;
+        AssociatedObject.MouseUp += AssociatedObject_MouseUp;
+        base.OnAttached();
+    }
+
+    protected override void OnDetaching()
+    {
+        AssociatedObject.StylusDown -= AssociatedObject_StylusDown;
+        AssociatedObject.StylusMove -= AssociatedObject_StylusMove;
+        AssociatedObject.TouchDown -= AssociatedObject_TouchDown;
+        AssociatedObject.MouseDown -= AssociatedObject_MouseDown;
+        AssociatedObject.MouseMove -= AssociatedObject_MouseMove;
+        AssociatedObject.MouseUp -= AssociatedObject_MouseUp;
+        base.OnDetaching();
+    }
+
+    private void AssociatedObject_StylusDown(object sender, StylusDownEventArgs e)
+    {
+        if (e.Source == AssociatedObject)
         {
-            snapAction = new SnapAction();
+            _rectangleStartPoint = e.GetPosition(AssociatedObject);
+            var viewModel = AssociatedObject.DataContext as IDiagramViewModel;
+            item = new MosaicViewModel();
+            item.Owner = viewModel;
+            e.Handled = true;
         }
+    }
 
-        protected override void OnAttached()
+    private void AssociatedObject_TouchDown(object sender, TouchEventArgs e)
+    {
+        if (e.Source == AssociatedObject)
         {
-            this.AssociatedObject.StylusDown += AssociatedObject_StylusDown;
-            this.AssociatedObject.StylusMove += AssociatedObject_StylusMove;
-            this.AssociatedObject.TouchDown += AssociatedObject_TouchDown;
-            this.AssociatedObject.MouseDown += AssociatedObject_MouseDown;
-            this.AssociatedObject.MouseMove += AssociatedObject_MouseMove;
-            this.AssociatedObject.MouseUp += AssociatedObject_MouseUp;
-            base.OnAttached();
+            var touchPoint = e.GetTouchPoint(AssociatedObject);
+            _rectangleStartPoint = touchPoint.Position;
+            var viewModel = AssociatedObject.DataContext as IDiagramViewModel;
+            item = new MosaicViewModel();
+            item.Owner = viewModel;
         }
+    }
 
-        protected override void OnDetaching()
-        {
-            this.AssociatedObject.StylusDown -= AssociatedObject_StylusDown;
-            this.AssociatedObject.StylusMove -= AssociatedObject_StylusMove;
-            this.AssociatedObject.TouchDown -= AssociatedObject_TouchDown;
-            this.AssociatedObject.MouseDown -= AssociatedObject_MouseDown;
-            this.AssociatedObject.MouseMove -= AssociatedObject_MouseMove;
-            this.AssociatedObject.MouseUp -= AssociatedObject_MouseUp;
-            base.OnDetaching();
-        }
+    private void AssociatedObject_MouseDown(object sender, MouseButtonEventArgs e)
+    {
+        if (e.StylusDevice != null)
+            return;
 
-        private void AssociatedObject_StylusDown(object sender, StylusDownEventArgs e)
-        {
+        if (e.LeftButton == MouseButtonState.Pressed)
             if (e.Source == AssociatedObject)
             {
                 _rectangleStartPoint = e.GetPosition(AssociatedObject);
                 var viewModel = AssociatedObject.DataContext as IDiagramViewModel;
                 item = new MosaicViewModel();
                 item.Owner = viewModel;
-                e.Handled = true;
             }
-        }
+    }
 
-        private void AssociatedObject_TouchDown(object sender, TouchEventArgs e)
+    private void AssociatedObject_StylusMove(object sender, StylusEventArgs e)
+    {
+        var canvas = AssociatedObject;
+        var current = e.GetPosition(canvas);
+        snapAction.OnMouseMove(ref current);
+
+        if (e.InAir)
+            _rectangleStartPoint = null;
+
+        if (_rectangleStartPoint.HasValue)
         {
-            if (e.Source == AssociatedObject)
+            if (_rectangleStartPoint.Value.X < current.X && _rectangleStartPoint.Value.Y <= current.Y)
+                snapAction.PostProcess(SnapPointPosition.LeftTop, item);
+            else if (_rectangleStartPoint.Value.X < current.X && current.Y < _rectangleStartPoint.Value.Y)
+                snapAction.PostProcess(SnapPointPosition.LeftBottom, item);
+            else if (current.X <= _rectangleStartPoint.Value.X && _rectangleStartPoint.Value.Y <= current.Y)
+                snapAction.PostProcess(SnapPointPosition.RightTop, item);
+            else if (current.X <= _rectangleStartPoint.Value.X && current.Y < _rectangleStartPoint.Value.Y)
+                snapAction.PostProcess(SnapPointPosition.RightBottom, item);
+            _rectangleStartPoint = current;
+            (Application.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value =
+                Resources.String_Draw;
+
+            var adornerLayer = AdornerLayer.GetAdornerLayer(canvas);
+            if (adornerLayer != null)
             {
-                var touchPoint = e.GetTouchPoint(AssociatedObject);
-                _rectangleStartPoint = touchPoint.Position;
-                var viewModel = AssociatedObject.DataContext as IDiagramViewModel;
-                item = new  MosaicViewModel();
-                item.Owner = viewModel;
+                var adorner = new MosaicAdorner(canvas, _rectangleStartPoint, item);
+                if (adorner != null) adornerLayer.Add(adorner);
             }
         }
+    }
 
-        private void AssociatedObject_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    private void AssociatedObject_MouseMove(object sender, MouseEventArgs e)
+    {
+        var canvas = AssociatedObject;
+        var current = e.GetPosition(canvas);
+        snapAction.OnMouseMove(ref current);
+
+        if (e.LeftButton != MouseButtonState.Pressed)
+            _rectangleStartPoint = null;
+
+        if (_rectangleStartPoint.HasValue)
         {
-            if (e.StylusDevice != null)
-                return;
+            if (_rectangleStartPoint.Value.X < current.X && _rectangleStartPoint.Value.Y <= current.Y)
+                snapAction.PostProcess(SnapPointPosition.LeftTop, item);
+            else if (_rectangleStartPoint.Value.X < current.X && current.Y < _rectangleStartPoint.Value.Y)
+                snapAction.PostProcess(SnapPointPosition.LeftBottom, item);
+            else if (current.X <= _rectangleStartPoint.Value.X && _rectangleStartPoint.Value.Y <= current.Y)
+                snapAction.PostProcess(SnapPointPosition.RightTop, item);
+            else if (current.X <= _rectangleStartPoint.Value.X && current.Y < _rectangleStartPoint.Value.Y)
+                snapAction.PostProcess(SnapPointPosition.RightBottom, item);
+            _rectangleStartPoint = current;
+            (Application.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value =
+                Resources.String_Draw;
 
-            if (e.LeftButton == MouseButtonState.Pressed)
+            var adornerLayer = AdornerLayer.GetAdornerLayer(canvas);
+            if (adornerLayer != null)
             {
-                if (e.Source == AssociatedObject)
-                {
-                    _rectangleStartPoint = e.GetPosition(AssociatedObject);
-                    var viewModel = AssociatedObject.DataContext as IDiagramViewModel;
-                    item = new MosaicViewModel();
-                    item.Owner = viewModel;
-                }
+                var adorner = new MosaicAdorner(canvas, _rectangleStartPoint, item);
+                if (adorner != null) adornerLayer.Add(adorner);
             }
         }
+    }
 
-        private void AssociatedObject_StylusMove(object sender, StylusEventArgs e)
-        {
-            var canvas = AssociatedObject as DesignerCanvas;
-            Point current = e.GetPosition(canvas);
-            snapAction.OnMouseMove(ref current);
-
-            if (e.InAir)
-                _rectangleStartPoint = null;
-
-            if (_rectangleStartPoint.HasValue)
-            {
-                if (_rectangleStartPoint.Value.X < current.X && _rectangleStartPoint.Value.Y <= current.Y)
-                {
-                    snapAction.PostProcess(SnapPointPosition.LeftTop, item);
-                }
-                else if (_rectangleStartPoint.Value.X < current.X && current.Y < _rectangleStartPoint.Value.Y)
-                {
-                    snapAction.PostProcess(SnapPointPosition.LeftBottom, item);
-                }
-                else if (current.X <= _rectangleStartPoint.Value.X && _rectangleStartPoint.Value.Y <= current.Y)
-                {
-                    snapAction.PostProcess(SnapPointPosition.RightTop, item);
-                }
-                else if (current.X <= _rectangleStartPoint.Value.X && current.Y < _rectangleStartPoint.Value.Y)
-                {
-                    snapAction.PostProcess(SnapPointPosition.RightBottom, item);
-                }
-                _rectangleStartPoint = current;
-                (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = boilersGraphics.Properties.Resources.String_Draw;
-
-                AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(canvas);
-                if (adornerLayer != null)
-                {
-                    var adorner = new Adorners.MosaicAdorner(canvas, _rectangleStartPoint, item);
-                    if (adorner != null)
-                    {
-                        adornerLayer.Add(adorner);
-                    }
-                }
-            }
-        }
-
-        private void AssociatedObject_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
-        {
-            var canvas = AssociatedObject as DesignerCanvas;
-            Point current = e.GetPosition(canvas);
-            snapAction.OnMouseMove(ref current); 
-
-            if (e.LeftButton != MouseButtonState.Pressed)
-                _rectangleStartPoint = null;
-
-            if (_rectangleStartPoint.HasValue)
-            {
-                if (_rectangleStartPoint.Value.X < current.X && _rectangleStartPoint.Value.Y <= current.Y)
-                {
-                    snapAction.PostProcess(SnapPointPosition.LeftTop, item);
-                }
-                else if (_rectangleStartPoint.Value.X < current.X && current.Y < _rectangleStartPoint.Value.Y)
-                {
-                    snapAction.PostProcess(SnapPointPosition.LeftBottom, item);
-                }
-                else if (current.X <= _rectangleStartPoint.Value.X && _rectangleStartPoint.Value.Y <= current.Y)
-                {
-                    snapAction.PostProcess(SnapPointPosition.RightTop, item);
-                }
-                else if (current.X <= _rectangleStartPoint.Value.X && current.Y < _rectangleStartPoint.Value.Y)
-                {
-                    snapAction.PostProcess(SnapPointPosition.RightBottom, item);
-                }
-                _rectangleStartPoint = current;
-                (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = boilersGraphics.Properties.Resources.String_Draw;
-
-                AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(canvas);
-                if (adornerLayer != null)
-                {
-                    var adorner = new Adorners.MosaicAdorner(canvas, _rectangleStartPoint, item);
-                    if (adorner != null)
-                    {
-                        adornerLayer.Add(adorner);
-                    }
-                }
-            }
-        }
-
-        private void AssociatedObject_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            // release mouse capture
-            if (AssociatedObject.IsMouseCaptured)
-            {
-                AssociatedObject.ReleaseMouseCapture();
-            }
-        }
+    private void AssociatedObject_MouseUp(object sender, MouseButtonEventArgs e)
+    {
+        // release mouse capture
+        if (AssociatedObject.IsMouseCaptured) AssociatedObject.ReleaseMouseCapture();
     }
 }

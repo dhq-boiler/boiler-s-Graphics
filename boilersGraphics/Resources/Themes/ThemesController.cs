@@ -1,42 +1,46 @@
 ﻿using System;
 using System.Windows;
 
-namespace REghZyFramework.Themes
+namespace REghZyFramework.Themes;
+
+public static class ThemesController
 {
-    public static class ThemesController
+    public enum ThemeTypes
     {
-        public enum ThemeTypes
+        Dark
+    }
+
+    public static ThemeTypes CurrentTheme { get; set; }
+
+    private static ResourceDictionary ThemeDictionary
+    {
+        get => Application.Current.Resources.MergedDictionaries[0];
+        set => Application.Current.Resources.MergedDictionaries[0] = value;
+    }
+
+    private static void ChangeTheme(Uri uri)
+    {
+        ThemeDictionary = new ResourceDictionary { Source = uri };
+    }
+
+    public static void SetTheme(ThemeTypes theme)
+    {
+        string themeName = null;
+        CurrentTheme = theme;
+        switch (theme)
         {
-            Dark,
+            case ThemeTypes.Dark:
+                themeName = "DarkTheme";
+                break;
         }
 
-        public static ThemeTypes CurrentTheme { get; set; }
-
-        private static ResourceDictionary ThemeDictionary
+        try
         {
-            get { return Application.Current.Resources.MergedDictionaries[0]; }
-            set { Application.Current.Resources.MergedDictionaries[0] = value; }
+            if (!string.IsNullOrEmpty(themeName))
+                ChangeTheme(new Uri($"Resources/Themes/{themeName}.xaml", UriKind.Relative));
         }
-
-        private static void ChangeTheme(Uri uri)
+        catch
         {
-            ThemeDictionary = new ResourceDictionary() { Source = uri };
-        }
-        public static void SetTheme(ThemeTypes theme)
-        {
-            string themeName = null;
-            CurrentTheme = theme;
-            switch (theme)
-            {
-                case ThemeTypes.Dark: themeName = "DarkTheme"; break;
-            }
-
-            try
-            {
-                if (!string.IsNullOrEmpty(themeName))
-                    ChangeTheme(new Uri($"Resources/Themes/{themeName}.xaml", UriKind.Relative));
-            }
-            catch { }
         }
     }
 }

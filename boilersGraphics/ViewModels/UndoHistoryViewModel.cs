@@ -1,12 +1,4 @@
-﻿using boilersGraphics.Extensions;
-using boilersGraphics.Helpers;
-using boilersGraphics.Properties;
-using boilersGraphics.Views;
-using Prism.Mvvm;
-using Prism.Services.Dialogs;
-using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -15,48 +7,32 @@ using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using boilersGraphics.Properties;
+using boilersGraphics.Views;
+using Prism.Mvvm;
+using Prism.Services.Dialogs;
+using Reactive.Bindings;
+using Reactive.Bindings.Extensions;
 using TsOperationHistory;
 using TsOperationHistory.Internal;
 
-namespace boilersGraphics.ViewModels
+namespace boilersGraphics.ViewModels;
+
+public class UndoHistoryViewModel : BindableBase, IDialogAware
 {
-    public class UndoHistoryViewModel : BindableBase, IDialogAware
+    private readonly CompositeDisposable compositeDisposable = new();
+
+    public UndoHistoryViewModel()
     {
-        private CompositeDisposable compositeDisposable = new CompositeDisposable();
-
-        public static UndoHistoryViewModel Instance { get; private set; }
-
-        public event Action<IDialogResult> RequestClose;
-
-        public ReactiveCommand<AutoScrollingLabel> MouseEnterCommand { get; } = new ReactiveCommand<AutoScrollingLabel>();
-        public ReactiveCommand<AutoScrollingLabel> MouseLeaveCommand { get; } = new ReactiveCommand<AutoScrollingLabel>();
-        public ReactiveCommand<IOperation> UndoCommand { get; } = new ReactiveCommand<IOperation>();
-        public ReactiveCommand<IOperation> RedoCommand { get; } = new ReactiveCommand<IOperation>();
-        public ReactiveCollection<MenuItem> ContextMenuItems { get; } = new ReactiveCollection<MenuItem>();
-        public ReactiveCommand<RoutedEventArgs> ContextMenuOpeningCommand { get; } = new ReactiveCommand<RoutedEventArgs>();
-        public ReadOnlyReactivePropertySlim<UndoStack<IOperation>> Operations { get; }
-        public ReactivePropertySlim<int> CurrentPosition { get; } = new ReactivePropertySlim<int>();
-        public ReactivePropertySlim<object> SelectedOperation { get; } = new ReactivePropertySlim<object>();
-
-        public string Title => "";
-
-        public UndoHistoryViewModel()
-        {
-            Instance = this;
-            MouseEnterCommand.Subscribe(label =>
-            {
-                label.EnableAutoScroll();
-            })
+        Instance = this;
+        MouseEnterCommand.Subscribe(label => { label.EnableAutoScroll(); })
             .AddTo(compositeDisposable);
-            MouseLeaveCommand.Subscribe(label =>
-            {
-                label.DisableAutoScroll();
-            })
+        MouseLeaveCommand.Subscribe(label => { label.DisableAutoScroll(); })
             .AddTo(compositeDisposable);
-            UndoCommand.Subscribe(operation =>
+        UndoCommand.Subscribe(operation =>
             {
-                var mainWindowViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel);
-                List<IOperation> operations = mainWindowViewModel.Controller.UndoStack.Undos.Value.ToList();
+                var mainWindowViewModel = Application.Current.MainWindow.DataContext as MainWindowViewModel;
+                var operations = mainWindowViewModel.Controller.UndoStack.Undos.Value.ToList();
                 var index = operations.IndexOf(operation);
                 var undoList = operations.Skip(index + 1).Take(operations.Count() - index);
                 undoList = undoList.Reverse().ToList();
@@ -67,13 +43,14 @@ namespace boilersGraphics.ViewModels
                     poped.Rollback();
                     mainWindowViewModel.Controller.UndoStack.Redos.Value.Push(undo);
                 }
+
                 CurrentPosition.Value = index;
             })
             .AddTo(compositeDisposable);
-            RedoCommand.Subscribe(operation =>
+        RedoCommand.Subscribe(operation =>
             {
-                var mainWindowViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel);
-                List<IOperation> operations = mainWindowViewModel.Controller.UndoStack.Redos.Value.ToList();
+                var mainWindowViewModel = Application.Current.MainWindow.DataContext as MainWindowViewModel;
+                var operations = mainWindowViewModel.Controller.UndoStack.Redos.Value.ToList();
                 var index = operations.IndexOf(operation);
                 var redoList = A(operations, index);
                 foreach (var redo in redoList)
@@ -83,33 +60,36 @@ namespace boilersGraphics.ViewModels
                     poped.RollForward();
                     mainWindowViewModel.Controller.UndoStack.Undos.Value.Push(redo);
                 }
+
                 CurrentPosition.Value = mainWindowViewModel.Controller.UndoStack.Undos.Value.Count() - 1;
             })
             .AddTo(compositeDisposable);
-            ContextMenuOpeningCommand.Subscribe(args =>
+        ContextMenuOpeningCommand.Subscribe(args =>
             {
                 ContextMenuItems.Clear();
-                if (this.Operations.Value.Undos.Value.Contains(SelectedOperation.Value))
+                if (Operations.Value.Undos.Value.Contains(SelectedOperation.Value))
                 {
-                    var menuItem = new MenuItem() { Header = Resources.MenuItem_Undo_NoShortcut, Command = this.UndoCommand };
+                    var menuItem = new MenuItem { Header = Resources.MenuItem_Undo_NoShortcut, Command = UndoCommand };
                     menuItem.SetBinding(MenuItem.CommandParameterProperty, new Binding());
                     ContextMenuItems.Add(menuItem);
                 }
-                if (this.Operations.Value.Redos.Value.Contains(SelectedOperation.Value))
+
+                if (Operations.Value.Redos.Value.Contains(SelectedOperation.Value))
                 {
-                    var menuItem = new MenuItem() { Header = Resources.MenuItem_Redo_NoShortcut, Command = this.RedoCommand };
+                    var menuItem = new MenuItem { Header = Resources.MenuItem_Redo_NoShortcut, Command = RedoCommand };
                     menuItem.SetBinding(MenuItem.CommandParameterProperty, new Binding());
                     ContextMenuItems.Add(menuItem);
                 }
             })
             .AddTo(compositeDisposable);
-            Operations = Observable.Return((App.Current.MainWindow.DataContext as MainWindowViewModel).Controller.UndoStack)
-                                   .ToReadOnlyReactivePropertySlim();
-            CurrentPosition.Subscribe(cp =>
+        Operations = Observable
+            .Return((Application.Current.MainWindow.DataContext as MainWindowViewModel).Controller.UndoStack)
+            .ToReadOnlyReactivePropertySlim();
+        CurrentPosition.Subscribe(cp =>
             {
-                var mainWindowViewModel = (App.Current.MainWindow.DataContext as MainWindowViewModel);
+                var mainWindowViewModel = Application.Current.MainWindow.DataContext as MainWindowViewModel;
                 var history = mainWindowViewModel.Controller.UndoStack.History.Value;
-                for (int i = 0; i < history.Count(); i++)
+                for (var i = 0; i < history.Count(); i++)
                 {
                     var record = history.ElementAt(i);
                     if (i == cp)
@@ -119,39 +99,50 @@ namespace boilersGraphics.ViewModels
                 }
             })
             .AddTo(compositeDisposable);
-            Operations.Value.History.Subscribe(_ =>
+        Operations.Value.History.Subscribe(_ =>
             {
                 if (Operations.Value.Count() == Operations.Value.Undos.Value.Count())
-                {
                     CurrentPosition.Value = Operations.Value.Count() - 1;
-                }
             })
             .AddTo(compositeDisposable);
-        }
+    }
 
-        private List<IOperation> A(List<IOperation> operations, int index)
-        {
-            var ret = new List<IOperation>();
-            for (int i = 0; i < operations.Count(); i++)
-            {
-                if (i >= index)
-                    ret.Add(operations[i]);
-            }
-            ret.Reverse();
-            return ret;
-        }
+    public static UndoHistoryViewModel Instance { get; private set; }
 
-        public bool CanCloseDialog()
-        {
-            return true;
-        }
+    public ReactiveCommand<AutoScrollingLabel> MouseEnterCommand { get; } = new();
+    public ReactiveCommand<AutoScrollingLabel> MouseLeaveCommand { get; } = new();
+    public ReactiveCommand<IOperation> UndoCommand { get; } = new();
+    public ReactiveCommand<IOperation> RedoCommand { get; } = new();
+    public ReactiveCollection<MenuItem> ContextMenuItems { get; } = new();
+    public ReactiveCommand<RoutedEventArgs> ContextMenuOpeningCommand { get; } = new();
+    public ReadOnlyReactivePropertySlim<UndoStack<IOperation>> Operations { get; }
+    public ReactivePropertySlim<int> CurrentPosition { get; } = new();
+    public ReactivePropertySlim<object> SelectedOperation { get; } = new();
 
-        public void OnDialogClosed()
-        {
-        }
+    public event Action<IDialogResult> RequestClose;
 
-        public void OnDialogOpened(IDialogParameters parameters)
-        {
-        }
+    public string Title => "";
+
+    public bool CanCloseDialog()
+    {
+        return true;
+    }
+
+    public void OnDialogClosed()
+    {
+    }
+
+    public void OnDialogOpened(IDialogParameters parameters)
+    {
+    }
+
+    private List<IOperation> A(List<IOperation> operations, int index)
+    {
+        var ret = new List<IOperation>();
+        for (var i = 0; i < operations.Count(); i++)
+            if (i >= index)
+                ret.Add(operations[i]);
+        ret.Reverse();
+        return ret;
     }
 }

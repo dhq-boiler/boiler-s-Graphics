@@ -1,43 +1,39 @@
-﻿using boilersGraphics.Models;
-using NLog;
-using System;
+﻿using System;
 using System.Text;
+using boilersGraphics.Models;
+using NLog;
 
-namespace boilersGraphics.Helpers
+namespace boilersGraphics.Helpers;
+
+public static class GoogleAnalyticsUtil
 {
-    public static class GoogleAnalyticsUtil
+    public static void Beacon(TerminalInfo terminalInfo, string action, string path, string label = null)
     {
-        public static void Beacon(TerminalInfo terminalInfo, string action, string path, string label = null)
+        try
         {
-            try
-            {
-                GoogleAnalytics.Beacon(terminalInfo.TerminalId.ToString(), GetBuildComposition(), action, path, label);
-            }
-            catch (Exception ex)
-            {
-                LogManager.GetCurrentClassLogger().Warn($"GoogleAnalyticsビーコンに失敗しました。");
-                LogManager.GetCurrentClassLogger().Warn(ex);
-            }
+            GoogleAnalytics.Beacon(terminalInfo.TerminalId.ToString(), GetBuildComposition(), action, path, label);
         }
-
-        public static string GetStringLimit500Bytes(string message)
+        catch (Exception ex)
         {
-            while (Encoding.UTF8.GetByteCount(message) > 500)
-            {
-                message = message.Substring(0, message.Length - 1);
-            }
-            return message;
+            LogManager.GetCurrentClassLogger().Warn("GoogleAnalyticsビーコンに失敗しました。");
+            LogManager.GetCurrentClassLogger().Warn(ex);
         }
+    }
 
-        private static string GetBuildComposition()
-        {
-            if (App.IsTest)
-                return "TEST";
+    public static string GetStringLimit500Bytes(string message)
+    {
+        while (Encoding.UTF8.GetByteCount(message) > 500) message = message.Substring(0, message.Length - 1);
+        return message;
+    }
+
+    private static string GetBuildComposition()
+    {
+        if (App.IsTest)
+            return "TEST";
 #if DEBUG
-            return "Debug";
+        return "Debug";
 #else
             return "Production";
 #endif
-        }
     }
 }

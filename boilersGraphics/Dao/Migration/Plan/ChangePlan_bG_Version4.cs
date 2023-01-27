@@ -1,17 +1,13 @@
-﻿using boilersGraphics.Dao.Migration.Version;
+﻿using System.Collections.Generic;
+using boilersGraphics.Dao.Migration.Version;
 using Homura.ORM.Migration;
-using System.Collections.Generic;
 
-namespace boilersGraphics.Dao.Migration.Plan
+namespace boilersGraphics.Dao.Migration.Plan;
+
+internal class ChangePlan_bG_Version4 : ChangePlanByVersion<Version4>
 {
-    class ChangePlan_bG_Version4 : ChangePlanByVersion<Version4>
+    public override IEnumerable<IEntityVersionChangePlan> VersionChangePlanList
     {
-        public override IEnumerable<IEntityVersionChangePlan> VersionChangePlanList
-        {
-            get
-            {
-                yield return new ChangePlan_bG_Statistics_Version3();
-            }
-        }
+        get { yield return new ChangePlan_bG_Statistics_Version3(); }
     }
 }

@@ -1,34 +1,37 @@
-﻿using boilersGraphics.ViewModels;
-using System;
+﻿using System;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
+using boilersGraphics.ViewModels;
 
-namespace boilersGraphics.Converters
+namespace boilersGraphics.Converters;
+
+internal class ShiftPointConverter : IValueConverter
 {
-    class ShiftPointConverter : IValueConverter
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        var viewModel = value as BezierCurveViewModel;
+        switch (parameter)
         {
-            var viewModel = value as BezierCurveViewModel;
-            switch (parameter)
-            {
-                case "Point0":
-                    return new Point(viewModel.Points[0].X - viewModel.Points[0].X + 50, viewModel.Points[0].Y - viewModel.Points[0].Y + 50);
-                case "ControlPoint1":
-                    return new Point(viewModel.ControlPoint1.Value.X - viewModel.Points[0].X + 50, viewModel.ControlPoint1.Value.Y - viewModel.Points[0].Y + 50);
-                case "ControlPoint2":
-                    return new Point(viewModel.ControlPoint2.Value.X - viewModel.Points[0].X + 50, viewModel.ControlPoint2.Value.Y - viewModel.Points[0].Y + 50);
-                case "Point1":
-                    return new Point(viewModel.Points[1].X - viewModel.Points[0].X + 50, viewModel.Points[1].Y - viewModel.Points[0].Y + 50);
-                default:
-                    return new Point();
-            }
+            case "Point0":
+                return new Point(viewModel.Points[0].X - viewModel.Points[0].X + 50,
+                    viewModel.Points[0].Y - viewModel.Points[0].Y + 50);
+            case "ControlPoint1":
+                return new Point(viewModel.ControlPoint1.Value.X - viewModel.Points[0].X + 50,
+                    viewModel.ControlPoint1.Value.Y - viewModel.Points[0].Y + 50);
+            case "ControlPoint2":
+                return new Point(viewModel.ControlPoint2.Value.X - viewModel.Points[0].X + 50,
+                    viewModel.ControlPoint2.Value.Y - viewModel.Points[0].Y + 50);
+            case "Point1":
+                return new Point(viewModel.Points[1].X - viewModel.Points[0].X + 50,
+                    viewModel.Points[1].Y - viewModel.Points[0].Y + 50);
+            default:
+                return new Point();
         }
+    }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
     }
 }

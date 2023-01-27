@@ -1,17 +1,11 @@
-﻿using Reactive.Bindings;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Media.Imaging;
+﻿using System.Windows.Media.Imaging;
+using Reactive.Bindings;
 
-namespace boilersGraphics.ViewModels
+namespace boilersGraphics.ViewModels;
+
+internal interface IEmbeddedImage
 {
-    interface IEmbeddedImage
-    {
-        ReactivePropertySlim<BitmapImage> EmbeddedImage { get; }
+    ReactivePropertySlim<BitmapImage> EmbeddedImage { get; }
 
-        string FileName { get; }
-    }
+    string FileName { get; }
 }

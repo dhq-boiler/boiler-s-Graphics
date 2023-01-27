@@ -16,7 +16,8 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/Theme.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/Themes/DarkTheme.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/boilersGraphics;component/Resources/Themes/DarkTheme.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <converter:ExtractRectConverter x:Key="ExtractRect" />
         </ResourceDictionary>
@@ -125,7 +126,8 @@
                     VerticalAlignment="Center"
                     Orientation="Horizontal">
                     <Label Content="Top" />
-                    <control:DoubleTextBox VerticalContentAlignment="Center" DoubleText="{Binding Top.Value, Mode=TwoWay}" />
+                    <control:DoubleTextBox VerticalContentAlignment="Center"
+                                           DoubleText="{Binding Top.Value, Mode=TwoWay}" />
                 </StackPanel>
             </DockPanel>
             <DockPanel
@@ -137,7 +139,8 @@
                     VerticalAlignment="Center"
                     Orientation="Horizontal">
                     <Label Content="Left" />
-                    <control:DoubleTextBox VerticalContentAlignment="Center" DoubleText="{Binding Left.Value, Mode=TwoWay}" />
+                    <control:DoubleTextBox VerticalContentAlignment="Center"
+                                           DoubleText="{Binding Left.Value, Mode=TwoWay}" />
                 </StackPanel>
             </DockPanel>
             <DockPanel Grid.Row="4" Grid.Column="2">
@@ -146,7 +149,8 @@
                     VerticalAlignment="Top"
                     Orientation="Horizontal">
                     <Label Content="Width" />
-                    <control:DoubleTextBox VerticalContentAlignment="Center" DoubleText="{Binding Width.Value, Mode=TwoWay}" />
+                    <control:DoubleTextBox VerticalContentAlignment="Center"
+                                           DoubleText="{Binding Width.Value, Mode=TwoWay}" />
                 </StackPanel>
             </DockPanel>
             <DockPanel Grid.Row="2" Grid.Column="4">
@@ -155,7 +159,8 @@
                     VerticalAlignment="Center"
                     Orientation="Horizontal">
                     <Label Content="Height" />
-                    <control:DoubleTextBox VerticalContentAlignment="Center" DoubleText="{Binding Height.Value, Mode=TwoWay}" />
+                    <control:DoubleTextBox VerticalContentAlignment="Center"
+                                           DoubleText="{Binding Height.Value, Mode=TwoWay}" />
                 </StackPanel>
             </DockPanel>
             <DockPanel
@@ -186,4 +191,3 @@
         </Grid>
     </Grid>
 </UserControl>
-

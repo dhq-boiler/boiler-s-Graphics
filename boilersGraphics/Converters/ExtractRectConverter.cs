@@ -1,26 +1,21 @@
-﻿using boilersGraphics.ViewModels;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
+using boilersGraphics.ViewModels;
 
-namespace boilersGraphics.Converters
+namespace boilersGraphics.Converters;
+
+internal class ExtractRectConverter : IValueConverter
 {
-    class ExtractRectConverter : IValueConverter
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            var viewModel = value as DesignerItemViewModelBase;
-            return new Rect(viewModel.Left.Value, viewModel.Top.Value, viewModel.Width.Value, viewModel.Height.Value);
-        }
+        var viewModel = value as DesignerItemViewModelBase;
+        return new Rect(viewModel.Left.Value, viewModel.Top.Value, viewModel.Width.Value, viewModel.Height.Value);
+    }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
     }
 }

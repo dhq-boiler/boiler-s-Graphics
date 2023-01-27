@@ -1,25 +1,20 @@
-﻿using boilersGraphics.ViewModels;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Data;
+using boilersGraphics.ViewModels;
 
-namespace boilersGraphics.Converters
+namespace boilersGraphics.Converters;
+
+internal class ToFileNameOrBitmapImage : IValueConverter
 {
-    internal class ToFileNameOrBitmapImage : IValueConverter
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            var viewModel = value as IEmbeddedImage;
-            return viewModel.EmbeddedImage.Value != null ? viewModel.EmbeddedImage.Value : viewModel.FileName;
-        }
+        var viewModel = value as IEmbeddedImage;
+        return viewModel.EmbeddedImage.Value != null ? viewModel.EmbeddedImage.Value : viewModel.FileName;
+    }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
     }
 }

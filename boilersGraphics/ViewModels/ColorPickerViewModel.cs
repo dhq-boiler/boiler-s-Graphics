@@ -1,4 +1,9 @@
-﻿using boilersGraphics.Extensions;
+﻿using System;
+using System.Linq;
+using System.Reactive.Disposables;
+using System.Windows;
+using System.Windows.Media;
+using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
 using boilersGraphics.Models;
 using boilersGraphics.Views;
@@ -7,49 +12,27 @@ using Prism.Regions;
 using Prism.Services.Dialogs;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
-using System;
-using System.Linq;
-using System.Reactive.Disposables;
-using System.Windows;
-using System.Windows.Media;
 
-namespace boilersGraphics.ViewModels
+namespace boilersGraphics.ViewModels;
+
+public class ColorPickerViewModel : BindableBase, IDialogAware, IDisposable
 {
-    public class ColorPickerViewModel : BindableBase, IDialogAware, IDisposable
+    private readonly IRegionManager regionManager;
+    private ColorPicker _colorPicker;
+    private readonly CompositeDisposable disposables = new();
+    private bool disposedValue;
+
+    public ColorPickerViewModel(IRegionManager regionManager)
     {
-        private bool disposedValue;
-        private CompositeDisposable disposables = new CompositeDisposable();
-        private ColorPicker _colorPicker;
-        private readonly IRegionManager regionManager;
-
-        public string Title => "カラーピッカー";
-
-        public event Action<IDialogResult> RequestClose;
-
-        public ReactiveCommand OKCommand { get; } = new ReactiveCommand();
-        public ReactiveCommand SelectSolidColorCommand { get; } = new ReactiveCommand();
-        public ReactiveCommand SelectLinearGradientCommand { get; } = new ReactiveCommand();
-        public ReactiveCommand SelectRadialGradientCommand { get; } = new ReactiveCommand();
-        public ReactivePropertySlim<ColorExchange> EditTarget { get; } = new ReactivePropertySlim<ColorExchange>();
-        public ReactivePropertySlim<ColorSpots> ColorSpots { get; } = new ReactivePropertySlim<ColorSpots>();
-
-        public ReactiveCommand<RoutedEventArgs> UnloadedCommand { get; } = new ReactiveCommand<RoutedEventArgs>();
-        public ReactiveCommand<RoutedEventArgs> LoadedCommand { get; } = new ReactiveCommand<RoutedEventArgs>();
-
-        public ColorPickerViewModel(IRegionManager regionManager)
-        {
-            LoadedCommand.Subscribe(x =>
+        LoadedCommand.Subscribe(x =>
             {
                 var source = x.Source;
                 _colorPicker = source as ColorPicker;
             })
             .AddTo(disposables);
-            UnloadedCommand.Subscribe(x =>
-            {
-                this.regionManager.Regions.Remove("ColorPickerRegion");
-            })
+        UnloadedCommand.Subscribe(x => { this.regionManager.Regions.Remove("ColorPickerRegion"); })
             .AddTo(disposables);
-            OKCommand.Subscribe(_ =>
+        OKCommand.Subscribe(_ =>
             {
                 this.regionManager.Regions.Remove("ColorPickerRegion");
                 var solidColorPicker = _colorPicker.FindVisualChildren<SolidColorPicker>().FirstOrDefault();
@@ -157,7 +140,7 @@ namespace boilersGraphics.ViewModels
                     colorSpots.ColorSpot97 = solidColorPickerViewModel.ColorSpot97.Value;
                     colorSpots.ColorSpot98 = solidColorPickerViewModel.ColorSpot98.Value;
                     colorSpots.ColorSpot99 = solidColorPickerViewModel.ColorSpot99.Value;
-                    var parameters = new DialogParameters()
+                    var parameters = new DialogParameters
                     {
                         { "ColorExchange", solidColorPickerViewModel.EditTarget.Value },
                         { "ColorSpots", colorSpots }
@@ -165,10 +148,13 @@ namespace boilersGraphics.ViewModels
                     var ret = new DialogResult(ButtonResult.OK, parameters);
                     RequestClose.Invoke(ret);
                 }
-                var linearGradientBrushPicker = _colorPicker.FindVisualChildren<LinearGradientBrushPicker>().FirstOrDefault();
+
+                var linearGradientBrushPicker =
+                    _colorPicker.FindVisualChildren<LinearGradientBrushPicker>().FirstOrDefault();
                 if (linearGradientBrushPicker != null)
                 {
-                    var linearGradientBrushPickerViewModel = linearGradientBrushPicker.DataContext as LinearGradientBrushPickerViewModel;
+                    var linearGradientBrushPickerViewModel =
+                        linearGradientBrushPicker.DataContext as LinearGradientBrushPickerViewModel;
                     var colorSpots = new ColorSpots();
                     colorSpots.ColorSpot0 = linearGradientBrushPickerViewModel.ColorSpot0.Value;
                     colorSpots.ColorSpot1 = linearGradientBrushPickerViewModel.ColorSpot1.Value;
@@ -271,10 +257,13 @@ namespace boilersGraphics.ViewModels
                     colorSpots.ColorSpot98 = linearGradientBrushPickerViewModel.ColorSpot98.Value;
                     colorSpots.ColorSpot99 = linearGradientBrushPickerViewModel.ColorSpot99.Value;
                     var gradientStopCollection = new GradientStopCollection();
-                    linearGradientBrushPickerViewModel.GradientStops.ToList().ForEach(x => gradientStopCollection.Add(x.ConvertToGradientStop()));
-                    linearGradientBrushPickerViewModel.EditTarget.Value.New = new LinearGradientBrush(gradientStopCollection, linearGradientBrushPickerViewModel.StartPoint.Value, linearGradientBrushPickerViewModel.EndPoint.Value);
+                    linearGradientBrushPickerViewModel.GradientStops.ToList()
+                        .ForEach(x => gradientStopCollection.Add(x.ConvertToGradientStop()));
+                    linearGradientBrushPickerViewModel.EditTarget.Value.New = new LinearGradientBrush(
+                        gradientStopCollection, linearGradientBrushPickerViewModel.StartPoint.Value,
+                        linearGradientBrushPickerViewModel.EndPoint.Value);
                     linearGradientBrushPickerViewModel.EditTarget.Value.Old = EditTarget.Value.Old;
-                    var parameters = new DialogParameters()
+                    var parameters = new DialogParameters
                     {
                         { "ColorExchange", linearGradientBrushPickerViewModel.EditTarget.Value },
                         { "ColorSpots", colorSpots }
@@ -282,10 +271,13 @@ namespace boilersGraphics.ViewModels
                     var ret = new DialogResult(ButtonResult.OK, parameters);
                     RequestClose.Invoke(ret);
                 }
-                var radialGradientBrushPicker = _colorPicker.FindVisualChildren<RadialGradientBrushPicker>().FirstOrDefault();
+
+                var radialGradientBrushPicker =
+                    _colorPicker.FindVisualChildren<RadialGradientBrushPicker>().FirstOrDefault();
                 if (radialGradientBrushPicker != null)
                 {
-                    var radialGradientBrushPickerViewModel = radialGradientBrushPicker.DataContext as RadialGradientBrushPickerViewModel;
+                    var radialGradientBrushPickerViewModel =
+                        radialGradientBrushPicker.DataContext as RadialGradientBrushPickerViewModel;
                     var colorSpots = new ColorSpots();
                     colorSpots.ColorSpot0 = radialGradientBrushPickerViewModel.ColorSpot0.Value;
                     colorSpots.ColorSpot1 = radialGradientBrushPickerViewModel.ColorSpot1.Value;
@@ -388,7 +380,8 @@ namespace boilersGraphics.ViewModels
                     colorSpots.ColorSpot98 = radialGradientBrushPickerViewModel.ColorSpot98.Value;
                     colorSpots.ColorSpot99 = radialGradientBrushPickerViewModel.ColorSpot99.Value;
                     var gradientStopCollection = new GradientStopCollection();
-                    radialGradientBrushPickerViewModel.GradientStops.ToList().ForEach(x => gradientStopCollection.Add(x.ConvertToGradientStop()));
+                    radialGradientBrushPickerViewModel.GradientStops.ToList()
+                        .ForEach(x => gradientStopCollection.Add(x.ConvertToGradientStop()));
                     var brush = new RadialGradientBrush(gradientStopCollection);
                     brush.GradientOrigin = radialGradientBrushPickerViewModel.GradientOrigin.Value;
                     brush.Center = radialGradientBrushPickerViewModel.Center.Value;
@@ -396,7 +389,7 @@ namespace boilersGraphics.ViewModels
                     brush.RadiusY = radialGradientBrushPickerViewModel.RadiusY.Value;
                     radialGradientBrushPickerViewModel.EditTarget.Value.New = brush;
                     radialGradientBrushPickerViewModel.EditTarget.Value.Old = EditTarget.Value.Old;
-                    var parameters = new DialogParameters()
+                    var parameters = new DialogParameters
                     {
                         { "ColorExchange", radialGradientBrushPickerViewModel.EditTarget.Value },
                         { "ColorSpots", colorSpots }
@@ -406,97 +399,109 @@ namespace boilersGraphics.ViewModels
                 }
             })
             .AddTo(disposables);
-            this.regionManager = regionManager;
-        }
+        this.regionManager = regionManager;
+    }
 
-        public bool CanCloseDialog()
-        {
-            return true;
-        }
+    public ReactiveCommand OKCommand { get; } = new();
+    public ReactiveCommand SelectSolidColorCommand { get; } = new();
+    public ReactiveCommand SelectLinearGradientCommand { get; } = new();
+    public ReactiveCommand SelectRadialGradientCommand { get; } = new();
+    public ReactivePropertySlim<ColorExchange> EditTarget { get; } = new();
+    public ReactivePropertySlim<ColorSpots> ColorSpots { get; } = new();
 
-        public void OnDialogClosed()
-        {
-        }
+    public ReactiveCommand<RoutedEventArgs> UnloadedCommand { get; } = new();
+    public ReactiveCommand<RoutedEventArgs> LoadedCommand { get; } = new();
 
-        public void OnDialogOpened(IDialogParameters parameters)
-        {
-            EditTarget.Value = parameters.GetValue<ColorExchange>("ColorExchange");
-            ColorSpots.Value = parameters.GetValue<ColorSpots>("ColorSpots");
+    public string Title => "カラーピッカー";
 
-            if (EditTarget.Value.Old is SolidColorBrush scb)
+    public event Action<IDialogResult> RequestClose;
+
+    public bool CanCloseDialog()
+    {
+        return true;
+    }
+
+    public void OnDialogClosed()
+    {
+    }
+
+    public void OnDialogOpened(IDialogParameters parameters)
+    {
+        EditTarget.Value = parameters.GetValue<ColorExchange>("ColorExchange");
+        ColorSpots.Value = parameters.GetValue<ColorSpots>("ColorSpots");
+
+        if (EditTarget.Value.Old is SolidColorBrush scb)
+            regionManager.RequestNavigate("ColorPickerRegion", nameof(SolidColorPicker), new NavigationParameters
             {
-                regionManager.RequestNavigate("ColorPickerRegion", nameof(SolidColorPicker), new NavigationParameters()
+                { "ColorExchange", EditTarget.Value },
+                { "ColorSpots", ColorSpots.Value }
+            });
+        else if (EditTarget.Value.Old is LinearGradientBrush lgb)
+            regionManager.RequestNavigate("ColorPickerRegion", nameof(LinearGradientBrushPicker),
+                new NavigationParameters
                 {
                     { "ColorExchange", EditTarget.Value },
                     { "ColorSpots", ColorSpots.Value }
                 });
-            }
-            else if (EditTarget.Value.Old is LinearGradientBrush lgb)
-            {
-                regionManager.RequestNavigate("ColorPickerRegion", nameof(LinearGradientBrushPicker), new NavigationParameters()
+        else if (EditTarget.Value.Old is RadialGradientBrush rgb)
+            regionManager.RequestNavigate("ColorPickerRegion", nameof(RadialGradientBrushPicker),
+                new NavigationParameters
                 {
                     { "ColorExchange", EditTarget.Value },
                     { "ColorSpots", ColorSpots.Value }
                 });
-            }
-            else if (EditTarget.Value.Old is RadialGradientBrush rgb)
-            {
-                regionManager.RequestNavigate("ColorPickerRegion", nameof(RadialGradientBrushPicker), new NavigationParameters()
-                {
-                    { "ColorExchange", EditTarget.Value },
-                    { "ColorSpots", ColorSpots.Value }
-                });
-            }
 
-            SelectSolidColorCommand.Subscribe(_ =>
+        SelectSolidColorCommand.Subscribe(_ =>
             {
-                regionManager.RequestNavigate("ColorPickerRegion", nameof(SolidColorPicker), new NavigationParameters()
-                {
-                    { "ColorExchange", EditTarget.Value },
-                    { "ColorSpots", ColorSpots.Value }
-                });
-            })
-            .AddTo(disposables);
-            SelectLinearGradientCommand.Subscribe(_ =>
-            {
-                regionManager.RequestNavigate("ColorPickerRegion", nameof(LinearGradientBrushPicker), new NavigationParameters()
-                {
-                    { "ColorExchange", EditTarget.Value },
-                    { "ColorSpots", ColorSpots.Value }
-                });
-            })
-            .AddTo(disposables);
-            SelectRadialGradientCommand.Subscribe(_ =>
-            {
-                regionManager.RequestNavigate("ColorPickerRegion", nameof(RadialGradientBrushPicker), new NavigationParameters()
+                regionManager.RequestNavigate("ColorPickerRegion", nameof(SolidColorPicker), new NavigationParameters
                 {
                     { "ColorExchange", EditTarget.Value },
                     { "ColorSpots", ColorSpots.Value }
                 });
             })
             .AddTo(disposables);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposedValue)
+        SelectLinearGradientCommand.Subscribe(_ =>
             {
-                if (disposing)
-                {
-                    SelectSolidColorCommand.Dispose();
-                    SelectLinearGradientCommand.Dispose();
-                    SelectRadialGradientCommand.Dispose();
-                    disposables.Dispose();
-                }
-                disposedValue = true;
-            }
-        }
+                regionManager.RequestNavigate("ColorPickerRegion", nameof(LinearGradientBrushPicker),
+                    new NavigationParameters
+                    {
+                        { "ColorExchange", EditTarget.Value },
+                        { "ColorSpots", ColorSpots.Value }
+                    });
+            })
+            .AddTo(disposables);
+        SelectRadialGradientCommand.Subscribe(_ =>
+            {
+                regionManager.RequestNavigate("ColorPickerRegion", nameof(RadialGradientBrushPicker),
+                    new NavigationParameters
+                    {
+                        { "ColorExchange", EditTarget.Value },
+                        { "ColorSpots", ColorSpots.Value }
+                    });
+            })
+            .AddTo(disposables);
+    }
 
-        public void Dispose()
+    public void Dispose()
+    {
+        // このコードを変更しないでください。クリーンアップ コードを 'Dispose(bool disposing)' メソッドに記述します
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!disposedValue)
         {
-            // このコードを変更しないでください。クリーンアップ コードを 'Dispose(bool disposing)' メソッドに記述します
-            Dispose(disposing: true);
-            GC.SuppressFinalize(this);
+            if (disposing)
+            {
+                SelectSolidColorCommand.Dispose();
+                SelectLinearGradientCommand.Dispose();
+                SelectRadialGradientCommand.Dispose();
+                disposables.Dispose();
+            }
+
+            disposedValue = true;
         }
     }
 }

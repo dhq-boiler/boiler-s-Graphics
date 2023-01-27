@@ -18,7 +18,8 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/Theme.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/Themes/DarkTheme.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/boilersGraphics;component/Resources/Themes/DarkTheme.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <converter:DoubleToStringConverter x:Key="DoubleToStringConverter" />
         </ResourceDictionary>

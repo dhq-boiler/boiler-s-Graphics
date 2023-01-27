@@ -1,134 +1,138 @@
-﻿using boilersGraphics.Controls;
-using boilersGraphics.Dao;
-using boilersGraphics.Extensions;
-using boilersGraphics.Helpers;
-using boilersGraphics.Models;
-using boilersGraphics.ViewModels;
-using NLog;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using boilersGraphics.Controls;
+using boilersGraphics.Dao;
+using boilersGraphics.Extensions;
+using boilersGraphics.Helpers;
+using boilersGraphics.Models;
+using boilersGraphics.ViewModels;
+using NLog;
 
-namespace boilersGraphics.Adorners
+namespace boilersGraphics.Adorners;
+
+internal class StraightLineAdorner : Adorner
 {
-    internal class StraightLineAdorner : Adorner
+    private readonly DesignerCanvas _designerCanvas;
+    private Point? _endPoint;
+    private readonly SnapAction _snapAction;
+    private Point? _startPoint;
+    private readonly Pen _straightLinePen;
+    private readonly StraightConnectorViewModel item;
+
+    public StraightLineAdorner(DesignerCanvas designerCanvas, Point? dragStartPoint, StraightConnectorViewModel item)
+        : base(designerCanvas)
     {
-        private DesignerCanvas _designerCanvas;
-        private Point? _startPoint;
-        private Point? _endPoint;
-        private Pen _straightLinePen;
-        private SnapAction _snapAction;
-        private StraightConnectorViewModel item;
+        this.item = item;
+        _designerCanvas = designerCanvas;
+        _startPoint = dragStartPoint;
+        var parent = (AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel;
+        var brush = parent.EdgeBrush.Value.Clone();
+        brush.Opacity = 0.5;
+        _straightLinePen = new Pen(brush, parent.EdgeThickness.Value.Value);
+        _snapAction = new SnapAction();
+    }
 
-        public StraightLineAdorner(DesignerCanvas designerCanvas, Point? dragStartPoint, StraightConnectorViewModel item)
-            : base(designerCanvas)
+    protected override void OnMouseMove(MouseEventArgs e)
+    {
+        if (e.LeftButton == MouseButtonState.Pressed)
         {
-            this.item = item;
-            _designerCanvas = designerCanvas;
-            _startPoint = dragStartPoint;
-            var parent = (AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel;
-            var brush = parent.EdgeBrush.Value.Clone();
-            brush.Opacity = 0.5;
-            _straightLinePen = new Pen(brush, parent.EdgeThickness.Value.Value);
-            _snapAction = new SnapAction();
+            if (!IsMouseCaptured)
+                CaptureMouse();
+
+            var ellipses = (_designerCanvas.DataContext as DiagramViewModel).AllItems.Value.OfType<NEllipseViewModel>();
+            var pies = (_designerCanvas.DataContext as DiagramViewModel).AllItems.Value.OfType<NPieViewModel>();
+
+            //ドラッグ終了座標を更新
+            _endPoint = e.GetPosition(this);
+
+            var appendIntersectionPoints = new List<Tuple<Point, object>>();
+            _snapAction.SnapIntersectionOfEllipseAndTangent(ellipses, _startPoint.Value, _endPoint.Value,
+                appendIntersectionPoints);
+            _snapAction.SnapIntersectionOfPieAndTangent(pies, _startPoint.Value, _endPoint.Value,
+                appendIntersectionPoints);
+
+            var currentPosition = _endPoint.Value;
+            var vec = new Vector();
+            vec = Point.Subtract(_endPoint.Value, _startPoint.Value);
+            _snapAction.OnMouseMove(ref currentPosition, vec, appendIntersectionPoints);
+            _endPoint = currentPosition;
+
+            (Application.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.CurrentPoint =
+                currentPosition;
+            (Application.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value =
+                $"({_startPoint.Value.X}, {_startPoint.Value.Y}) - ({_endPoint.Value.X}, {_endPoint.Value.Y}) (w, h) = ({_endPoint.Value.X - _startPoint.Value.X}, {_endPoint.Value.Y - _startPoint.Value.Y})";
+
+            InvalidateVisual();
+        }
+        else
+        {
+            if (IsMouseCaptured) ReleaseMouseCapture();
         }
 
-        protected override void OnMouseMove(MouseEventArgs e)
+        e.Handled = true;
+    }
+
+    protected override void OnMouseUp(MouseButtonEventArgs e)
+    {
+        // release mouse capture
+        if (IsMouseCaptured) ReleaseMouseCapture();
+
+        _snapAction.OnMouseUp(this);
+
+        if (_startPoint.HasValue && _endPoint.HasValue)
         {
-            if (e.LeftButton == MouseButtonState.Pressed)
-            {
-                if (!this.IsMouseCaptured)
-                    this.CaptureMouse();
+            var viewModel = (AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel;
+            item.Owner = viewModel;
+            item.EdgeBrush.Value = item.Owner.EdgeBrush.Value.Clone();
+            item.EdgeThickness.Value = item.Owner.EdgeThickness.Value.Value;
+            item.ZIndex.Value = item.Owner.Layers
+                .SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).Count();
+            item.IsSelected.Value = true;
+            item.IsVisible.Value = true;
+            item.AddPointP2(viewModel, _endPoint.Value);
+            item.PathGeometryNoRotate.Value = GeometryCreator.CreateLine(item);
+            item.SnapPoint0VM.Value.IsSelected.Value = true;
+            item.SnapPoint1VM.Value.IsSelected.Value = true;
+            item.SnapPoint0VM.Value.IsHitTestVisible.Value = true;
+            item.SnapPoint1VM.Value.IsHitTestVisible.Value = true;
+            item.Owner.DeselectAll();
+            LogManager.GetCurrentClassLogger().Debug($"Confirm straight line P1:{item.Points[0]} P2:{item.Points[1]}");
+            ((AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel).AddItemCommand.Execute(item);
 
-                var ellipses = (_designerCanvas.DataContext as DiagramViewModel).AllItems.Value.OfType<NEllipseViewModel>();
-                var pies = (_designerCanvas.DataContext as DiagramViewModel).AllItems.Value.OfType<NPieViewModel>();
+            _snapAction.PostProcess(SnapPointPosition.EndEdge, item);
 
-                //ドラッグ終了座標を更新
-                _endPoint = e.GetPosition(this);
+            UpdateStatisticsCount();
 
-                var appendIntersectionPoints = new List<Tuple<Point, object>>();
-                _snapAction.SnapIntersectionOfEllipseAndTangent(ellipses, _startPoint.Value, _endPoint.Value, appendIntersectionPoints);
-                _snapAction.SnapIntersectionOfPieAndTangent(pies, _startPoint.Value, _endPoint.Value, appendIntersectionPoints);
-
-                var currentPosition = _endPoint.Value;
-                Vector vec = new Vector();
-                vec = Point.Subtract(_endPoint.Value, _startPoint.Value);
-                _snapAction.OnMouseMove(ref currentPosition, vec, appendIntersectionPoints);
-                _endPoint = currentPosition;
-
-                (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.CurrentPoint = currentPosition;
-                (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = $"({_startPoint.Value.X}, {_startPoint.Value.Y}) - ({_endPoint.Value.X}, {_endPoint.Value.Y}) (w, h) = ({_endPoint.Value.X - _startPoint.Value.X}, {_endPoint.Value.Y - _startPoint.Value.Y})";
-
-                this.InvalidateVisual();
-            }
-            else
-            {
-                if (this.IsMouseCaptured) this.ReleaseMouseCapture();
-            }
-
-            e.Handled = true;
+            _startPoint = null;
+            _endPoint = null;
         }
 
-        protected override void OnMouseUp(System.Windows.Input.MouseButtonEventArgs e)
-        {
-            // release mouse capture
-            if (this.IsMouseCaptured) this.ReleaseMouseCapture();
+        (Application.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "";
+        (Application.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = "";
 
-            _snapAction.OnMouseUp(this);
+        e.Handled = true;
+    }
 
-            if (_startPoint.HasValue && _endPoint.HasValue)
-            {
-                var viewModel = (AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel;
-                item.Owner = viewModel;
-                item.EdgeBrush.Value = item.Owner.EdgeBrush.Value.Clone();
-                item.EdgeThickness.Value = item.Owner.EdgeThickness.Value.Value;
-                item.ZIndex.Value = item.Owner.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).Count();
-                item.IsSelected.Value = true;
-                item.IsVisible.Value = true;
-                item.AddPointP2(viewModel, _endPoint.Value);
-                item.PathGeometryNoRotate.Value = GeometryCreator.CreateLine(item);
-                item.SnapPoint0VM.Value.IsSelected.Value = true;
-                item.SnapPoint1VM.Value.IsSelected.Value = true;
-                item.SnapPoint0VM.Value.IsHitTestVisible.Value = true;
-                item.SnapPoint1VM.Value.IsHitTestVisible.Value = true;
-                item.Owner.DeselectAll();
-                LogManager.GetCurrentClassLogger().Debug($"Confirm straight line P1:{item.Points[0]} P2:{item.Points[1]}");
-                ((AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel).AddItemCommand.Execute(item);
+    private static void UpdateStatisticsCount()
+    {
+        var statistics = (Application.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+        statistics.NumberOfDrawsOfTheStraightLineTool++;
+        var dao = new StatisticsDao();
+        dao.Update(statistics);
+    }
 
-                _snapAction.PostProcess(SnapPointPosition.EndEdge, item);
+    protected override void OnRender(DrawingContext dc)
+    {
+        base.OnRender(dc);
 
-                UpdateStatisticsCount();
+        dc.DrawRectangle(Brushes.Transparent, null, new Rect(RenderSize));
 
-                _startPoint = null;
-                _endPoint = null;
-            }
-
-            (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "";
-            (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = "";
-
-            e.Handled = true;
-        }
-
-        private static void UpdateStatisticsCount()
-        {
-            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
-            statistics.NumberOfDrawsOfTheStraightLineTool++;
-            var dao = new StatisticsDao();
-            dao.Update(statistics);
-        }
-
-        protected override void OnRender(DrawingContext dc)
-        {
-            base.OnRender(dc);
-
-            dc.DrawRectangle(Brushes.Transparent, null, new Rect(RenderSize));
-
-            if (_startPoint.HasValue && _endPoint.HasValue)
-                dc.DrawLine(_straightLinePen, _startPoint.Value, _endPoint.Value);
-        }
+        if (_startPoint.HasValue && _endPoint.HasValue)
+            dc.DrawLine(_straightLinePen, _startPoint.Value, _endPoint.Value);
     }
 }

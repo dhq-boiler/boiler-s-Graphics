@@ -1,30 +1,28 @@
-﻿using boilersGraphics.Helpers;
-using Reactive.Bindings.Extensions;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using boilersGraphics.Helpers;
+using Reactive.Bindings.Extensions;
 using TsOperationHistory;
 using TsOperationHistory.Extensions;
 
-namespace boilersGraphics.ViewModels
-{
-    public class GroupItemViewModel : DesignerItemViewModelBase, IObservable<GroupTransformNotification>, ICloneable
-    {
-        private double _leftOld;
-        private double _topOld;
-        private double _widthOld;
-        private double _heightOld;
-        private double _lotateAngleOld;
+namespace boilersGraphics.ViewModels;
 
-        public GroupItemViewModel()
-            : base()
-        {
-            Left.Subscribe(l =>
+public class GroupItemViewModel : DesignerItemViewModelBase, IObservable<GroupTransformNotification>, ICloneable
+{
+    private double _heightOld;
+    private double _leftOld;
+    private double _lotateAngleOld;
+    private double _topOld;
+    private double _widthOld;
+
+    public GroupItemViewModel()
+    {
+        Left.Subscribe(l =>
             {
-                var notification = new GroupTransformNotification()
+                var notification = new GroupTransformNotification
                 {
                     Type = TransformType.Move,
                     LeftChange = l - _leftOld
@@ -33,9 +31,9 @@ namespace boilersGraphics.ViewModels
                 _leftOld = l;
             })
             .AddTo(_CompositeDisposable);
-            Top.Subscribe(t =>
+        Top.Subscribe(t =>
             {
-                var notification = new GroupTransformNotification()
+                var notification = new GroupTransformNotification
                 {
                     Type = TransformType.Move,
                     TopChange = t - _topOld
@@ -44,9 +42,9 @@ namespace boilersGraphics.ViewModels
                 _topOld = t;
             })
             .AddTo(_CompositeDisposable);
-            Width.Subscribe(w =>
+        Width.Subscribe(w =>
             {
-                var notification = new GroupTransformNotification()
+                var notification = new GroupTransformNotification
                 {
                     Type = TransformType.Resize,
                     GroupLeftTop = new Point(Left.Value, Top.Value),
@@ -58,9 +56,9 @@ namespace boilersGraphics.ViewModels
                 _widthOld = w;
             })
             .AddTo(_CompositeDisposable);
-            Height.Subscribe(h =>
+        Height.Subscribe(h =>
             {
-                var notification = new GroupTransformNotification()
+                var notification = new GroupTransformNotification
                 {
                     Type = TransformType.Resize,
                     GroupLeftTop = new Point(Left.Value, Top.Value),
@@ -72,9 +70,9 @@ namespace boilersGraphics.ViewModels
                 _heightOld = h;
             })
             .AddTo(_CompositeDisposable);
-            RotationAngle.Subscribe(a =>
+        RotationAngle.Subscribe(a =>
             {
-                var notification = new GroupTransformNotification()
+                var notification = new GroupTransformNotification
                 {
                     Type = TransformType.Rotate,
                     GroupLeftTop = new Point(Left.Value, Top.Value),
@@ -86,89 +84,89 @@ namespace boilersGraphics.ViewModels
                 _lotateAngleOld = a;
             })
             .AddTo(_CompositeDisposable);
-            EnablePathGeometryUpdate.Value = false;
-        }
-
-        private void GroupTransformObserversOnNext(GroupTransformNotification notification)
-        {
-            observers.ForEach(x => x.OnNext(notification));
-        }
-
-        public void AddGroup(OperationRecorder recorder, SelectableDesignerItemViewModelBase viewModel)
-        {
-            recorder.Current.ExecuteSetProperty(viewModel, "GroupDisposable", Subscribe(viewModel));
-        }
-
-        public override PathGeometry CreateGeometry(bool flag = false)
-        {
-            return null;
-        }
-
-        public override PathGeometry CreateGeometry(double angle)
-        {
-            return null;
-        }
-
-        #region IObservable<GroupTransformNotification>
-
-        public List<IObserver<GroupTransformNotification>> observers = new List<IObserver<GroupTransformNotification>>();
-
-        public override bool SupportsPropertyDialog => false;
-
-        public IDisposable Subscribe(IObserver<GroupTransformNotification> observer)
-        {
-            observers.Add(observer);
-            return new GroupItemViewModelDisposable(this, observer);
-        }
-
-        private class GroupItemViewModelDisposable : IDisposable
-        {
-            private GroupItemViewModel _groupItemViewModel;
-            private IObserver<GroupTransformNotification> _observer;
-
-            public GroupItemViewModelDisposable(GroupItemViewModel groupItemViewModel, IObserver<GroupTransformNotification> observer)
-            {
-                _groupItemViewModel = groupItemViewModel;
-                _observer = observer;
-            }
-
-            public void Dispose()
-            {
-                _groupItemViewModel.observers.Remove(_observer);
-            }
-        }
-
-        #endregion IObservable<GroupTransformNotification>
-
-        public override Type GetViewType()
-        {
-            return typeof(DockPanel);
-        }
-
-        #region IClonable
-
-        public override object Clone()
-        {
-            var clone = new GroupItemViewModel();
-            clone.Owner = Owner;
-            clone.Left.Value = Left.Value;
-            clone.Top.Value = Top.Value;
-            clone.Width.Value = Width.Value;
-            clone.Height.Value = Height.Value;
-            clone.EdgeBrush.Value = EdgeBrush.Value;
-            clone.FillBrush.Value = FillBrush.Value;
-            clone.EdgeThickness.Value = EdgeThickness.Value;
-            clone.Matrix.Value = Matrix.Value;
-            clone.RotationAngle.Value = RotationAngle.Value;
-            clone.StrokeLineJoin.Value = StrokeLineJoin.Value;
-            return clone;
-        }
-
-        public override void OpenPropertyDialog()
-        {
-            throw new NotImplementedException();
-        }
-
-        #endregion //IClonable
+        EnablePathGeometryUpdate.Value = false;
     }
+
+    private void GroupTransformObserversOnNext(GroupTransformNotification notification)
+    {
+        observers.ForEach(x => x.OnNext(notification));
+    }
+
+    public void AddGroup(OperationRecorder recorder, SelectableDesignerItemViewModelBase viewModel)
+    {
+        recorder.Current.ExecuteSetProperty(viewModel, "GroupDisposable", Subscribe(viewModel));
+    }
+
+    public override PathGeometry CreateGeometry(bool flag = false)
+    {
+        return null;
+    }
+
+    public override PathGeometry CreateGeometry(double angle)
+    {
+        return null;
+    }
+
+    public override Type GetViewType()
+    {
+        return typeof(DockPanel);
+    }
+
+    #region IObservable<GroupTransformNotification>
+
+    public List<IObserver<GroupTransformNotification>> observers = new();
+
+    public override bool SupportsPropertyDialog => false;
+
+    public IDisposable Subscribe(IObserver<GroupTransformNotification> observer)
+    {
+        observers.Add(observer);
+        return new GroupItemViewModelDisposable(this, observer);
+    }
+
+    private class GroupItemViewModelDisposable : IDisposable
+    {
+        private readonly GroupItemViewModel _groupItemViewModel;
+        private readonly IObserver<GroupTransformNotification> _observer;
+
+        public GroupItemViewModelDisposable(GroupItemViewModel groupItemViewModel,
+            IObserver<GroupTransformNotification> observer)
+        {
+            _groupItemViewModel = groupItemViewModel;
+            _observer = observer;
+        }
+
+        public void Dispose()
+        {
+            _groupItemViewModel.observers.Remove(_observer);
+        }
+    }
+
+    #endregion IObservable<GroupTransformNotification>
+
+    #region IClonable
+
+    public override object Clone()
+    {
+        var clone = new GroupItemViewModel();
+        clone.Owner = Owner;
+        clone.Left.Value = Left.Value;
+        clone.Top.Value = Top.Value;
+        clone.Width.Value = Width.Value;
+        clone.Height.Value = Height.Value;
+        clone.EdgeBrush.Value = EdgeBrush.Value;
+        clone.FillBrush.Value = FillBrush.Value;
+        clone.EdgeThickness.Value = EdgeThickness.Value;
+        clone.Matrix.Value = Matrix.Value;
+        clone.RotationAngle.Value = RotationAngle.Value;
+        clone.StrokeLineJoin.Value = StrokeLineJoin.Value;
+        return clone;
+    }
+
+    public override void OpenPropertyDialog()
+    {
+        throw new NotImplementedException();
+    }
+
+    #endregion //IClonable
 }

@@ -47,7 +47,8 @@
                                 <Setter TargetName="Ellipse" Property="Fill" Value="{StaticResource DarkBrush}" />
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="false">
-                                <Setter TargetName="Ellipse" Property="Fill" Value="{StaticResource DisabledBackgroundBrush}" />
+                                <Setter TargetName="Ellipse" Property="Fill"
+                                        Value="{StaticResource DisabledBackgroundBrush}" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -307,106 +308,206 @@
                         <Setter Property="Margin" Value="5" />
                     </Style>
                 </control:SimpleGrid.Resources>
-                <local:ColorSpot x:Name="colorSpot0" Brush="{Binding ColorSpot0.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot1" Brush="{Binding ColorSpot1.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot2" Brush="{Binding ColorSpot2.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot3" Brush="{Binding ColorSpot3.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot4" Brush="{Binding ColorSpot4.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot5" Brush="{Binding ColorSpot5.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot6" Brush="{Binding ColorSpot6.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot7" Brush="{Binding ColorSpot7.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot8" Brush="{Binding ColorSpot8.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot9" Brush="{Binding ColorSpot9.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot10" Brush="{Binding ColorSpot10.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot11" Brush="{Binding ColorSpot11.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot12" Brush="{Binding ColorSpot12.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot13" Brush="{Binding ColorSpot13.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot14" Brush="{Binding ColorSpot14.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot15" Brush="{Binding ColorSpot15.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot16" Brush="{Binding ColorSpot16.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot17" Brush="{Binding ColorSpot17.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot18" Brush="{Binding ColorSpot18.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot19" Brush="{Binding ColorSpot19.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot20" Brush="{Binding ColorSpot20.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot21" Brush="{Binding ColorSpot21.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot22" Brush="{Binding ColorSpot22.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot23" Brush="{Binding ColorSpot23.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot24" Brush="{Binding ColorSpot24.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot25" Brush="{Binding ColorSpot25.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot26" Brush="{Binding ColorSpot26.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot27" Brush="{Binding ColorSpot27.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot28" Brush="{Binding ColorSpot28.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot29" Brush="{Binding ColorSpot29.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot30" Brush="{Binding ColorSpot30.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot31" Brush="{Binding ColorSpot31.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot32" Brush="{Binding ColorSpot32.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot33" Brush="{Binding ColorSpot33.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot34" Brush="{Binding ColorSpot34.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot35" Brush="{Binding ColorSpot35.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot36" Brush="{Binding ColorSpot36.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot37" Brush="{Binding ColorSpot37.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot38" Brush="{Binding ColorSpot38.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot39" Brush="{Binding ColorSpot39.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot40" Brush="{Binding ColorSpot40.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot41" Brush="{Binding ColorSpot41.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot42" Brush="{Binding ColorSpot42.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot43" Brush="{Binding ColorSpot43.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot44" Brush="{Binding ColorSpot44.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot45" Brush="{Binding ColorSpot45.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot46" Brush="{Binding ColorSpot46.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot47" Brush="{Binding ColorSpot47.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot48" Brush="{Binding ColorSpot48.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot49" Brush="{Binding ColorSpot49.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot50" Brush="{Binding ColorSpot50.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot51" Brush="{Binding ColorSpot51.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot52" Brush="{Binding ColorSpot52.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot53" Brush="{Binding ColorSpot53.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot54" Brush="{Binding ColorSpot54.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot55" Brush="{Binding ColorSpot55.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot56" Brush="{Binding ColorSpot56.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot57" Brush="{Binding ColorSpot57.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot58" Brush="{Binding ColorSpot58.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot59" Brush="{Binding ColorSpot59.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot60" Brush="{Binding ColorSpot60.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot61" Brush="{Binding ColorSpot61.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot62" Brush="{Binding ColorSpot62.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot63" Brush="{Binding ColorSpot63.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot64" Brush="{Binding ColorSpot64.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot65" Brush="{Binding ColorSpot65.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot66" Brush="{Binding ColorSpot66.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot67" Brush="{Binding ColorSpot67.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot68" Brush="{Binding ColorSpot68.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot69" Brush="{Binding ColorSpot69.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot70" Brush="{Binding ColorSpot70.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot71" Brush="{Binding ColorSpot71.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot72" Brush="{Binding ColorSpot72.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot73" Brush="{Binding ColorSpot73.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot74" Brush="{Binding ColorSpot74.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot75" Brush="{Binding ColorSpot75.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot76" Brush="{Binding ColorSpot76.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot77" Brush="{Binding ColorSpot77.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot78" Brush="{Binding ColorSpot78.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot79" Brush="{Binding ColorSpot79.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot80" Brush="{Binding ColorSpot80.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot81" Brush="{Binding ColorSpot81.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot82" Brush="{Binding ColorSpot82.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot83" Brush="{Binding ColorSpot83.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot84" Brush="{Binding ColorSpot84.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot85" Brush="{Binding ColorSpot85.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot86" Brush="{Binding ColorSpot86.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot87" Brush="{Binding ColorSpot87.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot88" Brush="{Binding ColorSpot88.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot89" Brush="{Binding ColorSpot89.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot90" Brush="{Binding ColorSpot90.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot91" Brush="{Binding ColorSpot91.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot92" Brush="{Binding ColorSpot92.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot93" Brush="{Binding ColorSpot93.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot94" Brush="{Binding ColorSpot94.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot95" Brush="{Binding ColorSpot95.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot96" Brush="{Binding ColorSpot96.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot97" Brush="{Binding ColorSpot97.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot98" Brush="{Binding ColorSpot98.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
-                <local:ColorSpot x:Name="colorSpot99" Brush="{Binding ColorSpot99.Value, Mode=TwoWay}" Command="{Binding SpotSelectCommand}"/>
+                <local:ColorSpot x:Name="colorSpot0" Brush="{Binding ColorSpot0.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot1" Brush="{Binding ColorSpot1.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot2" Brush="{Binding ColorSpot2.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot3" Brush="{Binding ColorSpot3.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot4" Brush="{Binding ColorSpot4.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot5" Brush="{Binding ColorSpot5.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot6" Brush="{Binding ColorSpot6.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot7" Brush="{Binding ColorSpot7.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot8" Brush="{Binding ColorSpot8.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot9" Brush="{Binding ColorSpot9.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot10" Brush="{Binding ColorSpot10.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot11" Brush="{Binding ColorSpot11.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot12" Brush="{Binding ColorSpot12.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot13" Brush="{Binding ColorSpot13.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot14" Brush="{Binding ColorSpot14.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot15" Brush="{Binding ColorSpot15.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot16" Brush="{Binding ColorSpot16.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot17" Brush="{Binding ColorSpot17.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot18" Brush="{Binding ColorSpot18.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot19" Brush="{Binding ColorSpot19.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot20" Brush="{Binding ColorSpot20.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot21" Brush="{Binding ColorSpot21.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot22" Brush="{Binding ColorSpot22.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot23" Brush="{Binding ColorSpot23.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot24" Brush="{Binding ColorSpot24.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot25" Brush="{Binding ColorSpot25.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot26" Brush="{Binding ColorSpot26.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot27" Brush="{Binding ColorSpot27.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot28" Brush="{Binding ColorSpot28.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot29" Brush="{Binding ColorSpot29.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot30" Brush="{Binding ColorSpot30.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot31" Brush="{Binding ColorSpot31.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot32" Brush="{Binding ColorSpot32.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot33" Brush="{Binding ColorSpot33.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot34" Brush="{Binding ColorSpot34.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot35" Brush="{Binding ColorSpot35.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot36" Brush="{Binding ColorSpot36.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot37" Brush="{Binding ColorSpot37.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot38" Brush="{Binding ColorSpot38.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot39" Brush="{Binding ColorSpot39.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot40" Brush="{Binding ColorSpot40.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot41" Brush="{Binding ColorSpot41.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot42" Brush="{Binding ColorSpot42.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot43" Brush="{Binding ColorSpot43.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot44" Brush="{Binding ColorSpot44.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot45" Brush="{Binding ColorSpot45.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot46" Brush="{Binding ColorSpot46.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot47" Brush="{Binding ColorSpot47.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot48" Brush="{Binding ColorSpot48.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot49" Brush="{Binding ColorSpot49.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot50" Brush="{Binding ColorSpot50.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot51" Brush="{Binding ColorSpot51.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot52" Brush="{Binding ColorSpot52.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot53" Brush="{Binding ColorSpot53.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot54" Brush="{Binding ColorSpot54.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot55" Brush="{Binding ColorSpot55.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot56" Brush="{Binding ColorSpot56.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot57" Brush="{Binding ColorSpot57.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot58" Brush="{Binding ColorSpot58.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot59" Brush="{Binding ColorSpot59.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot60" Brush="{Binding ColorSpot60.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot61" Brush="{Binding ColorSpot61.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot62" Brush="{Binding ColorSpot62.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot63" Brush="{Binding ColorSpot63.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot64" Brush="{Binding ColorSpot64.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot65" Brush="{Binding ColorSpot65.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot66" Brush="{Binding ColorSpot66.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot67" Brush="{Binding ColorSpot67.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot68" Brush="{Binding ColorSpot68.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot69" Brush="{Binding ColorSpot69.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot70" Brush="{Binding ColorSpot70.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot71" Brush="{Binding ColorSpot71.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot72" Brush="{Binding ColorSpot72.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot73" Brush="{Binding ColorSpot73.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot74" Brush="{Binding ColorSpot74.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot75" Brush="{Binding ColorSpot75.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot76" Brush="{Binding ColorSpot76.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot77" Brush="{Binding ColorSpot77.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot78" Brush="{Binding ColorSpot78.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot79" Brush="{Binding ColorSpot79.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot80" Brush="{Binding ColorSpot80.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot81" Brush="{Binding ColorSpot81.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot82" Brush="{Binding ColorSpot82.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot83" Brush="{Binding ColorSpot83.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot84" Brush="{Binding ColorSpot84.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot85" Brush="{Binding ColorSpot85.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot86" Brush="{Binding ColorSpot86.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot87" Brush="{Binding ColorSpot87.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot88" Brush="{Binding ColorSpot88.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot89" Brush="{Binding ColorSpot89.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot90" Brush="{Binding ColorSpot90.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot91" Brush="{Binding ColorSpot91.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot92" Brush="{Binding ColorSpot92.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot93" Brush="{Binding ColorSpot93.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot94" Brush="{Binding ColorSpot94.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot95" Brush="{Binding ColorSpot95.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot96" Brush="{Binding ColorSpot96.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot97" Brush="{Binding ColorSpot97.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot98" Brush="{Binding ColorSpot98.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
+                <local:ColorSpot x:Name="colorSpot99" Brush="{Binding ColorSpot99.Value, Mode=TwoWay}"
+                                 Command="{Binding SpotSelectCommand}" />
             </control:SimpleGrid>
         </DockPanel>
         <DockPanel Width="266" DockPanel.Dock="Left">
@@ -569,17 +670,20 @@
                                 <Label.Style>
                                     <Style TargetType="{x:Type Label}">
                                         <Style.Triggers>
-                                            <DataTrigger Binding="{Binding ColorPalleteVisibility.Value}" Value="Visible">
+                                            <DataTrigger Binding="{Binding ColorPalleteVisibility.Value}"
+                                                         Value="Visible">
                                                 <Setter Property="Content" Value="▲" />
                                             </DataTrigger>
-                                            <DataTrigger Binding="{Binding ColorPalleteVisibility.Value}" Value="Collapsed">
+                                            <DataTrigger Binding="{Binding ColorPalleteVisibility.Value}"
+                                                         Value="Collapsed">
                                                 <Setter Property="Content" Value="▼" />
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
                                 </Label.Style>
                             </Label>
-                            <Image RenderOptions.BitmapScalingMode="HighQuality" Source="pack://application:,,,/Assets/img/art-pallete.png" />
+                            <Image RenderOptions.BitmapScalingMode="HighQuality"
+                                   Source="pack://application:,,,/Assets/img/art-pallete.png" />
                         </StackPanel>
                     </Button>
                     <DockPanel />

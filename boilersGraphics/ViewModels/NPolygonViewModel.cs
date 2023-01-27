@@ -1,139 +1,137 @@
-﻿using boilersGraphics.Controls;
+﻿using System;
+using System.Windows;
+using System.Windows.Media;
+using boilersGraphics.Controls;
 using boilersGraphics.Helpers;
 using boilersGraphics.Views;
 using Prism.Ioc;
 using Prism.Services.Dialogs;
 using Prism.Unity;
 using Reactive.Bindings;
-using System;
-using System.Windows.Media;
+using Path = System.Windows.Shapes.Path;
 
-namespace boilersGraphics.ViewModels
+namespace boilersGraphics.ViewModels;
+
+public class NPolygonViewModel : DesignerItemViewModelBase
 {
-    public class NPolygonViewModel : DesignerItemViewModelBase
+    public NPolygonViewModel()
     {
-        public ReactiveCollection<SnapPoint> SnapPoints { get; } = new ReactiveCollection<SnapPoint>();
+        Init();
+    }
 
-        public NPolygonViewModel()
-            : base()
+    public NPolygonViewModel(double left, double top, double width, double height)
+    {
+        Init();
+        Left.Value = left;
+        Top.Value = top;
+        Width.Value = width;
+        Height.Value = height;
+    }
+
+    public NPolygonViewModel(double left, double top, double width, double height, double angleInDegrees)
+        : this(left, top, width, height)
+    {
+        RotationAngle.Value = angleInDegrees;
+        Matrix.Value.RotateAt(angleInDegrees, 0, 0);
+    }
+
+    public NPolygonViewModel(int id, IDiagramViewModel parent, double left, double top)
+        : base(id, parent, left, top)
+    {
+        Init();
+    }
+
+    public ReactiveCollection<SnapPoint> SnapPoints { get; } = new();
+
+    public ReactivePropertySlim<string> Data { get; set; } = new();
+
+    public override bool SupportsPropertyDialog => true;
+
+    private void Init()
+    {
+        ShowConnectors = false;
+        EnablePathGeometryUpdate.Value = true;
+    }
+
+    public override void UpdatePathGeometryIfEnable(string propertyName, object oldValue, object newValue,
+        bool flag = false)
+    {
+        if (EnablePathGeometryUpdate.Value)
         {
-            Init();
-        }
-
-        public NPolygonViewModel(double left, double top, double width, double height)
-            : base()
-        {
-            Init();
-            Left.Value = left;
-            Top.Value = top;
-            Width.Value = width;
-            Height.Value = height;
-        }
-
-        public NPolygonViewModel(double left, double top, double width, double height, double angleInDegrees)
-            : this(left, top, width, height)
-        {
-            RotationAngle.Value = angleInDegrees;
-            Matrix.Value.RotateAt(angleInDegrees, 0, 0);
-        }
-
-        public NPolygonViewModel(int id, IDiagramViewModel parent, double left, double top)
-            : base(id, parent, left, top)
-        {
-            Init();
-        }
-
-        private void Init()
-        {
-            this.ShowConnectors = false;
-            EnablePathGeometryUpdate.Value = true;
-        }
-
-        public ReactivePropertySlim<string> Data { get; set; } = new ReactivePropertySlim<string>();
-
-        public override bool SupportsPropertyDialog => true;
-
-        public override void UpdatePathGeometryIfEnable(string propertyName, object oldValue, object newValue, bool flag = false)
-        {
-            if (EnablePathGeometryUpdate.Value)
+            if (!flag)
             {
-                if (!flag)
+                if (Left.Value != 0 && Top.Value != 0 && Width.Value != 0 && Height.Value != 0)
                 {
-                    if (Left.Value != 0 && Top.Value != 0 && Width.Value != 0 && Height.Value != 0)
+                    PathGeometryNoRotate.Value = CreateGeometry(flag);
+                    if (Width.Value != PathGeometryNoRotate.Value.Bounds.Width ||
+                        Height.Value != PathGeometryNoRotate.Value.Bounds.Height)
                     {
-                        PathGeometryNoRotate.Value = CreateGeometry(flag);
-                        if (Width.Value != PathGeometryNoRotate.Value.Bounds.Width || Height.Value != PathGeometryNoRotate.Value.Bounds.Height)
-                        {
-                            var lhs = PathGeometryNoRotate.Value.Clone();
-                            var coefficientWidth = Width.Value / lhs.Bounds.Width;
-                            var coefficientHeight = Height.Value / lhs.Bounds.Height;
-                            if (coefficientWidth == 0)
-                                coefficientWidth = 1;
-                            if (coefficientHeight == 0)
-                                coefficientHeight = 1;
-                            var newlhs = GeometryCreator.Scale(lhs, coefficientWidth, coefficientHeight);
-                            newlhs = GeometryCreator.Translate(newlhs, -newlhs.Bounds.Left, -newlhs.Bounds.Top);
-                            PathGeometryNoRotate.Value = newlhs;
-                        }
-                    }
-                    if (!(PathGeometryNoRotate.Value is null))
-                    {
-                        Data.Value = PathGeometryNoRotate.Value.ToString();
+                        var lhs = PathGeometryNoRotate.Value.Clone();
+                        var coefficientWidth = Width.Value / lhs.Bounds.Width;
+                        var coefficientHeight = Height.Value / lhs.Bounds.Height;
+                        if (coefficientWidth == 0)
+                            coefficientWidth = 1;
+                        if (coefficientHeight == 0)
+                            coefficientHeight = 1;
+                        var newlhs = GeometryCreator.Scale(lhs, coefficientWidth, coefficientHeight);
+                        newlhs = GeometryCreator.Translate(newlhs, -newlhs.Bounds.Left, -newlhs.Bounds.Top);
+                        PathGeometryNoRotate.Value = newlhs;
                     }
                 }
 
-                if (RotationAngle.Value != 0)
-                {
-                    PathGeometryRotate.Value = CreateGeometry(RotationAngle.Value);
-                }
+                if (!(PathGeometryNoRotate.Value is null)) Data.Value = PathGeometryNoRotate.Value.ToString();
             }
-        }
 
-        public override PathGeometry CreateGeometry(bool flag = false)
-        {
-            return GeometryCreator.CreatePolygon(this, Data.Value, flag);
+            if (RotationAngle.Value != 0) PathGeometryRotate.Value = CreateGeometry(RotationAngle.Value);
         }
+    }
 
-        public override PathGeometry CreateGeometry(double angle)
-        {
-            var geometry = Geometry.Parse(Data.Value);
-            var pathGeometry = System.Windows.Media.PathGeometry.CreateFromGeometry(geometry);
-            pathGeometry.Transform = new RotateTransform(angle);
-            return pathGeometry;
-        }
-        public override Type GetViewType()
-        {
-            return typeof(System.Windows.Shapes.Path);
-        }
+    public override PathGeometry CreateGeometry(bool flag = false)
+    {
+        return GeometryCreator.CreatePolygon(this, Data.Value, flag);
+    }
 
-        #region IClonable
+    public override PathGeometry CreateGeometry(double angle)
+    {
+        var geometry = Geometry.Parse(Data.Value);
+        var pathGeometry = System.Windows.Media.PathGeometry.CreateFromGeometry(geometry);
+        pathGeometry.Transform = new RotateTransform(angle);
+        return pathGeometry;
+    }
 
-        public override object Clone()
-        {
-            var clone = new NPolygonViewModel();
-            clone.Owner = Owner;
-            clone.Data.Value = Data.Value;
-            clone.Left.Value = Left.Value;
-            clone.Top.Value = Top.Value;
-            clone.Width.Value = Width.Value;
-            clone.Height.Value = Height.Value;
-            clone.EdgeBrush.Value = EdgeBrush.Value;
-            clone.FillBrush.Value = FillBrush.Value;
-            clone.EdgeThickness.Value = EdgeThickness.Value;
-            clone.RotationAngle.Value = RotationAngle.Value;
-            clone.StrokeLineJoin.Value = StrokeLineJoin.Value;
-            clone.StrokeDashArray.Value = StrokeDashArray.Value;
-            clone.StrokeMiterLimit.Value = StrokeMiterLimit.Value;
-            return clone;
-        }
+    public override Type GetViewType()
+    {
+        return typeof(Path);
+    }
 
-        #endregion //IClonable
+    #region IClonable
 
-        public override void OpenPropertyDialog()
-        {
-            var dialogService = new DialogService((App.Current as PrismApplication).Container as IContainerExtension);
-            IDialogResult result = null;
-            dialogService.Show(nameof(DetailPolygon), new DialogParameters() { { "ViewModel", this } }, ret => result = ret);
-        }
+    public override object Clone()
+    {
+        var clone = new NPolygonViewModel();
+        clone.Owner = Owner;
+        clone.Data.Value = Data.Value;
+        clone.Left.Value = Left.Value;
+        clone.Top.Value = Top.Value;
+        clone.Width.Value = Width.Value;
+        clone.Height.Value = Height.Value;
+        clone.EdgeBrush.Value = EdgeBrush.Value;
+        clone.FillBrush.Value = FillBrush.Value;
+        clone.EdgeThickness.Value = EdgeThickness.Value;
+        clone.RotationAngle.Value = RotationAngle.Value;
+        clone.StrokeLineJoin.Value = StrokeLineJoin.Value;
+        clone.StrokeDashArray.Value = StrokeDashArray.Value;
+        clone.StrokeMiterLimit.Value = StrokeMiterLimit.Value;
+        return clone;
+    }
+
+    #endregion //IClonable
+
+    public override void OpenPropertyDialog()
+    {
+        var dialogService =
+            new DialogService((Application.Current as PrismApplication).Container as IContainerExtension);
+        IDialogResult result = null;
+        dialogService.Show(nameof(DetailPolygon), new DialogParameters { { "ViewModel", this } }, ret => result = ret);
     }
 }

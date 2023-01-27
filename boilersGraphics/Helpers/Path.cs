@@ -1,29 +1,27 @@
-﻿using NLog;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
+using Windows.Storage;
+using NLog;
 
-namespace boilersGraphics.Helpers
+namespace boilersGraphics.Helpers;
+
+public static class Path
 {
-    public static class Path
+    public static string GetRoamingDirectory()
     {
-        public static string GetRoamingDirectory()
+        var path = string.Empty;
+        try
         {
-            string path = string.Empty;
-            try
-            {
-                var roamingDir = Windows.Storage.ApplicationData.Current.RoamingFolder;
-                path = roamingDir.Path;
-                LogManager.GetCurrentClassLogger().Debug($"Successed Windows.Storage.ApplicationData.Current.RoamingFolder.");
-            }
-            catch (Exception)
-            {
-                path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-                LogManager.GetCurrentClassLogger().Debug($"Failed Windows.Storage.ApplicationData.Current.RoamingFolder.");
-            }
-            return path;
+            var roamingDir = ApplicationData.Current.RoamingFolder;
+            path = roamingDir.Path;
+            LogManager.GetCurrentClassLogger()
+                .Debug("Successed Windows.Storage.ApplicationData.Current.RoamingFolder.");
         }
+        catch (Exception)
+        {
+            path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            LogManager.GetCurrentClassLogger().Debug("Failed Windows.Storage.ApplicationData.Current.RoamingFolder.");
+        }
+
+        return path;
     }
 }

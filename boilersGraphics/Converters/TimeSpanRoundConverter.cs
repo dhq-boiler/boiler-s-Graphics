@@ -1,22 +1,21 @@
-﻿using boilersGraphics.Extensions;
-using System;
+﻿using System;
 using System.Globalization;
 using System.Windows.Data;
+using boilersGraphics.Extensions;
 
-namespace boilersGraphics.Converters
+namespace boilersGraphics.Converters;
+
+internal class TimeSpanRoundConverter : IValueConverter
 {
-    class TimeSpanRoundConverter : IValueConverter
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            var timeSpan = (TimeSpan)value;
-            var result = timeSpan.Truncate(TimeSpan.FromSeconds(1));
-            return result;
-        }
+        var timeSpan = (TimeSpan)value;
+        var result = timeSpan.Truncate(TimeSpan.FromSeconds(1));
+        return result;
+    }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
     }
 }

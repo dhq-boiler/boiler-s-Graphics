@@ -1,8 +1,4 @@
-﻿using boilersGraphics.Controls;
-using boilersGraphics.Extensions;
-using boilersGraphics.ViewModels;
-using NLog;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,433 +6,441 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
+using boilersGraphics.Adorners;
+using boilersGraphics.Controls;
+using boilersGraphics.Extensions;
+using boilersGraphics.ViewModels;
+using NLog;
 
-namespace boilersGraphics.Helpers
+namespace boilersGraphics.Helpers;
+
+internal class SnapAction
 {
-    class SnapAction
+    public enum SnapResult
     {
-        private MultiDictionary<Point, Adorner> _adorners;
+        Snapped,
+        NoSnap
+    }
 
-        public SnapAction()
+    private readonly MultiDictionary<Point, Adorner> _adorners;
+    private SnapResult _SnapResult = SnapResult.NoSnap;
+
+    private SnapPointPosition _SnapToEdge;
+
+    public SnapAction()
+    {
+        _adorners = new MultiDictionary<Point, Adorner>();
+    }
+
+    private SelectableDesignerItemViewModelBase _SnapTargetDataContext { get; set; }
+
+    public void SnapIntersectionOfEllipseAndTangent(IEnumerable<NEllipseViewModel> ellipses, Point beginPoint,
+        Point endPoint, List<Tuple<Point, object>> appendIntersectionPoints)
+    {
+        foreach (var ellipse in ellipses)
         {
-            _adorners = new MultiDictionary<Point, Adorner>();
-        }
-
-        public enum SnapResult
-        {
-            Snapped,
-            NoSnap
-        }
-
-        private SnapPointPosition _SnapToEdge;
-        private SnapResult _SnapResult = SnapResult.NoSnap;
-        private SelectableDesignerItemViewModelBase _SnapTargetDataContext { get; set; }
-
-        public void SnapIntersectionOfEllipseAndTangent(IEnumerable<NEllipseViewModel> ellipses, Point beginPoint, Point endPoint, List<Tuple<Point, object>> appendIntersectionPoints)
-        {
-            foreach (var ellipse in ellipses)
+            var snapPower = (Application.Current.MainWindow.DataContext as MainWindowViewModel).SnapPower.Value;
+            var array = new ConcurrentBag<Tuple<Point[], double>>();
+            Parallel.For((int)-snapPower, (int)snapPower, y =>
             {
-                var snapPower = (App.Current.MainWindow.DataContext as MainWindowViewModel).SnapPower.Value;
-                var array = new ConcurrentBag<Tuple<Point[], double>>();
-                Parallel.For((int)-snapPower, (int)snapPower, (y) =>
+                for (var x = -snapPower; x < snapPower; x++)
                 {
-                    for (double x = -snapPower; x < snapPower; x++)
-                    {
-                        var tuple = Intersection.FindEllipseSegmentIntersectionsSupportRotation(ellipse, beginPoint, new Point(endPoint.X + x, endPoint.Y + y), false);
-                        array.Add(tuple);
-                    }
-                });
-                var minDiscriminant = array.FirstOrDefault(x => Math.Abs(x.Item2) == array.Min(x => Math.Abs(x.Item2)));
-                if (minDiscriminant != null && minDiscriminant.Item1.Count() == 1)
-                {
-                    appendIntersectionPoints.Add(new Tuple<Point, object>(minDiscriminant.Item1.First(), ellipse));
+                    var tuple = Intersection.FindEllipseSegmentIntersectionsSupportRotation(ellipse, beginPoint,
+                        new Point(endPoint.X + x, endPoint.Y + y), false);
+                    array.Add(tuple);
                 }
-            }
+            });
+            var minDiscriminant = array.FirstOrDefault(x => Math.Abs(x.Item2) == array.Min(x => Math.Abs(x.Item2)));
+            if (minDiscriminant != null && minDiscriminant.Item1.Count() == 1)
+                appendIntersectionPoints.Add(new Tuple<Point, object>(minDiscriminant.Item1.First(), ellipse));
         }
+    }
 
-        public void SnapIntersectionOfPieAndTangent(IEnumerable<NPieViewModel> pies, Point beginPoint, Point endPoint, List<Tuple<Point, object>> appendIntersectionPoints)
+    public void SnapIntersectionOfPieAndTangent(IEnumerable<NPieViewModel> pies, Point beginPoint, Point endPoint,
+        List<Tuple<Point, object>> appendIntersectionPoints)
+    {
+        foreach (var pie in pies)
         {
-            foreach (var pie in pies)
+            var snapPower = (Application.Current.MainWindow.DataContext as MainWindowViewModel).SnapPower.Value;
+            var array = new ConcurrentBag<Tuple<Point[], double>>();
+            Parallel.For((int)-snapPower, (int)snapPower, y =>
             {
-                var snapPower = (App.Current.MainWindow.DataContext as MainWindowViewModel).SnapPower.Value;
-                var array = new ConcurrentBag<Tuple<Point[], double>>();
-                Parallel.For((int)-snapPower, (int)snapPower, (y) =>
+                for (var x = -snapPower; x < snapPower; x++)
                 {
-                    for (double x = -snapPower; x < snapPower; x++)
-                    {
-                        var tuple = Intersection.FindPieSegmentIntersectionsSupportRotationLong(pie, beginPoint, new Point(endPoint.X + x, endPoint.Y + y), false);
-                        array.Add(tuple);
-                    }
-                });
-                var minDiscriminant = array.FirstOrDefault(x => Math.Abs(x.Item2) == array.Min(x => Math.Abs(x.Item2)));
-                if (minDiscriminant != null && minDiscriminant.Item1.Count() == 1)
-                {
-                    appendIntersectionPoints.Add(new Tuple<Point, object>(minDiscriminant.Item1.First(), pie));
+                    var tuple = Intersection.FindPieSegmentIntersectionsSupportRotationLong(pie, beginPoint,
+                        new Point(endPoint.X + x, endPoint.Y + y), false);
+                    array.Add(tuple);
                 }
+            });
+            var minDiscriminant = array.FirstOrDefault(x => Math.Abs(x.Item2) == array.Min(x => Math.Abs(x.Item2)));
+            if (minDiscriminant != null && minDiscriminant.Item1.Count() == 1)
+                appendIntersectionPoints.Add(new Tuple<Point, object>(minDiscriminant.Item1.First(), pie));
 
-                if (pie.Distance.Value - pie.DonutWidth.Value < 10) continue; //短い半径が短すぎる場合、接線の交点を計算しない
+            if (pie.Distance.Value - pie.DonutWidth.Value < 10) continue; //短い半径が短すぎる場合、接線の交点を計算しない
 
-                Parallel.For((int)-snapPower, (int)snapPower, (y) =>
+            Parallel.For((int)-snapPower, (int)snapPower, y =>
+            {
+                for (var x = -snapPower; x < snapPower; x++)
                 {
-                    for (double x = -snapPower; x < snapPower; x++)
-                    {
-                        var tuple = Intersection.FindPieSegmentIntersectionsSupportRotationShort(pie, beginPoint, new Point(endPoint.X + x, endPoint.Y + y), false);
-                        array.Add(tuple);
-                    }
-                });
-                minDiscriminant = array.FirstOrDefault(x => Math.Abs(x.Item2) == array.Min(x => Math.Abs(x.Item2)));
-                if (minDiscriminant != null && minDiscriminant.Item1.Count() == 1)
-                {
-                    appendIntersectionPoints.Add(new Tuple<Point, object>(minDiscriminant.Item1.First(), pie));
+                    var tuple = Intersection.FindPieSegmentIntersectionsSupportRotationShort(pie, beginPoint,
+                        new Point(endPoint.X + x, endPoint.Y + y), false);
+                    array.Add(tuple);
                 }
-            }
+            });
+            minDiscriminant = array.FirstOrDefault(x => Math.Abs(x.Item2) == array.Min(x => Math.Abs(x.Item2)));
+            if (minDiscriminant != null && minDiscriminant.Item1.Count() == 1)
+                appendIntersectionPoints.Add(new Tuple<Point, object>(minDiscriminant.Item1.First(), pie));
         }
+    }
 
-        public void OnMouseMove(ref Point currentPoint, List<Tuple<Point, object>> appendIntersectionPoints = null)
+    public void OnMouseMove(ref Point currentPoint, List<Tuple<Point, object>> appendIntersectionPoints = null)
+    {
+        var mainWindowVM = Application.Current.MainWindow.DataContext as MainWindowViewModel;
+        var designerCanvas = Application.Current.MainWindow.GetChildOfType<DesignerCanvas>();
+        var diagramVM = mainWindowVM.DiagramViewModel;
+        if (diagramVM.EnablePointSnap.Value)
         {
-            var mainWindowVM = (App.Current.MainWindow.DataContext as MainWindowViewModel);
-            var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-            var diagramVM = mainWindowVM.DiagramViewModel;
-            if (diagramVM.EnablePointSnap.Value)
+            var snapPoints = diagramVM.GetSnapPoints(currentPoint).ToList();
+            var hitTestResult = designerCanvas.InputHitTest(currentPoint);
+            if (!(hitTestResult is FrameworkElement)) return;
+            var dataContext = (hitTestResult as FrameworkElement).DataContext;
+            if (appendIntersectionPoints != null)
+                snapPoints.AddRange(from x in appendIntersectionPoints
+                    select new Tuple<SnapPoint, Point>(CreateSnapPoint(x.Item1, x.Item2), x.Item1));
+            Tuple<SnapPoint, Point> snapped = null;
+            foreach (var snapPoint in snapPoints)
+                if (currentPoint.X > snapPoint.Item2.X - mainWindowVM.SnapPower.Value
+                    && currentPoint.X < snapPoint.Item2.X + mainWindowVM.SnapPower.Value
+                    && currentPoint.Y > snapPoint.Item2.Y - mainWindowVM.SnapPower.Value
+                    && currentPoint.Y < snapPoint.Item2.Y + mainWindowVM.SnapPower.Value)
+                {
+                    //スナップする座標を一時変数へ保存
+                    snapped = snapPoint;
+                    _SnapToEdge = snapPoint.Item1.SnapPointPosition;
+                    _SnapTargetDataContext = snapPoint.Item1.DataContext as SelectableDesignerItemViewModelBase;
+                    break;
+                }
+
+            //スナップした場合
+            if (snapped != null)
             {
-                var snapPoints = diagramVM.GetSnapPoints(currentPoint).ToList();
-                var hitTestResult = designerCanvas.InputHitTest(currentPoint);
-                if (!(hitTestResult is FrameworkElement)) return;
-                var dataContext = (hitTestResult as FrameworkElement).DataContext;
-                if (appendIntersectionPoints != null)
-                    snapPoints.AddRange(from x in appendIntersectionPoints select new Tuple<SnapPoint, Point>(CreateSnapPoint(x.Item1, x.Item2), x.Item1));
-                Tuple<SnapPoint, Point> snapped = null;
-                foreach (var snapPoint in snapPoints)
-                {
-                    if (currentPoint.X > snapPoint.Item2.X - mainWindowVM.SnapPower.Value
-                     && currentPoint.X < snapPoint.Item2.X + mainWindowVM.SnapPower.Value
-                     && currentPoint.Y > snapPoint.Item2.Y - mainWindowVM.SnapPower.Value
-                     && currentPoint.Y < snapPoint.Item2.Y + mainWindowVM.SnapPower.Value)
+                var adornerLayer = AdornerLayer.GetAdornerLayer(designerCanvas);
+                RemoveFromAdornerLayerAndDictionary(snapped.Item2, adornerLayer);
+
+                //ドラッグ終了座標を一時変数で上書きしてスナップ
+                currentPoint = snapped.Item2;
+                if (adornerLayer != null)
+                    if (!_adorners.ContainsKey(snapped.Item2))
                     {
-                        //スナップする座標を一時変数へ保存
-                        snapped = snapPoint;
-                        _SnapToEdge = snapPoint.Item1.SnapPointPosition;
-                        _SnapTargetDataContext = snapPoint.Item1.DataContext as SelectableDesignerItemViewModelBase;
-                        break;
-                    }
-                }
-
-                //スナップした場合
-                if (snapped != null)
-                {
-                    AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(designerCanvas);
-                    RemoveFromAdornerLayerAndDictionary(snapped.Item2, adornerLayer);
-
-                    //ドラッグ終了座標を一時変数で上書きしてスナップ
-                    currentPoint = snapped.Item2;
-                    if (adornerLayer != null)
-                    {
-                        if (!_adorners.ContainsKey(snapped.Item2))
-                        {
-                            var adorner = new Adorners.SnapPointAdorner(designerCanvas, snapped.Item2, _SnapTargetDataContext.SnapPointSize.Value, _SnapTargetDataContext.ThumbThickness.Value);
-                            if (adorner != null)
-                            {
-                                adornerLayer.Add(adorner);
-
-                                //ディクショナリに記憶する
-                                _adorners.Add(snapped.Item2, adorner);
-                            }
-
-                            if (snapped.Item1.SnapPointPosition == SnapPointPosition.Intersection)
-                            {
-                                var auxiliaryLine = new Adorners.AuxiliaryLine(designerCanvas, (snapped.Item1.DataContext as NEllipseViewModel).CenterPoint.Value, snapped.Item2);
-                                if (auxiliaryLine != null)
-                                {
-                                    adornerLayer.Add(auxiliaryLine);
-
-                                    //ディクショナリに記憶する
-                                    _adorners.Add(snapped.Item2, auxiliaryLine);
-                                }
-                            }
-                        }
-                    }
-                    _SnapResult = SnapResult.Snapped;
-                }
-                else //スナップしなかった場合
-                {
-                    RemoveAllAdornerFromAdornerLayerAndDictionary(designerCanvas);
-                    _SnapResult = SnapResult.NoSnap;
-
-                    if (appendIntersectionPoints != null && appendIntersectionPoints.Count() > 0)
-                    {
-                        AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(designerCanvas);
-                        var adorner = new Adorners.SnapPointAdorner(designerCanvas, appendIntersectionPoints.First().Item1, (appendIntersectionPoints.First().Item2 as SelectableDesignerItemViewModelBase).SnapPointSize.Value, (appendIntersectionPoints.First().Item2 as SelectableDesignerItemViewModelBase).ThumbThickness.Value);
+                        var adorner = new SnapPointAdorner(designerCanvas, snapped.Item2,
+                            _SnapTargetDataContext.SnapPointSize.Value, _SnapTargetDataContext.ThumbThickness.Value);
                         if (adorner != null)
                         {
                             adornerLayer.Add(adorner);
 
                             //ディクショナリに記憶する
-                            _adorners.Add(appendIntersectionPoints.First().Item1, adorner);
+                            _adorners.Add(snapped.Item2, adorner);
                         }
-                    }
-                }
-            }
-        }
 
-        public void OnMouseMove(ref Point currentPoint, Vector vec, List<Tuple<Point, object>> appendIntersectionPoints = null)
-        {
-            var mainWindowVM = (App.Current.MainWindow.DataContext as MainWindowViewModel);
-            var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-            var diagramVM = mainWindowVM.DiagramViewModel;
-            if (diagramVM.EnablePointSnap.Value)
-            {
-                var snapPoints = diagramVM.GetSnapPoints(currentPoint).ToList();
-                var hit = designerCanvas.InputHitTest(currentPoint) as FrameworkElement;
-                if (hit == null)
-                    return;
-                var dataContext = hit.DataContext;
-                if (appendIntersectionPoints != null)
-                    snapPoints.AddRange(from x in appendIntersectionPoints select new Tuple<SnapPoint, Point>(CreateSnapPoint(x.Item1, x.Item2), x.Item1));
-                Tuple<SnapPoint, Point> snapped = null;
-                foreach (var snapPoint in snapPoints)
-                {
-                    if (currentPoint.X > snapPoint.Item2.X - mainWindowVM.SnapPower.Value
-                     && currentPoint.X < snapPoint.Item2.X + mainWindowVM.SnapPower.Value
-                     && currentPoint.Y > snapPoint.Item2.Y - mainWindowVM.SnapPower.Value
-                     && currentPoint.Y < snapPoint.Item2.Y + mainWindowVM.SnapPower.Value)
-                    {
-                        //スナップする座標を一時変数へ保存
-                        snapped = snapPoint;
-                        _SnapToEdge = snapPoint.Item1.SnapPointPosition;
-                        _SnapTargetDataContext = snapPoint.Item1.DataContext as SelectableDesignerItemViewModelBase;
-                        break;
-                    }
-                }
-
-                //スナップした場合
-                if (snapped != null)
-                {
-                    AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(designerCanvas);
-                    RemoveFromAdornerLayerAndDictionary(snapped.Item2, adornerLayer);
-
-                    //ドラッグ終了座標を一時変数で上書きしてスナップ
-                    currentPoint = snapped.Item2;
-                    if (adornerLayer != null)
-                    {
-                        if (!_adorners.ContainsKey(snapped.Item2))
+                        if (snapped.Item1.SnapPointPosition == SnapPointPosition.Intersection)
                         {
-                            var adorner = new Adorners.SnapPointAdorner(designerCanvas, snapped.Item2, _SnapTargetDataContext.SnapPointSize.Value, _SnapTargetDataContext.ThumbThickness.Value);
-                            if (adorner != null)
+                            var auxiliaryLine = new AuxiliaryLine(designerCanvas,
+                                (snapped.Item1.DataContext as NEllipseViewModel).CenterPoint.Value, snapped.Item2);
+                            if (auxiliaryLine != null)
                             {
-                                adornerLayer.Add(adorner);
+                                adornerLayer.Add(auxiliaryLine);
 
                                 //ディクショナリに記憶する
-                                _adorners.Add(snapped.Item2, adorner);
-                            }
-
-                            if (snapped.Item1.SnapPointPosition == SnapPointPosition.Intersection)
-                            {
-                                var gradient = -1 / (vec.Y / vec.X);
-                                var x0 = snapped.Item2.X;
-                                var y0 = snapped.Item2.Y;
-                                Func<double, double> f = (x) => gradient * (x - x0) + y0;
-                                var auxiliaryLine = new Adorners.AuxiliaryLine(designerCanvas, new Point(x0 - 50, f(x0 - 50)), new Point(x0 + 50, f(x0 + 50)));
-                                if (auxiliaryLine != null)
-                                {
-                                    adornerLayer.Add(auxiliaryLine);
-
-                                    //ディクショナリに記憶する
-                                    _adorners.Add(snapped.Item2, auxiliaryLine);
-                                }
+                                _adorners.Add(snapped.Item2, auxiliaryLine);
                             }
                         }
                     }
-                    _SnapResult = SnapResult.Snapped;
-                }
-                else //スナップしなかった場合
+
+                _SnapResult = SnapResult.Snapped;
+            }
+            else //スナップしなかった場合
+            {
+                RemoveAllAdornerFromAdornerLayerAndDictionary(designerCanvas);
+                _SnapResult = SnapResult.NoSnap;
+
+                if (appendIntersectionPoints != null && appendIntersectionPoints.Count() > 0)
                 {
-                    RemoveAllAdornerFromAdornerLayerAndDictionary(designerCanvas);
-                    _SnapResult = SnapResult.NoSnap;
-
-                    if (appendIntersectionPoints != null && appendIntersectionPoints.Count() > 0)
+                    var adornerLayer = AdornerLayer.GetAdornerLayer(designerCanvas);
+                    var adorner = new SnapPointAdorner(designerCanvas, appendIntersectionPoints.First().Item1,
+                        (appendIntersectionPoints.First().Item2 as SelectableDesignerItemViewModelBase).SnapPointSize
+                        .Value,
+                        (appendIntersectionPoints.First().Item2 as SelectableDesignerItemViewModelBase).ThumbThickness
+                        .Value);
+                    if (adorner != null)
                     {
-                        AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(designerCanvas);
-                        var adorner = new Adorners.SnapPointAdorner(designerCanvas, appendIntersectionPoints.First().Item1, (appendIntersectionPoints.First().Item2 as SelectableDesignerItemViewModelBase).SnapPointSize.Value, (appendIntersectionPoints.First().Item2 as SelectableDesignerItemViewModelBase).ThumbThickness.Value);
-                        if (adorner != null)
-                        {
-                            adornerLayer.Add(adorner);
+                        adornerLayer.Add(adorner);
 
-                            //ディクショナリに記憶する
-                            _adorners.Add(appendIntersectionPoints.First().Item1, adorner);
-                        }
+                        //ディクショナリに記憶する
+                        _adorners.Add(appendIntersectionPoints.First().Item1, adorner);
                     }
                 }
             }
         }
+    }
 
-        public void OnMouseMove(ref Point currentPoint, SnapPoint movingSnapPoint, Vector vec, List<Tuple<Point, object>> appendIntersectionPoints = null)
+    public void OnMouseMove(ref Point currentPoint, Vector vec,
+        List<Tuple<Point, object>> appendIntersectionPoints = null)
+    {
+        var mainWindowVM = Application.Current.MainWindow.DataContext as MainWindowViewModel;
+        var designerCanvas = Application.Current.MainWindow.GetChildOfType<DesignerCanvas>();
+        var diagramVM = mainWindowVM.DiagramViewModel;
+        if (diagramVM.EnablePointSnap.Value)
         {
-            var mainWindowVM = (App.Current.MainWindow.DataContext as MainWindowViewModel);
-            var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-            var diagramVM = mainWindowVM.DiagramViewModel;
-            if (diagramVM.EnablePointSnap.Value)
-            {
-                var snapPoints = diagramVM.GetSnapPoints(new SnapPoint[] { movingSnapPoint }).ToList();
-                if (appendIntersectionPoints != null)
-                    snapPoints.AddRange(from x in appendIntersectionPoints select new Tuple<SnapPoint, Point>(CreateSnapPoint(x.Item1, x.Item2), x.Item1));
-                Tuple<SnapPoint, Point> snapped = null;
-                foreach (var snapPoint in snapPoints)
-                {
-                    if (currentPoint.X > snapPoint.Item2.X - mainWindowVM.SnapPower.Value
-                     && currentPoint.X < snapPoint.Item2.X + mainWindowVM.SnapPower.Value
-                     && currentPoint.Y > snapPoint.Item2.Y - mainWindowVM.SnapPower.Value
-                     && currentPoint.Y < snapPoint.Item2.Y + mainWindowVM.SnapPower.Value)
-                    {
-                        //スナップする座標を一時変数へ保存
-                        snapped = snapPoint;
-                        _SnapToEdge = snapPoint.Item1.SnapPointPosition;
-                        _SnapTargetDataContext = snapPoint.Item1.DataContext as SelectableDesignerItemViewModelBase;
-                        break;
-                    }
-                }
-
-                //スナップした場合
-                if (snapped != null)
-                {
-                    AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(designerCanvas);
-                    RemoveFromAdornerLayerAndDictionary(snapped.Item2, adornerLayer);
-
-                    //ドラッグ終了座標を一時変数で上書きしてスナップ
-                    currentPoint = snapped.Item2;
-                    Canvas.SetLeft(movingSnapPoint, currentPoint.X - movingSnapPoint.Width / 2);
-                    Canvas.SetTop(movingSnapPoint, currentPoint.Y - movingSnapPoint.Height / 2);
-
-                    if (adornerLayer != null)
-                    {
-                        if (!_adorners.ContainsKey(snapped.Item2))
-                        {
-                            var adorner = new Adorners.SnapPointAdorner(designerCanvas, snapped.Item2, _SnapTargetDataContext.SnapPointSize.Value, _SnapTargetDataContext.ThumbThickness.Value);
-                            if (adorner != null)
-                            {
-                                adornerLayer.Add(adorner);
-
-                                //ディクショナリに記憶する
-                                _adorners.Add(snapped.Item2, adorner);
-                            }
-
-                            if (snapped.Item1.SnapPointPosition == SnapPointPosition.Intersection)
-                            {
-                                var gradient = -1 / (vec.Y / vec.X);
-                                var x0 = snapped.Item2.X;
-                                var y0 = snapped.Item2.Y;
-                                Func<double, double> f = (x) => gradient * (x - x0) + y0;
-                                var auxiliaryLine = new Adorners.AuxiliaryLine(designerCanvas, new Point(x0 - 50, f(x0 - 50)), new Point(x0 + 50, f(x0 + 50)));
-                                if (auxiliaryLine != null)
-                                {
-                                    adornerLayer.Add(auxiliaryLine);
-
-                                    //ディクショナリに記憶する
-                                    _adorners.Add(snapped.Item2, auxiliaryLine);
-                                }
-                            }
-                        }
-                    }
-                    _SnapResult = SnapResult.Snapped;
-                }
-                else //スナップしなかった場合
-                {
-                    RemoveAllAdornerFromAdornerLayerAndDictionary(designerCanvas);
-                    _SnapResult = SnapResult.NoSnap;
-                }
-            }
-        }
-
-        private SnapPoint CreateSnapPoint(Point point, object dataContext)
-        {
-            var snapPoint = new SnapPoint();
-            snapPoint.DataContext = dataContext;
-            snapPoint.SetValue(Canvas.LeftProperty, point.X);
-            snapPoint.SetValue(Canvas.TopProperty, point.Y);
-            snapPoint.SnapPointPosition = SnapPointPosition.Intersection;
-            return snapPoint;
-        }
-
-        public void OnMouseUp(Adorner targetAdorner)
-        {
-            var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-            // remove this adorner from adorner layer
-            AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(designerCanvas);
-            if (adornerLayer != null)
-            {
-                if (targetAdorner != null)
-                {
-                    adornerLayer.Remove(targetAdorner);
-                }
-
-                foreach (var adorner in _adorners)
-                    foreach (var remove in adorner.Value)
-                        adornerLayer.Remove(remove);
-
-                _adorners.Clear();
-            }
-        }
-
-        public void PostProcess(SnapPointPosition snapPointEdge, SelectableDesignerItemViewModelBase item)
-        {
-            if (_SnapTargetDataContext == null)
-            {
-                LogManager.GetCurrentClassLogger().Debug("_SnapTargetDataContext == null");
+            var snapPoints = diagramVM.GetSnapPoints(currentPoint).ToList();
+            var hit = designerCanvas.InputHitTest(currentPoint) as FrameworkElement;
+            if (hit == null)
                 return;
-            }
-
-            if (_SnapResult == SnapResult.Snapped)
-            {
-                switch (snapPointEdge)
+            var dataContext = hit.DataContext;
+            if (appendIntersectionPoints != null)
+                snapPoints.AddRange(from x in appendIntersectionPoints
+                    select new Tuple<SnapPoint, Point>(CreateSnapPoint(x.Item1, x.Item2), x.Item1));
+            Tuple<SnapPoint, Point> snapped = null;
+            foreach (var snapPoint in snapPoints)
+                if (currentPoint.X > snapPoint.Item2.X - mainWindowVM.SnapPower.Value
+                    && currentPoint.X < snapPoint.Item2.X + mainWindowVM.SnapPower.Value
+                    && currentPoint.Y > snapPoint.Item2.Y - mainWindowVM.SnapPower.Value
+                    && currentPoint.Y < snapPoint.Item2.Y + mainWindowVM.SnapPower.Value)
                 {
-                    case SnapPointPosition.Left:
-                    case SnapPointPosition.LeftTop:
-                    case SnapPointPosition.Top:
-                    case SnapPointPosition.RightTop:
-                    case SnapPointPosition.Right:
-                    case SnapPointPosition.RightBottom:
-                    case SnapPointPosition.Bottom:
-                    case SnapPointPosition.LeftBottom:
-                        (item as DesignerItemViewModelBase).SnapObjs.Add(_SnapTargetDataContext.Connect(_SnapToEdge, snapPointEdge, item));
-                        break;
-                    case SnapPointPosition.BeginEdge:
-                        (item as ConnectorBaseViewModel).SnapPoint0VM.Value.SnapObjs.Add(_SnapTargetDataContext.Connect(_SnapToEdge, SnapPointPosition.BeginEdge, item));
-                        break;
-                    case SnapPointPosition.EndEdge:
-                        (item as ConnectorBaseViewModel).SnapPoint1VM.Value.SnapObjs.Add(_SnapTargetDataContext.Connect(_SnapToEdge, SnapPointPosition.EndEdge, item));
-                        break;
+                    //スナップする座標を一時変数へ保存
+                    snapped = snapPoint;
+                    _SnapToEdge = snapPoint.Item1.SnapPointPosition;
+                    _SnapTargetDataContext = snapPoint.Item1.DataContext as SelectableDesignerItemViewModelBase;
+                    break;
                 }
-            }
-        }
 
-        private void RemoveAllAdornerFromAdornerLayerAndDictionary(DesignerCanvas designerCanvas)
-        {
-            AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(designerCanvas);
-            var removes = _adorners.ToList();
-
-            removes.ForEach(x =>
+            //スナップした場合
+            if (snapped != null)
             {
+                var adornerLayer = AdornerLayer.GetAdornerLayer(designerCanvas);
+                RemoveFromAdornerLayerAndDictionary(snapped.Item2, adornerLayer);
+
+                //ドラッグ終了座標を一時変数で上書きしてスナップ
+                currentPoint = snapped.Item2;
                 if (adornerLayer != null)
+                    if (!_adorners.ContainsKey(snapped.Item2))
+                    {
+                        var adorner = new SnapPointAdorner(designerCanvas, snapped.Item2,
+                            _SnapTargetDataContext.SnapPointSize.Value, _SnapTargetDataContext.ThumbThickness.Value);
+                        if (adorner != null)
+                        {
+                            adornerLayer.Add(adorner);
+
+                            //ディクショナリに記憶する
+                            _adorners.Add(snapped.Item2, adorner);
+                        }
+
+                        if (snapped.Item1.SnapPointPosition == SnapPointPosition.Intersection)
+                        {
+                            var gradient = -1 / (vec.Y / vec.X);
+                            var x0 = snapped.Item2.X;
+                            var y0 = snapped.Item2.Y;
+                            Func<double, double> f = x => gradient * (x - x0) + y0;
+                            var auxiliaryLine = new AuxiliaryLine(designerCanvas, new Point(x0 - 50, f(x0 - 50)),
+                                new Point(x0 + 50, f(x0 + 50)));
+                            if (auxiliaryLine != null)
+                            {
+                                adornerLayer.Add(auxiliaryLine);
+
+                                //ディクショナリに記憶する
+                                _adorners.Add(snapped.Item2, auxiliaryLine);
+                            }
+                        }
+                    }
+
+                _SnapResult = SnapResult.Snapped;
+            }
+            else //スナップしなかった場合
+            {
+                RemoveAllAdornerFromAdornerLayerAndDictionary(designerCanvas);
+                _SnapResult = SnapResult.NoSnap;
+
+                if (appendIntersectionPoints != null && appendIntersectionPoints.Count() > 0)
                 {
-                    foreach (var remove in x.Value)
-                        adornerLayer.Remove(remove);
+                    var adornerLayer = AdornerLayer.GetAdornerLayer(designerCanvas);
+                    var adorner = new SnapPointAdorner(designerCanvas, appendIntersectionPoints.First().Item1,
+                        (appendIntersectionPoints.First().Item2 as SelectableDesignerItemViewModelBase).SnapPointSize
+                        .Value,
+                        (appendIntersectionPoints.First().Item2 as SelectableDesignerItemViewModelBase).ThumbThickness
+                        .Value);
+                    if (adorner != null)
+                    {
+                        adornerLayer.Add(adorner);
+
+                        //ディクショナリに記憶する
+                        _adorners.Add(appendIntersectionPoints.First().Item1, adorner);
+                    }
                 }
-                _adorners.Remove(x.Key);
-            });
+            }
+        }
+    }
+
+    public void OnMouseMove(ref Point currentPoint, SnapPoint movingSnapPoint, Vector vec,
+        List<Tuple<Point, object>> appendIntersectionPoints = null)
+    {
+        var mainWindowVM = Application.Current.MainWindow.DataContext as MainWindowViewModel;
+        var designerCanvas = Application.Current.MainWindow.GetChildOfType<DesignerCanvas>();
+        var diagramVM = mainWindowVM.DiagramViewModel;
+        if (diagramVM.EnablePointSnap.Value)
+        {
+            var snapPoints = diagramVM.GetSnapPoints(new[] { movingSnapPoint }).ToList();
+            if (appendIntersectionPoints != null)
+                snapPoints.AddRange(from x in appendIntersectionPoints
+                    select new Tuple<SnapPoint, Point>(CreateSnapPoint(x.Item1, x.Item2), x.Item1));
+            Tuple<SnapPoint, Point> snapped = null;
+            foreach (var snapPoint in snapPoints)
+                if (currentPoint.X > snapPoint.Item2.X - mainWindowVM.SnapPower.Value
+                    && currentPoint.X < snapPoint.Item2.X + mainWindowVM.SnapPower.Value
+                    && currentPoint.Y > snapPoint.Item2.Y - mainWindowVM.SnapPower.Value
+                    && currentPoint.Y < snapPoint.Item2.Y + mainWindowVM.SnapPower.Value)
+                {
+                    //スナップする座標を一時変数へ保存
+                    snapped = snapPoint;
+                    _SnapToEdge = snapPoint.Item1.SnapPointPosition;
+                    _SnapTargetDataContext = snapPoint.Item1.DataContext as SelectableDesignerItemViewModelBase;
+                    break;
+                }
+
+            //スナップした場合
+            if (snapped != null)
+            {
+                var adornerLayer = AdornerLayer.GetAdornerLayer(designerCanvas);
+                RemoveFromAdornerLayerAndDictionary(snapped.Item2, adornerLayer);
+
+                //ドラッグ終了座標を一時変数で上書きしてスナップ
+                currentPoint = snapped.Item2;
+                Canvas.SetLeft(movingSnapPoint, currentPoint.X - movingSnapPoint.Width / 2);
+                Canvas.SetTop(movingSnapPoint, currentPoint.Y - movingSnapPoint.Height / 2);
+
+                if (adornerLayer != null)
+                    if (!_adorners.ContainsKey(snapped.Item2))
+                    {
+                        var adorner = new SnapPointAdorner(designerCanvas, snapped.Item2,
+                            _SnapTargetDataContext.SnapPointSize.Value, _SnapTargetDataContext.ThumbThickness.Value);
+                        if (adorner != null)
+                        {
+                            adornerLayer.Add(adorner);
+
+                            //ディクショナリに記憶する
+                            _adorners.Add(snapped.Item2, adorner);
+                        }
+
+                        if (snapped.Item1.SnapPointPosition == SnapPointPosition.Intersection)
+                        {
+                            var gradient = -1 / (vec.Y / vec.X);
+                            var x0 = snapped.Item2.X;
+                            var y0 = snapped.Item2.Y;
+                            Func<double, double> f = x => gradient * (x - x0) + y0;
+                            var auxiliaryLine = new AuxiliaryLine(designerCanvas, new Point(x0 - 50, f(x0 - 50)),
+                                new Point(x0 + 50, f(x0 + 50)));
+                            if (auxiliaryLine != null)
+                            {
+                                adornerLayer.Add(auxiliaryLine);
+
+                                //ディクショナリに記憶する
+                                _adorners.Add(snapped.Item2, auxiliaryLine);
+                            }
+                        }
+                    }
+
+                _SnapResult = SnapResult.Snapped;
+            }
+            else //スナップしなかった場合
+            {
+                RemoveAllAdornerFromAdornerLayerAndDictionary(designerCanvas);
+                _SnapResult = SnapResult.NoSnap;
+            }
+        }
+    }
+
+    private SnapPoint CreateSnapPoint(Point point, object dataContext)
+    {
+        var snapPoint = new SnapPoint();
+        snapPoint.DataContext = dataContext;
+        snapPoint.SetValue(Canvas.LeftProperty, point.X);
+        snapPoint.SetValue(Canvas.TopProperty, point.Y);
+        snapPoint.SnapPointPosition = SnapPointPosition.Intersection;
+        return snapPoint;
+    }
+
+    public void OnMouseUp(Adorner targetAdorner)
+    {
+        var designerCanvas = Application.Current.MainWindow.GetChildOfType<DesignerCanvas>();
+        // remove this adorner from adorner layer
+        var adornerLayer = AdornerLayer.GetAdornerLayer(designerCanvas);
+        if (adornerLayer != null)
+        {
+            if (targetAdorner != null) adornerLayer.Remove(targetAdorner);
+
+            foreach (var adorner in _adorners)
+            foreach (var remove in adorner.Value)
+                adornerLayer.Remove(remove);
+
+            _adorners.Clear();
+        }
+    }
+
+    public void PostProcess(SnapPointPosition snapPointEdge, SelectableDesignerItemViewModelBase item)
+    {
+        if (_SnapTargetDataContext == null)
+        {
+            LogManager.GetCurrentClassLogger().Debug("_SnapTargetDataContext == null");
+            return;
         }
 
-        private void RemoveFromAdornerLayerAndDictionary(Point? snapped, AdornerLayer adornerLayer)
-        {
-            var removes = _adorners.Where(x => x.Key != snapped)
-                                                       .ToList();
-            removes.ForEach(x =>
+        if (_SnapResult == SnapResult.Snapped)
+            switch (snapPointEdge)
             {
-                if (adornerLayer != null)
-                {
-                    foreach (var remove in x.Value)
-                        adornerLayer.Remove(remove);
-                }
-                _adorners.Remove(x.Key);
-            });
-        }
+                case SnapPointPosition.Left:
+                case SnapPointPosition.LeftTop:
+                case SnapPointPosition.Top:
+                case SnapPointPosition.RightTop:
+                case SnapPointPosition.Right:
+                case SnapPointPosition.RightBottom:
+                case SnapPointPosition.Bottom:
+                case SnapPointPosition.LeftBottom:
+                    (item as DesignerItemViewModelBase).SnapObjs.Add(
+                        _SnapTargetDataContext.Connect(_SnapToEdge, snapPointEdge, item));
+                    break;
+                case SnapPointPosition.BeginEdge:
+                    (item as ConnectorBaseViewModel).SnapPoint0VM.Value.SnapObjs.Add(
+                        _SnapTargetDataContext.Connect(_SnapToEdge, SnapPointPosition.BeginEdge, item));
+                    break;
+                case SnapPointPosition.EndEdge:
+                    (item as ConnectorBaseViewModel).SnapPoint1VM.Value.SnapObjs.Add(
+                        _SnapTargetDataContext.Connect(_SnapToEdge, SnapPointPosition.EndEdge, item));
+                    break;
+            }
+    }
+
+    private void RemoveAllAdornerFromAdornerLayerAndDictionary(DesignerCanvas designerCanvas)
+    {
+        var adornerLayer = AdornerLayer.GetAdornerLayer(designerCanvas);
+        var removes = _adorners.ToList();
+
+        removes.ForEach(x =>
+        {
+            if (adornerLayer != null)
+                foreach (var remove in x.Value)
+                    adornerLayer.Remove(remove);
+            _adorners.Remove(x.Key);
+        });
+    }
+
+    private void RemoveFromAdornerLayerAndDictionary(Point? snapped, AdornerLayer adornerLayer)
+    {
+        var removes = _adorners.Where(x => x.Key != snapped)
+            .ToList();
+        removes.ForEach(x =>
+        {
+            if (adornerLayer != null)
+                foreach (var remove in x.Value)
+                    adornerLayer.Remove(remove);
+            _adorners.Remove(x.Key);
+        });
     }
 }

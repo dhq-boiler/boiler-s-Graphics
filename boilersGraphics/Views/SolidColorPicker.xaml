@@ -50,7 +50,8 @@
                                 <Setter TargetName="Ellipse" Property="Fill" Value="{StaticResource DarkBrush}" />
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="false">
-                                <Setter TargetName="Ellipse" Property="Fill" Value="{StaticResource DisabledBackgroundBrush}" />
+                                <Setter TargetName="Ellipse" Property="Fill"
+                                        Value="{StaticResource DisabledBackgroundBrush}" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -912,17 +913,20 @@
                                 <Label.Style>
                                     <Style TargetType="{x:Type Label}">
                                         <Style.Triggers>
-                                            <DataTrigger Binding="{Binding ColorPalleteVisibility.Value}" Value="Visible">
+                                            <DataTrigger Binding="{Binding ColorPalleteVisibility.Value}"
+                                                         Value="Visible">
                                                 <Setter Property="Content" Value="▲" />
                                             </DataTrigger>
-                                            <DataTrigger Binding="{Binding ColorPalleteVisibility.Value}" Value="Collapsed">
+                                            <DataTrigger Binding="{Binding ColorPalleteVisibility.Value}"
+                                                         Value="Collapsed">
                                                 <Setter Property="Content" Value="▼" />
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
                                 </Label.Style>
                             </Label>
-                            <Image RenderOptions.BitmapScalingMode="HighQuality" Source="pack://application:,,,/Assets/img/art-pallete.png" />
+                            <Image RenderOptions.BitmapScalingMode="HighQuality"
+                                   Source="pack://application:,,,/Assets/img/art-pallete.png" />
                         </StackPanel>
                     </Button>
                     <DockPanel />
@@ -931,4 +935,3 @@
         </DockPanel>
     </DockPanel>
 </UserControl>
-

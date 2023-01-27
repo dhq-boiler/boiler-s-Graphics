@@ -3,27 +3,26 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Markup;
 
-namespace boilersGraphics.Views
+namespace boilersGraphics.Views;
+
+[ContentProperty("Items")]
+internal class ItemsControlTemplateSelector : DataTemplateSelector
 {
-    [ContentProperty("Items")]
-    internal class ItemsControlTemplateSelector : DataTemplateSelector
+    public ItemsControlTemplateSelector()
     {
-        public List<DataTemplate> Items { get; set; }
+        Items = new List<DataTemplate>();
+    }
 
-        public ItemsControlTemplateSelector()
-        {
-            Items = new List<DataTemplate>();
-        }
+    public List<DataTemplate> Items { get; set; }
 
-        public override DataTemplate SelectTemplate(object item, DependencyObject container)
-        {
-            if (item == null)
-                return null;
+    public override DataTemplate SelectTemplate(object item, DependencyObject container)
+    {
+        if (item == null)
+            return null;
 
-            var template = Items.Find(s => item.GetType().Equals(s.DataType));
-            if (template != null) return template;
+        var template = Items.Find(s => item.GetType().Equals(s.DataType));
+        if (template != null) return template;
 
-            return base.SelectTemplate(item, container);
-        }
+        return base.SelectTemplate(item, container);
     }
 }

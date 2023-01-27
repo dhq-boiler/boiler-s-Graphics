@@ -1,33 +1,28 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Data;
 
-namespace boilersGraphics.Converters
-{
-    public class IntToStringConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return value.ToString();
-        }
+namespace boilersGraphics.Converters;
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+public class IntToStringConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        return value.ToString();
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        var str = value as string;
+        if (string.IsNullOrEmpty(str))
+            return 0;
+        try
         {
-            var str = value as string;
-            if (string.IsNullOrEmpty(str))
-                return 0;
-            try
-            {
-                return int.Parse(str);
-            }
-            catch (FormatException)
-            {
-                return 0;
-            }
+            return int.Parse(str);
+        }
+        catch (FormatException)
+        {
+            return 0;
         }
     }
 }

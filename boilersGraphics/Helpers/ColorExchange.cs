@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Media;
+﻿using System.Windows.Media;
 
-namespace boilersGraphics.Helpers
+namespace boilersGraphics.Helpers;
+
+public class ColorExchange
 {
-    public class ColorExchange
-    {
-        public Brush Old { get; set; }
-        public Brush New { get; set; }
-    }
+    public Brush Old { get; set; }
+    public Brush New { get; set; }
 }

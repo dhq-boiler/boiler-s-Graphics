@@ -1,32 +1,28 @@
-﻿using boilersGraphics.Extensions;
+﻿using System;
+using System.Data;
+using boilersGraphics.Extensions;
 using boilersGraphics.Models;
 using Homura.ORM;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace boilersGraphics.Dao
+namespace boilersGraphics.Dao;
+
+internal class TerminalInfoDao : Dao<TerminalInfo>
 {
-    internal class TerminalInfoDao : Dao<TerminalInfo>
+    public TerminalInfoDao()
     {
-        public TerminalInfoDao()
-            : base()
-        { }
+    }
 
-        public TerminalInfoDao(Type entityVersionType)
-            : base(entityVersionType)
-        { }
+    public TerminalInfoDao(Type entityVersionType)
+        : base(entityVersionType)
+    {
+    }
 
-        protected override TerminalInfo ToEntity(IDataRecord reader)
+    protected override TerminalInfo ToEntity(IDataRecord reader)
+    {
+        return new TerminalInfo
         {
-            return new TerminalInfo()
-            {
-                ID = reader.SafeGetGuid("ID", Table),
-                TerminalId = reader.SafeGetGuid("TerminalId", Table),
-            };
-        }
+            ID = reader.SafeGetGuid("ID", Table),
+            TerminalId = reader.SafeGetGuid("TerminalId", Table)
+        };
     }
 }

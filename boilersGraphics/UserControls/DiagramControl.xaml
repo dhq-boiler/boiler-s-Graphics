@@ -3,14 +3,11 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:attached="clr-namespace:boilersGraphics.AttachedProperties"
-    xmlns:behavior="clr-namespace:boilersGraphics.Views.Behaviors"
-    xmlns:boilersGraphics="clr-namespace:boilersGraphics"
     xmlns:c="clr-namespace:CalcBinding;assembly=CalcBinding"
     xmlns:control="clr-namespace:boilersGraphics.Controls"
     xmlns:converter="clr-namespace:boilersGraphics.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:helper="clr-namespace:boilersGraphics.Helpers"
-    xmlns:helpers="clr-namespace:boilersGraphics.Helpers"
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:local="clr-namespace:boilersGraphics.UserControls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -27,7 +24,8 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/Theme.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/Themes/DarkTheme.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/boilersGraphics;component/Resources/Themes/DarkTheme.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
             <converter:ToPointCollectionConverter x:Key="ToPointCollection" />
@@ -95,25 +93,32 @@
                         VerticalScrollBarVisibility="Auto">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="PreviewMouseWheel">
-                                <helper:EventToCommand Command="{Binding MouseWheelCommand}" PassEventArgsToCommand="True" />
+                                <helper:EventToCommand Command="{Binding MouseWheelCommand}"
+                                                       PassEventArgsToCommand="True" />
                             </i:EventTrigger>
                             <i:EventTrigger EventName="PreviewMouseDown">
-                                <helper:EventToCommand Command="{Binding PreviewMouseDownCommand}" PassEventArgsToCommand="True" />
+                                <helper:EventToCommand Command="{Binding PreviewMouseDownCommand}"
+                                                       PassEventArgsToCommand="True" />
                             </i:EventTrigger>
                             <i:EventTrigger EventName="PreviewMouseUp">
-                                <helper:EventToCommand Command="{Binding PreviewMouseUpCommand}" PassEventArgsToCommand="True" />
+                                <helper:EventToCommand Command="{Binding PreviewMouseUpCommand}"
+                                                       PassEventArgsToCommand="True" />
                             </i:EventTrigger>
                             <i:EventTrigger EventName="MouseMove">
-                                <helper:EventToCommand Command="{Binding MouseMoveCommand}" PassEventArgsToCommand="True" />
+                                <helper:EventToCommand Command="{Binding MouseMoveCommand}"
+                                                       PassEventArgsToCommand="True" />
                             </i:EventTrigger>
                             <i:EventTrigger EventName="MouseLeave">
-                                <helper:EventToCommand Command="{Binding MouseLeaveCommand}" PassEventArgsToCommand="True" />
+                                <helper:EventToCommand Command="{Binding MouseLeaveCommand}"
+                                                       PassEventArgsToCommand="True" />
                             </i:EventTrigger>
                             <i:EventTrigger EventName="MouseEnter">
-                                <helper:EventToCommand Command="{Binding MouseEnterCommand}" PassEventArgsToCommand="True" />
+                                <helper:EventToCommand Command="{Binding MouseEnterCommand}"
+                                                       PassEventArgsToCommand="True" />
                             </i:EventTrigger>
                             <i:EventTrigger EventName="PreviewKeyDown">
-                                <helper:EventToCommand Command="{Binding PreviewKeyDownCommand}" PassEventArgsToCommand="True" />
+                                <helper:EventToCommand Command="{Binding PreviewKeyDownCommand}"
+                                                       PassEventArgsToCommand="True" />
                             </i:EventTrigger>
                             <i:EventTrigger EventName="Loaded">
                                 <helper:EventToCommand Command="{Binding LoadedCommand}" PassEventArgsToCommand="True" />
@@ -167,13 +172,15 @@
                                     <Setter Property="Canvas.Top" Value="{c:Binding Top.Value}" />
                                     <Setter Property="Canvas.Left" Value="{c:Binding Left.Value}" />
                                     <Setter Property="Panel.ZIndex" Value="{Binding ZIndex.Value}" />
-                                    <Setter Property="attached:SelectionProps.EnabledForSelection" Value="{Binding EnableForSelection.Value}" />
+                                    <Setter Property="attached:SelectionProps.EnabledForSelection"
+                                            Value="{Binding EnableForSelection.Value}" />
                                     <Setter Property="attached:ItemConnectProps.EnabledForConnection" Value="True" />
                                     <Setter Property="Width" Value="{c:Binding Width.Value}" />
                                     <Setter Property="Height" Value="{c:Binding Height.Value}" />
                                     <Setter Property="MaxWidth" Value="{x:Static sys:Double.PositiveInfinity}" />
                                     <Setter Property="MaxHeight" Value="{x:Static sys:Double.PositiveInfinity}" />
-                                    <Setter Property="Visibility" Value="{Binding IsVisible.Value, Converter={StaticResource BoolToVisibilityConverter}}" />
+                                    <Setter Property="Visibility"
+                                            Value="{Binding IsVisible.Value, Converter={StaticResource BoolToVisibilityConverter}}" />
                                     <Setter Property="SnapsToDevicePixels" Value="True" />
                                     <Setter Property="IsHitTestVisible" Value="{Binding IsHitTestVisible.Value}" />
                                     <Setter Property="ContentTemplate">
@@ -205,10 +212,14 @@
                                                         <ContentPresenter.Style>
                                                             <Style TargetType="{x:Type ContentPresenter}">
                                                                 <Style.Triggers>
-                                                                    <DataTrigger Binding="{Binding Converter={StaticResource Obj2TypeConverter}}" Value="{x:Type viewModel:NEllipseViewModel}">
+                                                                    <DataTrigger
+                                                                        Binding="{Binding Converter={StaticResource Obj2TypeConverter}}"
+                                                                        Value="{x:Type viewModel:NEllipseViewModel}">
                                                                         <Setter Property="RenderTransform">
                                                                             <Setter.Value>
-                                                                                <TranslateTransform X="{c:Binding HalfEdgeThickness.Value}" Y="{c:Binding HalfEdgeThickness.Value}" />
+                                                                                <TranslateTransform
+                                                                                    X="{c:Binding HalfEdgeThickness.Value}"
+                                                                                    Y="{c:Binding HalfEdgeThickness.Value}" />
                                                                             </Setter.Value>
                                                                         </Setter>
                                                                     </DataTrigger>
@@ -225,10 +236,12 @@
                                                 </Grid>
                                                 <DataTemplate.Triggers>
                                                     <DataTrigger Binding="{Binding IsSelected.Value}" Value="True">
-                                                        <Setter TargetName="PART_ResizeDecorator" Property="Visibility" Value="Visible" />
+                                                        <Setter TargetName="PART_ResizeDecorator" Property="Visibility"
+                                                                Value="Visible" />
                                                     </DataTrigger>
                                                     <DataTrigger Binding="{Binding IsSelected.Value}" Value="False">
-                                                        <Setter TargetName="PART_ResizeDecorator" Property="Visibility" Value="Hidden" />
+                                                        <Setter TargetName="PART_ResizeDecorator" Property="Visibility"
+                                                                Value="Hidden" />
                                                     </DataTrigger>
                                                 </DataTemplate.Triggers>
                                             </DataTemplate>
@@ -242,8 +255,10 @@
                                     <Setter Property="Canvas.Top" Value="{Binding Area.Top}" />
                                     <Setter Property="Canvas.Left" Value="{Binding Area.Left}" />
                                     <Setter Property="Panel.ZIndex" Value="{Binding ZIndex.Value}" />
-                                    <Setter Property="Visibility" Value="{Binding IsVisible.Value, Converter={StaticResource BoolToVisibilityConverter}}" />
-                                    <Setter Property="attached:SelectionProps.EnabledForSelection" Value="{Binding EnableForSelection.Value}" />
+                                    <Setter Property="Visibility"
+                                            Value="{Binding IsVisible.Value, Converter={StaticResource BoolToVisibilityConverter}}" />
+                                    <Setter Property="attached:SelectionProps.EnabledForSelection"
+                                            Value="{Binding EnableForSelection.Value}" />
                                     <Setter Property="IsHitTestVisible" Value="{Binding IsHitTestVisible.Value}" />
                                     <Setter Property="ContentTemplateSelector">
                                         <Setter.Value>
@@ -256,10 +271,12 @@
                                                         VerticalAlignment="Stretch">
                                                         <Canvas.Style>
                                                             <Style TargetType="{x:Type Canvas}">
-                                                                <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
+                                                                <Setter Property="RenderTransformOrigin"
+                                                                        Value="0.5,0.5" />
                                                                 <Setter Property="RenderTransform">
                                                                     <Setter.Value>
-                                                                        <MatrixTransform Matrix="{Binding Matrix.Value}" />
+                                                                        <MatrixTransform
+                                                                            Matrix="{Binding Matrix.Value}" />
                                                                     </Setter.Value>
                                                                 </Setter>
                                                             </Style>
@@ -280,11 +297,14 @@
                                                             Y2="{Binding Points[1].Y}">
                                                             <i:Interaction.Triggers>
                                                                 <i:EventTrigger EventName="MouseDown">
-                                                                    <helper:EventToCommand Command="{Binding DataContext.MouseDownStraightLineCommand, ElementName=diagramControl}" CommandParameter="{Binding ElementName=straightline}" />
+                                                                    <helper:EventToCommand
+                                                                        Command="{Binding DataContext.MouseDownStraightLineCommand, ElementName=diagramControl}"
+                                                                        CommandParameter="{Binding ElementName=straightline}" />
                                                                 </i:EventTrigger>
                                                             </i:Interaction.Triggers>
                                                         </Line>
-                                                        <Control x:Name="PART_ResizeDecorator" Template="{StaticResource StraightLineResizeDecoratorTemplate}" />
+                                                        <Control x:Name="PART_ResizeDecorator"
+                                                                 Template="{StaticResource StraightLineResizeDecoratorTemplate}" />
                                                     </Canvas>
                                                 </DataTemplate>
                                                 <DataTemplate DataType="{x:Type viewModel:BezierCurveViewModel}">
@@ -295,10 +315,12 @@
                                                         VerticalAlignment="Stretch">
                                                         <Canvas.Style>
                                                             <Style TargetType="{x:Type Canvas}">
-                                                                <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
+                                                                <Setter Property="RenderTransformOrigin"
+                                                                        Value="0.5,0.5" />
                                                                 <Setter Property="RenderTransform">
                                                                     <Setter.Value>
-                                                                        <MatrixTransform Matrix="{Binding Matrix.Value}" />
+                                                                        <MatrixTransform
+                                                                            Matrix="{Binding Matrix.Value}" />
                                                                     </Setter.Value>
                                                                 </Setter>
                                                             </Style>
@@ -329,10 +351,14 @@
                                                             <Path.Style>
                                                                 <Style TargetType="{x:Type Path}">
                                                                     <Style.Triggers>
-                                                                        <DataTrigger Binding="{Binding Converter={StaticResource Obj2TypeConverter}}" Value="{x:Type viewModel:BezierCurveViewModel}">
+                                                                        <DataTrigger
+                                                                            Binding="{Binding Converter={StaticResource Obj2TypeConverter}}"
+                                                                            Value="{x:Type viewModel:BezierCurveViewModel}">
                                                                             <Setter Property="RenderTransform">
                                                                                 <Setter.Value>
-                                                                                    <TranslateTransform X="{c:Binding -HalfEdgeThickness.Value}" Y="{c:Binding -HalfEdgeThickness.Value}" />
+                                                                                    <TranslateTransform
+                                                                                        X="{c:Binding -HalfEdgeThickness.Value}"
+                                                                                        Y="{c:Binding -HalfEdgeThickness.Value}" />
                                                                                 </Setter.Value>
                                                                             </Setter>
                                                                         </DataTrigger>
@@ -341,7 +367,9 @@
                                                             </Path.Style>
                                                             <i:Interaction.Triggers>
                                                                 <i:EventTrigger EventName="MouseDown">
-                                                                    <helper:EventToCommand Command="{Binding DataContext.MouseDownBezierCurveCommand, ElementName=diagramControl}" CommandParameter="{Binding ElementName=bezierCurve}" />
+                                                                    <helper:EventToCommand
+                                                                        Command="{Binding DataContext.MouseDownBezierCurveCommand, ElementName=diagramControl}"
+                                                                        CommandParameter="{Binding ElementName=bezierCurve}" />
                                                                 </i:EventTrigger>
                                                             </i:Interaction.Triggers>
                                                         </Path>
@@ -358,7 +386,8 @@
                                                             <Path.Data>
                                                                 <PathGeometry>
                                                                     <PathFigure StartPoint="{Binding Points[0]}">
-                                                                        <LineSegment Point="{Binding ControlPoint1.Value}" />
+                                                                        <LineSegment
+                                                                            Point="{Binding ControlPoint1.Value}" />
                                                                     </PathFigure>
                                                                 </PathGeometry>
                                                             </Path.Data>
@@ -375,7 +404,8 @@
                                                             Visibility="Hidden">
                                                             <Path.Data>
                                                                 <PathGeometry>
-                                                                    <PathFigure StartPoint="{Binding ControlPoint2.Value}">
+                                                                    <PathFigure
+                                                                        StartPoint="{Binding ControlPoint2.Value}">
                                                                         <LineSegment Point="{Binding Points[1]}" />
                                                                     </PathFigure>
                                                                 </PathGeometry>
@@ -404,14 +434,19 @@
                                                             Tag="制御点"
                                                             Visibility="Hidden" />
                                                         <!--  PART_ResizeDecorator  -->
-                                                        <Control x:Name="PART_ResizeDecorator" Template="{StaticResource BezierCurveResizeDecoratorTemplate}" />
+                                                        <Control x:Name="PART_ResizeDecorator"
+                                                                 Template="{StaticResource BezierCurveResizeDecoratorTemplate}" />
                                                     </Canvas>
                                                     <DataTemplate.Triggers>
                                                         <DataTrigger Binding="{Binding IsSelected.Value}" Value="True">
-                                                            <Setter TargetName="ControlPoint1" Property="Visibility" Value="Visible" />
-                                                            <Setter TargetName="ControlPoint2" Property="Visibility" Value="Visible" />
-                                                            <Setter TargetName="ControlLine1" Property="Visibility" Value="Visible" />
-                                                            <Setter TargetName="ControlLine2" Property="Visibility" Value="Visible" />
+                                                            <Setter TargetName="ControlPoint1" Property="Visibility"
+                                                                    Value="Visible" />
+                                                            <Setter TargetName="ControlPoint2" Property="Visibility"
+                                                                    Value="Visible" />
+                                                            <Setter TargetName="ControlLine1" Property="Visibility"
+                                                                    Value="Visible" />
+                                                            <Setter TargetName="ControlLine2" Property="Visibility"
+                                                                    Value="Visible" />
                                                         </DataTrigger>
                                                     </DataTemplate.Triggers>
                                                 </DataTemplate>
@@ -423,10 +458,12 @@
                                                         VerticalAlignment="Stretch">
                                                         <Canvas.Style>
                                                             <Style TargetType="{x:Type Canvas}">
-                                                                <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
+                                                                <Setter Property="RenderTransformOrigin"
+                                                                        Value="0.5,0.5" />
                                                                 <Setter Property="RenderTransform">
                                                                     <Setter.Value>
-                                                                        <MatrixTransform Matrix="{Binding Matrix.Value}" />
+                                                                        <MatrixTransform
+                                                                            Matrix="{Binding Matrix.Value}" />
                                                                     </Setter.Value>
                                                                 </Setter>
                                                             </Style>
@@ -447,18 +484,22 @@
                                                             <Path.Data>
                                                                 <PathGeometry>
                                                                     <PathFigure StartPoint="{Binding Points[0]}">
-                                                                        <PolyBezierSegment Points="{Binding Points, Converter={StaticResource ToPointCollection}}" />
+                                                                        <PolyBezierSegment
+                                                                            Points="{Binding Points, Converter={StaticResource ToPointCollection}}" />
                                                                     </PathFigure>
                                                                 </PathGeometry>
                                                             </Path.Data>
                                                             <i:Interaction.Triggers>
                                                                 <i:EventTrigger EventName="MouseDown">
-                                                                    <helper:EventToCommand Command="{Binding DataContext.MouseDownPolyBezierCommand, ElementName=diagramControl}" CommandParameter="{Binding ElementName=polyBezier}" />
+                                                                    <helper:EventToCommand
+                                                                        Command="{Binding DataContext.MouseDownPolyBezierCommand, ElementName=diagramControl}"
+                                                                        CommandParameter="{Binding ElementName=polyBezier}" />
                                                                 </i:EventTrigger>
                                                             </i:Interaction.Triggers>
                                                         </Path>
                                                         <!--  PART_ResizeDecorator  -->
-                                                        <Control x:Name="PART_ResizeDecorator" Template="{StaticResource BezierCurveResizeDecoratorTemplate}" />
+                                                        <Control x:Name="PART_ResizeDecorator"
+                                                                 Template="{StaticResource BezierCurveResizeDecoratorTemplate}" />
                                                     </Canvas>
                                                 </DataTemplate>
                                             </view:ItemsControlTemplateSelector>
@@ -470,7 +511,8 @@
                                     <Setter Property="Canvas.Top" Value="{Binding Top.Value}" />
                                     <Setter Property="Canvas.Left" Value="{Binding Left.Value}" />
                                     <Setter Property="Panel.ZIndex" Value="{Binding ZIndex.Value}" />
-                                    <Setter Property="Visibility" Value="{Binding IsVisible.Value, Converter={StaticResource BoolToVisibilityConverter}}" />
+                                    <Setter Property="Visibility"
+                                            Value="{Binding IsVisible.Value, Converter={StaticResource BoolToVisibilityConverter}}" />
                                 </Style>
 
 
@@ -492,80 +534,98 @@
                         </ItemsControl>
                         <ScrollViewer.ContextMenu>
                             <ContextMenu Visibility="{Binding ContextMenuVisibility.Value}">
-                                <MenuItem Command="{Binding PropertyCommand}" Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.MenuItem_Property, Mode=OneWay}" />
-                                <MenuItem Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Grouping, Mode=OneWay}">
-                                    <MenuItem Command="{Binding GroupCommand}" Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Command_Group, Mode=OneWay}">
+                                <MenuItem Command="{Binding PropertyCommand}"
+                                          Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.MenuItem_Property, Mode=OneWay}" />
+                                <MenuItem
+                                    Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Grouping, Mode=OneWay}">
+                                    <MenuItem Command="{Binding GroupCommand}"
+                                              Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Command_Group, Mode=OneWay}">
                                         <MenuItem.Icon>
                                             <Image Source="{StaticResource Icon_Group}" />
                                         </MenuItem.Icon>
                                     </MenuItem>
-                                    <MenuItem Command="{Binding UngroupCommand}" Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Command_Ungroup, Mode=OneWay}">
+                                    <MenuItem Command="{Binding UngroupCommand}"
+                                              Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Command_Ungroup, Mode=OneWay}">
                                         <MenuItem.Icon>
                                             <Image Source="{StaticResource Icon_Ungroup}" />
                                         </MenuItem.Icon>
                                     </MenuItem>
                                 </MenuItem>
-                                <MenuItem Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Ordering, Mode=OneWay}">
-                                    <MenuItem Command="{Binding BringForegroundCommand}" Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Command_BringForeground, Mode=OneWay}">
+                                <MenuItem
+                                    Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Ordering, Mode=OneWay}">
+                                    <MenuItem Command="{Binding BringForegroundCommand}"
+                                              Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Command_BringForeground, Mode=OneWay}">
                                         <MenuItem.Icon>
                                             <Image Source="{StaticResource Icon_BringToFront}" />
                                         </MenuItem.Icon>
                                     </MenuItem>
-                                    <MenuItem Command="{Binding BringForwardCommand}" Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Command_BringForward, Mode=OneWay}">
+                                    <MenuItem Command="{Binding BringForwardCommand}"
+                                              Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Command_BringForward, Mode=OneWay}">
                                         <MenuItem.Icon>
                                             <Image Source="{StaticResource Icon_BringForward}" />
                                         </MenuItem.Icon>
                                     </MenuItem>
-                                    <MenuItem Command="{Binding SendBackwardCommand}" Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Command_SendBackward, Mode=OneWay}">
+                                    <MenuItem Command="{Binding SendBackwardCommand}"
+                                              Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Command_SendBackward, Mode=OneWay}">
                                         <MenuItem.Icon>
                                             <Image Source="{StaticResource Icon_SendBackward}" />
                                         </MenuItem.Icon>
                                     </MenuItem>
-                                    <MenuItem Command="{Binding SendBackgroundCommand}" Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Command_SendBackground, Mode=OneWay}">
+                                    <MenuItem Command="{Binding SendBackgroundCommand}"
+                                              Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Command_SendBackground, Mode=OneWay}">
                                         <MenuItem.Icon>
                                             <Image Source="{StaticResource Icon_SendToBack}" />
                                         </MenuItem.Icon>
                                     </MenuItem>
                                 </MenuItem>
-                                <MenuItem Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Alignment, Mode=OneWay}">
-                                    <MenuItem Command="{Binding AlignTopCommand}" Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Command_AlignTop, Mode=OneWay}">
+                                <MenuItem
+                                    Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Alignment, Mode=OneWay}">
+                                    <MenuItem Command="{Binding AlignTopCommand}"
+                                              Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Command_AlignTop, Mode=OneWay}">
                                         <MenuItem.Icon>
                                             <Image Source="{StaticResource Icon_AlignTop}" />
                                         </MenuItem.Icon>
                                     </MenuItem>
-                                    <MenuItem Command="{Binding AlignVerticalCenterCommand}" Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Command_AlignVerticalCenter, Mode=OneWay}">
+                                    <MenuItem Command="{Binding AlignVerticalCenterCommand}"
+                                              Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Command_AlignVerticalCenter, Mode=OneWay}">
                                         <MenuItem.Icon>
                                             <Image Source="{StaticResource Icon_AlignCenteredVertical}" />
                                         </MenuItem.Icon>
                                     </MenuItem>
-                                    <MenuItem Command="{Binding AlignBottomCommand}" Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Command_AlignBottom, Mode=OneWay}">
+                                    <MenuItem Command="{Binding AlignBottomCommand}"
+                                              Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Command_AlignBottom, Mode=OneWay}">
                                         <MenuItem.Icon>
                                             <Image Source="{StaticResource Icon_AlignBottom}" />
                                         </MenuItem.Icon>
                                     </MenuItem>
                                     <Separator />
-                                    <MenuItem Command="{Binding AlignLeftCommand}" Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Command_AlignLeft, Mode=OneWay}">
+                                    <MenuItem Command="{Binding AlignLeftCommand}"
+                                              Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Command_AlignLeft, Mode=OneWay}">
                                         <MenuItem.Icon>
                                             <Image Source="{StaticResource Icon_AlignLeft}" />
                                         </MenuItem.Icon>
                                     </MenuItem>
-                                    <MenuItem Command="{Binding AlignHorizontalCenterCommand}" Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Command_AlignHorizontalCenter, Mode=OneWay}">
+                                    <MenuItem Command="{Binding AlignHorizontalCenterCommand}"
+                                              Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Command_AlignHorizontalCenter, Mode=OneWay}">
                                         <MenuItem.Icon>
                                             <Image Source="{StaticResource Icon_AlignCenteredHorizontal}" />
                                         </MenuItem.Icon>
                                     </MenuItem>
-                                    <MenuItem Command="{Binding AlignRightCommand}" Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Command_AlignRight, Mode=OneWay}">
+                                    <MenuItem Command="{Binding AlignRightCommand}"
+                                              Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Command_AlignRight, Mode=OneWay}">
                                         <MenuItem.Icon>
                                             <Image Source="{StaticResource Icon_AlignRight}" />
                                         </MenuItem.Icon>
                                     </MenuItem>
                                     <Separator />
-                                    <MenuItem Command="{Binding DistributeHorizontalCommand}" Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Command_DistributeHorizontal, Mode=OneWay}">
+                                    <MenuItem Command="{Binding DistributeHorizontalCommand}"
+                                              Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Command_DistributeHorizontal, Mode=OneWay}">
                                         <MenuItem.Icon>
                                             <Image Source="{StaticResource Icon_DistributeHorizontal}" />
                                         </MenuItem.Icon>
                                     </MenuItem>
-                                    <MenuItem Command="{Binding DistributeVerticalCommand}" Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Command_DistributeVertical, Mode=OneWay}">
+                                    <MenuItem Command="{Binding DistributeVerticalCommand}"
+                                              Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Command_DistributeVertical, Mode=OneWay}">
                                         <MenuItem.Icon>
                                             <Image Source="{StaticResource Icon_DistributeVertical}" />
                                         </MenuItem.Icon>
