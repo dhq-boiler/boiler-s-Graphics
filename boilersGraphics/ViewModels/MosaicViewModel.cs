@@ -143,11 +143,11 @@ namespace boilersGraphics.ViewModels
 
             Parallel.For(0, srcRows, y =>
             {
-                ProcessRow(mat, y, column, row, p_src, p_dst, channels, destStep, srcStep, srcCols, srcRows);
+                ProcessRow(y, column, row, p_src, p_dst, channels, destStep, srcStep, srcCols, srcRows);
             });
         }
 
-        private unsafe void ProcessRow(Mat mat, int y, double column, double row, byte* p_src, byte* p_dst, int channels, long destStep, long srcStep, int srcCols, int srcRows)
+        private unsafe void ProcessRow(int y, double column, double row, byte* p_src, byte* p_dst, int channels, long destStep, long srcStep, int srcCols, int srcRows)
         {
             var yy = GetMosaicPixelIndex(y, row);
             if (srcRows <= yy)
@@ -173,9 +173,10 @@ namespace boilersGraphics.ViewModels
             }
         }
 
-        private long GetMosaicPixelIndex(int a, double b)
+        private static long GetMosaicPixelIndex(int a, double b)
         {
-            return (long)(0.5 * (Math.Floor((double)a / b) + Math.Ceiling((double)a / b)) * b);
+            var aDivideB = a / b;
+            return (long)(0.5 * (Math.Floor(aDivideB) + Math.Ceiling(aDivideB)) * b);
         }
 
         public override async Task OnRectChanged(System.Windows.Rect rect)
