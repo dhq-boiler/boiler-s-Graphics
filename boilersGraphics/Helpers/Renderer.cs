@@ -39,13 +39,14 @@ namespace boilersGraphics.Helpers
                 DrawingVisual visual = new DrawingVisual();
                 using (DrawingContext context = visual.RenderOpen())
                 {
+                    var allViews = designerCanvas.GetDescendantsViews<FrameworkElement>().ToList();
                     //背景を描画
-                    if (RenderBackgroundViewModel(sliceRect, designerCanvas, context, backgroundItem))
+                    if (RenderBackgroundViewModel(sliceRect, designerCanvas, context, backgroundItem, allViews))
                     {
                         renderedCount++;
                     }
                     //前景を描画
-                    renderedCount += RenderForeground(sliceRect, diagramViewModel, designerCanvas, context, backgroundItem, mosaic);
+                    renderedCount += RenderForeground(sliceRect, diagramViewModel, designerCanvas, context, backgroundItem, allViews, mosaic);
                 }
                 rtb.Render(visual);
                 rtb.Freeze();
@@ -114,15 +115,14 @@ namespace boilersGraphics.Helpers
             return size;
         }
 
-        private static int RenderForeground(Rect? sliceRect, DiagramViewModel diagramViewModel, DesignerCanvas designerCanvas, DrawingContext context, BackgroundViewModel background, DesignerItemViewModelBase mosaic = null)
+        private static int RenderForeground(Rect? sliceRect, DiagramViewModel diagramViewModel, DesignerCanvas designerCanvas, DrawingContext context, BackgroundViewModel background, System.Collections.Generic.List<FrameworkElement> allViews, DesignerItemViewModelBase mosaic = null)
         {
             var renderedCount = 0;
             var except = new SelectableDesignerItemViewModelBase[] { background, mosaic }.Where(x => x is not null);
             foreach (var item in diagramViewModel.AllItems.Value.Except(except).Where(x => x.IsVisible.Value))
             {
                 FrameworkElement view = default(FrameworkElement);
-                var views = designerCanvas.GetCorrespondingViews<FrameworkElement>(item).ToList();
-                view = views.FirstOrDefault(x => x.GetType() == item.GetViewType());
+                view = allViews.FirstOrDefault(x => x.DataContext == item && x.GetType() == item.GetViewType());
                 if (view is null)
                     continue;
                 view.SnapsToDevicePixels = true;
@@ -322,13 +322,12 @@ namespace boilersGraphics.Helpers
             return renderedCount;
         }
 
-        private static bool RenderBackgroundViewModel(Rect? sliceRect, DesignerCanvas designerCanvas, DrawingContext context, BackgroundViewModel background)
+        private static bool RenderBackgroundViewModel(Rect? sliceRect, DesignerCanvas designerCanvas, DrawingContext context, BackgroundViewModel background, System.Collections.Generic.List<FrameworkElement> allViews)
         {
             FrameworkElement view = default(FrameworkElement);
             var result = App.Current.Dispatcher.Invoke(() =>
             {
-                var views = designerCanvas.GetCorrespondingViews<FrameworkElement>(background).ToList();
-                view = views.FirstOrDefault(x => x.GetType() == background.GetViewType());
+                view = allViews.FirstOrDefault(x => x.DataContext == background && x.GetType() == background.GetViewType());
                 if (view is null)
                 {
                     s_logger.Warn($"Not Found: view of {background}");

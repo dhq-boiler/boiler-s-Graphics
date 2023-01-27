@@ -700,6 +700,58 @@ namespace boilersGraphics.Extensions
             }
         }
 
+        public static IEnumerable<T> GetDescendantsViews<T>(this FrameworkElement parent, bool parentInclude = false)
+            where T : FrameworkElement
+        {
+            if (parentInclude)
+            {
+                if (parent is T)
+                    yield return parent as T;
+            }
+
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
+            {
+                var child = VisualTreeHelper.GetChild(parent, i);
+
+                IEnumerable<T> result = default(IEnumerable<T>);
+                if (child is IEnumerable<T> enumerable)
+                {
+                    result = enumerable;
+                }
+                else
+                {
+                    result = FindVisualChildren<T>(child).ToList();
+                }
+                if (result != null)
+                {
+                    foreach (var item in result)
+                    {
+                        if (item != null)
+                            yield return item;
+                    }
+                }
+                var result2 = child as T;
+                if (result2 is not null)
+                {
+                    yield return result2;
+                }
+                else
+                {
+                    var result3 = FindVisualChildren<T>(result2).ToList();
+                    if (result3 is not null)
+                    {
+                        foreach (var item in result3)
+                        {
+                            if (item is not null)
+                            {
+                                yield return item;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         public static IEnumerable<T> GetCorrespondingViews<T>(this FrameworkElement parent, object dataContext, bool parentInclude = false)
             where T : FrameworkElement
         {
