@@ -176,9 +176,9 @@ namespace boilersGraphics.ViewModels
         private static long GetMosaicPixelIndex(int a, double b)
         {
             var aDivideByB = a / b;
-            var floor = 0d;
-            var ceiling = 0d;
             var mod = aDivideByB % 1;
+            double ceiling;
+            double floor;
             if (mod < 0.5)
             {
                 //mod = 0.4 -> 1.4 -> (long)1.4 -> 1
