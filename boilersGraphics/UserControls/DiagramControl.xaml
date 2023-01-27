@@ -34,6 +34,11 @@
             <converter:ObjectToTypeConverter x:Key="Obj2TypeConverter" />
         </ResourceDictionary>
     </UserControl.Resources>
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding OnLoaded}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <Border BorderBrush="LightGray" BorderThickness="1">
         <Grid>
             <DockPanel>

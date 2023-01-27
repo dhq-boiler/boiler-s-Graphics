@@ -49,6 +49,7 @@ namespace boilersGraphics.ViewModels
         private bool _MiddleButtonIsPressed;
         private Point _MousePointerPosition;
         private bool disposedValue;
+        private DesignerCanvas designerCanvas;
 
         public DelegateCommand<object> AddItemCommand { get; private set; }
         public DelegateCommand<object> RemoveItemCommand { get; private set; }
@@ -104,6 +105,7 @@ namespace boilersGraphics.ViewModels
         public DelegateCommand LoadedCommand { get; private set; }
         public DelegateCommand FitCanvasCommand { get; private set; }
         public DelegateCommand ClearCanvasCommand { get; private set; }
+        public ReactiveCommand OnLoaded { get; private set; }
 
         #region Property
 
@@ -184,12 +186,13 @@ namespace boilersGraphics.ViewModels
 
         public int LayerItemCount { get; set; } = 1;
 
+        public DesignerCanvas DesignerCanvas { get; private set; }
+
         public IEnumerable<Tuple<SnapPoint, Point>> SnapPoints
         {
             get
             {
-                var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-                var resizeThumbs = designerCanvas.EnumerateChildOfType<SnapPoint>();
+                var resizeThumbs = DesignerCanvas.EnumerateChildOfType<SnapPoint>();
                 var sets = resizeThumbs
                                 .Select(x => new Tuple<SnapPoint, Point>(x, GetCenter(x)))
                                 .Distinct();
@@ -206,8 +209,7 @@ namespace boilersGraphics.ViewModels
 
         public IEnumerable<Tuple<SnapPoint, Point>> GetSnapPoints(IEnumerable<SnapPoint> exceptSnapPoints)
         {
-            var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-            var resizeThumbs = designerCanvas.EnumerateChildOfType<SnapPoint>();
+            var resizeThumbs = DesignerCanvas.EnumerateChildOfType<SnapPoint>();
             var sets = resizeThumbs
                             .Where(x => !exceptSnapPoints.Contains(x))
                             .Select(x => new Tuple<SnapPoint, Point>(x, GetCenter(x)))
@@ -217,8 +219,7 @@ namespace boilersGraphics.ViewModels
 
         public IEnumerable<Tuple<SnapPoint, Point>> GetSnapPoints(Point exceptPoint)
         {
-            var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-            var resizeThumbs = designerCanvas.EnumerateChildOfType<SnapPoint>();
+            var resizeThumbs = DesignerCanvas.EnumerateChildOfType<SnapPoint>();
             var sets = resizeThumbs
                             .Where(x => x.InputHitTest(exceptPoint) == null)
                             .Select(x => new Tuple<SnapPoint, Point>(x, GetCenter(x)))
@@ -471,6 +472,10 @@ namespace boilersGraphics.ViewModels
                 {
                     InitialSetting(mainWindowViewModel, true, false, false);
                 });
+                OnLoaded = new ReactiveCommand().WithSubscribe(() =>
+                {
+                    DesignerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
+                }).AddTo(_CompositeDisposable);
             }
 
             Layers = RootLayer.Value.Children.CollectionChangedAsObservable()
@@ -779,8 +784,7 @@ namespace boilersGraphics.ViewModels
 
         private Point GetCenter(SnapPoint snapPoint)
         {
-            var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-            var leftTop = snapPoint.TransformToAncestor(designerCanvas).Transform(new Point(0, 0));
+            var leftTop = snapPoint.TransformToAncestor(DesignerCanvas).Transform(new Point(0, 0));
             switch (snapPoint.Tag)
             {
                 case "左上":
@@ -813,14 +817,13 @@ namespace boilersGraphics.ViewModels
         [Conditional("DEBUG")]
         private void DebugPrint(int width, int height, IEnumerable<Tuple<SnapPoint, Point>> sets)
         {
-            var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-            var rtb = new RenderTargetBitmap((int)designerCanvas.ActualWidth, (int)designerCanvas.ActualHeight, 96, 96, PixelFormats.Pbgra32);
+            var rtb = new RenderTargetBitmap((int)DesignerCanvas.ActualWidth, (int)DesignerCanvas.ActualHeight, 96, 96, PixelFormats.Pbgra32);
 
             DrawingVisual visual = new DrawingVisual();
             using (DrawingContext context = visual.RenderOpen())
             {
-                VisualBrush brush = new VisualBrush(designerCanvas);
-                context.DrawRectangle(brush, null, new Rect(new Point(), new Size(designerCanvas.Width, designerCanvas.Height)));
+                VisualBrush brush = new VisualBrush(DesignerCanvas);
+                context.DrawRectangle(brush, null, new Rect(new Point(), new Size(DesignerCanvas.Width, DesignerCanvas.Height)));
 
                 Random rand = new Random();
                 foreach (var set in sets)
@@ -854,20 +857,18 @@ namespace boilersGraphics.ViewModels
             {
                 if (App.Current == null || App.Current.MainWindow == null)
                     return;
-                var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-                if (designerCanvas == null)
+                if (DesignerCanvas is null)
                     return;
-                designerCanvas.Width = width;
+                DesignerCanvas.Width = width;
             })
             .AddTo(_CompositeDisposable);
             BackgroundItem.Value.Height.Subscribe(height =>
             {
                 if (App.Current == null || App.Current.MainWindow == null)
                     return;
-                var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-                if (designerCanvas == null)
+                if (DesignerCanvas is null)
                     return;
-                designerCanvas.Height = height;
+                DesignerCanvas.Height = height;
             })
             .AddTo(_CompositeDisposable);
             mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.Width.Value", 1000d);
