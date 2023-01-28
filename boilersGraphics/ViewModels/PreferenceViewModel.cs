@@ -30,7 +30,7 @@ internal class PreferenceViewModel : BindableBase, IDialogAware, IDisposable
                 RequestClose.Invoke(ret);
             })
             .AddTo(_disposables);
-        ChangeCanvasBackgroundCommand.Subscribe(_ =>
+        ChangeCanvasFillBrushCommand.Subscribe(_ =>
             {
                 IDialogResult result = null;
                 dlgService.ShowDialog(nameof(ColorPicker),
@@ -40,7 +40,7 @@ internal class PreferenceViewModel : BindableBase, IDialogAware, IDisposable
                             "ColorExchange",
                             new ColorExchange
                             {
-                                Old = EditTarget.Value.CanvasBackground.Value
+                                Old = EditTarget.Value.CanvasFillBrush.Value
                             }
                         },
                         {
@@ -53,7 +53,34 @@ internal class PreferenceViewModel : BindableBase, IDialogAware, IDisposable
                 if (result != null)
                 {
                     var exchange = result.Parameters.GetValue<ColorExchange>("ColorExchange");
-                    if (exchange != null) EditTarget.Value.CanvasBackground.Value = exchange.New;
+                    if (exchange != null) EditTarget.Value.CanvasFillBrush.Value = exchange.New;
+                }
+            })
+            .AddTo(_disposables);
+        ChangeCanvasEdgeBrushCommand.Subscribe(_ =>
+            {
+                IDialogResult result = null;
+                dlgService.ShowDialog(nameof(ColorPicker),
+                    new DialogParameters
+                    {
+                        {
+                            "ColorExchange",
+                            new ColorExchange
+                            {
+                                Old = EditTarget.Value.CanvasEdgeBrush.Value
+                            }
+                        },
+                        {
+                            "ColorSpots",
+                            (Application.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel
+                            .ColorSpots.Value
+                        }
+                    },
+                    ret => result = ret);
+                if (result != null)
+                {
+                    var exchange = result.Parameters.GetValue<ColorExchange>("ColorExchange");
+                    if (exchange != null) EditTarget.Value.CanvasEdgeBrush.Value = exchange.New;
                 }
             })
             .AddTo(_disposables);
@@ -77,7 +104,8 @@ internal class PreferenceViewModel : BindableBase, IDialogAware, IDisposable
 
     public ReactivePropertySlim<ReactiveCommand> OkCommand { get; set; } = new();
     public ReactiveCommand CancelCommand { get; set; }
-    public ReactiveCommand ChangeCanvasBackgroundCommand { get; set; } = new();
+    public ReactiveCommand ChangeCanvasFillBrushCommand { get; set; } = new();
+    public ReactiveCommand ChangeCanvasEdgeBrushCommand { get; set; } = new();
 
     public ReactivePropertySlim<Preference> EditTarget { get; set; } = new();
 

@@ -787,13 +787,13 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
         mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "EdgeThickness.Value", 1.0);
         mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "CanvasBorderThickness", 0.0);
         if (initCanvasBackground)
-            mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "CanvasBackground.Value",
+            mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "CanvasFillBrush.Value",
                 Brushes.White as Brush);
         mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value",
             new BackgroundViewModel(this));
         mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.ZIndex.Value", -1);
         mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.FillBrush.Value",
-            CanvasBackground.Value);
+            CanvasFillBrush.Value);
         mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.Left.Value", 0d);
         mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.Top.Value", 0d);
         BackgroundItem.Value.Width.Subscribe(width =>
@@ -1463,8 +1463,9 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                 z.Width.Value = BackgroundItem.Value.Width.Value;
                 z.Height.Value = BackgroundItem.Value.Height.Value;
             });
-        preferences.CanvasBackground.Value = CanvasBackground.Value;
+        preferences.CanvasFillBrush.Value = CanvasFillBrush.Value;
         preferences.CanvasEdgeThickness.Value = BackgroundItem.Value.EdgeThickness.Value;
+        preferences.CanvasEdgeBrush.Value = BackgroundItem.Value.EdgeBrush.Value;
         preferences.EnablePointSnap.Value = EnablePointSnap.Value;
         preferences.SnapPower.Value =
             (Application.Current.MainWindow.DataContext as MainWindowViewModel).SnapPower.Value;
@@ -1478,9 +1479,10 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
         if (result != null && result.Result == ButtonResult.OK)
         {
             var s = result.Parameters.GetValue<Preference>("Preferences");
-            CanvasBackground.Value = s.CanvasBackground.Value;
+            CanvasFillBrush.Value = s.CanvasFillBrush.Value;
             BackgroundItem.Value.EdgeThickness.Value = s.CanvasEdgeThickness.Value;
-            BackgroundItem.Value.FillBrush.Value = CanvasBackground.Value;
+            BackgroundItem.Value.FillBrush.Value = CanvasFillBrush.Value;
+            BackgroundItem.Value.EdgeBrush.Value = s.CanvasEdgeBrush.Value;
             EnablePointSnap.Value = s.EnablePointSnap.Value;
             (Application.Current.MainWindow.DataContext as MainWindowViewModel).SnapPower.Value = s.SnapPower.Value;
             BackgroundItem.Value.Width.Value = s.Width.Value;
@@ -1750,7 +1752,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                 EnableCombine.Dispose();
                 EnableLayers.Dispose();
                 FileName.Dispose();
-                CanvasBackground.Dispose();
+                CanvasFillBrush.Dispose();
                 EnablePointSnap.Dispose();
                 if (_AutoSaveTimerDisposableObj != null)
                     _AutoSaveTimerDisposableObj.Dispose();
@@ -1789,7 +1791,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
 
     public ReactivePropertySlim<string> FileName { get; } = new();
 
-    public ReactivePropertySlim<Brush> CanvasBackground { get; } = new();
+    public ReactivePropertySlim<Brush> CanvasFillBrush { get; } = new();
 
     public ReactivePropertySlim<bool> EnablePointSnap { get; } = new();
 
@@ -2010,9 +2012,9 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
             mainwindowViewModel.Recorder.BeginRecode();
 
             var configuration = root.Element("Configuration");
-            mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "CanvasBackground.Value",
-                WpfObjectSerializer.Deserialize(configuration.Element("CanvasBackground").Nodes().First().ToString()) ??
-                new SolidColorBrush((Color)ColorConverter.ConvertFromString(configuration.Element("CanvasBackground")
+            mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "CanvasFillBrush.Value",
+                WpfObjectSerializer.Deserialize(configuration.Element("CanvasFillBrush").Nodes().First().ToString()) ??
+                new SolidColorBrush((Color)ColorConverter.ConvertFromString(configuration.Element("CanvasFillBrush")
                     .Nodes().First().ToString())));
             mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "EnablePointSnap.Value",
                 bool.Parse(configuration.Element("EnablePointSnap").Value));

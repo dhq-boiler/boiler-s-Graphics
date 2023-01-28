@@ -642,11 +642,14 @@
   <data name="String_Cancel" xml:space="preserve">
     <value>キャンセル</value>
   </data>
-  <data name="String_CanvasBackground" xml:space="preserve">
-    <value>キャンバスの背景色</value>
+  <data name="String_CanvasEdgeBrush" xml:space="preserve">
+    <value>キャンバスのエッジブラシ</value>
   </data>
   <data name="String_CanvasEdgeThickness" xml:space="preserve">
     <value>キャンバスのエッジの太さ</value>
+  </data>
+  <data name="String_CanvasFillBrush" xml:space="preserve">
+    <value>キャンバスの塗りつぶしブラシ</value>
   </data>
   <data name="String_CanvasHeight" xml:space="preserve">
     <value>キャンパスの高さ</value>

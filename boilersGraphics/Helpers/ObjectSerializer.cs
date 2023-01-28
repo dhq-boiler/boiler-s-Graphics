@@ -282,8 +282,8 @@ internal class ObjectSerializer
             new XElement("Top", diagramViewModel.BackgroundItem.Value.Top.Value),
             new XElement("Width", diagramViewModel.BackgroundItem.Value.Width.Value),
             new XElement("Height", diagramViewModel.BackgroundItem.Value.Height.Value),
-            new XElement("CanvasBackground",
-                XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.CanvasBackground.Value))),
+            new XElement("CanvasFillBrush",
+                XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.CanvasFillBrush.Value))),
             new XElement("EnablePointSnap", diagramViewModel.EnablePointSnap.Value),
             new XElement("SnapPower", diagramViewModel.MainWindowVM.SnapPower.Value),
             XElement_ColorSpots(diagramViewModel)

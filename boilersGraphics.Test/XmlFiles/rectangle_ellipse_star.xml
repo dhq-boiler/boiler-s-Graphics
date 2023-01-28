@@ -100,9 +100,9 @@
     <Top>0</Top>
     <Width>1000</Width>
     <Height>1000</Height>
-    <CanvasBackground>
+    <CanvasFillBrush>
       <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
-    </CanvasBackground>
+    </CanvasFillBrush>
     <EnablePointSnap>true</EnablePointSnap>
     <SnapPower>10</SnapPower>
     <ColorSpots>

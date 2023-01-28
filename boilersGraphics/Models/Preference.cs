@@ -10,8 +10,9 @@ internal class Preference : BindableBase
 {
     public ReactivePropertySlim<int> Width { get; set; } = new();
     public ReactivePropertySlim<int> Height { get; set; } = new();
-    public ReactivePropertySlim<Brush> CanvasBackground { get; set; } = new();
+    public ReactivePropertySlim<Brush> CanvasFillBrush { get; set; } = new();
     public ReactivePropertySlim<double> CanvasEdgeThickness { get; set; } = new();
+    public ReactivePropertySlim<Brush> CanvasEdgeBrush { get; set; } = new();
     public ReactivePropertySlim<bool> EnablePointSnap { get; set; } = new();
     public ReactivePropertySlim<double> SnapPower { get; set; } = new();
     public ReactivePropertySlim<bool> EnableAutoSave { get; set; } = new();

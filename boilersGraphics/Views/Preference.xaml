@@ -57,7 +57,7 @@
                     HorizontalContentAlignment="Right"
                     Text="{Binding EditTarget.Value.Height.Value, Converter={StaticResource IntToStringConverter}, UpdateSourceTrigger=PropertyChanged}" />
                 <Label
-                    Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_CanvasBackground, Mode=OneWay}" />
+                    Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_CanvasFillBrush, Mode=OneWay}" />
                 <Grid>
                     <Grid.Background>
                         <VisualBrush
@@ -95,18 +95,18 @@
                             </VisualBrush.Visual>
                         </VisualBrush>
                     </Grid.Background>
-                    <Button Command="{Binding ChangeCanvasBackgroundCommand}"
-                            Content="{Binding EditTarget.Value.CanvasBackground.Value, Converter={StaticResource BrushToStringConverter}}">
+                    <Button Command="{Binding ChangeCanvasFillBrushCommand}"
+                            Content="{Binding EditTarget.Value.CanvasFillBrush.Value, Converter={StaticResource BrushToStringConverter}}">
                         <Button.Style>
                             <Style TargetType="{x:Type Button}">
                                 <Style.Triggers>
                                     <Trigger Property="IsMouseOver" Value="True">
                                         <Setter Property="Background"
-                                                Value="{Binding EditTarget.Value.CanvasBackground.Value}" />
+                                                Value="{Binding EditTarget.Value.CanvasFillBrush.Value}" />
                                     </Trigger>
                                     <Trigger Property="IsMouseOver" Value="False">
                                         <Setter Property="Background"
-                                                Value="{Binding EditTarget.Value.CanvasBackground.Value}" />
+                                                Value="{Binding EditTarget.Value.CanvasFillBrush.Value}" />
                                     </Trigger>
                                 </Style.Triggers>
                             </Style>
@@ -159,6 +159,25 @@
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
+                <Label
+                    Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_CanvasEdgeBrush, Mode=OneWay}" />
+                <Button Command="{Binding ChangeCanvasEdgeBrushCommand}"
+                        Content="{Binding EditTarget.Value.CanvasEdgeBrush.Value, Converter={StaticResource BrushToStringConverter}}">
+                    <Button.Style>
+                        <Style TargetType="{x:Type Button}">
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background"
+                                            Value="{Binding EditTarget.Value.CanvasEdgeBrush.Value}" />
+                                </Trigger>
+                                <Trigger Property="IsMouseOver" Value="False">
+                                    <Setter Property="Background"
+                                            Value="{Binding EditTarget.Value.CanvasEdgeBrush.Value}" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
                 <CheckBox
                     x:Name="enablePointSnap"
                     Margin="5"

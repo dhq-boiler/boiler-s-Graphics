@@ -1636,11 +1636,11 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
-        ///   Canvas Background に類似しているローカライズされた文字列を検索します。
+        ///   Canvas EdgeBrush に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string String_CanvasBackground {
+        public static string String_CanvasEdgeBrush {
             get {
-                return ResourceManager.GetString("String_CanvasBackground", resourceCulture);
+                return ResourceManager.GetString("String_CanvasEdgeBrush", resourceCulture);
             }
         }
         
@@ -1650,6 +1650,15 @@ namespace boilersGraphics.Properties {
         public static string String_CanvasEdgeThickness {
             get {
                 return ResourceManager.GetString("String_CanvasEdgeThickness", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Canvas FillBrush に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_CanvasFillBrush {
+            get {
+                return ResourceManager.GetString("String_CanvasFillBrush", resourceCulture);
             }
         }
         
