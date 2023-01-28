@@ -10,7 +10,6 @@
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:local="clr-namespace:boilersGraphics.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:models="clr-namespace:boilersGraphics.Models"
     xmlns:prism="http://prismlibrary.com/"
     xmlns:views="clr-namespace:boilersGraphics.Views"
     prism:ViewModelLocator.AutoWireViewModel="True"
@@ -35,10 +34,13 @@
                     </Button.Template>
                 </Button>
                 <Label Content="Offset" DockPanel.Dock="Left" />
-                <TextBox Width="50" Text="{Binding Offset.Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DoubleToString}}">
+                <TextBox Width="50"
+                         Text="{Binding Offset.Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DoubleToString}}">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="TextChanged">
-                            <helper:EventToCommand Command="{Binding DataContext.TextChangedCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=local:RadialGradientBrushPicker}}" PassEventArgsToCommand="True" />
+                            <helper:EventToCommand
+                                Command="{Binding DataContext.TextChangedCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=local:RadialGradientBrushPicker}}"
+                                PassEventArgsToCommand="True" />
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </TextBox>
@@ -472,10 +474,12 @@
             </control:SimpleGrid>
         </DockPanel>
         <DockPanel DockPanel.Dock="Left">
-            <Button Command="{Binding PickBrushCommand}" CommandParameter="{Binding DataContext.TargetBrush.Value, RelativeSource={RelativeSource FindAncestor, AncestorType=views:RadialGradientBrushPicker}}">
+            <Button Command="{Binding PickBrushCommand}"
+                    CommandParameter="{Binding DataContext.TargetBrush.Value, RelativeSource={RelativeSource FindAncestor, AncestorType=views:RadialGradientBrushPicker}}">
                 <Button.ContentTemplate>
                     <DataTemplate>
-                        <local:GradientMap Fill="{Binding DataContext.TargetBrush.Value, RelativeSource={RelativeSource FindAncestor, AncestorType=views:RadialGradientBrushPicker}}" />
+                        <local:GradientMap
+                            Fill="{Binding DataContext.TargetBrush.Value, RelativeSource={RelativeSource FindAncestor, AncestorType=views:RadialGradientBrushPicker}}" />
                     </DataTemplate>
                 </Button.ContentTemplate>
             </Button>
@@ -500,17 +504,20 @@
                                 <Label.Style>
                                     <Style TargetType="{x:Type Label}">
                                         <Style.Triggers>
-                                            <DataTrigger Binding="{Binding ColorPalleteVisibility.Value}" Value="Visible">
+                                            <DataTrigger Binding="{Binding ColorPalleteVisibility.Value}"
+                                                         Value="Visible">
                                                 <Setter Property="Content" Value="▲" />
                                             </DataTrigger>
-                                            <DataTrigger Binding="{Binding ColorPalleteVisibility.Value}" Value="Collapsed">
+                                            <DataTrigger Binding="{Binding ColorPalleteVisibility.Value}"
+                                                         Value="Collapsed">
                                                 <Setter Property="Content" Value="▼" />
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
                                 </Label.Style>
                             </Label>
-                            <Image RenderOptions.BitmapScalingMode="HighQuality" Source="pack://application:,,,/Assets/img/art-pallete.png" />
+                            <Image RenderOptions.BitmapScalingMode="HighQuality"
+                                   Source="pack://application:,,,/Assets/img/art-pallete.png" />
                         </StackPanel>
                     </Button>
                     <Button
@@ -528,18 +535,22 @@
                         </Style>
                     </StackPanel.Resources>
                     <Label Content="GradientOrigin:" Foreground="White" />
-                    <TextBox Text="{Binding GradientOrigin.Value, Converter={StaticResource StringToPoint}, UpdateSourceTrigger=PropertyChanged}">
+                    <TextBox
+                        Text="{Binding GradientOrigin.Value, Converter={StaticResource StringToPoint}, UpdateSourceTrigger=PropertyChanged}">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="TextChanged">
-                                <helper:EventToCommand Command="{Binding TextChangedCommand}" PassEventArgsToCommand="True" />
+                                <helper:EventToCommand Command="{Binding TextChangedCommand}"
+                                                       PassEventArgsToCommand="True" />
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                     </TextBox>
                     <Label Content="Center:" Foreground="White" />
-                    <TextBox Text="{Binding Center.Value, Converter={StaticResource StringToPoint}, UpdateSourceTrigger=PropertyChanged}">
+                    <TextBox
+                        Text="{Binding Center.Value, Converter={StaticResource StringToPoint}, UpdateSourceTrigger=PropertyChanged}">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="TextChanged">
-                                <helper:EventToCommand Command="{Binding TextChangedCommand}" PassEventArgsToCommand="True" />
+                                <helper:EventToCommand Command="{Binding TextChangedCommand}"
+                                                       PassEventArgsToCommand="True" />
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                     </TextBox>
@@ -551,18 +562,22 @@
                         </Style>
                     </StackPanel.Resources>
                     <Label Content="RadiusX:" Foreground="White" />
-                    <TextBox Text="{Binding RadiusX.Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DoubleToString}}">
+                    <TextBox
+                        Text="{Binding RadiusX.Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DoubleToString}}">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="TextChanged">
-                                <helper:EventToCommand Command="{Binding TextChangedCommand}" PassEventArgsToCommand="True" />
+                                <helper:EventToCommand Command="{Binding TextChangedCommand}"
+                                                       PassEventArgsToCommand="True" />
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                     </TextBox>
                     <Label Content="RadiusY:" Foreground="White" />
-                    <TextBox Text="{Binding RadiusY.Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DoubleToString}}">
+                    <TextBox
+                        Text="{Binding RadiusY.Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DoubleToString}}">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="TextChanged">
-                                <helper:EventToCommand Command="{Binding TextChangedCommand}" PassEventArgsToCommand="True" />
+                                <helper:EventToCommand Command="{Binding TextChangedCommand}"
+                                                       PassEventArgsToCommand="True" />
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                     </TextBox>
@@ -577,7 +592,8 @@
                 SelectedItem="{Binding SelectedGradientStop.Value}">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="SelectionChanged">
-                        <helper:EventToCommand Command="{Binding SelectionChangedCommand}" PassEventArgsToCommand="True" />
+                        <helper:EventToCommand Command="{Binding SelectionChangedCommand}"
+                                               PassEventArgsToCommand="True" />
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
             </ListView>

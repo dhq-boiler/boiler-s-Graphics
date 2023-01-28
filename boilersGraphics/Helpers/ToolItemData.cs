@@ -1,43 +1,37 @@
-﻿using Prism.Mvvm;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using Microsoft.Xaml.Behaviors;
+﻿using System.Windows.Input;
+using Prism.Mvvm;
 using Reactive.Bindings;
 
-namespace boilersGraphics.Helpers
+namespace boilersGraphics.Helpers;
+
+public class ToolItemData : BindableBase
 {
-    public class ToolItemData : BindableBase
+    private bool _IsChecked;
+
+    public ToolItemData(string name, string imageUrl, ICommand command)
     {
-        private bool _IsChecked;
+        Name.Value = name;
+        ImageUrl = imageUrl;
+        Command = command;
+    }
 
-        public ToolItemData(string name, string imageUrl, ICommand command)
-        {
-            this.Name.Value = name;
-            this.ImageUrl = imageUrl;
-            this.Command = command;
-        }
-        public ToolItemData(string name, string imageUrl, string tooltip, ICommand command)
-        {
-            this.Name.Value = name;
-            this.ImageUrl = imageUrl;
-            this.Command = command;
-            this.Tooltip.Value = tooltip;
-        }
+    public ToolItemData(string name, string imageUrl, string tooltip, ICommand command)
+    {
+        Name.Value = name;
+        ImageUrl = imageUrl;
+        Command = command;
+        Tooltip.Value = tooltip;
+    }
 
-        //public string Name { get; private set; }
-        public ReactivePropertySlim<string> Name { get; private set; } = new ReactivePropertySlim<string>();
-        public string ImageUrl { get; private set; }
-        public ICommand Command { get; private set; }
-        public ReactivePropertySlim<string> Tooltip { get; private set; } = new ReactivePropertySlim<string>();
+    //public string Name { get; private set; }
+    public ReactivePropertySlim<string> Name { get; } = new();
+    public string ImageUrl { get; }
+    public ICommand Command { get; }
+    public ReactivePropertySlim<string> Tooltip { get; } = new();
 
-        public bool IsChecked
-        {
-            get { return _IsChecked; }
-            set { SetProperty(ref _IsChecked, value); }
-        }
+    public bool IsChecked
+    {
+        get => _IsChecked;
+        set => SetProperty(ref _IsChecked, value);
     }
 }

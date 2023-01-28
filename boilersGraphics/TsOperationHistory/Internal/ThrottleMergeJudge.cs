@@ -1,60 +1,58 @@
 ﻿using System;
+using TsOperationHistory.Extensions;
 
-namespace TsOperationHistory.Internal
+namespace TsOperationHistory.Internal;
+
+/// <summary>
+///     識別子とタイムスタンプからマージ可能か判断する
+/// </summary>
+internal class ThrottleMergeJudge<T> : IMergeJudge
 {
-    /// <summary>
-    /// 識別子とタイムスタンプからマージ可能か判断する
-    /// </summary>
-    internal class ThrottleMergeJudge<T> : IMergeJudge
+    public ThrottleMergeJudge(T key, TimeSpan convergeTimeSpan)
     {
-        public T Key { get; }
+        Key = key;
+        ConvergeTimeSpan = convergeTimeSpan;
+    }
 
-        /// <summary>
-        /// マージ間隔
-        /// </summary>
-        public TimeSpan ConvergeTimeSpan { get; set; } 
+    public ThrottleMergeJudge(T key)
+    {
+        Key = key;
+        ConvergeTimeSpan = Operation.DefaultMergeSpan;
+    }
 
-        /// <summary>
-        /// 操作の実行時間
-        /// </summary>
-        private DateTime TimeStamp { get; set; } = DateTime.Now;
+    public T Key { get; }
 
-        public bool CanMerge(IMergeJudge mergeJudge)
+    /// <summary>
+    ///     マージ間隔
+    /// </summary>
+    public TimeSpan ConvergeTimeSpan { get; set; }
+
+    /// <summary>
+    ///     操作の実行時間
+    /// </summary>
+    private DateTime TimeStamp { get; set; } = DateTime.Now;
+
+    public bool CanMerge(IMergeJudge mergeJudge)
+    {
+        if (mergeJudge is ThrottleMergeJudge<T> timeStampMergeInfo)
+            return Equals(Key, timeStampMergeInfo.Key) &&
+                   TimeStamp - timeStampMergeInfo.TimeStamp < ConvergeTimeSpan;
+        return false;
+    }
+
+    public IMergeJudge Update(IMergeJudge prevMergeJudge)
+    {
+        if (prevMergeJudge is ThrottleMergeJudge<T> throttleMergeJudge)
         {
-            if (mergeJudge is ThrottleMergeJudge<T> timeStampMergeInfo)
-            {
-                return Equals(Key, timeStampMergeInfo.Key) &&
-                       TimeStamp - timeStampMergeInfo.TimeStamp < ConvergeTimeSpan;
-            }
-            return false;
+            throttleMergeJudge.TimeStamp = DateTime.Now;
+            return throttleMergeJudge;
         }
 
-        public ThrottleMergeJudge(T key , TimeSpan convergeTimeSpan)
-        {
-            Key = key;
-            ConvergeTimeSpan = convergeTimeSpan;
-        }
+        return this;
+    }
 
-        public ThrottleMergeJudge(T key)
-        {
-            Key = key;
-            ConvergeTimeSpan = Extensions.Operation.DefaultMergeSpan;
-        }
-
-        public IMergeJudge Update(IMergeJudge prevMergeJudge)
-        {
-            if (prevMergeJudge is ThrottleMergeJudge<T> throttleMergeJudge)
-            {
-                throttleMergeJudge.TimeStamp = DateTime.Now;
-                return throttleMergeJudge;
-            }
-
-            return this;
-        }
-
-        public object GetMergeKey()
-        {
-            return Key;
-        }
+    public object GetMergeKey()
+    {
+        return Key;
     }
 }

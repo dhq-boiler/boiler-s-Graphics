@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace boilersGraphics.Helpers;
 
-namespace boilersGraphics.Helpers
+public enum AngleType
 {
-    public enum AngleType
-    {
-        Minus180To180,
-        ZeroTo360
-    }
+    Minus180To180,
+    ZeroTo360
 }

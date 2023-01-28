@@ -1,50 +1,49 @@
-﻿using Prism.Mvvm;
-using System;
+﻿using System;
 using System.Xml.Serialization;
+using Prism.Mvvm;
 
-namespace boilersGraphics.Models
+namespace boilersGraphics.Models;
+
+[Serializable]
+[XmlInclude(typeof(Rectangle))]
+[XmlInclude(typeof(StraightLine))]
+[XmlInclude(typeof(Ellipse))]
+public class RenderItem : BindableBase
 {
-    [Serializable]
-    [XmlInclude(typeof(Rectangle))]
-    [XmlInclude(typeof(StraightLine))]
-    [XmlInclude(typeof(Ellipse))]
-    public class RenderItem : BindableBase
+    private double _Height;
+    private bool _IsSelected;
+    private double _Width;
+    private double _X;
+    private double _Y;
+
+    public double X
     {
-        private double _X;
-        private double _Y;
-        private double _Width;
-        private double _Height;
-        private bool _IsSelected;
+        get => _X;
+        set => SetProperty(ref _X, value);
+    }
 
-        public double X
-        {
-            get { return _X; }
-            set { SetProperty(ref _X, value); }
-        }
+    public double Y
+    {
+        get => _Y;
+        set => SetProperty(ref _Y, value);
+    }
 
-        public double Y
-        {
-            get { return _Y; }
-            set { SetProperty(ref _Y, value); }
-        }
+    public double Width
+    {
+        get => _Width;
+        set => SetProperty(ref _Width, value);
+    }
 
-        public double Width
-        {
-            get { return _Width; }
-            set { SetProperty(ref _Width, value); }
-        }
+    public double Height
+    {
+        get => _Height;
+        set => SetProperty(ref _Height, value);
+    }
 
-        public double Height
-        {
-            get { return _Height; }
-            set { SetProperty(ref _Height, value); }
-        }
-
-        [XmlIgnore]
-        public bool IsSelected
-        {
-            get { return _IsSelected; }
-            set { SetProperty(ref _IsSelected, value); }
-        }
+    [XmlIgnore]
+    public bool IsSelected
+    {
+        get => _IsSelected;
+        set => SetProperty(ref _IsSelected, value);
     }
 }

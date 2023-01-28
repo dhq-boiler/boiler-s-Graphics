@@ -1,25 +1,20 @@
-﻿using NLog;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Data;
+using NLog;
 
-namespace boilersGraphics.Converters
+namespace boilersGraphics.Converters;
+
+internal class LogLevelToBoolConverter : IValueConverter
 {
-    class LogLevelToBoolConverter : IValueConverter
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            var logLevel = (LogLevel)value;
-            return logLevel.ToString() == (string)parameter;
-        }
+        var logLevel = (LogLevel)value;
+        return logLevel.ToString() == (string)parameter;
+    }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
     }
 }

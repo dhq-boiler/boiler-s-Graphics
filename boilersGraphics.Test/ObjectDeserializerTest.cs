@@ -108,7 +108,7 @@ namespace boilersGraphics.Test
     <Configuration>
       <Width>1000</Width>
       <Height>1000</Height>
-      <CanvasBackground>#FFFFFFFF</CanvasBackground>
+      <CanvasFillBrush>#FFFFFFFF</CanvasFillBrush>
       <EnablePointSnap>true</EnablePointSnap>
       <SnapPower>10</SnapPower>
     </Configuration>

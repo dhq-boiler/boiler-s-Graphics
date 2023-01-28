@@ -1,33 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Markup;
 
-namespace boilersGraphics.Views
+namespace boilersGraphics.Views;
+
+[ContentProperty("Items")]
+internal class ComboBoxItemTemplateSelector : DataTemplateSelector
 {
-    [ContentProperty("Items")]
-    internal class ComboBoxItemTemplateSelector : DataTemplateSelector
+    public ComboBoxItemTemplateSelector()
     {
-        public List<DataTemplate> Items { get; set; }
+        Items = new List<DataTemplate>();
+    }
 
-        public ComboBoxItemTemplateSelector()
-        {
-            Items = new List<DataTemplate>();
-        }
+    public List<DataTemplate> Items { get; set; }
 
-        public override DataTemplate SelectTemplate(object item, DependencyObject container)
-        {
-            if (item is null)
-                return null;
+    public override DataTemplate SelectTemplate(object item, DependencyObject container)
+    {
+        if (item is null)
+            return null;
 
-            var template = Items.Find(s => item.GetType().Equals(s.DataType));
-            if (template is not null) return template;
+        var template = Items.Find(s => item.GetType().Equals(s.DataType));
+        if (template is not null) return template;
 
-            return base.SelectTemplate(item, container);
-        }
+        return base.SelectTemplate(item, container);
     }
 }

@@ -1,109 +1,107 @@
-﻿using boilersGraphics.Controls;
-using boilersGraphics.Dao;
-using boilersGraphics.Extensions;
-using boilersGraphics.Models;
-using boilersGraphics.ViewModels;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using boilersGraphics.Controls;
+using boilersGraphics.Dao;
+using boilersGraphics.Extensions;
+using boilersGraphics.Models;
+using boilersGraphics.ViewModels;
 
-namespace boilersGraphics.Adorners
+namespace boilersGraphics.Adorners;
+
+public class LetterVerticalAdorner : Adorner
 {
-    public class LetterVerticalAdorner : Adorner
+    private readonly DesignerCanvas _designerCanvas;
+    private Point? _endPoint;
+    private readonly Pen _rectanglePen;
+    private Point? _startPoint;
+
+    public LetterVerticalAdorner(DesignerCanvas designerCanvas, Point? dragStartPoint)
+        : base(designerCanvas)
     {
-        private Point? _startPoint;
-        private Point? _endPoint;
-        private Pen _rectanglePen;
+        _designerCanvas = designerCanvas;
+        _startPoint = dragStartPoint;
+        var brush = new SolidColorBrush(Colors.Black);
+        brush.Opacity = 0.5;
+        _rectanglePen = new Pen(brush, 1);
+    }
 
-        private DesignerCanvas _designerCanvas;
-
-        public LetterVerticalAdorner(DesignerCanvas designerCanvas, Point? dragStartPoint)
-            : base(designerCanvas)
+    protected override void OnMouseMove(MouseEventArgs e)
+    {
+        if (e.LeftButton == MouseButtonState.Pressed)
         {
-            _designerCanvas = designerCanvas;
-            _startPoint = dragStartPoint;
-            var brush = new SolidColorBrush(Colors.Black);
-            brush.Opacity = 0.5;
-            _rectanglePen = new Pen(brush, 1);
+            if (!IsMouseCaptured)
+                CaptureMouse();
+
+            _endPoint = e.GetPosition(this);
+            InvalidateVisual();
+        }
+        else
+        {
+            if (IsMouseCaptured) ReleaseMouseCapture();
         }
 
-        protected override void OnMouseMove(System.Windows.Input.MouseEventArgs e)
+        e.Handled = true;
+    }
+
+    protected override void OnMouseUp(MouseButtonEventArgs e)
+    {
+        // release mouse capture
+        if (IsMouseCaptured) ReleaseMouseCapture();
+
+        // remove this adorner from adorner layer
+        var adornerLayer = AdornerLayer.GetAdornerLayer(_designerCanvas);
+        if (adornerLayer != null)
+            adornerLayer.Remove(this);
+
+        if (_startPoint.HasValue && _endPoint.HasValue)
         {
-            if (e.LeftButton == MouseButtonState.Pressed)
-            {
-                if (!this.IsMouseCaptured)
-                    this.CaptureMouse();
+            var itemBase = new LetterVerticalDesignerItemViewModel();
+            itemBase.Owner = (AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel;
+            itemBase.Left.Value = Math.Max(0, _startPoint.Value.X);
+            itemBase.Top.Value = Math.Max(0, _startPoint.Value.Y);
+            itemBase.Width.Value = Math.Abs(_endPoint.Value.X - _startPoint.Value.X);
+            itemBase.Height.Value = Math.Abs(_endPoint.Value.Y - _startPoint.Value.Y);
+            itemBase.EdgeBrush.Value = itemBase.Owner.EdgeBrush.Value.Clone();
+            itemBase.EdgeThickness.Value = itemBase.Owner.EdgeThickness.Value.Value;
+            itemBase.FillBrush.Value = itemBase.Owner.FillBrush.Value.Clone();
+            itemBase.IsSelected.Value = true;
+            itemBase.IsVisible.Value = true;
+            itemBase.Owner.DeselectAll();
+            itemBase.ZIndex.Value = itemBase.Owner.Layers
+                .SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).Count();
+            ((AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel).AddItemCommand.Execute(itemBase);
 
-                _endPoint = e.GetPosition(this);
-                this.InvalidateVisual();
-            }
-            else
-            {
-                if (this.IsMouseCaptured) this.ReleaseMouseCapture();
-            }
+            UpdateStatisticsCount();
 
-            e.Handled = true;
-        }
-        protected override void OnMouseUp(System.Windows.Input.MouseButtonEventArgs e)
-        {
-            // release mouse capture
-            if (this.IsMouseCaptured) this.ReleaseMouseCapture();
-
-            // remove this adorner from adorner layer
-            AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(_designerCanvas);
-            if (adornerLayer != null)
-                adornerLayer.Remove(this);
-
-            if (_startPoint.HasValue && _endPoint.HasValue)
-            {
-                LetterVerticalDesignerItemViewModel itemBase = new LetterVerticalDesignerItemViewModel();
-                itemBase.Owner = (AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel;
-                itemBase.Left.Value = Math.Max(0, _startPoint.Value.X);
-                itemBase.Top.Value = Math.Max(0, _startPoint.Value.Y);
-                itemBase.Width.Value = Math.Abs(_endPoint.Value.X - _startPoint.Value.X);
-                itemBase.Height.Value = Math.Abs(_endPoint.Value.Y - _startPoint.Value.Y);
-                itemBase.EdgeBrush.Value = itemBase.Owner.EdgeBrush.Value.Clone();
-                itemBase.EdgeThickness.Value = itemBase.Owner.EdgeThickness.Value.Value;
-                itemBase.FillBrush.Value = itemBase.Owner.FillBrush.Value.Clone();
-                itemBase.IsSelected.Value = true;
-                itemBase.IsVisible.Value = true;
-                itemBase.Owner.DeselectAll();
-                itemBase.ZIndex.Value = itemBase.Owner.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).Count();
-                ((AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel).AddItemCommand.Execute(itemBase);
-
-                UpdateStatisticsCount();
-
-                _startPoint = null;
-                _endPoint = null;
-            }
-
-            (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "";
-            (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = "";
-
-            e.Handled = true;
+            _startPoint = null;
+            _endPoint = null;
         }
 
-        private static void UpdateStatisticsCount()
-        {
-            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
-            statistics.NumberOfDrawsOfTheVerticalLetterTool++;
-            var dao = new StatisticsDao();
-            dao.Update(statistics);
-        }
-        protected override void OnRender(DrawingContext dc)
-        {
-            base.OnRender(dc);
+        (Application.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "";
+        (Application.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = "";
 
-            dc.DrawRectangle(Brushes.Transparent, null, new Rect(RenderSize));
+        e.Handled = true;
+    }
 
-            if (_startPoint.HasValue && _endPoint.HasValue)
-                dc.DrawRectangle(Brushes.Transparent, _rectanglePen, new Rect(_startPoint.Value, _endPoint.Value));
-        }
+    private static void UpdateStatisticsCount()
+    {
+        var statistics = (Application.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+        statistics.NumberOfDrawsOfTheVerticalLetterTool++;
+        var dao = new StatisticsDao();
+        dao.Update(statistics);
+    }
+
+    protected override void OnRender(DrawingContext dc)
+    {
+        base.OnRender(dc);
+
+        dc.DrawRectangle(Brushes.Transparent, null, new Rect(RenderSize));
+
+        if (_startPoint.HasValue && _endPoint.HasValue)
+            dc.DrawRectangle(Brushes.Transparent, _rectanglePen, new Rect(_startPoint.Value, _endPoint.Value));
     }
 }

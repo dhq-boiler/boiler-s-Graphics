@@ -14,7 +14,8 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/Theme.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/Themes/DarkTheme.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/boilersGraphics;component/Resources/Themes/DarkTheme.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <converter:DoubleCollectionToStringConverter x:Key="DoubleCollectionToString" />
         </ResourceDictionary>
@@ -32,14 +33,16 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="100" />
                             <ColumnDefinition Width="1" />
-                            <ColumnDefinition Width="{Binding DataContext.Width.Value, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}" />
+                            <ColumnDefinition
+                                Width="{Binding DataContext.Width.Value, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}" />
                             <ColumnDefinition Width="1" />
                             <ColumnDefinition Width="100" />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="100" />
                             <RowDefinition Height="1" />
-                            <RowDefinition Height="{Binding DataContext.Height.Value, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}" />
+                            <RowDefinition
+                                Height="{Binding DataContext.Height.Value, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}" />
                             <RowDefinition Height="1" />
                             <RowDefinition Height="100" />
                         </Grid.RowDefinitions>

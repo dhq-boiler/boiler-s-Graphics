@@ -1,124 +1,118 @@
-﻿using boilersGraphics.Controls;
+﻿using System.Windows;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using boilersGraphics.Controls;
 using boilersGraphics.Dao;
 using boilersGraphics.Helpers;
 using boilersGraphics.ViewModels;
 using boilersGraphics.Views;
 using Prism.Services.Dialogs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
 
-namespace boilersGraphics.Adorners
+namespace boilersGraphics.Adorners;
+
+internal class SliceAdorner : Adorner
 {
-    class SliceAdorner : Adorner
+    private readonly IDialogService dialogService;
+    private DesignerCanvas _designerCanvas;
+    private Point? _endPoint;
+    private readonly Pen _rectanglePen;
+    private readonly SnapAction _snapAction;
+    private Point? _startPoint;
+
+    public SliceAdorner(DesignerCanvas designerCanvas, Point? dragStartPoint, IDialogService dialogService)
+        : base(designerCanvas)
     {
-        private DesignerCanvas _designerCanvas;
-        private Point? _startPoint;
-        private readonly IDialogService dialogService;
-        private Point? _endPoint;
-        private Pen _rectanglePen;
-        private SnapAction _snapAction;
+        _designerCanvas = designerCanvas;
+        _startPoint = dragStartPoint;
+        this.dialogService = dialogService;
+        var brush = new SolidColorBrush(Colors.Blue);
+        brush.Opacity = 0.5;
+        _rectanglePen = new Pen(brush, 1);
+        _snapAction = new SnapAction();
+    }
 
-        public SliceAdorner(DesignerCanvas designerCanvas, Point? dragStartPoint, Prism.Services.Dialogs.IDialogService dialogService)
-            : base(designerCanvas)
+    protected override void OnMouseMove(MouseEventArgs e)
+    {
+        if (e.LeftButton == MouseButtonState.Pressed)
         {
-            _designerCanvas = designerCanvas;
-            _startPoint = dragStartPoint;
-            this.dialogService = dialogService;
-            var brush = new SolidColorBrush(Colors.Blue);
-            brush.Opacity = 0.5;
-            _rectanglePen = new Pen(brush, 1);
-            _snapAction = new SnapAction();
+            if (!IsMouseCaptured)
+                CaptureMouse();
+
+            //ドラッグ終了座標を更新
+            _endPoint = e.GetPosition(this);
+            var currentPosition = _endPoint.Value;
+            _snapAction.OnMouseMove(ref currentPosition);
+            _endPoint = currentPosition;
+
+            InvalidateVisual();
+        }
+        else
+        {
+            if (IsMouseCaptured) ReleaseMouseCapture();
         }
 
-        protected override void OnMouseMove(MouseEventArgs e)
+        e.Handled = true;
+    }
+
+    protected override void OnMouseUp(MouseButtonEventArgs e)
+    {
+        // release mouse capture
+        if (IsMouseCaptured) ReleaseMouseCapture();
+
+        if (_startPoint.HasValue && _endPoint.HasValue)
         {
-            if (e.LeftButton == MouseButtonState.Pressed)
+            _snapAction.OnMouseUp(this);
+
+            var sliceRect = new Rect(_startPoint.Value, _endPoint.Value);
+
+            UpdateStatisticsCount();
+
+            IDialogResult result = null;
+            var dialogParameters = new DialogParameters { { "sliceRect", sliceRect } };
+            dialogService.ShowDialog(nameof(Export), dialogParameters, ret => result = ret);
+            if (result != null)
             {
-                if (!this.IsMouseCaptured)
-                    this.CaptureMouse();
-
-                //ドラッグ終了座標を更新
-                _endPoint = e.GetPosition(this);
-                var currentPosition = _endPoint.Value;
-                _snapAction.OnMouseMove(ref currentPosition);
-                _endPoint = currentPosition;
-
-                this.InvalidateVisual();
-            }
-            else
-            {
-                if (this.IsMouseCaptured) this.ReleaseMouseCapture();
-            }
-
-            e.Handled = true;
-        }
-
-        protected override void OnMouseUp(System.Windows.Input.MouseButtonEventArgs e)
-        {
-            // release mouse capture
-            if (this.IsMouseCaptured) this.ReleaseMouseCapture();
-
-            if (_startPoint.HasValue && _endPoint.HasValue)
-            {
-                _snapAction.OnMouseUp(this);
-
-                var sliceRect = new Rect(_startPoint.Value, _endPoint.Value);
-
-                UpdateStatisticsCount();
-
-                IDialogResult result = null;
-                var dialogParameters = new DialogParameters() { { "sliceRect", sliceRect } };
-                this.dialogService.ShowDialog(nameof(Export), dialogParameters, ret => result = ret);
-                if (result != null)
-                {
-
-                }
-
-                _startPoint = null;
-                _endPoint = null;
             }
 
-            (App.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "";
-            (App.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = "";
-
-            e.Handled = true;
+            _startPoint = null;
+            _endPoint = null;
         }
 
-        private static void UpdateStatisticsCount()
-        {
-            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
-            statistics.NumberOfTimesSliceToolHasBeenUsed++;
-            var dao = new StatisticsDao();
-            dao.Update(statistics);
-        }
+        (Application.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "";
+        (Application.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = "";
 
-        protected override void OnRender(DrawingContext dc)
-        {
-            base.OnRender(dc);
+        e.Handled = true;
+    }
 
-            dc.DrawRectangle(Brushes.Transparent, null, new Rect(RenderSize));
+    private static void UpdateStatisticsCount()
+    {
+        var statistics = (Application.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+        statistics.NumberOfTimesSliceToolHasBeenUsed++;
+        var dao = new StatisticsDao();
+        dao.Update(statistics);
+    }
 
-            if (_startPoint.HasValue && _endPoint.HasValue)
-                dc.DrawRectangle(new SolidColorBrush(Color.FromArgb(255 / 2, 0, 0, 255)), _rectanglePen, ShiftEdgeThickness());
-        }
+    protected override void OnRender(DrawingContext dc)
+    {
+        base.OnRender(dc);
 
-        private Rect ShiftEdgeThickness()
-        {
-            var parent = (AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel;
-            var point1 = _startPoint.Value;
-            point1.X += parent.EdgeThickness.Value.Value / 2;
-            point1.Y += parent.EdgeThickness.Value.Value / 2;
-            var point2 = _endPoint.Value;
-            point2.X -= parent.EdgeThickness.Value.Value / 2;
-            point2.Y -= parent.EdgeThickness.Value.Value / 2;
-            return new Rect(point1, point2);
-        }
+        dc.DrawRectangle(Brushes.Transparent, null, new Rect(RenderSize));
+
+        if (_startPoint.HasValue && _endPoint.HasValue)
+            dc.DrawRectangle(new SolidColorBrush(Color.FromArgb(255 / 2, 0, 0, 255)), _rectanglePen,
+                ShiftEdgeThickness());
+    }
+
+    private Rect ShiftEdgeThickness()
+    {
+        var parent = (AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel;
+        var point1 = _startPoint.Value;
+        point1.X += parent.EdgeThickness.Value.Value / 2;
+        point1.Y += parent.EdgeThickness.Value.Value / 2;
+        var point2 = _endPoint.Value;
+        point2.X -= parent.EdgeThickness.Value.Value / 2;
+        point2.Y -= parent.EdgeThickness.Value.Value / 2;
+        return new Rect(point1, point2);
     }
 }

@@ -29,7 +29,7 @@ namespace boilersGraphics.Test
             Assert.That(viewModel.EdgeThickness.Value, Is.EqualTo(null));
             Assert.That(viewModel.EnableMiniMap.Value, Is.EqualTo(false));
             Assert.That(viewModel.FileName.Value, Is.EqualTo(null));
-            Assert.That(viewModel.CanvasBackground.Value, Is.EqualTo(null));
+            Assert.That(viewModel.CanvasFillBrush.Value, Is.EqualTo(null));
             Assert.That(viewModel.EnablePointSnap.Value, Is.EqualTo(false));
             Assert.That(() => viewModel.Dispose(), Throws.Nothing);
         }

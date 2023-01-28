@@ -7,8 +7,7 @@
     xmlns:converter="clr-namespace:boilersGraphics.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:helper="clr-namespace:boilersGraphics.Helpers"
-    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-    xmlns:local="clr-namespace:boilersGraphics.Views"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
     d:DesignHeight="450"
@@ -21,6 +20,7 @@
         <converter:BrushToStringConverter x:Key="BrushToStringConverter" />
         <converter:ToSolidColorBrushConverter x:Key="solidColorBrushConverter" />
         <converter:BoolToEnumConverter x:Key="BoolToEnumConverter" />
+        <converter:ComplementaryBrushConverter x:Key="ComplementaryBrushConverter" />
     </UserControl.Resources>
     <DockPanel>
         <StackPanel
@@ -45,17 +45,20 @@
                 Columns="2"
                 Orientation="Horizontal"
                 Rows="10">
-                <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_CanvasWidth, Mode=OneWay}" />
+                <Label
+                    Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_CanvasWidth, Mode=OneWay}" />
                 <TextBox
                     HorizontalAlignment="Stretch"
                     HorizontalContentAlignment="Right"
                     Text="{Binding EditTarget.Value.Width.Value, Converter={StaticResource IntToStringConverter}, UpdateSourceTrigger=PropertyChanged}" />
-                <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_CanvasHeight, Mode=OneWay}" />
+                <Label
+                    Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_CanvasHeight, Mode=OneWay}" />
                 <TextBox
                     HorizontalAlignment="Stretch"
                     HorizontalContentAlignment="Right"
                     Text="{Binding EditTarget.Value.Height.Value, Converter={StaticResource IntToStringConverter}, UpdateSourceTrigger=PropertyChanged}" />
-                <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_CanvasBackground, Mode=OneWay}" />
+                <Label
+                    Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_CanvasFillBrush, Mode=OneWay}" />
                 <Grid>
                     <Grid.Background>
                         <VisualBrush
@@ -93,17 +96,231 @@
                             </VisualBrush.Visual>
                         </VisualBrush>
                     </Grid.Background>
-                    <Button Command="{Binding ChangeCanvasBackgroundCommand}" Content="{Binding EditTarget.Value.CanvasBackground.Value, Converter={StaticResource BrushToStringConverter}}">
+                    <Button Command="{Binding ChangeCanvasFillBrushCommand}">
+                        <TextBlock Text="{Binding EditTarget.Value.CanvasFillBrush.Value, Converter={StaticResource BrushToStringConverter}}"
+                                   Foreground="{Binding EditTarget.Value.CanvasFillBrush.Value, UpdateSourceTrigger=PropertyChanged, Mode=OneWay, Converter={StaticResource ComplementaryBrushConverter}}" />
                         <Button.Style>
                             <Style TargetType="{x:Type Button}">
-                                <Style.Triggers>
-                                    <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter Property="Background" Value="{Binding EditTarget.Value.CanvasBackground.Value}" />
-                                    </Trigger>
-                                    <Trigger Property="IsMouseOver" Value="False">
-                                        <Setter Property="Background" Value="{Binding EditTarget.Value.CanvasBackground.Value}" />
-                                    </Trigger>
-                                </Style.Triggers>
+                                <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
+                                <Setter Property="Background" Value="{StaticResource ControlDefaultBackground}" />
+                                <Setter Property="BorderBrush" Value="{StaticResource ControlDefaultBorderBrush}" />
+                                <Setter Property="Foreground" Value="{StaticResource ControlDefaultForeground}" />
+                                <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
+                                <Setter Property="Cursor" Value="Hand" />
+                                <Setter Property="BorderThickness" Value="1" />
+                                <Setter Property="HorizontalContentAlignment" Value="Center" />
+                                <Setter Property="VerticalContentAlignment" Value="Center" />
+                                <Setter Property="Padding" Value="1" />
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type Button}">
+                                            <Border
+                                                    x:Name="border"
+                                                    HorizontalAlignment="Stretch"
+                                                    VerticalAlignment="Stretch"
+                                                    Background="{TemplateBinding Background}"
+                                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                                    SnapsToDevicePixels="true">
+                                                <ContentPresenter
+                                                                  x:Name="contentPresenter"
+                                                                  Margin="{TemplateBinding Padding}"
+                                                                  HorizontalAlignment="Center"
+                                                                  VerticalAlignment="Center"
+                                                                  Focusable="False"
+                                                                  RecognizesAccessKey="True"
+                                                                  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsDefaulted" Value="true">
+                                                    <Setter TargetName="border" Property="BorderBrush"
+                                                            Value="{StaticResource ControlMouseOverBorderBrush}" />
+                                                </Trigger>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter TargetName="border" Property="Background"
+                                                            Value="{Binding EditTarget.Value.CanvasFillBrush.Value, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" />
+                                                    <Setter TargetName="border" Property="BorderBrush"
+                                                            Value="{StaticResource ControlMouseOverBorderBrush}" />
+                                                </Trigger>
+                                                <Trigger Property="IsMouseOver" Value="False">
+                                                    <Setter TargetName="border" Property="Background"
+                                                            Value="{Binding EditTarget.Value.CanvasFillBrush.Value, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" />
+                                                    <Setter TargetName="border" Property="BorderBrush"
+                                                            Value="{StaticResource ControlMouseOverBorderBrush}" />
+                                                </Trigger>
+                                                <Trigger Property="IsPressed" Value="true">
+                                                    <Setter TargetName="border" Property="Background"
+                                                            Value="{Binding EditTarget.Value.CanvasFillBrush.Value, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" />
+                                                    <Setter TargetName="border" Property="BorderBrush"
+                                                            Value="{StaticResource ControlSelectedBorderBrush}" />
+                                                </Trigger>
+                                                <Trigger Property="IsEnabled" Value="false">
+                                                    <Setter TargetName="border" Property="Background"
+                                                            Value="{Binding EditTarget.Value.CanvasFillBrush.Value, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" />
+                                                    <Setter TargetName="border" Property="BorderBrush"
+                                                            Value="{StaticResource ControlBrightDefaultBorderBrush}" />
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                </Grid>
+                <Label
+                    Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_CanvasEdgeThickness, Mode=OneWay}" />
+                <ComboBox
+                    x:Name="ComboBox_CanvasEdgeThickness"
+                    MaxWidth="500"
+                    MaxHeight="100"
+                    HorizontalAlignment="Stretch"
+                    IsReadOnly="False"
+                    IsTabStop="True"
+                    ItemsSource="{Binding EditTarget.Value.EdgeThicknessOptions}"
+                    SelectedValue="{Binding EditTarget.Value.CanvasEdgeThickness.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate DataType="{x:Type sys:Double}">
+                            <Grid Background="White">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="50" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" MaxHeight="50" />
+                                </Grid.RowDefinitions>
+                                <Line
+                                    Grid.Row="0"
+                                    Grid.Column="0"
+                                    Stroke="Black"
+                                    StrokeThickness="{Binding}"
+                                    X1="0"
+                                    X2="300"
+                                    Y1="15"
+                                    Y2="15" />
+                                <Label
+                                    Foreground="Black"
+                                    Grid.Row="0"
+                                    Grid.Column="1"
+                                    VerticalAlignment="Center">
+                                    <Label.Content>
+                                        <TextBlock Foreground="Black">
+                                            <Run Text="{Binding Mode=OneWay}" />
+                                            <Run Text="pt" />
+                                        </TextBlock>
+                                    </Label.Content>
+                                </Label>
+                            </Grid>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+                <Label
+                    Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_CanvasEdgeBrush, Mode=OneWay}" />
+                <Grid>
+                    <Grid.Background>
+                        <VisualBrush
+                            Stretch="None"
+                            TileMode="Tile"
+                            Viewport="0,0,16,16"
+                            ViewportUnits="Absolute">
+                            <VisualBrush.Visual>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="8" />
+                                        <ColumnDefinition Width="8" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="8" />
+                                        <RowDefinition Height="8" />
+                                    </Grid.RowDefinitions>
+                                    <Rectangle
+                                        Grid.Row="0"
+                                        Grid.Column="0"
+                                        Fill="#EEE" />
+                                    <Rectangle
+                                        Grid.Row="0"
+                                        Grid.Column="1"
+                                        Fill="#AAA" />
+                                    <Rectangle
+                                        Grid.Row="1"
+                                        Grid.Column="0"
+                                        Fill="#AAA" />
+                                    <Rectangle
+                                        Grid.Row="1"
+                                        Grid.Column="1"
+                                        Fill="#EEE" />
+                                </Grid>
+                            </VisualBrush.Visual>
+                        </VisualBrush>
+                    </Grid.Background>
+                    <Button Command="{Binding ChangeCanvasEdgeBrushCommand}">
+                        <TextBlock Text="{Binding EditTarget.Value.CanvasEdgeBrush.Value, Converter={StaticResource BrushToStringConverter}}"
+                                   Foreground="{Binding EditTarget.Value.CanvasEdgeBrush.Value, UpdateSourceTrigger=PropertyChanged, Mode=OneWay, Converter={StaticResource ComplementaryBrushConverter}}" />
+                        <Button.Style>
+                            <Style TargetType="{x:Type Button}">
+                                <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
+                                <Setter Property="Background" Value="{StaticResource ControlDefaultBackground}" />
+                                <Setter Property="BorderBrush" Value="{StaticResource ControlDefaultBorderBrush}" />
+                                <Setter Property="Foreground" Value="{StaticResource ControlDefaultForeground}" />
+                                <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
+                                <Setter Property="Cursor" Value="Hand" />
+                                <Setter Property="BorderThickness" Value="1" />
+                                <Setter Property="HorizontalContentAlignment" Value="Center" />
+                                <Setter Property="VerticalContentAlignment" Value="Center" />
+                                <Setter Property="Padding" Value="1" />
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type Button}">
+                                            <Border
+                                                    x:Name="border"
+                                                    HorizontalAlignment="Stretch"
+                                                    VerticalAlignment="Stretch"
+                                                    Background="{TemplateBinding Background}"
+                                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                                    SnapsToDevicePixels="true">
+                                                <ContentPresenter
+                                                                  x:Name="contentPresenter"
+                                                                  Margin="{TemplateBinding Padding}"
+                                                                  HorizontalAlignment="Center"
+                                                                  VerticalAlignment="Center"
+                                                                  Focusable="False"
+                                                                  RecognizesAccessKey="True"
+                                                                  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsDefaulted" Value="true">
+                                                    <Setter TargetName="border" Property="BorderBrush"
+                                                            Value="{StaticResource ControlMouseOverBorderBrush}" />
+                                                </Trigger>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter TargetName="border" Property="Background"
+                                                            Value="{Binding EditTarget.Value.CanvasEdgeBrush.Value, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" />
+                                                    <Setter TargetName="border" Property="BorderBrush"
+                                                            Value="{StaticResource ControlMouseOverBorderBrush}" />
+                                                </Trigger>
+                                                <Trigger Property="IsMouseOver" Value="False">
+                                                    <Setter TargetName="border" Property="Background"
+                                                            Value="{Binding EditTarget.Value.CanvasEdgeBrush.Value, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" />
+                                                    <Setter TargetName="border" Property="BorderBrush"
+                                                            Value="{StaticResource ControlMouseOverBorderBrush}" />
+                                                </Trigger>
+                                                <Trigger Property="IsPressed" Value="true">
+                                                    <Setter TargetName="border" Property="Background"
+                                                            Value="{Binding EditTarget.Value.CanvasEdgeBrush.Value, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" />
+                                                    <Setter TargetName="border" Property="BorderBrush"
+                                                            Value="{StaticResource ControlSelectedBorderBrush}" />
+                                                </Trigger>
+                                                <Trigger Property="IsEnabled" Value="false">
+                                                    <Setter TargetName="border" Property="Background"
+                                                            Value="{Binding EditTarget.Value.CanvasEdgeBrush.Value, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" />
+                                                    <Setter TargetName="border" Property="BorderBrush"
+                                                            Value="{StaticResource ControlBrightDefaultBorderBrush}" />
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
                             </Style>
                         </Button.Style>
                     </Button>
@@ -114,7 +331,8 @@
                     Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_SnapPoint, Mode=OneWay}"
                     IsChecked="{Binding EditTarget.Value.EnablePointSnap.Value}" />
                 <DockPanel>
-                    <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_SnapRange, Mode=OneWay}" />
+                    <Label
+                        Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_SnapRange, Mode=OneWay}" />
                     <TextBox
                         HorizontalAlignment="Stretch"
                         HorizontalContentAlignment="Right"
@@ -124,10 +342,12 @@
                         <TextBox.Style>
                             <Style TargetType="{x:Type TextBox}">
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding ElementName=enablePointSnap, Path=IsChecked}" Value="True">
+                                    <DataTrigger Binding="{Binding ElementName=enablePointSnap, Path=IsChecked}"
+                                                 Value="True">
                                         <Setter Property="IsReadOnly" Value="False" />
                                     </DataTrigger>
-                                    <DataTrigger Binding="{Binding ElementName=enablePointSnap, Path=IsChecked}" Value="False">
+                                    <DataTrigger Binding="{Binding ElementName=enablePointSnap, Path=IsChecked}"
+                                                 Value="False">
                                         <Setter Property="IsReadOnly" Value="True" />
                                         <Setter Property="Foreground" Value="Gray" />
                                         <Setter Property="BorderBrush" Value="Gray" />
@@ -154,16 +374,22 @@
                 </StackPanel>
                 <DockPanel />
                 <StackPanel Orientation="Horizontal">
-                    <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_Interval, Mode=OneWay}" />
+                    <Label
+                        Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_Interval, Mode=OneWay}" />
                     <btl:ShortTimeSpanControl
                         x:Name="shortTimeSpanControl1"
                         IsEnable="{Binding EditTarget.Value.AutoSaveType.Value, Converter={StaticResource BoolToEnumConverter}, Mode=TwoWay, ConverterParameter=SetInterval}"
                         Value="{Binding EditTarget.Value.AutoSaveInterval.Value}" />
                 </StackPanel>
-                <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_RotationAngleType, Mode=OneWay}" />
+                <Label
+                    Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_RotationAngleType, Mode=OneWay}" />
                 <ComboBox SelectedValue="{Binding EditTarget.Value.AngleType.Value}" SelectedValuePath="Tag">
-                    <ComboBoxItem Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_RotationAngleType_Minus180To180, Mode=OneWay}" Tag="{x:Static helper:AngleType.Minus180To180}" />
-                    <ComboBoxItem Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_RotationAngleType_ZeroTo360, Mode=OneWay}" Tag="{x:Static helper:AngleType.ZeroTo360}" />
+                    <ComboBoxItem
+                        Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_RotationAngleType_Minus180To180, Mode=OneWay}"
+                        Tag="{x:Static helper:AngleType.Minus180To180}" />
+                    <ComboBoxItem
+                        Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_RotationAngleType_ZeroTo360, Mode=OneWay}"
+                        Tag="{x:Static helper:AngleType.ZeroTo360}" />
                 </ComboBox>
                 <CheckBox
                     x:Name="enableImageEmbedding"

@@ -16,7 +16,8 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/Theme.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/Themes/DarkTheme.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/boilersGraphics;component/Resources/Themes/DarkTheme.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <Style TargetType="Button">
                 <Setter Property="Width" Value="75" />
@@ -31,7 +32,10 @@
                                 Background="{TemplateBinding Background}"
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}">
-                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                <ContentPresenter
+                                    x:Name="Button_ContentPresenter"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center" />
                                 <VisualStateManager.VisualStateGroups>
                                     <VisualStateGroup x:Name="CommonStates">
                                         <VisualStateGroup.Transitions>
@@ -41,15 +45,19 @@
                                         <VisualState x:Name="Normal" />
                                         <VisualState x:Name="MouseOver">
                                             <Storyboard>
-                                                <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Background).(SolidColorBrush.Color)">
-                                                    <EasingColorKeyFrame KeyTime="0" Value="{StaticResource ControlBrightColor}" />
+                                                <ColorAnimationUsingKeyFrames
+                                                    Storyboard.TargetProperty="(Background).(SolidColorBrush.Color)">
+                                                    <EasingColorKeyFrame KeyTime="0"
+                                                                         Value="{StaticResource ControlBrightColor}" />
                                                 </ColorAnimationUsingKeyFrames>
                                             </Storyboard>
                                         </VisualState>
                                         <VisualState x:Name="Pressed">
                                             <Storyboard>
-                                                <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(BorderBrush).(SolidColorBrush.Color)">
-                                                    <EasingColorKeyFrame KeyTime="0" Value="{StaticResource PressedBorderDarkColor}" />
+                                                <ColorAnimationUsingKeyFrames
+                                                    Storyboard.TargetProperty="(BorderBrush).(SolidColorBrush.Color)">
+                                                    <EasingColorKeyFrame KeyTime="0"
+                                                                         Value="{StaticResource PressedBorderDarkColor}" />
                                                 </ColorAnimationUsingKeyFrames>
                                             </Storyboard>
                                         </VisualState>
@@ -101,32 +109,50 @@
                     Text="{Binding Path.Value, UpdateSourceTrigger=PropertyChanged}" />
             </DockPanel>
             <DockPanel>
-                <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_QualityLevel, Mode=OneWay}" DockPanel.Dock="Left">
+                <Label
+                    Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_QualityLevel, Mode=OneWay}"
+                    DockPanel.Dock="Left">
                     <Label.Style>
                         <Style TargetType="Label">
                             <Style.Triggers>
-                                <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value="{x:Static sys:String.Empty}">
+                                <DataTrigger
+                                    Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}"
+                                    Value="{x:Static sys:String.Empty}">
                                     <Setter Property="Visibility" Value="Collapsed" />
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value=".jpg">
+                                <DataTrigger
+                                    Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}"
+                                    Value=".jpg">
                                     <Setter Property="Visibility" Value="Visible" />
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value=".jpeg">
+                                <DataTrigger
+                                    Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}"
+                                    Value=".jpeg">
                                     <Setter Property="Visibility" Value="Visible" />
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value=".png">
+                                <DataTrigger
+                                    Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}"
+                                    Value=".png">
                                     <Setter Property="Visibility" Value="Collapsed" />
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value=".gif">
+                                <DataTrigger
+                                    Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}"
+                                    Value=".gif">
                                     <Setter Property="Visibility" Value="Collapsed" />
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value=".bmp">
+                                <DataTrigger
+                                    Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}"
+                                    Value=".bmp">
                                     <Setter Property="Visibility" Value="Collapsed" />
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value=".tiff">
+                                <DataTrigger
+                                    Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}"
+                                    Value=".tiff">
                                     <Setter Property="Visibility" Value="Collapsed" />
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value=".wmp">
+                                <DataTrigger
+                                    Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}"
+                                    Value=".wmp">
                                     <Setter Property="Visibility" Value="Collapsed" />
                                 </DataTrigger>
                             </Style.Triggers>
@@ -140,28 +166,44 @@
                     <Label.Style>
                         <Style TargetType="Label">
                             <Style.Triggers>
-                                <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value="{x:Static sys:String.Empty}">
+                                <DataTrigger
+                                    Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}"
+                                    Value="{x:Static sys:String.Empty}">
                                     <Setter Property="Visibility" Value="Collapsed" />
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value=".jpg">
+                                <DataTrigger
+                                    Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}"
+                                    Value=".jpg">
                                     <Setter Property="Visibility" Value="Visible" />
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value=".jpeg">
+                                <DataTrigger
+                                    Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}"
+                                    Value=".jpeg">
                                     <Setter Property="Visibility" Value="Visible" />
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value=".png">
+                                <DataTrigger
+                                    Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}"
+                                    Value=".png">
                                     <Setter Property="Visibility" Value="Collapsed" />
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value=".gif">
+                                <DataTrigger
+                                    Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}"
+                                    Value=".gif">
                                     <Setter Property="Visibility" Value="Collapsed" />
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value=".bmp">
+                                <DataTrigger
+                                    Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}"
+                                    Value=".bmp">
                                     <Setter Property="Visibility" Value="Collapsed" />
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value=".tiff">
+                                <DataTrigger
+                                    Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}"
+                                    Value=".tiff">
                                     <Setter Property="Visibility" Value="Collapsed" />
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value=".wmp">
+                                <DataTrigger
+                                    Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}"
+                                    Value=".wmp">
                                     <Setter Property="Visibility" Value="Collapsed" />
                                 </DataTrigger>
                             </Style.Triggers>
@@ -179,28 +221,44 @@
                     <Slider.Style>
                         <Style TargetType="Slider">
                             <Style.Triggers>
-                                <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value="{x:Static sys:String.Empty}">
+                                <DataTrigger
+                                    Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}"
+                                    Value="{x:Static sys:String.Empty}">
                                     <Setter Property="Visibility" Value="Collapsed" />
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value=".jpg">
+                                <DataTrigger
+                                    Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}"
+                                    Value=".jpg">
                                     <Setter Property="Visibility" Value="Visible" />
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value=".jpeg">
+                                <DataTrigger
+                                    Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}"
+                                    Value=".jpeg">
                                     <Setter Property="Visibility" Value="Visible" />
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value=".png">
+                                <DataTrigger
+                                    Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}"
+                                    Value=".png">
                                     <Setter Property="Visibility" Value="Collapsed" />
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value=".gif">
+                                <DataTrigger
+                                    Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}"
+                                    Value=".gif">
                                     <Setter Property="Visibility" Value="Collapsed" />
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value=".bmp">
+                                <DataTrigger
+                                    Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}"
+                                    Value=".bmp">
                                     <Setter Property="Visibility" Value="Collapsed" />
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value=".tiff">
+                                <DataTrigger
+                                    Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}"
+                                    Value=".tiff">
                                     <Setter Property="Visibility" Value="Collapsed" />
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}" Value=".wmp">
+                                <DataTrigger
+                                    Binding="{Binding Path.Value, Converter={StaticResource ExtensionConverter}}"
+                                    Value=".wmp">
                                     <Setter Property="Visibility" Value="Collapsed" />
                                 </DataTrigger>
                             </Style.Triggers>

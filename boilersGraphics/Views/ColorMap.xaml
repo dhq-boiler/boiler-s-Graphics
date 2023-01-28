@@ -2,7 +2,6 @@
     x:Class="boilersGraphics.Views.ColorMap"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:converter="clr-namespace:boilersGraphics.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:boilersGraphics.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -96,7 +95,8 @@
             ToolTipService.BetweenShowDelay="0"
             ToolTipService.InitialShowDelay="0">
             <Thumb.ToolTip>
-                <ToolTip DataContext="{Binding Path=PlacementTarget.DataContext, RelativeSource={x:Static RelativeSource.Self}}">
+                <ToolTip
+                    DataContext="{Binding Path=PlacementTarget.DataContext, RelativeSource={x:Static RelativeSource.Self}}">
                     <TextBlock>
                         <Run Text="Saturation:" />
                         <Run Text="{Binding Saturation.Value}" />

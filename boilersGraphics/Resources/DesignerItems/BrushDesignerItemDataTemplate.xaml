@@ -4,7 +4,6 @@
     xmlns:convereter="clr-namespace:boilersGraphics.Converters"
     xmlns:helper="clr-namespace:boilersGraphics.Helpers"
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-    xmlns:local="clr-namespace:boilersGraphics.Resources.DesignerItems"
     xmlns:viewModel="clr-namespace:boilersGraphics.ViewModels">
     <convereter:ToSolidColorBrushConverter x:Key="solidColorBrushConverter" />
     <DataTemplate DataType="{x:Type viewModel:BrushViewModel}">

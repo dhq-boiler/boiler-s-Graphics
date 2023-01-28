@@ -1,28 +1,28 @@
-﻿using boilersGraphics.Extensions;
+﻿using System;
+using System.Data;
+using boilersGraphics.Extensions;
 using boilersGraphics.Models;
 using Homura.ORM;
-using System;
-using System.Data;
 
-namespace boilersGraphics.Dao
+namespace boilersGraphics.Dao;
+
+internal class LogSettingDao : Dao<LogSetting>
 {
-    class LogSettingDao : Dao<LogSetting>
+    public LogSettingDao()
     {
-        public LogSettingDao()
-            : base()
-        { }
+    }
 
-        public LogSettingDao(Type entityVersionType)
-            : base(entityVersionType)
-        { }
+    public LogSettingDao(Type entityVersionType)
+        : base(entityVersionType)
+    {
+    }
 
-        protected override LogSetting ToEntity(IDataRecord reader)
+    protected override LogSetting ToEntity(IDataRecord reader)
+    {
+        return new LogSetting
         {
-            return new LogSetting()
-            {
-                ID = reader.SafeGetGuid("ID", Table),
-                LogLevel = reader.SafeGetString("LogLevel", Table),
-            };
-        }
+            ID = reader.SafeGetGuid("ID", Table),
+            LogLevel = reader.SafeGetString("LogLevel", Table)
+        };
     }
 }

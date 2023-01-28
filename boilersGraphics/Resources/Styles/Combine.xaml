@@ -76,7 +76,9 @@
                                                     <ContentControl.Style>
                                                         <Style TargetType="{x:Type ContentControl}">
                                                             <Style.Triggers>
-                                                                <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" Value="True">
+                                                                <DataTrigger
+                                                                    Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"
+                                                                    Value="True">
                                                                     <Setter Property="Content">
                                                                         <Setter.Value>
                                                                             <Image
@@ -86,7 +88,9 @@
                                                                         </Setter.Value>
                                                                     </Setter>
                                                                 </DataTrigger>
-                                                                <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" Value="False">
+                                                                <DataTrigger
+                                                                    Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"
+                                                                    Value="False">
                                                                     <Setter Property="Content">
                                                                         <Setter.Value>
                                                                             <Image
@@ -94,10 +98,13 @@
                                                                                 Height="16"
                                                                                 RenderOptions.BitmapScalingMode="HighQuality">
                                                                                 <Image.Source>
-                                                                                    <FormatConvertedBitmap DestinationFormat="Gray32Float" Source="{StaticResource Icon_Union}" />
+                                                                                    <FormatConvertedBitmap
+                                                                                        DestinationFormat="Gray32Float"
+                                                                                        Source="{StaticResource Icon_Union}" />
                                                                                 </Image.Source>
                                                                                 <Image.OpacityMask>
-                                                                                    <ImageBrush ImageSource="{StaticResource Icon_Union}" />
+                                                                                    <ImageBrush
+                                                                                        ImageSource="{StaticResource Icon_Union}" />
                                                                                 </Image.OpacityMask>
                                                                             </Image>
                                                                         </Setter.Value>
@@ -128,7 +135,9 @@
                                                     <ContentControl.Style>
                                                         <Style TargetType="{x:Type ContentControl}">
                                                             <Style.Triggers>
-                                                                <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" Value="True">
+                                                                <DataTrigger
+                                                                    Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"
+                                                                    Value="True">
                                                                     <Setter Property="Content">
                                                                         <Setter.Value>
                                                                             <Image
@@ -138,7 +147,9 @@
                                                                         </Setter.Value>
                                                                     </Setter>
                                                                 </DataTrigger>
-                                                                <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" Value="False">
+                                                                <DataTrigger
+                                                                    Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"
+                                                                    Value="False">
                                                                     <Setter Property="Content">
                                                                         <Setter.Value>
                                                                             <Image
@@ -146,10 +157,13 @@
                                                                                 Height="16"
                                                                                 RenderOptions.BitmapScalingMode="HighQuality">
                                                                                 <Image.Source>
-                                                                                    <FormatConvertedBitmap DestinationFormat="Gray32Float" Source="{StaticResource Icon_Intersect}" />
+                                                                                    <FormatConvertedBitmap
+                                                                                        DestinationFormat="Gray32Float"
+                                                                                        Source="{StaticResource Icon_Intersect}" />
                                                                                 </Image.Source>
                                                                                 <Image.OpacityMask>
-                                                                                    <ImageBrush ImageSource="{StaticResource Icon_Intersect}" />
+                                                                                    <ImageBrush
+                                                                                        ImageSource="{StaticResource Icon_Intersect}" />
                                                                                 </Image.OpacityMask>
                                                                             </Image>
                                                                         </Setter.Value>
@@ -180,7 +194,9 @@
                                                     <ContentControl.Style>
                                                         <Style TargetType="{x:Type ContentControl}">
                                                             <Style.Triggers>
-                                                                <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" Value="True">
+                                                                <DataTrigger
+                                                                    Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"
+                                                                    Value="True">
                                                                     <Setter Property="Content">
                                                                         <Setter.Value>
                                                                             <Image
@@ -190,7 +206,9 @@
                                                                         </Setter.Value>
                                                                     </Setter>
                                                                 </DataTrigger>
-                                                                <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" Value="False">
+                                                                <DataTrigger
+                                                                    Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"
+                                                                    Value="False">
                                                                     <Setter Property="Content">
                                                                         <Setter.Value>
                                                                             <Image
@@ -198,10 +216,13 @@
                                                                                 Height="16"
                                                                                 RenderOptions.BitmapScalingMode="HighQuality">
                                                                                 <Image.Source>
-                                                                                    <FormatConvertedBitmap DestinationFormat="Gray32Float" Source="{StaticResource Icon_Xor}" />
+                                                                                    <FormatConvertedBitmap
+                                                                                        DestinationFormat="Gray32Float"
+                                                                                        Source="{StaticResource Icon_Xor}" />
                                                                                 </Image.Source>
                                                                                 <Image.OpacityMask>
-                                                                                    <ImageBrush ImageSource="{StaticResource Icon_Xor}" />
+                                                                                    <ImageBrush
+                                                                                        ImageSource="{StaticResource Icon_Xor}" />
                                                                                 </Image.OpacityMask>
                                                                             </Image>
                                                                         </Setter.Value>
@@ -232,7 +253,9 @@
                                                     <ContentControl.Style>
                                                         <Style TargetType="{x:Type ContentControl}">
                                                             <Style.Triggers>
-                                                                <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" Value="True">
+                                                                <DataTrigger
+                                                                    Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"
+                                                                    Value="True">
                                                                     <Setter Property="Content">
                                                                         <Setter.Value>
                                                                             <Image
@@ -242,7 +265,9 @@
                                                                         </Setter.Value>
                                                                     </Setter>
                                                                 </DataTrigger>
-                                                                <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" Value="False">
+                                                                <DataTrigger
+                                                                    Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"
+                                                                    Value="False">
                                                                     <Setter Property="Content">
                                                                         <Setter.Value>
                                                                             <Image
@@ -250,10 +275,13 @@
                                                                                 Height="16"
                                                                                 RenderOptions.BitmapScalingMode="HighQuality">
                                                                                 <Image.Source>
-                                                                                    <FormatConvertedBitmap DestinationFormat="Gray32Float" Source="{StaticResource Icon_Exclude}" />
+                                                                                    <FormatConvertedBitmap
+                                                                                        DestinationFormat="Gray32Float"
+                                                                                        Source="{StaticResource Icon_Exclude}" />
                                                                                 </Image.Source>
                                                                                 <Image.OpacityMask>
-                                                                                    <ImageBrush ImageSource="{StaticResource Icon_Exclude}" />
+                                                                                    <ImageBrush
+                                                                                        ImageSource="{StaticResource Icon_Exclude}" />
                                                                                 </Image.OpacityMask>
                                                                             </Image>
                                                                         </Setter.Value>
@@ -270,7 +298,8 @@
                             </WrapPanel>
                             <Expander.Header>
                                 <Grid>
-                                    <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.PaneTitle_Combine}" />
+                                    <Label
+                                        Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.PaneTitle_Combine}" />
                                 </Grid>
                             </Expander.Header>
                         </Expander>

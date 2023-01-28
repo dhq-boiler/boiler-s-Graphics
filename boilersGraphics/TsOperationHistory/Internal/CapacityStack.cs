@@ -1,41 +1,48 @@
-﻿using boilersGraphics.Helpers;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.Specialized;
+using boilersGraphics.Helpers;
 
-namespace TsOperationHistory.Internal
+namespace TsOperationHistory.Internal;
+
+public interface IStack<T> : IEnumerable<T>, INotifyCollectionChanged
 {
-    public interface IStack<T> : IEnumerable<T>, INotifyCollectionChanged
+    T Push(T item);
+    T Peek();
+    T Pop();
+    void Clear();
+}
+
+internal class CapacityStack<T> : ObservableLinkedList<T>, IStack<T>
+{
+    public CapacityStack(int capacity)
     {
-        T Push(T item);
-        T Peek();
-        T Pop();
-        void Clear();
+        Capacity = capacity;
     }
 
-    internal class CapacityStack<T> : ObservableLinkedList<T>, IStack<T>
+    public CapacityStack(IEnumerable<T> collection)
+        : base(collection)
     {
-        public CapacityStack(int capacity) { Capacity = capacity; }
+    }
 
-        public CapacityStack(IEnumerable<T> collection)
-            : base(collection)
-        { }
+    public int Capacity { get; }
 
-        public int Capacity { get; }
+    public T Push(T item)
+    {
+        AddLast(item);
+        if (Count > Capacity)
+            RemoveFirst();
+        return item;
+    }
 
-        public T Push(T item)
-        {
-            AddLast(item);
-            if (Count > Capacity)
-                RemoveFirst();
-            return item;
-        }
-        public T Peek() => this.Last.Value;
+    public T Peek()
+    {
+        return Last.Value;
+    }
 
-        public T Pop()
-        {
-            var item = this.Last.Value;
-            RemoveLast();
-            return item;
-        }
+    public T Pop()
+    {
+        var item = Last.Value;
+        RemoveLast();
+        return item;
     }
 }

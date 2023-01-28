@@ -1,33 +1,25 @@
-﻿using boilersGraphics.Properties;
+﻿using System.Globalization;
+using boilersGraphics.Properties;
 using Prism.Mvvm;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace boilersGraphics.Helpers
+namespace boilersGraphics.Helpers;
+
+/// <summary>
+///     https://qiita.com/YSRKEN/items/a96bcec8dfb0a8340a5f
+/// </summary>
+public class ResourceService : BindableBase
 {
+    public static ResourceService Current { get; } = new();
+
+    public Resources Resources { get; } = new();
+
     /// <summary>
-    /// https://qiita.com/YSRKEN/items/a96bcec8dfb0a8340a5f
+    ///     リソースのカルチャーを変更
     /// </summary>
-    public class ResourceService : BindableBase
+    /// <param name="name">カルチャー名</param>
+    public void ChangeCulture(string name)
     {
-        private static readonly ResourceService current = new ResourceService();
-        public static ResourceService Current => current;
-
-        private readonly Resources resources = new Resources();
-        public Resources Resources => resources;
-
-        /// <summary>
-        /// リソースのカルチャーを変更
-        /// </summary>
-        /// <param name="name">カルチャー名</param>
-        public void ChangeCulture(string name)
-        {
-            Resources.Culture = CultureInfo.GetCultureInfo(name);
-            RaisePropertyChanged("Resources");
-        }
+        Resources.Culture = CultureInfo.GetCultureInfo(name);
+        RaisePropertyChanged("Resources");
     }
 }

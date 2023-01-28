@@ -642,8 +642,14 @@
   <data name="String_Cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
-  <data name="String_CanvasBackground" xml:space="preserve">
-    <value>Canvas Background</value>
+  <data name="String_CanvasEdgeBrush" xml:space="preserve">
+    <value>Canvas EdgeBrush</value>
+  </data>
+  <data name="String_CanvasEdgeThickness" xml:space="preserve">
+    <value>Canvas EdgeThickness</value>
+  </data>
+  <data name="String_CanvasFillBrush" xml:space="preserve">
+    <value>Canvas FillBrush</value>
   </data>
   <data name="String_CanvasHeight" xml:space="preserve">
     <value>Canvas Height</value>
@@ -815,6 +821,9 @@
   </data>
   <data name="Tool_FreeHand" xml:space="preserve">
     <value>Free hand tool</value>
+  </data>
+  <data name="Tool_GaussianFilter" xml:space="preserve">
+    <value>Gaussian filter tool</value>
   </data>
   <data name="Tool_Lasso" xml:space="preserve">
     <value>Lasso tool</value>

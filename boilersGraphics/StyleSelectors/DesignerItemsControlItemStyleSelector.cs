@@ -1,46 +1,32 @@
-﻿using boilersGraphics.ViewModels;
-using System;
+﻿using System;
 using System.Windows;
 using System.Windows.Controls;
+using boilersGraphics.ViewModels;
 
-namespace boilersGraphics.StyleSelectors
+namespace boilersGraphics.StyleSelectors;
+
+public class DesignerItemsControlItemStyleSelector : StyleSelector
 {
-    public class DesignerItemsControlItemStyleSelector : StyleSelector
+    static DesignerItemsControlItemStyleSelector()
     {
-        static DesignerItemsControlItemStyleSelector()
-        {
-            Instance = new DesignerItemsControlItemStyleSelector();
-        }
+        Instance = new DesignerItemsControlItemStyleSelector();
+    }
 
-        public static DesignerItemsControlItemStyleSelector Instance
-        {
-            get;
-            private set;
-        }
+    public static DesignerItemsControlItemStyleSelector Instance { get; }
 
 
-        public override Style SelectStyle(object item, DependencyObject container)
-        {
-            ItemsControl itemsControl = ItemsControl.ItemsControlFromItemContainer(container);
-            if (itemsControl == null)
-                throw new InvalidOperationException("DesignerItemsControlItemStyleSelector : Could not find ItemsControl");
+    public override Style SelectStyle(object item, DependencyObject container)
+    {
+        var itemsControl = ItemsControl.ItemsControlFromItemContainer(container);
+        if (itemsControl == null)
+            throw new InvalidOperationException("DesignerItemsControlItemStyleSelector : Could not find ItemsControl");
 
-            if (item is DesignerItemViewModelBase)
-            {
-                return (Style)itemsControl.FindResource("designerItemStyle");
-            }
+        if (item is DesignerItemViewModelBase) return (Style)itemsControl.FindResource("designerItemStyle");
 
-            if (item is ConnectorBaseViewModel)
-            {
-                return (Style)itemsControl.FindResource("connectorItemStyle");
-            }
+        if (item is ConnectorBaseViewModel) return (Style)itemsControl.FindResource("connectorItemStyle");
 
-            if (item is SnapPointViewModel)
-            {
-                return (Style)itemsControl.FindResource("snapPointItemStyle");
-            }
+        if (item is SnapPointViewModel) return (Style)itemsControl.FindResource("snapPointItemStyle");
 
-            return null;
-        }
+        return null;
     }
 }
