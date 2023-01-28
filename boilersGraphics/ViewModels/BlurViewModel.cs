@@ -28,7 +28,7 @@ public class BlurEffectViewModel : DesignerItemViewModelBase
         (Application.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.AllItems.Subscribe(items =>
         {
             foreach (var item in items)
-                item.BeginMonitor(() => { Render(); }).AddTo(_CompositeDisposable);
+                item.BeginMonitor(Render).AddTo(_CompositeDisposable);
         }).AddTo(_CompositeDisposable);
 
         KernelWidth.Subscribe(_ => { Render(); }).AddTo(_CompositeDisposable);
@@ -57,11 +57,11 @@ public class BlurEffectViewModel : DesignerItemViewModelBase
             (Application.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel,
             (Application.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.BackgroundItem.Value,
             this);
-        var newFormatedBitmapSource = new FormatConvertedBitmap();
-        newFormatedBitmapSource.BeginInit();
-        newFormatedBitmapSource.Source = rtb;
-        newFormatedBitmapSource.DestinationFormat = PixelFormats.Bgr24;
-        newFormatedBitmapSource.EndInit();
+        var newFormattedBitmapSource = new FormatConvertedBitmap();
+        newFormattedBitmapSource.BeginInit();
+        newFormattedBitmapSource.Source = rtb;
+        newFormattedBitmapSource.DestinationFormat = PixelFormats.Bgr24;
+        newFormattedBitmapSource.EndInit();
 
         if (!(KernelWidth.Value > 0 && KernelWidth.Value % 2 == 1))
         {
@@ -75,12 +75,10 @@ public class BlurEffectViewModel : DesignerItemViewModelBase
             return;
         }
 
-        using (var mat = newFormatedBitmapSource.ToMat())
-        using (var dest = new Mat())
-        {
-            Cv2.GaussianBlur(mat, dest, new Size(KernelWidth.Value, KernelHeight.Value), Sigma.Value);
-            Bitmap.Value = dest.ToWriteableBitmap();
-        }
+        using var mat = newFormattedBitmapSource.ToMat();
+        using var dest = new Mat();
+        Cv2.GaussianBlur(mat, dest, new Size(KernelWidth.Value, KernelHeight.Value), Sigma.Value);
+        Bitmap.Value = dest.ToWriteableBitmap();
     }
 
     public override async Task OnRectChanged(Rect rect)
@@ -90,8 +88,10 @@ public class BlurEffectViewModel : DesignerItemViewModelBase
 
     public override object Clone()
     {
-        var clone = new BlurEffectViewModel();
-        clone.Owner = Owner;
+        var clone = new BlurEffectViewModel
+        {
+            Owner = Owner
+        };
         clone.Left.Value = Left.Value;
         clone.Top.Value = Top.Value;
         clone.Width.Value = Width.Value;

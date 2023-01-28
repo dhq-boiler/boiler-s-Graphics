@@ -1157,9 +1157,8 @@ public static class GeometryCreator
         var flag = 0;
         var Cflag = false;
         var Aflag = 0;
-        for (var i = 0; i < split.Length; i++)
+        foreach (var sp in split)
         {
-            var sp = split[i];
             switch (sp)
             {
                 case "F0":
@@ -1213,52 +1212,60 @@ public static class GeometryCreator
                     sb.Append(sp);
                     break;
                 default:
-                    if (Aflag == 1) //size x
+                    switch (Aflag)
                     {
-                        debug.Add((double.Parse(sp) * scaleX).ToString());
-                        sb.Append(double.Parse(sp) * scaleX);
-                    }
-                    else if (Aflag == 2) //size y
-                    {
-                        debug.Add((double.Parse(sp) * scaleY).ToString());
-                        sb.Append(double.Parse(sp) * scaleY);
-                    }
-                    else if (Aflag == 3) //rotationAngle
-                    {
-                        debug.Add(double.Parse(sp).ToString());
-                        sb.Append(double.Parse(sp));
-                    }
-                    else if (Aflag == 4) //isLargeArgFlag
-                    {
-                        debug.Add(double.Parse(sp).ToString());
-                        sb.Append(double.Parse(sp));
-                    }
-                    else if (Aflag == 5) //sweepDirectionFlag
-                    {
-                        debug.Add(double.Parse(sp).ToString());
-                        sb.Append(double.Parse(sp));
-                    }
-                    else if (Aflag == 6) // endPoint x
-                    {
-                        debug.Add((double.Parse(sp) * scaleX).ToString());
-                        sb.Append(double.Parse(sp) * scaleX);
-                    }
-                    else if (Aflag == 7) // endPoint y
-                    {
-                        debug.Add((double.Parse(sp) * scaleY).ToString());
-                        sb.Append(double.Parse(sp) * scaleY);
-                    }
-                    else if (flag == 0)
-                    {
-                        debug.Add((double.Parse(sp) * scaleX).ToString());
-                        sb.Append(double.Parse(sp) * scaleX);
-                        flag = 1;
-                    }
-                    else if (flag == 1)
-                    {
-                        debug.Add((double.Parse(sp) * scaleY).ToString());
-                        sb.Append(double.Parse(sp) * scaleY);
-                        flag = 0;
+                        //size x
+                        case 1:
+                            debug.Add((double.Parse(sp) * scaleX).ToString());
+                            sb.Append(double.Parse(sp) * scaleX);
+                            break;
+                        //size y
+                        case 2:
+                            debug.Add((double.Parse(sp) * scaleY).ToString());
+                            sb.Append(double.Parse(sp) * scaleY);
+                            break;
+                        //rotationAngle
+                        case 3:
+                            debug.Add(double.Parse(sp).ToString());
+                            sb.Append(double.Parse(sp));
+                            break;
+                        //isLargeArgFlag
+                        case 4:
+                            debug.Add(double.Parse(sp).ToString());
+                            sb.Append(double.Parse(sp));
+                            break;
+                        //sweepDirectionFlag
+                        case 5:
+                            debug.Add(double.Parse(sp).ToString());
+                            sb.Append(double.Parse(sp));
+                            break;
+                        // endPoint x
+                        case 6:
+                            debug.Add((double.Parse(sp) * scaleX).ToString());
+                            sb.Append(double.Parse(sp) * scaleX);
+                            break;
+                        // endPoint y
+                        case 7:
+                            debug.Add((double.Parse(sp) * scaleY).ToString());
+                            sb.Append(double.Parse(sp) * scaleY);
+                            break;
+                        default:
+                        {
+                            if (flag == 0)
+                            {
+                                debug.Add((double.Parse(sp) * scaleX).ToString());
+                                sb.Append(double.Parse(sp) * scaleX);
+                                flag = 1;
+                            }
+                            else if (flag == 1)
+                            {
+                                debug.Add((double.Parse(sp) * scaleY).ToString());
+                                sb.Append(double.Parse(sp) * scaleY);
+                                flag = 0;
+                            }
+
+                            break;
+                        }
                     }
 
                     break;
@@ -1270,9 +1277,8 @@ public static class GeometryCreator
     {
         var flag = 0;
         var Cflag = false;
-        for (var i = 0; i < split.Length; i++)
+        foreach (var sp in split)
         {
-            var sp = split[i];
             switch (sp)
             {
                 case "F0":
@@ -1311,15 +1317,16 @@ public static class GeometryCreator
                     sb.Append(sp);
                     break;
                 default:
-                    if (flag == 0)
+                    switch (flag)
                     {
-                        sb.Append(double.Parse(sp) + translateX);
-                        flag = 1;
-                    }
-                    else if (flag == 1)
-                    {
-                        sb.Append(double.Parse(sp) + translateY);
-                        flag = 0;
+                        case 0:
+                            sb.Append(double.Parse(sp) + translateX);
+                            flag = 1;
+                            break;
+                        case 1:
+                            sb.Append(double.Parse(sp) + translateY);
+                            flag = 0;
+                            break;
                     }
 
                     break;
@@ -1343,7 +1350,6 @@ public static class GeometryCreator
     private static int Max(params int[] array)
     {
         var left = array.First();
-        foreach (var right in array.Skip(1)) left = Math.Max(left, right);
-        return left;
+        return array.Skip(1).Prepend(left).Max();
     }
 }
