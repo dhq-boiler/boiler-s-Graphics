@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Windows;
@@ -30,6 +31,7 @@ public class ResizeThumb : SnapPoint
     private SnapResult _SnapResult = SnapResult.NoSnap;
 
     private SnapPointPosition _SnapToEdge;
+    private DesignerItemViewModelBase _SnapTargetDataContext { get; set; }
 
     public ResizeThumb()
     {
@@ -37,7 +39,6 @@ public class ResizeThumb : SnapPoint
         DragDelta += ResizeThumb_DragDelta;
     }
 
-    private DesignerItemViewModelBase _SnapTargetDataContext { get; set; }
 
     protected override void OnMouseDown(MouseButtonEventArgs e)
     {
@@ -81,259 +82,246 @@ public class ResizeThumb : SnapPoint
 
     private void ResizeThumb_DragDelta(object sender, DragDeltaEventArgs e)
     {
-        var designerItem = DataContext as DesignerItemViewModelBase;
+        if (DataContext is not DesignerItemViewModelBase designerItem || !designerItem.IsSelected.Value) return;
+        SelectableDesignerItemViewModelBase.Disconnect(designerItem);
 
-        if (designerItem != null && designerItem.IsSelected.Value)
-        {
-            double minLeft, minTop, minDeltaHorizontal, minDeltaVertical;
-            double dragDeltaVertical, dragDeltaHorizontal;
+        // only resize DesignerItems
+        var selectedDesignerItems = from item in designerItem.Owner.SelectedItems.Value
+            where item is DesignerItemViewModelBase
+            select item;
 
-            SelectableDesignerItemViewModelBase.Disconnect(designerItem);
+        if (designerItem.Owner.BackgroundItem.Value.EdgeBrush.Value == Brushes.Magenta
+            && designerItem.Owner.BackgroundItem.Value.EdgeThickness.Value == 10)
+            selectedDesignerItems = selectedDesignerItems.Union(new SelectableDesignerItemViewModelBase[]
+                { designerItem.Owner.BackgroundItem.Value });
 
-            // only resize DesignerItems
-            var selectedDesignerItems = from item in designerItem.Owner.SelectedItems.Value
-                where item is DesignerItemViewModelBase
-                select item;
+        CalculateDragLimits(selectedDesignerItems, out double minLeft, out var minTop,
+            out var minDeltaHorizontal, out var minDeltaVertical);
 
-            if (designerItem.Owner.BackgroundItem.Value.EdgeBrush.Value == Brushes.Magenta
-                && designerItem.Owner.BackgroundItem.Value.EdgeThickness.Value == 10)
-                selectedDesignerItems = selectedDesignerItems.Union(new SelectableDesignerItemViewModelBase[]
-                    { designerItem.Owner.BackgroundItem.Value });
+        var mainWindowVM = Application.Current.MainWindow.DataContext as MainWindowViewModel;
+        var designerCanvas = Application.Current.MainWindow.GetChildOfType<DesignerCanvas>();
+        var correspondingViews = designerCanvas.GetCorrespondingViews<ResizeThumb>(DataContext).ToList();
+        var diagramVM = mainWindowVM.DiagramViewModel;
 
-            CalculateDragLimits(selectedDesignerItems, out minLeft, out minTop,
-                out minDeltaHorizontal, out minDeltaVertical);
-
-            var mainWindowVM = Application.Current.MainWindow.DataContext as MainWindowViewModel;
-            var designerCanvas = Application.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-            var correspondingViews = designerCanvas.GetCorrespondingViews<ResizeThumb>(DataContext).ToList();
-            var diagramVM = mainWindowVM.DiagramViewModel;
-
-            foreach (var item in selectedDesignerItems)
-                if (item is DesignerItemViewModelBase)
+        foreach (var item in selectedDesignerItems)
+            if (item is DesignerItemViewModelBase viewModel)
+            {
+                double dragDeltaVertical;
+                double dragDeltaHorizontal;
+                if (viewModel is PictureDesignerItemViewModel pictureDesignerItemViewModel &&
+                    ((Keyboard.GetKeyStates(Key.LeftShift) & KeyStates.Down) == KeyStates.Down ||
+                     (Keyboard.GetKeyStates(Key.RightShift) & KeyStates.Down) == KeyStates.Down))
                 {
-                    var viewModel = item as DesignerItemViewModelBase;
-                    if (viewModel is PictureDesignerItemViewModel &&
-                        ((Keyboard.GetKeyStates(Key.LeftShift) & KeyStates.Down) == KeyStates.Down ||
-                         (Keyboard.GetKeyStates(Key.RightShift) & KeyStates.Down) == KeyStates.Down))
+                    if (VerticalAlignment == VerticalAlignment.Top && HorizontalAlignment == HorizontalAlignment.Left)
                     {
-                        var picViewModel = viewModel as PictureDesignerItemViewModel;
-                        if (VerticalAlignment == VerticalAlignment.Top &&
-                            HorizontalAlignment == HorizontalAlignment.Left)
-                        {
-                            var left = picViewModel.Left.Value;
-                            dragDeltaHorizontal = Math.Min(Math.Max(-minLeft, e.HorizontalChange), minDeltaHorizontal);
-                            picViewModel.Left.Value = left + dragDeltaHorizontal;
-                            picViewModel.Width.Value = picViewModel.Width.Value - dragDeltaHorizontal;
-                            picViewModel.Height.Value = picViewModel.Width.Value / picViewModel.FileWidth *
-                                                        picViewModel.FileHeight;
-                            picViewModel.Top.Value = picViewModel.Bottom.Value - picViewModel.Height.Value;
-                        }
-                        else if (VerticalAlignment == VerticalAlignment.Top &&
-                                 HorizontalAlignment == HorizontalAlignment.Right)
-                        {
-                            var top = picViewModel.Top.Value;
-                            dragDeltaVertical = Math.Min(Math.Max(-minTop, e.VerticalChange), minDeltaVertical);
-                            picViewModel.Top.Value = top + dragDeltaVertical;
-                            picViewModel.Height.Value = picViewModel.Height.Value - dragDeltaVertical;
-                            picViewModel.Width.Value = picViewModel.Height.Value / picViewModel.FileHeight *
-                                                       picViewModel.FileWidth;
-                        }
-                        else if (VerticalAlignment == VerticalAlignment.Bottom &&
-                                 HorizontalAlignment == HorizontalAlignment.Left)
-                        {
-                            var left = picViewModel.Left.Value;
-                            dragDeltaHorizontal = Math.Min(Math.Max(-minLeft, e.HorizontalChange), minDeltaHorizontal);
-                            picViewModel.Left.Value = left + dragDeltaHorizontal;
-                            picViewModel.Width.Value = picViewModel.Width.Value - dragDeltaHorizontal;
-                            picViewModel.Height.Value = picViewModel.Width.Value / picViewModel.FileWidth *
-                                                        picViewModel.FileHeight;
-                        }
-                        else if (VerticalAlignment == VerticalAlignment.Bottom &&
-                                 HorizontalAlignment == HorizontalAlignment.Right)
-                        {
-                            dragDeltaVertical = Math.Min(-e.VerticalChange, minDeltaVertical);
-                            picViewModel.Height.Value = picViewModel.Height.Value - dragDeltaVertical;
-                            picViewModel.Width.Value = picViewModel.Height.Value / picViewModel.FileHeight *
-                                                       picViewModel.FileWidth;
-                        }
+                        var left = pictureDesignerItemViewModel.Left.Value;
+                        dragDeltaHorizontal = Math.Min(Math.Max(-minLeft, e.HorizontalChange), minDeltaHorizontal);
+                        pictureDesignerItemViewModel.Left.Value = left + dragDeltaHorizontal;
+                        pictureDesignerItemViewModel.Width.Value =
+                            pictureDesignerItemViewModel.Width.Value - dragDeltaHorizontal;
+                        pictureDesignerItemViewModel.Height.Value =
+                            pictureDesignerItemViewModel.Width.Value / pictureDesignerItemViewModel.FileWidth *
+                            pictureDesignerItemViewModel.FileHeight;
+                        pictureDesignerItemViewModel.Top.Value = pictureDesignerItemViewModel.Bottom.Value -
+                                                                 pictureDesignerItemViewModel.Height.Value;
                     }
-                    else if (viewModel is NEllipseViewModel &&
-                             ((Keyboard.GetKeyStates(Key.LeftShift) & KeyStates.Down) == KeyStates.Down ||
-                              (Keyboard.GetKeyStates(Key.RightShift) & KeyStates.Down) == KeyStates.Down))
+                    else if (VerticalAlignment == VerticalAlignment.Top &&
+                             HorizontalAlignment == HorizontalAlignment.Right)
                     {
-                        var ellipse = viewModel as NEllipseViewModel;
-                        if (VerticalAlignment == VerticalAlignment.Top &&
-                            HorizontalAlignment == HorizontalAlignment.Left)
+                        var top = pictureDesignerItemViewModel.Top.Value;
+                        dragDeltaVertical = Math.Min(Math.Max(-minTop, e.VerticalChange), minDeltaVertical);
+                        pictureDesignerItemViewModel.Top.Value = top + dragDeltaVertical;
+                        pictureDesignerItemViewModel.Height.Value =
+                            pictureDesignerItemViewModel.Height.Value - dragDeltaVertical;
+                        pictureDesignerItemViewModel.Width.Value =
+                            pictureDesignerItemViewModel.Height.Value / pictureDesignerItemViewModel.FileHeight *
+                            pictureDesignerItemViewModel.FileWidth;
+                    }
+                    else if (VerticalAlignment == VerticalAlignment.Bottom &&
+                             HorizontalAlignment == HorizontalAlignment.Left)
+                    {
+                        var left = pictureDesignerItemViewModel.Left.Value;
+                        dragDeltaHorizontal = Math.Min(Math.Max(-minLeft, e.HorizontalChange), minDeltaHorizontal);
+                        pictureDesignerItemViewModel.Left.Value = left + dragDeltaHorizontal;
+                        pictureDesignerItemViewModel.Width.Value =
+                            pictureDesignerItemViewModel.Width.Value - dragDeltaHorizontal;
+                        pictureDesignerItemViewModel.Height.Value =
+                            pictureDesignerItemViewModel.Width.Value / pictureDesignerItemViewModel.FileWidth *
+                            pictureDesignerItemViewModel.FileHeight;
+                    }
+                    else if (VerticalAlignment == VerticalAlignment.Bottom &&
+                             HorizontalAlignment == HorizontalAlignment.Right)
+                    {
+                        dragDeltaVertical = Math.Min(-e.VerticalChange, minDeltaVertical);
+                        pictureDesignerItemViewModel.Height.Value =
+                            pictureDesignerItemViewModel.Height.Value - dragDeltaVertical;
+                        pictureDesignerItemViewModel.Width.Value =
+                            pictureDesignerItemViewModel.Height.Value / pictureDesignerItemViewModel.FileHeight *
+                            pictureDesignerItemViewModel.FileWidth;
+                    }
+                }
+                else if (viewModel is NEllipseViewModel ellipseViewModel &&
+                         ((Keyboard.GetKeyStates(Key.LeftShift) & KeyStates.Down) == KeyStates.Down ||
+                          (Keyboard.GetKeyStates(Key.RightShift) & KeyStates.Down) == KeyStates.Down))
+                {
+                    if (VerticalAlignment == VerticalAlignment.Top && HorizontalAlignment == HorizontalAlignment.Left)
+                    {
+                        var left = ellipseViewModel.Left.Value;
+                        dragDeltaHorizontal = Math.Min(Math.Max(-minLeft, e.HorizontalChange), minDeltaHorizontal);
+                        ellipseViewModel.Left.Value = left + dragDeltaHorizontal;
+                        ellipseViewModel.Width.Value = ellipseViewModel.Width.Value - dragDeltaHorizontal;
+                        ellipseViewModel.Height.Value = ellipseViewModel.Width.Value - dragDeltaHorizontal;
+                        ellipseViewModel.Top.Value = ellipseViewModel.Bottom.Value - ellipseViewModel.Height.Value;
+                    }
+                    else if (VerticalAlignment == VerticalAlignment.Top &&
+                             HorizontalAlignment == HorizontalAlignment.Right)
+                    {
+                        var top = ellipseViewModel.Top.Value;
+                        dragDeltaVertical = Math.Min(Math.Max(-minTop, e.VerticalChange), minDeltaVertical);
+                        ellipseViewModel.Top.Value = top + dragDeltaVertical;
+                        ellipseViewModel.Height.Value = ellipseViewModel.Height.Value - dragDeltaVertical;
+                        ellipseViewModel.Width.Value = ellipseViewModel.Height.Value - dragDeltaVertical;
+                    }
+                    else if (VerticalAlignment == VerticalAlignment.Bottom &&
+                             HorizontalAlignment == HorizontalAlignment.Left)
+                    {
+                        var left = ellipseViewModel.Left.Value;
+                        dragDeltaHorizontal = Math.Min(Math.Max(-minLeft, e.HorizontalChange), minDeltaHorizontal);
+                        ellipseViewModel.Left.Value = left + dragDeltaHorizontal;
+                        ellipseViewModel.Width.Value = ellipseViewModel.Width.Value - dragDeltaHorizontal;
+                        ellipseViewModel.Height.Value = ellipseViewModel.Width.Value - dragDeltaHorizontal;
+                    }
+                    else if (VerticalAlignment == VerticalAlignment.Bottom &&
+                             HorizontalAlignment == HorizontalAlignment.Right)
+                    {
+                        dragDeltaVertical = Math.Min(-e.VerticalChange, minDeltaVertical);
+                        ellipseViewModel.Height.Value = ellipseViewModel.Height.Value - dragDeltaVertical;
+                        ellipseViewModel.Width.Value = ellipseViewModel.Height.Value - dragDeltaVertical;
+                    }
+                }
+                else
+                {
+                    var rect = new Rect(viewModel.Left.Value, viewModel.Top.Value, viewModel.Width.Value,
+                        viewModel.Height.Value);
+                    dragDeltaVertical = Math.Min(-e.VerticalChange, minDeltaVertical);
+                    dragDeltaHorizontal = Math.Min(Math.Max(-minLeft, e.HorizontalChange), minDeltaHorizontal);
+                    Sum(ref rect, dragDeltaHorizontal, dragDeltaVertical, HorizontalAlignment, VerticalAlignment);
+
+                    if (diagramVM.EnablePointSnap.Value)
+                    {
+                        var snapPoints = diagramVM.GetSnapPoints(new List<SnapPoint>(correspondingViews));
+                        Tuple<SnapPoint, Point> snapped = null;
+
+                        foreach (var snapPoint in snapPoints)
                         {
-                            var left = ellipse.Left.Value;
-                            dragDeltaHorizontal = Math.Min(Math.Max(-minLeft, e.HorizontalChange), minDeltaHorizontal);
-                            ellipse.Left.Value = left + dragDeltaHorizontal;
-                            ellipse.Width.Value = ellipse.Width.Value - dragDeltaHorizontal;
-                            ellipse.Height.Value = ellipse.Width.Value - dragDeltaHorizontal;
-                            ellipse.Top.Value = ellipse.Bottom.Value - ellipse.Height.Value;
+                            var p = GetPosition(rect, VerticalAlignment, HorizontalAlignment);
+                            var oppositeP = GetPosition(rect, OppositeVertical(VerticalAlignment),
+                                OppositeHorizontal(HorizontalAlignment));
+                            if (!(p.X > snapPoint.Item2.X - mainWindowVM.SnapPower.Value)
+                                || !(p.X < snapPoint.Item2.X + mainWindowVM.SnapPower.Value)
+                                || !(p.Y > snapPoint.Item2.Y - mainWindowVM.SnapPower.Value)
+                                || !(p.Y < snapPoint.Item2.Y + mainWindowVM.SnapPower.Value)) continue;
+                            //スナップする座標を一時変数へ保存
+                            snapped = snapPoint;
+                            _SnapToEdge = snapPoint.Item1.SnapPointPosition;
+                            _SnapTargetDataContext = snapPoint.Item1.DataContext as DesignerItemViewModelBase;
                         }
-                        else if (VerticalAlignment == VerticalAlignment.Top &&
-                                 HorizontalAlignment == HorizontalAlignment.Right)
+
+                        //スナップした場合
+                        if (snapped != null)
                         {
-                            var top = ellipse.Top.Value;
-                            dragDeltaVertical = Math.Min(Math.Max(-minTop, e.VerticalChange), minDeltaVertical);
-                            ellipse.Top.Value = top + dragDeltaVertical;
-                            ellipse.Height.Value = ellipse.Height.Value - dragDeltaVertical;
-                            ellipse.Width.Value = ellipse.Height.Value - dragDeltaVertical;
+                            var adornerLayer = AdornerLayer.GetAdornerLayer(designerCanvas);
+                            RemoveFromAdornerLayerAndDictionary(snapped.Item2, adornerLayer);
+
+                            //ドラッグ終了座標を一時変数で上書きしてスナップ
+                            SetRect(ref rect, snapped.Item2, VerticalAlignment, HorizontalAlignment);
+
+                            viewModel.Left.Value = rect.X;
+                            viewModel.Top.Value = rect.Y;
+                            viewModel.Width.Value = rect.Width;
+                            viewModel.Height.Value = rect.Height;
+
+                            _SnapResult = SnapResult.Snapped;
+
+                            if (adornerLayer != null)
+                            {
+                                LogManager.GetCurrentClassLogger().Trace($"Snap={snapped.Item2}");
+                                if (!_adorners.ContainsKey(snapped.Item2))
+                                {
+                                    var adorner = new SnapPointAdorner(designerCanvas, snapped.Item2,
+                                        viewModel.SnapPointSize.Value, viewModel.ThumbThickness.Value);
+                                    if (adorner != null)
+                                    {
+                                        adornerLayer.Add(adorner);
+
+                                        //ディクショナリに記憶する
+                                        _adorners.Add(snapped.Item2, adorner);
+                                    }
+                                }
+                            }
                         }
-                        else if (VerticalAlignment == VerticalAlignment.Bottom &&
-                                 HorizontalAlignment == HorizontalAlignment.Left)
+                        else //スナップしなかった場合
                         {
-                            var left = ellipse.Left.Value;
-                            dragDeltaHorizontal = Math.Min(Math.Max(-minLeft, e.HorizontalChange), minDeltaHorizontal);
-                            ellipse.Left.Value = left + dragDeltaHorizontal;
-                            ellipse.Width.Value = ellipse.Width.Value - dragDeltaHorizontal;
-                            ellipse.Height.Value = ellipse.Width.Value - dragDeltaHorizontal;
-                        }
-                        else if (VerticalAlignment == VerticalAlignment.Bottom &&
-                                 HorizontalAlignment == HorizontalAlignment.Right)
-                        {
-                            dragDeltaVertical = Math.Min(-e.VerticalChange, minDeltaVertical);
-                            ellipse.Height.Value = ellipse.Height.Value - dragDeltaVertical;
-                            ellipse.Width.Value = ellipse.Height.Value - dragDeltaVertical;
+                            _SnapResult = SnapResult.NoSnap;
+
+                            RemoveAllAdornerFromAdornerLayerAndDictionary(designerCanvas);
+
+                            viewModel.snapPointPosition =
+                                GetSnapPointPosition(VerticalAlignment, HorizontalAlignment);
+                            dragDeltaHorizontal = AffectHorizontal(e, HorizontalAlignment, minLeft,
+                                minDeltaHorizontal, viewModel);
+                            dragDeltaVertical = AffectVertical(e, VerticalAlignment, minTop, minDeltaVertical,
+                                viewModel);
                         }
                     }
                     else
                     {
-                        var rect = new Rect(viewModel.Left.Value, viewModel.Top.Value, viewModel.Width.Value,
-                            viewModel.Height.Value);
-                        dragDeltaVertical = Math.Min(-e.VerticalChange, minDeltaVertical);
-                        dragDeltaHorizontal = Math.Min(Math.Max(-minLeft, e.HorizontalChange), minDeltaHorizontal);
-                        Sum(ref rect, dragDeltaHorizontal, dragDeltaVertical, HorizontalAlignment, VerticalAlignment);
-
-                        if (diagramVM.EnablePointSnap.Value)
+                        if (VerticalAlignment == VerticalAlignment.Bottom)
                         {
-                            var snapPoints = diagramVM.GetSnapPoints(new List<SnapPoint>(correspondingViews));
-                            Tuple<SnapPoint, Point> snapped = null;
-
-                            foreach (var snapPoint in snapPoints)
-                            {
-                                var p = GetPosition(rect, VerticalAlignment, HorizontalAlignment);
-                                var oppositeP = GetPosition(rect, OppositeVertical(VerticalAlignment),
-                                    OppositeHorizontal(HorizontalAlignment));
-                                if (p.X > snapPoint.Item2.X - mainWindowVM.SnapPower.Value
-                                    && p.X < snapPoint.Item2.X + mainWindowVM.SnapPower.Value
-                                    && p.Y > snapPoint.Item2.Y - mainWindowVM.SnapPower.Value
-                                    && p.Y < snapPoint.Item2.Y + mainWindowVM.SnapPower.Value)
-                                {
-                                    //スナップする座標を一時変数へ保存
-                                    snapped = snapPoint;
-                                    _SnapToEdge = snapPoint.Item1.SnapPointPosition;
-                                    _SnapTargetDataContext = snapPoint.Item1.DataContext as DesignerItemViewModelBase;
-                                }
-                            }
-
-                            //スナップした場合
-                            if (snapped != null)
-                            {
-                                var adornerLayer = AdornerLayer.GetAdornerLayer(designerCanvas);
-                                RemoveFromAdornerLayerAndDictionary(snapped.Item2, adornerLayer);
-
-                                //ドラッグ終了座標を一時変数で上書きしてスナップ
-                                SetRect(ref rect, snapped.Item2, VerticalAlignment, HorizontalAlignment);
-
-                                viewModel.Left.Value = rect.X;
-                                viewModel.Top.Value = rect.Y;
-                                viewModel.Width.Value = rect.Width;
-                                viewModel.Height.Value = rect.Height;
-
-                                _SnapResult = SnapResult.Snapped;
-
-                                if (adornerLayer != null)
-                                {
-                                    LogManager.GetCurrentClassLogger().Trace($"Snap={snapped.Item2}");
-                                    if (!_adorners.ContainsKey(snapped.Item2))
-                                    {
-                                        var adorner = new SnapPointAdorner(designerCanvas, snapped.Item2,
-                                            viewModel.SnapPointSize.Value, viewModel.ThumbThickness.Value);
-                                        if (adorner != null)
-                                        {
-                                            adornerLayer.Add(adorner);
-
-                                            //ディクショナリに記憶する
-                                            _adorners.Add(snapped.Item2, adorner);
-                                        }
-                                    }
-                                }
-                            }
-                            else //スナップしなかった場合
-                            {
-                                _SnapResult = SnapResult.NoSnap;
-
-                                RemoveAllAdornerFromAdornerLayerAndDictionary(designerCanvas);
-
-                                viewModel.snapPointPosition =
-                                    GetSnapPointPosition(VerticalAlignment, HorizontalAlignment);
-                                dragDeltaHorizontal = AffectHorizontal(e, HorizontalAlignment, minLeft,
-                                    minDeltaHorizontal, viewModel);
-                                dragDeltaVertical = AffectVertical(e, VerticalAlignment, minTop, minDeltaVertical,
-                                    viewModel);
-                            }
+                            dragDeltaVertical = Math.Min(-e.VerticalChange, minDeltaVertical);
+                            var old = viewModel.Top.Value;
+                            viewModel.Height.Value = viewModel.Height.Value - dragDeltaVertical;
+                            viewModel.UpdatePathGeometryIfEnable("Height", viewModel.Height.Value, old);
                         }
-                        else
+                        else if (VerticalAlignment == VerticalAlignment.Top)
                         {
-                            switch (VerticalAlignment)
-                            {
-                                case VerticalAlignment.Bottom:
-                                {
-                                    dragDeltaVertical = Math.Min(-e.VerticalChange, minDeltaVertical);
-                                    var old = viewModel.Top.Value;
-                                    viewModel.Height.Value = viewModel.Height.Value - dragDeltaVertical;
-                                    viewModel.UpdatePathGeometryIfEnable("Height", viewModel.Height.Value, old);
-                                }
-                                    break;
-                                case VerticalAlignment.Top:
-                                {
-                                    var top = viewModel.Top.Value;
-                                    dragDeltaVertical = Math.Min(Math.Max(-minTop, e.VerticalChange), minDeltaVertical);
-                                    var old = viewModel.Top.Value;
-                                    viewModel.Top.Value = top + dragDeltaVertical;
-                                    viewModel.UpdatePathGeometryIfEnable("Top", viewModel.Top.Value, old);
-                                    old = viewModel.Height.Value;
-                                    viewModel.Height.Value = viewModel.Height.Value - dragDeltaVertical;
-                                    viewModel.UpdatePathGeometryIfEnable("Height", viewModel.Height.Value, old);
-                                }
-                                    break;
-                            }
+                            var top = viewModel.Top.Value;
+                            dragDeltaVertical = Math.Min(Math.Max(-minTop, e.VerticalChange), minDeltaVertical);
+                            var old = viewModel.Top.Value;
+                            viewModel.Top.Value = top + dragDeltaVertical;
+                            viewModel.UpdatePathGeometryIfEnable("Top", viewModel.Top.Value, old);
+                            old = viewModel.Height.Value;
+                            viewModel.Height.Value = viewModel.Height.Value - dragDeltaVertical;
+                            viewModel.UpdatePathGeometryIfEnable("Height", viewModel.Height.Value, old);
+                        }
 
-                            switch (HorizontalAlignment)
-                            {
-                                case HorizontalAlignment.Left:
-                                {
-                                    var left = viewModel.Left.Value;
-                                    dragDeltaHorizontal = Math.Min(Math.Max(-minLeft, e.HorizontalChange),
-                                        minDeltaHorizontal);
-                                    var old = viewModel.Left.Value;
-                                    viewModel.Left.Value = left + dragDeltaHorizontal;
-                                    viewModel.UpdatePathGeometryIfEnable("Left", viewModel.Left.Value, old);
-                                    old = viewModel.Width.Value;
-                                    viewModel.Width.Value = viewModel.Width.Value - dragDeltaHorizontal;
-                                    viewModel.UpdatePathGeometryIfEnable("Width", viewModel.Width.Value, old);
-                                }
-                                    break;
-                                case HorizontalAlignment.Right:
-                                {
-                                    dragDeltaHorizontal = Math.Min(-e.HorizontalChange, minDeltaHorizontal);
-                                    var old = viewModel.Width.Value;
-                                    viewModel.Width.Value = viewModel.Width.Value - dragDeltaHorizontal;
-                                    viewModel.UpdatePathGeometryIfEnable("Width", viewModel.Width.Value, old);
-                                }
-                                    break;
-                            }
+                        if (HorizontalAlignment == HorizontalAlignment.Left)
+                        {
+                            var left = viewModel.Left.Value;
+                            dragDeltaHorizontal = Math.Min(Math.Max(-minLeft, e.HorizontalChange),
+                                minDeltaHorizontal);
+                            var old = viewModel.Left.Value;
+                            viewModel.Left.Value = left + dragDeltaHorizontal;
+                            viewModel.UpdatePathGeometryIfEnable("Left", viewModel.Left.Value, old);
+                            old = viewModel.Width.Value;
+                            viewModel.Width.Value = viewModel.Width.Value - dragDeltaHorizontal;
+                            viewModel.UpdatePathGeometryIfEnable("Width", viewModel.Width.Value, old);
+                        }
+                        else if (HorizontalAlignment == HorizontalAlignment.Right)
+                        {
+                            dragDeltaHorizontal = Math.Min(-e.HorizontalChange, minDeltaHorizontal);
+                            var old = viewModel.Width.Value;
+                            viewModel.Width.Value = viewModel.Width.Value - dragDeltaHorizontal;
+                            viewModel.UpdatePathGeometryIfEnable("Width", viewModel.Width.Value, old);
                         }
                     }
-
-                    (Application.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value =
-                        $"(w, h) = ({viewModel.Width.Value}, {viewModel.Height.Value})";
                 }
 
-            e.Handled = true;
-        }
+                (Application.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value =
+                    $"(w, h) = ({viewModel.Width.Value}, {viewModel.Height.Value})";
+            }
+
+        e.Handled = true;
     }
 
     public static double AffectHorizontal(DragDeltaEventArgs e, HorizontalAlignment horizontalAlignment, double minLeft,
@@ -443,6 +431,7 @@ public class ResizeThumb : SnapPoint
         }
     }
 
+    [Conditional("DEBUG")]
     private void DebugPrint(string windowName, Rect rect, Point? value = null)
     {
         var designerCanvas = Application.Current.MainWindow.GetChildOfType<DesignerCanvas>();
@@ -474,13 +463,13 @@ public class ResizeThumb : SnapPoint
         rtb.Render(visual);
 
         //OpenCvSharp.Cv2.ImShow()するためには src_depth != CV_16F && src_depth != CV_32S である必要があるから、予めBgr24に変換しておく
-        var newFormatedBitmapSource = new FormatConvertedBitmap();
-        newFormatedBitmapSource.BeginInit();
-        newFormatedBitmapSource.Source = rtb;
-        newFormatedBitmapSource.DestinationFormat = PixelFormats.Bgr24;
-        newFormatedBitmapSource.EndInit();
+        var newFormattedBitmapSource = new FormatConvertedBitmap();
+        newFormattedBitmapSource.BeginInit();
+        newFormattedBitmapSource.Source = rtb;
+        newFormattedBitmapSource.DestinationFormat = PixelFormats.Bgr24;
+        newFormattedBitmapSource.EndInit();
 
-        var mat = BitmapSourceConverter.ToMat(newFormatedBitmapSource);
+        var mat = newFormattedBitmapSource.ToMat();
         Cv2.ImShow(windowName, mat);
     }
 
@@ -541,7 +530,7 @@ public class ResizeThumb : SnapPoint
                 break;
         }
 
-        throw new Exception("alignment conbination is wrong");
+        throw new Exception("alignment combination is wrong");
     }
 
     private double SafeValue(double target, double min, double delta)
@@ -671,31 +660,34 @@ public class ResizeThumb : SnapPoint
         // drag limits are set by these parameters: canvas top, canvas left, minHeight, minWidth
         // calculate min value for each parameter for each item
         foreach (var item in selectedDesignerItems)
-            if (item is DesignerItemViewModelBase)
+            switch (item)
             {
-                var viewModel = item as DesignerItemViewModelBase;
-                var left = viewModel.Left.Value;
-                var top = viewModel.Top.Value;
+                case DesignerItemViewModelBase designerItemViewModel:
+                {
+                    var left = designerItemViewModel.Left.Value;
+                    var top = designerItemViewModel.Top.Value;
 
-                minLeft = double.IsNaN(left) ? 0 : Math.Min(left, minLeft);
-                minTop = double.IsNaN(top) ? 0 : Math.Min(top, minTop);
+                    minLeft = double.IsNaN(left) ? 0 : Math.Min(left, minLeft);
+                    minTop = double.IsNaN(top) ? 0 : Math.Min(top, minTop);
 
-                minDeltaVertical = Math.Min(minDeltaVertical, viewModel.Height.Value - viewModel.MinHeight);
-                minDeltaHorizontal = Math.Min(minDeltaHorizontal, viewModel.Width.Value - viewModel.MinWidth);
-            }
-            else if (item is ConnectorBaseViewModel)
-            {
-                var viewModel = item as ConnectorBaseViewModel;
-                var left = Math.Min(viewModel.Points[0].X, viewModel.Points[1].X);
-                var top = Math.Min(viewModel.Points[0].Y, viewModel.Points[1].Y);
+                    minDeltaVertical = Math.Min(minDeltaVertical, designerItemViewModel.Height.Value - designerItemViewModel.MinHeight);
+                    minDeltaHorizontal = Math.Min(minDeltaHorizontal, designerItemViewModel.Width.Value - designerItemViewModel.MinWidth);
+                    break;
+                }
+                case ConnectorBaseViewModel connectorBaseViewModel:
+                {
+                    var left = Math.Min(connectorBaseViewModel.Points[0].X, connectorBaseViewModel.Points[1].X);
+                    var top = Math.Min(connectorBaseViewModel.Points[0].Y, connectorBaseViewModel.Points[1].Y);
 
-                var width = Math.Max(viewModel.Points[0].X, viewModel.Points[1].X) -
-                            Math.Min(viewModel.Points[0].X, viewModel.Points[1].X);
-                var height = Math.Max(viewModel.Points[0].Y, viewModel.Points[1].Y) -
-                             Math.Min(viewModel.Points[0].Y, viewModel.Points[1].Y);
+                    var width = Math.Max(connectorBaseViewModel.Points[0].X, connectorBaseViewModel.Points[1].X) -
+                                Math.Min(connectorBaseViewModel.Points[0].X, connectorBaseViewModel.Points[1].X);
+                    var height = Math.Max(connectorBaseViewModel.Points[0].Y, connectorBaseViewModel.Points[1].Y) -
+                                 Math.Min(connectorBaseViewModel.Points[0].Y, connectorBaseViewModel.Points[1].Y);
 
-                minDeltaVertical = Math.Min(minDeltaVertical, height);
-                minDeltaHorizontal = Math.Min(minDeltaHorizontal, width);
+                    minDeltaVertical = Math.Min(minDeltaVertical, height);
+                    minDeltaHorizontal = Math.Min(minDeltaHorizontal, width);
+                    break;
+                }
             }
     }
 
@@ -706,18 +698,18 @@ public class ResizeThumb : SnapPoint
 
         removes.ForEach(x =>
         {
-            if (adornerLayer != null) adornerLayer.Remove(x.Value);
+            adornerLayer?.Remove(x.Value);
             _adorners.Remove(x.Key);
         });
     }
 
-    private void RemoveFromAdornerLayerAndDictionary(Point? snapped, AdornerLayer adornerLayer)
+    private void RemoveFromAdornerLayerAndDictionary(Point? snapped, AdornerLayer? adornerLayer)
     {
         var removes = _adorners.Where(x => x.Key != snapped)
             .ToList();
         removes.ForEach(x =>
         {
-            if (adornerLayer != null) adornerLayer.Remove(x.Value);
+            adornerLayer?.Remove(x.Value);
             _adorners.Remove(x.Key);
         });
     }
