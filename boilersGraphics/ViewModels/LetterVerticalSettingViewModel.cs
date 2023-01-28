@@ -1,68 +1,61 @@
-﻿using boilersGraphics.Models;
-using Prism.Mvvm;
-using Prism.Services.Dialogs;
-using Reactive.Bindings.Extensions;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Markup;
 using System.Windows.Media;
+using boilersGraphics.Models;
+using Prism.Mvvm;
+using Prism.Services.Dialogs;
 
-namespace boilersGraphics.ViewModels
+namespace boilersGraphics.ViewModels;
+
+public class LetterVerticalSettingViewModel : BindableBase, IDialogAware
 {
-    public class LetterVerticalSettingViewModel : BindableBase, IDialogAware
+    private ObservableCollection<FontFamilyEx> _FontFamilies;
+    private LetterVerticalDesignerItemViewModel _ViewModel;
+
+    public LetterVerticalSettingViewModel()
     {
-        private LetterVerticalDesignerItemViewModel _ViewModel;
-        private ObservableCollection<FontFamilyEx> _FontFamilies;
+        var fontFamilies = Fonts.GetFontFamilies("C:\\Windows\\Fonts");
+        FontFamilies = new ObservableCollection<FontFamilyEx>(fontFamilies.Select(x => new FontFamilyEx(x)));
+    }
 
-        public LetterVerticalDesignerItemViewModel ViewModel
-        {
-            get { return _ViewModel; }
-            set { SetProperty(ref _ViewModel, value); }
-        }
+    public LetterVerticalDesignerItemViewModel ViewModel
+    {
+        get => _ViewModel;
+        set => SetProperty(ref _ViewModel, value);
+    }
 
-        public ObservableCollection<FontFamilyEx> FontFamilies
-        {
-            get { return _FontFamilies; }
-            set { SetProperty(ref _FontFamilies, value); }
-        }
+    public ObservableCollection<FontFamilyEx> FontFamilies
+    {
+        get => _FontFamilies;
+        set => SetProperty(ref _FontFamilies, value);
+    }
 
-        public LetterVerticalSettingViewModel()
-        {
-            var fontFamilies = Fonts.GetFontFamilies("C:\\Windows\\Fonts");
-            FontFamilies = new ObservableCollection<FontFamilyEx>(fontFamilies.Select(x => new FontFamilyEx(x)));
-        }
+    public string Title => "レタリング";
 
-        public string Title => "レタリング";
+    public event Action<IDialogResult> RequestClose;
 
-        public event Action<IDialogResult> RequestClose;
+    public bool CanCloseDialog()
+    {
+        return true;
+    }
 
-        public bool CanCloseDialog()
-        {
-            return true;
-        }
+    public void OnDialogClosed()
+    {
+        ViewModel.LetterSettingDialogClose -= ViewModel_LetterSettingDialogClose;
+        ViewModel.LetterSettingDialogIsOpen.Value = false;
+        ViewModel.IsSelected.Value = false;
+    }
 
-        public void OnDialogClosed()
-        {
-            ViewModel.LetterSettingDialogClose -= ViewModel_LetterSettingDialogClose;
-            ViewModel.LetterSettingDialogIsOpen.Value = false;
-            ViewModel.IsSelected.Value = false;
-        }
+    public void OnDialogOpened(IDialogParameters parameters)
+    {
+        ViewModel = parameters.GetValue<LetterVerticalDesignerItemViewModel>("ViewModel");
+        ViewModel.LetterSettingDialogClose += ViewModel_LetterSettingDialogClose;
+    }
 
-        public void OnDialogOpened(IDialogParameters parameters)
-        {
-            ViewModel = parameters.GetValue<LetterVerticalDesignerItemViewModel>("ViewModel");
-            ViewModel.LetterSettingDialogClose += ViewModel_LetterSettingDialogClose;
-        }
-
-        private void ViewModel_LetterSettingDialogClose(object sender, EventArgs e)
-        {
-            IDialogResult result = new DialogResult(ButtonResult.OK);
-            RequestClose.Invoke(result);
-        }
+    private void ViewModel_LetterSettingDialogClose(object sender, EventArgs e)
+    {
+        IDialogResult result = new DialogResult(ButtonResult.OK);
+        RequestClose.Invoke(result);
     }
 }

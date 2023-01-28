@@ -1,19 +1,13 @@
-﻿using Microsoft.Xaml.Behaviors;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 using System.Windows;
+using Microsoft.Xaml.Behaviors;
 
-namespace boilersGraphics.Helpers
+namespace boilersGraphics.Helpers;
+
+internal class DebugAction : TriggerAction<DependencyObject>
 {
-    class DebugAction : TriggerAction<DependencyObject>
+    protected override void Invoke(object parameter)
     {
-        protected override void Invoke(object parameter)
-        {
-            Debug.WriteLine("DebugAction Invoked!!!");
-        }
+        Debug.WriteLine("DebugAction Invoked!!!");
     }
 }

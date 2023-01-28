@@ -42,6 +42,7 @@
     <Resource Include="Assets\img\eraser_dark.png" />
     <Resource Include="Assets\img\Export_dark.png" />
     <Resource Include="Assets\img\FoldingFan_dark.png" />
+    <Resource Include="Assets\img\GaussianFilter.png" />
     <Resource Include="Assets\img\Gear_dark.png" />
     <Resource Include="Assets\img\icons8-canvas-64.png" />
     <Resource Include="Assets\img\icons8-canvas-64_dark.png" />
@@ -127,6 +128,7 @@
     <PackageReference Include="SharpDX.D3DCompiler" Version="4.2.0" />
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.115.5" />
     <PackageReference Include="System.Data.SQLite.Linq" Version="1.0.115.5" />
+    <PackageReference Include="System.Linq.Async" Version="6.0.1" />
     <PackageReference Include="System.Reactive" Version="5.0.0" />
     <PackageReference Include="System.Reactive.Windows.Threading" Version="5.0.0" />
     <PackageReference Include="WriteableBitmapEx" Version="1.6.8" />
@@ -150,6 +152,7 @@
     <None Remove="Assets\img\eraser_dark.png" />
     <None Remove="Assets\img\Export_dark.png" />
     <None Remove="Assets\img\FoldingFan_dark.png" />
+    <None Remove="Assets\img\GaussianFilter.png" />
     <None Remove="Assets\img\Gear_dark.png" />
     <None Remove="Assets\img\icons8-canvas-64.png" />
     <None Remove="Assets\img\icons8-canvas-64_dark.png" />

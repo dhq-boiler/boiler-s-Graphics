@@ -1,17 +1,15 @@
-﻿
-#define DEBUG
+﻿#define DEBUG
 
 using System;
 using System.Diagnostics;
 
-namespace boilersGraphics.Helpers
+namespace boilersGraphics.Helpers;
+
+[AttributeUsage(AttributeTargets.Assembly)]
+public class AssemblyErrorLogAttribute : Attribute
 {
-    [AttributeUsage(AttributeTargets.Assembly, Inherited = false)]
-    public class AssemblyErrorLogAttribute : Attribute
+    public AssemblyErrorLogAttribute(string log)
     {
-        public AssemblyErrorLogAttribute(string log)
-        {
-            Debug.Fail(log);
-        }
+        Debug.Fail(log);
     }
 }

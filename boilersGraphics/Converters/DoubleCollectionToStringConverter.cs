@@ -4,34 +4,31 @@ using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
 
-namespace boilersGraphics.Converters
+namespace boilersGraphics.Converters;
+
+internal class DoubleCollectionToStringConverter : IValueConverter
 {
-    internal class DoubleCollectionToStringConverter : IValueConverter
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return value.ToString();
-        }
+        return value.ToString();
+    }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            var split = value.ToString().Split(' ');
-            foreach (var item in split)
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        var split = value.ToString().Split(' ');
+        foreach (var item in split)
+            if (item.EndsWith("."))
             {
-                if (item.EndsWith("."))
-                {
-                    return DependencyProperty.UnsetValue;
-                }
-                else if (double.TryParse(item, out double d))
-                {
-
-                }
-                else
-                {
-                    return DependencyProperty.UnsetValue;
-                }
+                return DependencyProperty.UnsetValue;
             }
-            return DoubleCollection.Parse(value.ToString());
-        }
+            else if (double.TryParse(item, out var d))
+            {
+            }
+            else
+            {
+                return DependencyProperty.UnsetValue;
+            }
+
+        return DoubleCollection.Parse(value.ToString());
     }
 }

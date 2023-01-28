@@ -1,37 +1,31 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace boilersGraphics.Helpers
+namespace boilersGraphics.Helpers;
+
+//[DebuggerNonUserCode]
+public sealed class WeakINPCEventHandler
 {
-    //[DebuggerNonUserCode]
-    public sealed class WeakINPCEventHandler
+    private readonly MethodInfo _method;
+    private readonly WeakReference _targetReference;
+
+    public WeakINPCEventHandler(PropertyChangedEventHandler callback)
     {
-        private readonly WeakReference _targetReference;
-        private readonly MethodInfo _method;
+        _method = callback.Method;
+        _targetReference = new WeakReference(callback.Target, true);
+    }
 
-        public WeakINPCEventHandler(PropertyChangedEventHandler callback)
+    //[DebuggerNonUserCode]
+    public void Handler(object sender, PropertyChangedEventArgs e)
+    {
+        var target = _targetReference.Target;
+        if (target != null)
         {
-            _method = callback.Method;
-            _targetReference = new WeakReference(callback.Target, true);
-        }
-
-        //[DebuggerNonUserCode]
-        public void Handler(object sender, PropertyChangedEventArgs e)
-        {
-            var target = _targetReference.Target;
-            if (target != null)
-            {
-                var callback = (Action<object, PropertyChangedEventArgs>)Delegate.CreateDelegate(typeof(Action<object, PropertyChangedEventArgs>), target, _method, true);
-                if (callback != null)
-                {
-                    callback(sender, e);
-                }
-            }
+            var callback =
+                (Action<object, PropertyChangedEventArgs>)Delegate.CreateDelegate(
+                    typeof(Action<object, PropertyChangedEventArgs>), target, _method, true);
+            if (callback != null) callback(sender, e);
         }
     }
 }

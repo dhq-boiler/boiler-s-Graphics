@@ -1,8 +1,7 @@
-﻿namespace TsOperationHistory.Internal
+﻿namespace TsOperationHistory.Internal;
+
+internal static class ErrorMessages
 {
-    internal static class ErrorMessages
-    {
-        public static string InvalidOperation { get; } = "無効な呼び出しです。";
-        public static string NotNull { get; } = "nullは許容されません。";
-    }
+    public static string InvalidOperation { get; } = "無効な呼び出しです。";
+    public static string NotNull { get; } = "nullは許容されません。";
 }

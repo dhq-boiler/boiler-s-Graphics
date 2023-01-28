@@ -1,8 +1,7 @@
 ﻿using Homura.ORM;
 
-namespace boilersGraphics.Models
+namespace boilersGraphics.Models;
+
+public class Dummy : EntityBaseObject
 {
-    public class Dummy : EntityBaseObject
-    {
-    }
 }

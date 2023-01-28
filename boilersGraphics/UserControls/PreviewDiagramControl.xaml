@@ -20,7 +20,8 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/Theme.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/Themes/DarkTheme.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/boilersGraphics;component/Resources/Themes/DarkTheme.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
             <converter:ToPointCollectionConverter x:Key="ToPointCollection" />
@@ -79,13 +80,15 @@
                         <Setter Property="Canvas.Top" Value="{Binding Top.Value}" />
                         <Setter Property="Canvas.Left" Value="{Binding Left.Value}" />
                         <Setter Property="Panel.ZIndex" Value="{Binding ZIndex.Value}" />
-                        <Setter Property="attached:SelectionProps.EnabledForSelection" Value="{Binding EnableForSelection.Value}" />
+                        <Setter Property="attached:SelectionProps.EnabledForSelection"
+                                Value="{Binding EnableForSelection.Value}" />
                         <Setter Property="attached:ItemConnectProps.EnabledForConnection" Value="True" />
                         <Setter Property="Width" Value="{Binding Width.Value}" />
                         <Setter Property="Height" Value="{Binding Height.Value}" />
                         <Setter Property="MaxWidth" Value="{x:Static sys:Double.PositiveInfinity}" />
                         <Setter Property="MaxHeight" Value="{x:Static sys:Double.PositiveInfinity}" />
-                        <Setter Property="Visibility" Value="{Binding IsVisible.Value, Converter={StaticResource BoolToVisibilityConverter}}" />
+                        <Setter Property="Visibility"
+                                Value="{Binding IsVisible.Value, Converter={StaticResource BoolToVisibilityConverter}}" />
                         <Setter Property="SnapsToDevicePixels" Value="True" />
                         <Setter Property="IsHitTestVisible" Value="{Binding IsHitTestVisible.Value}" />
                         <Setter Property="ContentTemplate">
@@ -122,10 +125,12 @@
                                     </Grid>
                                     <DataTemplate.Triggers>
                                         <DataTrigger Binding="{Binding IsSelected.Value}" Value="True">
-                                            <Setter TargetName="PART_ResizeDecorator" Property="Visibility" Value="Visible" />
+                                            <Setter TargetName="PART_ResizeDecorator" Property="Visibility"
+                                                    Value="Visible" />
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding IsSelected.Value}" Value="False">
-                                            <Setter TargetName="PART_ResizeDecorator" Property="Visibility" Value="Hidden" />
+                                            <Setter TargetName="PART_ResizeDecorator" Property="Visibility"
+                                                    Value="Hidden" />
                                         </DataTrigger>
                                     </DataTemplate.Triggers>
                                 </DataTemplate>
@@ -139,8 +144,10 @@
                         <Setter Property="Canvas.Top" Value="{Binding Area.Top}" />
                         <Setter Property="Canvas.Left" Value="{Binding Area.Left}" />
                         <Setter Property="Panel.ZIndex" Value="{Binding ZIndex.Value}" />
-                        <Setter Property="Visibility" Value="{Binding IsVisible.Value, Converter={StaticResource BoolToVisibilityConverter}}" />
-                        <Setter Property="attached:SelectionProps.EnabledForSelection" Value="{Binding EnableForSelection.Value}" />
+                        <Setter Property="Visibility"
+                                Value="{Binding IsVisible.Value, Converter={StaticResource BoolToVisibilityConverter}}" />
+                        <Setter Property="attached:SelectionProps.EnabledForSelection"
+                                Value="{Binding EnableForSelection.Value}" />
                         <Setter Property="IsHitTestVisible" Value="{Binding IsHitTestVisible.Value}" />
                         <Setter Property="ContentTemplateSelector">
                             <Setter.Value>
@@ -173,7 +180,8 @@
                                                 X2="{Binding Points[1].X}"
                                                 Y1="{Binding Points[0].Y}"
                                                 Y2="{Binding Points[1].Y}" />
-                                            <Control x:Name="PART_ResizeDecorator" Template="{StaticResource StraightLineResizeDecoratorTemplate}" />
+                                            <Control x:Name="PART_ResizeDecorator"
+                                                     Template="{StaticResource StraightLineResizeDecoratorTemplate}" />
                                         </Canvas>
                                     </DataTemplate>
                                     <DataTemplate DataType="{x:Type viewModel:BezierCurveViewModel}">
@@ -271,12 +279,15 @@
                                                 Tag="制御点"
                                                 Visibility="Hidden" />
                                             <!--  PART_ResizeDecorator  -->
-                                            <Control x:Name="PART_ResizeDecorator" Template="{StaticResource BezierCurveResizeDecoratorTemplate}" />
+                                            <Control x:Name="PART_ResizeDecorator"
+                                                     Template="{StaticResource BezierCurveResizeDecoratorTemplate}" />
                                         </Canvas>
                                         <DataTemplate.Triggers>
                                             <DataTrigger Binding="{Binding IsSelected.Value}" Value="True">
-                                                <Setter TargetName="ControlPoint1" Property="Visibility" Value="Visible" />
-                                                <Setter TargetName="ControlPoint2" Property="Visibility" Value="Visible" />
+                                                <Setter TargetName="ControlPoint1" Property="Visibility"
+                                                        Value="Visible" />
+                                                <Setter TargetName="ControlPoint2" Property="Visibility"
+                                                        Value="Visible" />
                                                 <Setter TargetName="ControlLine1" Property="Visibility" Value="Visible" />
                                                 <Setter TargetName="ControlLine2" Property="Visibility" Value="Visible" />
                                             </DataTrigger>
@@ -312,13 +323,15 @@
                                                 <Path.Data>
                                                     <PathGeometry>
                                                         <PathFigure StartPoint="{Binding Points[0]}">
-                                                            <PolyBezierSegment Points="{Binding Points, Converter={StaticResource ToPointCollection}}" />
+                                                            <PolyBezierSegment
+                                                                Points="{Binding Points, Converter={StaticResource ToPointCollection}}" />
                                                         </PathFigure>
                                                     </PathGeometry>
                                                 </Path.Data>
                                             </Path>
                                             <!--  PART_ResizeDecorator  -->
-                                            <Control x:Name="PART_ResizeDecorator" Template="{StaticResource BezierCurveResizeDecoratorTemplate}" />
+                                            <Control x:Name="PART_ResizeDecorator"
+                                                     Template="{StaticResource BezierCurveResizeDecoratorTemplate}" />
                                         </Canvas>
                                     </DataTemplate>
                                 </view:ItemsControlTemplateSelector>
@@ -330,7 +343,8 @@
                         <Setter Property="Canvas.Top" Value="{Binding Top.Value}" />
                         <Setter Property="Canvas.Left" Value="{Binding Left.Value}" />
                         <Setter Property="Panel.ZIndex" Value="{Binding ZIndex.Value}" />
-                        <Setter Property="Visibility" Value="{Binding IsVisible.Value, Converter={StaticResource BoolToVisibilityConverter}}" />
+                        <Setter Property="Visibility"
+                                Value="{Binding IsVisible.Value, Converter={StaticResource BoolToVisibilityConverter}}" />
                     </Style>
 
 

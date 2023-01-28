@@ -1,4 +1,11 @@
-﻿using boilersGraphics.Controls;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using boilersGraphics.Controls;
 using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
 using boilersGraphics.Views;
@@ -9,144 +16,119 @@ using Prism.Services.Dialogs;
 using Prism.Unity;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
-using SharpDX.D3DCompiler;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reactive.Linq;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
+using Rect = System.Windows.Rect;
+using Size = OpenCvSharp.Size;
 
-namespace boilersGraphics.ViewModels
+namespace boilersGraphics.ViewModels;
+
+public class BlurEffectViewModel : DesignerItemViewModelBase
 {
-    public class BlurEffectViewModel : DesignerItemViewModelBase
+    public BlurEffectViewModel()
     {
-        public ReactivePropertySlim<WriteableBitmap> Bitmap { get; } = new ReactivePropertySlim<WriteableBitmap>();
-        public ReactivePropertySlim<double> KernelWidth { get; } = new ReactivePropertySlim<double>(111d);
-        public ReactivePropertySlim<double> KernelHeight { get; } = new ReactivePropertySlim<double>(111d);
-        public ReactivePropertySlim<double> Sigma { get; } = new ReactivePropertySlim<double>(16d);
-
-        public BlurEffectViewModel()
+        (Application.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.AllItems.Subscribe(items =>
         {
-            (Application.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.AllItems.Subscribe(items =>
-            {
-                foreach (var item in items)
-                {
-                    item.BeginMonitor(() =>
-                    {
-                        Render();
-                    }).AddTo(_CompositeDisposable);
-                }
-            }).AddTo(_CompositeDisposable);
+            foreach (var item in items)
+                item.BeginMonitor(Render).AddTo(_CompositeDisposable);
+        }).AddTo(_CompositeDisposable);
 
-            KernelWidth.Subscribe(_ =>
-            {
-                Render();
-            }).AddTo(_CompositeDisposable);
-            KernelHeight.Subscribe(_ =>
-            {
-                Render();
-            }).AddTo(_CompositeDisposable);
+        KernelWidth.Subscribe(_ => { Render(); }).AddTo(_CompositeDisposable);
+        KernelHeight.Subscribe(_ => { Render(); }).AddTo(_CompositeDisposable);
+    }
+
+    public ReactivePropertySlim<WriteableBitmap> Bitmap { get; } = new();
+    public ReactivePropertySlim<double> KernelWidth { get; } = new(111d);
+    public ReactivePropertySlim<double> KernelHeight { get; } = new(111d);
+    public ReactivePropertySlim<double> Sigma { get; } = new(16d);
+
+    public ReactivePropertySlim<string> Source { get; }
+
+    public ReadOnlyReactivePropertySlim<IList<byte>> Bytecode { get; }
+
+    public ReadOnlyReactivePropertySlim<string> ErrorMessage { get; }
+
+    public override bool SupportsPropertyDialog => true;
+
+    public void Render()
+    {
+        if (Width.Value <= 0 || Height.Value <= 0) return;
+
+        var rtb = Renderer.Render(new Rect(Left.Value, Top.Value, Width.Value, Height.Value),
+            Application.Current.MainWindow.GetChildOfType<DesignerCanvas>(),
+            (Application.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel,
+            (Application.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.BackgroundItem.Value,
+            this);
+        var newFormattedBitmapSource = new FormatConvertedBitmap();
+        newFormattedBitmapSource.BeginInit();
+        newFormattedBitmapSource.Source = rtb;
+        newFormattedBitmapSource.DestinationFormat = PixelFormats.Bgr24;
+        newFormattedBitmapSource.EndInit();
+
+        if (!(KernelWidth.Value > 0 && KernelWidth.Value % 2 == 1))
+        {
+            MessageBox.Show("!(KernelWidth > 0 && KernelWidth% 2 == 1)");
+            return;
         }
 
-        public void Render()
+        if (!(KernelHeight.Value > 0 && KernelHeight.Value % 2 == 1))
         {
-            if (this.Width.Value <= 0 || this.Height.Value <= 0)
-            {
-                return;
-            }
-
-            RenderTargetBitmap rtb = Renderer.Render(new System.Windows.Rect(Left.Value, Top.Value, Width.Value, Height.Value), App.Current.MainWindow.GetChildOfType<DesignerCanvas>(), (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel, (App.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.BackgroundItem.Value, this);
-            FormatConvertedBitmap newFormatedBitmapSource = new FormatConvertedBitmap();
-            newFormatedBitmapSource.BeginInit();
-            newFormatedBitmapSource.Source = rtb;
-            newFormatedBitmapSource.DestinationFormat = PixelFormats.Bgr24;
-            newFormatedBitmapSource.EndInit();
-
-            if (!(KernelWidth.Value > 0 && KernelWidth.Value % 2 == 1))
-            {
-                MessageBox.Show("!(KernelWidth > 0 && KernelWidth% 2 == 1)");
-                return;
-            }
-            if (!(KernelHeight.Value > 0 && KernelHeight.Value % 2 == 1))
-            {
-                MessageBox.Show("!(KernelHeight > 0 && KernelHeight% 2 == 1)");
-                return;
-            }
-
-            using (var mat = BitmapSourceConverter.ToMat(newFormatedBitmapSource))
-                using (var dest = new Mat())
-            {
-                Cv2.GaussianBlur(mat, dest, new OpenCvSharp.Size(KernelWidth.Value, KernelHeight.Value), Sigma.Value);
-                Bitmap.Value = dest.ToWriteableBitmap();
-            }
+            MessageBox.Show("!(KernelHeight > 0 && KernelHeight% 2 == 1)");
+            return;
         }
 
-        public override void OnRectChanged(System.Windows.Rect rect)
-        {
-            Render();
-        }
+        using var mat = newFormattedBitmapSource.ToMat();
+        using var dest = new Mat();
+        Cv2.GaussianBlur(mat, dest, new Size(KernelWidth.Value, KernelHeight.Value), Sigma.Value);
+        Bitmap.Value = dest.ToWriteableBitmap();
+    }
 
-        public ReactivePropertySlim<string> Source
-        {
-            get;
-        }
+    public override async Task OnRectChanged(Rect rect)
+    {
+        Render();
+    }
 
-        public ReadOnlyReactivePropertySlim<IList<byte>> Bytecode
+    public override object Clone()
+    {
+        var clone = new BlurEffectViewModel
         {
-            get;
-        }
+            Owner = Owner
+        };
+        clone.Left.Value = Left.Value;
+        clone.Top.Value = Top.Value;
+        clone.Width.Value = Width.Value;
+        clone.Height.Value = Height.Value;
+        clone.EdgeBrush.Value = EdgeBrush.Value;
+        clone.FillBrush.Value = FillBrush.Value;
+        clone.EdgeThickness.Value = EdgeThickness.Value;
+        clone.RotationAngle.Value = RotationAngle.Value;
+        clone.StrokeLineJoin.Value = StrokeLineJoin.Value;
+        clone.StrokeDashArray.Value = StrokeDashArray.Value;
+        clone.StrokeMiterLimit.Value = StrokeMiterLimit.Value;
+        clone.KernelWidth.Value = KernelWidth.Value;
+        clone.KernelHeight.Value = KernelHeight.Value;
+        clone.Bitmap.Value = Bitmap.Value;
+        return clone;
+    }
 
-        public ReadOnlyReactivePropertySlim<string> ErrorMessage
-        {
-            get;
-        }
+    public override PathGeometry CreateGeometry(bool flag = false)
+    {
+        return GeometryCreator.CreateRectangle(this, 0, 0, flag);
+    }
 
-        public override bool SupportsPropertyDialog => true;
+    public override PathGeometry CreateGeometry(double angle)
+    {
+        return GeometryCreator.CreateRectangleWithAngle(this, 0, 0, RotationAngle.Value);
+    }
 
-        public override object Clone()
-        {
-            var clone = new BlurEffectViewModel();
-            clone.Owner = Owner;
-            clone.Left.Value = Left.Value;
-            clone.Top.Value = Top.Value;
-            clone.Width.Value = Width.Value;
-            clone.Height.Value = Height.Value;
-            clone.EdgeBrush.Value = EdgeBrush.Value;
-            clone.FillBrush.Value = FillBrush.Value;
-            clone.EdgeThickness.Value = EdgeThickness.Value;
-            clone.RotationAngle.Value = RotationAngle.Value;
-            clone.StrokeLineJoin.Value = StrokeLineJoin.Value;
-            clone.StrokeDashArray.Value = StrokeDashArray.Value;
-            clone.StrokeMiterLimit.Value = StrokeMiterLimit.Value;
-            clone.KernelWidth.Value = KernelWidth.Value;
-            clone.KernelHeight.Value = KernelHeight.Value;
-            clone.Bitmap.Value = Bitmap.Value;
-            return clone;
-        }
+    public override Type GetViewType()
+    {
+        return typeof(Image);
+    }
 
-        public override PathGeometry CreateGeometry(bool flag = false)
-        {
-            return GeometryCreator.CreateRectangle(this, 0, 0, flag);
-        }
-
-        public override PathGeometry CreateGeometry(double angle)
-        {
-            return GeometryCreator.CreateRectangleWithAngle(this, 0, 0, RotationAngle.Value);
-        }
-
-        public override Type GetViewType()
-        {
-            return typeof(Image);
-        }
-
-        public override void OpenPropertyDialog()
-        {
-            var dialogService = new DialogService((App.Current as PrismApplication).Container as IContainerExtension);
-            IDialogResult result = null;
-            dialogService.Show(nameof(DetailBlur), new DialogParameters() { { "ViewModel", this } }, ret => result = ret);
-        }
+    public override void OpenPropertyDialog()
+    {
+        var dialogService =
+            new DialogService((Application.Current as PrismApplication).Container as IContainerExtension);
+        IDialogResult result = null;
+        dialogService.Show(nameof(DetailBlur), new DialogParameters { { "ViewModel", this } }, ret => result = ret);
     }
 }

@@ -29,7 +29,7 @@ namespace boilersGraphics.Properties {
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        public Resources() {
+        internal Resources() {
         }
         
         /// <summary>
@@ -1636,11 +1636,29 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
-        ///   Canvas Background に類似しているローカライズされた文字列を検索します。
+        ///   Canvas EdgeBrush に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string String_CanvasBackground {
+        public static string String_CanvasEdgeBrush {
             get {
-                return ResourceManager.GetString("String_CanvasBackground", resourceCulture);
+                return ResourceManager.GetString("String_CanvasEdgeBrush", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Canvas EdgeThickness に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_CanvasEdgeThickness {
+            get {
+                return ResourceManager.GetString("String_CanvasEdgeThickness", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Canvas FillBrush に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_CanvasFillBrush {
+            get {
+                return ResourceManager.GetString("String_CanvasFillBrush", resourceCulture);
             }
         }
         
@@ -2154,6 +2172,15 @@ namespace boilersGraphics.Properties {
         public static string Tool_FreeHand {
             get {
                 return ResourceManager.GetString("Tool_FreeHand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Gaussian filter tool に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Tool_GaussianFilter {
+            get {
+                return ResourceManager.GetString("Tool_GaussianFilter", resourceCulture);
             }
         }
         

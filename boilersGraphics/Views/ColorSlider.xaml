@@ -41,7 +41,8 @@
                                 <Setter TargetName="Ellipse" Property="Fill" Value="{StaticResource DarkBrush}" />
                             </Trigger>-->
                             <Trigger Property="IsEnabled" Value="false">
-                                <Setter TargetName="Ellipse" Property="Fill" Value="{StaticResource DisabledBackgroundBrush}" />
+                                <Setter TargetName="Ellipse" Property="Fill"
+                                        Value="{StaticResource DisabledBackgroundBrush}" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -72,7 +73,8 @@
                     BorderThickness="1"
                     CornerRadius="6">
                     <Border.Background>
-                        <ImageBrush ImageSource="{Binding BackgroundBitmapSource, RelativeSource={RelativeSource AncestorType={x:Type local:ColorSlider}}}" />
+                        <ImageBrush
+                            ImageSource="{Binding BackgroundBitmapSource, RelativeSource={RelativeSource AncestorType={x:Type local:ColorSlider}}}" />
                     </Border.Background>
                 </Border>
                 <Track Name="PART_Track" Grid.Row="1">

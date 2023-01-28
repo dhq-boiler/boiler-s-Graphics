@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace boilersGraphics.Models
+namespace boilersGraphics.Models;
+
+[Serializable]
+public class Diagram
 {
-    [Serializable]
-    public class Diagram
-    {
-        public List<RenderItem> RenderItems { get; set; }
-    }
+    public List<RenderItem> RenderItems { get; set; }
 }

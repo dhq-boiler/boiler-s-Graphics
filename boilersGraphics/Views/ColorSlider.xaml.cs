@@ -2,48 +2,51 @@
 using System.Windows.Controls;
 using System.Windows.Media;
 
-namespace boilersGraphics.Views
+namespace boilersGraphics.Views;
+
+/// <summary>
+///     ColorSlider.xaml の相互作用ロジック
+/// </summary>
+public partial class ColorSlider : UserControl
 {
-    /// <summary>
-    /// ColorSlider.xaml の相互作用ロジック
-    /// </summary>
-    public partial class ColorSlider : UserControl
+    public static readonly DependencyProperty BackgroundBitmapSourceProperty =
+        DependencyProperty.Register("BackgroundBitmapSource", typeof(ImageSource), typeof(ColorSlider));
+
+    public static readonly DependencyProperty MaximumProperty =
+        DependencyProperty.Register("Maximum", typeof(int), typeof(ColorSlider));
+
+    public static readonly DependencyProperty MinimumProperty =
+        DependencyProperty.Register("Minimum", typeof(int), typeof(ColorSlider));
+
+    public static readonly DependencyProperty ValueProperty =
+        DependencyProperty.Register("Value", typeof(int), typeof(ColorSlider));
+
+    public ColorSlider()
     {
-        public ColorSlider()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
+    }
 
-        public static readonly DependencyProperty BackgroundBitmapSourceProperty = DependencyProperty.Register("BackgroundBitmapSource", typeof(ImageSource), typeof(ColorSlider));
+    public ImageSource BackgroundBitmapSource
+    {
+        get => (ImageSource)GetValue(BackgroundBitmapSourceProperty);
+        set => SetValue(BackgroundBitmapSourceProperty, value);
+    }
 
-        public ImageSource BackgroundBitmapSource
-        {
-            get { return (ImageSource)GetValue(BackgroundBitmapSourceProperty); }
-            set { SetValue(BackgroundBitmapSourceProperty, value); }
-        }
+    public int Maximum
+    {
+        get => (int)GetValue(MaximumProperty);
+        set => SetValue(MaximumProperty, value);
+    }
 
-        public static readonly DependencyProperty MaximumProperty = DependencyProperty.Register("Maximum", typeof(int), typeof(ColorSlider));
+    public int Minimum
+    {
+        get => (int)GetValue(MinimumProperty);
+        set => SetValue(MinimumProperty, value);
+    }
 
-        public int Maximum
-        {
-            get { return (int)GetValue(MaximumProperty); }
-            set { SetValue(MaximumProperty, value); }
-        }
-
-        public static readonly DependencyProperty MinimumProperty = DependencyProperty.Register("Minimum", typeof(int), typeof(ColorSlider));
-
-        public int Minimum
-        {
-            get { return (int)GetValue(MinimumProperty); }
-            set { SetValue(MinimumProperty, value); }
-        }
-
-        public static readonly DependencyProperty ValueProperty = DependencyProperty.Register("Value", typeof(int), typeof(ColorSlider));
-
-        public int Value
-        {
-            get { return (int)GetValue(ValueProperty); }
-            set { SetValue(ValueProperty, value); }
-        }
+    public int Value
+    {
+        get => (int)GetValue(ValueProperty);
+        set => SetValue(ValueProperty, value);
     }
 }

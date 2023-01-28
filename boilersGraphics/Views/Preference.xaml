@@ -7,8 +7,7 @@
     xmlns:converter="clr-namespace:boilersGraphics.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:helper="clr-namespace:boilersGraphics.Helpers"
-    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-    xmlns:local="clr-namespace:boilersGraphics.Views"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
     d:DesignHeight="450"
@@ -45,17 +44,20 @@
                 Columns="2"
                 Orientation="Horizontal"
                 Rows="10">
-                <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_CanvasWidth, Mode=OneWay}" />
+                <Label
+                    Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_CanvasWidth, Mode=OneWay}" />
                 <TextBox
                     HorizontalAlignment="Stretch"
                     HorizontalContentAlignment="Right"
                     Text="{Binding EditTarget.Value.Width.Value, Converter={StaticResource IntToStringConverter}, UpdateSourceTrigger=PropertyChanged}" />
-                <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_CanvasHeight, Mode=OneWay}" />
+                <Label
+                    Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_CanvasHeight, Mode=OneWay}" />
                 <TextBox
                     HorizontalAlignment="Stretch"
                     HorizontalContentAlignment="Right"
                     Text="{Binding EditTarget.Value.Height.Value, Converter={StaticResource IntToStringConverter}, UpdateSourceTrigger=PropertyChanged}" />
-                <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_CanvasBackground, Mode=OneWay}" />
+                <Label
+                    Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_CanvasFillBrush, Mode=OneWay}" />
                 <Grid>
                     <Grid.Background>
                         <VisualBrush
@@ -93,28 +95,97 @@
                             </VisualBrush.Visual>
                         </VisualBrush>
                     </Grid.Background>
-                    <Button Command="{Binding ChangeCanvasBackgroundCommand}" Content="{Binding EditTarget.Value.CanvasBackground.Value, Converter={StaticResource BrushToStringConverter}}">
+                    <Button Command="{Binding ChangeCanvasFillBrushCommand}"
+                            Content="{Binding EditTarget.Value.CanvasFillBrush.Value, Converter={StaticResource BrushToStringConverter}}">
                         <Button.Style>
                             <Style TargetType="{x:Type Button}">
                                 <Style.Triggers>
                                     <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter Property="Background" Value="{Binding EditTarget.Value.CanvasBackground.Value}" />
+                                        <Setter Property="Background"
+                                                Value="{Binding EditTarget.Value.CanvasFillBrush.Value}" />
                                     </Trigger>
                                     <Trigger Property="IsMouseOver" Value="False">
-                                        <Setter Property="Background" Value="{Binding EditTarget.Value.CanvasBackground.Value}" />
+                                        <Setter Property="Background"
+                                                Value="{Binding EditTarget.Value.CanvasFillBrush.Value}" />
                                     </Trigger>
                                 </Style.Triggers>
                             </Style>
                         </Button.Style>
                     </Button>
                 </Grid>
+                <Label
+                    Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_CanvasEdgeThickness, Mode=OneWay}" />
+                <ComboBox
+                    x:Name="ComboBox_CanvasEdgeThickness"
+                    MaxWidth="500"
+                    MaxHeight="100"
+                    HorizontalAlignment="Stretch"
+                    IsReadOnly="False"
+                    IsTabStop="True"
+                    ItemsSource="{Binding EditTarget.Value.EdgeThicknessOptions}"
+                    SelectedValue="{Binding EditTarget.Value.CanvasEdgeThickness.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate DataType="{x:Type sys:Double}">
+                            <Grid Background="White">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="75" />
+                                    <ColumnDefinition Width="50" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" MaxHeight="50" />
+                                </Grid.RowDefinitions>
+                                <Line
+                                    Grid.Row="0"
+                                    Grid.Column="0"
+                                    Stroke="Black"
+                                    StrokeThickness="{Binding}"
+                                    X1="0"
+                                    X2="75"
+                                    Y1="15"
+                                    Y2="15" />
+                                <Label
+                                    Foreground="Black"
+                                    Grid.Row="0"
+                                    Grid.Column="1"
+                                    VerticalAlignment="Center">
+                                    <Label.Content>
+                                        <TextBlock Foreground="Black">
+                                            <Run Text="{Binding Mode=OneWay}" />
+                                            <Run Text="pt" />
+                                        </TextBlock>
+                                    </Label.Content>
+                                </Label>
+                            </Grid>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+                <Label
+                    Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_CanvasEdgeBrush, Mode=OneWay}" />
+                <Button Command="{Binding ChangeCanvasEdgeBrushCommand}"
+                        Content="{Binding EditTarget.Value.CanvasEdgeBrush.Value, Converter={StaticResource BrushToStringConverter}}">
+                    <Button.Style>
+                        <Style TargetType="{x:Type Button}">
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background"
+                                            Value="{Binding EditTarget.Value.CanvasEdgeBrush.Value}" />
+                                </Trigger>
+                                <Trigger Property="IsMouseOver" Value="False">
+                                    <Setter Property="Background"
+                                            Value="{Binding EditTarget.Value.CanvasEdgeBrush.Value}" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
                 <CheckBox
                     x:Name="enablePointSnap"
                     Margin="5"
                     Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_SnapPoint, Mode=OneWay}"
                     IsChecked="{Binding EditTarget.Value.EnablePointSnap.Value}" />
                 <DockPanel>
-                    <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_SnapRange, Mode=OneWay}" />
+                    <Label
+                        Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_SnapRange, Mode=OneWay}" />
                     <TextBox
                         HorizontalAlignment="Stretch"
                         HorizontalContentAlignment="Right"
@@ -124,10 +195,12 @@
                         <TextBox.Style>
                             <Style TargetType="{x:Type TextBox}">
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding ElementName=enablePointSnap, Path=IsChecked}" Value="True">
+                                    <DataTrigger Binding="{Binding ElementName=enablePointSnap, Path=IsChecked}"
+                                                 Value="True">
                                         <Setter Property="IsReadOnly" Value="False" />
                                     </DataTrigger>
-                                    <DataTrigger Binding="{Binding ElementName=enablePointSnap, Path=IsChecked}" Value="False">
+                                    <DataTrigger Binding="{Binding ElementName=enablePointSnap, Path=IsChecked}"
+                                                 Value="False">
                                         <Setter Property="IsReadOnly" Value="True" />
                                         <Setter Property="Foreground" Value="Gray" />
                                         <Setter Property="BorderBrush" Value="Gray" />
@@ -154,16 +227,22 @@
                 </StackPanel>
                 <DockPanel />
                 <StackPanel Orientation="Horizontal">
-                    <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_Interval, Mode=OneWay}" />
+                    <Label
+                        Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_Interval, Mode=OneWay}" />
                     <btl:ShortTimeSpanControl
                         x:Name="shortTimeSpanControl1"
                         IsEnable="{Binding EditTarget.Value.AutoSaveType.Value, Converter={StaticResource BoolToEnumConverter}, Mode=TwoWay, ConverterParameter=SetInterval}"
                         Value="{Binding EditTarget.Value.AutoSaveInterval.Value}" />
                 </StackPanel>
-                <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_RotationAngleType, Mode=OneWay}" />
+                <Label
+                    Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_RotationAngleType, Mode=OneWay}" />
                 <ComboBox SelectedValue="{Binding EditTarget.Value.AngleType.Value}" SelectedValuePath="Tag">
-                    <ComboBoxItem Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_RotationAngleType_Minus180To180, Mode=OneWay}" Tag="{x:Static helper:AngleType.Minus180To180}" />
-                    <ComboBoxItem Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_RotationAngleType_ZeroTo360, Mode=OneWay}" Tag="{x:Static helper:AngleType.ZeroTo360}" />
+                    <ComboBoxItem
+                        Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_RotationAngleType_Minus180To180, Mode=OneWay}"
+                        Tag="{x:Static helper:AngleType.Minus180To180}" />
+                    <ComboBoxItem
+                        Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_RotationAngleType_ZeroTo360, Mode=OneWay}"
+                        Tag="{x:Static helper:AngleType.ZeroTo360}" />
                 </ComboBox>
                 <CheckBox
                     x:Name="enableImageEmbedding"

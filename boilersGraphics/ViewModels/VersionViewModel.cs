@@ -1,12 +1,4 @@
-﻿using boilersGraphics.Dao;
-using boilersGraphics.Exceptions;
-using boilersGraphics.Properties;
-using NLog;
-using Prism.Mvvm;
-using Prism.Services.Dialogs;
-using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
@@ -15,206 +7,217 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
 using Windows.Services.Store;
+using boilersGraphics.Dao;
+using boilersGraphics.Exceptions;
+using boilersGraphics.Properties;
+using NLog;
+using Prism.Mvvm;
+using Prism.Services.Dialogs;
+using Reactive.Bindings;
+using Reactive.Bindings.Extensions;
 
-namespace boilersGraphics.ViewModels
+namespace boilersGraphics.ViewModels;
+
+public class VersionViewModel : BindableBase, IDialogAware
 {
-    public class VersionViewModel : BindableBase, IDialogAware
+    private readonly CompositeDisposable _disposables = new();
+
+    private StoreAppLicense appLicense;
+
+    public VersionViewModel()
     {
-        private CompositeDisposable _disposables = new CompositeDisposable();
-        public string Title => Resources.Dialog_Title_Version;
-
-        public event Action<IDialogResult> RequestClose;
-
-        public ReactivePropertySlim<string> Version { get; } = new ReactivePropertySlim<string>();
-
-        public ReactivePropertySlim<string> License { get; } = new ReactivePropertySlim<string>();
-
-        public ReactivePropertySlim<string> Markdown { get; } = new ReactivePropertySlim<string>();
-
-        public ReactiveCommand OKCommand { get; } = new ReactiveCommand();
-
-        private StoreAppLicense appLicense;
-
-        public ReactivePropertySlim<string> LicenseMessage { get; } = new ReactivePropertySlim<string>(null);
-
-        public VersionViewModel()
-        {
-            Version.Value = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion;
-            License.Value = LicenseReadToEnd();
-            Markdown.Value = LicenseMdReadToEnd();
-            OKCommand.Subscribe(() =>
+        Version.Value = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion;
+        License.Value = LicenseReadToEnd();
+        Markdown.Value = LicenseMdReadToEnd();
+        OKCommand.Subscribe(() =>
             {
-                DialogResult result = new DialogResult(ButtonResult.OK);
+                var result = new DialogResult(ButtonResult.OK);
                 RequestClose.Invoke(result);
             })
             .AddTo(_disposables);
-            UpdateStatisticsCountVersionInformationDialogWasDisplayed();
-            InitializeLicenseMessage();
-        }
+        UpdateStatisticsCountVersionInformationDialogWasDisplayed();
+        InitializeLicenseMessage();
+    }
 
-        private async Task InitializeLicenseMessage()
+    public ReactivePropertySlim<string> Version { get; } = new();
+
+    public ReactivePropertySlim<string> License { get; } = new();
+
+    public ReactivePropertySlim<string> Markdown { get; } = new();
+
+    public ReactiveCommand OKCommand { get; } = new();
+
+    public ReactivePropertySlim<string> LicenseMessage { get; } = new();
+    public string Title => Resources.Dialog_Title_Version;
+
+    public event Action<IDialogResult> RequestClose;
+
+    public bool CanCloseDialog()
+    {
+        return true;
+    }
+
+    public void OnDialogClosed()
+    {
+    }
+
+    public void OnDialogOpened(IDialogParameters parameters)
+    {
+    }
+
+    private async Task InitializeLicenseMessage()
+    {
+        var app = Application.Current as App;
+        appLicense = await app.StoreContext.GetAppLicenseAsync();
+        app.StoreContext.OfflineLicensesChanged += StoreContext_OfflineLicensesChanged;
+
+        if (appLicense.IsActive)
         {
-            var app = App.Current as App;
-            appLicense = await app.StoreContext.GetAppLicenseAsync();
-            app.StoreContext.OfflineLicensesChanged += StoreContext_OfflineLicensesChanged;
-
-            if (appLicense.IsActive)
+            if (appLicense.IsTrial)
             {
-                if (appLicense.IsTrial)
-                {
-                    var timespan = appLicense.ExpirationDate - DateTime.Now;
-                    LicenseMessage.Value = string.Format(Resources.String_TrialMessage, timespan.Days, timespan.Hours, timespan.Minutes, timespan.Seconds);
-                }
-                else
-                {
-                    //full license
-                    LicenseMessage.Value = string.Format(Resources.String_FullLicense);
-                }
+                var timespan = appLicense.ExpirationDate - DateTime.Now;
+                LicenseMessage.Value = string.Format(Resources.String_TrialMessage, timespan.Days, timespan.Hours,
+                    timespan.Minutes, timespan.Seconds);
+            }
+            else
+            {
+                //full license
+                LicenseMessage.Value = string.Format(Resources.String_FullLicense);
+            }
+        }
+    }
+
+    private async void StoreContext_OfflineLicensesChanged(StoreContext sender, object args)
+    {
+        var app = Application.Current as App;
+        appLicense = await app.StoreContext.GetAppLicenseAsync();
+
+        if (appLicense.IsActive)
+        {
+            if (appLicense.IsTrial)
+            {
+                var timespan = appLicense.ExpirationDate - DateTime.Now;
+                LicenseMessage.Value = string.Format(Resources.String_TrialMessage, timespan.Days, timespan.Hours,
+                    timespan.Minutes, timespan.Seconds);
+            }
+            else
+            {
+                //full license
+                LicenseMessage.Value = string.Format(Resources.String_FullLicense);
+            }
+        }
+    }
+
+    private static void UpdateStatisticsCountVersionInformationDialogWasDisplayed()
+    {
+        var statistics = (Application.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+        statistics.NumberOfTimesTheVersionInformationDialogWasDisplayed++;
+        var dao = new StatisticsDao();
+        dao.Update(statistics);
+    }
+
+    private string LicenseReadToEnd()
+    {
+        var filename = Path.Combine(Helpers.Path.GetRoamingDirectory(), "dhq_boiler\\boilersGraphics\\LICENSE");
+        var str = ReadFileToEnd(filename);
+        if (!string.IsNullOrEmpty(str))
+            return str;
+
+        using (var client = new WebClient())
+        {
+            var versionInfo = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location);
+            var flags = ParseProductVersion(versionInfo.ProductVersion);
+            if (flags.isPreRelease)
+            {
+                var url = "https://raw.githubusercontent.com/dhq-boiler/boiler-s-Graphics/develop/LICENSE";
+                DownloadFile(client, url, filename);
+            }
+            else if (flags.isMaster)
+            {
+                var url = "https://raw.githubusercontent.com/dhq-boiler/boiler-s-Graphics/master/LICENSE";
+                DownloadFile(client, url, filename);
             }
         }
 
-        private async void StoreContext_OfflineLicensesChanged(StoreContext sender, object args)
+        if (File.Exists(filename))
         {
-            var app = App.Current as App;
-            appLicense = await app.StoreContext.GetAppLicenseAsync();
-
-            if (appLicense.IsActive)
-            {
-                if (appLicense.IsTrial)
-                {
-                    var timespan = appLicense.ExpirationDate - DateTime.Now;
-                    LicenseMessage.Value = string.Format(Resources.String_TrialMessage, timespan.Days, timespan.Hours, timespan.Minutes, timespan.Seconds);
-                }
-                else
-                {
-                    //full license
-                    LicenseMessage.Value = string.Format(Resources.String_FullLicense);
-                }
-            }
-        }
-
-        private static void UpdateStatisticsCountVersionInformationDialogWasDisplayed()
-        {
-            var statistics = (App.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
-            statistics.NumberOfTimesTheVersionInformationDialogWasDisplayed++;
-            var dao = new StatisticsDao();
-            dao.Update(statistics);
-        }
-
-        private string LicenseReadToEnd()
-        {
-            var filename = System.IO.Path.Combine(boilersGraphics.Helpers.Path.GetRoamingDirectory(), "dhq_boiler\\boilersGraphics\\LICENSE");
-            var str = ReadFileToEnd(filename);
+            str = ReadFileToEnd(filename);
             if (!string.IsNullOrEmpty(str))
                 return str;
+        }
 
-            using (var client = new WebClient())
+        str = $"{filename}が見つかりません。";
+        MessageBox.Show(str);
+        return str;
+    }
+
+    private (bool isMaster, bool isPreRelease, bool isDebug) ParseProductVersion(string productVersion)
+    {
+        if (productVersion.Contains("master") || productVersion.Contains("hotfix"))
+            return (true, false, false);
+        if (productVersion.Contains("unstable"))
+            return (false, true, false);
+        if (productVersion.Contains("feature"))
+            return (false, false, true);
+        throw new UnexpectedException("ProductVersionをパースできませんでした。");
+    }
+
+    private static void DownloadFile(WebClient client, string url, string file)
+    {
+        client.DownloadFile(url, file);
+        LogManager.GetCurrentClassLogger().Info($"Download {file} from {url}");
+    }
+
+    private string ReadFileToEnd(string filename)
+    {
+        try
+        {
+            using (var streamReader = new StreamReader(new FileStream(filename, FileMode.Open)))
             {
-                var versionInfo = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location);
-                var flags = ParseProductVersion(versionInfo.ProductVersion);
-                if (flags.isPreRelease)
-                {
-                    var url = "https://raw.githubusercontent.com/dhq-boiler/boiler-s-Graphics/develop/LICENSE";
-                    DownloadFile(client, url, filename);
-                }
-                else if (flags.isMaster)
-                {
-                    var url = "https://raw.githubusercontent.com/dhq-boiler/boiler-s-Graphics/master/LICENSE";
-                    DownloadFile(client, url, filename);
-                }
+                return streamReader.ReadToEnd();
             }
+        }
+        catch (FileNotFoundException ex)
+        {
+            LogManager.GetCurrentClassLogger().Error(ex);
+            return string.Empty;
+        }
+    }
 
-            if (File.Exists(filename))
-            {
-                str = ReadFileToEnd(filename);
-                if (!string.IsNullOrEmpty(str))
-                    return str;
-            }
-
-            str = $"{filename}が見つかりません。";
-            MessageBox.Show(str);
+    private string LicenseMdReadToEnd()
+    {
+        var filename = Path.Combine(Helpers.Path.GetRoamingDirectory(), "dhq_boiler\\boilersGraphics\\LICENSE.md");
+        var str = ReadFileToEnd(filename);
+        if (!string.IsNullOrEmpty(str))
             return str;
-        }
 
-        private (bool isMaster, bool isPreRelease, bool isDebug) ParseProductVersion(string productVersion)
+        using (var client = new WebClient())
         {
-            if (productVersion.Contains("master") || productVersion.Contains("hotfix"))
-                return (true, false, false);
-            if (productVersion.Contains("unstable"))
-                return (false, true, false);
-            if (productVersion.Contains("feature"))
-                return (false, false, true);
-            throw new UnexpectedException("ProductVersionをパースできませんでした。");
-        }
-
-        private static void DownloadFile(WebClient client, string url, string file)
-        {
-            client.DownloadFile(url, file);
-            LogManager.GetCurrentClassLogger().Info($"Download {file} from {url}");
-        }
-
-        private string ReadFileToEnd(string filename)
-        {
-            try
+            var versionInfo = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location);
+            var flags = ParseProductVersion(versionInfo.ProductVersion);
+            if (flags.isPreRelease)
             {
-                using (var streamReader = new StreamReader(new FileStream(filename, FileMode.Open)))
-                {
-                    return streamReader.ReadToEnd();
-                }
+                var url =
+                    "https://raw.githubusercontent.com/dhq-boiler/boiler-s-Graphics/develop/boilersGraphics/LICENSE.md";
+                DownloadFile(client, url, filename);
             }
-            catch (FileNotFoundException ex)
+            else if (flags.isMaster)
             {
-                LogManager.GetCurrentClassLogger().Error(ex);
-                return string.Empty;
+                var url =
+                    "https://raw.githubusercontent.com/dhq-boiler/boiler-s-Graphics/master/boilersGraphics/LICENSE.md";
+                DownloadFile(client, url, filename);
             }
         }
 
-        private string LicenseMdReadToEnd()
+        if (File.Exists(filename))
         {
-            var filename = System.IO.Path.Combine(boilersGraphics.Helpers.Path.GetRoamingDirectory(), "dhq_boiler\\boilersGraphics\\LICENSE.md");
-            var str = ReadFileToEnd(filename);
+            str = ReadFileToEnd(filename);
             if (!string.IsNullOrEmpty(str))
                 return str;
-
-            using (var client = new WebClient())
-            {
-                var versionInfo = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location);
-                var flags = ParseProductVersion(versionInfo.ProductVersion);
-                if (flags.isPreRelease)
-                {
-                    var url = "https://raw.githubusercontent.com/dhq-boiler/boiler-s-Graphics/develop/boilersGraphics/LICENSE.md";
-                    DownloadFile(client, url, filename);
-                }
-                else if (flags.isMaster)
-                {
-                    var url = "https://raw.githubusercontent.com/dhq-boiler/boiler-s-Graphics/master/boilersGraphics/LICENSE.md";
-                    DownloadFile(client, url, filename);
-                }
-            }
-
-            if (File.Exists(filename))
-            {
-                str = ReadFileToEnd(filename);
-                if (!string.IsNullOrEmpty(str))
-                    return str;
-            }
-
-            str = $"{filename}が見つかりません。";
-            MessageBox.Show(str);
-            return str;
         }
 
-        public bool CanCloseDialog()
-        {
-            return true;
-        }
-
-        public void OnDialogClosed()
-        {
-        }
-
-        public void OnDialogOpened(IDialogParameters parameters)
-        {
-        }
+        str = $"{filename}が見つかりません。";
+        MessageBox.Show(str);
+        return str;
     }
 }
