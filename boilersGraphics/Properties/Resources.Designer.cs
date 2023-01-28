@@ -29,7 +29,7 @@ namespace boilersGraphics.Properties {
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        public Resources() {
+        internal Resources() {
         }
         
         /// <summary>
@@ -1641,6 +1641,15 @@ namespace boilersGraphics.Properties {
         public static string String_CanvasBackground {
             get {
                 return ResourceManager.GetString("String_CanvasBackground", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Canvas EdgeThickness に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_CanvasEdgeThickness {
+            get {
+                return ResourceManager.GetString("String_CanvasEdgeThickness", resourceCulture);
             }
         }
         

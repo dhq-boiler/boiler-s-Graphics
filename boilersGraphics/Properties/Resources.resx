@@ -645,6 +645,9 @@
   <data name="String_CanvasBackground" xml:space="preserve">
     <value>Canvas Background</value>
   </data>
+  <data name="String_CanvasEdgeThickness" xml:space="preserve">
+    <value>Canvas EdgeThickness</value>
+  </data>
   <data name="String_CanvasHeight" xml:space="preserve">
     <value>Canvas Height</value>
   </data>

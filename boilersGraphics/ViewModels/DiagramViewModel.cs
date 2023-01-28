@@ -1464,6 +1464,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                 z.Height.Value = BackgroundItem.Value.Height.Value;
             });
         preferences.CanvasBackground.Value = CanvasBackground.Value;
+        preferences.CanvasEdgeThickness.Value = BackgroundItem.Value.EdgeThickness.Value;
         preferences.EnablePointSnap.Value = EnablePointSnap.Value;
         preferences.SnapPower.Value =
             (Application.Current.MainWindow.DataContext as MainWindowViewModel).SnapPower.Value;
@@ -1478,6 +1479,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
         {
             var s = result.Parameters.GetValue<Preference>("Preferences");
             CanvasBackground.Value = s.CanvasBackground.Value;
+            BackgroundItem.Value.EdgeThickness.Value = s.CanvasEdgeThickness.Value;
             BackgroundItem.Value.FillBrush.Value = CanvasBackground.Value;
             EnablePointSnap.Value = s.EnablePointSnap.Value;
             (Application.Current.MainWindow.DataContext as MainWindowViewModel).SnapPower.Value = s.SnapPower.Value;
