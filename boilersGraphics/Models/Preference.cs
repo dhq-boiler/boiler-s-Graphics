@@ -1,8 +1,8 @@
-﻿using System;
-using System.Windows.Media;
-using boilersGraphics.Helpers;
+﻿using boilersGraphics.Helpers;
 using Prism.Mvvm;
 using Reactive.Bindings;
+using System;
+using System.Windows.Media;
 
 namespace boilersGraphics.Models;
 
