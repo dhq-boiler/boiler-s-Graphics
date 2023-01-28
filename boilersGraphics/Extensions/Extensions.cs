@@ -432,8 +432,7 @@ public static class Extensions
                 var list = FindVisualChildren<T>(child, digCount + 1).ToList();
                 foreach (var childOfChild in list) yield return childOfChild;
             }
-
-            if (child != null && child is ContentPresenter cp)
+            else if (child != null && child is ContentPresenter cp)
             {
                 //dig ContentPresenter.Content
                 var content = cp.Content as DependencyObject;
@@ -454,6 +453,11 @@ public static class Extensions
                     var list = FindVisualChildren<T>(dependencyObject, digCount + 1).ToList();
                     foreach (var childOfChild in list) yield return childOfChild;
                 }
+            }
+            else if (child != null)
+            {
+                var list = FindVisualChildren<T>(child, digCount + 1).ToList();
+                foreach (var childOfChild in list) yield return childOfChild;
             }
         }
 
