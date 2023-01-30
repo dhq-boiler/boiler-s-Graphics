@@ -162,6 +162,13 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
                 UpdateMatrix(x.OldItem, x.NewItem);
             })
             .AddTo(_CompositeDisposable);
+        ZIndex
+            .Zip(ZIndex.Skip(1), (Old, New) => new { OldItem = Old, NewItem = New })
+            .Subscribe(async x =>
+            {
+                await OnRectChanged(new Rect(Left.Value, Top.Value, Width.Value, Height.Value));
+            })
+            .AddTo(_CompositeDisposable);
         Matrix
             .Zip(Matrix.Skip(1), (Old, New) => new { OldItem = Old, NewItem = New })
             .Subscribe(x => UpdateTransform(nameof(Matrix), x.OldItem, x.NewItem))

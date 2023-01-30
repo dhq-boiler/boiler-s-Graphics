@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reactive.Disposables;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -21,14 +23,16 @@ using Size = OpenCvSharp.Size;
 
 namespace boilersGraphics.ViewModels;
 
-public class BlurEffectViewModel : DesignerItemViewModelBase
+public class BlurEffectViewModel : EffectViewModel
 {
+    private bool isMonitored;
+
     public BlurEffectViewModel()
     {
         (Application.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.AllItems.Subscribe(items =>
         {
-            foreach (var item in items)
-                item.BeginMonitor(Render).AddTo(_CompositeDisposable);
+            foreach (var item in items.Where(x => x.ZIndex.Value < this.ZIndex.Value))
+                item.BeginMonitor(() => { Render(); }).AddTo(_CompositeDisposable);
         }).AddTo(_CompositeDisposable);
 
         KernelWidth.Subscribe(_ => { Render(); }).AddTo(_CompositeDisposable);
@@ -48,7 +52,7 @@ public class BlurEffectViewModel : DesignerItemViewModelBase
 
     public override bool SupportsPropertyDialog => true;
 
-    public void Render()
+    public override void Render()
     {
         if (Width.Value <= 0 || Height.Value <= 0) return;
 
@@ -56,7 +60,7 @@ public class BlurEffectViewModel : DesignerItemViewModelBase
             Application.Current.MainWindow.GetChildOfType<DesignerCanvas>(),
             (Application.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel,
             (Application.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.BackgroundItem.Value,
-            this);
+            this.ZIndex.Value - 1);
         var newFormattedBitmapSource = new FormatConvertedBitmap();
         newFormattedBitmapSource.BeginInit();
         newFormattedBitmapSource.Source = rtb;
@@ -79,6 +83,7 @@ public class BlurEffectViewModel : DesignerItemViewModelBase
         using var dest = new Mat();
         Cv2.GaussianBlur(mat, dest, new Size(KernelWidth.Value, KernelHeight.Value), Sigma.Value);
         Bitmap.Value = dest.ToWriteableBitmap();
+        UpdateLayout();
     }
 
     public override async Task OnRectChanged(Rect rect)
@@ -130,5 +135,17 @@ public class BlurEffectViewModel : DesignerItemViewModelBase
             new DialogService((Application.Current as PrismApplication).Container as IContainerExtension);
         IDialogResult result = null;
         dialogService.Show(nameof(DetailBlur), new DialogParameters { { "ViewModel", this } }, ret => result = ret);
+    }
+    public override IDisposable BeginMonitor(Action action)
+    {
+        var compositeDisposable = new CompositeDisposable();
+        base.BeginMonitor(action).AddTo(compositeDisposable);
+        if (!isMonitored)
+        {
+            this.ObserveProperty(x => x.Bitmap).Subscribe(_ => action()).AddTo(compositeDisposable);
+            isMonitored = true;
+        }
+
+        return compositeDisposable;
     }
 }

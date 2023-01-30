@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -2265,7 +2266,17 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     {
         LogManager.GetCurrentClassLogger().Info(Resources.Log_BeginPostProcessInFileLoadingSequence);
 
-        await Task.Delay(100).ContinueWith(t => { ScanMosaicViewModelObjects(); }).ConfigureAwait(false);
+        var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
+        var allViews = designerCanvas.EnumVisualChildren<FrameworkElement>().Where(x => x.DataContext is not null).Distinct().ToList();
+        var count = Count(allViews);
+        await Task.Delay(1);
+        while (count != AllItems.Value.Length)
+        {
+            await Task.Delay(1);
+            allViews = designerCanvas.EnumVisualChildren<FrameworkElement>().ToList();
+            count = Count(allViews);
+        }
+        await Task.Run(() => ScanEffectViewModelObjects());
 
         var layersViewModel = Application.Current.MainWindow.GetChildOfType<Layers>().DataContext as LayersViewModel;
         layersViewModel.InitializeHitTestVisible(mainwindowViewModel);
@@ -2274,15 +2285,36 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
         LogManager.GetCurrentClassLogger().Info(Resources.Log_FinishPostProcessInFileLoadingSequence);
     }
 
+    private int Count(List<FrameworkElement> allViews)
+    {
+        int count = 0;
+        foreach (var item in AllItems.Value)
+        {
+            var view = allViews.FirstOrDefault(x => x.DataContext == item);
+            if (view is not null)
+            {
+                count++;
+            }
+        }
+        return count;
+    }
+
     /// <summary>
-    ///     ファイルロード後にこのメソッドを実行することで、すべての MosaicViewModel オブジェクトをレンダリングします。
+    ///     ファイルロード後にこのメソッドを実行することで、すべての EffectViewModel オブジェクトをレンダリングします。
     ///     注意：ZIndex の小さい方から順にレンダリングが実施されます。
     /// </summary>
-    private void ScanMosaicViewModelObjects()
+    private void ScanEffectViewModelObjects()
     {
-        foreach (var item in AllItems.Value.OrderBy(x => x.ZIndex.Value))
-            if (item is MosaicViewModel mosaic)
-                mosaic.Render();
+        App.Current.Dispatcher.BeginInvoke(() =>
+        {
+            foreach (var item in AllItems.Value.OrderBy(x => x.ZIndex.Value))
+            {
+                if (item is EffectViewModel effect)
+                {
+                    effect.Render();
+                }
+            }
+        });
     }
 
     private void ExecuteLoadCommand(string file, bool showConfirmDialog = true)

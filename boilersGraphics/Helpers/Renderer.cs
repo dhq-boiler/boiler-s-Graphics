@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -16,7 +17,7 @@ public static class Renderer
     private static readonly Logger s_logger = LogManager.GetCurrentClassLogger();
 
     public static RenderTargetBitmap Render(Rect? sliceRect, DesignerCanvas designerCanvas,
-        DiagramViewModel diagramViewModel, BackgroundViewModel backgroundItem, DesignerItemViewModelBase mosaic = null)
+        DiagramViewModel diagramViewModel, BackgroundViewModel backgroundItem, int maxZIndex = int.MaxValue)
     {
         var size = GetRenderSize(sliceRect, diagramViewModel);
 
@@ -35,13 +36,13 @@ public static class Renderer
             var visual = new DrawingVisual();
             using (var context = visual.RenderOpen())
             {
-                var allViews = designerCanvas.GetDescendantsViews<FrameworkElement>().ToList();
+                var allViews = designerCanvas.EnumVisualChildren<FrameworkElement>().Where(x => x.DataContext is not null).ToList();
                 //背景を描画
                 if (RenderBackgroundViewModel(sliceRect, designerCanvas, context, backgroundItem, allViews))
                     renderedCount++;
                 //前景を描画
                 renderedCount += RenderForeground(sliceRect, diagramViewModel, designerCanvas, context, backgroundItem,
-                    allViews, mosaic);
+                    allViews, maxZIndex);
             }
 
             rtb.Render(visual);
@@ -103,16 +104,19 @@ public static class Renderer
 
     private static int RenderForeground(Rect? sliceRect, DiagramViewModel diagramViewModel,
         DesignerCanvas designerCanvas, DrawingContext context, BackgroundViewModel background,
-        List<FrameworkElement> allViews, DesignerItemViewModelBase mosaic = null)
+        List<FrameworkElement> allViews, int maxZIndex)
     {
         var renderedCount = 0;
-        var except = new SelectableDesignerItemViewModelBase[] { background, mosaic }.Where(x => x is not null);
-        foreach (var item in diagramViewModel.AllItems.Value.Except(except).Where(x => x.IsVisible.Value))
+        var except = new SelectableDesignerItemViewModelBase[] { background }.Where(x => x is not null);
+        foreach (var item in diagramViewModel.AllItems.Value.Except(except).Where(x => x.IsVisible.Value && x.ZIndex.Value <= maxZIndex))
         {
             var view = default(FrameworkElement);
-            view = allViews.FirstOrDefault(x => x.DataContext == item && x.GetType() == item.GetViewType());
+            view = allViews.FirstOrDefault(x => x.DataContext == item);// && x.GetType() == item.GetViewType());
             if (view is null)
                 continue;
+            view.InvalidateMeasure();
+            view.InvalidateArrange();
+            view.UpdateLayout();
             view.SnapsToDevicePixels = true;
             var brush = new VisualBrush(view)
             {
@@ -127,12 +131,17 @@ public static class Renderer
                     if (designerItem is PictureDesignerItemViewModel picture)
                     {
                         var bounds = VisualTreeHelper.GetDescendantBounds(view);
+                        if (bounds.IsEmpty)
+                        {
+                            continue;
+                        }
                         if (sliceRect.HasValue)
                         {
                             rect = sliceRect.Value;
                             var intersectSrc = new Rect(designerItem.Left.Value, designerItem.Top.Value, bounds.Width,
                                 bounds.Height);
                             rect = Rect.Union(rect, intersectSrc);
+
                             if (rect != Rect.Empty)
                             {
                                 rect.X -= sliceRect.Value.X;
@@ -148,6 +157,10 @@ public static class Renderer
                     else
                     {
                         var bounds = VisualTreeHelper.GetDescendantBounds(view);
+                        if (bounds.IsEmpty)
+                        {
+                            continue;
+                        }
                         if (sliceRect.HasValue)
                         {
                             rect = sliceRect.Value;
@@ -184,6 +197,10 @@ public static class Renderer
                 case ConnectorBaseViewModel connector:
                 {
                     var bounds = VisualTreeHelper.GetDescendantBounds(view);
+                    if (bounds.IsEmpty)
+                    {
+                        continue;
+                    }
                     if (sliceRect.HasValue)
                     {
                         rect = sliceRect.Value;
@@ -352,7 +369,7 @@ public static class Renderer
         var view = default(FrameworkElement);
         var result = Application.Current.Dispatcher.Invoke(() =>
         {
-            view = allViews.FirstOrDefault(x => x.DataContext == background && x.GetType() == background.GetViewType());
+            view = allViews.FirstOrDefault(x => x.DataContext == background);// && x.GetType() == background.GetViewType());
             if (view is null)
             {
                 s_logger.Warn($"Not Found: view of {background}");

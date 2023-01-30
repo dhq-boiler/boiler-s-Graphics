@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reactive.Disposables;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -20,13 +22,15 @@ using Rect = System.Windows.Rect;
 
 namespace boilersGraphics.ViewModels;
 
-public class MosaicViewModel : DesignerItemViewModelBase
+public class MosaicViewModel : EffectViewModel
 {
+    private bool isMonitored;
+
     public MosaicViewModel()
     {
         (Application.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.AllItems.Subscribe(items =>
         {
-            foreach (var item in items)
+            foreach (var item in items.Where(x => x.ZIndex.Value < this.ZIndex.Value))
                 item.BeginMonitor(() => { Render(); }).AddTo(_CompositeDisposable);
         }).AddTo(_CompositeDisposable);
 
@@ -46,7 +50,7 @@ public class MosaicViewModel : DesignerItemViewModelBase
 
     public override bool SupportsPropertyDialog => true;
 
-    public void Render()
+    public override void Render()
     {
         if (Width.Value <= 0 || Height.Value <= 0) return;
 
@@ -54,18 +58,19 @@ public class MosaicViewModel : DesignerItemViewModelBase
         {
             var mainWindowViewModel = Application.Current.MainWindow.DataContext as MainWindowViewModel;
             var rtb = Renderer.Render(Rect.Value, Application.Current.MainWindow.GetChildOfType<DesignerCanvas>(),
-                mainWindowViewModel.DiagramViewModel, mainWindowViewModel.DiagramViewModel.BackgroundItem.Value, this);
-            var newFormatedBitmapSource = new FormatConvertedBitmap();
-            newFormatedBitmapSource.BeginInit();
-            newFormatedBitmapSource.Source = rtb;
-            newFormatedBitmapSource.DestinationFormat = PixelFormats.Bgr24;
-            newFormatedBitmapSource.EndInit();
+                mainWindowViewModel.DiagramViewModel, mainWindowViewModel.DiagramViewModel.BackgroundItem.Value, this.ZIndex.Value - 1);
+            var newFormattedBitmapSource = new FormatConvertedBitmap();
+            newFormattedBitmapSource.BeginInit();
+            newFormattedBitmapSource.Source = rtb;
+            newFormattedBitmapSource.DestinationFormat = PixelFormats.Bgr24;
+            newFormattedBitmapSource.EndInit();
 
-            using (var mat = newFormatedBitmapSource.ToMat())
+            using (var mat = newFormattedBitmapSource.ToMat())
             using (var dest = mat.Clone())
             {
                 Mosaic(mat, dest, ColumnPixels.Value, RowPixels.Value);
                 Bitmap.Value = dest.ToWriteableBitmap();
+                UpdateLayout();
             }
         });
     }
@@ -224,5 +229,17 @@ public class MosaicViewModel : DesignerItemViewModelBase
             new DialogService((Application.Current as PrismApplication).Container as IContainerExtension);
         IDialogResult result = null;
         dialogService.Show(nameof(DetailMosaic), new DialogParameters { { "ViewModel", this } }, ret => result = ret);
+    }
+    public override IDisposable BeginMonitor(Action action)
+    {
+        var compositeDisposable = new CompositeDisposable();
+        base.BeginMonitor(action).AddTo(compositeDisposable);
+        if (!isMonitored)
+        {
+            this.ObserveProperty(x => x.Bitmap).Subscribe(_ => action()).AddTo(compositeDisposable);
+            isMonitored = true;
+        }
+
+        return compositeDisposable;
     }
 }

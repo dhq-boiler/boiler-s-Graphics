@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -11,6 +12,7 @@ using boilersGraphics.Models;
 using boilersGraphics.ViewModels;
 using NLog;
 using Prism.Services.Dialogs;
+using SharpDX;
 
 namespace boilersGraphics.Extensions;
 
@@ -315,9 +317,10 @@ public static class Extensions
                 var loadObj2 = cp2.ContentTemplate.LoadContent();
                 if (loadObj2 is T) yield return (T)loadObj2;
                 var list = FindVisualChildren<DependencyObject>(loadObj2, digCount + 1).ToList();
-                foreach (var childOfChild2 in list)
-                    if (childOfChild2 != null && childOfChild2 is T)
-                        yield return (T)childOfChild2;
+                foreach (var p in list)
+                {
+                    foreach (var o in EnumVisualChildren<T>(p)) yield return o;
+                }
             }
         }
         else if (depObj is DialogWindow dw)
@@ -465,6 +468,258 @@ public static class Extensions
         logger.Debug($"Finish FindVisualChildren(digCount={digCount}) elapsed={sw.ElapsedMilliseconds}ms");
     }
 
+    public static IEnumerable<T> EnumVisualChildren<T>(this DependencyObject pp, int digCount = 0) where T : DependencyObject
+    {
+        if (pp is Control _control)
+        {
+            if (_control.Template is not null)
+            {
+                //dig Control.Template
+                var templateContent = _control.Template.LoadContent();
+                var list = EnumVisualChildren<DependencyObject>(templateContent, digCount + 1).ToList();
+                foreach (var p in list)
+                {
+                    foreach (var o in EnumVisualChildren<T>(p))
+                    {
+                        if (o is not ContentPresenter && o is not Control)
+                        {
+                            yield return o;
+                        }
+                    }
+                }
+            }
+
+            if (_control is ItemsControl ic)
+            {
+                if (ic.ItemTemplate is not null)
+                {
+                    var itemTemplateContent = ic.ItemTemplate.LoadContent();
+                    var list = EnumVisualChildren<DependencyObject>(itemTemplateContent, digCount + 1).ToList();
+                    foreach (var p in list)
+                    {
+                        foreach (var o in EnumVisualChildren<T>(p))
+                        {
+                            if (o is not ContentPresenter && o is not Control)
+                            {
+                                yield return o;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if (pp is ContentPresenter cp2)
+        {
+            //dig ContentPresenter.Content
+            var content = cp2.Content as DependencyObject;
+            if (content is T && content is not ContentPresenter) yield return (T)content;
+            if (content is not null)
+            {
+                var list = EnumVisualChildren<DependencyObject>(content, digCount + 1).ToList();
+                foreach (var childOfChild2 in list)
+                    if (childOfChild2 != null && childOfChild2 is T && childOfChild2 is not ContentPresenter && childOfChild2 is not Control)
+                        yield return (T)childOfChild2;
+            }
+
+            //dig ContentPresenter.ContentTemplate
+            if (cp2.ContentTemplate != null)
+            {
+                var loadObj2 = cp2.ContentTemplate.LoadContent();
+                if (loadObj2 is T && loadObj2 is not ContentPresenter) yield return (T)loadObj2;
+                var list = EnumVisualChildren<DependencyObject>(loadObj2, digCount + 1).ToList();
+                foreach (var p in list)
+                {
+                    foreach (var o in EnumVisualChildren<T>(p))
+                    {
+                        if (o is not ContentPresenter && o is not Control)
+                        {
+                            yield return o;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (pp is Panel panel)
+        {
+            foreach (var child in panel.Children)
+            {
+                if (child is T dependencyObject)
+                {
+                    if (dependencyObject is not ContentPresenter)
+                    {
+                        yield return dependencyObject;
+                    }
+
+                    foreach (var item in EnumVisualChildren<T>(dependencyObject))
+                    {
+                        if (item is not ContentPresenter && item is not Control)
+                        {
+                            yield return item;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (pp is DialogWindow dw)
+        {
+            //dig DialogWindow.Template
+            var loadObj = dw.Template.LoadContent();
+            if (loadObj is not null)
+            {
+                var list = EnumVisualChildren<DependencyObject>(loadObj, digCount + 1).ToList();
+                foreach (var childOfChild in list)
+                {
+                    if (childOfChild is ContentPresenter cp)
+                    {
+                        //dig ContentPresenter.Content
+                        var content = cp.Content as DependencyObject;
+                        if (content is T && content is not ContentPresenter) yield return (T)content;
+                        if (content is not null)
+                        {
+                            var list2 = EnumVisualChildren<DependencyObject>(content, digCount + 1).ToList();
+                            foreach (var childOfChild2 in list2)
+                                if (childOfChild2 != null && childOfChild2 is T && childOfChild2 is not ContentPresenter && childOfChild2 is not Control)
+                                    yield return (T)childOfChild2;
+                        }
+
+                        //dig ContentPresenter.ContentTemplate
+                        if (cp.ContentTemplate != null)
+                        {
+                            var loadObj2 = cp.ContentTemplate.LoadContent();
+                            if (loadObj2 is T && loadObj2 is not ContentPresenter && loadObj2 is not Control) yield return (T)loadObj2;
+                            if (loadObj2 is not null)
+                            {
+                                var list2 = EnumVisualChildren<DependencyObject>(loadObj2, digCount + 1).ToList();
+                                foreach (var childOfChild2 in list2)
+                                    if (childOfChild2 != null && childOfChild2 is T && childOfChild2 is not ContentPresenter && childOfChild2 is not Control)
+                                        yield return (T)childOfChild2;
+                            }
+                        }
+                    }
+
+                    if (childOfChild is Control c)
+                        //dig Control.Template
+                        if (c.Template != null)
+                        {
+                            var loadObj2 = c.Template.LoadContent();
+                            if (loadObj2 is T && loadObj2 is not ContentPresenter && loadObj2 is not Control) yield return (T)loadObj2;
+                            if (loadObj2 is not null)
+                            {
+                                var list2 = EnumVisualChildren<DependencyObject>(loadObj2, digCount + 1).ToList();
+                                foreach (var childOfChild2 in list2)
+                                    if (childOfChild2 != null && childOfChild2 is T && childOfChild2 is not ContentPresenter && childOfChild2 is not Control)
+                                        yield return (T)childOfChild2;
+                            }
+                        }
+
+                    if (childOfChild is ContentControl cc)
+                    {
+                        //dig ContentControl.Template
+                        if (cc.Template != null)
+                        {
+                            var loadObj2 = cc.Template.LoadContent();
+                            if (loadObj2 is T && loadObj2 is not ContentPresenter && loadObj2 is not Control) yield return (T)loadObj2;
+                            if (loadObj2 is not null)
+                            {
+                                var list2 = EnumVisualChildren<DependencyObject>(loadObj2, digCount + 1).ToList();
+                                foreach (var childOfChild2 in list2)
+                                    if (childOfChild2 != null && childOfChild2 is T && childOfChild2 is not ContentPresenter && childOfChild2 is not Control)
+                                        yield return (T)childOfChild2;
+                            }
+                        }
+
+                        //dig ContentControl.ContentTemplate
+                        if (cc.ContentTemplate != null)
+                        {
+                            var loadObj2 = cc.ContentTemplate.LoadContent();
+                            if (loadObj2 is T && loadObj2 is not ContentPresenter && loadObj2 is not Control) yield return (T)loadObj2;
+                            if (loadObj2 is not null)
+                            {
+                                var list2 = EnumVisualChildren<DependencyObject>(loadObj2, digCount + 1).ToList();
+                                foreach (var childOfChild2 in list2)
+                                    if (childOfChild2 != null && childOfChild2 is T && childOfChild2 is not ContentPresenter && childOfChild2 is not Control)
+                                        yield return (T)childOfChild2;
+                            }
+                        }
+                    }
+
+                    if (childOfChild != null && childOfChild is T && childOfChild is not ContentPresenter && childOfChild is not Control) yield return (T)childOfChild;
+                }
+            }
+
+            //dig Prism.Services.Dialogs.DialogWindow.ContentTemplate
+            if (dw.ContentTemplate != null)
+            {
+                loadObj = dw.ContentTemplate.LoadContent();
+                if (loadObj is not null)
+                {
+                    var list2 = EnumVisualChildren<DependencyObject>(loadObj, digCount + 1).ToList();
+                    foreach (var childOfChild in list2)
+                        if (childOfChild != null && childOfChild is T && childOfChild is not ContentPresenter && childOfChild is not Control)
+                            yield return (T)childOfChild;
+                }
+            }
+        }
+
+        for (var i = 0; i < VisualTreeHelper.GetChildrenCount(pp); i++)
+        {
+            var child = VisualTreeHelper.GetChild(pp, i);
+            if (child != null && child is T)
+            {
+                yield return (T)child;
+
+                var list = EnumVisualChildren<T>(child, digCount + 1).ToList();
+                foreach (var childOfChild in list) yield return childOfChild;
+            }
+            else if (child != null && child is ContentPresenter cp)
+            {
+                //dig ContentPresenter.Content
+                var content = cp.Content as DependencyObject;
+                if (content is T) yield return (T)content;
+                if (content is not null)
+                {
+                    var list = EnumVisualChildren<DependencyObject>(content, digCount + 1).ToList();
+                    foreach (var childOfChild2 in list)
+                        if (childOfChild2 != null && childOfChild2 is T)
+                            yield return (T)childOfChild2;
+                }
+
+                //dig ContentPresenter.ContentTemplate
+                if (cp.ContentTemplate != null)
+                {
+                    var dependencyObject = cp.ContentTemplate.LoadContent();
+                    if (dependencyObject is T) yield return (T)dependencyObject;
+                    var list = EnumVisualChildren<T>(dependencyObject, digCount + 1).ToList();
+                    foreach (var childOfChild in list) yield return childOfChild;
+                }
+            }
+            else if (child != null)
+            {
+                var list = EnumVisualChildren<T>(child, digCount + 1).ToList();
+                foreach (var childOfChild in list) yield return childOfChild;
+            }
+        }
+
+        if (pp is IEnumerable<T> enumerable)
+        {
+            foreach (var item in enumerable)
+            {
+                var list = EnumVisualChildren<T>(item, digCount + 1).ToList();
+                foreach (var child in list)
+                {
+                    yield return child;
+                }
+            }
+        }
+
+        //foreach (var o in EnumVisualChildren<T>(pp)) yield return o;
+        if (pp is T)
+            yield return (T)pp;
+    }
+
     public static IEnumerable<FrameworkElement> GetChildren(this FrameworkElement parent)
     {
         var count = VisualTreeHelper.GetChildrenCount(parent);
@@ -572,15 +827,16 @@ public static class Extensions
             if (parent is T)
                 yield return parent as T;
 
-        for (var i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
+        //for (var i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
+        foreach (var child in EnumVisualChildren<T>(parent, 1))
         {
-            var child = VisualTreeHelper.GetChild(parent, i);
+            //var child = VisualTreeHelper.GetChild(parent, i);
 
             var result = default(IEnumerable<T>);
             if (child is IEnumerable<T> enumerable)
                 result = enumerable;
             else
-                result = FindVisualChildren<T>(child).ToList();
+                result = EnumVisualChildren<T>(child).ToList();
             if (result != null)
                 foreach (var item in result)
                     if (item != null)
@@ -592,7 +848,7 @@ public static class Extensions
             }
             else
             {
-                var result3 = FindVisualChildren<T>(result2).ToList();
+                var result3 = EnumVisualChildren<T>(result2).ToList();
                 if (result3 is not null)
                     foreach (var item in result3)
                         if (item is not null)
