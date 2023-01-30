@@ -333,6 +333,7 @@ public class ObjectDeserializer
         if (designerItemElm.Element("PathGeometryRotate") is not null)
             item.PathGeometryRotate.Value =
                 PathGeometry.CreateFromGeometry(Geometry.Parse(designerItemElm.Element("PathGeometryRotate").Value));
+        item.RenderingEnabled.Value = false;
         item.IsHitTestVisible.Value = true;
         item.Left.Value = double.Parse(designerItemElm.Element("Left").Value);
         item.Top.Value = double.Parse(designerItemElm.Element("Top").Value);
@@ -422,6 +423,7 @@ public class ObjectDeserializer
 
         if (item is NPolygonViewModel polygon) polygon.Data.Value = designerItemElm.Element("Data").Value;
         item.UpdatePathGeometryIfEnable(string.Empty, 0, 0, true);
+        item.RenderingEnabled.Value = true;
         return item;
     }
 

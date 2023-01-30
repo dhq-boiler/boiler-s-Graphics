@@ -316,7 +316,7 @@ public class OldColorPickerViewModel : BindableBase, IDialogAware, IDisposable
             {
                 var source = x.Source;
                 _colorPicker = source as ColorPicker;
-                _spots = _colorPicker.FindVisualChildren<ColorSpot>();
+                _spots = _colorPicker.EnumVisualChildren<ColorSpot>();
             })
             .AddTo(_disposables);
     }

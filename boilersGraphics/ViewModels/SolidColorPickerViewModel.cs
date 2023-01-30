@@ -207,7 +207,7 @@ public class SolidColorPickerViewModel : BindableBase, IDialogAware, INavigation
             {
                 var source = x.Source;
                 _colorPicker = source as SolidColorPicker;
-                _spots = _colorPicker.FindVisualChildren<ColorSpot>();
+                _spots = _colorPicker.EnumVisualChildren<ColorSpot>();
             })
             .AddTo(_disposables);
     }

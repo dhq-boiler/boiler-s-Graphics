@@ -35,7 +35,7 @@ public class ColorPickerViewModel : BindableBase, IDialogAware, IDisposable
         OKCommand.Subscribe(_ =>
             {
                 this.regionManager.Regions.Remove("ColorPickerRegion");
-                var solidColorPicker = _colorPicker.FindVisualChildren<SolidColorPicker>().FirstOrDefault();
+                var solidColorPicker = _colorPicker.EnumVisualChildren<SolidColorPicker>().FirstOrDefault();
                 if (solidColorPicker != null)
                 {
                     var solidColorPickerViewModel = solidColorPicker.DataContext as SolidColorPickerViewModel;
@@ -152,7 +152,7 @@ public class ColorPickerViewModel : BindableBase, IDialogAware, IDisposable
                 }
 
                 var linearGradientBrushPicker =
-                    _colorPicker.FindVisualChildren<LinearGradientBrushPicker>().FirstOrDefault();
+                    _colorPicker.EnumVisualChildren<LinearGradientBrushPicker>().FirstOrDefault();
                 if (linearGradientBrushPicker != null)
                 {
                     var linearGradientBrushPickerViewModel =
@@ -277,7 +277,7 @@ public class ColorPickerViewModel : BindableBase, IDialogAware, IDisposable
                 }
 
                 var radialGradientBrushPicker =
-                    _colorPicker.FindVisualChildren<RadialGradientBrushPicker>().FirstOrDefault();
+                    _colorPicker.EnumVisualChildren<RadialGradientBrushPicker>().FirstOrDefault();
                 if (radialGradientBrushPicker != null)
                 {
                     var radialGradientBrushPickerViewModel =

@@ -74,6 +74,8 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
         }
     }
 
+    public ReactivePropertySlim<bool> RenderingEnabled { get; } = new ReactivePropertySlim<bool>(true);
+
     public ReactivePropertySlim<string> Pool { get; } = new();
 
     public ReactivePropertySlim<double> Left { get; } = new(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe |
@@ -127,7 +129,10 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
             .Subscribe(async x =>
             {
                 UpdateTransform(nameof(Left), x.OldItem, x.NewItem);
-                await OnRectChanged(new Rect(Left.Value, Top.Value, Width.Value, Height.Value));
+                if (RenderingEnabled.Value)
+                {
+                    await OnRectChanged(new Rect(Left.Value, Top.Value, Width.Value, Height.Value));
+                }
             })
             .AddTo(_CompositeDisposable);
         Top
@@ -135,7 +140,10 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
             .Subscribe(async x =>
             {
                 UpdateTransform(nameof(Top), x.OldItem, x.NewItem);
-                await OnRectChanged(new Rect(Left.Value, Top.Value, Width.Value, Height.Value));
+                if (RenderingEnabled.Value)
+                {
+                    await OnRectChanged(new Rect(Left.Value, Top.Value, Width.Value, Height.Value));
+                }
             })
             .AddTo(_CompositeDisposable);
         Width
@@ -143,7 +151,10 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
             .Subscribe(async x =>
             {
                 UpdateTransform(nameof(Width), x.OldItem, x.NewItem);
-                await OnRectChanged(new Rect(Left.Value, Top.Value, Width.Value, Height.Value));
+                if (RenderingEnabled.Value)
+                {
+                    await OnRectChanged(new Rect(Left.Value, Top.Value, Width.Value, Height.Value));
+                }
             })
             .AddTo(_CompositeDisposable);
         Height
@@ -151,7 +162,10 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
             .Subscribe(async x =>
             {
                 UpdateTransform(nameof(Height), x.OldItem, x.NewItem);
-                await OnRectChanged(new Rect(Left.Value, Top.Value, Width.Value, Height.Value));
+                if (RenderingEnabled.Value)
+                {
+                    await OnRectChanged(new Rect(Left.Value, Top.Value, Width.Value, Height.Value));
+                }
             })
             .AddTo(_CompositeDisposable);
         RotationAngle
@@ -166,7 +180,10 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
             .Zip(ZIndex.Skip(1), (Old, New) => new { OldItem = Old, NewItem = New })
             .Subscribe(async x =>
             {
-                await OnRectChanged(new Rect(Left.Value, Top.Value, Width.Value, Height.Value));
+                if (RenderingEnabled.Value)
+                {
+                    await OnRectChanged(new Rect(Left.Value, Top.Value, Width.Value, Height.Value));
+                }
             })
             .AddTo(_CompositeDisposable);
         Matrix
@@ -210,6 +227,13 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
             (size, rate) => { return new Thickness(0, 0, -size / (rate / 100d), 0); }).ToReadOnlyReactivePropertySlim();
         MarginBottom = Observable.Return(ThumbSize.Value / 2).CombineLatest(DiagramViewModel.Instance.MagnificationRate,
             (size, rate) => { return new Thickness(0, 0, 0, -size / (rate / 100d)); }).ToReadOnlyReactivePropertySlim();
+        RenderingEnabled.Subscribe(async renderingEnabled =>
+        {
+            if (renderingEnabled)
+            {
+                await OnRectChanged(new Rect(Left.Value, Top.Value, Width.Value, Height.Value));
+            }
+        }).AddTo(_CompositeDisposable);
     }
 
     public virtual async Task OnRectChanged(Rect rect)
