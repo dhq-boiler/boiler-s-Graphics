@@ -151,15 +151,15 @@ public class VersionViewModel : BindableBase, IDialogAware
         return str;
     }
 
-    private (bool isMaster, bool isPreRelease, bool isDebug) ParseProductVersion(string productVersion)
+    private static (bool isMaster, bool isPreRelease, bool isDebug) ParseProductVersion(string productVersion)
     {
         if (productVersion.Contains("master") || productVersion.Contains("hotfix"))
             return (true, false, false);
-        if (productVersion.Contains("unstable"))
-            return (false, true, false);
+        if (productVersion.Contains("develop") || productVersion.Contains("unstable"))
+            return (false, true, true);
         if (productVersion.Contains("feature"))
             return (false, false, true);
-        throw new UnexpectedException("ProductVersionをパースできませんでした。");
+        throw new UnexpectedException($"ProductVersionをパースできませんでした。productVersion={productVersion}");
     }
 
     private static void DownloadFile(WebClient client, string url, string file)
