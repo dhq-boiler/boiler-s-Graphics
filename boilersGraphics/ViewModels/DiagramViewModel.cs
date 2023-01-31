@@ -2311,6 +2311,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
             {
                 if (item is EffectViewModel effect)
                 {
+                    effect.Initialize();
                     effect.Render();
                 }
             }

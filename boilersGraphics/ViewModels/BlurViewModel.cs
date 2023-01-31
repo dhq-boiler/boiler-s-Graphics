@@ -29,12 +29,12 @@ public class BlurEffectViewModel : EffectViewModel
 
     public BlurEffectViewModel()
     {
-        (Application.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.AllItems.Subscribe(items =>
-        {
-            foreach (var item in items.Where(x => x.ZIndex.Value < this.ZIndex.Value))
-                item.BeginMonitor(() => { Render(); }).AddTo(_CompositeDisposable);
-        }).AddTo(_CompositeDisposable);
+        Initialize();
+    }
 
+    public override void Initialize()
+    {
+        base.Initialize();
         KernelWidth.Subscribe(_ => { Render(); }).AddTo(_CompositeDisposable);
         KernelHeight.Subscribe(_ => { Render(); }).AddTo(_CompositeDisposable);
     }
