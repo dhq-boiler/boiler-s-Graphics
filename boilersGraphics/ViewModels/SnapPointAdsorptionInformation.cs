@@ -287,15 +287,13 @@ internal class SnapPointAdsorptionInformation : IObserver<TransformNotification>
                 if (index == 0)
                 {
                     connector.SnapPoint0VM.Value.Left.Value += (double)value.NewValue - (double)value.OldValue;
-                    var fe = Application.Current.MainWindow
-                        .GetCorrespondingViews<LineResizeHandle>(connector.SnapPoint0VM.Value).First();
+                    var fe = Application.Current.MainWindow.GetVisualChild<LineResizeHandle>(connector.SnapPoint0VM.Value);
                     Canvas.SetLeft(fe, Canvas.GetLeft(fe) + (double)value.NewValue - (double)value.OldValue);
                 }
                 else if (index == 1)
                 {
                     connector.SnapPoint1VM.Value.Left.Value += (double)value.NewValue - (double)value.OldValue;
-                    var fe = Application.Current.MainWindow
-                        .GetCorrespondingViews<LineResizeHandle>(connector.SnapPoint1VM.Value).First();
+                    var fe = Application.Current.MainWindow.GetVisualChild<LineResizeHandle>(connector.SnapPoint1VM.Value);
                     Canvas.SetLeft(fe, Canvas.GetLeft(fe) + (double)value.NewValue - (double)value.OldValue);
                 }
 
@@ -306,15 +304,13 @@ internal class SnapPointAdsorptionInformation : IObserver<TransformNotification>
                 if (index == 0)
                 {
                     connector.SnapPoint0VM.Value.Top.Value += (double)value.NewValue - (double)value.OldValue;
-                    var fe = Application.Current.MainWindow
-                        .GetCorrespondingViews<LineResizeHandle>(connector.SnapPoint0VM.Value).First();
+                    var fe = Application.Current.MainWindow.GetVisualChild<LineResizeHandle>(connector.SnapPoint0VM.Value);
                     Canvas.SetTop(fe, Canvas.GetTop(fe) + (double)value.NewValue - (double)value.OldValue);
                 }
                 else if (index == 1)
                 {
                     connector.SnapPoint1VM.Value.Top.Value += (double)value.NewValue - (double)value.OldValue;
-                    var fe = Application.Current.MainWindow
-                        .GetCorrespondingViews<LineResizeHandle>(connector.SnapPoint1VM.Value).First();
+                    var fe = Application.Current.MainWindow.GetVisualChild<LineResizeHandle>(connector.SnapPoint1VM.Value);
                     Canvas.SetTop(fe, Canvas.GetTop(fe) + (double)value.NewValue - (double)value.OldValue);
                 }
 
@@ -329,15 +325,13 @@ internal class SnapPointAdsorptionInformation : IObserver<TransformNotification>
                         if (index == 0)
                         {
                             connector.SnapPoint0VM.Value.Left.Value += 0;
-                            var fe = Application.Current.MainWindow
-                                .GetCorrespondingViews<LineResizeHandle>(connector.SnapPoint0VM.Value).First();
+                            var fe = Application.Current.MainWindow.GetVisualChild<LineResizeHandle>(connector.SnapPoint0VM.Value);
                             Canvas.SetLeft(fe, Canvas.GetLeft(fe) + 0);
                         }
                         else if (index == 1)
                         {
                             connector.SnapPoint1VM.Value.Left.Value += 0;
-                            var fe = Application.Current.MainWindow
-                                .GetCorrespondingViews<LineResizeHandle>(connector.SnapPoint1VM.Value).First();
+                            var fe = Application.Current.MainWindow.GetVisualChild<LineResizeHandle>(connector.SnapPoint1VM.Value);
                             Canvas.SetLeft(fe, Canvas.GetLeft(fe) + 0);
                         }
 
@@ -352,8 +346,7 @@ internal class SnapPointAdsorptionInformation : IObserver<TransformNotification>
                         {
                             connector.SnapPoint0VM.Value.Left.Value +=
                                 ((double)value.NewValue - (double)value.OldValue) / 2;
-                            var fe = Application.Current.MainWindow
-                                .GetCorrespondingViews<LineResizeHandle>(connector.SnapPoint0VM.Value).First();
+                            var fe = Application.Current.MainWindow.GetVisualChild<LineResizeHandle>(connector.SnapPoint0VM.Value);
                             Canvas.SetLeft(fe,
                                 Canvas.GetLeft(fe) + ((double)value.NewValue - (double)value.OldValue) / 2);
                         }
@@ -361,8 +354,7 @@ internal class SnapPointAdsorptionInformation : IObserver<TransformNotification>
                         {
                             connector.SnapPoint1VM.Value.Left.Value +=
                                 ((double)value.NewValue - (double)value.OldValue) / 2;
-                            var fe = Application.Current.MainWindow
-                                .GetCorrespondingViews<LineResizeHandle>(connector.SnapPoint1VM.Value).First();
+                            var fe = Application.Current.MainWindow.GetVisualChild<LineResizeHandle>(connector.SnapPoint1VM.Value);
                             Canvas.SetLeft(fe,
                                 Canvas.GetLeft(fe) + ((double)value.NewValue - (double)value.OldValue) / 2);
                         }
@@ -377,15 +369,13 @@ internal class SnapPointAdsorptionInformation : IObserver<TransformNotification>
                         if (index == 0)
                         {
                             connector.SnapPoint0VM.Value.Left.Value += (double)value.NewValue - (double)value.OldValue;
-                            var fe = Application.Current.MainWindow
-                                .GetCorrespondingViews<LineResizeHandle>(connector.SnapPoint0VM.Value).First();
+                            var fe = Application.Current.MainWindow.GetVisualChild<LineResizeHandle>(connector.SnapPoint0VM.Value);
                             Canvas.SetLeft(fe, Canvas.GetLeft(fe) + ((double)value.NewValue - (double)value.OldValue));
                         }
                         else if (index == 1)
                         {
                             connector.SnapPoint1VM.Value.Left.Value += (double)value.NewValue - (double)value.OldValue;
-                            var fe = Application.Current.MainWindow
-                                .GetCorrespondingViews<LineResizeHandle>(connector.SnapPoint1VM.Value).First();
+                            var fe = Application.Current.MainWindow.GetVisualChild<LineResizeHandle>(connector.SnapPoint1VM.Value);
                             Canvas.SetLeft(fe, Canvas.GetLeft(fe) + ((double)value.NewValue - (double)value.OldValue));
                         }
 
@@ -403,15 +393,13 @@ internal class SnapPointAdsorptionInformation : IObserver<TransformNotification>
                         if (index == 0)
                         {
                             connector.SnapPoint0VM.Value.Top.Value += 0;
-                            var fe = Application.Current.MainWindow
-                                .GetCorrespondingViews<LineResizeHandle>(connector.SnapPoint0VM.Value).First();
+                            var fe = Application.Current.MainWindow.GetVisualChild<LineResizeHandle>(connector.SnapPoint0VM.Value);
                             Canvas.SetTop(fe, Canvas.GetTop(fe) + 0);
                         }
                         else if (index == 1)
                         {
                             connector.SnapPoint1VM.Value.Top.Value += 0;
-                            var fe = Application.Current.MainWindow
-                                .GetCorrespondingViews<LineResizeHandle>(connector.SnapPoint1VM.Value).First();
+                            var fe = Application.Current.MainWindow.GetVisualChild<LineResizeHandle>(connector.SnapPoint1VM.Value);
                             Canvas.SetTop(fe, Canvas.GetTop(fe) + 0);
                         }
 
@@ -425,8 +413,7 @@ internal class SnapPointAdsorptionInformation : IObserver<TransformNotification>
                         {
                             connector.SnapPoint0VM.Value.Top.Value +=
                                 ((double)value.NewValue - (double)value.OldValue) / 2;
-                            var fe = Application.Current.MainWindow
-                                .GetCorrespondingViews<LineResizeHandle>(connector.SnapPoint0VM.Value).First();
+                            var fe = Application.Current.MainWindow.GetVisualChild<LineResizeHandle>(connector.SnapPoint0VM.Value);
                             Canvas.SetTop(fe,
                                 Canvas.GetTop(fe) + ((double)value.NewValue - (double)value.OldValue) / 2);
                         }
@@ -435,7 +422,7 @@ internal class SnapPointAdsorptionInformation : IObserver<TransformNotification>
                             connector.SnapPoint1VM.Value.Top.Value +=
                                 ((double)value.NewValue - (double)value.OldValue) / 2;
                             var fe = Application.Current.MainWindow
-                                .GetCorrespondingViews<LineResizeHandle>(connector.SnapPoint1VM.Value).First();
+                                .GetVisualChild<LineResizeHandle>(connector.SnapPoint1VM.Value);
                             Canvas.SetTop(fe,
                                 Canvas.GetTop(fe) + ((double)value.NewValue - (double)value.OldValue) / 2);
                         }
@@ -450,14 +437,14 @@ internal class SnapPointAdsorptionInformation : IObserver<TransformNotification>
                         {
                             connector.SnapPoint0VM.Value.Top.Value += (double)value.NewValue - (double)value.OldValue;
                             var fe = Application.Current.MainWindow
-                                .GetCorrespondingViews<LineResizeHandle>(connector.SnapPoint0VM.Value).First();
+                                .GetVisualChild<LineResizeHandle>(connector.SnapPoint0VM.Value);
                             Canvas.SetTop(fe, Canvas.GetTop(fe) + ((double)value.NewValue - (double)value.OldValue));
                         }
                         else if (index == 1)
                         {
                             connector.SnapPoint1VM.Value.Top.Value += (double)value.NewValue - (double)value.OldValue;
                             var fe = Application.Current.MainWindow
-                                .GetCorrespondingViews<LineResizeHandle>(connector.SnapPoint1VM.Value).First();
+                                .GetVisualChild<LineResizeHandle>(connector.SnapPoint1VM.Value);
                             Canvas.SetTop(fe, Canvas.GetTop(fe) + ((double)value.NewValue - (double)value.OldValue));
                         }
 

@@ -167,8 +167,7 @@ public class DropperBehavior : Behavior<DesignerCanvas>
 
         using (var context = visual.RenderOpen())
         {
-            var views = designerCanvas.GetCorrespondingViews<FrameworkElement>(background);
-            var view = views.First(x => x.GetType() == background.GetViewType());
+            var view = designerCanvas.GetVisualChild<FrameworkElement>(background);
             var bounds = VisualTreeHelper.GetDescendantBounds(view);
             var rect = bounds;
             var brush = new VisualBrush(view);
@@ -189,8 +188,7 @@ public class DropperBehavior : Behavior<DesignerCanvas>
                         x.Children);
                 if (!layerItems.OfType<LayerItem>().First(x => x.Item.Value == item).IsVisible.Value)
                     continue;
-                var views = designerCanvas.GetCorrespondingViews<FrameworkElement>(item);
-                var view = views.First(x => x.GetType() == item.GetViewType());
+                var view = designerCanvas.GetVisualChild<FrameworkElement>(item);
                 view.SnapsToDevicePixels = true;
                 var brush = new VisualBrush(view);
                 brush.Stretch = Stretch.None;

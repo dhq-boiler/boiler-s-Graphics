@@ -43,7 +43,7 @@ public class LayerTreeViewItemBase : BindableBase, IDisposable, IObservable<Laye
             .AddTo(_disposable);
         ChangeNameCommand.Subscribe(_ =>
             {
-                var labelTextBox = Application.Current.MainWindow.GetCorrespondingViews<LabelTextBox>(this).First();
+                var labelTextBox = Application.Current.MainWindow.GetVisualChild<LabelTextBox>(this);
                 labelTextBox.FocusTextBox();
             })
             .AddTo(_disposable);

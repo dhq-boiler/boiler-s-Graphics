@@ -1,13 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reactive.Disposables;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using boilersGraphics.Controls;
+﻿using boilersGraphics.Controls;
 using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
 using boilersGraphics.Views;
@@ -18,14 +9,20 @@ using Prism.Services.Dialogs;
 using Prism.Unity;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
+using System;
+using System.Collections.Generic;
+using System.Reactive.Disposables;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using Rect = System.Windows.Rect;
 
 namespace boilersGraphics.ViewModels;
 
 public class MosaicViewModel : EffectViewModel
 {
-    private bool isMonitored;
-
     public MosaicViewModel()
     {
         Initialize();
@@ -234,12 +231,7 @@ public class MosaicViewModel : EffectViewModel
     {
         var compositeDisposable = new CompositeDisposable();
         base.BeginMonitor(action).AddTo(compositeDisposable);
-        if (!isMonitored)
-        {
-            this.ObserveProperty(x => x.Bitmap).Subscribe(_ => action()).AddTo(compositeDisposable);
-            isMonitored = true;
-        }
-
+        this.ObserveProperty(x => x.Bitmap).Subscribe(_ => action()).AddTo(compositeDisposable);
         return compositeDisposable;
     }
 }

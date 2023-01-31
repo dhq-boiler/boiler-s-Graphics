@@ -25,8 +25,6 @@ namespace boilersGraphics.ViewModels;
 
 public class BlurEffectViewModel : EffectViewModel
 {
-    private bool isMonitored;
-
     public BlurEffectViewModel()
     {
         Initialize();
@@ -140,12 +138,7 @@ public class BlurEffectViewModel : EffectViewModel
     {
         var compositeDisposable = new CompositeDisposable();
         base.BeginMonitor(action).AddTo(compositeDisposable);
-        if (!isMonitored)
-        {
-            this.ObserveProperty(x => x.Bitmap).Subscribe(_ => action()).AddTo(compositeDisposable);
-            isMonitored = true;
-        }
-
+        this.ObserveProperty(x => x.Bitmap).Subscribe(_ => action()).AddTo(compositeDisposable);
         return compositeDisposable;
     }
 }

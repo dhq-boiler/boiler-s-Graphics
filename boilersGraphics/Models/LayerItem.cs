@@ -149,8 +149,7 @@ public class LayerItem : LayerTreeViewItemBase, IDisposable, IComparable<LayerTr
     private static void UpdateAppearanceByItem(DesignerCanvas designerCanvas, double minX, double minY,
         RenderTargetBitmap rtb, DrawingVisual visual, SelectableDesignerItemViewModelBase item)
     {
-        var views = designerCanvas.GetCorrespondingViews<FrameworkElement>(item)
-            .Where(x => x.GetType() == item.GetViewType());
+        var views = designerCanvas.EnumVisualChildren<FrameworkElement>(item).Where(x => x.DataContext == item);
         foreach (var view in views)
             if (view != null)
             {

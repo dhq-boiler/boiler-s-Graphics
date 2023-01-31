@@ -19,8 +19,6 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
     private double _MinWidth;
     private bool _showConnectors;
 
-    private bool isMonitored;
-
     public DesignerItemViewModelBase(int id, IDiagramViewModel parent, double left, double top) : base(id, parent)
     {
         Left.Value = left;
@@ -370,12 +368,7 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
     {
         var compositeDisposable = new CompositeDisposable();
         base.BeginMonitor(action).AddTo(compositeDisposable);
-        if (!isMonitored)
-        {
-            Rect.Subscribe(_ => action()).AddTo(compositeDisposable);
-            isMonitored = true;
-        }
-
+        Rect.Subscribe(_ => action()).AddTo(compositeDisposable);
         return compositeDisposable;
     }
 

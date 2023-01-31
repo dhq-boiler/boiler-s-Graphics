@@ -54,9 +54,9 @@ public class BrushViewModel : DesignerItemViewModelBase
             .ObserveOn(new DispatcherScheduler(Dispatcher.CurrentDispatcher))
             .Subscribe(x =>
             {
-                var views = Application.Current.MainWindow.GetChildOfType<DesignerCanvas>()
-                    .GetCorrespondingViews<FrameworkElement>(this).Where(x => x.GetType() == GetViewType());
-                views.FirstOrDefault()?.Focus();
+                var view = Application.Current.MainWindow.GetChildOfType<DesignerCanvas>()
+                    .GetVisualChild<FrameworkElement>(this);
+                view?.Focus();
             })
             .AddTo(_CompositeDisposable);
     }

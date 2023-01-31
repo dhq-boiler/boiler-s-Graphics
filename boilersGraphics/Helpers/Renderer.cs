@@ -249,8 +249,8 @@ public static class Renderer
         foreach (var item in diagramViewModel.AllItems.Value.Except(except).Where(x => x.IsVisible.Value))
         {
             var view = default(FrameworkElement);
-            var views = await designerCanvas.GetCorrespondingViewsAsync<FrameworkElement>(item).ToListAsync();
-            view = views.FirstOrDefault(x => x.GetType() == item.GetViewType());
+            //var views = await designerCanvas.FindVisualChildrenAsync<FrameworkElement>(item).ToListAsync();
+            //view = views.FirstOrDefault(x => x.GetType() == item.GetViewType());
             if (view is null)
                 continue;
             view.SnapsToDevicePixels = true;

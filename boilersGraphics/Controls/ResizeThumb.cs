@@ -100,7 +100,7 @@ public class ResizeThumb : SnapPoint
 
         var mainWindowVM = Application.Current.MainWindow.DataContext as MainWindowViewModel;
         var designerCanvas = Application.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-        var correspondingViews = designerCanvas.GetCorrespondingViews<ResizeThumb>(DataContext).ToList();
+        var correspondingViews = designerCanvas.EnumVisualChildren<ResizeThumb>(DataContext);
         var diagramVM = mainWindowVM.DiagramViewModel;
 
         foreach (var item in selectedDesignerItems)

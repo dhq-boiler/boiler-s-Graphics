@@ -16,14 +16,21 @@ namespace boilersGraphics.ViewModels
     public abstract class EffectViewModel : DesignerItemViewModelBase
     {
         private bool isMonitored = false;
+        private Dictionary<Guid, IDisposable> monitoringItems = new Dictionary<Guid, IDisposable>();
         public ReactivePropertySlim<WriteableBitmap> Bitmap { get; }
 
         public virtual void Initialize()
         {
+            monitoringItems.ToList().ForEach(x => x.Value.Dispose());
+            monitoringItems.Clear();
+
             (Application.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.AllItems.Subscribe(items =>
             {
-                foreach (var item in items.Where(x => x.ZIndex.Value < this.ZIndex.Value))
-                    item.BeginMonitor(() => { Render(); }).AddTo(_CompositeDisposable);
+                foreach (var item in items.Where(x => !monitoringItems.ContainsKey(x.ID) && x.ZIndex.Value < this.ZIndex.Value))
+                {
+                    monitoringItems.Add(item.ID, item.BeginMonitor(() => Render()));
+                }
+
             }).AddTo(_CompositeDisposable);
         }
 
@@ -31,7 +38,7 @@ namespace boilersGraphics.ViewModels
 
         internal void UpdateLayout()
         {
-            var view = App.Current.MainWindow.GetChildOfType<DesignerCanvas>().EnumVisualChildren<FrameworkElement>().FirstOrDefault(x => x.DataContext == this);
+            var view = App.Current.MainWindow.GetChildOfType<DesignerCanvas>().GetVisualChild<FrameworkElement>(this);
             if (view is null)
             {
                 return;
@@ -53,6 +60,18 @@ namespace boilersGraphics.ViewModels
             }
 
             return compositeDisposable;
+        }
+
+        public override void Dispose()
+        {
+            foreach (var keyValuePair in monitoringItems)
+            {
+                keyValuePair.Value.Dispose();
+            }
+
+            monitoringItems = null;
+            Bitmap.Dispose();
+            base.Dispose();
         }
     }
 }
