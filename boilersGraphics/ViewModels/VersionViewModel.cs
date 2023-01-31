@@ -179,7 +179,7 @@ public class VersionViewModel : BindableBase, IDialogAware
         }
         catch (FileNotFoundException ex)
         {
-            LogManager.GetCurrentClassLogger().Error(ex);
+            LogManager.GetCurrentClassLogger().Warn(ex);
             return string.Empty;
         }
     }
