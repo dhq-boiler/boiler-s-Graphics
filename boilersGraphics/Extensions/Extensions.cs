@@ -137,6 +137,7 @@ public static class Extensions
         return depObj;
     }
 
+    [Obsolete]
     public static async IAsyncEnumerable<T> FindVisualChildrenAsync<T>(this DependencyObject depObj, int digCount = 0)
         where T : DependencyObject
     {
@@ -504,6 +505,7 @@ public static class Extensions
         logger.Debug($"Finish FindVisualChildren(digCount={digCount}) elapsed={sw.ElapsedMilliseconds}ms");
     }
 
+    [Obsolete]
     public static IEnumerable<T> EnumVisualChildren<T>(this DependencyObject pp, int digCount = 0) where T : DependencyObject
     {
         var ret = new List<T>();
@@ -1364,6 +1366,7 @@ public static class Extensions
         return null;
     }
 
+    [Obsolete]
     public static IEnumerable<FrameworkElement> GetChildren(this FrameworkElement parent)
     {
         var count = VisualTreeHelper.GetChildrenCount(parent);
@@ -1380,6 +1383,7 @@ public static class Extensions
         }
     }
 
+    [Obsolete]
     public static T FindChild<T>(this DependencyObject parent, string childName) where T : DependencyObject
     {
         // Confirm parent and childName are valid. 
@@ -1423,6 +1427,7 @@ public static class Extensions
         return foundChild;
     }
 
+    [Obsolete]
     public static async IAsyncEnumerable<T> GetCorrespondingViewsAsync<T>(this FrameworkElement parent,
         object dataContext, bool parentInclude = false)
         where T : FrameworkElement
@@ -1464,6 +1469,7 @@ public static class Extensions
         }
     }
 
+    [Obsolete]
     public static IEnumerable<T> GetDescendantsViews<T>(this FrameworkElement parent, bool parentInclude = false)
         where T : FrameworkElement
     {
@@ -1501,6 +1507,7 @@ public static class Extensions
         }
     }
 
+    [Obsolete]
     public static IEnumerable<T> GetCorrespondingViews<T>(this FrameworkElement parent, object dataContext,
         bool parentInclude = false)
         where T : FrameworkElement
@@ -1539,6 +1546,7 @@ public static class Extensions
         }
     }
 
+    [Obsolete]
     public static IEnumerable<FrameworkElement> GetViewsHavingDataContext(this FrameworkElement parent,
         bool parentInclude = false)
     {
@@ -1560,6 +1568,7 @@ public static class Extensions
         }
     }
 
+    [Obsolete]
     public static T GetParentOfType<T>(this DependencyObject obj)
         where T : DependencyObject
     {
@@ -1572,6 +1581,7 @@ public static class Extensions
         return (T)obj;
     }
 
+    [Obsolete]
     public static DependencyObject GetParentOfType(this DependencyObject obj, string name)
     {
         if (obj == null) return null;
@@ -1583,7 +1593,7 @@ public static class Extensions
 
         return obj;
     }
-
+    
     public static double DpiXFactor(this Visual visual)
     {
         var source = PresentationSource.FromVisual(visual);
