@@ -95,7 +95,7 @@ public static class Extensions
     /// <param name="dataContext1">子孫を調べるデータコンテキスト</param>
     /// <param name="dataContext2">一致対象のデータコンテキスト</param>
     /// <returns>子孫を調べるデータコンテキストの構成要素に一致対象のデータコンテキストが存在する場合、trueを返します。存在しない場合、falseを返します。</returns>
-    public static bool HasAncestor(object dataContext1, object dataContext2)
+    public static bool HasDescendants(object dataContext1, object dataContext2)
     {
         var properties = dataContext1.GetType().GetProperties(
             BindingFlags.Public
@@ -115,7 +115,7 @@ public static class Extensions
             {
                 foreach (var item in enumerable)
                 {
-                    if (HasAncestor(item, dataContext2))
+                    if (HasDescendants(item, dataContext2))
                         return true;
                 }
             }
@@ -811,7 +811,7 @@ public static class Extensions
             {
                 //dig Control.Template
                 var templateContent = _control.Template.LoadContent();
-                if (templateContent is FrameworkElement fe && fe.DataContext is not null && HasAncestor(fe.DataContext, dataContext))
+                if (templateContent is FrameworkElement fe && fe.DataContext is not null && HasDescendants(fe.DataContext, dataContext))
                 {
                     var list = EnumVisualChildren<FrameworkElement>(templateContent, dataContext, digCount + 1)
                         .Distinct().ToList();
@@ -820,7 +820,7 @@ public static class Extensions
                         var l = EnumVisualChildren<T>(p, dataContext, digCount + 1).Distinct().ToList();
                         foreach (var o in l)
                         {
-                            if (o is not ContentPresenter && o is not Control && o is T t && t.DataContext is not null && HasAncestor(t.DataContext, dataContext))
+                            if (o is not ContentPresenter && o is not Control && o is T t && t.DataContext is not null && HasDescendants(t.DataContext, dataContext))
                             {
                                 yield return t;
                             }
@@ -834,7 +834,7 @@ public static class Extensions
                 if (ic.ItemTemplate is not null)
                 {
                     var itemTemplateContent = ic.ItemTemplate.LoadContent();
-                    if (itemTemplateContent is FrameworkElement fe && fe.DataContext is not null && HasAncestor(fe.DataContext, dataContext))
+                    if (itemTemplateContent is FrameworkElement fe && fe.DataContext is not null && HasDescendants(fe.DataContext, dataContext))
                     {
                         var list = EnumVisualChildren<FrameworkElement>(itemTemplateContent, dataContext, digCount + 1)
                             .Distinct().ToList();
@@ -844,7 +844,7 @@ public static class Extensions
                             foreach (var o in l)
                             {
                                 if (o is not ContentPresenter && o is not Control && o is T t &&
-                                    t.DataContext is not null && HasAncestor(t.DataContext, dataContext))
+                                    t.DataContext is not null && HasDescendants(t.DataContext, dataContext))
                                 {
                                     yield return t;
                                 }
@@ -859,7 +859,7 @@ public static class Extensions
         {
             //dig ContentPresenter.Content
             var content = cp2.Content as DependencyObject;
-            if (content is T t && content is not ContentPresenter && t.DataContext is not null && HasAncestor(t.DataContext, dataContext)) yield return (T)content;
+            if (content is T t && content is not ContentPresenter && t.DataContext is not null && HasDescendants(t.DataContext, dataContext)) yield return (T)content;
             if (content is not null)
             {
                 if (content is FrameworkElement fe && fe.DataContext is not null)
@@ -868,7 +868,7 @@ public static class Extensions
                         .ToList();
                     foreach (var childOfChild2 in list)
                         if (childOfChild2 != null && childOfChild2 is T && childOfChild2 is not ContentPresenter &&
-                            childOfChild2 is not Control && childOfChild2 is T tt && tt.DataContext is not null && HasAncestor(tt.DataContext, dataContext))
+                            childOfChild2 is not Control && childOfChild2 is T tt && tt.DataContext is not null && HasDescendants(tt.DataContext, dataContext))
                             yield return tt;
                 }
             }
@@ -877,7 +877,7 @@ public static class Extensions
             if (cp2.ContentTemplate != null)
             {
                 var loadObj2 = cp2.ContentTemplate.LoadContent();
-                if (loadObj2 is T tt && loadObj2 is not ContentPresenter && tt.DataContext is not null && HasAncestor(tt.DataContext, dataContext)) yield return (T)content;
+                if (loadObj2 is T tt && loadObj2 is not ContentPresenter && tt.DataContext is not null && HasDescendants(tt.DataContext, dataContext)) yield return (T)content;
                 if (loadObj2 is FrameworkElement fe && fe.DataContext is not null)
                 {
                     var list = EnumVisualChildren<FrameworkElement>(loadObj2, dataContext, digCount + 1).Distinct()
@@ -888,7 +888,7 @@ public static class Extensions
                         foreach (var o in l)
                         {
                             if (o is not ContentPresenter && o is not Control && o is T ttt &&
-                                ttt.DataContext is not null && HasAncestor(ttt.DataContext, dataContext))
+                                ttt.DataContext is not null && HasDescendants(ttt.DataContext, dataContext))
                             {
                                 yield return ttt;
                             }
@@ -904,7 +904,7 @@ public static class Extensions
             {
                 if (child is T dependencyObject)
                 {
-                    if (dependencyObject is not ContentPresenter && dependencyObject is T t && t.DataContext is not null && HasAncestor(t.DataContext, dataContext))
+                    if (dependencyObject is not ContentPresenter && dependencyObject is T t && t.DataContext is not null && HasDescendants(t.DataContext, dataContext))
                     {
                         yield return t;
                     }
@@ -912,7 +912,7 @@ public static class Extensions
                     var l = EnumVisualChildren<T>(dependencyObject, dataContext, digCount + 1).Distinct().ToList();
                     foreach (var item in l)
                     {
-                        if (item is not ContentPresenter && item is not Control && item is T tt && tt.DataContext is not null && HasAncestor(tt.DataContext, dataContext))
+                        if (item is not ContentPresenter && item is not Control && item is T tt && tt.DataContext is not null && HasDescendants(tt.DataContext, dataContext))
                         {
                             yield return tt;
                         }
@@ -934,13 +934,13 @@ public static class Extensions
                     {
                         //dig ContentPresenter.Content
                         var content = cp.Content as DependencyObject;
-                        if (content is T t && content is not ContentPresenter && t.DataContext is not null && HasAncestor(t.DataContext, dataContext)) yield return (T)content;
+                        if (content is T t && content is not ContentPresenter && t.DataContext is not null && HasDescendants(t.DataContext, dataContext)) yield return (T)content;
                         if (content is not null)
                         {
                             var list2 = EnumVisualChildren<FrameworkElement>(content, dataContext, digCount + 1).Distinct().ToList();
                             foreach (var childOfChild2 in list2)
                                 if (childOfChild2 != null && childOfChild2 is T && childOfChild2 is not ContentPresenter && childOfChild2 is not Control &&
-                                    childOfChild2 is not Control && childOfChild2 is T tt && tt.DataContext is not null && HasAncestor(tt.DataContext, dataContext))
+                                    childOfChild2 is not Control && childOfChild2 is T tt && tt.DataContext is not null && HasDescendants(tt.DataContext, dataContext))
                                     yield return tt;
                         }
 
@@ -948,13 +948,13 @@ public static class Extensions
                         if (cp.ContentTemplate != null)
                         {
                             var loadObj2 = cp.ContentTemplate.LoadContent();
-                            if (loadObj2 is T tt && loadObj2 is not ContentPresenter && loadObj2 is not Control && tt.DataContext is not null && HasAncestor(tt.DataContext, dataContext)) yield return (T)content;
+                            if (loadObj2 is T tt && loadObj2 is not ContentPresenter && loadObj2 is not Control && tt.DataContext is not null && HasDescendants(tt.DataContext, dataContext)) yield return (T)content;
                             if (loadObj2 is not null)
                             {
                                 var list2 = EnumVisualChildren<FrameworkElement>(loadObj2, dataContext, digCount + 1).Distinct().ToList();
                                 foreach (var childOfChild2 in list2)
                                     if (childOfChild2 != null && childOfChild2 is T && childOfChild2 is not ContentPresenter && childOfChild2 is not Control &&
-                                        childOfChild2 is not Control && childOfChild2 is T ttt && ttt.DataContext is not null && HasAncestor(ttt.DataContext, dataContext))
+                                        childOfChild2 is not Control && childOfChild2 is T ttt && ttt.DataContext is not null && HasDescendants(ttt.DataContext, dataContext))
                                         yield return ttt;
                             }
                         }
@@ -965,13 +965,13 @@ public static class Extensions
                         if (c.Template != null)
                         {
                             var loadObj2 = c.Template.LoadContent();
-                            if (loadObj2 is T t && loadObj2 is not ContentPresenter && loadObj2 is not Control && t.DataContext is not null && HasAncestor(t.DataContext, dataContext)) yield return (T)t;
+                            if (loadObj2 is T t && loadObj2 is not ContentPresenter && loadObj2 is not Control && t.DataContext is not null && HasDescendants(t.DataContext, dataContext)) yield return (T)t;
                             if (loadObj2 is not null)
                             {
                                 var list2 = EnumVisualChildren<FrameworkElement>(loadObj2, dataContext, digCount + 1).Distinct().ToList();
                                 foreach (var childOfChild2 in list2)
                                     if (childOfChild2 != null && childOfChild2 is T && childOfChild2 is not ContentPresenter &&
-                                        childOfChild2 is not Control && childOfChild2 is T ttt && ttt.DataContext is not null && HasAncestor(ttt.DataContext, dataContext))
+                                        childOfChild2 is not Control && childOfChild2 is T ttt && ttt.DataContext is not null && HasDescendants(ttt.DataContext, dataContext))
                                         yield return ttt;
                             }
                         }
@@ -982,13 +982,13 @@ public static class Extensions
                         if (cc.Template != null)
                         {
                             var loadObj2 = cc.Template.LoadContent();
-                            if (loadObj2 is T t && loadObj2 is not ContentPresenter && loadObj2 is not Control && t.DataContext is not null && HasAncestor(t.DataContext, dataContext)) yield return (T)t;
+                            if (loadObj2 is T t && loadObj2 is not ContentPresenter && loadObj2 is not Control && t.DataContext is not null && HasDescendants(t.DataContext, dataContext)) yield return (T)t;
                             if (loadObj2 is not null)
                             {
                                 var list2 = EnumVisualChildren<FrameworkElement>(loadObj2, dataContext, digCount + 1).Distinct().ToList();
                                 foreach (var childOfChild2 in list2)
                                     if (childOfChild2 != null && childOfChild2 is not ContentPresenter && childOfChild2 is not Control &&
-                                        childOfChild2 is not Control && childOfChild2 is T ttt && ttt.DataContext is not null && HasAncestor(ttt.DataContext, dataContext))
+                                        childOfChild2 is not Control && childOfChild2 is T ttt && ttt.DataContext is not null && HasDescendants(ttt.DataContext, dataContext))
                                         yield return ttt;
                             }
                         }
@@ -997,20 +997,20 @@ public static class Extensions
                         if (cc.ContentTemplate != null)
                         {
                             var loadObj2 = cc.ContentTemplate.LoadContent();
-                            if (loadObj2 is T t && loadObj2 is not ContentPresenter && loadObj2 is not Control && t.DataContext is not null && HasAncestor(t.DataContext, dataContext)) yield return (T)t;
+                            if (loadObj2 is T t && loadObj2 is not ContentPresenter && loadObj2 is not Control && t.DataContext is not null && HasDescendants(t.DataContext, dataContext)) yield return (T)t;
                             if (loadObj2 is not null)
                             {
                                 var list2 = EnumVisualChildren<FrameworkElement>(loadObj2, dataContext, digCount + 1).Distinct().ToList();
                                 foreach (var childOfChild2 in list2)
                                     if (childOfChild2 != null && childOfChild2 is T && childOfChild2 is not ContentPresenter && childOfChild2 is not Control &&
-                                        childOfChild2 is not Control && childOfChild2 is T ttt && ttt.DataContext is not null && HasAncestor(ttt.DataContext, dataContext))
+                                        childOfChild2 is not Control && childOfChild2 is T ttt && ttt.DataContext is not null && HasDescendants(ttt.DataContext, dataContext))
                                         yield return ttt;
                             }
                         }
                     }
 
                     if (childOfChild != null && childOfChild is T tttt && childOfChild is not ContentPresenter &&
-                        childOfChild is not Control && tttt.DataContext is not null && HasAncestor(tttt.DataContext, dataContext))
+                        childOfChild is not Control && tttt.DataContext is not null && HasDescendants(tttt.DataContext, dataContext))
                         yield return tttt;
                 }
             }
@@ -1023,7 +1023,7 @@ public static class Extensions
                 {
                     var list2 = EnumVisualChildren<FrameworkElement>(loadObj, dataContext,digCount + 1).Distinct().ToList();
                     foreach (var childOfChild in list2)
-                        if (childOfChild != null && childOfChild is T t && childOfChild is not ContentPresenter && childOfChild is not Control && childOfChild is not Control && t.DataContext is not null && HasAncestor(t.DataContext, dataContext))
+                        if (childOfChild != null && childOfChild is T t && childOfChild is not ContentPresenter && childOfChild is not Control && childOfChild is not Control && t.DataContext is not null && HasDescendants(t.DataContext, dataContext))
                             yield return t;
                 }
             }
@@ -1036,22 +1036,22 @@ public static class Extensions
                 var list = EnumVisualChildren<T>(item, dataContext, digCount + 1).Distinct().ToList();
                 foreach (var child in list)
                 {
-                    if (child.DataContext is not null && HasAncestor(child.DataContext, dataContext)) yield return child;
+                    if (child.DataContext is not null && HasDescendants(child.DataContext, dataContext)) yield return child;
                 }
             }
         }
 
-        else if (pp is T ttttt && ttttt.DataContext is not null && HasAncestor(ttttt.DataContext, dataContext))
+        else if (pp is T ttttt && ttttt.DataContext is not null && HasDescendants(ttttt.DataContext, dataContext))
             yield return (T)pp;
 
         for (var i = 0; i < VisualTreeHelper.GetChildrenCount(pp); i++)
         {
             var child = VisualTreeHelper.GetChild(pp, i);
-            if (child != null && child is T t && child is FrameworkElement fe && fe.DataContext is not null && HasAncestor(fe.DataContext, dataContext))
+            if (child != null && child is T t && child is FrameworkElement fe && fe.DataContext is not null && HasDescendants(fe.DataContext, dataContext))
             {
                 var list = EnumVisualChildren<T>(child, dataContext, digCount + 1).Distinct().ToList();
                 foreach (var childOfChild in list) //yield return (T)childOfChild;
-                    if (childOfChild.DataContext is not null && HasAncestor(childOfChild.DataContext, dataContext)) yield return (T)childOfChild;
+                    if (childOfChild.DataContext is not null && HasDescendants(childOfChild.DataContext, dataContext)) yield return (T)childOfChild;
                 
                 //if (list.Count == 0 && t.DataContext is not null)
                 //{
@@ -1062,12 +1062,12 @@ public static class Extensions
             {
                 //dig ContentPresenter.Content
                 var content = cp.Content as DependencyObject;
-                if (content is T tt && tt.DataContext is not null && HasAncestor(tt.DataContext, dataContext)) yield return (T)content;
+                if (content is T tt && tt.DataContext is not null && HasDescendants(tt.DataContext, dataContext)) yield return (T)content;
                 if (content is not null)
                 {
                     var list = EnumVisualChildren<FrameworkElement>(content, dataContext, digCount + 1).Distinct().ToList();
                     foreach (var childOfChild2 in list)
-                        if (childOfChild2 != null && childOfChild2 is T ttt && ttt.DataContext is not null && HasAncestor(ttt.DataContext, dataContext))
+                        if (childOfChild2 != null && childOfChild2 is T ttt && ttt.DataContext is not null && HasDescendants(ttt.DataContext, dataContext))
                             yield return (T)childOfChild2;
                 }
 
@@ -1075,18 +1075,18 @@ public static class Extensions
                 if (cp.ContentTemplate != null)
                 {
                     var dependencyObject = cp.ContentTemplate.LoadContent();
-                    if (dependencyObject is T ttt && ttt.DataContext is not null && HasAncestor(ttt.DataContext, dataContext)) //yield return (T)dependencyObject;
+                    if (dependencyObject is T ttt && ttt.DataContext is not null && HasDescendants(ttt.DataContext, dataContext)) //yield return (T)dependencyObject;
                         yield return (T)dependencyObject;
                     var list = EnumVisualChildren<T>(dependencyObject, dataContext, digCount + 1).Distinct().ToList();
                     foreach (var childOfChild in list) //yield return childOfChild;
-                        if (childOfChild.DataContext is not null && HasAncestor(childOfChild.DataContext, dataContext)) yield return childOfChild;
+                        if (childOfChild.DataContext is not null && HasDescendants(childOfChild.DataContext, dataContext)) yield return childOfChild;
                 }
             }
-            else if (child != null && child is FrameworkElement feee && feee.DataContext is not null && HasAncestor(feee.DataContext, dataContext))
+            else if (child != null && child is FrameworkElement feee && feee.DataContext is not null && HasDescendants(feee.DataContext, dataContext))
             {
                 var list = EnumVisualChildren<T>(child, dataContext, digCount + 1).Distinct().ToList();
                 foreach (var childOfChild in list) //yield return childOfChild;
-                    if (childOfChild.DataContext is not null && HasAncestor(childOfChild.DataContext, dataContext)) yield return childOfChild;
+                    if (childOfChild.DataContext is not null && HasDescendants(childOfChild.DataContext, dataContext)) yield return childOfChild;
             }
         }
     }
