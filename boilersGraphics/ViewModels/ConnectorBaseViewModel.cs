@@ -1,19 +1,18 @@
-﻿using System;
+﻿using boilersGraphics.Exceptions;
+using boilersGraphics.Helpers;
+using NLog;
+using Reactive.Bindings;
+using Reactive.Bindings.Extensions;
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Media;
-using boilersGraphics.Exceptions;
-using boilersGraphics.Helpers;
-using NLog;
-using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
 
 namespace boilersGraphics.ViewModels;
 
-public abstract class ConnectorBaseViewModel : SelectableDesignerItemViewModelBase, IObserver<TransformNotification>,
-    ICloneable
+public abstract class ConnectorBaseViewModel : SelectableDesignerItemViewModelBase, IObserver<TransformNotification>, IRect, ICloneable
 {
     private ObservableCollection<Point> _Points;
 
@@ -32,6 +31,7 @@ public abstract class ConnectorBaseViewModel : SelectableDesignerItemViewModelBa
     public ReadOnlyReactivePropertySlim<double> Width { get; set; }
 
     public ReadOnlyReactivePropertySlim<double> Height { get; set; }
+    public ReadOnlyReactivePropertySlim<Rect> Rect { get; set; }
 
     public ObservableCollection<Point> Points
     {
@@ -128,6 +128,8 @@ public abstract class ConnectorBaseViewModel : SelectableDesignerItemViewModelBa
         Height = Points.ObserveProperty(x => x.Count)
             .Where(x => x > 0)
             .Select(_ => Points.Max(x => x.Y) - Points.Min(x => x.Y))
+            .ToReadOnlyReactivePropertySlim();
+        Rect = LeftTop.CombineLatest(Width, Height, (lt, width, height) => new Rect(lt, new Size(width, height)))
             .ToReadOnlyReactivePropertySlim();
         PenLineCaps = new ReactiveCollection<PenLineCap>();
         PenLineCaps.Add(PenLineCap.Flat);

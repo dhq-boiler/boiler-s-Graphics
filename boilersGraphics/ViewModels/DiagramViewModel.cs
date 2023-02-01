@@ -308,6 +308,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
             OnLoaded = new ReactiveCommand().WithSubscribe(() =>
             {
                 DesignerCanvas = Application.Current.MainWindow.GetChildOfType<DesignerCanvas>();
+                Layers.ToList().ForEach(x => x.UpdateAppearanceBothParentAndChild());
             }).AddTo(_CompositeDisposable);
         }
 
@@ -828,7 +829,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
         mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "LayerCount", 1);
         mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "LayerItemCount", 1);
         RootLayer.Dispose();
-        RootLayer = new ReactivePropertySlim<LayerTreeViewItemBase>(new LayerTreeViewItemBase());
+        RootLayer = new ReactivePropertySlim<LayerTreeViewItemBase>(new RootLayer());
         Layers.ToClearOperation().ExecuteTo(mainwindowViewModel.Recorder.Current);
         if (addingLayer)
         {
@@ -1766,7 +1767,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
 
     #region Property
 
-    public ReactivePropertySlim<LayerTreeViewItemBase> RootLayer { get; set; } = new(new LayerTreeViewItemBase());
+    public ReactivePropertySlim<LayerTreeViewItemBase> RootLayer { get; set; } = new(new RootLayer());
 
     public ReactiveCollection<LayerTreeViewItemBase> Layers { get; }
 

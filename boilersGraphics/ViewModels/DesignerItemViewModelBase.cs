@@ -10,7 +10,7 @@ using Reactive.Bindings.Extensions;
 
 namespace boilersGraphics.ViewModels;
 
-public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewModelBase, ICloneable
+public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewModelBase, ICloneable, IRect
 {
     public static readonly double DefaultWidth = 65d;
     public static readonly double DefaultHeight = 65d;

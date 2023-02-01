@@ -174,7 +174,7 @@ public class MoveableTreeViewBehavior : Behavior<TreeView>
                     children, sourceItem, targetItem);
                 sourceItem.Parent.Value = targetItemParent;
                 sourceItem.IsSelected.Value = true;
-                if (targetItemWasBottom && sourceItem is LayerItem li && li.Item.Value is EffectViewModel effect)
+                if (targetItemWasBottom && sourceItem is LayerItem { Item.Value: EffectViewModel effect })
                 {
                     effect.Render();
                 }

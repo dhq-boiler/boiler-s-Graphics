@@ -8,6 +8,7 @@ using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using boilersGraphics.Controls;
 using boilersGraphics.Exceptions;
 using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
@@ -22,7 +23,7 @@ using TsOperationHistory.Extensions;
 
 namespace boilersGraphics.Models;
 
-public class LayerTreeViewItemBase : BindableBase, IDisposable, IObservable<LayerTreeViewItemBaseObservable>
+public abstract class LayerTreeViewItemBase : BindableBase, IDisposable, IObservable<LayerTreeViewItemBaseObservable>
 {
     protected CompositeDisposable _disposable = new();
 
@@ -69,6 +70,8 @@ public class LayerTreeViewItemBase : BindableBase, IDisposable, IObservable<Laye
 
     public ReactivePropertySlim<Color> Color { get; } = new();
 
+    public ReactivePropertySlim<ImageSource> Appearance { get; } = new();
+
     public ReactivePropertySlim<Visibility> BeforeSeparatorVisibility { get; } = new(Visibility.Hidden);
 
     public ReactivePropertySlim<Visibility> AfterSeparatorVisibility { get; } = new(Visibility.Hidden);
@@ -78,6 +81,34 @@ public class LayerTreeViewItemBase : BindableBase, IDisposable, IObservable<Laye
     public ReactiveCollection<Control> LayerTreeViewItemContextMenu { get; } = new();
 
     public ReactiveCommand ChangeNameCommand { get; } = new();
+
+    public abstract void UpdateAppearance(IEnumerable<SelectableDesignerItemViewModelBase> items);
+
+    internal void UpdateAppearanceBothParentAndChild()
+    {
+        LogManager.GetCurrentClassLogger().Trace("detected Layer changes. run Layer.UpdateAppearance().");
+        UpdateAppearance(Children
+            .SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(xx => xx.Children)
+            .Select(x => (x as LayerItem).Item.Value));
+        Children.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+            .ToList()
+            .ForEach(x =>
+                (x as LayerItem).UpdateAppearance(IfGroupBringChildren((x as LayerItem).Item.Value)));
+    }
+
+    private IEnumerable<SelectableDesignerItemViewModelBase> IfGroupBringChildren(
+        SelectableDesignerItemViewModelBase value)
+    {
+        if (value is GroupItemViewModel groupItemVM)
+        {
+            var children = Children.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                .Select(x => (x as LayerItem).Item.Value)
+                .Where(x => x.ParentID == groupItemVM.ID);
+            return children;
+        }
+
+        return new List<SelectableDesignerItemViewModelBase> { value };
+    }
 
     public void Dispose()
     {

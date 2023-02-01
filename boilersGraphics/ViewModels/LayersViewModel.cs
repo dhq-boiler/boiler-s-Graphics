@@ -95,15 +95,16 @@ internal class LayersViewModel : BindableBase, IDialogAware
                     selectedLayer.IsSelected.Value = true;
                     selectedLayer.ChildrenSwitchIsHitTestVisible(true);
 
-                    selectedLayer.UpdateAppearance(selectedLayer.Children
-                        .SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(xx => xx.Children)
-                        .Select(x => (x as LayerItem).Item.Value));
-                    selectedLayer.Children
-                        .SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
-                        .ToList()
-                        .ForEach(x =>
-                            (x as LayerItem).UpdateAppearance(IfGroupBringChildren(selectedLayer.Children,
-                                (x as LayerItem).Item.Value)));
+                    selectedLayer.UpdateAppearanceBothParentAndChild();
+                    //selectedLayer.UpdateAppearance(selectedLayer.Children
+                    //    .SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(xx => xx.Children)
+                    //    .Select(x => (x as LayerItem).Item.Value));
+                    //selectedLayer.Children
+                    //    .SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                    //    .ToList()
+                    //    .ForEach(x =>
+                    //        (x as LayerItem).UpdateAppearance(IfGroupBringChildren(selectedLayer.Children,
+                    //            (x as LayerItem).Item.Value)));
                 }
                 else if (newItem.GetType() == typeof(LayerItem))
                 {

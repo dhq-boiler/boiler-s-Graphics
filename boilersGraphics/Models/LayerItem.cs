@@ -124,11 +124,10 @@ public class LayerItem : LayerTreeViewItemBase, IDisposable, IComparable<LayerTr
             .AddTo(_disposable);
     }
 
-    public void UpdateAppearance(IEnumerable<SelectableDesignerItemViewModelBase> items)
+    public override void UpdateAppearance(IEnumerable<SelectableDesignerItemViewModelBase> items)
     {
-        if (items.Count() == 0) return;
-
-        var designerCanvas = Application.Current.MainWindow.GetChildOfType<DesignerCanvas>();
+        if (items.Count() == 0)
+            return;
         double minX, maxX, minY, maxY;
         var width = Measure.GetWidth(items, out minX, out maxX);
         var height = Measure.GetHeight(items, out minY, out maxY);
@@ -136,14 +135,11 @@ public class LayerItem : LayerTreeViewItemBase, IDisposable, IComparable<LayerTr
         if (width <= 0 || height <= 0)
             return;
 
-        var rtb = new RenderTargetBitmap(width, height, 96, 96, PixelFormats.Pbgra32);
-
-        var visual = InitializeBitmap(width, height);
-        rtb.Render(visual);
-
-        foreach (var item in items) UpdateAppearanceByItem(designerCanvas, minX, minY, rtb, visual, item);
-
-        Appearance.Value = rtb;
+        Rect? sliceRect = null;
+        items.Cast<IRect>().ToList().ForEach(x => sliceRect = (!sliceRect.HasValue ? x.Rect.Value : Rect.Union(sliceRect.Value, x.Rect.Value)));
+        Appearance.Value = Renderer.Render(sliceRect, DesignerCanvas.GetInstance(),
+            DiagramViewModel.Instance,
+            DiagramViewModel.Instance.BackgroundItem.Value, items.Max(x => x.ZIndex.Value));
     }
 
     private static void UpdateAppearanceByItem(DesignerCanvas designerCanvas, double minX, double minY,
