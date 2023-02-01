@@ -1,14 +1,13 @@
-﻿using System;
+﻿using boilersGraphics.Controls;
+using boilersGraphics.Extensions;
+using boilersGraphics.ViewModels;
+using NLog;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using boilersGraphics.Controls;
-using boilersGraphics.Extensions;
-using boilersGraphics.ViewModels;
-using NLog;
 
 namespace boilersGraphics.Helpers;
 
@@ -43,40 +42,6 @@ public static class Renderer
                 //前景を描画
                 renderedCount += RenderForeground(sliceRect, diagramViewModel, designerCanvas, context, backgroundItem,
                     allViews, maxZIndex);
-            }
-
-            rtb.Render(visual);
-            rtb.Freeze();
-        });
-
-        if (renderedCount == 0)
-            s_logger.Warn("レンダリングが試みられましたが、レンダリングされませんでした。");
-        else
-            s_logger.Debug("レンダリングされました。");
-
-        return rtb;
-    }
-
-    public static async Task<RenderTargetBitmap> RenderAsync(Rect? sliceRect, DesignerCanvas designerCanvas,
-        DiagramViewModel diagramViewModel, BackgroundViewModel backgroundItem, DesignerItemViewModelBase mosaic = null)
-    {
-        var size = GetRenderSize(sliceRect, diagramViewModel);
-
-        s_logger.Debug($"SliceRect size:{size}");
-
-        var rtb = new RenderTargetBitmap((int)size.Width, (int)size.Height, 96, 96, PixelFormats.Pbgra32);
-        var visual = new DrawingVisual();
-        var renderedCount = 0;
-        await Application.Current.Dispatcher.Invoke(async () =>
-        {
-            using (var context = visual.RenderOpen())
-            {
-                //背景を描画
-                if (await RenderBackgroundViewModelAsync(sliceRect, designerCanvas, context, backgroundItem))
-                    renderedCount++;
-                //前景を描画
-                renderedCount += await RenderForegroundAsync(sliceRect, diagramViewModel, designerCanvas, context,
-                    backgroundItem, mosaic);
             }
 
             rtb.Render(visual);
@@ -224,145 +189,11 @@ public static class Renderer
                     break;
                 }
             }
-
-            //var size = GetRenderSize(diagramViewModel);
-            //var rtb = new RenderTargetBitmap((int)size.Width, (int)size.Height, 96, 96, PixelFormats.Pbgra32);
-            //DrawingVisual visual = new DrawingVisual();
-            //using (DrawingContext context2 = visual.RenderOpen())
-            //{
-            //    context2.DrawRectangle(new SolidColorBrush(Colors.Green), null, new Rect(new Point(0, 0), size));
-            //    context2.DrawRectangle(brush, null, rect);
-            //}
-            //rtb.Render(visual);
-            //OpenCvSharpHelper.ImShow("Foreground", rtb);
         }
 
         return renderedCount;
     }
-
-    private static async Task<int> RenderForegroundAsync(Rect? sliceRect, DiagramViewModel diagramViewModel,
-        DesignerCanvas designerCanvas, DrawingContext context, BackgroundViewModel background,
-        DesignerItemViewModelBase mosaic = null)
-    {
-        var renderedCount = 0;
-        var except = new SelectableDesignerItemViewModelBase[] { background, mosaic }.Where(x => x is not null);
-        foreach (var item in diagramViewModel.AllItems.Value.Except(except).Where(x => x.IsVisible.Value))
-        {
-            var view = default(FrameworkElement);
-            //var views = await designerCanvas.FindVisualChildrenAsync<FrameworkElement>(item).ToListAsync();
-            //view = views.FirstOrDefault(x => x.GetType() == item.GetViewType());
-            if (view is null)
-                continue;
-            view.SnapsToDevicePixels = true;
-            var brush = new VisualBrush(view)
-            {
-                Stretch = Stretch.None,
-                TileMode = TileMode.None
-            };
-            var rect = new Rect();
-            switch (item)
-            {
-                case DesignerItemViewModelBase designerItem:
-                {
-                    if (designerItem is PictureDesignerItemViewModel picture)
-                    {
-                        var bounds = VisualTreeHelper.GetDescendantBounds(view);
-                        if (sliceRect.HasValue)
-                        {
-                            rect = sliceRect.Value;
-                            var intersectSrc = new Rect(designerItem.Left.Value, designerItem.Top.Value, bounds.Width,
-                                bounds.Height);
-                            rect = Rect.Union(rect, intersectSrc);
-                            if (rect != Rect.Empty)
-                            {
-                                rect.X -= sliceRect.Value.X;
-                                rect.Y -= sliceRect.Value.Y;
-                            }
-                        }
-                        else
-                        {
-                            rect = new Rect(designerItem.Left.Value, designerItem.Top.Value, designerItem.Width.Value,
-                                designerItem.Height.Value);
-                        }
-                    }
-                    else
-                    {
-                        var bounds = VisualTreeHelper.GetDescendantBounds(view);
-                        if (sliceRect.HasValue)
-                        {
-                            rect = sliceRect.Value;
-                            var intersectSrc = new Rect(designerItem.Left.Value, designerItem.Top.Value, bounds.Width,
-                                bounds.Height);
-                            rect = Rect.Intersect(rect, intersectSrc);
-                            if (rect != Rect.Empty)
-                            {
-                                rect.X -= sliceRect.Value.X;
-                                rect.Y -= sliceRect.Value.Y;
-                            }
-                        }
-                        else
-                        {
-                            rect = new Rect(designerItem.Left.Value, designerItem.Top.Value, designerItem.Width.Value,
-                                designerItem.Height.Value);
-                        }
-                    }
-
-                    if (rect != Rect.Empty)
-                    {
-                        rect.X -= background.Left.Value;
-                        rect.Y -= background.Top.Value;
-                    }
-
-                    context.PushTransform(new RotateTransform(designerItem.RotationAngle.Value,
-                        designerItem.CenterX.Value,
-                        designerItem.CenterY.Value));
-                    context.DrawRectangle(brush, null, rect);
-                    context.Pop();
-                    renderedCount++;
-                    break;
-                }
-                case ConnectorBaseViewModel connector:
-                {
-                    var bounds = VisualTreeHelper.GetDescendantBounds(view);
-                    if (sliceRect.HasValue)
-                    {
-                        rect = sliceRect.Value;
-                        var intersectSrc = new Rect(connector.LeftTop.Value, bounds.Size);
-                        rect = Rect.Intersect(rect, intersectSrc);
-                        if (rect != Rect.Empty)
-                        {
-                            rect.X -= sliceRect.Value.X;
-                            rect.Y -= sliceRect.Value.Y;
-                        }
-                    }
-                    else
-                    {
-                        rect = new Rect(connector.LeftTop.Value, bounds.Size);
-                    }
-
-                    rect.X -= background.Left.Value;
-                    rect.Y -= background.Top.Value;
-                    context.DrawRectangle(brush, null, rect);
-                    renderedCount++;
-                    break;
-                }
-            }
-
-            //var size = GetRenderSize(diagramViewModel);
-            //var rtb = new RenderTargetBitmap((int)size.Width, (int)size.Height, 96, 96, PixelFormats.Pbgra32);
-            //DrawingVisual visual = new DrawingVisual();
-            //using (DrawingContext context2 = visual.RenderOpen())
-            //{
-            //    context2.DrawRectangle(new SolidColorBrush(Colors.Green), null, new Rect(new Point(0, 0), size));
-            //    context2.DrawRectangle(brush, null, rect);
-            //}
-            //rtb.Render(visual);
-            //OpenCvSharpHelper.ImShow("Foreground", rtb);
-        }
-
-        return renderedCount;
-    }
-
+    
     private static bool RenderBackgroundViewModel(Rect? sliceRect, DesignerCanvas designerCanvas,
         DrawingContext context, BackgroundViewModel background, List<FrameworkElement> allViews)
     {

@@ -72,31 +72,6 @@ public class MosaicViewModel : EffectViewModel
         });
     }
 
-    public async Task RenderAsync()
-    {
-        if (Width.Value <= 0 || Height.Value <= 0) return;
-
-        await Application.Current.Dispatcher.Invoke(async () =>
-        {
-            var mainWindowViewModel = Application.Current.MainWindow.DataContext as MainWindowViewModel;
-            var rtb = await Renderer.RenderAsync(Rect.Value,
-                Application.Current.MainWindow.GetChildOfType<DesignerCanvas>(), mainWindowViewModel.DiagramViewModel,
-                mainWindowViewModel.DiagramViewModel.BackgroundItem.Value, this);
-            var newFormatedBitmapSource = new FormatConvertedBitmap();
-            newFormatedBitmapSource.BeginInit();
-            newFormatedBitmapSource.Source = rtb;
-            newFormatedBitmapSource.DestinationFormat = PixelFormats.Bgr24;
-            newFormatedBitmapSource.EndInit();
-
-            using (var mat = newFormatedBitmapSource.ToMat())
-            using (var dest = mat.Clone())
-            {
-                Mosaic(mat, dest, ColumnPixels.Value, RowPixels.Value);
-                Bitmap.Value = dest.ToWriteableBitmap();
-            }
-        }).ConfigureAwait(false);
-    }
-
     private unsafe void Mosaic(Mat mat, Mat dest, double columnPixels, double rowPixels)
     {
         var column = columnPixels;
