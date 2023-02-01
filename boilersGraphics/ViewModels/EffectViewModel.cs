@@ -10,6 +10,7 @@ using boilersGraphics.Controls;
 using boilersGraphics.Extensions;
 using Reactive.Bindings.Extensions;
 using System.Reactive.Disposables;
+using System.Reactive.Linq;
 
 namespace boilersGraphics.ViewModels
 {
@@ -30,8 +31,18 @@ namespace boilersGraphics.ViewModels
                 {
                     monitoringItems.Add(item.ID, item.BeginMonitor(() => Render()));
                 }
-
             }).AddTo(_CompositeDisposable);
+            (Application.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.AllItems.Value
+                .ToObservable().ToReadOnlyReactiveCollection().ObserveElementProperty(x => x.ZIndex.Value).Subscribe(
+                    x =>
+                    {
+                        if (monitoringItems.ContainsKey(x.Instance.ID) && x.Instance.ZIndex.Value > this.ZIndex.Value)
+                        {
+                            var disposing = monitoringItems[x.Instance.ID];
+                            disposing?.Dispose();
+                            monitoringItems.Remove(x.Instance.ID);
+                        }
+                    }).AddTo(_CompositeDisposable);
         }
 
         public abstract void Render();
@@ -54,7 +65,6 @@ namespace boilersGraphics.ViewModels
             base.BeginMonitor(action).AddTo(compositeDisposable);
             if (!isMonitored)
             {
-                //Rect.Subscribe(_ => action()).AddTo(compositeDisposable);
                 this.ObserveProperty(x => x.Bitmap).Subscribe(_ => action()).AddTo(compositeDisposable);
                 isMonitored = true;
             }
