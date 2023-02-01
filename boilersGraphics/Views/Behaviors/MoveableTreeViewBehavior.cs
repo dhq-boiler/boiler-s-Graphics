@@ -168,10 +168,16 @@ public class MoveableTreeViewBehavior : Behavior<TreeView>
         {
             case InsertType.Before:
                 if (sourceItemParent != diagramVM.RootLayer.Value) children = targetItemParent.Children;
+                //このvar定義はLayerTreeViewItemCollection.InsertBeforeChildren()より前にないとダメ
+                var targetItemWasBottom = children.FirstOrDefault() is LayerItem _li && _li.Item.Value.ZIndex.Value == 0;
                 LayerTreeViewItemCollection.InsertBeforeChildren(mainWindowViewModel.Recorder, diagramVM.Layers,
                     children, sourceItem, targetItem);
                 sourceItem.Parent.Value = targetItemParent;
                 sourceItem.IsSelected.Value = true;
+                if (targetItemWasBottom && sourceItem is LayerItem li && li.Item.Value is EffectViewModel effect)
+                {
+                    effect.Render();
+                }
                 break;
             case InsertType.After:
                 if (sourceItemParent != diagramVM.RootLayer.Value) children = targetItemParent.Children;
