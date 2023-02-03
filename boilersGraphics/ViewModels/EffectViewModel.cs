@@ -80,7 +80,11 @@ namespace boilersGraphics.ViewModels
             }
 
             monitoringItems = null;
-            Bitmap.Dispose();
+            if (Bitmap is not null)
+            {
+                Bitmap.Dispose();
+            }
+
             base.Dispose();
         }
     }
