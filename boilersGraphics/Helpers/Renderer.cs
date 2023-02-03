@@ -110,12 +110,12 @@ public class Renderer
             if (item is ISizeRps size1)
             {
                 view.Measure(new Size(size1.Width.Value, size1.Height.Value));
-                view.Arrange(new Rect(size1.Left.Value, size1.Top.Value, size1.Width.Value, size1.Height.Value));
+                view.Arrange(new Rect(0, 0, size1.Width.Value, size1.Height.Value));
             }
             else if (item is ISizeReadOnlyRps size2)
             {
                 view.Measure(new Size(size2.Width.Value, size2.Height.Value));
-                view.Arrange(new Rect(size2.LeftTop.Value, new Size(size2.Width.Value, size2.Height.Value)));
+                view.Arrange(new Rect(new Point(), new Size(size2.Width.Value, size2.Height.Value)));
             }
             view.UpdateLayout();
             view.SnapsToDevicePixels = true;
