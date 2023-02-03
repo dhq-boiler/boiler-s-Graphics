@@ -3,19 +3,30 @@ using boilersGraphics.Extensions;
 using boilersGraphics.ViewModels;
 using NLog;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Documents;
+using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Xps.Serialization;
 
 namespace boilersGraphics.Helpers;
 
-public static class Renderer
+public class Renderer
 {
+    public IVisualTreeHelper VisualTreeHelper { get; private set; }
     private static readonly Logger s_logger = LogManager.GetCurrentClassLogger();
 
-    public static RenderTargetBitmap Render(Rect? sliceRect, DesignerCanvas designerCanvas,
+    public Renderer(IVisualTreeHelper visualTreeHelper)
+    {
+        VisualTreeHelper = visualTreeHelper;
+    }
+
+    public RenderTargetBitmap Render(Rect? sliceRect, DesignerCanvas designerCanvas,
         DiagramViewModel diagramViewModel, BackgroundViewModel backgroundItem, int maxZIndex = int.MaxValue)
     {
         var size = GetRenderSize(sliceRect, diagramViewModel);
@@ -30,23 +41,17 @@ public static class Renderer
         var rtb = new RenderTargetBitmap(width, height, 96, 96, PixelFormats.Pbgra32);
 
         var renderedCount = 0;
-        Application.Current.Dispatcher.Invoke(() =>
+        if (!boilersGraphics.App.IsTest)
         {
-            var visual = new DrawingVisual();
-            using (var context = visual.RenderOpen())
+            Application.Current.Dispatcher.Invoke(() =>
             {
-                var allViews = designerCanvas.EnumVisualChildren<FrameworkElement>().Where(x => x.DataContext is not null).ToList();
-                //背景を描画
-                if (RenderBackgroundViewModel(sliceRect, designerCanvas, context, backgroundItem, allViews))
-                    renderedCount++;
-                //前景を描画
-                renderedCount += RenderForeground(sliceRect, diagramViewModel, designerCanvas, context, backgroundItem,
-                    allViews, maxZIndex);
-            }
-
-            rtb.Render(visual);
-            rtb.Freeze();
-        });
+                renderedCount = RenderInternal(sliceRect, designerCanvas, diagramViewModel, backgroundItem, maxZIndex, renderedCount, rtb);
+            });
+        }
+        else
+        {
+            renderedCount = RenderInternal(sliceRect, designerCanvas, diagramViewModel, backgroundItem, maxZIndex, renderedCount, rtb);
+        }
 
         if (renderedCount == 0)
             s_logger.Warn("レンダリングが試みられましたが、レンダリングされませんでした。");
@@ -54,6 +59,28 @@ public static class Renderer
             s_logger.Debug("レンダリングされました。");
 
         return rtb;
+    }
+
+    private int RenderInternal(Rect? sliceRect, DesignerCanvas designerCanvas, DiagramViewModel diagramViewModel,
+        BackgroundViewModel backgroundItem, int maxZIndex, int renderedCount, RenderTargetBitmap rtb)
+    {
+        var visual = new DrawingVisual();
+        using (var context = visual.RenderOpen())
+        {
+            var allViews = designerCanvas.EnumVisualChildren<FrameworkElement>()
+                .Where(x => x.DataContext is not null).ToList();
+            //背景を描画
+            if (RenderBackgroundViewModel(sliceRect, designerCanvas, context, backgroundItem, allViews))
+                renderedCount++;
+            //前景を描画
+            renderedCount += RenderForeground(sliceRect, diagramViewModel, designerCanvas, context,
+                backgroundItem,
+                allViews, maxZIndex);
+        }
+
+        rtb.Render(visual);
+        rtb.Freeze();
+        return renderedCount;
     }
 
     private static Size GetRenderSize(Rect? sliceRect, DiagramViewModel diagramViewModel)
@@ -67,7 +94,7 @@ public static class Renderer
         return size;
     }
 
-    private static int RenderForeground(Rect? sliceRect, DiagramViewModel diagramViewModel,
+    private int RenderForeground(Rect? sliceRect, DiagramViewModel diagramViewModel,
         DesignerCanvas designerCanvas, DrawingContext context, BackgroundViewModel background,
         List<FrameworkElement> allViews, int maxZIndex)
     {
@@ -79,8 +106,17 @@ public static class Renderer
             view = allViews.FirstOrDefault(x => x.DataContext == item);// && x.GetType() == item.GetViewType());
             if (view is null)
                 continue;
-            view.InvalidateMeasure();
-            view.InvalidateArrange();
+            Size renderSize;
+            if (item is ISizeRps size1)
+            {
+                view.Measure(new Size(size1.Width.Value, size1.Height.Value));
+                view.Arrange(new Rect(size1.Left.Value, size1.Top.Value, size1.Width.Value, size1.Height.Value));
+            }
+            else if (item is ISizeReadOnlyRps size2)
+            {
+                view.Measure(new Size(size2.Width.Value, size2.Height.Value));
+                view.Arrange(new Rect(size2.LeftTop.Value, new Size(size2.Width.Value, size2.Height.Value)));
+            }
             view.UpdateLayout();
             view.SnapsToDevicePixels = true;
             var brush = new VisualBrush(view)
@@ -194,23 +230,42 @@ public static class Renderer
         return renderedCount;
     }
     
-    private static bool RenderBackgroundViewModel(Rect? sliceRect, DesignerCanvas designerCanvas,
+    private bool RenderBackgroundViewModel(Rect? sliceRect, DesignerCanvas designerCanvas,
         DrawingContext context, BackgroundViewModel background, List<FrameworkElement> allViews)
     {
         var view = default(FrameworkElement);
-        var result = Application.Current.Dispatcher.Invoke(() =>
+        if (!boilersGraphics.App.IsTest)
         {
-            view = allViews.FirstOrDefault(x => x.DataContext == background);// && x.GetType() == background.GetViewType());
+            var result = Application.Current.Dispatcher.Invoke(() =>
+            {
+                view = allViews.FirstOrDefault(x =>
+                    x.DataContext == background); // && x.GetType() == background.GetViewType());
+                if (view is null)
+                {
+                    s_logger.Warn($"Not Found: view of {background}");
+                    return false;
+                }
+
+                return true;
+            });
+            if (!result)
+                return false;
+        }
+        else
+        {
+            view = allViews.FirstOrDefault(x =>
+                x.DataContext == background); // && x.GetType() == background.GetViewType());
             if (view is null)
             {
                 s_logger.Warn($"Not Found: view of {background}");
                 return false;
             }
+        }
+        
+        view.Measure(new Size(background.Width.Value, background.Height.Value));
+        view.Arrange(background.Rect.Value);
+        view.UpdateLayout();
 
-            return true;
-        });
-        if (!result)
-            return false;
         var bounds = VisualTreeHelper.GetDescendantBounds(view);
 
         var rect = sliceRect ?? bounds;
@@ -230,7 +285,7 @@ public static class Renderer
         return true;
     }
 
-    private static async Task<bool> RenderBackgroundViewModelAsync(Rect? sliceRect, DesignerCanvas designerCanvas,
+    private async Task<bool> RenderBackgroundViewModelAsync(Rect? sliceRect, DesignerCanvas designerCanvas,
         DrawingContext context, BackgroundViewModel background)
     {
         var view = default(FrameworkElement);

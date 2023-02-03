@@ -105,7 +105,8 @@ public class Layer : LayerTreeViewItemBase, IObservable<LayerObservable>, ICompa
 
         Rect? sliceRect = DiagramViewModel.Instance.BackgroundItem.Value.Rect.Value;
         items.Cast<IRect>().ToList().ForEach(x => sliceRect = (!sliceRect.HasValue ? x.Rect.Value : Rect.Union(sliceRect.Value, x.Rect.Value)));
-        Appearance.Value = Renderer.Render(sliceRect, DesignerCanvas.GetInstance(),
+        var renderer = new Renderer(new WpfVisualTreeHelper());
+        Appearance.Value = renderer.Render(sliceRect, DesignerCanvas.GetInstance(),
             DiagramViewModel.Instance,
             DiagramViewModel.Instance.BackgroundItem.Value, items.Max(x => x.ZIndex.Value));
     }

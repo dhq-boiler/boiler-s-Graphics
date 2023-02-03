@@ -70,7 +70,8 @@ public class ExportViewModel : BindableBase, IDialogAware, IDisposable
                 designerCanvas.LayoutTransform = new MatrixTransform();
 
                 var backgroundItem = diagramViewModel.BackgroundItem.Value;
-                var rtb = Renderer.Render(x, designerCanvas, diagramViewModel, backgroundItem);
+                var renderer = new Renderer(new WpfVisualTreeHelper());
+                var rtb = renderer.Render(x, designerCanvas, diagramViewModel, backgroundItem);
                 //OpenCvSharpHelper.ImShow("preview", rtb);
                 Preview.Value = rtb;
 
@@ -161,7 +162,8 @@ public class ExportViewModel : BindableBase, IDialogAware, IDisposable
         DiagramViewModel diagramViewModel)
     {
         var backgroundItem = diagramViewModel.BackgroundItem.Value;
-        var rtb = Renderer.Render(SliceRect.Value, designerCanvas, diagramViewModel, backgroundItem);
+        var renderer = new Renderer(new WpfVisualTreeHelper());
+        var rtb = renderer.Render(SliceRect.Value, designerCanvas, diagramViewModel, backgroundItem);
 
         //OpenCvSharpHelper.ImShow("test", rtb);
 

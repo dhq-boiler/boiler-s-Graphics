@@ -574,7 +574,8 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
 
     private void ExecuteCopyCanvasToClipboardCommand()
     {
-        var bitmap = Renderer.Render(null, DesignerCanvas.GetInstance(), this, BackgroundItem.Value);
+        var renderer = new Renderer(new WpfVisualTreeHelper());
+        var bitmap = renderer.Render(null, DesignerCanvas.GetInstance(), this, BackgroundItem.Value);
         Clipboard.SetImage(bitmap);
     }
 

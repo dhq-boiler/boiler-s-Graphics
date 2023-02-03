@@ -11,7 +11,7 @@ using Size = System.Windows.Size;
 
 namespace boilersGraphics.Helpers;
 
-internal static class OpenCvSharpHelper
+public static class OpenCvSharpHelper
 {
     [Conditional("DEBUG")]
     public static void ImShow(string windowTitle, BitmapSource rtb)
@@ -84,5 +84,15 @@ internal static class OpenCvSharpHelper
         encoder.Frames.Add(BitmapFrame.Create(src));
 
         encoder.Save(outputStream);
+    }
+
+    public static Mat ToMat(BitmapSource rtb)
+    {
+        var newFormattedBitmapSource = new FormatConvertedBitmap();
+        newFormattedBitmapSource.BeginInit();
+        newFormattedBitmapSource.Source = rtb;
+        newFormattedBitmapSource.DestinationFormat = PixelFormats.Bgr24;
+        newFormattedBitmapSource.EndInit();
+        return newFormattedBitmapSource.ToMat();
     }
 }

@@ -12,7 +12,7 @@ using System.Windows.Media;
 
 namespace boilersGraphics.ViewModels;
 
-public abstract class ConnectorBaseViewModel : SelectableDesignerItemViewModelBase, IObserver<TransformNotification>, IRect, ICloneable
+public abstract class ConnectorBaseViewModel : SelectableDesignerItemViewModelBase, IObserver<TransformNotification>, IRect, ICloneable, ISizeReadOnlyRps
 {
     private ObservableCollection<Point> _Points;
 

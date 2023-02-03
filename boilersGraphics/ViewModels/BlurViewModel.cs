@@ -54,7 +54,8 @@ public class BlurEffectViewModel : EffectViewModel
     {
         if (Width.Value <= 0 || Height.Value <= 0) return;
 
-        var rtb = Renderer.Render(new Rect(Left.Value, Top.Value, Width.Value, Height.Value),
+        var renderer = new Renderer(new WpfVisualTreeHelper());
+        var rtb = renderer.Render(new Rect(Left.Value, Top.Value, Width.Value, Height.Value),
             Application.Current.MainWindow.GetChildOfType<DesignerCanvas>(),
             (Application.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel,
             (Application.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.BackgroundItem.Value,
