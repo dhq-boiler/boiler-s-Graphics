@@ -144,20 +144,14 @@
                                                                         BorderBrush="{Binding IsSelected.Value, Converter={StaticResource IsSelectedToBorderBrushConverter}}"
                                                                         BorderThickness="1">
                                                                         <Border.ToolTip>
-                                                                            <ToolTip x:Name="Appearance_ToolTip">
-                                                                                <StackPanel Orientation="Vertical">
-                                                                                    <Image
-                                                                                        Width="100"
-                                                                                        Height="100"
-                                                                                        RenderOptions.BitmapScalingMode="HighQuality"
-                                                                                        Source="{Binding Appearance.Value}" />
-                                                                                    <DockPanel Visibility="Visible">
-                                                                                        <Label>
-                                                                                            <TextBlock Text="{Binding}"
-                                                                                                TextWrapping="Wrap" />
-                                                                                        </Label>
-                                                                                    </DockPanel>
-                                                                                </StackPanel>
+                                                                            <ToolTip x:Name="Appearance_ToolTip"
+                                                                                     BorderBrush="Transparent"
+                                                                                     BorderThickness="0">
+                                                                                <Image
+                                                                                    Width="{Binding Appearance.Value.Width}"
+                                                                                    Height="{Binding Appearance.Value.Height}"
+                                                                                    RenderOptions.BitmapScalingMode="HighQuality"
+                                                                                    Source="{Binding Appearance.Value}" />
                                                                             </ToolTip>
                                                                         </Border.ToolTip>
                                                                         <Image
