@@ -326,6 +326,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                 .Where(x => x.GetType() == typeof(LayerItem))
                 .Select(y => (y as LayerItem).Item.Value)
                 .Union(new SelectableDesignerItemViewModelBase[] { BackgroundItem.Value })
+                .OrderBy(x => x.ZIndex.Value)
                 .ToArray())
             .ToReadOnlyReactivePropertySlim(Array.Empty<SelectableDesignerItemViewModelBase>());
 
@@ -2887,6 +2888,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
             {
                 var oldCurrentIndex = current.ZIndex.Value;
                 MainWindowVM.Recorder.Current.ExecuteSetProperty(current, "ZIndex.Value", newIndex);
+                (current as EffectViewModel)?.Render();
 
                 if (current is GroupItemViewModel)
                 {
@@ -2921,13 +2923,24 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                 {
                     var exists = Layers.SelectMany(x => x.Children).Where(item =>
                         (item as LayerItem).Item.Value.ZIndex.Value >= newIndex &&
-                        (item as LayerItem).Item.Value.ZIndex.Value < oldCurrentIndex);
+                        (item as LayerItem).Item.Value.ZIndex.Value < oldCurrentIndex)
+                        .Select(x => (x as LayerItem).Item.Value)
+                        .Except(new List<SelectableDesignerItemViewModelBase>() { current })
+                        .OrderBy(x => x.ZIndex.Value).ToList();
 
                     foreach (var item in exists)
-                        if ((item as LayerItem).Item.Value != current)
-                            MainWindowVM.Recorder.Current.ExecuteSetProperty((item as LayerItem).Item.Value,
-                                "ZIndex.Value", (item as LayerItem).Item.Value.ZIndex.Value + 1);
+                    {
+                        if (item != current)
+                        {
+                            MainWindowVM.Recorder.Current.ExecuteSetProperty(item,
+                                "ZIndex.Value", item.ZIndex.Value + 1);
+                            (item as EffectViewModel)?.BeginMonitoring(current);
+                            (item as EffectViewModel)?.Render();
+                        }
+                    }
+
                 }
+            
             }
         }
 
