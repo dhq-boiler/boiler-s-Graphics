@@ -1,5 +1,8 @@
-﻿using OpenQA.Selenium;
+﻿using boilersE2E;
+using NUnit.Framework;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Appium.Windows;
+using OpenQA.Selenium.Interactions;
 
 namespace boilersGraphics.Test.UITests.PageObjects
 {
@@ -11,6 +14,14 @@ namespace boilersGraphics.Test.UITests.PageObjects
 
         public WindowsElement PreviewImage => GetElementBy(By.XPath($"//*/Image[@Name=\"Preview\"][@AutomationId=\"Preview\"]"));
 
+
+        private Actions action;
+
+        public void InitializeActions()
+        {
+            action = new Actions(Session);
+        }
+
         public void ScreenShot_PreviewImage(string filename)
         {
             PreviewImage.GetScreenshot().SaveAsFile(filename);
@@ -18,12 +29,29 @@ namespace boilersGraphics.Test.UITests.PageObjects
 
         public void Input_FileName(string filename)
         {
-            InputText(GetElementByAutomationID("filename"), filename);
+            if (action is null)
+            {
+                Assert.Fail($"まずInitializeActionsメソッドでアクションを初期化する必要があります。");
+            }
+            action.InputText(GetElementByAutomationID("filename"), filename);
         }
 
         public void Click_PerformExportButton()
         {
-            GetElementByAutomationID("PerformExport").Click();
+            if (action is null)
+            {
+                Assert.Fail($"まずInitializeActionsメソッドでアクションを初期化する必要があります。");
+            }
+            action.Click(GetElementByAutomationID("PerformExport"));
+        }
+
+        public void Perform()
+        {
+            if (action is null)
+            {
+                Assert.Fail($"まずInitializeActionsメソッドでアクションを初期化する必要があります。");
+            }
+            action.Perform();
         }
     }
 }

@@ -22,8 +22,10 @@ namespace boilersGraphics.Test.UITests
             var exportFilePath = $"{dir}\\ExportTest.jpg";
 
             var exportDialogPO = mainwindowPO.Click_ExportButton();
+            exportDialogPO.InitializeActions();
             exportDialogPO.Input_FileName(exportFilePath);
             exportDialogPO.Click_PerformExportButton();
+            exportDialogPO.Perform();
             Thread.Sleep(1000);
             LogManager.GetCurrentClassLogger().Info(exportFilePath);
             Assert.That(exportFilePath, Does.Exist.After(5000, 50));
@@ -74,12 +76,14 @@ namespace boilersGraphics.Test.UITests
 
             LogManager.GetCurrentClassLogger().Info("I");
             TakeScreenShot("SCREENSHOT_I.png");
+            exportdialogPO.InitializeActions();
 
             exportdialogPO.Input_FileName(exportFilePath);
                 
             LogManager.GetCurrentClassLogger().Info("J");
             TakeScreenShot("SCREENSHOT_J.png");
             exportdialogPO.Click_PerformExportButton();
+            exportdialogPO.Perform();
 
             LogManager.GetCurrentClassLogger().Info("K");
             TakeScreenShot("SCREENSHOT_K.png");
@@ -179,6 +183,7 @@ namespace boilersGraphics.Test.UITests
 
             var previewdialogPO = new PreviewDialogPO(Session);
 
+            previewdialogPO.InitializeActions();
             previewdialogPO.ScreenShot_PreviewImage(previewFilePath);
             Assert.That(previewFilePath, Does.Exist.After(5000, 50));
             TestContext.AddTestAttachment(previewFilePath);
@@ -187,6 +192,7 @@ namespace boilersGraphics.Test.UITests
 
             previewdialogPO.Input_FileName(exportFilePath);
             previewdialogPO.Click_PerformExportButton();
+            previewdialogPO.Perform();
             Assert.That(exportFilePath, Does.Exist.After(5000, 50));
             TestContext.AddTestAttachment(exportFilePath);
 
