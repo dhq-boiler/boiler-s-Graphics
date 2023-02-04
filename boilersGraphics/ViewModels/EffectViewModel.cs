@@ -11,6 +11,7 @@ using boilersGraphics.Extensions;
 using Reactive.Bindings.Extensions;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using boilersGraphics.Models;
 
 namespace boilersGraphics.ViewModels
 {
@@ -35,6 +36,24 @@ namespace boilersGraphics.ViewModels
                     {
                         DisposeMonitoringItem(x.Instance);
                     }).AddTo(_CompositeDisposable);
+            DiagramViewModel.Instance.Layers.SelectRecursive((Func<LayerTreeViewItemBase, IEnumerable<LayerTreeViewItemBase>>)(x => x.Children)).ToObservable().ToReadOnlyReactiveCollection().ObserveElementProperty(x => x.IsVisible.Value).Subscribe(pp =>
+            {
+                if (pp.Instance is Layer)
+                {
+                    return;
+                }
+                var x = pp.Instance as LayerItem;
+                if (pp.Value) //IsVisible == true
+                {
+                    BeginMonitoring(x.Item.Value);
+                }
+
+                if (x is not null)
+                {
+                    Render();
+                    DisposeMonitoringItem(x.Item.Value);
+                }
+            }).AddTo(_CompositeDisposable);
         }
 
         private void BeginMonitoring(params SelectableDesignerItemViewModelBase[] items)
