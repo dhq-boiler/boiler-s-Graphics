@@ -37,7 +37,7 @@ public class Renderer
         var rtb = new RenderTargetBitmap(width, height, 96, 96, PixelFormats.Pbgra32);
 
         var renderedCount = 0;
-        if (!boilersGraphics.App.IsTest)
+        if (!App.IsTest)
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
