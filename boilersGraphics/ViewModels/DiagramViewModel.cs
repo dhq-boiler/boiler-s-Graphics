@@ -2267,18 +2267,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     private async Task PostProcessInFileLoadingSequence(MainWindowViewModel mainwindowViewModel)
     {
         LogManager.GetCurrentClassLogger().Info(Resources.Log_BeginPostProcessInFileLoadingSequence);
-
-        var designerCanvas = App.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-        var allViews = designerCanvas.EnumVisualChildren<FrameworkElement>().Where(x => x.DataContext is not null).Distinct().ToList();
-        var count = Count(allViews);
-        await Task.Delay(1);
-        while (count != AllItems.Value.Length)
-        {
-            await Task.Delay(1);
-            allViews = designerCanvas.EnumVisualChildren<FrameworkElement>().ToList();
-            count = Count(allViews);
-        }
-        await Task.Run(() => ScanEffectViewModelObjects());
+        ScanEffectViewModelObjects();
 
         var layersViewModel = Application.Current.MainWindow.GetChildOfType<Layers>().DataContext as LayersViewModel;
         layersViewModel.InitializeHitTestVisible(mainwindowViewModel);
