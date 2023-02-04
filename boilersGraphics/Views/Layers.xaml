@@ -12,6 +12,7 @@
     xmlns:views="clr-namespace:boilersGraphics.Views"
     d:DesignHeight="450"
     d:DesignWidth="800"
+    x:Name="LayersWindow"
     prism:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
     <UserControl.Resources>
