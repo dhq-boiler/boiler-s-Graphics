@@ -7,11 +7,13 @@ using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Media;
 using boilersGraphics.Controls;
 using boilersGraphics.Exceptions;
 using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
+using boilersGraphics.Properties;
 using boilersGraphics.ViewModels;
 using boilersGraphics.Views;
 using NLog;
@@ -49,11 +51,32 @@ public abstract class LayerTreeViewItemBase : BindableBase, IDisposable, IObserv
             })
             .AddTo(_disposable);
         if (!App.IsTest)
-            LayerTreeViewItemContextMenu.Add(new MenuItem
+        {
+            var menuItem = new MenuItem
             {
-                Header = "名前の変更",
                 Command = ChangeNameCommand
+            };
+            menuItem.SetBinding(MenuItem.HeaderProperty, new Binding()
+            {
+                Source = ResourceService.Current,
+                Path = new PropertyPath("Resources.Command_Rename"),
             });
+            LayerTreeViewItemContextMenu.Add(menuItem);
+
+            if (this is LayerItem)
+            {
+                menuItem = new MenuItem
+                {
+                    Command = DiagramViewModel.Instance.PropertyCommand,
+                };
+                menuItem.SetBinding(MenuItem.HeaderProperty, new Binding()
+                {
+                    Source = ResourceService.Current,
+                    Path = new PropertyPath("Resources.MenuItem_Property"),
+                });
+                LayerTreeViewItemContextMenu.Add(menuItem);
+            }
+        }
     }
 
     public ReactivePropertySlim<LayerTreeViewItemBase> Parent { get; } = new();

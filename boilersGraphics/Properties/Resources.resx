@@ -177,6 +177,9 @@
   <data name="Command_Overwrite" xml:space="preserve">
     <value>Overwrite</value>
   </data>
+  <data name="Command_Rename" xml:space="preserve">
+    <value>Rename</value>
+  </data>
   <data name="Command_Save" xml:space="preserve">
     <value>Save</value>
   </data>
@@ -792,11 +795,17 @@
   <data name="Title_Export" xml:space="preserve">
     <value>Export</value>
   </data>
+  <data name="Title_Layers" xml:space="preserve">
+    <value>Layers</value>
+  </data>
   <data name="Title_Preferences" xml:space="preserve">
     <value>Preferences</value>
   </data>
   <data name="Title_PrivacyPolicy" xml:space="preserve">
     <value>Privacy Policy</value>
+  </data>
+  <data name="Title_Property" xml:space="preserve">
+    <value>Property</value>
   </data>
   <data name="Title_Statistics" xml:space="preserve">
     <value>Statistics</value>

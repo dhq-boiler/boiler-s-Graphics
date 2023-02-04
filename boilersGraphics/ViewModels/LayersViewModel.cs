@@ -8,6 +8,7 @@ using boilersGraphics.Dao;
 using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
 using boilersGraphics.Models;
+using boilersGraphics.Properties;
 using boilersGraphics.Views.Behaviors;
 using NLog;
 using Prism.Commands;
@@ -170,7 +171,7 @@ internal class LayersViewModel : BindableBase, IDialogAware
 
     public ReactiveCollection<LayerTreeViewItemBase> Layers { get; }
 
-    public string Title => "レイヤー";
+    public string Title => Resources.ResourceManager.GetString("Title_Layers", Resources.Culture);
 
 #pragma warning disable CS0067
     public event Action<IDialogResult> RequestClose;

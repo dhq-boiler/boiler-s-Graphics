@@ -177,6 +177,9 @@
   <data name="Command_Overwrite" xml:space="preserve">
     <value>上書き保存</value>
   </data>
+  <data name="Command_Rename" xml:space="preserve">
+    <value>名前の変更</value>
+  </data>
   <data name="Command_Save" xml:space="preserve">
     <value>保存</value>
   </data>
@@ -792,11 +795,17 @@
   <data name="Title_Export" xml:space="preserve">
     <value>エクスポート</value>
   </data>
+  <data name="Title_Layers" xml:space="preserve">
+    <value>レイヤー</value>
+  </data>
   <data name="Title_Preferences" xml:space="preserve">
     <value>設定</value>
   </data>
   <data name="Title_PrivacyPolicy" xml:space="preserve">
     <value>プライバシーポリシー</value>
+  </data>
+  <data name="Title_Property" xml:space="preserve">
+    <value>プロパティ</value>
   </data>
   <data name="Title_Statistics" xml:space="preserve">
     <value>統計</value>

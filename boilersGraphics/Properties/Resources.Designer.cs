@@ -29,7 +29,7 @@ namespace boilersGraphics.Properties {
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        public Resources() {
+        internal Resources() {
         }
         
         /// <summary>
@@ -237,6 +237,15 @@ namespace boilersGraphics.Properties {
         public static string Command_Overwrite {
             get {
                 return ResourceManager.GetString("Command_Overwrite", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Rename に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Command_Rename {
+            get {
+                return ResourceManager.GetString("Command_Rename", resourceCulture);
             }
         }
         
@@ -2086,6 +2095,15 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Layers に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Title_Layers {
+            get {
+                return ResourceManager.GetString("Title_Layers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Preferences に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Title_Preferences {
@@ -2100,6 +2118,15 @@ namespace boilersGraphics.Properties {
         public static string Title_PrivacyPolicy {
             get {
                 return ResourceManager.GetString("Title_PrivacyPolicy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Property に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Title_Property {
+            get {
+                return ResourceManager.GetString("Title_Property", resourceCulture);
             }
         }
         
