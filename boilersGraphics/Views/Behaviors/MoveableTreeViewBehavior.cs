@@ -193,6 +193,8 @@ public class MoveableTreeViewBehavior : Behavior<TreeView>
                 {
                     ((targetItem as LayerItem)?.Item.Value as EffectViewModel)?.DisposeMonitoringItem(sdivmb2);
                 }
+                ((targetItem as LayerItem)?.Item.Value as EffectViewModel)?.Render();
+                ((sourceItem as LayerItem)?.Item.Value as EffectViewModel)?.Render();
                 break;
             case InsertType.Children:
                 children = targetItem.Children;
