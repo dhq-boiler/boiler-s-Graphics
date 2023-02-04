@@ -28,6 +28,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Effects;
 using System.Windows.Media.Imaging;
 using System.Xml;
 using System.Xml.Linq;
@@ -2721,10 +2722,14 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                 else
                 {
                     MainWindowVM.Recorder.Current.ExecuteSetProperty(ordered.ElementAt(i), "ZIndex.Value", newIndex);
+                    
+                    (ordered.ElementAt(i) as EffectViewModel)?.Render();
+                    
                     var exists = Layers.SelectMany(x => x.Children)
                         .Where(item => (item as LayerItem).Item.Value.ZIndex.Value == newIndex);
 
                     foreach (var item in exists)
+                    {
                         if ((item as LayerItem).Item.Value != ordered.ElementAt(i))
                         {
                             if ((item as LayerItem).Item.Value.ParentID != Guid.Empty)
@@ -2752,9 +2757,11 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                 MainWindowVM.Recorder.Current.ExecuteSetProperty((item as LayerItem).Item.Value,
                                     "ZIndex.Value", currentIndex);
                             }
-
+                            ((item as LayerItem)?.Item.Value as EffectViewModel)?.BeginMonitoring(ordered.ElementAt(i));
+                            ((item as LayerItem)?.Item.Value as EffectViewModel)?.Render();
                             break;
                         }
+                    }
                 }
             }
         }
