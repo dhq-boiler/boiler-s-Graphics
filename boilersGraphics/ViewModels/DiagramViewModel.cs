@@ -1,22 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Xml;
-using System.Xml.Linq;
-using boilersGraphics.Controls;
+﻿using boilersGraphics.Controls;
 using boilersGraphics.Dao;
 using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
@@ -32,6 +14,23 @@ using Prism.Mvvm;
 using Prism.Services.Dialogs;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Xml;
+using System.Xml.Linq;
 using TsOperationHistory;
 using TsOperationHistory.Extensions;
 using Layers = boilersGraphics.Views.Layers;
@@ -2590,13 +2589,15 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                         .Where(item => (item as LayerItem).Item.Value.ZIndex.Value == newIndex);
 
                     foreach (var item in exists)
+                    {
+                        ((item as LayerItem).Item.Value as EffectViewModel)?.DisposeMonitoringItem(ordered.ElementAt(i));
                         if ((item as LayerItem).Item.Value != ordered.ElementAt(i))
                         {
                             if ((item as LayerItem).Item.Value is GroupItemViewModel)
                             {
                                 var children = from it in Layers.SelectMany(x => x.Children)
-                                    where (it as LayerItem).Item.Value.ParentID == (item as LayerItem).Item.Value.ID
-                                    select it;
+                                               where (it as LayerItem).Item.Value.ParentID == (item as LayerItem).Item.Value.ID
+                                               select it;
 
                                 foreach (var child in children)
                                     MainWindowVM.Recorder.Current.ExecuteSetProperty((child as LayerItem).Item.Value,
@@ -2611,8 +2612,16 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     "ZIndex.Value", currentIndex);
                             }
 
+                            if ((item as LayerItem).Item.Value is EffectViewModel effect)
+                            {
+                                effect.Render();
+                            }
+
                             break;
                         }
+                    }
+
+                    (ordered.ElementAt(i) as EffectViewModel)?.Render();
                 }
             }
         }
