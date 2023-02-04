@@ -1,4 +1,14 @@
-﻿using System;
+﻿using boilersGraphics.Exceptions;
+using boilersGraphics.Extensions;
+using boilersGraphics.Helpers;
+using boilersGraphics.UserControls;
+using boilersGraphics.ViewModels;
+using boilersGraphics.Views;
+using NLog;
+using Prism.Mvvm;
+using Reactive.Bindings;
+using Reactive.Bindings.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
@@ -9,19 +19,9 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
-using boilersGraphics.Controls;
-using boilersGraphics.Exceptions;
-using boilersGraphics.Extensions;
-using boilersGraphics.Helpers;
-using boilersGraphics.Properties;
-using boilersGraphics.ViewModels;
-using boilersGraphics.Views;
-using NLog;
-using Prism.Mvvm;
-using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
 using TsOperationHistory;
 using TsOperationHistory.Extensions;
+using Layers = boilersGraphics.Views.Layers;
 
 namespace boilersGraphics.Models;
 
@@ -45,11 +45,13 @@ public abstract class LayerTreeViewItemBase : BindableBase, IDisposable, IObserv
             })
             .AddTo(_disposable);
         ChangeNameCommand.Subscribe(_ =>
-            {
-                var labelTextBox = Application.Current.MainWindow.GetVisualChild<LabelTextBox>(this);
-                labelTextBox.FocusTextBox();
-            })
-            .AddTo(_disposable);
+        {
+            var diagramControl = Application.Current.MainWindow.FindName("DiagramControl") as DiagramControl;
+            var layers = diagramControl.FindName("layers") as Layers; 
+            var labelTextBox = layers.EnumVisualChildren<LabelTextBox>(this).FirstOrDefault(x => x.DataContext == this);
+            labelTextBox?.FocusTextBox();
+        })
+        .AddTo(_disposable);
         if (!App.IsTest)
         {
             var menuItem = new MenuItem
