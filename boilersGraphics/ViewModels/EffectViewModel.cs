@@ -1,17 +1,15 @@
-﻿using Reactive.Bindings;
+﻿using boilersGraphics.Controls;
+using boilersGraphics.Extensions;
+using boilersGraphics.Models;
+using Reactive.Bindings;
+using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Media.Imaging;
-using boilersGraphics.Controls;
-using boilersGraphics.Extensions;
-using Reactive.Bindings.Extensions;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using boilersGraphics.Models;
+using System.Windows;
+using System.Windows.Media.Imaging;
 
 namespace boilersGraphics.ViewModels
 {
