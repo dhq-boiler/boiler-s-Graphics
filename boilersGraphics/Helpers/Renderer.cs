@@ -262,7 +262,7 @@ public class Renderer
             var result = Application.Current.Dispatcher.Invoke(() =>
             {
                 view = allViews.FirstOrDefault(x =>
-                    x.DataContext == background); // && x.GetType() == background.GetViewType());
+                    x.DataContext == background);
                 if (view is null)
                 {
                     s_logger.Warn($"Not Found: view of {background}");
@@ -277,7 +277,7 @@ public class Renderer
         else
         {
             view = allViews.FirstOrDefault(x =>
-                x.DataContext == background); // && x.GetType() == background.GetViewType());
+                x.DataContext == background);
             if (view is null)
             {
                 s_logger.Warn($"Not Found: view of {background}");
