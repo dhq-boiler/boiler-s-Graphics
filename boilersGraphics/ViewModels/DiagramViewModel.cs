@@ -326,6 +326,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                 .Where(x => x.GetType() == typeof(LayerItem))
                 .Select(y => (y as LayerItem).Item.Value)
                 .Union(new SelectableDesignerItemViewModelBase[] { BackgroundItem.Value })
+                .Where(x => x is not null)
                 .OrderBy(x => x.ZIndex.Value)
                 .ToArray())
             .ToReadOnlyReactivePropertySlim(Array.Empty<SelectableDesignerItemViewModelBase>());
