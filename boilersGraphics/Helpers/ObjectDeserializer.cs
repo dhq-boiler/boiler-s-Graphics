@@ -89,13 +89,49 @@ public class ObjectDeserializer
         }
     }
 
-    public static void ReadObjectsFromXML(DiagramViewModel diagramViewModel, XElement root, bool isPreview = false)
+    public static int CountObjectsFromXML(XElement root)
+    {
+        var ret = 0;
+        var layers = root.Elements().FirstOrDefault(x => x.Name == "Layers");
+        if (layers is not null)
+        {
+            foreach (var layer in layers.Elements("Layer"))
+            {
+                foreach (var layerItemsInternal in layer.Elements("Children"))
+                foreach (var layerItem in layerItemsInternal.Elements("LayerItem"))
+                {
+                    ret++;
+                }
+            }
+        }
+        else
+        {
+            //読み込むファイルにLayers要素がない場合、初期レイヤーに全てのアイテムを突っ込む
+            foreach (var designerItems in root.Elements("DesignerItems"))
+            foreach (var designerItem in designerItems.Elements("DesignerItem"))
+            {
+                ret++;
+            }
+
+            foreach (var connections in root.Elements("Connections"))
+            foreach (var connector in connections.Elements("Connection"))
+            {
+                ret++;
+            }
+        }
+
+        return ret;
+    }
+
+    public static void ReadObjectsFromXML(DiagramViewModel diagramViewModel,
+        ProgressBarWithOutputViewModel progressBarWithOutputViewModel, XElement root, bool isPreview = false)
     {
         var layers = root.Elements().Where(x => x.Name == "Layers").FirstOrDefault();
         if (layers is not null)
         {
             foreach (var layer in layers.Elements("Layer"))
             {
+                progressBarWithOutputViewModel.Output.Value = layer.ToString();
                 var layerObj = new Layer(isPreview);
                 layerObj.Color.Value = (Color)ColorConverter.ConvertFromString(layer.Element("Color").Value);
                 layerObj.IsVisible.Value = bool.Parse(layer.Element("IsVisible").Value);
@@ -108,9 +144,12 @@ public class ObjectDeserializer
                     if (layerItemObj is null)
                         continue;
                     layerObj.Children.Add(layerItemObj);
+                    progressBarWithOutputViewModel.Output.Value = layerItem.ToString();
+                    progressBarWithOutputViewModel.Current.Value++;
                 }
 
                 diagramViewModel.Layers.Add(layerObj);
+                progressBarWithOutputViewModel.Current.Value++;
             }
         }
         else
@@ -129,6 +168,8 @@ public class ObjectDeserializer
                 var layerItem = new LayerItem(item, layerObj, Name.GetNewLayerItemName(diagramViewModel));
                 layerItem.Color.Value = Randomizer.RandomColor(rand);
                 layerObj.Children.Add(layerItem);
+                progressBarWithOutputViewModel.Output.Value = designerItem.ToString();
+                progressBarWithOutputViewModel.Current.Value++;
             }
 
             foreach (var connections in root.Elements("Connections"))
@@ -138,9 +179,12 @@ public class ObjectDeserializer
                 var layerItem = new LayerItem(item, layerObj, Name.GetNewLayerItemName(diagramViewModel));
                 layerItem.Color.Value = Randomizer.RandomColor(rand);
                 layerObj.Children.Add(layerItem);
+                progressBarWithOutputViewModel.Output.Value = connector.ToString();
+                progressBarWithOutputViewModel.Current.Value++;
             }
 
             diagramViewModel.Layers.Add(layerObj);
+            progressBarWithOutputViewModel.Current.Value++;
         }
     }
 

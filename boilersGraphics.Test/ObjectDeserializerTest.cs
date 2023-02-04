@@ -116,10 +116,11 @@ namespace boilersGraphics.Test
 
             var dlgService = new Mock<IDialogService>();
             MainWindowViewModel mainWindowViewModel = new MainWindowViewModel(dlgService.Object);
+            var progressVM = new ProgressBarWithOutputViewModel();
             var diagramVM = new DiagramViewModel(mainWindowViewModel);
             var root = XElement.Parse(xml);
             diagramVM.Layers.Clear();
-            ObjectDeserializer.ReadObjectsFromXML(diagramVM, root);
+            ObjectDeserializer.ReadObjectsFromXML(diagramVM, progressVM, root);
             Assert.That(diagramVM.Layers.Count, Is.EqualTo(1));
             var layer = diagramVM.Layers[0];
             Assert.That(layer.Name.Value, Is.EqualTo("レイヤー1"));

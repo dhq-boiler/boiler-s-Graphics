@@ -196,6 +196,9 @@ public partial class App : PrismApplication
         containerRegistry.RegisterDialog<DetailPolyBezier, DetailPolyBezierViewModel>();
         containerRegistry.RegisterDialog<DetailMosaic, DetailMosaicViewModel>();
         containerRegistry.RegisterDialog<DetailBlur, DetailBlurViewModel>();
+
+        //containerRegistry.RegisterSingleton<ProgressBarWithOutputViewModel>();
+        containerRegistry.RegisterDialog<ProgressBarWithOutput, ProgressBarWithOutputViewModel>();
     }
 
     protected override Window CreateShell()
