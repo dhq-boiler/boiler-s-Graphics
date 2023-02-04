@@ -25,24 +25,34 @@ namespace boilersGraphics.ViewModels
             monitoringItems.ToList().ForEach(x => x.Value.Dispose());
             monitoringItems.Clear();
 
-            (Application.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.AllItems.Subscribe(items =>
+            DiagramViewModel.Instance.AllItems.Subscribe(items =>
             {
-                foreach (var item in items.Where(x => !monitoringItems.ContainsKey(x.ID) && x.ZIndex.Value < this.ZIndex.Value))
-                {
-                    monitoringItems.Add(item.ID, item.BeginMonitor(() => Render()));
-                }
+                BeginMonitoring(items);
             }).AddTo(_CompositeDisposable);
-            (Application.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.AllItems.Value
+            DiagramViewModel.Instance.AllItems.Value
                 .ToObservable().ToReadOnlyReactiveCollection().ObserveElementProperty(x => x.ZIndex.Value).Subscribe(
                     x =>
                     {
-                        if (monitoringItems.ContainsKey(x.Instance.ID) && x.Instance.ZIndex.Value > this.ZIndex.Value)
-                        {
-                            var disposing = monitoringItems[x.Instance.ID];
-                            disposing?.Dispose();
-                            monitoringItems.Remove(x.Instance.ID);
-                        }
+                        DisposeMonitoringItem(x.Instance);
                     }).AddTo(_CompositeDisposable);
+        }
+
+        private void BeginMonitoring(params SelectableDesignerItemViewModelBase[] items)
+        {
+            foreach (var item in items.Where(x => !monitoringItems.ContainsKey(x.ID) && x.ZIndex.Value < this.ZIndex.Value))
+            {
+                monitoringItems.Add(item.ID, item.BeginMonitor(() => Render()));
+            }
+        }
+
+        private void DisposeMonitoringItem(SelectableDesignerItemViewModelBase x)
+        {
+            if (monitoringItems.ContainsKey(x.ID) && x.ZIndex.Value > this.ZIndex.Value)
+            {
+                var disposing = monitoringItems[x.ID];
+                disposing?.Dispose();
+                monitoringItems.Remove(x.ID);
+            }
         }
 
         public abstract void Render();
