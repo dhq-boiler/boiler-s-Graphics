@@ -250,7 +250,7 @@ namespace boilersGraphics.Test
             Assert.That(diagramVM.Layers[0].Children[1].Children[0].Name.Value, Is.EqualTo($"{Resources.Name_Item}1"));
             Assert.That(diagramVM.Layers[0].Children[1].Children[1].Name.Value, Is.EqualTo($"{Resources.Name_Item}2"));
 
-            var secondGroup = diagramVM.AllItems.Value.Skip(1).First(x => x is GroupItemViewModel) as GroupItemViewModel;
+            var secondGroup = diagramVM.AllItems.Value.Where(x => x is GroupItemViewModel).Skip(1).Single() as GroupItemViewModel;
             Assert.That(secondGroup, Is.TypeOf<GroupItemViewModel>());
 
             secondGroup.Left.Value += 100;
