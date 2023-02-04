@@ -104,7 +104,7 @@ public class Renderer
         foreach (var item in diagramViewModel.AllItems.Value.Except(except).Where(x => x.IsVisible.Value && x.ZIndex.Value <= maxZIndex))
         {
             var view = default(FrameworkElement);
-            if (boilersGraphics.App.IsTest)
+            if (App.IsTest)
             {
                 view = allViews.FirstOrDefault(x => x.DataContext == item);
             }
@@ -126,7 +126,7 @@ public class Renderer
             if (item is ISizeRps size1)
             {
                 view.Measure(new Size(size1.Width.Value, size1.Height.Value));
-                if (boilersGraphics.App.IsTest)
+                if (App.IsTest)
                 {
                     view.Arrange(new Rect(0, 0, size1.Width.Value, size1.Height.Value));
                 }
