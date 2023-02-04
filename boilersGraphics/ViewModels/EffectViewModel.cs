@@ -24,6 +24,8 @@ namespace boilersGraphics.ViewModels
             monitoringItems.ToList().ForEach(x => x.Value.Dispose());
             monitoringItems.Clear();
 
+            BeginMonitoring(DiagramViewModel.Instance.AllItems.Value);
+
             DiagramViewModel.Instance.AllItems.Subscribe(items =>
             {
                 BeginMonitoring(items);
@@ -32,7 +34,14 @@ namespace boilersGraphics.ViewModels
                 .ToObservable().ToReadOnlyReactiveCollection().ObserveElementProperty(x => x.ZIndex.Value).Subscribe(
                     x =>
                     {
-                        DisposeMonitoringItem(x.Instance);
+                        if (x.Value < this.ZIndex.Value)
+                        {
+                            BeginMonitoring(x.Instance);
+                        }
+                        else
+                        {
+                            DisposeMonitoringItem(x.Instance);
+                        }
                     }).AddTo(_CompositeDisposable);
             DiagramViewModel.Instance.Layers.SelectRecursive((Func<LayerTreeViewItemBase, IEnumerable<LayerTreeViewItemBase>>)(x => x.Children)).ToObservable().ToReadOnlyReactiveCollection().ObserveElementProperty(x => x.IsVisible.Value).Subscribe(pp =>
             {
@@ -54,7 +63,7 @@ namespace boilersGraphics.ViewModels
             }).AddTo(_CompositeDisposable);
         }
 
-        private void BeginMonitoring(params SelectableDesignerItemViewModelBase[] items)
+        public void BeginMonitoring(params SelectableDesignerItemViewModelBase[] items)
         {
             foreach (var item in items.Where(x => !monitoringItems.ContainsKey(x.ID) && x.ZIndex.Value < this.ZIndex.Value))
             {
@@ -62,7 +71,7 @@ namespace boilersGraphics.ViewModels
             }
         }
 
-        private void DisposeMonitoringItem(SelectableDesignerItemViewModelBase x)
+        public void DisposeMonitoringItem(SelectableDesignerItemViewModelBase x)
         {
             if (monitoringItems.ContainsKey(x.ID) && x.ZIndex.Value > this.ZIndex.Value)
             {
