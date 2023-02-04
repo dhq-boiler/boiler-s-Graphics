@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Markup;
 using System.Windows.Media;
@@ -103,9 +104,24 @@ public class Renderer
         foreach (var item in diagramViewModel.AllItems.Value.Except(except).Where(x => x.IsVisible.Value && x.ZIndex.Value <= maxZIndex))
         {
             var view = default(FrameworkElement);
-            view = allViews.FirstOrDefault(x => x.DataContext == item);// && x.GetType() == item.GetViewType());
+            if (boilersGraphics.App.IsTest)
+            {
+                view = allViews.FirstOrDefault(x => x.DataContext == item);
+            }
+            else
+            {
+                view = allViews.FirstOrDefault(x => x.DataContext == item && x.FindName("PART_ContentPresenter") is not null);
+            }
+
             if (view is null)
                 continue;
+                        
+            var PART_ContentPresenter = view.FindName("PART_ContentPresenter") as ContentPresenter;
+            if (PART_ContentPresenter is not null)
+            {
+                view = PART_ContentPresenter;
+            }
+
             Size renderSize;
             if (item is ISizeRps size1)
             {
