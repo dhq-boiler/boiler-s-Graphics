@@ -23,6 +23,7 @@ namespace boilersGraphics.ViewModels
         ReactivePropertySlim<double> Left { get; } 
 
         ReactivePropertySlim<double> Top { get; }
+        ReadOnlyReactivePropertySlim<Rect> Rect { get; }
     }
 
     public interface ISizeReadOnlyRps : ISize<ReadOnlyReactivePropertySlim<double>>

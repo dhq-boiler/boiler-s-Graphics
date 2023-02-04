@@ -110,7 +110,14 @@ public class Renderer
             if (item is ISizeRps size1)
             {
                 view.Measure(new Size(size1.Width.Value, size1.Height.Value));
-                view.Arrange(new Rect(0, 0, size1.Width.Value, size1.Height.Value));
+                if (boilersGraphics.App.IsTest)
+                {
+                    view.Arrange(new Rect(0, 0, size1.Width.Value, size1.Height.Value));
+                }
+                else
+                {
+                    view.InvalidateArrange();
+                }
             }
             else if (item is ISizeReadOnlyRps size2)
             {
