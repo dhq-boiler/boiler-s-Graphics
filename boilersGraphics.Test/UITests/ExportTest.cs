@@ -34,13 +34,13 @@ namespace boilersGraphics.Test.UITests
 
             using (var mat = new Mat(exportFilePath))
             {
-                TestPixelIsBlack(mat, 0, 0);
+                TestPixelIsWhite(mat, 0, 0);
                 TestPixelIsWhite(mat, 1, 1);
                 TestPixelIsWhite(mat, 99, 99);
                 TestPixelIsWhite(mat, 998, 998);
-                TestPixelIsBlack(mat, 999, 999);
-                TestPixelIsBlack(mat, 999, 0);
-                TestPixelIsBlack(mat, 0, 999);
+                TestPixelIsWhite(mat, 999, 999);
+                TestPixelIsWhite(mat, 999, 0);
+                TestPixelIsWhite(mat, 0, 999);
             }
         }
 
