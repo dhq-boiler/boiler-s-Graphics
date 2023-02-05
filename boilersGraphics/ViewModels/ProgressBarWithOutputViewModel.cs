@@ -4,25 +4,17 @@ using Reactive.Bindings;
 using System;
 using System.Reactive.Disposables;
 using System.Threading.Tasks;
+using System.Windows.Threading;
 using Reactive.Bindings.Extensions;
 
 namespace boilersGraphics.ViewModels
 {
     public class ProgressBarWithOutputViewModel : BindableBase, IDialogAware, IDisposable
     {
-        private CompositeDisposable compositeDisposable = new CompositeDisposable();
+        private Guid _id = Guid.NewGuid();
+        private CompositeDisposable compositeDisposable = new();
         public ProgressBarWithOutputViewModel()
         {
-            LoadedCommand.Subscribe(_ =>
-            {
-                while (Action == null)
-                {
-                    Task.Delay(100);
-                }
-
-                Action();
-                RequestClose.Invoke(new DialogResult(ButtonResult.OK));
-            }).AddTo(compositeDisposable);
         }
 
         public bool CanCloseDialog()
@@ -37,17 +29,27 @@ namespace boilersGraphics.ViewModels
         public async void OnDialogOpened(IDialogParameters parameters)
         {
             Maximum.Value = parameters.GetValue<double>("Maximum");
-            Action = parameters.GetValue<Action>("LoadAction");
+            Action = parameters.GetValue<Func<ProgressBarWithOutputViewModel, Task>>("LoadAction");
+            Task.Factory.StartNew(() =>
+            {
+                App.Current.Dispatcher.Invoke(() =>
+                {
+                    Action(this);
+                }, DispatcherPriority.ApplicationIdle);
+                App.Current.Dispatcher.Invoke(() =>
+                {
+                    RequestClose.Invoke((new DialogResult(ButtonResult.OK)));
+                }, DispatcherPriority.ApplicationIdle);
+            });
         }
 
         public string Title => "プログレスバー";
         public event Action<IDialogResult>? RequestClose;
 
-        public ReactivePropertySlim<double> Maximum { get; } = new();
-        public ReactivePropertySlim<double> Current { get; } = new(0);
-        public ReactivePropertySlim<string> Output { get; } = new();
-        public ReactiveCommand LoadedCommand { get; } = new();
-        public Action Action { get; set; }
+        public ReactivePropertySlim<double> Maximum { get; } = new ReactivePropertySlim<double>(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe);
+        public ReactivePropertySlim<double> Current { get; } = new ReactivePropertySlim<double>(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe);
+        public ReactivePropertySlim<string> Output { get; } = new ReactivePropertySlim<string>(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe);
+        public Func<ProgressBarWithOutputViewModel, Task> Action { get; set; }
 
         public void Dispose()
         {
@@ -55,7 +57,6 @@ namespace boilersGraphics.ViewModels
             Maximum.Dispose();
             Current.Dispose();
             Output.Dispose();
-            //CloseCommand.Dispose();
         }
     }
 }

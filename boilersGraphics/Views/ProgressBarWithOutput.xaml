@@ -12,11 +12,11 @@
              d:DataContext="{d:DesignInstance Type=viewmodels:ProgressBarWithOutputViewModel}"
              Background="#0E0E0E"
              mc:Ignorable="d" >
-    <i:Interaction.Triggers>
-        <i:EventTrigger EventName="Loaded">
-            <helper:EventToCommand Command="{Binding LoadedCommand}"></helper:EventToCommand>
-        </i:EventTrigger>
-    </i:Interaction.Triggers>
+    <prism:Dialog.WindowStyle>
+        <Style TargetType="Window">
+            <Setter Property="SizeToContent" Value="WidthAndHeight"></Setter>
+        </Style>
+    </prism:Dialog.WindowStyle>
     <DockPanel Width="640"
                Height="480">
         <ProgressBar DockPanel.Dock="Top"

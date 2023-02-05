@@ -8,6 +8,7 @@ using System.Linq;
 using System.Reflection;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 using System.Xml.Linq;
 using boilersGraphics.Exceptions;
 using boilersGraphics.Models;
@@ -131,7 +132,10 @@ public class ObjectDeserializer
         {
             foreach (var layer in layers.Elements("Layer"))
             {
-                progressBarWithOutputViewModel.Output.Value = layer.ToString();
+                App.Current.Dispatcher.Invoke(() =>
+                {
+                    progressBarWithOutputViewModel.Output.Value = layer.ToString();
+                }, DispatcherPriority.ApplicationIdle);
                 var layerObj = new Layer(isPreview);
                 layerObj.Color.Value = (Color)ColorConverter.ConvertFromString(layer.Element("Color").Value);
                 layerObj.IsVisible.Value = bool.Parse(layer.Element("IsVisible").Value);
@@ -144,12 +148,18 @@ public class ObjectDeserializer
                     if (layerItemObj is null)
                         continue;
                     layerObj.Children.Add(layerItemObj);
-                    progressBarWithOutputViewModel.Output.Value = layerItem.ToString();
-                    progressBarWithOutputViewModel.Current.Value++;
+                    App.Current.Dispatcher.Invoke(() =>
+                    {
+                        progressBarWithOutputViewModel.Output.Value = layerItem.ToString();
+                        progressBarWithOutputViewModel.Current.Value++;
+                    }, DispatcherPriority.ApplicationIdle);
                 }
 
                 diagramViewModel.Layers.Add(layerObj);
-                progressBarWithOutputViewModel.Current.Value++;
+                App.Current.Dispatcher.Invoke(() =>
+                {
+                    progressBarWithOutputViewModel.Current.Value++;
+                }, DispatcherPriority.ApplicationIdle);
             }
         }
         else
@@ -168,8 +178,11 @@ public class ObjectDeserializer
                 var layerItem = new LayerItem(item, layerObj, Name.GetNewLayerItemName(diagramViewModel));
                 layerItem.Color.Value = Randomizer.RandomColor(rand);
                 layerObj.Children.Add(layerItem);
-                progressBarWithOutputViewModel.Output.Value = designerItem.ToString();
-                progressBarWithOutputViewModel.Current.Value++;
+                App.Current.Dispatcher.Invoke(() =>
+                {
+                    progressBarWithOutputViewModel.Output.Value = designerItem.ToString();
+                    progressBarWithOutputViewModel.Current.Value++;
+                }, DispatcherPriority.ApplicationIdle);
             }
 
             foreach (var connections in root.Elements("Connections"))
@@ -179,12 +192,18 @@ public class ObjectDeserializer
                 var layerItem = new LayerItem(item, layerObj, Name.GetNewLayerItemName(diagramViewModel));
                 layerItem.Color.Value = Randomizer.RandomColor(rand);
                 layerObj.Children.Add(layerItem);
-                progressBarWithOutputViewModel.Output.Value = connector.ToString();
-                progressBarWithOutputViewModel.Current.Value++;
+                App.Current.Dispatcher.Invoke(() =>
+                {
+                    progressBarWithOutputViewModel.Output.Value = connector.ToString();
+                    progressBarWithOutputViewModel.Current.Value++;
+                }, DispatcherPriority.ApplicationIdle);
             }
 
             diagramViewModel.Layers.Add(layerObj);
-            progressBarWithOutputViewModel.Current.Value++;
+            App.Current.Dispatcher.Invoke(() =>
+            {
+                progressBarWithOutputViewModel.Current.Value++;
+            }, DispatcherPriority.ApplicationIdle);
         }
     }
 
