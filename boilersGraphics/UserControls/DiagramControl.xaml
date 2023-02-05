@@ -197,7 +197,6 @@
                                                             </Setter>
                                                         </Style>
                                                     </Grid.Style>
-                                                    <control:DragThumb x:Name="PART_DragThumb" Cursor="SizeAll" />
                                                     <!--  PART_ResizeDecorator  -->
                                                     <Control
                                                         x:Name="PART_ResizeDecorator"
@@ -227,6 +226,7 @@
                                                             </Style>
                                                         </ContentPresenter.Style>
                                                     </ContentPresenter>
+                                                    <control:DragThumb x:Name="PART_DragThumb" Cursor="SizeAll" />
                                                     <!--  DEBUG  -->
                                                     <!--<TextBlock VerticalAlignment="Center"
                                                             HorizontalAlignment="Center">

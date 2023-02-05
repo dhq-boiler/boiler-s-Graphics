@@ -93,7 +93,13 @@ namespace boilersGraphics.Test
 
             mainWindowViewModel.DiagramViewModel.AllItems.Value.First().IsSelected.Value = true;
 
-            BrushInternal.Down(mainWindowViewModel, designerCanvas, ref vm, () => new System.Windows.Input.MouseButtonEventArgs(InputManager.Current.PrimaryMouseDevice, 0, MouseButton.Left).MouseDevice.Capture(designerCanvas), new System.Windows.Input.MouseButtonEventArgs(InputManager.Current.PrimaryMouseDevice, 0, MouseButton.Left), new System.Windows.Point() { X = 100, Y = 100 });
+            BrushInternal.Down(mainWindowViewModel, designerCanvas, ref vm, 
+                () => new System.Windows.Input.MouseButtonEventArgs(InputManager.Current.PrimaryMouseDevice, 0, MouseButton.Left).MouseDevice.Capture(designerCanvas), 
+                new System.Windows.Input.MouseButtonEventArgs(InputManager.Current.PrimaryMouseDevice, 0, MouseButton.Left)
+                {
+                    RoutedEvent = Mouse.MouseDownEvent
+                }, 
+                new System.Windows.Point() { X = 100, Y = 100 });
 
             Assert.That(vm.PathGeometry.Value.ToString(), Is.EqualTo("M101,99C101,100.1045694996616 100.1045694996616,101 99,101 97.8954305003384,101 97,100.1045694996616 97,99 97,97.8954305003384 97.8954305003384,97 99,97 100.1045694996616,97 101,97.8954305003384 101,99z"));
         }

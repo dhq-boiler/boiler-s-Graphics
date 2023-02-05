@@ -8,10 +8,13 @@ using System.Linq;
 using System.Reflection;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 using System.Xml.Linq;
 using boilersGraphics.Exceptions;
 using boilersGraphics.Models;
+using boilersGraphics.Properties;
 using boilersGraphics.ViewModels;
+using Reactive.Bindings.ObjectExtensions;
 using Brush = System.Windows.Media.Brush;
 using Color = System.Windows.Media.Color;
 using ColorConverter = System.Windows.Media.ColorConverter;
@@ -89,7 +92,42 @@ public class ObjectDeserializer
         }
     }
 
-    public static void ReadObjectsFromXML(DiagramViewModel diagramViewModel, XElement root, bool isPreview = false)
+    public static int CountObjectsFromXML(XElement root)
+    {
+        var ret = 0;
+        var layers = root.Elements().FirstOrDefault(x => x.Name == "Layers");
+        if (layers is not null)
+        {
+            foreach (var layer in layers.Elements("Layer"))
+            {
+                foreach (var layerItemsInternal in layer.Elements("Children"))
+                foreach (var layerItem in layerItemsInternal.Elements("LayerItem"))
+                {
+                    ret++;
+                }
+            }
+        }
+        else
+        {
+            //読み込むファイルにLayers要素がない場合、初期レイヤーに全てのアイテムを突っ込む
+            foreach (var designerItems in root.Elements("DesignerItems"))
+            foreach (var designerItem in designerItems.Elements("DesignerItem"))
+            {
+                ret++;
+            }
+
+            foreach (var connections in root.Elements("Connections"))
+            foreach (var connector in connections.Elements("Connection"))
+            {
+                ret++;
+            }
+        }
+
+        return ret;
+    }
+
+    public static void ReadObjectsFromXML(DiagramViewModel diagramViewModel,
+        ProgressBarWithOutputViewModel progressBarWithOutputViewModel, XElement root, bool isPreview = false)
     {
         var layers = root.Elements().Where(x => x.Name == "Layers").FirstOrDefault();
         if (layers is not null)
@@ -108,9 +146,21 @@ public class ObjectDeserializer
                     if (layerItemObj is null)
                         continue;
                     layerObj.Children.Add(layerItemObj);
+                    Invoke(() =>
+                    {
+                        progressBarWithOutputViewModel.Output.Value += Environment.NewLine;
+                        progressBarWithOutputViewModel.Output.Value += $"{Resources.String_Loaded}：{layerItemObj.Name.Value}";
+                        progressBarWithOutputViewModel.Current.Value++;
+                    }, DispatcherPriority.ApplicationIdle);
                 }
 
                 diagramViewModel.Layers.Add(layerObj);
+                Invoke(() =>
+                {
+                    progressBarWithOutputViewModel.Output.Value += Environment.NewLine;
+                    progressBarWithOutputViewModel.Output.Value += $"{Resources.String_Loaded}：{layerObj.Name.Value}";
+                    progressBarWithOutputViewModel.Current.Value++;
+                }, DispatcherPriority.ApplicationIdle);
             }
         }
         else
@@ -129,6 +179,12 @@ public class ObjectDeserializer
                 var layerItem = new LayerItem(item, layerObj, Name.GetNewLayerItemName(diagramViewModel));
                 layerItem.Color.Value = Randomizer.RandomColor(rand);
                 layerObj.Children.Add(layerItem);
+                Invoke(() =>
+                {
+                    progressBarWithOutputViewModel.Output.Value += Environment.NewLine;
+                    progressBarWithOutputViewModel.Output.Value += $"{Resources.String_Loaded}：{layerItem.Name.Value}";
+                    progressBarWithOutputViewModel.Current.Value++;
+                }, DispatcherPriority.ApplicationIdle);
             }
 
             foreach (var connections in root.Elements("Connections"))
@@ -138,9 +194,21 @@ public class ObjectDeserializer
                 var layerItem = new LayerItem(item, layerObj, Name.GetNewLayerItemName(diagramViewModel));
                 layerItem.Color.Value = Randomizer.RandomColor(rand);
                 layerObj.Children.Add(layerItem);
+                Invoke(() =>
+                {
+                    progressBarWithOutputViewModel.Output.Value += Environment.NewLine;
+                    progressBarWithOutputViewModel.Output.Value += $"{Resources.String_Loaded}：{layerItem.Name.Value}";
+                    progressBarWithOutputViewModel.Current.Value++;
+                }, DispatcherPriority.ApplicationIdle);
             }
 
             diagramViewModel.Layers.Add(layerObj);
+            Invoke(() =>
+            {
+                progressBarWithOutputViewModel.Output.Value += Environment.NewLine;
+                progressBarWithOutputViewModel.Output.Value += $"{Resources.String_Loaded}：{layerObj.Name.Value}";
+                progressBarWithOutputViewModel.Current.Value++;
+            }, DispatcherPriority.ApplicationIdle);
         }
     }
 
@@ -333,6 +401,7 @@ public class ObjectDeserializer
         if (designerItemElm.Element("PathGeometryRotate") is not null)
             item.PathGeometryRotate.Value =
                 PathGeometry.CreateFromGeometry(Geometry.Parse(designerItemElm.Element("PathGeometryRotate").Value));
+        item.RenderingEnabled.Value = false;
         item.IsHitTestVisible.Value = true;
         item.Left.Value = double.Parse(designerItemElm.Element("Left").Value);
         item.Top.Value = double.Parse(designerItemElm.Element("Top").Value);
@@ -422,6 +491,7 @@ public class ObjectDeserializer
 
         if (item is NPolygonViewModel polygon) polygon.Data.Value = designerItemElm.Element("Data").Value;
         item.UpdatePathGeometryIfEnable(string.Empty, 0, 0, true);
+        item.RenderingEnabled.Value = true;
         return item;
     }
 
@@ -446,5 +516,17 @@ public class ObjectDeserializer
         }
 
         return bitmapImage;
+    }
+
+    private static void Invoke(Action action, DispatcherPriority priority)
+    {
+        if (App.IsTest)
+        {
+            action();
+        }
+        else
+        {
+            App.Current.Dispatcher.Invoke(action, priority);
+        }
     }
 }

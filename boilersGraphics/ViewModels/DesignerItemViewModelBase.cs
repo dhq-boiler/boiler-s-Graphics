@@ -10,7 +10,7 @@ using Reactive.Bindings.Extensions;
 
 namespace boilersGraphics.ViewModels;
 
-public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewModelBase, ICloneable
+public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewModelBase, ICloneable, IRect, ISizeRps
 {
     public static readonly double DefaultWidth = 65d;
     public static readonly double DefaultHeight = 65d;
@@ -18,8 +18,6 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
 
     private double _MinWidth;
     private bool _showConnectors;
-
-    private bool isMonitored;
 
     public DesignerItemViewModelBase(int id, IDiagramViewModel parent, double left, double top) : base(id, parent)
     {
@@ -74,6 +72,8 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
         }
     }
 
+    public ReactivePropertySlim<bool> RenderingEnabled { get; } = new ReactivePropertySlim<bool>(true);
+
     public ReactivePropertySlim<string> Pool { get; } = new();
 
     public ReactivePropertySlim<double> Left { get; } = new(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe |
@@ -127,7 +127,10 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
             .Subscribe(async x =>
             {
                 UpdateTransform(nameof(Left), x.OldItem, x.NewItem);
-                await OnRectChanged(new Rect(Left.Value, Top.Value, Width.Value, Height.Value));
+                if (RenderingEnabled.Value)
+                {
+                    await OnRectChanged(new Rect(Left.Value, Top.Value, Width.Value, Height.Value));
+                }
             })
             .AddTo(_CompositeDisposable);
         Top
@@ -135,7 +138,10 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
             .Subscribe(async x =>
             {
                 UpdateTransform(nameof(Top), x.OldItem, x.NewItem);
-                await OnRectChanged(new Rect(Left.Value, Top.Value, Width.Value, Height.Value));
+                if (RenderingEnabled.Value)
+                {
+                    await OnRectChanged(new Rect(Left.Value, Top.Value, Width.Value, Height.Value));
+                }
             })
             .AddTo(_CompositeDisposable);
         Width
@@ -143,7 +149,10 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
             .Subscribe(async x =>
             {
                 UpdateTransform(nameof(Width), x.OldItem, x.NewItem);
-                await OnRectChanged(new Rect(Left.Value, Top.Value, Width.Value, Height.Value));
+                if (RenderingEnabled.Value)
+                {
+                    await OnRectChanged(new Rect(Left.Value, Top.Value, Width.Value, Height.Value));
+                }
             })
             .AddTo(_CompositeDisposable);
         Height
@@ -151,7 +160,10 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
             .Subscribe(async x =>
             {
                 UpdateTransform(nameof(Height), x.OldItem, x.NewItem);
-                await OnRectChanged(new Rect(Left.Value, Top.Value, Width.Value, Height.Value));
+                if (RenderingEnabled.Value)
+                {
+                    await OnRectChanged(new Rect(Left.Value, Top.Value, Width.Value, Height.Value));
+                }
             })
             .AddTo(_CompositeDisposable);
         RotationAngle
@@ -160,6 +172,16 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
             {
                 UpdateTransform(nameof(RotationAngle), x.OldItem, x.NewItem);
                 UpdateMatrix(x.OldItem, x.NewItem);
+            })
+            .AddTo(_CompositeDisposable);
+        ZIndex
+            .Zip(ZIndex.Skip(1), (Old, New) => new { OldItem = Old, NewItem = New })
+            .Subscribe(async x =>
+            {
+                if (RenderingEnabled.Value)
+                {
+                    await OnRectChanged(new Rect(Left.Value, Top.Value, Width.Value, Height.Value));
+                }
             })
             .AddTo(_CompositeDisposable);
         Matrix
@@ -203,6 +225,13 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
             (size, rate) => { return new Thickness(0, 0, -size / (rate / 100d), 0); }).ToReadOnlyReactivePropertySlim();
         MarginBottom = Observable.Return(ThumbSize.Value / 2).CombineLatest(DiagramViewModel.Instance.MagnificationRate,
             (size, rate) => { return new Thickness(0, 0, 0, -size / (rate / 100d)); }).ToReadOnlyReactivePropertySlim();
+        RenderingEnabled.Subscribe(async renderingEnabled =>
+        {
+            if (renderingEnabled)
+            {
+                await OnRectChanged(new Rect(Left.Value, Top.Value, Width.Value, Height.Value));
+            }
+        }).AddTo(_CompositeDisposable);
     }
 
     public virtual async Task OnRectChanged(Rect rect)
@@ -339,12 +368,7 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
     {
         var compositeDisposable = new CompositeDisposable();
         base.BeginMonitor(action).AddTo(compositeDisposable);
-        if (!isMonitored)
-        {
-            Rect.Subscribe(_ => action()).AddTo(compositeDisposable);
-            isMonitored = true;
-        }
-
+        Rect.Subscribe(_ => action()).AddTo(compositeDisposable);
         return compositeDisposable;
     }
 

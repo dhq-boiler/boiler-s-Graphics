@@ -38,9 +38,9 @@ public static class BrushInternal
     }
 
     public static void Draw(MainWindowViewModel mainWindowViewModel, ref BrushViewModel currentBrush, Point point,
-        IEnumerable<FrameworkElement> views)
+        FrameworkElement? views)
     {
-        var item = views.First().DataContext as BrushViewModel;
+        var item = views.DataContext as BrushViewModel;
         mainWindowViewModel.Recorder.Current.ExecuteSetProperty(item, "PathGeometry.Value",
             Geometry.Combine(item.PathGeometry.Value,
                 GeometryCreator.CreateEllipse(point.X, point.Y, item.Thickness.Value), GeometryCombineMode.Union,
@@ -63,9 +63,8 @@ public static class BrushInternal
             .Select(x => x);
         if (selectedDataContext.Count() > 0)
         {
-            var views = AssociatedObject.GetCorrespondingViews<FrameworkElement>(selectedDataContext.First())
-                .Where(x => x.GetType() == selectedDataContext.First().GetViewType());
-            if (!views.Any())
+            var view = AssociatedObject.GetVisualChild<FrameworkElement>(selectedDataContext.First());
+            if (view is not null)
             {
                 captureAction.Invoke();
                 currentBrush = BrushViewModel.CreateInstance();
@@ -75,7 +74,7 @@ public static class BrushInternal
             {
                 if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
                 {
-                    Draw(mainWindowViewModel, ref currentBrush, point, views);
+                    Draw(mainWindowViewModel, ref currentBrush, point, view);
                 }
                 else
                 {

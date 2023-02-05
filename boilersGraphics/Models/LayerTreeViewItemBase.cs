@@ -1,4 +1,14 @@
-﻿using System;
+﻿using boilersGraphics.Exceptions;
+using boilersGraphics.Extensions;
+using boilersGraphics.Helpers;
+using boilersGraphics.UserControls;
+using boilersGraphics.ViewModels;
+using boilersGraphics.Views;
+using NLog;
+using Prism.Mvvm;
+using Reactive.Bindings;
+using Reactive.Bindings.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
@@ -7,22 +17,15 @@ using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Media;
-using boilersGraphics.Exceptions;
-using boilersGraphics.Extensions;
-using boilersGraphics.Helpers;
-using boilersGraphics.ViewModels;
-using boilersGraphics.Views;
-using NLog;
-using Prism.Mvvm;
-using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
 using TsOperationHistory;
 using TsOperationHistory.Extensions;
+using Layers = boilersGraphics.Views.Layers;
 
 namespace boilersGraphics.Models;
 
-public class LayerTreeViewItemBase : BindableBase, IDisposable, IObservable<LayerTreeViewItemBaseObservable>
+public abstract class LayerTreeViewItemBase : BindableBase, IDisposable, IObservable<LayerTreeViewItemBaseObservable>
 {
     protected CompositeDisposable _disposable = new();
 
@@ -42,17 +45,40 @@ public class LayerTreeViewItemBase : BindableBase, IDisposable, IObservable<Laye
             })
             .AddTo(_disposable);
         ChangeNameCommand.Subscribe(_ =>
-            {
-                var labelTextBox = Application.Current.MainWindow.GetCorrespondingViews<LabelTextBox>(this).First();
-                labelTextBox.FocusTextBox();
-            })
-            .AddTo(_disposable);
+        {
+            var diagramControl = Application.Current.MainWindow.FindName("DiagramControl") as DiagramControl;
+            var layers = diagramControl.FindName("layers") as Layers; 
+            var labelTextBox = layers.EnumVisualChildren<LabelTextBox>(this).FirstOrDefault(x => x.DataContext == this);
+            labelTextBox?.FocusTextBox();
+        })
+        .AddTo(_disposable);
         if (!App.IsTest)
-            LayerTreeViewItemContextMenu.Add(new MenuItem
+        {
+            var menuItem = new MenuItem
             {
-                Header = "名前の変更",
                 Command = ChangeNameCommand
+            };
+            menuItem.SetBinding(MenuItem.HeaderProperty, new Binding()
+            {
+                Source = ResourceService.Current,
+                Path = new PropertyPath("Resources.Command_Rename"),
             });
+            LayerTreeViewItemContextMenu.Add(menuItem);
+
+            if (this is LayerItem)
+            {
+                menuItem = new MenuItem
+                {
+                    Command = DiagramViewModel.Instance.PropertyCommand,
+                };
+                menuItem.SetBinding(MenuItem.HeaderProperty, new Binding()
+                {
+                    Source = ResourceService.Current,
+                    Path = new PropertyPath("Resources.MenuItem_Property"),
+                });
+                LayerTreeViewItemContextMenu.Add(menuItem);
+            }
+        }
     }
 
     public ReactivePropertySlim<LayerTreeViewItemBase> Parent { get; } = new();
@@ -69,6 +95,8 @@ public class LayerTreeViewItemBase : BindableBase, IDisposable, IObservable<Laye
 
     public ReactivePropertySlim<Color> Color { get; } = new();
 
+    public ReactivePropertySlim<ImageSource> Appearance { get; } = new();
+
     public ReactivePropertySlim<Visibility> BeforeSeparatorVisibility { get; } = new(Visibility.Hidden);
 
     public ReactivePropertySlim<Visibility> AfterSeparatorVisibility { get; } = new(Visibility.Hidden);
@@ -78,6 +106,34 @@ public class LayerTreeViewItemBase : BindableBase, IDisposable, IObservable<Laye
     public ReactiveCollection<Control> LayerTreeViewItemContextMenu { get; } = new();
 
     public ReactiveCommand ChangeNameCommand { get; } = new();
+
+    public abstract void UpdateAppearance(IEnumerable<SelectableDesignerItemViewModelBase> items);
+
+    internal void UpdateAppearanceBothParentAndChild()
+    {
+        LogManager.GetCurrentClassLogger().Trace("detected Layer changes. run Layer.UpdateAppearance().");
+        UpdateAppearance(Children
+            .SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(xx => xx.Children)
+            .Select(x => (x as LayerItem).Item.Value));
+        Children.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+            .ToList()
+            .ForEach(x =>
+                (x as LayerItem).UpdateAppearance(IfGroupBringChildren((x as LayerItem).Item.Value)));
+    }
+
+    private IEnumerable<SelectableDesignerItemViewModelBase> IfGroupBringChildren(
+        SelectableDesignerItemViewModelBase value)
+    {
+        if (value is GroupItemViewModel groupItemVM)
+        {
+            var children = Children.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                .Select(x => (x as LayerItem).Item.Value)
+                .Where(x => x.ParentID == groupItemVM.ID);
+            return children;
+        }
+
+        return new List<SelectableDesignerItemViewModelBase> { value };
+    }
 
     public void Dispose()
     {

@@ -1,21 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Xml;
-using System.Xml.Linq;
-using boilersGraphics.Controls;
+﻿using boilersGraphics.Controls;
 using boilersGraphics.Dao;
 using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
@@ -31,6 +14,24 @@ using Prism.Mvvm;
 using Prism.Services.Dialogs;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Threading;
+using System.Xml;
+using System.Xml.Linq;
 using TsOperationHistory;
 using TsOperationHistory.Extensions;
 using Layers = boilersGraphics.Views.Layers;
@@ -307,6 +308,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
             OnLoaded = new ReactiveCommand().WithSubscribe(() =>
             {
                 DesignerCanvas = Application.Current.MainWindow.GetChildOfType<DesignerCanvas>();
+                Layers.ToList().ForEach(x => x.UpdateAppearanceBothParentAndChild());
             }).AddTo(_CompositeDisposable);
         }
 
@@ -324,6 +326,8 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                 .Where(x => x.GetType() == typeof(LayerItem))
                 .Select(y => (y as LayerItem).Item.Value)
                 .Union(new SelectableDesignerItemViewModelBase[] { BackgroundItem.Value })
+                .Where(x => x is not null)
+                .OrderBy(x => x.ZIndex.Value)
                 .ToArray())
             .ToReadOnlyReactivePropertySlim(Array.Empty<SelectableDesignerItemViewModelBase>());
 
@@ -572,7 +576,8 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
 
     private void ExecuteCopyCanvasToClipboardCommand()
     {
-        var bitmap = Renderer.Render(null, DesignerCanvas.GetInstance(), this, BackgroundItem.Value);
+        var renderer = new Renderer(new WpfVisualTreeHelper());
+        var bitmap = renderer.Render(null, DesignerCanvas.GetInstance(), this, BackgroundItem.Value);
         Clipboard.SetImage(bitmap);
     }
 
@@ -827,7 +832,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
         mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "LayerCount", 1);
         mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "LayerItemCount", 1);
         RootLayer.Dispose();
-        RootLayer = new ReactivePropertySlim<LayerTreeViewItemBase>(new LayerTreeViewItemBase());
+        RootLayer = new ReactivePropertySlim<LayerTreeViewItemBase>(new RootLayer());
         Layers.ToClearOperation().ExecuteTo(mainwindowViewModel.Recorder.Current);
         if (addingLayer)
         {
@@ -1765,7 +1770,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
 
     #region Property
 
-    public ReactivePropertySlim<LayerTreeViewItemBase> RootLayer { get; set; } = new(new LayerTreeViewItemBase());
+    public ReactivePropertySlim<LayerTreeViewItemBase> RootLayer { get; set; } = new(new RootLayer());
 
     public ReactiveCollection<LayerTreeViewItemBase> Layers { get; }
 
@@ -2004,268 +2009,1020 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
             LogManager.GetCurrentClassLogger().Info(Resources.Log_ForceReadMode);
         }
 
+        var willLoadingObjCount = ObjectDeserializer.CountObjectsFromXML(root) + 100 + 5;
 
-        var mainwindowViewModel = MainWindowVM;
-        try
+        Func<ProgressBarWithOutputViewModel, Task> loadAction = async (vm) =>
         {
-            LogManager.GetCurrentClassLogger().Info(Resources.Log_BeginLoadFromXml);
-            mainwindowViewModel.Recorder.BeginRecode();
-
-            var configuration = root.Element("Configuration");
-            mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "CanvasFillBrush.Value",
-                WpfObjectSerializer.Deserialize(configuration.Element("CanvasFillBrush").Nodes().First().ToString()) ??
-                new SolidColorBrush((Color)ColorConverter.ConvertFromString(configuration.Element("CanvasFillBrush")
-                    .Nodes().First().ToString())));
-            mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "EnablePointSnap.Value",
-                bool.Parse(configuration.Element("EnablePointSnap").Value));
-            mainwindowViewModel.Recorder.Current.ExecuteSetProperty(mainwindowViewModel, "SnapPower.Value",
-                double.Parse(configuration.Element("SnapPower").Value));
-            if (configuration.Element("ColorSpots") != null)
+            var mainwindowViewModel = MainWindowVM;
+            try
             {
-                var colorSpots = configuration.Element("ColorSpots");
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot0",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot0").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot1",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot1").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot2",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot2").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot3",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot3").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot4",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot4").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot5",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot5").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot6",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot6").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot7",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot7").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot8",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot8").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot9",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot9").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot10",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot10").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot11",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot11").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot12",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot12").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot13",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot13").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot14",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot14").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot15",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot15").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot16",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot16").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot17",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot17").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot18",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot18").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot19",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot19").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot20",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot20").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot21",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot21").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot22",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot22").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot23",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot23").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot24",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot24").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot25",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot25").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot26",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot26").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot27",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot27").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot28",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot28").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot29",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot29").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot30",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot30").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot31",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot31").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot32",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot32").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot33",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot33").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot34",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot34").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot35",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot35").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot36",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot36").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot37",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot37").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot38",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot38").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot39",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot39").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot40",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot40").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot41",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot41").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot42",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot42").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot43",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot43").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot44",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot44").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot45",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot45").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot46",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot46").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot47",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot47").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot48",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot48").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot49",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot49").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot50",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot50").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot51",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot51").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot52",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot52").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot53",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot53").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot54",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot54").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot55",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot55").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot56",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot56").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot57",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot57").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot58",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot58").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot59",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot59").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot60",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot60").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot61",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot61").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot62",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot62").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot63",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot63").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot64",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot64").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot65",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot65").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot66",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot66").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot67",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot67").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot68",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot68").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot69",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot69").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot70",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot70").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot71",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot71").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot72",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot72").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot73",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot73").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot74",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot74").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot75",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot75").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot76",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot76").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot77",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot77").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot78",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot78").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot79",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot79").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot80",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot80").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot81",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot81").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot82",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot82").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot83",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot83").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot84",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot84").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot85",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot85").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot86",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot86").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot87",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot87").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot88",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot88").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot89",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot89").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot90",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot90").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot91",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot91").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot92",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot92").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot93",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot93").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot94",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot94").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot95",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot95").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot96",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot96").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot97",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot97").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot98",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot98").Nodes().First().ToString()));
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot99",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot99").Nodes().First().ToString()));
+                vm.Output.Value += Resources.Log_BeginLoadFromXml;
+                LogManager.GetCurrentClassLogger().Info(Resources.Log_BeginLoadFromXml);
+                mainwindowViewModel.Recorder.BeginRecode();
+
+                var configuration = root.Element("Configuration");
+                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "CanvasFillBrush.Value",
+                    WpfObjectSerializer.Deserialize(configuration.Element("CanvasFillBrush").Nodes().First()
+                        .ToString()) ??
+                    new SolidColorBrush((Color)ColorConverter.ConvertFromString(configuration
+                        .Element("CanvasFillBrush")
+                        .Nodes().First().ToString())));
+                App.Current.Dispatcher.Invoke(() =>
+                {
+                    vm.Current.Value++;
+                    vm.Output.Value += Environment.NewLine;
+                    vm.Output.Value += $"{Resources.String_Loaded}：{nameof(this.CanvasFillBrush)}={this.CanvasFillBrush.Value}";
+                }, DispatcherPriority.ApplicationIdle);
+                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "EnablePointSnap.Value",
+                            bool.Parse(configuration.Element("EnablePointSnap").Value));
+                App.Current.Dispatcher.Invoke(() =>
+                {
+                    vm.Current.Value++;
+                    vm.Output.Value += Environment.NewLine;
+                    vm.Output.Value += $"{Resources.String_Loaded}：{nameof(this.EnablePointSnap)}={this.EnablePointSnap.Value}";
+                }, DispatcherPriority.ApplicationIdle);
+                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(mainwindowViewModel, "SnapPower.Value",
+                            double.Parse(configuration.Element("SnapPower").Value));
+                App.Current.Dispatcher.Invoke(() =>
+                {
+                    vm.Current.Value++;
+                    vm.Output.Value += Environment.NewLine;
+                    vm.Output.Value += $"{Resources.String_Loaded}：{nameof(mainwindowViewModel.SnapPower)}={mainwindowViewModel.SnapPower.Value}";
+                }, DispatcherPriority.ApplicationIdle);
+                if (configuration.Element("ColorSpots") != null)
+                {
+                    var colorSpots = configuration.Element("ColorSpots");
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot0",
+                        WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot0").Nodes().First()
+                            .ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                    {
+                        vm.Current.Value++;
+                        vm.Output.Value += Environment.NewLine;
+                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot0)}={ColorSpots.Value.ColorSpot0}";
+                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot1",
+                                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot1").Nodes().First()
+                                        .ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot1)}={ColorSpots.Value.ColorSpot1}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot2",
+                                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot2").Nodes().First()
+                                        .ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot2)}={ColorSpots.Value.ColorSpot2}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot3",
+                                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot3").Nodes().First()
+                                        .ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot3)}={ColorSpots.Value.ColorSpot3}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot4",
+                                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot4").Nodes().First()
+                                        .ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot4)}={ColorSpots.Value.ColorSpot4}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot5",
+                                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot5").Nodes().First()
+                                        .ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot5)}={ColorSpots.Value.ColorSpot5}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot6",
+                                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot6").Nodes().First()
+                                        .ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot6)}={ColorSpots.Value.ColorSpot6}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot7",
+                                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot7").Nodes().First()
+                                        .ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot7)}={ColorSpots.Value.ColorSpot7}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot8",
+                                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot8").Nodes().First()
+                                        .ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot8)}={ColorSpots.Value.ColorSpot8}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot9",
+                                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot9").Nodes().First()
+                                        .ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot9)}={ColorSpots.Value.ColorSpot9}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot10",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot10").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot10)}={ColorSpots.Value.ColorSpot10}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot11",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot11").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot11)}={ColorSpots.Value.ColorSpot11}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot12",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot12").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot12)}={ColorSpots.Value.ColorSpot12}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot13",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot13").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot13)}={ColorSpots.Value.ColorSpot13}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot14",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot14").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot14)}={ColorSpots.Value.ColorSpot14}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot15",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot15").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot15)}={ColorSpots.Value.ColorSpot15}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot16",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot16").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot16)}={ColorSpots.Value.ColorSpot16}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot17",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot17").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot17)}={ColorSpots.Value.ColorSpot17}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot18",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot18").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot18)}={ColorSpots.Value.ColorSpot18}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot19",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot19").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot19)}={ColorSpots.Value.ColorSpot19}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot20",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot20").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot20)}={ColorSpots.Value.ColorSpot20}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot21",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot21").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot21)}={ColorSpots.Value.ColorSpot21}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot22",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot22").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot22)}={ColorSpots.Value.ColorSpot22}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot23",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot23").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot23)}={ColorSpots.Value.ColorSpot23}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot24",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot24").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot24)}={ColorSpots.Value.ColorSpot24}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot25",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot25").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot25)}={ColorSpots.Value.ColorSpot25}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot26",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot26").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot26)}={ColorSpots.Value.ColorSpot26}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot27",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot27").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot27)}={ColorSpots.Value.ColorSpot27}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot28",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot28").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot28)}={ColorSpots.Value.ColorSpot28}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot29",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot29").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot29)}={ColorSpots.Value.ColorSpot29}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot30",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot30").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot30)}={ColorSpots.Value.ColorSpot30}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot31",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot31").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot31)}={ColorSpots.Value.ColorSpot31}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot32",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot32").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot32)}={ColorSpots.Value.ColorSpot32}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot33",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot33").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot33)}={ColorSpots.Value.ColorSpot33}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot34",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot34").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot34)}={ColorSpots.Value.ColorSpot34}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot35",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot35").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot35)}={ColorSpots.Value.ColorSpot35}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot36",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot36").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot36)}={ColorSpots.Value.ColorSpot36}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot37",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot37").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot37)}={ColorSpots.Value.ColorSpot37}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot38",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot38").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot38)}={ColorSpots.Value.ColorSpot38}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot39",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot39").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot39)}={ColorSpots.Value.ColorSpot39}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot40",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot40").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot40)}={ColorSpots.Value.ColorSpot40}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot41",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot41").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot41)}={ColorSpots.Value.ColorSpot41}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot42",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot42").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot42)}={ColorSpots.Value.ColorSpot42}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot43",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot43").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot43)}={ColorSpots.Value.ColorSpot43}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot44",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot44").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot44)}={ColorSpots.Value.ColorSpot44}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot45",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot45").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot45)}={ColorSpots.Value.ColorSpot45}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot46",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot46").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot46)}={ColorSpots.Value.ColorSpot46}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot47",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot47").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot47)}={ColorSpots.Value.ColorSpot47}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot48",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot48").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot48)}={ColorSpots.Value.ColorSpot48}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot49",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot49").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot49)}={ColorSpots.Value.ColorSpot49}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot50",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot50").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot50)}={ColorSpots.Value.ColorSpot50}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot51",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot51").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot51)}={ColorSpots.Value.ColorSpot51}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot52",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot52").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot52)}={ColorSpots.Value.ColorSpot52}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot53",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot53").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot53)}={ColorSpots.Value.ColorSpot53}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot54",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot54").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot54)}={ColorSpots.Value.ColorSpot54}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot55",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot55").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot55)}={ColorSpots.Value.ColorSpot55}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot56",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot56").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot56)}={ColorSpots.Value.ColorSpot56}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot57",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot57").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot57)}={ColorSpots.Value.ColorSpot57}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot58",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot58").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot58)}={ColorSpots.Value.ColorSpot58}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot59",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot59").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot59)}={ColorSpots.Value.ColorSpot59}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot60",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot60").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot60)}={ColorSpots.Value.ColorSpot60}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot61",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot61").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot61)}={ColorSpots.Value.ColorSpot61}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot62",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot62").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot62)}={ColorSpots.Value.ColorSpot62}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot63",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot63").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot63)}={ColorSpots.Value.ColorSpot63}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot64",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot64").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot64)}={ColorSpots.Value.ColorSpot64}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot65",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot65").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot65)}={ColorSpots.Value.ColorSpot65}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot66",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot66").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot66)}={ColorSpots.Value.ColorSpot66}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot67",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot67").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot67)}={ColorSpots.Value.ColorSpot67}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot68",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot68").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot68)}={ColorSpots.Value.ColorSpot68}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot69",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot69").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot69)}={ColorSpots.Value.ColorSpot69}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot70",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot70").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot70)}={ColorSpots.Value.ColorSpot70}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot71",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot71").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot71)}={ColorSpots.Value.ColorSpot71}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot72",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot72").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot72)}={ColorSpots.Value.ColorSpot72}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot73",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot73").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot73)}={ColorSpots.Value.ColorSpot73}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot74",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot74").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot74)}={ColorSpots.Value.ColorSpot74}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot75",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot75").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot75)}={ColorSpots.Value.ColorSpot75}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot76",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot76").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot76)}={ColorSpots.Value.ColorSpot76}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot77",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot77").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot77)}={ColorSpots.Value.ColorSpot77}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot78",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot78").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot78)}={ColorSpots.Value.ColorSpot78}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot79",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot79").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot79)}={ColorSpots.Value.ColorSpot79}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot80",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot80").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot80)}={ColorSpots.Value.ColorSpot80}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot81",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot81").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot81)}={ColorSpots.Value.ColorSpot81}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot82",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot82").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot82)}={ColorSpots.Value.ColorSpot82}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot83",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot83").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot83)}={ColorSpots.Value.ColorSpot83}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot84",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot84").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot84)}={ColorSpots.Value.ColorSpot84}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot85",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot85").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot85)}={ColorSpots.Value.ColorSpot85}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot86",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot86").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot86)}={ColorSpots.Value.ColorSpot86}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot87",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot87").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot87)}={ColorSpots.Value.ColorSpot87}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot88",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot88").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot88)}={ColorSpots.Value.ColorSpot88}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot89",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot89").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot89)}={ColorSpots.Value.ColorSpot89}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot90",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot90").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot90)}={ColorSpots.Value.ColorSpot90}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot91",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot91").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot91)}={ColorSpots.Value.ColorSpot91}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot92",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot92").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot92)}={ColorSpots.Value.ColorSpot92}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot93",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot93").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot93)}={ColorSpots.Value.ColorSpot93}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot94",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot94").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot94)}={ColorSpots.Value.ColorSpot94}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot95",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot95").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot95)}={ColorSpots.Value.ColorSpot95}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot96",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot96").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot96)}={ColorSpots.Value.ColorSpot96}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot97",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot97").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        vm.Current.Value++;
+                                        vm.Output.Value += Environment.NewLine;
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot97)}={ColorSpots.Value.ColorSpot97}";
+                                    }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot98",
+                                    WpfObjectSerializer.Deserialize(
+                                        colorSpots.Element("ColorSpot98").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                                                {
+                                                    vm.Current.Value++;
+                                                    vm.Output.Value += Environment.NewLine;
+                                                    vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot98)}={ColorSpots.Value.ColorSpot98}";
+                                                }, DispatcherPriority.ApplicationIdle);
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot99",
+                        WpfObjectSerializer.Deserialize(
+                            colorSpots.Element("ColorSpot99").Nodes().First().ToString()));
+                    App.Current.Dispatcher.Invoke(() =>
+                    {
+                        vm.Current.Value++;
+                        vm.Output.Value += Environment.NewLine;
+                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot99)}={ColorSpots.Value.ColorSpot99}";
+                    }, DispatcherPriority.ApplicationIdle);
+                }
+
+                App.Current.Dispatcher.Invoke(() =>
+                {
+                    vm.Current.Value++;
+                    vm.Output.Value += Environment.NewLine;
+                    vm.Output.Value += $"{Resources.String_SetupCanvas}...";
+                }, DispatcherPriority.ApplicationIdle);
+                InitialSetting(mainwindowViewModel, false, false, isPreview);
+                App.Current.Dispatcher.Invoke(() =>
+                {
+                    vm.Current.Value++;
+                    vm.Output.Value += $"{Resources.String_Completed}";
+                }, DispatcherPriority.ApplicationIdle);
+
+                if (configuration.Element("Left") != null)
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.Left.Value",
+                        double.Parse(configuration.Element("Left").Value));
+                if (configuration.Element("Top") != null)
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.Top.Value",
+                        double.Parse(configuration.Element("Top").Value));
+                if (configuration.Element("Width") != null)
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this,
+                        "BackgroundItem.Value.Width.Value",
+                        double.Parse(configuration.Element("Width").Value));
+                if (configuration.Element("Height") != null)
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this,
+                        "BackgroundItem.Value.Height.Value",
+                        double.Parse(configuration.Element("Height").Value));
+                ObjectDeserializer.ReadObjectsFromXML(this, vm, root,
+                    isPreview);
+
+                await PostProcessInFileLoadingSequence(mainwindowViewModel).ConfigureAwait(false);
+
+                vm.Output.Value += Environment.NewLine;
+                vm.Output.Value += Resources.Log_FinishLoadFromXml;
+                LogManager.GetCurrentClassLogger().Info(Resources.Log_FinishLoadFromXml);
             }
-
-            InitialSetting(mainwindowViewModel, false, false, isPreview);
-
-            if (configuration.Element("Left") != null)
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.Left.Value",
-                    double.Parse(configuration.Element("Left").Value));
-            if (configuration.Element("Top") != null)
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.Top.Value",
-                    double.Parse(configuration.Element("Top").Value));
-            if (configuration.Element("Width") != null)
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.Width.Value",
-                    double.Parse(configuration.Element("Width").Value));
-            if (configuration.Element("Height") != null)
-                mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.Height.Value",
-                    double.Parse(configuration.Element("Height").Value));
-
-            ObjectDeserializer.ReadObjectsFromXML(this, root, isPreview);
-            LogManager.GetCurrentClassLogger().Info(Resources.Log_FinishLoadFromXml);
-        }
-        catch (Exception)
+            catch (Exception)
+            {
+                vm.Output.Value += Environment.NewLine;
+                vm.Output.Value += Resources.Log_FileCannotOpenBecauseTooOldOrCorrupted;
+                MessageBox.Show(Resources.Message_FileCannotOpenBecauseTooOldOrCorrupted,
+                    Resources.DialogTitle_ReadError);
+                LogManager.GetCurrentClassLogger().Error(Resources.Log_FileCannotOpenBecauseTooOldOrCorrupted);
+                FileName.Value = "*";
+                return;
+            }
+            finally
+            {
+                mainwindowViewModel.Recorder.EndRecode();
+                mainwindowViewModel.Controller.Flush();
+            }
+            vm.Output.Value += Environment.NewLine;
+            vm.Output.Value += string.Format(Resources.Log_LoadedFile, filename);
+            LogManager.GetCurrentClassLogger().Info(string.Format(Resources.Log_LoadedFile, filename));
+        };
+        IDialogResult dialogResult = new DialogResult();
+        dlgService.ShowDialog(nameof(ProgressBarWithOutput),
+            new DialogParameters() { { "LoadAction", loadAction }, { "Maximum", willLoadingObjCount } },
+            ret => dialogResult = ret);
+        if (dialogResult.Result != ButtonResult.OK)
         {
-            MessageBox.Show(Resources.Message_FileCannotOpenBecauseTooOldOrCorrupted, Resources.DialogTitle_ReadError);
-            LogManager.GetCurrentClassLogger().Error(Resources.Log_FileCannotOpenBecauseTooOldOrCorrupted);
             FileName.Value = "*";
-            return;
         }
-        finally
-        {
-            mainwindowViewModel.Recorder.EndRecode();
-            mainwindowViewModel.Controller.Flush();
-        }
-
-        await PostProcessInFileLoadingSequence(mainwindowViewModel).ConfigureAwait(false);
-
-        LogManager.GetCurrentClassLogger().Info(string.Format(Resources.Log_LoadedFile, filename));
     }
 
     private async Task PostProcessInFileLoadingSequence(MainWindowViewModel mainwindowViewModel)
     {
         LogManager.GetCurrentClassLogger().Info(Resources.Log_BeginPostProcessInFileLoadingSequence);
-
-        await Task.Delay(100).ContinueWith(t => { ScanMosaicViewModelObjects(); }).ConfigureAwait(false);
+        ScanEffectViewModelObjects();
 
         var layersViewModel = Application.Current.MainWindow.GetChildOfType<Layers>().DataContext as LayersViewModel;
         layersViewModel.InitializeHitTestVisible(mainwindowViewModel);
@@ -2274,15 +3031,37 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
         LogManager.GetCurrentClassLogger().Info(Resources.Log_FinishPostProcessInFileLoadingSequence);
     }
 
+    private int Count(List<FrameworkElement> allViews)
+    {
+        int count = 0;
+        foreach (var item in AllItems.Value)
+        {
+            var view = allViews.FirstOrDefault(x => x.DataContext == item);
+            if (view is not null)
+            {
+                count++;
+            }
+        }
+        return count;
+    }
+
     /// <summary>
-    ///     ファイルロード後にこのメソッドを実行することで、すべての MosaicViewModel オブジェクトをレンダリングします。
+    ///     ファイルロード後にこのメソッドを実行することで、すべての EffectViewModel オブジェクトをレンダリングします。
     ///     注意：ZIndex の小さい方から順にレンダリングが実施されます。
     /// </summary>
-    private void ScanMosaicViewModelObjects()
+    private void ScanEffectViewModelObjects()
     {
-        foreach (var item in AllItems.Value.OrderBy(x => x.ZIndex.Value))
-            if (item is MosaicViewModel mosaic)
-                mosaic.Render();
+        App.Current.Dispatcher.BeginInvoke(() =>
+        {
+            foreach (var item in AllItems.Value.OrderBy(x => x.ZIndex.Value))
+            {
+                if (item is EffectViewModel effect)
+                {
+                    effect.Initialize();
+                    effect.Render();
+                }
+            }
+        });
     }
 
     private void ExecuteLoadCommand(string file, bool showConfirmDialog = true)
@@ -2566,13 +3345,15 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                         .Where(item => (item as LayerItem).Item.Value.ZIndex.Value == newIndex);
 
                     foreach (var item in exists)
+                    {
+                        ((item as LayerItem).Item.Value as EffectViewModel)?.DisposeMonitoringItem(ordered.ElementAt(i));
                         if ((item as LayerItem).Item.Value != ordered.ElementAt(i))
                         {
                             if ((item as LayerItem).Item.Value is GroupItemViewModel)
                             {
                                 var children = from it in Layers.SelectMany(x => x.Children)
-                                    where (it as LayerItem).Item.Value.ParentID == (item as LayerItem).Item.Value.ID
-                                    select it;
+                                               where (it as LayerItem).Item.Value.ParentID == (item as LayerItem).Item.Value.ID
+                                               select it;
 
                                 foreach (var child in children)
                                     MainWindowVM.Recorder.Current.ExecuteSetProperty((child as LayerItem).Item.Value,
@@ -2587,8 +3368,16 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     "ZIndex.Value", currentIndex);
                             }
 
+                            if ((item as LayerItem).Item.Value is EffectViewModel effect)
+                            {
+                                effect.Render();
+                            }
+
                             break;
                         }
+                    }
+
+                    (ordered.ElementAt(i) as EffectViewModel)?.Render();
                 }
             }
         }
@@ -2688,10 +3477,14 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                 else
                 {
                     MainWindowVM.Recorder.Current.ExecuteSetProperty(ordered.ElementAt(i), "ZIndex.Value", newIndex);
+                    
+                    (ordered.ElementAt(i) as EffectViewModel)?.Render();
+                    
                     var exists = Layers.SelectMany(x => x.Children)
                         .Where(item => (item as LayerItem).Item.Value.ZIndex.Value == newIndex);
 
                     foreach (var item in exists)
+                    {
                         if ((item as LayerItem).Item.Value != ordered.ElementAt(i))
                         {
                             if ((item as LayerItem).Item.Value.ParentID != Guid.Empty)
@@ -2719,9 +3512,11 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                 MainWindowVM.Recorder.Current.ExecuteSetProperty((item as LayerItem).Item.Value,
                                     "ZIndex.Value", currentIndex);
                             }
-
+                            ((item as LayerItem)?.Item.Value as EffectViewModel)?.BeginMonitoring(ordered.ElementAt(i));
+                            ((item as LayerItem)?.Item.Value as EffectViewModel)?.Render();
                             break;
                         }
+                    }
                 }
             }
         }
@@ -2847,6 +3642,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
             {
                 var oldCurrentIndex = current.ZIndex.Value;
                 MainWindowVM.Recorder.Current.ExecuteSetProperty(current, "ZIndex.Value", newIndex);
+                (current as EffectViewModel)?.Render();
 
                 if (current is GroupItemViewModel)
                 {
@@ -2881,13 +3677,24 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                 {
                     var exists = Layers.SelectMany(x => x.Children).Where(item =>
                         (item as LayerItem).Item.Value.ZIndex.Value >= newIndex &&
-                        (item as LayerItem).Item.Value.ZIndex.Value < oldCurrentIndex);
+                        (item as LayerItem).Item.Value.ZIndex.Value < oldCurrentIndex)
+                        .Select(x => (x as LayerItem).Item.Value)
+                        .Except(new List<SelectableDesignerItemViewModelBase>() { current })
+                        .OrderBy(x => x.ZIndex.Value).ToList();
 
                     foreach (var item in exists)
-                        if ((item as LayerItem).Item.Value != current)
-                            MainWindowVM.Recorder.Current.ExecuteSetProperty((item as LayerItem).Item.Value,
-                                "ZIndex.Value", (item as LayerItem).Item.Value.ZIndex.Value + 1);
+                    {
+                        if (item != current)
+                        {
+                            MainWindowVM.Recorder.Current.ExecuteSetProperty(item,
+                                "ZIndex.Value", item.ZIndex.Value + 1);
+                            (item as EffectViewModel)?.BeginMonitoring(current);
+                            (item as EffectViewModel)?.Render();
+                        }
+                    }
+
                 }
+            
             }
         }
 

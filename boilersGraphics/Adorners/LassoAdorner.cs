@@ -151,7 +151,7 @@ public class LassoAdorner : Adorner
     private async Task UpdateSelectionSnapPoint(Rect lassoRect, SnapPointViewModel vm)
     {
         var container = Application.Current.MainWindow.GetChildOfType<DesignerCanvas>()
-            .GetCorrespondingViews<LineResizeHandle>(vm).First();
+            .GetVisualChild<LineResizeHandle>(vm);
 
         var itemRect = VisualTreeHelper.GetDescendantBounds(container);
         var itemBounds = container.TransformToAncestor(_designerCanvas).TransformBounds(itemRect);

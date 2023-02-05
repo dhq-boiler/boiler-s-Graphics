@@ -54,26 +54,13 @@ public class Layer : LayerTreeViewItemBase, IObservable<LayerObservable>, ICompa
                     !MainWindowViewModel.Instance.ToolBarViewModel.Behaviors.Contains(MainWindowViewModel.Instance
                         .ToolBarViewModel.BrushBehavior));
 
-            temp.Delay(TimeSpan.FromMilliseconds(100))
-                .ObserveOn(new DispatcherScheduler(Dispatcher.CurrentDispatcher, DispatcherPriority.ApplicationIdle))
-                .Subscribe(x =>
-                {
-                    LogManager.GetCurrentClassLogger().Trace("detected Layer changes. run Layer.UpdateAppearance().");
-                    UpdateAppearance(Children
-                        .SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(xx => xx.Children)
-                        .Select(x => (x as LayerItem).Item.Value));
-                    Children.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
-                        .ToList()
-                        .ForEach(x =>
-                            (x as LayerItem).UpdateAppearance(IfGroupBringChildren((x as LayerItem).Item.Value)));
-                })
+            temp.ObserveOn(new DispatcherScheduler(Dispatcher.CurrentDispatcher, DispatcherPriority.ApplicationIdle))
+                .Subscribe(x => { UpdateAppearanceBothParentAndChild(); })
                 .AddTo(_disposable);
         }
 
         IsVisible.Value = true;
     }
-
-    public ReactivePropertySlim<ImageSource> Appearance { get; } = new();
 
     public ReactiveCommand SwitchVisibilityCommand { get; } = new();
 
@@ -104,26 +91,10 @@ public class Layer : LayerTreeViewItemBase, IObservable<LayerObservable>, ICompa
         observer.OnNext(new LayerObservable());
         return new LayerDisposable(this, observer);
     }
-
-    private IEnumerable<SelectableDesignerItemViewModelBase> IfGroupBringChildren(
-        SelectableDesignerItemViewModelBase value)
-    {
-        if (value is GroupItemViewModel groupItemVM)
-        {
-            var children = Children.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
-                .Select(x => (x as LayerItem).Item.Value)
-                .Where(x => x.ParentID == groupItemVM.ID);
-            return children;
-        }
-
-        return new List<SelectableDesignerItemViewModelBase> { value };
-    }
-
-    public void UpdateAppearance(IEnumerable<SelectableDesignerItemViewModelBase> items)
+    public override void UpdateAppearance(IEnumerable<SelectableDesignerItemViewModelBase> items)
     {
         if (items.Count() == 0)
             return;
-        var designerCanvas = Application.Current.MainWindow.GetChildOfType<DesignerCanvas>();
         double minX, maxX, minY, maxY;
         var width = Measure.GetWidth(items, out minX, out maxX);
         var height = Measure.GetHeight(items, out minY, out maxY);
@@ -131,21 +102,18 @@ public class Layer : LayerTreeViewItemBase, IObservable<LayerObservable>, ICompa
         if (width <= 0 || height <= 0)
             return;
 
-        var rtb = new RenderTargetBitmap(width, height, 96, 96, PixelFormats.Pbgra32);
-
-        var visual = InitializeBitmap(width, height);
-        rtb.Render(visual);
-
-        foreach (var item in items) UpdateAppearanceByItem(designerCanvas, minX, minY, rtb, visual, item);
-
-        Appearance.Value = rtb;
+        Rect? sliceRect = DiagramViewModel.Instance.BackgroundItem.Value.Rect.Value;
+        items.Cast<IRect>().ToList().ForEach(x => sliceRect = (!sliceRect.HasValue ? x.Rect.Value : Rect.Union(sliceRect.Value, x.Rect.Value)));
+        var renderer = new Renderer(new WpfVisualTreeHelper());
+        Appearance.Value = renderer.Render(sliceRect, DesignerCanvas.GetInstance(),
+            DiagramViewModel.Instance,
+            DiagramViewModel.Instance.BackgroundItem.Value, items.Max(x => x.ZIndex.Value));
     }
 
     private static void UpdateAppearanceByItem(DesignerCanvas designerCanvas, double minX, double minY,
         RenderTargetBitmap rtb, DrawingVisual visual, SelectableDesignerItemViewModelBase item)
     {
-        var views = designerCanvas.GetCorrespondingViews<FrameworkElement>(item)
-            .Where(x => x.GetType() == item.GetViewType());
+        var views = designerCanvas.EnumVisualChildren<FrameworkElement>(item);
         foreach (var view in views)
             if (view != null)
             {
@@ -169,6 +137,9 @@ public class Layer : LayerTreeViewItemBase, IObservable<LayerObservable>, ICompa
                             diffY = Math.Min(connectorItem.Points[0].Y, connectorItem.Points[1].Y);
                         }
 
+                        view.InvalidateMeasure();
+                        view.InvalidateArrange();
+                        view.UpdateLayout();
                         var brush = new VisualBrush(view);
                         brush.Stretch = Stretch.None;
                         context.DrawRectangle(brush, null,
@@ -184,13 +155,13 @@ public class Layer : LayerTreeViewItemBase, IObservable<LayerObservable>, ICompa
             }
     }
 
-    private static DrawingVisual InitializeBitmap(int width, int height)
+    private static DrawingVisual InitializeBitmap(double minX, double minY, double width, double height)
     {
         var visual = new DrawingVisual();
         using (var context = visual.RenderOpen())
         {
             //白背景でビットマップを初期化
-            context.DrawRectangle(Brushes.White, null, new Rect(new Point(), new Size(width, height)));
+            context.DrawRectangle(DiagramViewModel.Instance.BackgroundItem.Value.FillBrush.Value, null, new Rect(new Point(), new Size(width, height)));
         }
 
         return visual;

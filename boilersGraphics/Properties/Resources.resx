@@ -177,6 +177,9 @@
   <data name="Command_Overwrite" xml:space="preserve">
     <value>Overwrite</value>
   </data>
+  <data name="Command_Rename" xml:space="preserve">
+    <value>Rename</value>
+  </data>
   <data name="Command_Save" xml:space="preserve">
     <value>Save</value>
   </data>
@@ -657,6 +660,9 @@
   <data name="String_CanvasWidth" xml:space="preserve">
     <value>Canvas Width</value>
   </data>
+  <data name="String_Completed" xml:space="preserve">
+    <value>Completed</value>
+  </data>
   <data name="String_Deform" xml:space="preserve">
     <value>Deform</value>
   </data>
@@ -698,6 +704,9 @@
   </data>
   <data name="String_Interval" xml:space="preserve">
     <value>Interval:</value>
+  </data>
+  <data name="String_Loaded" xml:space="preserve">
+    <value>Loaded</value>
   </data>
   <data name="String_Move" xml:space="preserve">
     <value>Move</value>
@@ -765,6 +774,9 @@
   <data name="String_SetInterval" xml:space="preserve">
     <value>Set the interval</value>
   </data>
+  <data name="String_SetupCanvas" xml:space="preserve">
+    <value>Setup canvas</value>
+  </data>
   <data name="String_Slice" xml:space="preserve">
     <value>Slice</value>
   </data>
@@ -792,11 +804,20 @@
   <data name="Title_Export" xml:space="preserve">
     <value>Export</value>
   </data>
+  <data name="Title_Layers" xml:space="preserve">
+    <value>Layers</value>
+  </data>
+  <data name="Title_NowLoading" xml:space="preserve">
+    <value>Now loading</value>
+  </data>
   <data name="Title_Preferences" xml:space="preserve">
     <value>Preferences</value>
   </data>
   <data name="Title_PrivacyPolicy" xml:space="preserve">
     <value>Privacy Policy</value>
+  </data>
+  <data name="Title_Property" xml:space="preserve">
+    <value>Property</value>
   </data>
   <data name="Title_Statistics" xml:space="preserve">
     <value>Statistics</value>

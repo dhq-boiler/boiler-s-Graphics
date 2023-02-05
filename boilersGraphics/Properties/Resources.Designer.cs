@@ -29,7 +29,7 @@ namespace boilersGraphics.Properties {
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        public Resources() {
+        internal Resources() {
         }
         
         /// <summary>
@@ -237,6 +237,15 @@ namespace boilersGraphics.Properties {
         public static string Command_Overwrite {
             get {
                 return ResourceManager.GetString("Command_Overwrite", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Rename に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Command_Rename {
+            get {
+                return ResourceManager.GetString("Command_Rename", resourceCulture);
             }
         }
         
@@ -1681,6 +1690,15 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Completed に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_Completed {
+            get {
+                return ResourceManager.GetString("String_Completed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Deform に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string String_Deform {
@@ -1803,6 +1821,15 @@ namespace boilersGraphics.Properties {
         public static string String_Interval {
             get {
                 return ResourceManager.GetString("String_Interval", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Loaded に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_Loaded {
+            get {
+                return ResourceManager.GetString("String_Loaded", resourceCulture);
             }
         }
         
@@ -2005,6 +2032,15 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Setup canvas に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_SetupCanvas {
+            get {
+                return ResourceManager.GetString("String_SetupCanvas", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Slice に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string String_Slice {
@@ -2086,6 +2122,24 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Layers に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Title_Layers {
+            get {
+                return ResourceManager.GetString("Title_Layers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Now loading に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Title_NowLoading {
+            get {
+                return ResourceManager.GetString("Title_NowLoading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Preferences に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Title_Preferences {
@@ -2100,6 +2154,15 @@ namespace boilersGraphics.Properties {
         public static string Title_PrivacyPolicy {
             get {
                 return ResourceManager.GetString("Title_PrivacyPolicy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Property に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Title_Property {
+            get {
+                return ResourceManager.GetString("Title_Property", resourceCulture);
             }
         }
         

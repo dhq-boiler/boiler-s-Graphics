@@ -95,7 +95,7 @@ internal class LinearGradientBrushPickerViewModel : BindableBase, INavigationAwa
             {
                 var source = x.Source;
                 _colorPicker = source as LinearGradientBrushPicker;
-                _spots = _colorPicker.FindVisualChildren<ColorSpot>();
+                _spots = _colorPicker.EnumVisualChildren<ColorSpot>();
             })
             .AddTo(_disposables);
         AddGradientStopCommand.Subscribe(x => { GradientStops.Add(new GradientStop(Colors.White, 0)); })

@@ -172,6 +172,11 @@ public class MoveableTreeViewBehavior : Behavior<TreeView>
                     children, sourceItem, targetItem);
                 sourceItem.Parent.Value = targetItemParent;
                 sourceItem.IsSelected.Value = true;
+                if (sourceItem is LayerItem { Item.Value: SelectableDesignerItemViewModelBase sdivmb })
+                {
+                    ((sourceItem as LayerItem)?.Item.Value as EffectViewModel)?.Render();
+                    ((targetItem as LayerItem)?.Item.Value as EffectViewModel)?.BeginMonitoring(sdivmb);
+                }
                 break;
             case InsertType.After:
                 if (sourceItemParent != diagramVM.RootLayer.Value) children = targetItemParent.Children;
@@ -179,6 +184,12 @@ public class MoveableTreeViewBehavior : Behavior<TreeView>
                     children, sourceItem, targetItem);
                 sourceItem.Parent.Value = targetItemParent;
                 sourceItem.IsSelected.Value = true;
+                if (sourceItem is LayerItem { Item.Value: SelectableDesignerItemViewModelBase sdivmb2 })
+                {
+                    ((targetItem as LayerItem)?.Item.Value as EffectViewModel)?.DisposeMonitoringItem(sdivmb2);
+                }
+                ((targetItem as LayerItem)?.Item.Value as EffectViewModel)?.Render();
+                ((sourceItem as LayerItem)?.Item.Value as EffectViewModel)?.Render();
                 break;
             case InsertType.Children:
                 children = targetItem.Children;

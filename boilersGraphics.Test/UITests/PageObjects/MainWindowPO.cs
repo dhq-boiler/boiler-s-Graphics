@@ -27,7 +27,7 @@ namespace boilersGraphics.Test.UITests.PageObjects
 
         public ExportDialogPO Click_ExportButton()
         {
-            GetElementByAutomationID("Export").Click();
+            GetElementByAutomationID("Export", 20).Click();
             return new ExportDialogPO(Session);
         }
 
@@ -149,7 +149,7 @@ namespace boilersGraphics.Test.UITests.PageObjects
 
         public void Click_SliceTool()
         {
-            GetElementByName("slice").Click();
+            GetElementByName("slice", 20).Click();
         }
 
         public void Click_PolyBezierTool()

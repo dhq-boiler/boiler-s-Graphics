@@ -7,7 +7,7 @@ namespace boilersGraphics.Helpers;
 
 public static class Measure
 {
-    public static int GetWidth(IEnumerable<SelectableDesignerItemViewModelBase> items, out double minX, out double maxX)
+    public static double GetWidth(IEnumerable<SelectableDesignerItemViewModelBase> items, out double minX, out double maxX)
     {
         if (items.Count() == 0) throw new ArgumentException("items.Count() > 0");
         minX = double.MaxValue;
@@ -31,10 +31,10 @@ public static class Measure
             }
         }
 
-        return (int)(maxX - minX);
+        return maxX - minX;
     }
 
-    public static int GetHeight(IEnumerable<SelectableDesignerItemViewModelBase> items, out double minY,
+    public static double GetHeight(IEnumerable<SelectableDesignerItemViewModelBase> items, out double minY,
         out double maxY)
     {
         if (items.Count() == 0) throw new ArgumentException("items.Count() > 0");
@@ -59,6 +59,6 @@ public static class Measure
             }
         }
 
-        return (int)(maxY - minY);
+        return maxY - minY;
     }
 }

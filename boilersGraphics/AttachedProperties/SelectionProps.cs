@@ -62,8 +62,7 @@ public static class SelectionProps
                 selectableDesignerItemViewModelBase.Owner.EdgeThickness.Value = double.NaN;
                 selectableDesignerItemViewModelBase.IsSelected.Value = true;
                 var view = Application.Current.MainWindow
-                    .GetCorrespondingViews<FrameworkElement>(selectableDesignerItemViewModelBase)
-                    .Where(x => x.GetType() == selectableDesignerItemViewModelBase.GetViewType()).First();
+                    .GetVisualChild<FrameworkElement>(selectableDesignerItemViewModelBase);
                 view.Focus();
                 var diagramVM = (Application.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel;
                 diagramVM.Layers.ToList().ForEach(x => x.IsSelected.Value = false);

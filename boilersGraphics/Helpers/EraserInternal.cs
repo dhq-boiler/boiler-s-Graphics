@@ -13,10 +13,10 @@ namespace boilersGraphics.Helpers;
 public static class EraserInternal
 {
     public static void EraseAtDown(MainWindowViewModel mainWindowViewModel,
-        ref SelectableDesignerItemViewModelBase currentBrush, Point point, IEnumerable<FrameworkElement> views,
+        ref SelectableDesignerItemViewModelBase currentBrush, Point point, FrameworkElement views,
         Func<Point, PathGeometry> template)
     {
-        var item = views.First().DataContext as DesignerItemViewModelBase;
+        var item = views.DataContext as DesignerItemViewModelBase;
         if (currentBrush is DesignerItemViewModelBase designer)
         {
             if (item.RotationAngle.Value == 0)
@@ -81,13 +81,13 @@ public static class EraserInternal
             .Select(x => x);
         if (selectedDataContext.Count() > 0)
         {
-            var views = AssociatedObject.GetCorrespondingViews<FrameworkElement>(selectedDataContext.First());
-            var filtered = views.Where(x => x.GetType() == selectedDataContext.First().GetViewType());
+            var view = AssociatedObject.GetVisualChild<FrameworkElement>(selectedDataContext.First());
+            var filtered = view;
             if (selectedDataContext.First() is DesignerItemViewModelBase designer && currentBrush is BrushViewModel bvm)
-                if (filtered.Any())
+                if (filtered is not null)
                 {
                     var selectable = selectedDataContext.First();
-                    EraseAtDown(mainWindowViewModel, ref selectable, point, views,
+                    EraseAtDown(mainWindowViewModel, ref selectable, point, view,
                         p => GeometryCreator.CreateEllipse(p.X, p.Y, bvm.Thickness.Value));
                     e.Handled = true;
                 }

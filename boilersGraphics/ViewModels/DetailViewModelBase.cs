@@ -2,6 +2,8 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive.Disposables;
+using boilersGraphics.Helpers;
+using boilersGraphics.Properties;
 using boilersGraphics.Views;
 using Prism.Mvvm;
 using Prism.Regions;
@@ -28,7 +30,7 @@ public class DetailViewModelBase<T> : BindableBase, IDialogAware, INavigationAwa
 
     public ReactiveCollection<PropertyOptionsValueCombination> Properties { get; } = new();
 
-    public string Title => "プロパティ";
+    public string Title => Resources.ResourceManager.GetString("Title_Property", Resources.Culture);
 
     public event Action<IDialogResult> RequestClose;
 

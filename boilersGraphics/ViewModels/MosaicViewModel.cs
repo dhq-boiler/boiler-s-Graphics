@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using boilersGraphics.Controls;
+﻿using boilersGraphics.Controls;
 using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
 using boilersGraphics.Views;
@@ -16,20 +9,28 @@ using Prism.Services.Dialogs;
 using Prism.Unity;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
+using System;
+using System.Collections.Generic;
+using System.Reactive.Disposables;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using Rect = System.Windows.Rect;
 
 namespace boilersGraphics.ViewModels;
 
-public class MosaicViewModel : DesignerItemViewModelBase
+public class MosaicViewModel : EffectViewModel
 {
     public MosaicViewModel()
     {
-        (Application.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.AllItems.Subscribe(items =>
-        {
-            foreach (var item in items)
-                item.BeginMonitor(() => { Render(); }).AddTo(_CompositeDisposable);
-        }).AddTo(_CompositeDisposable);
+        Initialize();
+    }
 
+    public override void Initialize()
+    {
+        base.Initialize();
         ColumnPixels.Subscribe(_ => { Render(); }).AddTo(_CompositeDisposable);
         RowPixels.Subscribe(_ => { Render(); }).AddTo(_CompositeDisposable);
     }
@@ -46,53 +47,30 @@ public class MosaicViewModel : DesignerItemViewModelBase
 
     public override bool SupportsPropertyDialog => true;
 
-    public void Render()
+    public override void Render()
     {
         if (Width.Value <= 0 || Height.Value <= 0) return;
 
         Application.Current.Dispatcher.Invoke(() =>
         {
             var mainWindowViewModel = Application.Current.MainWindow.DataContext as MainWindowViewModel;
-            var rtb = Renderer.Render(Rect.Value, Application.Current.MainWindow.GetChildOfType<DesignerCanvas>(),
-                mainWindowViewModel.DiagramViewModel, mainWindowViewModel.DiagramViewModel.BackgroundItem.Value, this);
-            var newFormatedBitmapSource = new FormatConvertedBitmap();
-            newFormatedBitmapSource.BeginInit();
-            newFormatedBitmapSource.Source = rtb;
-            newFormatedBitmapSource.DestinationFormat = PixelFormats.Bgr24;
-            newFormatedBitmapSource.EndInit();
+            var renderer = new Renderer(new WpfVisualTreeHelper());
+            var rtb = renderer.Render(Rect.Value, Application.Current.MainWindow.GetChildOfType<DesignerCanvas>(),
+                mainWindowViewModel.DiagramViewModel, mainWindowViewModel.DiagramViewModel.BackgroundItem.Value, this.ZIndex.Value - 1);
+            var newFormattedBitmapSource = new FormatConvertedBitmap();
+            newFormattedBitmapSource.BeginInit();
+            newFormattedBitmapSource.Source = rtb;
+            newFormattedBitmapSource.DestinationFormat = PixelFormats.Bgr24;
+            newFormattedBitmapSource.EndInit();
 
-            using (var mat = newFormatedBitmapSource.ToMat())
+            using (var mat = newFormattedBitmapSource.ToMat())
             using (var dest = mat.Clone())
             {
                 Mosaic(mat, dest, ColumnPixels.Value, RowPixels.Value);
                 Bitmap.Value = dest.ToWriteableBitmap();
+                UpdateLayout();
             }
         });
-    }
-
-    public async Task RenderAsync()
-    {
-        if (Width.Value <= 0 || Height.Value <= 0) return;
-
-        await Application.Current.Dispatcher.Invoke(async () =>
-        {
-            var mainWindowViewModel = Application.Current.MainWindow.DataContext as MainWindowViewModel;
-            var rtb = await Renderer.RenderAsync(Rect.Value,
-                Application.Current.MainWindow.GetChildOfType<DesignerCanvas>(), mainWindowViewModel.DiagramViewModel,
-                mainWindowViewModel.DiagramViewModel.BackgroundItem.Value, this);
-            var newFormatedBitmapSource = new FormatConvertedBitmap();
-            newFormatedBitmapSource.BeginInit();
-            newFormatedBitmapSource.Source = rtb;
-            newFormatedBitmapSource.DestinationFormat = PixelFormats.Bgr24;
-            newFormatedBitmapSource.EndInit();
-
-            using (var mat = newFormatedBitmapSource.ToMat())
-            using (var dest = mat.Clone())
-            {
-                Mosaic(mat, dest, ColumnPixels.Value, RowPixels.Value);
-                Bitmap.Value = dest.ToWriteableBitmap();
-            }
-        }).ConfigureAwait(false);
     }
 
     private unsafe void Mosaic(Mat mat, Mat dest, double columnPixels, double rowPixels)
@@ -224,5 +202,12 @@ public class MosaicViewModel : DesignerItemViewModelBase
             new DialogService((Application.Current as PrismApplication).Container as IContainerExtension);
         IDialogResult result = null;
         dialogService.Show(nameof(DetailMosaic), new DialogParameters { { "ViewModel", this } }, ret => result = ret);
+    }
+    public override IDisposable BeginMonitor(Action action)
+    {
+        var compositeDisposable = new CompositeDisposable();
+        base.BeginMonitor(action).AddTo(compositeDisposable);
+        this.ObserveProperty(x => x.Bitmap).Subscribe(_ => action()).AddTo(compositeDisposable);
+        return compositeDisposable;
     }
 }

@@ -102,8 +102,7 @@ public class UndoStack<T> : BindableBase, IStack<T>, IDisposable where T : IOper
         var undoHistoryVM = UndoHistoryViewModel.Instance;
         if (undoHistoryVM == null)
             return;
-        var treeview = Application.Current.MainWindow.GetCorrespondingViews<BindableSelectedItemTreeView>(undoHistoryVM)
-            .FirstOrDefault();
+        var treeview = Application.Current.MainWindow.GetVisualChild<BindableSelectedItemTreeView>(undoHistoryVM);
         if (treeview == null)
             return;
         var scrollViewer = treeview.GetChildOfType<ScrollViewer>();
