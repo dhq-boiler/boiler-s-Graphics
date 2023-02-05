@@ -13,6 +13,7 @@ using System.Xml.Linq;
 using boilersGraphics.Exceptions;
 using boilersGraphics.Models;
 using boilersGraphics.ViewModels;
+using Reactive.Bindings.ObjectExtensions;
 using Brush = System.Windows.Media.Brush;
 using Color = System.Windows.Media.Color;
 using ColorConverter = System.Windows.Media.ColorConverter;
@@ -132,10 +133,6 @@ public class ObjectDeserializer
         {
             foreach (var layer in layers.Elements("Layer"))
             {
-                App.Current.Dispatcher.Invoke(() =>
-                {
-                    progressBarWithOutputViewModel.Output.Value = layer.ToString();
-                }, DispatcherPriority.ApplicationIdle);
                 var layerObj = new Layer(isPreview);
                 layerObj.Color.Value = (Color)ColorConverter.ConvertFromString(layer.Element("Color").Value);
                 layerObj.IsVisible.Value = bool.Parse(layer.Element("IsVisible").Value);
@@ -150,7 +147,8 @@ public class ObjectDeserializer
                     layerObj.Children.Add(layerItemObj);
                     App.Current.Dispatcher.Invoke(() =>
                     {
-                        progressBarWithOutputViewModel.Output.Value = layerItem.ToString();
+                        progressBarWithOutputViewModel.Output.Value += Environment.NewLine;
+                        progressBarWithOutputViewModel.Output.Value += $"ロード：{layerItemObj.Name.Value}";
                         progressBarWithOutputViewModel.Current.Value++;
                     }, DispatcherPriority.ApplicationIdle);
                 }
@@ -158,6 +156,8 @@ public class ObjectDeserializer
                 diagramViewModel.Layers.Add(layerObj);
                 App.Current.Dispatcher.Invoke(() =>
                 {
+                    progressBarWithOutputViewModel.Output.Value += Environment.NewLine;
+                    progressBarWithOutputViewModel.Output.Value += $"ロード：{layerObj.Name.Value}";
                     progressBarWithOutputViewModel.Current.Value++;
                 }, DispatcherPriority.ApplicationIdle);
             }
@@ -180,7 +180,8 @@ public class ObjectDeserializer
                 layerObj.Children.Add(layerItem);
                 App.Current.Dispatcher.Invoke(() =>
                 {
-                    progressBarWithOutputViewModel.Output.Value = designerItem.ToString();
+                    progressBarWithOutputViewModel.Output.Value += Environment.NewLine;
+                    progressBarWithOutputViewModel.Output.Value += $"ロード：{layerItem.Name.Value}";
                     progressBarWithOutputViewModel.Current.Value++;
                 }, DispatcherPriority.ApplicationIdle);
             }
@@ -194,7 +195,8 @@ public class ObjectDeserializer
                 layerObj.Children.Add(layerItem);
                 App.Current.Dispatcher.Invoke(() =>
                 {
-                    progressBarWithOutputViewModel.Output.Value = connector.ToString();
+                    progressBarWithOutputViewModel.Output.Value += Environment.NewLine;
+                    progressBarWithOutputViewModel.Output.Value += $"ロード：{layerItem.Name.Value}";
                     progressBarWithOutputViewModel.Current.Value++;
                 }, DispatcherPriority.ApplicationIdle);
             }
@@ -202,6 +204,8 @@ public class ObjectDeserializer
             diagramViewModel.Layers.Add(layerObj);
             App.Current.Dispatcher.Invoke(() =>
             {
+                progressBarWithOutputViewModel.Output.Value += Environment.NewLine;
+                progressBarWithOutputViewModel.Output.Value += $"ロード：{layerObj.Name.Value}";
                 progressBarWithOutputViewModel.Current.Value++;
             }, DispatcherPriority.ApplicationIdle);
         }
