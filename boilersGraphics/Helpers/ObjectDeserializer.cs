@@ -146,7 +146,7 @@ public class ObjectDeserializer
                     if (layerItemObj is null)
                         continue;
                     layerObj.Children.Add(layerItemObj);
-                    App.Current.Dispatcher.Invoke(() =>
+                    Invoke(() =>
                     {
                         progressBarWithOutputViewModel.Output.Value += Environment.NewLine;
                         progressBarWithOutputViewModel.Output.Value += $"{Resources.String_Loaded}：{layerItemObj.Name.Value}";
@@ -155,7 +155,7 @@ public class ObjectDeserializer
                 }
 
                 diagramViewModel.Layers.Add(layerObj);
-                App.Current.Dispatcher.Invoke(() =>
+                Invoke(() =>
                 {
                     progressBarWithOutputViewModel.Output.Value += Environment.NewLine;
                     progressBarWithOutputViewModel.Output.Value += $"{Resources.String_Loaded}：{layerObj.Name.Value}";
@@ -179,7 +179,7 @@ public class ObjectDeserializer
                 var layerItem = new LayerItem(item, layerObj, Name.GetNewLayerItemName(diagramViewModel));
                 layerItem.Color.Value = Randomizer.RandomColor(rand);
                 layerObj.Children.Add(layerItem);
-                App.Current.Dispatcher.Invoke(() =>
+                Invoke(() =>
                 {
                     progressBarWithOutputViewModel.Output.Value += Environment.NewLine;
                     progressBarWithOutputViewModel.Output.Value += $"{Resources.String_Loaded}：{layerItem.Name.Value}";
@@ -194,7 +194,7 @@ public class ObjectDeserializer
                 var layerItem = new LayerItem(item, layerObj, Name.GetNewLayerItemName(diagramViewModel));
                 layerItem.Color.Value = Randomizer.RandomColor(rand);
                 layerObj.Children.Add(layerItem);
-                App.Current.Dispatcher.Invoke(() =>
+                Invoke(() =>
                 {
                     progressBarWithOutputViewModel.Output.Value += Environment.NewLine;
                     progressBarWithOutputViewModel.Output.Value += $"{Resources.String_Loaded}：{layerItem.Name.Value}";
@@ -203,7 +203,7 @@ public class ObjectDeserializer
             }
 
             diagramViewModel.Layers.Add(layerObj);
-            App.Current.Dispatcher.Invoke(() =>
+            Invoke(() =>
             {
                 progressBarWithOutputViewModel.Output.Value += Environment.NewLine;
                 progressBarWithOutputViewModel.Output.Value += $"{Resources.String_Loaded}：{layerObj.Name.Value}";
@@ -516,5 +516,17 @@ public class ObjectDeserializer
         }
 
         return bitmapImage;
+    }
+
+    private static void Invoke(Action action, DispatcherPriority priority)
+    {
+        if (App.IsTest)
+        {
+            action();
+        }
+        else
+        {
+            App.Current.Dispatcher.Invoke(action, priority);
+        }
     }
 }
