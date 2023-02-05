@@ -33,6 +33,7 @@
                 </i:EventTrigger>
             </i:Interaction.Triggers>
             <TextBlock x:Name="Output"
+                       Margin="10"
                        Foreground="White"
                        Text="{Binding Output.Value, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"></TextBlock>
         </ScrollViewer>
