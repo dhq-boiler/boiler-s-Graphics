@@ -2,9 +2,13 @@
 using Prism.Services.Dialogs;
 using Reactive.Bindings;
 using System;
+using System.Linq;
 using System.Reactive.Disposables;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Threading;
+using boilersGraphics.Views;
 using Reactive.Bindings.Extensions;
 
 namespace boilersGraphics.ViewModels
@@ -15,6 +19,15 @@ namespace boilersGraphics.ViewModels
         private CompositeDisposable compositeDisposable = new();
         public ProgressBarWithOutputViewModel()
         {
+            ScrollCommand.Subscribe(args =>
+            {
+                var windows = new Window[App.Current.Windows.Count];
+                App.Current.Windows.CopyTo(windows, 0);
+                var dialog = windows.OfType<Prism.Services.Dialogs.DialogWindow>().First();
+                var progress = dialog.Content as ProgressBarWithOutput;
+                var scrollViewer = progress.FindName("ScrollViewer") as ScrollViewer;
+                scrollViewer.ScrollToBottom();
+            }).AddTo(compositeDisposable);
         }
 
         public bool CanCloseDialog()
@@ -50,6 +63,7 @@ namespace boilersGraphics.ViewModels
         public ReactivePropertySlim<double> Current { get; } = new ReactivePropertySlim<double>(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe);
         public ReactivePropertySlim<string> Output { get; } = new ReactivePropertySlim<string>(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe);
         public Func<ProgressBarWithOutputViewModel, Task> Action { get; set; }
+        public ReactiveCommand<RoutedEventArgs> ScrollCommand { get; } = new();
 
         public void Dispose()
         {
