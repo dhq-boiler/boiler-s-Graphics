@@ -2031,7 +2031,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                 {
                     vm.Current.Value++;
                     vm.Output.Value += Environment.NewLine;
-                    vm.Output.Value += $"ロード：{nameof(this.CanvasFillBrush)}={this.CanvasFillBrush.Value}";
+                    vm.Output.Value += $"{Resources.String_Loaded}：{nameof(this.CanvasFillBrush)}={this.CanvasFillBrush.Value}";
                 }, DispatcherPriority.ApplicationIdle);
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "EnablePointSnap.Value",
                             bool.Parse(configuration.Element("EnablePointSnap").Value));
@@ -2039,7 +2039,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                 {
                     vm.Current.Value++;
                     vm.Output.Value += Environment.NewLine;
-                    vm.Output.Value += $"ロード：{nameof(this.EnablePointSnap)}={this.EnablePointSnap.Value}";
+                    vm.Output.Value += $"{Resources.String_Loaded}：{nameof(this.EnablePointSnap)}={this.EnablePointSnap.Value}";
                 }, DispatcherPriority.ApplicationIdle);
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(mainwindowViewModel, "SnapPower.Value",
                             double.Parse(configuration.Element("SnapPower").Value));
@@ -2047,7 +2047,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                 {
                     vm.Current.Value++;
                     vm.Output.Value += Environment.NewLine;
-                    vm.Output.Value += $"ロード：{nameof(mainwindowViewModel.SnapPower)}={mainwindowViewModel.SnapPower.Value}";
+                    vm.Output.Value += $"{Resources.String_Loaded}：{nameof(mainwindowViewModel.SnapPower)}={mainwindowViewModel.SnapPower.Value}";
                 }, DispatcherPriority.ApplicationIdle);
                 if (configuration.Element("ColorSpots") != null)
                 {
@@ -2059,7 +2059,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                     {
                         vm.Current.Value++;
                         vm.Output.Value += Environment.NewLine;
-                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot0)}={ColorSpots.Value.ColorSpot0}";
+                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot0)}={ColorSpots.Value.ColorSpot0}";
                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot1",
                                     WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot1").Nodes().First()
@@ -2068,7 +2068,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot1)}={ColorSpots.Value.ColorSpot1}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot1)}={ColorSpots.Value.ColorSpot1}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot2",
                                     WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot2").Nodes().First()
@@ -2077,7 +2077,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot2)}={ColorSpots.Value.ColorSpot2}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot2)}={ColorSpots.Value.ColorSpot2}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot3",
                                     WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot3").Nodes().First()
@@ -2086,7 +2086,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot3)}={ColorSpots.Value.ColorSpot3}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot3)}={ColorSpots.Value.ColorSpot3}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot4",
                                     WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot4").Nodes().First()
@@ -2095,7 +2095,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot4)}={ColorSpots.Value.ColorSpot4}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot4)}={ColorSpots.Value.ColorSpot4}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot5",
                                     WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot5").Nodes().First()
@@ -2104,7 +2104,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot5)}={ColorSpots.Value.ColorSpot5}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot5)}={ColorSpots.Value.ColorSpot5}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot6",
                                     WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot6").Nodes().First()
@@ -2113,7 +2113,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot6)}={ColorSpots.Value.ColorSpot6}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot6)}={ColorSpots.Value.ColorSpot6}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot7",
                                     WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot7").Nodes().First()
@@ -2122,7 +2122,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot7)}={ColorSpots.Value.ColorSpot7}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot7)}={ColorSpots.Value.ColorSpot7}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot8",
                                     WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot8").Nodes().First()
@@ -2131,7 +2131,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot8)}={ColorSpots.Value.ColorSpot8}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot8)}={ColorSpots.Value.ColorSpot8}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot9",
                                     WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot9").Nodes().First()
@@ -2140,7 +2140,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot9)}={ColorSpots.Value.ColorSpot9}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot9)}={ColorSpots.Value.ColorSpot9}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot10",
                                     WpfObjectSerializer.Deserialize(
@@ -2149,7 +2149,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot10)}={ColorSpots.Value.ColorSpot10}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot10)}={ColorSpots.Value.ColorSpot10}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot11",
                                     WpfObjectSerializer.Deserialize(
@@ -2158,7 +2158,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot11)}={ColorSpots.Value.ColorSpot11}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot11)}={ColorSpots.Value.ColorSpot11}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot12",
                                     WpfObjectSerializer.Deserialize(
@@ -2167,7 +2167,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot12)}={ColorSpots.Value.ColorSpot12}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot12)}={ColorSpots.Value.ColorSpot12}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot13",
                                     WpfObjectSerializer.Deserialize(
@@ -2176,7 +2176,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot13)}={ColorSpots.Value.ColorSpot13}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot13)}={ColorSpots.Value.ColorSpot13}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot14",
                                     WpfObjectSerializer.Deserialize(
@@ -2185,7 +2185,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot14)}={ColorSpots.Value.ColorSpot14}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot14)}={ColorSpots.Value.ColorSpot14}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot15",
                                     WpfObjectSerializer.Deserialize(
@@ -2194,7 +2194,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot15)}={ColorSpots.Value.ColorSpot15}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot15)}={ColorSpots.Value.ColorSpot15}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot16",
                                     WpfObjectSerializer.Deserialize(
@@ -2203,7 +2203,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot16)}={ColorSpots.Value.ColorSpot16}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot16)}={ColorSpots.Value.ColorSpot16}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot17",
                                     WpfObjectSerializer.Deserialize(
@@ -2212,7 +2212,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot17)}={ColorSpots.Value.ColorSpot17}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot17)}={ColorSpots.Value.ColorSpot17}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot18",
                                     WpfObjectSerializer.Deserialize(
@@ -2221,7 +2221,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot18)}={ColorSpots.Value.ColorSpot18}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot18)}={ColorSpots.Value.ColorSpot18}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot19",
                                     WpfObjectSerializer.Deserialize(
@@ -2230,7 +2230,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot19)}={ColorSpots.Value.ColorSpot19}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot19)}={ColorSpots.Value.ColorSpot19}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot20",
                                     WpfObjectSerializer.Deserialize(
@@ -2239,7 +2239,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot20)}={ColorSpots.Value.ColorSpot20}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot20)}={ColorSpots.Value.ColorSpot20}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot21",
                                     WpfObjectSerializer.Deserialize(
@@ -2248,7 +2248,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot21)}={ColorSpots.Value.ColorSpot21}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot21)}={ColorSpots.Value.ColorSpot21}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot22",
                                     WpfObjectSerializer.Deserialize(
@@ -2257,7 +2257,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot22)}={ColorSpots.Value.ColorSpot22}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot22)}={ColorSpots.Value.ColorSpot22}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot23",
                                     WpfObjectSerializer.Deserialize(
@@ -2266,7 +2266,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot23)}={ColorSpots.Value.ColorSpot23}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot23)}={ColorSpots.Value.ColorSpot23}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot24",
                                     WpfObjectSerializer.Deserialize(
@@ -2275,7 +2275,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot24)}={ColorSpots.Value.ColorSpot24}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot24)}={ColorSpots.Value.ColorSpot24}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot25",
                                     WpfObjectSerializer.Deserialize(
@@ -2284,7 +2284,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot25)}={ColorSpots.Value.ColorSpot25}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot25)}={ColorSpots.Value.ColorSpot25}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot26",
                                     WpfObjectSerializer.Deserialize(
@@ -2293,7 +2293,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot26)}={ColorSpots.Value.ColorSpot26}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot26)}={ColorSpots.Value.ColorSpot26}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot27",
                                     WpfObjectSerializer.Deserialize(
@@ -2302,7 +2302,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot27)}={ColorSpots.Value.ColorSpot27}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot27)}={ColorSpots.Value.ColorSpot27}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot28",
                                     WpfObjectSerializer.Deserialize(
@@ -2311,7 +2311,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot28)}={ColorSpots.Value.ColorSpot28}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot28)}={ColorSpots.Value.ColorSpot28}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot29",
                                     WpfObjectSerializer.Deserialize(
@@ -2320,7 +2320,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot29)}={ColorSpots.Value.ColorSpot29}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot29)}={ColorSpots.Value.ColorSpot29}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot30",
                                     WpfObjectSerializer.Deserialize(
@@ -2329,7 +2329,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot30)}={ColorSpots.Value.ColorSpot30}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot30)}={ColorSpots.Value.ColorSpot30}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot31",
                                     WpfObjectSerializer.Deserialize(
@@ -2338,7 +2338,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot31)}={ColorSpots.Value.ColorSpot31}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot31)}={ColorSpots.Value.ColorSpot31}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot32",
                                     WpfObjectSerializer.Deserialize(
@@ -2347,7 +2347,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot32)}={ColorSpots.Value.ColorSpot32}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot32)}={ColorSpots.Value.ColorSpot32}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot33",
                                     WpfObjectSerializer.Deserialize(
@@ -2356,7 +2356,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot33)}={ColorSpots.Value.ColorSpot33}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot33)}={ColorSpots.Value.ColorSpot33}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot34",
                                     WpfObjectSerializer.Deserialize(
@@ -2365,7 +2365,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot34)}={ColorSpots.Value.ColorSpot34}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot34)}={ColorSpots.Value.ColorSpot34}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot35",
                                     WpfObjectSerializer.Deserialize(
@@ -2374,7 +2374,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot35)}={ColorSpots.Value.ColorSpot35}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot35)}={ColorSpots.Value.ColorSpot35}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot36",
                                     WpfObjectSerializer.Deserialize(
@@ -2383,7 +2383,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot36)}={ColorSpots.Value.ColorSpot36}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot36)}={ColorSpots.Value.ColorSpot36}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot37",
                                     WpfObjectSerializer.Deserialize(
@@ -2392,7 +2392,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot37)}={ColorSpots.Value.ColorSpot37}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot37)}={ColorSpots.Value.ColorSpot37}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot38",
                                     WpfObjectSerializer.Deserialize(
@@ -2401,7 +2401,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot38)}={ColorSpots.Value.ColorSpot38}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot38)}={ColorSpots.Value.ColorSpot38}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot39",
                                     WpfObjectSerializer.Deserialize(
@@ -2410,7 +2410,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot39)}={ColorSpots.Value.ColorSpot39}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot39)}={ColorSpots.Value.ColorSpot39}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot40",
                                     WpfObjectSerializer.Deserialize(
@@ -2419,7 +2419,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot40)}={ColorSpots.Value.ColorSpot40}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot40)}={ColorSpots.Value.ColorSpot40}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot41",
                                     WpfObjectSerializer.Deserialize(
@@ -2428,7 +2428,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot41)}={ColorSpots.Value.ColorSpot41}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot41)}={ColorSpots.Value.ColorSpot41}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot42",
                                     WpfObjectSerializer.Deserialize(
@@ -2437,7 +2437,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot42)}={ColorSpots.Value.ColorSpot42}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot42)}={ColorSpots.Value.ColorSpot42}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot43",
                                     WpfObjectSerializer.Deserialize(
@@ -2446,7 +2446,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot43)}={ColorSpots.Value.ColorSpot43}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot43)}={ColorSpots.Value.ColorSpot43}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot44",
                                     WpfObjectSerializer.Deserialize(
@@ -2455,7 +2455,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot44)}={ColorSpots.Value.ColorSpot44}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot44)}={ColorSpots.Value.ColorSpot44}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot45",
                                     WpfObjectSerializer.Deserialize(
@@ -2464,7 +2464,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot45)}={ColorSpots.Value.ColorSpot45}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot45)}={ColorSpots.Value.ColorSpot45}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot46",
                                     WpfObjectSerializer.Deserialize(
@@ -2473,7 +2473,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot46)}={ColorSpots.Value.ColorSpot46}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot46)}={ColorSpots.Value.ColorSpot46}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot47",
                                     WpfObjectSerializer.Deserialize(
@@ -2482,7 +2482,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot47)}={ColorSpots.Value.ColorSpot47}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot47)}={ColorSpots.Value.ColorSpot47}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot48",
                                     WpfObjectSerializer.Deserialize(
@@ -2491,7 +2491,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot48)}={ColorSpots.Value.ColorSpot48}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot48)}={ColorSpots.Value.ColorSpot48}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot49",
                                     WpfObjectSerializer.Deserialize(
@@ -2500,7 +2500,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot49)}={ColorSpots.Value.ColorSpot49}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot49)}={ColorSpots.Value.ColorSpot49}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot50",
                                     WpfObjectSerializer.Deserialize(
@@ -2509,7 +2509,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot50)}={ColorSpots.Value.ColorSpot50}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot50)}={ColorSpots.Value.ColorSpot50}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot51",
                                     WpfObjectSerializer.Deserialize(
@@ -2518,7 +2518,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot51)}={ColorSpots.Value.ColorSpot51}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot51)}={ColorSpots.Value.ColorSpot51}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot52",
                                     WpfObjectSerializer.Deserialize(
@@ -2527,7 +2527,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot52)}={ColorSpots.Value.ColorSpot52}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot52)}={ColorSpots.Value.ColorSpot52}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot53",
                                     WpfObjectSerializer.Deserialize(
@@ -2536,7 +2536,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot53)}={ColorSpots.Value.ColorSpot53}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot53)}={ColorSpots.Value.ColorSpot53}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot54",
                                     WpfObjectSerializer.Deserialize(
@@ -2545,7 +2545,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot54)}={ColorSpots.Value.ColorSpot54}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot54)}={ColorSpots.Value.ColorSpot54}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot55",
                                     WpfObjectSerializer.Deserialize(
@@ -2554,7 +2554,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot55)}={ColorSpots.Value.ColorSpot55}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot55)}={ColorSpots.Value.ColorSpot55}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot56",
                                     WpfObjectSerializer.Deserialize(
@@ -2563,7 +2563,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot56)}={ColorSpots.Value.ColorSpot56}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot56)}={ColorSpots.Value.ColorSpot56}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot57",
                                     WpfObjectSerializer.Deserialize(
@@ -2572,7 +2572,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot57)}={ColorSpots.Value.ColorSpot57}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot57)}={ColorSpots.Value.ColorSpot57}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot58",
                                     WpfObjectSerializer.Deserialize(
@@ -2581,7 +2581,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot58)}={ColorSpots.Value.ColorSpot58}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot58)}={ColorSpots.Value.ColorSpot58}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot59",
                                     WpfObjectSerializer.Deserialize(
@@ -2590,7 +2590,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot59)}={ColorSpots.Value.ColorSpot59}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot59)}={ColorSpots.Value.ColorSpot59}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot60",
                                     WpfObjectSerializer.Deserialize(
@@ -2599,7 +2599,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot60)}={ColorSpots.Value.ColorSpot60}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot60)}={ColorSpots.Value.ColorSpot60}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot61",
                                     WpfObjectSerializer.Deserialize(
@@ -2608,7 +2608,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot61)}={ColorSpots.Value.ColorSpot61}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot61)}={ColorSpots.Value.ColorSpot61}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot62",
                                     WpfObjectSerializer.Deserialize(
@@ -2617,7 +2617,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot62)}={ColorSpots.Value.ColorSpot62}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot62)}={ColorSpots.Value.ColorSpot62}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot63",
                                     WpfObjectSerializer.Deserialize(
@@ -2626,7 +2626,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot63)}={ColorSpots.Value.ColorSpot63}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot63)}={ColorSpots.Value.ColorSpot63}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot64",
                                     WpfObjectSerializer.Deserialize(
@@ -2635,7 +2635,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot64)}={ColorSpots.Value.ColorSpot64}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot64)}={ColorSpots.Value.ColorSpot64}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot65",
                                     WpfObjectSerializer.Deserialize(
@@ -2644,7 +2644,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot65)}={ColorSpots.Value.ColorSpot65}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot65)}={ColorSpots.Value.ColorSpot65}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot66",
                                     WpfObjectSerializer.Deserialize(
@@ -2653,7 +2653,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot66)}={ColorSpots.Value.ColorSpot66}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot66)}={ColorSpots.Value.ColorSpot66}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot67",
                                     WpfObjectSerializer.Deserialize(
@@ -2662,7 +2662,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot67)}={ColorSpots.Value.ColorSpot67}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot67)}={ColorSpots.Value.ColorSpot67}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot68",
                                     WpfObjectSerializer.Deserialize(
@@ -2671,7 +2671,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot68)}={ColorSpots.Value.ColorSpot68}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot68)}={ColorSpots.Value.ColorSpot68}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot69",
                                     WpfObjectSerializer.Deserialize(
@@ -2680,7 +2680,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot69)}={ColorSpots.Value.ColorSpot69}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot69)}={ColorSpots.Value.ColorSpot69}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot70",
                                     WpfObjectSerializer.Deserialize(
@@ -2689,7 +2689,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot70)}={ColorSpots.Value.ColorSpot70}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot70)}={ColorSpots.Value.ColorSpot70}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot71",
                                     WpfObjectSerializer.Deserialize(
@@ -2698,7 +2698,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot71)}={ColorSpots.Value.ColorSpot71}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot71)}={ColorSpots.Value.ColorSpot71}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot72",
                                     WpfObjectSerializer.Deserialize(
@@ -2707,7 +2707,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot72)}={ColorSpots.Value.ColorSpot72}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot72)}={ColorSpots.Value.ColorSpot72}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot73",
                                     WpfObjectSerializer.Deserialize(
@@ -2716,7 +2716,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot73)}={ColorSpots.Value.ColorSpot73}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot73)}={ColorSpots.Value.ColorSpot73}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot74",
                                     WpfObjectSerializer.Deserialize(
@@ -2725,7 +2725,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot74)}={ColorSpots.Value.ColorSpot74}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot74)}={ColorSpots.Value.ColorSpot74}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot75",
                                     WpfObjectSerializer.Deserialize(
@@ -2734,7 +2734,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot75)}={ColorSpots.Value.ColorSpot75}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot75)}={ColorSpots.Value.ColorSpot75}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot76",
                                     WpfObjectSerializer.Deserialize(
@@ -2743,7 +2743,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot76)}={ColorSpots.Value.ColorSpot76}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot76)}={ColorSpots.Value.ColorSpot76}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot77",
                                     WpfObjectSerializer.Deserialize(
@@ -2752,7 +2752,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot77)}={ColorSpots.Value.ColorSpot77}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot77)}={ColorSpots.Value.ColorSpot77}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot78",
                                     WpfObjectSerializer.Deserialize(
@@ -2761,7 +2761,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot78)}={ColorSpots.Value.ColorSpot78}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot78)}={ColorSpots.Value.ColorSpot78}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot79",
                                     WpfObjectSerializer.Deserialize(
@@ -2770,7 +2770,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot79)}={ColorSpots.Value.ColorSpot79}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot79)}={ColorSpots.Value.ColorSpot79}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot80",
                                     WpfObjectSerializer.Deserialize(
@@ -2779,7 +2779,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot80)}={ColorSpots.Value.ColorSpot80}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot80)}={ColorSpots.Value.ColorSpot80}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot81",
                                     WpfObjectSerializer.Deserialize(
@@ -2788,7 +2788,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot81)}={ColorSpots.Value.ColorSpot81}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot81)}={ColorSpots.Value.ColorSpot81}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot82",
                                     WpfObjectSerializer.Deserialize(
@@ -2797,7 +2797,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot82)}={ColorSpots.Value.ColorSpot82}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot82)}={ColorSpots.Value.ColorSpot82}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot83",
                                     WpfObjectSerializer.Deserialize(
@@ -2806,7 +2806,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot83)}={ColorSpots.Value.ColorSpot83}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot83)}={ColorSpots.Value.ColorSpot83}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot84",
                                     WpfObjectSerializer.Deserialize(
@@ -2815,7 +2815,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot84)}={ColorSpots.Value.ColorSpot84}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot84)}={ColorSpots.Value.ColorSpot84}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot85",
                                     WpfObjectSerializer.Deserialize(
@@ -2824,7 +2824,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot85)}={ColorSpots.Value.ColorSpot85}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot85)}={ColorSpots.Value.ColorSpot85}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot86",
                                     WpfObjectSerializer.Deserialize(
@@ -2833,7 +2833,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot86)}={ColorSpots.Value.ColorSpot86}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot86)}={ColorSpots.Value.ColorSpot86}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot87",
                                     WpfObjectSerializer.Deserialize(
@@ -2842,7 +2842,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot87)}={ColorSpots.Value.ColorSpot87}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot87)}={ColorSpots.Value.ColorSpot87}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot88",
                                     WpfObjectSerializer.Deserialize(
@@ -2851,7 +2851,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot88)}={ColorSpots.Value.ColorSpot88}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot88)}={ColorSpots.Value.ColorSpot88}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot89",
                                     WpfObjectSerializer.Deserialize(
@@ -2860,7 +2860,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot89)}={ColorSpots.Value.ColorSpot89}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot89)}={ColorSpots.Value.ColorSpot89}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot90",
                                     WpfObjectSerializer.Deserialize(
@@ -2869,7 +2869,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot90)}={ColorSpots.Value.ColorSpot90}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot90)}={ColorSpots.Value.ColorSpot90}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot91",
                                     WpfObjectSerializer.Deserialize(
@@ -2878,7 +2878,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot91)}={ColorSpots.Value.ColorSpot91}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot91)}={ColorSpots.Value.ColorSpot91}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot92",
                                     WpfObjectSerializer.Deserialize(
@@ -2887,7 +2887,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot92)}={ColorSpots.Value.ColorSpot92}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot92)}={ColorSpots.Value.ColorSpot92}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot93",
                                     WpfObjectSerializer.Deserialize(
@@ -2896,7 +2896,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot93)}={ColorSpots.Value.ColorSpot93}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot93)}={ColorSpots.Value.ColorSpot93}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot94",
                                     WpfObjectSerializer.Deserialize(
@@ -2905,7 +2905,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot94)}={ColorSpots.Value.ColorSpot94}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot94)}={ColorSpots.Value.ColorSpot94}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot95",
                                     WpfObjectSerializer.Deserialize(
@@ -2914,7 +2914,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot95)}={ColorSpots.Value.ColorSpot95}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot95)}={ColorSpots.Value.ColorSpot95}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot96",
                                     WpfObjectSerializer.Deserialize(
@@ -2923,7 +2923,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot96)}={ColorSpots.Value.ColorSpot96}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot96)}={ColorSpots.Value.ColorSpot96}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot97",
                                     WpfObjectSerializer.Deserialize(
@@ -2932,7 +2932,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     {
                                         vm.Current.Value++;
                                         vm.Output.Value += Environment.NewLine;
-                                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot97)}={ColorSpots.Value.ColorSpot97}";
+                                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot97)}={ColorSpots.Value.ColorSpot97}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot98",
                                     WpfObjectSerializer.Deserialize(
@@ -2941,7 +2941,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                                 {
                                                     vm.Current.Value++;
                                                     vm.Output.Value += Environment.NewLine;
-                                                    vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot98)}={ColorSpots.Value.ColorSpot98}";
+                                                    vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot98)}={ColorSpots.Value.ColorSpot98}";
                                                 }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot99",
                         WpfObjectSerializer.Deserialize(
@@ -2950,7 +2950,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                     {
                         vm.Current.Value++;
                         vm.Output.Value += Environment.NewLine;
-                        vm.Output.Value += $"ロード：{nameof(ColorSpots.Value.ColorSpot99)}={ColorSpots.Value.ColorSpot99}";
+                        vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot99)}={ColorSpots.Value.ColorSpot99}";
                     }, DispatcherPriority.ApplicationIdle);
                 }
 
@@ -2958,13 +2958,13 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                 {
                     vm.Current.Value++;
                     vm.Output.Value += Environment.NewLine;
-                    vm.Output.Value += $"キャンバスのセットアップ";
+                    vm.Output.Value += $"{Resources.String_SetupCanvas}...";
                 }, DispatcherPriority.ApplicationIdle);
                 InitialSetting(mainwindowViewModel, false, false, isPreview);
                 App.Current.Dispatcher.Invoke(() =>
                 {
                     vm.Current.Value++;
-                    vm.Output.Value += $"完了";
+                    vm.Output.Value += $"{Resources.String_Completed}";
                 }, DispatcherPriority.ApplicationIdle);
 
                 if (configuration.Element("Left") != null)

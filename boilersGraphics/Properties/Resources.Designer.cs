@@ -1690,6 +1690,15 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Completed に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_Completed {
+            get {
+                return ResourceManager.GetString("String_Completed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Deform に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string String_Deform {
@@ -1812,6 +1821,15 @@ namespace boilersGraphics.Properties {
         public static string String_Interval {
             get {
                 return ResourceManager.GetString("String_Interval", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Loaded に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_Loaded {
+            get {
+                return ResourceManager.GetString("String_Loaded", resourceCulture);
             }
         }
         
@@ -2010,6 +2028,15 @@ namespace boilersGraphics.Properties {
         public static string String_SetInterval {
             get {
                 return ResourceManager.GetString("String_SetInterval", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Setup canvas に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_SetupCanvas {
+            get {
+                return ResourceManager.GetString("String_SetupCanvas", resourceCulture);
             }
         }
         

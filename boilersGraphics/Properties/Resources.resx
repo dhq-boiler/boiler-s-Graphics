@@ -660,6 +660,9 @@
   <data name="String_CanvasWidth" xml:space="preserve">
     <value>Canvas Width</value>
   </data>
+  <data name="String_Completed" xml:space="preserve">
+    <value>Completed</value>
+  </data>
   <data name="String_Deform" xml:space="preserve">
     <value>Deform</value>
   </data>
@@ -701,6 +704,9 @@
   </data>
   <data name="String_Interval" xml:space="preserve">
     <value>Interval:</value>
+  </data>
+  <data name="String_Loaded" xml:space="preserve">
+    <value>Loaded</value>
   </data>
   <data name="String_Move" xml:space="preserve">
     <value>Move</value>
@@ -767,6 +773,9 @@
   </data>
   <data name="String_SetInterval" xml:space="preserve">
     <value>Set the interval</value>
+  </data>
+  <data name="String_SetupCanvas" xml:space="preserve">
+    <value>Setup canvas</value>
   </data>
   <data name="String_Slice" xml:space="preserve">
     <value>Slice</value>
