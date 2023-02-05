@@ -660,6 +660,9 @@
   <data name="String_CanvasWidth" xml:space="preserve">
     <value>キャンパスの幅</value>
   </data>
+  <data name="String_Completed" xml:space="preserve">
+    <value>完了</value>
+  </data>
   <data name="String_Deform" xml:space="preserve">
     <value>変形</value>
   </data>
@@ -701,6 +704,9 @@
   </data>
   <data name="String_Interval" xml:space="preserve">
     <value>インターバル：</value>
+  </data>
+  <data name="String_Loaded" xml:space="preserve">
+    <value>ロード</value>
   </data>
   <data name="String_Move" xml:space="preserve">
     <value>移動</value>
@@ -767,6 +773,9 @@
   </data>
   <data name="String_SetInterval" xml:space="preserve">
     <value>インターバルを設定する</value>
+  </data>
+  <data name="String_SetupCanvas" xml:space="preserve">
+    <value>キャンバスのセットアップ</value>
   </data>
   <data name="String_Slice" xml:space="preserve">
     <value>スライス</value>

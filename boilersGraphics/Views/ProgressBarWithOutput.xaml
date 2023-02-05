@@ -1,0 +1,41 @@
+﻿<UserControl x:Class="boilersGraphics.Views.ProgressBarWithOutput"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:boilersGraphics.Views"
+             xmlns:helper="clr-namespace:boilersGraphics.Helpers"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:viewmodels="clr-namespace:boilersGraphics.ViewModels"
+             xmlns:prism="http://prismlibrary.com/"
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             d:DataContext="{d:DesignInstance Type=viewmodels:ProgressBarWithOutputViewModel}"
+             Background="#0E0E0E"
+             mc:Ignorable="d" >
+    <prism:Dialog.WindowStyle>
+        <Style TargetType="Window">
+            <Setter Property="SizeToContent" Value="WidthAndHeight"></Setter>
+        </Style>
+    </prism:Dialog.WindowStyle>
+    <DockPanel Width="640"
+               Height="480">
+        <ProgressBar DockPanel.Dock="Top"
+                     Width="640"
+                     Margin="10"
+                     Foreground="#0067C0"
+                     Background="#1E1E1E"
+                     Maximum="{Binding Maximum.Value, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                     Value="{Binding Current.Value, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"></ProgressBar>
+        <ScrollViewer x:Name="ProgressBarWithOutput_ScrollViewer" VerticalScrollBarVisibility="Auto">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="ScrollChanged">
+                    <helper:EventToCommand Command="{Binding ScrollCommand}" PassEventArgsToCommand="True"></helper:EventToCommand>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+            <TextBlock x:Name="Output"
+                       Margin="10"
+                       Foreground="White"
+                       Text="{Binding Output.Value, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"></TextBlock>
+        </ScrollViewer>
+    </DockPanel>
+</UserControl>

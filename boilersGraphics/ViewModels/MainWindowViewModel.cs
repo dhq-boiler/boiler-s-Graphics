@@ -33,6 +33,7 @@ using Reactive.Bindings.Extensions;
 using REghZyFramework.Themes;
 using TsOperationHistory;
 using TsOperationHistory.Extensions;
+using Unity;
 using Path = System.IO.Path;
 using Statistics = boilersGraphics.Models.Statistics;
 using Version = boilersGraphics.Views.Version;
@@ -46,6 +47,9 @@ public class MainWindowViewModel : BindableBase, IDisposable
     private readonly DateTime _StartUpTime;
     private ToolBarViewModel _ToolBarViewModel;
     private readonly IDialogService dlgService;
+
+    [Dependency]
+    public ProgressBarWithOutputViewModel ProgressBarWithOutputViewModel { get; set; }
 
     public MainWindowViewModel()
     {
