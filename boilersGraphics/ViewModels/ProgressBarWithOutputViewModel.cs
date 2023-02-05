@@ -1,4 +1,5 @@
 ﻿using boilersGraphics.Extensions;
+using boilersGraphics.Properties;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
 using Reactive.Bindings;
@@ -62,7 +63,7 @@ namespace boilersGraphics.ViewModels
             });
         }
 
-        public string Title => "プログレスバー";
+        public string Title => Resources.Title_NowLoading;
         public event Action<IDialogResult>? RequestClose;
 
         public ReactivePropertySlim<double> Maximum { get; } = new ReactivePropertySlim<double>(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe);

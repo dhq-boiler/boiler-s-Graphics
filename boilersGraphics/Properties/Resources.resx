@@ -807,6 +807,9 @@
   <data name="Title_Layers" xml:space="preserve">
     <value>Layers</value>
   </data>
+  <data name="Title_NowLoading" xml:space="preserve">
+    <value>Now loading</value>
+  </data>
   <data name="Title_Preferences" xml:space="preserve">
     <value>Preferences</value>
   </data>

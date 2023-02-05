@@ -2131,6 +2131,15 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Now loading に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Title_NowLoading {
+            get {
+                return ResourceManager.GetString("Title_NowLoading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Preferences に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Title_Preferences {
