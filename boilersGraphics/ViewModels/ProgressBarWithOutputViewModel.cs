@@ -1,6 +1,8 @@
-﻿using Prism.Mvvm;
+﻿using boilersGraphics.Extensions;
+using Prism.Mvvm;
 using Prism.Services.Dialogs;
 using Reactive.Bindings;
+using Reactive.Bindings.Extensions;
 using System;
 using System.Linq;
 using System.Reactive.Disposables;
@@ -8,8 +10,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
-using boilersGraphics.Views;
-using Reactive.Bindings.Extensions;
 
 namespace boilersGraphics.ViewModels
 {
@@ -17,16 +17,22 @@ namespace boilersGraphics.ViewModels
     {
         private Guid _id = Guid.NewGuid();
         private CompositeDisposable compositeDisposable = new();
+        private ScrollViewer _scrollViewer;
         public ProgressBarWithOutputViewModel()
         {
             ScrollCommand.Subscribe(args =>
             {
-                var windows = new Window[App.Current.Windows.Count];
-                App.Current.Windows.CopyTo(windows, 0);
-                var dialog = windows.OfType<Prism.Services.Dialogs.DialogWindow>().First();
-                var progress = dialog.Content as ProgressBarWithOutput;
-                var scrollViewer = progress.FindName("ScrollViewer") as ScrollViewer;
-                scrollViewer.ScrollToBottom();
+                if (_scrollViewer is null)
+                {
+                    var windows = new Window[App.Current.Windows.Count];
+                    App.Current.Windows.CopyTo(windows, 0);
+                    _scrollViewer = windows.OfType<Prism.Services.Dialogs.DialogWindow>()
+                    .Select(x =>
+                    {
+                        return x.GetVisualChild<ScrollViewer>();
+                    }).FirstOrDefault(x => x.Name == "ProgressBarWithOutput_ScrollViewer");
+                }
+                _scrollViewer?.ScrollToBottom();
             }).AddTo(compositeDisposable);
         }
 

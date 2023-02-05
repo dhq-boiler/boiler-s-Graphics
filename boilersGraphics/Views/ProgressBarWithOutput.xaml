@@ -26,7 +26,7 @@
                      Background="#1E1E1E"
                      Maximum="{Binding Maximum.Value, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                      Value="{Binding Current.Value, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"></ProgressBar>
-        <ScrollViewer x:Name="ScrollViewer" VerticalScrollBarVisibility="Auto">
+        <ScrollViewer x:Name="ProgressBarWithOutput_ScrollViewer" VerticalScrollBarVisibility="Auto">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="ScrollChanged">
                     <helper:EventToCommand Command="{Binding ScrollCommand}" PassEventArgsToCommand="True"></helper:EventToCommand>
