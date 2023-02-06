@@ -1352,4 +1352,11 @@ public static class GeometryCreator
         var left = array.First();
         return array.Skip(1).Prepend(left).Max();
     }
+
+    public static PathGeometry Rotate(PathGeometry pathGeometry, double angle, Point center)
+    {
+        var clone = pathGeometry.Clone();
+        clone.Transform = new RotateTransform(angle,  center.X, center.Y);
+        return clone;
+    }
 }

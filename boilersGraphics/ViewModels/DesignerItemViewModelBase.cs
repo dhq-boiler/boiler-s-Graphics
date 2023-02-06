@@ -307,7 +307,7 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
         {
             if (!flag) PathGeometryNoRotate.Value = CreateGeometry(flag);
 
-            if (RotationAngle.Value != 0) PathGeometryRotate.Value = CreateGeometry(RotationAngle.Value);
+            if (RotationAngle.Value != 0d) PathGeometryRotate.Value = GeometryCreator.Rotate(PathGeometryNoRotate.Value, RotationAngle.Value, CenterPoint.Value);
         }
 
         if (UpdatingStrategy.Value == PathGeometryUpdatingStrategy.Initial)
