@@ -2,6 +2,7 @@
 using boilersGraphics.Extensions;
 using boilersGraphics.ViewModels;
 using NLog;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,7 +24,7 @@ public class Renderer
     }
 
     public RenderTargetBitmap Render(Rect? sliceRect, DesignerCanvas designerCanvas,
-        DiagramViewModel diagramViewModel, BackgroundViewModel backgroundItem, int maxZIndex = int.MaxValue, double rotateAngle = 0d)
+        DiagramViewModel diagramViewModel, BackgroundViewModel backgroundItem, Point center, int maxZIndex = int.MaxValue, double rotateAngle = 0d)
     {
         var size = GetRenderSize(sliceRect, diagramViewModel);
 
@@ -41,12 +42,12 @@ public class Renderer
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                renderedCount = RenderInternal(sliceRect, designerCanvas, diagramViewModel, backgroundItem, maxZIndex, renderedCount, rtb, rotateAngle);
+                renderedCount = RenderInternal(sliceRect, designerCanvas, diagramViewModel, backgroundItem, maxZIndex, renderedCount, rtb, center, rotateAngle);
             });
         }
         else
         {
-            renderedCount = RenderInternal(sliceRect, designerCanvas, diagramViewModel, backgroundItem, maxZIndex, renderedCount, rtb, rotateAngle);
+            renderedCount = RenderInternal(sliceRect, designerCanvas, diagramViewModel, backgroundItem, maxZIndex, renderedCount, rtb, center, rotateAngle);
         }
 
         if (renderedCount == 0)
@@ -58,7 +59,7 @@ public class Renderer
     }
 
     private int RenderInternal(Rect? sliceRect, DesignerCanvas designerCanvas, DiagramViewModel diagramViewModel,
-        BackgroundViewModel backgroundItem, int maxZIndex, int renderedCount, RenderTargetBitmap rtb, double rotateAngle = 0d)
+        BackgroundViewModel backgroundItem, int maxZIndex, int renderedCount, RenderTargetBitmap rtb, Point center, double rotateAngle = 0d)
     {
         var visual = new DrawingVisual();
         using (var context = visual.RenderOpen())
@@ -71,7 +72,7 @@ public class Renderer
             //前景を描画
             renderedCount += RenderForeground(sliceRect, diagramViewModel, designerCanvas, context,
                 backgroundItem,
-                allViews, maxZIndex, rotateAngle);
+                allViews, maxZIndex, center, rotateAngle);
         }
 
         rtb.Render(visual);
@@ -92,7 +93,7 @@ public class Renderer
 
     private int RenderForeground(Rect? sliceRect, DiagramViewModel diagramViewModel,
         DesignerCanvas designerCanvas, DrawingContext context, BackgroundViewModel background,
-        List<FrameworkElement> allViews, int maxZIndex, double rotateAngle = 0d)
+        List<FrameworkElement> allViews, int maxZIndex, Point center, double rotateAngle = 0d)
     {
         var renderedCount = 0;
         var except = new SelectableDesignerItemViewModelBase[] { background }.Where(x => x is not null);
@@ -205,14 +206,21 @@ public class Renderer
                         rect.Y -= background.Top.Value;
                     }
 
-                    //context.PushTransform(new RotateTransform(designerItem.RotationAngle.Value,
-                    //    designerItem.CenterX.Value,
-                    //    designerItem.CenterY.Value));
-                    //context.DrawRectangle(brush, null, rect);
-                    //context.Pop();
-                    context.PushTransform(new RotateTransform(rotateAngle,
-                        rect.Left + rect.Width / 2,
-                        rect.Top + rect.Height / 2));
+
+                    var a = Math.Sqrt(Math.Pow(rect.Left, 2) + Math.Pow(rect.Top, 2));
+                    //context.PushTransform(new TranslateTransform((center.X - rect.Width / 2) * -1, (center.Y - rect.Height / 2) * -1));
+                    //context.PushTransform(new RotateTransform(rotateAngle, center.X, center.Y));
+                    context.PushTransform(new TranslateTransform((center.X - rect.Width / 2) * -1, (center.Y - rect.Height / 2) * -1));
+                    //context.PushTransform(new RotateTransform(rotateAngle, center.X + rect.Left, center.Y + rect.Top));
+                    var invert = item.Matrix.Value;
+                    invert.Invert();
+                    context.PushTransform(new MatrixTransform(invert));
+
+                    var θ = rotateAngle * Math.PI / 180d;
+                    var θ45 = (rotateAngle - 45) * Math.PI / 180d;
+
+                    var b = Math.Sqrt(Math.Pow((center.X - rect.Width / 2), 2) + Math.Pow((center.Y - rect.Height / 2), 2));
+
                     context.DrawRectangle(brush, null, rect);
                     context.Pop();
                     renderedCount++;
