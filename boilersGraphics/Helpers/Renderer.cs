@@ -23,7 +23,7 @@ public class Renderer
     }
 
     public RenderTargetBitmap Render(Rect? sliceRect, DesignerCanvas designerCanvas,
-        DiagramViewModel diagramViewModel, BackgroundViewModel backgroundItem, int maxZIndex = int.MaxValue)
+        DiagramViewModel diagramViewModel, BackgroundViewModel backgroundItem, int maxZIndex = int.MaxValue, double rotateAngle = 0d)
     {
         var size = GetRenderSize(sliceRect, diagramViewModel);
 
@@ -41,12 +41,12 @@ public class Renderer
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                renderedCount = RenderInternal(sliceRect, designerCanvas, diagramViewModel, backgroundItem, maxZIndex, renderedCount, rtb);
+                renderedCount = RenderInternal(sliceRect, designerCanvas, diagramViewModel, backgroundItem, maxZIndex, renderedCount, rtb, rotateAngle);
             });
         }
         else
         {
-            renderedCount = RenderInternal(sliceRect, designerCanvas, diagramViewModel, backgroundItem, maxZIndex, renderedCount, rtb);
+            renderedCount = RenderInternal(sliceRect, designerCanvas, diagramViewModel, backgroundItem, maxZIndex, renderedCount, rtb, rotateAngle);
         }
 
         if (renderedCount == 0)
@@ -58,7 +58,7 @@ public class Renderer
     }
 
     private int RenderInternal(Rect? sliceRect, DesignerCanvas designerCanvas, DiagramViewModel diagramViewModel,
-        BackgroundViewModel backgroundItem, int maxZIndex, int renderedCount, RenderTargetBitmap rtb)
+        BackgroundViewModel backgroundItem, int maxZIndex, int renderedCount, RenderTargetBitmap rtb, double rotateAngle = 0d)
     {
         var visual = new DrawingVisual();
         using (var context = visual.RenderOpen())
@@ -66,12 +66,12 @@ public class Renderer
             var allViews = designerCanvas.EnumVisualChildren<FrameworkElement>()
                 .Where(x => x.DataContext is not null).ToList();
             //背景を描画
-            if (RenderBackgroundViewModel(sliceRect, designerCanvas, context, backgroundItem, allViews))
+            if (RenderBackgroundViewModel(sliceRect, designerCanvas, context, backgroundItem, allViews, rotateAngle))
                 renderedCount++;
             //前景を描画
             renderedCount += RenderForeground(sliceRect, diagramViewModel, designerCanvas, context,
                 backgroundItem,
-                allViews, maxZIndex);
+                allViews, maxZIndex, rotateAngle);
         }
 
         rtb.Render(visual);
@@ -92,7 +92,7 @@ public class Renderer
 
     private int RenderForeground(Rect? sliceRect, DiagramViewModel diagramViewModel,
         DesignerCanvas designerCanvas, DrawingContext context, BackgroundViewModel background,
-        List<FrameworkElement> allViews, int maxZIndex)
+        List<FrameworkElement> allViews, int maxZIndex, double rotateAngle = 0d)
     {
         var renderedCount = 0;
         var except = new SelectableDesignerItemViewModelBase[] { background }.Where(x => x is not null);
@@ -205,9 +205,14 @@ public class Renderer
                         rect.Y -= background.Top.Value;
                     }
 
-                    context.PushTransform(new RotateTransform(designerItem.RotationAngle.Value,
-                        designerItem.CenterX.Value,
-                        designerItem.CenterY.Value));
+                    //context.PushTransform(new RotateTransform(designerItem.RotationAngle.Value,
+                    //    designerItem.CenterX.Value,
+                    //    designerItem.CenterY.Value));
+                    //context.DrawRectangle(brush, null, rect);
+                    //context.Pop();
+                    context.PushTransform(new RotateTransform(rotateAngle,
+                        rect.Left + rect.Width / 2,
+                        rect.Top + rect.Height / 2));
                     context.DrawRectangle(brush, null, rect);
                     context.Pop();
                     renderedCount++;
@@ -249,7 +254,7 @@ public class Renderer
     }
     
     private bool RenderBackgroundViewModel(Rect? sliceRect, DesignerCanvas designerCanvas,
-        DrawingContext context, BackgroundViewModel background, List<FrameworkElement> allViews)
+        DrawingContext context, BackgroundViewModel background, List<FrameworkElement> allViews, double rotateAngle = 0d)
     {
         var view = default(FrameworkElement);
         if (!boilersGraphics.App.IsTest)
@@ -298,7 +303,11 @@ public class Renderer
             rect.Y = 0;
         }
 
+        context.PushTransform(new RotateTransform(rotateAngle,
+            rect.Left + rect.Width / 2,
+            rect.Top + rect.Height / 2));
         context.DrawRectangle(brush, null, rect);
+        context.Pop();
 
         return true;
     }

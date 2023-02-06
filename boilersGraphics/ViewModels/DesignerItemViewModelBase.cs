@@ -169,10 +169,14 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
             .AddTo(_CompositeDisposable);
         RotationAngle
             .Zip(RotationAngle.Skip(1), (Old, New) => new { OldItem = Old, NewItem = New })
-            .Subscribe(x =>
+            .Subscribe(async x =>
             {
                 UpdateTransform(nameof(RotationAngle), x.OldItem, x.NewItem);
                 UpdateMatrix(x.OldItem, x.NewItem);
+                if (RenderingEnabled.Value)
+                {
+                    await OnRectChanged(new Rect(Left.Value, Top.Value, Width.Value, Height.Value));
+                }
             })
             .AddTo(_CompositeDisposable);
         ZIndex
