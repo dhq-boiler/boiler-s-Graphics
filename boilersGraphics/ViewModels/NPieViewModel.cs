@@ -61,7 +61,7 @@ public class NPieViewModel : DesignerItemViewModelBase
     private void Init()
     {
         ShowConnectors = false;
-        EnablePathGeometryUpdate.Value = true;
+        UpdatingStrategy.Value = PathGeometryUpdatingStrategy.Initial;
         MouseDoubleClickCommand.Subscribe(x => { OpenPropertyDialog(); })
             .AddTo(_CompositeDisposable);
     }
@@ -77,7 +77,7 @@ public class NPieViewModel : DesignerItemViewModelBase
     public override void UpdatePathGeometryIfEnable(string propertyName, object oldValue, object newValue,
         bool flag = false)
     {
-        if (EnablePathGeometryUpdate.Value)
+        if (UpdatingStrategy.Value == PathGeometryUpdatingStrategy.Initial)
         {
             if (!flag)
                 if (Left.Value != 0 && Top.Value != 0 && Width.Value != 0 && Height.Value != 0)

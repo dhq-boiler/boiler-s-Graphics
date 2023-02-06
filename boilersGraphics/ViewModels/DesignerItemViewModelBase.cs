@@ -93,6 +93,8 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
 
     public ReactiveProperty<Point> CenterPoint { get; private set; }
 
+    public ReactivePropertySlim<Thickness> Margin { get; } = new();
+
     public ReadOnlyReactivePropertySlim<Thickness> MarginLeftTop { get; private set; }
     public ReadOnlyReactivePropertySlim<Thickness> MarginLeftBottom { get; private set; }
     public ReadOnlyReactivePropertySlim<Thickness> MarginRightTop { get; private set; }
@@ -101,7 +103,6 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
     public ReadOnlyReactivePropertySlim<Thickness> MarginTop { get; private set; }
     public ReadOnlyReactivePropertySlim<Thickness> MarginRight { get; private set; }
     public ReadOnlyReactivePropertySlim<Thickness> MarginBottom { get; private set; }
-
     public ReactivePropertySlim<TransformNotification> TransformNortification { get; } = new(
         mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe | ReactivePropertyMode.DistinctUntilChanged);
 
@@ -207,9 +208,9 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
 
         Matrix.Value = new Matrix();
 
-        EnablePathGeometryUpdate.Where(isEnable => isEnable).Subscribe(isEnable =>
+        UpdatingStrategy.Where(x => x == PathGeometryUpdatingStrategy.Initial).Subscribe(x =>
         {
-            UpdatePathGeometryIfEnable(nameof(EnablePathGeometryUpdate), false, true);
+            UpdatePathGeometryIfEnable(nameof(UpdatingStrategy), PathGeometryUpdatingStrategy.Unknown, PathGeometryUpdatingStrategy.Initial);
         }).AddTo(_CompositeDisposable);
 
         MarginLeftTop = ThumbSize.Select(size => new Thickness(-size, -size, 0, 0)).ToReadOnlyReactivePropertySlim();
@@ -302,11 +303,16 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
     public virtual void UpdatePathGeometryIfEnable(string propertyName, object oldValue, object newValue,
         bool flag = false)
     {
-        if (EnablePathGeometryUpdate.Value)
+        if (UpdatingStrategy.Value != PathGeometryUpdatingStrategy.Unknown)
         {
             if (!flag) PathGeometryNoRotate.Value = CreateGeometry(flag);
 
             if (RotationAngle.Value != 0) PathGeometryRotate.Value = CreateGeometry(RotationAngle.Value);
+        }
+
+        if (UpdatingStrategy.Value == PathGeometryUpdatingStrategy.Initial)
+        {
+            UpdatingStrategy.Value = PathGeometryUpdatingStrategy.ResizeWhilePreservingOriginalShape;
         }
     }
 

@@ -78,7 +78,7 @@ public abstract class AbstractLetterDesignerItemViewModel : DesignerItemViewMode
         this.ObserveProperty(x => x.IsAutoLineBreak.Value)
             .Subscribe(_ => RenderLetter())
             .AddTo(_CompositeDisposable);
-        EnablePathGeometryUpdate.Value = true;
+        UpdatingStrategy.Value = PathGeometryUpdatingStrategy.Initial;
     }
 
     public void CloseLetterSettingDialog()

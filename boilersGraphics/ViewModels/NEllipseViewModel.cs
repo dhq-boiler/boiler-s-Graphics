@@ -44,7 +44,7 @@ public class NEllipseViewModel : DesignerItemViewModelBase
     private void Init()
     {
         ShowConnectors = false;
-        EnablePathGeometryUpdate.Value = true;
+        UpdatingStrategy.Value = PathGeometryUpdatingStrategy.Initial;
     }
 
     public override PathGeometry CreateGeometry(bool flag = false)

@@ -50,13 +50,13 @@ public class NPolygonViewModel : DesignerItemViewModelBase
     private void Init()
     {
         ShowConnectors = false;
-        EnablePathGeometryUpdate.Value = true;
+        UpdatingStrategy.Value = PathGeometryUpdatingStrategy.Initial;
     }
 
     public override void UpdatePathGeometryIfEnable(string propertyName, object oldValue, object newValue,
         bool flag = false)
     {
-        if (EnablePathGeometryUpdate.Value)
+        if (UpdatingStrategy.Value == PathGeometryUpdatingStrategy.Initial)
         {
             if (!flag)
             {

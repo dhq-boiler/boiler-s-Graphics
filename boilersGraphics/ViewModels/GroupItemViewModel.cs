@@ -84,7 +84,7 @@ public class GroupItemViewModel : DesignerItemViewModelBase, IObservable<GroupTr
                 _lotateAngleOld = a;
             })
             .AddTo(_CompositeDisposable);
-        EnablePathGeometryUpdate.Value = false;
+        UpdatingStrategy.Value = PathGeometryUpdatingStrategy.Fixed;
     }
 
     private void GroupTransformObserversOnNext(GroupTransformNotification notification)

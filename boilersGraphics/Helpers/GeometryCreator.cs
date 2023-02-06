@@ -12,7 +12,7 @@ namespace boilersGraphics.Helpers;
 
 public static class GeometryCreator
 {
-    public static PathGeometry CreateEllipse(NEllipseViewModel item, bool flag = false)
+    public static PathGeometry CreateEllipse(DesignerItemViewModelBase item, bool flag = false)
     {
         if (item.PathGeometryNoRotate.Value is null)
         {

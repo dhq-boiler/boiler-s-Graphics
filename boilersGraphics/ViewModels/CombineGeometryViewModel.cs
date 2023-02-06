@@ -37,7 +37,7 @@ public class CombineGeometryViewModel : DesignerItemViewModelBase
 
     private void Init()
     {
-        EnablePathGeometryUpdate.Value = false;
+        UpdatingStrategy.Value = PathGeometryUpdatingStrategy.Fixed;
         ShowConnectors = false;
     }
 

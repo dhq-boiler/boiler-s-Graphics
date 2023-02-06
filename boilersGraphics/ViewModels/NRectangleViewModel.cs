@@ -56,7 +56,7 @@ public class NRectangleViewModel : DesignerItemViewModelBase, IRadius
     private void Init()
     {
         ShowConnectors = false;
-        EnablePathGeometryUpdate.Value = true;
+        UpdatingStrategy.Value = PathGeometryUpdatingStrategy.Initial;
         MouseDoubleClickCommand.Subscribe(x => { OpenPropertyDialog(); })
             .AddTo(_CompositeDisposable);
         RadiusX
