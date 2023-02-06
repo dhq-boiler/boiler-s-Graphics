@@ -46,10 +46,6 @@ public class CombineGeometryViewModel : DesignerItemViewModelBase
         throw new NotSupportedException("combine figures is not supported.");
     }
 
-    public override PathGeometry CreateGeometry(double angle)
-    {
-        throw new NotSupportedException("combine figures is not supported.");
-    }
 
     public override Type GetViewType()
     {

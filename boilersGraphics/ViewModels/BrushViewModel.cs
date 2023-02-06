@@ -129,10 +129,6 @@ public class BrushViewModel : DesignerItemViewModelBase
         throw new NotSupportedException("brush is not supported.");
     }
 
-    public override PathGeometry CreateGeometry(double angle)
-    {
-        throw new NotSupportedException("brush is not supported.");
-    }
 
     public override Type GetViewType()
     {

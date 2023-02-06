@@ -112,10 +112,6 @@ public class BlurEffectViewModel : EffectViewModel
         return clone;
     }
 
-    public override PathGeometry CreateGeometry(double angle)
-    {
-        return GeometryCreator.CreateRectangleWithAngle(this, 0, 0, RotationAngle.Value);
-    }
 
     public override Type GetViewType()
     {

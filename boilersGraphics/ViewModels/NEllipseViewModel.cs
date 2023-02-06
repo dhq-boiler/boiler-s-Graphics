@@ -52,10 +52,6 @@ public class NEllipseViewModel : DesignerItemViewModelBase
         return GeometryCreator.CreateEllipse(this, flag);
     }
 
-    public override PathGeometry CreateGeometry(double angle)
-    {
-        return GeometryCreator.CreateEllipse(this, angle);
-    }
 
     public override Type GetViewType()
     {

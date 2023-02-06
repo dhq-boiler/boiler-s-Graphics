@@ -102,10 +102,6 @@ public class GroupItemViewModel : DesignerItemViewModelBase, IObservable<GroupTr
         return null;
     }
 
-    public override PathGeometry CreateGeometry(double angle)
-    {
-        return null;
-    }
 
     public override Type GetViewType()
     {

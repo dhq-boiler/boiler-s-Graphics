@@ -86,7 +86,7 @@ public class NPieViewModel : DesignerItemViewModelBase
                     if (!geometry.IsEmpty()) PathGeometryNoRotate.Value = geometry;
                 }
 
-            if (RotationAngle.Value != 0) PathGeometryRotate.Value = CreateGeometry(RotationAngle.Value);
+            if (RotationAngle.Value != 0d) PathGeometryRotate.Value = GeometryCreator.Rotate(PathGeometryNoRotate.Value, RotationAngle.Value, CenterPoint.Value);
         }
     }
 
@@ -109,13 +109,6 @@ public class NPieViewModel : DesignerItemViewModelBase
         return ret;
     }
 
-    public override PathGeometry CreateGeometry(double angle)
-    {
-        var geometry = GeometryCreator.CreateDonut(PieCenterPoint.Value, DonutWidth.Value, Distance.Value,
-            StartDegree.Value, EndDegree.Value, SweepDirection.Value);
-        geometry.Transform = new RotateTransform(angle, PieCenterPoint.Value.X, PieCenterPoint.Value.Y);
-        return geometry;
-    }
 
     public NEllipseViewModel CreateNEllipseViewModelLong()
     {

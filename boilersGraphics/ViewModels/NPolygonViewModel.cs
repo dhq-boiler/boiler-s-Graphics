@@ -82,7 +82,7 @@ public class NPolygonViewModel : DesignerItemViewModelBase
                 if (!(PathGeometryNoRotate.Value is null)) Data.Value = PathGeometryNoRotate.Value.ToString();
             }
 
-            if (RotationAngle.Value != 0) PathGeometryRotate.Value = CreateGeometry(RotationAngle.Value);
+            if (RotationAngle.Value != 0d) PathGeometryRotate.Value = GeometryCreator.Rotate(PathGeometryNoRotate.Value, RotationAngle.Value, CenterPoint.Value);
         }
     }
 
@@ -91,13 +91,6 @@ public class NPolygonViewModel : DesignerItemViewModelBase
         return GeometryCreator.CreatePolygon(this, Data.Value, flag);
     }
 
-    public override PathGeometry CreateGeometry(double angle)
-    {
-        var geometry = Geometry.Parse(Data.Value);
-        var pathGeometry = System.Windows.Media.PathGeometry.CreateFromGeometry(geometry);
-        pathGeometry.Transform = new RotateTransform(angle);
-        return pathGeometry;
-    }
 
     public override Type GetViewType()
     {

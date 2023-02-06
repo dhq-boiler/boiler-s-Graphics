@@ -318,7 +318,6 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
 
     public abstract PathGeometry CreateGeometry(bool flag = false);
 
-    public abstract PathGeometry CreateGeometry(double angle);
 
     public void TransformObserversOnNext(string propertyName, object oldValue, object newValue)
     {

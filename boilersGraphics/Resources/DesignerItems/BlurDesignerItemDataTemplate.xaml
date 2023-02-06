@@ -1,14 +1,29 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:c="clr-namespace:CalcBinding;assembly=CalcBinding"
     xmlns:viewModel="clr-namespace:boilersGraphics.ViewModels">
     <DataTemplate DataType="{x:Type viewModel:BlurEffectViewModel}">
-        <Border BorderBrush="{Binding EdgeBrush.Value}" BorderThickness="{Binding EdgeThickness.Value}">
+        <Grid Margin="{Binding Margin.Value, UpdateSourceTrigger=PropertyChanged}">
             <Image
                 x:Name="baseGrid"
+                Clip="{Binding PathGeometry.Value, UpdateSourceTrigger=PropertyChanged}"
                 IsHitTestVisible="{Binding IsHitTestVisible.Value, UpdateSourceTrigger=PropertyChanged}"
                 RenderOptions.BitmapScalingMode="HighQuality"
                 Source="{Binding Bitmap.Value, UpdateSourceTrigger=PropertyChanged}" />
-        </Border>
+            <Path
+                Width="{Binding Width.Value}"
+                Height="{Binding Height.Value}"
+                Clip="{Binding Data, RelativeSource={RelativeSource Self}}"
+                Data="{Binding PathGeometry.Value, UpdateSourceTrigger=PropertyChanged}"
+                Fill="Transparent"
+                IsHitTestVisible="False"
+                Stretch="None"
+                Stroke="{Binding EdgeBrush.Value}"
+                StrokeDashArray="{Binding StrokeDashArray.Value}"
+                StrokeLineJoin="{Binding StrokeLineJoin.Value}"
+                StrokeMiterLimit="{Binding StrokeMiterLimit.Value}"
+                StrokeThickness="{c:Binding EdgeThickness.Value*2}" />
+        </Grid>
     </DataTemplate>
 </ResourceDictionary>

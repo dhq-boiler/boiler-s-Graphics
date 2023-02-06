@@ -71,7 +71,7 @@ public class PictureDesignerItemViewModel : DesignerItemViewModelBase, IEmbedded
         {
             PathGeometryNoRotate.Value = CreateGeometry();
 
-            if (RotationAngle.Value != 0) PathGeometryRotate.Value = CreateGeometry(RotationAngle.Value);
+            if (RotationAngle.Value != 0d) PathGeometryRotate.Value = GeometryCreator.Rotate(PathGeometryNoRotate.Value, RotationAngle.Value, CenterPoint.Value);
         }
     }
 
@@ -80,10 +80,6 @@ public class PictureDesignerItemViewModel : DesignerItemViewModelBase, IEmbedded
         return GeometryCreator.CreatePicture(this, flag);
     }
 
-    public override PathGeometry CreateGeometry(double angle)
-    {
-        return GeometryCreator.CreatePictureWithAngle(this, angle);
-    }
 
     public override Type GetViewType()
     {
