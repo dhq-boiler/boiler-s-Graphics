@@ -57,7 +57,7 @@ public class BlurEffectViewModel : EffectViewModel
         var rtb = renderer.Render(new Rect(Left.Value, Top.Value, Width.Value, Height.Value),
             Application.Current.MainWindow.GetChildOfType<DesignerCanvas>(),
             (Application.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel,
-            (Application.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.BackgroundItem.Value, new System.Windows.Point(),
+            (Application.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.BackgroundItem.Value, this,
             this.ZIndex.Value - 1);
         var newFormattedBitmapSource = new FormatConvertedBitmap();
         newFormattedBitmapSource.BeginInit();

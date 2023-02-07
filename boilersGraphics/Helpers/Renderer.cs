@@ -1,4 +1,5 @@
-﻿using boilersGraphics.Controls;
+﻿using boilersGraphics.Adorners;
+using boilersGraphics.Controls;
 using boilersGraphics.Extensions;
 using boilersGraphics.ViewModels;
 using NLog;
@@ -8,6 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
@@ -24,7 +26,7 @@ public class Renderer
     }
 
     public RenderTargetBitmap Render(Rect? sliceRect, DesignerCanvas designerCanvas,
-        DiagramViewModel diagramViewModel, BackgroundViewModel backgroundItem, Point center, int maxZIndex = int.MaxValue, double rotateAngle = 0d)
+        DiagramViewModel diagramViewModel, BackgroundViewModel backgroundItem, SelectableDesignerItemViewModelBase caller, int maxZIndex = int.MaxValue)
     {
         var size = GetRenderSize(sliceRect, diagramViewModel);
 
@@ -42,12 +44,12 @@ public class Renderer
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                renderedCount = RenderInternal(sliceRect, designerCanvas, diagramViewModel, backgroundItem, maxZIndex, renderedCount, rtb, center, rotateAngle);
+                renderedCount = RenderInternal(sliceRect, designerCanvas, diagramViewModel, backgroundItem, maxZIndex, renderedCount, rtb, caller);
             });
         }
         else
         {
-            renderedCount = RenderInternal(sliceRect, designerCanvas, diagramViewModel, backgroundItem, maxZIndex, renderedCount, rtb, center, rotateAngle);
+            renderedCount = RenderInternal(sliceRect, designerCanvas, diagramViewModel, backgroundItem, maxZIndex, renderedCount, rtb, caller);
         }
 
         if (renderedCount == 0)
@@ -59,7 +61,7 @@ public class Renderer
     }
 
     private int RenderInternal(Rect? sliceRect, DesignerCanvas designerCanvas, DiagramViewModel diagramViewModel,
-        BackgroundViewModel backgroundItem, int maxZIndex, int renderedCount, RenderTargetBitmap rtb, Point center, double rotateAngle = 0d)
+        BackgroundViewModel backgroundItem, int maxZIndex, int renderedCount, RenderTargetBitmap rtb, SelectableDesignerItemViewModelBase caller)
     {
         var visual = new DrawingVisual();
         using (var context = visual.RenderOpen())
@@ -67,12 +69,12 @@ public class Renderer
             var allViews = designerCanvas.EnumVisualChildren<FrameworkElement>()
                 .Where(x => x.DataContext is not null).ToList();
             //背景を描画
-            if (RenderBackgroundViewModel(sliceRect, designerCanvas, context, backgroundItem, allViews, rotateAngle))
+            if (RenderBackgroundViewModel(sliceRect, designerCanvas, context, backgroundItem, allViews, caller))
                 renderedCount++;
             //前景を描画
             renderedCount += RenderForeground(sliceRect, diagramViewModel, designerCanvas, context,
                 backgroundItem,
-                allViews, maxZIndex, center, rotateAngle);
+                allViews, maxZIndex, caller);
         }
 
         rtb.Render(visual);
@@ -93,7 +95,7 @@ public class Renderer
 
     private int RenderForeground(Rect? sliceRect, DiagramViewModel diagramViewModel,
         DesignerCanvas designerCanvas, DrawingContext context, BackgroundViewModel background,
-        List<FrameworkElement> allViews, int maxZIndex, Point center, double rotateAngle = 0d)
+        List<FrameworkElement> allViews, int maxZIndex, SelectableDesignerItemViewModelBase caller)
     {
         var renderedCount = 0;
         var except = new SelectableDesignerItemViewModelBase[] { background }.Where(x => x is not null);
@@ -206,23 +208,28 @@ public class Renderer
                         rect.Y -= background.Top.Value;
                     }
 
+                    if (caller is DesignerItemViewModelBase des)
+                    {
+                        var baseMatrix = new Matrix();
+                        baseMatrix.Translate((des.CenterPoint.Value.X - rect.Width / 2) * 1, (des.CenterPoint.Value.Y - rect.Height / 2) * 1);
+                        baseMatrix.Translate(-des.Left.Value, -des.Top.Value);
+                        var invert = des.Matrix.Value;
+                        invert.RotateAt(des.RotationAngle.Value, des.CenterPoint.Value.X - des.Left.Value - view.ActualWidth / 2, des.CenterPoint.Value.Y - des.Top.Value - view.ActualHeight / 2);
 
-                    var a = Math.Sqrt(Math.Pow(rect.Left, 2) + Math.Pow(rect.Top, 2));
-                    //context.PushTransform(new TranslateTransform((center.X - rect.Width / 2) * -1, (center.Y - rect.Height / 2) * -1));
-                    //context.PushTransform(new RotateTransform(rotateAngle, center.X, center.Y));
-                    context.PushTransform(new TranslateTransform((center.X - rect.Width / 2) * -1, (center.Y - rect.Height / 2) * -1));
-                    //context.PushTransform(new RotateTransform(rotateAngle, center.X + rect.Left, center.Y + rect.Top));
-                    var invert = item.Matrix.Value;
-                    invert.Invert();
-                    context.PushTransform(new MatrixTransform(invert));
+                        var adornerLayer = AdornerLayer.GetAdornerLayer(designerCanvas);
+                        SnapPointAdorner adorner = null;
+                        adornerLayer.Add(adorner = new SnapPointAdorner(designerCanvas, new Point(des.CenterPoint.Value.X - des.Left.Value - view.ActualWidth / 2, des.CenterPoint.Value.Y - des.Top.Value - view.ActualHeight / 2), 5, 1));
 
-                    var θ = rotateAngle * Math.PI / 180d;
-                    var θ45 = (rotateAngle - 45) * Math.PI / 180d;
-
-                    var b = Math.Sqrt(Math.Pow((center.X - rect.Width / 2), 2) + Math.Pow((center.Y - rect.Height / 2), 2));
+                        context.PushTransform(new MatrixTransform(baseMatrix));
+                        context.PushTransform(new MatrixTransform(invert));
+                    }
 
                     context.DrawRectangle(brush, null, rect);
-                    context.Pop();
+                    if (caller is DesignerItemViewModelBase)
+                    {
+                        context.Pop();
+                        context.Pop();
+                    }
                     renderedCount++;
                     break;
                 }
@@ -262,7 +269,7 @@ public class Renderer
     }
     
     private bool RenderBackgroundViewModel(Rect? sliceRect, DesignerCanvas designerCanvas,
-        DrawingContext context, BackgroundViewModel background, List<FrameworkElement> allViews, double rotateAngle = 0d)
+        DrawingContext context, BackgroundViewModel background, List<FrameworkElement> allViews, SelectableDesignerItemViewModelBase caller)
     {
         var view = default(FrameworkElement);
         if (!boilersGraphics.App.IsTest)
@@ -311,9 +318,10 @@ public class Renderer
             rect.Y = 0;
         }
 
-        context.PushTransform(new RotateTransform(rotateAngle,
-            rect.Left + rect.Width / 2,
-            rect.Top + rect.Height / 2));
+        //context.PushTransform(new RotateTransform(rotateAngle,
+        //    rect.Left + rect.Width / 2,
+        //    rect.Top + rect.Height / 2));
+        context.PushTransform(new MatrixTransform(caller.Matrix.Value));
         context.DrawRectangle(brush, null, rect);
         context.Pop();
 
