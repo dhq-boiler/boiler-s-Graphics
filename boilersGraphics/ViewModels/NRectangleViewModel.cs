@@ -56,7 +56,7 @@ public class NRectangleViewModel : DesignerItemViewModelBase, IRadius
     private void Init()
     {
         ShowConnectors = false;
-        EnablePathGeometryUpdate.Value = true;
+        UpdatingStrategy.Value = PathGeometryUpdatingStrategy.Initial;
         MouseDoubleClickCommand.Subscribe(x => { OpenPropertyDialog(); })
             .AddTo(_CompositeDisposable);
         RadiusX
@@ -83,10 +83,6 @@ public class NRectangleViewModel : DesignerItemViewModelBase, IRadius
         return GeometryCreator.CreateRectangle(this, RadiusX.Value, RadiusY.Value, flag);
     }
 
-    public override PathGeometry CreateGeometry(double angle)
-    {
-        return GeometryCreator.CreateRectangleWithAngle(this, RadiusX.Value, RadiusY.Value, angle);
-    }
 
     public override Type GetViewType()
     {

@@ -58,7 +58,7 @@ namespace boilersGraphics.Test
             var mock = new Mock<IVisualTreeHelper>();
             mock.Setup(x => x.GetDescendantBounds(backgroundRect)).Returns(new Rect(0, 0, 10, 10));
             var renderer = new Renderer(mock.Object);
-            var rtb = renderer.Render(null, designerCanvas, viewModel, viewModel.BackgroundItem.Value);
+            var rtb = renderer.Render(null, designerCanvas, viewModel, viewModel.BackgroundItem.Value, null);
 
             using var mat = OpenCvSharpHelper.ToMat(rtb);
             for (var y = 0; y < 10; y++)
@@ -144,7 +144,7 @@ namespace boilersGraphics.Test
             var mock = new Mock<IVisualTreeHelper>();
             mock.Setup(x => x.GetDescendantBounds(backgroundRect)).Returns(new Rect(0, 0, 10, 10));
             var renderer = new Renderer(mock.Object);
-            var rtb = renderer.Render(null, designerCanvas, viewModel, viewModel.BackgroundItem.Value);
+            var rtb = renderer.Render(null, designerCanvas, viewModel, viewModel.BackgroundItem.Value, null);
 
             using var mat = OpenCvSharpHelper.ToMat(rtb);
 
@@ -335,7 +335,7 @@ namespace boilersGraphics.Test
             var mock = new Mock<IVisualTreeHelper>();
             mock.Setup(x => x.GetDescendantBounds(redRect)).Returns(new Rect(2, 1, 3, 3));
             var renderer = new Renderer(mock.Object);
-            var rtb = renderer.Render(new Rect(2, 1, 3, 3), designerCanvas, viewModel, viewModel.BackgroundItem.Value);
+            var rtb = renderer.Render(new Rect(2, 1, 3, 3), designerCanvas, viewModel, viewModel.BackgroundItem.Value, null);
 
             using var mat = OpenCvSharpHelper.ToMat(rtb);
             mat.SaveImage("red.png");
@@ -422,7 +422,7 @@ namespace boilersGraphics.Test
             var mock = new Mock<IVisualTreeHelper>();
             mock.Setup(x => x.GetDescendantBounds(blueRect)).Returns(new Rect(3, 5, 6, 3));
             var renderer = new Renderer(mock.Object);
-            var rtb = renderer.Render(new Rect(3, 5, 6, 3), designerCanvas, viewModel, viewModel.BackgroundItem.Value);
+            var rtb = renderer.Render(new Rect(3, 5, 6, 3), designerCanvas, viewModel, viewModel.BackgroundItem.Value, null);
 
             using var mat = OpenCvSharpHelper.ToMat(rtb);
             mat.SaveImage("red.png");
@@ -510,7 +510,7 @@ namespace boilersGraphics.Test
             var mock = new Mock<IVisualTreeHelper>();
             mock.Setup(x => x.GetDescendantBounds(blueRect)).Returns(new Rect(3, 5, 6, 3));
             var renderer = new Renderer(mock.Object);
-            var rtb = renderer.Render(new Rect(2, 4, 8, 5), designerCanvas, viewModel, viewModel.BackgroundItem.Value);
+            var rtb = renderer.Render(new Rect(2, 4, 8, 5), designerCanvas, viewModel, viewModel.BackgroundItem.Value, null);
 
             using var mat = OpenCvSharpHelper.ToMat(rtb);
             mat.SaveImage("blue_margin_1.png");

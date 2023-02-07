@@ -12,7 +12,7 @@ namespace boilersGraphics.Helpers;
 
 public static class GeometryCreator
 {
-    public static PathGeometry CreateEllipse(NEllipseViewModel item, bool flag = false)
+    public static PathGeometry CreateEllipse(DesignerItemViewModelBase item, bool flag = false)
     {
         if (item.PathGeometryNoRotate.Value is null)
         {
@@ -1351,5 +1351,12 @@ public static class GeometryCreator
     {
         var left = array.First();
         return array.Skip(1).Prepend(left).Max();
+    }
+
+    public static PathGeometry Rotate(PathGeometry pathGeometry, double angle, Point center)
+    {
+        var clone = pathGeometry.Clone();
+        clone.Transform = new RotateTransform(angle,  center.X, center.Y);
+        return clone;
     }
 }

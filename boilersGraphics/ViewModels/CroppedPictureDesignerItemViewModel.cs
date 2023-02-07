@@ -60,12 +60,6 @@ public class CroppedPictureDesignerItemViewModel : DesignerItemViewModelBase, IE
         return pg;
     }
 
-    public override PathGeometry CreateGeometry(double angle)
-    {
-        var pg = PathGeometryNoRotate.Value;
-        pg.Transform = new RotateTransform(RotationAngle.Value);
-        return pg;
-    }
 
     public override Type GetViewType()
     {
