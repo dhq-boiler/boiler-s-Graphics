@@ -137,11 +137,6 @@ namespace boilersGraphics.Helpers
                                 baseMatrix.Translate((des.CenterPoint.Value.X - rect.Width / 2) * 1, (des.CenterPoint.Value.Y - rect.Height / 2) * 1);
                                 baseMatrix.Translate(-des.Left.Value, -des.Top.Value);
                                 baseMatrix.RotateAt(-des.RotationAngle.Value, des.CenterPoint.Value.X - des.Left.Value, des.CenterPoint.Value.Y - des.Top.Value);
-
-                                //var adornerLayer = AdornerLayer.GetAdornerLayer(designerCanvas);
-                                //SnapPointAdorner adorner = null;
-                                //adornerLayer.Add(adorner = new SnapPointAdorner(designerCanvas, new Point(des.CenterPoint.Value.X - des.Left.Value - view.ActualWidth / 2, des.CenterPoint.Value.Y - des.Top.Value - view.ActualHeight / 2), 5, 1));
-
                                 context.PushTransform(new MatrixTransform(baseMatrix));
                             }
 
@@ -237,14 +232,21 @@ namespace boilersGraphics.Helpers
                 rect.Y = 0;
             }
 
-            var baseMatrix = new Matrix();
-            //baseMatrix.Translate((background.CenterPoint.Value.X - rect.Width / 2) * 1, (background.CenterPoint.Value.Y - rect.Height / 2) * 1);
-            //baseMatrix.Translate(-background.Left.Value, -background.Top.Value);
-            //baseMatrix.Translate(background.Left.Value, background.Top.Value);
-            baseMatrix.RotateAt(-background.RotationAngle.Value, background.CenterPoint.Value.X - background.Left.Value, background.CenterPoint.Value.Y - background.Top.Value);
-            context.PushTransform(new MatrixTransform(baseMatrix));
-            context.DrawRectangle(brush, null, rect);
-            context.Pop();
+            if (caller is DesignerItemViewModelBase designer)
+            {
+                var baseMatrix = new Matrix();
+                //baseMatrix.Translate((background.CenterPoint.Value.X - rect.Width / 2) * 1, (background.CenterPoint.Value.Y - rect.Height / 2) * 1);
+                //baseMatrix.Translate(-background.Left.Value, -background.Top.Value);
+                baseMatrix.Translate(-designer.Left.Value, -designer.Top.Value);
+                //baseMatrix.Translate(background.Left.Value, background.Top.Value);
+                baseMatrix.RotateAt(-designer.RotationAngle.Value, designer.CenterPoint.Value.X - designer.Left.Value, designer.CenterPoint.Value.Y - designer.Top.Value);
+                context.PushTransform(new MatrixTransform(baseMatrix));
+            }
+            context.DrawRectangle(brush, null, background.Rect.Value);
+            if (caller is DesignerItemViewModelBase)
+            {
+                context.Pop();
+            }
 
             return true;
         }
