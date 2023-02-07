@@ -131,11 +131,12 @@ namespace boilersGraphics.Helpers
                                 rect.Y -= background.Top.Value;
                             }
 
-                            if (caller is DesignerItemViewModelBase des)
+                            if (item is DesignerItemViewModelBase id && caller is DesignerItemViewModelBase des)
                             {
                                 var baseMatrix = new Matrix();
                                 baseMatrix.Translate((des.CenterPoint.Value.X - rect.Width / 2) * 1, (des.CenterPoint.Value.Y - rect.Height / 2) * 1);
                                 baseMatrix.Translate(-des.Left.Value, -des.Top.Value);
+                                baseMatrix.RotateAt(item.RotationAngle.Value, id.CenterPoint.Value.X - des.Left.Value, id.CenterPoint.Value.Y - des.Top.Value);
                                 baseMatrix.RotateAt(-des.RotationAngle.Value, des.CenterPoint.Value.X - des.Left.Value, des.CenterPoint.Value.Y - des.Top.Value);
                                 context.PushTransform(new MatrixTransform(baseMatrix));
                             }
