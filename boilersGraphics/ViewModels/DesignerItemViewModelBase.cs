@@ -245,9 +245,9 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
 
     private void UpdateMatrix(double oldAngle, double newAngle)
     {
-        var targetMatrix = Matrix.Value;
-        targetMatrix.RotateAt(newAngle - oldAngle, 0, 0);
-        Matrix.Value = targetMatrix;
+        var matrix = new Matrix();
+        matrix.Rotate(newAngle);
+        Matrix.Value = matrix;
     }
 
     private void UpdateLeft(double value)

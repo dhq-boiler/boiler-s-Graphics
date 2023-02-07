@@ -213,21 +213,18 @@ public class Renderer
                         var baseMatrix = new Matrix();
                         baseMatrix.Translate((des.CenterPoint.Value.X - rect.Width / 2) * 1, (des.CenterPoint.Value.Y - rect.Height / 2) * 1);
                         baseMatrix.Translate(-des.Left.Value, -des.Top.Value);
-                        var invert = des.Matrix.Value;
-                        invert.RotateAt(des.RotationAngle.Value, des.CenterPoint.Value.X - des.Left.Value - view.ActualWidth / 2, des.CenterPoint.Value.Y - des.Top.Value - view.ActualHeight / 2);
+                        baseMatrix.RotateAt(-des.RotationAngle.Value, des.CenterPoint.Value.X - des.Left.Value, des.CenterPoint.Value.Y - des.Top.Value);
 
                         var adornerLayer = AdornerLayer.GetAdornerLayer(designerCanvas);
                         SnapPointAdorner adorner = null;
                         adornerLayer.Add(adorner = new SnapPointAdorner(designerCanvas, new Point(des.CenterPoint.Value.X - des.Left.Value - view.ActualWidth / 2, des.CenterPoint.Value.Y - des.Top.Value - view.ActualHeight / 2), 5, 1));
 
                         context.PushTransform(new MatrixTransform(baseMatrix));
-                        context.PushTransform(new MatrixTransform(invert));
                     }
 
                     context.DrawRectangle(brush, null, rect);
                     if (caller is DesignerItemViewModelBase)
                     {
-                        context.Pop();
                         context.Pop();
                     }
                     renderedCount++;
