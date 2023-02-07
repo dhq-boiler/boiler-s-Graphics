@@ -17,10 +17,6 @@ public class PathDesignerItemViewModel : DesignerItemViewModelBase
         throw new NotSupportedException();
     }
 
-    public override PathGeometry CreateGeometry(double angle)
-    {
-        throw new NotSupportedException();
-    }
 
     public override object Clone()
     {

@@ -1,5 +1,6 @@
 ﻿using boilersGraphics.Controls;
 using boilersGraphics.Extensions;
+using boilersGraphics.Helpers;
 using boilersGraphics.Models;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
@@ -9,6 +10,7 @@ using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Windows;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 namespace boilersGraphics.ViewModels
@@ -21,6 +23,7 @@ namespace boilersGraphics.ViewModels
 
         public virtual void Initialize()
         {
+            this.UpdatingStrategy.Value = SelectableDesignerItemViewModelBase.PathGeometryUpdatingStrategy.Initial;
             monitoringItems.ToList().ForEach(x => x.Value.Dispose());
             monitoringItems.Clear();
 
@@ -106,6 +109,21 @@ namespace boilersGraphics.ViewModels
             }
 
             return compositeDisposable;
+        }
+
+        public override PathGeometry CreateGeometry(bool flag = false)
+        {
+            switch (UpdatingStrategy.Value)
+            {
+                case PathGeometryUpdatingStrategy.Initial:
+                    return GeometryCreator.CreateRectangle(this, 0, 0, flag);
+                case PathGeometryUpdatingStrategy.ResizeWhilePreservingOriginalShape:
+                    return GeometryCreator.Scale(this.PathGeometryNoRotate.Value, this.Width.Value / this.PathGeometryNoRotate.Value.Bounds.Width, this.Height.Value / this.PathGeometryNoRotate.Value.Bounds.Height);
+                case PathGeometryUpdatingStrategy.Fixed:
+                    return this.PathGeometryNoRotate.Value;
+                default:
+                    throw new NotSupportedException();
+            }
         }
 
         public override void Dispose()

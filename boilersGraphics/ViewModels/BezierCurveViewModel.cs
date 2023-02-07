@@ -81,7 +81,7 @@ public class BezierCurveViewModel : ConnectorBaseViewModel
                 }
             })
             .AddTo(_CompositeDisposable);
-        EnablePathGeometryUpdate.Value = false;
+        UpdatingStrategy.Value = PathGeometryUpdatingStrategy.Fixed;
     }
 
     private void SetLeftTopOfControlLine1()

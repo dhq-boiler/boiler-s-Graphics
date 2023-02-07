@@ -44,7 +44,7 @@ public class NEllipseViewModel : DesignerItemViewModelBase
     private void Init()
     {
         ShowConnectors = false;
-        EnablePathGeometryUpdate.Value = true;
+        UpdatingStrategy.Value = PathGeometryUpdatingStrategy.Initial;
     }
 
     public override PathGeometry CreateGeometry(bool flag = false)
@@ -52,10 +52,6 @@ public class NEllipseViewModel : DesignerItemViewModelBase
         return GeometryCreator.CreateEllipse(this, flag);
     }
 
-    public override PathGeometry CreateGeometry(double angle)
-    {
-        return GeometryCreator.CreateEllipse(this, angle);
-    }
 
     public override Type GetViewType()
     {

@@ -54,9 +54,9 @@ public class MosaicViewModel : EffectViewModel
         Application.Current.Dispatcher.Invoke(() =>
         {
             var mainWindowViewModel = Application.Current.MainWindow.DataContext as MainWindowViewModel;
-            var renderer = new Renderer(new WpfVisualTreeHelper());
+            var renderer = new EffectRenderer(new WpfVisualTreeHelper());
             var rtb = renderer.Render(Rect.Value, Application.Current.MainWindow.GetChildOfType<DesignerCanvas>(),
-                mainWindowViewModel.DiagramViewModel, mainWindowViewModel.DiagramViewModel.BackgroundItem.Value, this.ZIndex.Value - 1);
+                mainWindowViewModel.DiagramViewModel, mainWindowViewModel.DiagramViewModel.BackgroundItem.Value, this, this.ZIndex.Value - 1);
             var newFormattedBitmapSource = new FormatConvertedBitmap();
             newFormattedBitmapSource.BeginInit();
             newFormattedBitmapSource.Source = rtb;
@@ -181,15 +181,6 @@ public class MosaicViewModel : EffectViewModel
         return clone;
     }
 
-    public override PathGeometry CreateGeometry(bool flag = false)
-    {
-        return GeometryCreator.CreateRectangle(this, 0, 0, flag);
-    }
-
-    public override PathGeometry CreateGeometry(double angle)
-    {
-        return GeometryCreator.CreateRectangleWithAngle(this, 0, 0, RotationAngle.Value);
-    }
 
     public override Type GetViewType()
     {

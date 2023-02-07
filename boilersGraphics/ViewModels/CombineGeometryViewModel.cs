@@ -37,7 +37,7 @@ public class CombineGeometryViewModel : DesignerItemViewModelBase
 
     private void Init()
     {
-        EnablePathGeometryUpdate.Value = false;
+        UpdatingStrategy.Value = PathGeometryUpdatingStrategy.Fixed;
         ShowConnectors = false;
     }
 
@@ -46,10 +46,6 @@ public class CombineGeometryViewModel : DesignerItemViewModelBase
         throw new NotSupportedException("combine figures is not supported.");
     }
 
-    public override PathGeometry CreateGeometry(double angle)
-    {
-        throw new NotSupportedException("combine figures is not supported.");
-    }
 
     public override Type GetViewType()
     {

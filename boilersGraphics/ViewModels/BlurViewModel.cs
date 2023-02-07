@@ -53,11 +53,11 @@ public class BlurEffectViewModel : EffectViewModel
     {
         if (Width.Value <= 0 || Height.Value <= 0) return;
 
-        var renderer = new Renderer(new WpfVisualTreeHelper());
+        var renderer = new EffectRenderer(new WpfVisualTreeHelper());
         var rtb = renderer.Render(new Rect(Left.Value, Top.Value, Width.Value, Height.Value),
             Application.Current.MainWindow.GetChildOfType<DesignerCanvas>(),
             (Application.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel,
-            (Application.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.BackgroundItem.Value,
+            (Application.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.BackgroundItem.Value, this,
             this.ZIndex.Value - 1);
         var newFormattedBitmapSource = new FormatConvertedBitmap();
         newFormattedBitmapSource.BeginInit();
@@ -112,15 +112,6 @@ public class BlurEffectViewModel : EffectViewModel
         return clone;
     }
 
-    public override PathGeometry CreateGeometry(bool flag = false)
-    {
-        return GeometryCreator.CreateRectangle(this, 0, 0, flag);
-    }
-
-    public override PathGeometry CreateGeometry(double angle)
-    {
-        return GeometryCreator.CreateRectangleWithAngle(this, 0, 0, RotationAngle.Value);
-    }
 
     public override Type GetViewType()
     {

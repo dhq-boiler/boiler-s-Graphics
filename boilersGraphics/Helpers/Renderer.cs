@@ -1,12 +1,15 @@
-﻿using boilersGraphics.Controls;
+﻿using boilersGraphics.Adorners;
+using boilersGraphics.Controls;
 using boilersGraphics.Extensions;
 using boilersGraphics.ViewModels;
 using NLog;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
@@ -23,7 +26,7 @@ public class Renderer
     }
 
     public RenderTargetBitmap Render(Rect? sliceRect, DesignerCanvas designerCanvas,
-        DiagramViewModel diagramViewModel, BackgroundViewModel backgroundItem, int maxZIndex = int.MaxValue)
+        DiagramViewModel diagramViewModel, BackgroundViewModel backgroundItem, SelectableDesignerItemViewModelBase caller, int maxZIndex = int.MaxValue)
     {
         var size = GetRenderSize(sliceRect, diagramViewModel);
 
@@ -41,12 +44,12 @@ public class Renderer
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                renderedCount = RenderInternal(sliceRect, designerCanvas, diagramViewModel, backgroundItem, maxZIndex, renderedCount, rtb);
+                renderedCount = RenderInternal(sliceRect, designerCanvas, diagramViewModel, backgroundItem, maxZIndex, renderedCount, rtb, caller);
             });
         }
         else
         {
-            renderedCount = RenderInternal(sliceRect, designerCanvas, diagramViewModel, backgroundItem, maxZIndex, renderedCount, rtb);
+            renderedCount = RenderInternal(sliceRect, designerCanvas, diagramViewModel, backgroundItem, maxZIndex, renderedCount, rtb, caller);
         }
 
         if (renderedCount == 0)
@@ -58,7 +61,7 @@ public class Renderer
     }
 
     private int RenderInternal(Rect? sliceRect, DesignerCanvas designerCanvas, DiagramViewModel diagramViewModel,
-        BackgroundViewModel backgroundItem, int maxZIndex, int renderedCount, RenderTargetBitmap rtb)
+        BackgroundViewModel backgroundItem, int maxZIndex, int renderedCount, RenderTargetBitmap rtb, SelectableDesignerItemViewModelBase caller)
     {
         var visual = new DrawingVisual();
         using (var context = visual.RenderOpen())
@@ -66,12 +69,12 @@ public class Renderer
             var allViews = designerCanvas.EnumVisualChildren<FrameworkElement>()
                 .Where(x => x.DataContext is not null).ToList();
             //背景を描画
-            if (RenderBackgroundViewModel(sliceRect, designerCanvas, context, backgroundItem, allViews))
+            if (RenderBackgroundViewModel(sliceRect, designerCanvas, context, backgroundItem, allViews, caller))
                 renderedCount++;
             //前景を描画
             renderedCount += RenderForeground(sliceRect, diagramViewModel, designerCanvas, context,
                 backgroundItem,
-                allViews, maxZIndex);
+                allViews, maxZIndex, caller);
         }
 
         rtb.Render(visual);
@@ -90,9 +93,9 @@ public class Renderer
         return size;
     }
 
-    private int RenderForeground(Rect? sliceRect, DiagramViewModel diagramViewModel,
+    public virtual int RenderForeground(Rect? sliceRect, DiagramViewModel diagramViewModel,
         DesignerCanvas designerCanvas, DrawingContext context, BackgroundViewModel background,
-        List<FrameworkElement> allViews, int maxZIndex)
+        List<FrameworkElement> allViews, int maxZIndex, SelectableDesignerItemViewModelBase caller)
     {
         var renderedCount = 0;
         var except = new SelectableDesignerItemViewModelBase[] { background }.Where(x => x is not null);
@@ -110,7 +113,7 @@ public class Renderer
 
             if (view is null)
                 continue;
-                        
+
             var PART_ContentPresenter = view.FindName("PART_ContentPresenter") as ContentPresenter;
             if (PART_ContentPresenter is not null)
             {
@@ -146,34 +149,74 @@ public class Renderer
             switch (item)
             {
                 case DesignerItemViewModelBase designerItem:
-                {
-                    if (designerItem is PictureDesignerItemViewModel picture)
                     {
-                        var bounds = VisualTreeHelper.GetDescendantBounds(view);
-                        if (bounds.IsEmpty)
+                        if (designerItem is PictureDesignerItemViewModel picture)
                         {
-                            continue;
-                        }
-                        if (sliceRect.HasValue)
-                        {
-                            rect = sliceRect.Value;
-                            var intersectSrc = new Rect(designerItem.Left.Value, designerItem.Top.Value, bounds.Width,
-                                bounds.Height);
-                            rect = Rect.Union(rect, intersectSrc);
-
-                            if (rect != Rect.Empty)
+                            var bounds = VisualTreeHelper.GetDescendantBounds(view);
+                            if (bounds.IsEmpty)
                             {
-                                rect.X -= sliceRect.Value.X;
-                                rect.Y -= sliceRect.Value.Y;
+                                continue;
+                            }
+                            if (sliceRect.HasValue)
+                            {
+                                rect = sliceRect.Value;
+                                var intersectSrc = new Rect(designerItem.Left.Value, designerItem.Top.Value, bounds.Width,
+                                    bounds.Height);
+                                rect = Rect.Union(rect, intersectSrc);
+
+                                if (rect != Rect.Empty)
+                                {
+                                    rect.X -= sliceRect.Value.X;
+                                    rect.Y -= sliceRect.Value.Y;
+                                }
+                            }
+                            else
+                            {
+                                rect = new Rect(designerItem.Left.Value, designerItem.Top.Value, designerItem.Width.Value,
+                                    designerItem.Height.Value);
                             }
                         }
                         else
                         {
-                            rect = new Rect(designerItem.Left.Value, designerItem.Top.Value, designerItem.Width.Value,
-                                designerItem.Height.Value);
+                            var bounds = VisualTreeHelper.GetDescendantBounds(view);
+                            if (bounds.IsEmpty)
+                            {
+                                continue;
+                            }
+                            if (sliceRect.HasValue)
+                            {
+                                rect = sliceRect.Value;
+                                var intersectSrc = new Rect(designerItem.Left.Value, designerItem.Top.Value, bounds.Width,
+                                    bounds.Height);
+                                rect = Rect.Intersect(rect, intersectSrc);
+                                if (rect != Rect.Empty)
+                                {
+                                    rect.X -= sliceRect.Value.X;
+                                    rect.Y -= sliceRect.Value.Y;
+                                }
+                            }
+                            else
+                            {
+                                rect = new Rect(designerItem.Left.Value, designerItem.Top.Value, designerItem.Width.Value,
+                                    designerItem.Height.Value);
+                            }
                         }
+
+                        if (rect != Rect.Empty)
+                        {
+                            rect.X -= background.Left.Value;
+                            rect.Y -= background.Top.Value;
+                        }
+
+                        context.PushTransform(new RotateTransform(designerItem.RotationAngle.Value,
+                            designerItem.CenterX.Value,
+                            designerItem.CenterY.Value));
+                        context.DrawRectangle(brush, null, rect);
+                        context.Pop();
+                        renderedCount++;
+                        break;
                     }
-                    else
+                case ConnectorBaseViewModel connector:
                     {
                         var bounds = VisualTreeHelper.GetDescendantBounds(view);
                         if (bounds.IsEmpty)
@@ -183,8 +226,7 @@ public class Renderer
                         if (sliceRect.HasValue)
                         {
                             rect = sliceRect.Value;
-                            var intersectSrc = new Rect(designerItem.Left.Value, designerItem.Top.Value, bounds.Width,
-                                bounds.Height);
+                            var intersectSrc = new Rect(connector.LeftTop.Value, bounds.Size);
                             rect = Rect.Intersect(rect, intersectSrc);
                             if (rect != Rect.Empty)
                             {
@@ -194,62 +236,23 @@ public class Renderer
                         }
                         else
                         {
-                            rect = new Rect(designerItem.Left.Value, designerItem.Top.Value, designerItem.Width.Value,
-                                designerItem.Height.Value);
+                            rect = new Rect(connector.LeftTop.Value, bounds.Size);
                         }
-                    }
 
-                    if (rect != Rect.Empty)
-                    {
                         rect.X -= background.Left.Value;
                         rect.Y -= background.Top.Value;
+                        context.DrawRectangle(brush, null, rect);
+                        renderedCount++;
+                        break;
                     }
-
-                    context.PushTransform(new RotateTransform(designerItem.RotationAngle.Value,
-                        designerItem.CenterX.Value,
-                        designerItem.CenterY.Value));
-                    context.DrawRectangle(brush, null, rect);
-                    context.Pop();
-                    renderedCount++;
-                    break;
-                }
-                case ConnectorBaseViewModel connector:
-                {
-                    var bounds = VisualTreeHelper.GetDescendantBounds(view);
-                    if (bounds.IsEmpty)
-                    {
-                        continue;
-                    }
-                    if (sliceRect.HasValue)
-                    {
-                        rect = sliceRect.Value;
-                        var intersectSrc = new Rect(connector.LeftTop.Value, bounds.Size);
-                        rect = Rect.Intersect(rect, intersectSrc);
-                        if (rect != Rect.Empty)
-                        {
-                            rect.X -= sliceRect.Value.X;
-                            rect.Y -= sliceRect.Value.Y;
-                        }
-                    }
-                    else
-                    {
-                        rect = new Rect(connector.LeftTop.Value, bounds.Size);
-                    }
-
-                    rect.X -= background.Left.Value;
-                    rect.Y -= background.Top.Value;
-                    context.DrawRectangle(brush, null, rect);
-                    renderedCount++;
-                    break;
-                }
             }
         }
 
         return renderedCount;
     }
     
-    private bool RenderBackgroundViewModel(Rect? sliceRect, DesignerCanvas designerCanvas,
-        DrawingContext context, BackgroundViewModel background, List<FrameworkElement> allViews)
+    public virtual bool RenderBackgroundViewModel(Rect? sliceRect, DesignerCanvas designerCanvas,
+        DrawingContext context, BackgroundViewModel background, List<FrameworkElement> allViews, SelectableDesignerItemViewModelBase caller)
     {
         var view = default(FrameworkElement);
         if (!boilersGraphics.App.IsTest)
@@ -279,7 +282,7 @@ public class Renderer
                 return false;
             }
         }
-        
+
         view.Measure(new Size(background.Width.Value, background.Height.Value));
         view.Arrange(background.Rect.Value);
         view.UpdateLayout();

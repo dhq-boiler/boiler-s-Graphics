@@ -61,7 +61,7 @@ public class NPieViewModel : DesignerItemViewModelBase
     private void Init()
     {
         ShowConnectors = false;
-        EnablePathGeometryUpdate.Value = true;
+        UpdatingStrategy.Value = PathGeometryUpdatingStrategy.Initial;
         MouseDoubleClickCommand.Subscribe(x => { OpenPropertyDialog(); })
             .AddTo(_CompositeDisposable);
     }
@@ -77,7 +77,7 @@ public class NPieViewModel : DesignerItemViewModelBase
     public override void UpdatePathGeometryIfEnable(string propertyName, object oldValue, object newValue,
         bool flag = false)
     {
-        if (EnablePathGeometryUpdate.Value)
+        if (UpdatingStrategy.Value == PathGeometryUpdatingStrategy.Initial)
         {
             if (!flag)
                 if (Left.Value != 0 && Top.Value != 0 && Width.Value != 0 && Height.Value != 0)
@@ -86,7 +86,7 @@ public class NPieViewModel : DesignerItemViewModelBase
                     if (!geometry.IsEmpty()) PathGeometryNoRotate.Value = geometry;
                 }
 
-            if (RotationAngle.Value != 0) PathGeometryRotate.Value = CreateGeometry(RotationAngle.Value);
+            if (RotationAngle.Value != 0d) PathGeometryRotate.Value = GeometryCreator.Rotate(PathGeometryNoRotate.Value, RotationAngle.Value, CenterPoint.Value);
         }
     }
 
@@ -109,13 +109,6 @@ public class NPieViewModel : DesignerItemViewModelBase
         return ret;
     }
 
-    public override PathGeometry CreateGeometry(double angle)
-    {
-        var geometry = GeometryCreator.CreateDonut(PieCenterPoint.Value, DonutWidth.Value, Distance.Value,
-            StartDegree.Value, EndDegree.Value, SweepDirection.Value);
-        geometry.Transform = new RotateTransform(angle, PieCenterPoint.Value.X, PieCenterPoint.Value.Y);
-        return geometry;
-    }
 
     public NEllipseViewModel CreateNEllipseViewModelLong()
     {

@@ -61,17 +61,17 @@ public class PictureDesignerItemViewModel : DesignerItemViewModelBase, IEmbedded
     protected virtual void Init()
     {
         ShowConnectors = false;
-        EnablePathGeometryUpdate.Value = true;
+        UpdatingStrategy.Value = PathGeometryUpdatingStrategy.Initial;
     }
 
     public override void UpdatePathGeometryIfEnable(string propertyName, object oldValue, object newValue,
         bool flag = false)
     {
-        if (EnablePathGeometryUpdate.Value)
+        if (UpdatingStrategy.Value == PathGeometryUpdatingStrategy.Initial)
         {
             PathGeometryNoRotate.Value = CreateGeometry();
 
-            if (RotationAngle.Value != 0) PathGeometryRotate.Value = CreateGeometry(RotationAngle.Value);
+            if (RotationAngle.Value != 0d) PathGeometryRotate.Value = GeometryCreator.Rotate(PathGeometryNoRotate.Value, RotationAngle.Value, CenterPoint.Value);
         }
     }
 
@@ -80,10 +80,6 @@ public class PictureDesignerItemViewModel : DesignerItemViewModelBase, IEmbedded
         return GeometryCreator.CreatePicture(this, flag);
     }
 
-    public override PathGeometry CreateGeometry(double angle)
-    {
-        return GeometryCreator.CreatePictureWithAngle(this, angle);
-    }
 
     public override Type GetViewType()
     {

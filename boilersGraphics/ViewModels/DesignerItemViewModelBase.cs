@@ -93,6 +93,8 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
 
     public ReactiveProperty<Point> CenterPoint { get; private set; }
 
+    public ReactivePropertySlim<Thickness> Margin { get; } = new();
+
     public ReadOnlyReactivePropertySlim<Thickness> MarginLeftTop { get; private set; }
     public ReadOnlyReactivePropertySlim<Thickness> MarginLeftBottom { get; private set; }
     public ReadOnlyReactivePropertySlim<Thickness> MarginRightTop { get; private set; }
@@ -101,7 +103,6 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
     public ReadOnlyReactivePropertySlim<Thickness> MarginTop { get; private set; }
     public ReadOnlyReactivePropertySlim<Thickness> MarginRight { get; private set; }
     public ReadOnlyReactivePropertySlim<Thickness> MarginBottom { get; private set; }
-
     public ReactivePropertySlim<TransformNotification> TransformNortification { get; } = new(
         mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe | ReactivePropertyMode.DistinctUntilChanged);
 
@@ -168,10 +169,14 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
             .AddTo(_CompositeDisposable);
         RotationAngle
             .Zip(RotationAngle.Skip(1), (Old, New) => new { OldItem = Old, NewItem = New })
-            .Subscribe(x =>
+            .Subscribe(async x =>
             {
                 UpdateTransform(nameof(RotationAngle), x.OldItem, x.NewItem);
                 UpdateMatrix(x.OldItem, x.NewItem);
+                if (RenderingEnabled.Value)
+                {
+                    await OnRectChanged(new Rect(Left.Value, Top.Value, Width.Value, Height.Value));
+                }
             })
             .AddTo(_CompositeDisposable);
         ZIndex
@@ -207,9 +212,9 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
 
         Matrix.Value = new Matrix();
 
-        EnablePathGeometryUpdate.Where(isEnable => isEnable).Subscribe(isEnable =>
+        UpdatingStrategy.Where(x => x == PathGeometryUpdatingStrategy.Initial).Subscribe(x =>
         {
-            UpdatePathGeometryIfEnable(nameof(EnablePathGeometryUpdate), false, true);
+            UpdatePathGeometryIfEnable(nameof(UpdatingStrategy), PathGeometryUpdatingStrategy.Unknown, PathGeometryUpdatingStrategy.Initial);
         }).AddTo(_CompositeDisposable);
 
         MarginLeftTop = ThumbSize.Select(size => new Thickness(-size, -size, 0, 0)).ToReadOnlyReactivePropertySlim();
@@ -240,9 +245,9 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
 
     private void UpdateMatrix(double oldAngle, double newAngle)
     {
-        var targetMatrix = Matrix.Value;
-        targetMatrix.RotateAt(newAngle - oldAngle, 0, 0);
-        Matrix.Value = targetMatrix;
+        var matrix = new Matrix();
+        matrix.Rotate(newAngle);
+        Matrix.Value = matrix;
     }
 
     private void UpdateLeft(double value)
@@ -302,17 +307,21 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
     public virtual void UpdatePathGeometryIfEnable(string propertyName, object oldValue, object newValue,
         bool flag = false)
     {
-        if (EnablePathGeometryUpdate.Value)
+        if (UpdatingStrategy.Value != PathGeometryUpdatingStrategy.Unknown)
         {
             if (!flag) PathGeometryNoRotate.Value = CreateGeometry(flag);
 
-            if (RotationAngle.Value != 0) PathGeometryRotate.Value = CreateGeometry(RotationAngle.Value);
+            if (RotationAngle.Value != 0d) PathGeometryRotate.Value = GeometryCreator.Rotate(PathGeometryNoRotate.Value, RotationAngle.Value, CenterPoint.Value);
+        }
+
+        if (UpdatingStrategy.Value == PathGeometryUpdatingStrategy.Initial)
+        {
+            UpdatingStrategy.Value = PathGeometryUpdatingStrategy.ResizeWhilePreservingOriginalShape;
         }
     }
 
     public abstract PathGeometry CreateGeometry(bool flag = false);
 
-    public abstract PathGeometry CreateGeometry(double angle);
 
     public void TransformObserversOnNext(string propertyName, object oldValue, object newValue)
     {
@@ -369,6 +378,7 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
         var compositeDisposable = new CompositeDisposable();
         base.BeginMonitor(action).AddTo(compositeDisposable);
         Rect.Subscribe(_ => action()).AddTo(compositeDisposable);
+        RotationAngle.Subscribe(_ => action()).AddTo(compositeDisposable);
         return compositeDisposable;
     }
 

@@ -140,28 +140,20 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsDefaulted" Value="true">
-                            <Setter TargetName="border" Property="BorderBrush"
-                                    Value="{StaticResource ControlMouseOverBorderBrush}" />
+                            <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource ControlMouseOverBorderBrush}" />
                         </Trigger>
                         <Trigger Property="IsMouseOver" Value="true">
-                            <Setter TargetName="border" Property="Background"
-                                    Value="{StaticResource ControlMouseOverBackground}" />
-                            <Setter TargetName="border" Property="BorderBrush"
-                                    Value="{StaticResource ControlMouseOverBorderBrush}" />
+                            <Setter TargetName="border" Property="Background" Value="{StaticResource ControlMouseOverBackground}" />
+                            <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource ControlMouseOverBorderBrush}" />
                         </Trigger>
                         <Trigger Property="IsPressed" Value="true">
-                            <Setter TargetName="border" Property="Background"
-                                    Value="{StaticResource ControlSelectedBackground}" />
-                            <Setter TargetName="border" Property="BorderBrush"
-                                    Value="{StaticResource ControlSelectedBorderBrush}" />
+                            <Setter TargetName="border" Property="Background" Value="{StaticResource ControlSelectedBackground}" />
+                            <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource ControlSelectedBorderBrush}" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="false">
-                            <Setter TargetName="border" Property="Background"
-                                    Value="{StaticResource ControlBrightDefaultBackground}" />
-                            <Setter TargetName="border" Property="BorderBrush"
-                                    Value="{StaticResource ControlBrightDefaultBorderBrush}" />
-                            <Setter TargetName="contentPresenter" Property="TextElement.Foreground"
-                                    Value="{StaticResource ControlDisabledGlythColour}" />
+                            <Setter TargetName="border" Property="Background" Value="{StaticResource ControlBrightDefaultBackground}" />
+                            <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource ControlBrightDefaultBorderBrush}" />
+                            <Setter TargetName="contentPresenter" Property="TextElement.Foreground" Value="{StaticResource ControlDisabledGlythColour}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -201,28 +193,20 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsDefaulted" Value="true">
-                            <Setter TargetName="border" Property="BorderBrush"
-                                    Value="{StaticResource ControlMouseOverBorderBrush}" />
+                            <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource ControlMouseOverBorderBrush}" />
                         </Trigger>
                         <Trigger Property="IsMouseOver" Value="true">
-                            <Setter TargetName="border" Property="Background"
-                                    Value="{StaticResource ControlMouseOverBackground}" />
-                            <Setter TargetName="border" Property="BorderBrush"
-                                    Value="{StaticResource ControlMouseOverBorderBrush}" />
+                            <Setter TargetName="border" Property="Background" Value="{StaticResource ControlMouseOverBackground}" />
+                            <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource ControlMouseOverBorderBrush}" />
                         </Trigger>
                         <Trigger Property="IsPressed" Value="true">
-                            <Setter TargetName="border" Property="Background"
-                                    Value="{StaticResource ControlSelectedBackground}" />
-                            <Setter TargetName="border" Property="BorderBrush"
-                                    Value="{StaticResource ControlSelectedBorderBrush}" />
+                            <Setter TargetName="border" Property="Background" Value="{StaticResource ControlSelectedBackground}" />
+                            <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource ControlSelectedBorderBrush}" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="false">
-                            <Setter TargetName="border" Property="Background"
-                                    Value="{StaticResource ControlBrightDefaultBackground}" />
-                            <Setter TargetName="border" Property="BorderBrush"
-                                    Value="{StaticResource ControlBrightDefaultBorderBrush}" />
-                            <Setter TargetName="contentPresenter" Property="TextElement.Foreground"
-                                    Value="{StaticResource ControlDisabledGlythColour}" />
+                            <Setter TargetName="border" Property="Background" Value="{StaticResource ControlBrightDefaultBackground}" />
+                            <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource ControlBrightDefaultBorderBrush}" />
+                            <Setter TargetName="contentPresenter" Property="TextElement.Foreground" Value="{StaticResource ControlDisabledGlythColour}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -518,15 +502,11 @@
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter TargetName="PART_DisabledVisual" Property="Visibility" Value="Visible" />
                         </Trigger>
-                        <DataTrigger
-                            Binding="{Binding DisplayMode, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Calendar}}}"
-                            Value="Year">
+                        <DataTrigger Binding="{Binding DisplayMode, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Calendar}}}" Value="Year">
                             <Setter TargetName="PART_MonthView" Property="Visibility" Value="Hidden" />
                             <Setter TargetName="PART_YearView" Property="Visibility" Value="Visible" />
                         </DataTrigger>
-                        <DataTrigger
-                            Binding="{Binding DisplayMode, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Calendar}}}"
-                            Value="Decade">
+                        <DataTrigger Binding="{Binding DisplayMode, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Calendar}}}" Value="Decade">
                             <Setter TargetName="PART_MonthView" Property="Visibility" Value="Hidden" />
                             <Setter TargetName="PART_YearView" Property="Visibility" Value="Visible" />
                         </DataTrigger>
@@ -608,34 +588,22 @@
                             <Setter Property="Padding" Value="4,-1,0,0" />
                         </Trigger>
                         <Trigger Property="IsMouseOver" Value="true">
-                            <Setter TargetName="checkBoxBorder" Property="Background"
-                                    Value="{StaticResource ControlMouseOverBackground}" />
-                            <Setter TargetName="checkBoxBorder" Property="BorderBrush"
-                                    Value="{StaticResource ControlMouseOverBorderBrush}" />
-                            <Setter TargetName="optionMark" Property="Fill"
-                                    Value="{StaticResource ControlMouseOverGlythColour}" />
-                            <Setter TargetName="indeterminateMark" Property="Fill"
-                                    Value="{StaticResource ControlMouseOverGlythColour}" />
+                            <Setter TargetName="checkBoxBorder" Property="Background" Value="{StaticResource ControlMouseOverBackground}" />
+                            <Setter TargetName="checkBoxBorder" Property="BorderBrush" Value="{StaticResource ControlMouseOverBorderBrush}" />
+                            <Setter TargetName="optionMark" Property="Fill" Value="{StaticResource ControlMouseOverGlythColour}" />
+                            <Setter TargetName="indeterminateMark" Property="Fill" Value="{StaticResource ControlMouseOverGlythColour}" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="false">
-                            <Setter TargetName="checkBoxBorder" Property="Background"
-                                    Value="{StaticResource ControlDisabledBackground}" />
-                            <Setter TargetName="checkBoxBorder" Property="BorderBrush"
-                                    Value="{StaticResource ControlDisabledBorderBrush}" />
-                            <Setter TargetName="optionMark" Property="Fill"
-                                    Value="{StaticResource ControlDisabledGlythColour}" />
-                            <Setter TargetName="indeterminateMark" Property="Fill"
-                                    Value="{StaticResource ControlDisabledGlythColour}" />
+                            <Setter TargetName="checkBoxBorder" Property="Background" Value="{StaticResource ControlDisabledBackground}" />
+                            <Setter TargetName="checkBoxBorder" Property="BorderBrush" Value="{StaticResource ControlDisabledBorderBrush}" />
+                            <Setter TargetName="optionMark" Property="Fill" Value="{StaticResource ControlDisabledGlythColour}" />
+                            <Setter TargetName="indeterminateMark" Property="Fill" Value="{StaticResource ControlDisabledGlythColour}" />
                         </Trigger>
                         <Trigger Property="IsPressed" Value="true">
-                            <Setter TargetName="checkBoxBorder" Property="Background"
-                                    Value="{StaticResource ControlSelectedBackground}" />
-                            <Setter TargetName="checkBoxBorder" Property="BorderBrush"
-                                    Value="{StaticResource ControlSelectedBorderBrush}" />
-                            <Setter TargetName="optionMark" Property="Fill"
-                                    Value="{StaticResource ControlSelectedGlythColour}" />
-                            <Setter TargetName="indeterminateMark" Property="Fill"
-                                    Value="{StaticResource ControlSelectedGlythColour}" />
+                            <Setter TargetName="checkBoxBorder" Property="Background" Value="{StaticResource ControlSelectedBackground}" />
+                            <Setter TargetName="checkBoxBorder" Property="BorderBrush" Value="{StaticResource ControlSelectedBorderBrush}" />
+                            <Setter TargetName="optionMark" Property="Fill" Value="{StaticResource ControlSelectedGlythColour}" />
+                            <Setter TargetName="indeterminateMark" Property="Fill" Value="{StaticResource ControlSelectedGlythColour}" />
                         </Trigger>
                         <Trigger Property="IsChecked" Value="true">
                             <Setter TargetName="optionMark" Property="Opacity" Value="1" />
@@ -706,126 +674,78 @@
                     <ControlTemplate.Triggers>
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
-                                <Condition
-                                    Binding="{Binding IsEditable, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}"
-                                    Value="true" />
-                                <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}"
-                                           Value="false" />
-                                <Condition Binding="{Binding IsPressed, RelativeSource={RelativeSource Self}}"
-                                           Value="false" />
-                                <Condition Binding="{Binding IsEnabled, RelativeSource={RelativeSource Self}}"
-                                           Value="true" />
+                                <Condition Binding="{Binding IsEditable, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}" Value="true" />
+                                <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="false" />
+                                <Condition Binding="{Binding IsPressed, RelativeSource={RelativeSource Self}}" Value="false" />
+                                <Condition Binding="{Binding IsEnabled, RelativeSource={RelativeSource Self}}" Value="true" />
                             </MultiDataTrigger.Conditions>
-                            <Setter TargetName="templateRoot" Property="Background"
-                                    Value="{StaticResource ControlDefaultBackground}" />
-                            <Setter TargetName="templateRoot" Property="BorderBrush"
-                                    Value="{StaticResource ControlDefaultBorderBrush}" />
-                            <Setter TargetName="splitBorder" Property="Background"
-                                    Value="{StaticResource ControlDefaultBackground}" />
-                            <Setter TargetName="splitBorder" Property="BorderBrush"
-                                    Value="{StaticResource ControlDefaultBorderBrush}" />
+                            <Setter TargetName="templateRoot" Property="Background" Value="{StaticResource ControlDefaultBackground}" />
+                            <Setter TargetName="templateRoot" Property="BorderBrush" Value="{StaticResource ControlDefaultBorderBrush}" />
+                            <Setter TargetName="splitBorder" Property="Background" Value="{StaticResource ControlDefaultBackground}" />
+                            <Setter TargetName="splitBorder" Property="BorderBrush" Value="{StaticResource ControlDefaultBorderBrush}" />
                         </MultiDataTrigger>
                         <Trigger Property="IsMouseOver" Value="true">
-                            <Setter TargetName="arrow" Property="Fill"
-                                    Value="{StaticResource ControlMouseOverGlythColour}" />
+                            <Setter TargetName="arrow" Property="Fill" Value="{StaticResource ControlMouseOverGlythColour}" />
                         </Trigger>
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
-                                <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}"
-                                           Value="true" />
-                                <Condition
-                                    Binding="{Binding IsEditable, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}"
-                                    Value="false" />
+                                <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="true" />
+                                <Condition Binding="{Binding IsEditable, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}" Value="false" />
                             </MultiDataTrigger.Conditions>
-                            <Setter TargetName="templateRoot" Property="Background"
-                                    Value="{StaticResource ControlMouseOverBackground}" />
-                            <Setter TargetName="templateRoot" Property="BorderBrush"
-                                    Value="{StaticResource ControlMouseOverBorderBrush}" />
+                            <Setter TargetName="templateRoot" Property="Background" Value="{StaticResource ControlMouseOverBackground}" />
+                            <Setter TargetName="templateRoot" Property="BorderBrush" Value="{StaticResource ControlMouseOverBorderBrush}" />
                         </MultiDataTrigger>
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
-                                <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}"
-                                           Value="true" />
-                                <Condition
-                                    Binding="{Binding IsEditable, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}"
-                                    Value="true" />
+                                <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="true" />
+                                <Condition Binding="{Binding IsEditable, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}" Value="true" />
                             </MultiDataTrigger.Conditions>
-                            <Setter TargetName="templateRoot" Property="Background"
-                                    Value="{StaticResource ControlMouseOverBackground}" />
-                            <Setter TargetName="templateRoot" Property="BorderBrush"
-                                    Value="{StaticResource ControlMouseOverBorderBrush}" />
-                            <Setter TargetName="splitBorder" Property="Background"
-                                    Value="{StaticResource ControlMouseOverBackground}" />
-                            <Setter TargetName="splitBorder" Property="BorderBrush"
-                                    Value="{StaticResource ControlMouseOverBorderBrush}" />
+                            <Setter TargetName="templateRoot" Property="Background" Value="{StaticResource ControlMouseOverBackground}" />
+                            <Setter TargetName="templateRoot" Property="BorderBrush" Value="{StaticResource ControlMouseOverBorderBrush}" />
+                            <Setter TargetName="splitBorder" Property="Background" Value="{StaticResource ControlMouseOverBackground}" />
+                            <Setter TargetName="splitBorder" Property="BorderBrush" Value="{StaticResource ControlMouseOverBorderBrush}" />
                         </MultiDataTrigger>
                         <Trigger Property="IsPressed" Value="true">
-                            <Setter TargetName="arrow" Property="Fill"
-                                    Value="{StaticResource ControlSelectedBackground}" />
+                            <Setter TargetName="arrow" Property="Fill" Value="{StaticResource ControlSelectedBackground}" />
                         </Trigger>
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
-                                <Condition Binding="{Binding IsPressed, RelativeSource={RelativeSource Self}}"
-                                           Value="true" />
-                                <Condition
-                                    Binding="{Binding IsEditable, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}"
-                                    Value="false" />
+                                <Condition Binding="{Binding IsPressed, RelativeSource={RelativeSource Self}}" Value="true" />
+                                <Condition Binding="{Binding IsEditable, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}" Value="false" />
                             </MultiDataTrigger.Conditions>
-                            <Setter TargetName="templateRoot" Property="Background"
-                                    Value="{StaticResource ControlSelectedBackground}" />
-                            <Setter TargetName="templateRoot" Property="BorderBrush"
-                                    Value="{StaticResource ControlSelectedBorderBrush}" />
+                            <Setter TargetName="templateRoot" Property="Background" Value="{StaticResource ControlSelectedBackground}" />
+                            <Setter TargetName="templateRoot" Property="BorderBrush" Value="{StaticResource ControlSelectedBorderBrush}" />
                         </MultiDataTrigger>
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
-                                <Condition Binding="{Binding IsPressed, RelativeSource={RelativeSource Self}}"
-                                           Value="true" />
-                                <Condition
-                                    Binding="{Binding IsEditable, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}"
-                                    Value="true" />
+                                <Condition Binding="{Binding IsPressed, RelativeSource={RelativeSource Self}}" Value="true" />
+                                <Condition Binding="{Binding IsEditable, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}" Value="true" />
                             </MultiDataTrigger.Conditions>
-                            <Setter TargetName="templateRoot" Property="Background"
-                                    Value="{StaticResource ControlSelectedBackground}" />
-                            <Setter TargetName="templateRoot" Property="BorderBrush"
-                                    Value="{StaticResource ControlSelectedBorderBrush}" />
-                            <Setter TargetName="splitBorder" Property="Background"
-                                    Value="{StaticResource ControlSelectedBackground}" />
-                            <Setter TargetName="splitBorder" Property="BorderBrush"
-                                    Value="{StaticResource ControlSelectedBorderBrush}" />
+                            <Setter TargetName="templateRoot" Property="Background" Value="{StaticResource ControlSelectedBackground}" />
+                            <Setter TargetName="templateRoot" Property="BorderBrush" Value="{StaticResource ControlSelectedBorderBrush}" />
+                            <Setter TargetName="splitBorder" Property="Background" Value="{StaticResource ControlSelectedBackground}" />
+                            <Setter TargetName="splitBorder" Property="BorderBrush" Value="{StaticResource ControlSelectedBorderBrush}" />
                         </MultiDataTrigger>
                         <Trigger Property="IsEnabled" Value="false">
-                            <Setter TargetName="arrow" Property="Fill"
-                                    Value="{StaticResource ControlDisabledGlythColour}" />
+                            <Setter TargetName="arrow" Property="Fill" Value="{StaticResource ControlDisabledGlythColour}" />
                         </Trigger>
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
-                                <Condition Binding="{Binding IsEnabled, RelativeSource={RelativeSource Self}}"
-                                           Value="false" />
-                                <Condition
-                                    Binding="{Binding IsEditable, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}"
-                                    Value="false" />
+                                <Condition Binding="{Binding IsEnabled, RelativeSource={RelativeSource Self}}" Value="false" />
+                                <Condition Binding="{Binding IsEditable, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}" Value="false" />
                             </MultiDataTrigger.Conditions>
-                            <Setter TargetName="templateRoot" Property="Background"
-                                    Value="{StaticResource ControlDisabledBackground}" />
-                            <Setter TargetName="templateRoot" Property="BorderBrush"
-                                    Value="{StaticResource ControlDisabledBorderBrush}" />
+                            <Setter TargetName="templateRoot" Property="Background" Value="{StaticResource ControlDisabledBackground}" />
+                            <Setter TargetName="templateRoot" Property="BorderBrush" Value="{StaticResource ControlDisabledBorderBrush}" />
                         </MultiDataTrigger>
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
-                                <Condition Binding="{Binding IsEnabled, RelativeSource={RelativeSource Self}}"
-                                           Value="false" />
-                                <Condition
-                                    Binding="{Binding IsEditable, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}"
-                                    Value="true" />
+                                <Condition Binding="{Binding IsEnabled, RelativeSource={RelativeSource Self}}" Value="false" />
+                                <Condition Binding="{Binding IsEditable, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}" Value="true" />
                             </MultiDataTrigger.Conditions>
-                            <Setter TargetName="templateRoot" Property="Background"
-                                    Value="{StaticResource ControlDisabledBackground}" />
-                            <Setter TargetName="templateRoot" Property="BorderBrush"
-                                    Value="{StaticResource ControlDisabledBorderBrush}" />
-                            <Setter TargetName="splitBorder" Property="Background"
-                                    Value="{StaticResource ControlDisabledBackground}" />
-                            <Setter TargetName="splitBorder" Property="BorderBrush"
-                                    Value="{StaticResource ControlDisabledBorderBrush}" />
+                            <Setter TargetName="templateRoot" Property="Background" Value="{StaticResource ControlDisabledBackground}" />
+                            <Setter TargetName="templateRoot" Property="BorderBrush" Value="{StaticResource ControlDisabledBorderBrush}" />
+                            <Setter TargetName="splitBorder" Property="Background" Value="{StaticResource ControlDisabledBackground}" />
+                            <Setter TargetName="splitBorder" Property="BorderBrush" Value="{StaticResource ControlDisabledBorderBrush}" />
                         </MultiDataTrigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -836,8 +756,7 @@
         <Grid x:Name="templateRoot" SnapsToDevicePixels="true">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="0"
-                                  MinWidth="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}" />
+                <ColumnDefinition Width="0" MinWidth="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}" />
             </Grid.ColumnDefinitions>
             <Popup
                 x:Name="PART_Popup"
@@ -917,10 +836,8 @@
                 <Setter Property="ScrollViewer.CanContentScroll" Value="false" />
             </MultiTrigger>
             <Trigger SourceName="DropDownScrollViewer" Property="ScrollViewer.CanContentScroll" Value="false">
-                <Setter TargetName="opaqueRect" Property="Canvas.Top"
-                        Value="{Binding VerticalOffset, ElementName=DropDownScrollViewer}" />
-                <Setter TargetName="opaqueRect" Property="Canvas.Left"
-                        Value="{Binding HorizontalOffset, ElementName=DropDownScrollViewer}" />
+                <Setter TargetName="opaqueRect" Property="Canvas.Top" Value="{Binding VerticalOffset, ElementName=DropDownScrollViewer}" />
+                <Setter TargetName="opaqueRect" Property="Canvas.Left" Value="{Binding HorizontalOffset, ElementName=DropDownScrollViewer}" />
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
@@ -976,8 +893,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type controls:DoubleTextBox}">
-                    <Border BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}">
+                    <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
                         <ScrollViewer
                             x:Name="PART_ContentHost"
                             Background="Transparent"
@@ -993,8 +909,7 @@
         <Grid x:Name="templateRoot" SnapsToDevicePixels="true">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="0"
-                                  MinWidth="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}" />
+                <ColumnDefinition Width="0" MinWidth="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}" />
             </Grid.ColumnDefinitions>
             <Popup
                 x:Name="PART_Popup"
@@ -1080,10 +995,8 @@
                 <Setter Property="ScrollViewer.CanContentScroll" Value="false" />
             </MultiTrigger>
             <Trigger SourceName="DropDownScrollViewer" Property="ScrollViewer.CanContentScroll" Value="false">
-                <Setter TargetName="opaqueRect" Property="Canvas.Top"
-                        Value="{Binding VerticalOffset, ElementName=DropDownScrollViewer}" />
-                <Setter TargetName="opaqueRect" Property="Canvas.Left"
-                        Value="{Binding HorizontalOffset, ElementName=DropDownScrollViewer}" />
+                <Setter TargetName="opaqueRect" Property="Canvas.Top" Value="{Binding VerticalOffset, ElementName=DropDownScrollViewer}" />
+                <Setter TargetName="opaqueRect" Property="Canvas.Left" Value="{Binding HorizontalOffset, ElementName=DropDownScrollViewer}" />
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
@@ -1114,10 +1027,8 @@
     <Style TargetType="{x:Type ComboBoxItem}">
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="Padding" Value="4,1" />
-        <Setter Property="HorizontalContentAlignment"
-                Value="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />
-        <Setter Property="VerticalContentAlignment"
-                Value="{Binding VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />
+        <Setter Property="HorizontalContentAlignment" Value="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />
+        <Setter Property="VerticalContentAlignment" Value="{Binding VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />
         <Setter Property="Foreground" Value="{StaticResource ControlDefaultForeground}" />
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="BorderBrush" Value="Transparent" />
@@ -1141,8 +1052,7 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsEnabled" Value="False">
-                            <Setter TargetName="Bd" Property="TextElement.Foreground"
-                                    Value="{StaticResource ControlDisabledGlythColour}" />
+                            <Setter TargetName="Bd" Property="TextElement.Foreground" Value="{StaticResource ControlDisabledGlythColour}" />
                         </Trigger>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
@@ -1150,10 +1060,8 @@
                                 <Condition Property="IsMouseOver" Value="True" />
                                 <Condition Property="IsKeyboardFocused" Value="False" />
                             </MultiTrigger.Conditions>
-                            <Setter TargetName="Bd" Property="Background"
-                                    Value="{StaticResource ControlMouseOverBackground}" />
-                            <Setter TargetName="Bd" Property="BorderBrush"
-                                    Value="{StaticResource ControlMouseOverBorderBrush}" />
+                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource ControlMouseOverBackground}" />
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource ControlMouseOverBorderBrush}" />
                         </MultiTrigger>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
@@ -1161,20 +1069,16 @@
                                 <Condition Property="IsMouseOver" Value="False" />
                                 <Condition Property="IsKeyboardFocused" Value="True" />
                             </MultiTrigger.Conditions>
-                            <Setter TargetName="Bd" Property="Background"
-                                    Value="{StaticResource ControlSelectedBackground}" />
-                            <Setter TargetName="Bd" Property="BorderBrush"
-                                    Value="{StaticResource ControlSelectedBorderBrush}" />
+                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource ControlSelectedBackground}" />
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource ControlSelectedBorderBrush}" />
                         </MultiTrigger>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
                                 <Condition Property="IsSelected" Value="True" />
                                 <Condition Property="IsMouseOver" Value="True" />
                             </MultiTrigger.Conditions>
-                            <Setter TargetName="Bd" Property="Background"
-                                    Value="{StaticResource ControlSelectedMouseOverBackground}" />
-                            <Setter TargetName="Bd" Property="BorderBrush"
-                                    Value="{StaticResource ControlSelectedMouseOverBorderBrush}" />
+                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource ControlSelectedMouseOverBackground}" />
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource ControlSelectedMouseOverBorderBrush}" />
                         </MultiTrigger>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
@@ -1182,10 +1086,8 @@
                                 <Condition Property="IsMouseOver" Value="False" />
                                 <Condition Property="IsKeyboardFocused" Value="False" />
                             </MultiTrigger.Conditions>
-                            <Setter TargetName="Bd" Property="Background"
-                                    Value="{StaticResource ControlDisabledBackground}" />
-                            <Setter TargetName="Bd" Property="BorderBrush"
-                                    Value="{StaticResource ControlDisabledBorderBrush}" />
+                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource ControlDisabledBackground}" />
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource ControlDisabledBorderBrush}" />
                         </MultiTrigger>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
@@ -1193,8 +1095,7 @@
                                 <Condition Property="IsMouseOver" Value="False" />
                                 <Condition Property="IsKeyboardFocused" Value="True" />
                             </MultiTrigger.Conditions>
-                            <Setter TargetName="Bd" Property="BorderBrush"
-                                    Value="{StaticResource ControlMouseOverBorderBrush}" />
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource ControlMouseOverBorderBrush}" />
                         </MultiTrigger>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
@@ -1202,10 +1103,8 @@
                                 <Condition Property="IsMouseOver" Value="True" />
                                 <Condition Property="IsKeyboardFocused" Value="True" />
                             </MultiTrigger.Conditions>
-                            <Setter TargetName="Bd" Property="Background"
-                                    Value="{StaticResource ControlMouseOverBackground}" />
-                            <Setter TargetName="Bd" Property="BorderBrush"
-                                    Value="{StaticResource ControlMouseOverBorderBrush}" />
+                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource ControlMouseOverBackground}" />
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource ControlMouseOverBorderBrush}" />
                         </MultiTrigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -1271,29 +1170,20 @@
                             <Setter TargetName="arrow" Property="Data" Value="M 1,4.5  L 4.5,1  L 8,4.5" />
                         </Trigger>
                         <Trigger Property="IsMouseOver" Value="true">
-                            <Setter TargetName="circle" Property="Stroke"
-                                    Value="{StaticResource ControlMouseOverBorderBrush}" />
-                            <Setter TargetName="circle" Property="Fill"
-                                    Value="{StaticResource ControlMouseOverBackground}" />
-                            <Setter TargetName="arrow" Property="Stroke"
-                                    Value="{StaticResource ControlDefaultForeground}" />
+                            <Setter TargetName="circle" Property="Stroke" Value="{StaticResource ControlMouseOverBorderBrush}" />
+                            <Setter TargetName="circle" Property="Fill" Value="{StaticResource ControlMouseOverBackground}" />
+                            <Setter TargetName="arrow" Property="Stroke" Value="{StaticResource ControlDefaultForeground}" />
                         </Trigger>
                         <Trigger Property="IsPressed" Value="true">
-                            <Setter TargetName="circle" Property="Stroke"
-                                    Value="{StaticResource ControlSelectedBorderBrush}" />
+                            <Setter TargetName="circle" Property="Stroke" Value="{StaticResource ControlSelectedBorderBrush}" />
                             <Setter TargetName="circle" Property="StrokeThickness" Value="1.5" />
-                            <Setter TargetName="circle" Property="Fill"
-                                    Value="{StaticResource ControlSelectedBackground}" />
-                            <Setter TargetName="arrow" Property="Stroke"
-                                    Value="{StaticResource ControlDefaultForeground}" />
+                            <Setter TargetName="circle" Property="Fill" Value="{StaticResource ControlSelectedBackground}" />
+                            <Setter TargetName="arrow" Property="Stroke" Value="{StaticResource ControlDefaultForeground}" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="false">
-                            <Setter TargetName="circle" Property="Stroke"
-                                    Value="{StaticResource ControlDisabledBorderBrush}" />
-                            <Setter TargetName="circle" Property="Fill"
-                                    Value="{StaticResource ControlDisabledBackground}" />
-                            <Setter TargetName="arrow" Property="Stroke"
-                                    Value="{StaticResource ControlDisabledGlythColour}" />
+                            <Setter TargetName="circle" Property="Stroke" Value="{StaticResource ControlDisabledBorderBrush}" />
+                            <Setter TargetName="circle" Property="Fill" Value="{StaticResource ControlDisabledBackground}" />
+                            <Setter TargetName="arrow" Property="Stroke" Value="{StaticResource ControlDisabledGlythColour}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -1352,29 +1242,20 @@
                             <Setter TargetName="arrow" Property="Data" Value="M 1,4.5  L 4.5,1  L 8,4.5" />
                         </Trigger>
                         <Trigger Property="IsMouseOver" Value="true">
-                            <Setter TargetName="circle" Property="Stroke"
-                                    Value="{StaticResource ControlMouseOverBorderBrush}" />
-                            <Setter TargetName="circle" Property="Fill"
-                                    Value="{StaticResource ControlMouseOverBackground}" />
-                            <Setter TargetName="arrow" Property="Stroke"
-                                    Value="{StaticResource ControlDefaultForeground}" />
+                            <Setter TargetName="circle" Property="Stroke" Value="{StaticResource ControlMouseOverBorderBrush}" />
+                            <Setter TargetName="circle" Property="Fill" Value="{StaticResource ControlMouseOverBackground}" />
+                            <Setter TargetName="arrow" Property="Stroke" Value="{StaticResource ControlDefaultForeground}" />
                         </Trigger>
                         <Trigger Property="IsPressed" Value="true">
-                            <Setter TargetName="circle" Property="Stroke"
-                                    Value="{StaticResource ControlSelectedBorderBrush}" />
+                            <Setter TargetName="circle" Property="Stroke" Value="{StaticResource ControlSelectedBorderBrush}" />
                             <Setter TargetName="circle" Property="StrokeThickness" Value="1.5" />
-                            <Setter TargetName="circle" Property="Fill"
-                                    Value="{StaticResource ControlSelectedBackground}" />
-                            <Setter TargetName="arrow" Property="Stroke"
-                                    Value="{StaticResource ControlDefaultForeground}" />
+                            <Setter TargetName="circle" Property="Fill" Value="{StaticResource ControlSelectedBackground}" />
+                            <Setter TargetName="arrow" Property="Stroke" Value="{StaticResource ControlDefaultForeground}" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="false">
-                            <Setter TargetName="circle" Property="Stroke"
-                                    Value="{StaticResource ControlDisabledBorderBrush}" />
-                            <Setter TargetName="circle" Property="Fill"
-                                    Value="{StaticResource ControlDisabledBackground}" />
-                            <Setter TargetName="arrow" Property="Stroke"
-                                    Value="{StaticResource ControlDisabledGlythColour}" />
+                            <Setter TargetName="circle" Property="Stroke" Value="{StaticResource ControlDisabledBorderBrush}" />
+                            <Setter TargetName="circle" Property="Fill" Value="{StaticResource ControlDisabledBackground}" />
+                            <Setter TargetName="arrow" Property="Stroke" Value="{StaticResource ControlDisabledGlythColour}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -1433,29 +1314,20 @@
                             <Setter TargetName="arrow" Property="Data" Value="M 1,4.5  L 4.5,1  L 8,4.5" />
                         </Trigger>
                         <Trigger Property="IsMouseOver" Value="true">
-                            <Setter TargetName="circle" Property="Stroke"
-                                    Value="{StaticResource ControlMouseOverBorderBrush}" />
-                            <Setter TargetName="circle" Property="Fill"
-                                    Value="{StaticResource ControlMouseOverBackground}" />
-                            <Setter TargetName="arrow" Property="Stroke"
-                                    Value="{StaticResource ControlDefaultForeground}" />
+                            <Setter TargetName="circle" Property="Stroke" Value="{StaticResource ControlMouseOverBorderBrush}" />
+                            <Setter TargetName="circle" Property="Fill" Value="{StaticResource ControlMouseOverBackground}" />
+                            <Setter TargetName="arrow" Property="Stroke" Value="{StaticResource ControlDefaultForeground}" />
                         </Trigger>
                         <Trigger Property="IsPressed" Value="true">
-                            <Setter TargetName="circle" Property="Stroke"
-                                    Value="{StaticResource ControlSelectedBorderBrush}" />
+                            <Setter TargetName="circle" Property="Stroke" Value="{StaticResource ControlSelectedBorderBrush}" />
                             <Setter TargetName="circle" Property="StrokeThickness" Value="1.5" />
-                            <Setter TargetName="circle" Property="Fill"
-                                    Value="{StaticResource ControlSelectedBackground}" />
-                            <Setter TargetName="arrow" Property="Stroke"
-                                    Value="{StaticResource ControlDefaultForeground}" />
+                            <Setter TargetName="circle" Property="Fill" Value="{StaticResource ControlSelectedBackground}" />
+                            <Setter TargetName="arrow" Property="Stroke" Value="{StaticResource ControlDefaultForeground}" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="false">
-                            <Setter TargetName="circle" Property="Stroke"
-                                    Value="{StaticResource ControlDisabledBorderBrush}" />
-                            <Setter TargetName="circle" Property="Fill"
-                                    Value="{StaticResource ControlDisabledBackground}" />
-                            <Setter TargetName="arrow" Property="Stroke"
-                                    Value="{StaticResource ControlDisabledGlythColour}" />
+                            <Setter TargetName="circle" Property="Stroke" Value="{StaticResource ControlDisabledBorderBrush}" />
+                            <Setter TargetName="circle" Property="Fill" Value="{StaticResource ControlDisabledBackground}" />
+                            <Setter TargetName="arrow" Property="Stroke" Value="{StaticResource ControlDisabledGlythColour}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -1519,29 +1391,20 @@
                             <Setter TargetName="arrow" Property="Data" Value="M 1,4.5  L 4.5,1  L 8,4.5" />
                         </Trigger>
                         <Trigger Property="IsMouseOver" Value="true">
-                            <Setter TargetName="circle" Property="Stroke"
-                                    Value="{StaticResource ControlMouseOverBorderBrush}" />
-                            <Setter TargetName="circle" Property="Fill"
-                                    Value="{StaticResource ControlMouseOverBackground}" />
-                            <Setter TargetName="arrow" Property="Stroke"
-                                    Value="{StaticResource ControlDefaultForeground}" />
+                            <Setter TargetName="circle" Property="Stroke" Value="{StaticResource ControlMouseOverBorderBrush}" />
+                            <Setter TargetName="circle" Property="Fill" Value="{StaticResource ControlMouseOverBackground}" />
+                            <Setter TargetName="arrow" Property="Stroke" Value="{StaticResource ControlDefaultForeground}" />
                         </Trigger>
                         <Trigger Property="IsPressed" Value="true">
-                            <Setter TargetName="circle" Property="Stroke"
-                                    Value="{StaticResource ControlSelectedBorderBrush}" />
+                            <Setter TargetName="circle" Property="Stroke" Value="{StaticResource ControlSelectedBorderBrush}" />
                             <Setter TargetName="circle" Property="StrokeThickness" Value="1.5" />
-                            <Setter TargetName="circle" Property="Fill"
-                                    Value="{StaticResource ControlSelectedBackground}" />
-                            <Setter TargetName="arrow" Property="Stroke"
-                                    Value="{StaticResource ControlDefaultForeground}" />
+                            <Setter TargetName="circle" Property="Fill" Value="{StaticResource ControlSelectedBackground}" />
+                            <Setter TargetName="arrow" Property="Stroke" Value="{StaticResource ControlDefaultForeground}" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="false">
-                            <Setter TargetName="circle" Property="Stroke"
-                                    Value="{StaticResource ControlDisabledBorderBrush}" />
-                            <Setter TargetName="circle" Property="Fill"
-                                    Value="{StaticResource ControlDisabledBackground}" />
-                            <Setter TargetName="arrow" Property="Stroke"
-                                    Value="{StaticResource ControlDisabledGlythColour}" />
+                            <Setter TargetName="circle" Property="Stroke" Value="{StaticResource ControlDisabledBorderBrush}" />
+                            <Setter TargetName="circle" Property="Fill" Value="{StaticResource ControlDisabledBackground}" />
+                            <Setter TargetName="arrow" Property="Stroke" Value="{StaticResource ControlDisabledGlythColour}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -1605,20 +1468,17 @@
                         <Trigger Property="ExpandDirection" Value="Right">
                             <Setter TargetName="ExpandSite" Property="DockPanel.Dock" Value="Right" />
                             <Setter TargetName="HeaderSite" Property="DockPanel.Dock" Value="Left" />
-                            <Setter TargetName="HeaderSite" Property="Style"
-                                    Value="{StaticResource ExpanderRightHeaderStyle}" />
+                            <Setter TargetName="HeaderSite" Property="Style" Value="{StaticResource ExpanderRightHeaderStyle}" />
                         </Trigger>
                         <Trigger Property="ExpandDirection" Value="Up">
                             <Setter TargetName="ExpandSite" Property="DockPanel.Dock" Value="Top" />
                             <Setter TargetName="HeaderSite" Property="DockPanel.Dock" Value="Bottom" />
-                            <Setter TargetName="HeaderSite" Property="Style"
-                                    Value="{StaticResource ExpanderUpHeaderStyle}" />
+                            <Setter TargetName="HeaderSite" Property="Style" Value="{StaticResource ExpanderUpHeaderStyle}" />
                         </Trigger>
                         <Trigger Property="ExpandDirection" Value="Left">
                             <Setter TargetName="ExpandSite" Property="DockPanel.Dock" Value="Left" />
                             <Setter TargetName="HeaderSite" Property="DockPanel.Dock" Value="Right" />
-                            <Setter TargetName="HeaderSite" Property="Style"
-                                    Value="{StaticResource ExpanderLeftHeaderStyle}" />
+                            <Setter TargetName="HeaderSite" Property="Style" Value="{StaticResource ExpanderLeftHeaderStyle}" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="false">
                             <Setter Property="Foreground" Value="{StaticResource ControlDisabledGlythColour}" />
@@ -1685,20 +1545,17 @@
                         <Trigger Property="ExpandDirection" Value="Right">
                             <Setter TargetName="ExpandSite" Property="DockPanel.Dock" Value="Right" />
                             <Setter TargetName="HeaderSite" Property="DockPanel.Dock" Value="Left" />
-                            <Setter TargetName="HeaderSite" Property="Style"
-                                    Value="{StaticResource ExpanderRightHeaderStyle}" />
+                            <Setter TargetName="HeaderSite" Property="Style" Value="{StaticResource ExpanderRightHeaderStyle}" />
                         </Trigger>
                         <Trigger Property="ExpandDirection" Value="Up">
                             <Setter TargetName="ExpandSite" Property="DockPanel.Dock" Value="Top" />
                             <Setter TargetName="HeaderSite" Property="DockPanel.Dock" Value="Bottom" />
-                            <Setter TargetName="HeaderSite" Property="Style"
-                                    Value="{StaticResource ExpanderUpHeaderStyle}" />
+                            <Setter TargetName="HeaderSite" Property="Style" Value="{StaticResource ExpanderUpHeaderStyle}" />
                         </Trigger>
                         <Trigger Property="ExpandDirection" Value="Left">
                             <Setter TargetName="ExpandSite" Property="DockPanel.Dock" Value="Left" />
                             <Setter TargetName="HeaderSite" Property="DockPanel.Dock" Value="Right" />
-                            <Setter TargetName="HeaderSite" Property="Style"
-                                    Value="{StaticResource ExpanderLeftHeaderStyle}" />
+                            <Setter TargetName="HeaderSite" Property="Style" Value="{StaticResource ExpanderLeftHeaderStyle}" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="false">
                             <Setter Property="Foreground" Value="{StaticResource ControlDisabledGlythColour}" />
@@ -1779,8 +1636,7 @@
                             BorderThickness="{TemplateBinding BorderThickness}"
                             CornerRadius="0">
                             <Border.OpacityMask>
-                                <MultiBinding Converter="{StaticResource BorderGapMaskConverter}"
-                                              ConverterParameter="7">
+                                <MultiBinding Converter="{StaticResource BorderGapMaskConverter}" ConverterParameter="7">
                                     <Binding ElementName="Header" Path="ActualWidth" />
                                     <Binding Path="ActualWidth" RelativeSource="{RelativeSource Self}" />
                                     <Binding Path="ActualHeight" RelativeSource="{RelativeSource Self}" />
@@ -1854,8 +1710,7 @@
                             BorderThickness="{TemplateBinding BorderThickness}"
                             CornerRadius="4">
                             <Border.OpacityMask>
-                                <MultiBinding Converter="{StaticResource BorderGapMaskConverter}"
-                                              ConverterParameter="7">
+                                <MultiBinding Converter="{StaticResource BorderGapMaskConverter}" ConverterParameter="7">
                                     <Binding ElementName="Header" Path="ActualWidth" />
                                     <Binding Path="ActualWidth" RelativeSource="{RelativeSource Self}" />
                                     <Binding Path="ActualHeight" RelativeSource="{RelativeSource Self}" />
@@ -1962,10 +1817,8 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsEnabled" Value="false">
-                            <Setter TargetName="Bd" Property="Background"
-                                    Value="{StaticResource ControlDisabledBackground}" />
-                            <Setter TargetName="Bd" Property="BorderBrush"
-                                    Value="{StaticResource ControlDisabledBackground}" />
+                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource ControlDisabledBackground}" />
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource ControlDisabledBackground}" />
                         </Trigger>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
@@ -2010,10 +1863,8 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsEnabled" Value="false">
-                            <Setter TargetName="Bd" Property="Background"
-                                    Value="{StaticResource ControlDisabledBackground}" />
-                            <Setter TargetName="Bd" Property="BorderBrush"
-                                    Value="{StaticResource ControlDisabledBackground}" />
+                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource ControlDisabledBackground}" />
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource ControlDisabledBackground}" />
                         </Trigger>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
@@ -2056,34 +1907,27 @@
                             <MultiTrigger.Conditions>
                                 <Condition Property="IsMouseOver" Value="True" />
                             </MultiTrigger.Conditions>
-                            <Setter TargetName="Bd" Property="Background"
-                                    Value="{StaticResource ControlMouseOverBackground}" />
-                            <Setter TargetName="Bd" Property="BorderBrush"
-                                    Value="{StaticResource ControlMouseOverBorderBrush}" />
+                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource ControlMouseOverBackground}" />
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource ControlMouseOverBorderBrush}" />
                         </MultiTrigger>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
                                 <Condition Property="Selector.IsSelectionActive" Value="False" />
                                 <Condition Property="IsSelected" Value="True" />
                             </MultiTrigger.Conditions>
-                            <Setter TargetName="Bd" Property="Background"
-                                    Value="{StaticResource ControlDefaultBackground}" />
-                            <Setter TargetName="Bd" Property="BorderBrush"
-                                    Value="{StaticResource ControlDefaultBorderBrush}" />
+                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource ControlDefaultBackground}" />
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource ControlDefaultBorderBrush}" />
                         </MultiTrigger>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
                                 <Condition Property="Selector.IsSelectionActive" Value="True" />
                                 <Condition Property="IsSelected" Value="True" />
                             </MultiTrigger.Conditions>
-                            <Setter TargetName="Bd" Property="Background"
-                                    Value="{StaticResource ControlSelectedBackground}" />
-                            <Setter TargetName="Bd" Property="BorderBrush"
-                                    Value="{StaticResource ControlSelectedBorderBrush}" />
+                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource ControlSelectedBackground}" />
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource ControlSelectedBorderBrush}" />
                         </MultiTrigger>
                         <Trigger Property="IsEnabled" Value="False">
-                            <Setter TargetName="Bd" Property="TextElement.Foreground"
-                                    Value="{StaticResource ControlDisabledGlythColour}" />
+                            <Setter TargetName="Bd" Property="TextElement.Foreground" Value="{StaticResource ControlDisabledGlythColour}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -2121,10 +1965,8 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsEnabled" Value="false">
-                            <Setter TargetName="Bd" Property="Background"
-                                    Value="{StaticResource ControlDisabledBackground}" />
-                            <Setter TargetName="Bd" Property="BorderBrush"
-                                    Value="{StaticResource ControlDisabledBackground}" />
+                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource ControlDisabledBackground}" />
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource ControlDisabledBackground}" />
                         </Trigger>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
@@ -2138,10 +1980,8 @@
                                 <Condition Property="Selector.IsSelectionActive" Value="False" />
                                 <Condition Property="IsSelected" Value="True" />
                             </MultiTrigger.Conditions>
-                            <Setter TargetName="Bd" Property="Background"
-                                    Value="{StaticResource ControlDefaultBackground}" />
-                            <Setter TargetName="Bd" Property="BorderBrush"
-                                    Value="{StaticResource ControlDefaultBorderBrush}" />
+                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource ControlDefaultBackground}" />
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource ControlDefaultBorderBrush}" />
                         </MultiTrigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -2268,22 +2108,16 @@
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsEnabled" Value="false">
-                            <Setter TargetName="HeaderBorder" Property="Background"
-                                    Value="{StaticResource ControlDisabledBackground}" />
-                            <Setter TargetName="HeaderBorder" Property="BorderBrush"
-                                    Value="{StaticResource ControlDisabledBackground}" />
+                            <Setter TargetName="HeaderBorder" Property="Background" Value="{StaticResource ControlDisabledBackground}" />
+                            <Setter TargetName="HeaderBorder" Property="BorderBrush" Value="{StaticResource ControlDisabledBackground}" />
                         </Trigger>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="HeaderBorder" Property="Background"
-                                    Value="{StaticResource ControlMouseOverBackground}" />
-                            <Setter TargetName="HeaderBorder" Property="BorderBrush"
-                                    Value="{StaticResource ControlMouseOverBorderBrush}" />
+                            <Setter TargetName="HeaderBorder" Property="Background" Value="{StaticResource ControlMouseOverBackground}" />
+                            <Setter TargetName="HeaderBorder" Property="BorderBrush" Value="{StaticResource ControlMouseOverBorderBrush}" />
                         </Trigger>
                         <Trigger Property="IsPressed" Value="true">
-                            <Setter TargetName="HeaderBorder" Property="Background"
-                                    Value="{StaticResource ControlSelectedBackground}" />
-                            <Setter TargetName="HeaderBorder" Property="BorderBrush"
-                                    Value="{StaticResource ControlSelectedBorderBrush}" />
+                            <Setter TargetName="HeaderBorder" Property="Background" Value="{StaticResource ControlSelectedBackground}" />
+                            <Setter TargetName="HeaderBorder" Property="BorderBrush" Value="{StaticResource ControlSelectedBorderBrush}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -2324,10 +2158,8 @@
     <Style TargetType="{x:Type ListViewItem}">
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="Padding" Value="4,1" />
-        <Setter Property="HorizontalContentAlignment"
-                Value="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />
-        <Setter Property="VerticalContentAlignment"
-                Value="{Binding VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />
+        <Setter Property="HorizontalContentAlignment" Value="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />
+        <Setter Property="VerticalContentAlignment" Value="{Binding VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="BorderBrush" Value="Transparent" />
         <Setter Property="BorderThickness" Value="1" />
@@ -2342,42 +2174,34 @@
                         BorderBrush="{TemplateBinding BorderBrush}"
                         BorderThickness="{TemplateBinding BorderThickness}"
                         SnapsToDevicePixels="true">
-                        <GridViewRowPresenter HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
-                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                        <GridViewRowPresenter HorizontalAlignment="{TemplateBinding HorizontalAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
                     </Border>
                     <ControlTemplate.Triggers>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
                                 <Condition Property="IsMouseOver" Value="True" />
                             </MultiTrigger.Conditions>
-                            <Setter TargetName="Bd" Property="Background"
-                                    Value="{StaticResource ControlMouseOverBackground}" />
-                            <Setter TargetName="Bd" Property="BorderBrush"
-                                    Value="{StaticResource ControlMouseOverBorderBrush}" />
+                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource ControlMouseOverBackground}" />
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource ControlMouseOverBorderBrush}" />
                         </MultiTrigger>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
                                 <Condition Property="Selector.IsSelectionActive" Value="False" />
                                 <Condition Property="IsSelected" Value="True" />
                             </MultiTrigger.Conditions>
-                            <Setter TargetName="Bd" Property="Background"
-                                    Value="{StaticResource ControlDefaultBackground}" />
-                            <Setter TargetName="Bd" Property="BorderBrush"
-                                    Value="{StaticResource ControlDefaultBorderBrush}" />
+                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource ControlDefaultBackground}" />
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource ControlDefaultBorderBrush}" />
                         </MultiTrigger>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
                                 <Condition Property="Selector.IsSelectionActive" Value="True" />
                                 <Condition Property="IsSelected" Value="True" />
                             </MultiTrigger.Conditions>
-                            <Setter TargetName="Bd" Property="Background"
-                                    Value="{StaticResource ControlSelectedBackground}" />
-                            <Setter TargetName="Bd" Property="BorderBrush"
-                                    Value="{StaticResource ControlSelectedBorderBrush}" />
+                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource ControlSelectedBackground}" />
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource ControlSelectedBorderBrush}" />
                         </MultiTrigger>
                         <Trigger Property="IsEnabled" Value="False">
-                            <Setter TargetName="Bd" Property="TextElement.Foreground"
-                                    Value="{StaticResource ControlDisabledGlythColour}" />
+                            <Setter TargetName="Bd" Property="TextElement.Foreground" Value="{StaticResource ControlDisabledGlythColour}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -2514,8 +2338,7 @@
                                         Background="{StaticResource ControlDefaultBackground}"
                                         BorderBrush="{StaticResource ControlDefaultBorderBrush}"
                                         BorderThickness="1">
-                                        <ScrollViewer x:Name="SubMenuScrollViewer"
-                                                      Style="{DynamicResource {ComponentResourceKey ResourceId=MenuScrollViewer, TypeInTargetAssembly={x:Type FrameworkElement}}}">
+                                        <ScrollViewer x:Name="SubMenuScrollViewer" Style="{DynamicResource {ComponentResourceKey ResourceId=MenuScrollViewer, TypeInTargetAssembly={x:Type FrameworkElement}}}">
                                             <Grid x:Name="Grid1" RenderOptions.ClearTypeHint="Enabled">
                                                 <Canvas
                                                     x:Name="Canvas"
@@ -2565,21 +2388,16 @@
                             <Setter TargetName="Icon" Property="Visibility" Value="Collapsed" />
                         </Trigger>
                         <Trigger Property="IsHighlighted" Value="True">
-                            <Setter TargetName="templateRoot" Property="Background"
-                                    Value="{StaticResource ControlMouseOverBackground}" />
-                            <Setter TargetName="templateRoot" Property="BorderBrush"
-                                    Value="{StaticResource ControlMouseOverBorderBrush}" />
+                            <Setter TargetName="templateRoot" Property="Background" Value="{StaticResource ControlMouseOverBackground}" />
+                            <Setter TargetName="templateRoot" Property="BorderBrush" Value="{StaticResource ControlMouseOverBorderBrush}" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
-                            <Setter TargetName="templateRoot" Property="TextElement.Foreground"
-                                    Value="{StaticResource ControlDisabledGlythColour}" />
+                            <Setter TargetName="templateRoot" Property="TextElement.Foreground" Value="{StaticResource ControlDisabledGlythColour}" />
                             <Setter Property="Background" Value="{StaticResource ControlDisabledBackground}" />
                         </Trigger>
                         <Trigger SourceName="SubMenuScrollViewer" Property="CanContentScroll" Value="False">
-                            <Setter TargetName="OpaqueRect" Property="Canvas.Top"
-                                    Value="{Binding VerticalOffset, ElementName=SubMenuScrollViewer}" />
-                            <Setter TargetName="OpaqueRect" Property="Canvas.Left"
-                                    Value="{Binding HorizontalOffset, ElementName=SubMenuScrollViewer}" />
+                            <Setter TargetName="OpaqueRect" Property="Canvas.Top" Value="{Binding VerticalOffset, ElementName=SubMenuScrollViewer}" />
+                            <Setter TargetName="OpaqueRect" Property="Canvas.Left" Value="{Binding HorizontalOffset, ElementName=SubMenuScrollViewer}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -2689,8 +2507,7 @@
                             Background="{StaticResource ControlDefaultBackground}"
                             BorderBrush="{StaticResource ControlDefaultBorderBrush}"
                             BorderThickness="1">
-                            <ScrollViewer x:Name="SubMenuScrollViewer"
-                                          Style="{DynamicResource {ComponentResourceKey ResourceId=MenuScrollViewer, TypeInTargetAssembly={x:Type FrameworkElement}}}">
+                            <ScrollViewer x:Name="SubMenuScrollViewer" Style="{DynamicResource {ComponentResourceKey ResourceId=MenuScrollViewer, TypeInTargetAssembly={x:Type FrameworkElement}}}">
                                 <Grid RenderOptions.ClearTypeHint="Enabled">
                                     <Canvas
                                         x:Name="Canvas"
@@ -2740,23 +2557,18 @@
                 <Setter TargetName="Icon" Property="Visibility" Value="Collapsed" />
             </Trigger>
             <Trigger Property="IsHighlighted" Value="True">
-                <Setter TargetName="templateRoot" Property="Background"
-                        Value="{StaticResource ControlMouseOverBackground}" />
-                <Setter TargetName="templateRoot" Property="BorderBrush"
-                        Value="{StaticResource ControlMouseOverBorderBrush}" />
+                <Setter TargetName="templateRoot" Property="Background" Value="{StaticResource ControlMouseOverBackground}" />
+                <Setter TargetName="templateRoot" Property="BorderBrush" Value="{StaticResource ControlMouseOverBorderBrush}" />
             </Trigger>
             <Trigger Property="IsEnabled" Value="False">
-                <Setter TargetName="templateRoot" Property="TextElement.Foreground"
-                        Value="{StaticResource ControlDisabledGlythColour}" />
+                <Setter TargetName="templateRoot" Property="TextElement.Foreground" Value="{StaticResource ControlDisabledGlythColour}" />
                 <Setter TargetName="Glyph" Property="Fill" Value="{StaticResource ControlDisabledGlythColour}" />
                 <Setter TargetName="RightArrow" Property="Fill" Value="{StaticResource ControlDisabledGlythColour}" />
                 <Setter Property="Background" Value="{StaticResource ControlDisabledBackground}" />
             </Trigger>
             <Trigger SourceName="SubMenuScrollViewer" Property="CanContentScroll" Value="False">
-                <Setter TargetName="OpaqueRect" Property="Canvas.Top"
-                        Value="{Binding VerticalOffset, ElementName=SubMenuScrollViewer}" />
-                <Setter TargetName="OpaqueRect" Property="Canvas.Left"
-                        Value="{Binding HorizontalOffset, ElementName=SubMenuScrollViewer}" />
+                <Setter TargetName="OpaqueRect" Property="Canvas.Top" Value="{Binding VerticalOffset, ElementName=SubMenuScrollViewer}" />
+                <Setter TargetName="OpaqueRect" Property="Canvas.Left" Value="{Binding HorizontalOffset, ElementName=SubMenuScrollViewer}" />
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
@@ -2849,8 +2661,7 @@
                         Background="{StaticResource ControlDefaultBackground}"
                         BorderBrush="{StaticResource ControlDefaultBorderBrush}"
                         BorderThickness="1">
-                        <ScrollViewer x:Name="SubMenuScrollViewer"
-                                      Style="{DynamicResource {ComponentResourceKey ResourceId=MenuScrollViewer, TypeInTargetAssembly={x:Type FrameworkElement}}}">
+                        <ScrollViewer x:Name="SubMenuScrollViewer" Style="{DynamicResource {ComponentResourceKey ResourceId=MenuScrollViewer, TypeInTargetAssembly={x:Type FrameworkElement}}}">
                             <Grid RenderOptions.ClearTypeHint="Enabled">
                                 <Canvas
                                     x:Name="Canvas"
@@ -2899,23 +2710,18 @@
                 <Setter TargetName="Icon" Property="Visibility" Value="Collapsed" />
             </Trigger>
             <Trigger Property="IsHighlighted" Value="True">
-                <Setter TargetName="templateRoot" Property="Background"
-                        Value="{StaticResource ControlMouseOverBackground}" />
-                <Setter TargetName="templateRoot" Property="BorderBrush"
-                        Value="{StaticResource ControlMouseOverBorderBrush}" />
+                <Setter TargetName="templateRoot" Property="Background" Value="{StaticResource ControlMouseOverBackground}" />
+                <Setter TargetName="templateRoot" Property="BorderBrush" Value="{StaticResource ControlMouseOverBorderBrush}" />
             </Trigger>
             <Trigger Property="IsEnabled" Value="False">
-                <Setter TargetName="templateRoot" Property="TextElement.Foreground"
-                        Value="{StaticResource ControlDisabledGlythColour}" />
+                <Setter TargetName="templateRoot" Property="TextElement.Foreground" Value="{StaticResource ControlDisabledGlythColour}" />
                 <Setter TargetName="Glyph" Property="Fill" Value="{StaticResource ControlDisabledGlythColour}" />
                 <Setter TargetName="RightArrow" Property="Fill" Value="{StaticResource ControlDisabledGlythColour}" />
                 <Setter Property="Background" Value="{StaticResource ControlDisabledBackground}" />
             </Trigger>
             <Trigger SourceName="SubMenuScrollViewer" Property="CanContentScroll" Value="False">
-                <Setter TargetName="OpaqueRect" Property="Canvas.Top"
-                        Value="{Binding VerticalOffset, ElementName=SubMenuScrollViewer}" />
-                <Setter TargetName="OpaqueRect" Property="Canvas.Left"
-                        Value="{Binding HorizontalOffset, ElementName=SubMenuScrollViewer}" />
+                <Setter TargetName="OpaqueRect" Property="Canvas.Top" Value="{Binding VerticalOffset, ElementName=SubMenuScrollViewer}" />
+                <Setter TargetName="OpaqueRect" Property="Canvas.Left" Value="{Binding HorizontalOffset, ElementName=SubMenuScrollViewer}" />
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
@@ -2957,12 +2763,10 @@
                             <Setter TargetName="border" Property="Opacity" Value="0.56" />
                         </Trigger>
                         <Trigger Property="IsMouseOver" Value="true">
-                            <Setter TargetName="border" Property="BorderBrush"
-                                    Value="{StaticResource ControlMouseOverBorderBrush}" />
+                            <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource ControlMouseOverBorderBrush}" />
                         </Trigger>
                         <Trigger Property="IsKeyboardFocused" Value="true">
-                            <Setter TargetName="border" Property="BorderBrush"
-                                    Value="{StaticResource ControlSelectedBorderBrush}" />
+                            <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource ControlSelectedBorderBrush}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -3112,28 +2916,19 @@
                             <Setter Property="Padding" Value="4,-1,0,0" />
                         </Trigger>
                         <Trigger Property="IsMouseOver" Value="true">
-                            <Setter TargetName="radioButtonBorder" Property="Background"
-                                    Value="{StaticResource ControlMouseOverBackground}" />
-                            <Setter TargetName="radioButtonBorder" Property="BorderBrush"
-                                    Value="{StaticResource ControlMouseOverBorderBrush}" />
-                            <Setter TargetName="optionMark" Property="Fill"
-                                    Value="{StaticResource ControlMouseOverGlythColour}" />
+                            <Setter TargetName="radioButtonBorder" Property="Background" Value="{StaticResource ControlMouseOverBackground}" />
+                            <Setter TargetName="radioButtonBorder" Property="BorderBrush" Value="{StaticResource ControlMouseOverBorderBrush}" />
+                            <Setter TargetName="optionMark" Property="Fill" Value="{StaticResource ControlMouseOverGlythColour}" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="false">
-                            <Setter TargetName="radioButtonBorder" Property="Background"
-                                    Value="{StaticResource ControlDisabledBackground}" />
-                            <Setter TargetName="radioButtonBorder" Property="BorderBrush"
-                                    Value="{StaticResource ControlDisabledBorderBrush}" />
-                            <Setter TargetName="optionMark" Property="Fill"
-                                    Value="{StaticResource ControlDisabledGlythColour}" />
+                            <Setter TargetName="radioButtonBorder" Property="Background" Value="{StaticResource ControlDisabledBackground}" />
+                            <Setter TargetName="radioButtonBorder" Property="BorderBrush" Value="{StaticResource ControlDisabledBorderBrush}" />
+                            <Setter TargetName="optionMark" Property="Fill" Value="{StaticResource ControlDisabledGlythColour}" />
                         </Trigger>
                         <Trigger Property="IsPressed" Value="true">
-                            <Setter TargetName="radioButtonBorder" Property="Background"
-                                    Value="{StaticResource ControlSelectedBackground}" />
-                            <Setter TargetName="radioButtonBorder" Property="BorderBrush"
-                                    Value="{StaticResource ControlSelectedBorderBrush}" />
-                            <Setter TargetName="optionMark" Property="Fill"
-                                    Value="{StaticResource ControlSelectedGlythColour}" />
+                            <Setter TargetName="radioButtonBorder" Property="Background" Value="{StaticResource ControlSelectedBackground}" />
+                            <Setter TargetName="radioButtonBorder" Property="BorderBrush" Value="{StaticResource ControlSelectedBorderBrush}" />
+                            <Setter TargetName="optionMark" Property="Fill" Value="{StaticResource ControlSelectedGlythColour}" />
                         </Trigger>
                         <Trigger Property="IsChecked" Value="true">
                             <Setter TargetName="optionMark" Property="Opacity" Value="1" />
@@ -3164,8 +2959,7 @@
                         <Setter Property="Foreground" Value="Blue" />
                     </Trigger>
                     <Trigger Property="IsEnabled" Value="false">
-                        <Setter Property="Foreground"
-                                Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
+                        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
                     </Trigger>
                 </Style.Triggers>
             </Style>
@@ -3209,12 +3003,10 @@
                             <Setter TargetName="border" Property="Opacity" Value="0.56" />
                         </Trigger>
                         <Trigger Property="IsMouseOver" Value="true">
-                            <Setter TargetName="border" Property="BorderBrush"
-                                    Value="{StaticResource ControlMouseOverBorderBrush}" />
+                            <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource ControlMouseOverBorderBrush}" />
                         </Trigger>
                         <Trigger Property="IsKeyboardFocused" Value="true">
-                            <Setter TargetName="border" Property="BorderBrush"
-                                    Value="{StaticResource ControlSelectedBorderBrush}" />
+                            <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource ControlSelectedBorderBrush}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -3266,11 +3058,9 @@
                 <ControlTemplate TargetType="{x:Type ScrollBar}">
                     <Grid x:Name="Bg" SnapsToDevicePixels="true">
                         <Grid.RowDefinitions>
-                            <RowDefinition
-                                MaxHeight="{DynamicResource {x:Static SystemParameters.VerticalScrollBarButtonHeightKey}}" />
+                            <RowDefinition MaxHeight="{DynamicResource {x:Static SystemParameters.VerticalScrollBarButtonHeightKey}}" />
                             <RowDefinition Height="0.00001*" />
-                            <RowDefinition
-                                MaxHeight="{DynamicResource {x:Static SystemParameters.VerticalScrollBarButtonHeightKey}}" />
+                            <RowDefinition MaxHeight="{DynamicResource {x:Static SystemParameters.VerticalScrollBarButtonHeightKey}}" />
                         </Grid.RowDefinitions>
                         <Button
                             x:Name="PART_LineUpButton"
@@ -3293,12 +3083,10 @@
                                 Grid.Row="1"
                                 IsDirectionReversed="true">
                                 <Track.DecreaseRepeatButton>
-                                    <RepeatButton Command="{x:Static ScrollBar.PageUpCommand}"
-                                                  Style="{StaticResource RepeatButtonTransparent}" />
+                                    <RepeatButton Command="{x:Static ScrollBar.PageUpCommand}" Style="{StaticResource RepeatButtonTransparent}" />
                                 </Track.DecreaseRepeatButton>
                                 <Track.IncreaseRepeatButton>
-                                    <RepeatButton Command="{x:Static ScrollBar.PageDownCommand}"
-                                                  Style="{StaticResource RepeatButtonTransparent}" />
+                                    <RepeatButton Command="{x:Static ScrollBar.PageDownCommand}" Style="{StaticResource RepeatButtonTransparent}" />
                                 </Track.IncreaseRepeatButton>
                                 <Track.Thumb>
                                     <Thumb Style="{DynamicResource ScrollBarThumbVertical}" />
@@ -3322,43 +3110,35 @@
                     <ControlTemplate.Triggers>
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
-                                <Condition Binding="{Binding IsMouseOver, ElementName=PART_LineDownButton}"
-                                           Value="true" />
+                                <Condition Binding="{Binding IsMouseOver, ElementName=PART_LineDownButton}" Value="true" />
                                 <Condition Binding="{Binding IsPressed, ElementName=PART_LineDownButton}" Value="true" />
                             </MultiDataTrigger.Conditions>
-                            <Setter TargetName="ArrowBottom" Property="Fill"
-                                    Value="{StaticResource ControlSelectedGlythColour}" />
+                            <Setter TargetName="ArrowBottom" Property="Fill" Value="{StaticResource ControlSelectedGlythColour}" />
                         </MultiDataTrigger>
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
                                 <Condition Binding="{Binding IsMouseOver, ElementName=PART_LineUpButton}" Value="true" />
                                 <Condition Binding="{Binding IsPressed, ElementName=PART_LineUpButton}" Value="true" />
                             </MultiDataTrigger.Conditions>
-                            <Setter TargetName="ArrowTop" Property="Fill"
-                                    Value="{StaticResource ControlSelectedGlythColour}" />
+                            <Setter TargetName="ArrowTop" Property="Fill" Value="{StaticResource ControlSelectedGlythColour}" />
                         </MultiDataTrigger>
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
-                                <Condition Binding="{Binding IsMouseOver, ElementName=PART_LineDownButton}"
-                                           Value="true" />
+                                <Condition Binding="{Binding IsMouseOver, ElementName=PART_LineDownButton}" Value="true" />
                                 <Condition Binding="{Binding IsPressed, ElementName=PART_LineDownButton}" Value="false" />
                             </MultiDataTrigger.Conditions>
-                            <Setter TargetName="ArrowBottom" Property="Fill"
-                                    Value="{StaticResource ControlMouseOverGlythColour}" />
+                            <Setter TargetName="ArrowBottom" Property="Fill" Value="{StaticResource ControlMouseOverGlythColour}" />
                         </MultiDataTrigger>
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
                                 <Condition Binding="{Binding IsMouseOver, ElementName=PART_LineUpButton}" Value="true" />
                                 <Condition Binding="{Binding IsPressed, ElementName=PART_LineUpButton}" Value="false" />
                             </MultiDataTrigger.Conditions>
-                            <Setter TargetName="ArrowTop" Property="Fill"
-                                    Value="{StaticResource ControlMouseOverGlythColour}" />
+                            <Setter TargetName="ArrowTop" Property="Fill" Value="{StaticResource ControlMouseOverGlythColour}" />
                         </MultiDataTrigger>
                         <Trigger Property="IsEnabled" Value="false">
-                            <Setter TargetName="ArrowTop" Property="Fill"
-                                    Value="{StaticResource ControlDisabledGlythColour}" />
-                            <Setter TargetName="ArrowBottom" Property="Fill"
-                                    Value="{StaticResource ControlDisabledGlythColour}" />
+                            <Setter TargetName="ArrowTop" Property="Fill" Value="{StaticResource ControlDisabledGlythColour}" />
+                            <Setter TargetName="ArrowBottom" Property="Fill" Value="{StaticResource ControlDisabledGlythColour}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -3371,21 +3151,17 @@
                 <Setter Property="BorderBrush" Value="{StaticResource ControlDefaultBorderBrush}" />
                 <Setter Property="Foreground" Value="{StaticResource ControlBrightDefaultBorderBrush}" />
                 <Setter Property="MinWidth" Value="0" />
-                <Setter Property="Height"
-                        Value="{DynamicResource {x:Static SystemParameters.HorizontalScrollBarHeightKey}}" />
-                <Setter Property="MinHeight"
-                        Value="{DynamicResource {x:Static SystemParameters.HorizontalScrollBarHeightKey}}" />
+                <Setter Property="Height" Value="{DynamicResource {x:Static SystemParameters.HorizontalScrollBarHeightKey}}" />
+                <Setter Property="MinHeight" Value="{DynamicResource {x:Static SystemParameters.HorizontalScrollBarHeightKey}}" />
                 <Setter Property="BorderThickness" Value="1" />
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type ScrollBar}">
                             <Grid x:Name="Bg" SnapsToDevicePixels="true">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition
-                                        MaxWidth="{DynamicResource {x:Static SystemParameters.HorizontalScrollBarButtonWidthKey}}" />
+                                    <ColumnDefinition MaxWidth="{DynamicResource {x:Static SystemParameters.HorizontalScrollBarButtonWidthKey}}" />
                                     <ColumnDefinition Width="0.00001*" />
-                                    <ColumnDefinition
-                                        MaxWidth="{DynamicResource {x:Static SystemParameters.HorizontalScrollBarButtonWidthKey}}" />
+                                    <ColumnDefinition MaxWidth="{DynamicResource {x:Static SystemParameters.HorizontalScrollBarButtonWidthKey}}" />
                                 </Grid.ColumnDefinitions>
                                 <Button
                                     x:Name="PART_LineLeftButton"
@@ -3405,12 +3181,10 @@
                                     BorderThickness="0,1,0,1">
                                     <Track x:Name="PART_Track" Grid.Column="1">
                                         <Track.DecreaseRepeatButton>
-                                            <RepeatButton Command="{x:Static ScrollBar.PageLeftCommand}"
-                                                          Style="{StaticResource RepeatButtonTransparent}" />
+                                            <RepeatButton Command="{x:Static ScrollBar.PageLeftCommand}" Style="{StaticResource RepeatButtonTransparent}" />
                                         </Track.DecreaseRepeatButton>
                                         <Track.IncreaseRepeatButton>
-                                            <RepeatButton Command="{x:Static ScrollBar.PageRightCommand}"
-                                                          Style="{StaticResource RepeatButtonTransparent}" />
+                                            <RepeatButton Command="{x:Static ScrollBar.PageRightCommand}" Style="{StaticResource RepeatButtonTransparent}" />
                                         </Track.IncreaseRepeatButton>
                                         <Track.Thumb>
                                             <Thumb Style="{DynamicResource ScrollBarThumbHorizontal}" />
@@ -3434,49 +3208,35 @@
                             <ControlTemplate.Triggers>
                                 <MultiDataTrigger>
                                     <MultiDataTrigger.Conditions>
-                                        <Condition Binding="{Binding IsMouseOver, ElementName=PART_LineRightButton}"
-                                                   Value="true" />
-                                        <Condition Binding="{Binding IsPressed, ElementName=PART_LineRightButton}"
-                                                   Value="true" />
+                                        <Condition Binding="{Binding IsMouseOver, ElementName=PART_LineRightButton}" Value="true" />
+                                        <Condition Binding="{Binding IsPressed, ElementName=PART_LineRightButton}" Value="true" />
                                     </MultiDataTrigger.Conditions>
-                                    <Setter TargetName="ArrowRight" Property="Fill"
-                                            Value="{StaticResource ControlSelectedGlythColour}" />
+                                    <Setter TargetName="ArrowRight" Property="Fill" Value="{StaticResource ControlSelectedGlythColour}" />
                                 </MultiDataTrigger>
                                 <MultiDataTrigger>
                                     <MultiDataTrigger.Conditions>
-                                        <Condition Binding="{Binding IsMouseOver, ElementName=PART_LineLeftButton}"
-                                                   Value="true" />
-                                        <Condition Binding="{Binding IsPressed, ElementName=PART_LineLeftButton}"
-                                                   Value="true" />
+                                        <Condition Binding="{Binding IsMouseOver, ElementName=PART_LineLeftButton}" Value="true" />
+                                        <Condition Binding="{Binding IsPressed, ElementName=PART_LineLeftButton}" Value="true" />
                                     </MultiDataTrigger.Conditions>
-                                    <Setter TargetName="ArrowLeft" Property="Fill"
-                                            Value="{StaticResource ControlSelectedGlythColour}" />
+                                    <Setter TargetName="ArrowLeft" Property="Fill" Value="{StaticResource ControlSelectedGlythColour}" />
                                 </MultiDataTrigger>
                                 <MultiDataTrigger>
                                     <MultiDataTrigger.Conditions>
-                                        <Condition Binding="{Binding IsMouseOver, ElementName=PART_LineRightButton}"
-                                                   Value="true" />
-                                        <Condition Binding="{Binding IsPressed, ElementName=PART_LineRightButton}"
-                                                   Value="false" />
+                                        <Condition Binding="{Binding IsMouseOver, ElementName=PART_LineRightButton}" Value="true" />
+                                        <Condition Binding="{Binding IsPressed, ElementName=PART_LineRightButton}" Value="false" />
                                     </MultiDataTrigger.Conditions>
-                                    <Setter TargetName="ArrowRight" Property="Fill"
-                                            Value="{StaticResource ControlMouseOverGlythColour}" />
+                                    <Setter TargetName="ArrowRight" Property="Fill" Value="{StaticResource ControlMouseOverGlythColour}" />
                                 </MultiDataTrigger>
                                 <MultiDataTrigger>
                                     <MultiDataTrigger.Conditions>
-                                        <Condition Binding="{Binding IsMouseOver, ElementName=PART_LineLeftButton}"
-                                                   Value="true" />
-                                        <Condition Binding="{Binding IsPressed, ElementName=PART_LineLeftButton}"
-                                                   Value="false" />
+                                        <Condition Binding="{Binding IsMouseOver, ElementName=PART_LineLeftButton}" Value="true" />
+                                        <Condition Binding="{Binding IsPressed, ElementName=PART_LineLeftButton}" Value="false" />
                                     </MultiDataTrigger.Conditions>
-                                    <Setter TargetName="ArrowLeft" Property="Fill"
-                                            Value="{StaticResource ControlMouseOverGlythColour}" />
+                                    <Setter TargetName="ArrowLeft" Property="Fill" Value="{StaticResource ControlMouseOverGlythColour}" />
                                 </MultiDataTrigger>
                                 <Trigger Property="IsEnabled" Value="false">
-                                    <Setter TargetName="ArrowLeft" Property="Fill"
-                                            Value="{StaticResource ControlDisabledGlythColour}" />
-                                    <Setter TargetName="ArrowRight" Property="Fill"
-                                            Value="{StaticResource ControlDisabledGlythColour}" />
+                                    <Setter TargetName="ArrowLeft" Property="Fill" Value="{StaticResource ControlDisabledGlythColour}" />
+                                    <Setter TargetName="ArrowRight" Property="Fill" Value="{StaticResource ControlDisabledGlythColour}" />
                                 </Trigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
@@ -3500,11 +3260,9 @@
                 <ControlTemplate TargetType="{x:Type ScrollBar}">
                     <Grid x:Name="Bg" SnapsToDevicePixels="true">
                         <Grid.RowDefinitions>
-                            <RowDefinition
-                                MaxHeight="{DynamicResource {x:Static SystemParameters.VerticalScrollBarButtonHeightKey}}" />
+                            <RowDefinition MaxHeight="{DynamicResource {x:Static SystemParameters.VerticalScrollBarButtonHeightKey}}" />
                             <RowDefinition Height="0.00001*" />
-                            <RowDefinition
-                                MaxHeight="{DynamicResource {x:Static SystemParameters.VerticalScrollBarButtonHeightKey}}" />
+                            <RowDefinition MaxHeight="{DynamicResource {x:Static SystemParameters.VerticalScrollBarButtonHeightKey}}" />
                         </Grid.RowDefinitions>
                         <Button
                             x:Name="PART_LineUpButton"
@@ -3527,12 +3285,10 @@
                                 Grid.Row="1"
                                 IsDirectionReversed="true">
                                 <Track.DecreaseRepeatButton>
-                                    <RepeatButton Command="{x:Static ScrollBar.PageUpCommand}"
-                                                  Style="{StaticResource RepeatButtonTransparent}" />
+                                    <RepeatButton Command="{x:Static ScrollBar.PageUpCommand}" Style="{StaticResource RepeatButtonTransparent}" />
                                 </Track.DecreaseRepeatButton>
                                 <Track.IncreaseRepeatButton>
-                                    <RepeatButton Command="{x:Static ScrollBar.PageDownCommand}"
-                                                  Style="{StaticResource RepeatButtonTransparent}" />
+                                    <RepeatButton Command="{x:Static ScrollBar.PageDownCommand}" Style="{StaticResource RepeatButtonTransparent}" />
                                 </Track.IncreaseRepeatButton>
                                 <Track.Thumb>
                                     <Thumb Style="{DynamicResource ScrollBarThumbVertical}" />
@@ -3556,43 +3312,35 @@
                     <ControlTemplate.Triggers>
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
-                                <Condition Binding="{Binding IsMouseOver, ElementName=PART_LineDownButton}"
-                                           Value="true" />
+                                <Condition Binding="{Binding IsMouseOver, ElementName=PART_LineDownButton}" Value="true" />
                                 <Condition Binding="{Binding IsPressed, ElementName=PART_LineDownButton}" Value="true" />
                             </MultiDataTrigger.Conditions>
-                            <Setter TargetName="ArrowBottom" Property="Fill"
-                                    Value="{StaticResource ControlSelectedGlythColour}" />
+                            <Setter TargetName="ArrowBottom" Property="Fill" Value="{StaticResource ControlSelectedGlythColour}" />
                         </MultiDataTrigger>
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
                                 <Condition Binding="{Binding IsMouseOver, ElementName=PART_LineUpButton}" Value="true" />
                                 <Condition Binding="{Binding IsPressed, ElementName=PART_LineUpButton}" Value="true" />
                             </MultiDataTrigger.Conditions>
-                            <Setter TargetName="ArrowTop" Property="Fill"
-                                    Value="{StaticResource ControlSelectedGlythColour}" />
+                            <Setter TargetName="ArrowTop" Property="Fill" Value="{StaticResource ControlSelectedGlythColour}" />
                         </MultiDataTrigger>
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
-                                <Condition Binding="{Binding IsMouseOver, ElementName=PART_LineDownButton}"
-                                           Value="true" />
+                                <Condition Binding="{Binding IsMouseOver, ElementName=PART_LineDownButton}" Value="true" />
                                 <Condition Binding="{Binding IsPressed, ElementName=PART_LineDownButton}" Value="false" />
                             </MultiDataTrigger.Conditions>
-                            <Setter TargetName="ArrowBottom" Property="Fill"
-                                    Value="{StaticResource ControlMouseOverGlythColour}" />
+                            <Setter TargetName="ArrowBottom" Property="Fill" Value="{StaticResource ControlMouseOverGlythColour}" />
                         </MultiDataTrigger>
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
                                 <Condition Binding="{Binding IsMouseOver, ElementName=PART_LineUpButton}" Value="true" />
                                 <Condition Binding="{Binding IsPressed, ElementName=PART_LineUpButton}" Value="false" />
                             </MultiDataTrigger.Conditions>
-                            <Setter TargetName="ArrowTop" Property="Fill"
-                                    Value="{StaticResource ControlMouseOverGlythColour}" />
+                            <Setter TargetName="ArrowTop" Property="Fill" Value="{StaticResource ControlMouseOverGlythColour}" />
                         </MultiDataTrigger>
                         <Trigger Property="IsEnabled" Value="false">
-                            <Setter TargetName="ArrowTop" Property="Fill"
-                                    Value="{StaticResource ControlDisabledGlythColour}" />
-                            <Setter TargetName="ArrowBottom" Property="Fill"
-                                    Value="{StaticResource ControlDisabledGlythColour}" />
+                            <Setter TargetName="ArrowTop" Property="Fill" Value="{StaticResource ControlDisabledGlythColour}" />
+                            <Setter TargetName="ArrowBottom" Property="Fill" Value="{StaticResource ControlDisabledGlythColour}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -3605,21 +3353,17 @@
                 <Setter Property="BorderBrush" Value="{StaticResource ControlDefaultBorderBrush}" />
                 <Setter Property="Foreground" Value="{StaticResource ControlBrightDefaultBorderBrush}" />
                 <Setter Property="MinWidth" Value="0" />
-                <Setter Property="Height"
-                        Value="{DynamicResource {x:Static SystemParameters.HorizontalScrollBarHeightKey}}" />
-                <Setter Property="MinHeight"
-                        Value="{DynamicResource {x:Static SystemParameters.HorizontalScrollBarHeightKey}}" />
+                <Setter Property="Height" Value="{DynamicResource {x:Static SystemParameters.HorizontalScrollBarHeightKey}}" />
+                <Setter Property="MinHeight" Value="{DynamicResource {x:Static SystemParameters.HorizontalScrollBarHeightKey}}" />
                 <Setter Property="BorderThickness" Value="1" />
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type ScrollBar}">
                             <Grid x:Name="Bg" SnapsToDevicePixels="true">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition
-                                        MaxWidth="{DynamicResource {x:Static SystemParameters.HorizontalScrollBarButtonWidthKey}}" />
+                                    <ColumnDefinition MaxWidth="{DynamicResource {x:Static SystemParameters.HorizontalScrollBarButtonWidthKey}}" />
                                     <ColumnDefinition Width="0.00001*" />
-                                    <ColumnDefinition
-                                        MaxWidth="{DynamicResource {x:Static SystemParameters.HorizontalScrollBarButtonWidthKey}}" />
+                                    <ColumnDefinition MaxWidth="{DynamicResource {x:Static SystemParameters.HorizontalScrollBarButtonWidthKey}}" />
                                 </Grid.ColumnDefinitions>
                                 <Button
                                     x:Name="PART_LineLeftButton"
@@ -3649,49 +3393,35 @@
                             <ControlTemplate.Triggers>
                                 <MultiDataTrigger>
                                     <MultiDataTrigger.Conditions>
-                                        <Condition Binding="{Binding IsMouseOver, ElementName=PART_LineRightButton}"
-                                                   Value="true" />
-                                        <Condition Binding="{Binding IsPressed, ElementName=PART_LineRightButton}"
-                                                   Value="true" />
+                                        <Condition Binding="{Binding IsMouseOver, ElementName=PART_LineRightButton}" Value="true" />
+                                        <Condition Binding="{Binding IsPressed, ElementName=PART_LineRightButton}" Value="true" />
                                     </MultiDataTrigger.Conditions>
-                                    <Setter TargetName="ArrowRight" Property="Fill"
-                                            Value="{StaticResource ControlSelectedGlythColour}" />
+                                    <Setter TargetName="ArrowRight" Property="Fill" Value="{StaticResource ControlSelectedGlythColour}" />
                                 </MultiDataTrigger>
                                 <MultiDataTrigger>
                                     <MultiDataTrigger.Conditions>
-                                        <Condition Binding="{Binding IsMouseOver, ElementName=PART_LineLeftButton}"
-                                                   Value="true" />
-                                        <Condition Binding="{Binding IsPressed, ElementName=PART_LineLeftButton}"
-                                                   Value="true" />
+                                        <Condition Binding="{Binding IsMouseOver, ElementName=PART_LineLeftButton}" Value="true" />
+                                        <Condition Binding="{Binding IsPressed, ElementName=PART_LineLeftButton}" Value="true" />
                                     </MultiDataTrigger.Conditions>
-                                    <Setter TargetName="ArrowLeft" Property="Fill"
-                                            Value="{StaticResource ControlSelectedGlythColour}" />
+                                    <Setter TargetName="ArrowLeft" Property="Fill" Value="{StaticResource ControlSelectedGlythColour}" />
                                 </MultiDataTrigger>
                                 <MultiDataTrigger>
                                     <MultiDataTrigger.Conditions>
-                                        <Condition Binding="{Binding IsMouseOver, ElementName=PART_LineRightButton}"
-                                                   Value="true" />
-                                        <Condition Binding="{Binding IsPressed, ElementName=PART_LineRightButton}"
-                                                   Value="false" />
+                                        <Condition Binding="{Binding IsMouseOver, ElementName=PART_LineRightButton}" Value="true" />
+                                        <Condition Binding="{Binding IsPressed, ElementName=PART_LineRightButton}" Value="false" />
                                     </MultiDataTrigger.Conditions>
-                                    <Setter TargetName="ArrowRight" Property="Fill"
-                                            Value="{StaticResource ControlMouseOverGlythColour}" />
+                                    <Setter TargetName="ArrowRight" Property="Fill" Value="{StaticResource ControlMouseOverGlythColour}" />
                                 </MultiDataTrigger>
                                 <MultiDataTrigger>
                                     <MultiDataTrigger.Conditions>
-                                        <Condition Binding="{Binding IsMouseOver, ElementName=PART_LineLeftButton}"
-                                                   Value="true" />
-                                        <Condition Binding="{Binding IsPressed, ElementName=PART_LineLeftButton}"
-                                                   Value="false" />
+                                        <Condition Binding="{Binding IsMouseOver, ElementName=PART_LineLeftButton}" Value="true" />
+                                        <Condition Binding="{Binding IsPressed, ElementName=PART_LineLeftButton}" Value="false" />
                                     </MultiDataTrigger.Conditions>
-                                    <Setter TargetName="ArrowLeft" Property="Fill"
-                                            Value="{StaticResource ControlMouseOverGlythColour}" />
+                                    <Setter TargetName="ArrowLeft" Property="Fill" Value="{StaticResource ControlMouseOverGlythColour}" />
                                 </MultiDataTrigger>
                                 <Trigger Property="IsEnabled" Value="false">
-                                    <Setter TargetName="ArrowLeft" Property="Fill"
-                                            Value="{StaticResource ControlDisabledGlythColour}" />
-                                    <Setter TargetName="ArrowRight" Property="Fill"
-                                            Value="{StaticResource ControlDisabledGlythColour}" />
+                                    <Setter TargetName="ArrowLeft" Property="Fill" Value="{StaticResource ControlDisabledGlythColour}" />
+                                    <Setter TargetName="ArrowRight" Property="Fill" Value="{StaticResource ControlDisabledGlythColour}" />
                                 </Trigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
@@ -3729,29 +3459,21 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="true">
-                            <Setter TargetName="border" Property="Background"
-                                    Value="{StaticResource ControlDefaultBackground}" />
-                            <Setter TargetName="border" Property="BorderBrush"
-                                    Value="{StaticResource ControlDefaultBorderBrush}" />
+                            <Setter TargetName="border" Property="Background" Value="{StaticResource ControlDefaultBackground}" />
+                            <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource ControlDefaultBorderBrush}" />
                         </Trigger>
                         <Trigger Property="IsMouseOver" Value="false">
-                            <Setter TargetName="border" Property="Background"
-                                    Value="{StaticResource ControlDefaultBackground}" />
-                            <Setter TargetName="border" Property="BorderBrush"
-                                    Value="{StaticResource ControlDefaultBorderBrush}" />
+                            <Setter TargetName="border" Property="Background" Value="{StaticResource ControlDefaultBackground}" />
+                            <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource ControlDefaultBorderBrush}" />
                         </Trigger>
                         <Trigger Property="IsPressed" Value="true">
-                            <Setter TargetName="border" Property="Background"
-                                    Value="{StaticResource ControlSelectedBackground}" />
-                            <Setter TargetName="border" Property="BorderBrush"
-                                    Value="{StaticResource ControlSelectedBackground}" />
+                            <Setter TargetName="border" Property="Background" Value="{StaticResource ControlSelectedBackground}" />
+                            <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource ControlSelectedBackground}" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="false">
                             <Setter TargetName="contentPresenter" Property="Opacity" Value="0.56" />
-                            <Setter TargetName="border" Property="Background"
-                                    Value="{StaticResource ControlDisabledBackground}" />
-                            <Setter TargetName="border" Property="BorderBrush"
-                                    Value="{StaticResource ControlDisabledBorderBrush}" />
+                            <Setter TargetName="border" Property="Background" Value="{StaticResource ControlDisabledBackground}" />
+                            <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource ControlDisabledBorderBrush}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -3775,13 +3497,11 @@
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="true">
-                            <Setter TargetName="rectangle" Property="Fill"
-                                    Value="{StaticResource ControlMouseOverBackground}" />
+                            <Setter TargetName="rectangle" Property="Fill" Value="{StaticResource ControlMouseOverBackground}" />
                             <Setter Property="BorderBrush" Value="{StaticResource ControlMouseOverBorderBrush}" />
                         </Trigger>
                         <Trigger Property="IsDragging" Value="true">
-                            <Setter TargetName="rectangle" Property="Fill"
-                                    Value="{StaticResource ControlBrightDefaultBackground}" />
+                            <Setter TargetName="rectangle" Property="Fill" Value="{StaticResource ControlBrightDefaultBackground}" />
                             <Setter Property="BorderBrush" Value="{StaticResource ControlBrightDefaultBackground}" />
                             <Setter Property="Foreground" Value="{StaticResource ControlBrightDefaultBorderBrush}" />
                         </Trigger>
@@ -3808,13 +3528,11 @@
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="true">
-                            <Setter TargetName="rectangle" Property="Fill"
-                                    Value="{StaticResource ControlMouseOverBackground}" />
+                            <Setter TargetName="rectangle" Property="Fill" Value="{StaticResource ControlMouseOverBackground}" />
                             <Setter Property="BorderBrush" Value="{StaticResource ControlMouseOverBorderBrush}" />
                         </Trigger>
                         <Trigger Property="IsDragging" Value="true">
-                            <Setter TargetName="rectangle" Property="Fill"
-                                    Value="{StaticResource ControlBrightDefaultBackground}" />
+                            <Setter TargetName="rectangle" Property="Fill" Value="{StaticResource ControlBrightDefaultBackground}" />
                             <Setter Property="BorderBrush" Value="{StaticResource ControlBrightDefaultBackground}" />
                             <Setter Property="Foreground" Value="{StaticResource ControlBrightDefaultBorderBrush}" />
                         </Trigger>
@@ -4162,12 +3880,10 @@
                 </Border>
                 <Track x:Name="PART_Track" Grid.Row="1">
                     <Track.DecreaseRepeatButton>
-                        <RepeatButton Command="{x:Static Slider.DecreaseLarge}"
-                                      Style="{StaticResource RepeatButtonTransparent}" />
+                        <RepeatButton Command="{x:Static Slider.DecreaseLarge}" Style="{StaticResource RepeatButtonTransparent}" />
                     </Track.DecreaseRepeatButton>
                     <Track.IncreaseRepeatButton>
-                        <RepeatButton Command="{x:Static Slider.IncreaseLarge}"
-                                      Style="{StaticResource RepeatButtonTransparent}" />
+                        <RepeatButton Command="{x:Static Slider.IncreaseLarge}" Style="{StaticResource RepeatButtonTransparent}" />
                     </Track.IncreaseRepeatButton>
                     <Track.Thumb>
                         <Thumb
@@ -4347,12 +4063,10 @@
                 </Border>
                 <Track x:Name="PART_Track" Grid.Column="1">
                     <Track.DecreaseRepeatButton>
-                        <RepeatButton Command="{x:Static Slider.DecreaseLarge}"
-                                      Style="{StaticResource RepeatButtonTransparent}" />
+                        <RepeatButton Command="{x:Static Slider.DecreaseLarge}" Style="{StaticResource RepeatButtonTransparent}" />
                     </Track.DecreaseRepeatButton>
                     <Track.IncreaseRepeatButton>
-                        <RepeatButton Command="{x:Static Slider.IncreaseLarge}"
-                                      Style="{StaticResource RepeatButtonTransparent}" />
+                        <RepeatButton Command="{x:Static Slider.IncreaseLarge}" Style="{StaticResource RepeatButtonTransparent}" />
                     </Track.IncreaseRepeatButton>
                     <Track.Thumb>
                         <Thumb
@@ -4495,8 +4209,7 @@
                             <Setter TargetName="headerPanel" Property="Margin" Value="0,2,2,2" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="false">
-                            <Setter TargetName="templateRoot" Property="TextElement.Foreground"
-                                    Value="{StaticResource ControlDisabledGlythColour}" />
+                            <Setter TargetName="templateRoot" Property="TextElement.Foreground" Value="{StaticResource ControlDisabledGlythColour}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -4544,146 +4257,100 @@
                     <ControlTemplate.Triggers>
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
-                                <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}"
-                                           Value="true" />
-                                <Condition
-                                    Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}"
-                                    Value="Left" />
+                                <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="true" />
+                                <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Left" />
                             </MultiDataTrigger.Conditions>
-                            <Setter TargetName="mainBorder" Property="Background"
-                                    Value="{StaticResource ControlMouseOverBackground}" />
-                            <Setter TargetName="mainBorder" Property="BorderBrush"
-                                    Value="{StaticResource ControlMouseOverBorderBrush}" />
+                            <Setter TargetName="mainBorder" Property="Background" Value="{StaticResource ControlMouseOverBackground}" />
+                            <Setter TargetName="mainBorder" Property="BorderBrush" Value="{StaticResource ControlMouseOverBorderBrush}" />
                             <Setter TargetName="innerBorder" Property="BorderThickness" Value="1,1,0,1" />
                             <Setter TargetName="mainBorder" Property="BorderThickness" Value="1,1,0,1" />
                         </MultiDataTrigger>
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
-                                <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}"
-                                           Value="true" />
-                                <Condition
-                                    Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}"
-                                    Value="Bottom" />
+                                <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="true" />
+                                <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Bottom" />
                             </MultiDataTrigger.Conditions>
-                            <Setter TargetName="mainBorder" Property="Background"
-                                    Value="{StaticResource ControlMouseOverBackground}" />
-                            <Setter TargetName="mainBorder" Property="BorderBrush"
-                                    Value="{StaticResource ControlMouseOverBorderBrush}" />
+                            <Setter TargetName="mainBorder" Property="Background" Value="{StaticResource ControlMouseOverBackground}" />
+                            <Setter TargetName="mainBorder" Property="BorderBrush" Value="{StaticResource ControlMouseOverBorderBrush}" />
                             <Setter TargetName="innerBorder" Property="BorderThickness" Value="1,0,1,1" />
                             <Setter TargetName="mainBorder" Property="BorderThickness" Value="1,0,1,1" />
                         </MultiDataTrigger>
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
-                                <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}"
-                                           Value="true" />
-                                <Condition
-                                    Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}"
-                                    Value="Right" />
+                                <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="true" />
+                                <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Right" />
                             </MultiDataTrigger.Conditions>
-                            <Setter TargetName="mainBorder" Property="Background"
-                                    Value="{StaticResource ControlMouseOverBackground}" />
-                            <Setter TargetName="mainBorder" Property="BorderBrush"
-                                    Value="{StaticResource ControlMouseOverBorderBrush}" />
+                            <Setter TargetName="mainBorder" Property="Background" Value="{StaticResource ControlMouseOverBackground}" />
+                            <Setter TargetName="mainBorder" Property="BorderBrush" Value="{StaticResource ControlMouseOverBorderBrush}" />
                             <Setter TargetName="innerBorder" Property="BorderThickness" Value="0,1,1,1" />
                             <Setter TargetName="mainBorder" Property="BorderThickness" Value="0,1,1,1" />
                         </MultiDataTrigger>
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
-                                <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}"
-                                           Value="true" />
-                                <Condition
-                                    Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}"
-                                    Value="Top" />
+                                <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="true" />
+                                <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Top" />
                             </MultiDataTrigger.Conditions>
-                            <Setter TargetName="mainBorder" Property="Background"
-                                    Value="{StaticResource ControlMouseOverBackground}" />
-                            <Setter TargetName="mainBorder" Property="BorderBrush"
-                                    Value="{StaticResource ControlMouseOverBorderBrush}" />
+                            <Setter TargetName="mainBorder" Property="Background" Value="{StaticResource ControlMouseOverBackground}" />
+                            <Setter TargetName="mainBorder" Property="BorderBrush" Value="{StaticResource ControlMouseOverBorderBrush}" />
                             <Setter TargetName="innerBorder" Property="BorderThickness" Value="1,1,1,0" />
                             <Setter TargetName="mainBorder" Property="BorderThickness" Value="1,1,1,0" />
                         </MultiDataTrigger>
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
-                                <Condition Binding="{Binding IsEnabled, RelativeSource={RelativeSource Self}}"
-                                           Value="false" />
-                                <Condition
-                                    Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}"
-                                    Value="Left" />
+                                <Condition Binding="{Binding IsEnabled, RelativeSource={RelativeSource Self}}" Value="false" />
+                                <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Left" />
                             </MultiDataTrigger.Conditions>
                             <Setter TargetName="contentPresenter" Property="Opacity" Value="0.56" />
-                            <Setter TargetName="mainBorder" Property="Background"
-                                    Value="{StaticResource ControlMouseOverBackground}" />
-                            <Setter TargetName="mainBorder" Property="BorderBrush"
-                                    Value="{StaticResource ControlMouseOverBorderBrush}" />
+                            <Setter TargetName="mainBorder" Property="Background" Value="{StaticResource ControlMouseOverBackground}" />
+                            <Setter TargetName="mainBorder" Property="BorderBrush" Value="{StaticResource ControlMouseOverBorderBrush}" />
                             <Setter TargetName="innerBorder" Property="BorderThickness" Value="1,1,0,1" />
                             <Setter TargetName="mainBorder" Property="BorderThickness" Value="1,1,0,1" />
                         </MultiDataTrigger>
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
-                                <Condition Binding="{Binding IsEnabled, RelativeSource={RelativeSource Self}}"
-                                           Value="false" />
-                                <Condition
-                                    Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}"
-                                    Value="Bottom" />
+                                <Condition Binding="{Binding IsEnabled, RelativeSource={RelativeSource Self}}" Value="false" />
+                                <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Bottom" />
                             </MultiDataTrigger.Conditions>
                             <Setter TargetName="contentPresenter" Property="Opacity" Value="0.56" />
-                            <Setter TargetName="mainBorder" Property="Background"
-                                    Value="{StaticResource ControlMouseOverBackground}" />
-                            <Setter TargetName="mainBorder" Property="BorderBrush"
-                                    Value="{StaticResource ControlMouseOverBorderBrush}" />
+                            <Setter TargetName="mainBorder" Property="Background" Value="{StaticResource ControlMouseOverBackground}" />
+                            <Setter TargetName="mainBorder" Property="BorderBrush" Value="{StaticResource ControlMouseOverBorderBrush}" />
                             <Setter TargetName="innerBorder" Property="BorderThickness" Value="1,0,1,1" />
                             <Setter TargetName="mainBorder" Property="BorderThickness" Value="1,0,1,1" />
                         </MultiDataTrigger>
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
-                                <Condition Binding="{Binding IsEnabled, RelativeSource={RelativeSource Self}}"
-                                           Value="false" />
-                                <Condition
-                                    Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}"
-                                    Value="Right" />
+                                <Condition Binding="{Binding IsEnabled, RelativeSource={RelativeSource Self}}" Value="false" />
+                                <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Right" />
                             </MultiDataTrigger.Conditions>
                             <Setter TargetName="contentPresenter" Property="Opacity" Value="0.56" />
-                            <Setter TargetName="mainBorder" Property="Background"
-                                    Value="{StaticResource ControlMouseOverBackground}" />
-                            <Setter TargetName="mainBorder" Property="BorderBrush"
-                                    Value="{StaticResource ControlMouseOverBorderBrush}" />
+                            <Setter TargetName="mainBorder" Property="Background" Value="{StaticResource ControlMouseOverBackground}" />
+                            <Setter TargetName="mainBorder" Property="BorderBrush" Value="{StaticResource ControlMouseOverBorderBrush}" />
                             <Setter TargetName="innerBorder" Property="BorderThickness" Value="0,1,1,1" />
                             <Setter TargetName="mainBorder" Property="BorderThickness" Value="0,1,1,1" />
                         </MultiDataTrigger>
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
-                                <Condition Binding="{Binding IsEnabled, RelativeSource={RelativeSource Self}}"
-                                           Value="false" />
-                                <Condition
-                                    Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}"
-                                    Value="Top" />
+                                <Condition Binding="{Binding IsEnabled, RelativeSource={RelativeSource Self}}" Value="false" />
+                                <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Top" />
                             </MultiDataTrigger.Conditions>
                             <Setter TargetName="contentPresenter" Property="Opacity" Value="0.56" />
-                            <Setter TargetName="mainBorder" Property="Background"
-                                    Value="{StaticResource ControlMouseOverBackground}" />
-                            <Setter TargetName="mainBorder" Property="BorderBrush"
-                                    Value="{StaticResource ControlMouseOverBorderBrush}" />
+                            <Setter TargetName="mainBorder" Property="Background" Value="{StaticResource ControlMouseOverBackground}" />
+                            <Setter TargetName="mainBorder" Property="BorderBrush" Value="{StaticResource ControlMouseOverBorderBrush}" />
                             <Setter TargetName="innerBorder" Property="BorderThickness" Value="1,1,1,0" />
                             <Setter TargetName="mainBorder" Property="BorderThickness" Value="1,1,1,0" />
                         </MultiDataTrigger>
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
-                                <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}"
-                                           Value="false" />
-                                <Condition
-                                    Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}"
-                                    Value="Left" />
+                                <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}" Value="false" />
+                                <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Left" />
                             </MultiDataTrigger.Conditions>
                             <Setter TargetName="innerBorder" Property="BorderThickness" Value="1,1,0,1" />
                             <Setter TargetName="mainBorder" Property="BorderThickness" Value="1,1,0,1" />
                         </MultiDataTrigger>
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
-                                <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}"
-                                           Value="true" />
-                                <Condition
-                                    Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}"
-                                    Value="Left" />
+                                <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}" Value="true" />
+                                <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Left" />
                             </MultiDataTrigger.Conditions>
                             <Setter Property="Panel.ZIndex" Value="1" />
                             <Setter Property="Margin" Value="-2,-2,0,-2" />
@@ -4693,22 +4360,16 @@
                         </MultiDataTrigger>
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
-                                <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}"
-                                           Value="false" />
-                                <Condition
-                                    Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}"
-                                    Value="Bottom" />
+                                <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}" Value="false" />
+                                <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Bottom" />
                             </MultiDataTrigger.Conditions>
                             <Setter TargetName="innerBorder" Property="BorderThickness" Value="1,0,1,1" />
                             <Setter TargetName="mainBorder" Property="BorderThickness" Value="1,0,1,1" />
                         </MultiDataTrigger>
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
-                                <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}"
-                                           Value="true" />
-                                <Condition
-                                    Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}"
-                                    Value="Bottom" />
+                                <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}" Value="true" />
+                                <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Bottom" />
                             </MultiDataTrigger.Conditions>
                             <Setter Property="Panel.ZIndex" Value="1" />
                             <Setter Property="Margin" Value="-2,0,-2,-2" />
@@ -4718,22 +4379,16 @@
                         </MultiDataTrigger>
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
-                                <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}"
-                                           Value="false" />
-                                <Condition
-                                    Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}"
-                                    Value="Right" />
+                                <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}" Value="false" />
+                                <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Right" />
                             </MultiDataTrigger.Conditions>
                             <Setter TargetName="innerBorder" Property="BorderThickness" Value="0,1,1,1" />
                             <Setter TargetName="mainBorder" Property="BorderThickness" Value="0,1,1,1" />
                         </MultiDataTrigger>
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
-                                <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}"
-                                           Value="true" />
-                                <Condition
-                                    Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}"
-                                    Value="Right" />
+                                <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}" Value="true" />
+                                <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Right" />
                             </MultiDataTrigger.Conditions>
                             <Setter Property="Panel.ZIndex" Value="1" />
                             <Setter Property="Margin" Value="0,-2,-2,-2" />
@@ -4743,22 +4398,16 @@
                         </MultiDataTrigger>
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
-                                <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}"
-                                           Value="false" />
-                                <Condition
-                                    Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}"
-                                    Value="Top" />
+                                <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}" Value="false" />
+                                <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Top" />
                             </MultiDataTrigger.Conditions>
                             <Setter TargetName="innerBorder" Property="BorderThickness" Value="1,1,1,0" />
                             <Setter TargetName="mainBorder" Property="BorderThickness" Value="1,1,1,0" />
                         </MultiDataTrigger>
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
-                                <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}"
-                                           Value="true" />
-                                <Condition
-                                    Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}"
-                                    Value="Top" />
+                                <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}" Value="true" />
+                                <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Top" />
                             </MultiDataTrigger.Conditions>
                             <Setter Property="Panel.ZIndex" Value="1" />
                             <Setter Property="Margin" Value="-2,-2,-2,0" />
@@ -4819,125 +4468,91 @@
             <MultiDataTrigger>
                 <MultiDataTrigger.Conditions>
                     <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="true" />
-                    <Condition
-                        Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}"
-                        Value="Left" />
+                    <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Left" />
                 </MultiDataTrigger.Conditions>
-                <Setter TargetName="mainBorder" Property="Background"
-                        Value="{StaticResource ControlMouseOverBackground}" />
-                <Setter TargetName="mainBorder" Property="BorderBrush"
-                        Value="{StaticResource ControlMouseOverBorderBrush}" />
+                <Setter TargetName="mainBorder" Property="Background" Value="{StaticResource ControlMouseOverBackground}" />
+                <Setter TargetName="mainBorder" Property="BorderBrush" Value="{StaticResource ControlMouseOverBorderBrush}" />
                 <Setter TargetName="innerBorder" Property="BorderThickness" Value="1,1,0,1" />
                 <Setter TargetName="mainBorder" Property="BorderThickness" Value="1,1,0,1" />
             </MultiDataTrigger>
             <MultiDataTrigger>
                 <MultiDataTrigger.Conditions>
                     <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="true" />
-                    <Condition
-                        Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}"
-                        Value="Bottom" />
+                    <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Bottom" />
                 </MultiDataTrigger.Conditions>
-                <Setter TargetName="mainBorder" Property="Background"
-                        Value="{StaticResource ControlMouseOverBackground}" />
-                <Setter TargetName="mainBorder" Property="BorderBrush"
-                        Value="{StaticResource ControlMouseOverBorderBrush}" />
+                <Setter TargetName="mainBorder" Property="Background" Value="{StaticResource ControlMouseOverBackground}" />
+                <Setter TargetName="mainBorder" Property="BorderBrush" Value="{StaticResource ControlMouseOverBorderBrush}" />
                 <Setter TargetName="innerBorder" Property="BorderThickness" Value="1,0,1,1" />
                 <Setter TargetName="mainBorder" Property="BorderThickness" Value="1,0,1,1" />
             </MultiDataTrigger>
             <MultiDataTrigger>
                 <MultiDataTrigger.Conditions>
                     <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="true" />
-                    <Condition
-                        Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}"
-                        Value="Right" />
+                    <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Right" />
                 </MultiDataTrigger.Conditions>
-                <Setter TargetName="mainBorder" Property="Background"
-                        Value="{StaticResource ControlMouseOverBackground}" />
-                <Setter TargetName="mainBorder" Property="BorderBrush"
-                        Value="{StaticResource ControlMouseOverBorderBrush}" />
+                <Setter TargetName="mainBorder" Property="Background" Value="{StaticResource ControlMouseOverBackground}" />
+                <Setter TargetName="mainBorder" Property="BorderBrush" Value="{StaticResource ControlMouseOverBorderBrush}" />
                 <Setter TargetName="innerBorder" Property="BorderThickness" Value="0,1,1,1" />
                 <Setter TargetName="mainBorder" Property="BorderThickness" Value="0,1,1,1" />
             </MultiDataTrigger>
             <MultiDataTrigger>
                 <MultiDataTrigger.Conditions>
                     <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="true" />
-                    <Condition
-                        Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}"
-                        Value="Top" />
+                    <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Top" />
                 </MultiDataTrigger.Conditions>
-                <Setter TargetName="mainBorder" Property="Background"
-                        Value="{StaticResource ControlMouseOverBackground}" />
-                <Setter TargetName="mainBorder" Property="BorderBrush"
-                        Value="{StaticResource ControlMouseOverBorderBrush}" />
+                <Setter TargetName="mainBorder" Property="Background" Value="{StaticResource ControlMouseOverBackground}" />
+                <Setter TargetName="mainBorder" Property="BorderBrush" Value="{StaticResource ControlMouseOverBorderBrush}" />
                 <Setter TargetName="innerBorder" Property="BorderThickness" Value="1,1,1,0" />
                 <Setter TargetName="mainBorder" Property="BorderThickness" Value="1,1,1,0" />
             </MultiDataTrigger>
             <MultiDataTrigger>
                 <MultiDataTrigger.Conditions>
                     <Condition Binding="{Binding IsEnabled, RelativeSource={RelativeSource Self}}" Value="false" />
-                    <Condition
-                        Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}"
-                        Value="Left" />
+                    <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Left" />
                 </MultiDataTrigger.Conditions>
                 <Setter TargetName="contentPresenter" Property="Opacity" Value="0.56" />
-                <Setter TargetName="mainBorder" Property="Background"
-                        Value="{StaticResource ControlDisabledBackground}" />
-                <Setter TargetName="mainBorder" Property="BorderBrush"
-                        Value="{StaticResource ControlDisabledBorderBrush}" />
+                <Setter TargetName="mainBorder" Property="Background" Value="{StaticResource ControlDisabledBackground}" />
+                <Setter TargetName="mainBorder" Property="BorderBrush" Value="{StaticResource ControlDisabledBorderBrush}" />
                 <Setter TargetName="innerBorder" Property="BorderThickness" Value="1,1,0,1" />
                 <Setter TargetName="mainBorder" Property="BorderThickness" Value="1,1,0,1" />
             </MultiDataTrigger>
             <MultiDataTrigger>
                 <MultiDataTrigger.Conditions>
                     <Condition Binding="{Binding IsEnabled, RelativeSource={RelativeSource Self}}" Value="false" />
-                    <Condition
-                        Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}"
-                        Value="Bottom" />
+                    <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Bottom" />
                 </MultiDataTrigger.Conditions>
                 <Setter TargetName="contentPresenter" Property="Opacity" Value="0.56" />
-                <Setter TargetName="mainBorder" Property="Background"
-                        Value="{StaticResource ControlDisabledBackground}" />
-                <Setter TargetName="mainBorder" Property="BorderBrush"
-                        Value="{StaticResource ControlDisabledBorderBrush}" />
+                <Setter TargetName="mainBorder" Property="Background" Value="{StaticResource ControlDisabledBackground}" />
+                <Setter TargetName="mainBorder" Property="BorderBrush" Value="{StaticResource ControlDisabledBorderBrush}" />
                 <Setter TargetName="innerBorder" Property="BorderThickness" Value="1,0,1,1" />
                 <Setter TargetName="mainBorder" Property="BorderThickness" Value="1,0,1,1" />
             </MultiDataTrigger>
             <MultiDataTrigger>
                 <MultiDataTrigger.Conditions>
                     <Condition Binding="{Binding IsEnabled, RelativeSource={RelativeSource Self}}" Value="false" />
-                    <Condition
-                        Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}"
-                        Value="Right" />
+                    <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Right" />
                 </MultiDataTrigger.Conditions>
                 <Setter TargetName="contentPresenter" Property="Opacity" Value="0.56" />
-                <Setter TargetName="mainBorder" Property="Background"
-                        Value="{StaticResource ControlDisabledBackground}" />
-                <Setter TargetName="mainBorder" Property="BorderBrush"
-                        Value="{StaticResource ControlDisabledBorderBrush}" />
+                <Setter TargetName="mainBorder" Property="Background" Value="{StaticResource ControlDisabledBackground}" />
+                <Setter TargetName="mainBorder" Property="BorderBrush" Value="{StaticResource ControlDisabledBorderBrush}" />
                 <Setter TargetName="innerBorder" Property="BorderThickness" Value="0,1,1,1" />
                 <Setter TargetName="mainBorder" Property="BorderThickness" Value="0,1,1,1" />
             </MultiDataTrigger>
             <MultiDataTrigger>
                 <MultiDataTrigger.Conditions>
                     <Condition Binding="{Binding IsEnabled, RelativeSource={RelativeSource Self}}" Value="false" />
-                    <Condition
-                        Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}"
-                        Value="Top" />
+                    <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Top" />
                 </MultiDataTrigger.Conditions>
                 <Setter TargetName="contentPresenter" Property="Opacity" Value="0.56" />
-                <Setter TargetName="mainBorder" Property="Background"
-                        Value="{StaticResource ControlDisabledBackground}" />
-                <Setter TargetName="mainBorder" Property="BorderBrush"
-                        Value="{StaticResource ControlDisabledBorderBrush}" />
+                <Setter TargetName="mainBorder" Property="Background" Value="{StaticResource ControlDisabledBackground}" />
+                <Setter TargetName="mainBorder" Property="BorderBrush" Value="{StaticResource ControlDisabledBorderBrush}" />
                 <Setter TargetName="innerBorder" Property="BorderThickness" Value="1,1,1,0" />
                 <Setter TargetName="mainBorder" Property="BorderThickness" Value="1,1,1,0" />
             </MultiDataTrigger>
             <MultiDataTrigger>
                 <MultiDataTrigger.Conditions>
                     <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}" Value="false" />
-                    <Condition
-                        Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}"
-                        Value="Left" />
+                    <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Left" />
                 </MultiDataTrigger.Conditions>
                 <Setter TargetName="innerBorder" Property="BorderThickness" Value="1,1,0,4" />
                 <Setter TargetName="mainBorder" Property="BorderThickness" Value="1,1,0,3" />
@@ -4945,9 +4560,7 @@
             <MultiDataTrigger>
                 <MultiDataTrigger.Conditions>
                     <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}" Value="true" />
-                    <Condition
-                        Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}"
-                        Value="Left" />
+                    <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Left" />
                 </MultiDataTrigger.Conditions>
                 <Setter Property="Background" Value="{StaticResource ControlDefaultBackground}" />
                 <Setter Property="Panel.ZIndex" Value="1" />
@@ -4959,9 +4572,7 @@
             <MultiDataTrigger>
                 <MultiDataTrigger.Conditions>
                     <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}" Value="false" />
-                    <Condition
-                        Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}"
-                        Value="Bottom" />
+                    <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Bottom" />
                 </MultiDataTrigger.Conditions>
                 <Setter TargetName="innerBorder" Property="BorderThickness" Value="1,0,1,1" />
                 <Setter TargetName="mainBorder" Property="BorderThickness" Value="1,0,1,1" />
@@ -4969,9 +4580,7 @@
             <MultiDataTrigger>
                 <MultiDataTrigger.Conditions>
                     <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}" Value="true" />
-                    <Condition
-                        Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}"
-                        Value="Bottom" />
+                    <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Bottom" />
                 </MultiDataTrigger.Conditions>
                 <Setter Property="Background" Value="{StaticResource ControlDefaultBackground}" />
                 <Setter Property="Panel.ZIndex" Value="1" />
@@ -4983,9 +4592,7 @@
             <MultiDataTrigger>
                 <MultiDataTrigger.Conditions>
                     <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}" Value="false" />
-                    <Condition
-                        Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}"
-                        Value="Right" />
+                    <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Right" />
                 </MultiDataTrigger.Conditions>
                 <Setter TargetName="innerBorder" Property="BorderThickness" Value="0,1,1,1" />
                 <Setter TargetName="mainBorder" Property="BorderThickness" Value="0,1,1,1" />
@@ -4993,9 +4600,7 @@
             <MultiDataTrigger>
                 <MultiDataTrigger.Conditions>
                     <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}" Value="true" />
-                    <Condition
-                        Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}"
-                        Value="Right" />
+                    <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Right" />
                 </MultiDataTrigger.Conditions>
                 <Setter Property="Background" Value="{StaticResource ControlDefaultBackground}" />
                 <Setter Property="Panel.ZIndex" Value="1" />
@@ -5007,9 +4612,7 @@
             <MultiDataTrigger>
                 <MultiDataTrigger.Conditions>
                     <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}" Value="false" />
-                    <Condition
-                        Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}"
-                        Value="Top" />
+                    <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Top" />
                 </MultiDataTrigger.Conditions>
                 <Setter TargetName="innerBorder" Property="BorderThickness" Value="1" />
                 <Setter TargetName="mainBorder" Property="BorderThickness" Value="1" />
@@ -5017,9 +4620,7 @@
             <MultiDataTrigger>
                 <MultiDataTrigger.Conditions>
                     <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}" Value="true" />
-                    <Condition
-                        Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}"
-                        Value="Top" />
+                    <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Top" />
                 </MultiDataTrigger.Conditions>
                 <Setter Property="Background" Value="{StaticResource ControlDefaultBackground}" />
                 <Setter Property="Panel.ZIndex" Value="1" />
@@ -5121,8 +4722,7 @@
                 <Setter TargetName="headerPanel" Property="Margin" Value="0,2,2,2" />
             </Trigger>
             <Trigger Property="IsEnabled" Value="false">
-                <Setter TargetName="templateRoot" Property="TextElement.Foreground"
-                        Value="{StaticResource ControlDisabledGlythColour}" />
+                <Setter TargetName="templateRoot" Property="TextElement.Foreground" Value="{StaticResource ControlDisabledGlythColour}" />
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
@@ -5182,12 +4782,10 @@
                             <Setter TargetName="border" Property="Opacity" Value="0.56" />
                         </Trigger>
                         <Trigger Property="IsMouseOver" Value="true">
-                            <Setter TargetName="border" Property="BorderBrush"
-                                    Value="{StaticResource ControlMouseOverBorderBrush}" />
+                            <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource ControlMouseOverBorderBrush}" />
                         </Trigger>
                         <Trigger Property="IsKeyboardFocused" Value="true">
-                            <Setter TargetName="border" Property="BorderBrush"
-                                    Value="{StaticResource ControlSelectedBorderBrush}" />
+                            <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource ControlSelectedBorderBrush}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -5235,12 +4833,10 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="true">
-                            <Setter TargetName="Bd" Property="Background"
-                                    Value="{StaticResource ControlDefaultBackground}" />
+                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource ControlDefaultBackground}" />
                         </Trigger>
                         <Trigger Property="IsKeyboardFocused" Value="true">
-                            <Setter TargetName="Bd" Property="Background"
-                                    Value="{StaticResource ControlDefaultBackground}" />
+                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource ControlDefaultBackground}" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="false">
                             <Setter Property="Foreground" Value="{StaticResource ControlGlythColour}" />
@@ -5273,20 +4869,16 @@
                             SnapsToDevicePixels="true">
                             <Path Data="M 1 1.5 L 6 1.5" Stroke="{StaticResource ControlBrightDefaultBackground}" />
                             <Path Data="M 0 0.5 L 5 0.5" Stroke="{StaticResource ControlBrightDefaultBorderBrush}" />
-                            <Path Data="M 0.5 4 L 6.5 4 L 3.5 7 Z"
-                                  Fill="{StaticResource ControlBrightDefaultBackground}" />
-                            <Path Data="M -0.5 3 L 5.5 3 L 2.5 6 Z"
-                                  Fill="{StaticResource ControlBrightDefaultBorderBrush}" />
+                            <Path Data="M 0.5 4 L 6.5 4 L 3.5 7 Z" Fill="{StaticResource ControlBrightDefaultBackground}" />
+                            <Path Data="M -0.5 3 L 5.5 3 L 2.5 6 Z" Fill="{StaticResource ControlBrightDefaultBorderBrush}" />
                         </Canvas>
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="true">
-                            <Setter TargetName="Bd" Property="Background"
-                                    Value="{StaticResource ControlPrimaryMouseOverBackground}" />
+                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource ControlPrimaryMouseOverBackground}" />
                         </Trigger>
                         <Trigger Property="IsKeyboardFocused" Value="true">
-                            <Setter TargetName="Bd" Property="Background"
-                                    Value="{StaticResource ControlDefaultBackground}" />
+                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource ControlDefaultBackground}" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="false">
                             <Setter Property="Foreground" Value="{StaticResource ControlGlythColour}" />
@@ -5319,20 +4911,16 @@
                             SnapsToDevicePixels="true">
                             <Path Data="M 1 1.5 L 6 1.5" Stroke="{StaticResource ControlBrightDefaultBackground}" />
                             <Path Data="M 0 0.5 L 5 0.5" Stroke="{StaticResource ControlBrightDefaultBorderBrush}" />
-                            <Path Data="M 0.5 4 L 6.5 4 L 3.5 7 Z"
-                                  Fill="{StaticResource ControlBrightDefaultBackground}" />
-                            <Path Data="M -0.5 3 L 5.5 3 L 2.5 6 Z"
-                                  Fill="{StaticResource ControlBrightDefaultBorderBrush}" />
+                            <Path Data="M 0.5 4 L 6.5 4 L 3.5 7 Z" Fill="{StaticResource ControlBrightDefaultBackground}" />
+                            <Path Data="M -0.5 3 L 5.5 3 L 2.5 6 Z" Fill="{StaticResource ControlBrightDefaultBorderBrush}" />
                         </Canvas>
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="true">
-                            <Setter TargetName="Bd" Property="Background"
-                                    Value="{StaticResource ControlPrimaryMouseOverBackground}" />
+                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource ControlPrimaryMouseOverBackground}" />
                         </Trigger>
                         <Trigger Property="IsKeyboardFocused" Value="true">
-                            <Setter TargetName="Bd" Property="Background"
-                                    Value="{StaticResource ControlDefaultBackground}" />
+                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource ControlDefaultBackground}" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="false">
                             <Setter Property="Foreground" Value="{StaticResource ControlGlythColour}" />
@@ -5363,10 +4951,8 @@
                                     ViewportUnits="Absolute">
                                     <DrawingBrush.Drawing>
                                         <DrawingGroup>
-                                            <GeometryDrawing Brush="{StaticResource ControlBrightDefaultBackground}"
-                                                             Geometry="M 1 1 L 1 3 L 3 3 L 3 1 z" />
-                                            <GeometryDrawing Brush="{StaticResource ControlBrightDefaultBorderBrush}"
-                                                             Geometry="M 0 0 L 0 2 L 2 2 L 2 0 z" />
+                                            <GeometryDrawing Brush="{StaticResource ControlBrightDefaultBackground}" Geometry="M 1 1 L 1 3 L 3 3 L 3 1 z" />
+                                            <GeometryDrawing Brush="{StaticResource ControlBrightDefaultBorderBrush}" Geometry="M 0 0 L 0 2 L 2 2 L 2 0 z" />
                                         </DrawingGroup>
                                     </DrawingBrush.Drawing>
                                 </DrawingBrush>
@@ -5492,8 +5078,7 @@
                         </Trigger>
                         <Trigger Property="Orientation" Value="Vertical">
                             <Setter TargetName="Grid" Property="Margin" Value="1,3,1,1" />
-                            <Setter TargetName="OverflowButton" Property="Style"
-                                    Value="{StaticResource ToolBarVerticalOverflowButtonStyle}" />
+                            <Setter TargetName="OverflowButton" Property="Style" Value="{StaticResource ToolBarVerticalOverflowButtonStyle}" />
                             <Setter TargetName="ToolBarThumb" Property="Height" Value="10" />
                             <Setter TargetName="ToolBarThumb" Property="Width" Value="Auto" />
                             <Setter TargetName="ToolBarThumb" Property="Margin" Value="-1,-3,0,0" />
@@ -5604,8 +5189,7 @@
             </Trigger>
             <Trigger Property="Orientation" Value="Vertical">
                 <Setter TargetName="Grid" Property="Margin" Value="1,3,1,1" />
-                <Setter TargetName="OverflowButton" Property="Style"
-                        Value="{StaticResource ToolBarVerticalOverflowButtonStyle}" />
+                <Setter TargetName="OverflowButton" Property="Style" Value="{StaticResource ToolBarVerticalOverflowButtonStyle}" />
                 <Setter TargetName="ToolBarThumb" Property="Height" Value="10" />
                 <Setter TargetName="ToolBarThumb" Property="Width" Value="Auto" />
                 <Setter TargetName="ToolBarThumb" Property="Margin" Value="-1,-3,0,0" />
@@ -6080,12 +5664,9 @@
                 <Setter TargetName="border" Property="BorderBrush" Value="#FF940A14" />
             </Trigger>
             <Trigger Property="IsEnabled" Value="false">
-                <Setter TargetName="border" Property="Background"
-                        Value="{StaticResource ControlBrightDefaultBackground}" />
-                <Setter TargetName="border" Property="BorderBrush"
-                        Value="{StaticResource ControlBrightDefaultBorderBrush}" />
-                <Setter TargetName="contentPresenter" Property="TextElement.Foreground"
-                        Value="{StaticResource ControlDisabledGlythColour}" />
+                <Setter TargetName="border" Property="Background" Value="{StaticResource ControlBrightDefaultBackground}" />
+                <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource ControlBrightDefaultBorderBrush}" />
+                <Setter TargetName="contentPresenter" Property="TextElement.Foreground" Value="{StaticResource ControlDisabledGlythColour}" />
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
@@ -6124,8 +5705,7 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsEnabled" Value="false">
-                            <Setter TargetName="Bd" Property="Background"
-                                    Value="{StaticResource ControlDisabledBackground}" />
+                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource ControlDisabledBackground}" />
                         </Trigger>
                         <Trigger Property="VirtualizingPanel.IsVirtualizing" Value="true">
                             <Setter TargetName="_tv_scrollviewer_" Property="CanContentScroll" Value="true" />
@@ -6193,26 +5773,20 @@
                                     <RotateTransform Angle="180" CenterX="3" CenterY="3" />
                                 </Setter.Value>
                             </Setter>
-                            <Setter TargetName="ExpandPath" Property="Fill"
-                                    Value="{StaticResource TreeViewItem.TreeArrow.Static.Checked.Fill}" />
-                            <Setter TargetName="ExpandPath" Property="Stroke"
-                                    Value="{StaticResource TreeViewItem.TreeArrow.Static.Checked.Stroke}" />
+                            <Setter TargetName="ExpandPath" Property="Fill" Value="{StaticResource TreeViewItem.TreeArrow.Static.Checked.Fill}" />
+                            <Setter TargetName="ExpandPath" Property="Stroke" Value="{StaticResource TreeViewItem.TreeArrow.Static.Checked.Stroke}" />
                         </Trigger>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="ExpandPath" Property="Stroke"
-                                    Value="{StaticResource TreeViewItem.TreeArrow.MouseOver.Stroke}" />
-                            <Setter TargetName="ExpandPath" Property="Fill"
-                                    Value="{StaticResource TreeViewItem.TreeArrow.MouseOver.Fill}" />
+                            <Setter TargetName="ExpandPath" Property="Stroke" Value="{StaticResource TreeViewItem.TreeArrow.MouseOver.Stroke}" />
+                            <Setter TargetName="ExpandPath" Property="Fill" Value="{StaticResource TreeViewItem.TreeArrow.MouseOver.Fill}" />
                         </Trigger>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
                                 <Condition Property="IsMouseOver" Value="True" />
                                 <Condition Property="IsChecked" Value="True" />
                             </MultiTrigger.Conditions>
-                            <Setter TargetName="ExpandPath" Property="Stroke"
-                                    Value="{StaticResource TreeViewItem.TreeArrow.MouseOver.Checked.Stroke}" />
-                            <Setter TargetName="ExpandPath" Property="Fill"
-                                    Value="{StaticResource TreeViewItem.TreeArrow.MouseOver.Checked.Fill}" />
+                            <Setter TargetName="ExpandPath" Property="Stroke" Value="{StaticResource TreeViewItem.TreeArrow.MouseOver.Checked.Stroke}" />
+                            <Setter TargetName="ExpandPath" Property="Fill" Value="{StaticResource TreeViewItem.TreeArrow.MouseOver.Checked.Fill}" />
                         </MultiTrigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -6221,10 +5795,8 @@
     </Style>
     <Style TargetType="{x:Type TreeViewItem}">
         <Setter Property="Background" Value="Transparent" />
-        <Setter Property="HorizontalContentAlignment"
-                Value="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />
-        <Setter Property="VerticalContentAlignment"
-                Value="{Binding VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />
+        <Setter Property="HorizontalContentAlignment" Value="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />
+        <Setter Property="VerticalContentAlignment" Value="{Binding VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />
         <Setter Property="Padding" Value="1,0,0,0" />
         <Setter Property="Foreground" Value="{StaticResource ControlDefaultForeground}" />
         <Setter Property="FocusVisualStyle" Value="{StaticResource TreeViewItemFocusVisual}" />
@@ -6277,30 +5849,23 @@
                             <MultiTrigger.Conditions>
                                 <Condition Property="IsMouseOver" Value="True" />
                             </MultiTrigger.Conditions>
-                            <Setter TargetName="Bd" Property="Background"
-                                    Value="{StaticResource ControlMouseOverBackground}" />
-                            <Setter TargetName="Bd" Property="BorderBrush"
-                                    Value="{StaticResource ControlMouseOverBorderBrush}" />
+                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource ControlMouseOverBackground}" />
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource ControlMouseOverBorderBrush}" />
                         </MultiTrigger>
                         <Trigger Property="IsSelected" Value="true">
-                            <Setter TargetName="Bd" Property="Background"
-                                    Value="{StaticResource ControlSelectedBackground}" />
-                            <Setter TargetName="Bd" Property="BorderBrush"
-                                    Value="{StaticResource ControlSelectedBorderBrush}" />
+                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource ControlSelectedBackground}" />
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource ControlSelectedBorderBrush}" />
                         </Trigger>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
                                 <Condition Property="IsSelected" Value="true" />
                                 <Condition Property="IsSelectionActive" Value="false" />
                             </MultiTrigger.Conditions>
-                            <Setter TargetName="Bd" Property="Background"
-                                    Value="{StaticResource ControlDefaultBackground}" />
-                            <Setter TargetName="Bd" Property="BorderBrush"
-                                    Value="{StaticResource ControlDefaultBorderBrush}" />
+                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource ControlDefaultBackground}" />
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource ControlDefaultBorderBrush}" />
                         </MultiTrigger>
                         <Trigger Property="IsEnabled" Value="false">
-                            <Setter Property="Foreground"
-                                    Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
+                            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -6391,8 +5956,7 @@
 
                                         <Grid Grid.Row="2" Grid.Column="1">
                                             <Grid.ColumnDefinitions>
-                                                <ColumnDefinition
-                                                    Width="{Binding NonFrozenColumnsViewportHorizontalOffset, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" />
+                                                <ColumnDefinition Width="{Binding NonFrozenColumnsViewportHorizontalOffset, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" />
                                                 <ColumnDefinition Width="*" />
                                             </Grid.ColumnDefinitions>
                                             <ScrollBar
@@ -6435,17 +5999,14 @@
                         BorderBrush="{StaticResource ControlBrightDefaultBorderBrush}"
                         BorderThickness="1"
                         SnapsToDevicePixels="True">
-                        <ContentPresenter x:Name="DataGridCell_ContentPresenter"
-                                          SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                        <ContentPresenter x:Name="DataGridCell_ContentPresenter" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
                     </Border>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
 
-    <Style
-        x:Key="{ComponentResourceKey ResourceId=DataGridSelectAllButtonStyle, TypeInTargetAssembly={x:Type DataGrid}}"
-        TargetType="{x:Type Button}">
+    <Style x:Key="{ComponentResourceKey ResourceId=DataGridSelectAllButtonStyle, TypeInTargetAssembly={x:Type DataGrid}}" TargetType="{x:Type Button}">
         <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
         <Setter Property="Background" Value="{StaticResource ControlDefaultBackground}" />
         <Setter Property="BorderBrush" Value="{StaticResource ControlDefaultBorderBrush}" />
@@ -6478,28 +6039,20 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsDefaulted" Value="true">
-                            <Setter TargetName="border" Property="BorderBrush"
-                                    Value="{StaticResource ControlMouseOverBorderBrush}" />
+                            <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource ControlMouseOverBorderBrush}" />
                         </Trigger>
                         <Trigger Property="IsMouseOver" Value="true">
-                            <Setter TargetName="border" Property="Background"
-                                    Value="{StaticResource ControlMouseOverBackground}" />
-                            <Setter TargetName="border" Property="BorderBrush"
-                                    Value="{StaticResource ControlMouseOverBorderBrush}" />
+                            <Setter TargetName="border" Property="Background" Value="{StaticResource ControlMouseOverBackground}" />
+                            <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource ControlMouseOverBorderBrush}" />
                         </Trigger>
                         <Trigger Property="IsPressed" Value="true">
-                            <Setter TargetName="border" Property="Background"
-                                    Value="{StaticResource ControlSelectedBackground}" />
-                            <Setter TargetName="border" Property="BorderBrush"
-                                    Value="{StaticResource ControlSelectedBorderBrush}" />
+                            <Setter TargetName="border" Property="Background" Value="{StaticResource ControlSelectedBackground}" />
+                            <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource ControlSelectedBorderBrush}" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="false">
-                            <Setter TargetName="border" Property="Background"
-                                    Value="{StaticResource ControlBrightDefaultBackground}" />
-                            <Setter TargetName="border" Property="BorderBrush"
-                                    Value="{StaticResource ControlBrightDefaultBorderBrush}" />
-                            <Setter TargetName="contentPresenter" Property="TextElement.Foreground"
-                                    Value="{StaticResource ControlDisabledGlythColour}" />
+                            <Setter TargetName="border" Property="Background" Value="{StaticResource ControlBrightDefaultBackground}" />
+                            <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource ControlBrightDefaultBorderBrush}" />
+                            <Setter TargetName="contentPresenter" Property="TextElement.Foreground" Value="{StaticResource ControlDisabledGlythColour}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

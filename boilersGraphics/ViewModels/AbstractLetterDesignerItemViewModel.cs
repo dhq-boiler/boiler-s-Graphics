@@ -78,7 +78,7 @@ public abstract class AbstractLetterDesignerItemViewModel : DesignerItemViewMode
         this.ObserveProperty(x => x.IsAutoLineBreak.Value)
             .Subscribe(_ => RenderLetter())
             .AddTo(_CompositeDisposable);
-        EnablePathGeometryUpdate.Value = true;
+        UpdatingStrategy.Value = PathGeometryUpdatingStrategy.Initial;
     }
 
     public void CloseLetterSettingDialog()
@@ -121,13 +121,6 @@ public abstract class AbstractLetterDesignerItemViewModel : DesignerItemViewMode
         return PathGeometry.Value;
     }
 
-    public override PathGeometry CreateGeometry(double angle)
-    {
-        RenderLetter();
-        var rotatePathGeometry = PathGeometry.Value.Clone();
-        rotatePathGeometry.Transform = new RotateTransform(angle, CenterPoint.Value.X, CenterPoint.Value.Y);
-        return rotatePathGeometry;
-    }
 
     public override Type GetViewType()
     {

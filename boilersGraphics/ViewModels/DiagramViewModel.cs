@@ -577,7 +577,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     private void ExecuteCopyCanvasToClipboardCommand()
     {
         var renderer = new Renderer(new WpfVisualTreeHelper());
-        var bitmap = renderer.Render(null, DesignerCanvas.GetInstance(), this, BackgroundItem.Value);
+        var bitmap = renderer.Render(null, DesignerCanvas.GetInstance(), this, BackgroundItem.Value, BackgroundItem.Value);
         Clipboard.SetImage(bitmap);
     }
 
@@ -920,12 +920,12 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
         var newCroppedPicture = new CroppedPictureDesignerItemViewModel();
         newCroppedPicture.PathGeometryNoRotate.Value = other.PathGeometryNoRotate.Value;
         newCroppedPicture.PathGeometryRotate.Value = other.PathGeometryRotate.Value;
-        newCroppedPicture.EnablePathGeometryUpdate.Value = false;
+        newCroppedPicture.UpdatingStrategy.Value = SelectableDesignerItemViewModelBase.PathGeometryUpdatingStrategy.Fixed;
         newCroppedPicture.Left.Value = other.Left.Value;
         newCroppedPicture.Top.Value = other.Top.Value;
         newCroppedPicture.Width.Value = other.Width.Value;
         newCroppedPicture.Height.Value = other.Height.Value;
-        newCroppedPicture.EnablePathGeometryUpdate.Value = true;
+        newCroppedPicture.UpdatingStrategy.Value = SelectableDesignerItemViewModelBase.PathGeometryUpdatingStrategy.Initial;
         newCroppedPicture.EdgeBrush.Value = other.EdgeBrush.Value;
         newCroppedPicture.EdgeThickness.Value = other.EdgeThickness.Value;
         newCroppedPicture.FillBrush.Value = new SolidColorBrush(Colors.Transparent);
@@ -1115,6 +1115,40 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
             MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "Height.Value",
                 combine.PathGeometry.Value.Bounds.Height);
             Add(combine);
+        }
+        else if (selectedItems.Count() == 2 && item1 is EffectViewModel effect)
+        {
+            var item2 = GetSelectedItemLast();
+            Remove(item2);
+
+            var designerItem1 = item1 as DesignerItemViewModelBase;
+            var designerItem2 = item2 as DesignerItemViewModelBase;
+
+            var item1PathGeometry = item1.PathGeometryNoRotate.Value;
+            var item2PathGeometry = item2.PathGeometryNoRotate.Value;
+
+            if (item1.RotationAngle.Value != 0) item1PathGeometry = designerItem1.PathGeometryRotate.Value;
+            if (designerItem1 is not CombineGeometryViewModel)
+                item1PathGeometry = GeometryCreator.Translate(item1PathGeometry, designerItem1.Left.Value,
+                    designerItem1.Top.Value);
+
+            if (item2.RotationAngle.Value != 0) item2PathGeometry = designerItem2.PathGeometryRotate.Value;
+
+            if (designerItem2 is not CombineGeometryViewModel)
+                item2PathGeometry = GeometryCreator.Translate(item2PathGeometry, designerItem2.Left.Value,
+                    designerItem2.Top.Value);
+
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(effect, "PathGeometryNoRotate.Value",
+                GeometryCreator.Translate(Geometry.Combine(item1PathGeometry, item2PathGeometry, mode, null), -designerItem1.Left.Value, -designerItem1.Top.Value));
+            
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(effect, "UpdatingStrategy.Value", SelectableDesignerItemViewModelBase.PathGeometryUpdatingStrategy.ResizeWhilePreservingOriginalShape);
+
+            var rect = Geometry.Combine(item1PathGeometry, item2PathGeometry, mode, null).Bounds;
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(effect, "Left.Value", rect.Left);
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(effect, "Top.Value", rect.Top);
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(effect, "PathGeometryNoRotate.Value", GeometryCreator.Translate(effect.PathGeometryNoRotate.Value, -effect.PathGeometryNoRotate.Value.Bounds.Left, -effect.PathGeometryNoRotate.Value.Bounds.Top));
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(effect, "Width.Value", rect.Width);
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(effect, "Height.Value", rect.Height);
         }
         else
         {

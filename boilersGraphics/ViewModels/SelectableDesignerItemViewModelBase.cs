@@ -50,7 +50,14 @@ public abstract class SelectableDesignerItemViewModelBase : BindableBase, ISelec
 
     public ReactivePropertySlim<bool> IsSelected { get; } = new();
     public ReactivePropertySlim<bool> EnableForSelection { get; } = new();
-    public ReactivePropertySlim<bool> EnablePathGeometryUpdate { get; set; } = new();
+    public ReactivePropertySlim<PathGeometryUpdatingStrategy> UpdatingStrategy { get; } = new();
+    public enum PathGeometryUpdatingStrategy
+    {
+        Unknown,
+        Initial,
+        ResizeWhilePreservingOriginalShape,
+        Fixed,
+    }
     public ReactivePropertySlim<bool> IsVisible { get; } = new();
     public ReactivePropertySlim<bool> IsHitTestVisible { get; set; } = new();
     public ReactivePropertySlim<bool> CanDrag { get; set; } = new(true);
@@ -145,7 +152,7 @@ public abstract class SelectableDesignerItemViewModelBase : BindableBase, ISelec
     {
         IsSelected.Dispose();
         EnableForSelection.Dispose();
-        EnablePathGeometryUpdate.Dispose();
+        UpdatingStrategy.Dispose();
         IsVisible.Dispose();
         IsHitTestVisible.Dispose();
         CanDrag.Dispose();

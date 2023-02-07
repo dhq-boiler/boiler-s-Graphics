@@ -70,7 +70,7 @@ public class SnapPointViewModel : SelectableDesignerItemViewModelBase
         clone.FillBrush.Value = FillBrush.Value;
         clone.EdgeThickness.Value = EdgeThickness.Value;
         clone.EnableForSelection.Value = EnableForSelection.Value;
-        clone.EnablePathGeometryUpdate.Value = EnablePathGeometryUpdate.Value;
+        clone.UpdatingStrategy.Value = UpdatingStrategy.Value;
         clone.ID = ID;
         clone.IsHitTestVisible.Value = IsHitTestVisible.Value;
         clone.IsSelected.Value = IsSelected.Value;

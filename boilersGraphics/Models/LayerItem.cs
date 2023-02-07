@@ -138,9 +138,9 @@ public class LayerItem : LayerTreeViewItemBase, IDisposable, IComparable<LayerTr
         Rect? sliceRect = null;
         items.Cast<IRect>().ToList().ForEach(x => sliceRect = (!sliceRect.HasValue ? x.Rect.Value : Rect.Union(sliceRect.Value, x.Rect.Value)));
         var renderer = new Renderer(new WpfVisualTreeHelper());
-        Appearance.Value = renderer.Render(sliceRect, DesignerCanvas.GetInstance(),
-            DiagramViewModel.Instance,
-            DiagramViewModel.Instance.BackgroundItem.Value, items.Max(x => x.ZIndex.Value));
+        //Appearance.Value = renderer.Render(sliceRect, DesignerCanvas.GetInstance(),
+        //    DiagramViewModel.Instance,
+        //    DiagramViewModel.Instance.BackgroundItem.Value, new System.Windows.Point(), items.Max(x => x.ZIndex.Value));
     }
 
     private static void UpdateAppearanceByItem(DesignerCanvas designerCanvas, double minX, double minY,

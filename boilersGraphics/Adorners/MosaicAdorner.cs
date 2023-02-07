@@ -74,11 +74,11 @@ internal class MosaicAdorner : Adorner
         {
             var rand = new Random();
             item.Owner = (AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel;
+            item.UpdatingStrategy.Value = SelectableDesignerItemViewModelBase.PathGeometryUpdatingStrategy.Unknown;
             item.Left.Value = Math.Min(_startPoint.Value.X, _endPoint.Value.X);
             item.Top.Value = Math.Min(_startPoint.Value.Y, _endPoint.Value.Y);
             item.Width.Value = Math.Max(_startPoint.Value.X - _endPoint.Value.X,
                 _endPoint.Value.X - _startPoint.Value.X);
-            item.PathGeometryNoRotate.Value = null;
             item.Height.Value = Math.Max(_startPoint.Value.Y - _endPoint.Value.Y,
                 _endPoint.Value.Y - _startPoint.Value.Y);
             item.EdgeBrush.Value = item.Owner.EdgeBrush.Value.Clone();
@@ -86,7 +86,8 @@ internal class MosaicAdorner : Adorner
             item.EdgeThickness.Value = item.Owner.EdgeThickness.Value.Value;
             item.ZIndex.Value = item.Owner.Layers
                 .SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).Count();
-            item.PathGeometryNoRotate.Value = GeometryCreator.CreateRectangle(item, 0, 0);
+            item.UpdatingStrategy.Value = SelectableDesignerItemViewModelBase.PathGeometryUpdatingStrategy.Initial;
+            item.PathGeometryNoRotate.Value = item.CreateGeometry();
             item.IsSelected.Value = true;
             item.IsVisible.Value = true;
             item.Owner.DeselectAll();
