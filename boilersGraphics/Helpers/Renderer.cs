@@ -251,7 +251,7 @@ public class Renderer
         return renderedCount;
     }
     
-    private bool RenderBackgroundViewModel(Rect? sliceRect, DesignerCanvas designerCanvas,
+    public virtual bool RenderBackgroundViewModel(Rect? sliceRect, DesignerCanvas designerCanvas,
         DrawingContext context, BackgroundViewModel background, List<FrameworkElement> allViews, SelectableDesignerItemViewModelBase caller)
     {
         var view = default(FrameworkElement);
@@ -282,7 +282,7 @@ public class Renderer
                 return false;
             }
         }
-        
+
         view.Measure(new Size(background.Width.Value, background.Height.Value));
         view.Arrange(background.Rect.Value);
         view.UpdateLayout();
@@ -301,12 +301,7 @@ public class Renderer
             rect.Y = 0;
         }
 
-        //context.PushTransform(new RotateTransform(rotateAngle,
-        //    rect.Left + rect.Width / 2,
-        //    rect.Top + rect.Height / 2));
-        context.PushTransform(new MatrixTransform(caller.Matrix.Value));
         context.DrawRectangle(brush, null, rect);
-        context.Pop();
 
         return true;
     }
