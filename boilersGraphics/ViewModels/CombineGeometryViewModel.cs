@@ -1,6 +1,6 @@
-﻿using System;
+﻿using boilersGraphics.Helpers;
+using System;
 using System.Windows.Media;
-using System.Windows.Shapes;
 
 namespace boilersGraphics.ViewModels;
 
@@ -43,13 +43,23 @@ public class CombineGeometryViewModel : DesignerItemViewModelBase
 
     public override PathGeometry CreateGeometry(bool flag = false)
     {
-        throw new NotSupportedException("combine figures is not supported.");
+        switch (UpdatingStrategy.Value)
+        {
+            case PathGeometryUpdatingStrategy.Initial:
+                return GeometryCreator.CreateRectangle(this, 0, 0, flag);
+            case PathGeometryUpdatingStrategy.ResizeWhilePreservingOriginalShape:
+                return GeometryCreator.Scale(this.PathGeometryNoRotate.Value, this.Width.Value / this.PathGeometryNoRotate.Value.Bounds.Width, this.Height.Value / this.PathGeometryNoRotate.Value.Bounds.Height);
+            case PathGeometryUpdatingStrategy.Fixed:
+                return this.PathGeometryNoRotate.Value;
+            default:
+                throw new NotSupportedException();
+        }
     }
 
 
     public override Type GetViewType()
     {
-        return typeof(Path);
+        return typeof(System.Windows.Shapes.Path);
     }
 
     #region IClonable
