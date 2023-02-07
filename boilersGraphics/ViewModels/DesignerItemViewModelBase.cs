@@ -378,6 +378,7 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
         var compositeDisposable = new CompositeDisposable();
         base.BeginMonitor(action).AddTo(compositeDisposable);
         Rect.Subscribe(_ => action()).AddTo(compositeDisposable);
+        RotationAngle.Subscribe(_ => action()).AddTo(compositeDisposable);
         return compositeDisposable;
     }
 
