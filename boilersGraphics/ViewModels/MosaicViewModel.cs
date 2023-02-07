@@ -54,7 +54,7 @@ public class MosaicViewModel : EffectViewModel
         Application.Current.Dispatcher.Invoke(() =>
         {
             var mainWindowViewModel = Application.Current.MainWindow.DataContext as MainWindowViewModel;
-            var renderer = new Renderer(new WpfVisualTreeHelper());
+            var renderer = new EffectRenderer(new WpfVisualTreeHelper());
             var rtb = renderer.Render(Rect.Value, Application.Current.MainWindow.GetChildOfType<DesignerCanvas>(),
                 mainWindowViewModel.DiagramViewModel, mainWindowViewModel.DiagramViewModel.BackgroundItem.Value, this, this.ZIndex.Value - 1);
             var newFormattedBitmapSource = new FormatConvertedBitmap();
