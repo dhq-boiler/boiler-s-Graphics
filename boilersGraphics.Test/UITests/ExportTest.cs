@@ -198,36 +198,8 @@ namespace boilersGraphics.Test.UITests
 
             using (var mat = new Mat(exportFilePath))
             {
-                Assert.That(mat.Rows, Is.EqualTo(200));
-                Assert.That(mat.Cols, Is.EqualTo(200));
-                //for (int y = 0; y < 100; ++y)
-                //{
-                //    for (int x = 0; x < 100; ++x)
-                //    {
-                //        TestPixelIsBlack(mat, y, x);
-                //    }
-                //}
-                //for (int y = 100; y < 200; ++y)
-                //{
-                //    for (int x = 100; x < 200; ++x)
-                //    {
-                //        TestPixelIsBlack(mat, y, x);
-                //    }
-                //}
-                //for (int y = 0; y < 100; ++y)
-                //{
-                //    for (int x = 100; x < 200; ++x)
-                //    {
-                //        TestPixelIsWhite(mat, y, x);
-                //    }
-                //}
-                //for (int y = 100; y < 200; ++y)
-                //{
-                //    for (int x = 0; x < 100; ++x)
-                //    {
-                //        TestPixelIsWhite(mat, y, x);
-                //    }
-                //}
+                Assert.That(mat.Rows, Is.EqualTo(200).After(5000, 50));
+                Assert.That(mat.Cols, Is.EqualTo(200).After(5000, 50));
             }
         }
 
