@@ -135,8 +135,9 @@ namespace boilersGraphics.Helpers
                             if (item is DesignerItemViewModelBase id && caller is DesignerItemViewModelBase des)
                             {
                                 var baseMatrix = new Matrix();
-                                baseMatrix.Translate((des.CenterPoint.Value.X - rect.Width / 2) * 1, (des.CenterPoint.Value.Y - rect.Height / 2) * 1);
+                                baseMatrix.Translate((des.CenterPoint.Value.X - id.Width.Value / 2) * 1, (des.CenterPoint.Value.Y - id.Height.Value / 2) * 1);
                                 baseMatrix.Translate(-des.Left.Value, -des.Top.Value);
+                                baseMatrix.Translate((-des.Width.Value + id.Width.Value) / 2, (-des.Height.Value + id.Height.Value) / 2);
                                 baseMatrix.RotateAt(item.RotationAngle.Value, id.CenterPoint.Value.X - des.Left.Value, id.CenterPoint.Value.Y - des.Top.Value);
                                 baseMatrix.RotateAt(-des.RotationAngle.Value, des.CenterPoint.Value.X - des.Left.Value, des.CenterPoint.Value.Y - des.Top.Value);
                                 context.PushTransform(new MatrixTransform(baseMatrix));
