@@ -1,5 +1,6 @@
 ﻿using boilersGraphics.Controls;
 using boilersGraphics.ViewModels;
+using NLog;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -10,6 +11,8 @@ namespace boilersGraphics.Helpers
 {
     public class EffectRenderer : Renderer
     {
+        private static readonly Logger s_logger = LogManager.GetCurrentClassLogger();
+
         public EffectRenderer(IVisualTreeHelper visualTreeHelper) : base(visualTreeHelper)
         {
         }
@@ -82,6 +85,7 @@ namespace boilersGraphics.Helpers
                                     var intersectSrc = new Rect(designerItem.Left.Value, designerItem.Top.Value, bounds.Width,
                                         bounds.Height);
                                     rect = Rect.Union(rect, intersectSrc);
+                                    rect = Rect.Intersect(rect, background.Rect.Value);
 
                                     if (rect != Rect.Empty)
                                     {
@@ -182,6 +186,67 @@ namespace boilersGraphics.Helpers
             }
 
             return renderedCount;
+        }
+
+        public override bool RenderBackgroundViewModel(Rect? sliceRect, DesignerCanvas designerCanvas, DrawingContext context, BackgroundViewModel background, List<FrameworkElement> allViews, SelectableDesignerItemViewModelBase caller)
+        {
+            var view = default(FrameworkElement);
+            if (!boilersGraphics.App.IsTest)
+            {
+                var result = Application.Current.Dispatcher.Invoke(() =>
+                {
+                    view = allViews.FirstOrDefault(x =>
+                        x.DataContext == background);
+                    if (view is null)
+                    {
+                        s_logger.Warn($"Not Found: view of {background}");
+                        return false;
+                    }
+
+                    return true;
+                });
+                if (!result)
+                    return false;
+            }
+            else
+            {
+                view = allViews.FirstOrDefault(x =>
+                    x.DataContext == background);
+                if (view is null)
+                {
+                    s_logger.Warn($"Not Found: view of {background}");
+                    return false;
+                }
+            }
+
+            view.Measure(new Size(background.Width.Value, background.Height.Value));
+            view.Arrange(background.Rect.Value);
+            view.UpdateLayout();
+
+            var bounds = VisualTreeHelper.GetDescendantBounds(view);
+
+            var rect = sliceRect ?? bounds;
+
+            var brush = new VisualBrush(view)
+            {
+                Stretch = Stretch.None
+            };
+            if (sliceRect.HasValue)
+            {
+                rect.X = 0;
+                rect.Y = 0;
+            }
+
+            var baseMatrix = new Matrix();
+            //baseMatrix.Translate((background.CenterPoint.Value.X - rect.Width / 2) * 1, (background.CenterPoint.Value.Y - rect.Height / 2) * 1);
+            //baseMatrix.Translate(-background.Left.Value, -background.Top.Value);
+            //baseMatrix.Translate(background.Left.Value, background.Top.Value);
+            baseMatrix.RotateAt(-background.RotationAngle.Value, background.CenterPoint.Value.X - background.Left.Value, background.CenterPoint.Value.Y - background.Top.Value);
+            context.PushTransform(new MatrixTransform(baseMatrix));
+            context.DrawRectangle(brush, null, rect);
+            context.Pop();
+
+            return true;
         }
     }
 }
