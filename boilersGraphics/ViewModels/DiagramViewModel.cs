@@ -1143,11 +1143,12 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
             
             effect.UpdatingStrategy.Value = SelectableDesignerItemViewModelBase.PathGeometryUpdatingStrategy.ResizeWhilePreservingOriginalShape;
 
-            if (mode == GeometryCombineMode.Union)
-            {
-                effect.Width.Value = effect.PathGeometryNoRotate.Value.Bounds.Width;
-                effect.Height.Value = effect.PathGeometryNoRotate.Value.Bounds.Height;
-            }
+            var rect = Geometry.Combine(item1PathGeometry, item2PathGeometry, mode, null).Bounds;
+            effect.Left.Value = rect.Left;
+            effect.Top.Value = rect.Top;
+            effect.PathGeometryNoRotate.Value = GeometryCreator.Translate(effect.PathGeometryNoRotate.Value, -effect.PathGeometryNoRotate.Value.Bounds.Left, -effect.PathGeometryNoRotate.Value.Bounds.Top);
+            effect.Width.Value = rect.Width;
+            effect.Height.Value = rect.Height;
         }
         else
         {
