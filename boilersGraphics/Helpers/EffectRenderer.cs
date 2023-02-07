@@ -85,6 +85,7 @@ namespace boilersGraphics.Helpers
                                     var intersectSrc = new Rect(designerItem.Left.Value, designerItem.Top.Value, bounds.Width,
                                         bounds.Height);
                                     rect = Rect.Union(rect, intersectSrc);
+                                    rect = Rect.Intersect(rect, designerItem.Rect.Value);
                                     rect = Rect.Intersect(rect, background.Rect.Value);
 
                                     if (rect != Rect.Empty)
