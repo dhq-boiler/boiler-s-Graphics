@@ -1141,14 +1141,14 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
             MainWindowVM.Recorder.Current.ExecuteSetProperty(effect, "PathGeometryNoRotate.Value",
                 GeometryCreator.Translate(Geometry.Combine(item1PathGeometry, item2PathGeometry, mode, null), -designerItem1.Left.Value, -designerItem1.Top.Value));
             
-            effect.UpdatingStrategy.Value = SelectableDesignerItemViewModelBase.PathGeometryUpdatingStrategy.ResizeWhilePreservingOriginalShape;
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(effect, "UpdatingStrategy.Value", SelectableDesignerItemViewModelBase.PathGeometryUpdatingStrategy.ResizeWhilePreservingOriginalShape);
 
             var rect = Geometry.Combine(item1PathGeometry, item2PathGeometry, mode, null).Bounds;
-            effect.Left.Value = rect.Left;
-            effect.Top.Value = rect.Top;
-            effect.PathGeometryNoRotate.Value = GeometryCreator.Translate(effect.PathGeometryNoRotate.Value, -effect.PathGeometryNoRotate.Value.Bounds.Left, -effect.PathGeometryNoRotate.Value.Bounds.Top);
-            effect.Width.Value = rect.Width;
-            effect.Height.Value = rect.Height;
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(effect, "Left.Value", rect.Left);
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(effect, "Top.Value", rect.Top);
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(effect, "PathGeometryNoRotate.Value", GeometryCreator.Translate(effect.PathGeometryNoRotate.Value, -effect.PathGeometryNoRotate.Value.Bounds.Left, -effect.PathGeometryNoRotate.Value.Bounds.Top));
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(effect, "Width.Value", rect.Width);
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(effect, "Height.Value", rect.Height);
         }
         else
         {
