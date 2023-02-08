@@ -107,7 +107,7 @@ internal class BlurAdorner : Adorner
                 //左上
                 _snapAction.PostProcess(SnapPointPosition.LeftTop, item);
 
-            //UpdateStatisticsCount();
+            UpdateStatisticsCount();
 
             _startPoint = null;
             _endPoint = null;
@@ -122,7 +122,7 @@ internal class BlurAdorner : Adorner
     private static void UpdateStatisticsCount()
     {
         var statistics = (Application.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
-        statistics.NumberOfDrawsOfTheRectangleTool++;
+        statistics.NumberOfDrawsOfTheGaussianFilterTool++;
         var dao = new StatisticsDao();
         dao.Update(statistics);
     }

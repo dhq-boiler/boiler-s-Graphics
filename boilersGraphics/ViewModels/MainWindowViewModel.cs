@@ -592,6 +592,7 @@ public class MainWindowViewModel : BindableBase, IDisposable
         dvManager.RegisterChangePlan(new ChangePlan_bG_Version3());
         dvManager.RegisterChangePlan(new ChangePlan_bG_Version4());
         dvManager.RegisterChangePlan(new ChangePlan_bG_Version5());
+        dvManager.RegisterChangePlan(new ChangePlan_bG_Version6());
         dvManager.FinishedToUpgradeTo += DvManager_FinishedToUpgradeTo;
 
         dvManager.UpgradeToTargetVersion();

@@ -106,7 +106,7 @@ internal class MosaicAdorner : Adorner
                 //左上
                 _snapAction.PostProcess(SnapPointPosition.LeftTop, item);
 
-            //UpdateStatisticsCount();
+            UpdateStatisticsCount();
 
             _startPoint = null;
             _endPoint = null;
@@ -121,7 +121,7 @@ internal class MosaicAdorner : Adorner
     private static void UpdateStatisticsCount()
     {
         var statistics = (Application.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
-        statistics.NumberOfDrawsOfTheRectangleTool++;
+        statistics.NumberOfDrawsOfTheMosaicTool++;
         var dao = new StatisticsDao();
         dao.Update(statistics);
     }

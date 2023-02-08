@@ -249,8 +249,14 @@
   <data name="Dialog_Statistics_NumberOfDrawsOfTheEllipseTool" xml:space="preserve">
     <value>円ツールの描画回数</value>
   </data>
+  <data name="Dialog_Statistics_NumberOfDrawsOfTheGaussianFilterTool" xml:space="preserve">
+    <value>ガウシアンフィルタツールの描画回数</value>
+  </data>
   <data name="Dialog_Statistics_NumberOfDrawsOfTheLetteringTool" xml:space="preserve">
     <value>文字ツールの描画回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfDrawsOfTheMosaicTool" xml:space="preserve">
+    <value>モザイクツールの描画回数</value>
   </data>
   <data name="Dialog_Statistics_NumberOfDrawsOfThePieTool" xml:space="preserve">
     <value>扇形ツールの描画回数</value>

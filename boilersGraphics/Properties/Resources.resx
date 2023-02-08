@@ -249,8 +249,14 @@
   <data name="Dialog_Statistics_NumberOfDrawsOfTheEllipseTool" xml:space="preserve">
     <value>Number of draws of the ellipse tool</value>
   </data>
+  <data name="Dialog_Statistics_NumberOfDrawsOfTheGaussianFilterTool" xml:space="preserve">
+    <value>Number of draws of the gaussian filter tool</value>
+  </data>
   <data name="Dialog_Statistics_NumberOfDrawsOfTheLetteringTool" xml:space="preserve">
     <value>Number of draws of the lettering tool</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfDrawsOfTheMosaicTool" xml:space="preserve">
+    <value>Number of draws of the mosaic tool</value>
   </data>
   <data name="Dialog_Statistics_NumberOfDrawsOfThePieTool" xml:space="preserve">
     <value>Number of draws of the pie tool</value>

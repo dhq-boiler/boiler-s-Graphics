@@ -29,7 +29,7 @@ namespace boilersGraphics.Properties {
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        public Resources() {
+        internal Resources() {
         }
         
         /// <summary>
@@ -430,11 +430,29 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Number of draws of the gaussian filter tool に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfDrawsOfTheGaussianFilterTool {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfDrawsOfTheGaussianFilterTool", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Number of draws of the lettering tool に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Dialog_Statistics_NumberOfDrawsOfTheLetteringTool {
             get {
                 return ResourceManager.GetString("Dialog_Statistics_NumberOfDrawsOfTheLetteringTool", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Number of draws of the mosaic tool に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfDrawsOfTheMosaicTool {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfDrawsOfTheMosaicTool", resourceCulture);
             }
         }
         

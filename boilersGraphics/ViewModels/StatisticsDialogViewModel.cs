@@ -92,6 +92,8 @@ internal class StatisticsDialogViewModel : BindableBase, IDialogAware, IDisposab
     public ReactivePropertySlim<int> NumberOfTimesSliceToolHasBeenUsed { get; } = new();
     public ReactivePropertySlim<int> NumberOfDrawsOfFreeHandTool { get; } = new();
     public ReactivePropertySlim<int> NumberOfDrawsOfThePieTool { get; } = new();
+    public ReactivePropertySlim<int> NumberOfDrawsOfTheMosaicTool { get; } = new();
+    public ReactivePropertySlim<int> NumberOfDrawsOfTheGaussianFilterTool { get; } = new();
 
     public ReactivePropertySlim<TimeSpan> Uptime { get; } = new();
 
@@ -191,6 +193,8 @@ internal class StatisticsDialogViewModel : BindableBase, IDialogAware, IDisposab
         NumberOfTimesSliceToolHasBeenUsed.Value = statistics.NumberOfTimesSliceToolHasBeenUsed;
         NumberOfDrawsOfFreeHandTool.Value = statistics.NumberOfDrawsOfFreeHandTool;
         NumberOfDrawsOfThePieTool.Value = statistics.NumberOfDrawsOfThePieTool;
+        NumberOfDrawsOfTheMosaicTool.Value = statistics.NumberOfDrawsOfTheMosaicTool;
+        NumberOfDrawsOfTheGaussianFilterTool.Value = statistics.NumberOfDrawsOfTheGaussianFilterTool;
 
         Observable.Timer(DateTime.Now, TimeSpan.FromSeconds(1))
             .Subscribe(_ =>
