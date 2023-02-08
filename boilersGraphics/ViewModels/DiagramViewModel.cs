@@ -1443,6 +1443,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
             foreach (var selectedLayer in SelectedLayers.Value)
                 Layers.Remove(selectedLayer);
 
+        ScanEffectViewModelObjects();
         UpdateStatisticsCountCut();
     }
 
@@ -1678,6 +1679,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     private void Remove(SelectableDesignerItemViewModelBase item)
     {
         Layers.ToList().ForEach(x => x.RemoveItem(MainWindowVM, item));
+        ScanEffectViewModelObjects();
         LogManager.GetCurrentClassLogger().Info($"Remove item {item.ShowPropertiesAndFields()}");
         UpdateStatisticsCountRemove();
     }
