@@ -1,9 +1,12 @@
-﻿using Prism.Mvvm;
+﻿using OpenCvSharp;
+using OpenCvSharp.WpfExtensions;
+using Prism.Mvvm;
 using Prism.Services.Dialogs;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
 using System.Reactive.Disposables;
+using System.Windows.Media.Imaging;
 
 namespace boilersGraphics.ViewModels
 {
@@ -24,6 +27,8 @@ namespace boilersGraphics.ViewModels
         public ReactivePropertySlim<int> AddHue { get; } = new();
         public ReactivePropertySlim<int> AddSaturation { get; } = new();
         public ReactivePropertySlim<int> AddValue { get; } = new();
+
+        public ReactivePropertySlim<WriteableBitmap> HueSelector { get; } = new();
 
         public ColorCorrectInstructionViewModel()
         {
@@ -55,6 +60,41 @@ namespace boilersGraphics.ViewModels
                     ViewModel.Value.Render();
                 }
             }).AddTo(disposable);
+            GenerateHueSelectorMat();
+        }
+
+        private void GenerateHueSelectorMat()
+        {
+            using (var hsvMat = new Mat(10, 180 * 2, MatType.CV_8UC3))
+            {
+                unsafe
+                {
+                    var p = (byte*)hsvMat.Data.ToPointer();
+
+                    for (var y = 0; y < 10; ++y)
+                    {
+                        var py = p + y * hsvMat.Step();
+
+                        for (var x = 0; x < 180 * 2; ++x)
+                        {
+                            *(py + x * 3) = CirculalyClamp(x - 180, 0, 180); //hue
+                            *(py + x * 3 + 1) = 255;
+                            *(py + x * 3 + 2) = 255;
+                        }
+                    }
+                }
+
+                using (var bgrMat = new Mat())
+                {
+                    Cv2.CvtColor(hsvMat, bgrMat, ColorConversionCodes.HSV2BGR);
+                    HueSelector.Value = bgrMat.ToWriteableBitmap();
+                }
+            }
+        }
+
+        private static byte CirculalyClamp(int value, byte min, byte max)
+        {
+            return (byte)(value > max ? value - Math.Abs(min) : (value < min ? value + max : value));
         }
 
         public bool CanCloseDialog()

@@ -27,13 +27,6 @@ public class ColorCorrectViewModel : EffectViewModel
         Initialize();
     }
 
-    public override void Initialize()
-    {
-        base.Initialize();
-        //ColumnPixels.Subscribe(_ => { Render(); }).AddTo(_CompositeDisposable);
-        //RowPixels.Subscribe(_ => { Render(); }).AddTo(_CompositeDisposable);
-    }
-
     public ReactivePropertySlim<WriteableBitmap> Bitmap { get; } = new();
 
     public ReactivePropertySlim<int> AddHue { get; } = new();

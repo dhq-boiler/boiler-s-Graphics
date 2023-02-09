@@ -10,16 +10,6 @@
     d:DesignWidth="800"
     mc:Ignorable="d">
     <DockPanel>
-        <DockPanel DockPanel.Dock="Bottom">
-            <Button
-                Width="75"
-                Height="25"
-                Margin="5"
-                AutomationProperties.AutomationId="OK"
-                Command="{Binding Path=DataContext.OKCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=view:ColorCorrectInstruction}}"
-                Content="OK"
-                DockPanel.Dock="Right" />
-        </DockPanel>
         <DockPanel>
             <StackPanel Orientation="Vertical">
                 <Slider
@@ -195,14 +185,7 @@
                                         </LinearGradientBrush>
                                     </Border.BorderBrush>
                                     <Border.Background>
-                                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                                            <LinearGradientBrush.GradientStops>
-                                                <GradientStopCollection>
-                                                    <GradientStop Offset="0.0" Color="{DynamicResource ControlLightColor}" />
-                                                    <GradientStop Offset="1.0" Color="{DynamicResource SliderTrackDarkColor}" />
-                                                </GradientStopCollection>
-                                            </LinearGradientBrush.GradientStops>
-                                        </LinearGradientBrush>
+                                        <ImageBrush ImageSource="{Binding HueSelector.Value, UpdateSourceTrigger=PropertyChanged}" />
                                     </Border.Background>
                                 </Border>
                                 <Track x:Name="PART_Track" Grid.Row="1">
@@ -509,13 +492,9 @@
                                         </LinearGradientBrush>
                                     </Border.BorderBrush>
                                     <Border.Background>
-                                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                                            <LinearGradientBrush.GradientStops>
-                                                <GradientStopCollection>
-                                                    <GradientStop Offset="0.0" Color="{DynamicResource ControlLightColor}" />
-                                                    <GradientStop Offset="1.0" Color="{DynamicResource SliderTrackDarkColor}" />
-                                                </GradientStopCollection>
-                                            </LinearGradientBrush.GradientStops>
+                                        <LinearGradientBrush StartPoint="0,0.5" EndPoint="1,0.5">
+                                            <GradientStop Offset="0.0" Color="White" />
+                                            <GradientStop Offset="1.0" Color="Red" />
                                         </LinearGradientBrush>
                                     </Border.Background>
                                 </Border>
@@ -823,13 +802,9 @@
                                         </LinearGradientBrush>
                                     </Border.BorderBrush>
                                     <Border.Background>
-                                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                                            <LinearGradientBrush.GradientStops>
-                                                <GradientStopCollection>
-                                                    <GradientStop Offset="0.0" Color="{DynamicResource ControlLightColor}" />
-                                                    <GradientStop Offset="1.0" Color="{DynamicResource SliderTrackDarkColor}" />
-                                                </GradientStopCollection>
-                                            </LinearGradientBrush.GradientStops>
+                                        <LinearGradientBrush StartPoint="0,0.5" EndPoint="1,0.5">
+                                            <GradientStop Offset="0.0" Color="Black" />
+                                            <GradientStop Offset="1.0" Color="White" />
                                         </LinearGradientBrush>
                                     </Border.Background>
                                 </Border>
