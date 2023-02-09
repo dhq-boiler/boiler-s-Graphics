@@ -81,15 +81,20 @@ public class ColorCorrectViewModel : EffectViewModel
             for (int x = 0; x < hsv.Width; x++)
             {
                 //H
-                *(p + y * step + x * 3) = (byte)Math.Max(Math.Min(*(p + y * step + x * 3) + AddHue.Value, 255), (byte)0);
+                *(p + y * step + x * 3) = CirculalyClamp(*(p + y * step + x * 3) + AddHue.Value, 0, 180);
 
                 //S
-                *(p + y * step + x * 3 + 1) = (byte)Math.Max(Math.Min(*(p + y * step + x * 3 + 1) + AddSaturation.Value, 255), (byte)0);
+                *(p + y * step + x * 3 + 1) = (byte)Math.Clamp(*(p + y * step + x * 3 + 1) + AddSaturation.Value, byte.MinValue, byte.MaxValue);
 
                 //V
-                *(p + y * step + x * 3 + 2) = (byte)Math.Max(Math.Min(*(p + y * step + x * 3 + 2) + AddValue.Value, 255), (byte)0);
+                *(p + y * step + x * 3 + 2) = (byte)Math.Clamp(*(p + y * step + x * 3 + 2) + AddValue.Value, byte.MinValue, byte.MaxValue);
             }
         }
+    }
+
+    private static byte CirculalyClamp(int value, byte min, byte max)
+    {
+        return (byte)(value > max ? value - Math.Abs(min) : (value < min ? value + max : value));
     }
 
     public override async Task OnRectChanged(Rect rect)

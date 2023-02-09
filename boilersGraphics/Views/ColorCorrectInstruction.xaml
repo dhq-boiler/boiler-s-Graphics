@@ -23,12 +23,11 @@
         <DockPanel>
             <StackPanel Orientation="Vertical">
                 <Slider
-                    Maximum="255"
-                    Minimum="-255"
+                    Maximum="180"
+                    Minimum="-180"
                     Orientation="Horizontal"
                     Value="{Binding AddHue.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                     <Slider.Resources>
-
                         <!--  Control colors.  -->
                         <Color x:Key="WindowColor">#FFE8EDF9</Color>
                         <Color x:Key="ContentAreaColorLight">#FFC5CBF9</Color>
