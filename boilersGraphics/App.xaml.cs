@@ -197,6 +197,8 @@ public partial class App : PrismApplication
         containerRegistry.RegisterDialog<DetailMosaic, DetailMosaicViewModel>();
         containerRegistry.RegisterDialog<DetailBlur, DetailBlurViewModel>();
 
+        containerRegistry.RegisterDialog<ColorCorrectInstruction, ColorCorrectInstructionViewModel>();
+
         //containerRegistry.RegisterSingleton<ProgressBarWithOutputViewModel>();
         containerRegistry.RegisterDialog<ProgressBarWithOutput, ProgressBarWithOutputViewModel>();
     }

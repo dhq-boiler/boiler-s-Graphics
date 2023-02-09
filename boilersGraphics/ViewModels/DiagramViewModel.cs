@@ -171,6 +171,12 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                 LogManager.GetCurrentClassLogger().Trace("MouseEnterCommand");
                 if (_MiddleButtonIsPressed) ReleaseMiddleButton(args);
             });
+            MouseDoubleClickCommand = new DelegateCommand<MouseEventArgs>(args =>
+            {
+                LogManager.GetCurrentClassLogger().Trace("MouseDoubleClickCommand");
+                var first = SelectedItems.Value.First();
+                first.OpenInstructionDialog();
+            });
             PreviewKeyDownCommand = new DelegateCommand<KeyEventArgs>(args =>
             {
                 LogManager.GetCurrentClassLogger().Trace("PreviewKeyDownCommand");
@@ -517,6 +523,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     public DelegateCommand<MouseEventArgs> MouseMoveCommand { get; }
     public DelegateCommand<MouseEventArgs> MouseLeaveCommand { get; }
     public DelegateCommand<MouseEventArgs> MouseEnterCommand { get; }
+    public DelegateCommand<MouseEventArgs> MouseDoubleClickCommand { get; }
     public DelegateCommand<KeyEventArgs> PreviewKeyDownCommand { get; }
     public DelegateCommand PropertyCommand { get; }
     public DelegateCommand<Line> MouseDownStraightLineCommand { get; }

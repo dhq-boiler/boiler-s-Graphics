@@ -57,6 +57,7 @@ public class ToolBarViewModel
     public CanvasModifierBehavior CanvasModifierBehavior { get; } = new();
     public MosaicBehavior MosaicBehavior { get; } = new();
     public BlurBehavior BlurBehavior { get; } = new();
+    public ColorCorrectBehavior ColorCorrectBehavior { get; } = new();
 
     public NDrawPolyBezierBehavior PolyBezierBehavior { get; } = new();
 
@@ -282,6 +283,16 @@ public class ToolBarViewModel
                 if (!Behaviors.Contains(BlurBehavior)) Behaviors.Add(BlurBehavior);
                 ChangeHitTestToDisable();
                 SelectOneToolItem("blur");
+            })));
+        ToolItems.Add(new ToolItemData("colorCorrect", "pack://application:,,,/Assets/img/GaussianFilter.png",
+            Resources.Tool_GaussianFilter, new DelegateCommand(() =>
+            {
+                var mainWindowViewModel = Application.Current.MainWindow.DataContext as MainWindowViewModel;
+                mainWindowViewModel.ClearCurrentOperationAndDetails();
+                Behaviors.Clear();
+                if (!Behaviors.Contains(BlurBehavior)) Behaviors.Add(ColorCorrectBehavior);
+                ChangeHitTestToDisable();
+                SelectOneToolItem("colorCorrect");
             })));
     }
 
