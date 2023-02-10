@@ -2041,6 +2041,15 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Saturation に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_Saturation {
+            get {
+                return ResourceManager.GetString("String_Saturation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Set the interval に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string String_SetInterval {
@@ -2109,6 +2118,15 @@ namespace boilersGraphics.Properties {
         public static string String_TrialMessage {
             get {
                 return ResourceManager.GetString("String_TrialMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Value に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_Value {
+            get {
+                return ResourceManager.GetString("String_Value", resourceCulture);
             }
         }
         
