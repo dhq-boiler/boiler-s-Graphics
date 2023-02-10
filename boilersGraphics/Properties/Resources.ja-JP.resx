@@ -778,7 +778,7 @@
     <value>0 ≦ angle &lt; 360</value>
   </data>
   <data name="String_Saturation" xml:space="preserve">
-    <value>彩度</value>
+    <value>彩度(Saturation)</value>
   </data>
   <data name="String_SetInterval" xml:space="preserve">
     <value>インターバルを設定する</value>
@@ -805,10 +805,13 @@
     <value>これは試用版です。有効期限：{0} 日 {1}:{2}:{3}</value>
   </data>
   <data name="String_Value" xml:space="preserve">
-    <value>輝度</value>
+    <value>輝度(Value)</value>
   </data>
   <data name="String_Version" xml:space="preserve">
     <value>バージョン</value>
+  </data>
+  <data name="Title_ColorCorrection" xml:space="preserve">
+    <value>色調補正</value>
   </data>
   <data name="Title_ColorPicker" xml:space="preserve">
     <value>カラーピッカー</value>

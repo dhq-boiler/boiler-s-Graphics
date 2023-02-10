@@ -810,6 +810,9 @@
   <data name="String_Version" xml:space="preserve">
     <value>Version</value>
   </data>
+  <data name="Title_ColorCorrection" xml:space="preserve">
+    <value>Color correction</value>
+  </data>
   <data name="Title_ColorPicker" xml:space="preserve">
     <value>Color picker</value>
   </data>

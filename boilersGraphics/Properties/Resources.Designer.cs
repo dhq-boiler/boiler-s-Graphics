@@ -2140,6 +2140,15 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Color correction に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Title_ColorCorrection {
+            get {
+                return ResourceManager.GetString("Title_ColorCorrection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Color picker に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Title_ColorPicker {

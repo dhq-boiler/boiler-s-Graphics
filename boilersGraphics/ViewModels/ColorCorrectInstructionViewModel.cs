@@ -7,6 +7,7 @@ using Reactive.Bindings.Extensions;
 using System;
 using System.Reactive.Disposables;
 using System.Windows.Media.Imaging;
+using boilersGraphics.Properties;
 
 namespace boilersGraphics.ViewModels
 {
@@ -15,7 +16,7 @@ namespace boilersGraphics.ViewModels
         private CompositeDisposable disposable = new CompositeDisposable();
         private bool disposedValue;
 
-        public string Title => "からーこれくといんすとらくしょん";
+        public string Title => Resources.Title_ColorCorrection;
 
         public event Action<IDialogResult> RequestClose;
 
