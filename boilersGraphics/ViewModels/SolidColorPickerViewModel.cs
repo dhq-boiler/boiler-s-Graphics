@@ -803,6 +803,8 @@ public class SolidColorPickerViewModel : BindableBase, IDialogAware, INavigation
         _disposables.Dispose();
     }
 
+    #endregion //IDisposable
+
     public void OnNavigatedTo(NavigationContext navigationContext)
     {
         EditTarget.Value = navigationContext.Parameters.GetValue<ColorExchange>("ColorExchange");
@@ -1026,6 +1028,4 @@ public class SolidColorPickerViewModel : BindableBase, IDialogAware, INavigation
         colorSpots.ColorSpot98 = ColorSpot98.Value;
         colorSpots.ColorSpot99 = ColorSpot99.Value;
     }
-
-    #endregion //IDisposable
 }

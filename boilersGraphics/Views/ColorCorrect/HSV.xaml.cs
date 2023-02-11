@@ -1,5 +1,4 @@
-﻿using Prism.Regions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,17 +13,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace boilersGraphics.Views
+namespace boilersGraphics.Views.ColorCorrect
 {
     /// <summary>
-    /// ColorCorrectInstruction.xaml の相互作用ロジック
+    /// HSV.xaml の相互作用ロジック
     /// </summary>
-    public partial class ColorCorrectInstruction : UserControl
+    public partial class HSV : UserControl
     {
-        public ColorCorrectInstruction(IRegionManager regionManager)
+        public HSV()
         {
             InitializeComponent();
-            RegionManager.SetRegionManager(_ColorCorrectInstructionResion, regionManager);
         }
     }
 }

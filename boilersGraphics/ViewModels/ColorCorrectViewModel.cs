@@ -27,6 +27,8 @@ public class ColorCorrectViewModel : EffectViewModel
         Initialize();
     }
 
+    public ReactivePropertySlim<ColorCorrectType> CCType { get; } = new(ColorCorrectType.HSV);
+
     public ReactivePropertySlim<WriteableBitmap> Bitmap { get; } = new();
 
     public ReactivePropertySlim<int> AddHue { get; } = new();
