@@ -174,7 +174,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
             MouseDoubleClickCommand = new DelegateCommand<MouseEventArgs>(args =>
             {
                 LogManager.GetCurrentClassLogger().Trace("MouseDoubleClickCommand");
-                var first = SelectedItems.Value.First();
+                var first = SelectedItems.Value.FirstOrDefault();
                 first?.OpenInstructionDialog();
             });
             PreviewKeyDownCommand = new DelegateCommand<KeyEventArgs>(args =>
