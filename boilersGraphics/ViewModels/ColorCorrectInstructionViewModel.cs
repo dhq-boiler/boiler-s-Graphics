@@ -9,6 +9,7 @@ using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
 using System.Reactive.Disposables;
+using System.Windows;
 using System.Windows.Media.Imaging;
 
 namespace boilersGraphics.ViewModels
@@ -24,6 +25,7 @@ namespace boilersGraphics.ViewModels
         public event Action<IDialogResult> RequestClose;
 
 
+        public ReactiveCommand<RoutedEventArgs> UnloadedCommand { get; } = new();
         public ReactivePropertySlim<int> OKTabIndex { get; } = new();
         public ReactivePropertySlim<ColorCorrectViewModel> ViewModel { get; } = new();
 
@@ -32,10 +34,8 @@ namespace boilersGraphics.ViewModels
         public ColorCorrectInstructionViewModel(IRegionManager regionManager)
         {
             _regionManager = regionManager;
-            OKCommand.Subscribe(_ =>
-            {
-                RequestClose.Invoke(new DialogResult(ButtonResult.OK, new DialogParameters() { { "ViewModel", ViewModel.Value } }));
-            }).AddTo(disposable);
+            UnloadedCommand.Subscribe(x => { _regionManager.Regions.Remove("ColorCorrectInstructionRegion"); })
+                .AddTo(disposable);
         }
 
         public bool CanCloseDialog()
@@ -55,13 +55,18 @@ namespace boilersGraphics.ViewModels
                 switch (cctype)
                 {
                     case ColorCorrectType.HSV:
-                        _regionManager.RequestNavigate("ColorCorrectInstructionRegion", nameof(HSV),
+                        _regionManager.RequestNavigate("ColorCorrectInstructionRegion", nameof(Hsv),
                             new NavigationParameters()
                             {
                                 { "ViewModel", ViewModel.Value },
                             });
                         break;
                     case ColorCorrectType.ToneCurve:
+                        _regionManager.RequestNavigate("ColorCorrectInstructionRegion", nameof(ToneCurve),
+                            new NavigationParameters()
+                            {
+                                { "ViewModel", ViewModel.Value },
+                            });
                         break;
                 }
             }).AddTo(disposable);

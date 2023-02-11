@@ -10,11 +10,11 @@ using OpenCvSharp.WpfExtensions;
 
 namespace boilersGraphics.ViewModels.ColorCorrect
 {
-    public class HSV : BindableBase, INavigationAware, IDisposable
+    public class HsvViewModel : BindableBase, INavigationAware, IDisposable
     {
-        private CompositeDisposable disposable = new CompositeDisposable();
+        private CompositeDisposable _disposable = new CompositeDisposable();
 
-        private bool disposedValue;
+        private bool _disposedValue;
         public ReactivePropertySlim<int> AddHue { get; } = new();
         public ReactivePropertySlim<int> AddSaturation { get; } = new();
         public ReactivePropertySlim<int> AddValue { get; } = new();
@@ -23,7 +23,7 @@ namespace boilersGraphics.ViewModels.ColorCorrect
 
         public ReactivePropertySlim<WriteableBitmap> HueSelector { get; } = new();
 
-        public HSV()
+        public HsvViewModel()
         {
             AddHue.Subscribe(hue =>
             {
@@ -32,7 +32,7 @@ namespace boilersGraphics.ViewModels.ColorCorrect
                     ViewModel.Value.AddHue.Value = hue;
                     ViewModel.Value.Render();
                 }
-            }).AddTo(disposable);
+            }).AddTo(_disposable);
             AddSaturation.Subscribe(saturation =>
             {
                 if (ViewModel.Value is not null)
@@ -40,7 +40,7 @@ namespace boilersGraphics.ViewModels.ColorCorrect
                     ViewModel.Value.AddSaturation.Value = saturation;
                     ViewModel.Value.Render();
                 }
-            }).AddTo(disposable);
+            }).AddTo(_disposable);
             AddValue.Subscribe(value =>
             {
                 if (ViewModel.Value is not null)
@@ -48,7 +48,7 @@ namespace boilersGraphics.ViewModels.ColorCorrect
                     ViewModel.Value.AddValue.Value = value;
                     ViewModel.Value.Render();
                 }
-            }).AddTo(disposable);
+            }).AddTo(_disposable);
             GenerateHueSelectorMat();
         }
 
@@ -88,15 +88,15 @@ namespace boilersGraphics.ViewModels.ColorCorrect
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposedValue)
+            if (!_disposedValue)
             {
                 if (disposing)
                 {
-                    disposable.Dispose();
+                    _disposable.Dispose();
                 }
 
-                disposable = null;
-                disposedValue = true;
+                _disposable = null;
+                _disposedValue = true;
             }
         }
 

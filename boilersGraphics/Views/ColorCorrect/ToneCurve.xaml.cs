@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace boilersGraphics.Views.ColorCorrect
 {
     /// <summary>
-    /// HSV.xaml の相互作用ロジック
+    /// ToneCurve.xaml の相互作用ロジック
     /// </summary>
-    public partial class HSV : UserControl
+    public partial class ToneCurve : UserControl
     {
-        public HSV()
+        public ToneCurve()
         {
             InitializeComponent();
         }

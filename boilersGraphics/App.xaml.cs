@@ -198,7 +198,8 @@ public partial class App : PrismApplication
         containerRegistry.RegisterDialog<DetailMosaic, DetailMosaicViewModel>();
         containerRegistry.RegisterDialog<DetailBlur, DetailBlurViewModel>();
 
-        containerRegistry.RegisterForNavigation<HSV, ViewModels.ColorCorrect.HSV>();
+        containerRegistry.RegisterForNavigation<Hsv, ViewModels.ColorCorrect.HsvViewModel>();
+        containerRegistry.RegisterForNavigation<ToneCurve, ViewModels.ColorCorrect.ToneCurveViewModel>();
         containerRegistry.RegisterDialog<ColorCorrectInstruction, ColorCorrectInstructionViewModel>();
 
         //containerRegistry.RegisterSingleton<ProgressBarWithOutputViewModel>();
