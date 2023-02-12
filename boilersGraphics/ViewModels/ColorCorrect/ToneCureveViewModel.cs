@@ -56,7 +56,9 @@ namespace boilersGraphics.ViewModels.ColorCorrect
                     return;
                 }
                 int index = Points.IndexOf(unboxedPoint);
-                unboxedPoint.X.Value = Math.Clamp(unboxedPoint.X.Value + x.HorizontalChange, 0, 300);
+                var previousPoint = Points[index - 1];
+                var nextPoint = Points[index + 1];
+                unboxedPoint.X.Value = Math.Clamp(unboxedPoint.X.Value + x.HorizontalChange, Math.Min(previousPoint.X.Value, nextPoint.X.Value), Math.Max(previousPoint.X.Value, nextPoint.X.Value));
                 unboxedPoint.Y.Value = Math.Clamp(unboxedPoint.Y.Value + x.VerticalChange, 0, 300);
                 this.OnPropertyChanged(new PropertyChangedEventArgs(nameof(Points)));
                 var window = Window.GetWindow(x.Source as Thumb);
