@@ -14,6 +14,8 @@ using boilersGraphics.Exceptions;
 using boilersGraphics.Models;
 using boilersGraphics.Properties;
 using boilersGraphics.ViewModels;
+using boilersGraphics.ViewModels.ColorCorrect;
+using Reactive.Bindings;
 using Reactive.Bindings.ObjectExtensions;
 using Brush = System.Windows.Media.Brush;
 using Color = System.Windows.Media.Color;
@@ -467,6 +469,46 @@ public class ObjectDeserializer
                 mosaic.ColumnPixels.Value = double.Parse(designerItemElm.Element("ColumnPixels").Value);
             if (designerItemElm.Elements("RowPixels").Any())
                 mosaic.RowPixels.Value = double.Parse(designerItemElm.Element("RowPixels").Value);
+        }
+
+        if (item is BlurEffectViewModel blurEffect)
+        {
+            if (designerItemElm.Elements("KernelWidth").Any())
+                blurEffect.KernelWidth.Value = double.Parse(designerItemElm.Element("KernelWidth").Value);
+            if (designerItemElm.Elements("KernelHeight").Any())
+                blurEffect.KernelHeight.Value = double.Parse(designerItemElm.Element("KernelHeight").Value);
+            if (designerItemElm.Elements("Sigma").Any())
+                blurEffect.Sigma.Value = double.Parse(designerItemElm.Element("Sigma").Value);
+        }
+
+        if (item is ColorCorrectViewModel colorCorrect)
+        {
+            if (designerItemElm.Elements("CCType").Any())
+                colorCorrect.CCType.Value = (ColorCorrectType)Enum.Parse(typeof(ColorCorrectType), designerItemElm.Element("CCType").Value);
+            if (designerItemElm.Elements("AddHue").Any())
+                colorCorrect.AddHue.Value = int.Parse(designerItemElm.Element("AddHue").Value);
+            if (designerItemElm.Elements("AddSaturation").Any())
+                colorCorrect.AddSaturation.Value = int.Parse(designerItemElm.Element("AddSaturation").Value);
+            if (designerItemElm.Elements("AddValue").Any())
+                colorCorrect.AddValue.Value = int.Parse(designerItemElm.Element("AddValue").Value);
+            if (designerItemElm.Elements("Points").Any())
+            {
+                colorCorrect.Points =
+                    new ReactiveCollection<ToneCurveViewModel.Point>();
+                colorCorrect.Points.AddRange(designerItemElm.Elements("Points").SelectMany(x => x.Elements("Point")).Select(x =>
+                    new ToneCurveViewModel.Point(int.Parse(x.Elements("X").Any() ? x.Element("X").Value : "0"),
+                        int.Parse(x.Elements("Y").Any() ? x.Element("Y").Value : "0"))
+                ));
+            }
+            if (designerItemElm.Elements("InOutPairs").Any())
+            {
+                colorCorrect.InOutPairs =
+                    new ReactiveCollection<InOutPair>();
+                colorCorrect.InOutPairs.AddRange(designerItemElm.Elements("InOutPairs").SelectMany(x => x.Elements("InOutPair")).Select(x =>
+                    new InOutPair(int.Parse(x.Elements("In").Any() ? x.Element("In").Value : "0"),
+                        int.Parse(x.Elements("Out").Any() ? x.Element("Out").Value : "0"))
+                ));
+            }
         }
 
         if (item is LetterDesignerItemViewModel letter)

@@ -143,6 +143,44 @@ internal class ObjectSerializer
                 list.Add(new XElement("RowPixels", mosaic.RowPixels.Value));
             }
 
+            if (designerItem is BlurEffectViewModel blurEffect)
+            {
+                list.Add(new XElement("KernelWidth", blurEffect.KernelWidth.Value));
+                list.Add(new XElement("KernelHeight", blurEffect.KernelHeight.Value));
+                list.Add(new XElement("Sigma", blurEffect.Sigma.Value));
+            }
+
+            if (designerItem is ColorCorrectViewModel colorCorrect)
+            {
+                list.Add(new XElement("CCType", colorCorrect.CCType.Value));
+                list.Add(new XElement("AddHue", colorCorrect.AddHue.Value));
+                list.Add(new XElement("AddSaturation", colorCorrect.AddSaturation.Value));
+                list.Add(new XElement("AddValue", colorCorrect.AddValue.Value));
+                var points = new XElement("Points");
+                foreach (var pt in colorCorrect.Points)
+                {
+                    var point = new XElement("Point");
+                    var x = new XElement("X", pt.X);
+                    point.Add(x);
+                    var y = new XElement("Y", pt.Y);
+                    point.Add(y);
+                    points.Add(point);
+                }
+
+                list.Add(points);
+                var inOutPairs = new XElement("InOutPairs");
+                foreach (var pair in colorCorrect.InOutPairs)
+                {
+                    var _pair = new XElement("InOutPair");
+                    var @in = new XElement("In", pair.In);
+                    _pair.Add(@in);
+                    var @out = new XElement("Out", pair.Out);
+                    _pair.Add(@out);
+                    inOutPairs.Add(_pair);
+                }
+                list.Add(inOutPairs);
+            }
+
             if (designerItem is ILetterDesignerItemViewModel letter)
             {
                 list.Add(new XElement("LetterString", letter.LetterString.Value));
