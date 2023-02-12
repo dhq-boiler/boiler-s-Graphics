@@ -15,27 +15,47 @@
     <UserControl.Resources>
         <converter:ToToneCurveControlPointCollectionConverter x:Key="ToPointCollection" />
         <converter:ToneCurvePointConverter x:Key="ToneCurvePointConverter" />
-        <Style x:Key="PointListBoxItemStyle" TargetType="{x:Type ListBoxItem}">
+        <!--<Style x:Key="PointListBoxItemStyle" TargetType="{x:Type ListBoxItem}">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="HorizontalContentAlignment" Value="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
             <Setter Property="VerticalContentAlignment" Value="{Binding VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
             <Setter Property="Canvas.Left" Value="{Binding X.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             <Setter Property="Canvas.Top" Value="{Binding Y.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             <Setter Property="AttachedProperty:DragInsideCanvasBehavior.DragInsideCanvas" Value="True"/>
-            <!--<Setter Property="Template">
+            <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ListBoxItem}">
                         <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
                     </ControlTemplate>
                 </Setter.Value>
-            </Setter>-->
-        </Style>
+            </Setter>
+        </Style>-->
     </UserControl.Resources>
-    <DockPanel>
-        <Border BorderBrush="white" Width="255" Height="255" BorderThickness="1">
+    <Grid VerticalAlignment="Center"
+          HorizontalAlignment="Center">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"></ColumnDefinition>
+            <ColumnDefinition Width="Auto"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Label Grid.Row="0"
+               Grid.Column="0"
+               VerticalAlignment="Center">
+            <Label.LayoutTransform>
+                <RotateTransform Angle="90"></RotateTransform>
+            </Label.LayoutTransform>
+            出力
+        </Label>
+        <Label Grid.Row="1"
+               Grid.Column="1"
+               HorizontalAlignment="Center">入力</Label>
+        <Border BorderBrush="white" Width="255" Height="255" BorderThickness="1" Grid.Row="0" Grid.Column="1">
             <Canvas Width="255" Height="255">
                 <Canvas Background="Transparent" AttachedProperty:ClickAtCanvasBehavior.ClickAtCanvas="{Binding CanvasClickCommand}" Margin="0,0.4,0.4,-0.2" Grid.RowSpan="1">
-                    <views:LandmarkControl Points="{Binding Points, UpdateSourceTrigger=PropertyChanged}" IsClosedCurve="{Binding IsClosedCurve}"/>
+                    <views:LandmarkControl Points="{Binding Points, UpdateSourceTrigger=PropertyChanged}" AllScales="{Binding ViewModel.Value.InOutPairs, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}" IsClosedCurve="{Binding IsClosedCurve}"/>
                 </Canvas>
                 <ItemsControl ItemsSource="{Binding Points}">
                     <ItemsControl.ItemsPanel>
@@ -45,10 +65,12 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Thumb>
+                            <Thumb Width="8"
+                                   Height="8">
                                 <Thumb.Style>
                                     <Style TargetType="{x:Type Thumb}">
                                         <Setter Property="AttachedProperty:DragInsideCanvasBehavior.DragInsideCanvas" Value="True"/>
+                                        <Setter Property="Focusable" Value="True"></Setter>
                                     </Style>
                                 </Thumb.Style>
                                 <i:Interaction.Triggers>
@@ -62,12 +84,12 @@
                     </ItemsControl.ItemTemplate>
                     <ItemsControl.ItemContainerStyle>
                         <Style>
-                            <Setter Property="Canvas.Left" Value="{c:Binding X.Value-2}"></Setter>
-                            <Setter Property="Canvas.Top" Value="{c:Binding Y.Value-2}"></Setter>
+                            <Setter Property="Canvas.Left" Value="{c:Binding X.Value-4}"></Setter>
+                            <Setter Property="Canvas.Top" Value="{c:Binding Y.Value-4}"></Setter>
                         </Style>
                     </ItemsControl.ItemContainerStyle>
                 </ItemsControl>
             </Canvas>
         </Border>
-    </DockPanel>
+    </Grid>
 </UserControl>

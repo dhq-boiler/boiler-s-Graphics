@@ -1,17 +1,18 @@
-﻿using System;
+﻿using boilersGraphics.Models;
+using boilersGraphics.ViewModels.ColorCorrect;
+using Reactive.Bindings;
+using Rulyotano.Math.Interpolation.Bezier;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
-using System.ServiceModel.Syndication;
+using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using boilersGraphics.Models;
-using boilersGraphics.ViewModels.ColorCorrect;
-using Reactive.Bindings;
-using Rulyotano.Math.Interpolation.Bezier;
+using boilersGraphics.ViewModels;
 using Point = Rulyotano.Math.Geometry.Point;
 
 namespace boilersGraphics.Views
@@ -34,6 +35,15 @@ namespace boilersGraphics.Views
             DependencyProperty.Register("Points", typeof(IEnumerable<ToneCurveViewModel.Point>),
             typeof(LandmarkControl), new PropertyMetadata(null, PropertyChangedCallback));
 
+        public ReactiveCollection<InOutPair> AllScales
+        {
+            get { return (ReactiveCollection<InOutPair>)GetValue(AllScalesProperty); }
+            set { SetValue(AllScalesProperty, value); }
+        }
+
+        public static readonly DependencyProperty AllScalesProperty =
+            DependencyProperty.Register("AllScales", typeof(ReactiveCollection<InOutPair>),
+                typeof(LandmarkControl), new PropertyMetadata(null));
 
         public List<InOutPair> Scales
         {
@@ -184,14 +194,23 @@ namespace boilersGraphics.Views
             path.Data = myPathGeometry;
 
             var inoutPairs = InOutPairs;
+            var allScales = new ReactiveCollection<InOutPair>();
             var ret = new List<InOutPair>();
+
+            foreach (var pair in inoutPairs)
+            {
+                allScales.Add(new InOutPair(pair.In, byte.MaxValue - pair.Out));
+            }
 
             for (int i = 0; i < inoutPairs.Count; i += 5)
             {
                 ret.Add(inoutPairs[i]);
             }
 
+            AllScales = allScales;
             Scales = ret;
+
+            ((this.DataContext as ToneCurveViewModel).ViewModel.Value as ColorCorrectViewModel).Render();
         }
 
         public List<InOutPair> InOutPairs
@@ -204,7 +223,7 @@ namespace boilersGraphics.Views
                 var segments = myPathFigure.Segments;
 
                 var ret = new List<InOutPair>();
-                for (int x = 0; x < byte.MaxValue; x++)
+                for (int x = 0; x <= byte.MaxValue; x++)
                 {
                     Point P0 = default(Point);
                     foreach (BezierSegment segment in _myPathSegmentCollection.Cast<BezierSegment>())
@@ -230,8 +249,8 @@ namespace boilersGraphics.Views
                         }
 
                         var t = FindT(x, P0, P1, P2, P3);
-                        double y = Math.Pow(1 - t, 3) * P0.Y + 3 * Math.Pow(1 - t, 2) * t * P1.Y + 3 * (1 - t) * Math.Pow(t, 2) * P2.Y + Math.Pow(t, 3) * P3.Y;
-                        if (y >= 0 && y <= 255)
+                        double y = Math.Round(Math.Pow(1 - t, 3) * P0.Y + 3 * Math.Pow(1 - t, 2) * t * P1.Y + 3 * (1 - t) * Math.Pow(t, 2) * P2.Y + Math.Pow(t, 3) * P3.Y);
+                        if (y >= byte.MinValue && y <= byte.MaxValue)
                         {
                             if (!ret.Any(a => a.In == x))
                             {

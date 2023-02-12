@@ -10,12 +10,14 @@ using Prism.Unity;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
+using System.Linq;
 using System.Reactive.Disposables;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using boilersGraphics.Models;
 using Rect = System.Windows.Rect;
 
 namespace boilersGraphics.ViewModels;
@@ -34,6 +36,7 @@ public class ColorCorrectViewModel : EffectViewModel
     public ReactivePropertySlim<int> AddHue { get; } = new();
     public ReactivePropertySlim<int> AddSaturation { get; } = new();
     public ReactivePropertySlim<int> AddValue { get; } = new();
+    public ReactiveCollection<InOutPair> InOutPairs { get; set; } = new();
 
     public override bool SupportsPropertyDialog => true;
 
@@ -57,11 +60,41 @@ public class ColorCorrectViewModel : EffectViewModel
             using (var hsv = mat.Clone())
             using (var dest = mat.Clone())
             {
-                Cv2.CvtColor(mat, hsv, ColorConversionCodes.BGR2HSV);
-                OperateHSV(hsv);
-                Cv2.CvtColor(hsv, dest, ColorConversionCodes.HSV2BGR);
+                switch (CCType.Value)
+                {
+                    case ColorCorrectType.HSV:
+                        Cv2.CvtColor(mat, hsv, ColorConversionCodes.BGR2HSV);
+                        OperateHSV(hsv);
+                        Cv2.CvtColor(hsv, dest, ColorConversionCodes.HSV2BGR);
+                        break;
+                    case ColorCorrectType.ToneCurve:
+                        Cv2.CvtColor(mat, hsv, ColorConversionCodes.BGR2HSV);
+                        OperateToneCurve(hsv);
+                        Cv2.CvtColor(hsv, dest, ColorConversionCodes.HSV2BGR);
+                        break;
+                }
+
                 Bitmap.Value = dest.ToWriteableBitmap();
                 UpdateLayout();
+            }
+        });
+    }
+
+    private unsafe void OperateToneCurve(Mat hsv)
+    {
+        byte* p = (byte*)hsv.Data.ToPointer();
+        long step = hsv.Step();
+        int width = hsv.Width;
+        int height = hsv.Height;
+        
+        Parallel.For(0, height, y =>
+        {
+            for (int x = 0; x < width; x++)
+            {
+                //V
+                *(p + y * step + x * 3 + 2) =
+                    (byte)Math.Clamp(InOutPairs.First(z => z.In == *(p + y * step + x * 3 + 2)).Out, byte.MinValue,
+                        byte.MaxValue);
             }
         });
     }
