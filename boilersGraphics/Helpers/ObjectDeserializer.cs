@@ -150,6 +150,8 @@ public class ObjectDeserializer
                     layerObj.Children.Add(layerItemObj);
                     Invoke(() =>
                     {
+                        if (progressBarWithOutputViewModel is null)
+                            return;
                         progressBarWithOutputViewModel.Output.Value += Environment.NewLine;
                         progressBarWithOutputViewModel.Output.Value += $"{Resources.String_Loaded}：{layerItemObj.Name.Value}";
                         progressBarWithOutputViewModel.Current.Value++;
@@ -159,6 +161,8 @@ public class ObjectDeserializer
                 diagramViewModel.Layers.Add(layerObj);
                 Invoke(() =>
                 {
+                    if (progressBarWithOutputViewModel is null)
+                        return;
                     progressBarWithOutputViewModel.Output.Value += Environment.NewLine;
                     progressBarWithOutputViewModel.Output.Value += $"{Resources.String_Loaded}：{layerObj.Name.Value}";
                     progressBarWithOutputViewModel.Current.Value++;
@@ -183,6 +187,8 @@ public class ObjectDeserializer
                 layerObj.Children.Add(layerItem);
                 Invoke(() =>
                 {
+                    if (progressBarWithOutputViewModel is null)
+                        return;
                     progressBarWithOutputViewModel.Output.Value += Environment.NewLine;
                     progressBarWithOutputViewModel.Output.Value += $"{Resources.String_Loaded}：{layerItem.Name.Value}";
                     progressBarWithOutputViewModel.Current.Value++;
@@ -198,6 +204,8 @@ public class ObjectDeserializer
                 layerObj.Children.Add(layerItem);
                 Invoke(() =>
                 {
+                    if (progressBarWithOutputViewModel is null)
+                        return;
                     progressBarWithOutputViewModel.Output.Value += Environment.NewLine;
                     progressBarWithOutputViewModel.Output.Value += $"{Resources.String_Loaded}：{layerItem.Name.Value}";
                     progressBarWithOutputViewModel.Current.Value++;
@@ -207,6 +215,8 @@ public class ObjectDeserializer
             diagramViewModel.Layers.Add(layerObj);
             Invoke(() =>
             {
+                if (progressBarWithOutputViewModel is null)
+                    return;
                 progressBarWithOutputViewModel.Output.Value += Environment.NewLine;
                 progressBarWithOutputViewModel.Output.Value += $"{Resources.String_Loaded}：{layerObj.Name.Value}";
                 progressBarWithOutputViewModel.Current.Value++;
