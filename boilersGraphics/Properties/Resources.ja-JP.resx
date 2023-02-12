@@ -705,8 +705,14 @@
   <data name="String_G" xml:space="preserve">
     <value>緑(Green)</value>
   </data>
+  <data name="String_Hsv" xml:space="preserve">
+    <value>色相, 彩度, 輝度</value>
+  </data>
   <data name="String_Hue" xml:space="preserve">
     <value>色相(Hue)</value>
+  </data>
+  <data name="String_Input" xml:space="preserve">
+    <value>入力</value>
   </data>
   <data name="String_Interval" xml:space="preserve">
     <value>インターバル：</value>
@@ -722,6 +728,9 @@
   </data>
   <data name="String_OpensourceComponent_Library_Code" xml:space="preserve">
     <value>オープンソース コンポーネント / ライブラリ / コード</value>
+  </data>
+  <data name="String_Output" xml:space="preserve">
+    <value>出力</value>
   </data>
   <data name="String_Pie_DetermineCenterPoint" xml:space="preserve">
     <value>クリックして扇形の中心点を決定します。</value>
@@ -800,6 +809,9 @@
   </data>
   <data name="String_SupportImage" xml:space="preserve">
     <value>サポートする画像|*.jpg;*.jpeg;*.png;*.gif;*.bmp|JPEG file|*.jpg;*.jpeg|PNG file|*.png|GIF file|*.gif|BMP file|*.bmp|すべて|*.*</value>
+  </data>
+  <data name="String_ToneCurve" xml:space="preserve">
+    <value>トーンカーブ</value>
   </data>
   <data name="String_TrialMessage" xml:space="preserve">
     <value>これは試用版です。有効期限：{0} 日 {1}:{2}:{3}</value>

@@ -1825,11 +1825,29 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Hue, Saturation, Value に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_Hsv {
+            get {
+                return ResourceManager.GetString("String_Hsv", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Hue に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string String_Hue {
             get {
                 return ResourceManager.GetString("String_Hue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Input に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_Input {
+            get {
+                return ResourceManager.GetString("String_Input", resourceCulture);
             }
         }
         
@@ -1875,6 +1893,15 @@ namespace boilersGraphics.Properties {
         public static string String_OpensourceComponent_Library_Code {
             get {
                 return ResourceManager.GetString("String_OpensourceComponent_Library_Code", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Output に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_Output {
+            get {
+                return ResourceManager.GetString("String_Output", resourceCulture);
             }
         }
         
@@ -2109,6 +2136,15 @@ namespace boilersGraphics.Properties {
         public static string String_SupportImage {
             get {
                 return ResourceManager.GetString("String_SupportImage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Tone curve に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_ToneCurve {
+            get {
+                return ResourceManager.GetString("String_ToneCurve", resourceCulture);
             }
         }
         

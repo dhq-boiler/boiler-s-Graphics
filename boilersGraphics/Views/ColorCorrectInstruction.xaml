@@ -90,10 +90,7 @@
         <DockPanel>
             <DockPanel.Resources>
                 <ObjectDataProvider x:Key="colorCorrectTypesFromEnum" MethodName="GetValues"
-                                    ObjectType="{x:Type sys:Enum}">
-                    <ObjectDataProvider.MethodParameters>
-                        <x:Type TypeName="viewModels:ColorCorrectType" />
-                    </ObjectDataProvider.MethodParameters>
+                                    ObjectType="{x:Type viewModels:ColorCorrectType}">
                 </ObjectDataProvider>
             </DockPanel.Resources>
             <ComboBox DockPanel.Dock="Top" ItemsSource="{Binding Source={StaticResource colorCorrectTypesFromEnum}}" 

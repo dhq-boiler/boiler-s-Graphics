@@ -61,14 +61,14 @@ namespace boilersGraphics.ViewModels
             {
                 switch (cctype)
                 {
-                    case ColorCorrectType.HSV:
+                    case Hsv hsv:
                         _regionManager.RequestNavigate("ColorCorrectInstructionRegion", nameof(Hsv),
                             new NavigationParameters()
                             {
                                 { "ViewModel", ViewModel.Value },
                             });
                         break;
-                    case ColorCorrectType.ToneCurve:
+                    case ToneCurve toneCurve:
                         _regionManager.RequestNavigate("ColorCorrectInstructionRegion", nameof(ToneCurve),
                             new NavigationParameters()
                             {

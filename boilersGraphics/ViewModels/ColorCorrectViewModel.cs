@@ -64,12 +64,12 @@ public class ColorCorrectViewModel : EffectViewModel
             {
                 switch (CCType.Value)
                 {
-                    case ColorCorrectType.HSV:
+                    case Hsv:
                         Cv2.CvtColor(mat, hsv, ColorConversionCodes.BGR2HSV);
                         OperateHSV(hsv);
                         Cv2.CvtColor(hsv, dest, ColorConversionCodes.HSV2BGR);
                         break;
-                    case ColorCorrectType.ToneCurve:
+                    case ToneCurve:
                         Cv2.CvtColor(mat, hsv, ColorConversionCodes.BGR2HSV);
                         OperateToneCurve(hsv);
                         Cv2.CvtColor(hsv, dest, ColorConversionCodes.HSV2BGR);

@@ -4,8 +4,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:converter="clr-namespace:boilersGraphics.Converters"
              xmlns:helpers="clr-namespace:boilersGraphics.Helpers"
-             xmlns:viewModels="clr-namespace:boilersGraphics.ViewModels"
-             xmlns:colorCorrect="clr-namespace:boilersGraphics.ViewModels.ColorCorrect"
              xmlns:c="clr-namespace:CalcBinding;assembly=CalcBinding"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:views="clr-namespace:boilersGraphics.Views"
@@ -43,19 +41,24 @@
         </Grid.ColumnDefinitions>
         <Label Grid.Row="0"
                Grid.Column="0"
-               VerticalAlignment="Center">
+               VerticalAlignment="Center"
+               Content="{Binding Source={x:Static helpers:ResourceService.Current}, Path=Resources.String_Output, Mode=OneWay}">
             <Label.LayoutTransform>
                 <RotateTransform Angle="90"></RotateTransform>
             </Label.LayoutTransform>
-            出力
         </Label>
         <Label Grid.Row="1"
                Grid.Column="1"
-               HorizontalAlignment="Center">入力</Label>
+               HorizontalAlignment="Center"
+               Content="{Binding Source={x:Static helpers:ResourceService.Current}, Path=Resources.String_Input, Mode=OneWay}" />
         <Border BorderBrush="white" Width="255" Height="255" BorderThickness="1" Grid.Row="0" Grid.Column="1">
             <Canvas Width="255" Height="255">
-                <Canvas Background="Transparent" AttachedProperty:ClickAtCanvasBehavior.ClickAtCanvas="{Binding CanvasClickCommand}" Margin="0,0.4,0.4,-0.2" Grid.RowSpan="1">
-                    <views:LandmarkControl Points="{Binding Points, UpdateSourceTrigger=PropertyChanged}" AllScales="{Binding ViewModel.Value.InOutPairs, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}" IsClosedCurve="{Binding IsClosedCurve}"/>
+                <Canvas Background="Transparent"
+                        AttachedProperty:ClickAtCanvasBehavior.ClickAtCanvas="{Binding CanvasClickCommand}"
+                        Margin="0,0.4,0.4,-0.2" Grid.RowSpan="1">
+                    <views:LandmarkControl Points="{Binding Points, UpdateSourceTrigger=PropertyChanged}"
+                                           AllScales="{Binding ViewModel.Value.InOutPairs, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
+                                           IsClosedCurve="{Binding IsClosedCurve}" />
                 </Canvas>
                 <ItemsControl ItemsSource="{Binding Points}">
                     <ItemsControl.ItemsPanel>
@@ -69,14 +72,17 @@
                                    Height="8">
                                 <Thumb.Style>
                                     <Style TargetType="{x:Type Thumb}">
-                                        <Setter Property="AttachedProperty:DragInsideCanvasBehavior.DragInsideCanvas" Value="True"/>
+                                        <Setter Property="AttachedProperty:DragInsideCanvasBehavior.DragInsideCanvas"
+                                                Value="True" />
                                         <Setter Property="Focusable" Value="True"></Setter>
                                     </Style>
                                 </Thumb.Style>
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="DragDelta">
-                                        <helpers:EventToCommand Command="{Binding Path=DataContext.DragDeltaCommand, ElementName=ItemsControlCanvas}"
-                                                                PassEventArgsToCommand="True"></helpers:EventToCommand>
+                                        <helpers:EventToCommand
+                                            Command="{Binding Path=DataContext.DragDeltaCommand, ElementName=ItemsControlCanvas}"
+                                            PassEventArgsToCommand="True">
+                                        </helpers:EventToCommand>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                             </Thumb>
