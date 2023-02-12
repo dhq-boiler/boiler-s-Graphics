@@ -97,7 +97,13 @@
                 </ObjectDataProvider>
             </DockPanel.Resources>
             <ComboBox DockPanel.Dock="Top" ItemsSource="{Binding Source={StaticResource colorCorrectTypesFromEnum}}" 
-                      SelectedItem="{Binding Path=ViewModel.Value.CCType.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                      SelectedItem="{Binding Path=ViewModel.Value.CCType.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SelectionChanged">
+                        <helper:EventToCommand Command="{Binding CCTypeChangedCommand}" PassEventArgsToCommand="True"></helper:EventToCommand>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </ComboBox>
             <ContentControl x:Name="_ColorCorrectInstructionResion" prism:RegionManager.RegionName="ColorCorrectInstructionRegion" />
         </DockPanel>
     </DockPanel>

@@ -18,6 +18,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using boilersGraphics.Models;
+using boilersGraphics.ViewModels.ColorCorrect;
 using Rect = System.Windows.Rect;
 
 namespace boilersGraphics.ViewModels;
@@ -36,6 +37,7 @@ public class ColorCorrectViewModel : EffectViewModel
     public ReactivePropertySlim<int> AddHue { get; } = new();
     public ReactivePropertySlim<int> AddSaturation { get; } = new();
     public ReactivePropertySlim<int> AddValue { get; } = new();
+    public ReactiveCollection<ToneCurveViewModel.Point> Points { get; set; } = new();
     public ReactiveCollection<InOutPair> InOutPairs { get; set; } = new();
 
     public override bool SupportsPropertyDialog => true;

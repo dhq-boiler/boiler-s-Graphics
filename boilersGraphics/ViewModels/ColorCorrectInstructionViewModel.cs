@@ -10,6 +10,7 @@ using Reactive.Bindings.Extensions;
 using System;
 using System.Reactive.Disposables;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 
 namespace boilersGraphics.ViewModels
@@ -29,13 +30,19 @@ namespace boilersGraphics.ViewModels
         public ReactivePropertySlim<int> OKTabIndex { get; } = new();
         public ReactivePropertySlim<ColorCorrectViewModel> ViewModel { get; } = new();
 
-        public ReactiveCommand OKCommand { get; } = new ();
+        public ReactiveCommand OKCommand { get; } = new();
+        public ReactiveCommand<SelectionChangedEventArgs> CCTypeChangedCommand { get; } = new();
 
         public ColorCorrectInstructionViewModel(IRegionManager regionManager)
         {
             _regionManager = regionManager;
             UnloadedCommand.Subscribe(x => { _regionManager.Regions.Remove("ColorCorrectInstructionRegion"); })
                 .AddTo(disposable);
+            CCTypeChangedCommand.Subscribe(x =>
+            {
+                ViewModel.Value.CCType.Value = (ColorCorrectType)x.AddedItems[0];
+                ViewModel.Value.Render();
+            }).AddTo(disposable);
         }
 
         public bool CanCloseDialog()

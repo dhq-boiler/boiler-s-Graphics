@@ -1,4 +1,5 @@
 ﻿using boilersGraphics.Models;
+using boilersGraphics.ViewModels;
 using boilersGraphics.ViewModels.ColorCorrect;
 using Reactive.Bindings;
 using Rulyotano.Math.Interpolation.Bezier;
@@ -12,7 +13,6 @@ using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using boilersGraphics.ViewModels;
 using Point = Rulyotano.Math.Geometry.Point;
 
 namespace boilersGraphics.Views
@@ -210,6 +210,7 @@ namespace boilersGraphics.Views
             AllScales = allScales;
             Scales = ret;
 
+            ((this.DataContext as ToneCurveViewModel).ViewModel.Value as ColorCorrectViewModel).InOutPairs = AllScales;
             ((this.DataContext as ToneCurveViewModel).ViewModel.Value as ColorCorrectViewModel).Render();
         }
 
