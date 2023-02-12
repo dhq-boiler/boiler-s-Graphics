@@ -84,6 +84,9 @@ public class ColorCorrectViewModel : EffectViewModel
 
     private unsafe void OperateToneCurve(Mat hsv)
     {
+        if (InOutPairs.Count < 256)
+            return;
+
         byte* p = (byte*)hsv.Data.ToPointer();
         long step = hsv.Step();
         int width = hsv.Width;
