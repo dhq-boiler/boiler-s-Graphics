@@ -153,6 +153,7 @@ namespace boilersGraphics.Views
                         Point2 = ConvertToVisualPoint(bezierCurveSegment.SecondControlPoint),
                         Point3 = ConvertToVisualPoint(bezierCurveSegment.EndPoint)
                     };
+                    CorrectBezierSegment(segment, new Rect(0, 0, 300, 300));
                     myPathSegmentCollection.Add(segment);
                 }
             }
@@ -165,6 +166,71 @@ namespace boilersGraphics.Views
             var myPathGeometry = new PathGeometry { Figures = myPathFigureCollection };
 
             path.Data = myPathGeometry;
+        }
+
+        private void CorrectBezierSegment(BezierSegment bezierSegment, Rect bounds)
+        {
+            System.Windows.Point point1 = bezierSegment.Point1;
+            System.Windows.Point point2 = bezierSegment.Point2;
+            System.Windows.Point point3 = bezierSegment.Point3;
+
+            if (point1.X < bounds.Left)
+            {
+                point1.X = bounds.Left;
+            }
+            else if (point1.X > bounds.Right)
+            {
+                point1.X = bounds.Right;
+            }
+
+            if (point1.Y < bounds.Top)
+            {
+                point1.Y = bounds.Top;
+            }
+            else if (point1.Y > bounds.Bottom)
+            {
+                point1.Y = bounds.Bottom;
+            }
+
+            if (point2.X < bounds.Left)
+            {
+                point2.X = bounds.Left;
+            }
+            else if (point2.X > bounds.Right)
+            {
+                point2.X = bounds.Right;
+            }
+
+            if (point2.Y < bounds.Top)
+            {
+                point2.Y = bounds.Top;
+            }
+            else if (point2.Y > bounds.Bottom)
+            {
+                point2.Y = bounds.Bottom;
+            }
+
+            if (point3.X < bounds.Left)
+            {
+                point3.X = bounds.Left;
+            }
+            else if (point3.X > bounds.Right)
+            {
+                point3.X = bounds.Right;
+            }
+
+            if (point3.Y < bounds.Top)
+            {
+                point3.Y = bounds.Top;
+            }
+            else if (point3.Y > bounds.Bottom)
+            {
+                point3.Y = bounds.Bottom;
+            }
+
+            bezierSegment.Point1 = point1;
+            bezierSegment.Point2 = point2;
+            bezierSegment.Point3 = point3;
         }
 
         private void RegisterCollectionItemPropertyChanged(IEnumerable collection)
