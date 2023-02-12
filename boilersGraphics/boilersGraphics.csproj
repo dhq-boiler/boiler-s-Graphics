@@ -125,6 +125,8 @@
     <PackageReference Include="OpenCvSharp4.Windows" Version="4.5.3.20211207" />
     <PackageReference Include="Prism.Unity" Version="8.1.97" />
     <PackageReference Include="ReactiveProperty.WPF" Version="8.2.0" />
+    <PackageReference Include="Rulyotano.Math.Geometry" Version="2.0.0" />
+    <PackageReference Include="Rulyotano.Math.Interpolation.Bezier" Version="2.0.0" />
     <PackageReference Include="SharpDX.D3DCompiler" Version="4.2.0" />
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.115.5" />
     <PackageReference Include="System.Data.SQLite.Linq" Version="1.0.115.5" />
