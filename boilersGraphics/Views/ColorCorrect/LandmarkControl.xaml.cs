@@ -1,11 +1,15 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
+using System.ServiceModel.Syndication;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using boilersGraphics.Models;
+using boilersGraphics.ViewModels.ColorCorrect;
 using Reactive.Bindings;
 using Rulyotano.Math.Interpolation.Bezier;
 using Point = Rulyotano.Math.Geometry.Point;
@@ -19,16 +23,27 @@ namespace boilersGraphics.Views
     {
         #region Points
 
-        public IEnumerable Points
+        public IEnumerable<ToneCurveViewModel.Point> Points
         {
-            get { return (IEnumerable)GetValue(PointsProperty); }
+            get { return (IEnumerable<ToneCurveViewModel.Point>)GetValue(PointsProperty); }
             set { SetValue(PointsProperty, value); }
         }
 
         // Using a DependencyProperty as the backing store for Points. This enables animation, styling, binding, etc...
         public static readonly DependencyProperty PointsProperty =
-            DependencyProperty.Register("Points", typeof(IEnumerable),
+            DependencyProperty.Register("Points", typeof(IEnumerable<ToneCurveViewModel.Point>),
             typeof(LandmarkControl), new PropertyMetadata(null, PropertyChangedCallback));
+
+
+        public List<InOutPair> Scales
+        {
+            get { return (List<InOutPair>)GetValue(ScalesProperty); }
+            set { SetValue(ScalesProperty, value); }
+        }
+
+        public static readonly DependencyProperty ScalesProperty =
+            DependencyProperty.Register("Scales", typeof(List<InOutPair>),
+                typeof(LandmarkControl), new PropertyMetadata(null));
 
         private static void PropertyChangedCallback(DependencyObject dependencyObject,
         DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
@@ -107,6 +122,8 @@ namespace boilersGraphics.Views
             return new System.Windows.Point(p.X, p.Y);
         }
 
+        private PathSegmentCollection _myPathSegmentCollection = new PathSegmentCollection();
+
         public void SetPathData()
         {
             if (Points == null) return;
@@ -119,17 +136,16 @@ namespace boilersGraphics.Views
                 pointProperties.All(p => p.Name != "Y"))
                     continue;
                 var x = (float)(point.GetType().GetProperty("X").GetValue(point, new object[] { }) as ReactivePropertySlim<double>).Value;
-                var y = (float)(point.GetType().GetProperty("Y").GetValue(point, new object[] { }) as ReactivePropertySlim<double>).Value; point.GetType().GetProperty("Y").GetValue(point, new object[] { });
+                var y = (float)(point.GetType().GetProperty("Y").GetValue(point, new object[] { }) as ReactivePropertySlim<double>).Value; 
                 points.Add(new Point(x, y));
             }
 
             if (points.Count <= 1)
                 return;
 
+            _myPathSegmentCollection = new PathSegmentCollection();
+
             var myPathFigure = new PathFigure { StartPoint = ConvertToVisualPoint(points.FirstOrDefault()) };
-
-
-            var myPathSegmentCollection = new PathSegmentCollection();
 
             var bezierSegments = BezierInterpolation.PointsToBezierCurves(points, IsClosedCurve);
 
@@ -140,7 +156,7 @@ namespace boilersGraphics.Views
                 {
 
                     var myLineSegment = new LineSegment { Point = ConvertToVisualPoint(point) };
-                    myPathSegmentCollection.Add(myLineSegment);
+                    _myPathSegmentCollection.Add(myLineSegment);
                 }
             }
             else
@@ -153,19 +169,104 @@ namespace boilersGraphics.Views
                         Point2 = ConvertToVisualPoint(bezierCurveSegment.SecondControlPoint),
                         Point3 = ConvertToVisualPoint(bezierCurveSegment.EndPoint)
                     };
-                    CorrectBezierSegment(segment, new Rect(0, 0, 300, 300));
-                    myPathSegmentCollection.Add(segment);
+                    CorrectBezierSegment(segment, new Rect(0, 0, 255, 255));
+                    _myPathSegmentCollection.Add(segment);
                 }
             }
 
 
-            myPathFigure.Segments = myPathSegmentCollection;
+            myPathFigure.Segments = _myPathSegmentCollection;
 
             var myPathFigureCollection = new PathFigureCollection { myPathFigure };
 
             var myPathGeometry = new PathGeometry { Figures = myPathFigureCollection };
 
             path.Data = myPathGeometry;
+
+            var inoutPairs = InOutPairs;
+            var ret = new List<InOutPair>();
+
+            for (int i = 0; i < inoutPairs.Count; i += 5)
+            {
+                ret.Add(inoutPairs[i]);
+            }
+
+            Scales = ret;
+        }
+
+        public List<InOutPair> InOutPairs
+        {
+            get
+            {
+                var myPathGeometry = path.Data as PathGeometry;
+                var myPathFigureCollection = myPathGeometry.Figures;
+                var myPathFigure = myPathFigureCollection.First();
+                var segments = myPathFigure.Segments;
+
+                var ret = new List<InOutPair>();
+                for (int x = 0; x < byte.MaxValue; x++)
+                {
+                    Point P0 = default(Point);
+                    foreach (BezierSegment segment in _myPathSegmentCollection.Cast<BezierSegment>())
+                    {
+                        if (segment == segments.First())
+                        {
+                            P0 = Points.First().ToPoint();
+                        }
+                        else
+                        {
+                            var index = segments.IndexOf(segment);
+                            var previous = segments[index-1] as BezierSegment;
+                            P0 = new Point(previous.Point3.X, previous.Point3.Y);
+                        }
+
+                        Point P1 = new Point(segment.Point1.X, segment.Point1.Y);
+                        Point P2 = new Point(segment.Point2.X, segment.Point2.Y);
+                        Point P3 = new Point(segment.Point3.X, segment.Point3.Y);
+
+                        if (x < P0.X || P3.X < x)
+                        {
+                            continue;
+                        }
+
+                        var t = FindT(x, P0, P1, P2, P3);
+                        double y = Math.Pow(1 - t, 3) * P0.Y + 3 * Math.Pow(1 - t, 2) * t * P1.Y + 3 * (1 - t) * Math.Pow(t, 2) * P2.Y + Math.Pow(t, 3) * P3.Y;
+                        if (y >= 0 && y <= 255)
+                        {
+                            if (!ret.Any(a => a.In == x))
+                            {
+                                ret.Add(new InOutPair(x, (int)y));
+                                break;
+                            }
+                        }
+                    }
+                }
+                return ret;
+            }
+        }
+
+        private double FindT(double x, Point P0, Point P1, Point P2, Point P3)
+        {
+            double t0 = 0;
+            double t1 = 1;
+            double precision = 0.0001;
+
+            while (Math.Abs(t1 - t0) > precision)
+            {
+                double t = (t0 + t1) / 2;
+                double xValue = Math.Pow(1 - t, 3) * P0.X + 3 * Math.Pow(1 - t, 2) * t * P1.X + 3 * (1 - t) * Math.Pow(t, 2) * P2.X + Math.Pow(t, 3) * P3.X;
+
+                if (xValue < x)
+                {
+                    t0 = t;
+                }
+                else
+                {
+                    t1 = t;
+                }
+            }
+
+            return (t0 + t1) / 2;
         }
 
         private void CorrectBezierSegment(BezierSegment bezierSegment, Rect bounds)
