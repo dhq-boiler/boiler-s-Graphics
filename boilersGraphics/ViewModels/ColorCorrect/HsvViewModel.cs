@@ -117,6 +117,9 @@ namespace boilersGraphics.ViewModels.ColorCorrect
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
             ViewModel.Value = navigationContext.Parameters.GetValue<ColorCorrectViewModel>("ViewModel");
+            AddHue.Value = ViewModel.Value.AddHue.Value;
+            AddSaturation.Value = ViewModel.Value.AddSaturation.Value;
+            AddValue.Value = ViewModel.Value.AddValue.Value;
         }
 
         public bool IsNavigationTarget(NavigationContext navigationContext)

@@ -204,6 +204,7 @@ namespace boilersGraphics.ViewModels.ColorCorrect
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
             ViewModel.Value = navigationContext.Parameters.GetValue<ColorCorrectViewModel>("ViewModel");
+            TargetChannel.Value = ViewModel.Value.TargetChannel.Value;
             Points = ViewModel.Value.Points;
             if (Points.Count <= 2)
             {
