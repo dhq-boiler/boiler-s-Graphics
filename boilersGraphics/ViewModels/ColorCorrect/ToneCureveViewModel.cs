@@ -1,7 +1,9 @@
 ﻿using boilersGraphics.Extensions;
 using boilersGraphics.Models;
 using boilersGraphics.Views;
+using boilersGraphics.Views.ColorCorrect;
 using OpenCvSharp;
+using OpenCvSharp.WpfExtensions;
 using Prism.Mvvm;
 using Prism.Regions;
 using Reactive.Bindings;
@@ -13,6 +15,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -52,7 +55,7 @@ namespace boilersGraphics.ViewModels.ColorCorrect
 
         public ReactivePropertySlim<WriteableBitmap> Histogram { get; } = new ();
 
-        public ReactivePropertySlim<Channel> TargetChannel { get; } = new ();
+        public ReactivePropertySlim<Channel> TargetChannel { get; } = new (Channel.GrayScale);
 
         public ReactiveCommand<SelectionChangedEventArgs> TargetChannelChangedCommand { get; } = new();
 
@@ -103,7 +106,96 @@ namespace boilersGraphics.ViewModels.ColorCorrect
                 ViewModel.Value.InOutPairs.Clear();
                 ViewModel.Value.TargetChannel.Value = (Channel)x.AddedItems[0];
                 ViewModel.Value.Render();
+                SetHistogram();
             }).AddTo(_disposable);
+        }
+
+        private void SetHistogram()
+        {
+            using (var histogram = new Mat())
+            {
+                switch (ViewModel.Value.TargetChannel.Value)
+                {
+                    case GrayScaleChannel:
+                    case BlueChannel:
+                        using (var mat = ViewModel.Value.Bitmap.Value.ToMat())
+                        {
+                            Cv2.CalcHist(new Mat[] { mat }, new int[] { 0 }, null, histogram, 1, new int[] { 256 }, new Rangef[] { new Rangef(0, 256) });
+                        }
+                        break;
+                    case GreenChannel:
+                        using (var mat = ViewModel.Value.Bitmap.Value.ToMat())
+                        {
+                            Cv2.CalcHist(new Mat[] { mat }, new int[] { 1 }, null, histogram, 1, new int[] { 256 }, new Rangef[] { new Rangef(0, 256) });
+                        }
+                        break;
+                    case RedChannel:
+                        using (var mat = ViewModel.Value.Bitmap.Value.ToMat())
+                        {
+                            Cv2.CalcHist(new Mat[] { mat }, new int[] { 2 }, null, histogram, 1, new int[] { 256 }, new Rangef[] { new Rangef(0, 256) });
+                        }
+                        break;
+                }
+                Cv2.Normalize(histogram, histogram, 0, 256, NormTypes.MinMax);
+                Histogram.Value = DrawHistogram(histogram, ViewModel.Value.TargetChannel.Value).ToWriteableBitmap();
+            }
+        }
+
+        private unsafe Mat DrawHistogram(Mat histogram, Channel value)
+        {
+            var ret = new Mat(256, 256, MatType.CV_8UC4);
+            float* p_hist = (float*)histogram.Data.ToPointer();
+            byte* p_ret = (byte*)ret.Data.ToPointer();
+            long step = ret.Step();
+            int width = ret.Width;
+            int height = ret.Height;
+
+            histogram.MinMaxLoc(out double min, out double max);
+
+            Parallel.For(0, 256, x =>
+            {
+                var v = (int)(256 - 256 * *(p_hist + x) / max);
+                for (int y = 0; y >= 0 && y <= 255; y++)
+                {
+                    if (y > v)
+                    {
+                        if (value == Channel.GrayScale)
+                        {
+                            *(p_ret + y * step + x * 4 + 0) = (byte)x; //B
+                            *(p_ret + y * step + x * 4 + 1) = (byte)x; //G
+                            *(p_ret + y * step + x * 4 + 2) = (byte)x; //R
+                            *(p_ret + y * step + x * 4 + 3) = 255; //Alpha
+                        }
+                        if (value == Channel.Blue)
+                        {
+                            *(p_ret + y * step + x * 4 + 0) = (byte)x; //B
+                            *(p_ret + y * step + x * 4 + 1) = 0; //G
+                            *(p_ret + y * step + x * 4 + 2) = 0; //R
+                            *(p_ret + y * step + x * 4 + 3) = 255; //Alpha
+                        }
+                        if (value == Channel.Green)
+                        {
+                            *(p_ret + y * step + x * 4 + 0) = 0; //B
+                            *(p_ret + y * step + x * 4 + 1) = (byte)x; //G
+                            *(p_ret + y * step + x * 4 + 2) = 0; //R
+                            *(p_ret + y * step + x * 4 + 3) = 255; //Alpha
+                        }
+                        if (value == Channel.Red)
+                        {
+                            *(p_ret + y * step + x * 4 + 0) = 0; //B
+                            *(p_ret + y * step + x * 4 + 1) = 0; //G
+                            *(p_ret + y * step + x * 4 + 2) = (byte)x; //R
+                            *(p_ret + y * step + x * 4 + 3) = 255; //Alpha
+                        }
+                    }
+                    else
+                    {
+                        *(p_ret + y * step + x * 4 + 3) = 0; //Alpha
+                    }
+                }
+            });
+
+            return ret;
         }
 
         public void OnNavigatedTo(NavigationContext navigationContext)
@@ -117,6 +209,7 @@ namespace boilersGraphics.ViewModels.ColorCorrect
                 Points.Add(new Point(255 / 2, 255 / 2));
                 Points.Add(new Point(255, 0));
             }
+            SetHistogram();
         }
 
         public bool IsNavigationTarget(NavigationContext navigationContext)

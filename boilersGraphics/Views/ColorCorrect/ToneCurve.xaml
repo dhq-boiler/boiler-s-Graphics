@@ -55,7 +55,7 @@
             SelectedItem="{Binding TargetChannel.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="SelectionChanged">
-                    <helpers:EventToCommand Command="{Binding TargetChannelChangedCommand}" PassEventArgsToCommand="True"></helpers:EventToCommand>
+                    <helpers:EventToCommand Command="{Binding TargetChannelChangedCommand}" PassEventArgsToCommand="True" />
                 </i:EventTrigger>
             </i:Interaction.Triggers>
         </ComboBox>
@@ -80,7 +80,8 @@
             Height="255"
             BorderBrush="white"
             BorderThickness="1">
-            <Canvas Width="255" Height="255">
+            <Canvas Width="256" Height="256">
+                <Image Margin="-4" Source="{Binding Histogram.Value, UpdateSourceTrigger=PropertyChanged}" />
                 <Canvas
                     Grid.RowSpan="1"
                     Margin="0,0.4,0.4,-0.2"
@@ -91,7 +92,6 @@
                         IsClosedCurve="{Binding IsClosedCurve}"
                         Points="{Binding Points, UpdateSourceTrigger=PropertyChanged}" />
                 </Canvas>
-                <Image Source="{Binding Histogram.Value, UpdateSourceTrigger=PropertyChanged}" />
                 <ItemsControl ItemsSource="{Binding Points}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
