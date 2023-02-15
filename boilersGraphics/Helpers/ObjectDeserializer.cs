@@ -14,6 +14,8 @@ using boilersGraphics.Exceptions;
 using boilersGraphics.Models;
 using boilersGraphics.Properties;
 using boilersGraphics.ViewModels;
+using boilersGraphics.ViewModels.ColorCorrect;
+using Reactive.Bindings;
 using Reactive.Bindings.ObjectExtensions;
 using Brush = System.Windows.Media.Brush;
 using Color = System.Windows.Media.Color;
@@ -148,6 +150,8 @@ public class ObjectDeserializer
                     layerObj.Children.Add(layerItemObj);
                     Invoke(() =>
                     {
+                        if (progressBarWithOutputViewModel is null)
+                            return;
                         progressBarWithOutputViewModel.Output.Value += Environment.NewLine;
                         progressBarWithOutputViewModel.Output.Value += $"{Resources.String_Loaded}：{layerItemObj.Name.Value}";
                         progressBarWithOutputViewModel.Current.Value++;
@@ -157,6 +161,8 @@ public class ObjectDeserializer
                 diagramViewModel.Layers.Add(layerObj);
                 Invoke(() =>
                 {
+                    if (progressBarWithOutputViewModel is null)
+                        return;
                     progressBarWithOutputViewModel.Output.Value += Environment.NewLine;
                     progressBarWithOutputViewModel.Output.Value += $"{Resources.String_Loaded}：{layerObj.Name.Value}";
                     progressBarWithOutputViewModel.Current.Value++;
@@ -181,6 +187,8 @@ public class ObjectDeserializer
                 layerObj.Children.Add(layerItem);
                 Invoke(() =>
                 {
+                    if (progressBarWithOutputViewModel is null)
+                        return;
                     progressBarWithOutputViewModel.Output.Value += Environment.NewLine;
                     progressBarWithOutputViewModel.Output.Value += $"{Resources.String_Loaded}：{layerItem.Name.Value}";
                     progressBarWithOutputViewModel.Current.Value++;
@@ -196,6 +204,8 @@ public class ObjectDeserializer
                 layerObj.Children.Add(layerItem);
                 Invoke(() =>
                 {
+                    if (progressBarWithOutputViewModel is null)
+                        return;
                     progressBarWithOutputViewModel.Output.Value += Environment.NewLine;
                     progressBarWithOutputViewModel.Output.Value += $"{Resources.String_Loaded}：{layerItem.Name.Value}";
                     progressBarWithOutputViewModel.Current.Value++;
@@ -205,6 +215,8 @@ public class ObjectDeserializer
             diagramViewModel.Layers.Add(layerObj);
             Invoke(() =>
             {
+                if (progressBarWithOutputViewModel is null)
+                    return;
                 progressBarWithOutputViewModel.Output.Value += Environment.NewLine;
                 progressBarWithOutputViewModel.Output.Value += $"{Resources.String_Loaded}：{layerObj.Name.Value}";
                 progressBarWithOutputViewModel.Current.Value++;
@@ -469,6 +481,57 @@ public class ObjectDeserializer
                 mosaic.RowPixels.Value = double.Parse(designerItemElm.Element("RowPixels").Value);
         }
 
+        if (item is BlurEffectViewModel blurEffect)
+        {
+            if (designerItemElm.Elements("KernelWidth").Any())
+                blurEffect.KernelWidth.Value = double.Parse(designerItemElm.Element("KernelWidth").Value);
+            if (designerItemElm.Elements("KernelHeight").Any())
+                blurEffect.KernelHeight.Value = double.Parse(designerItemElm.Element("KernelHeight").Value);
+            if (designerItemElm.Elements("Sigma").Any())
+                blurEffect.Sigma.Value = double.Parse(designerItemElm.Element("Sigma").Value);
+        }
+
+        if (item is ColorCorrectViewModel colorCorrect)
+        {
+            if (designerItemElm.Elements("CCType").Any())
+                colorCorrect.CCType.Value = GetCorrespondingStaticValue<ColorCorrectType>(designerItemElm.Element("CCType").Value);
+
+            if (colorCorrect.CCType.Value == ColorCorrectType.HSV)
+            {
+                if (designerItemElm.Elements("AddHue").Any())
+                    colorCorrect.AddHue.Value = int.Parse(designerItemElm.Element("AddHue").Value);
+                if (designerItemElm.Elements("AddSaturation").Any())
+                    colorCorrect.AddSaturation.Value = int.Parse(designerItemElm.Element("AddSaturation").Value);
+                if (designerItemElm.Elements("AddValue").Any())
+                    colorCorrect.AddValue.Value = int.Parse(designerItemElm.Element("AddValue").Value);
+            }
+            else if (colorCorrect.CCType.Value == ColorCorrectType.ToneCurve)
+            {
+                if (designerItemElm.Elements("TargetChannel").Any())
+                {
+                    colorCorrect.TargetChannel.Value = GetCorrespondingStaticValue<Channel>(designerItemElm.Element("TargetChannel").Value);
+                }
+                if (designerItemElm.Elements("Points").Any())
+                {
+                    colorCorrect.Points =
+                        new ReactiveCollection<ToneCurveViewModel.Point>();
+                    colorCorrect.Points.AddRange(designerItemElm.Elements("Points").SelectMany(x => x.Elements("Point")).Select(x =>
+                        new ToneCurveViewModel.Point(int.Parse(x.Elements("X").Any() ? x.Element("X").Value : "0"),
+                            int.Parse(x.Elements("Y").Any() ? x.Element("Y").Value : "0"))
+                    ));
+                }
+                if (designerItemElm.Elements("InOutPairs").Any())
+                {
+                    colorCorrect.InOutPairs =
+                        new ReactiveCollection<InOutPair>();
+                    colorCorrect.InOutPairs.AddRange(designerItemElm.Elements("InOutPairs").SelectMany(x => x.Elements("InOutPair")).Select(x =>
+                        new InOutPair(int.Parse(x.Elements("In").Any() ? x.Element("In").Value : "0"),
+                            int.Parse(x.Elements("Out").Any() ? x.Element("Out").Value : "0"))
+                    ));
+                }
+            }
+        }
+
         if (item is LetterDesignerItemViewModel letter)
         {
             letter.LetterString.Value = designerItemElm.Element("LetterString").Value;
@@ -493,6 +556,22 @@ public class ObjectDeserializer
         item.UpdatePathGeometryIfEnable(string.Empty, 0, 0, true);
         item.RenderingEnabled.Value = true;
         return item;
+    }
+
+    private static T GetCorrespondingStaticValue<T>(object str) where T : class
+    {
+        Type type = typeof(T);
+        var fields = type.GetFields(BindingFlags.Public | BindingFlags.Static);
+        foreach (var field in fields)
+        {
+            var fieldValue = field.GetValue(null);
+            var fieldValueType = fieldValue.GetType();
+            if (str.Equals(fieldValueType.Name))
+            {
+                return fieldValue as T;
+            }
+        }
+        throw new UnexpectedException("Corresponding property not found.");
     }
 
     public static BitmapImage Base64StringToBitmap(string base64String)

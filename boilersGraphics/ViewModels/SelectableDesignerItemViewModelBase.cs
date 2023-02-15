@@ -365,6 +365,10 @@ public abstract class SelectableDesignerItemViewModelBase : BindableBase, ISelec
         return new SelectableDesignerItemViewModelBaseDisposable(this, observer);
     }
 
+    public virtual void OpenInstructionDialog()
+    {
+    }
+
     public class SelectableDesignerItemViewModelBaseDisposable : IDisposable
     {
         private readonly SelectableDesignerItemViewModelBase _obj;

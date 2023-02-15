@@ -35,7 +35,7 @@ public class ColorPickerViewModel : BindableBase, IDialogAware, IDisposable
         OKCommand.Subscribe(_ =>
             {
                 this.regionManager.Regions.Remove("ColorPickerRegion");
-                var solidColorPicker = _colorPicker.EnumVisualChildren<SolidColorPicker>().FirstOrDefault();
+                var solidColorPicker = _colorPicker.GetVisualChild<SolidColorPicker>();
                 if (solidColorPicker != null)
                 {
                     var solidColorPickerViewModel = solidColorPicker.DataContext as SolidColorPickerViewModel;
@@ -149,10 +149,11 @@ public class ColorPickerViewModel : BindableBase, IDialogAware, IDisposable
                     };
                     var ret = new DialogResult(ButtonResult.OK, parameters);
                     RequestClose.Invoke(ret);
+                    return;
                 }
 
                 var linearGradientBrushPicker =
-                    _colorPicker.EnumVisualChildren<LinearGradientBrushPicker>().FirstOrDefault();
+                    _colorPicker.GetVisualChild<LinearGradientBrushPicker>();
                 if (linearGradientBrushPicker != null)
                 {
                     var linearGradientBrushPickerViewModel =
@@ -274,10 +275,11 @@ public class ColorPickerViewModel : BindableBase, IDialogAware, IDisposable
                     };
                     var ret = new DialogResult(ButtonResult.OK, parameters);
                     RequestClose.Invoke(ret);
+                    return;
                 }
 
                 var radialGradientBrushPicker =
-                    _colorPicker.EnumVisualChildren<RadialGradientBrushPicker>().FirstOrDefault();
+                    _colorPicker.GetVisualChild<RadialGradientBrushPicker>();
                 if (radialGradientBrushPicker != null)
                 {
                     var radialGradientBrushPickerViewModel =
@@ -404,6 +406,7 @@ public class ColorPickerViewModel : BindableBase, IDialogAware, IDisposable
                     };
                     var ret = new DialogResult(ButtonResult.OK, parameters);
                     RequestClose.Invoke(ret);
+                    return;
                 }
             })
             .AddTo(disposables);

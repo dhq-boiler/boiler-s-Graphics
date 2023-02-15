@@ -1825,11 +1825,38 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Grayscale に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_GrayScale {
+            get {
+                return ResourceManager.GetString("String_GrayScale", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Hue, Saturation, Value に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_Hsv {
+            get {
+                return ResourceManager.GetString("String_Hsv", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Hue に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string String_Hue {
             get {
                 return ResourceManager.GetString("String_Hue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Input に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_Input {
+            get {
+                return ResourceManager.GetString("String_Input", resourceCulture);
             }
         }
         
@@ -1875,6 +1902,15 @@ namespace boilersGraphics.Properties {
         public static string String_OpensourceComponent_Library_Code {
             get {
                 return ResourceManager.GetString("String_OpensourceComponent_Library_Code", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Output に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_Output {
+            get {
+                return ResourceManager.GetString("String_Output", resourceCulture);
             }
         }
         
@@ -2041,6 +2077,15 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Saturation に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_Saturation {
+            get {
+                return ResourceManager.GetString("String_Saturation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Set the interval に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string String_SetInterval {
@@ -2104,6 +2149,15 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Tone curve に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_ToneCurve {
+            get {
+                return ResourceManager.GetString("String_ToneCurve", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   This is the trial version. Expiration date：{0} days {1}:{2}:{3} に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string String_TrialMessage {
@@ -2113,11 +2167,29 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Value に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_Value {
+            get {
+                return ResourceManager.GetString("String_Value", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Version に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string String_Version {
             get {
                 return ResourceManager.GetString("String_Version", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Color correction に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Title_ColorCorrection {
+            get {
+                return ResourceManager.GetString("Title_ColorCorrection", resourceCulture);
             }
         }
         
@@ -2217,6 +2289,15 @@ namespace boilersGraphics.Properties {
         public static string Tool_CanvasResize {
             get {
                 return ResourceManager.GetString("Tool_CanvasResize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Color correct tool に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Tool_ColorCorrect {
+            get {
+                return ResourceManager.GetString("Tool_ColorCorrect", resourceCulture);
             }
         }
         
