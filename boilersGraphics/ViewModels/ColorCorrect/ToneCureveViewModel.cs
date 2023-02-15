@@ -1,7 +1,6 @@
 ﻿using boilersGraphics.Extensions;
 using boilersGraphics.Models;
 using boilersGraphics.Views;
-using boilersGraphics.Views.ColorCorrect;
 using OpenCvSharp;
 using OpenCvSharp.WpfExtensions;
 using Prism.Mvvm;
@@ -16,9 +15,9 @@ using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
@@ -31,6 +30,7 @@ namespace boilersGraphics.ViewModels.ColorCorrect
         public ReactivePropertySlim<ColorCorrectViewModel> ViewModel { get; } = new();
         public ReactiveCollection<Point> Points { get; private set; } = new();
         public ReactiveCommand<Point> CanvasClickCommand { get; } = new();
+        public ReactiveCommand<KeyEventArgs> PreviewKeyDownCommand { get; } = new();
 
         public class Point : BindableBase
         {
@@ -100,13 +100,31 @@ namespace boilersGraphics.ViewModels.ColorCorrect
                 Points.Add(new Point(0, 255));
                 Points.Add(new Point(255 / 2, 255 / 2));
                 Points.Add(new Point(255, 0));
-                var window = System.Windows.Window.GetWindow(x.Source as ComboBox);
+                var window = System.Windows.Window.GetWindow(x.Source as System.Windows.Controls.ComboBox);
                 var landmark = window.GetVisualChild<LandmarkControl>();
                 landmark.SetPathData();
                 ViewModel.Value.InOutPairs.Clear();
                 ViewModel.Value.TargetChannel.Value = (Channel)x.AddedItems[0];
                 ViewModel.Value.Render();
                 SetHistogram();
+            }).AddTo(_disposable);
+            PreviewKeyDownCommand.Subscribe(x =>
+            {
+                if (x.Key == Key.Delete)
+                {
+                    var thumb = x.Source as Thumb;
+                    var dataContext = thumb.DataContext;
+                    var point = dataContext as Point;
+                    if (point == new Point(0, 255) || point == new Point(255, 0))
+                    {
+                        return;
+                    }
+                    if (Points.Count() <= 3)
+                    {
+                        return;
+                    }
+                    Points.Remove(point);
+                }
             }).AddTo(_disposable);
         }
 

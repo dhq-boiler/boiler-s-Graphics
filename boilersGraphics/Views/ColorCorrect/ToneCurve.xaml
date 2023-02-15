@@ -111,6 +111,9 @@
                                     <i:EventTrigger EventName="DragDelta">
                                         <helpers:EventToCommand Command="{Binding Path=DataContext.DragDeltaCommand, ElementName=ItemsControlCanvas}" PassEventArgsToCommand="True" />
                                     </i:EventTrigger>
+                                    <i:EventTrigger EventName="PreviewKeyDown">
+                                        <helpers:EventToCommand Command="{Binding Path=DataContext.PreviewKeyDownCommand, ElementName=ItemsControlCanvas}" PassEventArgsToCommand="True" />
+                                    </i:EventTrigger>
                                 </i:Interaction.Triggers>
                             </Thumb>
                         </DataTemplate>
