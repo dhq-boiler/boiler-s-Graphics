@@ -227,7 +227,7 @@ namespace boilersGraphics.Views
                 for (int x = 0; x <= byte.MaxValue; x++)
                 {
                     Point P0 = default(Point);
-                    foreach (BezierSegment segment in _myPathSegmentCollection.Cast<BezierSegment>())
+                    foreach (BezierSegment segment in _myPathSegmentCollection.OfType<BezierSegment>())
                     {
                         if (segment == segments.First())
                         {
