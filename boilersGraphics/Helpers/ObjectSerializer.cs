@@ -152,33 +152,40 @@ internal class ObjectSerializer
 
             if (designerItem is ColorCorrectViewModel colorCorrect)
             {
-                list.Add(new XElement("CCType", colorCorrect.CCType.Value));
-                list.Add(new XElement("AddHue", colorCorrect.AddHue.Value));
-                list.Add(new XElement("AddSaturation", colorCorrect.AddSaturation.Value));
-                list.Add(new XElement("AddValue", colorCorrect.AddValue.Value));
-                var points = new XElement("Points");
-                foreach (var pt in colorCorrect.Points)
+                list.Add(new XElement("CCType", colorCorrect.CCType.Value.GetType().Name));
+                if (colorCorrect.CCType.Value == ColorCorrectType.HSV)
                 {
-                    var point = new XElement("Point");
-                    var x = new XElement("X", pt.X);
-                    point.Add(x);
-                    var y = new XElement("Y", pt.Y);
-                    point.Add(y);
-                    points.Add(point);
+                    list.Add(new XElement("AddHue", colorCorrect.AddHue.Value));
+                    list.Add(new XElement("AddSaturation", colorCorrect.AddSaturation.Value));
+                    list.Add(new XElement("AddValue", colorCorrect.AddValue.Value));
                 }
+                else if (colorCorrect.CCType.Value == ColorCorrectType.ToneCurve)
+                {
+                    list.Add(new XElement("TargetChannel", colorCorrect.TargetChannel.Value.GetType().Name));
+                    var points = new XElement("Points");
+                    foreach (var pt in colorCorrect.Points)
+                    {
+                        var point = new XElement("Point");
+                        var x = new XElement("X", pt.X);
+                        point.Add(x);
+                        var y = new XElement("Y", pt.Y);
+                        point.Add(y);
+                        points.Add(point);
+                    }
 
-                list.Add(points);
-                var inOutPairs = new XElement("InOutPairs");
-                foreach (var pair in colorCorrect.InOutPairs)
-                {
-                    var _pair = new XElement("InOutPair");
-                    var @in = new XElement("In", pair.In);
-                    _pair.Add(@in);
-                    var @out = new XElement("Out", pair.Out);
-                    _pair.Add(@out);
-                    inOutPairs.Add(_pair);
+                    list.Add(points);
+                    var inOutPairs = new XElement("InOutPairs");
+                    foreach (var pair in colorCorrect.InOutPairs)
+                    {
+                        var _pair = new XElement("InOutPair");
+                        var @in = new XElement("In", pair.In);
+                        _pair.Add(@in);
+                        var @out = new XElement("Out", pair.Out);
+                        _pair.Add(@out);
+                        inOutPairs.Add(_pair);
+                    }
+                    list.Add(inOutPairs);
                 }
-                list.Add(inOutPairs);
             }
 
             if (designerItem is ILetterDesignerItemViewModel letter)

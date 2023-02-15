@@ -494,30 +494,41 @@ public class ObjectDeserializer
         if (item is ColorCorrectViewModel colorCorrect)
         {
             if (designerItemElm.Elements("CCType").Any())
-                colorCorrect.CCType.Value = (ColorCorrectType)Enum.Parse(typeof(ColorCorrectType), designerItemElm.Element("CCType").Value);
-            if (designerItemElm.Elements("AddHue").Any())
-                colorCorrect.AddHue.Value = int.Parse(designerItemElm.Element("AddHue").Value);
-            if (designerItemElm.Elements("AddSaturation").Any())
-                colorCorrect.AddSaturation.Value = int.Parse(designerItemElm.Element("AddSaturation").Value);
-            if (designerItemElm.Elements("AddValue").Any())
-                colorCorrect.AddValue.Value = int.Parse(designerItemElm.Element("AddValue").Value);
-            if (designerItemElm.Elements("Points").Any())
+                colorCorrect.CCType.Value = GetCorrespondingStaticValue<ColorCorrectType>(designerItemElm.Element("CCType").Value);
+
+            if (colorCorrect.CCType.Value == ColorCorrectType.HSV)
             {
-                colorCorrect.Points =
-                    new ReactiveCollection<ToneCurveViewModel.Point>();
-                colorCorrect.Points.AddRange(designerItemElm.Elements("Points").SelectMany(x => x.Elements("Point")).Select(x =>
-                    new ToneCurveViewModel.Point(int.Parse(x.Elements("X").Any() ? x.Element("X").Value : "0"),
-                        int.Parse(x.Elements("Y").Any() ? x.Element("Y").Value : "0"))
-                ));
+                if (designerItemElm.Elements("AddHue").Any())
+                    colorCorrect.AddHue.Value = int.Parse(designerItemElm.Element("AddHue").Value);
+                if (designerItemElm.Elements("AddSaturation").Any())
+                    colorCorrect.AddSaturation.Value = int.Parse(designerItemElm.Element("AddSaturation").Value);
+                if (designerItemElm.Elements("AddValue").Any())
+                    colorCorrect.AddValue.Value = int.Parse(designerItemElm.Element("AddValue").Value);
             }
-            if (designerItemElm.Elements("InOutPairs").Any())
+            else if (colorCorrect.CCType.Value == ColorCorrectType.ToneCurve)
             {
-                colorCorrect.InOutPairs =
-                    new ReactiveCollection<InOutPair>();
-                colorCorrect.InOutPairs.AddRange(designerItemElm.Elements("InOutPairs").SelectMany(x => x.Elements("InOutPair")).Select(x =>
-                    new InOutPair(int.Parse(x.Elements("In").Any() ? x.Element("In").Value : "0"),
-                        int.Parse(x.Elements("Out").Any() ? x.Element("Out").Value : "0"))
-                ));
+                if (designerItemElm.Elements("TargetChannel").Any())
+                {
+                    colorCorrect.TargetChannel.Value = GetCorrespondingStaticValue<Channel>(designerItemElm.Element("TargetChannel").Value);
+                }
+                if (designerItemElm.Elements("Points").Any())
+                {
+                    colorCorrect.Points =
+                        new ReactiveCollection<ToneCurveViewModel.Point>();
+                    colorCorrect.Points.AddRange(designerItemElm.Elements("Points").SelectMany(x => x.Elements("Point")).Select(x =>
+                        new ToneCurveViewModel.Point(int.Parse(x.Elements("X").Any() ? x.Element("X").Value : "0"),
+                            int.Parse(x.Elements("Y").Any() ? x.Element("Y").Value : "0"))
+                    ));
+                }
+                if (designerItemElm.Elements("InOutPairs").Any())
+                {
+                    colorCorrect.InOutPairs =
+                        new ReactiveCollection<InOutPair>();
+                    colorCorrect.InOutPairs.AddRange(designerItemElm.Elements("InOutPairs").SelectMany(x => x.Elements("InOutPair")).Select(x =>
+                        new InOutPair(int.Parse(x.Elements("In").Any() ? x.Element("In").Value : "0"),
+                            int.Parse(x.Elements("Out").Any() ? x.Element("Out").Value : "0"))
+                    ));
+                }
             }
         }
 
@@ -545,6 +556,22 @@ public class ObjectDeserializer
         item.UpdatePathGeometryIfEnable(string.Empty, 0, 0, true);
         item.RenderingEnabled.Value = true;
         return item;
+    }
+
+    private static T GetCorrespondingStaticValue<T>(object str) where T : class
+    {
+        Type type = typeof(T);
+        var fields = type.GetFields(BindingFlags.Public | BindingFlags.Static);
+        foreach (var field in fields)
+        {
+            var fieldValue = field.GetValue(null);
+            var fieldValueType = fieldValue.GetType();
+            if (str.Equals(fieldValueType.Name))
+            {
+                return fieldValue as T;
+            }
+        }
+        throw new UnexpectedException("Corresponding property not found.");
     }
 
     public static BitmapImage Base64StringToBitmap(string base64String)
