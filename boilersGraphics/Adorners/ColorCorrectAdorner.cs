@@ -13,16 +13,16 @@ using boilersGraphics.ViewModels;
 
 namespace boilersGraphics.Adorners;
 
-internal class BlurAdorner : Adorner
+internal class ColorCorrectAdorner : Adorner
 {
     private DesignerCanvas _designerCanvas;
     private Point? _endPoint;
     private readonly Pen _rectanglePen;
     private readonly SnapAction _snapAction;
     private Point? _startPoint;
-    private readonly BlurEffectViewModel item;
+    private readonly ColorCorrectViewModel item;
 
-    public BlurAdorner(DesignerCanvas designerCanvas, Point? dragStartPoint, BlurEffectViewModel item)
+    public ColorCorrectAdorner(DesignerCanvas designerCanvas, Point? dragStartPoint, ColorCorrectViewModel item)
         : base(designerCanvas)
     {
         _designerCanvas = designerCanvas;
@@ -122,7 +122,7 @@ internal class BlurAdorner : Adorner
     private static void UpdateStatisticsCount()
     {
         var statistics = (Application.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
-        statistics.NumberOfDrawsOfTheGaussianFilterTool++;
+        statistics.NumberOfDrawsOfTheColorCorrectTool++;
         var dao = new StatisticsDao();
         dao.Update(statistics);
     }

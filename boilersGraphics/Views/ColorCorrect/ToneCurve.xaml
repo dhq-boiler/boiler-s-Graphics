@@ -1,0 +1,131 @@
+﻿<UserControl
+    x:Class="boilersGraphics.Views.ColorCorrect.ToneCurve"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:AttachedProperty="clr-namespace:boilersGraphics.AttachedProperties"
+    xmlns:c="clr-namespace:CalcBinding;assembly=CalcBinding"
+    xmlns:converter="clr-namespace:boilersGraphics.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helpers="clr-namespace:boilersGraphics.Helpers"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModels="clr-namespace:boilersGraphics.ViewModels"
+    xmlns:views="clr-namespace:boilersGraphics.Views"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <converter:ToToneCurveControlPointCollectionConverter x:Key="ToPointCollection" />
+        <converter:ToneCurvePointConverter x:Key="ToneCurvePointConverter" />
+        <!--<Style x:Key="PointListBoxItemStyle" TargetType="{x:Type ListBoxItem}">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="HorizontalContentAlignment" Value="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
+            <Setter Property="VerticalContentAlignment" Value="{Binding VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
+            <Setter Property="Canvas.Left" Value="{Binding X.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <Setter Property="Canvas.Top" Value="{Binding Y.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <Setter Property="AttachedProperty:DragInsideCanvasBehavior.DragInsideCanvas" Value="True"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>-->
+    </UserControl.Resources>
+    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Grid.Resources>
+            <ObjectDataProvider
+                x:Key="targetChannelFromEnum"
+                MethodName="GetValues"
+                ObjectType="{x:Type viewModels:Channel}" />
+        </Grid.Resources>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <ComboBox
+            Grid.Row="0"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            ItemsSource="{Binding Source={StaticResource targetChannelFromEnum}}"
+            SelectedItem="{Binding TargetChannel.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="SelectionChanged">
+                    <helpers:EventToCommand Command="{Binding TargetChannelChangedCommand}" PassEventArgsToCommand="True" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </ComboBox>
+        <Label
+            Grid.Row="1"
+            Grid.Column="0"
+            VerticalAlignment="Center"
+            Content="{Binding Source={x:Static helpers:ResourceService.Current}, Path=Resources.String_Output, Mode=OneWay}">
+            <Label.LayoutTransform>
+                <RotateTransform Angle="90" />
+            </Label.LayoutTransform>
+        </Label>
+        <Label
+            Grid.Row="2"
+            Grid.Column="1"
+            HorizontalAlignment="Center"
+            Content="{Binding Source={x:Static helpers:ResourceService.Current}, Path=Resources.String_Input, Mode=OneWay}" />
+        <Border
+            Grid.Row="1"
+            Grid.Column="1"
+            Width="255"
+            Height="255"
+            BorderBrush="white"
+            BorderThickness="1">
+            <Canvas Width="256" Height="256">
+                <Image Margin="-4" Source="{Binding Histogram.Value, UpdateSourceTrigger=PropertyChanged}" />
+                <Canvas
+                    Grid.RowSpan="1"
+                    Margin="0,0.4,0.4,-0.2"
+                    AttachedProperty:ClickAtCanvasBehavior.ClickAtCanvas="{Binding CanvasClickCommand}"
+                    Background="Transparent">
+                    <views:LandmarkControl
+                        AllScales="{Binding ViewModel.Value.InOutPairs, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
+                        IsClosedCurve="{Binding IsClosedCurve}"
+                        Points="{Binding Points, UpdateSourceTrigger=PropertyChanged}" />
+                </Canvas>
+                <ItemsControl ItemsSource="{Binding Points}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <Canvas x:Name="ItemsControlCanvas" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Thumb Width="8" Height="8">
+                                <Thumb.Style>
+                                    <Style TargetType="{x:Type Thumb}">
+                                        <Setter Property="AttachedProperty:DragInsideCanvasBehavior.DragInsideCanvas" Value="True" />
+                                        <Setter Property="Focusable" Value="True" />
+                                    </Style>
+                                </Thumb.Style>
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="DragDelta">
+                                        <helpers:EventToCommand Command="{Binding Path=DataContext.DragDeltaCommand, ElementName=ItemsControlCanvas}" PassEventArgsToCommand="True" />
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="PreviewKeyDown">
+                                        <helpers:EventToCommand Command="{Binding Path=DataContext.PreviewKeyDownCommand, ElementName=ItemsControlCanvas}" PassEventArgsToCommand="True" />
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </Thumb>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                    <ItemsControl.ItemContainerStyle>
+                        <Style>
+                            <Setter Property="Canvas.Left" Value="{c:Binding X.Value-4}" />
+                            <Setter Property="Canvas.Top" Value="{c:Binding Y.Value-4}" />
+                        </Style>
+                    </ItemsControl.ItemContainerStyle>
+                </ItemsControl>
+            </Canvas>
+        </Border>
+    </Grid>
+</UserControl>

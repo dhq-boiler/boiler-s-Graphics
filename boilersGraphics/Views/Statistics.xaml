@@ -18,8 +18,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/Theme.xaml" />
-                <ResourceDictionary
-                    Source="pack://application:,,,/boilersGraphics;component/Resources/Themes/DarkTheme.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/boilersGraphics;component/Resources/Themes/DarkTheme.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <converter:TimeSpanRoundConverter x:Key="TimeSpanRound" />
         </ResourceDictionary>
@@ -44,310 +43,260 @@
             </Style>
         </controls:SimpleGrid.Resources>
         <DockPanel>
-            <Label
-                Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfBoots}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfBoots}" />
             <Label d:Content="0" Content="{Binding NumberOfBoots.Value}" />
         </DockPanel>
         <DockPanel>
-            <Label
-                Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_Uptime}" />
-            <Label d:Content="00:00:00"
-                   Content="{Binding Uptime.Value, StringFormat={}{0:hh\\:mm\\:ss}, ConverterCulture=ja-jP, Converter={StaticResource TimeSpanRound}}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_Uptime}" />
+            <Label d:Content="00:00:00" Content="{Binding Uptime.Value, StringFormat={}{0:hh\\:mm\\:ss}, ConverterCulture=ja-jP, Converter={StaticResource TimeSpanRound}}" />
         </DockPanel>
         <DockPanel>
-            <Label
-                Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfTimesTheFileWasOpenedBySpecifyingIt}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfTimesTheFileWasOpenedBySpecifyingIt}" />
             <Label d:Content="0" Content="{Binding NumberOfTimesTheFileWasOpenedBySpecifyingIt.Value}" />
         </DockPanel>
         <DockPanel>
-            <Label
-                Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfTimesTheAutoSaveFileIsSpecifiedAndOpened}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfTimesTheAutoSaveFileIsSpecifiedAndOpened}" />
             <Label d:Content="0" Content="{Binding NumberOfTimesTheAutoSaveFileIsSpecifiedAndOpened.Value}" />
         </DockPanel>
         <DockPanel>
-            <Label
-                Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfClicksWithThePointerTool}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfClicksWithThePointerTool}" />
             <Label d:Content="0" Content="{Binding NumberOfClicksWithThePointerTool.Value}" />
         </DockPanel>
         <DockPanel>
-            <Label
-                Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_CumulativeNumberOfItemsSelectedWithTheLassoTool}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_CumulativeNumberOfItemsSelectedWithTheLassoTool}" />
             <Label d:Content="0" Content="{Binding CumulativeTotalOfItemsSelectedWithTheLassoTool.Value}" />
         </DockPanel>
         <DockPanel>
-            <Label
-                Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfDrawsForTheStraightLineTool}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfDrawsForTheStraightLineTool}" />
             <Label d:Content="0" Content="{Binding NumberOfDrawsOfTheStraightLineTool.Value}" />
         </DockPanel>
         <DockPanel>
-            <Label
-                Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfDrawsOfTheRectangleTool}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfDrawsOfTheRectangleTool}" />
             <Label d:Content="0" Content="{Binding NumberOfDrawsOfTheRectangleTool.Value}" />
         </DockPanel>
         <DockPanel>
-            <Label
-                Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfDrawsOfTheEllipseTool}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfDrawsOfTheEllipseTool}" />
             <Label d:Content="0" Content="{Binding NumberOfDrawsOfTheEllipseTool.Value}" />
         </DockPanel>
         <DockPanel>
-            <Label
-                Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfDrawingOfPictureTool}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfDrawingOfPictureTool}" />
             <Label d:Content="0" Content="{Binding NumberOfDrawsOfTheImageFileTool.Value}" />
         </DockPanel>
         <DockPanel>
-            <Label
-                Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfDrawsOfTheLetteringTool}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfDrawsOfTheLetteringTool}" />
             <Label d:Content="0" Content="{Binding NumberOfDrawsOfTheLetterTool.Value}" />
         </DockPanel>
         <DockPanel>
-            <Label
-                Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfDrawsOfTheVerticalLetteringTool}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfDrawsOfTheVerticalLetteringTool}" />
             <Label d:Content="0" Content="{Binding NumberOfDrawsOfTheVerticalLetterTool.Value}" />
         </DockPanel>
         <DockPanel>
-            <Label
-                Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfDrawsOfPolygonTool}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfDrawsOfPolygonTool}" />
             <Label d:Content="0" Content="{Binding NumberOfDrawsOfPolygonTool.Value}" />
         </DockPanel>
         <DockPanel>
-            <Label
-                Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfDrawsOfBezierCurveTool}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfDrawsOfBezierCurveTool}" />
             <Label d:Content="0" Content="{Binding NumberOfDrawsOfBezierCurveTool.Value}" />
         </DockPanel>
         <DockPanel>
-            <Label
-                Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfSnapPointToolInstallations}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfSnapPointToolInstallations}" />
             <Label d:Content="0" Content="{Binding NumberOfSnapPointToolInstallations.Value}" />
         </DockPanel>
         <DockPanel>
-            <Label
-                Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfTimesTheBrushToolIsDrawn}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfTimesTheBrushToolIsDrawn}" />
             <Label d:Content="0" Content="{Binding BrushToolDrawCount.Value}" />
         </DockPanel>
         <DockPanel>
-            <Label
-                Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfTimesTheEraserToolHasBeenUsed}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfTimesTheEraserToolHasBeenUsed}" />
             <Label d:Content="0" Content="{Binding NumberOfTimesTheEraserToolHasBeenUsed.Value}" />
         </DockPanel>
         <DockPanel>
-            <Label
-                Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfTimesSavedByOverwriting}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfTimesSavedByOverwriting}" />
             <Label d:Content="0" Content="{Binding NumberOfTimesSaved.Value}" />
         </DockPanel>
         <DockPanel>
-            <Label
-                Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfTimesYouHaveNamedAndSaved}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfTimesYouHaveNamedAndSaved}" />
             <Label d:Content="0" Content="{Binding NumberOfTimesYouHaveNamedAndSaved.Value}" />
         </DockPanel>
         <DockPanel>
-            <Label
-                Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfExports}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfExports}" />
             <Label d:Content="0" Content="{Binding NumberOfExports.Value}" />
         </DockPanel>
         <DockPanel>
-            <Label
-                Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfExportsAsJpeg}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfExportsAsJpeg}" />
             <Label d:Content="0" Content="{Binding NumberOfJpegExports.Value}" />
         </DockPanel>
         <DockPanel>
-            <Label
-                Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfExportsAsPng}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfExportsAsPng}" />
             <Label d:Content="0" Content="{Binding NumberOfPngExports.Value}" />
         </DockPanel>
         <DockPanel>
-            <Label
-                Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfExportsAsGif}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfExportsAsGif}" />
             <Label d:Content="0" Content="{Binding NumberOfGifExports.Value}" />
         </DockPanel>
         <DockPanel>
-            <Label
-                Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfExportsAsBmp}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfExportsAsBmp}" />
             <Label d:Content="0" Content="{Binding NumberOfBmpExports.Value}" />
         </DockPanel>
         <DockPanel>
-            <Label
-                Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfExportsAsTiff}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfExportsAsTiff}" />
             <Label d:Content="0" Content="{Binding NumberOfTiffExports.Value}" />
         </DockPanel>
         <DockPanel>
-            <Label
-                Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfExportsAsWmp}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfExportsAsWmp}" />
             <Label d:Content="0" Content="{Binding NumberOfWmpExports.Value}" />
         </DockPanel>
         <DockPanel>
-            <Label
-                Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfTimesGrouped}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfTimesGrouped}" />
             <Label d:Content="0" Content="{Binding NumberOfTimesGrouped.Value}" />
         </DockPanel>
         <DockPanel>
-            <Label
-                Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfUngrouped}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfUngrouped}" />
             <Label d:Content="0" Content="{Binding NumberOfUngrouped.Value}" />
         </DockPanel>
         <DockPanel>
-            <Label
-                Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfTimesToMoveToTheFrontend}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfTimesToMoveToTheFrontend}" />
             <Label d:Content="0" Content="{Binding NumberOfMovesToTheFrontend.Value}" />
         </DockPanel>
         <DockPanel>
-            <Label
-                Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfMovesToTheFront}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfMovesToTheFront}" />
             <Label d:Content="0" Content="{Binding NumberOfMovesToTheFront.Value}" />
         </DockPanel>
         <DockPanel>
-            <Label
-                Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfMovesToTheBack}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfMovesToTheBack}" />
             <Label d:Content="0" Content="{Binding NumberOfMovesToTheBack.Value}" />
         </DockPanel>
         <DockPanel>
-            <Label
-                Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfTimesToMoveToTheBackend}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfTimesToMoveToTheBackend}" />
             <Label d:Content="0" Content="{Binding NumberOfMovesToTheBackend.Value}" />
         </DockPanel>
         <DockPanel>
-            <Label
-                Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfTopAlignment}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfTopAlignment}" />
             <Label d:Content="0" Content="{Binding NumberOfTopAlignment.Value}" />
         </DockPanel>
         <DockPanel>
-            <Label
-                Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfTimesTheTopAndBottomAreAligned}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfTimesTheTopAndBottomAreAligned}" />
             <Label d:Content="0" Content="{Binding NumberOfTimesTheTopAndBottomAreCentered.Value}" />
         </DockPanel>
         <DockPanel>
-            <Label
-                Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfBottomAlignment}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfBottomAlignment}" />
             <Label d:Content="0" Content="{Binding NumberOfBottomAlignment.Value}" />
         </DockPanel>
         <DockPanel>
-            <Label
-                Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfLeftAlignment}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfLeftAlignment}" />
             <Label d:Content="0" Content="{Binding NumberOfLeftAlignment.Value}" />
         </DockPanel>
         <DockPanel>
-            <Label
-                Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfTimesLeftAndRightCentered}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfTimesLeftAndRightCentered}" />
             <Label d:Content="0" Content="{Binding NumberOfTimesLeftAndRightCentered.Value}" />
         </DockPanel>
         <DockPanel>
-            <Label
-                Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfRightAlignment}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfRightAlignment}" />
             <Label d:Content="0" Content="{Binding NumberOfRightAlignment.Value}" />
         </DockPanel>
         <DockPanel>
-            <Label
-                Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfTimesAlignedLeftAndRight}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfTimesAlignedLeftAndRight}" />
             <Label d:Content="0" Content="{Binding NumberOfTimesAlignedLeftAndRight.Value}" />
         </DockPanel>
         <DockPanel>
-            <Label
-                Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfTimesAlignedUpAndDown}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfTimesAlignedUpAndDown}" />
             <Label d:Content="0" Content="{Binding NumberOfTimesAlignedUpAndDown.Value}" />
         </DockPanel>
         <DockPanel>
-            <Label
-                Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfTimesToMatchTheWidth}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfTimesToMatchTheWidth}" />
             <Label d:Content="0" Content="{Binding NumberOfTimesToMatchTheWidth.Value}" />
         </DockPanel>
         <DockPanel>
-            <Label
-                Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfTimesToMatchTheHeight}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfTimesToMatchTheHeight}" />
             <Label d:Content="0" Content="{Binding NumberOfTimesToMatchTheHeight.Value}" />
         </DockPanel>
         <DockPanel>
-            <Label
-                Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfUnions}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfUnions}" />
             <Label d:Content="0" Content="{Binding NumberOfUnions.Value}" />
         </DockPanel>
         <DockPanel>
-            <Label
-                Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfIntersects}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfIntersects}" />
             <Label d:Content="0" Content="{Binding NumberOfIntersects.Value}" />
         </DockPanel>
         <DockPanel>
-            <Label
-                Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfXors}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfXors}" />
             <Label d:Content="0" Content="{Binding NumberOfXors.Value}" />
         </DockPanel>
         <DockPanel>
-            <Label
-                Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfExcludes}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfExcludes}" />
             <Label d:Content="0" Content="{Binding NumberOfExcludes.Value}" />
         </DockPanel>
         <DockPanel>
-            <Label
-                Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfCuts}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfCuts}" />
             <Label d:Content="0" Content="{Binding NumberOfCuts.Value}" />
         </DockPanel>
         <DockPanel>
-            <Label
-                Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfCopies}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfCopies}" />
             <Label d:Content="0" Content="{Binding NumberOfCopies.Value}" />
         </DockPanel>
         <DockPanel>
-            <Label
-                Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfPasted}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfPasted}" />
             <Label d:Content="0" Content="{Binding NumberOfPasted.Value}" />
         </DockPanel>
         <DockPanel>
-            <Label
-                Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfUndos}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfUndos}" />
             <Label d:Content="0" Content="{Binding NumberOfUndos.Value}" />
         </DockPanel>
         <DockPanel>
-            <Label
-                Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfRedoes}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfRedoes}" />
             <Label d:Content="0" Content="{Binding NumberOfRedoes.Value}" />
         </DockPanel>
         <DockPanel>
-            <Label
-                Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfTimesAutomaticallySaved}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfTimesAutomaticallySaved}" />
             <Label d:Content="0" Content="{Binding NumberOfTimesAutomaticallySaved.Value}" />
         </DockPanel>
         <DockPanel>
-            <Label
-                Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfNewlyCreatedLayers}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfNewlyCreatedLayers}" />
             <Label d:Content="0" Content="{Binding NumberOfNewlyCreatedLayers.Value}" />
         </DockPanel>
         <DockPanel>
-            <Label
-                Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfDeletedLayers}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfDeletedLayers}" />
             <Label d:Content="0" Content="{Binding NumberOfDeletedLayers.Value}" />
         </DockPanel>
         <DockPanel>
-            <Label
-                Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfTimesTheItemWasDrawn}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfTimesTheItemWasDrawn}" />
             <Label d:Content="0" Content="{Binding NumberOfTimesTheItemWasDrawn.Value}" />
         </DockPanel>
         <DockPanel>
-            <Label
-                Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfTimesTheItemWasDeleted}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfTimesTheItemWasDeleted}" />
             <Label d:Content="0" Content="{Binding NumberOfTimesTheItemWasDeleted.Value}" />
         </DockPanel>
         <DockPanel>
-            <Label
-                Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfLogLevelChanges}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfLogLevelChanges}" />
             <Label d:Content="0" Content="{Binding NumberOfLogLevelChanges.Value}" />
         </DockPanel>
         <DockPanel>
-            <Label
-                Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfTimesTheVersionInformationDialogWasDisplayed}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfTimesTheVersionInformationDialogWasDisplayed}" />
             <Label d:Content="0" Content="{Binding NumberOfTimesTheVersionInformationDialogWasDisplayed.Value}" />
         </DockPanel>
         <DockPanel>
-            <Label
-                Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfTimesTheApplicationLogWasDisplayed}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfTimesTheApplicationLogWasDisplayed}" />
             <Label d:Content="0" Content="{Binding NumberOfTimesTheApplicationLogWasDisplayed.Value}" />
         </DockPanel>
         <DockPanel>
-            <Label
-                Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfDrawsOfFreeHandTool}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfDrawsOfFreeHandTool}" />
             <Label d:Content="0" Content="{Binding NumberOfDrawsOfFreeHandTool.Value}" />
         </DockPanel>
         <DockPanel>
-            <Label
-                Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfDrawsOfThePieTool}" />
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfDrawsOfThePieTool}" />
             <Label d:Content="0" Content="{Binding NumberOfDrawsOfThePieTool.Value}" />
+        </DockPanel>
+        <DockPanel>
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfDrawsOfTheMosaicTool}" />
+            <Label d:Content="0" Content="{Binding NumberOfDrawsOfTheMosaicTool.Value}" />
+        </DockPanel>
+        <DockPanel>
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfDrawsOfTheGaussianFilterTool}" />
+            <Label d:Content="0" Content="{Binding NumberOfDrawsOfTheGaussianFilterTool.Value}" />
+        </DockPanel>
+        <DockPanel>
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfDrawsOfTheColorCorrectTool}" />
+            <Label d:Content="0" Content="{Binding NumberOfDrawsOfTheColorCorrectTool.Value}" />
         </DockPanel>
     </controls:SimpleGrid>
 </UserControl>

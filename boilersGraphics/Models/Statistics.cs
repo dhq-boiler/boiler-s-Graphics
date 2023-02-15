@@ -3,7 +3,7 @@ using Homura.ORM.Mapping;
 
 namespace boilersGraphics.Models;
 
-[DefaultVersion(typeof(Version3))]
+[DefaultVersion(typeof(Version5))]
 public class Statistics : PkIdEntity
 {
     private int _brushToolDrawCount;
@@ -68,6 +68,9 @@ public class Statistics : PkIdEntity
     private int _numberOfWmpExports;
     private int _numberOfXors;
     private long _uptime;
+    private int _numberOfDrawsOfTheMosaicTool;
+    private int _numberOfDrawsOfTheGaussianFilterTool;
+    private int _numberOfDrawsOfTheColorCorrectTool;
 
 
     /// <summary>
@@ -676,6 +679,7 @@ public class Statistics : PkIdEntity
     /// </summary>
     [Since(typeof(Version2))]
     [Column("NumberOfDrawsOfFreeHandTool", "INTEGER", 61)]
+    [NotNull]
     public int NumberOfDrawsOfFreeHandTool
     {
         get => _numberOfDrawsOfFreeHandTool;
@@ -686,10 +690,46 @@ public class Statistics : PkIdEntity
     /// パイツールの描画回数
     /// </summary>
     [Since(typeof(Version3))]
-    [Column("NumberOfDrawsOfThePieTool", "INTEGER", 61)][NotNull]
+    [Column("NumberOfDrawsOfThePieTool", "INTEGER", 62)][NotNull]
     public int NumberOfDrawsOfThePieTool
     {
         get => _numberOfDrawsOfThePieTool;
         set => SetProperty(ref _numberOfDrawsOfThePieTool, value);
+    }
+
+    /// <summary>
+    /// モザイクツールの描画回数
+    /// </summary>
+    [Since(typeof(Version4))]
+    [Column("NumberOfDrawsOfTheMosaicTool", "INTEGER", 63)]
+    [NotNull]
+    public int NumberOfDrawsOfTheMosaicTool
+    {
+        get => _numberOfDrawsOfTheMosaicTool;
+        set => SetProperty(ref _numberOfDrawsOfTheMosaicTool, value);
+    }
+
+    /// <summary>
+    /// ガウシアンフィルタツールの描画回数
+    /// </summary>
+    [Since(typeof(Version4))]
+    [Column("NumberOfDrawsOfTheGaussianFilterTool", "INTEGER", 64)]
+    [NotNull]
+    public int NumberOfDrawsOfTheGaussianFilterTool
+    {
+        get => _numberOfDrawsOfTheGaussianFilterTool;
+        set => SetProperty(ref _numberOfDrawsOfTheGaussianFilterTool, value);
+    }
+
+    /// <summary>
+    /// 色調補正ツールの描画回数
+    /// </summary>
+    [Since(typeof(Version5))]
+    [Column("NumberOfDrawsOfTheColorCorrectTool", "INTEGER", 65)]
+    [NotNull]
+    public int NumberOfDrawsOfTheColorCorrectTool
+    {
+        get => _numberOfDrawsOfTheColorCorrectTool;
+        set => SetProperty(ref _numberOfDrawsOfTheColorCorrectTool, value);
     }
 }

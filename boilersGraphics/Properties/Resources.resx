@@ -246,11 +246,20 @@
   <data name="Dialog_Statistics_NumberOfDrawsOfPolygonTool" xml:space="preserve">
     <value>Number of draws of polygon tool</value>
   </data>
+  <data name="Dialog_Statistics_NumberOfDrawsOfTheColorCorrectTool" xml:space="preserve">
+    <value>Number of draws of the color correct  tool</value>
+  </data>
   <data name="Dialog_Statistics_NumberOfDrawsOfTheEllipseTool" xml:space="preserve">
     <value>Number of draws of the ellipse tool</value>
   </data>
+  <data name="Dialog_Statistics_NumberOfDrawsOfTheGaussianFilterTool" xml:space="preserve">
+    <value>Number of draws of the gaussian filter tool</value>
+  </data>
   <data name="Dialog_Statistics_NumberOfDrawsOfTheLetteringTool" xml:space="preserve">
     <value>Number of draws of the lettering tool</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfDrawsOfTheMosaicTool" xml:space="preserve">
+    <value>Number of draws of the mosaic tool</value>
   </data>
   <data name="Dialog_Statistics_NumberOfDrawsOfThePieTool" xml:space="preserve">
     <value>Number of draws of the pie tool</value>
@@ -699,8 +708,17 @@
   <data name="String_G" xml:space="preserve">
     <value>Green</value>
   </data>
+  <data name="String_GrayScale" xml:space="preserve">
+    <value>Grayscale</value>
+  </data>
+  <data name="String_Hsv" xml:space="preserve">
+    <value>Hue, Saturation, Value</value>
+  </data>
   <data name="String_Hue" xml:space="preserve">
     <value>Hue</value>
+  </data>
+  <data name="String_Input" xml:space="preserve">
+    <value>Input</value>
   </data>
   <data name="String_Interval" xml:space="preserve">
     <value>Interval:</value>
@@ -716,6 +734,9 @@
   </data>
   <data name="String_OpensourceComponent_Library_Code" xml:space="preserve">
     <value>OpenSource component / Libraries / Code</value>
+  </data>
+  <data name="String_Output" xml:space="preserve">
+    <value>Output</value>
   </data>
   <data name="String_Pie_DetermineCenterPoint" xml:space="preserve">
     <value>Click to determine the center point of the pie</value>
@@ -771,6 +792,9 @@
   <data name="String_RotationAngleType_ZeroTo360" xml:space="preserve">
     <value>0 ≦ angle &lt; 360</value>
   </data>
+  <data name="String_Saturation" xml:space="preserve">
+    <value>Saturation</value>
+  </data>
   <data name="String_SetInterval" xml:space="preserve">
     <value>Set the interval</value>
   </data>
@@ -792,11 +816,20 @@
   <data name="String_SupportImage" xml:space="preserve">
     <value>Supported images|*.jpg;*.jpeg;*.png;*.gif;*.bmp|JPEG file|*.jpg;*.jpeg|PNG file|*.png|GIF file|*.gif|BMP file|*.bmp|ALL|*.*</value>
   </data>
+  <data name="String_ToneCurve" xml:space="preserve">
+    <value>Tone curve</value>
+  </data>
   <data name="String_TrialMessage" xml:space="preserve">
     <value>This is the trial version. Expiration date：{0} days {1}:{2}:{3}</value>
   </data>
+  <data name="String_Value" xml:space="preserve">
+    <value>Value</value>
+  </data>
   <data name="String_Version" xml:space="preserve">
     <value>Version</value>
+  </data>
+  <data name="Title_ColorCorrection" xml:space="preserve">
+    <value>Color correction</value>
   </data>
   <data name="Title_ColorPicker" xml:space="preserve">
     <value>Color picker</value>
@@ -830,6 +863,9 @@
   </data>
   <data name="Tool_CanvasResize" xml:space="preserve">
     <value>Canvas resize tool</value>
+  </data>
+  <data name="Tool_ColorCorrect" xml:space="preserve">
+    <value>Color correct tool</value>
   </data>
   <data name="Tool_Dropper" xml:space="preserve">
     <value>Dropper</value>

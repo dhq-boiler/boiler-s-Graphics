@@ -246,11 +246,20 @@
   <data name="Dialog_Statistics_NumberOfDrawsOfPolygonTool" xml:space="preserve">
     <value>多角形ツールの描画回数</value>
   </data>
+  <data name="Dialog_Statistics_NumberOfDrawsOfTheColorCorrectTool" xml:space="preserve">
+    <value>色調補正ツールの描画回数</value>
+  </data>
   <data name="Dialog_Statistics_NumberOfDrawsOfTheEllipseTool" xml:space="preserve">
     <value>円ツールの描画回数</value>
   </data>
+  <data name="Dialog_Statistics_NumberOfDrawsOfTheGaussianFilterTool" xml:space="preserve">
+    <value>ガウシアンフィルタツールの描画回数</value>
+  </data>
   <data name="Dialog_Statistics_NumberOfDrawsOfTheLetteringTool" xml:space="preserve">
     <value>文字ツールの描画回数</value>
+  </data>
+  <data name="Dialog_Statistics_NumberOfDrawsOfTheMosaicTool" xml:space="preserve">
+    <value>モザイクツールの描画回数</value>
   </data>
   <data name="Dialog_Statistics_NumberOfDrawsOfThePieTool" xml:space="preserve">
     <value>扇形ツールの描画回数</value>
@@ -699,8 +708,17 @@
   <data name="String_G" xml:space="preserve">
     <value>緑(Green)</value>
   </data>
+  <data name="String_GrayScale" xml:space="preserve">
+    <value>グレースケール(Grayscale)</value>
+  </data>
+  <data name="String_Hsv" xml:space="preserve">
+    <value>色相, 彩度, 輝度</value>
+  </data>
   <data name="String_Hue" xml:space="preserve">
     <value>色相(Hue)</value>
+  </data>
+  <data name="String_Input" xml:space="preserve">
+    <value>入力</value>
   </data>
   <data name="String_Interval" xml:space="preserve">
     <value>インターバル：</value>
@@ -716,6 +734,9 @@
   </data>
   <data name="String_OpensourceComponent_Library_Code" xml:space="preserve">
     <value>オープンソース コンポーネント / ライブラリ / コード</value>
+  </data>
+  <data name="String_Output" xml:space="preserve">
+    <value>出力</value>
   </data>
   <data name="String_Pie_DetermineCenterPoint" xml:space="preserve">
     <value>クリックして扇形の中心点を決定します。</value>
@@ -771,6 +792,9 @@
   <data name="String_RotationAngleType_ZeroTo360" xml:space="preserve">
     <value>0 ≦ angle &lt; 360</value>
   </data>
+  <data name="String_Saturation" xml:space="preserve">
+    <value>彩度(Saturation)</value>
+  </data>
   <data name="String_SetInterval" xml:space="preserve">
     <value>インターバルを設定する</value>
   </data>
@@ -792,11 +816,20 @@
   <data name="String_SupportImage" xml:space="preserve">
     <value>サポートする画像|*.jpg;*.jpeg;*.png;*.gif;*.bmp|JPEG file|*.jpg;*.jpeg|PNG file|*.png|GIF file|*.gif|BMP file|*.bmp|すべて|*.*</value>
   </data>
+  <data name="String_ToneCurve" xml:space="preserve">
+    <value>トーンカーブ</value>
+  </data>
   <data name="String_TrialMessage" xml:space="preserve">
     <value>これは試用版です。有効期限：{0} 日 {1}:{2}:{3}</value>
   </data>
+  <data name="String_Value" xml:space="preserve">
+    <value>輝度(Value)</value>
+  </data>
   <data name="String_Version" xml:space="preserve">
     <value>バージョン</value>
+  </data>
+  <data name="Title_ColorCorrection" xml:space="preserve">
+    <value>色調補正</value>
   </data>
   <data name="Title_ColorPicker" xml:space="preserve">
     <value>カラーピッカー</value>
@@ -830,6 +863,9 @@
   </data>
   <data name="Tool_CanvasResize" xml:space="preserve">
     <value>キャンバスリサイズツール</value>
+  </data>
+  <data name="Tool_ColorCorrect" xml:space="preserve">
+    <value>色調補正ツール</value>
   </data>
   <data name="Tool_Dropper" xml:space="preserve">
     <value>スポイトツール</value>

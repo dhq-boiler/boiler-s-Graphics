@@ -10,9 +10,9 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
     xmlns:views="clr-namespace:boilersGraphics.Views"
+    x:Name="LayersWindow"
     d:DesignHeight="450"
     d:DesignWidth="800"
-    x:Name="LayersWindow"
     prism:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
     <UserControl.Resources>
@@ -34,12 +34,10 @@
                                 IsExpanded="True"
                                 Style="{StaticResource ExpanderStyle}">
                                 <DockPanel>
-                                    <TreeView x:Name="LayersTreeView"
-                                              ItemsSource="{Binding Layers, UpdateSourceTrigger=PropertyChanged}">
+                                    <TreeView x:Name="LayersTreeView" ItemsSource="{Binding Layers, UpdateSourceTrigger=PropertyChanged}">
                                         <i:Interaction.Triggers>
                                             <i:EventTrigger EventName="SelectedItemChanged">
-                                                <helper:EventToCommand Command="{Binding SelectedItemChangedCommand}"
-                                                                       PassEventArgsToCommand="True" />
+                                                <helper:EventToCommand Command="{Binding SelectedItemChangedCommand}" PassEventArgsToCommand="True" />
                                             </i:EventTrigger>
                                         </i:Interaction.Triggers>
                                         <i:Interaction.Behaviors>
@@ -47,8 +45,7 @@
                                         </i:Interaction.Behaviors>
                                         <TreeView.Resources>
                                             <Style TargetType="TreeViewItem">
-                                                <Setter Property="IsExpanded"
-                                                        Value="{Binding IsExpanded.Value, Mode=TwoWay}" />
+                                                <Setter Property="IsExpanded" Value="{Binding IsExpanded.Value, Mode=TwoWay}" />
                                                 <Setter Property="Template">
                                                     <Setter.Value>
                                                         <ControlTemplate TargetType="TreeViewItem">
@@ -69,8 +66,7 @@
                                                                     Orientation="Horizontal">
                                                                     <Button Command="{Binding SwitchVisibilityCommand}">
                                                                         <Button.Template>
-                                                                            <ControlTemplate
-                                                                                TargetType="{x:Type Button}">
+                                                                            <ControlTemplate TargetType="{x:Type Button}">
                                                                                 <Image
                                                                                     Name="Eye"
                                                                                     Width="25"
@@ -78,28 +74,18 @@
                                                                                     RenderOptions.BitmapScalingMode="HighQuality"
                                                                                     Source="{StaticResource Icon_Eye}" />
                                                                                 <ControlTemplate.Triggers>
-                                                                                    <DataTrigger
-                                                                                        Binding="{Binding IsVisible.Value}"
-                                                                                        Value="True">
-                                                                                        <Setter TargetName="Eye"
-                                                                                            Property="Source"
-                                                                                            Value="{StaticResource Icon_Eye}" />
+                                                                                    <DataTrigger Binding="{Binding IsVisible.Value}" Value="True">
+                                                                                        <Setter TargetName="Eye" Property="Source" Value="{StaticResource Icon_Eye}" />
                                                                                     </DataTrigger>
-                                                                                    <DataTrigger
-                                                                                        Binding="{Binding IsVisible.Value}"
-                                                                                        Value="False">
-                                                                                        <Setter TargetName="Eye"
-                                                                                            Property="Source"
-                                                                                            Value="{StaticResource Icon_EyeSlash}" />
+                                                                                    <DataTrigger Binding="{Binding IsVisible.Value}" Value="False">
+                                                                                        <Setter TargetName="Eye" Property="Source" Value="{StaticResource Icon_EyeSlash}" />
                                                                                     </DataTrigger>
                                                                                 </ControlTemplate.Triggers>
                                                                             </ControlTemplate>
                                                                         </Button.Template>
                                                                     </Button>
-                                                                    <Rectangle Width="5"
-                                                                               Fill="{Binding Color.Value, Converter={StaticResource ToSolidColorBrushConverter}}" />
-                                                                    <ToggleButton Name="Expander"
-                                                                        IsChecked="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=IsExpanded, Mode=TwoWay}">
+                                                                    <Rectangle Width="5" Fill="{Binding Color.Value, Converter={StaticResource ToSolidColorBrushConverter}}" />
+                                                                    <ToggleButton Name="Expander" IsChecked="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=IsExpanded, Mode=TwoWay}">
                                                                         <ToggleButton.Template>
                                                                             <ControlTemplate TargetType="ToggleButton">
                                                                                 <Grid
@@ -119,35 +105,24 @@
                                                                                         Stroke="#FF989898" />
                                                                                 </Grid>
                                                                                 <ControlTemplate.Triggers>
-                                                                                    <Trigger Property="IsChecked"
-                                                                                        Value="False">
-                                                                                        <Setter TargetName="ExpandOff"
-                                                                                            Property="Visibility"
-                                                                                            Value="Collapsed" />
-                                                                                        <Setter TargetName="ExpandOn"
-                                                                                            Property="Visibility"
-                                                                                            Value="Visible" />
+                                                                                    <Trigger Property="IsChecked" Value="False">
+                                                                                        <Setter TargetName="ExpandOff" Property="Visibility" Value="Collapsed" />
+                                                                                        <Setter TargetName="ExpandOn" Property="Visibility" Value="Visible" />
                                                                                     </Trigger>
-                                                                                    <Trigger Property="IsChecked"
-                                                                                        Value="True">
-                                                                                        <Setter TargetName="ExpandOff"
-                                                                                            Property="Visibility"
-                                                                                            Value="Visible" />
-                                                                                        <Setter TargetName="ExpandOn"
-                                                                                            Property="Visibility"
-                                                                                            Value="Collapsed" />
+                                                                                    <Trigger Property="IsChecked" Value="True">
+                                                                                        <Setter TargetName="ExpandOff" Property="Visibility" Value="Visible" />
+                                                                                        <Setter TargetName="ExpandOn" Property="Visibility" Value="Collapsed" />
                                                                                     </Trigger>
                                                                                 </ControlTemplate.Triggers>
                                                                             </ControlTemplate>
                                                                         </ToggleButton.Template>
                                                                     </ToggleButton>
-                                                                    <Border
-                                                                        BorderBrush="{Binding IsSelected.Value, Converter={StaticResource IsSelectedToBorderBrushConverter}}"
-                                                                        BorderThickness="1">
+                                                                    <Border BorderBrush="{Binding IsSelected.Value, Converter={StaticResource IsSelectedToBorderBrushConverter}}" BorderThickness="1">
                                                                         <Border.ToolTip>
-                                                                            <ToolTip x:Name="Appearance_ToolTip"
-                                                                                     BorderBrush="Transparent"
-                                                                                     BorderThickness="0">
+                                                                            <ToolTip
+                                                                                x:Name="Appearance_ToolTip"
+                                                                                BorderBrush="Transparent"
+                                                                                BorderThickness="0">
                                                                                 <Image
                                                                                     Width="{Binding Appearance.Value.Width}"
                                                                                     Height="{Binding Appearance.Value.Height}"
@@ -181,19 +156,14 @@
                                                             </Grid>
                                                             <ControlTemplate.Triggers>
                                                                 <Trigger Property="HasItems" Value="False">
-                                                                    <Setter TargetName="Expander" Property="Visibility"
-                                                                            Value="Hidden" />
+                                                                    <Setter TargetName="Expander" Property="Visibility" Value="Hidden" />
                                                                 </Trigger>
                                                                 <Trigger Property="IsExpanded" Value="False">
-                                                                    <Setter TargetName="ItemsHost"
-                                                                            Property="Visibility" Value="Collapsed" />
+                                                                    <Setter TargetName="ItemsHost" Property="Visibility" Value="Collapsed" />
                                                                 </Trigger>
                                                                 <Trigger Property="IsSelected" Value="True">
-                                                                    <Setter TargetName="BackBorder"
-                                                                            Property="Background"
-                                                                            Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
-                                                                    <Setter Property="Foreground"
-                                                                            Value="{DynamicResource {x:Static SystemColors.HighlightTextBrushKey}}" />
+                                                                    <Setter TargetName="BackBorder" Property="Background" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
+                                                                    <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.HighlightTextBrushKey}}" />
                                                                 </Trigger>
                                                             </ControlTemplate.Triggers>
                                                         </ControlTemplate>
@@ -210,11 +180,9 @@
                                                             BorderThickness="1"
                                                             Visibility="{Binding BeforeSeparatorVisibility.Value}" />
                                                         <StackPanel Orientation="Horizontal">
-                                                            <views:LabelTextBox VerticalAlignment="Center"
-                                                                Text="{Binding Name.Value, Mode=TwoWay}">
+                                                            <views:LabelTextBox VerticalAlignment="Center" Text="{Binding Name.Value, Mode=TwoWay}">
                                                                 <views:LabelTextBox.ContextMenu>
-                                                                    <ContextMenu
-                                                                        ItemsSource="{Binding LayerTreeViewItemContextMenu}" />
+                                                                    <ContextMenu ItemsSource="{Binding LayerTreeViewItemContextMenu}" />
                                                                 </views:LabelTextBox.ContextMenu>
                                                             </views:LabelTextBox>
                                                         </StackPanel>
@@ -264,8 +232,7 @@
                                                 </Button.Template>
                                             </Button>
                                         </DockPanel>
-                                        <Label VerticalAlignment="Center"
-                                               Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.PaneTitle_Layer}" />
+                                        <Label VerticalAlignment="Center" Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.PaneTitle_Layer}" />
                                     </DockPanel>
                                 </Expander.Header>
                             </Expander>

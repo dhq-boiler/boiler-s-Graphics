@@ -10,6 +10,7 @@ using boilersGraphics.Helpers;
 using boilersGraphics.Models;
 using boilersGraphics.ViewModels;
 using boilersGraphics.Views;
+using boilersGraphics.Views.ColorCorrect;
 using NLog;
 using Prism.Commands;
 using Prism.Ioc;
@@ -196,6 +197,10 @@ public partial class App : PrismApplication
         containerRegistry.RegisterDialog<DetailPolyBezier, DetailPolyBezierViewModel>();
         containerRegistry.RegisterDialog<DetailMosaic, DetailMosaicViewModel>();
         containerRegistry.RegisterDialog<DetailBlur, DetailBlurViewModel>();
+
+        containerRegistry.RegisterForNavigation<Views.ColorCorrect.Hsv, ViewModels.ColorCorrect.HsvViewModel>();
+        containerRegistry.RegisterForNavigation<Views.ColorCorrect.ToneCurve, ViewModels.ColorCorrect.ToneCurveViewModel>();
+        containerRegistry.RegisterDialog<ColorCorrectInstruction, ColorCorrectInstructionViewModel>();
 
         //containerRegistry.RegisterSingleton<ProgressBarWithOutputViewModel>();
         containerRegistry.RegisterDialog<ProgressBarWithOutput, ProgressBarWithOutputViewModel>();
