@@ -3368,6 +3368,11 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     /// </summary>
     private void ScanEffectViewModelObjects()
     {
+        if (boilersGraphics.App.IsTest)
+        {
+            return;
+        }
+
         App.Current.Dispatcher.BeginInvoke(() =>
         {
             foreach (var item in AllItems.Value.OrderBy(x => x.ZIndex.Value))
