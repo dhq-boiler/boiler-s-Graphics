@@ -246,6 +246,9 @@
   <data name="Dialog_Statistics_NumberOfDrawsOfPolygonTool" xml:space="preserve">
     <value>多角形ツールの描画回数</value>
   </data>
+  <data name="Dialog_Statistics_NumberOfDrawsOfTheColorCorrectTool" xml:space="preserve">
+    <value>色調補正ツールの描画回数</value>
+  </data>
   <data name="Dialog_Statistics_NumberOfDrawsOfTheEllipseTool" xml:space="preserve">
     <value>円ツールの描画回数</value>
   </data>
