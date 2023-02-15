@@ -2293,6 +2293,15 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Color correct tool に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Tool_ColorCorrect {
+            get {
+                return ResourceManager.GetString("Tool_ColorCorrect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Dropper に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Tool_Dropper {

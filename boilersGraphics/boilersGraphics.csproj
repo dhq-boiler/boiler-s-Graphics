@@ -36,6 +36,7 @@
     <Resource Include="Assets\img\A_Vertical_dark.png" />
     <Resource Include="Assets\img\BezierCurve_dark.png" />
     <Resource Include="Assets\img\brush_dark.png" />
+    <Resource Include="Assets\img\colorCorrect.png" />
     <Resource Include="Assets\img\dropper.png" />
     <Resource Include="Assets\img\dropper_dark.png" />
     <Resource Include="Assets\img\ellipse_dark.png" />
@@ -148,6 +149,7 @@
     <None Remove="Assets\img\A_Vertical_dark.png" />
     <None Remove="Assets\img\BezierCurve_dark.png" />
     <None Remove="Assets\img\brush_dark.png" />
+    <None Remove="Assets\img\colorCorrect.png" />
     <None Remove="Assets\img\dropper.png" />
     <None Remove="Assets\img\dropper_dark.png" />
     <None Remove="Assets\img\ellipse_dark.png" />

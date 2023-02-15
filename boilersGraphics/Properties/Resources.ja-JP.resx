@@ -861,6 +861,9 @@
   <data name="Tool_CanvasResize" xml:space="preserve">
     <value>キャンバスリサイズツール</value>
   </data>
+  <data name="Tool_ColorCorrect" xml:space="preserve">
+    <value>色調補正ツール</value>
+  </data>
   <data name="Tool_Dropper" xml:space="preserve">
     <value>スポイトツール</value>
   </data>

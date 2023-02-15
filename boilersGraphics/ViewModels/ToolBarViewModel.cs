@@ -284,8 +284,8 @@ public class ToolBarViewModel
                 ChangeHitTestToDisable();
                 SelectOneToolItem("blur");
             })));
-        ToolItems.Add(new ToolItemData("colorCorrect", "pack://application:,,,/Assets/img/GaussianFilter.png",
-            Resources.Tool_GaussianFilter, new DelegateCommand(() =>
+        ToolItems.Add(new ToolItemData("colorCorrect", "pack://application:,,,/Assets/img/colorCorrect.png",
+            Resources.Tool_ColorCorrect, new DelegateCommand(() =>
             {
                 var mainWindowViewModel = Application.Current.MainWindow.DataContext as MainWindowViewModel;
                 mainWindowViewModel.ClearCurrentOperationAndDetails();
