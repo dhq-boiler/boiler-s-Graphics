@@ -1,5 +1,7 @@
 ﻿using boilersGraphics.ViewModels;
+using Moq;
 using NUnit.Framework;
+using Prism.Services.Dialogs;
 using System;
 using System.Windows;
 
@@ -8,9 +10,15 @@ namespace boilersGraphics.Test
     [TestFixture]
     public class BoundaryTest
     {
-        [Test]
+        [Test, Apartment(System.Threading.ApartmentState.STA)]
         public void Basic()
         {
+            boilersGraphics.App.IsTest = true;
+
+            var dlgService = new Mock<IDialogService>();
+            MainWindowViewModel mainWindowViewModel = new MainWindowViewModel(dlgService.Object);
+            var diagramViewModel = new DiagramViewModel(mainWindowViewModel);
+
             var diagrams = new SelectableDesignerItemViewModelBase[]
             {
                 new NRectangleViewModel(10, 10, 10, 10)
@@ -21,9 +29,15 @@ namespace boilersGraphics.Test
             Assert.That(actual, Is.EqualTo(new Rect(10, 10, 10, 10)));
         }
 
-        [Test]
+        [Test, Apartment(System.Threading.ApartmentState.STA)]
         public void Rotate_45()
         {
+            boilersGraphics.App.IsTest = true;
+
+            var dlgService = new Mock<IDialogService>();
+            MainWindowViewModel mainWindowViewModel = new MainWindowViewModel(dlgService.Object);
+            var diagramViewModel = new DiagramViewModel(mainWindowViewModel);
+
             var diagrams = new SelectableDesignerItemViewModelBase[]
             {
                 new NRectangleViewModel(10, 10, 10, 10, 45)
@@ -34,9 +48,15 @@ namespace boilersGraphics.Test
             Assert.That(actual, Is.EqualTo(new Rect(15 - 5 * Math.Sqrt(2), 15 - 5 * Math.Sqrt(2), 10 * Math.Sqrt(2), 10 * Math.Sqrt(2))));
         }
 
-        [Test]
+        [Test, Apartment(System.Threading.ApartmentState.STA)]
         public void Rotate_90()
         {
+            boilersGraphics.App.IsTest = true;
+
+            var dlgService = new Mock<IDialogService>();
+            MainWindowViewModel mainWindowViewModel = new MainWindowViewModel(dlgService.Object);
+            var diagramViewModel = new DiagramViewModel(mainWindowViewModel);
+
             var diagrams = new SelectableDesignerItemViewModelBase[]
             {
                 new NRectangleViewModel(10, 10, 10, 10, 90)
@@ -47,9 +67,15 @@ namespace boilersGraphics.Test
             Assert.That(actual, Is.EqualTo(new Rect(10, 10, 10, 10)));
         }
 
-        [Test]
+        [Test, Apartment(System.Threading.ApartmentState.STA)]
         public void Rotate_180()
         {
+            boilersGraphics.App.IsTest = true;
+
+            var dlgService = new Mock<IDialogService>();
+            MainWindowViewModel mainWindowViewModel = new MainWindowViewModel(dlgService.Object);
+            var diagramViewModel = new DiagramViewModel(mainWindowViewModel);
+
             var diagrams = new SelectableDesignerItemViewModelBase[]
             {
                 new NRectangleViewModel(10, 10, 10, 10, 180)
@@ -60,9 +86,15 @@ namespace boilersGraphics.Test
             Assert.That(actual, Is.EqualTo(new Rect(10, 10, 10, 10)));
         }
 
-        [Test]
+        [Test, Apartment(System.Threading.ApartmentState.STA)]
         public void Multiple_2()
         {
+            boilersGraphics.App.IsTest = true;
+
+            var dlgService = new Mock<IDialogService>();
+            MainWindowViewModel mainWindowViewModel = new MainWindowViewModel(dlgService.Object);
+            var diagramViewModel = new DiagramViewModel(mainWindowViewModel);
+
             var diagrams = new SelectableDesignerItemViewModelBase[]
             {
                 new NRectangleViewModel(10, 10, 10, 10),
@@ -74,9 +106,15 @@ namespace boilersGraphics.Test
             Assert.That(actual, Is.EqualTo(new Rect(10, 10, 20, 20)));
         }
 
-        [Test]
+        [Test, Apartment(System.Threading.ApartmentState.STA)]
         public void Multiple_3()
         {
+            boilersGraphics.App.IsTest = true;
+
+            var dlgService = new Mock<IDialogService>();
+            MainWindowViewModel mainWindowViewModel = new MainWindowViewModel(dlgService.Object);
+            var diagramViewModel = new DiagramViewModel(mainWindowViewModel);
+
             var diagrams = new SelectableDesignerItemViewModelBase[]
             {
                 new NRectangleViewModel(10, 10, 10, 10),
