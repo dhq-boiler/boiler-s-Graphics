@@ -294,5 +294,9 @@
             <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfDrawsOfTheGaussianFilterTool}" />
             <Label d:Content="0" Content="{Binding NumberOfDrawsOfTheGaussianFilterTool.Value}" />
         </DockPanel>
+        <DockPanel>
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfDrawsOfTheColorCorrectTool}" />
+            <Label d:Content="0" Content="{Binding NumberOfDrawsOfTheColorCorrectTool.Value}" />
+        </DockPanel>
     </controls:SimpleGrid>
 </UserControl>

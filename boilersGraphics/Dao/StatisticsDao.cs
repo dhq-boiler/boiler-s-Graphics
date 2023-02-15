@@ -91,7 +91,8 @@ internal class StatisticsDao : Dao<Statistics>
             NumberOfDrawsOfFreeHandTool = reader.SafeGetInt("NumberOfDrawsOfFreeHandTool", Table),
             NumberOfDrawsOfThePieTool = reader.SafeGetInt("NumberOfDrawsOfThePieTool", Table),
             NumberOfDrawsOfTheMosaicTool = reader.SafeGetInt("NumberOfDrawsOfTheMosaicTool", Table),
-            NumberOfDrawsOfTheGaussianFilterTool = reader.SafeGetInt("NumberOfDrawsOfTheGaussianFilterTool", Table)
+            NumberOfDrawsOfTheGaussianFilterTool = reader.SafeGetInt("NumberOfDrawsOfTheGaussianFilterTool", Table),
+            NumberOfDrawsOfTheColorCorrectTool = reader.SafeGetInt("NumberOfDrawsOfTheColorCorrectTool", Table)
         };
     }
 }

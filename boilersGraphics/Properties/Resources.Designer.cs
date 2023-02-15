@@ -421,6 +421,15 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Number of draws of the color correct  tool に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Dialog_Statistics_NumberOfDrawsOfTheColorCorrectTool {
+            get {
+                return ResourceManager.GetString("Dialog_Statistics_NumberOfDrawsOfTheColorCorrectTool", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Number of draws of the ellipse tool に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Dialog_Statistics_NumberOfDrawsOfTheEllipseTool {
