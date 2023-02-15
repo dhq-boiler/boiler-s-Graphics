@@ -705,6 +705,9 @@
   <data name="String_G" xml:space="preserve">
     <value>緑(Green)</value>
   </data>
+  <data name="String_GrayScale" xml:space="preserve">
+    <value>グレースケール(Grayscale)</value>
+  </data>
   <data name="String_Hsv" xml:space="preserve">
     <value>色相, 彩度, 輝度</value>
   </data>

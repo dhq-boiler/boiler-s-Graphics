@@ -1825,6 +1825,15 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Grayscale に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_GrayScale {
+            get {
+                return ResourceManager.GetString("String_GrayScale", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Hue, Saturation, Value に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string String_Hsv {

@@ -5,7 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:converter="clr-namespace:boilersGraphics.Converters"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:helper="clr-namespace:boilersGraphics.Helpers"
+    xmlns:helpers="clr-namespace:boilersGraphics.Helpers"
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:viewModels="clr-namespace:boilersGraphics.ViewModels"
     xmlns:sys="clr-namespace:System;assembly=mscorlib"
@@ -23,7 +23,7 @@
     </UserControl.Resources>
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Unloaded">
-            <helper:EventToCommand Command="{Binding UnloadedCommand}" PassEventArgsToCommand="True" />
+            <helpers:EventToCommand Command="{Binding UnloadedCommand}" PassEventArgsToCommand="True" />
         </i:EventTrigger>
     </i:Interaction.Triggers>
     <prism:Dialog.WindowStyle>
@@ -97,7 +97,7 @@
                       SelectedItem="{Binding Path=ViewModel.Value.CCType.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="SelectionChanged">
-                        <helper:EventToCommand Command="{Binding CCTypeChangedCommand}" PassEventArgsToCommand="True"></helper:EventToCommand>
+                        <helpers:EventToCommand Command="{Binding CCTypeChangedCommand}" PassEventArgsToCommand="True"></helpers:EventToCommand>
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
             </ComboBox>

@@ -705,6 +705,9 @@
   <data name="String_G" xml:space="preserve">
     <value>Green</value>
   </data>
+  <data name="String_GrayScale" xml:space="preserve">
+    <value>Grayscale</value>
+  </data>
   <data name="String_Hsv" xml:space="preserve">
     <value>Hue, Saturation, Value</value>
   </data>

@@ -1,6 +1,7 @@
 ﻿using boilersGraphics.Extensions;
 using boilersGraphics.Models;
 using boilersGraphics.Views;
+using OpenCvSharp;
 using Prism.Mvvm;
 using Prism.Regions;
 using Reactive.Bindings;
@@ -13,8 +14,10 @@ using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace boilersGraphics.ViewModels.ColorCorrect
 {
@@ -47,6 +50,12 @@ namespace boilersGraphics.ViewModels.ColorCorrect
 
         public ReactiveCommand<DragDeltaEventArgs> DragDeltaCommand { get; } = new();
 
+        public ReactivePropertySlim<WriteableBitmap> Histogram { get; } = new ();
+
+        public ReactivePropertySlim<Channel> TargetChannel { get; } = new ();
+
+        public ReactiveCommand<SelectionChangedEventArgs> TargetChannelChangedCommand { get; } = new();
+
         public ToneCurveViewModel()
         {
             Points.Add(new Point(0, 255));
@@ -65,7 +74,7 @@ namespace boilersGraphics.ViewModels.ColorCorrect
                 unboxedPoint.X.Value = Math.Clamp(unboxedPoint.X.Value + x.HorizontalChange, Math.Min(previousPoint.X.Value, nextPoint.X.Value), Math.Max(previousPoint.X.Value, nextPoint.X.Value));
                 unboxedPoint.Y.Value = Math.Clamp(unboxedPoint.Y.Value + x.VerticalChange, 0, 255);
                 this.OnPropertyChanged(new PropertyChangedEventArgs(nameof(Points)));
-                var window = Window.GetWindow(x.Source as Thumb);
+                var window = System.Windows.Window.GetWindow(x.Source as Thumb);
                 var landmark = window.GetVisualChild<LandmarkControl>();
                 landmark.SetPathData();
             }).AddTo(_disposable);
@@ -81,6 +90,19 @@ namespace boilersGraphics.ViewModels.ColorCorrect
                     return;
                 }
                 Points.Insert(insertIndex, newPointModel);
+            }).AddTo(_disposable);
+            TargetChannelChangedCommand.Subscribe(x =>
+            {
+                Points.Clear();
+                Points.Add(new Point(0, 255));
+                Points.Add(new Point(255 / 2, 255 / 2));
+                Points.Add(new Point(255, 0));
+                var window = System.Windows.Window.GetWindow(x.Source as ComboBox);
+                var landmark = window.GetVisualChild<LandmarkControl>();
+                landmark.SetPathData();
+                ViewModel.Value.InOutPairs.Clear();
+                ViewModel.Value.TargetChannel.Value = (Channel)x.AddedItems[0];
+                ViewModel.Value.Render();
             }).AddTo(_disposable);
         }
 
@@ -135,7 +157,7 @@ namespace boilersGraphics.ViewModels.ColorCorrect
                         Point2 = ConvertToVisualPoint(bezierCurveSegment.SecondControlPoint),
                         Point3 = ConvertToVisualPoint(bezierCurveSegment.EndPoint)
                     };
-                    CorrectBezierSegment(segment, new Rect(0, 0, 255, 255));
+                    CorrectBezierSegment(segment, new System.Windows.Rect(0, 0, 255, 255));
                     _myPathSegmentCollection.Add(segment);
                 }
             }
@@ -218,7 +240,7 @@ namespace boilersGraphics.ViewModels.ColorCorrect
             return new System.Windows.Point(p.X, p.Y);
         }
 
-        private void CorrectBezierSegment(BezierSegment bezierSegment, Rect bounds)
+        private void CorrectBezierSegment(BezierSegment bezierSegment, System.Windows.Rect bounds)
         {
             System.Windows.Point point1 = bezierSegment.Point1;
             System.Windows.Point point2 = bezierSegment.Point2;

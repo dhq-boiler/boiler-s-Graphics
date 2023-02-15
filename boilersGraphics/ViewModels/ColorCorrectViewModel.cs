@@ -20,6 +20,7 @@ using System.Windows.Media.Imaging;
 using boilersGraphics.Models;
 using boilersGraphics.ViewModels.ColorCorrect;
 using Rect = System.Windows.Rect;
+using boilersGraphics.Exceptions;
 
 namespace boilersGraphics.ViewModels;
 
@@ -31,6 +32,7 @@ public class ColorCorrectViewModel : EffectViewModel
     }
 
     public ReactivePropertySlim<ColorCorrectType> CCType { get; } = new(ColorCorrectType.HSV);
+    public ReactivePropertySlim<Channel> TargetChannel { get; } = new(Channel.GrayScale);
 
     public ReactivePropertySlim<WriteableBitmap> Bitmap { get; } = new();
 
@@ -70,9 +72,31 @@ public class ColorCorrectViewModel : EffectViewModel
                         Cv2.CvtColor(hsv, dest, ColorConversionCodes.HSV2BGR);
                         break;
                     case ToneCurve:
-                        Cv2.CvtColor(mat, hsv, ColorConversionCodes.BGR2HSV);
-                        OperateToneCurve(hsv);
-                        Cv2.CvtColor(hsv, dest, ColorConversionCodes.HSV2BGR);
+                        switch (TargetChannel.Value)
+                        {
+                            case GrayScaleChannel:
+                                Cv2.CvtColor(mat, hsv, ColorConversionCodes.BGR2HSV);
+                                var arr4 = Cv2.Split(hsv);
+                                OperateToneCurve(arr4[2]);
+                                Cv2.Merge(arr4, hsv);
+                                Cv2.CvtColor(hsv, dest, ColorConversionCodes.HSV2BGR);
+                                break;
+                            case BlueChannel:
+                                var arr0 = Cv2.Split(mat);
+                                OperateToneCurve(arr0[0]);
+                                Cv2.Merge(arr0, dest);
+                                break;
+                            case GreenChannel:
+                                var arr1 = Cv2.Split(mat);
+                                OperateToneCurve(arr1[1]);
+                                Cv2.Merge(arr1, dest);
+                                break;
+                            case RedChannel:
+                                var arr2 = Cv2.Split(mat);
+                                OperateToneCurve(arr2[2]);
+                                Cv2.Merge(arr2, dest);
+                                break;
+                        }
                         break;
                 }
 
@@ -82,23 +106,24 @@ public class ColorCorrectViewModel : EffectViewModel
         });
     }
 
-    private unsafe void OperateToneCurve(Mat hsv)
+    private unsafe void OperateToneCurve(Mat singleChannel)
     {
         if (InOutPairs.Count < 256)
             return;
+        if (singleChannel.Channels() != 1)
+            throw new UnexpectedException("singleChannel.Channels() != 1");
 
-        byte* p = (byte*)hsv.Data.ToPointer();
-        long step = hsv.Step();
-        int width = hsv.Width;
-        int height = hsv.Height;
+        byte* p = (byte*)singleChannel.Data.ToPointer();
+        long step = singleChannel.Step();
+        int width = singleChannel.Width;
+        int height = singleChannel.Height;
         
         Parallel.For(0, height, y =>
         {
             for (int x = 0; x < width; x++)
             {
-                //V
-                *(p + y * step + x * 3 + 2) =
-                    (byte)Math.Clamp(InOutPairs.First(z => z.In == *(p + y * step + x * 3 + 2)).Out, byte.MinValue,
+                *(p + y * step + x * 1) =
+                    (byte)Math.Clamp(InOutPairs.First(z => z.In == *(p + y * step + x * 1)).Out, byte.MinValue,
                         byte.MaxValue);
             }
         });
