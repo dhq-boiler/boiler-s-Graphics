@@ -137,7 +137,10 @@ namespace boilersGraphics.ViewModels.ColorCorrect
                         break;
                 }
                 Cv2.Normalize(histogram, histogram, 0, 256, NormTypes.MinMax);
-                Histogram.Value = DrawHistogram(histogram, ViewModel.Value.TargetChannel.Value).ToWriteableBitmap();
+                using (var output = DrawHistogram(histogram, ViewModel.Value.TargetChannel.Value))
+                {
+                    Histogram.Value = output.ToWriteableBitmap();
+                }
             }
         }
 
