@@ -1,4 +1,4 @@
-﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis;
 using System;
@@ -27,9 +27,20 @@ namespace ReplaceInternalResourcesDefaultConstructorToPublic
 
             //クラスの宣言から、デフォルトコンストラクタの宣言を取得します。
             ConstructorDeclarationSyntax constructorDeclaration = classDeclaration.DescendantNodes().OfType<ConstructorDeclarationSyntax>().FirstOrDefault(cd => cd.ParameterList.Parameters.Count == 0);
+            
+            // アクセス修飾子トークンを取得
+            SyntaxToken accessModifierToken = constructorDeclaration.Modifiers.First();
 
-            //デフォルトコンストラクタのアクセス修飾子を public に変更します。
-            ConstructorDeclarationSyntax newConstructorDeclaration = constructorDeclaration.WithModifiers(SyntaxFactory.TokenList(SyntaxFactory.Token(SyntaxKind.PublicKeyword)));
+            // public アクセス修飾子トークンを作成 (トリビアを含む)
+            SyntaxToken publicModifierToken = SyntaxFactory.Token(
+                accessModifierToken.LeadingTrivia, // 前の空白やコメントを含める
+                SyntaxKind.PublicKeyword,
+                accessModifierToken.TrailingTrivia // 後の空白やコメントを含める
+            );
+
+            // public アクセス修飾子を持つ新しいコンストラクタ宣言を作成
+            ConstructorDeclarationSyntax newConstructorDeclaration =
+                constructorDeclaration.WithModifiers(SyntaxFactory.TokenList(publicModifierToken));
 
             //SyntaxNode からデフォルトコンストラクタの宣言を削除し、新しいデフォルトコンストラクタの宣言を追加します。
             ClassDeclarationSyntax newClassDeclaration = classDeclaration.ReplaceNode(constructorDeclaration, newConstructorDeclaration);
