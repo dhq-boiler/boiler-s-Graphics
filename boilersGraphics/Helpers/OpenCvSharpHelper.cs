@@ -86,6 +86,14 @@ public static class OpenCvSharpHelper
         encoder.Save(outputStream);
     }
 
+    public static void SaveAsPng(RenderTargetBitmap src, string filename)
+    {
+        using (var stream = new FileStream(filename, FileMode.Create))
+        {
+            SaveAsPng(src, stream);
+        }
+    }
+
     public static Mat ToMat(BitmapSource rtb)
     {
         var newFormattedBitmapSource = new FormatConvertedBitmap();
