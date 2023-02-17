@@ -94,6 +94,26 @@ public class ToolBarViewModel
                 ChangeHitTestToDisable();
                 SelectOneToolItem("straightline");
             })));
+        ToolItems.Add(new ToolItemData("bezier", "pack://application:,,,/Assets/img/BezierCurve_dark.png",
+            Resources.Tool_BezierCurve, new DelegateCommand(() =>
+            {
+                var mainWindowViewModel = Application.Current.MainWindow.DataContext as MainWindowViewModel;
+                mainWindowViewModel.ClearCurrentOperationAndDetails();
+                Behaviors.Clear();
+                if (!Behaviors.Contains(NDrawBezierCurveBehavior)) Behaviors.Add(NDrawBezierCurveBehavior);
+                ChangeHitTestToDisable();
+                SelectOneToolItem("bezier");
+            })));
+        ToolItems.Add(new ToolItemData("polybezier", "pack://application:,,,/Assets/img/poly_bezier_dark.png",
+            Resources.Tool_FreeHand, new DelegateCommand(() =>
+            {
+                var mainWindowViewModel = Application.Current.MainWindow.DataContext as MainWindowViewModel;
+                mainWindowViewModel.ClearCurrentOperationAndDetails();
+                Behaviors.Clear();
+                if (!Behaviors.Contains(PolyBezierBehavior)) Behaviors.Add(PolyBezierBehavior);
+                ChangeHitTestToDisable();
+                SelectOneToolItem("polybezier");
+            })));
         ToolItems.Add(new ToolItemData("rectangle", "pack://application:,,,/Assets/img/rectangle_dark.png",
             Resources.Tool_Rectangle, new DelegateCommand(() =>
             {
@@ -114,45 +134,6 @@ public class ToolBarViewModel
                 ChangeHitTestToDisable();
                 SelectOneToolItem("ellipse");
             })));
-        ToolItems.Add(new ToolItemData("picture", "pack://application:,,,/Assets/img/Picture_dark.png",
-            Resources.Tool_Picture, new DelegateCommand(() =>
-            {
-                var mainWindowViewModel = Application.Current.MainWindow.DataContext as MainWindowViewModel;
-                mainWindowViewModel.ClearCurrentOperationAndDetails();
-                var dialog = new OpenFileDialog();
-                dialog.Multiselect = false;
-                dialog.Filter = Resources.String_SupportImage;
-                if (dialog.ShowDialog() == true)
-                {
-                    var bitmap =
-                        BitmapFactory.FromStream(new FileStream(dialog.FileName, FileMode.Open, FileAccess.Read));
-                    PictureBehavior = new PictureBehavior(dialog.FileName, bitmap.Width, bitmap.Height);
-                    Behaviors.Clear();
-                    if (!Behaviors.Contains(PictureBehavior)) Behaviors.Add(PictureBehavior);
-                    ChangeHitTestToDisable();
-                    SelectOneToolItem("picture");
-                }
-            })));
-        ToolItems.Add(new ToolItemData("letter", "pack://application:,,,/Assets/img/A_dark.png",
-            Resources.Tool_Lettering, new DelegateCommand(() =>
-            {
-                var mainWindowViewModel = Application.Current.MainWindow.DataContext as MainWindowViewModel;
-                mainWindowViewModel.ClearCurrentOperationAndDetails();
-                Behaviors.Clear();
-                if (!Behaviors.Contains(LetterBehavior)) Behaviors.Add(LetterBehavior);
-                ChangeHitTestToDisable();
-                SelectOneToolItem("letter");
-            })));
-        ToolItems.Add(new ToolItemData("letter-vertical", "pack://application:,,,/Assets/img/A_Vertical_dark.png",
-            Resources.Tool_VerticalLettering, new DelegateCommand(() =>
-            {
-                var mainWindowViewModel = Application.Current.MainWindow.DataContext as MainWindowViewModel;
-                mainWindowViewModel.ClearCurrentOperationAndDetails();
-                Behaviors.Clear();
-                if (!Behaviors.Contains(LetterVerticalBehavior)) Behaviors.Add(LetterVerticalBehavior);
-                ChangeHitTestToDisable();
-                SelectOneToolItem("letter-vertical");
-            })));
         ToolItems.Add(new ToolItemData("polygon", "pack://application:,,,/Assets/img/polygon_dark.png",
             Resources.Tool_Polygon, new DelegateCommand(() =>
             {
@@ -171,68 +152,6 @@ public class ToolBarViewModel
                     SelectOneToolItem("polygon");
                 }
             })));
-        ToolItems.Add(new ToolItemData("bezier", "pack://application:,,,/Assets/img/BezierCurve_dark.png",
-            Resources.Tool_BezierCurve, new DelegateCommand(() =>
-            {
-                var mainWindowViewModel = Application.Current.MainWindow.DataContext as MainWindowViewModel;
-                mainWindowViewModel.ClearCurrentOperationAndDetails();
-                Behaviors.Clear();
-                if (!Behaviors.Contains(NDrawBezierCurveBehavior)) Behaviors.Add(NDrawBezierCurveBehavior);
-                ChangeHitTestToDisable();
-                SelectOneToolItem("bezier");
-            })));
-        ToolItems.Add(new ToolItemData("snappoint", "pack://application:,,,/Assets/img/SnapPoint_dark.png",
-            Resources.Tool_SnapPoint, new DelegateCommand(() =>
-            {
-                var mainWindowViewModel = Application.Current.MainWindow.DataContext as MainWindowViewModel;
-                mainWindowViewModel.ClearCurrentOperationAndDetails();
-                Behaviors.Clear();
-                if (!Behaviors.Contains(SetSnapPointBehavior)) Behaviors.Add(SetSnapPointBehavior);
-                ChangeHitTestToDisable();
-                SelectOneToolItem("snappoint");
-            })));
-        ToolItems.Add(new ToolItemData("brush", "pack://application:,,,/Assets/img/brush_dark.png",
-            Resources.Tool_Brush, new DelegateCommand(() =>
-            {
-                var mainWindowViewModel = Application.Current.MainWindow.DataContext as MainWindowViewModel;
-                mainWindowViewModel.ClearCurrentOperationAndDetails();
-                BrushBehavior = new BrushBehavior(dlgService);
-                BrushBehavior.CurrentBrush.OpenThicknessDialog();
-                Behaviors.Clear();
-                if (!Behaviors.Contains(BrushBehavior)) Behaviors.Add(BrushBehavior);
-                ChangeHitTestToDisable();
-                SelectOneToolItem("brush");
-            })));
-        ToolItems.Add(new ToolItemData("eraser", "pack://application:,,,/Assets/img/eraser_dark.png",
-            Resources.Tool_Eraser, new DelegateCommand(() =>
-            {
-                var mainWindowViewModel = Application.Current.MainWindow.DataContext as MainWindowViewModel;
-                mainWindowViewModel.ClearCurrentOperationAndDetails();
-                Behaviors.Clear();
-                if (!Behaviors.Contains(EraserBehavior)) Behaviors.Add(EraserBehavior);
-                ChangeHitTestToDisable();
-                SelectOneToolItem("eraser");
-            })));
-        ToolItems.Add(new ToolItemData("slice", "pack://application:,,,/Assets/img/slice_tool_dark.png",
-            Resources.Tool_Slice, new DelegateCommand(() =>
-            {
-                var mainWindowViewModel = Application.Current.MainWindow.DataContext as MainWindowViewModel;
-                mainWindowViewModel.ClearCurrentOperationAndDetails();
-                Behaviors.Clear();
-                if (!Behaviors.Contains(SliceBehavior)) Behaviors.Add(SliceBehavior);
-                ChangeHitTestToDisable();
-                SelectOneToolItem("slice");
-            })));
-        ToolItems.Add(new ToolItemData("polybezier", "pack://application:,,,/Assets/img/poly_bezier_dark.png",
-            Resources.Tool_FreeHand, new DelegateCommand(() =>
-            {
-                var mainWindowViewModel = Application.Current.MainWindow.DataContext as MainWindowViewModel;
-                mainWindowViewModel.ClearCurrentOperationAndDetails();
-                Behaviors.Clear();
-                if (!Behaviors.Contains(PolyBezierBehavior)) Behaviors.Add(PolyBezierBehavior);
-                ChangeHitTestToDisable();
-                SelectOneToolItem("polybezier");
-            })));
         ToolItems.Add(new ToolItemData("pie", "pack://application:,,,/Assets/img/FoldingFan_dark.png",
             Resources.Tool_Pie, new DelegateCommand(() =>
             {
@@ -245,24 +164,24 @@ public class ToolBarViewModel
                 (Application.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value =
                     Resources.String_Pie_DetermineCenterPoint;
             })));
-        ToolItems.Add(new ToolItemData("dropper", "pack://application:,,,/Assets/img/dropper_dark.png",
-            Resources.Tool_Dropper, new DelegateCommand(() =>
+        ToolItems.Add(new ToolItemData("picture", "pack://application:,,,/Assets/img/Picture_dark.png",
+            Resources.Tool_Picture, new DelegateCommand(() =>
             {
                 var mainWindowViewModel = Application.Current.MainWindow.DataContext as MainWindowViewModel;
                 mainWindowViewModel.ClearCurrentOperationAndDetails();
-                Behaviors.Clear();
-                if (!Behaviors.Contains(DropperBehavior)) Behaviors.Add(DropperBehavior);
-                ChangeHitTestToDisable();
-                SelectOneToolItem("dropper");
-            })));
-        ToolItems.Add(new ToolItemData("canvasModifier", "pack://application:,,,/Assets/img/icons8-canvas-64_dark.png",
-            Resources.Tool_CanvasResize, new DelegateCommand(() =>
-            {
-                var mainWindowViewModel = Application.Current.MainWindow.DataContext as MainWindowViewModel;
-                mainWindowViewModel.ClearCurrentOperationAndDetails();
-                Behaviors.Clear();
-                if (!Behaviors.Contains(CanvasModifierBehavior)) Behaviors.Add(CanvasModifierBehavior);
-                SelectOneToolItem("canvasModifier");
+                var dialog = new OpenFileDialog();
+                dialog.Multiselect = false;
+                dialog.Filter = Resources.String_SupportImage;
+                if (dialog.ShowDialog() == true)
+                {
+                    var bitmap =
+                        BitmapFactory.FromStream(new FileStream(dialog.FileName, FileMode.Open, FileAccess.Read));
+                    PictureBehavior = new PictureBehavior(dialog.FileName, bitmap.Width, bitmap.Height);
+                    Behaviors.Clear();
+                    if (!Behaviors.Contains(PictureBehavior)) Behaviors.Add(PictureBehavior);
+                    ChangeHitTestToDisable();
+                    SelectOneToolItem("picture");
+                }
             })));
         ToolItems.Add(new ToolItemData("mosaic", "pack://application:,,,/Assets/img/mosaic.png", Resources.Tool_Mosaic,
             new DelegateCommand(() =>
@@ -293,6 +212,87 @@ public class ToolBarViewModel
                 if (!Behaviors.Contains(BlurBehavior)) Behaviors.Add(ColorCorrectBehavior);
                 ChangeHitTestToDisable();
                 SelectOneToolItem("colorCorrect");
+            })));
+        ToolItems.Add(new ToolItemData("letter", "pack://application:,,,/Assets/img/A_dark.png",
+            Resources.Tool_Lettering, new DelegateCommand(() =>
+            {
+                var mainWindowViewModel = Application.Current.MainWindow.DataContext as MainWindowViewModel;
+                mainWindowViewModel.ClearCurrentOperationAndDetails();
+                Behaviors.Clear();
+                if (!Behaviors.Contains(LetterBehavior)) Behaviors.Add(LetterBehavior);
+                ChangeHitTestToDisable();
+                SelectOneToolItem("letter");
+            })));
+        ToolItems.Add(new ToolItemData("letter-vertical", "pack://application:,,,/Assets/img/A_Vertical_dark.png",
+            Resources.Tool_VerticalLettering, new DelegateCommand(() =>
+            {
+                var mainWindowViewModel = Application.Current.MainWindow.DataContext as MainWindowViewModel;
+                mainWindowViewModel.ClearCurrentOperationAndDetails();
+                Behaviors.Clear();
+                if (!Behaviors.Contains(LetterVerticalBehavior)) Behaviors.Add(LetterVerticalBehavior);
+                ChangeHitTestToDisable();
+                SelectOneToolItem("letter-vertical");
+            })));
+        ToolItems.Add(new ToolItemData("brush", "pack://application:,,,/Assets/img/brush_dark.png",
+            Resources.Tool_Brush, new DelegateCommand(() =>
+            {
+                var mainWindowViewModel = Application.Current.MainWindow.DataContext as MainWindowViewModel;
+                mainWindowViewModel.ClearCurrentOperationAndDetails();
+                BrushBehavior = new BrushBehavior(dlgService);
+                BrushBehavior.CurrentBrush.OpenThicknessDialog();
+                Behaviors.Clear();
+                if (!Behaviors.Contains(BrushBehavior)) Behaviors.Add(BrushBehavior);
+                ChangeHitTestToDisable();
+                SelectOneToolItem("brush");
+            })));
+        ToolItems.Add(new ToolItemData("eraser", "pack://application:,,,/Assets/img/eraser_dark.png",
+            Resources.Tool_Eraser, new DelegateCommand(() =>
+            {
+                var mainWindowViewModel = Application.Current.MainWindow.DataContext as MainWindowViewModel;
+                mainWindowViewModel.ClearCurrentOperationAndDetails();
+                Behaviors.Clear();
+                if (!Behaviors.Contains(EraserBehavior)) Behaviors.Add(EraserBehavior);
+                ChangeHitTestToDisable();
+                SelectOneToolItem("eraser");
+            })));
+        ToolItems.Add(new ToolItemData("snappoint", "pack://application:,,,/Assets/img/SnapPoint_dark.png",
+            Resources.Tool_SnapPoint, new DelegateCommand(() =>
+            {
+                var mainWindowViewModel = Application.Current.MainWindow.DataContext as MainWindowViewModel;
+                mainWindowViewModel.ClearCurrentOperationAndDetails();
+                Behaviors.Clear();
+                if (!Behaviors.Contains(SetSnapPointBehavior)) Behaviors.Add(SetSnapPointBehavior);
+                ChangeHitTestToDisable();
+                SelectOneToolItem("snappoint");
+            })));
+        ToolItems.Add(new ToolItemData("slice", "pack://application:,,,/Assets/img/slice_tool_dark.png",
+            Resources.Tool_Slice, new DelegateCommand(() =>
+            {
+                var mainWindowViewModel = Application.Current.MainWindow.DataContext as MainWindowViewModel;
+                mainWindowViewModel.ClearCurrentOperationAndDetails();
+                Behaviors.Clear();
+                if (!Behaviors.Contains(SliceBehavior)) Behaviors.Add(SliceBehavior);
+                ChangeHitTestToDisable();
+                SelectOneToolItem("slice");
+            })));
+        ToolItems.Add(new ToolItemData("dropper", "pack://application:,,,/Assets/img/dropper_dark.png",
+            Resources.Tool_Dropper, new DelegateCommand(() =>
+            {
+                var mainWindowViewModel = Application.Current.MainWindow.DataContext as MainWindowViewModel;
+                mainWindowViewModel.ClearCurrentOperationAndDetails();
+                Behaviors.Clear();
+                if (!Behaviors.Contains(DropperBehavior)) Behaviors.Add(DropperBehavior);
+                ChangeHitTestToDisable();
+                SelectOneToolItem("dropper");
+            })));
+        ToolItems.Add(new ToolItemData("canvasModifier", "pack://application:,,,/Assets/img/icons8-canvas-64_dark.png",
+            Resources.Tool_CanvasResize, new DelegateCommand(() =>
+            {
+                var mainWindowViewModel = Application.Current.MainWindow.DataContext as MainWindowViewModel;
+                mainWindowViewModel.ClearCurrentOperationAndDetails();
+                Behaviors.Clear();
+                if (!Behaviors.Contains(CanvasModifierBehavior)) Behaviors.Add(CanvasModifierBehavior);
+                SelectOneToolItem("canvasModifier");
             })));
     }
 
