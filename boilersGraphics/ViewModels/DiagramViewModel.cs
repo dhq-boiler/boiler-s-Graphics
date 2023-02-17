@@ -7,6 +7,7 @@ using boilersGraphics.Models;
 using boilersGraphics.Properties;
 using boilersGraphics.UserControls;
 using boilersGraphics.Views;
+using boilersGraphics.Views.Behaviors;
 using Microsoft.Win32;
 using NLog;
 using Prism.Commands;
@@ -316,6 +317,12 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                 DesignerCanvas = Application.Current.MainWindow.GetChildOfType<DesignerCanvas>();
                 Layers.ToList().ForEach(x => x.UpdateAppearanceBothParentAndChild());
             }).AddTo(_CompositeDisposable);
+            Image2TextCommand = new ReactiveCommand().WithSubscribe(() =>
+            {
+                MainWindowViewModel.Instance.ToolBarViewModel.SelectOneToolItem(string.Empty);
+                MainWindowViewModel.Instance.ToolBarViewModel.Behaviors.Add(new Image2TextBehavior());
+                MainWindowViewModel.Instance.ToolBarViewModel.ChangeHitTestToDisable();
+            }).AddTo(_CompositeDisposable);
         }
 
         Layers = RootLayer.Value.Children.CollectionChangedAsObservable()
@@ -533,6 +540,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     public DelegateCommand FitCanvasCommand { get; }
     public DelegateCommand ClearCanvasCommand { get; }
     public ReactiveCommand OnLoaded { get; }
+    public ReactiveCommand Image2TextCommand { get; }
     public MainWindowViewModel MainWindowVM { get; }
 
     public DelegateCommand<object> AddItemCommand { get; }
@@ -801,8 +809,11 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
         if (initCanvasBackground)
             mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "CanvasFillBrush.Value",
                 Brushes.White as Brush);
-        mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value",
-            new BackgroundViewModel(this));
+        if (this.BackgroundItem.Value is null)
+        {
+            mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value",
+                new BackgroundViewModel(this));
+        }
         mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.ZIndex.Value", -1);
         mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.FillBrush.Value",
             CanvasFillBrush.Value);
