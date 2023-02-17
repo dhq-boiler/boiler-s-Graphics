@@ -329,7 +329,7 @@ public class ToolBarViewModel
         InitializeToolItems(dlgService);
     }
 
-    private void ChangeHitTestToDisable()
+    internal void ChangeHitTestToDisable()
     {
         var diagramViewModel = MainWindowViewModel.Instance.DiagramViewModel;
         diagramViewModel.AllItems.Value.ToList().ForEach(x => x.IsHitTestVisible.Value = false);
@@ -351,7 +351,7 @@ public class ToolBarViewModel
         CurrentHitTestVisibleState.Value = true;
     }
 
-    private void SelectOneToolItem(string toolName)
+    internal void SelectOneToolItem(string toolName)
     {
         var toolItem = ToolItems.Where(i => i.Name.Value == toolName).SingleOrDefault();
         if (toolItem is not null)
