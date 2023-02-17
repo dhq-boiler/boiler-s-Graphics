@@ -353,8 +353,11 @@ public class ToolBarViewModel
 
     private void SelectOneToolItem(string toolName)
     {
-        var toolItem = ToolItems.Where(i => i.Name.Value == toolName).Single();
-        toolItem.IsChecked = true;
+        var toolItem = ToolItems.Where(i => i.Name.Value == toolName).SingleOrDefault();
+        if (toolItem is not null)
+        {
+            toolItem.IsChecked = true;
+        }
 
         ToolItems.Where(i => i.Name.Value != toolName).ToList().ForEach(i => i.IsChecked = false);
 
