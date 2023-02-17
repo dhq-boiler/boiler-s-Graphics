@@ -599,7 +599,7 @@ public class ObjectDeserializer
 
     private static void Invoke(Action action, DispatcherPriority priority)
     {
-        if (App.IsTest)
+        if (App.IsTest || App.Current is null)
         {
             action();
         }
