@@ -729,6 +729,9 @@
   <data name="String_Move" xml:space="preserve">
     <value>Move</value>
   </data>
+  <data name="String_NegativePositiveConversion" xml:space="preserve">
+    <value>Negative-Positive conversion</value>
+  </data>
   <data name="String_OK" xml:space="preserve">
     <value>OK</value>
   </data>

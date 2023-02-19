@@ -98,6 +98,9 @@ public class ColorCorrectViewModel : EffectViewModel
                                 break;
                         }
                         break;
+                    case NegativePositiveConversion:
+                        Cv2.BitwiseNot(mat, dest);
+                        break;
                 }
 
                 Bitmap.Value = dest.ToWriteableBitmap();

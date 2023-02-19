@@ -1897,6 +1897,15 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Negative-Positive conversion に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_NegativePositiveConversion {
+            get {
+                return ResourceManager.GetString("String_NegativePositiveConversion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   OK に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string String_OK {

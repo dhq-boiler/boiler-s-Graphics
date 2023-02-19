@@ -75,6 +75,13 @@ namespace boilersGraphics.ViewModels
                                 { "ViewModel", ViewModel.Value },
                             });
                         break;
+                    case NegativePositiveConversion npc:
+                        _regionManager.RequestNavigate("ColorCorrectInstructionRegion", nameof(NegativePositiveConversion),
+                            new NavigationParameters()
+                            {
+                                { "ViewModel", ViewModel.Value },
+                            });
+                        break;
                 }
             }).AddTo(disposable);
         }
