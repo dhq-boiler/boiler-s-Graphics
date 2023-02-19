@@ -214,6 +214,6 @@
     <NoWarn>1701;1702;0002;CA1416;</NoWarn>
   </PropertyGroup>
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="$(SolutionDir)ReplaceInternalResourcesDefaultConstructorToPublic\bin\$(Configuration)\net7.0\ReplaceInternalResourcesDefaultConstructorToPublic.exe $(SolutionDir)boilersGraphics\Properties\Resources.Designer.cs\" />
+    <Exec Command="$(SolutionDir)ReplaceInternalResourcesDefaultConstructorToPublic\bin\$(Configuration)\net7.0\ReplaceInternalResourcesDefaultConstructorToPublic.exe $(SolutionDir)boilersGraphics\Properties\Resources.Designer.cs" />
   </Target>
 </Project>
