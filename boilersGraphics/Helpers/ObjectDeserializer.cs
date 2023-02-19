@@ -516,8 +516,8 @@ public class ObjectDeserializer
                     colorCorrect.Points =
                         new ReactiveCollection<ToneCurveViewModel.Point>();
                     colorCorrect.Points.AddRange(designerItemElm.Elements("Points").SelectMany(x => x.Elements("Point")).Select(x =>
-                        new ToneCurveViewModel.Point(int.Parse(x.Elements("X").Any() ? x.Element("X").Value : "0"),
-                            int.Parse(x.Elements("Y").Any() ? x.Element("Y").Value : "0"))
+                        new ToneCurveViewModel.Point(int.Parse(x.Elements("X").Any() ? CastToDoubleRound(x.Element("X").Value) : "0"),
+                            int.Parse(x.Elements("Y").Any() ? CastToDoubleRound(x.Element("Y").Value) : "0"))
                     ));
                 }
                 if (designerItemElm.Elements("InOutPairs").Any())
@@ -525,8 +525,8 @@ public class ObjectDeserializer
                     colorCorrect.InOutPairs =
                         new ReactiveCollection<InOutPair>();
                     colorCorrect.InOutPairs.AddRange(designerItemElm.Elements("InOutPairs").SelectMany(x => x.Elements("InOutPair")).Select(x =>
-                        new InOutPair(int.Parse(x.Elements("In").Any() ? x.Element("In").Value : "0"),
-                            int.Parse(x.Elements("Out").Any() ? x.Element("Out").Value : "0"))
+                        new InOutPair(int.Parse(x.Elements("In").Any() ? CastToDoubleRound(x.Element("In").Value) : "0"),
+                            int.Parse(x.Elements("Out").Any() ? CastToDoubleRound(x.Element("Out").Value) : "0"))
                     ));
                 }
             }
@@ -560,6 +560,13 @@ public class ObjectDeserializer
         item.UpdatePathGeometryIfEnable(string.Empty, 0, 0, true);
         item.RenderingEnabled.Value = true;
         return item;
+    }
+
+    private static string CastToDoubleRound(string value)
+    {
+        var doubleValue = double.Parse(value);
+        doubleValue = double.Round(doubleValue);
+        return doubleValue.ToString();
     }
 
     private static T GetCorrespondingStaticValue<T>(object str) where T : class
