@@ -199,7 +199,7 @@ public partial class App : PrismApplication
 
         containerRegistry.RegisterForNavigation<Views.ColorCorrect.Hsv, ViewModels.ColorCorrect.HsvViewModel>();
         containerRegistry.RegisterForNavigation<Views.ColorCorrect.ToneCurve, ViewModels.ColorCorrect.ToneCurveViewModel>();
-        containerRegistry.RegisterForNavigation<Views.ColorCorrect.NegativePositiveConversion, ViewModels.ColorCorrect.NegativePositiveConversion>();
+        containerRegistry.RegisterForNavigation<Views.ColorCorrect.NegativePositiveConversion, ViewModels.ColorCorrect.NegativePositiveConversionViewModel>();
         containerRegistry.RegisterDialog<ColorCorrectInstruction, ColorCorrectInstructionViewModel>();
 
         //containerRegistry.RegisterSingleton<ProgressBarWithOutputViewModel>();

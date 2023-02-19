@@ -6,7 +6,7 @@ using System.Reactive.Disposables;
 
 namespace boilersGraphics.ViewModels.ColorCorrect
 {
-    internal class NegativePositiveConversion : BindableBase, INavigationAware, IDisposable
+    internal class NegativePositiveConversionViewModel : BindableBase, INavigationAware, IDisposable
     {
         private CompositeDisposable _disposable = new CompositeDisposable();
 
