@@ -63,8 +63,8 @@
         <Canvas Opacity="0.7" SnapsToDevicePixels="true">
             <control:LineResizeHandle
                 x:Name="ResizeHandle_BeginPoint"
-                Canvas.Left="{Binding Left.Value}"
-                Canvas.Top="{Binding Top.Value}"
+                Canvas.Left="{c:Binding Left.Value-ThumbSize.Value/2}"
+                Canvas.Top="{c:Binding Top.Value-ThumbSize.Value/2}"
                 Width="{Binding ThumbSize.Value, UpdateSourceTrigger=PropertyChanged}"
                 Height="{Binding ThumbSize.Value, UpdateSourceTrigger=PropertyChanged}"
                 DataContext="{Binding SnapPoint0VM.Value}"
@@ -94,8 +94,8 @@
             </control:LineResizeHandle>
             <control:LineResizeHandle
                 x:Name="ResizeHandle_EndPoint"
-                Canvas.Left="{Binding Left.Value}"
-                Canvas.Top="{Binding Top.Value}"
+                Canvas.Left="{c:Binding Left.Value-ThumbSize.Value/2}"
+                Canvas.Top="{c:Binding Top.Value-ThumbSize.Value/2}"
                 Width="{Binding ThumbSize.Value, UpdateSourceTrigger=PropertyChanged}"
                 Height="{Binding ThumbSize.Value, UpdateSourceTrigger=PropertyChanged}"
                 DataContext="{Binding SnapPoint1VM.Value}"
@@ -130,8 +130,8 @@
         <Canvas Opacity="0.7" SnapsToDevicePixels="true">
             <control:LineResizeHandle
                 x:Name="ResizeHandle_BeginPoint"
-                Canvas.Left="{Binding Left.Value}"
-                Canvas.Top="{Binding Top.Value}"
+                Canvas.Left="{c:Binding Left.Value-ThumbSize.Value/2}"
+                Canvas.Top="{c:Binding Top.Value-ThumbSize.Value/2}"
                 Width="{Binding ThumbSize.Value, UpdateSourceTrigger=PropertyChanged}"
                 Height="{Binding ThumbSize.Value, UpdateSourceTrigger=PropertyChanged}"
                 DataContext="{Binding SnapPoint0VM.Value}"
@@ -161,8 +161,8 @@
             </control:LineResizeHandle>
             <control:LineResizeHandle
                 x:Name="ResizeHandle_EndPoint"
-                Canvas.Left="{Binding Left.Value}"
-                Canvas.Top="{Binding Top.Value}"
+                Canvas.Left="{c:Binding Left.Value-ThumbSize.Value/2}"
+                Canvas.Top="{c:Binding Top.Value-ThumbSize.Value/2}"
                 Width="{Binding ThumbSize.Value, UpdateSourceTrigger=PropertyChanged}"
                 Height="{Binding ThumbSize.Value, UpdateSourceTrigger=PropertyChanged}"
                 DataContext="{Binding SnapPoint1VM.Value}"
