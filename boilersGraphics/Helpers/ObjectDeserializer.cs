@@ -530,6 +530,10 @@ public class ObjectDeserializer
                     ));
                 }
             }
+            else if (colorCorrect.CCType.Value == ColorCorrectType.NegativePositiveConversion)
+            {
+                //Do nothing. No need to do anything.
+            }
         }
 
         if (item is LetterDesignerItemViewModel letter)
