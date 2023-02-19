@@ -1,20 +1,14 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Markup;
-using System.Windows.Media;
-using boilersGraphics.Controls;
+﻿using boilersGraphics.Controls;
 using boilersGraphics.Dao;
 using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
-using boilersGraphics.Models;
 using boilersGraphics.UserControls;
 using boilersGraphics.ViewModels;
-using boilersGraphics.Views;
+using System.IO;
+using System.Windows;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
 using Tesseract;
 
 namespace boilersGraphics.Adorners;
@@ -99,6 +93,8 @@ internal class Image2TextAdorner : Adorner
                         using (var page = engine.Process(img))
                         {
                             string text = page.GetText();
+
+                            text = text.Trim();
 
                             // テキストをクリップボードに保存する
                             Clipboard.SetText(text);
