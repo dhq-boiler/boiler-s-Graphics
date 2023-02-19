@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.0.31825.309
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "boilersGraphics", "boilersGraphics\boilersGraphics.csproj", "{22E14D88-7443-4526-9C02-3523E08FFA83}"
+	ProjectSection(ProjectDependencies) = postProject
+		{51B5A111-EBF3-4925-BC49-1A0FF3F9D25F} = {51B5A111-EBF3-4925-BC49-1A0FF3F9D25F}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "boilersGraphics.Test", "boilersGraphics.Test\boilersGraphics.Test.csproj", "{8EDF4429-251A-416D-BB68-93F227191BCF}"
 EndProject
@@ -22,9 +25,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Btl.Controls", "Btl\Controls\Btl.Controls.csproj", "{EEFA1336-44F6-4766-BE16-A81AD1FCC2E5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReplaceInternalResourcesDefaultConstructorToPublic", "ReplaceInternalResourcesDefaultConstructorToPublic\ReplaceInternalResourcesDefaultConstructorToPublic.csproj", "{51B5A111-EBF3-4925-BC49-1A0FF3F9D25F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReplaceInternalResourcesDefaultConstructorToPublic", "ReplaceInternalResourcesDefaultConstructorToPublic\ReplaceInternalResourcesDefaultConstructorToPublic.csproj", "{51B5A111-EBF3-4925-BC49-1A0FF3F9D25F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReplaceInternalResourcesDefaultConstructorToPublic.Test", "ReplaceInternalResourcesDefaultConstructorToPublic.Test\ReplaceInternalResourcesDefaultConstructorToPublic.Test.csproj", "{BAE0A8D6-84FE-4398-A2F0-E77A5DE25C11}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReplaceInternalResourcesDefaultConstructorToPublic.Test", "ReplaceInternalResourcesDefaultConstructorToPublic.Test\ReplaceInternalResourcesDefaultConstructorToPublic.Test.csproj", "{BAE0A8D6-84FE-4398-A2F0-E77A5DE25C11}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
