@@ -13,6 +13,7 @@ public abstract class ThresholdTypes
     public static readonly ThresholdTypes Mask = new Mask();
     public static readonly ThresholdTypes Otsu = new Otsu();
     public static readonly ThresholdTypes Triangle = new Triangle();
+
     public abstract OpenCvSharp.ThresholdTypes ToOpenCvValue();
 
     public static IEnumerable<ThresholdTypes> GetValues()
