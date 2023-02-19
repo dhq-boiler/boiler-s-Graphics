@@ -118,7 +118,8 @@ public class ColorCorrectViewModel : EffectViewModel
                         {
                             Cv2.CvtColor(mat, grayscale, ColorConversionCodes.BGR2GRAY);
                             var flags = ThresholdTypes.Value.ToOpenCvValue();
-                            if (OtsuEnabled.Value)
+                            if ((flags & OpenCvSharp.ThresholdTypes.Triangle) != OpenCvSharp.ThresholdTypes.Triangle 
+                              && OtsuEnabled.Value)
                             {
                                 flags |= ViewModels.ThresholdTypes.Otsu.ToOpenCvValue();
                             }

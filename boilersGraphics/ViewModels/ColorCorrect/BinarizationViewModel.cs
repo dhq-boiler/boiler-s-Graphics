@@ -18,6 +18,8 @@ namespace boilersGraphics.ViewModels.ColorCorrect
         private CompositeDisposable _disposable = new CompositeDisposable();
 
         private bool _disposedValue;
+        private bool callFromThreshold = false;
+        private bool callFromOtsuEnabled = false;
 
         public ReactivePropertySlim<ColorCorrectViewModel> ViewModel { get; } = new();
         public ReactivePropertySlim<ThresholdTypes> ThresholdTypes { get; } = new();
@@ -41,11 +43,18 @@ namespace boilersGraphics.ViewModels.ColorCorrect
             {
                 if (ViewModel.Value is not null)
                 {
-                    ViewModel.Value.OtsuEnabled.Value = enabled;
+                    callFromOtsuEnabled = true;
                     if (enabled)
                     {
-                        Threshold.Value = ViewModel.Value.Threshold.Value = GetThresholdByOtsu();
+                        var threshold = GetThresholdByOtsu();
+                        ViewModel.Value.Threshold.Value = threshold;
+                        if (!callFromThreshold)
+                        {
+                            Threshold.Value = threshold;
+                            ViewModel.Value.OtsuEnabled.Value = enabled;
+                        }
                     }
+                    callFromOtsuEnabled = false;
                     ViewModel.Value.Render();
                 }
             }).AddTo(_disposable);
@@ -54,6 +63,13 @@ namespace boilersGraphics.ViewModels.ColorCorrect
                 if (ViewModel.Value is not null)
                 {
                     ViewModel.Value.Threshold.Value = threshold;
+                    callFromThreshold = true;
+                    ViewModel.Value.OtsuEnabled.Value = false;
+                    if (!callFromOtsuEnabled)
+                    {
+                        OtsuEnabled.Value = false;
+                    }
+                    callFromThreshold = false;
                     ViewModel.Value.Render();
                 }
             }).AddTo(_disposable);
