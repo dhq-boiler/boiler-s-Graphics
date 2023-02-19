@@ -1,6 +1,9 @@
 ﻿using boilersGraphics.Controls;
+using boilersGraphics.Exceptions;
 using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
+using boilersGraphics.Models;
+using boilersGraphics.ViewModels.ColorCorrect;
 using boilersGraphics.Views;
 using OpenCvSharp;
 using OpenCvSharp.WpfExtensions;
@@ -17,11 +20,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using boilersGraphics.Models;
-using boilersGraphics.ViewModels.ColorCorrect;
 using Rect = System.Windows.Rect;
-using boilersGraphics.Exceptions;
-using Reactive.Bindings.ObjectExtensions;
 
 namespace boilersGraphics.ViewModels;
 
@@ -64,10 +63,9 @@ public class ColorCorrectViewModel : EffectViewModel
 
         Application.Current.Dispatcher.Invoke(() =>
         {
-            var mainWindowViewModel = Application.Current.MainWindow.DataContext as MainWindowViewModel;
             var renderer = new EffectRenderer(new WpfVisualTreeHelper());
             var rtb = renderer.Render(Rect.Value, Application.Current.MainWindow.GetChildOfType<DesignerCanvas>(),
-                mainWindowViewModel.DiagramViewModel, mainWindowViewModel.DiagramViewModel.BackgroundItem.Value, this, this.ZIndex.Value - 1);
+                MainWindowViewModel.Instance.DiagramViewModel, MainWindowViewModel.Instance.DiagramViewModel.BackgroundItem.Value, this, this.ZIndex.Value - 1);
             var newFormattedBitmapSource = new FormatConvertedBitmap();
             newFormattedBitmapSource.BeginInit();
             newFormattedBitmapSource.Source = rtb;
