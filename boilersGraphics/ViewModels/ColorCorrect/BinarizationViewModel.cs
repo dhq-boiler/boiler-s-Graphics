@@ -35,6 +35,10 @@ namespace boilersGraphics.ViewModels.ColorCorrect
             {
                 if (ViewModel.Value is not null)
                 {
+                    if (types == ViewModels.ThresholdTypes.Triangle)
+                    {
+                        OtsuEnabled.Value = false;
+                    }
                     ViewModel.Value.ThresholdTypes.Value = types;
                     ViewModel.Value.Render();
                 }

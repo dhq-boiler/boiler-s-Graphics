@@ -29,7 +29,7 @@
                 </i:EventTrigger>
             </i:Interaction.Triggers>
         </ComboBox>
-        <CheckBox Margin="10" Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_ApplyOtsu, Mode=OneWay}" IsChecked="{Binding OtsuEnabled.Value}" />
+        <CheckBox IsEnabled="{Binding ThresholdTypes.Value.OtsuIsAvailable}" Margin="10" Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_ApplyOtsu, Mode=OneWay}" IsChecked="{Binding OtsuEnabled.Value}" />
         <StackPanel Orientation="Horizontal"
                             HorizontalAlignment="Center">
             <Label

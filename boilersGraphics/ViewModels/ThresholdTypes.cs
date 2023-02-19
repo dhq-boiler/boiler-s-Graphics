@@ -16,6 +16,8 @@ public abstract class ThresholdTypes
 
     public abstract OpenCvSharp.ThresholdTypes ToOpenCvValue();
 
+    public abstract bool OtsuIsAvailable { get; }
+
     public static IEnumerable<ThresholdTypes> GetValues()
     {
         yield return Binary;
@@ -31,6 +33,8 @@ public abstract class ThresholdTypes
 
 public class Binary : ThresholdTypes
 {
+    public override bool OtsuIsAvailable => true;
+
     public override OpenCvSharp.ThresholdTypes ToOpenCvValue()
     {
         return OpenCvSharp.ThresholdTypes.Binary;
@@ -45,6 +49,8 @@ public class Binary : ThresholdTypes
 
 public class BinaryInv : ThresholdTypes
 {
+    public override bool OtsuIsAvailable => true;
+
     public override OpenCvSharp.ThresholdTypes ToOpenCvValue()
     {
         return OpenCvSharp.ThresholdTypes.BinaryInv;
@@ -59,6 +65,8 @@ public class BinaryInv : ThresholdTypes
 
 public class Trunc : ThresholdTypes
 {
+    public override bool OtsuIsAvailable => true;
+
     public override OpenCvSharp.ThresholdTypes ToOpenCvValue()
     {
         return OpenCvSharp.ThresholdTypes.Trunc;
@@ -73,6 +81,8 @@ public class Trunc : ThresholdTypes
 
 public class Tozero : ThresholdTypes
 {
+    public override bool OtsuIsAvailable => true;
+
     public override OpenCvSharp.ThresholdTypes ToOpenCvValue()
     {
         return OpenCvSharp.ThresholdTypes.Tozero;
@@ -88,6 +98,8 @@ public class Tozero : ThresholdTypes
 
 public class TozeroInv : ThresholdTypes
 {
+    public override bool OtsuIsAvailable => true;
+
     public override OpenCvSharp.ThresholdTypes ToOpenCvValue()
     {
         return OpenCvSharp.ThresholdTypes.TozeroInv;
@@ -103,6 +115,8 @@ public class TozeroInv : ThresholdTypes
 
 public class Mask : ThresholdTypes
 {
+    public override bool OtsuIsAvailable => true;
+
     public override OpenCvSharp.ThresholdTypes ToOpenCvValue()
     {
         return OpenCvSharp.ThresholdTypes.Mask;
@@ -116,6 +130,8 @@ public class Mask : ThresholdTypes
 
 public class Otsu : ThresholdTypes
 {
+    public override bool OtsuIsAvailable => true;
+
     public override OpenCvSharp.ThresholdTypes ToOpenCvValue()
     {
         return OpenCvSharp.ThresholdTypes.Otsu;
@@ -129,6 +145,8 @@ public class Otsu : ThresholdTypes
 
 public class Triangle : ThresholdTypes
 {
+    public override bool OtsuIsAvailable => false;
+
     public override OpenCvSharp.ThresholdTypes ToOpenCvValue()
     {
         return OpenCvSharp.ThresholdTypes.Triangle;
