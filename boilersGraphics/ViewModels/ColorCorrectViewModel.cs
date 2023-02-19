@@ -36,11 +36,23 @@ public class ColorCorrectViewModel : EffectViewModel
 
     public ReactivePropertySlim<WriteableBitmap> Bitmap { get; } = new();
 
+    #region 色相・彩度・輝度
     public ReactivePropertySlim<int> AddHue { get; } = new();
     public ReactivePropertySlim<int> AddSaturation { get; } = new();
     public ReactivePropertySlim<int> AddValue { get; } = new();
+    #endregion
+
+    #region トーンカーブ
     public ReactiveCollection<ToneCurveViewModel.Point> Points { get; set; } = new();
     public ReactiveCollection<InOutPair> InOutPairs { get; set; } = new();
+    #endregion
+
+    #region 2値化
+    public ReactivePropertySlim<double> Threshold { get; } = new();
+    public ReactivePropertySlim<double> MaxValue { get; } = new();
+    public ReactivePropertySlim<ThresholdTypes> ThresholdTypes { get; } = new(boilersGraphics.ViewModels.ThresholdTypes.Binary);
+    #endregion
+
 
     public override bool SupportsPropertyDialog => true;
 
@@ -100,6 +112,13 @@ public class ColorCorrectViewModel : EffectViewModel
                         break;
                     case NegativePositiveConversion:
                         Cv2.BitwiseNot(mat, dest);
+                        break;
+                    case Binarization:
+                        using (var grayscale = new Mat())
+                        {
+                            Cv2.CvtColor(mat, grayscale, ColorConversionCodes.BGR2GRAY);
+                            Cv2.Threshold(grayscale, dest, Threshold.Value, MaxValue.Value, ThresholdTypes.Value.ToOpenCvValue());
+                        }
                         break;
                 }
 

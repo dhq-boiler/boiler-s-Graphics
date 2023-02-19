@@ -62,21 +62,28 @@ namespace boilersGraphics.ViewModels
                 switch (cctype)
                 {
                     case Hsv hsv:
-                        _regionManager.RequestNavigate("ColorCorrectInstructionRegion", nameof(Hsv),
+                        _regionManager.RequestNavigate("ColorCorrectInstructionRegion", nameof(Views.ColorCorrect.Hsv),
                             new NavigationParameters()
                             {
                                 { "ViewModel", ViewModel.Value },
                             });
                         break;
                     case ToneCurve toneCurve:
-                        _regionManager.RequestNavigate("ColorCorrectInstructionRegion", nameof(ToneCurve),
+                        _regionManager.RequestNavigate("ColorCorrectInstructionRegion", nameof(Views.ColorCorrect.ToneCurve),
                             new NavigationParameters()
                             {
                                 { "ViewModel", ViewModel.Value },
                             });
                         break;
                     case NegativePositiveConversion npc:
-                        _regionManager.RequestNavigate("ColorCorrectInstructionRegion", nameof(NegativePositiveConversion),
+                        _regionManager.RequestNavigate("ColorCorrectInstructionRegion", nameof(Views.ColorCorrect.NegativePositiveConversion),
+                            new NavigationParameters()
+                            {
+                                { "ViewModel", ViewModel.Value },
+                            });
+                        break;
+                    case Binarization binarize:
+                        _regionManager.RequestNavigate("ColorCorrectInstructionRegion", nameof(Views.ColorCorrect.Binarization),
                             new NavigationParameters()
                             {
                                 { "ViewModel", ViewModel.Value },

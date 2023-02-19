@@ -1663,6 +1663,33 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Binarization に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_Binarization {
+            get {
+                return ResourceManager.GetString("String_Binarization", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Binary に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_Binary {
+            get {
+                return ResourceManager.GetString("String_Binary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   BinaryInv に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_BinaryInv {
+            get {
+                return ResourceManager.GetString("String_BinaryInv", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Cancel に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string String_Cancel {
@@ -1888,6 +1915,24 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Mask に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_Mask {
+            get {
+                return ResourceManager.GetString("String_Mask", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Max Value に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_MaxValue {
+            get {
+                return ResourceManager.GetString("String_MaxValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Move に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string String_Move {
@@ -1947,6 +1992,15 @@ namespace boilersGraphics.Properties {
         public static string String_OpensourceComponent_Library_Code {
             get {
                 return ResourceManager.GetString("String_OpensourceComponent_Library_Code", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Otsu に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_Otsu {
+            get {
+                return ResourceManager.GetString("String_Otsu", resourceCulture);
             }
         }
         
@@ -2194,6 +2248,15 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Threshold に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_Threshold {
+            get {
+                return ResourceManager.GetString("String_Threshold", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Tone curve に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string String_ToneCurve {
@@ -2203,11 +2266,47 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Tozero に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_Tozero {
+            get {
+                return ResourceManager.GetString("String_Tozero", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   TozeroInv に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_TozeroInv {
+            get {
+                return ResourceManager.GetString("String_TozeroInv", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   This is the trial version. Expiration date：{0} days {1}:{2}:{3} に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string String_TrialMessage {
             get {
                 return ResourceManager.GetString("String_TrialMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Triangle に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_Triangle {
+            get {
+                return ResourceManager.GetString("String_Triangle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Trunc に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_Trunc {
+            get {
+                return ResourceManager.GetString("String_Trunc", resourceCulture);
             }
         }
         
