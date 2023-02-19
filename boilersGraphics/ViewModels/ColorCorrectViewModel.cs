@@ -196,7 +196,7 @@ public class ColorCorrectViewModel : EffectViewModel
         var dialogService =
             new DialogService((Application.Current as PrismApplication).Container as IContainerExtension);
         IDialogResult result = null;
-        dialogService.Show(nameof(DetailMosaic), new DialogParameters { { "ViewModel", this } }, ret => result = ret);
+        dialogService.Show(nameof(DetailColorCorrect), new DialogParameters { { "ViewModel", this } }, ret => result = ret);
     }
 
     public override void OpenInstructionDialog()
