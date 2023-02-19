@@ -186,6 +186,10 @@ internal class ObjectSerializer
                     }
                     list.Add(inOutPairs);
                 }
+                else if (colorCorrect.CCType.Value == ColorCorrectType.NegativePositiveConversion)
+                {
+                    //Do nothing. No need to do anything.
+                }
             }
 
             if (designerItem is ILetterDesignerItemViewModel letter)

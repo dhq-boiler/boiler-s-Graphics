@@ -1,6 +1,9 @@
 ﻿using boilersGraphics.Controls;
+using boilersGraphics.Exceptions;
 using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
+using boilersGraphics.Models;
+using boilersGraphics.ViewModels.ColorCorrect;
 using boilersGraphics.Views;
 using OpenCvSharp;
 using OpenCvSharp.WpfExtensions;
@@ -17,10 +20,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using boilersGraphics.Models;
-using boilersGraphics.ViewModels.ColorCorrect;
 using Rect = System.Windows.Rect;
-using boilersGraphics.Exceptions;
 
 namespace boilersGraphics.ViewModels;
 
@@ -36,11 +36,24 @@ public class ColorCorrectViewModel : EffectViewModel
 
     public ReactivePropertySlim<WriteableBitmap> Bitmap { get; } = new();
 
+    #region 色相・彩度・輝度
     public ReactivePropertySlim<int> AddHue { get; } = new();
     public ReactivePropertySlim<int> AddSaturation { get; } = new();
     public ReactivePropertySlim<int> AddValue { get; } = new();
+    #endregion
+
+    #region トーンカーブ
     public ReactiveCollection<ToneCurveViewModel.Point> Points { get; set; } = new();
     public ReactiveCollection<InOutPair> InOutPairs { get; set; } = new();
+    #endregion
+
+    #region 2値化
+    public ReactivePropertySlim<double> Threshold { get; } = new();
+    public ReactivePropertySlim<double> MaxValue { get; } = new(255);
+    public ReactivePropertySlim<ThresholdTypes> ThresholdTypes { get; } = new(boilersGraphics.ViewModels.ThresholdTypes.Binary);
+    public ReactivePropertySlim<bool> OtsuEnabled { get; } = new();
+    #endregion
+
 
     public override bool SupportsPropertyDialog => true;
 
@@ -50,10 +63,9 @@ public class ColorCorrectViewModel : EffectViewModel
 
         Application.Current.Dispatcher.Invoke(() =>
         {
-            var mainWindowViewModel = Application.Current.MainWindow.DataContext as MainWindowViewModel;
             var renderer = new EffectRenderer(new WpfVisualTreeHelper());
             var rtb = renderer.Render(Rect.Value, Application.Current.MainWindow.GetChildOfType<DesignerCanvas>(),
-                mainWindowViewModel.DiagramViewModel, mainWindowViewModel.DiagramViewModel.BackgroundItem.Value, this, this.ZIndex.Value - 1);
+                MainWindowViewModel.Instance.DiagramViewModel, MainWindowViewModel.Instance.DiagramViewModel.BackgroundItem.Value, this, this.ZIndex.Value - 1);
             var newFormattedBitmapSource = new FormatConvertedBitmap();
             newFormattedBitmapSource.BeginInit();
             newFormattedBitmapSource.Source = rtb;
@@ -96,6 +108,22 @@ public class ColorCorrectViewModel : EffectViewModel
                                 OperateToneCurve(arr2[2]);
                                 Cv2.Merge(arr2, dest);
                                 break;
+                        }
+                        break;
+                    case NegativePositiveConversion:
+                        Cv2.BitwiseNot(mat, dest);
+                        break;
+                    case Binarization:
+                        using (var grayscale = new Mat())
+                        {
+                            Cv2.CvtColor(mat, grayscale, ColorConversionCodes.BGR2GRAY);
+                            var flags = ThresholdTypes.Value.ToOpenCvValue();
+                            if ((flags & OpenCvSharp.ThresholdTypes.Triangle) != OpenCvSharp.ThresholdTypes.Triangle 
+                              && OtsuEnabled.Value)
+                            {
+                                flags |= ViewModels.ThresholdTypes.Otsu.ToOpenCvValue();
+                            }
+                            Cv2.Threshold(grayscale, dest, Threshold.Value, MaxValue.Value, flags);
                         }
                         break;
                 }
@@ -179,6 +207,12 @@ public class ColorCorrectViewModel : EffectViewModel
         clone.AddHue.Value = AddHue.Value;
         clone.AddSaturation.Value = AddSaturation.Value;
         clone.AddValue.Value = AddValue.Value;
+        clone.Points = Points;
+        clone.InOutPairs = InOutPairs;
+        clone.Threshold.Value = Threshold.Value;
+        clone.MaxValue.Value = MaxValue.Value;
+        clone.ThresholdTypes.Value = ThresholdTypes.Value;
+        clone.OtsuEnabled.Value = OtsuEnabled.Value;
         return clone;
     }
 
@@ -193,7 +227,7 @@ public class ColorCorrectViewModel : EffectViewModel
         var dialogService =
             new DialogService((Application.Current as PrismApplication).Container as IContainerExtension);
         IDialogResult result = null;
-        dialogService.Show(nameof(DetailMosaic), new DialogParameters { { "ViewModel", this } }, ret => result = ret);
+        dialogService.Show(nameof(DetailColorCorrect), new DialogParameters { { "ViewModel", this } }, ret => result = ret);
     }
 
     public override void OpenInstructionDialog()

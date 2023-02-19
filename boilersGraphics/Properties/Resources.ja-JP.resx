@@ -642,6 +642,9 @@
   <data name="String_ApplicationLicense" xml:space="preserve">
     <value>アプリケーションのライセンス</value>
   </data>
+  <data name="String_ApplyOtsu" xml:space="preserve">
+    <value>大津の二値化法を適用する</value>
+  </data>
   <data name="String_AutoSave" xml:space="preserve">
     <value>自動保存</value>
   </data>
@@ -650,6 +653,15 @@
   </data>
   <data name="String_B" xml:space="preserve">
     <value>青(Blue)</value>
+  </data>
+  <data name="String_Binarization" xml:space="preserve">
+    <value>2値化</value>
+  </data>
+  <data name="String_Binary" xml:space="preserve">
+    <value>Binary</value>
+  </data>
+  <data name="String_BinaryInv" xml:space="preserve">
+    <value>BinaryInv</value>
   </data>
   <data name="String_Cancel" xml:space="preserve">
     <value>キャンセル</value>
@@ -726,14 +738,35 @@
   <data name="String_Loaded" xml:space="preserve">
     <value>ロード</value>
   </data>
+  <data name="String_Mask" xml:space="preserve">
+    <value>Mask</value>
+  </data>
+  <data name="String_MaxValue" xml:space="preserve">
+    <value>最大値</value>
+  </data>
   <data name="String_Move" xml:space="preserve">
     <value>移動</value>
+  </data>
+  <data name="String_NegativePositiveConversion" xml:space="preserve">
+    <value>ネガポジ変換</value>
+  </data>
+  <data name="String_OCR" xml:space="preserve">
+    <value>OCR</value>
+  </data>
+  <data name="String_OCR_Image2Text_English" xml:space="preserve">
+    <value>Image2Text 英語</value>
+  </data>
+  <data name="String_OCR_Image2Text_Japanese" xml:space="preserve">
+    <value>Image2Text 日本語</value>
   </data>
   <data name="String_OK" xml:space="preserve">
     <value>OK</value>
   </data>
   <data name="String_OpensourceComponent_Library_Code" xml:space="preserve">
     <value>オープンソース コンポーネント / ライブラリ / コード</value>
+  </data>
+  <data name="String_Otsu" xml:space="preserve">
+    <value>大津の二値化</value>
   </data>
   <data name="String_Output" xml:space="preserve">
     <value>出力</value>
@@ -816,11 +849,26 @@
   <data name="String_SupportImage" xml:space="preserve">
     <value>サポートする画像|*.jpg;*.jpeg;*.png;*.gif;*.bmp|JPEG file|*.jpg;*.jpeg|PNG file|*.png|GIF file|*.gif|BMP file|*.bmp|すべて|*.*</value>
   </data>
+  <data name="String_Threshold" xml:space="preserve">
+    <value>閾値</value>
+  </data>
   <data name="String_ToneCurve" xml:space="preserve">
     <value>トーンカーブ</value>
   </data>
+  <data name="String_Tozero" xml:space="preserve">
+    <value>Tozero</value>
+  </data>
+  <data name="String_TozeroInv" xml:space="preserve">
+    <value>TozeroInv</value>
+  </data>
   <data name="String_TrialMessage" xml:space="preserve">
     <value>これは試用版です。有効期限：{0} 日 {1}:{2}:{3}</value>
+  </data>
+  <data name="String_Triangle" xml:space="preserve">
+    <value>Triangle</value>
+  </data>
+  <data name="String_Trunc" xml:space="preserve">
+    <value>Trunc</value>
   </data>
   <data name="String_Value" xml:space="preserve">
     <value>輝度(Value)</value>

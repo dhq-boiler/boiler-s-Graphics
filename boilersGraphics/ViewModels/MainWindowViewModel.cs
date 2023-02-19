@@ -84,7 +84,7 @@ public class MainWindowViewModel : BindableBase, IDisposable
         DiagramViewModel = new DiagramViewModel(this, dlgService);
         _CompositeDisposable.Add(DiagramViewModel);
         DiagramViewModel.EnableMiniMap.Value = true;
-        ToolBarViewModel = new ToolBarViewModel(dialogService, this);
+        ToolBarViewModel = new ToolBarViewModel(dialogService);
 
         DiagramViewModel.EnableMiniMap.Value = true;
         DiagramViewModel.EnableBrushThickness.Value = true;

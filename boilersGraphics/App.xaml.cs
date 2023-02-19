@@ -1,22 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Reflection;
-using System.Windows;
-using System.Windows.Threading;
-using Windows.Services.Store;
-using boilersGraphics.Extensions;
+﻿using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
 using boilersGraphics.Models;
 using boilersGraphics.ViewModels;
 using boilersGraphics.Views;
-using boilersGraphics.Views.ColorCorrect;
 using NLog;
 using Prism.Commands;
 using Prism.Ioc;
 using Prism.Services.Dialogs;
 using Prism.Unity;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Reflection;
+using System.Windows;
+using System.Windows.Threading;
 using Unity;
+using Windows.Services.Store;
 using WinRT;
 using static boilersGraphics.ViewModels.CustomMessageBoxViewModel;
 using Path = System.IO.Path;
@@ -200,6 +199,8 @@ public partial class App : PrismApplication
 
         containerRegistry.RegisterForNavigation<Views.ColorCorrect.Hsv, ViewModels.ColorCorrect.HsvViewModel>();
         containerRegistry.RegisterForNavigation<Views.ColorCorrect.ToneCurve, ViewModels.ColorCorrect.ToneCurveViewModel>();
+        containerRegistry.RegisterForNavigation<Views.ColorCorrect.NegativePositiveConversion, ViewModels.ColorCorrect.NegativePositiveConversionViewModel>();
+        containerRegistry.RegisterForNavigation<Views.ColorCorrect.Binarization, ViewModels.ColorCorrect.BinarizationViewModel>();
         containerRegistry.RegisterDialog<ColorCorrectInstruction, ColorCorrectInstructionViewModel>();
 
         //containerRegistry.RegisterSingleton<ProgressBarWithOutputViewModel>();

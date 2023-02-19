@@ -23,6 +23,11 @@ namespace boilersGraphics.Helpers
             var except = new SelectableDesignerItemViewModelBase[] { background }.Where(x => x is not null);
             foreach (var item in diagramViewModel.AllItems.Value.Except(except).Where(x => x.IsVisible.Value && x.ZIndex.Value <= maxZIndex).OrderBy(x => x.ZIndex.Value))
             {
+                if (item is null)
+                {
+                    continue;
+                }
+
                 var view = default(FrameworkElement);
                 if (App.IsTest)
                 {

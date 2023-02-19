@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -19,6 +20,7 @@ public class DesignerCanvas : Canvas
         Mediator.Instance.Register(this);
     }
 
+    [DebuggerStepThrough]
     public static DesignerCanvas GetInstance()
     {
         return _instance;

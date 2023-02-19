@@ -23,6 +23,15 @@
     <None Include="..\LICENSE">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Assets\tessdata\eng.traineddata">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\tessdata\jpn.traineddata">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\tessdata\jpn_vert.traineddata">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="LICENSE.md">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -128,12 +137,12 @@
     <PackageReference Include="ReactiveProperty.WPF" Version="8.2.0" />
     <PackageReference Include="Rulyotano.Math.Geometry" Version="2.0.0" />
     <PackageReference Include="Rulyotano.Math.Interpolation.Bezier" Version="2.0.0" />
-    <PackageReference Include="SharpDX.D3DCompiler" Version="4.2.0" />
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.115.5" />
     <PackageReference Include="System.Data.SQLite.Linq" Version="1.0.115.5" />
     <PackageReference Include="System.Linq.Async" Version="6.0.1" />
     <PackageReference Include="System.Reactive" Version="5.0.0" />
     <PackageReference Include="System.Reactive.Windows.Threading" Version="5.0.0" />
+    <PackageReference Include="Tesseract" Version="5.2.0" />
     <PackageReference Include="WriteableBitmapEx" Version="1.6.8" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="6.0.0" />
     <PackageReference Include="System.ServiceModel.Duplex" Version="4.9.0" />
@@ -204,4 +213,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <NoWarn>1701;1702;0002;CA1416;</NoWarn>
   </PropertyGroup>
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="$(SolutionDir)ReplaceInternalResourcesDefaultConstructorToPublic\bin\$(Configuration)\net7.0\ReplaceInternalResourcesDefaultConstructorToPublic.exe $(SolutionDir)boilersGraphics\Properties\Resources.Designer.cs\" />
+  </Target>
 </Project>
