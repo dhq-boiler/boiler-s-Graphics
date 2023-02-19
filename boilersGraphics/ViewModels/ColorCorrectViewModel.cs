@@ -49,7 +49,7 @@ public class ColorCorrectViewModel : EffectViewModel
 
     #region 2値化
     public ReactivePropertySlim<double> Threshold { get; } = new();
-    public ReactivePropertySlim<double> MaxValue { get; } = new();
+    public ReactivePropertySlim<double> MaxValue { get; } = new(255);
     public ReactivePropertySlim<ThresholdTypes> ThresholdTypes { get; } = new(boilersGraphics.ViewModels.ThresholdTypes.Binary);
     public ReactivePropertySlim<bool> OtsuEnabled { get; } = new();
     #endregion

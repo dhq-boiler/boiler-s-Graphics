@@ -1,10 +1,15 @@
-﻿using Prism.Mvvm;
+﻿using boilersGraphics.Controls;
+using boilersGraphics.Helpers;
+using OpenCvSharp.WpfExtensions;
+using Prism.Mvvm;
 using Prism.Regions;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
 using System.Reactive.Disposables;
 using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace boilersGraphics.ViewModels.ColorCorrect
 {
@@ -37,6 +42,10 @@ namespace boilersGraphics.ViewModels.ColorCorrect
                 if (ViewModel.Value is not null)
                 {
                     ViewModel.Value.OtsuEnabled.Value = enabled;
+                    if (enabled)
+                    {
+                        Threshold.Value = ViewModel.Value.Threshold.Value = GetThresholdByOtsu();
+                    }
                     ViewModel.Value.Render();
                 }
             }).AddTo(_disposable);
@@ -63,12 +72,79 @@ namespace boilersGraphics.ViewModels.ColorCorrect
             }).AddTo(_disposable);
         }
 
+        private double GetThresholdByOtsu()
+        {
+            var renderer = new EffectRenderer(new WpfVisualTreeHelper());
+            var rtb = renderer.Render(ViewModel.Value.Rect.Value, DesignerCanvas.GetInstance(),
+                MainWindowViewModel.Instance.DiagramViewModel, MainWindowViewModel.Instance.DiagramViewModel.BackgroundItem.Value, ViewModel.Value, ViewModel.Value.ZIndex.Value - 1);
+            var newFormattedBitmapSource = new FormatConvertedBitmap();
+            newFormattedBitmapSource.BeginInit();
+            newFormattedBitmapSource.Source = rtb;
+            newFormattedBitmapSource.DestinationFormat = PixelFormats.Bgr24;
+            newFormattedBitmapSource.EndInit();
+
+            using (var grayscale = newFormattedBitmapSource.ToMat())
+            {
+                // 入力画像のヒストグラムを計算する
+                int[] hist = new int[256];
+                for (int i = 0; i < grayscale.Rows; i++)
+                {
+                    for (int j = 0; j < grayscale.Cols; j++)
+                    {
+                        hist[(int)grayscale.At<byte>(i, j)]++;
+                    }
+                }
+
+                // ヒストグラムの総和を計算する
+                int sum = 0;
+                for (int i = 0; i < 256; i++)
+                {
+                    sum += i * hist[i];
+                }
+
+                // クラス間分散を最大化するしきい値を計算する
+                double max_variance = 0;
+                int threshold = 0;
+                long w1 = 0;
+                long w2 = 0;
+                int sum1 = 0;
+                int sum2 = 0;
+                double variance = 0;
+                for (int i = 0; i < 256; i++)
+                {
+                    w1 += hist[i];
+                    if (w1 == 0)
+                    {
+                        continue;
+                    }
+                    w2 = grayscale.Total() - w1;
+                    if (w2 == 0)
+                    {
+                        break;
+                    }
+                    sum1 += i * hist[i];
+                    sum2 = sum - sum1;
+                    double mean1 = sum1 / (double)w1;
+                    double mean2 = sum2 / (double)w2;
+                    variance = w1 * w2 * Math.Pow(mean1 - mean2, 2);
+                    if (variance > max_variance)
+                    {
+                        max_variance = variance;
+                        threshold = i;
+                    }
+                }
+
+                return threshold;
+            }
+        }
+
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
             ViewModel.Value = navigationContext.Parameters.GetValue<ColorCorrectViewModel>("ViewModel");
             ThresholdTypes.Value = ViewModel.Value.ThresholdTypes.Value;
             Threshold.Value = ViewModel.Value.Threshold.Value;
             MaxValue.Value = ViewModel.Value.MaxValue.Value;
+            OtsuEnabled.Value = ViewModel.Value.OtsuEnabled.Value;
         }
 
         public bool IsNavigationTarget(NavigationContext navigationContext)
