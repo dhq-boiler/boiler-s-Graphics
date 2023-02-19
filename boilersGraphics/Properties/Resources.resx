@@ -642,6 +642,9 @@
   <data name="String_ApplicationLicense" xml:space="preserve">
     <value>Application license</value>
   </data>
+  <data name="String_ApplyOtsu" xml:space="preserve">
+    <value>Apply Otsu's method</value>
+  </data>
   <data name="String_AutoSave" xml:space="preserve">
     <value>Autosave</value>
   </data>
@@ -763,7 +766,7 @@
     <value>OpenSource component / Libraries / Code</value>
   </data>
   <data name="String_Otsu" xml:space="preserve">
-    <value>Otsu</value>
+    <value>Otsu's method</value>
   </data>
   <data name="String_Output" xml:space="preserve">
     <value>Output</value>

@@ -51,6 +51,7 @@ public class ColorCorrectViewModel : EffectViewModel
     public ReactivePropertySlim<double> Threshold { get; } = new();
     public ReactivePropertySlim<double> MaxValue { get; } = new();
     public ReactivePropertySlim<ThresholdTypes> ThresholdTypes { get; } = new(boilersGraphics.ViewModels.ThresholdTypes.Binary);
+    public ReactivePropertySlim<bool> OtsuEnabled { get; } = new();
     #endregion
 
 
@@ -117,7 +118,12 @@ public class ColorCorrectViewModel : EffectViewModel
                         using (var grayscale = new Mat())
                         {
                             Cv2.CvtColor(mat, grayscale, ColorConversionCodes.BGR2GRAY);
-                            Cv2.Threshold(grayscale, dest, Threshold.Value, MaxValue.Value, ThresholdTypes.Value.ToOpenCvValue());
+                            var flags = ThresholdTypes.Value.ToOpenCvValue();
+                            if (OtsuEnabled.Value)
+                            {
+                                flags |= ViewModels.ThresholdTypes.Otsu.ToOpenCvValue();
+                            }
+                            Cv2.Threshold(grayscale, dest, Threshold.Value, MaxValue.Value, flags);
                         }
                         break;
                 }

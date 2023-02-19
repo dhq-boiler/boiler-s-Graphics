@@ -18,6 +18,7 @@ namespace boilersGraphics.ViewModels.ColorCorrect
         public ReactivePropertySlim<ThresholdTypes> ThresholdTypes { get; } = new();
         public ReactivePropertySlim<double> Threshold { get; } = new();
         public ReactivePropertySlim<double> MaxValue { get; } = new();
+        public ReactivePropertySlim<bool> OtsuEnabled { get; } = new();
 
         public ReactiveCommand<SelectionChangedEventArgs> ThresholdTypesChangedCommand { get; } = new();
 
@@ -28,6 +29,14 @@ namespace boilersGraphics.ViewModels.ColorCorrect
                 if (ViewModel.Value is not null)
                 {
                     ViewModel.Value.ThresholdTypes.Value = types;
+                    ViewModel.Value.Render();
+                }
+            }).AddTo(_disposable);
+            OtsuEnabled.Subscribe(enabled =>
+            {
+                if (ViewModel.Value is not null)
+                {
+                    ViewModel.Value.OtsuEnabled.Value = enabled;
                     ViewModel.Value.Render();
                 }
             }).AddTo(_disposable);

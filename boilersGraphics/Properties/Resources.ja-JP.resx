@@ -642,6 +642,9 @@
   <data name="String_ApplicationLicense" xml:space="preserve">
     <value>アプリケーションのライセンス</value>
   </data>
+  <data name="String_ApplyOtsu" xml:space="preserve">
+    <value>大津の二値化法を適用する</value>
+  </data>
   <data name="String_AutoSave" xml:space="preserve">
     <value>自動保存</value>
   </data>
@@ -763,7 +766,7 @@
     <value>オープンソース コンポーネント / ライブラリ / コード</value>
   </data>
   <data name="String_Otsu" xml:space="preserve">
-    <value>Otsu</value>
+    <value>大津の二値化</value>
   </data>
   <data name="String_Output" xml:space="preserve">
     <value>出力</value>

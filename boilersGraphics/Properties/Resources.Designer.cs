@@ -1636,6 +1636,15 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Apply Otsu&apos;s method に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_ApplyOtsu {
+            get {
+                return ResourceManager.GetString("String_ApplyOtsu", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Autosave に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string String_AutoSave {
@@ -1996,7 +2005,7 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
-        ///   Otsu に類似しているローカライズされた文字列を検索します。
+        ///   Otsu&apos;s method に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string String_Otsu {
             get {
