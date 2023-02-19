@@ -1897,6 +1897,33 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   OCR に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_OCR {
+            get {
+                return ResourceManager.GetString("String_OCR", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Image2Text English に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_OCR_Image2Text_English {
+            get {
+                return ResourceManager.GetString("String_OCR_Image2Text_English", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Image2Text Japanese に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_OCR_Image2Text_Japanese {
+            get {
+                return ResourceManager.GetString("String_OCR_Image2Text_Japanese", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   OK に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string String_OK {

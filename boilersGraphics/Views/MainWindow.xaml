@@ -735,7 +735,10 @@
                                 <MenuItem Command="{Binding DiagramViewModel.CopyCanvasToClipboardCommand}" Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.MenuItem_CopyCanvasToClipboard, Mode=OneWay}" />
                                 <MenuItem Command="{Binding DiagramViewModel.ClearCanvasCommand}" Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.MenuItem_ClearCanvas, Mode=OneWay}" />
                                 <MenuItem Command="{Binding DiagramViewModel.SettingCommand}" Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.MenuItem_Preference, Mode=OneWay}" />
-                                <MenuItem Command="{Binding DiagramViewModel.Image2TextCommand}" Header="Image2Text" />
+                                <MenuItem Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_OCR, Mode=OneWay}">
+                                    <MenuItem Command="{Binding DiagramViewModel.Image2TextEngCommand}" Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_OCR_Image2Text_English, Mode=OneWay}" />
+                                    <MenuItem Command="{Binding DiagramViewModel.Image2TextJpnCommand}" Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_OCR_Image2Text_Japanese, Mode=OneWay}" />
+                                </MenuItem>
                             </MenuItem>
                             <MenuItem Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.MenuItem_View, Mode=OneWay}">
                                 <MenuItem Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.MenuItem_Window, Mode=OneWay}">

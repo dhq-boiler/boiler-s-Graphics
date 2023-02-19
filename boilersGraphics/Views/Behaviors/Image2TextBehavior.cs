@@ -14,10 +14,12 @@ public class Image2TextBehavior : Behavior<DesignerCanvas>
 {
     private Point? _rectangleStartPoint;
     private readonly SnapAction snapAction;
+    private readonly string language;
 
-    public Image2TextBehavior()
+    public Image2TextBehavior(string language)
     {
         snapAction = new SnapAction();
+        this.language = language;
     }
 
     protected override void OnAttached()
@@ -90,7 +92,7 @@ public class Image2TextBehavior : Behavior<DesignerCanvas>
             var adornerLayer = AdornerLayer.GetAdornerLayer(canvas);
             if (adornerLayer != null)
             {
-                var adorner = new Image2TextAdorner(canvas, _rectangleStartPoint);
+                var adorner = new Image2TextAdorner(canvas, _rectangleStartPoint, language);
                 if (adorner != null) adornerLayer.Add(adorner);
             }
         }
@@ -114,7 +116,7 @@ public class Image2TextBehavior : Behavior<DesignerCanvas>
             var adornerLayer = AdornerLayer.GetAdornerLayer(canvas);
             if (adornerLayer != null)
             {
-                var adorner = new Image2TextAdorner(canvas, _rectangleStartPoint);
+                var adorner = new Image2TextAdorner(canvas, _rectangleStartPoint, language);
                 if (adorner != null) adornerLayer.Add(adorner);
             }
         }

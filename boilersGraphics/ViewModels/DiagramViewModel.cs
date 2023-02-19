@@ -317,10 +317,16 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                 DesignerCanvas = Application.Current.MainWindow.GetChildOfType<DesignerCanvas>();
                 Layers.ToList().ForEach(x => x.UpdateAppearanceBothParentAndChild());
             }).AddTo(_CompositeDisposable);
-            Image2TextCommand = new ReactiveCommand().WithSubscribe(() =>
+            Image2TextEngCommand = new ReactiveCommand().WithSubscribe(() =>
             {
                 MainWindowViewModel.Instance.ToolBarViewModel.SelectOneToolItem(string.Empty);
-                MainWindowViewModel.Instance.ToolBarViewModel.Behaviors.Add(new Image2TextBehavior());
+                MainWindowViewModel.Instance.ToolBarViewModel.Behaviors.Add(new Image2TextBehavior("eng"));
+                MainWindowViewModel.Instance.ToolBarViewModel.ChangeHitTestToDisable();
+            }).AddTo(_CompositeDisposable);
+            Image2TextJpnCommand = new ReactiveCommand().WithSubscribe(() =>
+            {
+                MainWindowViewModel.Instance.ToolBarViewModel.SelectOneToolItem(string.Empty);
+                MainWindowViewModel.Instance.ToolBarViewModel.Behaviors.Add(new Image2TextBehavior("jpn"));
                 MainWindowViewModel.Instance.ToolBarViewModel.ChangeHitTestToDisable();
             }).AddTo(_CompositeDisposable);
         }
@@ -540,7 +546,8 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     public DelegateCommand FitCanvasCommand { get; }
     public DelegateCommand ClearCanvasCommand { get; }
     public ReactiveCommand OnLoaded { get; }
-    public ReactiveCommand Image2TextCommand { get; }
+    public ReactiveCommand Image2TextEngCommand { get; }
+    public ReactiveCommand Image2TextJpnCommand { get; }
     public MainWindowViewModel MainWindowVM { get; }
 
     public DelegateCommand<object> AddItemCommand { get; }

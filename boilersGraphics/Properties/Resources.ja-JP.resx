@@ -729,6 +729,15 @@
   <data name="String_Move" xml:space="preserve">
     <value>移動</value>
   </data>
+  <data name="String_OCR" xml:space="preserve">
+    <value>OCR</value>
+  </data>
+  <data name="String_OCR_Image2Text_English" xml:space="preserve">
+    <value>Image2Text 英語</value>
+  </data>
+  <data name="String_OCR_Image2Text_Japanese" xml:space="preserve">
+    <value>Image2Text 日本語</value>
+  </data>
   <data name="String_OK" xml:space="preserve">
     <value>OK</value>
   </data>

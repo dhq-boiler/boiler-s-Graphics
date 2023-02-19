@@ -26,12 +26,14 @@ internal class Image2TextAdorner : Adorner
     private readonly Pen _rectanglePen;
     private readonly SnapAction _snapAction;
     private Point? _startPoint;
+    private readonly string language;
 
-    public Image2TextAdorner(DesignerCanvas designerCanvas, Point? dragStartPoint)
+    public Image2TextAdorner(DesignerCanvas designerCanvas, Point? dragStartPoint, string language)
         : base(designerCanvas)
     {
         _designerCanvas = designerCanvas;
         _startPoint = dragStartPoint;
+        this.language = language;
         var parent = (AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel;
         var brush = parent.EdgeBrush.Value.Clone();
         brush.Opacity = 0.5;
@@ -90,7 +92,7 @@ internal class Image2TextAdorner : Adorner
                 OpenCvSharpHelper.SaveAsPng(rtb, filename);
 
                 // 画像からテキストを抽出する
-                using (var engine = new TesseractEngine(@"Assets\tessdata", "eng", EngineMode.Default))
+                using (var engine = new TesseractEngine(@"Assets\tessdata", language, EngineMode.Default))
                 {
                     using (var img = Pix.LoadFromFile(filename))
                     {
