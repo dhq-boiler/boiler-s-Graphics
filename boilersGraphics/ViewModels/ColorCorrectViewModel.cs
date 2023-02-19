@@ -21,6 +21,7 @@ using boilersGraphics.Models;
 using boilersGraphics.ViewModels.ColorCorrect;
 using Rect = System.Windows.Rect;
 using boilersGraphics.Exceptions;
+using Reactive.Bindings.ObjectExtensions;
 
 namespace boilersGraphics.ViewModels;
 
@@ -207,6 +208,12 @@ public class ColorCorrectViewModel : EffectViewModel
         clone.AddHue.Value = AddHue.Value;
         clone.AddSaturation.Value = AddSaturation.Value;
         clone.AddValue.Value = AddValue.Value;
+        clone.Points = Points;
+        clone.InOutPairs = InOutPairs;
+        clone.Threshold.Value = Threshold.Value;
+        clone.MaxValue.Value = MaxValue.Value;
+        clone.ThresholdTypes.Value = ThresholdTypes.Value;
+        clone.OtsuEnabled.Value = OtsuEnabled.Value;
         return clone;
     }
 
