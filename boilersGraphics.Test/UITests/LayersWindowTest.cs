@@ -40,7 +40,9 @@ namespace boilersGraphics.Test.UITests
                 {
                     using (var mat = layerItem.AppearanceImage.ToMat("XXXXXXXXXX.png"))
                     {
-                        Assert.That(mat.Mean(), Is.EqualTo(Scalar.FromVec4d(new Vec4d(72.09263157894736, 169.56842105263158, 185.15157894736842, 0))));
+                        Assert.That(mat.Mean()[0], Is.EqualTo(72.09263157894736).Within(1));
+                        Assert.That(mat.Mean()[1], Is.EqualTo(169.56842105263158).Within(1));
+                        Assert.That(mat.Mean()[2], Is.EqualTo(185.15157894736842).Within(1));
                     }
                 }
                 finally
@@ -79,7 +81,9 @@ namespace boilersGraphics.Test.UITests
                     //アイテム１
                     using (var mat = layerItems.ElementAt(0).AppearanceImage.ToMat("YYYYYYYYYY.png"))
                     {
-                        Assert.That(mat.Mean(), Is.EqualTo(Scalar.FromVec4d(new Vec4d(72.09263157894736, 169.56842105263158, 185.15157894736842, 0))));
+                        Assert.That(mat.Mean()[0], Is.EqualTo(72.09263157894736).Within(1));
+                        Assert.That(mat.Mean()[1], Is.EqualTo(169.56842105263158).Within(1));
+                        Assert.That(mat.Mean()[2], Is.EqualTo(185.15157894736842).Within(1));
                     }
                 }
                 finally

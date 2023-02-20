@@ -5,6 +5,7 @@ using OpenCvSharp;
 using System.IO;
 using System.Reflection;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace boilersGraphics.Test.UITests
 {
@@ -69,6 +70,8 @@ namespace boilersGraphics.Test.UITests
             loaddialogPO.Input_FileName(loadFilePath);
             loaddialogPO.Click_OpenButton();
             loaddialogPO.Perform();
+
+            Task.Delay(10000).Wait();
 
             LogManager.GetCurrentClassLogger().Info("H");
             TakeScreenShot("SCREENSHOT_H.png");
@@ -164,6 +167,8 @@ namespace boilersGraphics.Test.UITests
             loaddialogPO.Input_FileName(loadFilePath);
             loaddialogPO.Click_OpenButton();
             loaddialogPO.Perform();
+
+            Task.Delay(10000).Wait();
 
             TakeScreenShot("SCREENSHOT_GetDesignerCanvas.png");
             mainwindowPO.Click_SliceTool();
