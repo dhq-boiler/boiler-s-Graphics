@@ -117,7 +117,7 @@
                                                                             </ControlTemplate>
                                                                         </ToggleButton.Template>
                                                                     </ToggleButton>
-                                                                    <Border BorderBrush="{Binding IsSelected.Value, Converter={StaticResource IsSelectedToBorderBrushConverter}}" BorderThickness="1">
+                                                                    <Border x:Name="Appearance_OuterBorder"  BorderBrush="{Binding IsSelected.Value, Converter={StaticResource IsSelectedToBorderBrushConverter}}" BorderThickness="1">
                                                                         <Border.ToolTip>
                                                                             <ToolTip
                                                                                 x:Name="Appearance_ToolTip"
@@ -132,6 +132,7 @@
                                                                             </ToolTip>
                                                                         </Border.ToolTip>
                                                                         <Image
+                                                                            x:Name="Appearance_Image"
                                                                             Width="25"
                                                                             Height="25"
                                                                             RenderOptions.BitmapScalingMode="HighQuality"
