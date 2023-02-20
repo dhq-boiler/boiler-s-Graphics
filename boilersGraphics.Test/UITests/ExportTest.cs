@@ -3,6 +3,7 @@ using NLog;
 using NUnit.Framework;
 using OpenCvSharp;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,7 +15,7 @@ namespace boilersGraphics.Test.UITests
     {
         [Test, Apartment(ApartmentState.STA)]
         [Retry(3)]
-        public void 真っ白なキャンパスをエクスポートする()
+        public async Task 真っ白なキャンパスをエクスポートする()
         {
             var mainwindowPO = new MainWindowPO(Session);
 
@@ -27,7 +28,9 @@ namespace boilersGraphics.Test.UITests
             exportDialogPO.Input_FileName(exportFilePath);
             exportDialogPO.Click_PerformExportButton();
             exportDialogPO.Perform();
-            Thread.Sleep(1000);
+
+            await Task.Delay(1000);
+
             LogManager.GetCurrentClassLogger().Info(exportFilePath);
             Assert.That(exportFilePath, Does.Exist.After(5000, 50));
             TestContext.AddTestAttachment(exportFilePath);
@@ -47,7 +50,7 @@ namespace boilersGraphics.Test.UITests
 
         [Test, Apartment(ApartmentState.STA)]
         [Retry(3)]
-        public void チェッカーパターンを読み込んでエクスポートする()
+        public async Task チェッカーパターンを読み込んでエクスポートする()
         {
             var mainwindowPO = new MainWindowPO(Session);
 
@@ -71,8 +74,8 @@ namespace boilersGraphics.Test.UITests
             loaddialogPO.Click_OpenButton();
             loaddialogPO.Perform();
 
-            Task.Delay(10000).Wait();
-
+            //300秒の執行猶予を与える
+            GetElementByName("Export", 300);
             LogManager.GetCurrentClassLogger().Info("H");
             TakeScreenShot("SCREENSHOT_H.png");
             var exportdialogPO = mainwindowPO.Click_ExportButton();
@@ -152,7 +155,7 @@ namespace boilersGraphics.Test.UITests
 
         [Test, Apartment(ApartmentState.STA)]
         [Retry(3)]
-        public void スライス()
+        public async Task スライス()
         {
             TakeScreenShot("SCREENSHOT_A.png");
             var mainwindowPO = new MainWindowPO(Session);
@@ -168,9 +171,10 @@ namespace boilersGraphics.Test.UITests
             loaddialogPO.Click_OpenButton();
             loaddialogPO.Perform();
 
-            Task.Delay(10000).Wait();
-
             TakeScreenShot("SCREENSHOT_GetDesignerCanvas.png");
+
+            //300秒の執行猶予を与える
+            GetElementByName("slice", 300);
             mainwindowPO.Click_SliceTool();
             mainwindowPO.InitializeActions();
             mainwindowPO.MoveToElement(100, 100);
@@ -182,7 +186,7 @@ namespace boilersGraphics.Test.UITests
 
             var previewFilePath = $"{dir}\\ExportTest3.jpg";
 
-            Thread.Sleep(1000);
+            await Task.Delay(1000);
 
             TakeScreenShot("SCREENSHOT_PREVIEW.png");
 
