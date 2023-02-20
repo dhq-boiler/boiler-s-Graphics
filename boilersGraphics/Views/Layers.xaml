@@ -126,6 +126,7 @@
                                                                                 <Image
                                                                                     Width="{Binding Appearance.Value.Width}"
                                                                                     Height="{Binding Appearance.Value.Height}"
+                                                                                    Stretch="UniformToFill"
                                                                                     RenderOptions.BitmapScalingMode="HighQuality"
                                                                                     Source="{Binding Appearance.Value}" />
                                                                             </ToolTip>

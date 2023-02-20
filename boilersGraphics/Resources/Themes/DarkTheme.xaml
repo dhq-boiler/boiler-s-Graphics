@@ -5239,7 +5239,7 @@
         <Setter Property="Background" Value="{StaticResource ControlDefaultBackground}" />
         <Setter Property="BorderBrush" Value="{StaticResource ControlDefaultBorderBrush}" />
         <Setter Property="Foreground" Value="{StaticResource ControlDefaultForeground}" />
-        <Setter Property="MaxWidth" Value="800" />
+        <!--<Setter Property="MaxWidth" Value="800" />-->
         <Setter Property="OverridesDefaultStyle" Value="true" />
         <Setter Property="HasDropShadow" Value="True" />
         <Setter Property="Placement" Value="MousePoint" />
