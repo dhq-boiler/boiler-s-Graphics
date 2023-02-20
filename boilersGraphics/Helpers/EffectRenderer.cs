@@ -17,11 +17,11 @@ namespace boilersGraphics.Helpers
         {
         }
 
-        public override int RenderForeground(Rect? sliceRect, DiagramViewModel diagramViewModel, DesignerCanvas designerCanvas, DrawingContext context, BackgroundViewModel background, List<FrameworkElement> allViews, int maxZIndex, SelectableDesignerItemViewModelBase caller)
+        public override int RenderForeground(Rect? sliceRect, DiagramViewModel diagramViewModel, DesignerCanvas designerCanvas, DrawingContext context, BackgroundViewModel background, List<FrameworkElement> allViews, int minZIndex, int maxZIndex, SelectableDesignerItemViewModelBase caller)
         {
             var renderedCount = 0;
             var except = new SelectableDesignerItemViewModelBase[] { background }.Where(x => x is not null);
-            foreach (var item in diagramViewModel.AllItems.Value.Except(except).Where(x => x.IsVisible.Value && x.ZIndex.Value <= maxZIndex).OrderBy(x => x.ZIndex.Value))
+            foreach (var item in diagramViewModel.AllItems.Value.Except(except).Where(x => x.IsVisible.Value && x.ZIndex.Value >= minZIndex && x.ZIndex.Value <= maxZIndex).OrderBy(x => x.ZIndex.Value))
             {
                 if (item is null)
                 {

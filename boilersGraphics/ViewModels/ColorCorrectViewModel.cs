@@ -65,7 +65,7 @@ public class ColorCorrectViewModel : EffectViewModel
         {
             var renderer = new EffectRenderer(new WpfVisualTreeHelper());
             var rtb = renderer.Render(Rect.Value, Application.Current.MainWindow.GetChildOfType<DesignerCanvas>(),
-                MainWindowViewModel.Instance.DiagramViewModel, MainWindowViewModel.Instance.DiagramViewModel.BackgroundItem.Value, this, this.ZIndex.Value - 1);
+                MainWindowViewModel.Instance.DiagramViewModel, MainWindowViewModel.Instance.DiagramViewModel.BackgroundItem.Value, this, 0, this.ZIndex.Value - 1);
             var newFormattedBitmapSource = new FormatConvertedBitmap();
             newFormattedBitmapSource.BeginInit();
             newFormattedBitmapSource.Source = rtb;
