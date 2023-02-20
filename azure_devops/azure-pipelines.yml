@@ -104,7 +104,7 @@ steps:
   displayName: 'dotnet test'
   inputs:
     command: 'test'
-    arguments: '--configuration "Debug" /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura -- RunConfiguration.DisableAppDomain=true'
+    arguments: '--configuration '$(BuildConfiguration)' /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura -- RunConfiguration.DisableAppDomain=true'
     publishTestResults: true
     projects: 'boilersGraphics.Test'
 
