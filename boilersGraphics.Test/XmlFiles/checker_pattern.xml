@@ -1,3 +1,606 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:f9a5bbbd55fc1cffb5eb51a336f3adffd3118813dcbacb871fbb38ccfea9376d
-size 30633
+﻿<?xml version="1.0" encoding="utf-8"?>
+<boilersGraphics>
+  <Version>2.4</Version>
+  <Layers>
+    <Layer>
+      <IsVisible>true</IsVisible>
+      <Name>レイヤー1</Name>
+      <Color>#FFB2A3C0</Color>
+      <Children>
+        <LayerItem>
+          <IsVisible>true</IsVisible>
+          <Name>アイテム1</Name>
+          <Color>#FF02D641</Color>
+          <Item>
+            <DesignerItem>
+              <ID>e4128c86-ed5d-4d08-8eff-82636c57a99b</ID>
+              <ParentID>00000000-0000-0000-0000-000000000000</ParentID>
+              <Type>boilersGraphics.ViewModels.NRectangleViewModel</Type>
+              <Left>0</Left>
+              <Top>0</Top>
+              <Width>100</Width>
+              <Height>100</Height>
+              <ZIndex>0</ZIndex>
+              <EdgeBrush>
+                <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FF000000</SolidColorBrush>
+              </EdgeBrush>
+              <FillBrush>
+                <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FF000000</SolidColorBrush>
+              </FillBrush>
+              <EdgeThickness>0</EdgeThickness>
+              <PathGeometryNoRotate>F1M0.3436418752388968,0.38461520859446835L100.34364288385669,0.38461520859446835 100.34364288385669,100.38461731027188 0.3436418752388968,100.38461731027188 0.3436418752388968,0.38461520859446835z</PathGeometryNoRotate>
+              <PathGeometryRotate></PathGeometryRotate>
+              <RotationAngle>0</RotationAngle>
+            </DesignerItem>
+          </Item>
+          <Children />
+        </LayerItem>
+        <LayerItem>
+          <IsVisible>true</IsVisible>
+          <Name>アイテム2</Name>
+          <Color>#FF38D0E5</Color>
+          <Item>
+            <DesignerItem>
+              <ID>4c0d7e65-700a-4ddf-9dd2-dbf3df7584f3</ID>
+              <ParentID>00000000-0000-0000-0000-000000000000</ParentID>
+              <Type>boilersGraphics.ViewModels.NRectangleViewModel</Type>
+              <Left>100</Left>
+              <Top>100</Top>
+              <Width>100</Width>
+              <Height>100</Height>
+              <ZIndex>1</ZIndex>
+              <EdgeBrush>
+                <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FF000000</SolidColorBrush>
+              </EdgeBrush>
+              <FillBrush>
+                <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FF000000</SolidColorBrush>
+              </FillBrush>
+              <EdgeThickness>0</EdgeThickness>
+              <PathGeometryNoRotate>F1M0.4484310857652711,0.47619024989515313L100.44843149317302,0.47619024989515313 100.44843149317302,100.47619063865851 0.4484310857652711,100.47619063865851 0.4484310857652711,0.47619024989515313z</PathGeometryNoRotate>
+              <PathGeometryRotate></PathGeometryRotate>
+              <RotationAngle>0</RotationAngle>
+            </DesignerItem>
+          </Item>
+          <Children />
+        </LayerItem>
+        <LayerItem>
+          <IsVisible>true</IsVisible>
+          <Name>アイテム3</Name>
+          <Color>#FF9A9C35</Color>
+          <Item>
+            <DesignerItem>
+              <ID>15f0ccae-aaa1-4738-9b47-4657429952a3</ID>
+              <ParentID>00000000-0000-0000-0000-000000000000</ParentID>
+              <Type>boilersGraphics.ViewModels.NRectangleViewModel</Type>
+              <Left>200</Left>
+              <Top>200</Top>
+              <Width>100</Width>
+              <Height>100</Height>
+              <ZIndex>2</ZIndex>
+              <EdgeBrush>
+                <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FF000000</SolidColorBrush>
+              </EdgeBrush>
+              <FillBrush>
+                <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FF000000</SolidColorBrush>
+              </FillBrush>
+              <EdgeThickness>0</EdgeThickness>
+              <PathGeometryNoRotate>F1M0.4694831802607643,0.4807693869498677L100.46948441407457,0.4807693869498677 100.46948441407457,100.48076593780019 0.4694831802607643,100.48076593780019 0.4694831802607643,0.4807693869498677z</PathGeometryNoRotate>
+              <PathGeometryRotate></PathGeometryRotate>
+              <RotationAngle>0</RotationAngle>
+            </DesignerItem>
+          </Item>
+          <Children />
+        </LayerItem>
+        <LayerItem>
+          <IsVisible>true</IsVisible>
+          <Name>アイテム4</Name>
+          <Color>#FFA747BF</Color>
+          <Item>
+            <DesignerItem>
+              <ID>9c18eac8-6c2b-4797-9d1d-beae7c038a15</ID>
+              <ParentID>00000000-0000-0000-0000-000000000000</ParentID>
+              <Type>boilersGraphics.ViewModels.NRectangleViewModel</Type>
+              <Left>300</Left>
+              <Top>300</Top>
+              <Width>100</Width>
+              <Height>100</Height>
+              <ZIndex>3</ZIndex>
+              <EdgeBrush>
+                <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FF000000</SolidColorBrush>
+              </EdgeBrush>
+              <FillBrush>
+                <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FF000000</SolidColorBrush>
+              </FillBrush>
+              <EdgeThickness>0</EdgeThickness>
+              <PathGeometryNoRotate>F1M0.45662097312781574,0.4807690417771634L100.45662007580061,0.4807690417771634 100.45662007580061,100.48076566614918 0.45662097312781574,100.48076566614918 0.45662097312781574,0.4807690417771634z</PathGeometryNoRotate>
+              <PathGeometryRotate></PathGeometryRotate>
+              <RotationAngle>0</RotationAngle>
+            </DesignerItem>
+          </Item>
+          <Children />
+        </LayerItem>
+        <LayerItem>
+          <IsVisible>true</IsVisible>
+          <Name>アイテム5</Name>
+          <Color>#FF27A3D1</Color>
+          <Item>
+            <DesignerItem>
+              <ID>83c52c7e-964b-41a3-8875-7c61180f6847</ID>
+              <ParentID>00000000-0000-0000-0000-000000000000</ParentID>
+              <Type>boilersGraphics.ViewModels.NRectangleViewModel</Type>
+              <Left>400</Left>
+              <Top>400</Top>
+              <Width>100</Width>
+              <Height>100</Height>
+              <ZIndex>4</ZIndex>
+              <EdgeBrush>
+                <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FF000000</SolidColorBrush>
+              </EdgeBrush>
+              <FillBrush>
+                <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FF000000</SolidColorBrush>
+              </FillBrush>
+              <EdgeThickness>0</EdgeThickness>
+              <PathGeometryNoRotate>F1M0,0L100.00000217982702,0 100.00000217982702,99.9999973871937 0,99.9999973871937z</PathGeometryNoRotate>
+              <PathGeometryRotate></PathGeometryRotate>
+              <RotationAngle>0</RotationAngle>
+            </DesignerItem>
+          </Item>
+          <Children />
+        </LayerItem>
+        <LayerItem>
+          <IsVisible>true</IsVisible>
+          <Name>アイテム6</Name>
+          <Color>#FFAB7908</Color>
+          <Item>
+            <DesignerItem>
+              <ID>42f822cb-d7d0-452d-b262-dec01ac47123</ID>
+              <ParentID>00000000-0000-0000-0000-000000000000</ParentID>
+              <Type>boilersGraphics.ViewModels.NRectangleViewModel</Type>
+              <Left>500</Left>
+              <Top>500</Top>
+              <Width>100</Width>
+              <Height>100</Height>
+              <ZIndex>5</ZIndex>
+              <EdgeBrush>
+                <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FF000000</SolidColorBrush>
+              </EdgeBrush>
+              <FillBrush>
+                <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FF000000</SolidColorBrush>
+              </FillBrush>
+              <EdgeThickness>0</EdgeThickness>
+              <PathGeometryNoRotate>F1M0,0L100.00000210756747,0 100.00000210756747,99.9999999999999 0,99.9999999999999z</PathGeometryNoRotate>
+              <PathGeometryRotate></PathGeometryRotate>
+              <RotationAngle>0</RotationAngle>
+            </DesignerItem>
+          </Item>
+          <Children />
+        </LayerItem>
+        <LayerItem>
+          <IsVisible>true</IsVisible>
+          <Name>アイテム7</Name>
+          <Color>#FF78D72D</Color>
+          <Item>
+            <DesignerItem>
+              <ID>89c404bc-717e-46d6-8b9d-0b1c96cfea4e</ID>
+              <ParentID>00000000-0000-0000-0000-000000000000</ParentID>
+              <Type>boilersGraphics.ViewModels.NRectangleViewModel</Type>
+              <Left>600</Left>
+              <Top>600</Top>
+              <Width>100</Width>
+              <Height>100</Height>
+              <ZIndex>6</ZIndex>
+              <EdgeBrush>
+                <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FF000000</SolidColorBrush>
+              </EdgeBrush>
+              <FillBrush>
+                <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FF000000</SolidColorBrush>
+              </FillBrush>
+              <EdgeThickness>0</EdgeThickness>
+              <PathGeometryNoRotate>F1M0,0L100,0 100,99.99999738719364 0,99.99999738719364z</PathGeometryNoRotate>
+              <PathGeometryRotate></PathGeometryRotate>
+              <RotationAngle>0</RotationAngle>
+            </DesignerItem>
+          </Item>
+          <Children />
+        </LayerItem>
+        <LayerItem>
+          <IsVisible>true</IsVisible>
+          <Name>アイテム8</Name>
+          <Color>#FFD58A2B</Color>
+          <Item>
+            <DesignerItem>
+              <ID>d804f306-bd05-466d-8d27-f1652cd78454</ID>
+              <ParentID>00000000-0000-0000-0000-000000000000</ParentID>
+              <Type>boilersGraphics.ViewModels.NRectangleViewModel</Type>
+              <Left>700</Left>
+              <Top>700</Top>
+              <Width>100</Width>
+              <Height>100</Height>
+              <ZIndex>7</ZIndex>
+              <EdgeBrush>
+                <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FF000000</SolidColorBrush>
+              </EdgeBrush>
+              <FillBrush>
+                <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FF000000</SolidColorBrush>
+              </FillBrush>
+              <EdgeThickness>0</EdgeThickness>
+              <PathGeometryNoRotate>F1M0,0L99.99999753890499,0 99.99999753890499,100.00000247707618 0,100.00000247707618z</PathGeometryNoRotate>
+              <PathGeometryRotate></PathGeometryRotate>
+              <RotationAngle>0</RotationAngle>
+            </DesignerItem>
+          </Item>
+          <Children />
+        </LayerItem>
+        <LayerItem>
+          <IsVisible>true</IsVisible>
+          <Name>アイテム9</Name>
+          <Color>#FF2DB02A</Color>
+          <Item>
+            <DesignerItem>
+              <ID>044cc09d-f6ec-4c9b-8dca-1ea5ef66af40</ID>
+              <ParentID>00000000-0000-0000-0000-000000000000</ParentID>
+              <Type>boilersGraphics.ViewModels.NRectangleViewModel</Type>
+              <Left>800</Left>
+              <Top>800</Top>
+              <Width>100</Width>
+              <Height>100</Height>
+              <ZIndex>8</ZIndex>
+              <EdgeBrush>
+                <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FF000000</SolidColorBrush>
+              </EdgeBrush>
+              <FillBrush>
+                <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FF000000</SolidColorBrush>
+              </FillBrush>
+              <EdgeThickness>0</EdgeThickness>
+              <PathGeometryNoRotate>F1M0,0L100.0000024297434,0 100.0000024297434,100.0000012052756 0,100.0000012052756z</PathGeometryNoRotate>
+              <PathGeometryRotate></PathGeometryRotate>
+              <RotationAngle>0</RotationAngle>
+            </DesignerItem>
+          </Item>
+          <Children />
+        </LayerItem>
+        <LayerItem>
+          <IsVisible>true</IsVisible>
+          <Name>アイテム10</Name>
+          <Color>#FF89339E</Color>
+          <Item>
+            <DesignerItem>
+              <ID>5f50ae71-b2b9-4aba-bb8b-1ea9d70005f0</ID>
+              <ParentID>00000000-0000-0000-0000-000000000000</ParentID>
+              <Type>boilersGraphics.ViewModels.NRectangleViewModel</Type>
+              <Left>900</Left>
+              <Top>900</Top>
+              <Width>100</Width>
+              <Height>100</Height>
+              <ZIndex>9</ZIndex>
+              <EdgeBrush>
+                <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FF000000</SolidColorBrush>
+              </EdgeBrush>
+              <FillBrush>
+                <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FF000000</SolidColorBrush>
+              </FillBrush>
+              <EdgeThickness>0</EdgeThickness>
+              <PathGeometryNoRotate>F1M0.5050500160990337,0.5050500160990337L100.50504905279163,0.5050500160990337 100.50504905279163,100.50504905279163 0.5050500160990337,100.50504905279163 0.5050500160990337,0.5050500160990337z</PathGeometryNoRotate>
+              <PathGeometryRotate></PathGeometryRotate>
+              <RotationAngle>0</RotationAngle>
+            </DesignerItem>
+          </Item>
+          <Children />
+        </LayerItem>
+      </Children>
+    </Layer>
+  </Layers>
+  <Configuration>
+    <Left>0</Left>
+    <Top>0</Top>
+    <Width>1000</Width>
+    <Height>1000</Height>
+    <CanvasFillBrush>
+      <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+    </CanvasFillBrush>
+    <EnablePointSnap>true</EnablePointSnap>
+    <SnapPower>10</SnapPower>
+    <ColorSpots>
+      <ColorSpot0>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot0>
+      <ColorSpot1>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot1>
+      <ColorSpot2>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot2>
+      <ColorSpot3>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot3>
+      <ColorSpot4>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot4>
+      <ColorSpot5>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot5>
+      <ColorSpot6>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot6>
+      <ColorSpot7>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot7>
+      <ColorSpot8>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot8>
+      <ColorSpot9>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot9>
+      <ColorSpot10>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot10>
+      <ColorSpot11>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot11>
+      <ColorSpot12>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot12>
+      <ColorSpot13>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot13>
+      <ColorSpot14>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot14>
+      <ColorSpot15>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot15>
+      <ColorSpot16>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot16>
+      <ColorSpot17>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot17>
+      <ColorSpot18>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot18>
+      <ColorSpot19>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot19>
+      <ColorSpot20>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot20>
+      <ColorSpot21>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot21>
+      <ColorSpot22>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot22>
+      <ColorSpot23>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot23>
+      <ColorSpot24>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot24>
+      <ColorSpot25>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot25>
+      <ColorSpot26>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot26>
+      <ColorSpot27>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot27>
+      <ColorSpot28>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot28>
+      <ColorSpot29>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot29>
+      <ColorSpot30>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot30>
+      <ColorSpot31>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot31>
+      <ColorSpot32>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot32>
+      <ColorSpot33>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot33>
+      <ColorSpot34>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot34>
+      <ColorSpot35>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot35>
+      <ColorSpot36>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot36>
+      <ColorSpot37>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot37>
+      <ColorSpot38>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot38>
+      <ColorSpot39>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot39>
+      <ColorSpot40>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot40>
+      <ColorSpot41>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot41>
+      <ColorSpot42>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot42>
+      <ColorSpot43>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot43>
+      <ColorSpot44>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot44>
+      <ColorSpot45>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot45>
+      <ColorSpot46>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot46>
+      <ColorSpot47>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot47>
+      <ColorSpot48>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot48>
+      <ColorSpot49>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot49>
+      <ColorSpot50>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot50>
+      <ColorSpot51>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot51>
+      <ColorSpot52>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot52>
+      <ColorSpot53>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot53>
+      <ColorSpot54>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot54>
+      <ColorSpot55>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot55>
+      <ColorSpot56>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot56>
+      <ColorSpot57>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot57>
+      <ColorSpot58>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot58>
+      <ColorSpot59>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot59>
+      <ColorSpot60>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot60>
+      <ColorSpot61>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot61>
+      <ColorSpot62>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot62>
+      <ColorSpot63>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot63>
+      <ColorSpot64>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot64>
+      <ColorSpot65>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot65>
+      <ColorSpot66>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot66>
+      <ColorSpot67>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot67>
+      <ColorSpot68>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot68>
+      <ColorSpot69>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot69>
+      <ColorSpot70>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot70>
+      <ColorSpot71>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot71>
+      <ColorSpot72>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot72>
+      <ColorSpot73>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot73>
+      <ColorSpot74>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot74>
+      <ColorSpot75>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot75>
+      <ColorSpot76>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot76>
+      <ColorSpot77>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot77>
+      <ColorSpot78>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot78>
+      <ColorSpot79>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot79>
+      <ColorSpot80>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot80>
+      <ColorSpot81>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot81>
+      <ColorSpot82>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot82>
+      <ColorSpot83>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot83>
+      <ColorSpot84>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot84>
+      <ColorSpot85>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot85>
+      <ColorSpot86>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot86>
+      <ColorSpot87>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot87>
+      <ColorSpot88>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot88>
+      <ColorSpot89>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot89>
+      <ColorSpot90>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot90>
+      <ColorSpot91>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot91>
+      <ColorSpot92>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot92>
+      <ColorSpot93>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot93>
+      <ColorSpot94>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot94>
+      <ColorSpot95>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot95>
+      <ColorSpot96>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot96>
+      <ColorSpot97>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot97>
+      <ColorSpot98>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot98>
+      <ColorSpot99>
+        <SolidColorBrush xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">#FFFFFFFF</SolidColorBrush>
+      </ColorSpot99>
+    </ColorSpots>
+  </Configuration>
+</boilersGraphics>
