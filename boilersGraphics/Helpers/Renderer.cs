@@ -26,7 +26,7 @@ public class Renderer
     }
 
     public RenderTargetBitmap Render(Rect? sliceRect, DesignerCanvas designerCanvas,
-        DiagramViewModel diagramViewModel, BackgroundViewModel backgroundItem, SelectableDesignerItemViewModelBase caller, int maxZIndex = int.MaxValue)
+        DiagramViewModel diagramViewModel, BackgroundViewModel backgroundItem, SelectableDesignerItemViewModelBase caller, int minZIndex = 0, int maxZIndex = int.MaxValue)
     {
         var size = GetRenderSize(sliceRect, diagramViewModel);
 
@@ -44,12 +44,12 @@ public class Renderer
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                renderedCount = RenderInternal(sliceRect, designerCanvas, diagramViewModel, backgroundItem, maxZIndex, renderedCount, rtb, caller);
+                renderedCount = RenderInternal(sliceRect, designerCanvas, diagramViewModel, backgroundItem, minZIndex, maxZIndex, renderedCount, rtb, caller);
             });
         }
         else
         {
-            renderedCount = RenderInternal(sliceRect, designerCanvas, diagramViewModel, backgroundItem, maxZIndex, renderedCount, rtb, caller);
+            renderedCount = RenderInternal(sliceRect, designerCanvas, diagramViewModel, backgroundItem, minZIndex, maxZIndex, renderedCount, rtb, caller);
         }
 
         if (renderedCount == 0)
@@ -61,7 +61,7 @@ public class Renderer
     }
 
     private int RenderInternal(Rect? sliceRect, DesignerCanvas designerCanvas, DiagramViewModel diagramViewModel,
-        BackgroundViewModel backgroundItem, int maxZIndex, int renderedCount, RenderTargetBitmap rtb, SelectableDesignerItemViewModelBase caller)
+        BackgroundViewModel backgroundItem, int minZIndex, int maxZIndex, int renderedCount, RenderTargetBitmap rtb, SelectableDesignerItemViewModelBase caller)
     {
         var visual = new DrawingVisual();
         using (var context = visual.RenderOpen())
@@ -74,7 +74,7 @@ public class Renderer
             //前景を描画
             renderedCount += RenderForeground(sliceRect, diagramViewModel, designerCanvas, context,
                 backgroundItem,
-                allViews, maxZIndex, caller);
+                allViews, minZIndex, maxZIndex, caller);
         }
 
         rtb.Render(visual);
@@ -95,11 +95,11 @@ public class Renderer
 
     public virtual int RenderForeground(Rect? sliceRect, DiagramViewModel diagramViewModel,
         DesignerCanvas designerCanvas, DrawingContext context, BackgroundViewModel background,
-        List<FrameworkElement> allViews, int maxZIndex, SelectableDesignerItemViewModelBase caller)
+        List<FrameworkElement> allViews, int minZIndex, int maxZIndex, SelectableDesignerItemViewModelBase caller)
     {
         var renderedCount = 0;
         var except = new SelectableDesignerItemViewModelBase[] { background }.Where(x => x is not null);
-        foreach (var item in diagramViewModel.AllItems.Value.Except(except).Where(x => x.IsVisible.Value && x.ZIndex.Value <= maxZIndex).OrderBy(x => x.ZIndex.Value))
+        foreach (var item in diagramViewModel.AllItems.Value.Except(except).Where(x => x.IsVisible.Value && x.ZIndex.Value >= minZIndex && x.ZIndex.Value <= maxZIndex).OrderBy(x => x.ZIndex.Value))
         {
             var view = default(FrameworkElement);
             if (App.IsTest)
@@ -120,6 +120,11 @@ public class Renderer
                 view = PART_ContentPresenter;
             }
 
+            if (item is DesignerItemViewModelBase des)
+            {
+                Canvas.SetLeft(view, des.Left.Value);
+                Canvas.SetTop(view, des.Top.Value);
+            }
             Size renderSize;
             if (item is ISizeRps size1)
             {
@@ -162,7 +167,7 @@ public class Renderer
                                 rect = sliceRect.Value;
                                 var intersectSrc = new Rect(designerItem.Left.Value, designerItem.Top.Value, bounds.Width,
                                     bounds.Height);
-                                rect = Rect.Union(rect, intersectSrc);
+                                rect = Rect.Intersect(rect, intersectSrc);
 
                                 if (rect != Rect.Empty)
                                 {

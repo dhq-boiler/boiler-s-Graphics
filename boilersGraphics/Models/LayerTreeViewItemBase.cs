@@ -107,14 +107,14 @@ public abstract class LayerTreeViewItemBase : BindableBase, IDisposable, IObserv
 
     public ReactiveCommand ChangeNameCommand { get; } = new();
 
-    public abstract void UpdateAppearance(IEnumerable<SelectableDesignerItemViewModelBase> items);
+    public abstract void UpdateAppearance(IEnumerable<SelectableDesignerItemViewModelBase> items, bool backgroundIncluded = false);
 
     internal void UpdateAppearanceBothParentAndChild()
     {
         LogManager.GetCurrentClassLogger().Trace("detected Layer changes. run Layer.UpdateAppearance().");
         UpdateAppearance(Children
             .SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(xx => xx.Children)
-            .Select(x => (x as LayerItem).Item.Value));
+            .Select(x => (x as LayerItem).Item.Value), true);
         Children.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
             .ToList()
             .ForEach(x =>

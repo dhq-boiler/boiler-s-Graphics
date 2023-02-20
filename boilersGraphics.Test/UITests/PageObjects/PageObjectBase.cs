@@ -5,6 +5,8 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Appium.Windows;
 using OpenQA.Selenium.Support.UI;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 
 namespace boilersGraphics.Test.UITests.PageObjects
@@ -140,6 +142,33 @@ namespace boilersGraphics.Test.UITests.PageObjects
             }
 
             return element;
+        }
+
+        public static IEnumerable<WindowsElement> GetElementsBy(By by, int timeOutSeconds = 10)
+        {
+            By by2 = by;
+            List<WindowsElement> elements = new List<WindowsElement>();
+            DefaultWait<WindowsDriver<WindowsElement>> defaultWait = new DefaultWait<WindowsDriver<WindowsElement>>(Session)
+            {
+                Timeout = TimeSpan.FromSeconds(timeOutSeconds),
+                Message = "Element with By " + by2.ToString() + " not found."
+            };
+            defaultWait.IgnoreExceptionTypes(typeof(WebDriverException));
+            try
+            {
+                defaultWait.Until(delegate (WindowsDriver<WindowsElement> Driver)
+                {
+                    elements.AddRange(Driver.FindElements(by2));
+                    return elements.Count() > 0;
+                });
+            }
+            catch (WebDriverTimeoutException ex)
+            {
+                s_logger.Error(ex);
+                Assert.Fail(ex.Message);
+            }
+
+            return elements;
         }
 
         public static bool ExistsElementByAutomationID(string automationId, int timeOutSeconds = 10)

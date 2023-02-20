@@ -239,7 +239,11 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                 polyBezierVM.SnapPoint0VM.Value.IsSelected.Value = true;
                 polyBezierVM.SnapPoint1VM.Value.IsSelected.Value = true;
             });
-            LoadedCommand = new DelegateCommand(() => { LogManager.GetCurrentClassLogger().Trace("LoadedCommand"); });
+            LoadedCommand = new DelegateCommand(() => 
+            { 
+                LogManager.GetCurrentClassLogger().Trace("LoadedCommand");
+                Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).ToList().ForEach(x => x.UpdateAppearance(x.Children.Select(y => (y as LayerItem).Item.Value), true));
+            });
             FitCanvasCommand = new DelegateCommand(() =>
                 {
                     LogManager.GetCurrentClassLogger().Trace("FitCanvasCommand");
