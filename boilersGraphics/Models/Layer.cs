@@ -1,4 +1,11 @@
-﻿using System;
+﻿using boilersGraphics.Controls;
+using boilersGraphics.Extensions;
+using boilersGraphics.Helpers;
+using boilersGraphics.ViewModels;
+using Prism.Mvvm;
+using Reactive.Bindings;
+using Reactive.Bindings.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Concurrency;
@@ -7,14 +14,6 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
-using boilersGraphics.Controls;
-using boilersGraphics.Extensions;
-using boilersGraphics.Helpers;
-using boilersGraphics.ViewModels;
-using NLog;
-using Prism.Mvvm;
-using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
 
 namespace boilersGraphics.Models;
 
@@ -91,23 +90,29 @@ public class Layer : LayerTreeViewItemBase, IObservable<LayerObservable>, ICompa
         observer.OnNext(new LayerObservable());
         return new LayerDisposable(this, observer);
     }
-    public override void UpdateAppearance(IEnumerable<SelectableDesignerItemViewModelBase> items)
+
+    public override void UpdateAppearance(IEnumerable<SelectableDesignerItemViewModelBase> items, bool backgroundIncluded = false)
     {
-        if (items.Count() == 0)
+        if (!backgroundIncluded && items.Count() == 0)
             return;
         double minX, maxX, minY, maxY;
-        var width = Measure.GetWidth(items, out minX, out maxX);
-        var height = Measure.GetHeight(items, out minY, out maxY);
+        var _items = items;
+        if (backgroundIncluded)
+        {
+            _items = _items.Union(new SelectableDesignerItemViewModelBase[] { DiagramViewModel.Instance.BackgroundItem.Value });
+        }
+        var width = Measure.GetWidth(_items, out minX, out maxX);
+        var height = Measure.GetHeight(_items, out minY, out maxY);
 
         if (width <= 0 || height <= 0)
             return;
 
-        Rect? sliceRect = DiagramViewModel.Instance.BackgroundItem.Value.Rect.Value;
-        items.Cast<IRect>().ToList().ForEach(x => sliceRect = (!sliceRect.HasValue ? x.Rect.Value : Rect.Union(sliceRect.Value, x.Rect.Value)));
+        Rect? sliceRect = null;
+        _items.Cast<IRect>().ToList().ForEach(x => sliceRect = (!sliceRect.HasValue ? x.Rect.Value : Rect.Union(sliceRect.Value, x.Rect.Value)));
         var renderer = new Renderer(new WpfVisualTreeHelper());
         Appearance.Value = renderer.Render(sliceRect, DesignerCanvas.GetInstance(),
             DiagramViewModel.Instance,
-            DiagramViewModel.Instance.BackgroundItem.Value, null, items.Min(x => x.ZIndex.Value), items.Max(x => x.ZIndex.Value));
+            DiagramViewModel.Instance.BackgroundItem.Value, null, _items.Min(x => x.ZIndex.Value), _items.Max(x => x.ZIndex.Value));
     }
 
     private static void UpdateAppearanceByItem(DesignerCanvas designerCanvas, double minX, double minY,
