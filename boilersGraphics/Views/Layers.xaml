@@ -64,28 +64,29 @@
                                                                     Grid.Column="0"
                                                                     Grid.ColumnSpan="2"
                                                                     Orientation="Horizontal">
-                                                                    <Button Command="{Binding SwitchVisibilityCommand}">
+                                                                    <Button x:Name="Visibility_Button"
+                                                                            Command="{Binding SwitchVisibilityCommand}">
                                                                         <Button.Template>
                                                                             <ControlTemplate TargetType="{x:Type Button}">
                                                                                 <Image
-                                                                                    Name="Eye"
+                                                                                    Name="Eye_Image"
                                                                                     Width="25"
                                                                                     Height="25"
                                                                                     RenderOptions.BitmapScalingMode="HighQuality"
                                                                                     Source="{StaticResource Icon_Eye}" />
                                                                                 <ControlTemplate.Triggers>
                                                                                     <DataTrigger Binding="{Binding IsVisible.Value}" Value="True">
-                                                                                        <Setter TargetName="Eye" Property="Source" Value="{StaticResource Icon_Eye}" />
+                                                                                        <Setter TargetName="Eye_Image" Property="Source" Value="{StaticResource Icon_Eye}" />
                                                                                     </DataTrigger>
                                                                                     <DataTrigger Binding="{Binding IsVisible.Value}" Value="False">
-                                                                                        <Setter TargetName="Eye" Property="Source" Value="{StaticResource Icon_EyeSlash}" />
+                                                                                        <Setter TargetName="Eye_Image" Property="Source" Value="{StaticResource Icon_EyeSlash}" />
                                                                                     </DataTrigger>
                                                                                 </ControlTemplate.Triggers>
                                                                             </ControlTemplate>
                                                                         </Button.Template>
                                                                     </Button>
-                                                                    <Rectangle Width="5" Fill="{Binding Color.Value, Converter={StaticResource ToSolidColorBrushConverter}}" />
-                                                                    <ToggleButton Name="Expander" IsChecked="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=IsExpanded, Mode=TwoWay}">
+                                                                    <Rectangle x:Name="LayerItem_Color"  Width="5" Fill="{Binding Color.Value, Converter={StaticResource ToSolidColorBrushConverter}}" />
+                                                                    <ToggleButton x:Name="LayerItem_ToggleButton" IsChecked="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=IsExpanded, Mode=TwoWay}">
                                                                         <ToggleButton.Template>
                                                                             <ControlTemplate TargetType="ToggleButton">
                                                                                 <Grid
@@ -117,13 +118,17 @@
                                                                             </ControlTemplate>
                                                                         </ToggleButton.Template>
                                                                     </ToggleButton>
-                                                                    <Border x:Name="Appearance_OuterBorder"  BorderBrush="{Binding IsSelected.Value, Converter={StaticResource IsSelectedToBorderBrushConverter}}" BorderThickness="1">
+                                                                    <Border x:Name="Appearance_OuterBorder"
+                                                                            AutomationProperties.AutomationId="Appearance_OuterBorder"
+                                                                            BorderBrush="{Binding IsSelected.Value, Converter={StaticResource IsSelectedToBorderBrushConverter}}" BorderThickness="1">
                                                                         <Border.ToolTip>
                                                                             <ToolTip
                                                                                 x:Name="Appearance_ToolTip"
+                                                                                AutomationProperties.AutomationId="Appearance_ToolTip"
                                                                                 BorderBrush="Transparent"
                                                                                 BorderThickness="0">
                                                                                 <Image
+                                                                                    x:Name="Appearance_ToolTip_Image"
                                                                                     Width="{Binding Appearance.Value.Width}"
                                                                                     Height="{Binding Appearance.Value.Height}"
                                                                                     Stretch="UniformToFill"
@@ -133,6 +138,7 @@
                                                                         </Border.ToolTip>
                                                                         <Image
                                                                             x:Name="Appearance_Image"
+                                                                            AutomationProperties.AutomationId="Appearance_Image"
                                                                             Width="25"
                                                                             Height="25"
                                                                             RenderOptions.BitmapScalingMode="HighQuality"
@@ -158,7 +164,7 @@
                                                             </Grid>
                                                             <ControlTemplate.Triggers>
                                                                 <Trigger Property="HasItems" Value="False">
-                                                                    <Setter TargetName="Expander" Property="Visibility" Value="Hidden" />
+                                                                    <Setter TargetName="LayerItem_ToggleButton" Property="Visibility" Value="Hidden" />
                                                                 </Trigger>
                                                                 <Trigger Property="IsExpanded" Value="False">
                                                                     <Setter TargetName="ItemsHost" Property="Visibility" Value="Collapsed" />
@@ -175,7 +181,9 @@
                                         </TreeView.Resources>
                                         <TreeView.ItemTemplate>
                                             <HierarchicalDataTemplate ItemsSource="{Binding Children}">
-                                                <Grid Background="{Binding Background.Value}">
+                                                <Grid x:Name="LayerItem"
+                                                      AutomationProperties.AutomationId="LayerItem"
+                                                      Background="{Binding Background.Value}">
                                                     <StackPanel Orientation="Vertical">
                                                         <Separator
                                                             BorderBrush="{StaticResource LightBorderBrush}"
