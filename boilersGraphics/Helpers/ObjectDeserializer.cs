@@ -587,22 +587,30 @@ public class ObjectDeserializer
 
     public static BitmapImage Base64StringToBitmap(string base64String)
     {
-        var byteBuffer = Convert.FromBase64String(base64String);
+        var byteBuffer = new List<byte>();
+        int length = base64String.Length;
+        int index = 0;
+        while (length > 0)
+        {
+            //4文字ずつデコードする
+            byteBuffer.AddRange(Convert.FromBase64String(base64String.Substring(index, 4)));
+            index += 4;
+            length -= 4;
+        }
+
         var bitmapImage = new BitmapImage();
-        using (var memStream = new MemoryStream(byteBuffer))
+        using (var memStream = new MemoryStream(byteBuffer.ToArray()))
         using (var memStream2 = new MemoryStream())
         {
             var image = Image.FromStream(memStream);
             image.Save(memStream2, ImageFormat.Png);
-            using (var memoryStream = new MemoryStream(byteBuffer))
-            {
-                memoryStream.Position = 0;
-                bitmapImage.BeginInit();
-                bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
-                bitmapImage.StreamSource = memStream2;
-                bitmapImage.EndInit();
-                bitmapImage.Freeze();
-            }
+
+            memStream2.Position = 0;
+            bitmapImage.BeginInit();
+            bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+            bitmapImage.StreamSource = memStream2;
+            bitmapImage.EndInit();
+            bitmapImage.Freeze();
         }
 
         return bitmapImage;

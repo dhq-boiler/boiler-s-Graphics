@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Windows;
 using System.Windows.Media.Imaging;
 using System.Xml.Linq;
@@ -111,7 +112,24 @@ internal class ObjectSerializer
                         var encoder = new PngBitmapEncoder();
                         encoder.Frames.Add(BitmapFrame.Create(writeableBitmap));
                         encoder.Save(memStream);
-                        list.Add(new XElement("EmbeddedImageBase64", Convert.ToBase64String(memStream.ToArray())));
+
+                        using (var br = new BinaryReader(memStream))
+                        {
+                            memStream.Seek(0, SeekOrigin.Begin);
+                            const int CHUNK_SIZE = 1024;
+                            byte[] bs = br.ReadBytes(CHUNK_SIZE);
+                            StringBuilder base64str = new StringBuilder();
+
+                            while (bs.Length > 0)
+                            {
+
+                                base64str.Append(Convert.ToBase64String(bs));
+
+                                bs = br.ReadBytes(CHUNK_SIZE);
+                            }
+
+                            list.Add(new XElement("EmbeddedImageBase64", base64str.ToString()));
+                        }
                     }
                 }
             }
