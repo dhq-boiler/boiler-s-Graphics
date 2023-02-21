@@ -28,7 +28,7 @@ internal class RectangleAdorner : Adorner
         _designerCanvas = designerCanvas;
         _startPoint = dragStartPoint;
         this.item = item;
-        var parent = (AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel;
+        var parent = DiagramViewModel.Instance;
         var brush = parent.EdgeBrush.Value.Clone();
         brush.Opacity = 0.5;
         _rectanglePen = new Pen(brush, parent.EdgeThickness.Value.Value);
@@ -48,9 +48,9 @@ internal class RectangleAdorner : Adorner
             _snapAction.OnMouseMove(ref currentPosition);
             _endPoint = currentPosition;
 
-            (Application.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.CurrentPoint =
+            MainWindowViewModel.Instance.DiagramViewModel.CurrentPoint =
                 currentPosition;
-            (Application.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value =
+            MainWindowViewModel.Instance.Details.Value =
                 $"({_startPoint.Value.X}, {_startPoint.Value.Y}) - ({_endPoint.Value.X}, {_endPoint.Value.Y}) (w, h) = ({_endPoint.Value.X - _startPoint.Value.X}, {_endPoint.Value.Y - _startPoint.Value.Y})";
 
             InvalidateVisual();
@@ -70,10 +70,10 @@ internal class RectangleAdorner : Adorner
 
         _snapAction.OnMouseUp(this);
 
-        if (_startPoint.HasValue && _endPoint.HasValue)
+        if (_startPoint.HasValue && _endPoint.HasValue && item is not null)
         {
             var rand = new Random();
-            item.Owner = (AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel;
+            item.Owner = DiagramViewModel.Instance;
             item.Left.Value = Math.Min(_startPoint.Value.X, _endPoint.Value.X);
             item.Top.Value = Math.Min(_startPoint.Value.Y, _endPoint.Value.Y);
             item.Width.Value = Math.Max(_startPoint.Value.X - _endPoint.Value.X,
@@ -91,7 +91,7 @@ internal class RectangleAdorner : Adorner
             item.IsSelected.Value = true;
             item.IsVisible.Value = true;
             item.Owner.DeselectAll();
-            ((AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel).AddItemCommand.Execute(item);
+            DiagramViewModel.Instance.AddItemCommand.Execute(item);
 
             if (_startPoint.Value.X < _endPoint.Value.X && _startPoint.Value.Y <= _endPoint.Value.Y)
                 //右下
@@ -112,15 +112,15 @@ internal class RectangleAdorner : Adorner
             _endPoint = null;
         }
 
-        (Application.Current.MainWindow.DataContext as MainWindowViewModel).CurrentOperation.Value = "";
-        (Application.Current.MainWindow.DataContext as MainWindowViewModel).Details.Value = "";
+        MainWindowViewModel.Instance.CurrentOperation.Value = "";
+        MainWindowViewModel.Instance.Details.Value = "";
 
         e.Handled = true;
     }
 
     private static void UpdateStatisticsCount()
     {
-        var statistics = (Application.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+        var statistics = MainWindowViewModel.Instance.Statistics.Value;
         statistics.NumberOfDrawsOfTheRectangleTool++;
         var dao = new StatisticsDao();
         dao.Update(statistics);
@@ -134,13 +134,13 @@ internal class RectangleAdorner : Adorner
 
         if (_startPoint.HasValue && _endPoint.HasValue)
             dc.DrawRectangle(
-                ((AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel).FillBrush.Value.Clone(),
+                DiagramViewModel.Instance.FillBrush.Value.Clone(),
                 _rectanglePen, ShiftEdgeThickness());
     }
 
     private Rect ShiftEdgeThickness()
     {
-        var parent = (AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel;
+        var parent = DiagramViewModel.Instance;
         var point1 = _startPoint.Value;
         point1.X += parent.EdgeThickness.Value.Value / 2;
         point1.Y += parent.EdgeThickness.Value.Value / 2;
