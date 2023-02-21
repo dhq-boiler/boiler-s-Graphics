@@ -245,7 +245,6 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                 App.Current.Dispatcher.Invoke(() =>
                 {
                     RootLayer.Value.UpdateAppearanceBothParentAndChild();
-                    //Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).ToList().ForEach(x => x.UpdateAppearance(x.Children.Select(y => (y as LayerItem).Item.Value), true));
                 }, DispatcherPriority.Render);
             });
             FitCanvasCommand = new DelegateCommand(() =>
