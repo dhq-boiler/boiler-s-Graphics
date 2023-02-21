@@ -124,6 +124,11 @@ public class LayerItem : LayerTreeViewItemBase, IDisposable, IComparable<LayerTr
             .AddTo(_disposable);
     }
 
+    public void UpdateAppearance()
+    {
+        UpdateAppearance(new SelectableDesignerItemViewModelBase[] { this.Item.Value });
+    }
+
     public override void UpdateAppearance(IEnumerable<SelectableDesignerItemViewModelBase> items, bool backgroundIncluded = false)
     {
         if (!backgroundIncluded && items.Count() == 0)
@@ -142,7 +147,7 @@ public class LayerItem : LayerTreeViewItemBase, IDisposable, IComparable<LayerTr
 
         Rect? sliceRect = null;
         _items.Cast<IRect>().ToList().ForEach(x => sliceRect = (!sliceRect.HasValue ? x.Rect.Value : Rect.Union(sliceRect.Value, x.Rect.Value)));
-        var renderer = new Renderer(new WpfVisualTreeHelper());
+        var renderer = new AppearanceRenderer(new WpfVisualTreeHelper());
         Appearance.Value = renderer.Render(sliceRect, DesignerCanvas.GetInstance(),
             DiagramViewModel.Instance,
             DiagramViewModel.Instance.BackgroundItem.Value, null, _items.Min(x => x.ZIndex.Value), _items.Max(x => x.ZIndex.Value));

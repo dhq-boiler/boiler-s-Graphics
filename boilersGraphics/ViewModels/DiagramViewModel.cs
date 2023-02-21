@@ -242,7 +242,11 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
             LoadedCommand = new DelegateCommand(() => 
             { 
                 LogManager.GetCurrentClassLogger().Trace("LoadedCommand");
-                Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).ToList().ForEach(x => x.UpdateAppearance(x.Children.Select(y => (y as LayerItem).Item.Value), true));
+                App.Current.Dispatcher.Invoke(() =>
+                {
+                    RootLayer.Value.UpdateAppearanceBothParentAndChild();
+                    //Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).ToList().ForEach(x => x.UpdateAppearance(x.Children.Select(y => (y as LayerItem).Item.Value), true));
+                }, DispatcherPriority.Render);
             });
             FitCanvasCommand = new DelegateCommand(() =>
                 {
@@ -1692,6 +1696,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
 
     private void Add(LayerItem item)
     {
+        item.Item.Value.LayerItem.Value = item;
         SelectedLayers.Value.First().AddItem(MainWindowVM, this, item);
         LogManager.GetCurrentClassLogger().Info($"Add item {item.ShowPropertiesAndFields()}");
         UpdateStatisticsCountAdd();
@@ -3082,6 +3087,10 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
         {
             FileName.Value = "*";
         }
+        App.Current.Dispatcher.Invoke(() =>
+        {
+            RootLayer.Value.UpdateAppearanceBothParentAndChild();
+        }, DispatcherPriority.Render);
     }
 
     private async Task LoadInternalForPreview(XElement root, string filename, bool isPreview = false)

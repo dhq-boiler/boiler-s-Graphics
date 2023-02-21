@@ -41,6 +41,8 @@ public class Layer : LayerTreeViewItemBase, IObservable<LayerObservable>, ICompa
                 .ToUnit()
                 .Merge(Children.ObserveElementObservableProperty(x => x.IsVisible).ToUnit())
                 .ToUnit()
+                .Merge(Children.ObserveElementObservableProperty(x => (x as LayerItem).Item.Value.ChangeFormTriggerObject).ToUnit())
+                .ToUnit()
                 .Merge(Children.ObserveElementObservableProperty(x => (x as LayerItem).Item.Value.EdgeBrush).ToUnit())
                 .ToUnit()
                 .Merge(Children.ObserveElementObservableProperty(x => (x as LayerItem).Item.Value.EdgeThickness)
@@ -53,7 +55,7 @@ public class Layer : LayerTreeViewItemBase, IObservable<LayerObservable>, ICompa
                     !MainWindowViewModel.Instance.ToolBarViewModel.Behaviors.Contains(MainWindowViewModel.Instance
                         .ToolBarViewModel.BrushBehavior));
 
-            temp.ObserveOn(new DispatcherScheduler(Dispatcher.CurrentDispatcher, DispatcherPriority.ApplicationIdle))
+            temp.ObserveOn(new DispatcherScheduler(Dispatcher.CurrentDispatcher, DispatcherPriority.Render))
                 .Subscribe(x => { UpdateAppearanceBothParentAndChild(); })
                 .AddTo(_disposable);
         }

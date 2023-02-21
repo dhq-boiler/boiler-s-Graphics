@@ -132,6 +132,7 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
                 {
                     await OnRectChanged(new Rect(Left.Value, Top.Value, Width.Value, Height.Value));
                 }
+                UpdateChangeFormTriggerObject();
             })
             .AddTo(_CompositeDisposable);
         Top
@@ -143,6 +144,7 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
                 {
                     await OnRectChanged(new Rect(Left.Value, Top.Value, Width.Value, Height.Value));
                 }
+                UpdateChangeFormTriggerObject();
             })
             .AddTo(_CompositeDisposable);
         Width
@@ -154,6 +156,7 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
                 {
                     await OnRectChanged(new Rect(Left.Value, Top.Value, Width.Value, Height.Value));
                 }
+                UpdateChangeFormTriggerObject();
             })
             .AddTo(_CompositeDisposable);
         Height
@@ -165,6 +168,7 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
                 {
                     await OnRectChanged(new Rect(Left.Value, Top.Value, Width.Value, Height.Value));
                 }
+                UpdateChangeFormTriggerObject();
             })
             .AddTo(_CompositeDisposable);
         RotationAngle
@@ -177,6 +181,7 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
                 {
                     await OnRectChanged(new Rect(Left.Value, Top.Value, Width.Value, Height.Value));
                 }
+                UpdateChangeFormTriggerObject();
             })
             .AddTo(_CompositeDisposable);
         ZIndex
@@ -191,7 +196,11 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
             .AddTo(_CompositeDisposable);
         Matrix
             .Zip(Matrix.Skip(1), (Old, New) => new { OldItem = Old, NewItem = New })
-            .Subscribe(x => UpdateTransform(nameof(Matrix), x.OldItem, x.NewItem))
+            .Subscribe(x =>
+            {
+                UpdateTransform(nameof(Matrix), x.OldItem, x.NewItem);
+                UpdateChangeFormTriggerObject();
+            })
             .AddTo(_CompositeDisposable);
         Right = Left.CombineLatest(Width, (a, b) => a + b)
             .ToReadOnlyReactivePropertySlim();
@@ -205,7 +214,11 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
             .ToReactiveProperty();
         EdgeThickness
             .Zip(EdgeThickness.Skip(1), (Old, New) => new { OldItem = Old, NewItem = New })
-            .Subscribe(x => UpdateTransform(nameof(EdgeThickness), x.OldItem, x.NewItem))
+            .Subscribe(x =>
+            {
+                UpdateTransform(nameof(EdgeThickness), x.OldItem, x.NewItem);
+                UpdateChangeFormTriggerObject();
+            })
             .AddTo(_CompositeDisposable);
 
         PathGeometry = PathGeometryNoRotate.ToReadOnlyReactivePropertySlim();
