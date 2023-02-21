@@ -1,4 +1,5 @@
-﻿using boilersGraphics.Controls;
+﻿using boilersGraphics.Adorners;
+using boilersGraphics.Controls;
 using boilersGraphics.ViewModels;
 using NLog;
 using System;
@@ -8,7 +9,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrayNotify;
 
 namespace boilersGraphics.Helpers
 {
@@ -199,9 +199,24 @@ namespace boilersGraphics.Helpers
                             {
                                 var bounds = VisualTreeHelper.GetDescendantBounds(view);
                                 var baseMatrix = new Matrix();
-                                var radian = id.RotationAngle.Value * (Math.PI / 180);
-                                baseMatrix.Translate(-bounds.X * Math.Cos(radian) + bounds.X, -bounds.Y * Math.Sin(radian) + bounds.Y);
+
+                                //rotateBounds計算
+                                baseMatrix.RotateAt(id.RotationAngle.Value, id.CenterPoint.Value.X, id.CenterPoint.Value.Y);
+                                var leftTop = new Vector(0, 0);
+                                var rotatedLeftTop = baseMatrix.Transform(new Point(id.Left.Value, id.Top.Value)) + leftTop;
+                                var rotatedLeftBottom = baseMatrix.Transform(new Point(id.Left.Value, id.Bottom.Value)) + leftTop;
+                                var rotatedRightTop = baseMatrix.Transform(new Point(id.Right.Value, id.Top.Value)) + leftTop;
+                                var rotatedRightBottom = baseMatrix.Transform(new Point(id.Right.Value, id.Bottom.Value)) + leftTop;
+                                var rotatedBounds = new Rect(Math.Min(Math.Min(rotatedLeftTop.X, rotatedLeftBottom.X), Math.Min(rotatedRightTop.X, rotatedRightBottom.X)),
+                                                             Math.Min(Math.Min(rotatedLeftTop.Y, rotatedLeftBottom.Y), Math.Min(rotatedRightTop.Y, rotatedRightBottom.Y)),
+                                                             Math.Max(Math.Max(rotatedLeftTop.X, rotatedLeftBottom.X), Math.Max(rotatedRightTop.X, rotatedRightBottom.X)) - Math.Min(Math.Min(rotatedLeftTop.X, rotatedLeftBottom.X), Math.Min(rotatedRightTop.X, rotatedRightBottom.X)),
+                                                             Math.Max(Math.Max(rotatedLeftTop.Y, rotatedLeftBottom.Y), Math.Max(rotatedRightTop.Y, rotatedRightBottom.Y)) - Math.Min(Math.Min(rotatedLeftTop.Y, rotatedLeftBottom.Y), Math.Min(rotatedRightTop.Y, rotatedRightBottom.Y)));
+                                baseMatrix.Translate(-rotatedBounds.X + id.Left.Value, -rotatedBounds.Y + id.Top.Value);
+
+                                //PushTransform用にMatrixを初期化
+                                baseMatrix = new Matrix();
                                 baseMatrix.RotateAt(id.RotationAngle.Value, id.CenterPoint.Value.X - id.Left.Value, id.CenterPoint.Value.Y - id.Top.Value);
+                                baseMatrix.Translate(-rotatedBounds.X + id.Left.Value, -rotatedBounds.Y + id.Top.Value);
                                 context.PushTransform(new MatrixTransform(baseMatrix));
                             }
 

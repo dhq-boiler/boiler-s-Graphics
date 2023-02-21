@@ -22,6 +22,19 @@ internal class RectangleAdorner : Adorner
     private Point? _startPoint;
     private readonly NRectangleViewModel item;
 
+    public RectangleAdorner(UIElement element, Rect rect)
+        : base(element)
+    {
+        _startPoint = rect.TopLeft;
+        _endPoint= rect.BottomRight;
+        _snapAction = new SnapAction();
+        var parent = DiagramViewModel.Instance;
+        var brush = parent.EdgeBrush.Value.Clone();
+        brush.Opacity = 0.5;
+        _rectanglePen = new Pen(brush, parent.EdgeThickness.Value.Value);
+        this.IsHitTestVisible = false;
+    }
+
     public RectangleAdorner(DesignerCanvas designerCanvas, Point? dragStartPoint, NRectangleViewModel item)
         : base(designerCanvas)
     {
