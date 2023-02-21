@@ -320,7 +320,8 @@ public abstract class SelectableDesignerItemViewModelBase : BindableBase, ISelec
         foreach (var property in properties.Except(new[]
                  {
                      GetType().GetProperty("Parent"),
-                     GetType().GetProperty("SelectedItems")
+                     GetType().GetProperty("SelectedItems"),
+                     GetType().GetProperty("LayerItem"),
                  }))
             ret += $"{property.Name}={property.GetValue(this)},";
 
