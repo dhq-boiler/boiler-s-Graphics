@@ -152,7 +152,7 @@ public class LayerItem : LayerTreeViewItemBase, IDisposable, IComparable<LayerTr
         var renderer = new AppearanceRenderer(new WpfVisualTreeHelper());
         Appearance.Value = renderer.Render(sliceRect, DesignerCanvas.GetInstance(),
             DiagramViewModel.Instance,
-            DiagramViewModel.Instance.BackgroundItem.Value, null, _items.Min(x => x.ZIndex.Value), _items.Max(x => x.ZIndex.Value));
+            null, null, _items.Min(x => x.ZIndex.Value), _items.Max(x => x.ZIndex.Value));
 
         Item.Value.ChangeFormDateTime.Value = DateTime.Now;
     }

@@ -5236,12 +5236,15 @@
 
     <!--  Tooltip  -->
     <Style TargetType="{x:Type ToolTip}">
-        <Setter Property="Background" Value="{StaticResource ControlDefaultBackground}" />
-        <Setter Property="BorderBrush" Value="{StaticResource ControlDefaultBorderBrush}" />
-        <Setter Property="Foreground" Value="{StaticResource ControlDefaultForeground}" />
+        <!--<Setter Property="Background" Value="{StaticResource ControlDefaultBackground}" />-->
+        <Setter Property="Background" Value="Transparent" />
+        <!--<Setter Property="BorderBrush" Value="{StaticResource ControlDefaultBorderBrush}" />-->
+        <!--<Setter Property="Foreground" Value="{StaticResource ControlDefaultForeground}" />-->
+        <Setter Property="Foreground" Value="Transparent" />
         <!--<Setter Property="MaxWidth" Value="800" />-->
+        <Setter Property="Effect" Value="{x:Null}" />
         <Setter Property="OverridesDefaultStyle" Value="true" />
-        <Setter Property="HasDropShadow" Value="True" />
+        <Setter Property="HasDropShadow" Value="False" />
         <Setter Property="Placement" Value="MousePoint" />
         <Setter Property="PlacementRectangle" Value="10 10 5 5" />
         <Setter Property="HorizontalOffset" Value="15" />

@@ -126,7 +126,8 @@
                                                                                 x:Name="Appearance_ToolTip"
                                                                                 AutomationProperties.AutomationId="Appearance_ToolTip"
                                                                                 BorderBrush="Transparent"
-                                                                                BorderThickness="0">
+                                                                                BorderThickness="0"
+                                                                                Background="Transparent">
                                                                                 <Image
                                                                                     x:Name="Appearance_ToolTip_Image"
                                                                                     Width="{Binding Appearance.Value.Width}"
@@ -136,6 +137,37 @@
                                                                                     Source="{Binding Appearance.Value}" />
                                                                             </ToolTip>
                                                                         </Border.ToolTip>
+                                                                        <Border.Background>
+                                                                            <VisualBrush Stretch="None"
+                                                                                         TileMode="Tile"
+                                                                                         Viewport="0,0,16,16"
+                                                                                         ViewportUnits="Absolute">       
+                                                                                <VisualBrush.Visual>
+                                                                                    <Grid>
+                                                                                        <Grid.ColumnDefinitions>
+                                                                                            <ColumnDefinition Width="8" />
+                                                                                            <ColumnDefinition Width="8" />
+                                                                                        </Grid.ColumnDefinitions>
+                                                                                        <Grid.RowDefinitions>
+                                                                                            <RowDefinition Height="8" />
+                                                                                            <RowDefinition Height="8" />
+                                                                                        </Grid.RowDefinitions>
+                                                                                        <Rectangle Grid.Row="0"
+                                                                                                   Grid.Column="0"
+                                                                                                   Fill="#EEE" />
+                                                                                        <Rectangle Grid.Row="0"
+                                                                                                   Grid.Column="1"
+                                                                                                   Fill="#AAA" />
+                                                                                        <Rectangle Grid.Row="1"
+                                                                                                   Grid.Column="0"
+                                                                                                   Fill="#AAA" />
+                                                                                        <Rectangle Grid.Row="1"
+                                                                                                   Grid.Column="1"
+                                                                                                   Fill="#EEE" />
+                                                                                    </Grid>
+                                                                                </VisualBrush.Visual>
+                                                                            </VisualBrush>
+                                                                        </Border.Background>
                                                                         <Image
                                                                             x:Name="Appearance_Image"
                                                                             AutomationProperties.AutomationId="Appearance_Image"

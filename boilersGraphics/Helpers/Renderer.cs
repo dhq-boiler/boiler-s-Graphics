@@ -73,7 +73,7 @@ public class Renderer
                 renderedCount++;
             //前景を描画
             renderedCount += RenderForeground(sliceRect, diagramViewModel, designerCanvas, context,
-                backgroundItem,
+                DiagramViewModel.Instance.BackgroundItem.Value,
                 allViews, minZIndex, maxZIndex, caller);
         }
 

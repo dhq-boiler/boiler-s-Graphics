@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
 
 namespace boilersGraphics.Helpers
 {
@@ -149,7 +150,10 @@ namespace boilersGraphics.Helpers
                                         bounds.Height);
                                     rect = Rect.Union(rect, intersectSrc);
                                     rect = Rect.Intersect(rect, designerItem.Rect.Value);
-                                    rect = Rect.Intersect(rect, background.Rect.Value);
+                                    if (background is not null)
+                                    {
+                                        rect = Rect.Intersect(rect, background.Rect.Value);
+                                    }
 
                                     if (rect != Rect.Empty)
                                     {
@@ -189,7 +193,7 @@ namespace boilersGraphics.Helpers
                                 }
                             }
 
-                            if (rect != Rect.Empty)
+                            if (background is not null && rect != Rect.Empty)
                             {
                                 rect.X -= background.Left.Value;
                                 rect.Y -= background.Top.Value;
@@ -267,6 +271,20 @@ namespace boilersGraphics.Helpers
 
         public override bool RenderBackgroundViewModel(Rect? sliceRect, DesignerCanvas designerCanvas, DrawingContext context, BackgroundViewModel background, List<FrameworkElement> allViews, SelectableDesignerItemViewModelBase caller)
         {
+            var grid = new Grid();
+            grid.Background = Brushes.Transparent;
+
+            var _brush = new VisualBrush(grid)
+            {
+                Stretch = Stretch.None,
+            };
+            context.DrawRectangle(_brush, null, sliceRect.Value);
+
+            if (background is null)
+            {
+                return false;
+            }
+
             var view = default(FrameworkElement);
             if (!boilersGraphics.App.IsTest)
             {
