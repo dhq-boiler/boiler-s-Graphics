@@ -25,10 +25,10 @@ public class Renderer
         VisualTreeHelper = visualTreeHelper;
     }
 
-    public RenderTargetBitmap Render(Rect? sliceRect, DesignerCanvas designerCanvas,
+    public virtual RenderTargetBitmap Render(Rect? sliceRect, DesignerCanvas designerCanvas,
         DiagramViewModel diagramViewModel, BackgroundViewModel backgroundItem, SelectableDesignerItemViewModelBase caller, int minZIndex = 0, int maxZIndex = int.MaxValue)
     {
-        var size = GetRenderSize(sliceRect, diagramViewModel);
+        var size = GetRenderSize(sliceRect, diagramViewModel, minZIndex, maxZIndex);
 
         s_logger.Debug($"SliceRect size:{size}");
 
@@ -60,7 +60,7 @@ public class Renderer
         return rtb;
     }
 
-    private int RenderInternal(Rect? sliceRect, DesignerCanvas designerCanvas, DiagramViewModel diagramViewModel,
+    protected int RenderInternal(Rect? sliceRect, DesignerCanvas designerCanvas, DiagramViewModel diagramViewModel,
         BackgroundViewModel backgroundItem, int minZIndex, int maxZIndex, int renderedCount, RenderTargetBitmap rtb, SelectableDesignerItemViewModelBase caller)
     {
         var visual = new DrawingVisual();
@@ -73,7 +73,7 @@ public class Renderer
                 renderedCount++;
             //前景を描画
             renderedCount += RenderForeground(sliceRect, diagramViewModel, designerCanvas, context,
-                backgroundItem,
+                DiagramViewModel.Instance.BackgroundItem.Value,
                 allViews, minZIndex, maxZIndex, caller);
         }
 
@@ -82,7 +82,7 @@ public class Renderer
         return renderedCount;
     }
 
-    private static Size GetRenderSize(Rect? sliceRect, DiagramViewModel diagramViewModel)
+    protected virtual Size GetRenderSize(Rect? sliceRect, DiagramViewModel diagramViewModel, int minZIndex, int maxZIndex)
     {
         Size size;
         if (sliceRect.HasValue)

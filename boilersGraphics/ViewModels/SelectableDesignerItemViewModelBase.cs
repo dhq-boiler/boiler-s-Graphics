@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Windows;
 using System.Windows.Media;
 using boilersGraphics.Helpers;
+using boilersGraphics.Models;
 using Prism.Commands;
 using Prism.Mvvm;
 using Reactive.Bindings;
@@ -63,6 +64,10 @@ public abstract class SelectableDesignerItemViewModelBase : BindableBase, ISelec
     public ReactivePropertySlim<bool> CanDrag { get; set; } = new(true);
 
     // ↑ Flags ↑
+
+    public ReactivePropertySlim<object> ChangeFormTriggerObject { get; } = new();
+    public ReactivePropertySlim<DateTime> ChangeFormDateTime { get; } = new(DateTime.Now);
+    public ReactivePropertySlim<LayerItem> LayerItem { get; } = new();
 
     public ReactivePropertySlim<int> SelectedOrder { get; } = new();
 
@@ -195,6 +200,11 @@ public abstract class SelectableDesignerItemViewModelBase : BindableBase, ISelec
     }
 
     #endregion IObserver<TransformNotification>
+
+    protected void UpdateChangeFormTriggerObject()
+    {
+        ChangeFormTriggerObject.Value = new object();
+    }
 
     public void Restore(Action restorePropertiesAction)
     {

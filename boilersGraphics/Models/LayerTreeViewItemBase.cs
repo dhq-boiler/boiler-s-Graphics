@@ -118,7 +118,26 @@ public abstract class LayerTreeViewItemBase : BindableBase, IDisposable, IObserv
         Children.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
             .ToList()
             .ForEach(x =>
-                (x as LayerItem).UpdateAppearance(IfGroupBringChildren((x as LayerItem).Item.Value)));
+            {
+                if (x is Layer l)
+                {
+                    l.UpdateAppearance(l.Children.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(xx => xx.Children)
+                                               .Select(x => (x as LayerItem).Item.Value), true);
+                    l.Children.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                              .ToList()
+                              .ForEach(x =>
+                              {
+                                  if (x is LayerItem li)
+                                  {
+                                      li.UpdateAppearance(IfGroupBringChildren(li.Item.Value));
+                                  }
+                              });
+                }
+                else if (x is LayerItem li)
+                {
+                    li.UpdateAppearance(IfGroupBringChildren(li.Item.Value));
+                }
+            });
     }
 
     private IEnumerable<SelectableDesignerItemViewModelBase> IfGroupBringChildren(

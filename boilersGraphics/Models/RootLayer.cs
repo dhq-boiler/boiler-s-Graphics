@@ -8,7 +8,7 @@ namespace boilersGraphics.Models
     {
         public override void UpdateAppearance(IEnumerable<SelectableDesignerItemViewModelBase> items, bool backgroundIncluded = false)
         {
-            throw new NotSupportedException("Do not run.");
+            //Do nothing
         }
     }
 }
