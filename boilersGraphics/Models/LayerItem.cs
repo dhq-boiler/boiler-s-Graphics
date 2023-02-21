@@ -131,6 +131,8 @@ public class LayerItem : LayerTreeViewItemBase, IDisposable, IComparable<LayerTr
 
     public override void UpdateAppearance(IEnumerable<SelectableDesignerItemViewModelBase> items, bool backgroundIncluded = false)
     {
+        if ((DateTime.Now - Item.Value.ChangeFormDateTime.Value).TotalMilliseconds < 100)
+            return;
         if (!backgroundIncluded && items.Count() == 0)
             return;
         double minX, maxX, minY, maxY;
@@ -151,6 +153,8 @@ public class LayerItem : LayerTreeViewItemBase, IDisposable, IComparable<LayerTr
         Appearance.Value = renderer.Render(sliceRect, DesignerCanvas.GetInstance(),
             DiagramViewModel.Instance,
             DiagramViewModel.Instance.BackgroundItem.Value, null, _items.Min(x => x.ZIndex.Value), _items.Max(x => x.ZIndex.Value));
+
+        Item.Value.ChangeFormDateTime.Value = DateTime.Now;
     }
 
     private static void UpdateAppearanceByItem(DesignerCanvas designerCanvas, double minX, double minY,

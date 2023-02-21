@@ -66,6 +66,7 @@ public abstract class SelectableDesignerItemViewModelBase : BindableBase, ISelec
     // ↑ Flags ↑
 
     public ReactivePropertySlim<object> ChangeFormTriggerObject { get; } = new();
+    public ReactivePropertySlim<DateTime> ChangeFormDateTime { get; } = new(DateTime.Now);
     public ReactivePropertySlim<LayerItem> LayerItem { get; } = new();
 
     public ReactivePropertySlim<int> SelectedOrder { get; } = new();
