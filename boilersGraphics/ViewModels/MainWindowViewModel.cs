@@ -92,6 +92,8 @@ public class MainWindowViewModel : BindableBase, IDisposable
         Title.Value = $"{App.GetAppNameAndVersion()}";
         DiagramViewModel.FileName.Value = "*";
 
+        SetInitialMainWindowSize();
+
         EdgeThicknessOptions.Add(double.NaN);
         EdgeThicknessOptions.Add(0.0);
         EdgeThicknessOptions.Add(1.0);
@@ -391,6 +393,17 @@ public class MainWindowViewModel : BindableBase, IDisposable
 
         ResourceService.Current.ChangeCulture(CultureInfo.CurrentCulture.Name);
         ThemesController.SetTheme(ThemesController.ThemeTypes.Dark);
+    }
+
+    /// <summary>
+    /// ウィンドウサイズを最大でフルHDに設定します。
+    /// プライマリモニタサイズがそれより小さい場合はそのサイズに設定します。
+    /// </summary>
+    private void SetInitialMainWindowSize()
+    {
+        var mainWindow = App.Current.MainWindow;
+        mainWindow.Width = Math.Min(1920, SystemParameters.PrimaryScreenWidth) - 2;
+        mainWindow.Height = Math.Min(1080, SystemParameters.PrimaryScreenWidth) - 2;
     }
 
     public static MainWindowViewModel Instance { get; set; }
