@@ -23,7 +23,6 @@ namespace boilersGraphics.ViewModels
 
         public virtual void Initialize()
         {
-            this.UpdatingStrategy.Value = SelectableDesignerItemViewModelBase.PathGeometryUpdatingStrategy.Initial;
             monitoringItems.ToList().ForEach(x => x.Value.Dispose());
             monitoringItems.Clear();
 
