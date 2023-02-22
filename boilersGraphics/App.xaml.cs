@@ -74,23 +74,25 @@ public partial class App : PrismApplication
         IDialogParameters dialogParameters = new DialogParameters();
         dialogParameters.Add("Title", boilersGraphics.Properties.Resources.DialogTitle_Error);
         var title = Uri.EscapeDataString(e.Message);
-        var body = boilersGraphics.Properties.Resources.String_ErrorReporting + "\n" +
-                   boilersGraphics.Properties.Resources.String_ErrorReporting1 + "\n" +
+        var stackTrace = new StackTrace(e, true);
+        var body = boilersGraphics.Properties.Resources.String_ErrorReporting + Environment.NewLine +
+                   boilersGraphics.Properties.Resources.String_ErrorReporting1 + Environment.NewLine +
                    boilersGraphics.Properties.Resources.String_ErrorReporting2 +
                    Path.Combine(Helpers.Path.GetRoamingDirectory(),
-                       "dhq_boiler\\boilersGraphics\\Logs\\boilersGraphics.log") + "\n" +
-                   boilersGraphics.Properties.Resources.String_ErrorReporting3 + "\n" +
-                   e;
+                       "dhq_boiler\\boilersGraphics\\Logs\\boilersGraphics.log") + Environment.NewLine +
+                   boilersGraphics.Properties.Resources.String_ErrorReporting3 + Environment.NewLine +
+                   stackTrace.ToString();
         dialogParameters.Add("Text", body);
-        body = Uri.EscapeDataString(e.ToString());
+        body = Uri.EscapeDataString(stackTrace.ToString());
         dialogParameters.Add("Buttons", new List<Button>
         {
             new(boilersGraphics.Properties.Resources.Button_PostIssue, new DelegateCommand(() =>
             {
+                var stackTrace = new StackTrace(e, true);
                 body = boilersGraphics.Properties.Resources.String_PleaseDescribeError +
                        Environment.NewLine +
                        Environment.NewLine +
-                       e;
+                       stackTrace.ToString();
                 const int maxExceptionDetailsLength = 4000;
                 if (body.Length > maxExceptionDetailsLength)
                 {
