@@ -2128,8 +2128,8 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
             var mainwindowViewModel = MainWindowVM;
             try
             {
-                vm.Output.Value += Resources.Log_BeginLoadFromXml;
-                LogManager.GetCurrentClassLogger().Info(Resources.Log_BeginLoadFromXml);
+                vm.Output.Value += Resources.Log_BeginLoadFromFile;
+                LogManager.GetCurrentClassLogger().Info(Resources.Log_BeginLoadFromFile);
                 mainwindowViewModel.Recorder.BeginRecode();
 
                 var configuration = root.Element("Configuration");
@@ -3099,8 +3099,8 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                 await PostProcessInFileLoadingSequence(mainwindowViewModel).ConfigureAwait(false);
 
                 vm.Output.Value += Environment.NewLine;
-                vm.Output.Value += Resources.Log_FinishLoadFromXml;
-                LogManager.GetCurrentClassLogger().Info(Resources.Log_FinishLoadFromXml);
+                vm.Output.Value += Resources.Log_FinishLoadFromFile;
+                LogManager.GetCurrentClassLogger().Info(Resources.Log_FinishLoadFromFile);
             }
             catch (Exception)
             {
@@ -3157,7 +3157,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
         var mainwindowViewModel = MainWindowVM;
         try
         {
-            LogManager.GetCurrentClassLogger().Info(Resources.Log_BeginLoadFromXml);
+            LogManager.GetCurrentClassLogger().Info(Resources.Log_BeginLoadFromFile);
             mainwindowViewModel.Recorder.BeginRecode();
 
             var configuration = root.Element("Configuration");
@@ -3390,7 +3390,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                     double.Parse(configuration.Element("Height").Value));
 
             ObjectDeserializer.ReadObjectsFromXML(this, null, root, isPreview);
-            LogManager.GetCurrentClassLogger().Info(Resources.Log_FinishLoadFromXml);
+            LogManager.GetCurrentClassLogger().Info(Resources.Log_FinishLoadFromFile);
         }
         catch (Exception)
         {

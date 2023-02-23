@@ -943,11 +943,11 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
-        ///   Begin loading from XML... に類似しているローカライズされた文字列を検索します。
+        ///   Begin loading from File... に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string Log_BeginLoadFromXml {
+        public static string Log_BeginLoadFromFile {
             get {
-                return ResourceManager.GetString("Log_BeginLoadFromXml", resourceCulture);
+                return ResourceManager.GetString("Log_BeginLoadFromFile", resourceCulture);
             }
         }
         
@@ -970,11 +970,11 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
-        ///   Finished loading from XML. に類似しているローカライズされた文字列を検索します。
+        ///   Finished loading from File. に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string Log_FinishLoadFromXml {
+        public static string Log_FinishLoadFromFile {
             get {
-                return ResourceManager.GetString("Log_FinishLoadFromXml", resourceCulture);
+                return ResourceManager.GetString("Log_FinishLoadFromFile", resourceCulture);
             }
         }
         

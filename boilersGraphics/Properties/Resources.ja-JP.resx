@@ -411,8 +411,8 @@
   <data name="Grouping" xml:space="preserve">
     <value>グループ</value>
   </data>
-  <data name="Log_BeginLoadFromXml" xml:space="preserve">
-    <value>XMLからのロードを開始しています...。</value>
+  <data name="Log_BeginLoadFromFile" xml:space="preserve">
+    <value>ファイルからロードを開始しています...。</value>
   </data>
   <data name="Log_BeginPostProcessInFileLoadingSequence" xml:space="preserve">
     <value>ファイルローディングシークエンス内の後処理を開始しています...。</value>
@@ -420,8 +420,8 @@
   <data name="Log_FileCannotOpenBecauseTooOldOrCorrupted" xml:space="preserve">
     <value>【読み込みエラー】このファイルは古すぎるか壊れているため開けません。</value>
   </data>
-  <data name="Log_FinishLoadFromXml" xml:space="preserve">
-    <value>XMLからのロードが完了しました。</value>
+  <data name="Log_FinishLoadFromFile" xml:space="preserve">
+    <value>ファイルからロードが完了しました。</value>
   </data>
   <data name="Log_FinishPostProcessInFileLoadingSequence" xml:space="preserve">
     <value>ファイルローディングシークエンス内の後処理が完了しました。</value>
