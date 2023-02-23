@@ -83,7 +83,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
             CreateNewDiagramCommand = new DelegateCommand<object>(p => ExecuteCreateNewDiagramCommand(p));
             LoadCommand = new DelegateCommand(() => ExecuteLoadCommand());
             LoadFileCommand = new DelegateCommand<string>(file => ExecuteLoadCommand(file));
-            SaveCommand = new DelegateCommand(() => ExecuteSaveCommand());
+            SaveCommand = new DelegateCommand(() => ExecuteSaveAsCommand());
             OverwriteCommand = new DelegateCommand(() => ExecuteOverwriteCommand());
             ExportCommand = new DelegateCommand(() => ExecuteExportCommand());
             GroupCommand = new DelegateCommand(() => ExecuteGroupItemsCommand(), () => CanExecuteGroup());
@@ -1949,7 +1949,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
 
     #region Save
 
-    private void ExecuteSaveCommand()
+    private void ExecuteSaveAsCommand()
     {
         var versionXML = new XElement("Version", BGSXFileVersion.ToString());
         var layersXML = new XElement("Layers", ObjectSerializer.SerializeLayers(Layers));
