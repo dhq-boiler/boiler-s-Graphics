@@ -87,7 +87,7 @@ public abstract class LayerTreeViewItemBase : BindableBase, IDisposable, IObserv
 
     public ReactivePropertySlim<Brush> Background { get; } = new();
 
-    public ReactivePropertySlim<bool> IsExpanded { get; } = new();
+    public ReactivePropertySlim<bool> IsExpanded { get; } = new(true);
 
     public ReactiveProperty<bool> IsSelected { get; set; } = new();
 
