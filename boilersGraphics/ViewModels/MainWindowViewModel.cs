@@ -56,7 +56,7 @@ public class MainWindowViewModel : BindableBase, IDisposable
         Instance = this;
     }
 
-    public MainWindowViewModel(IDialogService dialogService)
+    public MainWindowViewModel(IDialogService dialogService, StartupEventArgs startupEventArgs = null)
     {
         Instance = this;
         dlgService = dialogService;
@@ -306,6 +306,14 @@ public class MainWindowViewModel : BindableBase, IDisposable
         var statisticsObj = statistics.First();
         Statistics.Value = statisticsObj;
         updateTicks = statisticsObj.UptimeTicks;
+
+        DiagramViewModel.LoadedEventActions.Enqueue(() =>
+        {
+            if (startupEventArgs is not null && startupEventArgs.Args.Length > 0)
+            {
+                DiagramViewModel.Load(startupEventArgs.Args.First());
+            }
+        });
 
         LogLevel.Subscribe(x =>
             {

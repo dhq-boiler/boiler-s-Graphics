@@ -145,6 +145,9 @@ public partial class App : PrismApplication
         StoreContext = context;
 
         base.OnStartup(e);
+
+        var container = new UnityContainer();
+        container.RegisterInstance(e);
     }
 
     protected override void OnExit(ExitEventArgs e)

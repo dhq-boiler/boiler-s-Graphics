@@ -239,9 +239,16 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                 polyBezierVM.SnapPoint0VM.Value.IsSelected.Value = true;
                 polyBezierVM.SnapPoint1VM.Value.IsSelected.Value = true;
             });
-            LoadedCommand = new DelegateCommand(() => 
-            { 
+            LoadedCommand = new DelegateCommand(() =>
+            {
                 LogManager.GetCurrentClassLogger().Trace("LoadedCommand");
+
+                while (LoadedEventActions.Count > 0)
+                {
+                    var action = LoadedEventActions.Dequeue();
+                    action();
+                }
+
                 App.Current.Dispatcher.Invoke(() =>
                 {
                     RootLayer.Value.UpdateAppearanceBothParentAndChild();
@@ -1936,6 +1943,8 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     /// </summary>
     public ReactivePropertySlim<double> MagnificationRate { get; } = new(100);
 
+    public Queue<Action> LoadedEventActions { get; } = new();
+
     #endregion //Property
 
     #region Save
@@ -2045,6 +2054,24 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     #endregion
 
     #region Load
+
+    public async Task Load(string filename)
+    {
+        try
+        {
+            await LoadInternal(XElement.Load(filename), filename);
+            FileName.Value = filename;
+        }
+        catch (IOException e)
+        {
+            MessageBox.Show(e.ToString());
+            return;
+        }
+        var statistics = MainWindowVM.Statistics.Value;
+        statistics.NumberOfTimesTheFileWasOpenedBySpecifyingIt++;
+        var dao = new StatisticsDao();
+        dao.Update(statistics);
+    }
 
     private async Task ExecuteLoadCommand()
     {
