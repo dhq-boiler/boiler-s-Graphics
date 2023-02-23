@@ -81,6 +81,7 @@ public partial class App : PrismApplication
                    Path.Combine(Helpers.Path.GetRoamingDirectory(),
                        "dhq_boiler\\boilersGraphics\\Logs\\boilersGraphics.log") + Environment.NewLine +
                    boilersGraphics.Properties.Resources.String_ErrorReporting3 + Environment.NewLine +
+                   e.GetType().Name + Environment.NewLine +
                    stackTrace.ToString();
         dialogParameters.Add("Text", body);
         body = Uri.EscapeDataString(stackTrace.ToString());
@@ -92,6 +93,7 @@ public partial class App : PrismApplication
                 body = boilersGraphics.Properties.Resources.String_PleaseDescribeError +
                        Environment.NewLine +
                        Environment.NewLine +
+                       e.GetType() + Environment.NewLine +
                        stackTrace.ToString();
                 const int maxExceptionDetailsLength = 4000;
                 if (body.Length > maxExceptionDetailsLength)
