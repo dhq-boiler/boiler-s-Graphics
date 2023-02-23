@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities" IgnorableNamespaces="uap rescap">
-  <Identity Name="10443dhqboiler.boilersGraphics" Publisher="CN=F2E61F15-88E6-4972-ADC5-BF310C00F85F" Version="5.2.12.0" />
+  <Identity Name="dhq-boiler.boilersGraphics" Publisher="CN=F2E61F15-88E6-4972-ADC5-BF310C00F85F" Version="5.2.12.0" />
   <Properties>
     <DisplayName>boiler's Graphics</DisplayName>
     <PublisherDisplayName>dhq_boiler</PublisherDisplayName>
@@ -25,6 +25,18 @@
           <uap:Rotation Preference="portraitFlipped" />
         </uap:InitialRotationPreference>
       </uap:VisualElements>
+      <Extensions>
+        <uap:Extension Category="windows.fileTypeAssociation">
+          <uap:FileTypeAssociation Name="boilersgraphicsformat">
+            <uap:SupportedFileTypes>
+              <uap:FileType ContentType="text/xml">.bgff</uap:FileType>
+            </uap:SupportedFileTypes>
+            <uap:DisplayName>boiler&apos;s Graphics Format File</uap:DisplayName>
+            <uap:Logo>Images\Square150x150Logo.png</uap:Logo>
+            <uap:InfoTip>boiler&apos;s Graphics で開きます。</uap:InfoTip>
+          </uap:FileTypeAssociation>
+        </uap:Extension>
+      </Extensions>
     </Application>
   </Applications>
   <Capabilities>
