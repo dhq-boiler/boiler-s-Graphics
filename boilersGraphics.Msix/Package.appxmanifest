@@ -33,7 +33,7 @@
             </uap:SupportedFileTypes>
             <uap:DisplayName>boiler&apos;s Graphics Format File</uap:DisplayName>
             <uap:Logo>Images\Square150x150Logo.png</uap:Logo>
-            <uap:InfoTip>boiler&apos;s Graphics で開きます。</uap:InfoTip>
+            <uap:InfoTip>Open boiler&apos;s Graphics</uap:InfoTip>
           </uap:FileTypeAssociation>
         </uap:Extension>
       </Extensions>
