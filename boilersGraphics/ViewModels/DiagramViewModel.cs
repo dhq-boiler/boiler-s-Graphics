@@ -3487,7 +3487,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     private (XElement, string) LoadSerializedDataFromFile()
     {
         var openFile = new OpenFileDialog();
-        openFile.Filter = "Designer Files (*.xml)|*.xml|All Files (*.*)|*.*";
+        openFile.Filter = "boiler's Graphics Format Files (*.bgff)|*.bgff|Files (*.xml)|*.xml|All Files (*.*)|*.*";
 
         var oldFileName = FileName.Value;
 
