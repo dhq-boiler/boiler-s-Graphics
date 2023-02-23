@@ -728,7 +728,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
             root.Add(versionXML);
             root.Add(layersXML);
             root.Add(configurationXML);
-            root.Save(path);
+            SaveFileWithoutSaveFileDialog(root, path);
         });
 
         MainWindowVM.Message.Value = $"{AutoSavedDateTime.Value} {Resources.Message_Autosaved}";
@@ -1960,19 +1960,19 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
         root.Add(layersXML);
         root.Add(configurationXML);
 
-        SaveFile(root);
+        SaveFileWithSaveFileDialog(root);
     }
 
-    private void SaveFile(XElement xElement)
+    private void SaveFileWithSaveFileDialog(XElement xElement)
     {
         var saveFile = new SaveFileDialog();
-        saveFile.Filter = "Files (*.xml)|*.xml|All Files (*.*)|*.*";
+        saveFile.Filter = "boiler's Graphics Format Files (*.bgff)|*.bgff|Files (*.xml)|*.xml|All Files (*.*)|*.*";
         var oldFileName = FileName.Value;
         if (saveFile.ShowDialog() == true)
             try
             {
                 FileName.Value = saveFile.FileName;
-                xElement.Save(saveFile.FileName);
+                SaveFileWithoutSaveFileDialog(xElement, saveFile.FileName);
 
                 UpdateStatisticsCountSaveAs();
             }
@@ -1981,6 +1981,22 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                 FileName.Value = oldFileName;
                 MessageBox.Show(ex.StackTrace, ex.Message, MessageBoxButton.OK, MessageBoxImage.Error);
             }
+    }
+
+    private void SaveFileWithoutSaveFileDialog(XElement xElement, string filename)
+    {
+        var oldFileName = FileName.Value;
+        try
+        {
+            FileName.Value = filename;
+            xElement.Save(filename);
+            UpdateStatisticsCountSaveAs();
+        }
+        catch (Exception ex)
+        {
+            FileName.Value = oldFileName;
+            MessageBox.Show(ex.StackTrace, ex.Message, MessageBoxButton.OK, MessageBoxImage.Error);
+        }
     }
 
     private void UpdateStatisticsCountSaveAs()
@@ -2018,7 +2034,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                 try
                 {
                     FileName.Value = saveFile.FileName;
-                    root.Save(saveFile.FileName);
+                    SaveFileWithoutSaveFileDialog(root, saveFile.FileName);
                     UpdateStatisticsCountSaveAs();
                 }
                 catch (Exception ex)
@@ -2032,7 +2048,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
         {
             try
             {
-                root.Save(FileName.Value);
+                SaveFileWithoutSaveFileDialog(root, FileName.Value);
                 UpdateStatisticsCountOverwrite();
             }
             catch (Exception ex)
