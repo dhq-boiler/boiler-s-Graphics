@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net7.0-windows</TargetFramework>
+    <TargetFramework>net7.0-windows10.0.22000.0</TargetFramework>
     <OutputType>Library</OutputType>
     <AssemblyName>Btl.Controls.MyControls</AssemblyName>
     <ExpressionBlendVersion>4.0.20901.0</ExpressionBlendVersion>
