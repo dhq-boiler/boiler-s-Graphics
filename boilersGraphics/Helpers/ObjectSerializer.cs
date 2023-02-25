@@ -600,7 +600,6 @@ internal class ObjectSerializer
             }
             picture.SetAttributeValue("Source", source);
 
-            MessageBox.Show(source.Length.ToString());
             return new[]
             {
                 picture
