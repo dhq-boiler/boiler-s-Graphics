@@ -62,6 +62,9 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="BgffThumbnailProvider.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Images\SplashScreen.scale-200.png" />
     <Content Include="Images\LockScreenLogo.scale-200.png" />
     <Content Include="Images\Square150x150Logo.png" />
@@ -78,7 +81,9 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\boilersGraphics\boilersGraphics.csproj" />
-    <ProjectReference Include="..\installBgff\installBgff.vcxproj" />
+    <ProjectReference Include="..\installBgff\installBgff.vcxproj">
+      <IncludeAssets>BgffThumbnailProvider.dll</IncludeAssets>
+    </ProjectReference>
     <ProjectReference Include="..\uninstallBgff\uninstallBgff.vcxproj" />
   </ItemGroup>
 </Project>

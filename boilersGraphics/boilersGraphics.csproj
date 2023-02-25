@@ -121,6 +121,7 @@
     <Resource Include="Assets\img\slice_tool.png" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BgffThumbnailProvider\BgffThumbnailProvider.vcxproj" />
     <ProjectReference Include="..\Btl\Controls\Btl.Controls.csproj" />
   </ItemGroup>
   <ItemGroup>

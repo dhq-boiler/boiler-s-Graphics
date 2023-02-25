@@ -354,7 +354,10 @@ public class MainWindowViewModel : BindableBase, IDisposable
             var result = MessageBox.Show("シェル拡張をインストールします。よろしいですか？", "シェル拡張のインストール", MessageBoxButton.YesNo);
             if (result == MessageBoxResult.Yes)
             {
-                Process.Start(new ProcessStartInfo("../installBgff.exe"));
+                var appDirectory = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+                var exePath = Path.Combine(appDirectory, "../installBgff/installBgff.exe");
+                exePath = Path.GetFullPath(exePath);
+                Process.Start(new ProcessStartInfo(exePath));
             }
         });
         UninstallBgffThumbnailProviderCommand = new ReactiveCommand().WithSubscribe(() =>

@@ -7,7 +7,7 @@
 int main()
 {
     // DLLをロードする
-    HMODULE dllHandle = LoadLibrary(L"BgffThumbnailProvider.dll");
+    HMODULE dllHandle = LoadLibrary(L"../BgffThumbnailProvider.dll");
 
     // DLLに含まれる関数のアドレスを取得する
     MyFunctionType myFunction = (MyFunctionType)GetProcAddress(dllHandle, "DllUnregisterServer");
