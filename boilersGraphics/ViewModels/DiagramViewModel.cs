@@ -30,6 +30,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
 using System.Windows.Threading;
 using System.Xml;
 using System.Xml.Linq;
@@ -723,11 +724,13 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
             var versionXML = new XElement("Version", BGSXFileVersion.ToString());
             var layersXML = new XElement("Layers", ObjectSerializer.SerializeLayers(Layers));
             var configurationXML = new XElement("Configuration", ObjectSerializer.SerializeConfiguration(this));
+            var attachmentsXML = new XElement("Attachments", ObjectSerializer.SerializeAttachments());
 
             var root = new XElement("boilersGraphics");
             root.Add(versionXML);
             root.Add(layersXML);
             root.Add(configurationXML);
+            root.Add(attachmentsXML);
             SaveFileWithoutSaveFileDialog(root, path);
         });
 
@@ -1954,11 +1957,13 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
         var versionXML = new XElement("Version", BGSXFileVersion.ToString());
         var layersXML = new XElement("Layers", ObjectSerializer.SerializeLayers(Layers));
         var configurationXML = new XElement("Configuration", ObjectSerializer.SerializeConfiguration(this));
+        var attachmentsXML = new XElement("Attachments", ObjectSerializer.SerializeAttachments());
 
         var root = new XElement("boilersGraphics");
         root.Add(versionXML);
         root.Add(layersXML);
         root.Add(configurationXML);
+        root.Add(attachmentsXML);
 
         SaveFileWithSaveFileDialog(root);
     }
@@ -2016,11 +2021,13 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
         var versionXML = new XElement("Version", BGSXFileVersion.ToString());
         var layersXML = new XElement("Layers", ObjectSerializer.SerializeLayers(Layers));
         var configurationXML = new XElement("Configuration", ObjectSerializer.SerializeConfiguration(this));
+        var attachmentsXML = new XElement("Attachments", ObjectSerializer.SerializeAttachments());
 
         var root = new XElement("boilersGraphics");
         root.Add(versionXML);
         root.Add(layersXML);
         root.Add(configurationXML);
+        root.Add(attachmentsXML);
         Save(root);
     }
 

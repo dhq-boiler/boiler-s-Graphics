@@ -1,12 +1,16 @@
 ﻿using System;
+using System.Buffers.Text;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Windows;
+using System.Windows.Documents;
 using System.Windows.Media.Imaging;
 using System.Xml.Linq;
+using boilersGraphics.Controls;
 using boilersGraphics.Extensions;
 using boilersGraphics.Models;
 using boilersGraphics.ViewModels;
@@ -563,5 +567,85 @@ internal class ObjectSerializer
         colorSpots.Add(new XElement("ColorSpot99",
             XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot99))));
         return colorSpots;
+    }
+
+    internal static IEnumerable<XElement> SerializeAttachments()
+    {
+        using (var memStream = new MemoryStream())
+        {
+            var renderer = new Renderer(new WpfVisualTreeHelper());
+            var image = renderer.Render(null, DesignerCanvas.GetInstance(), DiagramViewModel.Instance, DiagramViewModel.Instance.BackgroundItem.Value, DiagramViewModel.Instance.BackgroundItem.Value);
+            var writeableBitmap = new WriteableBitmap(image);
+            var encoder = new PngBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(writeableBitmap));
+            encoder.Save(memStream);
+
+            // 入力文字列をASCIIエンコードしたバイト配列
+            byte[] bytes = memStream.ToArray();
+
+            // Base64エンコードした文字列
+            string base64String = Convert.ToBase64String(bytes);
+
+            // 必要な出力文字数を計算する
+            int outputCount = base64String.Length + (base64String.Length / 76) + 1;
+
+            var picture = new XElement("Picture");
+            var source = string.Empty;
+            // Base64エンコードした文字列を76文字ごとに分割する
+            for (int i = 0; i < base64String.Length; i += 76)
+            {
+                int charCount = Math.Min(76, base64String.Length - i);
+                string line = base64String.Substring(i, charCount);
+                source += line;
+            }
+            picture.SetAttributeValue("Source", source);
+
+            MessageBox.Show(source.Length.ToString());
+            return new[]
+            {
+                picture
+            };
+
+            //string table = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+
+            //byte[] src = memStream.ToArray();
+
+            //string dest = string.Empty;
+
+            //for (int i = 0; i < src.Length; ++i)
+            //{
+            //    switch (i % 3)
+            //    {
+            //        case 0:
+            //            dest += table[(src[i] & 0xFC) >> 2];
+            //            if (i + 1 == src.Length)
+            //            {
+            //                dest += table[(src[i] & 0x03) << 4];
+            //                dest += '=';
+            //                dest += '=';
+            //            }
+            //            break;
+            //        case 1:
+            //            dest += table[((src[i - 1] & 0x03) << 4) | ((src[i + 0] & 0xF0) >> 4)];
+            //            if (i + 1 == src.Length)
+            //            {
+            //                dest += table[(src[i] & 0x0F) << 2];
+            //                dest += '='; 
+            //            }
+            //            break;
+            //        case 2:
+            //            dest += table[((src[i - 1] & 0x0F) << 2) | ((src[i + 0] & 0xC0) >> 6)];
+            //            dest += table[src[i] & 0x3F];
+            //            break;
+            //    }
+            //}
+
+            //var picture = new XElement("Picture");
+            //picture.SetAttributeValue("Source", dest);
+            //return new[]
+            //{
+            //    picture
+            //};
+        }
     }
 }
