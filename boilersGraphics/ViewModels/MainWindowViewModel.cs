@@ -354,7 +354,7 @@ public class MainWindowViewModel : BindableBase, IDisposable
             var result = MessageBox.Show("シェル拡張をインストールします。よろしいですか？", "シェル拡張のインストール", MessageBoxButton.YesNo);
             if (result == MessageBoxResult.Yes)
             {
-                var hResult = NativeMethods.DllRegisterServer();
+                Process.Start(new ProcessStartInfo("../installBgff.exe"));
             }
         });
         UninstallBgffThumbnailProviderCommand = new ReactiveCommand().WithSubscribe(() =>
@@ -362,7 +362,7 @@ public class MainWindowViewModel : BindableBase, IDisposable
             var result = MessageBox.Show("シェル拡張をアンインストールします。よろしいですか？", "シェル拡張のアンインストール", MessageBoxButton.YesNo);
             if (result == MessageBoxResult.Yes)
             {
-                var hResult = NativeMethods.DllUnregisterServer();
+                Process.Start(new ProcessStartInfo("../uninstallBgff.exe"));
             }
         });
 

@@ -78,5 +78,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\boilersGraphics\boilersGraphics.csproj" />
+    <ProjectReference Include="..\installBgff\installBgff.vcxproj" />
+    <ProjectReference Include="..\uninstallBgff\uninstallBgff.vcxproj" />
   </ItemGroup>
 </Project>
