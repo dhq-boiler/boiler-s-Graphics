@@ -817,6 +817,10 @@
                                         Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.MenuItem_ja_JP, Mode=OneWay}"
                                         IsChecked="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Culture, Mode=OneWay, Converter={StaticResource CultureToBool}, ConverterParameter=ja-JP}" />
                                 </MenuItem>
+                                <MenuItem Header="シェル拡張">
+                                    <MenuItem Command="{Binding InstallBgffThumbnailProviderCommand}" Header="インストール" />
+                                    <MenuItem Command="{Binding UninstallBgffThumbnailProviderCommand}" Header="アンインストール" />
+                                </MenuItem>
                                 <MenuItem Command="{Binding PostNewIssueCommand}" Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.MenuItem_PostNewIssue, Mode=OneWay}" />
                                 <MenuItem Command="{Binding ShowPrivacyPolicyCommand}" Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.MenuItem_ShowPrivacyPolicy, Mode=OneWay}" />
                                 <MenuItem Command="{Binding ShowStatisticsCommand}" Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.MenuItem_Statistics, Mode=OneWay}" />
