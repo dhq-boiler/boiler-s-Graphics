@@ -11,12 +11,12 @@
 #include <shlobj.h>     // For SHChangeNotify
 #include <new>
 
-extern HRESULT CBgffThumbProvider_CreateInstance(REFIID riid, void **ppv);
+extern HRESULT CRecipeThumbProvider_CreateInstance(REFIID riid, void **ppv);
 
-#define SZ_CLSID_BGFFTHUMBHANDLER     L"{d3d868f0-cccb-42ed-ab2d-9b99f739f814}"
-#define SZ_BGFFTHUMBHANDLER           L"Bgff Thumbnail Handler"
+#define SZ_CLSID_RECIPETHUMBHANDLER     L"{50d9450f-2a80-4f08-93b9-2eb526477d1b}"
+#define SZ_RECIPETHUMBHANDLER           L"Bgff Thumbnail Handler"
 
-const CLSID CLSID_BgffThumbHandler    = {0xd3d868f0, 0xcccb, 0x42ed, {0xab, 0x2d, 0x9b, 0x99, 0xf7, 0x39, 0xf8, 0x14}};
+const CLSID CLSID_RecipeThumbHandler    = {0x50d9450f, 0x2a80, 0x4f08, {0x93, 0xb9, 0x2e, 0xb5, 0x26, 0x47, 0x7d, 0x1b}};
 
 typedef HRESULT (*PFNCREATEINSTANCE)(REFIID riid, void **ppvObject);
 struct CLASS_OBJECT_INIT
@@ -28,7 +28,7 @@ struct CLASS_OBJECT_INIT
 // add classes supported by this module here
 const CLASS_OBJECT_INIT c_rgClassObjectInit[] =
 {
-    { &CLSID_BgffThumbHandler, CBgffThumbProvider_CreateInstance }
+    { &CLSID_RecipeThumbHandler, CRecipeThumbProvider_CreateInstance }
 };
 
 
@@ -199,10 +199,10 @@ STDAPI DllRegisterServer()
         const REGISTRY_ENTRY rgRegistryEntries[] =
         {
             // RootKey            KeyName                                                                ValueName                     Data
-            {HKEY_CURRENT_USER,   L"Software\\Classes\\CLSID\\" SZ_CLSID_BGFFTHUMBHANDLER,                                 NULL,                           SZ_BGFFTHUMBHANDLER},
-            {HKEY_CURRENT_USER,   L"Software\\Classes\\CLSID\\" SZ_CLSID_BGFFTHUMBHANDLER L"\\InProcServer32",             NULL,                           szModuleName},
-            {HKEY_CURRENT_USER,   L"Software\\Classes\\CLSID\\" SZ_CLSID_BGFFTHUMBHANDLER L"\\InProcServer32",             L"ThreadingModel",              L"Apartment"},
-            {HKEY_CURRENT_USER,   L"Software\\Classes\\.bgff\\ShellEx\\{7cf42569-c523-49d5-a68b-67ae3be766d8}",            NULL,                           SZ_CLSID_BGFFTHUMBHANDLER},
+            {HKEY_CURRENT_USER,   L"Software\\Classes\\CLSID\\" SZ_CLSID_RECIPETHUMBHANDLER,                                 NULL,                           SZ_RECIPETHUMBHANDLER},
+            {HKEY_CURRENT_USER,   L"Software\\Classes\\CLSID\\" SZ_CLSID_RECIPETHUMBHANDLER L"\\InProcServer32",             NULL,                           szModuleName},
+            {HKEY_CURRENT_USER,   L"Software\\Classes\\CLSID\\" SZ_CLSID_RECIPETHUMBHANDLER L"\\InProcServer32",             L"ThreadingModel",              L"Apartment"},
+            {HKEY_CURRENT_USER,   L"Software\\Classes\\.bgff\\ShellEx\\{e357fccd-a995-4576-b01f-234630154e96}",            NULL,                           SZ_CLSID_RECIPETHUMBHANDLER},
         };
 
         hr = S_OK;
@@ -229,8 +229,8 @@ STDAPI DllUnregisterServer()
 
     const PCWSTR rgpszKeys[] =
     {
-        L"Software\\Classes\\CLSID\\" SZ_CLSID_BGFFTHUMBHANDLER,
-        L"Software\\Classes\\.bgff\\ShellEx\\{7cf42569-c523-49d5-a68b-67ae3be766d8}"
+        L"Software\\Classes\\CLSID\\" SZ_CLSID_RECIPETHUMBHANDLER,
+        L"Software\\Classes\\.bgff\\ShellEx\\{e357fccd-a995-4576-b01f-234630154e96}"
     };
 
     // Delete the registry entries

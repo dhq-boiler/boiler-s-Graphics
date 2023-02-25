@@ -11,7 +11,6 @@
 #include <wincodec.h>   // Windows Imaging Codecs
 #include <msxml6.h>
 #include <new>
-#include <atlbase.h>
 
 #pragma comment(lib, "shlwapi.lib")
 #pragma comment(lib, "windowscodecs.lib")
@@ -21,16 +20,15 @@
 // this thumbnail provider implements IInitializeWithStream to enable being hosted
 // in an isolated process for robustness
 
-class CBgffThumbProvider : public IInitializeWithStream,
-                             public IThumbnailProvider,
-                            public IShellItemImageFactory
+class CRecipeThumbProvider : public IInitializeWithStream,
+                             public IThumbnailProvider
 {
 public:
-    CBgffThumbProvider() : _cRef(1), _pStream(NULL)
+    CRecipeThumbProvider() : _cRef(1), _pStream(NULL)
     {
     }
 
-    virtual ~CBgffThumbProvider()
+    virtual ~CRecipeThumbProvider()
     {
         if (_pStream)
         {
@@ -43,9 +41,8 @@ public:
     {
         static const QITAB qit[] =
         {
-            QITABENT(CBgffThumbProvider, IInitializeWithStream),
-            QITABENT(CBgffThumbProvider, IThumbnailProvider),
-            QITABENT(CBgffThumbProvider, IShellItemImageFactory),
+            QITABENT(CRecipeThumbProvider, IInitializeWithStream),
+            QITABENT(CRecipeThumbProvider, IThumbnailProvider),
             { 0 },
         };
         return QISearch(this, qit, riid, ppv);
@@ -70,9 +67,7 @@ public:
     IFACEMETHODIMP Initialize(IStream *pStream, DWORD grfMode);
 
     // IThumbnailProvider
-    IFACEMETHODIMP GetThumbnail(UINT cx, HBITMAP* phbmp, WTS_ALPHATYPE* pdwAlpha);
-
-    IFACEMETHODIMP GetImage(SIZE, SIIGBF, HBITMAP*);
+    IFACEMETHODIMP GetThumbnail(UINT cx, HBITMAP *phbmp, WTS_ALPHATYPE *pdwAlpha);
 
 private:
     HRESULT _LoadXMLDocument( IXMLDOMDocument **ppXMLDoc);
@@ -83,9 +78,9 @@ private:
     IStream *_pStream;     // provided during initialization.
 };
 
-HRESULT CBgffThumbProvider_CreateInstance(REFIID riid, void **ppv)
+HRESULT CRecipeThumbProvider_CreateInstance(REFIID riid, void **ppv)
 {
-    CBgffThumbProvider *pNew = new (std::nothrow) CBgffThumbProvider();
+    CRecipeThumbProvider *pNew = new (std::nothrow) CRecipeThumbProvider();
     HRESULT hr = pNew ? S_OK : E_OUTOFMEMORY;
     if (SUCCEEDED(hr))
     {
@@ -96,7 +91,7 @@ HRESULT CBgffThumbProvider_CreateInstance(REFIID riid, void **ppv)
 }
 
 // IInitializeWithStream
-IFACEMETHODIMP CBgffThumbProvider::Initialize(IStream *pStream, DWORD)
+IFACEMETHODIMP CRecipeThumbProvider::Initialize(IStream *pStream, DWORD)
 {
     HRESULT hr = E_UNEXPECTED;  // can only be inited once
     if (_pStream == NULL)
@@ -107,7 +102,7 @@ IFACEMETHODIMP CBgffThumbProvider::Initialize(IStream *pStream, DWORD)
     return hr;
 }
 
-HRESULT CBgffThumbProvider::_LoadXMLDocument(IXMLDOMDocument **ppXMLDoc)
+HRESULT CRecipeThumbProvider::_LoadXMLDocument(IXMLDOMDocument **ppXMLDoc)
 {
     *ppXMLDoc = NULL;
 
@@ -132,7 +127,7 @@ HRESULT CBgffThumbProvider::_LoadXMLDocument(IXMLDOMDocument **ppXMLDoc)
 }
 
 // Gets the base64-encoded string which represents the image.
-HRESULT CBgffThumbProvider::_GetBase64EncodedImageString(UINT /* cx */, PWSTR *ppszResult)
+HRESULT CRecipeThumbProvider::_GetBase64EncodedImageString(UINT /* cx */, PWSTR *ppszResult)
 {
     *ppszResult = NULL;
 
@@ -184,7 +179,7 @@ HRESULT CBgffThumbProvider::_GetBase64EncodedImageString(UINT /* cx */, PWSTR *p
 }
 
 // Decodes the base64-encoded string to a stream.
-HRESULT CBgffThumbProvider::_GetStreamFromString(PCWSTR pszImageName, IStream **ppImageStream)
+HRESULT CRecipeThumbProvider::_GetStreamFromString(PCWSTR pszImageName, IStream **ppImageStream)
 {
     HRESULT hr = E_FAIL;
 
@@ -316,7 +311,7 @@ HRESULT WICCreate32BitsPerPixelHBITMAP(IStream *pstm, UINT /* cx */, HBITMAP *ph
 }
 
 // IThumbnailProvider
-IFACEMETHODIMP CBgffThumbProvider::GetThumbnail(UINT cx, HBITMAP *phbmp, WTS_ALPHATYPE *pdwAlpha)
+IFACEMETHODIMP CRecipeThumbProvider::GetThumbnail(UINT cx, HBITMAP *phbmp, WTS_ALPHATYPE *pdwAlpha)
 {
     PWSTR pszBase64EncodedImageString;
     HRESULT hr = _GetBase64EncodedImageString(cx, &pszBase64EncodedImageString);
@@ -331,12 +326,5 @@ IFACEMETHODIMP CBgffThumbProvider::GetThumbnail(UINT cx, HBITMAP *phbmp, WTS_ALP
         }
         CoTaskMemFree(pszBase64EncodedImageString);
     }
-    return hr;
-}
-
-HRESULT CBgffThumbProvider::GetImage(SIZE /*size*/, SIIGBF /*flags*/, HBITMAP* phbm)
-{
-    HRESULT hr = E_FAIL;
-    hr = CBgffThumbProvider::GetThumbnail(0, phbm, NULL);
     return hr;
 }
