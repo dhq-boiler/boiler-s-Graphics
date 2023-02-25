@@ -349,22 +349,6 @@ public class MainWindowViewModel : BindableBase, IDisposable
                 UpdateStatisticsCountLogLevelChanged();
             })
             .AddTo(_CompositeDisposable);
-        InstallBgffThumbnailProviderCommand = new ReactiveCommand().WithSubscribe(() =>
-        {
-            var result = MessageBox.Show("シェル拡張をインストールします。よろしいですか？", "シェル拡張のインストール", MessageBoxButton.YesNo);
-            if (result == MessageBoxResult.Yes)
-            {
-                var hResult = NativeMethods.DllRegisterServer();
-            }
-        });
-        UninstallBgffThumbnailProviderCommand = new ReactiveCommand().WithSubscribe(() =>
-        {
-            var result = MessageBox.Show("シェル拡張をアンインストールします。よろしいですか？", "シェル拡張のアンインストール", MessageBoxButton.YesNo);
-            if (result == MessageBoxResult.Yes)
-            {
-                var hResult = NativeMethods.DllUnregisterServer();
-            }
-        });
 
         try
         {
@@ -496,10 +480,6 @@ public class MainWindowViewModel : BindableBase, IDisposable
     public DelegateCommand PostNewIssueCommand { get; }
 
     public DelegateCommand ShowPrivacyPolicyCommand { get; }
-
-    public ReactiveCommand InstallBgffThumbnailProviderCommand { get; }
-
-    public ReactiveCommand UninstallBgffThumbnailProviderCommand { get; }
 
     #region IDisposable
 
