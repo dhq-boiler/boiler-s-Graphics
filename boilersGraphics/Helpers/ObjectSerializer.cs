@@ -605,47 +605,6 @@ internal class ObjectSerializer
             {
                 picture
             };
-
-            //string table = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-
-            //byte[] src = memStream.ToArray();
-
-            //string dest = string.Empty;
-
-            //for (int i = 0; i < src.Length; ++i)
-            //{
-            //    switch (i % 3)
-            //    {
-            //        case 0:
-            //            dest += table[(src[i] & 0xFC) >> 2];
-            //            if (i + 1 == src.Length)
-            //            {
-            //                dest += table[(src[i] & 0x03) << 4];
-            //                dest += '=';
-            //                dest += '=';
-            //            }
-            //            break;
-            //        case 1:
-            //            dest += table[((src[i - 1] & 0x03) << 4) | ((src[i + 0] & 0xF0) >> 4)];
-            //            if (i + 1 == src.Length)
-            //            {
-            //                dest += table[(src[i] & 0x0F) << 2];
-            //                dest += '='; 
-            //            }
-            //            break;
-            //        case 2:
-            //            dest += table[((src[i - 1] & 0x0F) << 2) | ((src[i + 0] & 0xC0) >> 6)];
-            //            dest += table[src[i] & 0x3F];
-            //            break;
-            //    }
-            //}
-
-            //var picture = new XElement("Picture");
-            //picture.SetAttributeValue("Source", dest);
-            //return new[]
-            //{
-            //    picture
-            //};
         }
     }
 }
