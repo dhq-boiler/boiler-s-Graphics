@@ -138,7 +138,8 @@
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command>copy $(ProjectDir)x64\$(Configuration)\BgffThumbnailProvider.dll $(SolutionDir)boilersGraphics\bin\$(Configuration)\net7.0-windows10.0.22000.0\BgffThumbnailProvider.dll</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -193,6 +194,9 @@
   <ItemGroup>
     <ClCompile Include="Dll.cpp" />
     <ClCompile Include="BgffThumbnailProvider.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Dll.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
