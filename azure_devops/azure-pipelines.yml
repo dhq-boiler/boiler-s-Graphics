@@ -56,7 +56,7 @@ steps:
   displayName: 'NuGet パッケージの復元'
   inputs:
     command: 'restore'
-    projects: '$(TargetSolution)'
+    projects: '$(Build.SourcesDirectory)\boilersGraphics.sln'
     feedsToUse: 'select'
 
 - task: VSBuild@1
