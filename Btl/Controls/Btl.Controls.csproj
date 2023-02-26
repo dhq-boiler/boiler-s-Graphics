@@ -9,6 +9,7 @@
     <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
 	<PlatformTarget>x64</PlatformTarget>
 	<RuntimeIdentifiers>win-x64;win-x86</RuntimeIdentifiers>
+	<Platforms>AnyCPU;x64;x86</Platforms>
   </PropertyGroup>
   <ItemGroup>
     <AppDesigner Include="Properties\" />

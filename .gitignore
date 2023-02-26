@@ -19,3 +19,4 @@ boilersGraphics.Msix/AppPackages/
 boilersGraphics.Msix/BundleArtifacts/
 x64/
 Release/
+Debug/

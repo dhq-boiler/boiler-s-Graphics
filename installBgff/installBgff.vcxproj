@@ -87,6 +87,9 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PreBuildEvent>
+      <Command>copy $(SolutionDir)BgffThumbnailProvider\Release\BgffThumbnailProvider.dll $(SolutionDir)$(Configuration)\BgffThumbnailProvider.dll</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -103,6 +106,9 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PreBuildEvent>
+      <Command>copy $(SolutionDir)BgffThumbnailProvider\Release\BgffThumbnailProvider.dll $(SolutionDir)$(Configuration)\BgffThumbnailProvider.dll</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -142,11 +148,6 @@ copy $(SolutionDir)BgffThumbnailProvider\$(PlatformTarget)\Release\BgffThumbnail
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="installBgff.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\BgffThumbnailProvider\BgffThumbnailProvider.vcxproj">
-      <Project>{3af44f8c-a331-4d74-995a-9bdf157e4b8a}</Project>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
