@@ -10,6 +10,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "installBgff", "installBgff\installBgff.vcxproj", "{D368E0EA-E37C-41D7-995B-4043BBD95827}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "uninstallBgff", "uninstallBgff\uninstallBgff.vcxproj", "{C0B6F3CD-3EEB-4F90-A0BE-89AE28742B79}"
+	ProjectSection(ProjectDependencies) = postProject
+		{3AF44F8C-A331-4D74-995A-9BDF157E4B8A} = {3AF44F8C-A331-4D74-995A-9BDF157E4B8A}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BgffThumbnailProvider", "BgffThumbnailProvider\BgffThumbnailProvider.vcxproj", "{3AF44F8C-A331-4D74-995A-9BDF157E4B8A}"
 EndProject
