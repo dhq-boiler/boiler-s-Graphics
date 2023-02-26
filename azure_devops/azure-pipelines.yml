@@ -60,6 +60,15 @@ steps:
     projects: '$(TargetSolution)'
     feedsToUse: 'select'
 
+- task: VSBuild@1
+  displayName: 'シェル拡張のビルド'
+  inputs:
+    solution: '**\*.sln'
+    vsVersion: 'latest'
+    platform: $(buildPlatform) 
+    configuration: $(buildConfiguration) 
+    clean: false
+
 - task: DotNetCoreCLI@2
   displayName: 'アプリケーションのビルド'
   inputs:
