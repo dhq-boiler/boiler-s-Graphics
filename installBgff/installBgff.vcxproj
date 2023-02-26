@@ -115,6 +115,10 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PreBuildEvent>
+      <Command>copy $(SolutionDir)BgffThumbnailProvider\$(PlatformTarget)\Release\BgffThumbnailProvider.dll $(ProjectDir)$(PlatformTarget)\$(Configuration)\BgffThumbnailProvider.dll
+copy $(SolutionDir)BgffThumbnailProvider\$(PlatformTarget)\Release\BgffThumbnailProvider.dll $(SolutionDir)$(PlatformTarget)\$(Configuration)\BgffThumbnailProvider.dll</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -131,6 +135,10 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PreBuildEvent>
+      <Command>copy $(SolutionDir)BgffThumbnailProvider\$(PlatformTarget)\Release\BgffThumbnailProvider.dll $(ProjectDir)$(PlatformTarget)\$(Configuration)\BgffThumbnailProvider.dll
+copy $(SolutionDir)BgffThumbnailProvider\$(PlatformTarget)\Release\BgffThumbnailProvider.dll $(SolutionDir)$(PlatformTarget)\$(Configuration)\BgffThumbnailProvider.dll</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="installBgff.cpp" />

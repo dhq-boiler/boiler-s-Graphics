@@ -81,9 +81,5 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\boilersGraphics\boilersGraphics.csproj" />
-    <ProjectReference Include="..\installBgff\installBgff.vcxproj">
-      <IncludeAssets>BgffThumbnailProvider.dll</IncludeAssets>
-    </ProjectReference>
-    <ProjectReference Include="..\uninstallBgff\uninstallBgff.vcxproj" />
   </ItemGroup>
 </Project>
