@@ -17,7 +17,6 @@ variables:
   dotNetVersion: '7.0.x'
   disable.coverage.autogenerate: 'true'
   System.Debug: True
-  TargetSolution: '$(Build.SourcesDirectory)\boilersGraphics.sln'
   TestProjects: '$(Build.SourcesDirectory)\boilersGraphics.Test\*.Test.csproj'
 
 steps:
@@ -63,7 +62,7 @@ steps:
 - task: VSBuild@1
   displayName: 'シェル拡張のビルド'
   inputs:
-    solution: '**\*.sln'
+    solution: '$(Build.SourcesDirectory)\BgffThumbnailProvider.sln'
     vsVersion: 'latest'
     platform: $(buildPlatform) 
     configuration: $(buildConfiguration) 
@@ -73,7 +72,7 @@ steps:
   displayName: 'アプリケーションのビルド'
   inputs:
     command: 'build'
-    projects: '$(TargetSolution)'
+    projects: '$(Build.SourcesDirectory)\boilersGraphics.sln'
     arguments: '--configuration $(BuildConfiguration)'  
 
 - powershell: |
