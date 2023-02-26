@@ -185,6 +185,7 @@
       <DataExecutionPrevention>true</DataExecutionPrevention>
       <ImportLibrary>$(OutDir)BgffThumbnailProvider.lib</ImportLibrary>
       <TargetMachine>MachineX64</TargetMachine>
+      <ModuleDefinitionFile>BgffThumbnailProvider.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
