@@ -5236,6 +5236,61 @@
 
     <!--  Tooltip  -->
     <Style TargetType="{x:Type ToolTip}">
+        <Setter Property="Background" Value="{StaticResource ControlDefaultBackground}" />
+        <Setter Property="BorderBrush" Value="{StaticResource ControlDefaultBorderBrush}" />
+        <Setter Property="Foreground" Value="{StaticResource ControlDefaultForeground}" />
+        <Setter Property="MaxWidth" Value="800" />
+        <Setter Property="OverridesDefaultStyle" Value="true" />
+        <Setter Property="HasDropShadow" Value="True" />
+        <Setter Property="Placement" Value="MousePoint" />
+        <Setter Property="PlacementRectangle" Value="10 10 5 5" />
+        <Setter Property="HorizontalOffset" Value="15" />
+        <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+        <Setter Property="VerticalOffset" Value="15" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ToolTip">
+                    <Themes:SystemDropShadowChrome
+                        Name="Shdw"
+                        Themes:SystemDropShadowChrome.Color="Transparent"
+                        Themes:SystemDropShadowChrome.CornerRadius="0"
+                        SnapsToDevicePixels="True">
+                        <Border
+                            Name="Border"
+                            Width="{TemplateBinding Width}"
+                            Height="{TemplateBinding Height}"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="1"
+                            SnapsToDevicePixels="True">
+                            <ContentPresenter
+                                x:Name="ToolTip_ContentPresenter"
+                                Margin="5"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Top">
+                                <ContentPresenter.Resources>
+                                    <Style TargetType="{x:Type TextBlock}">
+                                        <Setter Property="TextWrapping" Value="Wrap" />
+                                        <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                                        <Setter Property="TextAlignment" Value="Left" />
+                                        <Setter Property="Foreground" Value="{StaticResource ControlDefaultForeground}" />
+                                    </Style>
+                                </ContentPresenter.Resources>
+                            </ContentPresenter>
+                        </Border>
+                    </Themes:SystemDropShadowChrome>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="HasDropShadow" Value="True">
+                            <Setter TargetName="Shdw" Property="Margin" Value="0,0,5,5" />
+                            <Setter TargetName="Shdw" Property="Themes:SystemDropShadowChrome.Color" Value="#71000000" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="LayerWindow_LayerItem_Appearance_ToolTip" TargetType="{x:Type ToolTip}">
         <!--<Setter Property="Background" Value="{StaticResource ControlDefaultBackground}" />-->
         <Setter Property="Background" Value="Transparent" />
         <!--<Setter Property="BorderBrush" Value="{StaticResource ControlDefaultBorderBrush}" />-->

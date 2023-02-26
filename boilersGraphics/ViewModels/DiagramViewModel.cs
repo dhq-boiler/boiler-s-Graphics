@@ -30,6 +30,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
 using System.Windows.Threading;
 using System.Xml;
 using System.Xml.Linq;
@@ -83,7 +84,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
             CreateNewDiagramCommand = new DelegateCommand<object>(p => ExecuteCreateNewDiagramCommand(p));
             LoadCommand = new DelegateCommand(() => ExecuteLoadCommand());
             LoadFileCommand = new DelegateCommand<string>(file => ExecuteLoadCommand(file));
-            SaveCommand = new DelegateCommand(() => ExecuteSaveCommand());
+            SaveCommand = new DelegateCommand(() => ExecuteSaveAsCommand());
             OverwriteCommand = new DelegateCommand(() => ExecuteOverwriteCommand());
             ExportCommand = new DelegateCommand(() => ExecuteExportCommand());
             GroupCommand = new DelegateCommand(() => ExecuteGroupItemsCommand(), () => CanExecuteGroup());
@@ -239,9 +240,16 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                 polyBezierVM.SnapPoint0VM.Value.IsSelected.Value = true;
                 polyBezierVM.SnapPoint1VM.Value.IsSelected.Value = true;
             });
-            LoadedCommand = new DelegateCommand(() => 
-            { 
+            LoadedCommand = new DelegateCommand(() =>
+            {
                 LogManager.GetCurrentClassLogger().Trace("LoadedCommand");
+
+                while (LoadedEventActions.Count > 0)
+                {
+                    var action = LoadedEventActions.Dequeue();
+                    action();
+                }
+
                 App.Current.Dispatcher.Invoke(() =>
                 {
                     RootLayer.Value.UpdateAppearanceBothParentAndChild();
@@ -624,7 +632,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
         {
             var files = Directory.EnumerateFiles(
                 System.IO.Path.Combine(Helpers.Path.GetRoamingDirectory(), "dhq_boiler\\boilersGraphics\\AutoSave"),
-                "AutoSave-*-*-*-*-*-*.xml");
+                "AutoSave-*-*-*-*-*-*.bgff");
             foreach (var file in files.OrderByDescending(x => new FileInfo(x).LastWriteTime))
                 AutoSaveFiles.AddOnScheduler(file);
         }
@@ -707,7 +715,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
 
         AutoSavedDateTime.Value = DateTime.Now;
         var path = System.IO.Path.Combine(Helpers.Path.GetRoamingDirectory(),
-            $"dhq_boiler\\boilersGraphics\\AutoSave\\AutoSave-{AutoSavedDateTime.Value.Year}-{AutoSavedDateTime.Value.Month}-{AutoSavedDateTime.Value.Day}-{AutoSavedDateTime.Value.Hour}-{AutoSavedDateTime.Value.Minute}-{AutoSavedDateTime.Value.Second}.xml");
+            $"dhq_boiler\\boilersGraphics\\AutoSave\\AutoSave-{AutoSavedDateTime.Value.Year}-{AutoSavedDateTime.Value.Month}-{AutoSavedDateTime.Value.Day}-{AutoSavedDateTime.Value.Hour}-{AutoSavedDateTime.Value.Minute}-{AutoSavedDateTime.Value.Second}.bgff");
         var autoSaveDir = System.IO.Path.GetDirectoryName(path);
         if (!Directory.Exists(autoSaveDir)) Directory.CreateDirectory(autoSaveDir);
 
@@ -716,12 +724,14 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
             var versionXML = new XElement("Version", BGSXFileVersion.ToString());
             var layersXML = new XElement("Layers", ObjectSerializer.SerializeLayers(Layers));
             var configurationXML = new XElement("Configuration", ObjectSerializer.SerializeConfiguration(this));
+            var attachmentsXML = new XElement("Attachments", ObjectSerializer.SerializeAttachments());
 
             var root = new XElement("boilersGraphics");
             root.Add(versionXML);
             root.Add(layersXML);
             root.Add(configurationXML);
-            root.Save(path);
+            root.Add(attachmentsXML);
+            SaveFileWithoutSaveFileDialog(root, path);
         });
 
         MainWindowVM.Message.Value = $"{AutoSavedDateTime.Value} {Resources.Message_Autosaved}";
@@ -1936,34 +1946,38 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     /// </summary>
     public ReactivePropertySlim<double> MagnificationRate { get; } = new(100);
 
+    public Queue<Action> LoadedEventActions { get; } = new();
+
     #endregion //Property
 
     #region Save
 
-    private void ExecuteSaveCommand()
+    private void ExecuteSaveAsCommand()
     {
         var versionXML = new XElement("Version", BGSXFileVersion.ToString());
         var layersXML = new XElement("Layers", ObjectSerializer.SerializeLayers(Layers));
         var configurationXML = new XElement("Configuration", ObjectSerializer.SerializeConfiguration(this));
+        var attachmentsXML = new XElement("Attachments", ObjectSerializer.SerializeAttachments());
 
         var root = new XElement("boilersGraphics");
         root.Add(versionXML);
         root.Add(layersXML);
         root.Add(configurationXML);
+        root.Add(attachmentsXML);
 
-        SaveFile(root);
+        SaveFileWithSaveFileDialog(root);
     }
 
-    private void SaveFile(XElement xElement)
+    private void SaveFileWithSaveFileDialog(XElement xElement)
     {
         var saveFile = new SaveFileDialog();
-        saveFile.Filter = "Files (*.xml)|*.xml|All Files (*.*)|*.*";
+        saveFile.Filter = "boiler's Graphics Format Files (*.bgff)|*.bgff|Files (*.xml)|*.xml|All Files (*.*)|*.*";
         var oldFileName = FileName.Value;
         if (saveFile.ShowDialog() == true)
             try
             {
                 FileName.Value = saveFile.FileName;
-                xElement.Save(saveFile.FileName);
+                SaveFileWithoutSaveFileDialog(xElement, saveFile.FileName);
 
                 UpdateStatisticsCountSaveAs();
             }
@@ -1972,6 +1986,22 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                 FileName.Value = oldFileName;
                 MessageBox.Show(ex.StackTrace, ex.Message, MessageBoxButton.OK, MessageBoxImage.Error);
             }
+    }
+
+    private void SaveFileWithoutSaveFileDialog(XElement xElement, string filename)
+    {
+        var oldFileName = FileName.Value;
+        try
+        {
+            FileName.Value = filename;
+            xElement.Save(filename);
+            UpdateStatisticsCountSaveAs();
+        }
+        catch (Exception ex)
+        {
+            FileName.Value = oldFileName;
+            MessageBox.Show(ex.StackTrace, ex.Message, MessageBoxButton.OK, MessageBoxImage.Error);
+        }
     }
 
     private void UpdateStatisticsCountSaveAs()
@@ -1991,11 +2021,13 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
         var versionXML = new XElement("Version", BGSXFileVersion.ToString());
         var layersXML = new XElement("Layers", ObjectSerializer.SerializeLayers(Layers));
         var configurationXML = new XElement("Configuration", ObjectSerializer.SerializeConfiguration(this));
+        var attachmentsXML = new XElement("Attachments", ObjectSerializer.SerializeAttachments());
 
         var root = new XElement("boilersGraphics");
         root.Add(versionXML);
         root.Add(layersXML);
         root.Add(configurationXML);
+        root.Add(attachmentsXML);
         Save(root);
     }
 
@@ -2004,12 +2036,12 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
         if (FileName.Value == "*")
         {
             var saveFile = new SaveFileDialog();
-            saveFile.Filter = "Files (*.xml)|*.xml|All Files (*.*)|*.*";
+            saveFile.Filter = "boiler's Graphics Format Files (*.bgff)|*.bgff|Files (*.xml)|*.xml|All Files (*.*)|*.*";
             if (saveFile.ShowDialog() == true)
                 try
                 {
                     FileName.Value = saveFile.FileName;
-                    root.Save(saveFile.FileName);
+                    SaveFileWithoutSaveFileDialog(root, saveFile.FileName);
                     UpdateStatisticsCountSaveAs();
                 }
                 catch (Exception ex)
@@ -2023,7 +2055,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
         {
             try
             {
-                root.Save(FileName.Value);
+                SaveFileWithoutSaveFileDialog(root, FileName.Value);
                 UpdateStatisticsCountOverwrite();
             }
             catch (Exception ex)
@@ -2045,6 +2077,24 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     #endregion
 
     #region Load
+
+    public async Task Load(string filename)
+    {
+        try
+        {
+            await LoadInternal(XElement.Load(filename), filename);
+            FileName.Value = filename;
+        }
+        catch (IOException e)
+        {
+            MessageBox.Show(e.ToString());
+            return;
+        }
+        var statistics = MainWindowVM.Statistics.Value;
+        statistics.NumberOfTimesTheFileWasOpenedBySpecifyingIt++;
+        var dao = new StatisticsDao();
+        dao.Update(statistics);
+    }
 
     private async Task ExecuteLoadCommand()
     {
@@ -2085,8 +2135,8 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
             var mainwindowViewModel = MainWindowVM;
             try
             {
-                vm.Output.Value += Resources.Log_BeginLoadFromXml;
-                LogManager.GetCurrentClassLogger().Info(Resources.Log_BeginLoadFromXml);
+                vm.Output.Value += Resources.Log_BeginLoadFromFile;
+                LogManager.GetCurrentClassLogger().Info(Resources.Log_BeginLoadFromFile);
                 mainwindowViewModel.Recorder.BeginRecode();
 
                 var configuration = root.Element("Configuration");
@@ -3056,8 +3106,8 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                 await PostProcessInFileLoadingSequence(mainwindowViewModel).ConfigureAwait(false);
 
                 vm.Output.Value += Environment.NewLine;
-                vm.Output.Value += Resources.Log_FinishLoadFromXml;
-                LogManager.GetCurrentClassLogger().Info(Resources.Log_FinishLoadFromXml);
+                vm.Output.Value += Resources.Log_FinishLoadFromFile;
+                LogManager.GetCurrentClassLogger().Info(Resources.Log_FinishLoadFromFile);
             }
             catch (Exception)
             {
@@ -3114,7 +3164,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
         var mainwindowViewModel = MainWindowVM;
         try
         {
-            LogManager.GetCurrentClassLogger().Info(Resources.Log_BeginLoadFromXml);
+            LogManager.GetCurrentClassLogger().Info(Resources.Log_BeginLoadFromFile);
             mainwindowViewModel.Recorder.BeginRecode();
 
             var configuration = root.Element("Configuration");
@@ -3347,7 +3397,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                     double.Parse(configuration.Element("Height").Value));
 
             ObjectDeserializer.ReadObjectsFromXML(this, null, root, isPreview);
-            LogManager.GetCurrentClassLogger().Info(Resources.Log_FinishLoadFromXml);
+            LogManager.GetCurrentClassLogger().Info(Resources.Log_FinishLoadFromFile);
         }
         catch (Exception)
         {
@@ -3444,7 +3494,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     private (XElement, string) LoadSerializedDataFromFile()
     {
         var openFile = new OpenFileDialog();
-        openFile.Filter = "Designer Files (*.xml)|*.xml|All Files (*.*)|*.*";
+        openFile.Filter = "boiler's Graphics Format Files (*.bgff)|*.bgff|Files (*.xml)|*.xml|All Files (*.*)|*.*";
 
         var oldFileName = FileName.Value;
 

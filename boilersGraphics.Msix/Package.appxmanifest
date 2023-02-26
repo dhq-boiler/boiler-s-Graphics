@@ -25,6 +25,18 @@
           <uap:Rotation Preference="portraitFlipped" />
         </uap:InitialRotationPreference>
       </uap:VisualElements>
+      <Extensions>
+        <uap:Extension Category="windows.fileTypeAssociation">
+          <uap:FileTypeAssociation Name="boilersgraphicsformat">
+            <uap:SupportedFileTypes>
+              <uap:FileType ContentType="text/xml">.bgff</uap:FileType>
+            </uap:SupportedFileTypes>
+            <uap:DisplayName>boiler&apos;s Graphics Format File</uap:DisplayName>
+            <uap:Logo>Images\Square150x150Logo.png</uap:Logo>
+            <uap:InfoTip>Open boiler&apos;s Graphics</uap:InfoTip>
+          </uap:FileTypeAssociation>
+        </uap:Extension>
+      </Extensions>
     </Application>
   </Applications>
   <Capabilities>

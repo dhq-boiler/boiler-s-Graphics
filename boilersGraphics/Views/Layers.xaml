@@ -124,6 +124,7 @@
                                                                         <Border.ToolTip>
                                                                             <ToolTip
                                                                                 x:Name="Appearance_ToolTip"
+                                                                                Style="{StaticResource LayerWindow_LayerItem_Appearance_ToolTip}"
                                                                                 AutomationProperties.AutomationId="Appearance_ToolTip"
                                                                                 BorderBrush="Transparent"
                                                                                 BorderThickness="0"

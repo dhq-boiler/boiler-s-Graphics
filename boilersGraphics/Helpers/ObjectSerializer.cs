@@ -1,12 +1,16 @@
 ﻿using System;
+using System.Buffers.Text;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Windows;
+using System.Windows.Documents;
 using System.Windows.Media.Imaging;
 using System.Xml.Linq;
+using boilersGraphics.Controls;
 using boilersGraphics.Extensions;
 using boilersGraphics.Models;
 using boilersGraphics.ViewModels;
@@ -26,6 +30,7 @@ internal class ObjectSerializer
     {
         var layerXML = new List<XElement>();
         layerXML.Add(new XElement("IsVisible", layer.IsVisible.Value));
+        layerXML.Add(new XElement("IsExpanded", layer.IsExpanded.Value));
         layerXML.Add(new XElement("Name", layer.Name.Value));
         layerXML.Add(new XElement("Color", layer.Color.Value));
         layerXML.Add(new XElement("Children", ExtractLayerItemFromLayer(layer)));
@@ -52,6 +57,7 @@ internal class ObjectSerializer
     {
         return new XElement("LayerItem",
             new XElement("IsVisible", layerItem.IsVisible.Value),
+            new XElement("IsExpanded", layerItem.IsExpanded.Value),
             new XElement("Name", layerItem.Name.Value),
             new XElement("Color", layerItem.Color.Value),
             new XElement("Item", ExtractItem(layerItem.Item.Value)),
@@ -561,5 +567,43 @@ internal class ObjectSerializer
         colorSpots.Add(new XElement("ColorSpot99",
             XElement.Parse(WpfObjectSerializer.Serialize(diagramViewModel.ColorSpots.Value.ColorSpot99))));
         return colorSpots;
+    }
+
+    internal static IEnumerable<XElement> SerializeAttachments()
+    {
+        using (var memStream = new MemoryStream())
+        {
+            var renderer = new Renderer(new WpfVisualTreeHelper());
+            var image = renderer.Render(null, DesignerCanvas.GetInstance(), DiagramViewModel.Instance, DiagramViewModel.Instance.BackgroundItem.Value, DiagramViewModel.Instance.BackgroundItem.Value);
+            var writeableBitmap = new WriteableBitmap(image);
+            var encoder = new PngBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(writeableBitmap));
+            encoder.Save(memStream);
+
+            // 入力文字列をASCIIエンコードしたバイト配列
+            byte[] bytes = memStream.ToArray();
+
+            // Base64エンコードした文字列
+            string base64String = Convert.ToBase64String(bytes);
+
+            // 必要な出力文字数を計算する
+            int outputCount = base64String.Length + (base64String.Length / 76) + 1;
+
+            var picture = new XElement("Picture");
+            var source = string.Empty;
+            // Base64エンコードした文字列を76文字ごとに分割する
+            for (int i = 0; i < base64String.Length; i += 76)
+            {
+                int charCount = Math.Min(76, base64String.Length - i);
+                string line = base64String.Substring(i, charCount);
+                source += line;
+            }
+            picture.SetAttributeValue("Source", source);
+
+            return new[]
+            {
+                picture
+            };
+        }
     }
 }

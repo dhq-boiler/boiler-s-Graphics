@@ -139,6 +139,10 @@ public class ObjectDeserializer
                 var layerObj = new Layer(isPreview);
                 layerObj.Color.Value = (Color)ColorConverter.ConvertFromString(layer.Element("Color").Value);
                 layerObj.IsVisible.Value = bool.Parse(layer.Element("IsVisible").Value);
+                if (layer.Elements("IsExpanded").Any())
+                {
+                    layerObj.IsExpanded.Value = bool.Parse(layer.Element("IsExpanded").Value);
+                }
                 layerObj.Name.Value = layer.Element("Name").Value;
 
                 foreach (var layerItemsInternal in layer.Elements("Children"))
@@ -246,6 +250,10 @@ public class ObjectDeserializer
         var layerItemObj = new LayerItem(item, layerObj, layerItem.Element("Name").Value);
         layerItemObj.Color.Value = (Color)ColorConverter.ConvertFromString(layerItem.Element("Color").Value);
         layerItemObj.IsVisible.Value = bool.Parse(layerItem.Element("IsVisible").Value);
+        if (layerItem.Elements("IsExpanded").Any())
+        {
+            layerItemObj.IsExpanded.Value = bool.Parse(layerItem.Element("IsExpanded").Value);
+        }
         var children = layerItem.Elements("Children").Descendants("LayerItem");
         var children_layerItems = from child in children
             let li = ReadLayerItemFromXML(diagramViewModel, layerObj, child)

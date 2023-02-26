@@ -11,7 +11,7 @@ pool:
 
 variables:
   solution: '**/*.sln'
-  buildPlatform: 'Any CPU'
+  buildPlatform: 'x64'
   buildConfiguration: 'Release'
   dotNetFrameworks: 'net7.0'
   dotNetVersion: '7.0.x'
@@ -80,7 +80,7 @@ steps:
   displayName: 'MSBuild boilersGraphics.Msix.wapproj'
   inputs:
     solution: 'boilersGraphics.Msix\boilersGraphics.Msix.wapproj'
-    platform: 'AnyCPU'
+    platform: '$(buildPlatform)'
     configuration: '$(BuildConfiguration)'
     msbuildArguments: '/p:OutDir=$(Build.ArtifactStagingDirectory) /p:UapAppxPackageBuildMode=StoreUpload /p:AppxBundle=Never /p:AppxPackageOutput=boilersGraphics_$(Major)_$(Minor)_$(Build).msix /p:AppxPackageSigningEnabled=false /p:DebugSymbols=true'
     clean: true
@@ -140,6 +140,19 @@ steps:
     #verbose: # Optional
     #quiet: # Optional
 
+# Archive x64 shellExtension files
+- task: ArchiveFiles@2
+  condition: always()
+  inputs:
+    rootFolderOrFile: '$(System.DefaultWorkingDirectory)\$(buildPlatform)\Release' 
+    includeRootFolder: false
+    archiveType: 'zip' # Options: zip, 7z, tar, wim
+    tarCompression: 'gz' # Optional. Options: gz, bz2, xz, none
+    archiveFile: '$(Build.ArtifactStagingDirectory)/boilersGraphics_$(Major)_$(Minor)_$(Build)_shellExtensions_$(buildPlatform).zip' 
+    replaceExistingArchive: true 
+    #verbose: # Optional
+    #quiet: # Optional
+
 # GitHub Release
 # Create, edit, or delete a GitHub release
 - task: GitHubRelease@0
@@ -157,7 +170,8 @@ steps:
     #releaseNotes: # Optional
     assets: |
       $(Build.ArtifactStagingDirectory)\boilersGraphics_$(Major)_$(Minor)_$(Build).zip
-      $(Build.ArtifactStagingDirectory)\boilersGraphics.Msix\AppPackages\boilersGraphics.Msix_**_AnyCPU.appxupload
+      $(Build.ArtifactStagingDirectory)/boilersGraphics_$(Major)_$(Minor)_$(Build)_shellExtensions_$(buildPlatform).zip
+      $(Build.ArtifactStagingDirectory)\boilersGraphics.Msix\AppPackages\boilersGraphics.Msix_**_$(buildPlatform).appxupload
       $(System.DefaultWorkingDirectory)\boilersGraphics.Msix\boilersGraphics_$(Major)_$(Minor)_$(Build).msix
     assetUploadMode: 'delete' # Optional. Options: delete, replace
     isDraft: false # Optional

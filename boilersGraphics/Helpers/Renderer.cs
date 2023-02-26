@@ -1,15 +1,13 @@
-﻿using boilersGraphics.Adorners;
-using boilersGraphics.Controls;
+﻿using boilersGraphics.Controls;
 using boilersGraphics.Extensions;
 using boilersGraphics.ViewModels;
 using NLog;
-using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
@@ -309,6 +307,31 @@ public class Renderer
         context.DrawRectangle(brush, null, rect);
 
         return true;
+    }
+
+    public static System.Drawing.Bitmap ConvertToBitmap(RenderTargetBitmap renderTargetBitmap)
+    {
+        var bitmapImage = new BitmapImage();
+
+        // RenderTargetBitmapをBitmapImageに変換
+        var bitmapEncoder = new BmpBitmapEncoder();
+        bitmapEncoder.Frames.Add(BitmapFrame.Create(renderTargetBitmap));
+        using (var ms = new MemoryStream())
+        {
+            bitmapEncoder.Save(ms);
+            ms.Position = 0;
+            bitmapImage.BeginInit();
+            bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+            bitmapImage.StreamSource = ms;
+            bitmapImage.EndInit();
+        }
+
+        // BitmapImageをBitmapに変換
+        var bitmap = new System.Drawing.Bitmap(bitmapImage.PixelWidth, bitmapImage.PixelHeight, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
+        var bitmapData = bitmap.LockBits(new System.Drawing.Rectangle(System.Drawing.Point.Empty, bitmap.Size), System.Drawing.Imaging.ImageLockMode.WriteOnly, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
+        bitmapImage.CopyPixels(Int32Rect.Empty, bitmapData.Scan0, bitmapData.Height * bitmapData.Stride, bitmapData.Stride);
+        bitmap.UnlockBits(bitmapData);
+        return bitmap;
     }
 
     private async Task<bool> RenderBackgroundViewModelAsync(Rect? sliceRect, DesignerCanvas designerCanvas,

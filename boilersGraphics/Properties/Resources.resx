@@ -411,8 +411,8 @@
   <data name="Grouping" xml:space="preserve">
     <value>Grouping</value>
   </data>
-  <data name="Log_BeginLoadFromXml" xml:space="preserve">
-    <value>Begin loading from XML...</value>
+  <data name="Log_BeginLoadFromFile" xml:space="preserve">
+    <value>Begin loading from File...</value>
   </data>
   <data name="Log_BeginPostProcessInFileLoadingSequence" xml:space="preserve">
     <value>Begin post processes in file loading sequence...</value>
@@ -420,8 +420,8 @@
   <data name="Log_FileCannotOpenBecauseTooOldOrCorrupted" xml:space="preserve">
     <value>This file is too old or corrupted to open.</value>
   </data>
-  <data name="Log_FinishLoadFromXml" xml:space="preserve">
-    <value>Finished loading from XML.</value>
+  <data name="Log_FinishLoadFromFile" xml:space="preserve">
+    <value>Finished loading from File.</value>
   </data>
   <data name="Log_FinishPostProcessInFileLoadingSequence" xml:space="preserve">
     <value>Finished post processes in file loading sequence.</value>
