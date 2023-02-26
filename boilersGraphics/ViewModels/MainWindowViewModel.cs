@@ -409,6 +409,11 @@ public class MainWindowViewModel : BindableBase, IDisposable
     /// </summary>
     private void SetInitialMainWindowSize()
     {
+        if (App.Current is null)
+        {
+            return;
+        }
+
         var mainWindow = App.Current.MainWindow;
         mainWindow.Width = Math.Min(1920, SystemParameters.PrimaryScreenWidth) - 2;
         mainWindow.Height = Math.Min(1080, SystemParameters.PrimaryScreenWidth) - 2;
