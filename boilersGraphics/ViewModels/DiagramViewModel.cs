@@ -2036,7 +2036,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
         if (FileName.Value == "*")
         {
             var saveFile = new SaveFileDialog();
-            saveFile.Filter = "Files (*.xml)|*.xml|All Files (*.*)|*.*";
+            saveFile.Filter = "boiler's Graphics Format Files (*.bgff)|*.bgff|Files (*.xml)|*.xml|All Files (*.*)|*.*";
             if (saveFile.ShowDialog() == true)
                 try
                 {
