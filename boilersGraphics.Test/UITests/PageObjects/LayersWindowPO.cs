@@ -27,7 +27,7 @@ namespace boilersGraphics.Test.UITests.PageObjects
             {
                 for (int i = 0;i < count; i++)
                 {
-                    x.GetElementBy(By.XPath("//Button[@AutomationId=\"LayerItem_ToggleButton\"]")).Click();
+                    x.GetElementBy(By.XPath("//Button[@AutomationId=\"LayerItem_ToggleButton\"]"), 60 * 5).Click();
                 }
             }
 
@@ -54,9 +54,9 @@ namespace boilersGraphics.Test.UITests.PageObjects
                 }
             }
 
-            public IEnumerable<LayerItemPO> LayerItems => GetElementsBy(By.XPath("//Custom[@AutomationId=\"DiagramControl\"]/Custom[@AutomationId=\"layers\"]/Group[@ClassName=\"Expander\"]/Tree[@AutomationId=\"LayersTreeView\"]/TreeItem")).Select(x => new LayerItemPO(Session, x));
+            public IEnumerable<LayerItemPO> LayerItems => GetElementsBy(By.XPath("//Custom[@AutomationId=\"DiagramControl\"]/Custom[@AutomationId=\"layers\"]/Group[@ClassName=\"Expander\"]/Tree[@AutomationId=\"LayersTreeView\"]/TreeItem"), 60 * 5).Select(x => new LayerItemPO(Session, x));
         }
 
-        public IEnumerable<LayerItemPO> LayerItems => GetElementsBy(By.XPath("//Custom[@AutomationId=\"DiagramControl\"]/Custom[@AutomationId=\"layers\"]/Group[@ClassName=\"Expander\"]/Tree[@AutomationId=\"LayersTreeView\"]/TreeItem")).Select(x => new LayerItemPO(Session, x));
+        public IEnumerable<LayerItemPO> LayerItems => GetElementsBy(By.XPath("//Custom[@AutomationId=\"DiagramControl\"]/Custom[@AutomationId=\"layers\"]/Group[@ClassName=\"Expander\"]/Tree[@AutomationId=\"LayersTreeView\"]/TreeItem"), 60 * 5).Select(x => new LayerItemPO(Session, x));
     }
 }
