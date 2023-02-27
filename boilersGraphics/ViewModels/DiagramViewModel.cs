@@ -731,7 +731,9 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
             root.Add(layersXML);
             root.Add(configurationXML);
             root.Add(attachmentsXML);
-            SaveFileWithoutSaveFileDialog(root, path);
+
+            //自動保存なので、FileNameは更新しないでセーブだけする
+            SaveFileAndNoFileNameUpdatingWithoutSaveFileDialog(root, path);
         });
 
         MainWindowVM.Message.Value = $"{AutoSavedDateTime.Value} {Resources.Message_Autosaved}";
@@ -1986,6 +1988,20 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                 FileName.Value = oldFileName;
                 MessageBox.Show(ex.StackTrace, ex.Message, MessageBoxButton.OK, MessageBoxImage.Error);
             }
+    }
+
+    private void SaveFileAndNoFileNameUpdatingWithoutSaveFileDialog(XElement xElement, string filename)
+    {
+        var oldFileName = FileName.Value;
+        try
+        {
+            xElement.Save(filename);
+            UpdateStatisticsCountSaveAs();
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(ex.StackTrace, ex.Message, MessageBoxButton.OK, MessageBoxImage.Error);
+        }
     }
 
     private void SaveFileWithoutSaveFileDialog(XElement xElement, string filename)
