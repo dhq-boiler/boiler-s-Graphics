@@ -33,7 +33,7 @@ namespace boilersGraphics.Test.UITests
 
             foreach (var layerItem in layerswindowPO.LayerItems)
             {
-                layerItem.ToggleButton(1);
+                //レイヤーアイテムはデフォルトで展開されるので、トグル不要
 
                 //レイヤー１
                 try
@@ -73,7 +73,7 @@ namespace boilersGraphics.Test.UITests
 
             foreach (var layerItem in layerswindowPO.LayerItems)
             {
-                layerItem.ToggleButton(1);
+                //レイヤーアイテムはデフォルトで展開されるので、トグル不要
 
                 var layerItems = layerItem.LayerItems;
                 try
