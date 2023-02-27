@@ -69,6 +69,8 @@ namespace boilersGraphics.ViewModels.ColorCorrect
                 Point unboxedPoint = (Point)(x.Source as Thumb).DataContext;
                 if (Points.First() == unboxedPoint || Points.Last() == unboxedPoint)
                 {
+                    unboxedPoint.Y.Value = Math.Clamp(unboxedPoint.Y.Value + x.VerticalChange, 0, 255);
+                    UpdatePoints(x);
                     return;
                 }
                 int index = Points.IndexOf(unboxedPoint);
@@ -76,10 +78,7 @@ namespace boilersGraphics.ViewModels.ColorCorrect
                 var nextPoint = Points[index + 1];
                 unboxedPoint.X.Value = Math.Clamp(unboxedPoint.X.Value + x.HorizontalChange, Math.Min(previousPoint.X.Value, nextPoint.X.Value), Math.Max(previousPoint.X.Value, nextPoint.X.Value));
                 unboxedPoint.Y.Value = Math.Clamp(unboxedPoint.Y.Value + x.VerticalChange, 0, 255);
-                this.OnPropertyChanged(new PropertyChangedEventArgs(nameof(Points)));
-                var window = System.Windows.Window.GetWindow(x.Source as Thumb);
-                var landmark = window.GetVisualChild<LandmarkControl>();
-                landmark.SetPathData();
+                UpdatePoints(x);
             }).AddTo(_disposable);
             CanvasClickCommand.Subscribe(t =>
             {
@@ -126,6 +125,14 @@ namespace boilersGraphics.ViewModels.ColorCorrect
                     Points.Remove(point);
                 }
             }).AddTo(_disposable);
+        }
+
+        private void UpdatePoints(DragDeltaEventArgs x)
+        {
+            this.OnPropertyChanged(new PropertyChangedEventArgs(nameof(Points)));
+            var window = System.Windows.Window.GetWindow(x.Source as Thumb);
+            var landmark = window.GetVisualChild<LandmarkControl>();
+            landmark.SetPathData();
         }
 
         private void SetHistogram()
