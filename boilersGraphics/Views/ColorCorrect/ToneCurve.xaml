@@ -32,6 +32,11 @@
             </Setter>
         </Style>-->
     </UserControl.Resources>
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <helpers:EventToCommand Command="{Binding LoadedCommand}" PassEventArgsToCommand="True" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
         <Grid.Resources>
             <ObjectDataProvider
@@ -115,14 +120,15 @@
                                 <Canvas
                                     Grid.RowSpan="1"
                                     Margin="0,0.4,0.4,-0.2"
-                                    AttachedProperty:ClickAtCanvasBehavior.ClickAtCanvas="{Binding CanvasClickCommand}"
+                                    AttachedProperty:ClickAtCanvasBehavior.ClickAtCanvas="{Binding DataContext.CanvasClickCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"
                                     Background="Transparent">
                                     <views:LandmarkControl
-                                        AllScales="{Binding InOutPairs, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
+                                        x:Name="landmark"
+                                        AllScales="{Binding TargetCurve.Value.InOutPairs, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
                                         DataContext="{Binding Path=DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"
-                                        IsClosedCurve="{Binding IsClosedCurve}"
-                                        PathColor="{Binding Color.Value}"
-                                        Points="{Binding Points, UpdateSourceTrigger=PropertyChanged}" />
+                                        IsClosedCurve="{Binding IsClosedCurve, RelativeSource={RelativeSource Self}}"
+                                        PathColor="{Binding TargetCurve.Value.Color.Value}"
+                                        Points="{Binding TargetCurve.Value.Points, UpdateSourceTrigger=PropertyChanged}" />
                                 </Canvas>
                                 <ItemsControl ItemsSource="{Binding Points}">
                                     <ItemsControl.ItemsPanel>
@@ -141,10 +147,10 @@
                                                 </Thumb.Style>
                                                 <i:Interaction.Triggers>
                                                     <i:EventTrigger EventName="DragDelta">
-                                                        <helpers:EventToCommand Command="{Binding Path=DataContext.DragDeltaCommand, ElementName=ItemsControlCanvas}" PassEventArgsToCommand="True" />
+                                                        <helpers:EventToCommand Command="{Binding Path=DataContext.DragDeltaCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" PassEventArgsToCommand="True" />
                                                     </i:EventTrigger>
                                                     <i:EventTrigger EventName="PreviewKeyDown">
-                                                        <helpers:EventToCommand Command="{Binding Path=DataContext.PreviewKeyDownCommand, ElementName=ItemsControlCanvas}" PassEventArgsToCommand="True" />
+                                                        <helpers:EventToCommand Command="{Binding Path=DataContext.PreviewKeyDownCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" PassEventArgsToCommand="True" />
                                                     </i:EventTrigger>
                                                 </i:Interaction.Triggers>
                                             </Thumb>

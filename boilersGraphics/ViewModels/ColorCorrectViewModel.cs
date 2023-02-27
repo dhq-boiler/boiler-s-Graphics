@@ -70,6 +70,11 @@ public class ColorCorrectViewModel : EffectViewModel
             newFormattedBitmapSource.DestinationFormat = PixelFormats.Bgr24;
             newFormattedBitmapSource.EndInit();
 
+            if (TargetCurve.Value is not null && TargetCurve.Value.InOutPairs is null)
+            {
+                TargetCurve.Value.InOutPairs = new();
+            }
+
             using (var mat = newFormattedBitmapSource.ToMat())
             using (var hsv = mat.Clone())
             using (var dest = mat.Clone())
@@ -145,13 +150,15 @@ public class ColorCorrectViewModel : EffectViewModel
         long step = singleChannel.Step();
         int width = singleChannel.Width;
         int height = singleChannel.Height;
+
+        var inOutPairs = TargetCurve.Value.InOutPairs;
         
         Parallel.For(0, height, y =>
         {
             for (int x = 0; x < width; x++)
             {
                 *(p + y * step + x * 1) =
-                    (byte)Math.Clamp(TargetCurve.Value.InOutPairs.First(z => z.In == *(p + y * step + x * 1)).Out, byte.MinValue,
+                    (byte)Math.Clamp(inOutPairs.First(z => z.In == *(p + y * step + x * 1)).Out, byte.MinValue,
                         byte.MaxValue);
             }
         });

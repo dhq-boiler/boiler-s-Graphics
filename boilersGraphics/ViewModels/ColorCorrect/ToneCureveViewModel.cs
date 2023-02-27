@@ -14,7 +14,9 @@ using System.ComponentModel;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
@@ -30,6 +32,7 @@ namespace boilersGraphics.ViewModels.ColorCorrect
         public ReactivePropertySlim<ColorCorrectViewModel> ViewModel { get; } = new();
         public ReactiveCommand<Point> CanvasClickCommand { get; } = new();
         public ReactiveCommand<KeyEventArgs> PreviewKeyDownCommand { get; } = new();
+        public ReactiveCommand<RoutedEventArgs> LoadedCommand { get; } = new();
 
         public class Point : BindableBase
         {
@@ -71,6 +74,11 @@ namespace boilersGraphics.ViewModels.ColorCorrect
             public ReactiveCollection<InOutPair> InOutPairs { get; set; } = new();
 
             public ReactivePropertySlim<Brush> Color { get; } = new();
+
+            public void RaisePropertyChanged([CallerMemberName] string propertyName = null)
+            {
+                OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+            }
         }
 
         public class RGBCurve : Curve
@@ -161,11 +169,13 @@ namespace boilersGraphics.ViewModels.ColorCorrect
             TargetChannelChangedCommand.Subscribe(x =>
             {
                 var window = System.Windows.Window.GetWindow(x.Source as System.Windows.Controls.ComboBox);
-                var landmark = window.GetVisualChild<LandmarkControl>();
-                landmark.SetPathData();
-                ViewModel.Value.TargetCurve.Value = Curves.First(y => y.TargetChannel.Value == (Channel)x.AddedItems[0]);
-                ViewModel.Value.TargetCurve.Value.InOutPairs.Clear();
+                var landmarks = window.EnumerateChildOfType<LandmarkControl>().Distinct();
+                var landmark = landmarks.First(x => x.PathColor == TargetCurve.Value.Color.Value);
+                TargetCurve.Value = ViewModel.Value.TargetCurve.Value = Curves.First(y => y.TargetChannel.Value == (Channel)x.AddedItems[0]);
+                ViewModel.Value.TargetCurve.Value.InOutPairs = landmark.InOutPairs.ToObservable().ToReactiveCollection();
                 ViewModel.Value.TargetChannel.Value = (Channel)x.AddedItems[0];
+                ViewModel.Value.TargetCurve.Value.Color.Value = TargetCurve.Value.Color.Value;
+                landmark.SetPathData();
                 ViewModel.Value.Render();
                 SetHistogram(TargetCurve.Value);
             }).AddTo(_disposable);
@@ -187,14 +197,21 @@ namespace boilersGraphics.ViewModels.ColorCorrect
                     TargetCurve.Value.Points.Remove(point);
                 }
             }).AddTo(_disposable);
+            LoadedCommand.Subscribe(x =>
+            {
+                var window = System.Windows.Window.GetWindow(x.Source as Views.ColorCorrect.ToneCurve);
+                var landmarks = window.EnumerateChildOfType<LandmarkControl>().Distinct();
+                var set = landmarks.Select(x => new
+                    { Landmark = x, Color = Channel.GetValues().First(y => y.Brush == x.PathColor) });
+            }).AddTo(_disposable);
         }
 
         private void UpdatePoints(DragDeltaEventArgs x)
         {
-            this.OnPropertyChanged(new PropertyChangedEventArgs(nameof(TargetCurve.Value.Points)));
-            var window = System.Windows.Window.GetWindow(x.Source as Thumb);
-            var landmark = window.GetVisualChild<LandmarkControl>();
-            landmark.SetPathData();
+            var p = new Point(999, 999);
+            TargetCurve.Value.Points.Add(p);
+            TargetCurve.Value.Points.Remove(p);
+            ViewModel.Value.Render();
         }
 
         private void SetHistogram(Curve curve)

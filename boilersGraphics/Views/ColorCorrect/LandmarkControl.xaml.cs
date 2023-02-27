@@ -79,7 +79,10 @@ namespace boilersGraphics.Views
             }
 
             if (dependencyPropertyChangedEventArgs.NewValue != null)
+            {
                 landmarkControl.SetPathData();
+                ((landmarkControl.DataContext as ToneCurveViewModel).ViewModel.Value as ColorCorrectViewModel).Render();
+            }
         }
 
         #endregion
@@ -111,6 +114,7 @@ namespace boilersGraphics.Views
             if (landmarkControl == null)
                 return;
             landmarkControl.SetPathData();
+            ((landmarkControl.DataContext as ToneCurveViewModel).ViewModel.Value as ColorCorrectViewModel).Render();
         }
 
         public bool IsClosedCurve
@@ -193,8 +197,6 @@ namespace boilersGraphics.Views
 
             path.Data = myPathGeometry;
 
-            path.Stroke = PathColor;
-
             var inoutPairs = InOutPairs;
             var allScales = new ReactiveCollection<InOutPair>();
             var ret = new List<InOutPair>();
@@ -212,8 +214,9 @@ namespace boilersGraphics.Views
             AllScales = allScales;
             Scales = ret;
 
-            ((this.DataContext as ToneCurveViewModel).ViewModel.Value as ColorCorrectViewModel).TargetCurve.Value.InOutPairs = AllScales;
-            ((this.DataContext as ToneCurveViewModel).ViewModel.Value as ColorCorrectViewModel).Render();
+            (this.DataContext as ToneCurveViewModel).TargetCurve.Value.InOutPairs = AllScales;
+            ((this.DataContext as ToneCurveViewModel).ViewModel.Value as ColorCorrectViewModel).TargetCurve.Value = (this.DataContext as ToneCurveViewModel).TargetCurve.Value;
+            ((this.DataContext as ToneCurveViewModel).ViewModel.Value as ColorCorrectViewModel).TargetCurve.Value.InOutPairs = (this.DataContext as ToneCurveViewModel).TargetCurve.Value.InOutPairs;
         }
 
         public List<InOutPair> InOutPairs
@@ -379,12 +382,17 @@ namespace boilersGraphics.Views
             UnRegisterCollectionItemPropertyChanged(e.OldItems);
 
             SetPathData();
+
+            //((this.DataContext as ToneCurveViewModel).ViewModel.Value as ColorCorrectViewModel).Render();
         }
 
         private void OnPointPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "X" || e.PropertyName == "Y")
+            {
                 SetPathData();
+                ((this.DataContext as ToneCurveViewModel).ViewModel.Value as ColorCorrectViewModel).Render();
+            }
         }
     }
 }
