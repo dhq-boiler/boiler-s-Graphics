@@ -15,6 +15,8 @@ namespace boilersGraphics.Test.UITests.PageObjects
     {
         private static readonly Logger s_logger = LogManager.GetCurrentClassLogger();
 
+        public const int TimeoutMinutes = 5;
+
         protected static WindowsDriver<WindowsElement> Session { get; private set; }
 
         public PageObjectBase(WindowsDriver<WindowsElement> session)
