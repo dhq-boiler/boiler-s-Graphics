@@ -62,7 +62,7 @@
   * このバージョンをインストールすると、bgff拡張子に対してファイルの関連付けを行います。
   * bgffファイルをダブルクリックすると、boiler's Graphicsがこのファイルを開くようになります。
   * 自動保存されるファイルの拡張子が xml から bgff に変わります。
-  * bgffファイルに対するシェル拡張プログラムを提供します。GitHub Releasesからv11以降のリリースページでダウンロードできるようになります。**自動でインストールされることはありません。** boilersGraphics_\$(Major)\_\$(Minor)\_\$(Build)\_shellExtensions\_\$(buildPlatform).zip に同梱されている、installBgff.exe を実行すると、即時シェル拡張プログラムがインストールされます。アンインストールしたい場合は、uninstallBgff.exeを実行してください。なお、これらのソースコードはオープンソースで公開しており、GitHubの[boiler-s-Graphicsリポジトリ](https://github.com/dhq-boiler/boiler-s-Graphics)からダウンロード可能です。
+  * bgffファイルに対するシェル拡張プログラムを提供します。GitHub Releasesからv11以降のリリースページでダウンロードできるようになります。**自動でインストールされることはありません。** boilersGraphics_\$(Major)\_\$(Minor)\_\$(Build)\_shellExtensions\_\$(buildPlatform).zip を展開したフォルダを安全な場所に配置した上で、同梱されている installBgff.exe を実行すると、即時シェル拡張プログラムがインストールされます。アンインストールしたい場合は、uninstallBgff.exeを実行してください。なお、これらのソースコードはオープンソースで公開しており、GitHubの[boiler-s-Graphicsリポジトリ](https://github.com/dhq-boiler/boiler-s-Graphics)からダウンロード可能です。
 * レイヤーウィンドウで、レイヤーアイテムをデフォルトで展開します。
 
 ### バグフィックス
