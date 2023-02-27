@@ -193,6 +193,8 @@ namespace boilersGraphics.Views
 
             path.Data = myPathGeometry;
 
+            path.Stroke = PathColor;
+
             var inoutPairs = InOutPairs;
             var allScales = new ReactiveCollection<InOutPair>();
             var ret = new List<InOutPair>();
@@ -210,7 +212,7 @@ namespace boilersGraphics.Views
             AllScales = allScales;
             Scales = ret;
 
-            ((this.DataContext as ToneCurveViewModel).ViewModel.Value as ColorCorrectViewModel).InOutPairs = AllScales;
+            ((this.DataContext as ToneCurveViewModel).ViewModel.Value as ColorCorrectViewModel).TargetCurve.Value.InOutPairs = AllScales;
             ((this.DataContext as ToneCurveViewModel).ViewModel.Value as ColorCorrectViewModel).Render();
         }
 

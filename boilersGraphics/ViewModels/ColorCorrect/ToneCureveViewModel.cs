@@ -28,7 +28,6 @@ namespace boilersGraphics.ViewModels.ColorCorrect
         private CompositeDisposable _disposable = new CompositeDisposable();
         private bool _disposedValue;
         public ReactivePropertySlim<ColorCorrectViewModel> ViewModel { get; } = new();
-        public ReactiveCollection<Point> Points { get; private set; } = new();
         public ReactiveCommand<Point> CanvasClickCommand { get; } = new();
         public ReactiveCommand<KeyEventArgs> PreviewKeyDownCommand { get; } = new();
 
@@ -53,29 +52,95 @@ namespace boilersGraphics.ViewModels.ColorCorrect
 
         public ReactiveCommand<DragDeltaEventArgs> DragDeltaCommand { get; } = new();
 
-        public ReactivePropertySlim<WriteableBitmap> Histogram { get; } = new ();
-
         public ReactivePropertySlim<Channel> TargetChannel { get; } = new (Channel.GrayScale);
 
         public ReactiveCommand<SelectionChangedEventArgs> TargetChannelChangedCommand { get; } = new();
 
+        public ReactiveCollection<Curve> Curves { get; private set; } = new ReactiveCollection<Curve>();
+
+        public ReactivePropertySlim<Curve> TargetCurve { get; } = new ReactivePropertySlim<Curve>();
+
+        public class Curve : BindableBase
+        {
+            public ReactivePropertySlim<Channel> TargetChannel { get; } = new();
+
+            public ReactiveCollection<Point> Points { get; set; } = new();
+
+            public ReactivePropertySlim<WriteableBitmap> Histogram { get; } = new();
+
+            public ReactiveCollection<InOutPair> InOutPairs { get; set; } = new();
+
+            public ReactivePropertySlim<Brush> Color { get; } = new();
+        }
+
+        public class RGBCurve : Curve
+        {
+
+        }
+
+        public class BlueCurve : Curve
+        {
+
+        }
+
+        public class GreenCurve : Curve
+        {
+
+        }
+
+        public class RedCurve : Curve
+        {
+
+        }
+
         public ToneCurveViewModel()
         {
-            Points.Add(new Point(0, 255));
-            Points.Add(new Point(255/2, 255/2));
-            Points.Add(new Point(255, 0));
+            Curve curve = new RGBCurve();
+            curve.TargetChannel.Value = Channel.GrayScale;
+            curve.Color.Value = Channel.GrayScale.Brush;
+            curve.Points.Add(new Point(0, 255));
+            curve.Points.Add(new Point(255 / 2, 255 / 2));
+            curve.Points.Add(new Point(255, 0));
+            Curves.Add(curve);
+
+            curve = new BlueCurve();
+            curve.TargetChannel.Value = Channel.Blue;
+            curve.Color.Value = Channel.Blue.Brush;
+            curve.Points.Add(new Point(0, 255));
+            curve.Points.Add(new Point(255 / 2, 255 / 2));
+            curve.Points.Add(new Point(255, 0));
+            Curves.Add(curve);
+
+            curve = new GreenCurve();
+            curve.TargetChannel.Value = Channel.Green;
+            curve.Color.Value = Channel.Green.Brush;
+            curve.Points.Add(new Point(0, 255));
+            curve.Points.Add(new Point(255 / 2, 255 / 2));
+            curve.Points.Add(new Point(255, 0));
+            Curves.Add(curve);
+
+            curve = new RedCurve();
+            curve.TargetChannel.Value = Channel.Red;
+            curve.Color.Value = Channel.Red.Brush;
+            curve.Points.Add(new Point(0, 255));
+            curve.Points.Add(new Point(255 / 2, 255 / 2));
+            curve.Points.Add(new Point(255, 0));
+            Curves.Add(curve);
+
+            TargetCurve.Value = Curves.First();
+
             DragDeltaCommand.Subscribe(x =>
             { 
                 Point unboxedPoint = (Point)(x.Source as Thumb).DataContext;
-                if (Points.First() == unboxedPoint || Points.Last() == unboxedPoint)
+                if (TargetCurve.Value.Points.First() == unboxedPoint || TargetCurve.Value.Points.Last() == unboxedPoint)
                 {
                     unboxedPoint.Y.Value = Math.Clamp(unboxedPoint.Y.Value + x.VerticalChange, 0, 255);
                     UpdatePoints(x);
                     return;
                 }
-                int index = Points.IndexOf(unboxedPoint);
-                var previousPoint = Points[index - 1];
-                var nextPoint = Points[index + 1];
+                int index = TargetCurve.Value.Points.IndexOf(unboxedPoint);
+                var previousPoint = TargetCurve.Value.Points[index - 1];
+                var nextPoint = TargetCurve.Value.Points[index + 1];
                 unboxedPoint.X.Value = Math.Clamp(unboxedPoint.X.Value + x.HorizontalChange, Math.Min(previousPoint.X.Value, nextPoint.X.Value), Math.Max(previousPoint.X.Value, nextPoint.X.Value));
                 unboxedPoint.Y.Value = Math.Clamp(unboxedPoint.Y.Value + x.VerticalChange, 0, 255);
                 UpdatePoints(x);
@@ -84,28 +149,25 @@ namespace boilersGraphics.ViewModels.ColorCorrect
             {
                 var newPoint = new Point(t.X.Value, t.Y.Value);
                 var newPointModel = new Point(t.X.Value, t.Y.Value);
-                var pointsList = Points.Select(it => new Rulyotano.Math.Geometry.Point(it.X.Value, it.Y.Value));
+                var pointsList = TargetCurve.Value.Points.Select(it => new Rulyotano.Math.Geometry.Point(it.X.Value, it.Y.Value));
                 var insertIndex = Rulyotano.Math.Geometry.Helpers.BestPlaceToInsert(newPoint.ToPoint(), pointsList.ToList());
-                if (insertIndex == Points.Count)
+                if (insertIndex == TargetCurve.Value.Points.Count)
                 {
-                    Points.Add(newPointModel);
+                    TargetCurve.Value.Points.Add(newPointModel);
                     return;
                 }
-                Points.Insert(insertIndex, newPointModel);
+                TargetCurve.Value.Points.Insert(insertIndex, newPointModel);
             }).AddTo(_disposable);
             TargetChannelChangedCommand.Subscribe(x =>
             {
-                Points.Clear();
-                Points.Add(new Point(0, 255));
-                Points.Add(new Point(255 / 2, 255 / 2));
-                Points.Add(new Point(255, 0));
                 var window = System.Windows.Window.GetWindow(x.Source as System.Windows.Controls.ComboBox);
                 var landmark = window.GetVisualChild<LandmarkControl>();
                 landmark.SetPathData();
-                ViewModel.Value.InOutPairs.Clear();
+                ViewModel.Value.TargetCurve.Value = Curves.First(y => y.TargetChannel.Value == (Channel)x.AddedItems[0]);
+                ViewModel.Value.TargetCurve.Value.InOutPairs.Clear();
                 ViewModel.Value.TargetChannel.Value = (Channel)x.AddedItems[0];
                 ViewModel.Value.Render();
-                SetHistogram();
+                SetHistogram(TargetCurve.Value);
             }).AddTo(_disposable);
             PreviewKeyDownCommand.Subscribe(x =>
             {
@@ -118,28 +180,28 @@ namespace boilersGraphics.ViewModels.ColorCorrect
                     {
                         return;
                     }
-                    if (Points.Count() <= 3)
+                    if (TargetCurve.Value.Points.Count() <= 3)
                     {
                         return;
                     }
-                    Points.Remove(point);
+                    TargetCurve.Value.Points.Remove(point);
                 }
             }).AddTo(_disposable);
         }
 
         private void UpdatePoints(DragDeltaEventArgs x)
         {
-            this.OnPropertyChanged(new PropertyChangedEventArgs(nameof(Points)));
+            this.OnPropertyChanged(new PropertyChangedEventArgs(nameof(TargetCurve.Value.Points)));
             var window = System.Windows.Window.GetWindow(x.Source as Thumb);
             var landmark = window.GetVisualChild<LandmarkControl>();
             landmark.SetPathData();
         }
 
-        private void SetHistogram()
+        private void SetHistogram(Curve curve)
         {
             using (var histogram = new Mat())
             {
-                switch (ViewModel.Value.TargetChannel.Value)
+                switch (curve.TargetChannel.Value)
                 {
                     case GrayScaleChannel:
                     case BlueChannel:
@@ -162,9 +224,9 @@ namespace boilersGraphics.ViewModels.ColorCorrect
                         break;
                 }
                 Cv2.Normalize(histogram, histogram, 0, 256, NormTypes.MinMax);
-                using (var output = DrawHistogram(histogram, ViewModel.Value.TargetChannel.Value))
+                using (var output = DrawHistogram(histogram, curve.TargetChannel.Value))
                 {
-                    Histogram.Value = output.ToWriteableBitmap();
+                    curve.Histogram.Value = output.ToWriteableBitmap();
                 }
             }
         }
@@ -230,15 +292,24 @@ namespace boilersGraphics.ViewModels.ColorCorrect
         {
             ViewModel.Value = navigationContext.Parameters.GetValue<ColorCorrectViewModel>("ViewModel");
             TargetChannel.Value = ViewModel.Value.TargetChannel.Value;
-            Points = ViewModel.Value.Points;
-            if (Points.Count <= 2)
+            //Curves = ViewModel.Value.Curves;
+            if (ViewModel.Value.TargetCurve.Value is not null)
             {
-                Points.Clear();
-                Points.Add(new Point(0, 255));
-                Points.Add(new Point(255 / 2, 255 / 2));
-                Points.Add(new Point(255, 0));
+                TargetCurve.Value = ViewModel.Value.TargetCurve.Value;
+                TargetCurve.Value.Points = ViewModel.Value.TargetCurve.Value.Points;
             }
-            SetHistogram();
+
+            foreach (var curve in Curves)
+            {
+                if (curve.Points.Count <= 2)
+                {
+                    curve.Points.Clear();
+                    curve.Points.Add(new Point(0, 255));
+                    curve.Points.Add(new Point(255 / 2, 255 / 2));
+                    curve.Points.Add(new Point(255, 0));
+                }
+                SetHistogram(curve);
+            }
         }
 
         public bool IsNavigationTarget(NavigationContext navigationContext)
@@ -248,9 +319,9 @@ namespace boilersGraphics.ViewModels.ColorCorrect
 
         public void OnNavigatedFrom(NavigationContext navigationContext)
         {
-            ViewModel.Value.Points = Points;
+            ViewModel.Value.Curves = Curves;
 
-            var _Points = Points.Select(x => new Rulyotano.Math.Geometry.Point(x.X.Value, x.Y.Value)).ToList();
+            var _Points = TargetCurve.Value.Points.Select(x => new Rulyotano.Math.Geometry.Point(x.X.Value, x.Y.Value)).ToList();
 
 
             var myPathFigure = new PathFigure { StartPoint = ConvertToVisualPoint(_Points.FirstOrDefault()) };
@@ -299,7 +370,7 @@ namespace boilersGraphics.ViewModels.ColorCorrect
                 {
                     if (segment == segments.First())
                     {
-                        P0 = Points.First().ToPoint();
+                        P0 = TargetCurve.Value.Points.First().ToPoint();
                     }
                     else
                     {
@@ -330,7 +401,7 @@ namespace boilersGraphics.ViewModels.ColorCorrect
                 }
             }
 
-            ViewModel.Value.InOutPairs = ret.ToObservable().ToReactiveCollection();
+            ViewModel.Value.TargetCurve.Value.InOutPairs = ret.ToObservable().ToReactiveCollection();
         }
 
         private double FindT(double x, Rulyotano.Math.Geometry.Point P0, Rulyotano.Math.Geometry.Point P1, Rulyotano.Math.Geometry.Point P2, Rulyotano.Math.Geometry.Point P3)

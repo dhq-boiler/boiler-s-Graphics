@@ -1,7 +1,4 @@
 ﻿using boilersGraphics.Properties;
-using boilersGraphics.Views.ColorCorrect;
-using OpenCvSharp;
-using OpenCvSharp.WpfExtensions;
 using Prism.Mvvm;
 using Prism.Regions;
 using Prism.Services.Dialogs;
@@ -11,7 +8,6 @@ using System;
 using System.Reactive.Disposables;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media.Imaging;
 
 namespace boilersGraphics.ViewModels
 {

@@ -15,6 +15,7 @@
     <UserControl.Resources>
         <converter:ToToneCurveControlPointCollectionConverter x:Key="ToPointCollection" />
         <converter:ToneCurvePointConverter x:Key="ToneCurvePointConverter" />
+        <converter:TargetChannelMatcher x:Key="TargetChannelMatcher" />
         <!--<Style x:Key="PointListBoxItemStyle" TargetType="{x:Type ListBoxItem}">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="HorizontalContentAlignment" Value="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
@@ -81,49 +82,84 @@
             BorderBrush="white"
             BorderThickness="1">
             <Canvas Width="256" Height="256">
-                <Image Margin="-4" Source="{Binding Histogram.Value, UpdateSourceTrigger=PropertyChanged}" />
-                <Canvas
-                    Grid.RowSpan="1"
-                    Margin="0,0.4,0.4,-0.2"
-                    AttachedProperty:ClickAtCanvasBehavior.ClickAtCanvas="{Binding CanvasClickCommand}"
-                    Background="Transparent">
-                    <views:LandmarkControl
-                        AllScales="{Binding ViewModel.Value.InOutPairs, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
-                        IsClosedCurve="{Binding IsClosedCurve}"
-                        Points="{Binding Points, UpdateSourceTrigger=PropertyChanged}" />
-                </Canvas>
-                <ItemsControl ItemsSource="{Binding Points}">
+                <ItemsControl ItemsSource="{Binding Curves, UpdateSourceTrigger=PropertyChanged}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <Canvas x:Name="ItemsControlCanvas" />
+                            <Grid />
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Thumb Width="8" Height="8">
-                                <Thumb.Style>
-                                    <Style TargetType="{x:Type Thumb}">
-                                        <Setter Property="AttachedProperty:DragInsideCanvasBehavior.DragInsideCanvas" Value="True" />
-                                        <Setter Property="Focusable" Value="True" />
+                            <Grid>
+                                <Grid.Style>
+                                    <Style TargetType="{x:Type Grid}">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                        <Style.Triggers>
+                                            <DataTrigger Value="True">
+                                                <DataTrigger.Binding>
+                                                    <MultiBinding Converter="{StaticResource TargetChannelMatcher}">
+                                                        <Binding Path="TargetChannel.Value" UpdateSourceTrigger="PropertyChanged" />
+                                                        <Binding
+                                                            Path="DataContext.TargetChannel.Value"
+                                                            RelativeSource="{RelativeSource FindAncestor,
+                                                                                            AncestorType={x:Type UserControl}}"
+                                                            UpdateSourceTrigger="PropertyChanged" />
+                                                    </MultiBinding>
+                                                </DataTrigger.Binding>
+                                                <Setter Property="Visibility" Value="Visible" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
                                     </Style>
-                                </Thumb.Style>
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="DragDelta">
-                                        <helpers:EventToCommand Command="{Binding Path=DataContext.DragDeltaCommand, ElementName=ItemsControlCanvas}" PassEventArgsToCommand="True" />
-                                    </i:EventTrigger>
-                                    <i:EventTrigger EventName="PreviewKeyDown">
-                                        <helpers:EventToCommand Command="{Binding Path=DataContext.PreviewKeyDownCommand, ElementName=ItemsControlCanvas}" PassEventArgsToCommand="True" />
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-                            </Thumb>
+                                </Grid.Style>
+                                <Image Margin="-4" Source="{Binding Histogram.Value, UpdateSourceTrigger=PropertyChanged}" />
+                                <Canvas
+                                    Grid.RowSpan="1"
+                                    Margin="0,0.4,0.4,-0.2"
+                                    AttachedProperty:ClickAtCanvasBehavior.ClickAtCanvas="{Binding CanvasClickCommand}"
+                                    Background="Transparent">
+                                    <views:LandmarkControl
+                                        AllScales="{Binding InOutPairs, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
+                                        DataContext="{Binding Path=DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"
+                                        IsClosedCurve="{Binding IsClosedCurve}"
+                                        PathColor="{Binding Color.Value}"
+                                        Points="{Binding Points, UpdateSourceTrigger=PropertyChanged}" />
+                                </Canvas>
+                                <ItemsControl ItemsSource="{Binding Points}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <Canvas x:Name="ItemsControlCanvas" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Thumb Width="8" Height="8">
+                                                <Thumb.Style>
+                                                    <Style TargetType="{x:Type Thumb}">
+                                                        <Setter Property="AttachedProperty:DragInsideCanvasBehavior.DragInsideCanvas" Value="True" />
+                                                        <Setter Property="Focusable" Value="True" />
+                                                    </Style>
+                                                </Thumb.Style>
+                                                <i:Interaction.Triggers>
+                                                    <i:EventTrigger EventName="DragDelta">
+                                                        <helpers:EventToCommand Command="{Binding Path=DataContext.DragDeltaCommand, ElementName=ItemsControlCanvas}" PassEventArgsToCommand="True" />
+                                                    </i:EventTrigger>
+                                                    <i:EventTrigger EventName="PreviewKeyDown">
+                                                        <helpers:EventToCommand Command="{Binding Path=DataContext.PreviewKeyDownCommand, ElementName=ItemsControlCanvas}" PassEventArgsToCommand="True" />
+                                                    </i:EventTrigger>
+                                                </i:Interaction.Triggers>
+                                            </Thumb>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                    <ItemsControl.ItemContainerStyle>
+                                        <Style>
+                                            <Setter Property="Canvas.Left" Value="{c:Binding X.Value-4}" />
+                                            <Setter Property="Canvas.Top" Value="{c:Binding Y.Value-4}" />
+                                        </Style>
+                                    </ItemsControl.ItemContainerStyle>
+                                </ItemsControl>
+                            </Grid>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
-                    <ItemsControl.ItemContainerStyle>
-                        <Style>
-                            <Setter Property="Canvas.Left" Value="{c:Binding X.Value-4}" />
-                            <Setter Property="Canvas.Top" Value="{c:Binding Y.Value-4}" />
-                        </Style>
-                    </ItemsControl.ItemContainerStyle>
                 </ItemsControl>
             </Canvas>
         </Border>

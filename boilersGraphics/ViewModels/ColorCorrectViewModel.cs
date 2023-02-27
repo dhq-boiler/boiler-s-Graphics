@@ -1,8 +1,6 @@
 ﻿using boilersGraphics.Controls;
 using boilersGraphics.Exceptions;
-using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
-using boilersGraphics.Models;
 using boilersGraphics.ViewModels.ColorCorrect;
 using boilersGraphics.Views;
 using OpenCvSharp;
@@ -43,8 +41,8 @@ public class ColorCorrectViewModel : EffectViewModel
     #endregion
 
     #region トーンカーブ
-    public ReactiveCollection<ToneCurveViewModel.Point> Points { get; set; } = new();
-    public ReactiveCollection<InOutPair> InOutPairs { get; set; } = new();
+    public ReactiveCollection<ToneCurveViewModel.Curve> Curves { get; set; } = new();
+    public ReactivePropertySlim<ToneCurveViewModel.Curve> TargetCurve { get; set; } = new();
     #endregion
 
     #region 2値化
@@ -64,7 +62,7 @@ public class ColorCorrectViewModel : EffectViewModel
         Application.Current.Dispatcher.Invoke(() =>
         {
             var renderer = new EffectRenderer(new WpfVisualTreeHelper());
-            var rtb = renderer.Render(Rect.Value, Application.Current.MainWindow.GetChildOfType<DesignerCanvas>(),
+            var rtb = renderer.Render(Rect.Value, DesignerCanvas.GetInstance(), 
                 MainWindowViewModel.Instance.DiagramViewModel, MainWindowViewModel.Instance.DiagramViewModel.BackgroundItem.Value, this, 0, this.ZIndex.Value - 1);
             var newFormattedBitmapSource = new FormatConvertedBitmap();
             newFormattedBitmapSource.BeginInit();
@@ -136,7 +134,9 @@ public class ColorCorrectViewModel : EffectViewModel
 
     private unsafe void OperateToneCurve(Mat singleChannel)
     {
-        if (InOutPairs.Count < 256)
+        if (TargetCurve.Value is null)
+            return;
+        if (TargetCurve.Value.InOutPairs.Count < 256)
             return;
         if (singleChannel.Channels() != 1)
             throw new UnexpectedException("singleChannel.Channels() != 1");
@@ -151,7 +151,7 @@ public class ColorCorrectViewModel : EffectViewModel
             for (int x = 0; x < width; x++)
             {
                 *(p + y * step + x * 1) =
-                    (byte)Math.Clamp(InOutPairs.First(z => z.In == *(p + y * step + x * 1)).Out, byte.MinValue,
+                    (byte)Math.Clamp(TargetCurve.Value.InOutPairs.First(z => z.In == *(p + y * step + x * 1)).Out, byte.MinValue,
                         byte.MaxValue);
             }
         });
@@ -207,8 +207,8 @@ public class ColorCorrectViewModel : EffectViewModel
         clone.AddHue.Value = AddHue.Value;
         clone.AddSaturation.Value = AddSaturation.Value;
         clone.AddValue.Value = AddValue.Value;
-        clone.Points = Points;
-        clone.InOutPairs = InOutPairs;
+        clone.Curves = Curves;
+        clone.TargetCurve = TargetCurve;
         clone.Threshold.Value = Threshold.Value;
         clone.MaxValue.Value = MaxValue.Value;
         clone.ThresholdTypes.Value = ThresholdTypes.Value;
