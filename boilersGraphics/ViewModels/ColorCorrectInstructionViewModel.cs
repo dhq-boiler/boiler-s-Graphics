@@ -1,4 +1,7 @@
-﻿using boilersGraphics.Properties;
+﻿using boilersGraphics.Extensions;
+using boilersGraphics.Helpers;
+using boilersGraphics.Properties;
+using boilersGraphics.Views;
 using Prism.Mvvm;
 using Prism.Regions;
 using Prism.Services.Dialogs;
@@ -9,9 +12,6 @@ using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using boilersGraphics.Extensions;
-using boilersGraphics.Helpers;
-using boilersGraphics.Views;
 
 namespace boilersGraphics.ViewModels
 {

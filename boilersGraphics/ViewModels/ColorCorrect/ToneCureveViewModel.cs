@@ -10,8 +10,6 @@ using Reactive.Bindings.Extensions;
 using Rulyotano.Math.Interpolation.Bezier;
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Reactive.Disposables;
