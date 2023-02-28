@@ -216,7 +216,6 @@ namespace boilersGraphics.Views
             foreach (var pair in inoutPairs)
             {
                 allScales.Add(new InOutPair(pair.In, byte.MaxValue - pair.Out));
-                //allScales.Add(new InOutPair(pair.In, pair.Out));
             }
 
             for (int i = 0; i < inoutPairs.Count; i += 5)
@@ -229,8 +228,6 @@ namespace boilersGraphics.Views
             
             var toneCurve = window.EnumerateChildOfType<Views.ColorCorrect.ToneCurve>().First();
             var dataContext = toneCurve.DataContext as ToneCurveViewModel;
-            //var rc = new ReactiveCollection<InOutPair>();
-            //rc.AddRange(InOutPairs);
             dataContext.TargetCurve.Value.InOutPairs = AllScales;
             dataContext.ViewModel.Value.TargetCurve.Value = dataContext.TargetCurve.Value;
             dataContext.ViewModel.Value.TargetCurve.Value.InOutPairs = dataContext.TargetCurve.Value.InOutPairs;

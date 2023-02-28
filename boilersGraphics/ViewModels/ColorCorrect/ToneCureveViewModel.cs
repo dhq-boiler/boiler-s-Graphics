@@ -346,7 +346,6 @@ namespace boilersGraphics.ViewModels.ColorCorrect
             ViewModel.Value = navigationContext.Parameters.GetValue<ColorCorrectViewModel>("ViewModel");
             TargetChannel.Value = ViewModel.Value.TargetChannel.Value;
             ViewModel.Value.TargetCurve.Value = TargetCurve.Value;
-            //Curves = ViewModel.Value.Curves;
             if (ViewModel.Value.TargetCurve.Value is not null)
             {
                 TargetCurve.Value = ViewModel.Value.TargetCurve.Value;
@@ -366,21 +365,6 @@ namespace boilersGraphics.ViewModels.ColorCorrect
             }
         }
 
-        //private static void SetInOutPairs(Window[] windowArray, Curve curve)
-        //{
-        //    foreach (var window in windowArray)
-        //    {
-        //        var landmarkControls = window.EnumerateChildOfType<LandmarkControl>();
-        //        foreach (var landmark in landmarkControls)
-        //        {
-        //            if (landmark.DataContext != curve)
-        //                continue;
-        //            curve.InOutPairs = Helpers.Curve.CalcInOutPairs(landmark).ToObservable().ToReactiveCollection();
-        //            return;
-        //        }
-        //    }
-        //}
-
         private static void SetInOutPairs(Window window, Curve curve)
         {
             var landmarkControls = window.EnumerateChildOfType<LandmarkControl>();
@@ -394,8 +378,6 @@ namespace boilersGraphics.ViewModels.ColorCorrect
                 {
                     curve.InOutPairs.Add(new InOutPair(elm.In, byte.MaxValue - elm.Out));
                 }
-
-                //curve.InOutPairs = list.ToObservable().ToReactiveCollection();
                 return;
             }
         }
