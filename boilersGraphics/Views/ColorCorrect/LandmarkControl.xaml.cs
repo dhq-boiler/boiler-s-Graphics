@@ -37,6 +37,8 @@ namespace boilersGraphics.Views
             DependencyProperty.Register("Points", typeof(IEnumerable<ToneCurveViewModel.Point>),
             typeof(LandmarkControl), new PropertyMetadata(null, PropertyChangedCallback));
 
+        #endregion
+
         public ReactiveCollection<InOutPair> AllScales
         {
             get { return (ReactiveCollection<InOutPair>)GetValue(AllScalesProperty); }
@@ -90,8 +92,6 @@ namespace boilersGraphics.Views
                 (dataContext.ViewModel.Value as ColorCorrectViewModel).Render();
             }
         }
-
-        #endregion
 
         #region PathColor
 
