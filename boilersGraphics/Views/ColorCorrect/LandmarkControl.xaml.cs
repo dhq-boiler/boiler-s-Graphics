@@ -138,6 +138,9 @@ namespace boilersGraphics.Views
         public LandmarkControl()
         {
             InitializeComponent();
+
+            Scales = new List<InOutPair>();
+            AllScales = new ReactiveCollection<InOutPair>();
         }
 
         private System.Windows.Point ConvertToVisualPoint(Point p)

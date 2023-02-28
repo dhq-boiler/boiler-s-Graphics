@@ -78,9 +78,27 @@ namespace boilersGraphics.ViewModels.ColorCorrect
 
             public ReactivePropertySlim<WriteableBitmap> Histogram { get; } = new();
 
-            public ReactiveCollection<InOutPair> InOutPairs { get; set; } = new();
+
+            private ReactiveCollection<InOutPair> _InOutPairs = new ReactiveCollection<InOutPair>();
+            public ReactiveCollection<InOutPair> InOutPairs
+            {
+                get
+                {
+                    return _InOutPairs;
+                }
+                set
+                {
+                    if (value is null)
+                        return;
+                    _InOutPairs = value;
+                }
+            }
 
             public ReactivePropertySlim<Brush> Color { get; } = new();
+
+            public Curve()
+            {
+            }
 
             public void RaisePropertyChanged([CallerMemberName] string propertyName = null)
             {
