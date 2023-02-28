@@ -16,6 +16,7 @@ using System.Reactive.Disposables;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Rect = System.Windows.Rect;
@@ -75,73 +76,64 @@ public class ColorCorrectViewModel : EffectViewModel
                 TargetCurve.Value.InOutPairs = new();
             }
 
-            using (var mat = newFormattedBitmapSource.ToMat())
-            using (var hsv = mat.Clone())
-            using (var dest = mat.Clone())
+            using (var a = newFormattedBitmapSource.ToMat())
+            using (var b = new Mat())
+            using (var c = new Mat())
+            using (var d = new Mat())
+            using (var z = a.Clone())
             {
                 switch (CCType.Value)
                 {
                     case Hsv:
-                        Cv2.CvtColor(mat, hsv, ColorConversionCodes.BGR2HSV);
-                        OperateHSV(hsv);
-                        Cv2.CvtColor(hsv, dest, ColorConversionCodes.HSV2BGR);
+                        Cv2.CvtColor(a, b, ColorConversionCodes.BGR2HSV);
+                        OperateHSV(b);
+                        Cv2.CvtColor(b, z, ColorConversionCodes.HSV2BGR);
                         break;
                     case ToneCurve:
-                        switch (TargetChannel.Value)
-                        {
-                            case GrayScaleChannel:
-                                Cv2.CvtColor(mat, hsv, ColorConversionCodes.BGR2HSV);
-                                var arr4 = Cv2.Split(hsv);
-                                OperateToneCurve(arr4[2]);
-                                Cv2.Merge(arr4, hsv);
-                                Cv2.CvtColor(hsv, dest, ColorConversionCodes.HSV2BGR);
-                                break;
-                            case BlueChannel:
-                                var arr0 = Cv2.Split(mat);
-                                OperateToneCurve(arr0[0]);
-                                Cv2.Merge(arr0, dest);
-                                break;
-                            case GreenChannel:
-                                var arr1 = Cv2.Split(mat);
-                                OperateToneCurve(arr1[1]);
-                                Cv2.Merge(arr1, dest);
-                                break;
-                            case RedChannel:
-                                var arr2 = Cv2.Split(mat);
-                                OperateToneCurve(arr2[2]);
-                                Cv2.Merge(arr2, dest);
-                                break;
-                        }
+                        if (Curves.Count() != 4)
+                            break;
+                        var arr3 = Cv2.Split(a);
+                        OperateToneCurve(arr3[0], Curves[1]); //B
+                        OperateToneCurve(arr3[1], Curves[2]); //G
+                        OperateToneCurve(arr3[2], Curves[3]); //R
+                        Cv2.Merge(arr3, b);
+                        Cv2.CvtColor(b, c, ColorConversionCodes.BGR2HSV);
+                        var arr4 = Cv2.Split(c);
+                        OperateToneCurve(arr4[2], Curves[0]); //Value
+                        Cv2.Merge(arr4, d);
+                        Cv2.CvtColor(d, z, ColorConversionCodes.HSV2BGR);
                         break;
                     case NegativePositiveConversion:
-                        Cv2.BitwiseNot(mat, dest);
+                        Cv2.BitwiseNot(a, z);
                         break;
                     case Binarization:
                         using (var grayscale = new Mat())
                         {
-                            Cv2.CvtColor(mat, grayscale, ColorConversionCodes.BGR2GRAY);
+                            Cv2.CvtColor(a, grayscale, ColorConversionCodes.BGR2GRAY);
                             var flags = ThresholdTypes.Value.ToOpenCvValue();
                             if ((flags & OpenCvSharp.ThresholdTypes.Triangle) != OpenCvSharp.ThresholdTypes.Triangle 
                               && OtsuEnabled.Value)
                             {
                                 flags |= ViewModels.ThresholdTypes.Otsu.ToOpenCvValue();
                             }
-                            Cv2.Threshold(grayscale, dest, Threshold.Value, MaxValue.Value, flags);
+                            Cv2.Threshold(grayscale, z, Threshold.Value, MaxValue.Value, flags);
                         }
                         break;
                 }
 
-                Bitmap.Value = dest.ToWriteableBitmap();
+                Bitmap.Value = z.ToWriteableBitmap();
                 UpdateLayout();
             }
         });
     }
 
-    private unsafe void OperateToneCurve(Mat singleChannel)
+    private unsafe void OperateToneCurve(Mat singleChannel, ViewModels.ColorCorrect.ToneCurveViewModel.Curve targetCurve)
     {
-        if (TargetCurve.Value is null)
+        if (targetCurve is null)
             return;
-        if (TargetCurve.Value.InOutPairs.Count < 256)
+        if (targetCurve.InOutPairs is null)
+            return;
+        if (targetCurve.InOutPairs.Count < 256)
             return;
         if (singleChannel.Channels() != 1)
             throw new UnexpectedException("singleChannel.Channels() != 1");
@@ -151,7 +143,7 @@ public class ColorCorrectViewModel : EffectViewModel
         int width = singleChannel.Width;
         int height = singleChannel.Height;
 
-        var inOutPairs = TargetCurve.Value.InOutPairs;
+        var inOutPairs = targetCurve.InOutPairs;
         
         Parallel.For(0, height, y =>
         {

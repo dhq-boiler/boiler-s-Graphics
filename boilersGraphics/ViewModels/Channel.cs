@@ -9,7 +9,7 @@ namespace boilersGraphics.ViewModels
         public static readonly Channel Red = new RedChannel();
         public static readonly Channel Green = new GreenChannel();
         public static readonly Channel Blue = new BlueChannel();
-        public static readonly Channel GrayScale = new GrayScaleChannel();
+        public static readonly Channel GrayScale = new RGBChannel();
 
         public abstract Brush Brush { get; }
 
@@ -52,13 +52,13 @@ namespace boilersGraphics.ViewModels
         }
     }
 
-    public class GrayScaleChannel : Channel
+    public class RGBChannel : Channel
     {
         public override Brush Brush => Brushes.White;
 
         public override string ToString()
         {
-            return Resources.String_GrayScale;
+            return Resources.String_RGB;
         }
     }
 }

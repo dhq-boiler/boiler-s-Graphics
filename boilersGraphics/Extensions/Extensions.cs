@@ -8,12 +8,14 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Documents;
 using System.Windows.Media;
+using Reactive.Bindings;
 
 namespace boilersGraphics.Extensions;
 
@@ -1941,5 +1943,18 @@ public static class Extensions
         }
 
         return child;
+    }
+
+    public static IObservable<T> Sort<T>(this ObservableCollection<T> source, T top)
+    {
+        var newCollection = new ObservableCollection<T>
+        {
+            top
+        };
+        foreach (var elm in source.Except(new T[] { top }))
+        {
+            newCollection.Add(elm);
+        }
+        return newCollection.Reverse().ToObservable();
     }
 }

@@ -10,6 +10,8 @@ using Reactive.Bindings.Extensions;
 using Rulyotano.Math.Interpolation.Bezier;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Reactive.Disposables;
@@ -22,6 +24,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Window = System.Windows.Window;
 
 namespace boilersGraphics.ViewModels.ColorCorrect
 {
@@ -36,7 +39,9 @@ namespace boilersGraphics.ViewModels.ColorCorrect
 
         public class Point : BindableBase
         {
-            public Point() { }
+            public Point()
+            {
+            }
 
             public Point(double x, double y)
             {
@@ -55,11 +60,13 @@ namespace boilersGraphics.ViewModels.ColorCorrect
 
         public ReactiveCommand<DragDeltaEventArgs> DragDeltaCommand { get; } = new();
 
-        public ReactivePropertySlim<Channel> TargetChannel { get; } = new (Channel.GrayScale);
+        public ReactivePropertySlim<Channel> TargetChannel { get; } = new(Channel.GrayScale);
 
         public ReactiveCommand<SelectionChangedEventArgs> TargetChannelChangedCommand { get; } = new();
 
         public ReactiveCollection<Curve> Curves { get; private set; } = new ReactiveCollection<Curve>();
+
+        public ReactiveCollection<Curve> OrderedCurves { get; set; }
 
         public ReactivePropertySlim<Curve> TargetCurve { get; } = new ReactivePropertySlim<Curve>();
 
@@ -135,6 +142,12 @@ namespace boilersGraphics.ViewModels.ColorCorrect
             curve.Points.Add(new Point(255, 0));
             Curves.Add(curve);
 
+            TargetCurve.Subscribe(x =>
+            {
+                OrderedCurves = Curves.Sort(TargetCurve.Value).ToReactiveCollection();
+                OnPropertyChanged(new PropertyChangedEventArgs(nameof(OrderedCurves)));
+            }).AddTo(_disposable);
+
             TargetCurve.Value = Curves.First();
 
             DragDeltaCommand.Subscribe(x =>
@@ -172,10 +185,10 @@ namespace boilersGraphics.ViewModels.ColorCorrect
                 var landmarks = window.EnumerateChildOfType<LandmarkControl>().Distinct();
                 var landmark = landmarks.First(x => x.PathColor == TargetCurve.Value.Color.Value);
                 TargetCurve.Value = ViewModel.Value.TargetCurve.Value = Curves.First(y => y.TargetChannel.Value == (Channel)x.AddedItems[0]);
-                ViewModel.Value.TargetCurve.Value.InOutPairs = landmark.InOutPairs.ToObservable().ToReactiveCollection();
+                ViewModel.Value.TargetCurve.Value.InOutPairs = landmark.AllScales;
                 ViewModel.Value.TargetChannel.Value = (Channel)x.AddedItems[0];
                 ViewModel.Value.TargetCurve.Value.Color.Value = TargetCurve.Value.Color.Value;
-                landmark.SetPathData();
+                landmark.SetPathData(window);
                 ViewModel.Value.Render();
                 SetHistogram(TargetCurve.Value);
             }).AddTo(_disposable);
@@ -203,6 +216,11 @@ namespace boilersGraphics.ViewModels.ColorCorrect
                 var landmarks = window.EnumerateChildOfType<LandmarkControl>().Distinct();
                 var set = landmarks.Select(x => new
                     { Landmark = x, Color = Channel.GetValues().First(y => y.Brush == x.PathColor) });
+
+                foreach (var curve in Curves)
+                {
+                    SetInOutPairs(window, curve);
+                }
             }).AddTo(_disposable);
         }
 
@@ -220,7 +238,7 @@ namespace boilersGraphics.ViewModels.ColorCorrect
             {
                 switch (curve.TargetChannel.Value)
                 {
-                    case GrayScaleChannel:
+                    case RGBChannel:
                     case BlueChannel:
                         using (var mat = ViewModel.Value.Bitmap.Value.ToMat())
                         {
@@ -309,6 +327,7 @@ namespace boilersGraphics.ViewModels.ColorCorrect
         {
             ViewModel.Value = navigationContext.Parameters.GetValue<ColorCorrectViewModel>("ViewModel");
             TargetChannel.Value = ViewModel.Value.TargetChannel.Value;
+            ViewModel.Value.TargetCurve.Value = TargetCurve.Value;
             //Curves = ViewModel.Value.Curves;
             if (ViewModel.Value.TargetCurve.Value is not null)
             {
@@ -326,6 +345,40 @@ namespace boilersGraphics.ViewModels.ColorCorrect
                     curve.Points.Add(new Point(255, 0));
                 }
                 SetHistogram(curve);
+            }
+        }
+
+        //private static void SetInOutPairs(Window[] windowArray, Curve curve)
+        //{
+        //    foreach (var window in windowArray)
+        //    {
+        //        var landmarkControls = window.EnumerateChildOfType<LandmarkControl>();
+        //        foreach (var landmark in landmarkControls)
+        //        {
+        //            if (landmark.DataContext != curve)
+        //                continue;
+        //            curve.InOutPairs = Helpers.Curve.CalcInOutPairs(landmark).ToObservable().ToReactiveCollection();
+        //            return;
+        //        }
+        //    }
+        //}
+
+        private static void SetInOutPairs(Window window, Curve curve)
+        {
+            var landmarkControls = window.EnumerateChildOfType<LandmarkControl>();
+            foreach (var landmark in landmarkControls)
+            {
+                if (landmark.DataContext != curve)
+                    continue;
+                var list = Helpers.Curve.CalcInOutPairs(landmark);
+                curve.InOutPairs = new ReactiveCollection<InOutPair>();
+                foreach (var elm in list)
+                {
+                    curve.InOutPairs.Add(new InOutPair(elm.In, byte.MaxValue - elm.Out));
+                }
+
+                //curve.InOutPairs = list.ToObservable().ToReactiveCollection();
+                return;
             }
         }
 

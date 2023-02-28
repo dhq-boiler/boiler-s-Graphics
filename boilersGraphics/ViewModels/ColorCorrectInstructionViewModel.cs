@@ -6,8 +6,12 @@ using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
 using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using boilersGraphics.Extensions;
+using boilersGraphics.Helpers;
+using boilersGraphics.Views;
 
 namespace boilersGraphics.ViewModels
 {
@@ -37,6 +41,17 @@ namespace boilersGraphics.ViewModels
             CCTypeChangedCommand.Subscribe(x =>
             {
                 ViewModel.Value.CCType.Value = (ColorCorrectType)x.AddedItems[0];
+                if (ViewModel.Value.CCType.Value == ColorCorrectType.ToneCurve)
+                {
+                    foreach (var curve in ViewModel.Value.Curves)
+                    {
+                        var landmarkControls = System.Windows.Window.GetWindow(x.Source as Grid).EnumerateChildOfType<LandmarkControl>();
+                        foreach (var landmark in landmarkControls)
+                        {
+                            curve.InOutPairs = Curve.CalcInOutPairs(landmark).ToObservable().ToReactiveCollection();
+                        }
+                    }
+                }
                 ViewModel.Value.Render();
             }).AddTo(disposable);
         }

@@ -1,17 +1,21 @@
 ﻿using boilersGraphics.Models;
+using boilersGraphics.ViewModels.ColorCorrect;
+using boilersGraphics.Views;
+using Rulyotano.Math.Geometry;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media;
-using boilersGraphics.ViewModels.ColorCorrect;
-using Rulyotano.Math.Geometry;
 
 namespace boilersGraphics.Helpers
 {
     internal static class Curve
     {
+        public static List<InOutPair> CalcInOutPairs(LandmarkControl landmarkControl)
+        {
+            return landmarkControl.InOutPairs;
+        }
+
         public static List<InOutPair> CalcInOutPairs(PathGeometry myPathGeometry, PathSegmentCollection _myPathSegmentCollection, ToneCurveViewModel.Point beginPoint)
         {
                 var myPathFigureCollection = myPathGeometry.Figures;

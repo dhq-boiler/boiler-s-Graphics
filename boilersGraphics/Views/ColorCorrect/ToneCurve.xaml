@@ -87,7 +87,7 @@
             BorderBrush="white"
             BorderThickness="1">
             <Canvas Width="256" Height="256">
-                <ItemsControl ItemsSource="{Binding Curves, UpdateSourceTrigger=PropertyChanged}">
+                <ItemsControl ItemsSource="{Binding OrderedCurves, UpdateSourceTrigger=PropertyChanged}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <Grid />
@@ -96,41 +96,42 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Grid>
-                                <Grid.Style>
-                                    <Style TargetType="{x:Type Grid}">
-                                        <Setter Property="Visibility" Value="Collapsed" />
-                                        <Style.Triggers>
-                                            <DataTrigger Value="True">
-                                                <DataTrigger.Binding>
-                                                    <MultiBinding Converter="{StaticResource TargetChannelMatcher}">
-                                                        <Binding Path="TargetChannel.Value" UpdateSourceTrigger="PropertyChanged" />
-                                                        <Binding
-                                                            Path="DataContext.TargetChannel.Value"
-                                                            RelativeSource="{RelativeSource FindAncestor,
-                                                                                            AncestorType={x:Type UserControl}}"
-                                                            UpdateSourceTrigger="PropertyChanged" />
-                                                    </MultiBinding>
-                                                </DataTrigger.Binding>
-                                                <Setter Property="Visibility" Value="Visible" />
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Grid.Style>
-                                <Image Margin="-4" Source="{Binding Histogram.Value, UpdateSourceTrigger=PropertyChanged}" />
-                                <Canvas
-                                    Grid.RowSpan="1"
-                                    Margin="0,0.4,0.4,-0.2"
-                                    AttachedProperty:ClickAtCanvasBehavior.ClickAtCanvas="{Binding DataContext.CanvasClickCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"
-                                    Background="Transparent">
-                                    <views:LandmarkControl
-                                        x:Name="landmark"
-                                        AllScales="{Binding TargetCurve.Value.InOutPairs, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
-                                        DataContext="{Binding Path=DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"
-                                        IsClosedCurve="{Binding IsClosedCurve, RelativeSource={RelativeSource Self}}"
-                                        PathColor="{Binding TargetCurve.Value.Color.Value}"
-                                        Points="{Binding TargetCurve.Value.Points, UpdateSourceTrigger=PropertyChanged}" />
-                                </Canvas>
+                                <Grid x:Name="AlwaysDisplay">
+                                    <Image Margin="-4" Source="{Binding Histogram.Value, UpdateSourceTrigger=PropertyChanged}" />
+                                    <Canvas
+                                        Grid.RowSpan="1"
+                                        Margin="0,0.4,0.4,-0.2"
+                                        AttachedProperty:ClickAtCanvasBehavior.ClickAtCanvas="{Binding DataContext.CanvasClickCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"
+                                        Background="Transparent">
+                                        <views:LandmarkControl
+                                            x:Name="landmark"
+                                            AllScales="{Binding InOutPairs, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
+                                            IsClosedCurve="{Binding IsClosedCurve, RelativeSource={RelativeSource Self}}"
+                                            PathColor="{Binding Color.Value}"
+                                            Points="{Binding Points, UpdateSourceTrigger=PropertyChanged}" />
+                                    </Canvas>
+                                </Grid>
                                 <ItemsControl ItemsSource="{Binding Points}">
+                                    <ItemsControl.Style>
+                                        <Style TargetType="{x:Type ItemsControl}">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                            <Style.Triggers>
+                                                <DataTrigger Value="True">
+                                                    <DataTrigger.Binding>
+                                                        <MultiBinding Converter="{StaticResource TargetChannelMatcher}">
+                                                            <Binding Path="TargetChannel.Value" UpdateSourceTrigger="PropertyChanged" />
+                                                            <Binding
+                                                                Path="DataContext.TargetChannel.Value"
+                                                                RelativeSource="{RelativeSource FindAncestor,
+                                                                                                AncestorType={x:Type UserControl}}"
+                                                                UpdateSourceTrigger="PropertyChanged" />
+                                                        </MultiBinding>
+                                                    </DataTrigger.Binding>
+                                                    <Setter Property="Visibility" Value="Visible" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </ItemsControl.Style>
                                     <ItemsControl.ItemsPanel>
                                         <ItemsPanelTemplate>
                                             <Canvas x:Name="ItemsControlCanvas" />
@@ -143,6 +144,7 @@
                                                     <Style TargetType="{x:Type Thumb}">
                                                         <Setter Property="AttachedProperty:DragInsideCanvasBehavior.DragInsideCanvas" Value="True" />
                                                         <Setter Property="Focusable" Value="True" />
+                                                        <Setter Property="Foreground" Value="{Binding Color.Value}" />
                                                     </Style>
                                                 </Thumb.Style>
                                                 <i:Interaction.Triggers>
