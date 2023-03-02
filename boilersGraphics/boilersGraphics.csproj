@@ -48,8 +48,10 @@
     <Resource Include="Assets\img\brush_dark.png" />
     <Resource Include="Assets\img\colorCorrect.png" />
     <Resource Include="Assets\img\dropper.png" />
+    <Resource Include="Assets\img\dropper_black.cur" />
     <Resource Include="Assets\img\dropper_black.png" />
     <Resource Include="Assets\img\dropper_dark.png" />
+    <Resource Include="Assets\img\dropper_white.cur" />
     <Resource Include="Assets\img\dropper_white.png" />
     <Resource Include="Assets\img\ellipse_dark.png" />
     <Resource Include="Assets\img\eraser_dark.png" />
@@ -163,8 +165,10 @@
     <None Remove="Assets\img\brush_dark.png" />
     <None Remove="Assets\img\colorCorrect.png" />
     <None Remove="Assets\img\dropper.png" />
+    <None Remove="Assets\img\dropper_black.cur" />
     <None Remove="Assets\img\dropper_black.png" />
     <None Remove="Assets\img\dropper_dark.png" />
+    <None Remove="Assets\img\dropper_white.cur" />
     <None Remove="Assets\img\dropper_white.png" />
     <None Remove="Assets\img\ellipse_dark.png" />
     <None Remove="Assets\img\eraser_dark.png" />

@@ -132,8 +132,8 @@ namespace boilersGraphics.ViewModels.ColorCorrect
 
         public ToneCurveViewModel()
         {
-            BlackDropperBehavior = new ToneCurveDropperBehavior(this, Colors.Black);
-            WhiteDropperBehavior = new ToneCurveDropperBehavior(this, Colors.White);
+            BlackDropperBehavior = new ToneCurveDropperBehavior(this, Colors.Black, new Cursor("pack://application:,,,/Assets/img/dropper_black.cur"));
+            WhiteDropperBehavior = new ToneCurveDropperBehavior(this, Colors.White, new Cursor("pack://application:,,,/Assets/img/dropper_white.cur"));
 
             Curve curve = new RGBCurve();
             curve.TargetChannel.Value = Channel.GrayScale;

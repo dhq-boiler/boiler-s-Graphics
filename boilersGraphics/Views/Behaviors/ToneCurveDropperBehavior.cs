@@ -19,9 +19,11 @@ namespace boilersGraphics.Views.Behaviors
     {
         private ToneCurveViewModel _viewModel;
         private Color _color;
+        private Cursor _cursor;
 
-        public ToneCurveDropperBehavior(ToneCurveViewModel viewModel, Color color)
+        public ToneCurveDropperBehavior(ToneCurveViewModel viewModel, Color color, Cursor cursor)
         {
+            _cursor = cursor;
             _color = color;
             _viewModel = viewModel;
         }
@@ -33,6 +35,7 @@ namespace boilersGraphics.Views.Behaviors
             AssociatedObject.TouchDown += AssociatedObject_TouchDown;
             AssociatedObject.MouseDown += AssociatedObject_MouseDown;
             AssociatedObject.MouseMove += AssociatedObject_MouseMove;
+            AssociatedObject.Cursor = _cursor;
             base.OnAttached();
         }
 
@@ -43,6 +46,7 @@ namespace boilersGraphics.Views.Behaviors
             AssociatedObject.TouchDown -= AssociatedObject_TouchDown;
             AssociatedObject.MouseDown -= AssociatedObject_MouseDown;
             AssociatedObject.MouseMove -= AssociatedObject_MouseMove;
+            AssociatedObject.Cursor = Cursors.Arrow;
             base.OnDetaching();
         }
 
