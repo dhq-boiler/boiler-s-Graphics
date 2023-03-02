@@ -1957,4 +1957,11 @@ public static class Extensions
         }
         return newCollection.Reverse().ToObservable();
     }
+
+    public static IEnumerable<Window> OfType<T>(this WindowCollection collection) where T : Window
+    {
+        var windowArray = new Window[collection.Count];
+        collection.CopyTo(windowArray, 0);
+        return windowArray.OfType<T>();
+    }
 }

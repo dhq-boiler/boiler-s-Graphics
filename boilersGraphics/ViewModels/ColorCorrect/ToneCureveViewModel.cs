@@ -11,6 +11,7 @@ using Rulyotano.Math.Interpolation.Bezier;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
@@ -22,6 +23,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using boilersGraphics.Views.Behaviors;
 using Window = System.Windows.Window;
 
 namespace boilersGraphics.ViewModels.ColorCorrect
@@ -34,6 +36,10 @@ namespace boilersGraphics.ViewModels.ColorCorrect
         public ReactiveCommand<Point> CanvasClickCommand { get; } = new();
         public ReactiveCommand<KeyEventArgs> PreviewKeyDownCommand { get; } = new();
         public ReactiveCommand<RoutedEventArgs> LoadedCommand { get; } = new();
+        public ReactiveCommand DropperBlackCommand { get; } = new();
+        public ReactiveCommand DropperWhiteCommand { get; } = new();
+        public ToneCurveDropperBehavior BlackDropperBehavior { get; }
+        public ToneCurveDropperBehavior WhiteDropperBehavior { get; }
 
         public class Point : BindableBase
         {
@@ -126,6 +132,9 @@ namespace boilersGraphics.ViewModels.ColorCorrect
 
         public ToneCurveViewModel()
         {
+            BlackDropperBehavior = new ToneCurveDropperBehavior(this, Colors.Black);
+            WhiteDropperBehavior = new ToneCurveDropperBehavior(this, Colors.White);
+
             Curve curve = new RGBCurve();
             curve.TargetChannel.Value = Channel.GrayScale;
             curve.Color.Value = Channel.GrayScale.Brush;
@@ -182,19 +191,7 @@ namespace boilersGraphics.ViewModels.ColorCorrect
                 unboxedPoint.Y.Value = Math.Clamp(unboxedPoint.Y.Value + x.VerticalChange, 0, 255);
                 UpdatePoints(x);
             }).AddTo(_disposable);
-            CanvasClickCommand.Subscribe(t =>
-            {
-                var newPoint = new Point(t.X.Value, t.Y.Value);
-                var newPointModel = new Point(t.X.Value, t.Y.Value);
-                var pointsList = TargetCurve.Value.Points.Select(it => new Rulyotano.Math.Geometry.Point(it.X.Value, it.Y.Value));
-                var insertIndex = Rulyotano.Math.Geometry.Helpers.BestPlaceToInsert(newPoint.ToPoint(), pointsList.ToList());
-                if (insertIndex == TargetCurve.Value.Points.Count)
-                {
-                    TargetCurve.Value.Points.Add(newPointModel);
-                    return;
-                }
-                TargetCurve.Value.Points.Insert(insertIndex, newPointModel);
-            }).AddTo(_disposable);
+            CanvasClickCommand.Subscribe(t => { AddNewPoint(TargetCurve.Value, t); }).AddTo(_disposable);
             TargetChannelChangedCommand.Subscribe(x =>
             {
                 var window = System.Windows.Window.GetWindow(x.Source as System.Windows.Controls.ComboBox);
@@ -238,6 +235,43 @@ namespace boilersGraphics.ViewModels.ColorCorrect
                     SetInOutPairs(window, curve);
                 }
             }).AddTo(_disposable);
+            DropperBlackCommand.Subscribe(_ =>
+            {
+                MainWindowViewModel.Instance.ToolBarViewModel.Behaviors.Clear();
+                MainWindowViewModel.Instance.ToolBarViewModel.Behaviors.Add(BlackDropperBehavior);
+            }).AddTo(_disposable);
+            DropperWhiteCommand.Subscribe(_ =>
+            {
+                MainWindowViewModel.Instance.ToolBarViewModel.Behaviors.Clear();
+                MainWindowViewModel.Instance.ToolBarViewModel.Behaviors.Add(WhiteDropperBehavior);
+            }).AddTo(_disposable);
+        }
+
+        public void AddNewPoint(Curve curve, Point t)
+        {
+            var newPoint = new Point(t.X.Value, t.Y.Value);
+            var newPointModel = new Point(t.X.Value, t.Y.Value);
+            var pointsList = curve.Points.Select(it => new Rulyotano.Math.Geometry.Point(it.X.Value, it.Y.Value));
+            var insertIndex = Rulyotano.Math.Geometry.Helpers.BestPlaceToInsert(newPoint.ToPoint(), pointsList.ToList());
+            if (insertIndex == curve.Points.Count)
+            {
+                curve.Points.Add(newPointModel);
+                return;
+            }
+
+            curve.Points.Insert(insertIndex, newPointModel);
+        }
+
+        public void RemoveAllPointsInInterval(Curve curve)
+        {
+            var removeCount = 0;
+            for (int index = 1; index <= curve.Points.Count - 2; index++)
+            {
+                if (curve.Points.Remove(curve.Points[index - removeCount]))
+                {
+                    removeCount++;
+                }
+            }
         }
 
         private void UpdatePoints(DragDeltaEventArgs x)

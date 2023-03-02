@@ -48,6 +48,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
@@ -171,5 +172,23 @@
                 </ItemsControl>
             </Canvas>
         </Border>
+        <StackPanel
+            Grid.Row="3"
+            Grid.Column="1"
+            HorizontalAlignment="Center"
+            Orientation="Horizontal">
+            <Button Command="{Binding DropperBlackCommand}">
+                <Image
+                    Width="25"
+                    Height="25"
+                    Source="pack://application:,,,/Assets/img/dropper_black.png" />
+            </Button>
+            <Button Command="{Binding DropperWhiteCommand}">
+                <Image
+                    Width="25"
+                    Height="25"
+                    Source="pack://application:,,,/Assets/img/dropper_white.png" />
+            </Button>
+        </StackPanel>
     </Grid>
 </UserControl>
