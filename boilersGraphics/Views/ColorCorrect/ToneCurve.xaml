@@ -99,21 +99,20 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Grid>
-                                <Grid x:Name="AlwaysDisplay">
-                                    <Image Margin="-4" Source="{Binding Histogram.Value, UpdateSourceTrigger=PropertyChanged}" />
-                                    <Canvas
-                                        Grid.RowSpan="1"
-                                        Margin="0,0.4,0.4,-0.2"
-                                        AttachedProperty:ClickAtCanvasBehavior.ClickAtCanvas="{Binding DataContext.CanvasClickCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"
-                                        Background="Transparent">
-                                        <views:LandmarkControl
-                                            x:Name="landmark"
-                                            AllScales="{Binding InOutPairs, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
-                                            IsClosedCurve="{Binding IsClosedCurve, RelativeSource={RelativeSource Self}}"
-                                            PathColor="{Binding Color.Value}"
-                                            Points="{Binding Points, UpdateSourceTrigger=PropertyChanged}" />
-                                    </Canvas>
-                                </Grid>
+                                <Image Margin="-4" Source="{Binding Histogram.Value, UpdateSourceTrigger=PropertyChanged}" />
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <ItemsControl ItemsSource="{Binding OrderedCurves, UpdateSourceTrigger=PropertyChanged}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <Grid />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
                                 <ItemsControl ItemsSource="{Binding Scales, ElementName=landmark, UpdateSourceTrigger=PropertyChanged}">
                                     <ItemsControl.Style>
                                         <Style TargetType="{x:Type ItemsControl}">
@@ -161,6 +160,18 @@
                                         </ItemsPanelTemplate>
                                     </ItemsControl.ItemsPanel>
                                 </ItemsControl>
+                                <Canvas
+                                    Grid.RowSpan="1"
+                                    Margin="0,0.4,0.4,-0.2"
+                                    AttachedProperty:ClickAtCanvasBehavior.ClickAtCanvas="{Binding DataContext.CanvasClickCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"
+                                    Background="Transparent">
+                                    <views:LandmarkControl
+                                        x:Name="landmark"
+                                        AllScales="{Binding InOutPairs, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
+                                        IsClosedCurve="{Binding IsClosedCurve, RelativeSource={RelativeSource Self}}"
+                                        PathColor="{Binding Color.Value}"
+                                        Points="{Binding Points, UpdateSourceTrigger=PropertyChanged}" />
+                                </Canvas>
                                 <ItemsControl ItemsSource="{Binding Points}">
                                     <ItemsControl.Style>
                                         <Style TargetType="{x:Type ItemsControl}">
