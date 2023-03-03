@@ -813,6 +813,9 @@
   <data name="String_Resize" xml:space="preserve">
     <value>Resize</value>
   </data>
+  <data name="String_RGB" xml:space="preserve">
+    <value>RGB</value>
+  </data>
   <data name="String_Rotate" xml:space="preserve">
     <value>Rotate</value>
   </data>

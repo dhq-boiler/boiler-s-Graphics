@@ -101,7 +101,8 @@
                     </Setter.Value>
                 </Setter>
             </Style>
-
+            <TextBlock x:Key="CursorBlackDropper" Cursor="Assets/img/dropper_black.cur" />
+            <TextBlock x:Key="CursorWhiteDropper" Cursor="Assets/img/dropper_white.cur" />
             <property:Resources x:Key="resources" />
         </ResourceDictionary>
     </prism:PrismApplication.Resources>

@@ -8,48 +8,8 @@
     d:DesignHeight="300"
     d:DesignWidth="300"
     mc:Ignorable="d">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition />
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition />
-        </Grid.ColumnDefinitions>
-        <ItemsControl
-            Grid.Row="0"
-            Grid.Column="0"
-            ItemsSource="{Binding Scales, ElementName=UserControl, UpdateSourceTrigger=PropertyChanged}">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <Grid>
-                        <Line
-                            Stroke="#88888888"
-                            StrokeThickness="1"
-                            X1="0"
-                            X2="{Binding In}"
-                            Y1="{Binding Out}"
-                            Y2="{Binding Out}" />
-                        <Line
-                            Stroke="#88888888"
-                            StrokeThickness="1"
-                            X1="{Binding In}"
-                            X2="{Binding In}"
-                            Y1="{Binding Out}"
-                            Y2="255" />
-                    </Grid>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <Canvas />
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-        </ItemsControl>
-        <Path
-            x:Name="path"
-            Grid.Row="0"
-            Grid.Column="0"
-            Stroke="{Binding PathColor, ElementName=UserControl}"
-            StrokeThickness="1" />
-    </Grid>
+    <Path
+        x:Name="path"
+        Stroke="{Binding PathColor, ElementName=UserControl, UpdateSourceTrigger=PropertyChanged}"
+        StrokeThickness="1" />
 </UserControl>

@@ -112,9 +112,24 @@ public class Layer : LayerTreeViewItemBase, IObservable<LayerObservable>, ICompa
         Rect? sliceRect = null;
         _items.Cast<IRect>().ToList().ForEach(x => sliceRect = (!sliceRect.HasValue ? x.Rect.Value : Rect.Union(sliceRect.Value, x.Rect.Value)));
         var renderer = new Renderer(new WpfVisualTreeHelper());
-        Appearance.Value = renderer.Render(sliceRect, DesignerCanvas.GetInstance(),
-            DiagramViewModel.Instance,
-            DiagramViewModel.Instance.BackgroundItem.Value, null, _items.Min(x => x.ZIndex.Value), _items.Max(x => x.ZIndex.Value));
+        
+        //背景オブジェクトを除く、アイテムがない場合
+        if (_items.Except(new SelectableDesignerItemViewModelBase[]{ DiagramViewModel.Instance.BackgroundItem.Value }).Count() == 0)
+        {
+            //アピアランスには背景オブジェクトのみをレンダリングする
+            Appearance.Value = renderer.Render(sliceRect, DesignerCanvas.GetInstance(),
+                DiagramViewModel.Instance,
+                DiagramViewModel.Instance.BackgroundItem.Value, null, -1,
+                -1);
+        }
+        else //背景オブジェクトを除く、アイテムがある場合
+        {
+            //アピアランスには背景オブジェクトを除いて、ZIndexが範囲内のオブジェクトのみをレンダリングする
+            Appearance.Value = renderer.Render(sliceRect, DesignerCanvas.GetInstance(),
+                DiagramViewModel.Instance,
+                DiagramViewModel.Instance.BackgroundItem.Value, null, _items.Except(new SelectableDesignerItemViewModelBase[] { DiagramViewModel.Instance.BackgroundItem.Value }).Min(x => x.ZIndex.Value),
+                _items.Max(x => x.ZIndex.Value));
+        }
     }
 
     private static void UpdateAppearanceByItem(DesignerCanvas designerCanvas, double minX, double minY,

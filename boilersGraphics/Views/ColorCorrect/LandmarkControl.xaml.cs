@@ -6,6 +6,7 @@ using Rulyotano.Math.Interpolation.Bezier;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
@@ -13,6 +14,7 @@ using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using boilersGraphics.Extensions;
 using Point = Rulyotano.Math.Geometry.Point;
 
 namespace boilersGraphics.Views
@@ -34,6 +36,8 @@ namespace boilersGraphics.Views
         public static readonly DependencyProperty PointsProperty =
             DependencyProperty.Register("Points", typeof(IEnumerable<ToneCurveViewModel.Point>),
             typeof(LandmarkControl), new PropertyMetadata(null, PropertyChangedCallback));
+
+        #endregion
 
         public ReactiveCollection<InOutPair> AllScales
         {
@@ -79,10 +83,15 @@ namespace boilersGraphics.Views
             }
 
             if (dependencyPropertyChangedEventArgs.NewValue != null)
-                landmarkControl.SetPathData();
+            {
+                var window = System.Windows.Window.GetWindow(landmarkControl);
+                landmarkControl.SetPathData(window);
+                var toneCurve = window.EnumerateChildOfType<Views.ColorCorrect.ToneCurve>().First();
+                var dataContext = toneCurve.DataContext as ToneCurveViewModel;
+                (dataContext.ViewModel.Value as ColorCorrectViewModel).Curves = dataContext.Curves;
+                (dataContext.ViewModel.Value as ColorCorrectViewModel).Render();
+            }
         }
-
-        #endregion
 
         #region PathColor
 
@@ -110,7 +119,11 @@ namespace boilersGraphics.Views
             var landmarkControl = dependencyObject as LandmarkControl;
             if (landmarkControl == null)
                 return;
-            landmarkControl.SetPathData();
+            var window = System.Windows.Window.GetWindow(landmarkControl);
+            landmarkControl.SetPathData(window);
+            var toneCurve = window.EnumerateChildOfType<Views.ColorCorrect.ToneCurve>().First();
+            var dataContext = toneCurve.DataContext as ToneCurveViewModel;
+            (dataContext.ViewModel.Value as ColorCorrectViewModel).Render();
         }
 
         public bool IsClosedCurve
@@ -125,6 +138,9 @@ namespace boilersGraphics.Views
         public LandmarkControl()
         {
             InitializeComponent();
+
+            Scales = new List<InOutPair>();
+            AllScales = new ReactiveCollection<InOutPair>();
         }
 
         private System.Windows.Point ConvertToVisualPoint(Point p)
@@ -134,7 +150,7 @@ namespace boilersGraphics.Views
 
         private PathSegmentCollection _myPathSegmentCollection = new PathSegmentCollection();
 
-        public void SetPathData()
+        public void SetPathData(Window window)
         {
             if (Points == null) return;
             var points = new List<Point>();
@@ -209,9 +225,12 @@ namespace boilersGraphics.Views
 
             AllScales = allScales;
             Scales = ret;
-
-            ((this.DataContext as ToneCurveViewModel).ViewModel.Value as ColorCorrectViewModel).InOutPairs = AllScales;
-            ((this.DataContext as ToneCurveViewModel).ViewModel.Value as ColorCorrectViewModel).Render();
+            
+            var toneCurve = window.EnumerateChildOfType<Views.ColorCorrect.ToneCurve>().First();
+            var dataContext = toneCurve.DataContext as ToneCurveViewModel;
+            dataContext.TargetCurve.Value.InOutPairs = AllScales;
+            dataContext.ViewModel.Value.TargetCurve.Value = dataContext.TargetCurve.Value;
+            dataContext.ViewModel.Value.TargetCurve.Value.InOutPairs = dataContext.TargetCurve.Value.InOutPairs;
         }
 
         public List<InOutPair> InOutPairs
@@ -376,13 +395,25 @@ namespace boilersGraphics.Views
 
             UnRegisterCollectionItemPropertyChanged(e.OldItems);
 
-            SetPathData();
+            var window = System.Windows.Window.GetWindow(this);
+
+            if (window is null)
+                return;
+
+            SetPathData(window);
         }
 
         private void OnPointPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "X" || e.PropertyName == "Y")
-                SetPathData();
+            {
+                var window = System.Windows.Window.GetWindow(this);
+                if (window is not null)
+                {
+                    SetPathData(window);
+                    ((this.DataContext as ToneCurveViewModel).ViewModel.Value as ColorCorrectViewModel).Render();
+                }
+            }
         }
     }
 }
