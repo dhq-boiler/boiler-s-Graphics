@@ -114,6 +114,53 @@
                                             Points="{Binding Points, UpdateSourceTrigger=PropertyChanged}" />
                                     </Canvas>
                                 </Grid>
+                                <ItemsControl ItemsSource="{Binding Scales, ElementName=landmark, UpdateSourceTrigger=PropertyChanged}">
+                                    <ItemsControl.Style>
+                                        <Style TargetType="{x:Type ItemsControl}">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                            <Style.Triggers>
+                                                <DataTrigger Value="True">
+                                                    <DataTrigger.Binding>
+                                                        <MultiBinding Converter="{StaticResource TargetChannelMatcher}">
+                                                            <Binding Path="TargetChannel.Value" UpdateSourceTrigger="PropertyChanged" />
+                                                            <Binding
+                                                                Path="DataContext.TargetChannel.Value"
+                                                                RelativeSource="{RelativeSource FindAncestor,
+                                                                                                AncestorType={x:Type UserControl}}"
+                                                                UpdateSourceTrigger="PropertyChanged" />
+                                                        </MultiBinding>
+                                                    </DataTrigger.Binding>
+                                                    <Setter Property="Visibility" Value="Visible" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </ItemsControl.Style>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid>
+                                                <Line
+                                                    Stroke="#88888888"
+                                                    StrokeThickness="1"
+                                                    X1="0"
+                                                    X2="{Binding In}"
+                                                    Y1="{Binding Out}"
+                                                    Y2="{Binding Out}" />
+                                                <Line
+                                                    Stroke="#88888888"
+                                                    StrokeThickness="1"
+                                                    X1="{Binding In}"
+                                                    X2="{Binding In}"
+                                                    Y1="{Binding Out}"
+                                                    Y2="255" />
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <Canvas />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                </ItemsControl>
                                 <ItemsControl ItemsSource="{Binding Points}">
                                     <ItemsControl.Style>
                                         <Style TargetType="{x:Type ItemsControl}">
