@@ -68,6 +68,23 @@ namespace boilersGraphics.ViewModels.ColorCorrect
             {
                 return new Rulyotano.Math.Geometry.Point(X.Value, Y.Value);
             }
+
+            public override bool Equals(object? obj)
+            {
+                if (obj == null) return false;
+                if (obj is not Point p) return false;
+                return p.X.Value == X.Value && p.Y.Value == Y.Value;
+            }
+
+            public override int GetHashCode()
+            {
+                return X.Value.GetHashCode() ^ Y.Value.GetHashCode();
+            }
+
+            public override string ToString()
+            {
+                return $"{X.Value}, {Y.Value}";
+            }
         }
 
         public ReactiveCommand<DragDeltaEventArgs> DragDeltaCommand { get; } = new();
@@ -294,8 +311,10 @@ namespace boilersGraphics.ViewModels.ColorCorrect
         public void ResetPoints(Curve curve)
         {
             var resetPoints = new Point[] { new Point(0, 255), new Point(255, 0) };
-            curve.Points.Clear();
-            curve.Points.AddRange(resetPoints);
+            curve.Points.Where(p => p.Y.Value != 0 && p.Y.Value != 255).ToList().ForEach(p => curve.Points.Remove(p));
+            var except = curve.Points.ToList();
+            var adds = resetPoints.Except(except);
+            curve.Points.AddRange(adds);
         }
 
         private void UpdatePoints(DragDeltaEventArgs x)
