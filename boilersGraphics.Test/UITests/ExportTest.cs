@@ -74,8 +74,8 @@ namespace boilersGraphics.Test.UITests
             loaddialogPO.Click_OpenButton();
             loaddialogPO.Perform();
 
-            //300秒の執行猶予を与える
-            GetElementByName("Export", 300);
+            //180秒の執行猶予を与える
+            GetElementByName("Export", 180);
             LogManager.GetCurrentClassLogger().Info("H");
             TakeScreenShot("SCREENSHOT_H.png");
             var exportdialogPO = mainwindowPO.Click_ExportButton();
@@ -173,8 +173,8 @@ namespace boilersGraphics.Test.UITests
 
             TakeScreenShot("SCREENSHOT_GetDesignerCanvas.png");
 
-            //300秒の執行猶予を与える
-            GetElementByName("slice", 300);
+            //180秒の執行猶予を与える
+            GetElementByName("slice", 180);
             mainwindowPO.Click_SliceTool();
             mainwindowPO.InitializeActions();
             mainwindowPO.MoveToElement(100, 100);

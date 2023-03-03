@@ -77,8 +77,15 @@ namespace boilersGraphics.Test.UITests.PageObjects
             {
                 defaultWait.Until(delegate (WindowsDriver<WindowsElement> Driver)
                 {
-                    element = Driver.FindElementByAccessibilityId(automationId2);
-                    return element != null;
+                    try
+                    {
+                        element = Driver.FindElementByAccessibilityId(automationId2);
+                        return element != null;
+                    }
+                    catch (WebDriverException e)
+                    {
+                        return false;
+                    }
                 });
             }
             catch (WebDriverTimeoutException ex)
@@ -187,8 +194,15 @@ namespace boilersGraphics.Test.UITests.PageObjects
             {
                 defaultWait.Until(delegate (WindowsDriver<WindowsElement> Driver)
                 {
-                    element = Driver.FindElementByAccessibilityId(automationId2);
-                    return element != null;
+                    try
+                    {
+                        element = Driver.FindElementByAccessibilityId(automationId2);
+                        return element != null;
+                    }
+                    catch (WebDriverException)
+                    {
+                        return false;
+                    }
                 });
             }
             catch (WebDriverTimeoutException)
