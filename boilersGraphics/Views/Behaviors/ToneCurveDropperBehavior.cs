@@ -106,7 +106,9 @@ namespace boilersGraphics.Views.Behaviors
             var position = e.GetPosition(designerCanvas);
             var color = writeableBitmap.GetPixel((int)position.X, (int)position.Y);
 
-            var window = System.Windows.Window.GetWindow(App.Current.Windows.OfType<DialogWindow>().First());
+            var window = System.Windows.Window.GetWindow(App.Current.Windows.OfType<DialogWindow>().FirstOrDefault());
+            if (window is null)
+                return;
             var landmarks = window.EnumerateChildOfType<LandmarkControl>().Distinct();
             var landmark = landmarks.First(x => x.PathColor == _viewModel.Curves[1].Color.Value);
 
