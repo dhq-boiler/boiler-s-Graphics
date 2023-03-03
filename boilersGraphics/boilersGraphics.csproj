@@ -48,10 +48,14 @@
     <Resource Include="Assets\img\brush_dark.png" />
     <Resource Include="Assets\img\colorCorrect.png" />
     <Resource Include="Assets\img\dropper.png" />
-    <Resource Include="Assets\img\dropper_black.cur" />
+    <Content Include="Assets\img\dropper_black.cur">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Resource Include="Assets\img\dropper_black.png" />
     <Resource Include="Assets\img\dropper_dark.png" />
-    <Resource Include="Assets\img\dropper_white.cur" />
+    <Content Include="Assets\img\dropper_white.cur">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Resource Include="Assets\img\dropper_white.png" />
     <Resource Include="Assets\img\ellipse_dark.png" />
     <Resource Include="Assets\img\eraser_dark.png" />

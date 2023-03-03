@@ -179,18 +179,40 @@
             Grid.Column="1"
             HorizontalAlignment="Center"
             Orientation="Horizontal">
-            <Button Command="{Binding DropperBlackCommand}">
+            <StackPanel.Resources>
+                <Style TargetType="{x:Type ToggleButton}">
+                    <Setter Property="Background" Value="{StaticResource ControlDefaultBackground}" />
+                    <Setter Property="BorderBrush" Value="{StaticResource ControlDefaultBorderBrush}" />
+                </Style>
+            </StackPanel.Resources>
+            <ToggleButton IsChecked="{Binding IsCheckedDropperBlack.Value, Mode=TwoWay}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Checked">
+                        <helpers:EventToCommand Command="{Binding DropperBlackEnabledCommand}" />
+                    </i:EventTrigger>
+                    <i:EventTrigger EventName="Unchecked">
+                        <helpers:EventToCommand Command="{Binding DropperBlackDisabledCommand}" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
                 <Image
                     Width="25"
                     Height="25"
                     Source="pack://application:,,,/Assets/img/dropper_black.png" />
-            </Button>
-            <Button Command="{Binding DropperWhiteCommand}">
+            </ToggleButton>
+            <ToggleButton IsChecked="{Binding IsCheckedDropperWhite.Value, Mode=TwoWay}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Checked">
+                        <helpers:EventToCommand Command="{Binding DropperWhiteEnabledCommand}" />
+                    </i:EventTrigger>
+                    <i:EventTrigger EventName="Unchecked">
+                        <helpers:EventToCommand Command="{Binding DropperWhiteDisabledCommand}" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
                 <Image
                     Width="25"
                     Height="25"
                     Source="pack://application:,,,/Assets/img/dropper_white.png" />
-            </Button>
+            </ToggleButton>
         </StackPanel>
     </Grid>
 </UserControl>
