@@ -10,7 +10,7 @@ namespace boilersGraphics.Test.UITests.PageObjects
 
         public bool Click_AgreeButton_IfExists()
         {
-            if (ExistsElementByAutomationID("Agree", 1))
+            if (ExistsElementByAutomationID("Agree", 10))
             {
                 GetElementByAutomationID("Agree").Click();
                 return true;
@@ -20,7 +20,7 @@ namespace boilersGraphics.Test.UITests.PageObjects
 
         public bool Click_OKButton_IfExists()
         {
-            if (ExistsElementByAutomationID("OK", 1))
+            if (ExistsElementByAutomationID("OK", 10))
             {
                 //OKボタンを押下する
                 GetElementByAutomationID("OK").Click();
