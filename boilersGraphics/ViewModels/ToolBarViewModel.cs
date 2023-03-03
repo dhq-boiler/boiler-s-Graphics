@@ -336,7 +336,7 @@ public class ToolBarViewModel
         CurrentHitTestVisibleState.Value = false;
     }
 
-    private void ChangeHitTestToEnable()
+    internal void ChangeHitTestToEnable()
     {
         var diagramViewModel = MainWindowViewModel.Instance.DiagramViewModel;
         diagramViewModel.SelectedLayers.Value.ToList().ForEach(x =>

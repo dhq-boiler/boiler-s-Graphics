@@ -186,29 +186,44 @@ internal class ObjectSerializer
                 else if (colorCorrect.CCType.Value == ColorCorrectType.ToneCurve)
                 {
                     list.Add(new XElement("TargetChannel", colorCorrect.TargetChannel.Value.GetType().Name));
-                    var points = new XElement("Points");
-                    foreach (var pt in colorCorrect.Points)
+
+                    var curves = new XElement("Curves");
+
+                    foreach (var curve in colorCorrect.Curves)
                     {
-                        var point = new XElement("Point");
-                        var x = new XElement("X", pt.X);
-                        point.Add(x);
-                        var y = new XElement("Y", pt.Y);
-                        point.Add(y);
-                        points.Add(point);
+                        var _curve = new XElement("Curve");
+
+                        _curve.Add(new XElement("Name", curve.TargetChannel.Value.GetType().Name));
+
+                        var points = new XElement("Points");
+                        foreach (var pt in curve.Points)
+                        {
+                            var point = new XElement("Point");
+                            var x = new XElement("X", pt.X);
+                            point.Add(x);
+                            var y = new XElement("Y", pt.Y);
+                            point.Add(y);
+                            points.Add(point);
+                        }
+
+                        _curve.Add(points);
+                        var inOutPairs = new XElement("InOutPairs");
+                        foreach (var pair in curve.InOutPairs)
+                        {
+                            var _pair = new XElement("InOutPair");
+                            var @in = new XElement("In", pair.In);
+                            _pair.Add(@in);
+                            var @out = new XElement("Out", pair.Out);
+                            _pair.Add(@out);
+                            inOutPairs.Add(_pair);
+                        }
+
+                        _curve.Add(inOutPairs);
+
+                        curves.Add(_curve);
                     }
 
-                    list.Add(points);
-                    var inOutPairs = new XElement("InOutPairs");
-                    foreach (var pair in colorCorrect.InOutPairs)
-                    {
-                        var _pair = new XElement("InOutPair");
-                        var @in = new XElement("In", pair.In);
-                        _pair.Add(@in);
-                        var @out = new XElement("Out", pair.Out);
-                        _pair.Add(@out);
-                        inOutPairs.Add(_pair);
-                    }
-                    list.Add(inOutPairs);
+                    list.Add(curves);
                 }
                 else if (colorCorrect.CCType.Value == ColorCorrectType.NegativePositiveConversion)
                 {

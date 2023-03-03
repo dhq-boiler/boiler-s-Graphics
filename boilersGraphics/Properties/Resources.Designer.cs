@@ -2149,6 +2149,15 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   RGB に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_RGB {
+            get {
+                return ResourceManager.GetString("String_RGB", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Rotate に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string String_Rotate {

@@ -1,15 +1,17 @@
 ﻿using boilersGraphics.Properties;
 using System.Collections.Generic;
+using System.Windows.Media;
 
 namespace boilersGraphics.ViewModels
 {
-    public class Channel
+    public abstract class Channel
     {
         public static readonly Channel Red = new RedChannel();
         public static readonly Channel Green = new GreenChannel();
         public static readonly Channel Blue = new BlueChannel();
-        public static readonly Channel GrayScale = new GrayScaleChannel();
+        public static readonly Channel GrayScale = new RGBChannel();
 
+        public abstract Brush Brush { get; }
 
         public static IEnumerable<Channel> GetValues()
         {
@@ -22,6 +24,8 @@ namespace boilersGraphics.ViewModels
 
     public class RedChannel : Channel
     {
+        public override Brush Brush => Brushes.Red;
+
         public override string ToString()
         {
             return Resources.String_R;
@@ -30,6 +34,8 @@ namespace boilersGraphics.ViewModels
 
     public class GreenChannel : Channel
     {
+        public override Brush Brush => Brushes.Green;
+
         public override string ToString()
         {
             return Resources.String_G;
@@ -38,17 +44,21 @@ namespace boilersGraphics.ViewModels
 
     public class BlueChannel : Channel
     {
+        public override Brush Brush => Brushes.Blue;
+
         public override string ToString()
         {
             return Resources.String_B;
         }
     }
 
-    public class GrayScaleChannel : Channel
+    public class RGBChannel : Channel
     {
+        public override Brush Brush => Brushes.White;
+
         public override string ToString()
         {
-            return Resources.String_GrayScale;
+            return Resources.String_RGB;
         }
     }
 }

@@ -519,23 +519,51 @@ public class ObjectDeserializer
                 {
                     colorCorrect.TargetChannel.Value = GetCorrespondingStaticValue<Channel>(designerItemElm.Element("TargetChannel").Value);
                 }
-                if (designerItemElm.Elements("Points").Any())
+
+                if (designerItemElm.Elements("Curves").Any())
                 {
-                    colorCorrect.Points =
-                        new ReactiveCollection<ToneCurveViewModel.Point>();
-                    colorCorrect.Points.AddRange(designerItemElm.Elements("Points").SelectMany(x => x.Elements("Point")).Select(x =>
-                        new ToneCurveViewModel.Point(int.Parse(x.Elements("X").Any() ? CastToDoubleRound(x.Element("X").Value) : "0"),
-                            int.Parse(x.Elements("Y").Any() ? CastToDoubleRound(x.Element("Y").Value) : "0"))
-                    ));
-                }
-                if (designerItemElm.Elements("InOutPairs").Any())
-                {
-                    colorCorrect.InOutPairs =
-                        new ReactiveCollection<InOutPair>();
-                    colorCorrect.InOutPairs.AddRange(designerItemElm.Elements("InOutPairs").SelectMany(x => x.Elements("InOutPair")).Select(x =>
-                        new InOutPair(int.Parse(x.Elements("In").Any() ? CastToDoubleRound(x.Element("In").Value) : "0"),
-                            int.Parse(x.Elements("Out").Any() ? CastToDoubleRound(x.Element("Out").Value) : "0"))
-                    ));
+                    var curvesElm = designerItemElm.Element("Curves");
+
+                    if (curvesElm.Elements("Curve").Any())
+                    {
+
+                        foreach (var curveElm in curvesElm.Elements("Curve"))
+                        {
+                            var curve = new ToneCurveViewModel.Curve();
+                            if (curveElm.Elements("Points").Any())
+                            {
+                                curve.Points =
+                                    new ReactiveCollection<ToneCurveViewModel.Point>();
+                                curve.Points.AddRange(curveElm.Elements("Points")
+                                    .SelectMany(x => x.Elements("Point")).Select(x =>
+                                        new ToneCurveViewModel.Point(
+                                            int.Parse(x.Elements("X").Any()
+                                                ? CastToDoubleRound(x.Element("X").Value)
+                                                : "0"),
+                                            int.Parse(x.Elements("Y").Any()
+                                                ? CastToDoubleRound(x.Element("Y").Value)
+                                                : "0"))
+                                    ));
+                            }
+
+                            if (curveElm.Elements("InOutPairs").Any())
+                            {
+                                curve.InOutPairs =
+                                    new ReactiveCollection<InOutPair>();
+                                curve.InOutPairs.AddRange(curveElm.Elements("InOutPairs")
+                                    .SelectMany(x => x.Elements("InOutPair")).Select(x =>
+                                        new InOutPair(
+                                            int.Parse(x.Elements("In").Any()
+                                                ? CastToDoubleRound(x.Element("In").Value)
+                                                : "0"),
+                                            int.Parse(x.Elements("Out").Any()
+                                                ? CastToDoubleRound(x.Element("Out").Value)
+                                                : "0"))
+                                    ));
+                            }
+                            colorCorrect.Curves.Add(curve);
+                        }
+                    }
                 }
             }
             else if (colorCorrect.CCType.Value == ColorCorrectType.NegativePositiveConversion)
