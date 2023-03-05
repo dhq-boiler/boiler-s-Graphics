@@ -17,17 +17,15 @@ namespace boilersGraphics.Test.UITests
         [Retry(3)]
         public async Task 真っ白なキャンパスをエクスポートする()
         {
-            var mainwindowPO = new MainWindowPO(Session);
+            var mainwindowPO = new MainWindowPO(Session, this);
 
             TakeScreenShot("SCREENSHOT_A.png");
             var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var exportFilePath = $"{dir}\\ExportTest.jpg";
 
             var exportDialogPO = mainwindowPO.Click_ExportButton();
-            exportDialogPO.InitializeActions();
             exportDialogPO.Input_FileName(exportFilePath);
             exportDialogPO.Click_PerformExportButton();
-            exportDialogPO.Perform();
 
             await Task.Delay(1000);
 
@@ -52,7 +50,7 @@ namespace boilersGraphics.Test.UITests
         [Retry(3)]
         public async Task チェッカーパターンを読み込んでエクスポートする()
         {
-            var mainwindowPO = new MainWindowPO(Session);
+            var mainwindowPO = new MainWindowPO(Session, this);
 
             TakeScreenShot("SCREENSHOT_A.png");
             LogManager.GetCurrentClassLogger().Info("A");
@@ -68,28 +66,24 @@ namespace boilersGraphics.Test.UITests
             var loaddialogPO = msgboxPO.Click_OKButton();
             LogManager.GetCurrentClassLogger().Info("D");
             TakeScreenShot("SCREENSHOT_D.png");
-            loaddialogPO.InitializeActions();
             loaddialogPO.Focus_FileName();
             loaddialogPO.Input_FileName(loadFilePath);
             loaddialogPO.Click_OpenButton();
-            loaddialogPO.Perform();
 
-            //180秒の執行猶予を与える
-            GetElementByName("Export", 180);
+            ////180秒の執行猶予を与える
+            //GetElementByName("Export", 180);
             LogManager.GetCurrentClassLogger().Info("H");
             TakeScreenShot("SCREENSHOT_H.png");
             var exportdialogPO = mainwindowPO.Click_ExportButton();
 
             LogManager.GetCurrentClassLogger().Info("I");
             TakeScreenShot("SCREENSHOT_I.png");
-            exportdialogPO.InitializeActions();
 
             exportdialogPO.Input_FileName(exportFilePath);
                 
             LogManager.GetCurrentClassLogger().Info("J");
             TakeScreenShot("SCREENSHOT_J.png");
             exportdialogPO.Click_PerformExportButton();
-            exportdialogPO.Perform();
 
             LogManager.GetCurrentClassLogger().Info("K");
             TakeScreenShot("SCREENSHOT_K.png");
@@ -158,23 +152,21 @@ namespace boilersGraphics.Test.UITests
         public async Task スライス()
         {
             TakeScreenShot("SCREENSHOT_A.png");
-            var mainwindowPO = new MainWindowPO(Session);
+            var mainwindowPO = new MainWindowPO(Session, this);
             var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var loadFilePath = $"{dir}\\XmlFiles\\checker_pattern.xml";
 
             var msgboxPO = mainwindowPO.Click_LoadButton();
             var loaddialogPO = msgboxPO.Click_OKButton();
 
-            loaddialogPO.InitializeActions();
             loaddialogPO.Focus_FileName();
             loaddialogPO.Input_FileName(loadFilePath);
             loaddialogPO.Click_OpenButton();
-            loaddialogPO.Perform();
 
             TakeScreenShot("SCREENSHOT_GetDesignerCanvas.png");
 
-            //180秒の執行猶予を与える
-            GetElementByName("slice", 180);
+            ////180秒の執行猶予を与える
+            //GetElementByName("slice", 180);
             mainwindowPO.Click_SliceTool();
             mainwindowPO.InitializeActions();
             mainwindowPO.MoveToElement(100, 100);
@@ -190,7 +182,7 @@ namespace boilersGraphics.Test.UITests
 
             TakeScreenShot("SCREENSHOT_PREVIEW.png");
 
-            var previewdialogPO = new PreviewDialogPO(Session);
+            var previewdialogPO = new PreviewDialogPO(Session, this);
 
             previewdialogPO.InitializeActions();
             previewdialogPO.ScreenShot_PreviewImage(previewFilePath);

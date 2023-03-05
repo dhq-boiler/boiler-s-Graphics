@@ -1,4 +1,5 @@
-﻿using OpenQA.Selenium.Appium.Windows;
+﻿using boilersE2E.NUnit;
+using OpenQA.Selenium.Appium.Windows;
 
 namespace boilersGraphics.Test.UITests.PageObjects
 {
@@ -7,14 +8,14 @@ namespace boilersGraphics.Test.UITests.PageObjects
     /// </summary>
     public class MessageBoxPO : PageObjectBase
     {
-        public MessageBoxPO(WindowsDriver<WindowsElement> Session)
-            : base(Session)
+        public MessageBoxPO(WindowsDriver<WindowsElement> Session, E2ETestFixture testFixture)
+            : base(Session, testFixture)
         { }
 
         public LoadDialogPO Click_OKButton()
         {
             GetElementByAutomationID("1").Click();
-            return new LoadDialogPO(Session);
+            return new LoadDialogPO(Session, TestFixture);
         }
     }
 }

@@ -13,16 +13,14 @@ namespace boilersGraphics.Test.UITests
         [Retry(3)]
         public void 四角形を選択する()
         {
-            var mainwindowPO = new MainWindowPO(Session);
+            var mainwindowPO = new MainWindowPO(Session, this);
             var msgboxPO = mainwindowPO.Click_LoadButton();
             var loaddialogPO = msgboxPO.Click_OKButton();
-            loaddialogPO.InitializeActions();
             loaddialogPO.Focus_FileName();
             var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var loadFilePath = $"{dir}\\XmlFiles\\rectangle_ellipse_star.xml";
             loaddialogPO.Input_FileName(loadFilePath);
             loaddialogPO.Click_OpenButton();
-            loaddialogPO.Perform();
 
             mainwindowPO.Click_PointerTool();
 
@@ -38,16 +36,14 @@ namespace boilersGraphics.Test.UITests
         [Retry(3)]
         public void 四角形ー楕円ー星型の順で選択する()
         {
-            var mainwindowPO = new MainWindowPO(Session);
+            var mainwindowPO = new MainWindowPO(Session, this);
             var msgboxPO = mainwindowPO.Click_LoadButton();
             var loaddialogPO = msgboxPO.Click_OKButton();
-            loaddialogPO.InitializeActions();
             loaddialogPO.Focus_FileName();
             var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var loadFilePath = $"{dir}\\XmlFiles\\rectangle_ellipse_star.xml";
             loaddialogPO.Input_FileName(loadFilePath);
             loaddialogPO.Click_OpenButton();
-            loaddialogPO.Perform();
 
             mainwindowPO.Click_PointerTool();
 
@@ -76,16 +72,14 @@ namespace boilersGraphics.Test.UITests
         [Retry(3)]
         public void 四角形を選択した後選択解除する()
         {
-            var mainwindowPO = new MainWindowPO(Session);
+            var mainwindowPO = new MainWindowPO(Session, this);
             var msgboxPO = mainwindowPO.Click_LoadButton();
             var loaddialogPO = msgboxPO.Click_OKButton();
-            loaddialogPO.InitializeActions();
             loaddialogPO.Focus_FileName();
             var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var loadFilePath = $"{dir}\\XmlFiles\\rectangle_ellipse_star.xml";
             loaddialogPO.Input_FileName(loadFilePath);
             loaddialogPO.Click_OpenButton();
-            loaddialogPO.Perform();
 
             mainwindowPO.Click_PointerTool();
 

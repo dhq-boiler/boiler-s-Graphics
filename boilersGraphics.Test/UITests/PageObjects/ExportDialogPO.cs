@@ -1,4 +1,5 @@
 ﻿using boilersE2E;
+using boilersE2E.NUnit;
 using NUnit.Framework;
 using OpenQA.Selenium.Appium.Windows;
 using OpenQA.Selenium.Interactions;
@@ -7,43 +8,22 @@ namespace boilersGraphics.Test.UITests.PageObjects
 {
     public class ExportDialogPO : PageObjectBase
     {
-        public ExportDialogPO(WindowsDriver<WindowsElement> session)
-            : base(session)
+        public ExportDialogPO(WindowsDriver<WindowsElement> session, E2ETestFixture testFixture)
+            : base(session, testFixture)
         { }
 
         private Actions action;
 
-        public void InitializeActions()
-        {
-            action = new Actions(Session);
-        }
 
 
         public void Input_FileName(string filename)
         {
-            if (action is null)
-            {
-                Assert.Fail($"まずInitializeActionsメソッドでアクションを初期化する必要があります。");
-            }
-            action.InputText(GetElementByAutomationID("filename"), filename);
+            TestFixture.InputText(GetElementByAutomationID("filename"), filename);
         }
 
         public void Click_PerformExportButton()
         {
-            if (action is null)
-            {
-                Assert.Fail($"まずInitializeActionsメソッドでアクションを初期化する必要があります。");
-            }
-            action.Click(GetElementByAutomationID("PerformExport"));
-        }
-
-        public void Perform()
-        {
-            if (action is null)
-            {
-                Assert.Fail($"まずInitializeActionsメソッドでアクションを初期化する必要があります。");
-            }
-            action.Perform();
+            GetElementByAutomationID("PerformExport").Click();
         }
     }
 }

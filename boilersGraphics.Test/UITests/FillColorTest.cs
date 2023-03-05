@@ -15,7 +15,7 @@ namespace boilersGraphics.Test.UITests
         [Retry(3)]
         public void 塗りつぶし色をHueで赤指定して矩形描画()
         {
-            var mainwindowPO = new MainWindowPO(Session);
+            var mainwindowPO = new MainWindowPO(Session, this);
             var selectFillColorDialogPO = mainwindowPO.Click_SelectFillColorButton();
             selectFillColorDialogPO.Click_Solid();
             selectFillColorDialogPO.HueDADA.Initialize();
@@ -61,7 +61,7 @@ namespace boilersGraphics.Test.UITests
         [Retry(3)]
         public void 塗りつぶし色を赤指定して矩形描画()
         {
-            var mainwindowPO = new MainWindowPO(Session);
+            var mainwindowPO = new MainWindowPO(Session, this);
             var selectFillColorDialogPO = mainwindowPO.Click_SelectFillColorButton();
             selectFillColorDialogPO.Click_Solid();
             selectFillColorDialogPO.BlueDADA.Initialize();
@@ -108,7 +108,7 @@ namespace boilersGraphics.Test.UITests
         [Retry(3)]
         public void 塗りつぶし色を緑指定して矩形描画()
         {
-            var mainwindowPO = new MainWindowPO(Session);
+            var mainwindowPO = new MainWindowPO(Session, this);
             var selectFillColorDialogPO = mainwindowPO.Click_SelectFillColorButton();
             selectFillColorDialogPO.Click_Solid();
             selectFillColorDialogPO.BlueDADA.Initialize();
@@ -155,7 +155,7 @@ namespace boilersGraphics.Test.UITests
         [Retry(3)]
         public void 塗りつぶし色を青指定して矩形描画()
         {
-            var mainwindowPO = new MainWindowPO(Session);
+            var mainwindowPO = new MainWindowPO(Session, this);
             var selectFillColorDialogPO = mainwindowPO.Click_SelectFillColorButton();
             selectFillColorDialogPO.Click_Solid();
             selectFillColorDialogPO.BlueDADA.Initialize();
