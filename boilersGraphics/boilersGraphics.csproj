@@ -239,6 +239,6 @@
     <NoWarn>1701;1702;0002;CA1416;</NoWarn>
   </PropertyGroup>
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="..\ReplaceInternalResourcesDefaultConstructorToPublic\bin\$(Configuration)\net7.0\check.bat" />
+    <Exec Command="$(SolutionDir)\ReplaceInternalResourcesDefaultConstructorToPublic\bin\$(Configuration)\net7.0\check.bat $(SolutionDir)" />
   </Target>
 </Project>
