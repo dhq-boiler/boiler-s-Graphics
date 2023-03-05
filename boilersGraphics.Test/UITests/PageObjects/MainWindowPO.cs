@@ -31,7 +31,9 @@ namespace boilersGraphics.Test.UITests.PageObjects
 
         public ExportDialogPO Click_ExportButton()
         {
-            GetElementByAutomationID("Export", 20).Click();
+            var exportButton = GetElementByAutomationID("Export", 20);
+            exportButton.Click();
+            exportButton.Click();
             return new ExportDialogPO(Session, TestFixture);
         }
 
