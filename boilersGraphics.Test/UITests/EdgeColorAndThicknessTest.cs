@@ -15,7 +15,7 @@ namespace boilersGraphics.Test.UITests
         [Retry(3)]
         public void エッジを赤太さ25ptを選択して描画()
         {
-            var mainwindowPO = new MainWindowPO(Session);
+            var mainwindowPO = new MainWindowPO(Session, this);
             var selectEdgeColorDialogPO = mainwindowPO.Click_SelectEdgeColorButton();
             selectEdgeColorDialogPO.Click_Solid();
             selectEdgeColorDialogPO.BlueDADA.Initialize();

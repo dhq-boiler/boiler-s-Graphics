@@ -1,4 +1,4 @@
-﻿using boilersE2E;
+﻿using boilersE2E.NUnit;
 using NLog;
 using NUnit.Framework;
 using OpenQA.Selenium;
@@ -13,15 +13,18 @@ namespace boilersGraphics.Test.UITests.PageObjects
 {
     public abstract class PageObjectBase
     {
-        private static readonly Logger s_logger = LogManager.GetCurrentClassLogger();
+        private static readonly NLog.Logger s_logger = LogManager.GetCurrentClassLogger();
 
         public const int TimeoutMinutes = 5;
 
         protected static WindowsDriver<WindowsElement> Session { get; private set; }
 
-        public PageObjectBase(WindowsDriver<WindowsElement> session)
+        protected E2ETestFixture TestFixture { get; private set; }
+
+        public PageObjectBase(WindowsDriver<WindowsElement> session, E2ETestFixture testFixture)
         {
             Session = session;
+            TestFixture = testFixture;
         }
 
         public static WindowsElement WaitForObject(Func<WindowsElement> function, int timeOutSeconds = 10)
@@ -57,100 +60,24 @@ namespace boilersGraphics.Test.UITests.PageObjects
             }
         }
 
-        public static void InputText(WindowsElement element, string text)
+        public void InputText(WindowsElement element, string text)
         {
-            Util.SetTextToClipboard(text);
-            element.SendKeys(Keys.Control + "v" + Keys.Control);
+            TestFixture.InputText(element, text);
         }
 
-        public static WindowsElement GetElementByAutomationID(string automationId, int timeOutSeconds = 10)
+        public  WindowsElement GetElementByAutomationID(string automationId, int timeOutSeconds = 10)
         {
-            string automationId2 = automationId;
-            WindowsElement element = null;
-            DefaultWait<WindowsDriver<WindowsElement>> defaultWait = new DefaultWait<WindowsDriver<WindowsElement>>(Session)
-            {
-                Timeout = TimeSpan.FromSeconds(timeOutSeconds),
-                Message = "Element with automationId \"" + automationId2 + "\" not found."
-            };
-            defaultWait.IgnoreExceptionTypes(typeof(WebDriverException));
-            try
-            {
-                defaultWait.Until(delegate (WindowsDriver<WindowsElement> Driver)
-                {
-                    try
-                    {
-                        element = Driver.FindElementByAccessibilityId(automationId2);
-                        return element != null;
-                    }
-                    catch (WebDriverException e)
-                    {
-                        return false;
-                    }
-                });
-            }
-            catch (WebDriverTimeoutException ex)
-            {
-                s_logger.Error(ex);
-                s_logger.Error("automationId:" + automationId2);
-                Assert.Fail(ex.Message);
-            }
-
-            return element;
+            return TestFixture.GetElementByAutomationID(automationId, timeOutSeconds);
         }
 
-        public static WindowsElement GetElementByName(string name, int timeOutSeconds = 10)
+        public WindowsElement GetElementByName(string name, int timeOutSeconds = 10)
         {
-            string name2 = name;
-            WindowsElement element = null;
-            DefaultWait<WindowsDriver<WindowsElement>> defaultWait = new DefaultWait<WindowsDriver<WindowsElement>>(Session)
-            {
-                Timeout = TimeSpan.FromSeconds(timeOutSeconds),
-                Message = "Element with Name \"" + name2 + "\" not found."
-            };
-            defaultWait.IgnoreExceptionTypes(typeof(WebDriverException));
-            try
-            {
-                defaultWait.Until(delegate (WindowsDriver<WindowsElement> Driver)
-                {
-                    element = Driver.FindElementByName(name2);
-                    return element != null;
-                });
-            }
-            catch (WebDriverTimeoutException ex)
-            {
-                s_logger.Error(ex);
-                s_logger.Error("Name:" + name2);
-                Assert.Fail(ex.Message);
-            }
-
-            return element;
+            return TestFixture.GetElementByName(name, timeOutSeconds);
         }
 
-        public static WindowsElement GetElementBy(By by, int timeOutSeconds = 10)
+        public  WindowsElement GetElementBy(By by, int timeOutSeconds = 10)
         {
-            By by2 = by;
-            WindowsElement element = null;
-            DefaultWait<WindowsDriver<WindowsElement>> defaultWait = new DefaultWait<WindowsDriver<WindowsElement>>(Session)
-            {
-                Timeout = TimeSpan.FromSeconds(timeOutSeconds),
-                Message = "Element with By " + by2.ToString() + " not found."
-            };
-            defaultWait.IgnoreExceptionTypes(typeof(WebDriverException));
-            try
-            {
-                defaultWait.Until(delegate (WindowsDriver<WindowsElement> Driver)
-                {
-                    element = Driver.FindElement(by2);
-                    return element != null;
-                });
-            }
-            catch (WebDriverTimeoutException ex)
-            {
-                s_logger.Error(ex);
-                Assert.Fail(ex.Message);
-            }
-
-            return element;
+            return TestFixture.GetElementBy(by, timeOutSeconds);
         }
 
         public static IEnumerable<WindowsElement> GetElementsBy(By by, int timeOutSeconds = 10)
@@ -180,56 +107,14 @@ namespace boilersGraphics.Test.UITests.PageObjects
             return elements;
         }
 
-        public static bool ExistsElementByAutomationID(string automationId, int timeOutSeconds = 10)
+        public bool ExistsElementByAutomationID(string automationId, int timeOutSeconds = 10)
         {
-            string automationId2 = automationId;
-            WindowsElement element = null;
-            DefaultWait<WindowsDriver<WindowsElement>> defaultWait = new DefaultWait<WindowsDriver<WindowsElement>>(Session)
-            {
-                Timeout = TimeSpan.FromSeconds(timeOutSeconds),
-                Message = "Element with automationId \"" + automationId2 + "\" not found."
-            };
-            defaultWait.IgnoreExceptionTypes(typeof(WebDriverException));
-            try
-            {
-                defaultWait.Until(delegate (WindowsDriver<WindowsElement> Driver)
-                {
-                    try
-                    {
-                        element = Driver.FindElementByAccessibilityId(automationId2);
-                        return element != null;
-                    }
-                    catch (WebDriverException)
-                    {
-                        return false;
-                    }
-                });
-            }
-            catch (WebDriverTimeoutException)
-            {
-            }
-            catch (WebDriverException)
-            {
-            }
-
-            return element != null;
+            return TestFixture.ExistsElementByAutomationID(automationId, timeOutSeconds);
         }
 
-        public static bool IsElementPresent(By by)
+        public bool IsElementPresent(By by)
         {
-            try
-            {
-                Session.FindElement(by);
-                return true;
-            }
-            catch (NoSuchElementException)
-            {
-                return false;
-            }
-            catch (WebDriverException)
-            {
-                return false;
-            }
+            return TestFixture.IsElementPresent(by);
         }
     }
 }

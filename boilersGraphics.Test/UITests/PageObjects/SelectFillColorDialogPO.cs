@@ -1,4 +1,5 @@
-﻿using OpenQA.Selenium.Appium.Windows;
+﻿using boilersE2E.NUnit;
+using OpenQA.Selenium.Appium.Windows;
 using OpenQA.Selenium.Interactions;
 
 namespace boilersGraphics.Test.UITests.PageObjects
@@ -12,8 +13,7 @@ namespace boilersGraphics.Test.UITests.PageObjects
         private DragAndDropAction _GreenDADA;
         private DragAndDropAction _BlueDADA;
 
-        public SelectFillColorDialogPO(WindowsDriver<WindowsElement> session)
-            : base(session)
+        public SelectFillColorDialogPO(WindowsDriver<WindowsElement> session, E2ETestFixture testFixture) : base(session, testFixture)
         { }
 
         public void Click_Solid()

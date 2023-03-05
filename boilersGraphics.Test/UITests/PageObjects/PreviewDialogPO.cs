@@ -1,4 +1,5 @@
 ﻿using boilersE2E;
+using boilersE2E.NUnit;
 using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Appium.Windows;
@@ -8,8 +9,7 @@ namespace boilersGraphics.Test.UITests.PageObjects
 {
     public class PreviewDialogPO : PageObjectBase
     {
-        public PreviewDialogPO(WindowsDriver<WindowsElement> session)
-            : base(session)
+        public PreviewDialogPO(WindowsDriver<WindowsElement> session, E2ETestFixture testFixture) : base(session, testFixture)
         { }
 
         public WindowsElement PreviewImage => GetElementBy(By.XPath($"//*/Image[@Name=\"Preview\"][@AutomationId=\"Preview\"]"));
@@ -33,7 +33,7 @@ namespace boilersGraphics.Test.UITests.PageObjects
             {
                 Assert.Fail($"まずInitializeActionsメソッドでアクションを初期化する必要があります。");
             }
-            action.InputText(GetElementByAutomationID("filename"), filename);
+            TestFixture.InputText(GetElementByAutomationID("filename"), filename);
         }
 
         public void Click_PerformExportButton()

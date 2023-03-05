@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using boilersE2E.NUnit;
+using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Appium;
 using OpenQA.Selenium.Appium.Windows;
@@ -10,9 +11,10 @@ namespace boilersGraphics.Test.UITests.PageObjects
 {
     public class MainWindowPO : PageObjectBase
     {
-        public MainWindowPO(WindowsDriver<WindowsElement> session)
-            : base(session)
-        { }
+        public MainWindowPO(WindowsDriver<WindowsElement> session, E2ETestFixture testFixture)
+            : base(session, testFixture)
+        { 
+        }
 
         public void SaveCanvas(string filename)
         {
@@ -21,19 +23,21 @@ namespace boilersGraphics.Test.UITests.PageObjects
 
         public MessageBoxPO Click_LoadButton()
         {
-            GetElementByAutomationID("Load").Click();
-            return new MessageBoxPO(Session);
+            var loadButton = GetElementByAutomationID("Load", 20);
+            loadButton.Click();
+            loadButton.Click();
+            return new MessageBoxPO(Session, TestFixture);
         }
 
         public ExportDialogPO Click_ExportButton()
         {
             GetElementByAutomationID("Export", 20).Click();
-            return new ExportDialogPO(Session);
+            return new ExportDialogPO(Session, TestFixture);
         }
 
         public void Click_EdgeThicknessComboBox()
         {
-            GetElementByAutomationID("EdgeThickness").Click();
+            GetElementByAutomationID("EdgeThickness", 20).Click();
         }
 
         //public enum EdgeThicknessComboBoxItem
@@ -65,14 +69,14 @@ namespace boilersGraphics.Test.UITests.PageObjects
 
         public SelectEdgeColorDialogPO Click_SelectEdgeColorButton()
         {
-            GetElementByAutomationID("SelectEdgeColor").Click();
-            return new SelectEdgeColorDialogPO(Session);
+            GetElementByAutomationID("SelectEdgeColor", 20).Click();
+            return new SelectEdgeColorDialogPO(Session, TestFixture);
         }
 
         public SelectFillColorDialogPO Click_SelectFillColorButton()
         {
-            GetElementByAutomationID("SelectFillColor").Click();
-            return new SelectFillColorDialogPO(Session);
+            GetElementByAutomationID("SelectFillColor", 20).Click();
+            return new SelectFillColorDialogPO(Session, TestFixture);
         }
 
         public WindowsElement Canvas => GetElementBy(By.XPath("//Pane[@Name=\"DesignerScrollViewer\"][@AutomationId=\"DesignerScrollViewer\"]/Thumb[@AutomationId=\"PART_DragThumb\"]"));
@@ -83,68 +87,68 @@ namespace boilersGraphics.Test.UITests.PageObjects
 
         public void Click_PointerTool()
         {
-            GetElementByName("pointer").Click();
+            GetElementByName("pointer", 20).Click();
         }
 
         public void Click_LassoTool()
         {
-            GetElementByName("lasso").Click();
+            GetElementByName("lasso", 20).Click();
         }
 
         public void Click_StraightLineTool()
         {
-            GetElementByName("straightline").Click();
+            GetElementByName("straightline", 20).Click();
         }
 
         public void Click_RectangleTool()
         {
-            GetElementByName("rectangle").Click();
+            GetElementByName("rectangle", 20).Click();
         }
 
         public void Click_EllipseTool()
         {
-            GetElementByName("ellipse").Click();
+            GetElementByName("ellipse", 20).Click();
         }
 
         public PictureOpenFileDialogPO Click_PictureTool()
         {
-            GetElementByName("picture").Click();
-            return new PictureOpenFileDialogPO(Session);
+            GetElementByName("picture", 20).Click();
+            return new PictureOpenFileDialogPO(Session, TestFixture);
         }
 
         public void Click_LetterTool()
         {
-            GetElementByName("letter").Click();
+            GetElementByName("letter", 20).Click();
         }
 
         public void Click_LetterVerticalTool()
         {
-            GetElementByName("letter-vertical").Click();
+            GetElementByName("letter-vertical", 20).Click();
         }
 
         public void Click_PolygonTool()
         {
-            GetElementByName("polygon").Click();
+            GetElementByName("polygon", 20).Click();
         }
 
         public void Click_BezierTool()
         {
-            GetElementByName("bezier").Click();
+            GetElementByName("bezier", 20).Click();
         }
 
         public void Click_SnapPointTool()
         {
-            GetElementByName("snappoint").Click();
+            GetElementByName("snappoint", 20).Click();
         }
 
         public void Click_BrushTool()
         {
-            GetElementByName("brush").Click();
+            GetElementByName("brush", 20).Click();
         }
 
         public void Click_EraserTool()
         {
-            GetElementByName("eraser").Click();
+            GetElementByName("eraser", 20).Click();
         }
 
         public void Click_SliceTool()
@@ -154,22 +158,22 @@ namespace boilersGraphics.Test.UITests.PageObjects
 
         public void Click_PolyBezierTool()
         {
-            GetElementByName("polybezier").Click();
+            GetElementByName("polybezier", 20).Click();
         }
 
         public void Click_PieTool()
         {
-            GetElementByName("pie").Click();
+            GetElementByName("pie", 20).Click();
         }
 
         public void Click_DropperTool()
         {
-            GetElementByName("dropper").Click();
+            GetElementByName("dropper", 20).Click();
         }
 
         public void Click_CanvasModifierTool()
         {
-            GetElementByName("canvasModifier").Click();
+            GetElementByName("canvasModifier", 20).Click();
         }
 
         private Actions action;
@@ -233,9 +237,9 @@ namespace boilersGraphics.Test.UITests.PageObjects
             action.Perform();
         }
 
-        public string Coordinate => GetElementByAutomationID("Coordinate").Text;
-        public string CurrentOperation => GetElementByAutomationID("CurrentOperation").Text;
-        public string Details => GetElementByAutomationID("Details").Text;
-        public string Message => GetElementByAutomationID("Message").Text;
+        public string Coordinate => GetElementByAutomationID("Coordinate", 20).Text;
+        public string CurrentOperation => GetElementByAutomationID("CurrentOperation", 20).Text;
+        public string Details => GetElementByAutomationID("Details", 20).Text;
+        public string Message => GetElementByAutomationID("Message", 20).Text;
     }
 }

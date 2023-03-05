@@ -1,4 +1,5 @@
 ﻿using boilersE2E;
+using boilersE2E.NUnit;
 using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Appium.Windows;
@@ -8,8 +9,7 @@ namespace boilersGraphics.Test.UITests.PageObjects
 {
     public class PictureOpenFileDialogPO : PageObjectBase
     {
-        public PictureOpenFileDialogPO(WindowsDriver<WindowsElement> session)
-            : base(session)
+        public PictureOpenFileDialogPO(WindowsDriver<WindowsElement> session, E2ETestFixture testFixture) : base(session, testFixture)
         { }
 
         private Actions action;
@@ -34,7 +34,7 @@ namespace boilersGraphics.Test.UITests.PageObjects
             {
                 Assert.Fail($"まずInitializeActionsメソッドでアクションを初期化する必要があります。");
             }
-            action.InputText(GetElementByAutomationID("1148"), filename);
+            TestFixture.InputText(GetElementByAutomationID("1148"), filename);
         }
 
         public void Click_OpenButton()

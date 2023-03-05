@@ -1,6 +1,5 @@
 ﻿using boilersGraphics.Test.UITests.PageObjects;
 using NUnit.Framework;
-using OpenCvSharp;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -16,20 +15,17 @@ namespace boilersGraphics.Test.UITests
         [Retry(3)]
         public void レイヤー１のアピアランスが正しく映っている()
         {
-            var mainwindowPO = new MainWindowPO(Session);
+            var mainwindowPO = new MainWindowPO(Session, this);
             var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var loadFilePath = $"{dir}\\XmlFiles\\Vincent_Willem_van_Gogh_127.xml";
             var msgboxPO = mainwindowPO.Click_LoadButton();
             var loaddialogPO = msgboxPO.Click_OKButton();
-            loaddialogPO.InitializeActions();
-            loaddialogPO.Focus_FileName();
             loaddialogPO.Input_FileName(loadFilePath);
             loaddialogPO.Click_OpenButton();
-            loaddialogPO.Perform();
 
             Task.Delay(10000).Wait();
 
-            var layerswindowPO = new LayersWindowPO(Session);
+            var layerswindowPO = new LayersWindowPO(Session, this);
 
             foreach (var layerItem in layerswindowPO.LayerItems)
             {
@@ -56,20 +52,17 @@ namespace boilersGraphics.Test.UITests
         [Retry(3)]
         public void アイテム１のアピアランスが正しく映っている()
         {
-            var mainwindowPO = new MainWindowPO(Session);
+            var mainwindowPO = new MainWindowPO(Session, this);
             var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var loadFilePath = $"{dir}\\XmlFiles\\Vincent_Willem_van_Gogh_127.xml";
             var msgboxPO = mainwindowPO.Click_LoadButton();
             var loaddialogPO = msgboxPO.Click_OKButton();
-            loaddialogPO.InitializeActions();
-            loaddialogPO.Focus_FileName();
             loaddialogPO.Input_FileName(loadFilePath);
             loaddialogPO.Click_OpenButton();
-            loaddialogPO.Perform();
 
             Task.Delay(10000).Wait();
 
-            var layerswindowPO = new LayersWindowPO(Session);
+            var layerswindowPO = new LayersWindowPO(Session, this);
 
             foreach (var layerItem in layerswindowPO.LayerItems)
             {

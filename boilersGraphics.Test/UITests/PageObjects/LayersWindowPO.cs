@@ -1,4 +1,5 @@
 ﻿using boilersE2E;
+using boilersE2E.NUnit;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Appium.Windows;
 using System;
@@ -10,15 +11,15 @@ namespace boilersGraphics.Test.UITests.PageObjects
 {
     public class LayersWindowPO : PageObjectBase
     {
-        public LayersWindowPO(WindowsDriver<WindowsElement> session) : base(session)
-        {
-        }
+        public LayersWindowPO(WindowsDriver<WindowsElement> session, E2ETestFixture testFixture)
+            : base(session, testFixture)
+        { }
 
         public class LayerItemPO : PageObjectBase
         {
             private readonly WindowsElement x;
 
-            public LayerItemPO(WindowsDriver<WindowsElement> session, WindowsElement x) : base(session)
+            public LayerItemPO(WindowsDriver<WindowsElement> session, E2ETestFixture testFixture, WindowsElement x) : base(session, testFixture)
             {
                 this.x = x;
             }
@@ -54,9 +55,9 @@ namespace boilersGraphics.Test.UITests.PageObjects
                 }
             }
 
-            public IEnumerable<LayerItemPO> LayerItems => GetElementsBy(By.XPath("//Custom[@AutomationId=\"DiagramControl\"]/Custom[@AutomationId=\"layers\"]/Group[@ClassName=\"Expander\"]/Tree[@AutomationId=\"LayersTreeView\"]/TreeItem"), 60 * 5).Select(x => new LayerItemPO(Session, x));
+            public IEnumerable<LayerItemPO> LayerItems => GetElementsBy(By.XPath("//Custom[@AutomationId=\"DiagramControl\"]/Custom[@AutomationId=\"layers\"]/Group[@ClassName=\"Expander\"]/Tree[@AutomationId=\"LayersTreeView\"]/TreeItem"), 60 * 5).Select(x => new LayerItemPO(Session, TestFixture, x));
         }
 
-        public IEnumerable<LayerItemPO> LayerItems => GetElementsBy(By.XPath("//Custom[@AutomationId=\"DiagramControl\"]/Custom[@AutomationId=\"layers\"]/Group[@ClassName=\"Expander\"]/Tree[@AutomationId=\"LayersTreeView\"]/TreeItem"), 60 * 5).Select(x => new LayerItemPO(Session, x));
+        public IEnumerable<LayerItemPO> LayerItems => GetElementsBy(By.XPath("//Custom[@AutomationId=\"DiagramControl\"]/Custom[@AutomationId=\"layers\"]/Group[@ClassName=\"Expander\"]/Tree[@AutomationId=\"LayersTreeView\"]/TreeItem"), 60 * 5).Select(x => new LayerItemPO(Session, TestFixture, x));
     }
 }
