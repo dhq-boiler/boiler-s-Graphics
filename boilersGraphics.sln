@@ -6,6 +6,7 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "boilersGraphics", "boilersGraphics\boilersGraphics.csproj", "{22E14D88-7443-4526-9C02-3523E08FFA83}"
 	ProjectSection(ProjectDependencies) = postProject
 		{51B5A111-EBF3-4925-BC49-1A0FF3F9D25F} = {51B5A111-EBF3-4925-BC49-1A0FF3F9D25F}
+		{BAE0A8D6-84FE-4398-A2F0-E77A5DE25C11} = {BAE0A8D6-84FE-4398-A2F0-E77A5DE25C11}
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "boilersGraphics.Test", "boilersGraphics.Test\boilersGraphics.Test.csproj", "{8EDF4429-251A-416D-BB68-93F227191BCF}"
