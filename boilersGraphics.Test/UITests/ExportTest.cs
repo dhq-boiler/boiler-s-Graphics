@@ -68,6 +68,9 @@ namespace boilersGraphics.Test.UITests
             loaddialogPO.Input_FileName(loadFilePath);
             loaddialogPO.Click_OpenButton();
 
+            //ファイルロード待ち、10秒
+            await Task.Delay(10000);
+
             LogManager.GetCurrentClassLogger().Info("H");
             TakeScreenShot("SCREENSHOT_H.png");
             var exportdialogPO = mainwindowPO.Click_ExportButton();
