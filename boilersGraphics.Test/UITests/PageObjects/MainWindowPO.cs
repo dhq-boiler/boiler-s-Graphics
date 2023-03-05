@@ -23,7 +23,9 @@ namespace boilersGraphics.Test.UITests.PageObjects
 
         public MessageBoxPO Click_LoadButton()
         {
-            GetElementByAutomationID("Load", 20).Click();
+            var loadButton = GetElementByAutomationID("Load", 20);
+            loadButton.Click();
+            loadButton.Click();
             return new MessageBoxPO(Session, TestFixture);
         }
 

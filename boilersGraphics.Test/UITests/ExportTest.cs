@@ -3,7 +3,6 @@ using NLog;
 using NUnit.Framework;
 using OpenCvSharp;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -52,26 +51,23 @@ namespace boilersGraphics.Test.UITests
         {
             var mainwindowPO = new MainWindowPO(Session, this);
 
-            TakeScreenShot("SCREENSHOT_A.png");
             LogManager.GetCurrentClassLogger().Info("A");
+            TakeScreenShot("SCREENSHOT_A.png");
+            var msgboxPO = mainwindowPO.Click_LoadButton();
+            LogManager.GetCurrentClassLogger().Info("B");
+            TakeScreenShot("SCREENSHOT_B.png");
+            var loaddialogPO = msgboxPO.Click_OKButton();
+            LogManager.GetCurrentClassLogger().Info("C");
+            TakeScreenShot("SCREENSHOT_C.png");
             var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var loadFilePath = $"{dir}\\XmlFiles\\checker_pattern.xml";
             var exportFilePath = $"{dir}\\ExportTest2.jpg";
-
-            LogManager.GetCurrentClassLogger().Info("B");
-            TakeScreenShot("SCREENSHOT_B.png");
-            var msgboxPO = mainwindowPO.Click_LoadButton();
-            LogManager.GetCurrentClassLogger().Info("C");
-            TakeScreenShot("SCREENSHOT_C.png");
-            var loaddialogPO = msgboxPO.Click_OKButton();
             LogManager.GetCurrentClassLogger().Info("D");
             TakeScreenShot("SCREENSHOT_D.png");
-            loaddialogPO.Focus_FileName();
+
             loaddialogPO.Input_FileName(loadFilePath);
             loaddialogPO.Click_OpenButton();
 
-            ////180秒の執行猶予を与える
-            //GetElementByName("Export", 180);
             LogManager.GetCurrentClassLogger().Info("H");
             TakeScreenShot("SCREENSHOT_H.png");
             var exportdialogPO = mainwindowPO.Click_ExportButton();
@@ -159,14 +155,11 @@ namespace boilersGraphics.Test.UITests
             var msgboxPO = mainwindowPO.Click_LoadButton();
             var loaddialogPO = msgboxPO.Click_OKButton();
 
-            loaddialogPO.Focus_FileName();
             loaddialogPO.Input_FileName(loadFilePath);
             loaddialogPO.Click_OpenButton();
 
             TakeScreenShot("SCREENSHOT_GetDesignerCanvas.png");
 
-            ////180秒の執行猶予を与える
-            //GetElementByName("slice", 180);
             mainwindowPO.Click_SliceTool();
             mainwindowPO.InitializeActions();
             mainwindowPO.MoveToElement(100, 100);

@@ -16,7 +16,6 @@ namespace boilersGraphics.Test.UITests
             var mainwindowPO = new MainWindowPO(Session, this);
             var msgboxPO = mainwindowPO.Click_LoadButton();
             var loaddialogPO = msgboxPO.Click_OKButton();
-            loaddialogPO.Focus_FileName();
             var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var loadFilePath = $"{dir}\\XmlFiles\\rectangle_ellipse_star.xml";
             loaddialogPO.Input_FileName(loadFilePath);
@@ -39,7 +38,6 @@ namespace boilersGraphics.Test.UITests
             var mainwindowPO = new MainWindowPO(Session, this);
             var msgboxPO = mainwindowPO.Click_LoadButton();
             var loaddialogPO = msgboxPO.Click_OKButton();
-            loaddialogPO.Focus_FileName();
             var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var loadFilePath = $"{dir}\\XmlFiles\\rectangle_ellipse_star.xml";
             loaddialogPO.Input_FileName(loadFilePath);
@@ -75,7 +73,6 @@ namespace boilersGraphics.Test.UITests
             var mainwindowPO = new MainWindowPO(Session, this);
             var msgboxPO = mainwindowPO.Click_LoadButton();
             var loaddialogPO = msgboxPO.Click_OKButton();
-            loaddialogPO.Focus_FileName();
             var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var loadFilePath = $"{dir}\\XmlFiles\\rectangle_ellipse_star.xml";
             loaddialogPO.Input_FileName(loadFilePath);

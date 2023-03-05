@@ -1,6 +1,5 @@
 ﻿using boilersGraphics.Test.UITests.PageObjects;
 using NUnit.Framework;
-using OpenCvSharp;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -21,7 +20,6 @@ namespace boilersGraphics.Test.UITests
             var loadFilePath = $"{dir}\\XmlFiles\\Vincent_Willem_van_Gogh_127.xml";
             var msgboxPO = mainwindowPO.Click_LoadButton();
             var loaddialogPO = msgboxPO.Click_OKButton();
-            loaddialogPO.Focus_FileName();
             loaddialogPO.Input_FileName(loadFilePath);
             loaddialogPO.Click_OpenButton();
 
@@ -59,7 +57,6 @@ namespace boilersGraphics.Test.UITests
             var loadFilePath = $"{dir}\\XmlFiles\\Vincent_Willem_van_Gogh_127.xml";
             var msgboxPO = mainwindowPO.Click_LoadButton();
             var loaddialogPO = msgboxPO.Click_OKButton();
-            loaddialogPO.Focus_FileName();
             loaddialogPO.Input_FileName(loadFilePath);
             loaddialogPO.Click_OpenButton();
 

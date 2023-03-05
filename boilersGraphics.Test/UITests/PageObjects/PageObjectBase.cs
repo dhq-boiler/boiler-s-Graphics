@@ -60,8 +60,9 @@ namespace boilersGraphics.Test.UITests.PageObjects
             }
         }
 
-        public static void InputText(WindowsElement element, string text)
+        public void InputText(WindowsElement element, string text)
         {
+            TestFixture.InputText(element, text);
         }
 
         public  WindowsElement GetElementByAutomationID(string automationId, int timeOutSeconds = 10)
