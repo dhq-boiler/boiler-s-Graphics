@@ -89,7 +89,7 @@ namespace boilersGraphics.ViewModels.ColorCorrect
 
         public ReactiveCommand<DragDeltaEventArgs> DragDeltaCommand { get; } = new();
 
-        public ReactivePropertySlim<Channel> TargetChannel { get; } = new(Channel.GrayScale);
+        public ReactivePropertySlim<Channel> TargetChannel { get; } = new(Channel.RGB);
 
         public ReactiveCommand<SelectionChangedEventArgs> TargetChannelChangedCommand { get; } = new();
 
@@ -101,7 +101,7 @@ namespace boilersGraphics.ViewModels.ColorCorrect
 
         public class Curve : BindableBase
         {
-            public ReactivePropertySlim<Channel> TargetChannel { get; } = new();
+            public ReactivePropertySlim<Channel> TargetChannel { get; } = new(Channel.RGB);
 
             public ReactiveCollection<Point> Points { get; set; } = new();
 
@@ -161,8 +161,8 @@ namespace boilersGraphics.ViewModels.ColorCorrect
             WhiteDropperBehavior = new ToneCurveDropperBehavior(this, Colors.White, GetCursorFromResource("Assets/img/dropper_white.cur"));
 
             Curve curve = new RGBCurve();
-            curve.TargetChannel.Value = Channel.GrayScale;
-            curve.Color.Value = Channel.GrayScale.Brush;
+            curve.TargetChannel.Value = Channel.RGB;
+            curve.Color.Value = Channel.RGB.Brush;
             curve.Points.Add(new Point(0, 255));
             curve.Points.Add(new Point(255 / 2, 255 / 2));
             curve.Points.Add(new Point(255, 0));
@@ -377,7 +377,7 @@ namespace boilersGraphics.ViewModels.ColorCorrect
                 {
                     if (y > v)
                     {
-                        if (value == Channel.GrayScale)
+                        if (value == Channel.RGB)
                         {
                             *(p_ret + y * step + x * 4 + 0) = (byte)x; //B
                             *(p_ret + y * step + x * 4 + 1) = (byte)x; //G
