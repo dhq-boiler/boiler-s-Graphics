@@ -62,9 +62,6 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="BgffThumbnailProvider.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="Images\SplashScreen.scale-200.png" />
     <Content Include="Images\LockScreenLogo.scale-200.png" />
     <Content Include="Images\Square150x150Logo.png" />
