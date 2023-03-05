@@ -84,14 +84,13 @@ steps:
        $doc.Save($path)
   displayName: 'Update Version in Package.appxmanifest'
 
-- task: MSBuild@1
-  displayName: 'MSBuild boilersGraphics.Msix.wapproj'
+  
+- task: DotNetCoreCLI@2
+  displayName: 'boilersGraphics.Msix.slnのビルド'
   inputs:
-    solution: 'boilersGraphics.Msix\boilersGraphics.Msix.wapproj'
-    platform: '$(buildPlatform)'
-    configuration: '$(BuildConfiguration)'
-    msbuildArguments: '/p:OutDir=$(Build.ArtifactStagingDirectory) /p:UapAppxPackageBuildMode=StoreUpload /p:AppxBundle=Never /p:AppxPackageOutput=boilersGraphics_$(Major)_$(Minor)_$(Build).msix /p:AppxPackageSigningEnabled=false /p:DebugSymbols=true'
-    clean: true
+    command: 'build'
+    projects: '$(Build.SourcesDirectory)\boilersGraphics.Msix.sln'
+    arguments: '--configuration $(BuildConfiguration) /p:Platform=$(buildPlatform) /p:OutDir=$(Build.ArtifactStagingDirectory) /p:UapAppxPackageBuildMode=StoreUpload /p:AppxBundle=Never /p:AppxPackageOutput=boilersGraphics_$(Major)_$(Minor)_$(Build).msix /p:AppxPackageSigningEnabled=false /p:DebugSymbols=true'  
 
 - task: CmdLine@2
   displayName: 'tree $(Build.ArtifactStagingDirectory) /F'
