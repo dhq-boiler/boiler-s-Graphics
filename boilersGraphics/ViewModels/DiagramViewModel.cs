@@ -188,6 +188,11 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                     }
                 }
 
+                if (first is not null && first.IsOpenedInstructionDialog.Value)
+                {
+                    return;
+                }
+
                 first?.OpenInstructionDialog();
             });
             PreviewKeyDownCommand = new DelegateCommand<KeyEventArgs>(args =>

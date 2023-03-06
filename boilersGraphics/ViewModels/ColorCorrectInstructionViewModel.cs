@@ -63,11 +63,13 @@ namespace boilersGraphics.ViewModels
 
         public void OnDialogClosed()
         {
+            ViewModel.Value.IsOpenedInstructionDialog.Value = false;
         }
 
         public void OnDialogOpened(IDialogParameters parameters)
         {
             ViewModel.Value = parameters.GetValue<ColorCorrectViewModel>("ViewModel");
+            ViewModel.Value.IsOpenedInstructionDialog.Value = true;
             ViewModel.Value.CCType.Subscribe(cctype =>
             {
                 switch (cctype)
