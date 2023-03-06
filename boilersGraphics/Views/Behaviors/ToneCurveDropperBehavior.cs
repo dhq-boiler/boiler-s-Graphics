@@ -101,7 +101,6 @@ namespace boilersGraphics.Views.Behaviors
             var rtb = new EffectRenderer(new WpfVisualTreeHelper()).Render(_viewModel.ViewModel.Value.Rect.Value,
                 DesignerCanvas.GetInstance(), DiagramViewModel.Instance, DiagramViewModel.Instance.BackgroundItem.Value,
                 _viewModel.ViewModel.Value, 0, _viewModel.ViewModel.Value.ZIndex.Value - 1);
-            OpenCvSharpHelper.ImShow("TEST", rtb);
             var writeableBitmap = new WriteableBitmap(rtb);
             var position = e.GetPosition(designerCanvas);
             var color = writeableBitmap.GetPixel((int)position.X, (int)position.Y);
