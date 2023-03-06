@@ -152,7 +152,7 @@ namespace boilersGraphics.ViewModels.ColorCorrect
 
         public ToneCurveViewModel()
         {
-            MainWindowViewModel.Instance.ToolBarViewModel.BlackDropperBehavior = new ToneCurveDropperBehavior(this, Colors.Black,GetCursorFromResource("Assets/img/dropper_black.cur"));
+            MainWindowViewModel.Instance.ToolBarViewModel.BlackDropperBehavior = new ToneCurveDropperBehavior(this, Colors.Black, GetCursorFromResource("Assets/img/dropper_black.cur"));
             MainWindowViewModel.Instance.ToolBarViewModel.WhiteDropperBehavior = new ToneCurveDropperBehavior(this, Colors.White, GetCursorFromResource("Assets/img/dropper_white.cur"));
 
             Curve curve = new RGBCurve();
