@@ -306,7 +306,18 @@ namespace boilersGraphics.ViewModels.ColorCorrect
         public void ResetPoints(Curve curve)
         {
             var resetPoints = new Point[] { new Point(0, 255), new Point(255, 0) };
-            curve.Points.Where(p => p.Y.Value != 0 && p.Y.Value != 255).ToList().ForEach(p => curve.Points.Remove(p));
+            if (MainWindowViewModel.Instance.ToolBarViewModel.Behaviors.Contains(MainWindowViewModel.Instance.ToolBarViewModel.BlackDropperBehavior))
+            {
+                //点(0, 255)を除く、下半分をリセット
+                curve.Points.Where(p => !(p.X.Value == 0 && p.Y.Value == 255) && p.Y.Value >= 255 / 2 && p.Y.Value <= 255)
+                                    .ToList().ForEach(p => curve.Points.Remove(p));
+            }
+            else if (MainWindowViewModel.Instance.ToolBarViewModel.Behaviors.Contains(MainWindowViewModel.Instance.ToolBarViewModel.WhiteDropperBehavior))
+            {
+                //点(255, 0)を除く、上半分をリセット
+                curve.Points.Where(p => !(p.X.Value == 255 && p.Y.Value == 0) && p.Y.Value >= 0 && p.Y.Value <= 255 / 2)
+                                    .ToList().ForEach(p => curve.Points.Remove(p));
+            }
             var except = curve.Points.ToList();
             var adds = resetPoints.Except(except);
             curve.Points.AddRange(adds);
