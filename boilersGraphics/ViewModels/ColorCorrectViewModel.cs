@@ -211,6 +211,8 @@ public class ColorCorrectViewModel : EffectViewModel
         clone.MaxValue.Value = MaxValue.Value;
         clone.ThresholdTypes.Value = ThresholdTypes.Value;
         clone.OtsuEnabled.Value = OtsuEnabled.Value;
+        clone.PathGeometryNoRotate.Value = PathGeometryNoRotate.Value;
+        clone.PathGeometryRotate.Value = PathGeometryRotate.Value;
         return clone;
     }
 

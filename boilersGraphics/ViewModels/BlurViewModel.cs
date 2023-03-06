@@ -110,6 +110,8 @@ public class BlurEffectViewModel : EffectViewModel
         clone.KernelWidth.Value = KernelWidth.Value;
         clone.KernelHeight.Value = KernelHeight.Value;
         clone.Bitmap.Value = Bitmap.Value;
+        clone.PathGeometryNoRotate.Value = PathGeometryNoRotate.Value;
+        clone.PathGeometryRotate.Value = PathGeometryRotate.Value;
         return clone;
     }
 
