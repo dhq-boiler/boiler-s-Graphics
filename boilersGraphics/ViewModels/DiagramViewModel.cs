@@ -177,6 +177,17 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
             {
                 LogManager.GetCurrentClassLogger().Trace("MouseDoubleClickCommand");
                 var first = SelectedItems.Value.FirstOrDefault();
+
+                //色調補正ツールのトーンカーブの白スポイトおよび黒スポイト機能使用中は、ダブルクリックイベントを抑制する
+                if (first is ColorCorrectViewModel cc && cc.CCType.Value == ColorCorrectType.ToneCurve)
+                {
+                    if (MainWindowViewModel.Instance.ToolBarViewModel.Behaviors.Contains(MainWindowViewModel.Instance.ToolBarViewModel.BlackDropperBehavior)
+                     || MainWindowViewModel.Instance.ToolBarViewModel.Behaviors.Contains(MainWindowViewModel.Instance.ToolBarViewModel.WhiteDropperBehavior))
+                    {
+                        return;
+                    }
+                }
+
                 first?.OpenInstructionDialog();
             });
             PreviewKeyDownCommand = new DelegateCommand<KeyEventArgs>(args =>

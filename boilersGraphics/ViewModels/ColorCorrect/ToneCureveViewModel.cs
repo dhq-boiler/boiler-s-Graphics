@@ -1,6 +1,7 @@
 ﻿using boilersGraphics.Extensions;
 using boilersGraphics.Models;
 using boilersGraphics.Views;
+using boilersGraphics.Views.Behaviors;
 using OpenCvSharp;
 using OpenCvSharp.WpfExtensions;
 using Prism.Mvvm;
@@ -10,8 +11,8 @@ using Reactive.Bindings.Extensions;
 using Rulyotano.Math.Interpolation.Bezier;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reactive.Disposables;
@@ -24,11 +25,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Resources;
-using boilersGraphics.Views.Behaviors;
 using Window = System.Windows.Window;
-using Prism.Services.Dialogs;
-using System.Collections.ObjectModel;
 
 namespace boilersGraphics.ViewModels.ColorCorrect
 {
@@ -44,8 +41,6 @@ namespace boilersGraphics.ViewModels.ColorCorrect
         public ReactiveCommand DropperWhiteEnabledCommand { get; } = new();
         public ReactiveCommand DropperBlackDisabledCommand { get; } = new();
         public ReactiveCommand DropperWhiteDisabledCommand { get; } = new();
-        public ToneCurveDropperBehavior BlackDropperBehavior { get; }
-        public ToneCurveDropperBehavior WhiteDropperBehavior { get; }
         public ReactivePropertySlim<bool> IsCheckedDropperBlack { get; } = new();
         public ReactivePropertySlim<bool> IsCheckedDropperWhite { get; } = new();
 
@@ -157,8 +152,8 @@ namespace boilersGraphics.ViewModels.ColorCorrect
 
         public ToneCurveViewModel()
         {
-            BlackDropperBehavior = new ToneCurveDropperBehavior(this, Colors.Black,GetCursorFromResource("Assets/img/dropper_black.cur"));
-            WhiteDropperBehavior = new ToneCurveDropperBehavior(this, Colors.White, GetCursorFromResource("Assets/img/dropper_white.cur"));
+            MainWindowViewModel.Instance.ToolBarViewModel.BlackDropperBehavior = new ToneCurveDropperBehavior(this, Colors.Black,GetCursorFromResource("Assets/img/dropper_black.cur"));
+            MainWindowViewModel.Instance.ToolBarViewModel.WhiteDropperBehavior = new ToneCurveDropperBehavior(this, Colors.White, GetCursorFromResource("Assets/img/dropper_white.cur"));
 
             Curve curve = new RGBCurve();
             curve.TargetChannel.Value = Channel.RGB;
@@ -264,14 +259,14 @@ namespace boilersGraphics.ViewModels.ColorCorrect
             {
                 IsCheckedDropperWhite.Value = false;
                 MainWindowViewModel.Instance.ToolBarViewModel.Behaviors.Clear();
-                MainWindowViewModel.Instance.ToolBarViewModel.Behaviors.Add(BlackDropperBehavior);
+                MainWindowViewModel.Instance.ToolBarViewModel.Behaviors.Add(MainWindowViewModel.Instance.ToolBarViewModel.BlackDropperBehavior);
                 MainWindowViewModel.Instance.ToolBarViewModel.ChangeHitTestToDisable();
             }).AddTo(_disposable);
             DropperWhiteEnabledCommand.Subscribe(_ =>
             {
                 IsCheckedDropperBlack.Value = false;
                 MainWindowViewModel.Instance.ToolBarViewModel.Behaviors.Clear();
-                MainWindowViewModel.Instance.ToolBarViewModel.Behaviors.Add(WhiteDropperBehavior);
+                MainWindowViewModel.Instance.ToolBarViewModel.Behaviors.Add(MainWindowViewModel.Instance.ToolBarViewModel.WhiteDropperBehavior);
                 MainWindowViewModel.Instance.ToolBarViewModel.ChangeHitTestToDisable();
             }).AddTo(_disposable);
             DropperBlackDisabledCommand.Subscribe(_ =>
