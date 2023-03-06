@@ -178,6 +178,8 @@ public class MosaicViewModel : EffectViewModel
         clone.ColumnPixels.Value = ColumnPixels.Value;
         clone.RowPixels.Value = RowPixels.Value;
         clone.Bitmap.Value = Bitmap.Value;
+        clone.PathGeometryNoRotate.Value = PathGeometryNoRotate.Value;
+        clone.PathGeometryRotate.Value = PathGeometryRotate.Value;
         return clone;
     }
 

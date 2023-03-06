@@ -55,7 +55,7 @@ public class Layer : LayerTreeViewItemBase, IObservable<LayerObservable>, ICompa
                     !MainWindowViewModel.Instance.ToolBarViewModel.Behaviors.Contains(MainWindowViewModel.Instance
                         .ToolBarViewModel.BrushBehavior));
 
-            temp.ObserveOn(new DispatcherScheduler(Dispatcher.CurrentDispatcher, DispatcherPriority.Render))
+            temp.ObserveOn(new DispatcherScheduler(Dispatcher.CurrentDispatcher, DispatcherPriority.ApplicationIdle))
                 .Subscribe(x => { UpdateAppearanceBothParentAndChild(); })
                 .AddTo(_disposable);
         }

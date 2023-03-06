@@ -108,6 +108,8 @@ public class NRectangleViewModel : DesignerItemViewModelBase, IRadius
         clone.RadiusX.Value = RadiusX.Value;
         clone.RadiusY.Value = RadiusY.Value;
         clone.StrokeMiterLimit.Value = StrokeMiterLimit.Value;
+        clone.PathGeometryNoRotate.Value = PathGeometryNoRotate.Value;
+        clone.PathGeometryRotate.Value = PathGeometryRotate.Value;
         return clone;
     }
 

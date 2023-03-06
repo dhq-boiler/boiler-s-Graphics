@@ -75,6 +75,8 @@ public class NEllipseViewModel : DesignerItemViewModelBase
         clone.StrokeLineJoin.Value = StrokeLineJoin.Value;
         clone.StrokeDashArray.Value = StrokeDashArray.Value;
         clone.StrokeMiterLimit.Value = StrokeMiterLimit.Value;
+        clone.PathGeometryNoRotate.Value = PathGeometryNoRotate.Value;
+        clone.PathGeometryRotate.Value = PathGeometryRotate.Value;
         return clone;
     }
 

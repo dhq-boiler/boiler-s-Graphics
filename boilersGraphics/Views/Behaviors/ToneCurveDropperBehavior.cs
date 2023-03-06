@@ -97,107 +97,130 @@ namespace boilersGraphics.Views.Behaviors
 
         private void SetColor(MouseEventArgs e)
         {
-            var designerCanvas = Application.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-            var rtb = new EffectRenderer(new WpfVisualTreeHelper()).Render(_viewModel.ViewModel.Value.Rect.Value,
-                DesignerCanvas.GetInstance(), DiagramViewModel.Instance, DiagramViewModel.Instance.BackgroundItem.Value,
-                _viewModel.ViewModel.Value, 0, _viewModel.ViewModel.Value.ZIndex.Value - 1);
-            OpenCvSharpHelper.ImShow("TEST", rtb);
-            var writeableBitmap = new WriteableBitmap(rtb);
-            var position = e.GetPosition(designerCanvas);
-            var color = writeableBitmap.GetPixel((int)position.X, (int)position.Y);
+            try
+            {
+                Kurukuru.Set(_cursor);
+                var designerCanvas = Application.Current.MainWindow.GetChildOfType<DesignerCanvas>();
+                var rtb = new EffectRenderer(new WpfVisualTreeHelper()).Render(_viewModel.ViewModel.Value.Rect.Value,
+                    DesignerCanvas.GetInstance(), DiagramViewModel.Instance, DiagramViewModel.Instance.BackgroundItem.Value,
+                    _viewModel.ViewModel.Value, 0, _viewModel.ViewModel.Value.ZIndex.Value - 1);
+                var writeableBitmap = new WriteableBitmap(rtb);
+                var position = e.GetPosition(designerCanvas);
+                var color = writeableBitmap.GetPixel((int)position.X, (int)position.Y);
 
-            var window = System.Windows.Window.GetWindow(App.Current.Windows.OfType<DialogWindow>().FirstOrDefault());
-            if (window is null)
-                return;
-            var landmarks = window.EnumerateChildOfType<LandmarkControl>().Distinct();
-            var landmark = landmarks.First(x => x.PathColor == _viewModel.Curves[1].Color.Value);
+                var window = System.Windows.Window.GetWindow(App.Current.Windows.OfType<DialogWindow>().FirstOrDefault());
+                if (window is null)
+                    return;
+                var landmarks = window.EnumerateChildOfType<LandmarkControl>().Distinct();
+                var landmark = landmarks.First(x => x.PathColor == _viewModel.Curves[1].Color.Value);
 
-            _viewModel.ResetPoints(_viewModel.Curves[1]);
-            _viewModel.AddNewPoint(_viewModel.Curves[1],
-                new ToneCurveViewModel.Point(color.B, byte.MaxValue - _color.B));
-            _viewModel.Curves[1].InOutPairs = landmark.AllScales;
+                _viewModel.ResetPoints(_viewModel.Curves[1]);
+                _viewModel.AddNewPoint(_viewModel.Curves[1],
+                    new ToneCurveViewModel.Point(color.B, byte.MaxValue - _color.B));
+                _viewModel.Curves[1].InOutPairs = landmark.AllScales;
 
-            landmark = landmarks.First(x => x.PathColor == _viewModel.Curves[2].Color.Value);
-            _viewModel.ResetPoints(_viewModel.Curves[2]);
-            _viewModel.AddNewPoint(_viewModel.Curves[2],
-                new ToneCurveViewModel.Point(color.G, byte.MaxValue - _color.G));
-            _viewModel.Curves[2].InOutPairs = landmark.AllScales;
+                landmark = landmarks.First(x => x.PathColor == _viewModel.Curves[2].Color.Value);
+                _viewModel.ResetPoints(_viewModel.Curves[2]);
+                _viewModel.AddNewPoint(_viewModel.Curves[2],
+                    new ToneCurveViewModel.Point(color.G, byte.MaxValue - _color.G));
+                _viewModel.Curves[2].InOutPairs = landmark.AllScales;
 
-            landmark = landmarks.First(x => x.PathColor == _viewModel.Curves[3].Color.Value);
-            _viewModel.ResetPoints(_viewModel.Curves[3]);
-            _viewModel.AddNewPoint(_viewModel.Curves[3],
-                new ToneCurveViewModel.Point(color.R, byte.MaxValue - _color.R));
-            _viewModel.Curves[3].InOutPairs = landmark.AllScales;
+                landmark = landmarks.First(x => x.PathColor == _viewModel.Curves[3].Color.Value);
+                _viewModel.ResetPoints(_viewModel.Curves[3]);
+                _viewModel.AddNewPoint(_viewModel.Curves[3],
+                    new ToneCurveViewModel.Point(color.R, byte.MaxValue - _color.R));
+                _viewModel.Curves[3].InOutPairs = landmark.AllScales;
 
-            _viewModel.ViewModel.Value.Render();
+                _viewModel.ViewModel.Value.Render();
+            }
+            finally
+            {
+                Kurukuru.Stop();
+            }
         }
 
         private void SetColor(StylusEventArgs e)
         {
-            var designerCanvas = Application.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-            var rtb = new EffectRenderer(new WpfVisualTreeHelper()).Render(_viewModel.ViewModel.Value.Rect.Value,
-                DesignerCanvas.GetInstance(), DiagramViewModel.Instance, DiagramViewModel.Instance.BackgroundItem.Value,
-                _viewModel.ViewModel.Value);
-            var writeableBitmap = new WriteableBitmap(rtb);
-            var position = e.GetPosition(designerCanvas);
-            var color = writeableBitmap.GetPixel((int)position.X, (int)position.Y);
+            try
+            {
+                Kurukuru.Set(_cursor);
+                var designerCanvas = Application.Current.MainWindow.GetChildOfType<DesignerCanvas>();
+                var rtb = new EffectRenderer(new WpfVisualTreeHelper()).Render(_viewModel.ViewModel.Value.Rect.Value,
+                    DesignerCanvas.GetInstance(), DiagramViewModel.Instance, DiagramViewModel.Instance.BackgroundItem.Value,
+                    _viewModel.ViewModel.Value);
+                var writeableBitmap = new WriteableBitmap(rtb);
+                var position = e.GetPosition(designerCanvas);
+                var color = writeableBitmap.GetPixel((int)position.X, (int)position.Y);
 
-            var window = System.Windows.Window.GetWindow(App.Current.Windows.OfType<DialogWindow>().First());
-            var landmarks = window.EnumerateChildOfType<LandmarkControl>().Distinct();
-            var landmark = landmarks.First(x => x.PathColor == _viewModel.Curves[1].Color.Value);
+                var window = System.Windows.Window.GetWindow(App.Current.Windows.OfType<DialogWindow>().First());
+                var landmarks = window.EnumerateChildOfType<LandmarkControl>().Distinct();
+                var landmark = landmarks.First(x => x.PathColor == _viewModel.Curves[1].Color.Value);
 
-            _viewModel.ResetPoints(_viewModel.Curves[1]);
-            _viewModel.AddNewPoint(_viewModel.Curves[1],
-                new ToneCurveViewModel.Point(color.B, byte.MaxValue - _color.B));
-            _viewModel.Curves[1].InOutPairs = landmark.AllScales;
+                _viewModel.ResetPoints(_viewModel.Curves[1]);
+                _viewModel.AddNewPoint(_viewModel.Curves[1],
+                    new ToneCurveViewModel.Point(color.B, byte.MaxValue - _color.B));
+                _viewModel.Curves[1].InOutPairs = landmark.AllScales;
 
-            landmark = landmarks.First(x => x.PathColor == _viewModel.Curves[2].Color.Value);
-            _viewModel.ResetPoints(_viewModel.Curves[2]);
-            _viewModel.AddNewPoint(_viewModel.Curves[2],
-                new ToneCurveViewModel.Point(color.G, byte.MaxValue - _color.G));
-            _viewModel.Curves[2].InOutPairs = landmark.AllScales;
+                landmark = landmarks.First(x => x.PathColor == _viewModel.Curves[2].Color.Value);
+                _viewModel.ResetPoints(_viewModel.Curves[2]);
+                _viewModel.AddNewPoint(_viewModel.Curves[2],
+                    new ToneCurveViewModel.Point(color.G, byte.MaxValue - _color.G));
+                _viewModel.Curves[2].InOutPairs = landmark.AllScales;
 
-            landmark = landmarks.First(x => x.PathColor == _viewModel.Curves[3].Color.Value);
-            _viewModel.ResetPoints(_viewModel.Curves[3]);
-            _viewModel.AddNewPoint(_viewModel.Curves[3],
-                new ToneCurveViewModel.Point(color.R, byte.MaxValue - _color.R));
-            _viewModel.Curves[3].InOutPairs = landmark.AllScales;
+                landmark = landmarks.First(x => x.PathColor == _viewModel.Curves[3].Color.Value);
+                _viewModel.ResetPoints(_viewModel.Curves[3]);
+                _viewModel.AddNewPoint(_viewModel.Curves[3],
+                    new ToneCurveViewModel.Point(color.R, byte.MaxValue - _color.R));
+                _viewModel.Curves[3].InOutPairs = landmark.AllScales;
 
-            _viewModel.ViewModel.Value.Render();
+                _viewModel.ViewModel.Value.Render();
+            }
+            finally
+            {
+                Kurukuru.Stop();
+            }
         }
 
         private void SetColor(TouchEventArgs e)
         {
-            var designerCanvas = Application.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-            var rtb = new EffectRenderer(new WpfVisualTreeHelper()).Render(_viewModel.ViewModel.Value.Rect.Value,
-                DesignerCanvas.GetInstance(), DiagramViewModel.Instance, DiagramViewModel.Instance.BackgroundItem.Value,
-                _viewModel.ViewModel.Value);
-            var writeableBitmap = new WriteableBitmap(rtb);
-            var position = e.GetTouchPoint(designerCanvas);
-            var color = writeableBitmap.GetPixel((int)position.Position.X, (int)position.Position.Y);
+            try
+            {
+                Kurukuru.Set(_cursor);
+                var designerCanvas = Application.Current.MainWindow.GetChildOfType<DesignerCanvas>();
+                var rtb = new EffectRenderer(new WpfVisualTreeHelper()).Render(_viewModel.ViewModel.Value.Rect.Value,
+                    DesignerCanvas.GetInstance(), DiagramViewModel.Instance, DiagramViewModel.Instance.BackgroundItem.Value,
+                    _viewModel.ViewModel.Value);
+                var writeableBitmap = new WriteableBitmap(rtb);
+                var position = e.GetTouchPoint(designerCanvas);
+                var color = writeableBitmap.GetPixel((int)position.Position.X, (int)position.Position.Y);
 
-            var window = System.Windows.Window.GetWindow(App.Current.Windows.OfType<DialogWindow>().First());
-            var landmarks = window.EnumerateChildOfType<LandmarkControl>().Distinct();
-            var landmark = landmarks.First(x => x.PathColor == _viewModel.Curves[1].Color.Value);
+                var window = System.Windows.Window.GetWindow(App.Current.Windows.OfType<DialogWindow>().First());
+                var landmarks = window.EnumerateChildOfType<LandmarkControl>().Distinct();
+                var landmark = landmarks.First(x => x.PathColor == _viewModel.Curves[1].Color.Value);
 
-            _viewModel.ResetPoints(_viewModel.Curves[1]);
-            _viewModel.AddNewPoint(_viewModel.Curves[1],
-                new ToneCurveViewModel.Point(color.B, byte.MaxValue - _color.B));
-            _viewModel.Curves[1].InOutPairs = landmark.AllScales;
+                _viewModel.ResetPoints(_viewModel.Curves[1]);
+                _viewModel.AddNewPoint(_viewModel.Curves[1],
+                    new ToneCurveViewModel.Point(color.B, byte.MaxValue - _color.B));
+                _viewModel.Curves[1].InOutPairs = landmark.AllScales;
 
-            landmark = landmarks.First(x => x.PathColor == _viewModel.Curves[2].Color.Value);
-            _viewModel.ResetPoints(_viewModel.Curves[2]);
-            _viewModel.AddNewPoint(_viewModel.Curves[2],
-                new ToneCurveViewModel.Point(color.G, byte.MaxValue - _color.G));
-            _viewModel.Curves[2].InOutPairs = landmark.AllScales;
+                landmark = landmarks.First(x => x.PathColor == _viewModel.Curves[2].Color.Value);
+                _viewModel.ResetPoints(_viewModel.Curves[2]);
+                _viewModel.AddNewPoint(_viewModel.Curves[2],
+                    new ToneCurveViewModel.Point(color.G, byte.MaxValue - _color.G));
+                _viewModel.Curves[2].InOutPairs = landmark.AllScales;
 
-            landmark = landmarks.First(x => x.PathColor == _viewModel.Curves[3].Color.Value);
-            _viewModel.ResetPoints(_viewModel.Curves[3]);
-            _viewModel.AddNewPoint(_viewModel.Curves[3],
-                new ToneCurveViewModel.Point(color.R, byte.MaxValue - _color.R));
-            _viewModel.Curves[3].InOutPairs = landmark.AllScales;
+                landmark = landmarks.First(x => x.PathColor == _viewModel.Curves[3].Color.Value);
+                _viewModel.ResetPoints(_viewModel.Curves[3]);
+                _viewModel.AddNewPoint(_viewModel.Curves[3],
+                    new ToneCurveViewModel.Point(color.R, byte.MaxValue - _color.R));
+                _viewModel.Curves[3].InOutPairs = landmark.AllScales;
 
-            _viewModel.ViewModel.Value.Render();
+                _viewModel.ViewModel.Value.Render();
+            }
+            finally
+            {
+                Kurukuru.Stop();
+            }
         }
     }
 }

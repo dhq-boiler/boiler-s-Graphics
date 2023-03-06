@@ -2,12 +2,14 @@
 using boilersGraphics.Helpers;
 using boilersGraphics.Properties;
 using boilersGraphics.Views;
+using boilersGraphics.Views.Behaviors;
 using Prism.Mvvm;
 using Prism.Regions;
 using Prism.Services.Dialogs;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
+using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Windows;
@@ -64,6 +66,9 @@ namespace boilersGraphics.ViewModels
         public void OnDialogClosed()
         {
             ViewModel.Value.IsOpenedInstructionDialog.Value = false;
+            MainWindowViewModel.Instance.ToolBarViewModel.Behaviors.OfType<ToneCurveDropperBehavior>().ToList().ForEach(x => MainWindowViewModel.Instance.ToolBarViewModel.Behaviors.Remove(x));
+            MainWindowViewModel.Instance.ToolBarViewModel.Behaviors.Add(MainWindowViewModel.Instance.ToolBarViewModel.DeselectBehavior);
+            MainWindowViewModel.Instance.ToolBarViewModel.ChangeHitTestToEnable();
         }
 
         public void OnDialogOpened(IDialogParameters parameters)
