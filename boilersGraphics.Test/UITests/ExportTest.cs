@@ -163,6 +163,9 @@ namespace boilersGraphics.Test.UITests
 
             TakeScreenShot("SCREENSHOT_GetDesignerCanvas.png");
 
+            //ファイルロード待ち、10秒
+            await Task.Delay(10000);
+
             mainwindowPO.Click_SliceTool();
             mainwindowPO.InitializeActions();
             mainwindowPO.MoveToElement(100, 100);
