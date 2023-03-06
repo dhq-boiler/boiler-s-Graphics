@@ -9,13 +9,13 @@ namespace boilersGraphics.ViewModels
         public static readonly Channel Red = new RedChannel();
         public static readonly Channel Green = new GreenChannel();
         public static readonly Channel Blue = new BlueChannel();
-        public static readonly Channel GrayScale = new RGBChannel();
+        public static readonly Channel RGB = new RGBChannel();
 
         public abstract Brush Brush { get; }
 
         public static IEnumerable<Channel> GetValues()
         {
-            yield return GrayScale;
+            yield return RGB;
             yield return Blue;
             yield return Green;
             yield return Red;

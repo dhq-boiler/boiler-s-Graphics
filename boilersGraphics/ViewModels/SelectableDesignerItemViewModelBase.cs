@@ -145,6 +145,8 @@ public abstract class SelectableDesignerItemViewModelBase : BindableBase, ISelec
 
     public abstract bool SupportsPropertyDialog { get; }
 
+    public ReactivePropertySlim<bool> IsOpenedInstructionDialog { get; } = new();
+
     #region IClonable
 
     public abstract object Clone();

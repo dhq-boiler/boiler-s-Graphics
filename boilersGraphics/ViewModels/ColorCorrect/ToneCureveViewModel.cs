@@ -1,6 +1,7 @@
 ﻿using boilersGraphics.Extensions;
 using boilersGraphics.Models;
 using boilersGraphics.Views;
+using boilersGraphics.Views.Behaviors;
 using OpenCvSharp;
 using OpenCvSharp.WpfExtensions;
 using Prism.Mvvm;
@@ -10,8 +11,8 @@ using Reactive.Bindings.Extensions;
 using Rulyotano.Math.Interpolation.Bezier;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reactive.Disposables;
@@ -24,11 +25,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Resources;
-using boilersGraphics.Views.Behaviors;
 using Window = System.Windows.Window;
-using Prism.Services.Dialogs;
-using System.Collections.ObjectModel;
 
 namespace boilersGraphics.ViewModels.ColorCorrect
 {
@@ -44,8 +41,6 @@ namespace boilersGraphics.ViewModels.ColorCorrect
         public ReactiveCommand DropperWhiteEnabledCommand { get; } = new();
         public ReactiveCommand DropperBlackDisabledCommand { get; } = new();
         public ReactiveCommand DropperWhiteDisabledCommand { get; } = new();
-        public ToneCurveDropperBehavior BlackDropperBehavior { get; }
-        public ToneCurveDropperBehavior WhiteDropperBehavior { get; }
         public ReactivePropertySlim<bool> IsCheckedDropperBlack { get; } = new();
         public ReactivePropertySlim<bool> IsCheckedDropperWhite { get; } = new();
 
@@ -89,7 +84,7 @@ namespace boilersGraphics.ViewModels.ColorCorrect
 
         public ReactiveCommand<DragDeltaEventArgs> DragDeltaCommand { get; } = new();
 
-        public ReactivePropertySlim<Channel> TargetChannel { get; } = new(Channel.GrayScale);
+        public ReactivePropertySlim<Channel> TargetChannel { get; } = new(Channel.RGB);
 
         public ReactiveCommand<SelectionChangedEventArgs> TargetChannelChangedCommand { get; } = new();
 
@@ -101,7 +96,7 @@ namespace boilersGraphics.ViewModels.ColorCorrect
 
         public class Curve : BindableBase
         {
-            public ReactivePropertySlim<Channel> TargetChannel { get; } = new();
+            public ReactivePropertySlim<Channel> TargetChannel { get; } = new(Channel.RGB);
 
             public ReactiveCollection<Point> Points { get; set; } = new();
 
@@ -157,12 +152,12 @@ namespace boilersGraphics.ViewModels.ColorCorrect
 
         public ToneCurveViewModel()
         {
-            BlackDropperBehavior = new ToneCurveDropperBehavior(this, Colors.Black,GetCursorFromResource("Assets/img/dropper_black.cur"));
-            WhiteDropperBehavior = new ToneCurveDropperBehavior(this, Colors.White, GetCursorFromResource("Assets/img/dropper_white.cur"));
+            MainWindowViewModel.Instance.ToolBarViewModel.BlackDropperBehavior = new ToneCurveDropperBehavior(this, Colors.Black,GetCursorFromResource("Assets/img/dropper_black.cur"));
+            MainWindowViewModel.Instance.ToolBarViewModel.WhiteDropperBehavior = new ToneCurveDropperBehavior(this, Colors.White, GetCursorFromResource("Assets/img/dropper_white.cur"));
 
             Curve curve = new RGBCurve();
-            curve.TargetChannel.Value = Channel.GrayScale;
-            curve.Color.Value = Channel.GrayScale.Brush;
+            curve.TargetChannel.Value = Channel.RGB;
+            curve.Color.Value = Channel.RGB.Brush;
             curve.Points.Add(new Point(0, 255));
             curve.Points.Add(new Point(255 / 2, 255 / 2));
             curve.Points.Add(new Point(255, 0));
@@ -264,14 +259,14 @@ namespace boilersGraphics.ViewModels.ColorCorrect
             {
                 IsCheckedDropperWhite.Value = false;
                 MainWindowViewModel.Instance.ToolBarViewModel.Behaviors.Clear();
-                MainWindowViewModel.Instance.ToolBarViewModel.Behaviors.Add(BlackDropperBehavior);
+                MainWindowViewModel.Instance.ToolBarViewModel.Behaviors.Add(MainWindowViewModel.Instance.ToolBarViewModel.BlackDropperBehavior);
                 MainWindowViewModel.Instance.ToolBarViewModel.ChangeHitTestToDisable();
             }).AddTo(_disposable);
             DropperWhiteEnabledCommand.Subscribe(_ =>
             {
                 IsCheckedDropperBlack.Value = false;
                 MainWindowViewModel.Instance.ToolBarViewModel.Behaviors.Clear();
-                MainWindowViewModel.Instance.ToolBarViewModel.Behaviors.Add(WhiteDropperBehavior);
+                MainWindowViewModel.Instance.ToolBarViewModel.Behaviors.Add(MainWindowViewModel.Instance.ToolBarViewModel.WhiteDropperBehavior);
                 MainWindowViewModel.Instance.ToolBarViewModel.ChangeHitTestToDisable();
             }).AddTo(_disposable);
             DropperBlackDisabledCommand.Subscribe(_ =>
@@ -311,7 +306,18 @@ namespace boilersGraphics.ViewModels.ColorCorrect
         public void ResetPoints(Curve curve)
         {
             var resetPoints = new Point[] { new Point(0, 255), new Point(255, 0) };
-            curve.Points.Where(p => p.Y.Value != 0 && p.Y.Value != 255).ToList().ForEach(p => curve.Points.Remove(p));
+            if (MainWindowViewModel.Instance.ToolBarViewModel.Behaviors.Contains(MainWindowViewModel.Instance.ToolBarViewModel.BlackDropperBehavior))
+            {
+                //点(0, 255)を除く、下半分をリセット
+                curve.Points.Where(p => !(p.X.Value == 0 && p.Y.Value == 255) && p.Y.Value >= 255 / 2 && p.Y.Value <= 255)
+                                    .ToList().ForEach(p => curve.Points.Remove(p));
+            }
+            else if (MainWindowViewModel.Instance.ToolBarViewModel.Behaviors.Contains(MainWindowViewModel.Instance.ToolBarViewModel.WhiteDropperBehavior))
+            {
+                //点(255, 0)を除く、上半分をリセット
+                curve.Points.Where(p => !(p.X.Value == 255 && p.Y.Value == 0) && p.Y.Value >= 0 && p.Y.Value <= 255 / 2)
+                                    .ToList().ForEach(p => curve.Points.Remove(p));
+            }
             var except = curve.Points.ToList();
             var adds = resetPoints.Except(except);
             curve.Points.AddRange(adds);
@@ -377,7 +383,7 @@ namespace boilersGraphics.ViewModels.ColorCorrect
                 {
                     if (y > v)
                     {
-                        if (value == Channel.GrayScale)
+                        if (value == Channel.RGB)
                         {
                             *(p_ret + y * step + x * 4 + 0) = (byte)x; //B
                             *(p_ret + y * step + x * 4 + 1) = (byte)x; //G

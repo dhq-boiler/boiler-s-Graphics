@@ -58,6 +58,8 @@ public class ToolBarViewModel
     public MosaicBehavior MosaicBehavior { get; } = new();
     public BlurBehavior BlurBehavior { get; } = new();
     public ColorCorrectBehavior ColorCorrectBehavior { get; } = new();
+    public ToneCurveDropperBehavior BlackDropperBehavior { get; set; }
+    public ToneCurveDropperBehavior WhiteDropperBehavior { get; set; }
 
     public NDrawPolyBezierBehavior PolyBezierBehavior { get; } = new();
 

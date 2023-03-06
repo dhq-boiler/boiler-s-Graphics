@@ -30,7 +30,7 @@ public class ColorCorrectViewModel : EffectViewModel
     }
 
     public ReactivePropertySlim<ColorCorrectType> CCType { get; } = new(ColorCorrectType.HSV);
-    public ReactivePropertySlim<Channel> TargetChannel { get; } = new(Channel.GrayScale);
+    public ReactivePropertySlim<Channel> TargetChannel { get; } = new(Channel.RGB);
 
     public ReactivePropertySlim<WriteableBitmap> Bitmap { get; } = new();
 
