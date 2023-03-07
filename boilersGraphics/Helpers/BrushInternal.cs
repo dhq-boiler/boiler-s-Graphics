@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using boilersGraphics.Controls;
+using boilersGraphics.Extensions;
+using boilersGraphics.Models;
+using boilersGraphics.ViewModels;
+using OpenCvSharp.ML;
+using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
-using boilersGraphics.Controls;
-using boilersGraphics.Extensions;
-using boilersGraphics.Models;
-using boilersGraphics.ViewModels;
 using TsOperationHistory.Extensions;
 
 namespace boilersGraphics.Helpers;
@@ -41,19 +41,27 @@ public static class BrushInternal
         FrameworkElement? views)
     {
         var item = views.DataContext as BrushViewModel;
-        mainWindowViewModel.Recorder.Current.ExecuteSetProperty(item, "PathGeometry.Value",
+        mainWindowViewModel.Recorder.Current.ExecuteSetProperty(item, "PathGeometryNoRotate.Value",
             Geometry.Combine(item.PathGeometry.Value,
                 GeometryCreator.CreateEllipse(point.X, point.Y, item.Thickness.Value), GeometryCombineMode.Union,
                 null));
+        if (currentBrush.RotationAngle.Value != 0)
+            mainWindowViewModel.Recorder.Current.ExecuteSetProperty(item, "PathGeometryRotate.Value",
+                Geometry.Combine(item.PathGeometryRotate.Value, GeometryCreator.CreateEllipse(point.X, point.Y, item.Thickness.Value), GeometryCombineMode.Union,
+                    null));
         currentBrush = item;
     }
 
     public static void Draw(MainWindowViewModel mainWindowViewModel, ref BrushViewModel currentBrush, Point point)
     {
-        mainWindowViewModel.Recorder.Current.ExecuteSetProperty(currentBrush, "PathGeometry.Value",
+        mainWindowViewModel.Recorder.Current.ExecuteSetProperty(currentBrush, "PathGeometryNoRotate.Value",
             Geometry.Combine(currentBrush.PathGeometry.Value,
                 GeometryCreator.CreateEllipse(point.X, point.Y, currentBrush.Thickness.Value),
                 GeometryCombineMode.Union, null));
+        if (currentBrush.RotationAngle.Value != 0)
+            mainWindowViewModel.Recorder.Current.ExecuteSetProperty(currentBrush, "PathGeometryRotate.Value",
+                Geometry.Combine(currentBrush.PathGeometryRotate.Value, GeometryCreator.CreateEllipse(point.X, point.Y, currentBrush.Thickness.Value), GeometryCombineMode.Union,
+                    null));
     }
 
     public static void Down(MainWindowViewModel mainWindowViewModel, DesignerCanvas AssociatedObject,
