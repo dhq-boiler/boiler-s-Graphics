@@ -5,6 +5,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using boilersGraphics.Controls;
 using boilersGraphics.Extensions;
+using boilersGraphics.Helpers;
 using boilersGraphics.Models;
 using boilersGraphics.ViewModels;
 using Microsoft.Xaml.Behaviors;
@@ -93,7 +94,9 @@ public class DropperBehavior : Behavior<DesignerCanvas>
     private static void SetFillColor(TouchEventArgs e)
     {
         var designerCanvas = Application.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-        var rtb = GetCurrentBitmap();
+        var rtb = new EffectRenderer(new WpfVisualTreeHelper()).Render(null,
+            DesignerCanvas.GetInstance(), DiagramViewModel.Instance, DiagramViewModel.Instance.BackgroundItem.Value,
+            null);
         var writeableBitmap = new WriteableBitmap(rtb);
         var position = e.GetTouchPoint(designerCanvas);
         var color = writeableBitmap.GetPixel((int)position.Position.X, (int)position.Position.Y);
@@ -104,7 +107,9 @@ public class DropperBehavior : Behavior<DesignerCanvas>
     private static void SetEdgeColor(TouchEventArgs e)
     {
         var designerCanvas = Application.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-        var rtb = GetCurrentBitmap();
+        var rtb = new EffectRenderer(new WpfVisualTreeHelper()).Render(null,
+            DesignerCanvas.GetInstance(), DiagramViewModel.Instance, DiagramViewModel.Instance.BackgroundItem.Value,
+            null);
         var writeableBitmap = new WriteableBitmap(rtb);
         var position = e.GetTouchPoint(designerCanvas);
         var color = writeableBitmap.GetPixel((int)position.Position.X, (int)position.Position.Y);
@@ -115,7 +120,9 @@ public class DropperBehavior : Behavior<DesignerCanvas>
     private static void SetFillColor(StylusEventArgs e)
     {
         var designerCanvas = Application.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-        var rtb = GetCurrentBitmap();
+        var rtb = new EffectRenderer(new WpfVisualTreeHelper()).Render(null,
+            DesignerCanvas.GetInstance(), DiagramViewModel.Instance, DiagramViewModel.Instance.BackgroundItem.Value,
+            null);
         var writeableBitmap = new WriteableBitmap(rtb);
         var position = e.GetPosition(designerCanvas);
         var color = writeableBitmap.GetPixel((int)position.X, (int)position.Y);
@@ -126,7 +133,9 @@ public class DropperBehavior : Behavior<DesignerCanvas>
     private static void SetEdgeColor(StylusEventArgs e)
     {
         var designerCanvas = Application.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-        var rtb = GetCurrentBitmap();
+        var rtb = new EffectRenderer(new WpfVisualTreeHelper()).Render(null,
+            DesignerCanvas.GetInstance(), DiagramViewModel.Instance, DiagramViewModel.Instance.BackgroundItem.Value,
+            null);
         var writeableBitmap = new WriteableBitmap(rtb);
         var position = e.GetPosition(designerCanvas);
         var color = writeableBitmap.GetPixel((int)position.X, (int)position.Y);
@@ -137,7 +146,9 @@ public class DropperBehavior : Behavior<DesignerCanvas>
     private static void SetFillColor(MouseEventArgs e)
     {
         var designerCanvas = Application.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-        var rtb = GetCurrentBitmap();
+        var rtb = new EffectRenderer(new WpfVisualTreeHelper()).Render(null,
+            DesignerCanvas.GetInstance(), DiagramViewModel.Instance, DiagramViewModel.Instance.BackgroundItem.Value,
+            null);
         var writeableBitmap = new WriteableBitmap(rtb);
         var position = e.GetPosition(designerCanvas);
         var color = writeableBitmap.GetPixel((int)position.X, (int)position.Y);
@@ -148,73 +159,13 @@ public class DropperBehavior : Behavior<DesignerCanvas>
     private static void SetEdgeColor(MouseEventArgs e)
     {
         var designerCanvas = Application.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-        var rtb = GetCurrentBitmap();
+        var rtb = new EffectRenderer(new WpfVisualTreeHelper()).Render(null,
+            DesignerCanvas.GetInstance(), DiagramViewModel.Instance, DiagramViewModel.Instance.BackgroundItem.Value,
+            null);
         var writeableBitmap = new WriteableBitmap(rtb);
         var position = e.GetPosition(designerCanvas);
         var color = writeableBitmap.GetPixel((int)position.X, (int)position.Y);
         (Application.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.EdgeBrush.Value =
             new SolidColorBrush(color);
-    }
-
-    private static RenderTargetBitmap GetCurrentBitmap()
-    {
-        var diagramViewModel = (Application.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel;
-        var designerCanvas = Application.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-        var renderTargetBitmap = new RenderTargetBitmap((int)diagramViewModel.BackgroundItem.Value.Width.Value,
-            (int)diagramViewModel.BackgroundItem.Value.Height.Value, 96, 96, PixelFormats.Pbgra32);
-        var visual = new DrawingVisual();
-        var background = diagramViewModel.BackgroundItem.Value;
-
-        using (var context = visual.RenderOpen())
-        {
-            var view = designerCanvas.GetVisualChild<FrameworkElement>(background);
-            var bounds = VisualTreeHelper.GetDescendantBounds(view);
-            var rect = bounds;
-            var brush = new VisualBrush(view);
-            brush.Stretch = Stretch.None;
-            view.UpdateLayout();
-            context.DrawRectangle(brush, null, rect);
-        }
-
-        renderTargetBitmap.Render(visual);
-
-        using (var context = visual.RenderOpen())
-        {
-            foreach (var item in diagramViewModel.AllItems.Value.Except(new SelectableDesignerItemViewModelBase[]
-                         { background }))
-            {
-                var layerItems =
-                    diagramViewModel.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x =>
-                        x.Children);
-                if (!layerItems.OfType<LayerItem>().First(x => x.Item.Value == item).IsVisible.Value)
-                    continue;
-                var view = designerCanvas.GetVisualChild<FrameworkElement>(item);
-                view.SnapsToDevicePixels = true;
-                var brush = new VisualBrush(view);
-                brush.Stretch = Stretch.None;
-                brush.TileMode = TileMode.None;
-                var rect = new Rect();
-                if (item is DesignerItemViewModelBase designerItem)
-                {
-                    var bounds = VisualTreeHelper.GetDescendantBounds(view);
-                    rect = new Rect(designerItem.Left.Value, designerItem.Top.Value, designerItem.Width.Value,
-                        designerItem.Height.Value);
-                    context.PushTransform(new RotateTransform(item.RotationAngle.Value,
-                        (item as DesignerItemViewModelBase).CenterX.Value,
-                        (item as DesignerItemViewModelBase).CenterY.Value));
-                    context.DrawRectangle(brush, null, rect);
-                    context.Pop();
-                }
-                else if (item is ConnectorBaseViewModel connector)
-                {
-                    var bounds = VisualTreeHelper.GetDescendantBounds(view);
-                    rect = new Rect(connector.LeftTop.Value, bounds.Size);
-                    context.DrawRectangle(brush, null, rect);
-                }
-            }
-        }
-
-        renderTargetBitmap.Render(visual);
-        return renderTargetBitmap;
     }
 }
