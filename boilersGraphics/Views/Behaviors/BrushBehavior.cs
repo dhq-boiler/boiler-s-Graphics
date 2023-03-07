@@ -55,7 +55,7 @@ public class BrushBehavior : Behavior<DesignerCanvas>
 
         if (e.Source == AssociatedObject)
         {
-            (AssociatedObject.DataContext as DiagramViewModel).MainWindowVM.Recorder.BeginRecode();
+            MainWindowViewModel.Instance.Recorder.BeginRecode();
 
             if (!(Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
             {
@@ -72,7 +72,7 @@ public class BrushBehavior : Behavior<DesignerCanvas>
                 currentBrush.OpenThicknessDialog();
             }
 
-            BrushInternal.Down((AssociatedObject.DataContext as DiagramViewModel).MainWindowVM, AssociatedObject,
+            BrushInternal.Down(MainWindowViewModel.Instance, AssociatedObject,
                 ref currentBrush, () => e.StylusDevice.Capture(AssociatedObject), e, point);
             downFlag = true;
             e.Handled = true;
@@ -86,7 +86,7 @@ public class BrushBehavior : Behavior<DesignerCanvas>
 
         if (e.Source == AssociatedObject)
         {
-            (AssociatedObject.DataContext as DiagramViewModel).MainWindowVM.Recorder.BeginRecode();
+            MainWindowViewModel.Instance.Recorder.BeginRecode();
 
             if (!(Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
             {
@@ -104,7 +104,7 @@ public class BrushBehavior : Behavior<DesignerCanvas>
                 currentBrush.OpenThicknessDialog();
             }
 
-            BrushInternal.Down((AssociatedObject.DataContext as DiagramViewModel).MainWindowVM, AssociatedObject,
+            BrushInternal.Down(MainWindowViewModel.Instance, AssociatedObject,
                 ref currentBrush, () => e.TouchDevice.Capture(AssociatedObject), e, point);
             downFlag = true;
         }
@@ -117,7 +117,7 @@ public class BrushBehavior : Behavior<DesignerCanvas>
 
         if (e.LeftButton == MouseButtonState.Pressed)
         {
-            (AssociatedObject.DataContext as DiagramViewModel).MainWindowVM.Recorder.BeginRecode();
+            MainWindowViewModel.Instance.Recorder.BeginRecode();
 
             if (e.Source == AssociatedObject)
             {
@@ -136,7 +136,7 @@ public class BrushBehavior : Behavior<DesignerCanvas>
                     currentBrush.OpenThicknessDialog();
                 }
 
-                BrushInternal.Down((AssociatedObject.DataContext as DiagramViewModel).MainWindowVM, AssociatedObject,
+                BrushInternal.Down(MainWindowViewModel.Instance, AssociatedObject,
                     ref currentBrush, () => e.MouseDevice.Capture(AssociatedObject), e, point);
                 downFlag = true;
             }
@@ -152,7 +152,7 @@ public class BrushBehavior : Behavior<DesignerCanvas>
             return;
 
         var point = e.GetPosition(AssociatedObject);
-        BrushInternal.Draw((AssociatedObject.DataContext as DiagramViewModel).MainWindowVM, ref currentBrush, point);
+        BrushInternal.Draw(MainWindowViewModel.Instance, ref currentBrush, point);
     }
 
     private void AssociatedObject_StylusMove(object sender, StylusEventArgs e)
@@ -161,7 +161,7 @@ public class BrushBehavior : Behavior<DesignerCanvas>
             return;
 
         var point = e.GetPosition(AssociatedObject);
-        BrushInternal.Draw((AssociatedObject.DataContext as DiagramViewModel).MainWindowVM, ref currentBrush, point);
+        BrushInternal.Draw(MainWindowViewModel.Instance, ref currentBrush, point);
     }
 
     private void AssociatedObject_MouseUp(object sender, MouseButtonEventArgs e)
@@ -169,7 +169,7 @@ public class BrushBehavior : Behavior<DesignerCanvas>
         if (!downFlag)
             return;
 
-        (AssociatedObject.DataContext as DiagramViewModel).MainWindowVM.Recorder.EndRecode();
+        MainWindowViewModel.Instance.Recorder.EndRecode();
 
         UpdateStatisticsCount();
 
@@ -183,7 +183,7 @@ public class BrushBehavior : Behavior<DesignerCanvas>
 
     private static void UpdateStatisticsCount()
     {
-        var statistics = (Application.Current.MainWindow.DataContext as MainWindowViewModel).Statistics.Value;
+        var statistics = MainWindowViewModel.Instance.Statistics.Value;
         statistics.BrushToolDrawCount++;
         var dao = new StatisticsDao();
         dao.Update(statistics);
@@ -194,7 +194,7 @@ public class BrushBehavior : Behavior<DesignerCanvas>
         if (!downFlag)
             return;
 
-        (AssociatedObject.DataContext as DiagramViewModel).MainWindowVM.Recorder.EndRecode();
+        MainWindowViewModel.Instance.Recorder.EndRecode();
 
         // release touch capture
         if (e.TouchDevice.Captured != null) AssociatedObject.ReleaseTouchCapture(e.TouchDevice);
