@@ -1,11 +1,10 @@
-﻿using System.Windows;
-using System.Windows.Input;
-using boilersGraphics.Controls;
+﻿using boilersGraphics.Controls;
 using boilersGraphics.Dao;
 using boilersGraphics.Helpers;
 using boilersGraphics.ViewModels;
 using Microsoft.Xaml.Behaviors;
 using Prism.Services.Dialogs;
+using System.Windows.Input;
 
 namespace boilersGraphics.Views.Behaviors;
 
