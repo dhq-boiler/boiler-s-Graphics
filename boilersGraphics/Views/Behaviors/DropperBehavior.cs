@@ -76,6 +76,9 @@ public class DropperBehavior : Behavior<DesignerCanvas>
         if (e.MouseDevice.LeftButton == MouseButtonState.Pressed &&
             (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)))
             SetFillColor(e);
+        else if (e.MouseDevice.LeftButton == MouseButtonState.Pressed &&
+            (Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightAlt)))
+            AddNewColorSpot(e);
         else if (e.MouseDevice.LeftButton == MouseButtonState.Pressed) SetEdgeColor(e);
     }
 
@@ -88,6 +91,9 @@ public class DropperBehavior : Behavior<DesignerCanvas>
         if (e.MouseDevice.LeftButton == MouseButtonState.Pressed &&
             (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)))
             SetFillColor(e);
+        else if (e.MouseDevice.LeftButton == MouseButtonState.Pressed &&
+            (Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightAlt)))
+            AddNewColorSpot(e);
         else if (e.MouseDevice.LeftButton == MouseButtonState.Pressed) SetEdgeColor(e);
     }
 
@@ -161,5 +167,17 @@ public class DropperBehavior : Behavior<DesignerCanvas>
         var position = e.GetPosition(designerCanvas);
         var color = writeableBitmap.GetPixel((int)position.X, (int)position.Y);
         DiagramViewModel.Instance.EdgeBrush.Value = new SolidColorBrush(color);
+    }
+
+    private static void AddNewColorSpot(MouseEventArgs e)
+    {
+        var designerCanvas = Application.Current.MainWindow.GetChildOfType<DesignerCanvas>();
+        var rtb = new EffectRenderer(new WpfVisualTreeHelper()).Render(null,
+            DesignerCanvas.GetInstance(), DiagramViewModel.Instance, DiagramViewModel.Instance.BackgroundItem.Value,
+            null);
+        var writeableBitmap = new WriteableBitmap(rtb);
+        var position = e.GetPosition(designerCanvas);
+        var color = writeableBitmap.GetPixel((int)position.X, (int)position.Y);
+        DiagramViewModel.Instance.OverwriteColorSpot(new SolidColorBrush(color));
     }
 }

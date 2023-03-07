@@ -104,4 +104,14 @@ public class ColorSpots
     public Brush ColorSpot97 { get; set; } = new SolidColorBrush(Colors.White);
     public Brush ColorSpot98 { get; set; } = new SolidColorBrush(Colors.White);
     public Brush ColorSpot99 { get; set; } = new SolidColorBrush(Colors.White);
+
+    public Brush Get(int index)
+    {
+        return typeof(ColorSpots).GetProperty($"ColorSpot{index}").GetValue(this) as Brush;
+    }
+
+    public void Set(int index, Brush value)
+    {
+        typeof(ColorSpots).GetProperty($"ColorSpot{index}").SetValue(this, value);
+    }
 }

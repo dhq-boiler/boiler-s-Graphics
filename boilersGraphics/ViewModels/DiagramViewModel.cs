@@ -4764,4 +4764,27 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     }
 
     #endregion //Duplicate
+
+    public void OverwriteColorSpot(Brush brush)
+    {
+        for (int i = 0; i < 100; i++)
+        {
+            if (OverwriteColorSpotIf(i, brush))
+            {
+                return;
+            }
+        }
+    }
+
+    private bool OverwriteColorSpotIf(int index, Brush brush)
+    {
+        var target = ColorSpots.Value.Get(index);
+        var white = new SolidColorBrush(Colors.White);
+        if (target is SolidColorBrush scb && scb.Color.Equals(white.Color) && !target.Equals(brush))
+        {
+            ColorSpots.Value.Set(index, brush);
+            return true;
+        }
+        return false;
+    }
 }
