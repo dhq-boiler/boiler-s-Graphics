@@ -100,8 +100,7 @@ public class DropperBehavior : Behavior<DesignerCanvas>
         var writeableBitmap = new WriteableBitmap(rtb);
         var position = e.GetTouchPoint(designerCanvas);
         var color = writeableBitmap.GetPixel((int)position.Position.X, (int)position.Position.Y);
-        (Application.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.FillBrush.Value =
-            new SolidColorBrush(color);
+        DiagramViewModel.Instance.FillBrush.Value = new SolidColorBrush(color);
     }
 
     private static void SetEdgeColor(TouchEventArgs e)
@@ -113,8 +112,7 @@ public class DropperBehavior : Behavior<DesignerCanvas>
         var writeableBitmap = new WriteableBitmap(rtb);
         var position = e.GetTouchPoint(designerCanvas);
         var color = writeableBitmap.GetPixel((int)position.Position.X, (int)position.Position.Y);
-        (Application.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.EdgeBrush.Value =
-            new SolidColorBrush(color);
+        DiagramViewModel.Instance.EdgeBrush.Value = new SolidColorBrush(color);
     }
 
     private static void SetFillColor(StylusEventArgs e)
@@ -126,8 +124,7 @@ public class DropperBehavior : Behavior<DesignerCanvas>
         var writeableBitmap = new WriteableBitmap(rtb);
         var position = e.GetPosition(designerCanvas);
         var color = writeableBitmap.GetPixel((int)position.X, (int)position.Y);
-        (Application.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.FillBrush.Value =
-            new SolidColorBrush(color);
+        DiagramViewModel.Instance.FillBrush.Value = new SolidColorBrush(color);
     }
 
     private static void SetEdgeColor(StylusEventArgs e)
@@ -139,8 +136,7 @@ public class DropperBehavior : Behavior<DesignerCanvas>
         var writeableBitmap = new WriteableBitmap(rtb);
         var position = e.GetPosition(designerCanvas);
         var color = writeableBitmap.GetPixel((int)position.X, (int)position.Y);
-        (Application.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.EdgeBrush.Value =
-            new SolidColorBrush(color);
+        DiagramViewModel.Instance.EdgeBrush.Value = new SolidColorBrush(color);
     }
 
     private static void SetFillColor(MouseEventArgs e)
@@ -152,8 +148,7 @@ public class DropperBehavior : Behavior<DesignerCanvas>
         var writeableBitmap = new WriteableBitmap(rtb);
         var position = e.GetPosition(designerCanvas);
         var color = writeableBitmap.GetPixel((int)position.X, (int)position.Y);
-        (Application.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.FillBrush.Value =
-            new SolidColorBrush(color);
+        DiagramViewModel.Instance.FillBrush.Value = new SolidColorBrush(color);
     }
 
     private static void SetEdgeColor(MouseEventArgs e)
@@ -165,7 +160,6 @@ public class DropperBehavior : Behavior<DesignerCanvas>
         var writeableBitmap = new WriteableBitmap(rtb);
         var position = e.GetPosition(designerCanvas);
         var color = writeableBitmap.GetPixel((int)position.X, (int)position.Y);
-        (Application.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.EdgeBrush.Value =
-            new SolidColorBrush(color);
+        DiagramViewModel.Instance.EdgeBrush.Value = new SolidColorBrush(color);
     }
 }
