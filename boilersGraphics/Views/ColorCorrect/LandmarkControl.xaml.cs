@@ -175,7 +175,7 @@ namespace boilersGraphics.Views
 
             var bezierSegments = BezierInterpolation.PointsToBezierCurves(points, IsClosedCurve);
 
-            if (bezierSegments == null || bezierSegments.Count < 1)
+            if (bezierSegments == null || bezierSegments.Segments.Count() < 1)
             {
                 //Add a line segment <this is generic for more than one line>
                 foreach (var point in points.GetRange(1, points.Count - 1))
@@ -187,7 +187,7 @@ namespace boilersGraphics.Views
             }
             else
             {
-                foreach (var bezierCurveSegment in bezierSegments)
+                foreach (var bezierCurveSegment in bezierSegments.Segments)
                 {
                     var segment = new BezierSegment
                     {

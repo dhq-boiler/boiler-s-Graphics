@@ -481,7 +481,7 @@ namespace boilersGraphics.ViewModels.ColorCorrect
 
             var _myPathSegmentCollection = new PathSegmentCollection();
 
-            if (bezierSegments == null || bezierSegments.Count < 1)
+            if (bezierSegments == null || bezierSegments.Segments.Count() < 1)
             {
                 //Add a line segment <this is generic for more than one line>
                 foreach (var point in _Points.GetRange(1, _Points.Count - 1))
@@ -493,7 +493,7 @@ namespace boilersGraphics.ViewModels.ColorCorrect
             }
             else
             {
-                foreach (var bezierCurveSegment in bezierSegments)
+                foreach (var bezierCurveSegment in bezierSegments.Segments)
                 {
                     var segment = new BezierSegment
                     {
