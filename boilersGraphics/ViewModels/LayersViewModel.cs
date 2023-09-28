@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reactive.Disposables;
-using System.Windows;
-using System.Windows.Input;
-using boilersGraphics.Dao;
+﻿using boilersGraphics.Dao;
 using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
 using boilersGraphics.Models;
@@ -16,6 +10,12 @@ using Prism.Mvvm;
 using Prism.Services.Dialogs;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reactive.Disposables;
+using System.Windows;
+using System.Windows.Input;
 using TsOperationHistory.Extensions;
 
 namespace boilersGraphics.ViewModels;

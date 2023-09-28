@@ -1,10 +1,10 @@
-﻿using System.Linq;
+﻿using boilersGraphics.Extensions;
+using boilersGraphics.Models;
+using boilersGraphics.ViewModels;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
-using boilersGraphics.Extensions;
-using boilersGraphics.Models;
-using boilersGraphics.ViewModels;
 
 namespace boilersGraphics.AttachedProperties;
 

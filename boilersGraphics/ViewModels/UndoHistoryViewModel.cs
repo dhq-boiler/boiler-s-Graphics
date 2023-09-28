@@ -1,4 +1,10 @@
-﻿using System;
+﻿using boilersGraphics.Properties;
+using boilersGraphics.Views;
+using Prism.Mvvm;
+using Prism.Services.Dialogs;
+using Reactive.Bindings;
+using Reactive.Bindings.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -7,12 +13,6 @@ using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using boilersGraphics.Properties;
-using boilersGraphics.Views;
-using Prism.Mvvm;
-using Prism.Services.Dialogs;
-using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
 using TsOperationHistory;
 using TsOperationHistory.Internal;
 

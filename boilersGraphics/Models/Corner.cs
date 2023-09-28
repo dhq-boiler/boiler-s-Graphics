@@ -1,6 +1,6 @@
-﻿using System.Windows;
-using Prism.Mvvm;
+﻿using Prism.Mvvm;
 using Reactive.Bindings;
+using System.Windows;
 
 namespace boilersGraphics.Models;
 

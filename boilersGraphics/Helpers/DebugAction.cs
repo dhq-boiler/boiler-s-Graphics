@@ -1,6 +1,6 @@
-﻿using System.Diagnostics;
+﻿using Microsoft.Xaml.Behaviors;
+using System.Diagnostics;
 using System.Windows;
-using Microsoft.Xaml.Behaviors;
 
 namespace boilersGraphics.Helpers;
 

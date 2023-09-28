@@ -1,6 +1,6 @@
-﻿using System;
+﻿using boilersGraphics.Exceptions;
+using System;
 using System.Windows.Media;
-using boilersGraphics.Exceptions;
 
 namespace boilersGraphics.Helpers;
 

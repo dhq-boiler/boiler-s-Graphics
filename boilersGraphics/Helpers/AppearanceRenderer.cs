@@ -1,5 +1,4 @@
-﻿using boilersGraphics.Adorners;
-using boilersGraphics.Controls;
+﻿using boilersGraphics.Controls;
 using boilersGraphics.ViewModels;
 using NLog;
 using System;
@@ -9,7 +8,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace boilersGraphics.Helpers
 {

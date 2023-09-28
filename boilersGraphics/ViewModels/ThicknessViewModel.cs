@@ -1,9 +1,9 @@
-﻿using System;
-using System.Reactive.Disposables;
-using Prism.Mvvm;
+﻿using Prism.Mvvm;
 using Prism.Services.Dialogs;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
+using System;
+using System.Reactive.Disposables;
 
 namespace boilersGraphics.ViewModels;
 

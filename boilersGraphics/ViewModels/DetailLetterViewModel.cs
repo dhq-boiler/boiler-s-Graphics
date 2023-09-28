@@ -1,8 +1,8 @@
-﻿using System.Linq;
+﻿using boilersGraphics.Models;
+using Prism.Regions;
+using System.Linq;
 using System.Windows;
 using System.Windows.Media;
-using boilersGraphics.Models;
-using Prism.Regions;
 
 namespace boilersGraphics.ViewModels;
 

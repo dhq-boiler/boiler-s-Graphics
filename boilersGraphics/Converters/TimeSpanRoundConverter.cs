@@ -1,7 +1,7 @@
-﻿using System;
+﻿using boilersGraphics.Extensions;
+using System;
 using System.Globalization;
 using System.Windows.Data;
-using boilersGraphics.Extensions;
 
 namespace boilersGraphics.Converters;
 

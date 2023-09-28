@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Prism.Mvvm;
+using System;
 using System.Xml.Serialization;
-using Prism.Mvvm;
 
 namespace boilersGraphics.Models;
 

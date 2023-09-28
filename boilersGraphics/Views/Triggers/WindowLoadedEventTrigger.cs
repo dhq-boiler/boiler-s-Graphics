@@ -1,5 +1,5 @@
-﻿using System;
-using Microsoft.Xaml.Behaviors;
+﻿using Microsoft.Xaml.Behaviors;
+using System;
 
 namespace boilersGraphics.Views.Triggers;
 

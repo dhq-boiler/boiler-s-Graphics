@@ -1,16 +1,16 @@
-﻿using System;
+﻿using boilersGraphics.Models;
+using Prism.Commands;
+using Prism.Mvvm;
+using Prism.Services.Dialogs;
+using Reactive.Bindings;
+using Reactive.Bindings.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Windows;
 using System.Windows.Input;
-using boilersGraphics.Models;
-using Prism.Commands;
-using Prism.Mvvm;
-using Prism.Services.Dialogs;
-using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
 
 namespace boilersGraphics.ViewModels;
 

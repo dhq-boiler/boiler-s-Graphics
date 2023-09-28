@@ -1,17 +1,16 @@
 ﻿using boilersGraphics.Controls;
 using boilersGraphics.Extensions;
-using boilersGraphics.Models;
+using boilersGraphics.Helpers;
 using boilersGraphics.ViewModels;
 using boilersGraphics.ViewModels.ColorCorrect;
 using Microsoft.Xaml.Behaviors;
 using NLog;
+using Prism.Services.Dialogs;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using boilersGraphics.Helpers;
-using Prism.Services.Dialogs;
 
 namespace boilersGraphics.Views.Behaviors
 {

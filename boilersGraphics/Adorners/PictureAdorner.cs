@@ -1,4 +1,10 @@
-﻿using System;
+﻿using boilersGraphics.Controls;
+using boilersGraphics.Dao;
+using boilersGraphics.Extensions;
+using boilersGraphics.Helpers;
+using boilersGraphics.Models;
+using boilersGraphics.ViewModels;
+using System;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -6,12 +12,6 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using boilersGraphics.Controls;
-using boilersGraphics.Dao;
-using boilersGraphics.Extensions;
-using boilersGraphics.Helpers;
-using boilersGraphics.Models;
-using boilersGraphics.ViewModels;
 
 namespace boilersGraphics.Adorners;
 

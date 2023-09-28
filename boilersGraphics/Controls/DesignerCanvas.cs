@@ -1,11 +1,11 @@
-﻿using System;
+﻿using boilersGraphics.Helpers;
+using boilersGraphics.Messenger;
+using boilersGraphics.ViewModels;
+using System;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using boilersGraphics.Helpers;
-using boilersGraphics.Messenger;
-using boilersGraphics.ViewModels;
 
 namespace boilersGraphics.Controls;
 

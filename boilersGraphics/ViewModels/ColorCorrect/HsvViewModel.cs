@@ -1,12 +1,12 @@
-﻿using Prism.Regions;
+﻿using OpenCvSharp;
+using OpenCvSharp.WpfExtensions;
+using Prism.Mvvm;
+using Prism.Regions;
 using Reactive.Bindings;
+using Reactive.Bindings.Extensions;
 using System;
 using System.Reactive.Disposables;
 using System.Windows.Media.Imaging;
-using Prism.Mvvm;
-using Reactive.Bindings.Extensions;
-using OpenCvSharp;
-using OpenCvSharp.WpfExtensions;
 
 namespace boilersGraphics.ViewModels.ColorCorrect
 {

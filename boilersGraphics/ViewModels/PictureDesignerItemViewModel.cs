@@ -1,14 +1,14 @@
-﻿using System;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using boilersGraphics.Helpers;
+﻿using boilersGraphics.Helpers;
 using boilersGraphics.Views;
 using Prism.Ioc;
 using Prism.Services.Dialogs;
 using Prism.Unity;
 using Reactive.Bindings;
+using System;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using Thickness = System.Windows.Thickness;
 
 namespace boilersGraphics.ViewModels;

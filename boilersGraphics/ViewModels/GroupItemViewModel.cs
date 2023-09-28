@@ -1,10 +1,10 @@
-﻿using System;
+﻿using boilersGraphics.Helpers;
+using Reactive.Bindings.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using boilersGraphics.Helpers;
-using Reactive.Bindings.Extensions;
 using TsOperationHistory;
 using TsOperationHistory.Extensions;
 

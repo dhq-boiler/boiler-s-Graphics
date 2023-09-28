@@ -1,7 +1,7 @@
-﻿using System.Windows;
+﻿using boilersGraphics.Exceptions;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using boilersGraphics.Exceptions;
 
 namespace boilersGraphics.Views;
 

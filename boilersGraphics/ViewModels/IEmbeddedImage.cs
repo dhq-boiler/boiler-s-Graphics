@@ -1,5 +1,5 @@
-﻿using System.Windows.Media.Imaging;
-using Reactive.Bindings;
+﻿using Reactive.Bindings;
+using System.Windows.Media.Imaging;
 
 namespace boilersGraphics.ViewModels;
 

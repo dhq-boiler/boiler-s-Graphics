@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using Homura.ORM.Mapping;
+﻿using Homura.ORM.Mapping;
 using Homura.ORM.Migration;
+using System.Collections.Generic;
 
 namespace boilersGraphics.Dao.Migration.Plan;
 

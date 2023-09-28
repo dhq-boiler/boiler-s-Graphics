@@ -1,7 +1,7 @@
-﻿using System.ComponentModel;
+﻿using boilersGraphics.Extensions;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
-using boilersGraphics.Extensions;
 
 namespace boilersGraphics.Views;
 

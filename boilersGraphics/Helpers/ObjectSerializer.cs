@@ -1,19 +1,16 @@
-﻿using System;
-using System.Buffers.Text;
+﻿using boilersGraphics.Controls;
+using boilersGraphics.Extensions;
+using boilersGraphics.Models;
+using boilersGraphics.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Text;
 using System.Windows;
-using System.Windows.Documents;
 using System.Windows.Media.Imaging;
 using System.Xml.Linq;
-using boilersGraphics.Controls;
-using boilersGraphics.Extensions;
-using boilersGraphics.Models;
-using boilersGraphics.ViewModels;
 
 namespace boilersGraphics.Helpers;
 

@@ -1,4 +1,5 @@
-﻿using boilersGraphics.Models;
+﻿using boilersGraphics.Extensions;
+using boilersGraphics.Models;
 using boilersGraphics.ViewModels;
 using boilersGraphics.ViewModels.ColorCorrect;
 using Reactive.Bindings;
@@ -6,7 +7,6 @@ using Rulyotano.Math.Interpolation.Bezier;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
@@ -14,7 +14,6 @@ using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using boilersGraphics.Extensions;
 using Point = Rulyotano.Math.Geometry.Point;
 
 namespace boilersGraphics.Views

@@ -1,7 +1,7 @@
-﻿using System.Windows;
-using System.Windows.Controls;
-using boilersGraphics.Helpers;
+﻿using boilersGraphics.Helpers;
 using boilersGraphics.Models;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace boilersGraphics.Views;
 

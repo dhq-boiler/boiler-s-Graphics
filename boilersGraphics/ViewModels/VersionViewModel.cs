@@ -1,4 +1,12 @@
-﻿using System;
+﻿using boilersGraphics.Dao;
+using boilersGraphics.Exceptions;
+using boilersGraphics.Properties;
+using NLog;
+using Prism.Mvvm;
+using Prism.Services.Dialogs;
+using Reactive.Bindings;
+using Reactive.Bindings.Extensions;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
@@ -7,14 +15,6 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
 using Windows.Services.Store;
-using boilersGraphics.Dao;
-using boilersGraphics.Exceptions;
-using boilersGraphics.Properties;
-using NLog;
-using Prism.Mvvm;
-using Prism.Services.Dialogs;
-using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
 
 namespace boilersGraphics.ViewModels;
 

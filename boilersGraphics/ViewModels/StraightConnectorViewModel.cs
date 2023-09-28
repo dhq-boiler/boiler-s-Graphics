@@ -1,12 +1,12 @@
-﻿using System;
-using System.Reactive.Linq;
-using System.Windows;
-using System.Windows.Shapes;
-using boilersGraphics.Views;
+﻿using boilersGraphics.Views;
 using Prism.Ioc;
 using Prism.Services.Dialogs;
 using Prism.Unity;
 using Reactive.Bindings;
+using System;
+using System.Reactive.Linq;
+using System.Windows;
+using System.Windows.Shapes;
 
 namespace boilersGraphics.ViewModels;
 

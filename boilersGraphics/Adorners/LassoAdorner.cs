@@ -1,4 +1,9 @@
-﻿using System;
+﻿using boilersGraphics.Controls;
+using boilersGraphics.Dao;
+using boilersGraphics.Extensions;
+using boilersGraphics.Models;
+using boilersGraphics.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,11 +12,6 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using boilersGraphics.Controls;
-using boilersGraphics.Dao;
-using boilersGraphics.Extensions;
-using boilersGraphics.Models;
-using boilersGraphics.ViewModels;
 
 namespace boilersGraphics.Adorners;
 

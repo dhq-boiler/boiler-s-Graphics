@@ -1,7 +1,5 @@
-﻿using System.Collections;
+﻿using boilersGraphics.Properties;
 using System.Collections.Generic;
-using boilersGraphics.Helpers;
-using boilersGraphics.Properties;
 
 namespace boilersGraphics.ViewModels;
 

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Reactive.Disposables;
-using System.Windows;
-using System.Windows.Media;
-using boilersGraphics.Extensions;
+﻿using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
 using boilersGraphics.Models;
 using boilersGraphics.Views;
@@ -12,6 +7,11 @@ using Prism.Regions;
 using Prism.Services.Dialogs;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
+using System;
+using System.Linq;
+using System.Reactive.Disposables;
+using System.Windows;
+using System.Windows.Media;
 
 namespace boilersGraphics.ViewModels;
 

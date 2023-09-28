@@ -1,6 +1,6 @@
-﻿using System.Windows.Input;
-using Prism.Mvvm;
+﻿using Prism.Mvvm;
 using Reactive.Bindings;
+using System.Windows.Input;
 
 namespace boilersGraphics.Helpers;
 

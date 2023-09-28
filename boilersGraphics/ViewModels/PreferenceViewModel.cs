@@ -1,14 +1,14 @@
-﻿using System;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
-using System.Windows;
-using boilersGraphics.Helpers;
+﻿using boilersGraphics.Helpers;
 using boilersGraphics.Properties;
 using boilersGraphics.Views;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
+using System;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
+using System.Windows;
 using Preference = boilersGraphics.Models.Preference;
 
 namespace boilersGraphics.ViewModels;

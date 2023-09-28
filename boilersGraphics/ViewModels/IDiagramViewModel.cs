@@ -1,7 +1,7 @@
-﻿using System.Windows.Media;
-using boilersGraphics.Models;
+﻿using boilersGraphics.Models;
 using Prism.Commands;
 using Reactive.Bindings;
+using System.Windows.Media;
 
 namespace boilersGraphics.ViewModels;
 

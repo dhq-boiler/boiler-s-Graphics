@@ -2,7 +2,6 @@
 using boilersGraphics.Extensions;
 using boilersGraphics.Models;
 using boilersGraphics.ViewModels;
-using OpenCvSharp.ML;
 using System;
 using System.Linq;
 using System.Windows;

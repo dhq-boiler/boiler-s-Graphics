@@ -1,14 +1,14 @@
-﻿using System;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
-using System.Windows;
-using System.Windows.Threading;
-using boilersGraphics.Properties;
+﻿using boilersGraphics.Properties;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
+using System;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
+using System.Windows;
+using System.Windows.Threading;
 
 namespace boilersGraphics.ViewModels;
 

@@ -1,9 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
-using System.Windows;
-using System.Windows.Media.Imaging;
-using boilersGraphics.Controls;
+﻿using boilersGraphics.Controls;
 using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
 using boilersGraphics.Models;
@@ -16,6 +11,11 @@ using NLog;
 using Prism.Commands;
 using Prism.Services.Dialogs;
 using Reactive.Bindings;
+using System.Collections.ObjectModel;
+using System.IO;
+using System.Linq;
+using System.Windows;
+using System.Windows.Media.Imaging;
 
 namespace boilersGraphics.ViewModels;
 

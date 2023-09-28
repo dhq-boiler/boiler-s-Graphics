@@ -1,9 +1,9 @@
-﻿using System.Windows;
-using System.Windows.Input;
-using boilersGraphics.Controls;
+﻿using boilersGraphics.Controls;
 using boilersGraphics.Dao;
 using boilersGraphics.ViewModels;
 using Microsoft.Xaml.Behaviors;
+using System.Windows;
+using System.Windows.Input;
 
 namespace boilersGraphics.Views.Behaviors;
 

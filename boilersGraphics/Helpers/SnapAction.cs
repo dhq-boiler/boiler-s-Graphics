@@ -1,4 +1,9 @@
-﻿using System;
+﻿using boilersGraphics.Adorners;
+using boilersGraphics.Controls;
+using boilersGraphics.Extensions;
+using boilersGraphics.ViewModels;
+using NLog;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,11 +11,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
-using boilersGraphics.Adorners;
-using boilersGraphics.Controls;
-using boilersGraphics.Extensions;
-using boilersGraphics.ViewModels;
-using NLog;
 
 namespace boilersGraphics.Helpers;
 

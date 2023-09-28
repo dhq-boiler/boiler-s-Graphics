@@ -1,10 +1,10 @@
-﻿using System;
+﻿using boilersGraphics.Models;
+using Prism.Mvvm;
+using Prism.Services.Dialogs;
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Media;
-using boilersGraphics.Models;
-using Prism.Mvvm;
-using Prism.Services.Dialogs;
 
 namespace boilersGraphics.ViewModels;
 

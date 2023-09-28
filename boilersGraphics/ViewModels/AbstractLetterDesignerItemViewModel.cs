@@ -1,10 +1,10 @@
-﻿using System;
+﻿using boilersGraphics.Models;
+using Reactive.Bindings;
+using Reactive.Bindings.Extensions;
+using System;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using boilersGraphics.Models;
-using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
 
 namespace boilersGraphics.ViewModels;
 

@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Reactive.Bindings;
+using System;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using Reactive.Bindings;
 
 namespace boilersGraphics.ViewModels;
 

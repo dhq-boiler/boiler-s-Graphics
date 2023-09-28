@@ -1,14 +1,14 @@
-﻿using System;
+﻿using boilersGraphics.Adorners;
+using boilersGraphics.Controls;
+using boilersGraphics.Helpers;
+using boilersGraphics.ViewModels;
+using Microsoft.Xaml.Behaviors;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
-using boilersGraphics.Adorners;
-using boilersGraphics.Controls;
-using boilersGraphics.Helpers;
-using boilersGraphics.ViewModels;
-using Microsoft.Xaml.Behaviors;
 
 namespace boilersGraphics.Views.Behaviors;
 

@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Prism.Mvvm;
+using Reactive.Bindings;
+using Reactive.Bindings.Extensions;
+using System;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Windows.Media;
-using Prism.Mvvm;
-using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
 
 namespace boilersGraphics.Models;
 

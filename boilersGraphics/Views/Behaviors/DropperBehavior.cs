@@ -1,15 +1,13 @@
-﻿using System.Linq;
+﻿using boilersGraphics.Controls;
+using boilersGraphics.Extensions;
+using boilersGraphics.Helpers;
+using boilersGraphics.ViewModels;
+using Microsoft.Xaml.Behaviors;
+using NLog;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using boilersGraphics.Controls;
-using boilersGraphics.Extensions;
-using boilersGraphics.Helpers;
-using boilersGraphics.Models;
-using boilersGraphics.ViewModels;
-using Microsoft.Xaml.Behaviors;
-using NLog;
 
 namespace boilersGraphics.Views.Behaviors;
 

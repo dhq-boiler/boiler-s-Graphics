@@ -1,14 +1,14 @@
-﻿using System;
-using System.Reactive.Linq;
-using System.Windows;
-using System.Windows.Media;
-using boilersGraphics.Helpers;
+﻿using boilersGraphics.Helpers;
 using boilersGraphics.Views;
 using Prism.Ioc;
 using Prism.Services.Dialogs;
 using Prism.Unity;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
+using System;
+using System.Reactive.Linq;
+using System.Windows;
+using System.Windows.Media;
 using Path = System.Windows.Shapes.Path;
 
 namespace boilersGraphics.ViewModels;

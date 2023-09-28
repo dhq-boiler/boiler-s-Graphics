@@ -1,4 +1,11 @@
-﻿using System;
+﻿using boilersGraphics.Controls;
+using boilersGraphics.Dao;
+using boilersGraphics.Extensions;
+using boilersGraphics.Helpers;
+using boilersGraphics.Models;
+using boilersGraphics.ViewModels;
+using NLog;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -8,13 +15,6 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using boilersGraphics.Controls;
-using boilersGraphics.Dao;
-using boilersGraphics.Extensions;
-using boilersGraphics.Helpers;
-using boilersGraphics.Models;
-using boilersGraphics.ViewModels;
-using NLog;
 using Ellipse = System.Windows.Shapes.Ellipse;
 
 namespace boilersGraphics.Adorners;

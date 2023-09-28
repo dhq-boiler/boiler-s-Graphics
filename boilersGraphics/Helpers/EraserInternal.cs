@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using boilersGraphics.Controls;
+using boilersGraphics.Extensions;
+using boilersGraphics.ViewModels;
+using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Media;
-using boilersGraphics.Controls;
-using boilersGraphics.Extensions;
-using boilersGraphics.ViewModels;
 using TsOperationHistory.Extensions;
 
 namespace boilersGraphics.Helpers;

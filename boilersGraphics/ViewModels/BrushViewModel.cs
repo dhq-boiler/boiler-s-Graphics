@@ -1,4 +1,11 @@
-﻿using System;
+﻿using boilersGraphics.Controls;
+using boilersGraphics.Extensions;
+using Prism.Ioc;
+using Prism.Services.Dialogs;
+using Prism.Unity;
+using Reactive.Bindings;
+using Reactive.Bindings.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Concurrency;
@@ -7,13 +14,6 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows.Threading;
-using boilersGraphics.Controls;
-using boilersGraphics.Extensions;
-using Prism.Ioc;
-using Prism.Services.Dialogs;
-using Prism.Unity;
-using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
 
 namespace boilersGraphics.ViewModels;
 

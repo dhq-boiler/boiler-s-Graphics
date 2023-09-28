@@ -1,4 +1,6 @@
-﻿using System;
+﻿using boilersGraphics.Extensions;
+using boilersGraphics.UserControls;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -8,8 +10,6 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
-using boilersGraphics.Extensions;
-using boilersGraphics.UserControls;
 
 namespace boilersGraphics.Controls;
 
