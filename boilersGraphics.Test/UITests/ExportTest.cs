@@ -207,18 +207,18 @@ namespace boilersGraphics.Test.UITests
         {
             Vec3b pic = mat.At<Vec3b>(y, x);
 
-            Assert.That(pic.Item0, Is.EqualTo(0), "{0},{1}", y, x);
-            Assert.That(pic.Item1, Is.EqualTo(0), "{0},{1}", y, x);
-            Assert.That(pic.Item2, Is.EqualTo(0), "{0},{1}", y, x);
+            Assert.That(pic.Item0, Is.EqualTo(0), $"{y},{x}");
+            Assert.That(pic.Item1, Is.EqualTo(0), $"{y},{x}");
+            Assert.That(pic.Item2, Is.EqualTo(0), $"{y},{x}");
         }
 
         private void TestPixelIsWhite(Mat mat, int y, int x)
         {
             Vec3b pic = mat.At<Vec3b>(y, x);
 
-            Assert.That(pic.Item0, Is.EqualTo(255), "{0},{1}", y, x);
-            Assert.That(pic.Item1, Is.EqualTo(255), "{0},{1}", y, x);
-            Assert.That(pic.Item2, Is.EqualTo(255), "{0},{1}", y, x);
+            Assert.That(pic.Item0, Is.EqualTo(255), $"{y},{x}");
+            Assert.That(pic.Item1, Is.EqualTo(255), $"{y},{x}");
+            Assert.That(pic.Item2, Is.EqualTo(255), $"{y},{x}");
         }
     }
 }

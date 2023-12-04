@@ -153,17 +153,17 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CalcBinding" Version="2.5.2" />
-    <PackageReference Include="Dapper.StrongName" Version="2.0.151" />
+    <PackageReference Include="Dapper.StrongName" Version="2.1.24" />
     <PackageReference Include="GitInfo" Version="2.3.0" />
     <PackageReference Include="Homura" Version="3.4.2" />
-    <PackageReference Include="MdXaml" Version="1.21.0" />
-    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.0.3" />
-    <PackageReference Include="NLog" Version="5.2.4" />
-    <PackageReference Include="NLog.Schema" Version="5.2.4" />
+    <PackageReference Include="MdXaml" Version="1.22.0" />
+    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.0.4" />
+    <PackageReference Include="NLog" Version="5.2.7" />
+    <PackageReference Include="NLog.Schema" Version="5.2.7" />
     <PackageReference Include="OpenCvSharp4.Windows" Version="4.8.0.20230708" />
     <PackageReference Include="OpenCvSharp4.WpfExtensions" Version="4.8.0.20230708" />
     <PackageReference Include="Prism.Unity" Version="8.1.97" />
-    <PackageReference Include="ReactiveProperty.WPF" Version="9.3.2" />
+    <PackageReference Include="ReactiveProperty.WPF" Version="9.3.4" />
     <PackageReference Include="Rulyotano.Math.Geometry" Version="2.0.0" />
     <PackageReference Include="Rulyotano.Math.Interpolation.Bezier" Version="3.0.0" />
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.118" />
@@ -173,10 +173,10 @@
     <PackageReference Include="System.Reactive.Windows.Threading" Version="6.0.0" />
     <PackageReference Include="Tesseract" Version="5.2.0" />
     <PackageReference Include="WriteableBitmapEx" Version="1.6.8" />
-    <PackageReference Include="System.Configuration.ConfigurationManager" Version="7.0.0" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0" />
     <PackageReference Include="System.ServiceModel.Duplex" Version="6.0.0" />
-    <PackageReference Include="System.ServiceModel.NetTcp" Version="6.0.0" />
-    <PackageReference Include="System.ServiceModel.Federation" Version="6.0.0" />
+    <PackageReference Include="System.ServiceModel.NetTcp" Version="6.2.0" />
+    <PackageReference Include="System.ServiceModel.Federation" Version="6.2.0" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Assets\img\art-pallete.png" />
