@@ -3,11 +3,11 @@ using boilersGraphics.ViewModels;
 using NLog;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using ZLinq;
 
 namespace boilersGraphics.Helpers
 {
@@ -22,8 +22,8 @@ namespace boilersGraphics.Helpers
         protected override Size GetRenderSize(Rect? sliceRect, DiagramViewModel diagramViewModel, int minZIndex, int maxZIndex)
         {
             var rect = base.GetRenderSize(sliceRect, diagramViewModel, minZIndex, maxZIndex);
-            var except = new SelectableDesignerItemViewModelBase[] { diagramViewModel.BackgroundItem.Value }.Where(x => x is not null);
-            var rects = diagramViewModel.AllItems.Value.Except(except).Where(x => x.IsVisible.Value && x.ZIndex.Value >= minZIndex && x.ZIndex.Value <= maxZIndex).OrderBy(x => x.ZIndex.Value).OfType<DesignerItemViewModelBase>().Select(x =>
+            var except = new SelectableDesignerItemViewModelBase[] { diagramViewModel.BackgroundItem.Value }.AsValueEnumerable().Where(x => x is not null);
+            var rects = diagramViewModel.AllItems.Value.AsValueEnumerable().Except(except).Where(x => x.IsVisible.Value && x.ZIndex.Value >= minZIndex && x.ZIndex.Value <= maxZIndex).OrderBy(x => x.ZIndex.Value).OfType<DesignerItemViewModelBase>().Select(x =>
             {
                 var matrix = new Matrix();
                 matrix.RotateAt(x.RotationAngle.Value, x.CenterX.Value, x.CenterY.Value);
@@ -77,8 +77,8 @@ namespace boilersGraphics.Helpers
         public override int RenderForeground(Rect? sliceRect, DiagramViewModel diagramViewModel, DesignerCanvas designerCanvas, DrawingContext context, BackgroundViewModel background, List<FrameworkElement> allViews, int minZIndex, int maxZIndex, SelectableDesignerItemViewModelBase caller)
         {
             var renderedCount = 0;
-            var except = new SelectableDesignerItemViewModelBase[] { background }.Where(x => x is not null);
-            foreach (var item in diagramViewModel.AllItems.Value.Except(except).Where(x => x.IsVisible.Value && x.ZIndex.Value >= minZIndex && x.ZIndex.Value <= maxZIndex).OrderBy(x => x.ZIndex.Value))
+            var except = new SelectableDesignerItemViewModelBase[] { background }.AsValueEnumerable().Where(x => x is not null);
+            foreach (var item in diagramViewModel.AllItems.Value.AsValueEnumerable().Except(except).Where(x => x.IsVisible.Value && x.ZIndex.Value >= minZIndex && x.ZIndex.Value <= maxZIndex).OrderBy(x => x.ZIndex.Value))
             {
                 if (item is null)
                 {
@@ -88,11 +88,11 @@ namespace boilersGraphics.Helpers
                 var view = default(FrameworkElement);
                 if (App.IsTest)
                 {
-                    view = allViews.FirstOrDefault(x => x.DataContext == item);
+                    view = allViews.AsValueEnumerable().FirstOrDefault(x => x.DataContext == item);
                 }
                 else
                 {
-                    view = allViews.FirstOrDefault(x => x.DataContext == item && x.FindName("PART_ContentPresenter") is not null);
+                    view = allViews.AsValueEnumerable().FirstOrDefault(x => x.DataContext == item && x.FindName("PART_ContentPresenter") is not null);
                 }
 
                 if (view is null)
@@ -288,7 +288,7 @@ namespace boilersGraphics.Helpers
             {
                 var result = Application.Current.Dispatcher.Invoke(() =>
                 {
-                    view = allViews.FirstOrDefault(x =>
+                    view = allViews.AsValueEnumerable().FirstOrDefault(x =>
                         x.DataContext == background);
                     if (view is null)
                     {
@@ -303,7 +303,7 @@ namespace boilersGraphics.Helpers
             }
             else
             {
-                view = allViews.FirstOrDefault(x =>
+                view = allViews.AsValueEnumerable().FirstOrDefault(x =>
                     x.DataContext == background);
                 if (view is null)
                 {

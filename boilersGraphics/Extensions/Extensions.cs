@@ -3,17 +3,18 @@ using boilersGraphics.ViewModels;
 using NLog;
 using Prism.Services.Dialogs;
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Linq;
 using System.Reactive.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
+using ZLinq;
 
 namespace boilersGraphics.Extensions;
 
@@ -47,11 +48,11 @@ public static class Extensions
         {
             var child = VisualTreeHelper.GetChild(depObj, i);
 
-            var result = (child as IEnumerable<T> ?? EnumerateChildOfType<T>(child)).ToList();
+            var result = (child as IEnumerable<T> ?? EnumerateChildOfType<T>(child)).AsValueEnumerable().ToList();
             if (result != null)
-                for (var j = 0; j < result.Count(); j++)
+                for (var j = 0; j < result.AsValueEnumerable().Count(); j++)
                 {
-                    var item = result.ElementAt(j);
+                    var item = result.AsValueEnumerable().ElementAt(j);
                     if (item != null)
                         yield return item;
                 }
@@ -102,7 +103,7 @@ public static class Extensions
             BindingFlags.Public
             | BindingFlags.Instance);
 
-        foreach (var property in properties.Except(new[]
+        foreach (var property in properties.AsValueEnumerable().Except(new[]
                  {
                      dataContext1.GetType().GetProperty("Parent"),
                      dataContext1.GetType().GetProperty("SelectedItems"),
@@ -343,7 +344,7 @@ public static class Extensions
             if (content is T) yield return (T)content;
             if (content is not null)
             {
-                var list = FindVisualChildren<DependencyObject>(content, digCount + 1).ToList();
+                var list = FindVisualChildren<DependencyObject>(content, digCount + 1).AsValueEnumerable().ToList();
                 foreach (var childOfChild2 in list)
                     if (childOfChild2 != null && childOfChild2 is T)
                         yield return (T)childOfChild2;
@@ -354,7 +355,7 @@ public static class Extensions
             {
                 var loadObj2 = cp2.ContentTemplate.LoadContent();
                 if (loadObj2 is T) yield return (T)loadObj2;
-                var list = FindVisualChildren<DependencyObject>(loadObj2, digCount + 1).ToList();
+                var list = FindVisualChildren<DependencyObject>(loadObj2, digCount + 1).AsValueEnumerable().ToList();
                 foreach (var p in list)
                 {
                     foreach (var o in EnumVisualChildren<T>(p)) yield return o;
@@ -367,7 +368,7 @@ public static class Extensions
             var loadObj = dw.Template.LoadContent();
             if (loadObj is not null)
             {
-                var list = FindVisualChildren<DependencyObject>(loadObj, digCount + 1).ToList();
+                var list = FindVisualChildren<DependencyObject>(loadObj, digCount + 1).AsValueEnumerable().ToList();
                 foreach (var childOfChild in list)
                 {
                     if (childOfChild is ContentPresenter cp)
@@ -377,7 +378,7 @@ public static class Extensions
                         if (content is T) yield return (T)content;
                         if (content is not null)
                         {
-                            var list2 = FindVisualChildren<DependencyObject>(content, digCount + 1).ToList();
+                            var list2 = FindVisualChildren<DependencyObject>(content, digCount + 1).AsValueEnumerable().ToList();
                             foreach (var childOfChild2 in list2)
                                 if (childOfChild2 != null && childOfChild2 is T)
                                     yield return (T)childOfChild2;
@@ -390,7 +391,7 @@ public static class Extensions
                             if (loadObj2 is T) yield return (T)loadObj2;
                             if (loadObj2 is not null)
                             {
-                                var list2 = FindVisualChildren<DependencyObject>(loadObj2, digCount + 1).ToList();
+                                var list2 = FindVisualChildren<DependencyObject>(loadObj2, digCount + 1).AsValueEnumerable().ToList();
                                 foreach (var childOfChild2 in list2)
                                     if (childOfChild2 != null && childOfChild2 is T)
                                         yield return (T)childOfChild2;
@@ -406,7 +407,7 @@ public static class Extensions
                             if (loadObj2 is T) yield return (T)loadObj2;
                             if (loadObj2 is not null)
                             {
-                                var list2 = FindVisualChildren<DependencyObject>(loadObj2, digCount + 1).ToList();
+                                var list2 = FindVisualChildren<DependencyObject>(loadObj2, digCount + 1).AsValueEnumerable().ToList();
                                 foreach (var childOfChild2 in list2)
                                     if (childOfChild2 != null && childOfChild2 is T)
                                         yield return (T)childOfChild2;
@@ -422,7 +423,7 @@ public static class Extensions
                             if (loadObj2 is T) yield return (T)loadObj2;
                             if (loadObj2 is not null)
                             {
-                                var list2 = FindVisualChildren<DependencyObject>(loadObj2, digCount + 1).ToList();
+                                var list2 = FindVisualChildren<DependencyObject>(loadObj2, digCount + 1).AsValueEnumerable().ToList();
                                 foreach (var childOfChild2 in list2)
                                     if (childOfChild2 != null && childOfChild2 is T)
                                         yield return (T)childOfChild2;
@@ -436,7 +437,7 @@ public static class Extensions
                             if (loadObj2 is T) yield return (T)loadObj2;
                             if (loadObj2 is not null)
                             {
-                                var list2 = FindVisualChildren<DependencyObject>(loadObj2, digCount + 1).ToList();
+                                var list2 = FindVisualChildren<DependencyObject>(loadObj2, digCount + 1).AsValueEnumerable().ToList();
                                 foreach (var childOfChild2 in list2)
                                     if (childOfChild2 != null && childOfChild2 is T)
                                         yield return (T)childOfChild2;
@@ -454,7 +455,7 @@ public static class Extensions
                 loadObj = dw.ContentTemplate.LoadContent();
                 if (loadObj is not null)
                 {
-                    var list2 = FindVisualChildren<DependencyObject>(loadObj, digCount + 1).ToList();
+                    var list2 = FindVisualChildren<DependencyObject>(loadObj, digCount + 1).AsValueEnumerable().ToList();
                     foreach (var childOfChild in list2)
                         if (childOfChild != null && childOfChild is T)
                             yield return (T)childOfChild;
@@ -470,7 +471,7 @@ public static class Extensions
             {
                 yield return (T)child;
 
-                var list = FindVisualChildren<T>(child, digCount + 1).ToList();
+                var list = FindVisualChildren<T>(child, digCount + 1).AsValueEnumerable().ToList();
                 foreach (var childOfChild in list) yield return childOfChild;
             }
             else if (child != null && child is ContentPresenter cp)
@@ -480,7 +481,7 @@ public static class Extensions
                 if (content is T) yield return (T)content;
                 if (content is not null)
                 {
-                    var list = FindVisualChildren<DependencyObject>(content, digCount + 1).ToList();
+                    var list = FindVisualChildren<DependencyObject>(content, digCount + 1).AsValueEnumerable().ToList();
                     foreach (var childOfChild2 in list)
                         if (childOfChild2 != null && childOfChild2 is T)
                             yield return (T)childOfChild2;
@@ -491,13 +492,13 @@ public static class Extensions
                 {
                     var dependencyObject = cp.ContentTemplate.LoadContent();
                     if (dependencyObject is T) yield return (T)dependencyObject;
-                    var list = FindVisualChildren<T>(dependencyObject, digCount + 1).ToList();
+                    var list = FindVisualChildren<T>(dependencyObject, digCount + 1).AsValueEnumerable().ToList();
                     foreach (var childOfChild in list) yield return childOfChild;
                 }
             }
             else if (child != null)
             {
-                var list = FindVisualChildren<T>(child, digCount + 1).ToList();
+                var list = FindVisualChildren<T>(child, digCount + 1).AsValueEnumerable().ToList();
                 foreach (var childOfChild in list) yield return childOfChild;
             }
         }
@@ -518,7 +519,7 @@ public static class Extensions
                 var templateContent = _control.Template.LoadContent();
                 if (templateContent is FrameworkElement fe && fe.DataContext is not null)
                 {
-                    var list = EnumVisualChildren<DependencyObject>(templateContent, digCount + 1).ToList();
+                    var list = EnumVisualChildren<DependencyObject>(templateContent, digCount + 1).AsValueEnumerable().ToList();
                     foreach (var p in list)
                     {
                         var l = EnumVisualChildren<T>(p);
@@ -541,7 +542,7 @@ public static class Extensions
                     var itemTemplateContent = ic.ItemTemplate.LoadContent();
                     if (itemTemplateContent is FrameworkElement fe && fe.DataContext is not null)
                     {
-                        var list = EnumVisualChildren<DependencyObject>(itemTemplateContent, digCount + 1).ToList();
+                        var list = EnumVisualChildren<DependencyObject>(itemTemplateContent, digCount + 1).AsValueEnumerable().ToList();
                         foreach (var p in list)
                         {
                             var l = EnumVisualChildren<T>(p);
@@ -568,7 +569,7 @@ public static class Extensions
                 if (content is T && content is not ContentPresenter) ret.Add((T)content);
                 if (content is not null)
                 {
-                    var list = EnumVisualChildren<DependencyObject>(content, digCount + 1).ToList();
+                    var list = EnumVisualChildren<DependencyObject>(content, digCount + 1).AsValueEnumerable().ToList();
                     foreach (var childOfChild2 in list)
                         if (childOfChild2 != null && childOfChild2 is T && childOfChild2 is not ContentPresenter &&
                             childOfChild2 is not Control)
@@ -581,7 +582,7 @@ public static class Extensions
                 {
                     var loadObj2 = cp2.ContentTemplate.LoadContent();
                     if (loadObj2 is T && loadObj2 is not ContentPresenter) ret.Add((T)loadObj2);
-                    var list = EnumVisualChildren<DependencyObject>(loadObj2, digCount + 1).ToList();
+                    var list = EnumVisualChildren<DependencyObject>(loadObj2, digCount + 1).AsValueEnumerable().ToList();
                     foreach (var p in list)
                     {
                         var l = EnumVisualChildren<T>(p);
@@ -632,7 +633,7 @@ public static class Extensions
             var loadObj = dw.Template.LoadContent();
             if (loadObj is not null)
             {
-                var list = EnumVisualChildren<DependencyObject>(loadObj, digCount + 1).ToList();
+                var list = EnumVisualChildren<DependencyObject>(loadObj, digCount + 1).AsValueEnumerable().ToList();
                 foreach (var childOfChild in list)
                 {
                     if (childOfChild is ContentPresenter cp)
@@ -642,7 +643,7 @@ public static class Extensions
                         if (content is T && content is not ContentPresenter) ret.Add((T)content);
                         if (content is not null)
                         {
-                            var list2 = EnumVisualChildren<DependencyObject>(content, digCount + 1).ToList();
+                            var list2 = EnumVisualChildren<DependencyObject>(content, digCount + 1).AsValueEnumerable().ToList();
                             foreach (var childOfChild2 in list2)
                                 if (childOfChild2 != null && childOfChild2 is T && childOfChild2 is not ContentPresenter && childOfChild2 is not Control)
                                     //yield return (T)childOfChild2;
@@ -656,7 +657,7 @@ public static class Extensions
                             if (loadObj2 is T && loadObj2 is not ContentPresenter && loadObj2 is not Control) ret.Add((T)loadObj2);
                             if (loadObj2 is not null)
                             {
-                                var list2 = EnumVisualChildren<DependencyObject>(loadObj2, digCount + 1).ToList();
+                                var list2 = EnumVisualChildren<DependencyObject>(loadObj2, digCount + 1).AsValueEnumerable().ToList();
                                 foreach (var childOfChild2 in list2)
                                     if (childOfChild2 != null && childOfChild2 is T && childOfChild2 is not ContentPresenter && childOfChild2 is not Control)
                                         //yield return (T)childOfChild2;
@@ -673,7 +674,7 @@ public static class Extensions
                             if (loadObj2 is T && loadObj2 is not ContentPresenter && loadObj2 is not Control) ret.Add((T)loadObj2);
                             if (loadObj2 is not null)
                             {
-                                var list2 = EnumVisualChildren<DependencyObject>(loadObj2, digCount + 1).ToList();
+                                var list2 = EnumVisualChildren<DependencyObject>(loadObj2, digCount + 1).AsValueEnumerable().ToList();
                                 foreach (var childOfChild2 in list2)
                                     if (childOfChild2 != null && childOfChild2 is T && childOfChild2 is not ContentPresenter && childOfChild2 is not Control)
                                         //yield return (T)childOfChild2;
@@ -690,7 +691,7 @@ public static class Extensions
                             if (loadObj2 is T && loadObj2 is not ContentPresenter && loadObj2 is not Control) ret.Add((T)loadObj2);
                             if (loadObj2 is not null)
                             {
-                                var list2 = EnumVisualChildren<DependencyObject>(loadObj2, digCount + 1).ToList();
+                                var list2 = EnumVisualChildren<DependencyObject>(loadObj2, digCount + 1).AsValueEnumerable().ToList();
                                 foreach (var childOfChild2 in list2)
                                     if (childOfChild2 != null && childOfChild2 is T && childOfChild2 is not ContentPresenter && childOfChild2 is not Control)
                                         //yield return (T)childOfChild2;
@@ -705,7 +706,7 @@ public static class Extensions
                             if (loadObj2 is T && loadObj2 is not ContentPresenter && loadObj2 is not Control) ret.Add((T)loadObj2);
                             if (loadObj2 is not null)
                             {
-                                var list2 = EnumVisualChildren<DependencyObject>(loadObj2, digCount + 1).ToList();
+                                var list2 = EnumVisualChildren<DependencyObject>(loadObj2, digCount + 1).AsValueEnumerable().ToList();
                                 foreach (var childOfChild2 in list2)
                                     if (childOfChild2 != null && childOfChild2 is T && childOfChild2 is not ContentPresenter && childOfChild2 is not Control)
                                         //yield return (T)childOfChild2;
@@ -729,7 +730,7 @@ public static class Extensions
                 loadObj = dw.ContentTemplate.LoadContent();
                 if (loadObj is not null)
                 {
-                    var list2 = EnumVisualChildren<DependencyObject>(loadObj, digCount + 1).ToList();
+                    var list2 = EnumVisualChildren<DependencyObject>(loadObj, digCount + 1).AsValueEnumerable().ToList();
                     foreach (var childOfChild in list2)
                         if (childOfChild != null && childOfChild is T && childOfChild is not ContentPresenter && childOfChild is not Control)
                             //yield return (T)childOfChild;
@@ -746,7 +747,7 @@ public static class Extensions
                 //yield return (T)child;
                 ret.Add((T)child);
 
-                var list = EnumVisualChildren<T>(child, digCount + 1).ToList();
+                var list = EnumVisualChildren<T>(child, digCount + 1).AsValueEnumerable().ToList();
                 foreach (var childOfChild in list) //yield return (T)childOfChild;
                     ret.Add((T)childOfChild);
             }
@@ -757,7 +758,7 @@ public static class Extensions
                 if (content is T) ret.Add((T)content);
                 if (content is not null)
                 {
-                    var list = EnumVisualChildren<DependencyObject>(content, digCount + 1).ToList();
+                    var list = EnumVisualChildren<DependencyObject>(content, digCount + 1).AsValueEnumerable().ToList();
                     foreach (var childOfChild2 in list)
                         if (childOfChild2 != null && childOfChild2 is T)
                             ret.Add((T)childOfChild2);
@@ -769,14 +770,14 @@ public static class Extensions
                     var dependencyObject = cp.ContentTemplate.LoadContent();
                     if (dependencyObject is T) //yield return (T)dependencyObject;
                         ret.Add((T)dependencyObject);
-                    var list = EnumVisualChildren<T>(dependencyObject, digCount + 1).ToList();
+                    var list = EnumVisualChildren<T>(dependencyObject, digCount + 1).AsValueEnumerable().ToList();
                     foreach (var childOfChild in list) //yield return childOfChild;
                         ret.Add(childOfChild);
                 }
             }
             else if (child != null && child is FrameworkElement feeee && feeee.DataContext is not null)
             {
-                var list = EnumVisualChildren<T>(child, digCount + 1).ToList();
+                var list = EnumVisualChildren<T>(child, digCount + 1).AsValueEnumerable().ToList();
                 foreach (var childOfChild in list) //yield return childOfChild;
                     ret.Add(childOfChild);
             }
@@ -788,7 +789,7 @@ public static class Extensions
             {
                 if (item is FrameworkElement fe && fe.DataContext is not null)
                 {
-                    var list = EnumVisualChildren<T>(item, digCount + 1).ToList();
+                    var list = EnumVisualChildren<T>(item, digCount + 1).AsValueEnumerable().ToList();
                     foreach (var child in list)
                     {
                         //yield return child;
@@ -1224,7 +1225,7 @@ public static class Extensions
             {
                 //dig Control.Template
                 var templateContent = _control.Template.LoadContent();
-                var list = EnumVisualChildren<FrameworkElement>(templateContent, dataContext,digCount + 1).ToList();
+                var list = EnumVisualChildren<FrameworkElement>(templateContent, dataContext,digCount + 1).AsValueEnumerable().ToList();
                 foreach (var p in list)
                 {
                     var l = EnumVisualChildren<T>(p);
@@ -1243,7 +1244,7 @@ public static class Extensions
                 if (ic.ItemTemplate is not null)
                 {
                     var itemTemplateContent = ic.ItemTemplate.LoadContent();
-                    var list = EnumVisualChildren<FrameworkElement>(itemTemplateContent, dataContext, digCount + 1).ToList();
+                    var list = EnumVisualChildren<FrameworkElement>(itemTemplateContent, dataContext, digCount + 1).AsValueEnumerable().ToList();
                     foreach (var p in list)
                     {
                         var l = EnumVisualChildren<T>(p, dataContext, digCount + 1);
@@ -1266,7 +1267,7 @@ public static class Extensions
             if (content is T t && content is not ContentPresenter && t.DataContext == dataContext) return (T)content;
             if (content is not null)
             {
-                var list = EnumVisualChildren<FrameworkElement>(content, dataContext, digCount + 1).ToList();
+                var list = EnumVisualChildren<FrameworkElement>(content, dataContext, digCount + 1).AsValueEnumerable().ToList();
                 foreach (var childOfChild2 in list)
                     if (childOfChild2 != null && childOfChild2 is T && childOfChild2 is not ContentPresenter &&
                         childOfChild2 is not Control && childOfChild2 is T tt && tt.DataContext == dataContext)
@@ -1278,7 +1279,7 @@ public static class Extensions
             {
                 var loadObj2 = cp2.ContentTemplate.LoadContent();
                 if (loadObj2 is T tt && loadObj2 is not ContentPresenter && tt.DataContext == dataContext) return (T)content;
-                var list = EnumVisualChildren<DependencyObject>(loadObj2, digCount + 1).ToList();
+                var list = EnumVisualChildren<DependencyObject>(loadObj2, digCount + 1).AsValueEnumerable().ToList();
                 foreach (var p in list)
                 {
                     var l = EnumVisualChildren<T>(p, dataContext, digCount + 1);
@@ -1322,7 +1323,7 @@ public static class Extensions
             var loadObj = dw.Template.LoadContent();
             if (loadObj is not null)
             {
-                var list = EnumVisualChildren<FrameworkElement>(loadObj, dataContext,digCount + 1).ToList();
+                var list = EnumVisualChildren<FrameworkElement>(loadObj, dataContext,digCount + 1).AsValueEnumerable().ToList();
                 foreach (var childOfChild in list)
                 {
                     if (childOfChild is ContentPresenter cp)
@@ -1332,7 +1333,7 @@ public static class Extensions
                         if (content is T t && content is not ContentPresenter && t.DataContext == dataContext) return (T)content;
                         if (content is not null)
                         {
-                            var list2 = EnumVisualChildren<FrameworkElement>(content, dataContext, digCount + 1).ToList();
+                            var list2 = EnumVisualChildren<FrameworkElement>(content, dataContext, digCount + 1).AsValueEnumerable().ToList();
                             foreach (var childOfChild2 in list2)
                                 if (childOfChild2 != null && childOfChild2 is T && childOfChild2 is not ContentPresenter && childOfChild2 is not Control &&
                                     childOfChild2 is not Control && childOfChild2 is T tt && tt.DataContext == dataContext)
@@ -1346,7 +1347,7 @@ public static class Extensions
                             if (loadObj2 is T tt && loadObj2 is not ContentPresenter && loadObj2 is not Control && tt.DataContext == dataContext) return (T)content;
                             if (loadObj2 is not null)
                             {
-                                var list2 = EnumVisualChildren<DependencyObject>(loadObj2, digCount + 1).ToList();
+                                var list2 = EnumVisualChildren<DependencyObject>(loadObj2, digCount + 1).AsValueEnumerable().ToList();
                                 foreach (var childOfChild2 in list2)
                                     if (childOfChild2 != null && childOfChild2 is T && childOfChild2 is not ContentPresenter && childOfChild2 is not Control &&
                                         childOfChild2 is not Control && childOfChild2 is T ttt && ttt.DataContext == dataContext)
@@ -1363,7 +1364,7 @@ public static class Extensions
                             if (loadObj2 is T t && loadObj2 is not ContentPresenter && loadObj2 is not Control && t.DataContext == dataContext) return (T)t;
                             if (loadObj2 is not null)
                             {
-                                var list2 = EnumVisualChildren<FrameworkElement>(loadObj2, dataContext, digCount + 1).ToList();
+                                var list2 = EnumVisualChildren<FrameworkElement>(loadObj2, dataContext, digCount + 1).AsValueEnumerable().ToList();
                                 foreach (var childOfChild2 in list2)
                                     if (childOfChild2 != null && childOfChild2 is T && childOfChild2 is not ContentPresenter &&
                                         childOfChild2 is not Control && childOfChild2 is T ttt && ttt.DataContext == dataContext)
@@ -1380,7 +1381,7 @@ public static class Extensions
                             if (loadObj2 is T t&& loadObj2 is not ContentPresenter && loadObj2 is not Control && t.DataContext == dataContext) return (T)t;
                             if (loadObj2 is not null)
                             {
-                                var list2 = EnumVisualChildren<FrameworkElement>(loadObj2, dataContext, digCount + 1).ToList();
+                                var list2 = EnumVisualChildren<FrameworkElement>(loadObj2, dataContext, digCount + 1).AsValueEnumerable().ToList();
                                 foreach (var childOfChild2 in list2)
                                     if (childOfChild2 != null && childOfChild2 is not ContentPresenter && childOfChild2 is not Control &&
                                         childOfChild2 is not Control && childOfChild2 is T ttt && ttt.DataContext == dataContext)
@@ -1395,7 +1396,7 @@ public static class Extensions
                             if (loadObj2 is T t && loadObj2 is not ContentPresenter && loadObj2 is not Control && t.DataContext == dataContext) return (T)t;
                             if (loadObj2 is not null)
                             {
-                                var list2 = EnumVisualChildren<FrameworkElement>(loadObj2, dataContext, digCount + 1).ToList();
+                                var list2 = EnumVisualChildren<FrameworkElement>(loadObj2, dataContext, digCount + 1).AsValueEnumerable().ToList();
                                 foreach (var childOfChild2 in list2)
                                     if (childOfChild2 != null && childOfChild2 is T && childOfChild2 is not ContentPresenter && childOfChild2 is not Control &&
                                         childOfChild2 is not Control && childOfChild2 is T ttt && ttt.DataContext == dataContext)
@@ -1416,7 +1417,7 @@ public static class Extensions
                 loadObj = dw.ContentTemplate.LoadContent();
                 if (loadObj is not null)
                 {
-                    var list2 = EnumVisualChildren<FrameworkElement>(loadObj, dataContext, digCount + 1).ToList();
+                    var list2 = EnumVisualChildren<FrameworkElement>(loadObj, dataContext, digCount + 1).AsValueEnumerable().ToList();
                     foreach (var childOfChild in list2)
                         if (childOfChild != null && childOfChild is T t && childOfChild is not ContentPresenter && childOfChild is not Control && childOfChild is not Control && t.DataContext == dataContext)
                             return t;
@@ -1435,7 +1436,7 @@ public static class Extensions
                     return t;
                 }
 
-                var list = EnumVisualChildren<T>(child, dataContext, digCount + 1).ToList();
+                var list = EnumVisualChildren<T>(child, dataContext, digCount + 1).AsValueEnumerable().ToList();
                 foreach (var childOfChild in list) //yield return (T)childOfChild;
                     if (childOfChild.DataContext == dataContext) return (T)childOfChild;
             }
@@ -1446,7 +1447,7 @@ public static class Extensions
                 if (content is T tt && tt.DataContext == dataContext) return (T)content;
                 if (content is not null)
                 {
-                    var list = EnumVisualChildren<FrameworkElement>(content, dataContext, digCount + 1).ToList();
+                    var list = EnumVisualChildren<FrameworkElement>(content, dataContext, digCount + 1).AsValueEnumerable().ToList();
                     foreach (var childOfChild2 in list)
                         if (childOfChild2 != null && childOfChild2 is T ttt && ttt.DataContext == dataContext)
                             return (T)childOfChild2;
@@ -1458,14 +1459,14 @@ public static class Extensions
                     var dependencyObject = cp.ContentTemplate.LoadContent();
                     if (dependencyObject is T ttt && ttt.DataContext == dataContext) //yield return (T)dependencyObject;
                         return (T)dependencyObject;
-                    var list = EnumVisualChildren<T>(dependencyObject, dataContext, digCount + 1).ToList();
+                    var list = EnumVisualChildren<T>(dependencyObject, dataContext, digCount + 1).AsValueEnumerable().ToList();
                     foreach (var childOfChild in list) //yield return childOfChild;
                         if (childOfChild.DataContext == dataContext) return childOfChild;
                 }
             }
             else if (child != null)
             {
-                var list = EnumVisualChildren<T>(child, dataContext, digCount + 1).ToList();
+                var list = EnumVisualChildren<T>(child, dataContext, digCount + 1).AsValueEnumerable().ToList();
                 foreach (var childOfChild in list) //yield return childOfChild;
                     if (childOfChild.DataContext == dataContext) return childOfChild;
             }
@@ -1475,7 +1476,7 @@ public static class Extensions
         {
             foreach (var item in enumerable)
             {
-                var list = EnumVisualChildren<T>(item, dataContext, digCount + 1).ToList();
+                var list = EnumVisualChildren<T>(item, dataContext, digCount + 1).AsValueEnumerable().ToList();
                 foreach (var child in list)
                 {
                     if (child.DataContext == dataContext) return child;
@@ -1497,7 +1498,7 @@ public static class Extensions
         {
             var child = VisualTreeHelper.GetChild(parent, i) as FrameworkElement;
 
-            var children = GetChildren(child).ToList();
+            var children = GetChildren(child).AsValueEnumerable().ToList();
             foreach (var child2 in children)
                 yield return child2;
 
@@ -1609,7 +1610,7 @@ public static class Extensions
             if (child is IEnumerable<T> enumerable)
                 result = enumerable;
             else
-                result = EnumVisualChildren<T>(child).ToList();
+                result = EnumVisualChildren<T>(child).AsValueEnumerable().ToList();
             if (result != null)
                 foreach (var item in result)
                     if (item != null)
@@ -1621,7 +1622,7 @@ public static class Extensions
             }
             else
             {
-                var result3 = EnumVisualChildren<T>(result2).ToList();
+                var result3 = EnumVisualChildren<T>(result2).AsValueEnumerable().ToList();
                 if (result3 is not null)
                     foreach (var item in result3)
                         if (item is not null)
@@ -1647,7 +1648,7 @@ public static class Extensions
             if (child is IEnumerable<T> enumerable)
                 result = enumerable;
             else
-                result = FindVisualChildren<T>(child).ToList();
+                result = FindVisualChildren<T>(child).AsValueEnumerable().ToList();
             //var result = (child as IEnumerable<T>) ?? FindVisualChildren<T>(child);
             if (result != null)
                 foreach (var item in result)
@@ -1660,7 +1661,7 @@ public static class Extensions
             }
             else
             {
-                var result3 = FindVisualChildren<T>(result2).ToList();
+                var result3 = FindVisualChildren<T>(result2).AsValueEnumerable().ToList();
                 if (result3 is not null)
                     foreach (var item in result3)
                         if (item is not null && item.DataContext == dataContext)
@@ -1788,7 +1789,7 @@ public static class Extensions
             ret += pg.Bounds.Width;
         }
 
-        return ret / str.Count();
+        return ret / str.AsValueEnumerable().Count();
     }
 
     public static double GetAvgHeight(this GlyphTypeface glyphTypeface, int fontSize)
@@ -1804,7 +1805,7 @@ public static class Extensions
             ret += pg.Bounds.Height;
         }
 
-        return ret / str.Count();
+        return ret / str.AsValueEnumerable().Count();
     }
 
     public static Point Shift(this Point target, double x, double y)
@@ -1827,7 +1828,7 @@ public static class Extensions
             {
                 var group = item as GroupItemViewModel;
                 var id = group.ID;
-                var idmatch = all.Where(x => x.ParentID == id);
+                var idmatch = all.AsValueEnumerable().Where(x => x.ParentID == id).ToArray();
                 foreach (var idmatchitem in idmatch) yield return idmatchitem;
             }
 
@@ -1843,7 +1844,7 @@ public static class Extensions
 
     public static IEnumerable<SelectableDesignerItemViewModelBase> Items(this ObservableCollection<Layer> layers)
     {
-        return layers.SelectMany(x => x.Children).Select(x => (x as LayerItem).Item.Value);
+        return layers.AsValueEnumerable().SelectMany(x => x.Children).Select(x => (x as LayerItem).Item.Value).ToArray();
     }
 
     public static T GetParent<T>(this DependencyObject obj)
@@ -1889,14 +1890,14 @@ public static class Extensions
     public static IEnumerable<T> Children<T>(this DependencyObject obj)
         where T : DependencyObject
     {
-        return obj.Children().OfType<T>();
+        return obj.Children().AsValueEnumerable().OfType<T>().ToArray();
     }
 
     //--- 特定の型の子孫要素を取得
     public static IEnumerable<T> Descendants<T>(this DependencyObject obj)
         where T : DependencyObject
     {
-        return obj.Descendants().OfType<T>();
+        return obj.Descendants().AsValueEnumerable().OfType<T>().ToArray();
     }
 
     //https://stackoverflow.com/questions/41608665/linq-recursive-parent-child
@@ -1949,17 +1950,17 @@ public static class Extensions
         {
             top
         };
-        foreach (var elm in source.Except(new T[] { top }))
+        foreach (var elm in source.AsValueEnumerable().Except(new T[] { top }))
         {
             newCollection.Add(elm);
         }
-        return newCollection.Reverse().ToObservable();
+        return newCollection.AsValueEnumerable().Reverse().ToArray().ToObservable();
     }
 
     public static IEnumerable<Window> OfType<T>(this WindowCollection collection) where T : Window
     {
         var windowArray = new Window[collection.Count];
         collection.CopyTo(windowArray, 0);
-        return windowArray.OfType<T>();
+        return windowArray.AsValueEnumerable().OfType<T>().ToArray();
     }
 }

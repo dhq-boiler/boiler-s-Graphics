@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Reactive.Bindings;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Windows;
-using Reactive.Bindings;
+using ZLinq;
 
 namespace TsOperationHistory;
 
@@ -187,7 +187,7 @@ public class ClearOperation<T> : IOperation
 
     public void RollForward()
     {
-        _prevData = get_list().ToArray();
+        _prevData = get_list().AsValueEnumerable().ToArray();
         get_list().Clear();
     }
 

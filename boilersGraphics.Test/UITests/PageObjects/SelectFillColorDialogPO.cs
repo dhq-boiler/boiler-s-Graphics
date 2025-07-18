@@ -13,7 +13,7 @@ namespace boilersGraphics.Test.UITests.PageObjects
         private DragAndDropAction _GreenDADA;
         private DragAndDropAction _BlueDADA;
 
-        public SelectFillColorDialogPO(WindowsDriver<WindowsElement> session, E2ETestFixture testFixture) : base(session, testFixture)
+        public SelectFillColorDialogPO(WindowsDriver<AppiumElement> session, E2ETestFixture testFixture) : base(session, testFixture)
         { }
 
         public void Click_Solid()
@@ -42,13 +42,13 @@ namespace boilersGraphics.Test.UITests.PageObjects
             GetElementByAutomationID("OK").Click();
         }
 
-        public WindowsElement ColorMap => GetElementByAutomationID("ColorMap");
-        public WindowsElement ColorMapThumb => GetElementByAutomationID("ColorMapThumb");
-        public WindowsElement Hue => GetElementByAutomationID("Hue");
-        public WindowsElement Alpha => GetElementByAutomationID("Alpha");
-        public WindowsElement Red => GetElementByAutomationID("Red");
-        public WindowsElement Green => GetElementByAutomationID("Green");
-        public WindowsElement Blue => GetElementByAutomationID("Blue");
+        public AppiumElement ColorMap => GetElementByAutomationID("ColorMap");
+        public AppiumElement ColorMapThumb => GetElementByAutomationID("ColorMapThumb");
+        public AppiumElement Hue => GetElementByAutomationID("Hue");
+        public AppiumElement Alpha => GetElementByAutomationID("Alpha");
+        public AppiumElement Red => GetElementByAutomationID("Red");
+        public AppiumElement Green => GetElementByAutomationID("Green");
+        public AppiumElement Blue => GetElementByAutomationID("Blue");
 
 
         public DragAndDropAction ColorMapDADA { get { return _ColorMapDADA; } }
@@ -60,14 +60,14 @@ namespace boilersGraphics.Test.UITests.PageObjects
 
         public class DragAndDropAction
         {
-            public DragAndDropAction(WindowsElement windowsElement)
+            public DragAndDropAction(AppiumElement AppiumElement)
             {
-                WindowsElement = windowsElement;
+                AppiumElement = AppiumElement;
             }
 
             private Actions actions;
 
-            public WindowsElement WindowsElement { get; }
+            public AppiumElement AppiumElement { get; }
 
             public void Initialize()
             {
@@ -86,7 +86,7 @@ namespace boilersGraphics.Test.UITests.PageObjects
 
             public void MoveTo(int x, int y)
             {
-                actions.MoveToElement(WindowsElement, x, y);
+                actions.MoveToElement(AppiumElement, x, y);
             }
 
             public void MoveByOffset(int x, int y)

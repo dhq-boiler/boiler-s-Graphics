@@ -3,9 +3,9 @@ using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Windows.Input;
+using ZLinq;
 
 namespace boilersGraphics.ViewModels;
 
@@ -44,7 +44,7 @@ internal class CustomMessageBoxViewModel : IDialogAware, IDisposable
         Title = parameters.GetValue<string>("Title");
         Text.Value = parameters.GetValue<string>("Text");
         var buttons = parameters.GetValue<IEnumerable<Button>>("Buttons");
-        buttons.ToList().ForEach(button => Buttons.Add(button));
+        buttons.AsValueEnumerable().ToList().ForEach(button => Buttons.Add(button));
     }
 
     public void Dispose()

@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using Reactive.Bindings;
+using System.Collections.Generic;
 using System.Windows;
-using Reactive.Bindings;
+using ZLinq;
 
 namespace TsOperationHistory;
 
@@ -37,7 +37,7 @@ public class CompositeOperation : ICompositeOperation
 
     public void Rollback()
     {
-        foreach (var operation in _operations.Reverse())
+        foreach (var operation in _operations.AsValueEnumerable().Reverse())
             operation.Rollback();
     }
 

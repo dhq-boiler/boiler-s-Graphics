@@ -24,7 +24,7 @@ namespace boilersGraphics.Test.UITests
         private const string WindowsApplicationDriverUrl = "http://127.0.0.1:4723";
         private static readonly string AppPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "boilersGraphics.exe");//"Microsoft.WindowsCalculator_8wekyb3d8bbwe!App";
 
-        protected static WindowsDriver<WindowsElement> session;
+        protected static WindowsDriver session;
         private static Process wad;
 
         [OneTimeSetUp]
@@ -56,9 +56,9 @@ namespace boilersGraphics.Test.UITests
                 // Create a new session to bring up an instance of the Calculator application
                 // Note: Multiple calculator windows (instances) share the same process Id
                 var options = new AppiumOptions();
-                options.AddAdditionalCapability("app", AppPath);
-                options.AddAdditionalCapability("appWorkingDir", Path.GetDirectoryName(AppPath));
-                session = new WindowsDriver<WindowsElement>(new Uri(WindowsApplicationDriverUrl), options);
+                options.AddAdditionalOption("app", AppPath);
+                options.AddAdditionalOption("appWorkingDir", Path.GetDirectoryName(AppPath));
+                session = new WindowsDriver(new Uri(WindowsApplicationDriverUrl), options);
                 Assert.That(session, Is.Not.Null);
 
                 // Set implicit timeout to 1.5 seconds to make element search to retry every 500 ms for at most three times
@@ -106,14 +106,14 @@ namespace boilersGraphics.Test.UITests
         }
 
         // Wait for an Object to be accessible, use a custom timeout
-        public static WindowsElement WaitForObject(Func<WindowsElement> element, int timeout)
+        public static AppiumElement WaitForObject(Func<AppiumElement> element, int timeout)
         {
 
-            WindowsElement waitElement = null;
+            AppiumElement waitElement = null;
 
             try
             {
-                var wait = new DefaultWait<WindowsDriver<WindowsElement>>(session)
+                var wait = new DefaultWait<WindowsDriver>(session)
                 {
                     Timeout = TimeSpan.FromSeconds(timeout),
                     PollingInterval = TimeSpan.FromSeconds(1)
@@ -145,17 +145,17 @@ namespace boilersGraphics.Test.UITests
             }
         }
 
-        public static void InjectText(WindowsElement element, string text)
+        public static void InjectText(AppiumElement element, string text)
         {
             Clipboard.SetText(text);
             element.SendKeys(Keys.Control + "v" + Keys.Control);
         }
 
-        public static WindowsElement GetElementByAutomationID(string automationId, int timeOut = 10000)
+        public static AppiumElement GetElementByAutomationID(string automationId, int timeOut = 10000)
         {
-            WindowsElement element = null;
+            AppiumElement element = null;
 
-            var wait = new DefaultWait<WindowsDriver<WindowsElement>>(session)
+            var wait = new DefaultWait<WindowsDriver>(session)
             {
                 Timeout = TimeSpan.FromMilliseconds(timeOut),
                 Message = $"Element with automationId \"{automationId}\" not found."
@@ -167,7 +167,7 @@ namespace boilersGraphics.Test.UITests
             {
                 wait.Until(Driver =>
                 {
-                    element = Driver.FindElementByAccessibilityId(automationId);
+                    element = Driver.FindElement(By.Id(automationId));
                     return element != null;
                 });
             }
@@ -181,11 +181,11 @@ namespace boilersGraphics.Test.UITests
             return element;
         }
 
-        public static WindowsElement GetElementByName(string name, int timeOut = 10000)
+        public static AppiumElement GetElementByName(string name, int timeOut = 10000)
         {
-            WindowsElement element = null;
+            AppiumElement element = null;
 
-            var wait = new DefaultWait<WindowsDriver<WindowsElement>>(session)
+            var wait = new DefaultWait<WindowsDriver>(session)
             {
                 Timeout = TimeSpan.FromMilliseconds(timeOut),
                 Message = $"Element with Name \"{name}\" not found."
@@ -197,7 +197,7 @@ namespace boilersGraphics.Test.UITests
             {
                 wait.Until(Driver =>
                 {
-                    element = Driver.FindElementByName(name);
+                    element = Driver.FindElement(By.Name(name));
                     return element != null;
                 });
             }
@@ -211,11 +211,11 @@ namespace boilersGraphics.Test.UITests
             return element;
         }
 
-        public static WindowsElement GetElementBy(By by, int timeOut = 10000)
+        public static AppiumElement GetElementBy(By by, int timeOut = 10000)
         {
-            WindowsElement element = null;
+            AppiumElement element = null;
 
-            var wait = new DefaultWait<WindowsDriver<WindowsElement>>(session)
+            var wait = new DefaultWait<WindowsDriver>(session)
             {
                 Timeout = TimeSpan.FromMilliseconds(timeOut),
                 Message = $"Element with By {by.ToString()} not found."
@@ -242,9 +242,9 @@ namespace boilersGraphics.Test.UITests
 
         public static bool ExistsElementByAutomationID(string automationId, int timeOut = 10000)
         {
-            WindowsElement element = null;
+            AppiumElement element = null;
 
-            var wait = new DefaultWait<WindowsDriver<WindowsElement>>(session)
+            var wait = new DefaultWait<WindowsDriver>(session)
             {
                 Timeout = TimeSpan.FromMilliseconds(timeOut),
                 Message = $"Element with automationId \"{automationId}\" not found."
@@ -256,7 +256,7 @@ namespace boilersGraphics.Test.UITests
             {
                 wait.Until(Driver =>
                 {
-                    element = Driver.FindElementByAccessibilityId(automationId);
+                    element = Driver.FindElement(By.Id(automationId));
                     return element != null;
                 });
             }

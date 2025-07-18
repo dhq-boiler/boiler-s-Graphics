@@ -11,7 +11,7 @@ namespace boilersGraphics.Test.UITests.PageObjects
 {
     public class MainWindowPO : PageObjectBase
     {
-        public MainWindowPO(WindowsDriver<WindowsElement> session, E2ETestFixture testFixture)
+        public MainWindowPO(WindowsDriver<AppiumElement> session, E2ETestFixture testFixture)
             : base(session, testFixture)
         { 
         }
@@ -62,7 +62,7 @@ namespace boilersGraphics.Test.UITests.PageObjects
         //    ET100 = 100,
         //}
 
-        public ReadOnlyCollection<WindowsElement> EdgeThicknessComboBoxItem => Session.FindElements(By.XPath("//Window[@ClassName=\"Popup\"]/ListItem[@ClassName=\"ListBoxItem\"]"));
+        public ReadOnlyCollection<AppiumElement> EdgeThicknessComboBoxItem => Session.FindElements(By.XPath("//Window[@ClassName=\"Popup\"]/ListItem[@ClassName=\"ListBoxItem\"]"));
 
         public void Click_EdgeThicknessComboBoxItem(int index)
         {
@@ -81,11 +81,11 @@ namespace boilersGraphics.Test.UITests.PageObjects
             return new SelectFillColorDialogPO(Session, TestFixture);
         }
 
-        public WindowsElement Canvas => GetElementBy(By.XPath("//Pane[@Name=\"DesignerScrollViewer\"][@AutomationId=\"DesignerScrollViewer\"]/Thumb[@AutomationId=\"PART_DragThumb\"]"));
+        public AppiumElement Canvas => GetElementBy(By.XPath("//Pane[@Name=\"DesignerScrollViewer\"][@AutomationId=\"DesignerScrollViewer\"]/Thumb[@AutomationId=\"PART_DragThumb\"]"));
 
-        public WindowsElement DesignerScrollViewer => GetElementBy(By.XPath("//Pane[@Name=\"DesignerScrollViewer\"][@AutomationId=\"DesignerScrollViewer\"]"));
+        public AppiumElement DesignerScrollViewer => GetElementBy(By.XPath("//Pane[@Name=\"DesignerScrollViewer\"][@AutomationId=\"DesignerScrollViewer\"]"));
 
-        public ReadOnlyCollection<AppiumWebElement> Items => DesignerScrollViewer.FindElements(By.ClassName("Thumb"));
+        public ReadOnlyCollection<AppiumElement> Items => DesignerScrollViewer.FindElements(By.ClassName("Thumb"));
 
         public void Click_PointerTool()
         {

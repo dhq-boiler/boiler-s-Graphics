@@ -6,9 +6,9 @@ using Prism.Services.Dialogs;
 using Prism.Unity;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows;
 using System.Windows.Media;
+using ZLinq;
 
 namespace boilersGraphics.ViewModels;
 
@@ -36,10 +36,10 @@ public class LetterDesignerItemViewModel : AbstractLetterDesignerItemViewModel, 
         var offsetY = 0d;
         var next = 0;
         var allcount = 0;
-        while (allcount < LetterString.Value.Count() && Width.Value > 0)
+        while (allcount < LetterString.Value.AsValueEnumerable().Count() && Width.Value > 0)
         {
             var maxHeight = 0d;
-            var letterString = LetterString.Value.Skip(allcount);
+            var letterString = LetterString.Value.AsValueEnumerable().Skip(allcount);
 
             listLineBreak.Clear();
             width = 0d;

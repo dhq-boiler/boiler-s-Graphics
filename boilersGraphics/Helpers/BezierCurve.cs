@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows;
+using ZLinq;
 
 namespace boilersGraphics.Helpers;
 
@@ -19,11 +19,11 @@ public static class BezierCurve
     public static Point Evaluate(double t, IEnumerable<Point> points)
     {
         var result = new Point();
-        var n = points.Count();
+        var n = points.AsValueEnumerable().Count();
         for (var i = 0; i < n; i++)
         {
-            result.X += points.ElementAt(i).X * Bernstein(n - 1, i, t);
-            result.Y += points.ElementAt(i).Y * Bernstein(n - 1, i, t);
+            result.X += points.AsValueEnumerable().ElementAt(i).X * Bernstein(n - 1, i, t);
+            result.Y += points.AsValueEnumerable().ElementAt(i).Y * Bernstein(n - 1, i, t);
         }
 
         return result;

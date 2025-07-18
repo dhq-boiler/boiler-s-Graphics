@@ -5,13 +5,13 @@ using boilersGraphics.Models;
 using boilersGraphics.ViewModels;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using ZLinq;
 
 namespace boilersGraphics.Adorners;
 
@@ -79,7 +79,7 @@ public class LassoAdorner : Adorner
 
     private void UpdateStatisticsCount()
     {
-        statistics.CumulativeTotalOfItemsSelectedWithTheLassoTool += sets.Count();
+        statistics.CumulativeTotalOfItemsSelectedWithTheLassoTool += sets.AsValueEnumerable().Count();
         var dao = new StatisticsDao();
         dao.Update(statistics);
         sets.Clear();
@@ -115,7 +115,7 @@ public class LassoAdorner : Adorner
         var lassoRect = new Rect(_startPoint.Value, _endPoint.Value);
         var itemsControl = GetParent<ItemsControl>(typeof(ItemsControl), _designerCanvas);
 
-        foreach (var item in vm.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+        foreach (var item in vm.Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).AsValueEnumerable()
                      .Where(x => x is LayerItem)
                      .Select(x => (x as LayerItem).Item.Value))
             if (item is SelectableDesignerItemViewModelBase)

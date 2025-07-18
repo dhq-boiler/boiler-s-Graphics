@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using TsOperationHistory.Extensions;
 using TsOperationHistory.Internal;
+using ZLinq;
 
 namespace TsOperationHistory;
 
@@ -29,14 +29,14 @@ public partial class OperationBuilder
         public IOperation BindEvents(IOperation operation)
         {
             Debug.Assert(operation != null, ErrorMessages.NotNull);
-            if (_prevEvents.Any())
+            if (_prevEvents.AsValueEnumerable().Any())
                 operation = operation.AddPreEvent(() =>
                 {
                     foreach (var e in _prevEvents)
                         e.Invoke();
                 });
 
-            if (_postEvents.Any())
+            if (_postEvents.AsValueEnumerable().Any())
                 operation = operation.AddPostEvent(() =>
                 {
                     foreach (var e in _postEvents)
@@ -261,7 +261,7 @@ public partial class OperationBuilder
 
         public IOperation BuildAddOperation(T addValue)
         {
-            Debug.Assert(_addEvents.Any() && _removeEvents.Any(), ErrorMessages.InvalidOperation);
+            Debug.Assert(_addEvents.AsValueEnumerable().Any() && _removeEvents.AsValueEnumerable().Any(), ErrorMessages.InvalidOperation);
 
             return new DelegateOperation(
                 MakeInvokeListAction(_addEvents, _addedEvents, addValue),
@@ -270,7 +270,7 @@ public partial class OperationBuilder
 
         public IOperation BuildRemoveOperation(T removeValue)
         {
-            Debug.Assert(_addEvents.Any() && _removeEvents.Any(), ErrorMessages.InvalidOperation);
+            Debug.Assert(_addEvents.AsValueEnumerable().Any() && _removeEvents.AsValueEnumerable().Any(), ErrorMessages.InvalidOperation);
 
             return new DelegateOperation(
                 MakeInvokeListAction(_removeEvents, _removedEvents, removeValue),
@@ -280,18 +280,18 @@ public partial class OperationBuilder
         public IOperation BuildAddRangeOperation(IEnumerable<T> addValues)
         {
             Debug.Assert(addValues != null, ErrorMessages.NotNull);
-            return addValues.Select(BuildAddOperation).ToCompositeOperation();
+            return addValues.AsValueEnumerable().Select(BuildAddOperation).ToArray().ToCompositeOperation();
         }
 
         public IOperation BuildRemoveRangeOperation(IEnumerable<T> removeValues)
         {
             Debug.Assert(removeValues != null, ErrorMessages.NotNull);
-            return removeValues.Select(BuildRemoveOperation).ToCompositeOperation();
+            return removeValues.AsValueEnumerable().Select(BuildRemoveOperation).ToArray().ToCompositeOperation();
         }
 
         public IOperation BuildClearOperation()
         {
-            Debug.Assert(_clearEvents.Any() && _rollbackEvents.Any(), ErrorMessages.InvalidOperation);
+            Debug.Assert(_clearEvents.AsValueEnumerable().Any() && _rollbackEvents.AsValueEnumerable().Any(), ErrorMessages.InvalidOperation);
 
             return new DelegateOperation(
                 () =>

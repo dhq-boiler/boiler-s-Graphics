@@ -15,6 +15,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using TsOperationHistory;
 using TsOperationHistory.Internal;
+using ZLinq;
 
 namespace boilersGraphics.ViewModels;
 
@@ -32,10 +33,10 @@ public class UndoHistoryViewModel : BindableBase, IDialogAware
         UndoCommand.Subscribe(operation =>
             {
                 var mainWindowViewModel = Application.Current.MainWindow.DataContext as MainWindowViewModel;
-                var operations = mainWindowViewModel.Controller.UndoStack.Undos.Value.ToList();
+                var operations = mainWindowViewModel.Controller.UndoStack.Undos.Value.AsValueEnumerable().ToList();
                 var index = operations.IndexOf(operation);
-                var undoList = operations.Skip(index + 1).Take(operations.Count() - index);
-                undoList = undoList.Reverse().ToList();
+                var undoList = operations.AsValueEnumerable().Skip(index + 1).Take(operations.AsValueEnumerable().Count() - index).ToArray();
+                undoList = undoList.AsValueEnumerable().Reverse().ToArray();
                 foreach (var undo in undoList)
                 {
                     var poped = mainWindowViewModel.Controller.UndoStack.Undos.Value.Pop();
@@ -50,7 +51,7 @@ public class UndoHistoryViewModel : BindableBase, IDialogAware
         RedoCommand.Subscribe(operation =>
             {
                 var mainWindowViewModel = Application.Current.MainWindow.DataContext as MainWindowViewModel;
-                var operations = mainWindowViewModel.Controller.UndoStack.Redos.Value.ToList();
+                var operations = mainWindowViewModel.Controller.UndoStack.Redos.Value.AsValueEnumerable().ToList();
                 var index = operations.IndexOf(operation);
                 var redoList = A(operations, index);
                 foreach (var redo in redoList)
@@ -61,7 +62,7 @@ public class UndoHistoryViewModel : BindableBase, IDialogAware
                     mainWindowViewModel.Controller.UndoStack.Undos.Value.Push(redo);
                 }
 
-                CurrentPosition.Value = mainWindowViewModel.Controller.UndoStack.Undos.Value.Count() - 1;
+                CurrentPosition.Value = mainWindowViewModel.Controller.UndoStack.Undos.Value.AsValueEnumerable().Count() - 1;
             })
             .AddTo(compositeDisposable);
         ContextMenuOpeningCommand.Subscribe(args =>
@@ -88,7 +89,7 @@ public class UndoHistoryViewModel : BindableBase, IDialogAware
         CurrentPosition.Subscribe(cp =>
             {
                 var mainWindowViewModel = Application.Current.MainWindow.DataContext as MainWindowViewModel;
-                var history = mainWindowViewModel.Controller.UndoStack.History.Value;
+                var history = mainWindowViewModel.Controller.UndoStack.History.Value.AsValueEnumerable();
                 for (var i = 0; i < history.Count(); i++)
                 {
                     var record = history.ElementAt(i);
@@ -101,8 +102,8 @@ public class UndoHistoryViewModel : BindableBase, IDialogAware
             .AddTo(compositeDisposable);
         Operations.Value.History.Subscribe(_ =>
             {
-                if (Operations.Value.Count() == Operations.Value.Undos.Value.Count())
-                    CurrentPosition.Value = Operations.Value.Count() - 1;
+                if (Operations.Value.AsValueEnumerable().Count() == Operations.Value.Undos.Value.AsValueEnumerable().Count())
+                    CurrentPosition.Value = Operations.Value.AsValueEnumerable().Count() - 1;
             })
             .AddTo(compositeDisposable);
     }

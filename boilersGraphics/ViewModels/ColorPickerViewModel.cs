@@ -8,10 +8,10 @@ using Prism.Services.Dialogs;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Windows;
 using System.Windows.Media;
+using ZLinq;
 
 namespace boilersGraphics.ViewModels;
 
@@ -262,7 +262,7 @@ public class ColorPickerViewModel : BindableBase, IDialogAware, IDisposable
                         ColorSpot99 = linearGradientBrushPickerViewModel.ColorSpot99.Value
                     };
                     var gradientStopCollection = new GradientStopCollection();
-                    linearGradientBrushPickerViewModel.GradientStops.ToList()
+                    linearGradientBrushPickerViewModel.GradientStops.AsValueEnumerable().ToList()
                         .ForEach(x => gradientStopCollection.Add(x.ConvertToGradientStop()));
                     linearGradientBrushPickerViewModel.EditTarget.Value.New = new LinearGradientBrush(
                         gradientStopCollection, linearGradientBrushPickerViewModel.StartPoint.Value,
@@ -388,7 +388,7 @@ public class ColorPickerViewModel : BindableBase, IDialogAware, IDisposable
                         ColorSpot99 = radialGradientBrushPickerViewModel.ColorSpot99.Value
                     };
                     var gradientStopCollection = new GradientStopCollection();
-                    radialGradientBrushPickerViewModel.GradientStops.ToList()
+                    radialGradientBrushPickerViewModel.GradientStops.AsValueEnumerable().ToList()
                         .ForEach(x => gradientStopCollection.Add(x.ConvertToGradientStop()));
                     var brush = new RadialGradientBrush(gradientStopCollection)
                     {

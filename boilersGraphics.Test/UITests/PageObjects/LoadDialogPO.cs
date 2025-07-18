@@ -5,7 +5,7 @@ namespace boilersGraphics.Test.UITests.PageObjects
 {
     public class LoadDialogPO : PageObjectBase
     {
-        public LoadDialogPO(WindowsDriver<WindowsElement> session, E2ETestFixture testFixture) : base(session, testFixture)
+        public LoadDialogPO(WindowsDriver session, E2ETestFixture testFixture) : base(session, testFixture)
         { }
 
         public void Input_FileName(string filename)

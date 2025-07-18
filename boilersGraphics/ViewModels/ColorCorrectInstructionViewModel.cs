@@ -9,11 +9,11 @@ using Prism.Services.Dialogs;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using ZLinq;
 
 namespace boilersGraphics.ViewModels
 {
@@ -66,7 +66,7 @@ namespace boilersGraphics.ViewModels
         public void OnDialogClosed()
         {
             ViewModel.Value.IsOpenedInstructionDialog.Value = false;
-            MainWindowViewModel.Instance.ToolBarViewModel.Behaviors.OfType<ToneCurveDropperBehavior>().ToList().ForEach(x => MainWindowViewModel.Instance.ToolBarViewModel.Behaviors.Remove(x));
+            MainWindowViewModel.Instance.ToolBarViewModel.Behaviors.AsValueEnumerable().OfType<ToneCurveDropperBehavior>().ToList().ForEach(x => MainWindowViewModel.Instance.ToolBarViewModel.Behaviors.Remove(x));
             MainWindowViewModel.Instance.ToolBarViewModel.Behaviors.Add(MainWindowViewModel.Instance.ToolBarViewModel.DeselectBehavior);
             MainWindowViewModel.Instance.ToolBarViewModel.ChangeHitTestToEnable();
         }

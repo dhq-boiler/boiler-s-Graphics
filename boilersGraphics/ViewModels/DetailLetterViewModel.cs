@@ -1,8 +1,8 @@
 ﻿using boilersGraphics.Models;
 using Prism.Regions;
-using System.Linq;
 using System.Windows;
 using System.Windows.Media;
+using ZLinq;
 
 namespace boilersGraphics.ViewModels;
 
@@ -59,7 +59,7 @@ internal class DetailLetterViewModel : DetailViewModelBase<AbstractLetterDesigne
                 "LetterString", HorizontalAlignment.Left));
         Properties.Add(new PropertyOptionsValueCombinationClass<AbstractLetterDesignerItemViewModel, FontFamilyEx>(
             ViewModel.Value, "SelectedFontFamily", HorizontalAlignment.Left,
-            Fonts.GetFontFamilies("C:\\Windows\\Fonts").Select(x => new FontFamilyEx(x)).ToArray()));
+            Fonts.GetFontFamilies("C:\\Windows\\Fonts").AsValueEnumerable().Select(x => new FontFamilyEx(x)).ToArray()));
         Properties.Add(
             new PropertyOptionsValueCombinationStruct<AbstractLetterDesignerItemViewModel, bool>(ViewModel.Value,
                 "IsBold", HorizontalAlignment.Left));

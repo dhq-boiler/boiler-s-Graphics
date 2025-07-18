@@ -3,13 +3,13 @@ using boilersGraphics.UserControls;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
+using ZLinq;
 
 namespace boilersGraphics.Controls;
 
@@ -61,8 +61,8 @@ public class ZoomBox : Control, INotifyPropertyChanged
         var ticks = _zoomSlider.Ticks;
         var index = ticks.IndexOf(_zoomSlider.Value);
         index++;
-        if (index > ticks.Count() - 1)
-            index = ticks.Count() - 1;
+        if (index > ticks.AsValueEnumerable().Count() - 1)
+            index = ticks.AsValueEnumerable().Count() - 1;
         _zoomSlider.Value = ticks[index];
     }
 

@@ -7,13 +7,13 @@ using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
+using ZLinq;
 
 namespace boilersGraphics.Models;
 
@@ -74,15 +74,15 @@ public class Layer : LayerTreeViewItemBase, IObservable<LayerObservable>, ICompa
             return 1;
         }
 
-        var otherInt = other.Children.OfType<LayerItem>().Max(x => x.Item.Value.ZIndex.Value);
-        return Children.OfType<LayerItem>().Max(x => x.Item.Value.ZIndex.Value).CompareTo(otherInt);
+        var otherInt = other.Children.AsValueEnumerable().OfType<LayerItem>().Max(x => x.Item.Value.ZIndex.Value);
+        return Children.AsValueEnumerable().OfType<LayerItem>().Max(x => x.Item.Value.ZIndex.Value).CompareTo(otherInt);
     }
 
     public int CompareTo(LayerTreeViewItemBase other)
     {
         if (other == null)
             return 1;
-        return Children.OfType<LayerItem>().Max(x => x.Item.Value.ZIndex.Value)
+        return Children.AsValueEnumerable().OfType<LayerItem>().Max(x => x.Item.Value.ZIndex.Value)
             .CompareTo(other.OfType<LayerItem>().Max(x => x.Item.Value.ZIndex.Value));
     }
 
@@ -95,13 +95,13 @@ public class Layer : LayerTreeViewItemBase, IObservable<LayerObservable>, ICompa
 
     public override void UpdateAppearance(IEnumerable<SelectableDesignerItemViewModelBase> items, bool backgroundIncluded = false)
     {
-        if (!backgroundIncluded && items.Count() == 0)
+        if (!backgroundIncluded && items.AsValueEnumerable().Count() == 0)
             return;
         double minX, maxX, minY, maxY;
         var _items = items;
         if (backgroundIncluded)
         {
-            _items = _items.Union(new SelectableDesignerItemViewModelBase[] { DiagramViewModel.Instance.BackgroundItem.Value });
+            _items = _items.AsValueEnumerable().Union(new SelectableDesignerItemViewModelBase[] { DiagramViewModel.Instance.BackgroundItem.Value }).ToArray();
         }
         var width = Measure.GetWidth(_items, out minX, out maxX);
         var height = Measure.GetHeight(_items, out minY, out maxY);
@@ -110,11 +110,11 @@ public class Layer : LayerTreeViewItemBase, IObservable<LayerObservable>, ICompa
             return;
 
         Rect? sliceRect = null;
-        _items.Cast<IRect>().ToList().ForEach(x => sliceRect = (!sliceRect.HasValue ? x.Rect.Value : Rect.Union(sliceRect.Value, x.Rect.Value)));
+        _items.AsValueEnumerable().Cast<IRect>().ToList().ForEach(x => sliceRect = (!sliceRect.HasValue ? x.Rect.Value : Rect.Union(sliceRect.Value, x.Rect.Value)));
         var renderer = new Renderer(new WpfVisualTreeHelper());
         
         //背景オブジェクトを除く、アイテムがない場合
-        if (_items.Except(new SelectableDesignerItemViewModelBase[]{ DiagramViewModel.Instance.BackgroundItem.Value }).Count() == 0)
+        if (_items.AsValueEnumerable().Except(new SelectableDesignerItemViewModelBase[]{ DiagramViewModel.Instance.BackgroundItem.Value }).Count() == 0)
         {
             //アピアランスには背景オブジェクトのみをレンダリングする
             Appearance.Value = renderer.Render(sliceRect, DesignerCanvas.GetInstance(),
@@ -127,8 +127,8 @@ public class Layer : LayerTreeViewItemBase, IObservable<LayerObservable>, ICompa
             //アピアランスには背景オブジェクトを除いて、ZIndexが範囲内のオブジェクトのみをレンダリングする
             Appearance.Value = renderer.Render(sliceRect, DesignerCanvas.GetInstance(),
                 DiagramViewModel.Instance,
-                DiagramViewModel.Instance.BackgroundItem.Value, null, _items.Except(new SelectableDesignerItemViewModelBase[] { DiagramViewModel.Instance.BackgroundItem.Value }).Min(x => x.ZIndex.Value),
-                _items.Max(x => x.ZIndex.Value));
+                DiagramViewModel.Instance.BackgroundItem.Value, null, _items.AsValueEnumerable().Except(new SelectableDesignerItemViewModelBase[] { DiagramViewModel.Instance.BackgroundItem.Value }).Min(x => x.ZIndex.Value),
+                _items.AsValueEnumerable().Max(x => x.ZIndex.Value));
         }
     }
 

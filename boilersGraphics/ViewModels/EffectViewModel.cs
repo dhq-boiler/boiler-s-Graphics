@@ -6,12 +6,12 @@ using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using ZLinq;
 
 namespace boilersGraphics.ViewModels
 {
@@ -23,7 +23,7 @@ namespace boilersGraphics.ViewModels
 
         public virtual void Initialize()
         {
-            monitoringItems.ToList().ForEach(x => x.Value.Dispose());
+            monitoringItems.AsValueEnumerable().ToList().ForEach(x => x.Value.Dispose());
             monitoringItems.Clear();
 
             BeginMonitoring(DiagramViewModel.Instance.AllItems.Value);
@@ -67,7 +67,7 @@ namespace boilersGraphics.ViewModels
 
         public void BeginMonitoring(params SelectableDesignerItemViewModelBase[] items)
         {
-            foreach (var item in items.Where(x => !monitoringItems.ContainsKey(x.ID) && x.ZIndex.Value < this.ZIndex.Value))
+            foreach (var item in items.AsValueEnumerable().Where(x => !monitoringItems.ContainsKey(x.ID) && x.ZIndex.Value < this.ZIndex.Value))
             {
                 monitoringItems.Add(item.ID, item.BeginMonitor(() => Render()));
             }

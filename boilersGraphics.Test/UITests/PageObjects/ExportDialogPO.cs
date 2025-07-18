@@ -8,7 +8,7 @@ namespace boilersGraphics.Test.UITests.PageObjects
 {
     public class ExportDialogPO : PageObjectBase
     {
-        public ExportDialogPO(WindowsDriver<WindowsElement> session, E2ETestFixture testFixture)
+        public ExportDialogPO(WindowsDriver session, E2ETestFixture testFixture)
             : base(session, testFixture)
         { }
 

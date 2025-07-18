@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows;
 using System.Windows.Media;
+using ZLinq;
 
 namespace boilersGraphics.Helpers;
 
@@ -14,9 +14,9 @@ internal class GeometryCombiner
         var str2 = geometry2.ToString();
         var figures1 = Interpret(str1);
         var figures2 = Interpret(str2);
-        if (figures1.Last().Point2 == figures2.First().Point1)
+        if (figures1.AsValueEnumerable().Last().Point2 == figures2.AsValueEnumerable().First().Point1)
         {
-            var str = $"M {figures1.First().Point1} ";
+            var str = $"M {figures1.AsValueEnumerable().First().Point1} ";
             foreach (var figure in figures1)
             {
                 str += figure.ToString();
@@ -26,16 +26,16 @@ internal class GeometryCombiner
             foreach (var figure in figures2)
             {
                 str += figure.ToString();
-                if (figures2.Last() != figure)
+                if (figures2.AsValueEnumerable().Last() != figure)
                     str += " ";
             }
 
             return PathGeometry.CreateFromGeometry(Geometry.Parse(str));
         }
 
-        if (figures2.Last().Point2 == figures1.First().Point1)
+        if (figures2.AsValueEnumerable().Last().Point2 == figures1.AsValueEnumerable().First().Point1)
         {
-            var str = $"M {figures2.First().Point1} ";
+            var str = $"M {figures2.AsValueEnumerable().First().Point1} ";
             foreach (var figure in figures2)
             {
                 str += figure.ToString();
@@ -45,7 +45,7 @@ internal class GeometryCombiner
             foreach (var figure in figures1)
             {
                 str += figure.ToString();
-                if (figures2.Last() != figure)
+                if (figures2.AsValueEnumerable().Last() != figure)
                     str += " ";
             }
 
@@ -61,17 +61,17 @@ internal class GeometryCombiner
         var ret = new List<Figure>();
         var i = 0;
         var prevPoint = new Point();
-        while (i < split.Count())
+        while (i < split.AsValueEnumerable().Count())
         {
-            var str1 = split.ElementAt(i);
+            var str1 = split.AsValueEnumerable().ElementAt(i);
             if (str1 == "M")
             {
                 i++;
-                var str2 = split.ElementAt(i); //X coordinate
+                var str2 = split.AsValueEnumerable().ElementAt(i); //X coordinate
                 i++;
-                var str3 = split.ElementAt(i); //,
+                var str3 = split.AsValueEnumerable().ElementAt(i); //,
                 i++;
-                var str4 = split.ElementAt(i); //Y coordinate
+                var str4 = split.AsValueEnumerable().ElementAt(i); //Y coordinate
                 i++;
                 prevPoint = Point.Parse(str2 + str3 + str4);
             }
@@ -80,11 +80,11 @@ internal class GeometryCombiner
                 i++;
                 var obj = new Line();
                 obj.Point1 = prevPoint;
-                var str2 = split.ElementAt(i); //X coordinate
+                var str2 = split.AsValueEnumerable().ElementAt(i); //X coordinate
                 i++;
-                var str3 = split.ElementAt(i); //,
+                var str3 = split.AsValueEnumerable().ElementAt(i); //,
                 i++;
-                var str4 = split.ElementAt(i); //Y coordinate
+                var str4 = split.AsValueEnumerable().ElementAt(i); //Y coordinate
                 i++;
                 obj.Point2 = Point.Parse(str2 + str3 + str4);
                 ret.Add(obj);
@@ -95,27 +95,27 @@ internal class GeometryCombiner
                 i++;
                 var obj = new BezierLine();
                 obj.Point1 = prevPoint;
-                var str2 = split.ElementAt(i); //X1 coordinate
+                var str2 = split.AsValueEnumerable().ElementAt(i); //X1 coordinate
                 i++;
-                var str3 = split.ElementAt(i); //,
+                var str3 = split.AsValueEnumerable().ElementAt(i); //,
                 i++;
-                var str4 = split.ElementAt(i); //Y1 coordinate
+                var str4 = split.AsValueEnumerable().ElementAt(i); //Y1 coordinate
                 i++;
-                var str5 = split.ElementAt(i); //space
+                var str5 = split.AsValueEnumerable().ElementAt(i); //space
                 i++;
-                var str6 = split.ElementAt(i); //X2 coordinate
+                var str6 = split.AsValueEnumerable().ElementAt(i); //X2 coordinate
                 i++;
-                var str7 = split.ElementAt(i); //,
+                var str7 = split.AsValueEnumerable().ElementAt(i); //,
                 i++;
-                var str8 = split.ElementAt(i); //Y2 coordinate
+                var str8 = split.AsValueEnumerable().ElementAt(i); //Y2 coordinate
                 i++;
-                var str9 = split.ElementAt(i); //space
+                var str9 = split.AsValueEnumerable().ElementAt(i); //space
                 i++;
-                var str10 = split.ElementAt(i); //X coordinate
+                var str10 = split.AsValueEnumerable().ElementAt(i); //X coordinate
                 i++;
-                var str11 = split.ElementAt(i); //,
+                var str11 = split.AsValueEnumerable().ElementAt(i); //,
                 i++;
-                var str12 = split.ElementAt(i); //Y coordinate
+                var str12 = split.AsValueEnumerable().ElementAt(i); //Y coordinate
                 i++;
                 obj.ControlPoint1 = Point.Parse(str2 + str3 + str4);
                 obj.ControlPoint2 = Point.Parse(str6 + str7 + str8);

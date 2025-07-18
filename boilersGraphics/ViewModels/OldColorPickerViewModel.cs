@@ -11,12 +11,12 @@ using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using ZLinq;
 
 namespace boilersGraphics.ViewModels;
 
@@ -295,7 +295,7 @@ public class OldColorPickerViewModel : BindableBase, IDialogAware, IDisposable
                 {
                     if (!colorSpot.IsSelected.Value)
                     {
-                        _spots.ToList().ForEach(x => x.IsSelected.Value = false);
+                        _spots.AsValueEnumerable().ToList().ForEach(x => x.IsSelected.Value = false);
                         colorSpot.IsSelected.Value = true;
                         var color = BrushHelper.ExtractColor(colorSpot.Brush);
                         var a = color.A;
@@ -627,7 +627,7 @@ public class OldColorPickerViewModel : BindableBase, IDialogAware, IDisposable
     private void SetColorToSpot()
     {
         if (_spots != null && _flag)
-            _spots.Where(x => x.IsSelected.Value)
+            _spots.AsValueEnumerable().Where(x => x.IsSelected.Value)
                 .ToList()
                 .ForEach(x => { x.Brush = new SolidColorBrush(Output.Value); });
     }

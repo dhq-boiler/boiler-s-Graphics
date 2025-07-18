@@ -35,6 +35,7 @@ using System.Xml;
 using System.Xml.Linq;
 using TsOperationHistory;
 using TsOperationHistory.Extensions;
+using ZLinq;
 using Layers = boilersGraphics.Views.Layers;
 using Line = System.Windows.Shapes.Line;
 using Path = System.Windows.Shapes.Path;
@@ -175,7 +176,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
             MouseDoubleClickCommand = new DelegateCommand<MouseEventArgs>(args =>
             {
                 LogManager.GetCurrentClassLogger().Trace("MouseDoubleClickCommand");
-                var first = SelectedItems.Value.FirstOrDefault();
+                var first = SelectedItems.Value.AsValueEnumerable().FirstOrDefault();
 
                 //色調補正ツールのトーンカーブの白スポイトおよび黒スポイト機能使用中は、ダブルクリックイベントを抑制する
                 if (first is ColorCorrectViewModel cc && cc.CCType.Value == ColorCorrectType.ToneCurve)
@@ -227,7 +228,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
             PropertyCommand = new DelegateCommand(() =>
                 {
                     LogManager.GetCurrentClassLogger().Trace("PropertyCommand");
-                    var first = SelectedItems.Value.First();
+                    var first = SelectedItems.Value.AsValueEnumerable().First();
                     first.OpenPropertyDialog();
                 },
                 () => CanOpenPropertyDialog());
@@ -273,31 +274,31 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
             FitCanvasCommand = new DelegateCommand(() =>
                 {
                     LogManager.GetCurrentClassLogger().Trace("FitCanvasCommand");
-                    var horizontalGap = AllItems.Value.OfType<DesignerItemViewModelBase>()
+                    var horizontalGap = AllItems.Value.AsValueEnumerable().OfType<DesignerItemViewModelBase>()
                         .Except(new DesignerItemViewModelBase[] { BackgroundItem.Value }).Count() > 0
-                        ? AllItems.Value.OfType<DesignerItemViewModelBase>()
+                        ? AllItems.Value.AsValueEnumerable().OfType<DesignerItemViewModelBase>()
                             .Except(new DesignerItemViewModelBase[] { BackgroundItem.Value }).Min(x => x.Left.Value)
                         : 0;
-                    var verticalGap = AllItems.Value.OfType<DesignerItemViewModelBase>()
+                    var verticalGap = AllItems.Value.AsValueEnumerable().OfType<DesignerItemViewModelBase>()
                         .Except(new DesignerItemViewModelBase[] { BackgroundItem.Value }).Count() > 0
-                        ? AllItems.Value.OfType<DesignerItemViewModelBase>()
+                        ? AllItems.Value.AsValueEnumerable().OfType<DesignerItemViewModelBase>()
                             .Except(new DesignerItemViewModelBase[] { BackgroundItem.Value }).Min(x => x.Top.Value)
                         : 0;
-                    foreach (var item in AllItems.Value.OfType<ConnectorBaseViewModel>())
+                    foreach (var item in AllItems.Value.AsValueEnumerable().OfType<ConnectorBaseViewModel>())
                     foreach (var p in item.Points)
                     {
                         horizontalGap = Math.Min(p.X, horizontalGap);
                         verticalGap = Math.Min(p.Y, verticalGap);
                     }
 
-                    foreach (var item in AllItems.Value.OfType<DesignerItemViewModelBase>()
+                    foreach (var item in AllItems.Value.AsValueEnumerable().OfType<DesignerItemViewModelBase>()
                                  .Except(new DesignerItemViewModelBase[] { BackgroundItem.Value }))
                     {
                         item.Left.Value += -horizontalGap;
                         item.Top.Value += -verticalGap;
                     }
 
-                    foreach (var item in AllItems.Value.OfType<ConnectorBaseViewModel>())
+                    foreach (var item in AllItems.Value.AsValueEnumerable().OfType<ConnectorBaseViewModel>())
                         for (var i = 0; i < item.Points.Count; i++)
                         {
                             var p = item.Points[i];
@@ -305,31 +306,31 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                             item.Points[i] = newP;
                         }
 
-                    var horizontalMax = AllItems.Value.OfType<DesignerItemViewModelBase>()
+                    var horizontalMax = AllItems.Value.AsValueEnumerable().OfType<DesignerItemViewModelBase>()
                         .Except(new DesignerItemViewModelBase[] { BackgroundItem.Value }).Count() > 0
-                        ? AllItems.Value.OfType<DesignerItemViewModelBase>()
+                        ? AllItems.Value.AsValueEnumerable().OfType<DesignerItemViewModelBase>()
                             .Except(new DesignerItemViewModelBase[] { BackgroundItem.Value }).Max(x => x.Right.Value)
                         : 0;
-                    var verticalMax = AllItems.Value.OfType<DesignerItemViewModelBase>()
+                    var verticalMax = AllItems.Value.AsValueEnumerable().OfType<DesignerItemViewModelBase>()
                         .Except(new DesignerItemViewModelBase[] { BackgroundItem.Value }).Count() > 0
-                        ? AllItems.Value.OfType<DesignerItemViewModelBase>()
+                        ? AllItems.Value.AsValueEnumerable().OfType<DesignerItemViewModelBase>()
                             .Except(new DesignerItemViewModelBase[] { BackgroundItem.Value }).Max(x => x.Bottom.Value)
                         : 0;
-                    foreach (var item in AllItems.Value.OfType<ConnectorBaseViewModel>())
+                    foreach (var item in AllItems.Value.AsValueEnumerable().OfType<ConnectorBaseViewModel>())
                     foreach (var p in item.Points)
                     {
                         horizontalMax = Math.Max(p.X, horizontalMax);
                         verticalMax = Math.Max(p.Y, verticalMax);
                     }
 
-                    var horizontalMin = AllItems.Value.OfType<DesignerItemViewModelBase>()
+                    var horizontalMin = AllItems.Value.AsValueEnumerable().OfType<DesignerItemViewModelBase>()
                         .Except(new DesignerItemViewModelBase[] { BackgroundItem.Value }).Count() > 0
-                        ? AllItems.Value.OfType<DesignerItemViewModelBase>()
+                        ? AllItems.Value.AsValueEnumerable().OfType<DesignerItemViewModelBase>()
                             .Except(new DesignerItemViewModelBase[] { BackgroundItem.Value }).Min(x => x.Left.Value)
                         : 0;
-                    var verticalMin = AllItems.Value.OfType<DesignerItemViewModelBase>()
+                    var verticalMin = AllItems.Value.AsValueEnumerable().OfType<DesignerItemViewModelBase>()
                         .Except(new DesignerItemViewModelBase[] { BackgroundItem.Value }).Count() > 0
-                        ? AllItems.Value.OfType<DesignerItemViewModelBase>()
+                        ? AllItems.Value.AsValueEnumerable().OfType<DesignerItemViewModelBase>()
                             .Except(new DesignerItemViewModelBase[] { BackgroundItem.Value }).Min(x => x.Top.Value)
                         : 0;
 
@@ -338,14 +339,14 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                     BackgroundItem.Value.Width.Value = Math.Round(horizontalMax);
                     BackgroundItem.Value.Height.Value = Math.Round(verticalMax);
                 },
-                () => AllItems.Value.OfType<DesignerItemViewModelBase>()
+                () => AllItems.Value.AsValueEnumerable().OfType<DesignerItemViewModelBase>()
                         .Except(new DesignerItemViewModelBase[] { BackgroundItem.Value }).Count() +
-                    AllItems.Value.OfType<ConnectorBaseViewModel>().Count() > 0);
+                    AllItems.Value.AsValueEnumerable().OfType<ConnectorBaseViewModel>().Count() > 0);
             ClearCanvasCommand = new DelegateCommand(() => { InitialSetting(mainWindowViewModel, true); });
             OnLoaded = new ReactiveCommand().WithSubscribe(() =>
             {
                 DesignerCanvas = Application.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-                Layers.ToList().ForEach(x => x.UpdateAppearanceBothParentAndChild());
+                Layers.AsValueEnumerable().ToList().ForEach(x => x.UpdateAppearanceBothParentAndChild());
             }).AddTo(_CompositeDisposable);
             Image2TextEngCommand = new ReactiveCommand().WithSubscribe(() =>
             {
@@ -372,6 +373,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                 .Merge(this.ObserveProperty(y => y.BackgroundItem.Value).ToUnit()))
             .Switch()
             .Select(_ => Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                .AsValueEnumerable()
                 .Where(x => x.GetType() == typeof(LayerItem))
                 .Select(y => (y as LayerItem).Item.Value)
                 .Union(new SelectableDesignerItemViewModelBase[] { BackgroundItem.Value })
@@ -386,7 +388,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                 {
                     FitCanvasCommand.RaiseCanExecuteChanged();
                     LogManager.GetCurrentClassLogger().Trace($"{x.Length} items in AllItems.");
-                    LogManager.GetCurrentClassLogger().Trace(string.Join(", ", x.Select(y => y?.ToString() ?? "null")));
+                    LogManager.GetCurrentClassLogger().Trace(string.Join(", ", x.AsValueEnumerable().Select(y => y?.ToString() ?? "null").ToArray()));
                 })
                 .AddTo(_CompositeDisposable);
 
@@ -401,18 +403,23 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                 .Do(x => LogManager.GetCurrentClassLogger().Debug("SelectedItems updated"))
                 .Select(_ => Layers
                     .SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                    .AsValueEnumerable()
                     .OfType<LayerItem>()
                     .Select(y => y.Item.Value)
                     .Except(Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                        .AsValueEnumerable()
                         .OfType<LayerItem>()
                         .Select(y => y.Item.Value)
-                        .OfType<ConnectorBaseViewModel>())
+                        .OfType<ConnectorBaseViewModel>()
+                        .ToArray())
                     .Union(Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                        .AsValueEnumerable()
                         .OfType<LayerItem>()
                         .Select(y => y.Item.Value)
                         .OfType<ConnectorBaseViewModel>()
                         .SelectMany(x => new[] { x.SnapPoint0VM.Value, x.SnapPoint1VM.Value })
                         .Where(y => y.IsSelected.Value)
+                        .ToArray()
                     )
                     .Where(z => z.IsSelected.Value)
                     .OrderBy(z => z.SelectedOrder.Value)
@@ -423,7 +430,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                 {
                     LogManager.GetCurrentClassLogger()
                         .Debug(
-                            $"SelectedItems changed {string.Join(", ", selectedItems.Select(x => x?.ToString() ?? "null"))}");
+                            $"SelectedItems changed {string.Join(", ", selectedItems.AsValueEnumerable().Select(x => x?.ToString() ?? "null").ToArray())}");
 
                     GroupCommand.RaiseCanExecuteChanged();
                     UngroupCommand.RaiseCanExecuteChanged();
@@ -456,13 +463,13 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                 .AddTo(_CompositeDisposable);
 
             SelectedLayers = Layers.ObserveElementObservableProperty(x => x.IsSelected)
-                .Select(_ => Layers.Where(x => x.IsSelected.Value).ToArray())
+                .Select(_ => Layers.AsValueEnumerable().Where(x => x.IsSelected.Value).ToArray())
                 .ToReadOnlyReactivePropertySlim(Array.Empty<LayerTreeViewItemBase>());
 
             SelectedLayers.Subscribe(x =>
                 {
                     LogManager.GetCurrentClassLogger()
-                        .Trace($"SelectedLayers changed {string.Join(", ", x.Select(x => x.ToString()))}");
+                        .Trace($"SelectedLayers changed {string.Join(", ", x.AsValueEnumerable().Select(x => x.ToString()).ToArray())}");
                 })
                 .AddTo(_CompositeDisposable);
 
@@ -490,7 +497,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
             var id = Guid.Parse("00000000-0000-0000-0000-000000000000");
             var dao = new LogSettingDao();
             var logSettings = dao.FindBy(new Dictionary<string, object> { { "ID", id } });
-            if (logSettings.Count() == 0)
+            if (logSettings.AsValueEnumerable().Count() == 0)
             {
                 var newLogSetting = new LogSetting();
                 newLogSetting.ID = id;
@@ -499,7 +506,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
             }
 
             logSettings = dao.FindBy(new Dictionary<string, object> { { "ID", id } });
-            var logSetting = logSettings.First();
+            var logSetting = logSettings.AsValueEnumerable().First();
             MainWindowVM.LogLevel.Value = LogLevel.FromString(logSetting.LogLevel);
             PackAutoSaveFiles();
         }
@@ -587,6 +594,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     public void DeselectAll()
     {
         foreach (var layerItem in Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                     .AsValueEnumerable()
                      .OfType<LayerItem>())
         {
             layerItem.Item.Value.IsSelected.Value = false;
@@ -609,20 +617,22 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     public IEnumerable<Tuple<SnapPoint, Point>> GetSnapPoints(IEnumerable<SnapPoint> exceptSnapPoints)
     {
         var resizeThumbs = DesignerCanvas.EnumerateChildOfType<SnapPoint>();
-        var sets = resizeThumbs
-            .Where(x => !exceptSnapPoints.Contains(x))
+        var sets = resizeThumbs.AsValueEnumerable()
+            .Where(x => !exceptSnapPoints.AsValueEnumerable().Contains(x))
             .Select(x => new Tuple<SnapPoint, Point>(x, GetCenter(x)))
-            .Distinct();
+            .Distinct()
+            .ToArray();
         return sets;
     }
 
     public IEnumerable<Tuple<SnapPoint, Point>> GetSnapPoints(Point exceptPoint)
     {
         var resizeThumbs = DesignerCanvas.EnumerateChildOfType<SnapPoint>();
-        var sets = resizeThumbs
+        var sets = resizeThumbs.AsValueEnumerable()
             .Where(x => x.InputHitTest(exceptPoint) == null)
             .Select(x => new Tuple<SnapPoint, Point>(x, GetCenter(x)))
-            .Distinct();
+            .Distinct()
+            .ToArray();
         return sets;
     }
 
@@ -648,7 +658,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
             var files = Directory.EnumerateFiles(
                 System.IO.Path.Combine(Helpers.Path.GetRoamingDirectory(), "dhq_boiler\\boilersGraphics\\AutoSave"),
                 "AutoSave-*-*-*-*-*-*.bgff");
-            foreach (var file in files.OrderByDescending(x => new FileInfo(x).LastWriteTime))
+            foreach (var file in files.AsValueEnumerable().OrderByDescending(x => new FileInfo(x).LastWriteTime))
                 AutoSaveFiles.AddOnScheduler(file);
         }
         catch (DirectoryNotFoundException)
@@ -659,20 +669,21 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
 
     private bool CanOpenPropertyDialog()
     {
-        return (SelectedItems.Value.Length == 1 && SelectedItems.Value.First().SupportsPropertyDialog)
-               || (SelectedItems.Value.OfType<SnapPointViewModel>().Count() == 2 && SelectedItems.Value
+        return (SelectedItems.Value.Length == 1 && SelectedItems.Value.AsValueEnumerable().First().SupportsPropertyDialog)
+               || (SelectedItems.Value.AsValueEnumerable().OfType<SnapPointViewModel>().Count() == 2 && SelectedItems.Value
+                   .AsValueEnumerable()
                    .OfType<SnapPointViewModel>().First().Parent.Value.SupportsPropertyDialog);
     }
 
     private void MoveSelectedItems(int horizontalDiff, int verticalDiff)
     {
         MainWindowVM.Recorder.BeginRecode();
-        SelectedItems.Value.OfType<DesignerItemViewModelBase>().ToList().ForEach(x =>
+        SelectedItems.Value.AsValueEnumerable().OfType<DesignerItemViewModelBase>().ToList().ForEach(x =>
         {
             MainWindowVM.Recorder.Current.ExecuteSetProperty(x, "Left.Value", x.Left.Value + horizontalDiff);
             MainWindowVM.Recorder.Current.ExecuteSetProperty(x, "Top.Value", x.Top.Value + verticalDiff);
         });
-        SelectedItems.Value.OfType<SnapPointViewModel>().ToList().ForEach(x =>
+        SelectedItems.Value.AsValueEnumerable().OfType<SnapPointViewModel>().ToList().ForEach(x =>
         {
             MainWindowVM.Recorder.Current.ExecuteSetProperty(x, "Left.Value", x.Left.Value + horizontalDiff);
             MainWindowVM.Recorder.Current.ExecuteSetProperty(x, "Top.Value", x.Top.Value + verticalDiff);
@@ -775,6 +786,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     public LayerTreeViewItemBase GetLayerTreeViewItemBase(SelectableDesignerItemViewModelBase item)
     {
         return Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+            .AsValueEnumerable()
             .Where(x => x is LayerItem)
             .First(x => (x as LayerItem).Item.Value == item);
     }
@@ -950,8 +962,8 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     private void ExecuteClipCommand()
     {
         MainWindowVM.Recorder.BeginRecode();
-        var picture = SelectedItems.Value.OfType<PictureDesignerItemViewModel>().First();
-        var other = SelectedItems.Value.OfType<DesignerItemViewModelBase>().Last();
+        var picture = SelectedItems.Value.AsValueEnumerable().OfType<PictureDesignerItemViewModel>().First();
+        var other = SelectedItems.Value.AsValueEnumerable().OfType<DesignerItemViewModelBase>().Last();
         var left = -(other.Left.Value - picture.Left.Value);
         var top = -(other.Top.Value - picture.Top.Value);
         var right = -(picture.Right.Value - other.Right.Value);
@@ -1024,8 +1036,8 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
 
     public bool CanExecuteClip()
     {
-        return SelectedItems.Value.Count() == 2 &&
-               SelectedItems.Value.First().GetType() == typeof(PictureDesignerItemViewModel);
+        return SelectedItems.Value.AsValueEnumerable().Count() == 2 &&
+               SelectedItems.Value.AsValueEnumerable().First().GetType() == typeof(PictureDesignerItemViewModel);
     }
 
     private void ExecuteExcludeCommand()
@@ -1044,7 +1056,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
 
     public bool CanExecuteExclude()
     {
-        var countIsCorrent = SelectedItems.Value.Count() == 2;
+        var countIsCorrent = SelectedItems.Value.AsValueEnumerable().Count() == 2;
         if (countIsCorrent)
         {
             var firstElementTypeIsCorrect =
@@ -1073,7 +1085,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
 
     public bool CanExecuteXor()
     {
-        var countIsCorrent = SelectedItems.Value.Count() == 2;
+        var countIsCorrent = SelectedItems.Value.AsValueEnumerable().Count() == 2;
         if (countIsCorrent)
         {
             var firstElementTypeIsCorrect =
@@ -1102,7 +1114,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
 
     public bool CanExecuteIntersect()
     {
-        var countIsCorrent = SelectedItems.Value.Count() == 2;
+        var countIsCorrent = SelectedItems.Value.AsValueEnumerable().Count() == 2;
         if (countIsCorrent)
         {
             var firstElementTypeIsCorrect =
@@ -1133,7 +1145,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
             return countIsCorrent && firstElementTypeIsCorrect && secondElementTypeIsCorrect;
         }
 
-        var polyBezier = GetSelectedItemsForCombine().FirstOrDefault() as PolyBezierViewModel;
+        var polyBezier = GetSelectedItemsForCombine().AsValueEnumerable().FirstOrDefault() as PolyBezierViewModel;
         if (polyBezier != null) return true;
         return false;
     }
@@ -1151,7 +1163,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
         MainWindowVM.Recorder.BeginRecode();
         var selectedItems = GetSelectedItemsForCombine();
         var item1 = GetSelectedItemFirst();
-        if (selectedItems.Count() == 1 && item1 is PolyBezierViewModel pb)
+        if (selectedItems.AsValueEnumerable().Count() == 1 && item1 is PolyBezierViewModel pb)
         {
             Remove(pb);
             var combine = new CombineGeometryViewModel();
@@ -1160,7 +1172,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
             MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "IsSelected.Value", true);
             MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "Owner", this);
             MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "ZIndex.Value",
-                Layers.SelectMany(x => x.Children).Count());
+                Layers.AsValueEnumerable().SelectMany(x => x.Children).Count());
             MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "IsHitTestVisible.Value",
                 MainWindowVM.ToolBarViewModel.CurrentHitTestVisibleState.Value);
             MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "PathGeometry.Value",
@@ -1175,7 +1187,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                 combine.PathGeometry.Value.Bounds.Height);
             Add(combine);
         }
-        else if (selectedItems.Count() == 2 && item1 is EffectViewModel effect)
+        else if (selectedItems.AsValueEnumerable().Count() == 2 && item1 is EffectViewModel effect)
         {
             var item2 = GetSelectedItemLast();
             Remove(item2);
@@ -1220,12 +1232,12 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
             MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "IsSelected.Value", true);
             MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "Owner", this);
             MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "ZIndex.Value",
-                Layers.SelectMany(x => x.Children).Count());
+                Layers.AsValueEnumerable().SelectMany(x => x.Children).Count());
             MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "IsHitTestVisible.Value",
                 MainWindowVM.ToolBarViewModel.CurrentHitTestVisibleState.Value);
             MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "PathGeometryNoRotate.Value",
                 GeometryCreator.CreateCombineGeometry(item1, item2));
-            if (combine.PathGeometryNoRotate.Value == null || combine.PathGeometryNoRotate.Value.Figures.Count() == 0)
+            if (combine.PathGeometryNoRotate.Value == null || combine.PathGeometryNoRotate.Value.Figures.AsValueEnumerable().Count() == 0)
             {
                 var item1PathGeometry = item1.PathGeometryNoRotate.Value;
                 var item2PathGeometry = item2.PathGeometryNoRotate.Value;
@@ -1270,12 +1282,12 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
 
     private SelectableDesignerItemViewModelBase GetSelectedItemFirst()
     {
-        return GetSelectedItemsForCombine().First();
+        return GetSelectedItemsForCombine().AsValueEnumerable().First();
     }
 
     private SelectableDesignerItemViewModelBase GetSelectedItemLast()
     {
-        return GetSelectedItemsForCombine().Skip(1).Take(1).First();
+        return GetSelectedItemsForCombine().AsValueEnumerable().Skip(1).Take(1).First();
     }
 
     private void CastToLetterAndSetTransform(SelectableDesignerItemViewModelBase item1,
@@ -1342,12 +1354,12 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     private bool GetCountIsCorrent()
     {
         var newlist = GetSelectedItemsForCombine();
-        return newlist.Count() == 2;
+        return newlist.AsValueEnumerable().Count() == 2;
     }
 
     private List<SelectableDesignerItemViewModelBase> GetSelectedItemsForCombine()
     {
-        var list = SelectedItems.Value.ToList();
+        var list = SelectedItems.Value.AsValueEnumerable().ToList();
         var newlist = new List<SelectableDesignerItemViewModelBase>();
         foreach (var item in list)
         {
@@ -1357,7 +1369,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                 newlist.Add(snapPoint.Parent.Value);
         }
 
-        newlist = newlist.Distinct().ToList();
+        newlist = newlist.AsValueEnumerable().Distinct().ToList();
         return newlist;
     }
 
@@ -1450,23 +1462,23 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                 var rootHasElements = root.HasElements;
                 if (rootNameIsCopyObjects && rootHasElements)
                 {
-                    var copyObjsEnumerable = root.Elements().Where(x => x.Name == "CopyObjects");
+                    var copyObjsEnumerable = root.Elements().AsValueEnumerable().Where(x => x.Name == "CopyObjects");
                     var copyObjs = copyObjsEnumerable.FirstOrDefault();
                     var rootHasCopyObjects = copyObjs != null;
                     if (rootHasCopyObjects)
                     {
-                        var copyObjsHasLayers = copyObjs.Elements().Where(x => x.Name == "Layers").Count() == 1;
-                        var copyObjsHasItems = copyObjs.Elements().Where(x => x.Name == "LayerItems").Count() == 1;
+                        var copyObjsHasLayers = copyObjs.Elements().AsValueEnumerable().Where(x => x.Name == "Layers").Count() == 1;
+                        var copyObjsHasItems = copyObjs.Elements().AsValueEnumerable().Where(x => x.Name == "LayerItems").Count() == 1;
                         if (copyObjsHasLayers)
                         {
-                            var layers = copyObjs.Elements().Where(x => x.Name == "Layers").FirstOrDefault();
-                            return layers.Elements().Count() >= 1;
+                            var layers = copyObjs.Elements().AsValueEnumerable().Where(x => x.Name == "Layers").FirstOrDefault();
+                            return layers.Elements().AsValueEnumerable().Count() >= 1;
                         }
 
                         if (copyObjsHasItems)
                         {
-                            var items = copyObjs.Elements().Where(x => x.Name == "LayerItems").FirstOrDefault();
-                            return items.Elements().Count() >= 1;
+                            var items = copyObjs.Elements().AsValueEnumerable().Where(x => x.Name == "LayerItems").FirstOrDefault();
+                            return items.Elements().AsValueEnumerable().Count() >= 1;
                         }
                     }
                 }
@@ -1488,8 +1500,8 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     {
         CopyToClipboard();
 
-        if (SelectedLayers.Value.Count() > 0 && SelectedItems.Value.Count() > 0)
-            SelectedLayers.Value.ToList().ForEach(x =>
+        if (SelectedLayers.Value.AsValueEnumerable().Count() > 0 && SelectedItems.Value.AsValueEnumerable().Count() > 0)
+            SelectedLayers.Value.AsValueEnumerable().ToList().ForEach(x =>
             {
                 foreach (var selectedItem in SelectedItems.Value)
                 {
@@ -1497,7 +1509,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                     selectedItem.Dispose();
                 }
             });
-        else if (SelectedLayers.Value.Count() > 0)
+        else if (SelectedLayers.Value.AsValueEnumerable().Count() > 0)
             //Copy Layer and LayerItem
             foreach (var selectedLayer in SelectedLayers.Value)
                 Layers.Remove(selectedLayer);
@@ -1516,17 +1528,17 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
 
     private void CopyToClipboard()
     {
-        if (SelectedLayers.Value.Count() > 0 && SelectedItems.Value.Count() > 0)
+        if (SelectedLayers.Value.AsValueEnumerable().Count() > 0 && SelectedItems.Value.AsValueEnumerable().Count() > 0)
         {
             //Copy only LayerItem
             var root = new XElement("boilersGraphics");
             var copyObj = new XElement("CopyObjects");
             root.Add(copyObj);
-            copyObj.Add(ObjectSerializer.ExtractItems(Layers.SelectMany(x => x.Children)
-                .Where(x => (x as LayerItem).IsSelected.Value).Cast<LayerItem>()));
+            copyObj.Add(ObjectSerializer.ExtractItems(Layers.AsValueEnumerable().SelectMany(x => x.Children)
+                .Where(x => (x as LayerItem).IsSelected.Value).Cast<LayerItem>().ToArray()));
             Clipboard.SetDataObject(new ClipboardDTO(root.ToString()), false);
         }
-        else if (SelectedLayers.Value.Count() > 0)
+        else if (SelectedLayers.Value.AsValueEnumerable().Count() > 0)
         {
             //Copy Layer and LayerItem
             var root = new XElement("boilersGraphics");
@@ -1541,8 +1553,8 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
 
     public bool CanExecuteCut()
     {
-        return (SelectedLayers.Value.Count() > 0 && SelectedItems.Value.Count() > 0)
-               || SelectedLayers.Value.Count() > 0;
+        return (SelectedLayers.Value.AsValueEnumerable().Count() > 0 && SelectedItems.Value.AsValueEnumerable().Count() > 0)
+               || SelectedLayers.Value.AsValueEnumerable().Count() > 0;
     }
 
     private void ExecuteSettingCommand()
@@ -1552,6 +1564,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
         preferences.Width.Value = (int)BackgroundItem.Value.Width.Value;
         preferences.Height.Value = (int)BackgroundItem.Value.Height.Value;
         Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+            .AsValueEnumerable()
             .Where(x => x.GetType() == typeof(LayerItem))
             .Select(y => (y as LayerItem).Item.Value)
             .Where(z => z is BrushViewModel)
@@ -1612,8 +1625,9 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
             var targetLayer = GetSelectedLayer();
             if (targetLayer == null)
                 return;
-            var newZIndex = targetLayer.GetNewZIndex(Layers.TakeWhile(x => x != targetLayer));
+            var newZIndex = targetLayer.GetNewZIndex(Layers.AsValueEnumerable().TakeWhile(x => x != targetLayer).ToArray());
             Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                .AsValueEnumerable()
                 .Where(x => x != targetLayer)
                 .ToList()
                 .ForEach(x => x.PushZIndex(MainWindowVM.Recorder, newZIndex));
@@ -1625,9 +1639,9 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
 
     private LayerTreeViewItemBase GetSelectedLayer()
     {
-        var targetLayer = SelectedLayers.Value.FirstOrDefault();
+        var targetLayer = SelectedLayers.Value.AsValueEnumerable().FirstOrDefault();
         if (targetLayer == null)
-            targetLayer = Layers.FirstOrDefault();
+            targetLayer = Layers.AsValueEnumerable().FirstOrDefault();
         if (targetLayer == null)
         {
             LogManager.GetCurrentClassLogger().Warn("レイヤーが選択されていません。");
@@ -1656,18 +1670,18 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
 
     private void UpdateZIndex()
     {
-        var items = (from item in Layers.SelectMany(x => x.Children)
+        var items = (from item in Layers.AsValueEnumerable().SelectMany(x => x.Children)
             orderby (item as LayerItem).Item.Value.ZIndex.Value
             select item).ToList();
 
-        for (var i = 0; i < items.Count; ++i) (items.ElementAt(i) as LayerItem).Item.Value.ZIndex.Value = i;
+        for (var i = 0; i < items.Count; ++i) (items.AsValueEnumerable().ElementAt(i) as LayerItem).Item.Value.ZIndex.Value = i;
     }
 
     private void RemoveGroupMembers(SelectableDesignerItemViewModelBase item)
     {
         if (item is GroupItemViewModel groupItem)
         {
-            var children = (from it in Layers.SelectMany(x => x.Children)
+            var children = (from it in Layers.AsValueEnumerable().SelectMany(x => x.Children)
                 where (it as LayerItem).Item.Value.ParentID == groupItem.ID
                 select it).ToList();
 
@@ -1683,6 +1697,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     private void ExecuteClearSelectedItemsCommand(object parameter)
     {
         foreach (var layerItem in Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                     .AsValueEnumerable()
                      .OfType<LayerItem>())
         {
             layerItem.Item.Value.IsSelected.Value = false;
@@ -1723,7 +1738,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     private void Add(LayerItem item)
     {
         item.Item.Value.LayerItem.Value = item;
-        SelectedLayers.Value.First().AddItem(MainWindowVM, this, item);
+        SelectedLayers.Value.AsValueEnumerable().First().AddItem(MainWindowVM, this, item);
         LogManager.GetCurrentClassLogger().Info($"Add item {item.ShowPropertiesAndFields()}");
         UpdateStatisticsCountAdd();
     }
@@ -1738,7 +1753,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
 
     private void Remove(SelectableDesignerItemViewModelBase item)
     {
-        Layers.ToList().ForEach(x => x.RemoveItem(MainWindowVM, item));
+        Layers.AsValueEnumerable().ToList().ForEach(x => x.RemoveItem(MainWindowVM, item));
         ScanEffectViewModelObjects();
         LogManager.GetCurrentClassLogger().Info($"Remove item {item.ShowPropertiesAndFields()}");
         UpdateStatisticsCountRemove();
@@ -1754,17 +1769,17 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
 
     private void ExecuteSelectAllCommand()
     {
-        Layers.SelectMany(x => x.Children).ToList().ForEach(x => (x as LayerItem).Item.Value.IsSelected.Value = true);
+        Layers.AsValueEnumerable().SelectMany(x => x.Children).ToList().ForEach(x => (x as LayerItem).Item.Value.IsSelected.Value = true);
     }
 
     private IEnumerable<SelectableDesignerItemViewModelBase> GetGroupMembers(SelectableDesignerItemViewModelBase item)
     {
         var list = new List<SelectableDesignerItemViewModelBase>();
         list.Add(item);
-        var children = Layers.SelectMany(x => x.Children)
+        var children = Layers.AsValueEnumerable().SelectMany(x => x.Children)
             .Where(x => (x as LayerItem).Item.Value.ParentID == item.ID)
             .Select(x => (x as LayerItem).Item.Value);
-        list.AddRange(children);
+        list.AddRange(children.ToArray());
         return list;
     }
 
@@ -1952,8 +1967,10 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
         {
             var resizeThumbs = DesignerCanvas.EnumerateChildOfType<SnapPoint>();
             var sets = resizeThumbs
+                .AsValueEnumerable()
                 .Select(x => new Tuple<SnapPoint, Point>(x, GetCenter(x)))
-                .Distinct();
+                .Distinct()
+                .ToArray();
             return sets;
         }
     }
@@ -2172,11 +2189,11 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
 
                 var configuration = root.Element("Configuration");
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "CanvasFillBrush.Value",
-                    WpfObjectSerializer.Deserialize(configuration.Element("CanvasFillBrush").Nodes().First()
+                    WpfObjectSerializer.Deserialize(configuration.Element("CanvasFillBrush").Nodes().AsValueEnumerable().First()
                         .ToString()) ??
                     new SolidColorBrush((Color)ColorConverter.ConvertFromString(configuration
                         .Element("CanvasFillBrush")
-                        .Nodes().First().ToString())));
+                        .Nodes().AsValueEnumerable().First().ToString())));
                 App.Current.Dispatcher.Invoke(() =>
                 {
                     vm.Current.Value++;
@@ -2203,7 +2220,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                 {
                     var colorSpots = configuration.Element("ColorSpots");
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot0",
-                        WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot0").Nodes().First()
+                        WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot0").Nodes().AsValueEnumerable().First()
                             .ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                     {
@@ -2212,7 +2229,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                         vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot0)}={ColorSpots.Value.ColorSpot0}";
                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot1",
-                                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot1").Nodes().First()
+                                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot1").Nodes().AsValueEnumerable().First()
                                         .ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
@@ -2221,7 +2238,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                         vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot1)}={ColorSpots.Value.ColorSpot1}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot2",
-                                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot2").Nodes().First()
+                                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot2").Nodes().AsValueEnumerable().First()
                                         .ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
@@ -2230,7 +2247,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                         vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot2)}={ColorSpots.Value.ColorSpot2}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot3",
-                                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot3").Nodes().First()
+                                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot3").Nodes().AsValueEnumerable().First()
                                         .ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
@@ -2239,7 +2256,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                         vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot3)}={ColorSpots.Value.ColorSpot3}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot4",
-                                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot4").Nodes().First()
+                                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot4").Nodes().AsValueEnumerable().First()
                                         .ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
@@ -2248,7 +2265,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                         vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot4)}={ColorSpots.Value.ColorSpot4}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot5",
-                                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot5").Nodes().First()
+                                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot5").Nodes().AsValueEnumerable().First()
                                         .ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
@@ -2257,7 +2274,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                         vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot5)}={ColorSpots.Value.ColorSpot5}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot6",
-                                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot6").Nodes().First()
+                                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot6").Nodes().AsValueEnumerable().First()
                                         .ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
@@ -2266,7 +2283,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                         vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot6)}={ColorSpots.Value.ColorSpot6}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot7",
-                                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot7").Nodes().First()
+                                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot7").Nodes().AsValueEnumerable().First()
                                         .ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
@@ -2275,7 +2292,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                         vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot7)}={ColorSpots.Value.ColorSpot7}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot8",
-                                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot8").Nodes().First()
+                                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot8").Nodes().AsValueEnumerable().First()
                                         .ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
@@ -2284,7 +2301,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                         vm.Output.Value += $"{Resources.String_Loaded}：{nameof(ColorSpots.Value.ColorSpot8)}={ColorSpots.Value.ColorSpot8}";
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot9",
-                                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot9").Nodes().First()
+                                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot9").Nodes().AsValueEnumerable().First()
                                         .ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
@@ -2294,7 +2311,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot10",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot10").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot10").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2303,7 +2320,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot11",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot11").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot11").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2312,7 +2329,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot12",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot12").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot12").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2321,7 +2338,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot13",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot13").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot13").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2330,7 +2347,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot14",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot14").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot14").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2339,7 +2356,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot15",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot15").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot15").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2348,7 +2365,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot16",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot16").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot16").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2357,7 +2374,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot17",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot17").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot17").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2366,7 +2383,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot18",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot18").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot18").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2375,7 +2392,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot19",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot19").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot19").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2384,7 +2401,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot20",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot20").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot20").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2393,7 +2410,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot21",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot21").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot21").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2402,7 +2419,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot22",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot22").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot22").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2411,7 +2428,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot23",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot23").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot23").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2420,7 +2437,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot24",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot24").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot24").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2429,7 +2446,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot25",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot25").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot25").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2438,7 +2455,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot26",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot26").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot26").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2447,7 +2464,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot27",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot27").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot27").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2456,7 +2473,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot28",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot28").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot28").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2465,7 +2482,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot29",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot29").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot29").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2474,7 +2491,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot30",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot30").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot30").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2483,7 +2500,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot31",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot31").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot31").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2492,7 +2509,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot32",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot32").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot32").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2501,7 +2518,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot33",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot33").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot33").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2510,7 +2527,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot34",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot34").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot34").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2519,7 +2536,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot35",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot35").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot35").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2528,7 +2545,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot36",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot36").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot36").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2537,7 +2554,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot37",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot37").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot37").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2546,7 +2563,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot38",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot38").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot38").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2555,7 +2572,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot39",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot39").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot39").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2564,7 +2581,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot40",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot40").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot40").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2573,7 +2590,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot41",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot41").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot41").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2582,7 +2599,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot42",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot42").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot42").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2591,7 +2608,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot43",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot43").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot43").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2600,7 +2617,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot44",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot44").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot44").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2609,7 +2626,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot45",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot45").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot45").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2618,7 +2635,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot46",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot46").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot46").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2627,7 +2644,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot47",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot47").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot47").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2636,7 +2653,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot48",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot48").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot48").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2645,7 +2662,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot49",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot49").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot49").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2654,7 +2671,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot50",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot50").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot50").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2663,7 +2680,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot51",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot51").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot51").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2672,7 +2689,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot52",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot52").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot52").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2681,7 +2698,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot53",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot53").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot53").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2690,7 +2707,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot54",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot54").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot54").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2699,7 +2716,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot55",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot55").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot55").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2708,7 +2725,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot56",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot56").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot56").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2717,7 +2734,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot57",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot57").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot57").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2726,7 +2743,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot58",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot58").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot58").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2735,7 +2752,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot59",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot59").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot59").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2744,7 +2761,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot60",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot60").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot60").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2753,7 +2770,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot61",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot61").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot61").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2762,7 +2779,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot62",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot62").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot62").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2771,7 +2788,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot63",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot63").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot63").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2780,7 +2797,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot64",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot64").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot64").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2789,7 +2806,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot65",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot65").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot65").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2798,7 +2815,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot66",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot66").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot66").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2807,7 +2824,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot67",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot67").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot67").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2816,7 +2833,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot68",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot68").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot68").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2825,7 +2842,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot69",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot69").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot69").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2834,7 +2851,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot70",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot70").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot70").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2843,7 +2860,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot71",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot71").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot71").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2852,7 +2869,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot72",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot72").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot72").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2861,7 +2878,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot73",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot73").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot73").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2870,7 +2887,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot74",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot74").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot74").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2879,7 +2896,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot75",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot75").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot75").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2888,7 +2905,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot76",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot76").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot76").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2897,7 +2914,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot77",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot77").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot77").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2906,7 +2923,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot78",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot78").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot78").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2915,7 +2932,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot79",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot79").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot79").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2924,7 +2941,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot80",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot80").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot80").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2933,7 +2950,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot81",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot81").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot81").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2942,7 +2959,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot82",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot82").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot82").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2951,7 +2968,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot83",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot83").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot83").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2960,7 +2977,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot84",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot84").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot84").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2969,7 +2986,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot85",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot85").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot85").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2978,7 +2995,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot86",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot86").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot86").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2987,7 +3004,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot87",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot87").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot87").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -2996,7 +3013,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot88",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot88").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot88").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -3005,7 +3022,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot89",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot89").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot89").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -3014,7 +3031,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot90",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot90").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot90").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -3023,7 +3040,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot91",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot91").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot91").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -3032,7 +3049,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot92",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot92").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot92").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -3041,7 +3058,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot93",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot93").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot93").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -3050,7 +3067,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot94",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot94").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot94").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -3059,7 +3076,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot95",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot95").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot95").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -3068,7 +3085,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot96",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot96").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot96").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -3077,7 +3094,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot97",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot97").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot97").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                     {
                                         vm.Current.Value++;
@@ -3086,7 +3103,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot98",
                                     WpfObjectSerializer.Deserialize(
-                                        colorSpots.Element("ColorSpot98").Nodes().First().ToString()));
+                                        colorSpots.Element("ColorSpot98").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                                                 {
                                                     vm.Current.Value++;
@@ -3095,7 +3112,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                                 }, DispatcherPriority.ApplicationIdle);
                     mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot99",
                         WpfObjectSerializer.Deserialize(
-                            colorSpots.Element("ColorSpot99").Nodes().First().ToString()));
+                            colorSpots.Element("ColorSpot99").Nodes().AsValueEnumerable().First().ToString()));
                     App.Current.Dispatcher.Invoke(() =>
                     {
                         vm.Current.Value++;
@@ -3200,9 +3217,9 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
 
             var configuration = root.Element("Configuration");
             mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "CanvasFillBrush.Value",
-                WpfObjectSerializer.Deserialize(configuration.Element("CanvasFillBrush").Nodes().First().ToString()) ??
+                WpfObjectSerializer.Deserialize(configuration.Element("CanvasFillBrush").Nodes().AsValueEnumerable().First().ToString()) ??
                 new SolidColorBrush((Color)ColorConverter.ConvertFromString(configuration.Element("CanvasFillBrush")
-                    .Nodes().First().ToString())));
+                    .Nodes().AsValueEnumerable().First().ToString())));
             mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "EnablePointSnap.Value",
                 bool.Parse(configuration.Element("EnablePointSnap").Value));
             mainwindowViewModel.Recorder.Current.ExecuteSetProperty(mainwindowViewModel, "SnapPower.Value",
@@ -3211,205 +3228,205 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
             {
                 var colorSpots = configuration.Element("ColorSpots");
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot0",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot0").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot0").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot1",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot1").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot1").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot2",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot2").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot2").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot3",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot3").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot3").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot4",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot4").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot4").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot5",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot5").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot5").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot6",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot6").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot6").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot7",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot7").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot7").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot8",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot8").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot8").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot9",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot9").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot9").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot10",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot10").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot10").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot11",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot11").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot11").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot12",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot12").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot12").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot13",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot13").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot13").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot14",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot14").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot14").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot15",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot15").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot15").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot16",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot16").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot16").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot17",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot17").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot17").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot18",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot18").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot18").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot19",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot19").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot19").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot20",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot20").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot20").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot21",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot21").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot21").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot22",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot22").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot22").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot23",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot23").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot23").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot24",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot24").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot24").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot25",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot25").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot25").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot26",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot26").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot26").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot27",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot27").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot27").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot28",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot28").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot28").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot29",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot29").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot29").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot30",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot30").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot30").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot31",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot31").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot31").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot32",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot32").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot32").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot33",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot33").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot33").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot34",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot34").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot34").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot35",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot35").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot35").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot36",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot36").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot36").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot37",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot37").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot37").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot38",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot38").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot38").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot39",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot39").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot39").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot40",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot40").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot40").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot41",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot41").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot41").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot42",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot42").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot42").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot43",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot43").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot43").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot44",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot44").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot44").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot45",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot45").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot45").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot46",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot46").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot46").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot47",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot47").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot47").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot48",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot48").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot48").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot49",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot49").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot49").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot50",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot50").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot50").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot51",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot51").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot51").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot52",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot52").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot52").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot53",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot53").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot53").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot54",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot54").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot54").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot55",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot55").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot55").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot56",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot56").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot56").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot57",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot57").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot57").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot58",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot58").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot58").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot59",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot59").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot59").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot60",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot60").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot60").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot61",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot61").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot61").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot62",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot62").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot62").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot63",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot63").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot63").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot64",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot64").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot64").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot65",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot65").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot65").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot66",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot66").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot66").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot67",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot67").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot67").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot68",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot68").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot68").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot69",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot69").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot69").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot70",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot70").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot70").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot71",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot71").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot71").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot72",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot72").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot72").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot73",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot73").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot73").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot74",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot74").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot74").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot75",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot75").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot75").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot76",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot76").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot76").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot77",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot77").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot77").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot78",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot78").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot78").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot79",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot79").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot79").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot80",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot80").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot80").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot81",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot81").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot81").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot82",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot82").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot82").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot83",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot83").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot83").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot84",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot84").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot84").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot85",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot85").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot85").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot86",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot86").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot86").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot87",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot87").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot87").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot88",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot88").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot88").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot89",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot89").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot89").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot90",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot90").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot90").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot91",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot91").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot91").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot92",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot92").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot92").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot93",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot93").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot93").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot94",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot94").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot94").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot95",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot95").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot95").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot96",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot96").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot96").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot97",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot97").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot97").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot98",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot98").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot98").Nodes().AsValueEnumerable().First().ToString()));
                 mainwindowViewModel.Recorder.Current.ExecuteSetProperty(ColorSpots.Value, "ColorSpot99",
-                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot99").Nodes().First().ToString()));
+                    WpfObjectSerializer.Deserialize(colorSpots.Element("ColorSpot99").Nodes().AsValueEnumerable().First().ToString()));
             }
 
             InitialSetting(mainwindowViewModel, false, false, isPreview);
@@ -3454,7 +3471,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
 
         var layersViewModel = Application.Current.MainWindow.GetChildOfType<Layers>().DataContext as LayersViewModel;
         layersViewModel.InitializeHitTestVisible(mainwindowViewModel);
-        Layers.First().IsSelected.Value = true;
+        Layers.AsValueEnumerable().First().IsSelected.Value = true;
 
         LogManager.GetCurrentClassLogger().Info(Resources.Log_FinishPostProcessInFileLoadingSequence);
     }
@@ -3464,7 +3481,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
         int count = 0;
         foreach (var item in AllItems.Value)
         {
-            var view = allViews.FirstOrDefault(x => x.DataContext == item);
+            var view = allViews.AsValueEnumerable().FirstOrDefault(x => x.DataContext == item);
             if (view is not null)
             {
                 count++;
@@ -3486,7 +3503,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
 
         App.Current.Dispatcher.BeginInvoke(() =>
         {
-            foreach (var item in AllItems.Value.OrderBy(x => x.ZIndex.Value))
+            foreach (var item in AllItems.Value.AsValueEnumerable().OrderBy(x => x.ZIndex.Value))
             {
                 if (item is EffectViewModel effect)
                 {
@@ -3552,7 +3569,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     {
         MainWindowVM.Recorder.BeginRecode();
 
-        var items = SelectedItems.Value.Select(x => x is SnapPointViewModel sp
+        var items = SelectedItems.Value.AsValueEnumerable().Select(x => x is SnapPointViewModel sp
             ? sp.Parent.Value
             : x
         ).Distinct().Where(x => Equals(x.ParentID, Guid.Empty)).ToList();
@@ -3569,14 +3586,14 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
         AddItemCommand.Execute(groupItem);
 
         var groupItemLayerItem =
-            Layers.SelectMany(x => x.Children).First(x => (x as LayerItem).Item.Value == groupItem);
+            Layers.AsValueEnumerable().SelectMany(x => x.Children).First(x => (x as LayerItem).Item.Value == groupItem);
 
         var list = new List<Tuple<LayerItem, LayerTreeViewItemBase>>();
 
         foreach (var item in items)
         {
             var layerItem =
-                Layers.SelectMany(x => x.Children).First(x => (x as LayerItem).Item.Value == item) as LayerItem;
+                Layers.AsValueEnumerable().SelectMany(x => x.Children).First(x => (x as LayerItem).Item.Value == item) as LayerItem;
             list.Add(new Tuple<LayerItem, LayerTreeViewItemBase>(layerItem, layerItem.Parent.Value));
             MainWindowVM.Recorder.Current.ExecuteSetProperty(layerItem, "Parent.Value", groupItemLayerItem);
             MainWindowVM.Recorder.Current.ExecuteAdd(groupItemLayerItem.Children, layerItem);
@@ -3610,6 +3627,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     private void Remove(LayerItem layerItem)
     {
         var layer = Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+            .AsValueEnumerable()
             .Where(x => x is LayerItem)
             .First(x => x as LayerItem == layerItem)
             .Parent.Value;
@@ -3618,26 +3636,22 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
 
     public bool CanExecuteGroup()
     {
-        var items = from item in SelectedItems.Value
-            where item.ParentID == Guid.Empty
-            select item;
+        var items = SelectedItems.Value.AsValueEnumerable().Where(item => item.ParentID == Guid.Empty);
         return items.Count() > 1;
     }
 
     private void ExecuteUngroupItemsCommand()
     {
         MainWindowVM.Recorder.BeginRecode();
-
-        var groups = from item in SelectedItems.Value
-            where item.ParentID == Guid.Empty
-            select item;
+        
+        var groups = SelectedItems.Value.AsValueEnumerable().Where(item => item.ParentID == Guid.Empty);
 
         foreach (var groupRoot in groups.ToList())
         {
             var children =
-                (from child in Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
-                    where child is LayerItem && (child as LayerItem).Item.Value.ParentID == groupRoot.ID
-                    select child).ToList();
+                Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                    .AsValueEnumerable().Where(child =>
+                        child is LayerItem && (child as LayerItem).Item.Value.ParentID == groupRoot.ID).ToList();
 
             var group = groupRoot as GroupItemViewModel;
 
@@ -3651,6 +3665,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                     true);
                 MainWindowVM.Recorder.Current.ExecuteSetProperty(layerItem, "Parent.Value", Layers
                     .SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                    .AsValueEnumerable()
                     .Where(x => x is LayerItem)
                     .First(x => (x as LayerItem).Item == (child as LayerItem).Item)
                     .Parent.Value
@@ -3667,7 +3682,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
 
             var groupZIndex = groupRoot.ZIndex.Value;
 
-            var it = from item in Layers.SelectMany(x => x.Children)
+            var it = from item in Layers.AsValueEnumerable().SelectMany(x => x.Children)
                 where (item as LayerItem).Item.Value.ZIndex.Value > groupZIndex
                 select item;
 
@@ -3691,7 +3706,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
 
     public bool CanExecuteUngroup()
     {
-        var items = from item in SelectedItems.Value.OfType<GroupItemViewModel>()
+        var items = from item in SelectedItems.Value.AsValueEnumerable().OfType<GroupItemViewModel>()
             select item;
         return items.Count() > 0;
     }
@@ -3706,27 +3721,25 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     private void ExecuteBringForwardCommand()
     {
         MainWindowVM.Recorder.BeginRecode();
+        
+        var ordered = SelectedItems.Value.AsValueEnumerable().OrderByDescending(item => item.ZIndex.Value);
 
-        var ordered = from item in SelectedItems.Value
-            orderby item.ZIndex.Value descending
-            select item;
-
-        var count = Layers.SelectMany(x => x.Children).Count();
+        var count = Layers.AsValueEnumerable().SelectMany(x => x.Children).Count();
 
         for (var i = 0; i < ordered.Count(); ++i)
         {
             var currentIndex = ordered.ElementAt(i).ZIndex.Value;
-            if (SelectedLayers.Value.First().Children.Max(x => (x as LayerItem).Item.Value.ZIndex.Value) ==
+            if (SelectedLayers.Value.AsValueEnumerable().First().Children.AsValueEnumerable().Max(x => (x as LayerItem).Item.Value.ZIndex.Value) ==
                 currentIndex)
                 continue; //レイヤー内の最大ZIndex値と同じだった場合はcontinueして次の選択アイテムへ
-            var next = (from x in Layers.SelectMany(x => x.Children)
+            var next = (from x in Layers.AsValueEnumerable().SelectMany(x => x.Children)
                 where (x as LayerItem).Item.Value.ZIndex.Value == currentIndex + 1
                 select x).SingleOrDefault();
 
             if (next == null) continue;
 
             var newIndex = (next as LayerItem).Item.Value.ParentID != Guid.Empty
-                ? (Layers.SelectMany(x => x.Children)
+                ? (Layers.AsValueEnumerable().SelectMany(x => x.Children)
                         .Single(x => (x as LayerItem).Item.Value.ID == (next as LayerItem).Item.Value.ParentID) as
                     LayerItem).Item.Value.ZIndex.Value
                 : Math.Min(count - 1 - i, currentIndex + 1);
@@ -3736,45 +3749,47 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                 {
                     MainWindowVM.Recorder.Current.ExecuteSetProperty(ordered.ElementAt(i), "ZIndex.Value", newIndex);
 
-                    var children = from item in Layers.SelectMany(xx => xx.Children)
-                        where (item as LayerItem).Item.Value.ParentID == ordered.ElementAt(i).ID
-                        orderby (item as LayerItem).Item.Value.ZIndex.Value descending
-                        select item;
+                    var orderedElementID = ordered.ElementAt(i).ID;
+                    var children = Layers.AsValueEnumerable().SelectMany(xx => xx.Children)
+                        .Where(item => (item as LayerItem).Item.Value.ParentID == orderedElementID)
+                        .OrderByDescending(item => (item as LayerItem).Item.Value.ZIndex.Value)
+                        .ToList();
 
                     var youngestChildrenZIndex = 0;
 
-                    for (var j = 0; j < children.Count(); ++j)
+                    for (var j = 0; j < children.AsValueEnumerable().Count(); ++j)
                     {
-                        var child = children.ElementAt(j);
+                        var child = children.AsValueEnumerable().ElementAt(j);
                         youngestChildrenZIndex = newIndex - j - 1;
                         MainWindowVM.Recorder.Current.ExecuteSetProperty((child as LayerItem).Item.Value,
                             "ZIndex.Value", newIndex - j - 1);
                     }
-
-                    var younger = from item in Layers.SelectMany(xx => xx.Children)
-                        where (item as LayerItem).Item.Value.ID != ordered.ElementAt(i).ID &&
-                              (item as LayerItem).Item.Value.ParentID != ordered.ElementAt(i).ID
-                              && (item as LayerItem).Item.Value.ZIndex.Value <= ordered.ElementAt(i).ZIndex.Value &&
+                    
+                    var orderedElementZIndex = ordered.ElementAt(i).ZIndex.Value;
+                    var younger = from item in Layers.AsValueEnumerable().SelectMany(xx => xx.Children)
+                        where (item as LayerItem).Item.Value.ID != orderedElementID &&
+                              (item as LayerItem).Item.Value.ParentID != orderedElementID
+                              && (item as LayerItem).Item.Value.ZIndex.Value <= orderedElementZIndex &&
                               (item as LayerItem).Item.Value.ZIndex.Value >= youngestChildrenZIndex
                         select item;
 
-                    var x = from item in Layers.SelectMany(xx => xx.Children)
-                        where (item as LayerItem).Item.Value.ID != ordered.ElementAt(i).ID &&
-                              (item as LayerItem).Item.Value.ParentID != ordered.ElementAt(i).ID
+                    var x = from item in Layers.AsValueEnumerable().SelectMany(xx => xx.Children)
+                        where (item as LayerItem).Item.Value.ID != orderedElementID &&
+                              (item as LayerItem).Item.Value.ParentID != orderedElementID
                               && (item as LayerItem).Item.Value.ZIndex.Value < youngestChildrenZIndex
                         select item;
 
                     var z = x.ToList();
-                    z.AddRange(younger);
+                    z.AddRange(younger.ToArray());
 
-                    for (var j = 0; j < z.Count(); ++j)
-                        MainWindowVM.Recorder.Current.ExecuteSetProperty((z.ElementAt(j) as LayerItem).Item.Value,
+                    for (var j = 0; j < z.AsValueEnumerable().Count(); ++j)
+                        MainWindowVM.Recorder.Current.ExecuteSetProperty((z.AsValueEnumerable().ElementAt(j) as LayerItem).Item.Value,
                             "ZIndex.Value", j);
                 }
                 else
                 {
                     MainWindowVM.Recorder.Current.ExecuteSetProperty(ordered.ElementAt(i), "ZIndex.Value", newIndex);
-                    var exists = Layers.SelectMany(x => x.Children)
+                    var exists = Layers.AsValueEnumerable().SelectMany(x => x.Children)
                         .Where(item => (item as LayerItem).Item.Value.ZIndex.Value == newIndex);
 
                     foreach (var item in exists)
@@ -3784,7 +3799,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                         {
                             if ((item as LayerItem).Item.Value is GroupItemViewModel)
                             {
-                                var children = from it in Layers.SelectMany(x => x.Children)
+                                var children = from it in Layers.AsValueEnumerable().SelectMany(x => x.Children)
                                                where (it as LayerItem).Item.Value.ParentID == (item as LayerItem).Item.Value.ID
                                                select it;
 
@@ -3836,27 +3851,25 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     private void ExecuteSendBackwardCommand()
     {
         MainWindowVM.Recorder.BeginRecode();
+        
+        var ordered = SelectedItems.Value.AsValueEnumerable().OrderBy(item => item.ZIndex.Value);
 
-        var ordered = from item in SelectedItems.Value
-            orderby item.ZIndex.Value
-            select item;
-
-        var count = Layers.SelectMany(x => x.Children).Count();
+        var count = Layers.AsValueEnumerable().SelectMany(x => x.Children).Count();
 
         for (var i = 0; i < ordered.Count(); ++i)
         {
             var currentIndex = ordered.ElementAt(i).ZIndex.Value;
-            if (SelectedLayers.Value.First().Children.Min(x => (x as LayerItem).Item.Value.ZIndex.Value) ==
+            if (SelectedLayers.Value.AsValueEnumerable().First().Children.AsValueEnumerable().Min(x => (x as LayerItem).Item.Value.ZIndex.Value) ==
                 currentIndex)
                 continue; //レイヤー内の最小ZIndex値と同じだった場合はcontinueして次の選択アイテムへ
-            var previous = (from x in Layers.SelectMany(x => x.Children)
+            var previous = (from x in Layers.AsValueEnumerable().SelectMany(x => x.Children)
                 where (x as LayerItem).Item.Value.ZIndex.Value == currentIndex - 1
                 select x).SingleOrDefault();
 
             if (previous == null) continue;
 
             var newIndex = (previous as LayerItem).Item.Value is GroupItemViewModel
-                ? Layers.SelectMany(x => x.Children)
+                ? Layers.AsValueEnumerable().SelectMany(x => x.Children)
                     .Where(x => (x as LayerItem).Item.Value.ParentID == (previous as LayerItem).Item.Value.ID)
                     .Min(x => (x as LayerItem).Item.Value.ZIndex.Value)
                 : Math.Max(i, currentIndex - 1);
@@ -3864,47 +3877,49 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
             {
                 if (ordered.ElementAt(i) is GroupItemViewModel)
                 {
-                    var children = (from item in Layers.SelectMany(xx => xx.Children)
-                        where (item as LayerItem).Item.Value.ParentID == ordered.ElementAt(i).ID
-                        orderby (item as LayerItem).Item.Value.ZIndex.Value descending
+                    var orderedElementID = ordered.ElementAt(i).ID;
+                    var children = (from item in Layers.AsValueEnumerable().SelectMany(xx => xx.Children)
+                        where (item as LayerItem).Item.Value.ParentID == orderedElementID
+                                    orderby (item as LayerItem).Item.Value.ZIndex.Value descending
                         select item).ToList();
 
-                    if (children.Any(c => (c as LayerItem).Item.Value.ZIndex.Value == 0)) continue;
+                    if (children.AsValueEnumerable().Any(c => (c as LayerItem).Item.Value.ZIndex.Value == 0)) continue;
 
                     MainWindowVM.Recorder.Current.ExecuteSetProperty(ordered.ElementAt(i), "ZIndex.Value", newIndex);
 
                     var youngestChildrenZIndex = 0;
 
-                    for (var j = 0; j < children.Count(); ++j)
+                    for (var j = 0; j < children.AsValueEnumerable().Count(); ++j)
                     {
-                        var child = children.ElementAt(j);
+                        var child = children.AsValueEnumerable().ElementAt(j);
                         youngestChildrenZIndex = newIndex - j - 1;
                         MainWindowVM.Recorder.Current.ExecuteSetProperty((child as LayerItem).Item.Value,
                             "ZIndex.Value", newIndex - j - 1);
                     }
 
-                    var older = from item in Layers.SelectMany(xx => xx.Children)
-                        where (item as LayerItem).Item.Value.ID != ordered.ElementAt(i).ID &&
-                              (item as LayerItem).Item.Value.ParentID != ordered.ElementAt(i).ID
-                              && (item as LayerItem).Item.Value.ZIndex.Value <= ordered.ElementAt(i).ZIndex.Value &&
+                    var orderedElementZIndex = ordered.ElementAt(i).ZIndex.Value;
+                    var older = from item in Layers.AsValueEnumerable().SelectMany(xx => xx.Children)
+                        where (item as LayerItem).Item.Value.ID != orderedElementID &&
+                              (item as LayerItem).Item.Value.ParentID != orderedElementID
+                              && (item as LayerItem).Item.Value.ZIndex.Value <= orderedElementZIndex &&
                               (item as LayerItem).Item.Value.ZIndex.Value >= youngestChildrenZIndex
                         select item;
 
-                    var x = from item in Layers.SelectMany(xx => xx.Children)
-                        where (item as LayerItem).Item.Value.ID != ordered.ElementAt(i).ID &&
-                              (item as LayerItem).Item.Value.ParentID != ordered.ElementAt(i).ID
-                              && (item as LayerItem).Item.Value.ZIndex.Value > ordered.ElementAt(i).ZIndex.Value
-                        select item;
+                    var x = from item in Layers.AsValueEnumerable().SelectMany(xx => xx.Children)
+                        where (item as LayerItem).Item.Value.ID != orderedElementID &&
+                              (item as LayerItem).Item.Value.ParentID != orderedElementID
+                              && (item as LayerItem).Item.Value.ZIndex.Value > orderedElementZIndex
+                            select item;
 
                     var z = older.ToList();
-                    z.AddRange(x);
+                    z.AddRange(x.ToArray());
                     z.Reverse();
 
-                    for (var j = 0; j < z.Count(); ++j)
+                    for (var j = 0; j < z.AsValueEnumerable().Count(); ++j)
                     {
-                        var elm = z.ElementAt(j);
+                        var elm = z.AsValueEnumerable().ElementAt(j);
                         MainWindowVM.Recorder.Current.ExecuteSetProperty((elm as LayerItem).Item.Value, "ZIndex.Value",
-                            Layers.SelectMany(xx => xx.Children).Count() - j - 1);
+                            Layers.AsValueEnumerable().SelectMany(xx => xx.Children).Count() - j - 1);
                     }
                 }
                 else
@@ -3913,7 +3928,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                     
                     (ordered.ElementAt(i) as EffectViewModel)?.Render();
                     
-                    var exists = Layers.SelectMany(x => x.Children)
+                    var exists = Layers.AsValueEnumerable().SelectMany(x => x.Children)
                         .Where(item => (item as LayerItem).Item.Value.ZIndex.Value == newIndex);
 
                     foreach (var item in exists)
@@ -3922,7 +3937,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                         {
                             if ((item as LayerItem).Item.Value.ParentID != Guid.Empty)
                             {
-                                var children = from it in Layers.SelectMany(x => x.Children)
+                                var children = from it in Layers.AsValueEnumerable().SelectMany(x => x.Children)
                                     where (it as LayerItem).Item.Value.ParentID ==
                                           (item as LayerItem).Item.Value.ParentID
                                     select it;
@@ -3931,7 +3946,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                                     MainWindowVM.Recorder.Current.ExecuteSetProperty((child as LayerItem).Item.Value,
                                         "ZIndex.Value", (child as LayerItem).Item.Value.ZIndex.Value + 1);
 
-                                var parent = (from it in Layers.SelectMany(x => x.Children)
+                                var parent = (from it in Layers.AsValueEnumerable().SelectMany(x => x.Children)
                                     where (it as LayerItem).Item.Value.ID == (item as LayerItem).Item.Value.ParentID
                                     select it).Single();
 
@@ -3976,17 +3991,15 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     {
         MainWindowVM.Recorder.BeginRecode();
 
-        var ordered = from item in SelectedItems.Value
-            orderby item.ZIndex.Value descending
-            select item;
+        var ordered = SelectedItems.Value.AsValueEnumerable().OrderByDescending(item => item.ZIndex.Value);
 
-        var count = Layers.SelectMany(x => x.Children).Count();
+        var count = Layers.AsValueEnumerable().SelectMany(x => x.Children).Count();
 
         for (var i = 0; i < ordered.Count(); ++i)
         {
             var current = ordered.ElementAt(i);
             var currentIndex = current.ZIndex.Value;
-            var newIndex = SelectedLayers.Value.SelectMany(x => x.Children).Count() - 1;
+            var newIndex = SelectedLayers.Value.AsValueEnumerable().SelectMany(x => x.Children).Count() - 1;
             if (currentIndex != newIndex)
             {
                 var oldCurrentIndex = current.ZIndex.Value;
@@ -3994,7 +4007,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
 
                 if (current is GroupItemViewModel)
                 {
-                    var children = from item in Layers.SelectMany(x => x.Children)
+                    var children = from item in Layers.AsValueEnumerable().SelectMany(x => x.Children)
                         where (item as LayerItem).Item.Value.ParentID == current.ID
                         orderby (item as LayerItem).Item.Value.ZIndex.Value descending
                         select item;
@@ -4008,22 +4021,22 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
 
                     var minValue = children.Min(x => (x as LayerItem).Item.Value.ZIndex.Value);
 
-                    var other = (from item in Layers.SelectMany(x => x.Children)
+                    var other = (from item in Layers.AsValueEnumerable().SelectMany(x => x.Children)
                         where (item as LayerItem).Item.Value.ParentID != current.ID &&
                               (item as LayerItem).Item.Value.ID != current.ID
                         orderby (item as LayerItem).Item.Value.ZIndex.Value descending
                         select item).ToList();
 
-                    for (var j = 0; j < other.Count(); ++j)
+                    for (var j = 0; j < other.AsValueEnumerable().Count(); ++j)
                     {
-                        var item = other.ElementAt(j);
+                        var item = other.AsValueEnumerable().ElementAt(j);
                         MainWindowVM.Recorder.Current.ExecuteSetProperty((item as LayerItem).Item.Value, "ZIndex.Value",
                             minValue - j - 1);
                     }
                 }
                 else
                 {
-                    var exists = Layers.SelectMany(x => x.Children).Where(item =>
+                    var exists = Layers.AsValueEnumerable().SelectMany(x => x.Children).Where(item =>
                         (item as LayerItem).Item.Value.ZIndex.Value <= newIndex &&
                         (item as LayerItem).Item.Value.ZIndex.Value > oldCurrentIndex);
 
@@ -4057,20 +4070,18 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     {
         MainWindowVM.Recorder.BeginRecode();
 
-        var ordered = from item in SelectedItems.Value
-            orderby item.ZIndex.Value
-            select item;
+        var ordered = SelectedItems.Value.AsValueEnumerable().OrderByDescending(item => item.ZIndex.Value);
 
-        var count = Layers.SelectMany(x => x.Children).Count();
+        var count = Layers.AsValueEnumerable().SelectMany(x => x.Children).Count();
 
         for (var i = 0; i < ordered.Count(); ++i)
         {
             var current = ordered.ElementAt(i);
             var currentIndex = current.ZIndex.Value;
             var newIndex = current is GroupItemViewModel
-                ? Layers.SelectMany(x => x.Children).Where(x => (x as LayerItem).Item.Value.ParentID == current.ID)
+                ? Layers.AsValueEnumerable().SelectMany(x => x.Children).Where(x => (x as LayerItem).Item.Value.ParentID == current.ID)
                     .Count()
-                : SelectedLayers.Value.First().Children.Min(x => (x as LayerItem).Item.Value.ZIndex.Value);
+                : SelectedLayers.Value.AsValueEnumerable().First().Children.AsValueEnumerable().Min(x => (x as LayerItem).Item.Value.ZIndex.Value);
             if (currentIndex != newIndex)
             {
                 var oldCurrentIndex = current.ZIndex.Value;
@@ -4079,36 +4090,36 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
 
                 if (current is GroupItemViewModel)
                 {
-                    var children = (from item in Layers.SelectMany(x => x.Children)
+                    var children = (from item in Layers.AsValueEnumerable().SelectMany(x => x.Children)
                         where (item as LayerItem).Item.Value.ParentID == current.ID
                         orderby (item as LayerItem).Item.Value.ZIndex.Value descending
                         select item).ToList();
 
-                    for (var j = 0; j < children.Count(); ++j)
+                    for (var j = 0; j < children.AsValueEnumerable().Count(); ++j)
                     {
-                        var child = children.ElementAt(j);
+                        var child = children.AsValueEnumerable().ElementAt(j);
                         MainWindowVM.Recorder.Current.ExecuteSetProperty((child as LayerItem).Item.Value,
                             "ZIndex.Value", current.ZIndex.Value - j - 1);
                     }
 
-                    var other = (from item in Layers.SelectMany(x => x.Children)
+                    var other = (from item in Layers.AsValueEnumerable().SelectMany(x => x.Children)
                         where (item as LayerItem).Item.Value.ParentID != current.ID &&
                               (item as LayerItem).Item.Value.ID != current.ID
                         orderby (item as LayerItem).Item.Value.ZIndex.Value descending
                         select item).ToList();
 
-                    var maxValue = Layers.SelectMany(x => x.Children).Count() - 1;
+                    var maxValue = Layers.AsValueEnumerable().SelectMany(x => x.Children).Count() - 1;
 
-                    for (var j = 0; j < other.Count(); ++j)
+                    for (var j = 0; j < other.AsValueEnumerable().Count(); ++j)
                     {
-                        var item = other.ElementAt(j);
+                        var item = other.AsValueEnumerable().ElementAt(j);
                         MainWindowVM.Recorder.Current.ExecuteSetProperty((item as LayerItem).Item.Value, "ZIndex.Value",
                             maxValue - j);
                     }
                 }
                 else
                 {
-                    var exists = Layers.SelectMany(x => x.Children).Where(item =>
+                    var exists = Layers.AsValueEnumerable().SelectMany(x => x.Children).Where(item =>
                         (item as LayerItem).Item.Value.ZIndex.Value >= newIndex &&
                         (item as LayerItem).Item.Value.ZIndex.Value < oldCurrentIndex)
                         .Select(x => (x as LayerItem).Item.Value)
@@ -4148,7 +4159,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
 
     public static void Sort(ReactiveCollection<LayerTreeViewItemBase> target)
     {
-        var list = target.ToList();
+        var list = target.AsValueEnumerable().ToList();
 
         foreach (var layer in list) target.Remove(layer);
 
@@ -4163,7 +4174,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
 
     public bool CanExecuteOrder()
     {
-        return SelectedItems.Value.Count() > 0;
+        return SelectedItems.Value.AsValueEnumerable().Count() > 0;
     }
 
     #endregion //Ordering
@@ -4172,11 +4183,11 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
 
     private void ExecuteAlignTopCommand()
     {
-        if (SelectedItems.Value.Count() > 1)
+        if (SelectedItems.Value.AsValueEnumerable().Count() > 1)
         {
             MainWindowVM.Recorder.BeginRecode();
 
-            var first = SelectedItems.Value.First();
+            var first = SelectedItems.Value.AsValueEnumerable().First();
             var top = GetTop(first);
 
             foreach (var item in SelectedItems.Value)
@@ -4201,11 +4212,11 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
 
     private void ExecuteAlignVerticalCenterCommand()
     {
-        if (SelectedItems.Value.Count() > 1)
+        if (SelectedItems.Value.AsValueEnumerable().Count() > 1)
         {
             MainWindowVM.Recorder.BeginRecode();
 
-            var first = SelectedItems.Value.First();
+            var first = SelectedItems.Value.AsValueEnumerable().First();
             var bottom = GetTop(first) + GetHeight(first) / 2;
 
             foreach (var item in SelectedItems.Value)
@@ -4229,11 +4240,11 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
 
     private void ExecuteAlignBottomCommand()
     {
-        if (SelectedItems.Value.Count() > 1)
+        if (SelectedItems.Value.AsValueEnumerable().Count() > 1)
         {
             MainWindowVM.Recorder.BeginRecode();
 
-            var first = SelectedItems.Value.First();
+            var first = SelectedItems.Value.AsValueEnumerable().First();
             var bottom = GetTop(first) + GetHeight(first);
 
             foreach (var item in SelectedItems.Value)
@@ -4257,11 +4268,11 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
 
     private void ExecuteAlignLeftCommand()
     {
-        if (SelectedItems.Value.Count() > 1)
+        if (SelectedItems.Value.AsValueEnumerable().Count() > 1)
         {
             MainWindowVM.Recorder.BeginRecode();
 
-            var first = SelectedItems.Value.First();
+            var first = SelectedItems.Value.AsValueEnumerable().First();
             var left = GetLeft(first);
 
             foreach (var item in SelectedItems.Value)
@@ -4285,11 +4296,11 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
 
     private void ExecuteAlignHorizontalCenterCommand()
     {
-        if (SelectedItems.Value.Count() > 1)
+        if (SelectedItems.Value.AsValueEnumerable().Count() > 1)
         {
             MainWindowVM.Recorder.BeginRecode();
 
-            var first = SelectedItems.Value.First();
+            var first = SelectedItems.Value.AsValueEnumerable().First();
             var center = GetLeft(first) + GetWidth(first) / 2;
 
             foreach (var item in SelectedItems.Value)
@@ -4313,11 +4324,11 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
 
     private void ExecuteAlignRightCommand()
     {
-        if (SelectedItems.Value.Count() > 1)
+        if (SelectedItems.Value.AsValueEnumerable().Count() > 1)
         {
             MainWindowVM.Recorder.BeginRecode();
 
-            var first = SelectedItems.Value.First();
+            var first = SelectedItems.Value.AsValueEnumerable().First();
             var right = GetLeft(first) + GetWidth(first);
 
             foreach (var item in SelectedItems.Value)
@@ -4344,10 +4355,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     /// </summary>
     private void ExecuteDistributeHorizontalCommand()
     {
-        var selectedItems = from item in SelectedItems.Value
-            let itemLeft = GetLeft(item)
-            orderby itemLeft
-            select item;
+        var selectedItems = SelectedItems.Value.OrderBy(GetLeft);
 
         if (selectedItems.Count() > 1)
         {

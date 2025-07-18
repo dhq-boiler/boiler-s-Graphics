@@ -10,13 +10,13 @@ using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reactive.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using ZLinq;
 
 namespace boilersGraphics.Models;
 
@@ -133,13 +133,13 @@ public class LayerItem : LayerTreeViewItemBase, IDisposable, IComparable<LayerTr
     {
         if ((DateTime.Now - Item.Value.ChangeFormDateTime.Value).TotalMilliseconds < 100)
             return;
-        if (!backgroundIncluded && items.Count() == 0)
+        if (!backgroundIncluded && items.AsValueEnumerable().Count() == 0)
             return;
         double minX, maxX, minY, maxY;
         var _items = items;
         if (backgroundIncluded)
         {
-            _items = _items.Union(new SelectableDesignerItemViewModelBase[] { DiagramViewModel.Instance.BackgroundItem.Value });
+            _items = _items.AsValueEnumerable().Union(new SelectableDesignerItemViewModelBase[] { DiagramViewModel.Instance.BackgroundItem.Value }).ToArray();
         }
         var width = Measure.GetWidth(_items, out minX, out maxX);
         var height = Measure.GetHeight(_items, out minY, out maxY);
@@ -148,11 +148,11 @@ public class LayerItem : LayerTreeViewItemBase, IDisposable, IComparable<LayerTr
             return;
 
         Rect? sliceRect = null;
-        _items.Cast<IRect>().ToList().ForEach(x => sliceRect = (!sliceRect.HasValue ? x.Rect.Value : Rect.Union(sliceRect.Value, x.Rect.Value)));
+        _items.AsValueEnumerable().Cast<IRect>().ToList().ForEach(x => sliceRect = (!sliceRect.HasValue ? x.Rect.Value : Rect.Union(sliceRect.Value, x.Rect.Value)));
         var renderer = new AppearanceRenderer(new WpfVisualTreeHelper());
         Appearance.Value = renderer.Render(sliceRect, DesignerCanvas.GetInstance(),
             DiagramViewModel.Instance,
-            null, null, _items.Min(x => x.ZIndex.Value), _items.Max(x => x.ZIndex.Value));
+            null, null, _items.AsValueEnumerable().Min(x => x.ZIndex.Value), _items.AsValueEnumerable().Max(x => x.ZIndex.Value));
 
         Item.Value.ChangeFormDateTime.Value = DateTime.Now;
     }
@@ -160,7 +160,7 @@ public class LayerItem : LayerTreeViewItemBase, IDisposable, IComparable<LayerTr
     private static void UpdateAppearanceByItem(DesignerCanvas designerCanvas, double minX, double minY,
         RenderTargetBitmap rtb, DrawingVisual visual, SelectableDesignerItemViewModelBase item)
     {
-        var views = designerCanvas.EnumVisualChildren<FrameworkElement>(item).Where(x => x.DataContext == item);
+        var views = designerCanvas.EnumVisualChildren<FrameworkElement>(item).AsValueEnumerable().Where(x => x.DataContext == item);
         foreach (var view in views)
             if (view != null)
             {

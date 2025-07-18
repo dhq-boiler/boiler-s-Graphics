@@ -6,11 +6,11 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Media.Imaging;
 using System.Xml.Linq;
+using ZLinq;
 
 namespace boilersGraphics.Helpers;
 
@@ -18,8 +18,7 @@ internal class ObjectSerializer
 {
     public static IEnumerable<XElement> SerializeLayers(ObservableCollection<LayerTreeViewItemBase> layers)
     {
-        var layersXML = from layer in layers
-            select new XElement("Layer", ExtractLayer(layer));
+        var layersXML = layers.AsValueEnumerable().Select(layer => new XElement("Layer", ExtractLayer(layer))).ToArray();
         return layersXML;
     }
 
@@ -36,17 +35,14 @@ internal class ObjectSerializer
 
     private static IEnumerable<XElement> ExtractLayerItemFromLayer(LayerTreeViewItemBase layer)
     {
-        var layerItemsXML = from layerItem in layer.Children
-            select ExtractLayerItem(layerItem as LayerItem);
+        var layerItemsXML = layer.Children.AsValueEnumerable().Select(layerItem => ExtractLayerItem(layerItem as LayerItem)).ToArray();
         return layerItemsXML;
     }
 
     public static XElement ExtractItems(IEnumerable<LayerItem> layerItems)
     {
         var layerItemsXML = new XElement("LayerItems",
-            from layerItem in layerItems
-            select ExtractLayerItem(layerItem)
-        );
+            layerItems.AsValueEnumerable().Select(layerItem => ExtractLayerItem(layerItem)).ToArray());
         return layerItemsXML;
     }
 
@@ -58,9 +54,7 @@ internal class ObjectSerializer
             new XElement("Name", layerItem.Name.Value),
             new XElement("Color", layerItem.Color.Value),
             new XElement("Item", ExtractItem(layerItem.Item.Value)),
-            new XElement("Children", from child in layerItem.Children
-                select ExtractLayerItem(child as LayerItem)
-            )
+            new XElement("Children", layerItem.Children.AsValueEnumerable().Select(child => ExtractLayerItem(child as LayerItem)).ToArray())
         );
     }
 
@@ -309,7 +303,7 @@ internal class ObjectSerializer
         foreach (var point in points)
         {
             ret += $"{point.X},{point.Y}";
-            if (point != points.Last())
+            if (point != points.AsValueEnumerable().Last())
                 ret += " ";
         }
 
@@ -320,10 +314,10 @@ internal class ObjectSerializer
         IEnumerable<SelectableDesignerItemViewModelBase> items)
     {
         return (from connection in items.WithPickupChildren(dialogViewModel.Layers
-                    .SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                    .SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).AsValueEnumerable()
                     .Where(x => x is LayerItem)
-                    .Select(x => (x as LayerItem).Item.Value)
-                ).OfType<ConnectorBaseViewModel>()
+                    .Select(x => (x as LayerItem).Item.Value).ToArray()
+                ).AsValueEnumerable().OfType<ConnectorBaseViewModel>()
                 where connection is not BezierCurveViewModel
                 select new XElement("Connection",
                     new XElement("ID", connection.ID),
@@ -340,9 +334,11 @@ internal class ObjectSerializer
             .Union(
                 from connection in items.WithPickupChildren(dialogViewModel.Layers
                     .SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                    .AsValueEnumerable()
                     .Where(x => x is LayerItem)
                     .Select(x => (x as LayerItem).Item.Value)
-                ).OfType<BezierCurveViewModel>()
+                    .ToArray()
+                ).AsValueEnumerable().OfType<BezierCurveViewModel>()
                 select new XElement("Connection",
                     new XElement("ID", connection.ID),
                     new XElement("ParentID", connection.ParentID),
@@ -356,7 +352,7 @@ internal class ObjectSerializer
                     new XElement("ControlPoint1", connection.ControlPoint1.Value),
                     new XElement("ControlPoint2", connection.ControlPoint2.Value),
                     new XElement("PathGeometry", connection.PathGeometry.Value)
-                ));
+                )).ToArray();
     }
 
     public static IEnumerable<XElement> SerializeConfiguration(DiagramViewModel diagramViewModel)

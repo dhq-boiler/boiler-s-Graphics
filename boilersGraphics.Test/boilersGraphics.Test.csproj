@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net7.0-windows10.0.22621.0</TargetFramework>
+    <TargetFramework>net9.0-windows10.0.26100.0</TargetFramework>
     <OutputType>Library</OutputType>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <UseWindowsForms>true</UseWindowsForms>
@@ -44,27 +44,27 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Appium.WebDriver" Version="4.4.5" />
-    <PackageReference Include="boilersE2E.Core" Version="4.7.0" />
-    <PackageReference Include="boilersE2E.NUnit" Version="4.7.0" />
-    <PackageReference Include="coverlet.collector" Version="6.0.0">
+    <PackageReference Include="Appium.WebDriver" Version="8.0.0" />
+    <PackageReference Include="boilersE2E.Core" Version="5.0.4" />
+    <PackageReference Include="boilersE2E.NUnit" Version="5.0.4" />
+    <PackageReference Include="coverlet.collector" Version="6.0.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="coverlet.msbuild" Version="6.0.0">
+    <PackageReference Include="coverlet.msbuild" Version="6.0.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Dapper.StrongName" Version="2.1.24" />
+    <PackageReference Include="Dapper.StrongName" Version="2.1.66" />
     <PackageReference Include="DotNetSeleniumExtras.WaitHelpers" Version="3.11.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
-    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.0.4" />
-    <PackageReference Include="Microsoft.Windows.SDK.Contracts" Version="10.0.22621.2428" />
-    <PackageReference Include="Moq" Version="4.20.70" />
-    <PackageReference Include="NUnit" Version="4.0.1" />
-    <PackageReference Include="NUnit.ConsoleRunner" Version="3.16.3" />
-    <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
-    <PackageReference Include="OpenCvSharp4.Windows" Version="4.8.0.20230708" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Windows.SDK.Contracts" Version="10.0.26100.4654" />
+    <PackageReference Include="Moq" Version="4.20.72" />
+    <PackageReference Include="NUnit" Version="4.3.2" />
+    <PackageReference Include="NUnit.ConsoleRunner" Version="3.20.1" />
+    <PackageReference Include="NUnit3TestAdapter" Version="5.0.0" />
+    <PackageReference Include="OpenCvSharp4.Windows" Version="4.11.0.20250507" />
     <PackageReference Include="System.Runtime" Version="4.3.1" />
   </ItemGroup>
   <ItemGroup>

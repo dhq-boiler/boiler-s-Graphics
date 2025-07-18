@@ -5,12 +5,12 @@ using Prism.Services.Dialogs;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
+using ZLinq;
 
 namespace boilersGraphics.ViewModels
 {
@@ -27,7 +27,7 @@ namespace boilersGraphics.ViewModels
                 {
                     var windows = new Window[App.Current.Windows.Count];
                     App.Current.Windows.CopyTo(windows, 0);
-                    _scrollViewer = windows.OfType<Prism.Services.Dialogs.DialogWindow>()
+                    _scrollViewer = windows.AsValueEnumerable().OfType<Prism.Services.Dialogs.DialogWindow>()
                     .Select(x =>
                     {
                         return x.GetVisualChild<ScrollViewer>();

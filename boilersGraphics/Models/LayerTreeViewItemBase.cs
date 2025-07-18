@@ -21,6 +21,7 @@ using System.Windows.Data;
 using System.Windows.Media;
 using TsOperationHistory;
 using TsOperationHistory.Extensions;
+using ZLinq;
 using Layers = boilersGraphics.Views.Layers;
 
 namespace boilersGraphics.Models;
@@ -48,7 +49,7 @@ public abstract class LayerTreeViewItemBase : BindableBase, IDisposable, IObserv
         {
             var diagramControl = Application.Current.MainWindow.FindName("DiagramControl") as DiagramControl;
             var layers = diagramControl.FindName("layers") as Layers; 
-            var labelTextBox = layers.EnumVisualChildren<LabelTextBox>(this).FirstOrDefault(x => x.DataContext == this);
+            var labelTextBox = layers.EnumVisualChildren<LabelTextBox>(this).AsValueEnumerable().FirstOrDefault(x => x.DataContext == this);
             labelTextBox?.FocusTextBox();
         })
         .AddTo(_disposable);
@@ -114,16 +115,21 @@ public abstract class LayerTreeViewItemBase : BindableBase, IDisposable, IObserv
         LogManager.GetCurrentClassLogger().Trace("detected Layer changes. run Layer.UpdateAppearance().");
         UpdateAppearance(Children
             .SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(xx => xx.Children)
-            .Select(x => (x as LayerItem).Item.Value), true);
+            .AsValueEnumerable()
+            .Select(x => (x as LayerItem)?.Item?.Value)
+                .Where(x => x is not null).ToArray(), true);
         Children.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+            .AsValueEnumerable()
             .ToList()
             .ForEach(x =>
             {
                 if (x is Layer l)
                 {
                     l.UpdateAppearance(l.Children.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(xx => xx.Children)
-                                               .Select(x => (x as LayerItem).Item.Value), true);
+                                               .AsValueEnumerable()
+                                               .Select(x => (x as LayerItem).Item.Value).ToArray(), true);
                     l.Children.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                              .AsValueEnumerable()
                               .ToList()
                               .ForEach(x =>
                               {
@@ -146,8 +152,10 @@ public abstract class LayerTreeViewItemBase : BindableBase, IDisposable, IObserv
         if (value is GroupItemViewModel groupItemVM)
         {
             var children = Children.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                .AsValueEnumerable()
                 .Select(x => (x as LayerItem).Item.Value)
-                .Where(x => x.ParentID == groupItemVM.ID);
+                .Where(x => x.ParentID == groupItemVM.ID)
+                .ToArray();
             return children;
         }
 
@@ -237,7 +245,7 @@ public abstract class LayerTreeViewItemBase : BindableBase, IDisposable, IObserv
 
     public void RemoveItem(MainWindowViewModel mainWindowViewModel, SelectableDesignerItemViewModelBase item)
     {
-        var layerItems = Children.Where(x => (x as LayerItem).Item.Value == item);
+        var layerItems = Children.AsValueEnumerable().Where(x => (x as LayerItem).Item.Value == item);
         layerItems.ToList().ForEach(x =>
         {
             mainWindowViewModel.Recorder.Current.ExecuteRemove(Children, x);
@@ -247,7 +255,7 @@ public abstract class LayerTreeViewItemBase : BindableBase, IDisposable, IObserv
 
     public void ChildrenSwitchIsHitTestVisible(bool isVisible)
     {
-        Children.ToList().ForEach(x =>
+        Children.AsValueEnumerable().ToList().ForEach(x =>
         {
             if (x is LayerItem layerItem)
             {
@@ -262,7 +270,7 @@ public abstract class LayerTreeViewItemBase : BindableBase, IDisposable, IObserv
 
     public void ChildrenSwitchVisibility(bool isVisible)
     {
-        Children.ToList().ForEach(x =>
+        Children.AsValueEnumerable().ToList().ForEach(x =>
         {
             x.IsVisible.Value = isVisible;
             x.ChildrenSwitchVisibility(isVisible);
@@ -347,8 +355,9 @@ public abstract class LayerTreeViewItemBase : BindableBase, IDisposable, IObserv
     public int GetNewZIndex(IEnumerable<LayerTreeViewItemBase> layers)
     {
         var layerItems = layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+            .AsValueEnumerable()
             .Where(x => x is LayerItem);
-        var zindexes = Children.Union(layerItems).Cast<LayerItem>().Select(x => x.Item.Value.ZIndex.Value);
+        var zindexes = Children.AsValueEnumerable().Union(layerItems).Cast<LayerItem>().Select(x => x.Item.Value.ZIndex.Value);
         if (zindexes.Count() == 0)
             return 0;
         return zindexes.Max() + 1;
@@ -356,7 +365,7 @@ public abstract class LayerTreeViewItemBase : BindableBase, IDisposable, IObserv
 
     public void PushZIndex(OperationRecorder recorder, int newZIndex)
     {
-        var targetChildren = Children.Cast<LayerItem>().Where(x => x.Item.Value.ZIndex.Value >= newZIndex);
+        var targetChildren = Children.AsValueEnumerable().Cast<LayerItem>().Where(x => x.Item.Value.ZIndex.Value >= newZIndex);
         foreach (var target in targetChildren)
             recorder.Current.ExecuteSetProperty(target.Item.Value, "ZIndex.Value", target.Item.Value.ZIndex.Value + 1);
     }

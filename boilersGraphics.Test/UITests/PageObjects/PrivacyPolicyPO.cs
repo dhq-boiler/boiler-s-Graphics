@@ -5,7 +5,7 @@ namespace boilersGraphics.Test.UITests.PageObjects
 {
     public class PrivacyPolicyPO : PageObjectBase
     {
-        public PrivacyPolicyPO(WindowsDriver<WindowsElement> Session, E2ETestFixture testFixture)
+        public PrivacyPolicyPO(WindowsDriver<AppiumElement> Session, E2ETestFixture testFixture)
             : base(Session, testFixture)
         { }
 

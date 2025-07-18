@@ -6,11 +6,12 @@ using NLog;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
+using ZLinq;
+using ZLinq.Linq;
 
 namespace boilersGraphics.Helpers;
 
@@ -34,7 +35,7 @@ internal class SnapAction
 
     private SelectableDesignerItemViewModelBase _SnapTargetDataContext { get; set; }
 
-    public void SnapIntersectionOfEllipseAndTangent(IEnumerable<NEllipseViewModel> ellipses, Point beginPoint,
+    public void SnapIntersectionOfEllipseAndTangent(ValueEnumerable<ZLinq.Linq.FromEnumerable<NEllipseViewModel>, NEllipseViewModel> ellipses, Point beginPoint,
         Point endPoint, List<Tuple<Point, object>> appendIntersectionPoints)
     {
         foreach (var ellipse in ellipses)
@@ -50,9 +51,9 @@ internal class SnapAction
                     array.Add(tuple);
                 }
             });
-            var minDiscriminant = array.FirstOrDefault(x => Math.Abs(x.Item2) == array.Min(x => Math.Abs(x.Item2)));
-            if (minDiscriminant != null && minDiscriminant.Item1.Count() == 1)
-                appendIntersectionPoints.Add(new Tuple<Point, object>(minDiscriminant.Item1.First(), ellipse));
+            var minDiscriminant = array.AsValueEnumerable().FirstOrDefault(x => Math.Abs(x.Item2) == array.AsValueEnumerable().Min(x => Math.Abs(x.Item2)));
+            if (minDiscriminant != null && minDiscriminant.Item1.AsValueEnumerable().Count() == 1)
+                appendIntersectionPoints.Add(new Tuple<Point, object>(minDiscriminant.Item1.AsValueEnumerable().First(), ellipse));
         }
     }
 
@@ -72,9 +73,9 @@ internal class SnapAction
                     array.Add(tuple);
                 }
             });
-            var minDiscriminant = array.FirstOrDefault(x => Math.Abs(x.Item2) == array.Min(x => Math.Abs(x.Item2)));
-            if (minDiscriminant != null && minDiscriminant.Item1.Count() == 1)
-                appendIntersectionPoints.Add(new Tuple<Point, object>(minDiscriminant.Item1.First(), pie));
+            var minDiscriminant = array.AsValueEnumerable().FirstOrDefault(x => Math.Abs(x.Item2) == array.AsValueEnumerable().Min(x => Math.Abs(x.Item2)));
+            if (minDiscriminant != null && minDiscriminant.Item1.AsValueEnumerable().Count() == 1)
+                appendIntersectionPoints.Add(new Tuple<Point, object>(minDiscriminant.Item1.AsValueEnumerable().First(), pie));
 
             if (pie.Distance.Value - pie.DonutWidth.Value < 10) continue; //短い半径が短すぎる場合、接線の交点を計算しない
 
@@ -87,9 +88,9 @@ internal class SnapAction
                     array.Add(tuple);
                 }
             });
-            minDiscriminant = array.FirstOrDefault(x => Math.Abs(x.Item2) == array.Min(x => Math.Abs(x.Item2)));
-            if (minDiscriminant != null && minDiscriminant.Item1.Count() == 1)
-                appendIntersectionPoints.Add(new Tuple<Point, object>(minDiscriminant.Item1.First(), pie));
+            minDiscriminant = array.AsValueEnumerable().FirstOrDefault(x => Math.Abs(x.Item2) == array.AsValueEnumerable().Min(x => Math.Abs(x.Item2)));
+            if (minDiscriminant != null && minDiscriminant.Item1.AsValueEnumerable().Count() == 1)
+                appendIntersectionPoints.Add(new Tuple<Point, object>(minDiscriminant.Item1.AsValueEnumerable().First(), pie));
         }
     }
 
@@ -100,13 +101,13 @@ internal class SnapAction
         var diagramVM = mainWindowVM.DiagramViewModel;
         if (diagramVM.EnablePointSnap.Value)
         {
-            var snapPoints = diagramVM.GetSnapPoints(currentPoint).ToList();
+            var snapPoints = diagramVM.GetSnapPoints(currentPoint).AsValueEnumerable().ToList();
             var hitTestResult = designerCanvas.InputHitTest(currentPoint);
             if (!(hitTestResult is FrameworkElement)) return;
             var dataContext = (hitTestResult as FrameworkElement).DataContext;
             if (appendIntersectionPoints != null)
-                snapPoints.AddRange(from x in appendIntersectionPoints
-                    select new Tuple<SnapPoint, Point>(CreateSnapPoint(x.Item1, x.Item2), x.Item1));
+                snapPoints.AddRange(appendIntersectionPoints.AsValueEnumerable()
+                    .Select(x => new Tuple<SnapPoint, Point>(CreateSnapPoint(x.Item1, x.Item2), x.Item1)).ToArray());
             Tuple<SnapPoint, Point> snapped = null;
             foreach (var snapPoint in snapPoints)
                 if (currentPoint.X > snapPoint.Item2.X - mainWindowVM.SnapPower.Value
@@ -163,20 +164,20 @@ internal class SnapAction
                 RemoveAllAdornerFromAdornerLayerAndDictionary(designerCanvas);
                 _SnapResult = SnapResult.NoSnap;
 
-                if (appendIntersectionPoints != null && appendIntersectionPoints.Count() > 0)
+                if (appendIntersectionPoints != null && appendIntersectionPoints.AsValueEnumerable().Count() > 0)
                 {
                     var adornerLayer = AdornerLayer.GetAdornerLayer(designerCanvas);
-                    var adorner = new SnapPointAdorner(designerCanvas, appendIntersectionPoints.First().Item1,
-                        (appendIntersectionPoints.First().Item2 as SelectableDesignerItemViewModelBase).SnapPointSize
+                    var adorner = new SnapPointAdorner(designerCanvas, appendIntersectionPoints.AsValueEnumerable().First().Item1,
+                        (appendIntersectionPoints.AsValueEnumerable().First().Item2 as SelectableDesignerItemViewModelBase).SnapPointSize
                         .Value,
-                        (appendIntersectionPoints.First().Item2 as SelectableDesignerItemViewModelBase).ThumbThickness
+                        (appendIntersectionPoints.AsValueEnumerable().First().Item2 as SelectableDesignerItemViewModelBase).ThumbThickness
                         .Value);
                     if (adorner != null)
                     {
                         adornerLayer.Add(adorner);
 
                         //ディクショナリに記憶する
-                        _adorners.Add(appendIntersectionPoints.First().Item1, adorner);
+                        _adorners.Add(appendIntersectionPoints.AsValueEnumerable().First().Item1, adorner);
                     }
                 }
             }
@@ -191,14 +192,14 @@ internal class SnapAction
         var diagramVM = mainWindowVM.DiagramViewModel;
         if (diagramVM.EnablePointSnap.Value)
         {
-            var snapPoints = diagramVM.GetSnapPoints(currentPoint).ToList();
+            var snapPoints = diagramVM.GetSnapPoints(currentPoint).AsValueEnumerable().ToList();
             var hit = designerCanvas.InputHitTest(currentPoint) as FrameworkElement;
             if (hit == null)
                 return;
             var dataContext = hit.DataContext;
             if (appendIntersectionPoints != null)
-                snapPoints.AddRange(from x in appendIntersectionPoints
-                    select new Tuple<SnapPoint, Point>(CreateSnapPoint(x.Item1, x.Item2), x.Item1));
+                snapPoints.AddRange(appendIntersectionPoints.AsValueEnumerable()
+                    .Select(x => new Tuple<SnapPoint, Point>(CreateSnapPoint(x.Item1, x.Item2), x.Item1)).ToArray());
             Tuple<SnapPoint, Point> snapped = null;
             foreach (var snapPoint in snapPoints)
                 if (currentPoint.X > snapPoint.Item2.X - mainWindowVM.SnapPower.Value
@@ -259,20 +260,20 @@ internal class SnapAction
                 RemoveAllAdornerFromAdornerLayerAndDictionary(designerCanvas);
                 _SnapResult = SnapResult.NoSnap;
 
-                if (appendIntersectionPoints != null && appendIntersectionPoints.Count() > 0)
+                if (appendIntersectionPoints != null && appendIntersectionPoints.AsValueEnumerable().Count() > 0)
                 {
                     var adornerLayer = AdornerLayer.GetAdornerLayer(designerCanvas);
-                    var adorner = new SnapPointAdorner(designerCanvas, appendIntersectionPoints.First().Item1,
-                        (appendIntersectionPoints.First().Item2 as SelectableDesignerItemViewModelBase).SnapPointSize
+                    var adorner = new SnapPointAdorner(designerCanvas, appendIntersectionPoints.AsValueEnumerable().First().Item1,
+                        (appendIntersectionPoints.AsValueEnumerable().First().Item2 as SelectableDesignerItemViewModelBase).SnapPointSize
                         .Value,
-                        (appendIntersectionPoints.First().Item2 as SelectableDesignerItemViewModelBase).ThumbThickness
+                        (appendIntersectionPoints.AsValueEnumerable().First().Item2 as SelectableDesignerItemViewModelBase).ThumbThickness
                         .Value);
                     if (adorner != null)
                     {
                         adornerLayer.Add(adorner);
 
                         //ディクショナリに記憶する
-                        _adorners.Add(appendIntersectionPoints.First().Item1, adorner);
+                        _adorners.Add(appendIntersectionPoints.AsValueEnumerable().First().Item1, adorner);
                     }
                 }
             }
@@ -287,10 +288,10 @@ internal class SnapAction
         var diagramVM = mainWindowVM.DiagramViewModel;
         if (diagramVM.EnablePointSnap.Value)
         {
-            var snapPoints = diagramVM.GetSnapPoints(new[] { movingSnapPoint }).ToList();
+            var snapPoints = diagramVM.GetSnapPoints(new[] { movingSnapPoint }).AsValueEnumerable().ToList();
             if (appendIntersectionPoints != null)
-                snapPoints.AddRange(from x in appendIntersectionPoints
-                    select new Tuple<SnapPoint, Point>(CreateSnapPoint(x.Item1, x.Item2), x.Item1));
+                snapPoints.AddRange(appendIntersectionPoints.AsValueEnumerable()
+                    .Select(x => new Tuple<SnapPoint, Point>(CreateSnapPoint(x.Item1, x.Item2), x.Item1)).ToArray());
             Tuple<SnapPoint, Point> snapped = null;
             foreach (var snapPoint in snapPoints)
                 if (currentPoint.X > snapPoint.Item2.X - mainWindowVM.SnapPower.Value
@@ -420,7 +421,7 @@ internal class SnapAction
     private void RemoveAllAdornerFromAdornerLayerAndDictionary(DesignerCanvas designerCanvas)
     {
         var adornerLayer = AdornerLayer.GetAdornerLayer(designerCanvas);
-        var removes = _adorners.ToList();
+        var removes = _adorners.AsValueEnumerable().ToList();
 
         removes.ForEach(x =>
         {
@@ -433,7 +434,7 @@ internal class SnapAction
 
     private void RemoveFromAdornerLayerAndDictionary(Point? snapped, AdornerLayer adornerLayer)
     {
-        var removes = _adorners.Where(x => x.Key != snapped)
+        var removes = _adorners.AsValueEnumerable().Where(x => x.Key != snapped)
             .ToList();
         removes.ForEach(x =>
         {
@@ -442,5 +443,63 @@ internal class SnapAction
                     adornerLayer.Remove(remove);
             _adorners.Remove(x.Key);
         });
+    }
+
+    internal void SnapIntersectionOfEllipseAndTangent(ValueEnumerable<OfType<FromArray<SelectableDesignerItemViewModelBase>, SelectableDesignerItemViewModelBase, NEllipseViewModel>, NEllipseViewModel> ellipses, Point beginPoint,
+        Point endPoint, List<Tuple<Point, object>> appendIntersectionPoints)
+    {
+        foreach (var ellipse in ellipses)
+        {
+            var snapPower = (Application.Current.MainWindow.DataContext as MainWindowViewModel).SnapPower.Value;
+            var array = new ConcurrentBag<Tuple<Point[], double>>();
+            Parallel.For((int)-snapPower, (int)snapPower, y =>
+            {
+                for (var x = -snapPower; x < snapPower; x++)
+                {
+                    var tuple = Intersection.FindEllipseSegmentIntersectionsSupportRotation(ellipse, beginPoint,
+                        new Point(endPoint.X + x, endPoint.Y + y), false);
+                    array.Add(tuple);
+                }
+            });
+            var minDiscriminant = array.AsValueEnumerable().FirstOrDefault(x => Math.Abs(x.Item2) == array.AsValueEnumerable().Min(x => Math.Abs(x.Item2)));
+            if (minDiscriminant != null && minDiscriminant.Item1.AsValueEnumerable().Count() == 1)
+                appendIntersectionPoints.Add(new Tuple<Point, object>(minDiscriminant.Item1.AsValueEnumerable().First(), ellipse));
+        }
+    }
+
+    public void SnapIntersectionOfPieAndTangent(ValueEnumerable<OfType<FromArray<SelectableDesignerItemViewModelBase>, SelectableDesignerItemViewModelBase, NPieViewModel>, NPieViewModel> pies, Point beginPoint, Point endPoint, List<Tuple<Point, object>> appendIntersectionPoints)
+    {
+        foreach (var pie in pies)
+        {
+            var snapPower = (Application.Current.MainWindow.DataContext as MainWindowViewModel).SnapPower.Value;
+            var array = new ConcurrentBag<Tuple<Point[], double>>();
+            Parallel.For((int)-snapPower, (int)snapPower, y =>
+            {
+                for (var x = -snapPower; x < snapPower; x++)
+                {
+                    var tuple = Intersection.FindPieSegmentIntersectionsSupportRotationLong(pie, beginPoint,
+                        new Point(endPoint.X + x, endPoint.Y + y), false);
+                    array.Add(tuple);
+                }
+            });
+            var minDiscriminant = array.AsValueEnumerable().FirstOrDefault(x => Math.Abs(x.Item2) == array.AsValueEnumerable().Min(x => Math.Abs(x.Item2)));
+            if (minDiscriminant != null && minDiscriminant.Item1.AsValueEnumerable().Count() == 1)
+                appendIntersectionPoints.Add(new Tuple<Point, object>(minDiscriminant.Item1.AsValueEnumerable().First(), pie));
+
+            if (pie.Distance.Value - pie.DonutWidth.Value < 10) continue; //短い半径が短すぎる場合、接線の交点を計算しない
+
+            Parallel.For((int)-snapPower, (int)snapPower, y =>
+            {
+                for (var x = -snapPower; x < snapPower; x++)
+                {
+                    var tuple = Intersection.FindPieSegmentIntersectionsSupportRotationShort(pie, beginPoint,
+                        new Point(endPoint.X + x, endPoint.Y + y), false);
+                    array.Add(tuple);
+                }
+            });
+            minDiscriminant = array.AsValueEnumerable().FirstOrDefault(x => Math.Abs(x.Item2) == array.AsValueEnumerable().Min(x => Math.Abs(x.Item2)));
+            if (minDiscriminant != null && minDiscriminant.Item1.AsValueEnumerable().Count() == 1)
+                appendIntersectionPoints.Add(new Tuple<Point, object>(minDiscriminant.Item1.AsValueEnumerable().First(), pie));
+        }
     }
 }

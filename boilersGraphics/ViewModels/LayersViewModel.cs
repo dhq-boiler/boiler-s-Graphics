@@ -12,11 +12,11 @@ using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Windows;
 using System.Windows.Input;
 using TsOperationHistory.Extensions;
+using ZLinq;
 
 namespace boilersGraphics.ViewModels;
 
@@ -44,7 +44,7 @@ internal class LayersViewModel : BindableBase, IDialogAware
             var diagramViewModel = mainWindowVM.DiagramViewModel;
             var layers = diagramViewModel.Layers;
             var selectedLayers = diagramViewModel.SelectedLayers;
-            foreach (var remove in selectedLayers.Value.ToList()) mainWindowVM.Controller.ExecuteRemove(layers, remove);
+            foreach (var remove in selectedLayers.Value.AsValueEnumerable().ToList()) mainWindowVM.Controller.ExecuteRemove(layers, remove);
             UpdateStatisticsCountRemoveLayer(mainWindowVM);
         });
         SelectedItemChangedCommand.Subscribe(args =>
@@ -54,7 +54,7 @@ internal class LayersViewModel : BindableBase, IDialogAware
                 var layers = mainWindowVM.DiagramViewModel.Layers;
                 if (newItem.GetType() == typeof(Layer))
                 {
-                    layers.ToList().ForEach(x =>
+                    layers.AsValueEnumerable().ToList().ForEach(x =>
                     {
                         x.IsSelected.Value = false;
                         x.ChildrenSwitchIsHitTestVisible(false);
@@ -62,6 +62,7 @@ internal class LayersViewModel : BindableBase, IDialogAware
 
                     var layerItems = layers
                         .SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                        .AsValueEnumerable()
                         .Where(x => x is LayerItem);
 
                     layerItems.ToList().ForEach(x =>
@@ -103,10 +104,11 @@ internal class LayersViewModel : BindableBase, IDialogAware
                     var selectedItem = newItem as LayerItem;
 
                     if (!Keyboard.IsKeyDown(Key.LeftCtrl) && !Keyboard.IsKeyDown(Key.RightCtrl))
-                        Layers.ToList().ForEach(x => x.IsSelected.Value = false);
+                        Layers.AsValueEnumerable().ToList().ForEach(x => x.IsSelected.Value = false);
 
                     var layerItems = layers
                         .SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                        .AsValueEnumerable()
                         .Where(x => x is LayerItem);
                     layerItems.ToList().ForEach(x =>
                     {
@@ -212,8 +214,9 @@ internal class LayersViewModel : BindableBase, IDialogAware
         if (value is GroupItemViewModel groupItemVM)
         {
             var children = Children.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                .AsValueEnumerable()
                 .Select(x => (x as LayerItem).Item.Value)
-                .Where(x => x.ParentID == groupItemVM.ID);
+                .Where(x => x.ParentID == groupItemVM.ID).ToArray();
             return children;
         }
 
@@ -222,8 +225,8 @@ internal class LayersViewModel : BindableBase, IDialogAware
 
     public void InitializeHitTestVisible(MainWindowViewModel mainWindowVM)
     {
-        Layers.ToList().ForEach(x => { x.ChildrenSwitchIsHitTestVisible(false); });
-        mainWindowVM.DiagramViewModel.SelectedLayers.Value.ToList().ForEach(x =>
+        Layers.AsValueEnumerable().ToList().ForEach(x => { x.ChildrenSwitchIsHitTestVisible(false); });
+        mainWindowVM.DiagramViewModel.SelectedLayers.Value.AsValueEnumerable().ToList().ForEach(x =>
         {
             x.ChildrenSwitchIsHitTestVisible(true);
         });

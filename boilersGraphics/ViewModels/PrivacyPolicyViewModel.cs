@@ -10,11 +10,11 @@ using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Reactive.Disposables;
 using System.Text.RegularExpressions;
 using System.Windows;
+using ZLinq;
 
 namespace boilersGraphics.ViewModels;
 
@@ -136,13 +136,13 @@ public class PrivacyPolicyViewModel : BindableBase, IDialogAware
     {
         var dao = new PrivacyPolicyAgreementDao();
         var list = dao.GetAgreeOrDisagree();
-        return list.FirstOrDefault();
+        return list.AsValueEnumerable().FirstOrDefault();
     }
 
     private static DateTime ExtractLatestDateOfEnactment(string markdown)
     {
         var lines = markdown.Split("\n");
-        foreach (var line in lines.Reverse())
+        foreach (var line in lines.AsValueEnumerable().Reverse())
         {
             var regex = new Regex("^改定：(?<year>\\d+?)年(?<month>\\d+?)月(?<day>\\d+?)日$");
             if (regex.IsMatch(line))

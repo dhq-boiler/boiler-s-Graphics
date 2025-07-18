@@ -6,9 +6,9 @@ using Prism.Unity;
 using Reactive.Bindings;
 using System;
 using System.Collections.Specialized;
-using System.Linq;
 using System.Reactive.Linq;
 using System.Windows;
+using ZLinq;
 using Path = System.Windows.Shapes.Path;
 
 namespace boilersGraphics.ViewModels;
@@ -53,12 +53,12 @@ public class PolyBezierViewModel : ConnectorBaseViewModel
     {
         if (SnapPoint0VM != null)
             SnapPoint0VM.Dispose();
-        SnapPoint0VM = Observable.Return(Points.First())
+        SnapPoint0VM = Observable.Return(Points.AsValueEnumerable().First())
             .Select(x => new SnapPointViewModel(this, 0, Owner, x.X, x.Y, 3, 3))
             .ToReadOnlyReactivePropertySlim();
         if (SnapPoint1VM != null)
             SnapPoint1VM.Dispose();
-        SnapPoint1VM = Observable.Return(Points.Last())
+        SnapPoint1VM = Observable.Return(Points.AsValueEnumerable().Last())
             .Select(x => new SnapPointViewModel(this, 1, Owner, x.X, x.Y, 3, 3))
             .ToReadOnlyReactivePropertySlim();
     }

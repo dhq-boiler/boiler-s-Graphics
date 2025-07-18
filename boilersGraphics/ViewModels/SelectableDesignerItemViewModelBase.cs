@@ -6,7 +6,6 @@ using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reflection;
@@ -14,6 +13,7 @@ using System.Windows;
 using System.Windows.Media;
 using TsOperationHistory;
 using TsOperationHistory.Extensions;
+using ZLinq;
 
 namespace boilersGraphics.ViewModels;
 
@@ -214,7 +214,7 @@ public abstract class SelectableDesignerItemViewModelBase : BindableBase, ISelec
     }
 
     public DelegateCommand<object> SelectItemCommand { get; private set; }
-
+    
     public IDisposable Connect(SnapPointPosition snapPointEdgeTo, SnapPointPosition snapPointEdgeFrom,
         SelectableDesignerItemViewModelBase item)
     {
@@ -243,7 +243,7 @@ public abstract class SelectableDesignerItemViewModelBase : BindableBase, ISelec
     private void SelectItem(bool newselect, bool select)
     {
         if (newselect)
-            foreach (var designerItemViewModelBase in Owner.SelectedItems.Value.ToList())
+            foreach (var designerItemViewModelBase in Owner.SelectedItems.Value.AsValueEnumerable().ToList())
                 Owner.MainWindowVM.Recorder.Current.ExecuteSetProperty(designerItemViewModelBase, "IsSelected.Value",
                     false);
 
@@ -319,7 +319,7 @@ public abstract class SelectableDesignerItemViewModelBase : BindableBase, ISelec
             BindingFlags.Public
             | BindingFlags.Instance);
 
-        foreach (var property in properties.Except(new[]
+        foreach (var property in properties.AsValueEnumerable().Except(new[]
                  {
                      GetType().GetProperty("Parent"),
                      GetType().GetProperty("SelectedItems"),

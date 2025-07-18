@@ -6,8 +6,8 @@ using Prism.Services.Dialogs;
 using Reactive.Bindings;
 using System;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Reactive.Disposables;
+using ZLinq;
 
 namespace boilersGraphics.ViewModels;
 
@@ -48,7 +48,7 @@ public class DetailViewModelBase<T> : BindableBase, IDialogAware, INavigationAwa
         ViewModel.Value = parameters.GetValue<T>("ViewModel");
         regionManager.RequestNavigate("DetailRegion", nameof(Detail));
         SetProperties();
-        var properties = Properties.OrderBy(x => x.PropertyName.Value).ToList();
+        var properties = Properties.AsValueEnumerable().OrderBy(x => x.PropertyName.Value).ToList();
         Properties.Clear();
         Properties.AddRange(properties);
         var i = 0;

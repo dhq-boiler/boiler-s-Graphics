@@ -2,9 +2,9 @@
 using Prism.Mvvm;
 using Reactive.Bindings;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Reflection;
 using System.Windows;
+using ZLinq;
 
 namespace boilersGraphics.ViewModels;
 
@@ -30,7 +30,7 @@ public abstract class PropertyOptionsValueCombination : BindableBase
             BindingFlags.Public
             | BindingFlags.Instance);
 
-        foreach (var property in properties.Except(new[]
+        foreach (var property in properties.AsValueEnumerable().Except(new[]
                  {
                      GetType().GetProperty("Parent"),
                      GetType().GetProperty("SelectedItems")
@@ -89,7 +89,7 @@ public class PropertyOptionsValueCombinationClass<E, V> : PropertyOptionsValueCo
     {
         get
         {
-            var splits = PropertyName.Value.Split('.');
+            var splits = PropertyName.Value.Split('.').AsValueEnumerable();
             object obj = Object.Value;
             foreach (var split in splits.Except(new[] { splits.Last() }))
             {
@@ -105,7 +105,7 @@ public class PropertyOptionsValueCombinationClass<E, V> : PropertyOptionsValueCo
         }
         set
         {
-            var splits = PropertyName.Value.Split('.');
+            var splits = PropertyName.Value.Split('.').AsValueEnumerable();
             object obj = Object.Value;
             foreach (var split in splits.Except(new[] { splits.Last() }))
             {
@@ -120,7 +120,7 @@ public class PropertyOptionsValueCombinationClass<E, V> : PropertyOptionsValueCo
     }
 
     public override string Type =>
-        typeof(V) == typeof(bool) ? "CheckBox" : Options.Count() > 0 ? "ComboBox" : "TextBox";
+        typeof(V) == typeof(bool) ? "CheckBox" : Options.AsValueEnumerable().Count() > 0 ? "ComboBox" : "TextBox";
 }
 
 public class PropertyOptionsValueCombinationReadOnlyClass<E, V> : PropertyOptionsValueCombination where V : class
@@ -160,7 +160,7 @@ public class PropertyOptionsValueCombinationReadOnlyClass<E, V> : PropertyOption
     {
         get
         {
-            var splits = PropertyName.Value.Split('.');
+            var splits = PropertyName.Value.Split('.').AsValueEnumerable();
             object obj = Object.Value;
             foreach (var split in splits.Except(new[] { splits.Last() }))
             {
@@ -178,7 +178,7 @@ public class PropertyOptionsValueCombinationReadOnlyClass<E, V> : PropertyOption
     }
 
     public override string Type => typeof(V) == typeof(bool) ? "ReadOnlyCheckBox" :
-        Options.Count() > 0 ? "ReadOnlyComboBox" : "ReadOnlyTextBox";
+        Options.AsValueEnumerable().Count() > 0 ? "ReadOnlyComboBox" : "ReadOnlyTextBox";
 }
 
 public class PropertyOptionsValueCombinationStruct<E, V> : PropertyOptionsValueCombination where V : struct
@@ -217,7 +217,7 @@ public class PropertyOptionsValueCombinationStruct<E, V> : PropertyOptionsValueC
     {
         get
         {
-            var splits = PropertyName.Value.Split('.');
+            var splits = PropertyName.Value.Split('.').AsValueEnumerable();
             object obj = Object.Value;
             foreach (var split in splits.Except(new[] { splits.Last() }))
             {
@@ -233,7 +233,7 @@ public class PropertyOptionsValueCombinationStruct<E, V> : PropertyOptionsValueC
         }
         set
         {
-            var splits = PropertyName.Value.Split('.');
+            var splits = PropertyName.Value.Split('.').AsValueEnumerable();
             object obj = Object.Value;
             foreach (var split in splits.Except(new[] { splits.Last() }))
             {
@@ -248,7 +248,7 @@ public class PropertyOptionsValueCombinationStruct<E, V> : PropertyOptionsValueC
     }
 
     public override string Type =>
-        typeof(V) == typeof(bool) ? "CheckBox" : Options.Count() > 0 ? "ComboBox" : "TextBox";
+        typeof(V) == typeof(bool) ? "CheckBox" : Options.AsValueEnumerable().Count() > 0 ? "ComboBox" : "TextBox";
 }
 
 public class PropertyOptionsValueCombinationReadOnlyStruct<E, V> : PropertyOptionsValueCombination where V : struct
@@ -288,7 +288,7 @@ public class PropertyOptionsValueCombinationReadOnlyStruct<E, V> : PropertyOptio
     {
         get
         {
-            var splits = PropertyName.Value.Split('.');
+            var splits = PropertyName.Value.Split('.').AsValueEnumerable();
             object obj = Object.Value;
             foreach (var split in splits.Except(new[] { splits.Last() }))
             {
@@ -307,7 +307,7 @@ public class PropertyOptionsValueCombinationReadOnlyStruct<E, V> : PropertyOptio
     }
 
     public override string Type => typeof(V) == typeof(bool) ? "ReadOnlyCheckBox" :
-        Options.Count() > 0 ? "ReadOnlyComboBox" : "ReadOnlyTextBox";
+        Options.AsValueEnumerable().Count() > 0 ? "ReadOnlyComboBox" : "ReadOnlyTextBox";
 }
 
 public class PropertyOptionsValueCombinationStructRP<E, V> : PropertyOptionsValueCombination where V : struct
@@ -346,7 +346,7 @@ public class PropertyOptionsValueCombinationStructRP<E, V> : PropertyOptionsValu
     {
         get
         {
-            var splits = PropertyName.Value.Split('.');
+            var splits = PropertyName.Value.Split('.').AsValueEnumerable();
             object obj = Object.Value;
             foreach (var split in splits.Except(new[] { splits.Last() }))
             {
@@ -362,7 +362,7 @@ public class PropertyOptionsValueCombinationStructRP<E, V> : PropertyOptionsValu
         }
         set
         {
-            var splits = PropertyName.Value.Split('.');
+            var splits = PropertyName.Value.Split('.').AsValueEnumerable();
             object obj = Object.Value;
             foreach (var split in splits.Except(new[] { splits.Last() }))
             {
@@ -377,7 +377,7 @@ public class PropertyOptionsValueCombinationStructRP<E, V> : PropertyOptionsValu
     }
 
     public override string Type =>
-        typeof(V) == typeof(bool) ? "CheckBox" : Options.Count() > 0 ? "ComboBox" : "TextBox";
+        typeof(V) == typeof(bool) ? "CheckBox" : Options.AsValueEnumerable().Count() > 0 ? "ComboBox" : "TextBox";
 }
 
 public class PropertyOptionsValueCombinationReadOnlyStructRP<E, V> : PropertyOptionsValueCombination where V : struct
@@ -417,7 +417,7 @@ public class PropertyOptionsValueCombinationReadOnlyStructRP<E, V> : PropertyOpt
     {
         get
         {
-            var splits = PropertyName.Value.Split('.');
+            var splits = PropertyName.Value.Split('.').AsValueEnumerable();
             object obj = Object.Value;
             foreach (var split in splits.Except(new[] { splits.Last() }))
             {
@@ -435,5 +435,5 @@ public class PropertyOptionsValueCombinationReadOnlyStructRP<E, V> : PropertyOpt
     }
 
     public override string Type => typeof(V) == typeof(bool) ? "ReadOnlyCheckBox" :
-        Options.Count() > 0 ? "ReadOnlyComboBox" : "ReadOnlyTextBox";
+        Options.AsValueEnumerable().Count() > 0 ? "ReadOnlyComboBox" : "ReadOnlyTextBox";
 }

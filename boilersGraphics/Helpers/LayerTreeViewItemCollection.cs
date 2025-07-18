@@ -1,9 +1,9 @@
 ﻿using boilersGraphics.Models;
 using Reactive.Bindings;
 using System.Collections.Generic;
-using System.Linq;
 using TsOperationHistory;
 using TsOperationHistory.Extensions;
+using ZLinq;
 
 namespace boilersGraphics.Helpers;
 
@@ -44,7 +44,7 @@ public static class LayerTreeViewItemCollection
         var queue = new Queue<LayerTreeViewItemBase>(layers);
         LayerTreeViewItemBase item = null;
         var zindex = 0;
-        while (queue.Count() > 0)
+        while (queue.AsValueEnumerable().Count() > 0)
         {
             item = queue.Dequeue();
             zindex = item.SetZIndex(recorder, zindex);

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
-using System.Linq;
 using System.Windows.Data;
+using ZLinq;
 
 namespace boilersGraphics.Converters;
 
@@ -17,7 +17,7 @@ public class DoubleToStringConverter : IValueConverter
         var str = value as string;
         if (string.IsNullOrEmpty(str))
             return Binding.DoNothing;
-        if (str.Last() == '.' || str.Last() == '-')
+        if (str.AsValueEnumerable().Last() == '.' || str.AsValueEnumerable().Last() == '-')
             return Binding.DoNothing;
         try
         {

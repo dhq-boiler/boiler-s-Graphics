@@ -5,10 +5,10 @@ using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Media;
+using ZLinq;
 
 namespace boilersGraphics.ViewModels;
 
@@ -60,7 +60,7 @@ public abstract class ConnectorBaseViewModel : SelectableDesignerItemViewModelBa
 
     public void AddPointP1(IDiagramViewModel diagramViewModel, Point p1)
     {
-        if (Points.Count() != 0)
+        if (Points.AsValueEnumerable().Count() != 0)
             throw new UnexpectedException("Points.Count() != 0");
         Points.Add(p1);
         SnapPoint0VM = Observable.Return(Points[0])
@@ -72,7 +72,7 @@ public abstract class ConnectorBaseViewModel : SelectableDesignerItemViewModelBa
 
     public void AddPointP2(IDiagramViewModel diagramViewModel, Point p2)
     {
-        if (Points.Count() != 1)
+        if (Points.AsValueEnumerable().Count() != 1)
             throw new UnexpectedException("Points.Count() != 1");
         Points.Add(p2);
         SnapPoint1VM = Observable.Return(Points[1])
@@ -119,15 +119,15 @@ public abstract class ConnectorBaseViewModel : SelectableDesignerItemViewModelBa
         InitPathFinder();
         LeftTop = Points.ObserveProperty(x => x.Count)
             .Where(x => x > 0)
-            .Select(_ => new Point(Points.Min(x => x.X), Points.Min(x => x.Y)))
+            .Select(_ => new Point(Points.AsValueEnumerable().Min(x => x.X), Points.AsValueEnumerable().Min(x => x.Y)))
             .ToReactiveProperty();
         Width = Points.ObserveProperty(x => x.Count)
             .Where(x => x > 0)
-            .Select(_ => Points.Max(x => x.X) - Points.Min(x => x.X))
+            .Select(_ => Points.AsValueEnumerable().Max(x => x.X) - Points.AsValueEnumerable().Min(x => x.X))
             .ToReadOnlyReactivePropertySlim();
         Height = Points.ObserveProperty(x => x.Count)
             .Where(x => x > 0)
-            .Select(_ => Points.Max(x => x.Y) - Points.Min(x => x.Y))
+            .Select(_ => Points.AsValueEnumerable().Max(x => x.Y) - Points.AsValueEnumerable().Min(x => x.Y))
             .ToReadOnlyReactivePropertySlim();
         Rect = LeftTop.CombineLatest(Width, Height, (lt, width, height) => new Rect(lt, new Size(width, height)))
             .ToReadOnlyReactivePropertySlim();

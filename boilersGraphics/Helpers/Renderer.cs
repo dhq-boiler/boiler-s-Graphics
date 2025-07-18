@@ -10,6 +10,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using ZLinq;
 
 namespace boilersGraphics.Helpers;
 
@@ -64,7 +65,7 @@ public class Renderer
         var visual = new DrawingVisual();
         using (var context = visual.RenderOpen())
         {
-            var allViews = designerCanvas.EnumVisualChildren<FrameworkElement>()
+            var allViews = designerCanvas.EnumVisualChildren<FrameworkElement>().AsValueEnumerable()
                 .Where(x => x.DataContext is not null).ToList();
             //背景を描画
             if (RenderBackgroundViewModel(sliceRect, designerCanvas, context, backgroundItem, allViews, caller))
@@ -96,17 +97,17 @@ public class Renderer
         List<FrameworkElement> allViews, int minZIndex, int maxZIndex, SelectableDesignerItemViewModelBase caller)
     {
         var renderedCount = 0;
-        var except = new SelectableDesignerItemViewModelBase[] { background }.Where(x => x is not null);
-        foreach (var item in diagramViewModel.AllItems.Value.Except(except).Where(x => x.IsVisible.Value && x.ZIndex.Value >= minZIndex && x.ZIndex.Value <= maxZIndex).OrderBy(x => x.ZIndex.Value))
+        var except = new SelectableDesignerItemViewModelBase[] { background }.AsValueEnumerable().Where(x => x is not null);
+        foreach (var item in diagramViewModel.AllItems.Value.AsValueEnumerable().Except(except).Where(x => x.IsVisible.Value && x.ZIndex.Value >= minZIndex && x.ZIndex.Value <= maxZIndex).OrderBy(x => x.ZIndex.Value))
         {
             var view = default(FrameworkElement);
             if (App.IsTest)
             {
-                view = allViews.FirstOrDefault(x => x.DataContext == item);
+                view = allViews.AsValueEnumerable().FirstOrDefault(x => x.DataContext == item);
             }
             else
             {
-                view = allViews.FirstOrDefault(x => x.DataContext == item && x.FindName("PART_ContentPresenter") is not null);
+                view = allViews.AsValueEnumerable().FirstOrDefault(x => x.DataContext == item && x.FindName("PART_ContentPresenter") is not null);
             }
 
             if (view is null)
@@ -262,7 +263,7 @@ public class Renderer
         {
             var result = Application.Current.Dispatcher.Invoke(() =>
             {
-                view = allViews.FirstOrDefault(x =>
+                view = allViews.AsValueEnumerable().FirstOrDefault(x =>
                     x.DataContext == background);
                 if (view is null)
                 {
@@ -277,7 +278,7 @@ public class Renderer
         }
         else
         {
-            view = allViews.FirstOrDefault(x =>
+            view = allViews.AsValueEnumerable().FirstOrDefault(x =>
                 x.DataContext == background);
             if (view is null)
             {

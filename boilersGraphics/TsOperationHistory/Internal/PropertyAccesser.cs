@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
+using ZLinq;
 
 namespace TsOperationHistory.Internal;
 
@@ -38,11 +38,11 @@ internal sealed class MultiPropertyAccessor : IMultiLayerAccessor
 
     public List<IAccessor> AccessorChain { get; } = new();
 
-    public bool HasGetter => AccessorChain.All(x => x.HasGetter);
+    public bool HasGetter => AccessorChain.AsValueEnumerable().All(x => x.HasGetter);
 
-    public bool HasSetter => AccessorChain.All(x => x.HasSetter);
+    public bool HasSetter => AccessorChain.AsValueEnumerable().All(x => x.HasSetter);
 
-    public Type PropertyType => AccessorChain.Last().PropertyType;
+    public Type PropertyType => AccessorChain.AsValueEnumerable().Last().PropertyType;
 
     public object GetValue(object target)
     {
@@ -55,7 +55,7 @@ internal sealed class MultiPropertyAccessor : IMultiLayerAccessor
     {
         var obj = target;
         foreach (var chain in AccessorChain)
-            if (chain != AccessorChain.Last())
+            if (chain != AccessorChain.AsValueEnumerable().Last())
                 obj = chain.GetValue(obj);
             else
                 obj = chain.GetValue(obj, index);
@@ -64,7 +64,7 @@ internal sealed class MultiPropertyAccessor : IMultiLayerAccessor
 
     public object GetValue()
     {
-        return AccessorChain.First().GetValue();
+        return AccessorChain.AsValueEnumerable().First().GetValue();
     }
 
     public void SetValue(object target, object value)
@@ -74,7 +74,7 @@ internal sealed class MultiPropertyAccessor : IMultiLayerAccessor
         foreach (var chain in AccessorChain)
         {
             var temp = chain.GetValue(obj);
-            if (chain != AccessorChain.Last()) obj = temp;
+            if (chain != AccessorChain.AsValueEnumerable().Last()) obj = temp;
             accessor = chain;
         }
 
@@ -87,7 +87,7 @@ internal sealed class MultiPropertyAccessor : IMultiLayerAccessor
         IAccessor accessor = null;
         foreach (var chain in AccessorChain)
         {
-            if (chain != AccessorChain.Last()) obj = chain.GetValue(obj);
+            if (chain != AccessorChain.AsValueEnumerable().Last()) obj = chain.GetValue(obj);
             accessor = chain;
         }
 
@@ -96,7 +96,7 @@ internal sealed class MultiPropertyAccessor : IMultiLayerAccessor
 
     public void SetValue(object value)
     {
-        AccessorChain.First().SetValue(value);
+        AccessorChain.AsValueEnumerable().First().SetValue(value);
     }
 }
 

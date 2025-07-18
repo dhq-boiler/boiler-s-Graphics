@@ -5,11 +5,11 @@ using boilersGraphics.Helpers;
 using boilersGraphics.Models;
 using boilersGraphics.ViewModels;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using ZLinq;
 
 namespace boilersGraphics.Adorners;
 
@@ -80,7 +80,7 @@ public class BezierCurveAdorner : Adorner
             item.EdgeBrush.Value = item.Owner.EdgeBrush.Value.Clone();
             item.EdgeThickness.Value = item.Owner.EdgeThickness.Value.Value;
             item.ZIndex.Value = item.Owner.Layers
-                .SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).Count();
+                .SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).AsValueEnumerable().Count();
             item.IsSelected.Value = true;
             item.PathGeometryNoRotate.Value = GeometryCreator.CreateBezierCurve(item);
             item.IsVisible.Value = true;
@@ -123,8 +123,8 @@ public class BezierCurveAdorner : Adorner
             var points = new List<Point>();
             points.Add(_startPoint.Value);
             points.Add(_endPoint.Value);
-            var width = points.Select(x => x.X).Max() - points.Select(x => x.X).Min();
-            var height = points.Select(x => x.Y).Max() - points.Select(x => x.Y).Min();
+            var width = points.AsValueEnumerable().Select(x => x.X).Max() - points.AsValueEnumerable().Select(x => x.X).Min();
+            var height = points.AsValueEnumerable().Select(x => x.Y).Max() - points.AsValueEnumerable().Select(x => x.Y).Min();
             var geometry = new StreamGeometry();
             geometry.FillRule = FillRule.EvenOdd;
             using (var ctx = geometry.Open())

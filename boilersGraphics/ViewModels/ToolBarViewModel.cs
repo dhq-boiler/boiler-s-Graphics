@@ -13,9 +13,9 @@ using Prism.Services.Dialogs;
 using Reactive.Bindings;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
 using System.Windows;
 using System.Windows.Media.Imaging;
+using ZLinq;
 
 namespace boilersGraphics.ViewModels;
 
@@ -334,15 +334,15 @@ public class ToolBarViewModel
     internal void ChangeHitTestToDisable()
     {
         var diagramViewModel = MainWindowViewModel.Instance.DiagramViewModel;
-        diagramViewModel.AllItems.Value.ToList().ForEach(x => x.IsHitTestVisible.Value = false);
+        diagramViewModel.AllItems.Value.AsValueEnumerable().ToList().ForEach(x => x.IsHitTestVisible.Value = false);
         CurrentHitTestVisibleState.Value = false;
     }
 
     internal void ChangeHitTestToEnable()
     {
         var diagramViewModel = MainWindowViewModel.Instance.DiagramViewModel;
-        diagramViewModel.SelectedLayers.Value.ToList().ForEach(x =>
-            (x as Layer).Children.ToList().ForEach(y =>
+        diagramViewModel.SelectedLayers.Value.AsValueEnumerable().ToList().ForEach(x =>
+            (x as Layer).Children.AsValueEnumerable().ToList().ForEach(y =>
             {
                 var layerItem = y as LayerItem;
                 layerItem.Item.Value.IsHitTestVisible.Value = true;
@@ -355,13 +355,13 @@ public class ToolBarViewModel
 
     internal void SelectOneToolItem(string toolName)
     {
-        var toolItem = ToolItems.Where(i => i.Name.Value == toolName).SingleOrDefault();
+        var toolItem = ToolItems.AsValueEnumerable().Where(i => i.Name.Value == toolName).SingleOrDefault();
         if (toolItem is not null)
         {
             toolItem.IsChecked = true;
         }
 
-        ToolItems.Where(i => i.Name.Value != toolName).ToList().ForEach(i => i.IsChecked = false);
+        ToolItems.AsValueEnumerable().Where(i => i.Name.Value != toolName).ToList().ForEach(i => i.IsChecked = false);
 
         switch (toolName)
         {

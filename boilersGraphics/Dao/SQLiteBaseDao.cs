@@ -6,7 +6,7 @@ using NLog;
 using System;
 using System.Data;
 using System.Data.SQLite;
-using System.Linq;
+using ZLinq;
 
 namespace boilersGraphics.Dao;
 
@@ -64,8 +64,8 @@ public abstract class SQLiteBaseDao<E> : Dao<E> where E : EntityBaseObject
                 var overrideColumns = SwapIfOverrided(Columns);
 
                 using (var query = new InsertOrReplace().Into.Table(new Table<E>().Name)
-                           .Columns(overrideColumns.Select(c => c.ColumnName))
-                           .Values.Row(overrideColumns.Select(c => c.PropInfo.GetValue(entity))))
+                           .Columns(overrideColumns.AsValueEnumerable().Select(c => c.ColumnName).ToArray())
+                           .Values.Row(overrideColumns.AsValueEnumerable().Select(c => c.PropInfo.GetValue(entity)).ToArray()))
                 {
                     var sql = query.ToSql();
                     command.CommandText = sql;

@@ -7,11 +7,11 @@ using boilersGraphics.ViewModels;
 using NLog;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using ZLinq;
 
 namespace boilersGraphics.Adorners;
 
@@ -170,7 +170,7 @@ internal class PieAdorner : Adorner
                 _item.FillBrush.Value = _item.Owner.FillBrush.Value.Clone();
                 _item.EdgeThickness.Value = _item.Owner.EdgeThickness.Value.Value;
                 _item.ZIndex.Value = _item.Owner.Layers
-                    .SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).Count();
+                    .SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).AsValueEnumerable().Count();
                 var geometry = GeometryCreator.CreateDonut(_firstDragStartPoint.Value,
                     _RadiusVector.Length - _MinusRaidus, _RadiusVector.Length, _StartAngle, _EndAngle,
                     GetSweepDirection());

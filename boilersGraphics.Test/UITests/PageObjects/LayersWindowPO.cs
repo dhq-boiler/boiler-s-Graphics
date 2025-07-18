@@ -6,20 +6,21 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using OpenQA.Selenium.Appium;
 
 namespace boilersGraphics.Test.UITests.PageObjects
 {
     public class LayersWindowPO : PageObjectBase
     {
-        public LayersWindowPO(WindowsDriver<WindowsElement> session, E2ETestFixture testFixture)
+        public LayersWindowPO(WindowsDriver session, E2ETestFixture testFixture)
             : base(session, testFixture)
         { }
 
         public class LayerItemPO : PageObjectBase
         {
-            private readonly WindowsElement x;
+            private readonly AppiumElement x;
 
-            public LayerItemPO(WindowsDriver<WindowsElement> session, E2ETestFixture testFixture, WindowsElement x) : base(session, testFixture)
+            public LayerItemPO(WindowsDriver session, E2ETestFixture testFixture, AppiumElement x) : base(session, testFixture)
             {
                 this.x = x;
             }
@@ -28,7 +29,7 @@ namespace boilersGraphics.Test.UITests.PageObjects
             {
                 for (int i = 0;i < count; i++)
                 {
-                    x.GetElementBy(By.XPath("//Button[@AutomationId=\"LayerItem_ToggleButton\"]"), 60 * 5).Click();
+                    x.FindElement(By.XPath("//Button[@AutomationId=\"LayerItem_ToggleButton\"]")).Click();
                 }
             }
 
@@ -36,7 +37,7 @@ namespace boilersGraphics.Test.UITests.PageObjects
             {
                 get
                 {
-                    var targetElement = x.GetElementBy(By.XPath("//Image[@AutomationId=\"Appearance_Image\"]"));
+                    var targetElement = x.FindElement(By.XPath("//Image[@AutomationId=\"Appearance_Image\"]"));
                     var beginDateTime = DateTime.Now;
 
                     while ((DateTime.Now - beginDateTime).TotalMinutes < TimeoutMinutes)

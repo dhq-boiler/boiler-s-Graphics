@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Reactive.Bindings;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Windows;
-using Reactive.Bindings;
 using TsOperationHistory.Internal;
+using ZLinq;
 
 namespace TsOperationHistory.Extensions;
 
@@ -69,7 +70,7 @@ public static class OperationExtensions
     /// </summary>
     public static IOperation ExecuteAndCombineTop(this IOperation @this, IOperationController controller)
     {
-        if (controller.UndoStack.Any())
+        if (controller.UndoStack.AsValueEnumerable().Any())
         {
             var prev = controller.Pop();
             @this.RollForward();
@@ -288,8 +289,9 @@ public static class ListOperationExtensions
 
     public static IOperation ToAddRangeOperation<T>(this IList<T> @this, IEnumerable<T> values)
     {
-        return values
+        return values.AsValueEnumerable()
             .Select(x => new InsertOperation<T>(@this, x, message: $"Add {x} to {@this}"))
+            .ToList()
             .ToCompositeOperation();
     }
 

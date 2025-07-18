@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using boilersGraphics.Helpers;
+﻿using boilersGraphics.Helpers;
 using NLog;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using TsOperationHistory.Extensions;
+using ZLinq;
 
 namespace TsOperationHistory;
 
@@ -26,7 +26,7 @@ public class OperationRecorder
     {
         get
         {
-            if (_stack.Any())
+            if (_stack.AsValueEnumerable().Any())
                 return _stack.Peek();
             return _root;
         }
@@ -41,7 +41,7 @@ public class OperationRecorder
 
     public void EndRecode([CallerMemberName] string callerMemberName = "")
     {
-        if (_stack.Count() == 0)
+        if (_stack.AsValueEnumerable().Count() == 0)
         {
             LogManager.GetCurrentClassLogger().Warn("_stackが空ですがEndRecord()が呼び出されました。");
             return;

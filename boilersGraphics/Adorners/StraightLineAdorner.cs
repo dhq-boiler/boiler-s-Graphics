@@ -7,11 +7,11 @@ using boilersGraphics.ViewModels;
 using NLog;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using ZLinq;
 
 namespace boilersGraphics.Adorners;
 
@@ -44,8 +44,8 @@ internal class StraightLineAdorner : Adorner
             if (!IsMouseCaptured)
                 CaptureMouse();
 
-            var ellipses = (_designerCanvas.DataContext as DiagramViewModel).AllItems.Value.OfType<NEllipseViewModel>();
-            var pies = (_designerCanvas.DataContext as DiagramViewModel).AllItems.Value.OfType<NPieViewModel>();
+            var ellipses = (_designerCanvas.DataContext as DiagramViewModel).AllItems.Value.AsValueEnumerable().OfType<NEllipseViewModel>();
+            var pies = (_designerCanvas.DataContext as DiagramViewModel).AllItems.Value.AsValueEnumerable().OfType<NPieViewModel>();
 
             //ドラッグ終了座標を更新
             _endPoint = e.GetPosition(this);
@@ -91,7 +91,7 @@ internal class StraightLineAdorner : Adorner
             item.EdgeBrush.Value = item.Owner.EdgeBrush.Value.Clone();
             item.EdgeThickness.Value = item.Owner.EdgeThickness.Value.Value;
             item.ZIndex.Value = item.Owner.Layers
-                .SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).Count();
+                .SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).AsValueEnumerable().Count();
             item.IsSelected.Value = true;
             item.IsVisible.Value = true;
             item.AddPointP2(viewModel, _endPoint.Value);

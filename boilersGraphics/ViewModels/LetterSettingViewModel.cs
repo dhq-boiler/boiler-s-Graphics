@@ -3,8 +3,8 @@ using Prism.Mvvm;
 using Prism.Services.Dialogs;
 using System;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Windows.Media;
+using ZLinq;
 
 namespace boilersGraphics.ViewModels;
 
@@ -16,7 +16,7 @@ public class LetterSettingViewModel : BindableBase, IDialogAware
     public LetterSettingViewModel()
     {
         var fontFamilies = Fonts.GetFontFamilies("C:\\Windows\\Fonts");
-        FontFamilies = new ObservableCollection<FontFamilyEx>(fontFamilies.Select(x => new FontFamilyEx(x)));
+        FontFamilies = new ObservableCollection<FontFamilyEx>(fontFamilies.AsValueEnumerable().Select(x => new FontFamilyEx(x)).ToArray());
     }
 
     public LetterDesignerItemViewModel ViewModel

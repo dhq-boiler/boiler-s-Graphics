@@ -7,12 +7,12 @@ using Microsoft.Xaml.Behaviors;
 using NLog;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using TsOperationHistory.Extensions;
+using ZLinq;
 
 namespace boilersGraphics.Views.Behaviors;
 
@@ -253,13 +253,13 @@ public class MoveableTreeViewBehavior : Behavior<TreeView>
     private static LayerTreeViewItemBase GetParentLastChild(LayerTreeViewItemBase infoBase)
     {
         var targetParent = infoBase.Parent.Value;
-        var last = targetParent?.Children.LastOrDefault();
+        var last = targetParent?.Children.AsValueEnumerable().LastOrDefault();
         return last;
     }
 
     private static void ResetSeparator(ICollection<LayerTreeViewItemBase> collection)
     {
-        var list = collection.ToList();
+        var list = collection.AsValueEnumerable().ToList();
         foreach (var pair in list)
         {
             ResetSeparator(pair);
@@ -276,7 +276,7 @@ public class MoveableTreeViewBehavior : Behavior<TreeView>
 
     private static void DragScroll(FrameworkElement itemsControl, DragEventArgs e)
     {
-        var scrollViewer = itemsControl.Descendants<ScrollViewer>().FirstOrDefault();
+        var scrollViewer = itemsControl.Descendants<ScrollViewer>().AsValueEnumerable().FirstOrDefault();
         const double tolerance = 10d;
         const double offset = 3d;
         var verticalPos = e.GetPosition(itemsControl).Y;

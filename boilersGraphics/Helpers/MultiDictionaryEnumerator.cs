@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
+using ZLinq;
 
 namespace boilersGraphics.Helpers;
 
@@ -38,12 +38,12 @@ public class MultiDictionary<TKey, TValue> : IEnumerable<KeyValuePair<TKey, List
 
     IEnumerator<KeyValuePair<TKey, List<TValue>>> IEnumerable<KeyValuePair<TKey, List<TValue>>>.GetEnumerator()
     {
-        return new MultiDictionaryEnumerator(mDictionary.ToList());
+        return new MultiDictionaryEnumerator(mDictionary.AsValueEnumerable().ToList());
     }
 
     IEnumerator IEnumerable.GetEnumerator()
     {
-        return new MultiDictionaryEnumerator(mDictionary.ToList());
+        return new MultiDictionaryEnumerator(mDictionary.AsValueEnumerable().ToList());
     }
 
     /// <summary>

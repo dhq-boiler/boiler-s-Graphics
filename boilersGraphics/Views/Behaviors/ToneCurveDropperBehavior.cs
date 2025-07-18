@@ -6,11 +6,11 @@ using boilersGraphics.ViewModels.ColorCorrect;
 using Microsoft.Xaml.Behaviors;
 using NLog;
 using Prism.Services.Dialogs;
-using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using ZLinq;
 
 namespace boilersGraphics.Views.Behaviors
 {
@@ -107,10 +107,10 @@ namespace boilersGraphics.Views.Behaviors
                 var position = e.GetPosition(designerCanvas);
                 var color = writeableBitmap.GetPixel((int)position.X, (int)position.Y);
 
-                var window = System.Windows.Window.GetWindow(App.Current.Windows.OfType<DialogWindow>().FirstOrDefault());
+                var window = System.Windows.Window.GetWindow(App.Current.Windows.AsValueEnumerable().OfType<DialogWindow>().FirstOrDefault());
                 if (window is null)
                     return;
-                var landmarks = window.EnumerateChildOfType<LandmarkControl>().Distinct();
+                var landmarks = window.EnumerateChildOfType<LandmarkControl>().AsValueEnumerable().Distinct();
                 var landmark = landmarks.First(x => x.PathColor == _viewModel.Curves[1].Color.Value);
 
                 _viewModel.ResetPoints(_viewModel.Curves[1]);
@@ -151,8 +151,8 @@ namespace boilersGraphics.Views.Behaviors
                 var position = e.GetPosition(designerCanvas);
                 var color = writeableBitmap.GetPixel((int)position.X, (int)position.Y);
 
-                var window = System.Windows.Window.GetWindow(App.Current.Windows.OfType<DialogWindow>().First());
-                var landmarks = window.EnumerateChildOfType<LandmarkControl>().Distinct();
+                var window = System.Windows.Window.GetWindow(App.Current.Windows.AsValueEnumerable().OfType<DialogWindow>().First());
+                var landmarks = window.EnumerateChildOfType<LandmarkControl>().AsValueEnumerable().Distinct();
                 var landmark = landmarks.First(x => x.PathColor == _viewModel.Curves[1].Color.Value);
 
                 _viewModel.ResetPoints(_viewModel.Curves[1]);
@@ -193,8 +193,8 @@ namespace boilersGraphics.Views.Behaviors
                 var position = e.GetTouchPoint(designerCanvas);
                 var color = writeableBitmap.GetPixel((int)position.Position.X, (int)position.Position.Y);
 
-                var window = System.Windows.Window.GetWindow(App.Current.Windows.OfType<DialogWindow>().First());
-                var landmarks = window.EnumerateChildOfType<LandmarkControl>().Distinct();
+                var window = System.Windows.Window.GetWindow(App.Current.Windows.AsValueEnumerable().OfType<DialogWindow>().First());
+                var landmarks = window.EnumerateChildOfType<LandmarkControl>().AsValueEnumerable().Distinct();
                 var landmark = landmarks.First(x => x.PathColor == _viewModel.Curves[1].Color.Value);
 
                 _viewModel.ResetPoints(_viewModel.Curves[1]);

@@ -10,13 +10,13 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls.Primitives;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using ZLinq;
 using static boilersGraphics.Helpers.SnapAction;
 using Point = System.Windows.Point;
 using Rect = System.Windows.Rect;
@@ -86,14 +86,13 @@ public class ResizeThumb : SnapPoint
         SelectableDesignerItemViewModelBase.Disconnect(designerItem);
 
         // only resize DesignerItems
-        var selectedDesignerItems = from item in designerItem.Owner.SelectedItems.Value
-            where item is DesignerItemViewModelBase
-            select item;
+        var selectedDesignerItems = designerItem.Owner.SelectedItems.Value.AsValueEnumerable()
+            .Where(item => item is DesignerItemViewModelBase).ToArray();
 
         if (designerItem.Owner.BackgroundItem.Value.EdgeBrush.Value == Brushes.Magenta
             && designerItem.Owner.BackgroundItem.Value.EdgeThickness.Value == 10)
-            selectedDesignerItems = selectedDesignerItems.Union(new SelectableDesignerItemViewModelBase[]
-                { designerItem.Owner.BackgroundItem.Value });
+            selectedDesignerItems = selectedDesignerItems.AsValueEnumerable().Union(new SelectableDesignerItemViewModelBase[]
+                { designerItem.Owner.BackgroundItem.Value }).ToArray();
 
         CalculateDragLimits(selectedDesignerItems, out double minLeft, out var minTop,
             out var minDeltaHorizontal, out var minDeltaVertical);
@@ -694,7 +693,7 @@ public class ResizeThumb : SnapPoint
     private void RemoveAllAdornerFromAdornerLayerAndDictionary(DesignerCanvas designerCanvas)
     {
         var adornerLayer = AdornerLayer.GetAdornerLayer(designerCanvas);
-        var removes = _adorners.ToList();
+        var removes = _adorners.AsValueEnumerable().ToList();
 
         removes.ForEach(x =>
         {
@@ -705,7 +704,7 @@ public class ResizeThumb : SnapPoint
 
     private void RemoveFromAdornerLayerAndDictionary(Point? snapped, AdornerLayer? adornerLayer)
     {
-        var removes = _adorners.Where(x => x.Key != snapped)
+        var removes = _adorners.AsValueEnumerable().Where(x => x.Key != snapped)
             .ToList();
         removes.ForEach(x =>
         {

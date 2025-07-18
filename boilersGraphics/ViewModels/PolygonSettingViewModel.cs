@@ -7,10 +7,10 @@ using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Windows;
 using System.Windows.Input;
+using ZLinq;
 
 namespace boilersGraphics.ViewModels;
 
@@ -159,7 +159,7 @@ internal class PolygonSettingViewModel : BindableBase, IDialogAware, IDisposable
     {
         var indexOf = Corners.IndexOf(x);
         Corners.Remove(x);
-        Corners.Where(y => y.Number.Value - 1 > indexOf).ToList().ForEach(y => y.Number.Value -= 1);
+        Corners.AsValueEnumerable().Where(y => y.Number.Value - 1 > indexOf).ToList().ForEach(y => y.Number.Value -= 1);
         UpdateSegments();
     }
 
@@ -173,14 +173,14 @@ internal class PolygonSettingViewModel : BindableBase, IDialogAware, IDisposable
 
     private void UpdateSegments()
     {
-        if (Corners.Count() <= 1) return;
+        if (Corners.AsValueEnumerable().Count() <= 1) return;
         Data.Value = "";
-        var x = Corners.Skip(1);
+        var x = Corners.AsValueEnumerable().Skip(1);
         var data = $"M {x.First().Point.Value}";
         var list = new List<Corner>();
-        foreach (var corner in Corners.Skip(1))
+        foreach (var corner in Corners.AsValueEnumerable().Skip(1))
         {
-            var angle = list.Sum(x => x.Angle.Value);
+            var angle = list.AsValueEnumerable().Sum(x => x.Angle.Value);
             var θ = (angle - Angle.Value) * Math.PI / 180.0;
             var point = new Point(
                 Math.Round(corner.Radius.Value * Math.Cos(θ), 2, MidpointRounding.AwayFromZero),

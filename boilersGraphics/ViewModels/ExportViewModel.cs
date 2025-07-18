@@ -13,12 +13,12 @@ using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using ZLinq;
 
 namespace boilersGraphics.ViewModels;
 
@@ -147,7 +147,7 @@ public class ExportViewModel : BindableBase, IDialogAware, IDisposable
             item.IsSelected.Value = false;
         }
 
-        foreach (var snapPointVM in diagramViewModel.AllItems.Value.OfType<SnapPointViewModel>())
+        foreach (var snapPointVM in diagramViewModel.AllItems.Value.AsValueEnumerable().OfType<SnapPointViewModel>())
             //一時的に非表示にする
             snapPointVM.Opacity.Value = 0;
 
@@ -200,7 +200,7 @@ public class ExportViewModel : BindableBase, IDialogAware, IDisposable
             if (tempIsSelected.TryGetValue(item, out outIsSelected)) item.IsSelected.Value = outIsSelected;
         }
 
-        foreach (var snapPointVM in diagramViewModel.AllItems.Value.OfType<SnapPointViewModel>())
+        foreach (var snapPointVM in diagramViewModel.AllItems.Value.AsValueEnumerable().OfType<SnapPointViewModel>())
             //スナップポイントを半透明に復元する
             snapPointVM.Opacity.Value = 0.5;
 

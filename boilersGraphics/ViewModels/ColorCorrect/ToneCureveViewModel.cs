@@ -14,7 +14,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Runtime.CompilerServices;
@@ -25,6 +24,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using ZLinq;
 using Window = System.Windows.Window;
 
 namespace boilersGraphics.ViewModels.ColorCorrect
@@ -193,12 +193,12 @@ namespace boilersGraphics.ViewModels.ColorCorrect
                 OnPropertyChanged(new PropertyChangedEventArgs(nameof(OrderedCurves)));
             }).AddTo(_disposable);
 
-            TargetCurve.Value = Curves.First();
+            TargetCurve.Value = Curves.AsValueEnumerable().First();
 
             DragDeltaCommand.Subscribe(x =>
             { 
                 Point unboxedPoint = (Point)(x.Source as Thumb).DataContext;
-                if (TargetCurve.Value.Points.First() == unboxedPoint || TargetCurve.Value.Points.Last() == unboxedPoint)
+                if (TargetCurve.Value.Points.AsValueEnumerable().First() == unboxedPoint || TargetCurve.Value.Points.AsValueEnumerable().Last() == unboxedPoint)
                 {
                     unboxedPoint.Y.Value = Math.Clamp(unboxedPoint.Y.Value + x.VerticalChange, 0, 255);
                     UpdatePoints(x);
@@ -215,9 +215,9 @@ namespace boilersGraphics.ViewModels.ColorCorrect
             TargetChannelChangedCommand.Subscribe(x =>
             {
                 var window = System.Windows.Window.GetWindow(x.Source as System.Windows.Controls.ComboBox);
-                var landmarks = window.EnumerateChildOfType<LandmarkControl>().Distinct();
+                var landmarks = window.EnumerateChildOfType<LandmarkControl>().AsValueEnumerable().Distinct();
                 var landmark = landmarks.First(x => x.PathColor == TargetCurve.Value.Color.Value);
-                TargetCurve.Value = ViewModel.Value.TargetCurve.Value = Curves.First(y => y.TargetChannel.Value == (Channel)x.AddedItems[0]);
+                TargetCurve.Value = ViewModel.Value.TargetCurve.Value = Curves.AsValueEnumerable().First(y => y.TargetChannel.Value == (Channel)x.AddedItems[0]);
                 ViewModel.Value.TargetCurve.Value.InOutPairs = landmark.AllScales;
                 ViewModel.Value.TargetChannel.Value = (Channel)x.AddedItems[0];
                 ViewModel.Value.TargetCurve.Value.Color.Value = TargetCurve.Value.Color.Value;
@@ -236,7 +236,7 @@ namespace boilersGraphics.ViewModels.ColorCorrect
                     {
                         return;
                     }
-                    if (TargetCurve.Value.Points.Count() <= 3)
+                    if (TargetCurve.Value.Points.AsValueEnumerable().Count() <= 3)
                     {
                         return;
                     }
@@ -246,9 +246,9 @@ namespace boilersGraphics.ViewModels.ColorCorrect
             LoadedCommand.Subscribe(x =>
             {
                 var window = System.Windows.Window.GetWindow(x.Source as Views.ColorCorrect.ToneCurve);
-                var landmarks = window.EnumerateChildOfType<LandmarkControl>().Distinct();
+                var landmarks = window.EnumerateChildOfType<LandmarkControl>().AsValueEnumerable().Distinct();
                 var set = landmarks.Select(x => new
-                    { Landmark = x, Color = Channel.GetValues().First(y => y.Brush == x.PathColor) });
+                    { Landmark = x, Color = Channel.GetValues().AsValueEnumerable().First(y => y.Brush == x.PathColor) });
 
                 foreach (var curve in Curves)
                 {
@@ -292,7 +292,7 @@ namespace boilersGraphics.ViewModels.ColorCorrect
         {
             var newPoint = new Point(t.X.Value, t.Y.Value);
             var newPointModel = new Point(t.X.Value, t.Y.Value);
-            var pointsList = curve.Points.Select(it => new Rulyotano.Math.Geometry.Point(it.X.Value, it.Y.Value));
+            var pointsList = curve.Points.AsValueEnumerable().Select(it => new Rulyotano.Math.Geometry.Point(it.X.Value, it.Y.Value));
             var insertIndex = Rulyotano.Math.Geometry.Helpers.BestPlaceToInsert(newPoint.ToPoint(), pointsList.ToList());
             if (insertIndex == curve.Points.Count)
             {
@@ -309,17 +309,17 @@ namespace boilersGraphics.ViewModels.ColorCorrect
             if (MainWindowViewModel.Instance.ToolBarViewModel.Behaviors.Contains(MainWindowViewModel.Instance.ToolBarViewModel.BlackDropperBehavior))
             {
                 //点(0, 255)を除く、下半分をリセット
-                curve.Points.Where(p => !(p.X.Value == 0 && p.Y.Value == 255) && p.Y.Value >= 255 / 2 && p.Y.Value <= 255)
+                curve.Points.AsValueEnumerable().Where(p => !(p.X.Value == 0 && p.Y.Value == 255) && p.Y.Value >= 255 / 2 && p.Y.Value <= 255)
                                     .ToList().ForEach(p => curve.Points.Remove(p));
             }
             else if (MainWindowViewModel.Instance.ToolBarViewModel.Behaviors.Contains(MainWindowViewModel.Instance.ToolBarViewModel.WhiteDropperBehavior))
             {
                 //点(255, 0)を除く、上半分をリセット
-                curve.Points.Where(p => !(p.X.Value == 255 && p.Y.Value == 0) && p.Y.Value >= 0 && p.Y.Value <= 255 / 2)
+                curve.Points.AsValueEnumerable().Where(p => !(p.X.Value == 255 && p.Y.Value == 0) && p.Y.Value >= 0 && p.Y.Value <= 255 / 2)
                                     .ToList().ForEach(p => curve.Points.Remove(p));
             }
-            var except = curve.Points.ToList();
-            var adds = resetPoints.Except(except);
+            var except = curve.Points.AsValueEnumerable().ToList();
+            var adds = resetPoints.AsValueEnumerable().Except(except).ToArray();
             curve.Points.AddRange(adds);
         }
 
@@ -472,16 +472,16 @@ namespace boilersGraphics.ViewModels.ColorCorrect
         {
             ViewModel.Value.Curves = Curves;
 
-            var _Points = TargetCurve.Value.Points.Select(x => new Rulyotano.Math.Geometry.Point(x.X.Value, x.Y.Value)).ToList();
+            var _Points = TargetCurve.Value.Points.AsValueEnumerable().Select(x => new Rulyotano.Math.Geometry.Point(x.X.Value, x.Y.Value)).ToList();
 
 
-            var myPathFigure = new PathFigure { StartPoint = ConvertToVisualPoint(_Points.FirstOrDefault()) };
+            var myPathFigure = new PathFigure { StartPoint = ConvertToVisualPoint(_Points.AsValueEnumerable().FirstOrDefault()) };
 
             var bezierSegments = BezierInterpolation.PointsToBezierCurves(_Points, false);
 
             var _myPathSegmentCollection = new PathSegmentCollection();
 
-            if (bezierSegments == null || bezierSegments.Segments.Count() < 1)
+            if (bezierSegments == null || bezierSegments.Segments.AsValueEnumerable().Count() < 1)
             {
                 //Add a line segment <this is generic for more than one line>
                 foreach (var point in _Points.GetRange(1, _Points.Count - 1))
@@ -517,11 +517,11 @@ namespace boilersGraphics.ViewModels.ColorCorrect
             for (int x = 0; x <= byte.MaxValue; x++)
             {
                 var P0 = default(Rulyotano.Math.Geometry.Point);
-                foreach (BezierSegment segment in _myPathSegmentCollection.Cast<BezierSegment>())
+                foreach (BezierSegment segment in _myPathSegmentCollection.AsValueEnumerable().Cast<BezierSegment>())
                 {
-                    if (segment == segments.First())
+                    if (segment == segments.AsValueEnumerable().First())
                     {
-                        P0 = TargetCurve.Value.Points.First().ToPoint();
+                        P0 = TargetCurve.Value.Points.AsValueEnumerable().First().ToPoint();
                     }
                     else
                     {
@@ -543,7 +543,7 @@ namespace boilersGraphics.ViewModels.ColorCorrect
                     double y = Math.Round(Math.Pow(1 - t, 3) * P0.Y + 3 * Math.Pow(1 - t, 2) * t * P1.Y + 3 * (1 - t) * Math.Pow(t, 2) * P2.Y + Math.Pow(t, 3) * P3.Y);
                     if (y >= byte.MinValue && y <= byte.MaxValue)
                     {
-                        if (!ret.Any(a => a.In == x))
+                        if (!ret.AsValueEnumerable().Any(a => a.In == x))
                         {
                             ret.Add(new InOutPair(x, (int)y));
                             break;

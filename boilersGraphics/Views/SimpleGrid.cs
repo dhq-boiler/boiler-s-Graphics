@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using ZLinq;
 
 namespace boilersGraphics.Views;
 
@@ -26,15 +26,15 @@ public class SimpleGrid : Panel
             var iterator = rows.First;
             for (var y = 0; y < rows.Count; ++y)
             {
-                var topHeight = _cells.Where(a => a.Y < y).GroupBy(b => b.Y).Sum(c => c.Max(d => d.Height));
-                var heightOn = _cells.Where(a => a.Y == y).Max(b => b.Height);
+                var topHeight = _cells.AsValueEnumerable().Where(a => a.Y < y).GroupBy(b => b.Y).Sum(c => c.AsValueEnumerable().Max(d => d.Height));
+                var heightOn = _cells.AsValueEnumerable().Where(a => a.Y == y).Max(b => b.Height);
                 var row = iterator.Value;
                 if (row == null) continue;
                 for (var x = 0; x < row.Count; ++x)
                 {
                     var cell = row[x];
-                    var leftWidth = _cells.Where(a => a.X < x).GroupBy(b => b.X).Sum(c => c.Max(d => d.Width));
-                    var widthOn = _cells.Where(a => a.X == x).Max(b => b.Width);
+                    var leftWidth = _cells.AsValueEnumerable().Where(a => a.X < x).GroupBy(b => b.X).Sum(c => c.AsValueEnumerable().Max(d => d.Width));
+                    var widthOn = _cells.AsValueEnumerable().Where(a => a.X == x).Max(b => b.Width);
                     var finalRect = new Rect(leftWidth, topHeight, widthOn, heightOn);
                     cell.Arrange(finalRect);
                 }
@@ -48,16 +48,16 @@ public class SimpleGrid : Panel
             var iterator = cols.First;
             for (var x = 0; x < cols.Count; ++x)
             {
-                var leftWidth = _cells.Where(a => a.X < x).GroupBy(b => b.X).Sum(c => c.Max(d => d.Width));
-                var widthOn = _cells.Where(a => a.X == x).Max(b => b.Width);
+                var leftWidth = _cells.AsValueEnumerable().Where(a => a.X < x).GroupBy(b => b.X).Sum(c => c.AsValueEnumerable().Max(d => d.Width));
+                var widthOn = _cells.AsValueEnumerable().Where(a => a.X == x).Max(b => b.Width);
 
                 var row = iterator.Value;
                 if (row == null) continue;
                 for (var y = 0; y < row.Count; ++y)
                 {
                     var cell = row[y];
-                    var topHeight = _cells.Where(a => a.Y < y).GroupBy(b => b.Y).Sum(c => c.Max(d => d.Height));
-                    var heightOn = _cells.Where(a => a.Y == y).Max(b => b.Height);
+                    var topHeight = _cells.AsValueEnumerable().Where(a => a.Y < y).GroupBy(b => b.Y).Sum(c => c.AsValueEnumerable().Max(d => d.Height));
+                    var heightOn = _cells.AsValueEnumerable().Where(a => a.Y == y).Max(b => b.Height);
                     var finalRect = new Rect(leftWidth, topHeight, widthOn, heightOn);
                     cell.Arrange(finalRect);
                 }
@@ -78,8 +78,8 @@ public class SimpleGrid : Panel
     {
         var rows = GetChildrenStructure();
         _cells = getCellsSize(Orientation, availableSize, rows);
-        var totalMaxWidth = _cells.GroupBy(a => a.X).Sum(b => b.Max(c => c.Width));
-        var totalMaxHeight = _cells.GroupBy(a => a.Y).Sum(b => b.Max(c => c.Height));
+        var totalMaxWidth = _cells.AsValueEnumerable().GroupBy(a => a.X).Sum(b => b.AsValueEnumerable().Max(c => c.Width));
+        var totalMaxHeight = _cells.AsValueEnumerable().GroupBy(a => a.Y).Sum(b => b.AsValueEnumerable().Max(c => c.Height));
 
         return new Size(totalMaxWidth, totalMaxHeight);
     }

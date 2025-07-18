@@ -11,12 +11,12 @@ using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using ZLinq;
 using GradientStop = boilersGraphics.Models.GradientStop;
 
 namespace boilersGraphics.ViewModels;
@@ -73,7 +73,7 @@ internal class RadialGradientBrushPickerViewModel : BindableBase, INavigationAwa
                 {
                     if (!colorSpot.IsSelected.Value)
                     {
-                        _spots.ToList().ForEach(x => x.IsSelected.Value = false);
+                        _spots.AsValueEnumerable().ToList().ForEach(x => x.IsSelected.Value = false);
                         colorSpot.IsSelected.Value = true;
                         if (SelectedGradientStop.Value != null)
                         {
@@ -237,8 +237,8 @@ internal class RadialGradientBrushPickerViewModel : BindableBase, INavigationAwa
             .AddTo(_disposables);
         PickBrushCommand.Subscribe(brush =>
             {
-                if (_spots != null && _spots.Where(x => x.IsSelected.Value).Count() > 0)
-                    _spots.Where(x => x.IsSelected.Value).ToList().ForEach(x => x.Brush = brush);
+                if (_spots != null && _spots.AsValueEnumerable().Where(x => x.IsSelected.Value).Count() > 0)
+                    _spots.AsValueEnumerable().Where(x => x.IsSelected.Value).ToList().ForEach(x => x.Brush = brush);
             })
             .AddTo(_disposables);
     }
@@ -616,7 +616,7 @@ internal class RadialGradientBrushPickerViewModel : BindableBase, INavigationAwa
 
     private void Sort(ReactiveCollection<GradientStop> gradientStops)
     {
-        var order = gradientStops.Select(x => x.Offset.Value);
+        var order = gradientStops.AsValueEnumerable().Select(x => x.Offset.Value);
         for (var i = 0; i < order.Count(); i++)
         for (var j = 0; j < order.Count(); j++)
         {
@@ -636,7 +636,7 @@ internal class RadialGradientBrushPickerViewModel : BindableBase, INavigationAwa
             .Debug(
                 $"BuildTargetBrush GradientOrigin={GradientOrigin.Value}, Center={Center.Value}, RadiusX={RadiusX.Value}, RadiusY={RadiusY.Value}");
         var gradientStopCollection = new GradientStopCollection();
-        GradientStops.ToList().ForEach(x => gradientStopCollection.Add(x.ConvertToGradientStop()));
+        GradientStops.AsValueEnumerable().ToList().ForEach(x => gradientStopCollection.Add(x.ConvertToGradientStop()));
         var brush = new RadialGradientBrush(gradientStopCollection);
         brush.GradientOrigin = GradientOrigin.Value;
         brush.Center = Center.Value;

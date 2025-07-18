@@ -11,13 +11,13 @@ using Prism.Unity;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using ZLinq;
 using Rect = System.Windows.Rect;
 
 namespace boilersGraphics.ViewModels;
@@ -89,7 +89,7 @@ public class ColorCorrectViewModel : EffectViewModel
                         Cv2.CvtColor(b, z, ColorConversionCodes.HSV2BGR);
                         break;
                     case ToneCurve:
-                        if (Curves.Count() != 4)
+                        if (Curves.AsValueEnumerable().Count() != 4)
                             break;
                         var arr3 = Cv2.Split(a);
                         OperateToneCurve(arr3[0], Curves[1]); //B
@@ -149,7 +149,7 @@ public class ColorCorrectViewModel : EffectViewModel
             for (int x = 0; x < width; x++)
             {
                 *(p + y * step + x * 1) =
-                    (byte)Math.Clamp(inOutPairs.First(z => z.In == *(p + y * step + x * 1)).Out, byte.MinValue,
+                    (byte)Math.Clamp(inOutPairs.AsValueEnumerable().First(z => z.In == *(p + y * step + x * 1)).Out, byte.MinValue,
                         byte.MaxValue);
             }
         });
