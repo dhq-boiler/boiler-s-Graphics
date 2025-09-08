@@ -1,11 +1,13 @@
 ﻿using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
 using boilersGraphics.Models;
+using Cysharp.Text;
 using ObservableCollections;
 using Prism.Commands;
 using Prism.Mvvm;
 using R3;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Windows;
@@ -307,30 +309,82 @@ public abstract class SelectableDesignerItemViewModelBase : BindableBase, ISelec
         }
     }
 
+    private static readonly ConcurrentDictionary<Type, (PropertyInfo[] properties, FieldInfo[] fields)> _reflectionCache = new();
+    private static readonly HashSet<string> _excludedPropertyNames = new()
+    {
+        "Parent",
+        "SelectedItems", 
+        "LayerItem"
+    };
+
     public string ShowPropertiesAndFields()
     {
-        var ret = $"<{GetType().Name}>{{";
+        var type = GetType();
+        var (properties, fields) = _reflectionCache.GetOrAdd(type, GetPropertiesAndFields);
 
-        var properties = GetType().GetProperties(
-            BindingFlags.Public
-            | BindingFlags.Instance);
+        using (var sb = ZString.CreateStringBuilder())
+        {
+            sb.Append('<');
+            sb.Append(type.Name);
+            sb.Append(">");
+#if DEBUG
+            sb.Append('{');
+            // プロパティの処理
+            for (int i = 0; i < properties.Length; i++)
+            {
+                var property = properties[i];
+                if (_excludedPropertyNames.Contains(property.Name))
+                    continue;
 
-        foreach (var property in properties.AsValueEnumerable().Except(new[]
-                 {
-                     GetType().GetProperty("Parent"),
-                     GetType().GetProperty("SelectedItems"),
-                     GetType().GetProperty("LayerItem"),
-                 }))
-            ret += $"{property.Name}={property.GetValue(this)},";
+                try
+                {
+                    var value = property.GetValue(this);
+                    sb.Append(property.Name);
+                    sb.Append('=');
+                    sb.Append(value?.ToString() ?? "null");
+                    sb.Append(',');
+                }
+                catch (Exception)
+                {
+                    sb.Append(property.Name);
+                    sb.Append("=<error>,");
+                }
+            }
 
-        var fields = GetType().GetFields(
-            BindingFlags.Public
-            | BindingFlags.Instance);
+            // フィールドの処理
+            for (int i = 0; i < fields.Length; i++)
+            {
+                var field = fields[i];
+                try
+                {
+                    var value = field.GetValue(this);
+                    sb.Append(field.Name);
+                    sb.Append('=');
+                    sb.Append(value?.ToString() ?? "null");
+                    sb.Append(',');
+                }
+                catch (Exception)
+                {
+                    sb.Append(field.Name);
+                    sb.Append("=<error>,");
+                }
+            }
 
-        foreach (var field in fields) ret += $"{field.Name}={field.GetValue(this)},";
-        ret = ret.Remove(ret.Length - 1, 1);
-        ret += "}";
-        return ret;
+            // 最後のカンマを削除
+            if (sb.Length > 0 && sb.ToString()[sb.Length - 1] == ',')
+                sb.Remove(sb.Length - 1, 1);
+
+            sb.Append('}');
+#endif
+            return sb.ToString();
+        }
+    }
+
+    private static (PropertyInfo[] properties, FieldInfo[] fields) GetPropertiesAndFields(Type type)
+    {
+        var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+        var fields = type.GetFields(BindingFlags.Public | BindingFlags.Instance);
+        return (properties, fields);
     }
 
     public override string ToString()

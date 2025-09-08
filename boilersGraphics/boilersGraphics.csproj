@@ -179,6 +179,7 @@
     <PackageReference Include="System.ServiceModel.NetTcp" Version="8.1.2" />
     <PackageReference Include="System.ServiceModel.Federation" Version="8.1.2" />
     <PackageReference Include="ZLinq" Version="1.5.2" />
+    <PackageReference Include="ZString" Version="2.6.0" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Assets\img\art-pallete.png" />
