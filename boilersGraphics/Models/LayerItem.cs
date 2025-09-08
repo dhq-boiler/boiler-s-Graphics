@@ -38,9 +38,9 @@ public class LayerItem : LayerTreeViewItemBase, IDisposable, IComparable<LayerTr
         Init();
     }
 
-    public ReactiveProperty<ImageSource> Appearance { get; } = new();
+    public BindableReactiveProperty<ImageSource> Appearance { get; } = new();
     public ReactiveCommand SwitchVisibilityCommand { get; } = new();
-    public ReactiveProperty<SelectableDesignerItemViewModelBase> Item { get; } = new();
+    public BindableReactiveProperty<SelectableDesignerItemViewModelBase> Item { get; } = new();
     public ReactiveCommand MoveSnapPointCommand { get; } = new();
 
     public int CompareTo(object obj)

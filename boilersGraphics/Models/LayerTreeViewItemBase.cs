@@ -80,29 +80,29 @@ public abstract class LayerTreeViewItemBase : BindableBase, IDisposable, IObserv
         }
     }
 
-    public R3.ReactiveProperty<LayerTreeViewItemBase> Parent { get; } = new();
+    public R3.BindableReactiveProperty<LayerTreeViewItemBase> Parent { get; } = new();
 
-    public R3.ReactiveProperty<string> Name { get; } = new();
+    public R3.BindableReactiveProperty<string> Name { get; } = new();
 
-    public R3.ReactiveProperty<Brush> Background { get; } = new();
+    public R3.BindableReactiveProperty<Brush> Background { get; } = new();
 
-    public R3.ReactiveProperty<bool> IsExpanded { get; } = new(true);
+    public R3.BindableReactiveProperty<bool> IsExpanded { get; } = new(true);
 
-    public R3.ReactiveProperty<bool> IsSelected { get; protected set; } = new();
+    public R3.BindableReactiveProperty<bool> IsSelected { get; protected set; } = new();
 
-    public R3.ReactiveProperty<bool> IsVisible { get; } = new();
+    public R3.BindableReactiveProperty<bool> IsVisible { get; } = new();
 
-    public R3.ReactiveProperty<Color> Color { get; } = new();
+    public R3.BindableReactiveProperty<Color> Color { get; } = new();
 
-    public R3.ReactiveProperty<ImageSource> Appearance { get; } = new();
+    public R3.BindableReactiveProperty<ImageSource> Appearance { get; } = new();
 
-    public R3.ReactiveProperty<Visibility> BeforeSeparatorVisibility { get; } = new(Visibility.Hidden);
+    public R3.BindableReactiveProperty<Visibility> BeforeSeparatorVisibility { get; } = new(Visibility.Hidden);
 
-    public R3.ReactiveProperty<Visibility> AfterSeparatorVisibility { get; } = new(Visibility.Hidden);
+    public R3.BindableReactiveProperty<Visibility> AfterSeparatorVisibility { get; } = new(Visibility.Hidden);
 
     public NotifyCollectionChangedSynchronizedViewList<LayerTreeViewItemBase> Children { get; set; } = new ObservableList<LayerTreeViewItemBase>().ToWritableNotifyCollectionChanged();
 
-    public ObservableList<Control> LayerTreeViewItemContextMenu { get; } = new();
+    public NotifyCollectionChangedSynchronizedViewList<Control> LayerTreeViewItemContextMenu { get; } = new ObservableList<Control>().ToWritableNotifyCollectionChanged();
 
     public ReactiveCommand ChangeNameCommand { get; } = new();
 
