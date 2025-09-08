@@ -85,7 +85,7 @@ public class NPieViewModel : DesignerItemViewModelBase
                     if (!geometry.IsEmpty()) PathGeometryNoRotate.Value = geometry;
                 }
 
-            if (RotationAngle.Value != 0d) PathGeometryRotate.Value = GeometryCreator.Rotate(PathGeometryNoRotate.Value, RotationAngle.Value, CenterPoint.CurrentValue);
+            if (RotationAngle.Value != 0d) PathGeometryRotate.Value = GeometryCreator.Rotate(PathGeometryNoRotate.Value, RotationAngle.Value, CenterPoint.Value);
         }
     }
 

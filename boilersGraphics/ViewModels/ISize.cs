@@ -13,16 +13,16 @@ namespace boilersGraphics.ViewModels
         T Height { get; }
     }
 
-    public interface ISizeRps : ISize<ReactiveProperty<double>>
+    public interface ISizeRps : ISize<BindableReactiveProperty<double>>
     {
-        ReactiveProperty<double> Left { get; } 
+        BindableReactiveProperty<double> Left { get; }
 
-        ReactiveProperty<double> Top { get; }
-        ReadOnlyReactiveProperty<Rect> Rect { get; }
+        BindableReactiveProperty<double> Top { get; }
+        IReadOnlyBindableReactiveProperty<Rect> Rect { get; }
     }
 
-    public interface ISizeReadOnlyRps : ISize<ReadOnlyReactiveProperty<double>>
+    public interface ISizeReadOnlyRps : ISize<IReadOnlyBindableReactiveProperty<double>>
     {
-        ReactiveProperty<Point> LeftTop { get; }
+        BindableReactiveProperty<Point> LeftTop { get; }
     }
 }

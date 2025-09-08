@@ -71,7 +71,7 @@ public class PictureDesignerItemViewModel : DesignerItemViewModelBase, IEmbedded
         {
             PathGeometryNoRotate.Value = CreateGeometry();
 
-            if (RotationAngle.Value != 0d) PathGeometryRotate.Value = GeometryCreator.Rotate(PathGeometryNoRotate.Value, RotationAngle.Value, CenterPoint.CurrentValue);
+            if (RotationAngle.Value != 0d) PathGeometryRotate.Value = GeometryCreator.Rotate(PathGeometryNoRotate.Value, RotationAngle.Value, CenterPoint.Value);
         }
     }
 

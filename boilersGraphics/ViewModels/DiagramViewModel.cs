@@ -307,12 +307,12 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                     var horizontalMax = AllItems.Value.AsValueEnumerable().OfType<DesignerItemViewModelBase>()
                         .Except(new DesignerItemViewModelBase[] { BackgroundItem.Value }).Count() > 0
                         ? AllItems.Value.AsValueEnumerable().OfType<DesignerItemViewModelBase>()
-                            .Except(new DesignerItemViewModelBase[] { BackgroundItem.Value }).Max(x => x.Right.CurrentValue)
+                            .Except(new DesignerItemViewModelBase[] { BackgroundItem.Value }).Max(x => x.Right.Value)
                         : 0;
                     var verticalMax = AllItems.Value.AsValueEnumerable().OfType<DesignerItemViewModelBase>()
                         .Except(new DesignerItemViewModelBase[] { BackgroundItem.Value }).Count() > 0
                         ? AllItems.Value.AsValueEnumerable().OfType<DesignerItemViewModelBase>()
-                            .Except(new DesignerItemViewModelBase[] { BackgroundItem.Value }).Max(x => x.Bottom.CurrentValue)
+                            .Except(new DesignerItemViewModelBase[] { BackgroundItem.Value }).Max(x => x.Bottom.Value)
                         : 0;
                     foreach (var item in AllItems.Value.AsValueEnumerable().OfType<ConnectorBaseViewModel>())
                     foreach (var p in item.Points)
@@ -1113,8 +1113,8 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
         var other = SelectedItems.Value.AsValueEnumerable().OfType<DesignerItemViewModelBase>().Last();
         var left = -(other.Left.Value - picture.Left.Value);
         var top = -(other.Top.Value - picture.Top.Value);
-        var right = -(picture.Right.CurrentValue - other.Right.CurrentValue);
-        var bottom = -(picture.Bottom.CurrentValue - other.Bottom.CurrentValue);
+        var right = -(picture.Right.Value - other.Right.Value);
+        var bottom = -(picture.Bottom.Value - other.Bottom.Value);
         var image = new Image();
         image.BeginInit();
         image.Width = picture.Width.Value;
@@ -1975,7 +1975,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
         foreach (var item in items)
             if (item is DesignerItemViewModelBase designerItem)
             {
-                var centerPoint = designerItem.CenterPoint.CurrentValue;
+                var centerPoint = designerItem.CenterPoint.Value;
                 var angleInDegrees = designerItem.RotationAngle.Value;
 
                 var p0 = new Point(designerItem.Left.Value + designerItem.Width.Value,
@@ -2160,7 +2160,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     /// <summary>
     ///     拡大率
     /// </summary>
-    public ReactiveProperty<double> MagnificationRate { get; } = new(100);
+    public BindableReactiveProperty<double> MagnificationRate { get; } = new(100);
 
     public Queue<Action> LoadedEventActions { get; } = new();
 

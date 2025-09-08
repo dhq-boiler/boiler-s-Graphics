@@ -5,6 +5,6 @@ namespace boilersGraphics.ViewModels
 {
     public interface IRect
     {
-        ReadOnlyReactiveProperty<Rect> Rect { get; set; }
+        IReadOnlyBindableReactiveProperty<Rect> Rect { get; set; }
     }
 }

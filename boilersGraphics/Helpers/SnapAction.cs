@@ -146,7 +146,7 @@ internal class SnapAction
                         if (snapped.Item1.SnapPointPosition == SnapPointPosition.Intersection)
                         {
                             var auxiliaryLine = new AuxiliaryLine(designerCanvas,
-                                (snapped.Item1.DataContext as NEllipseViewModel).CenterPoint.CurrentValue, snapped.Item2);
+                                (snapped.Item1.DataContext as NEllipseViewModel).CenterPoint.Value, snapped.Item2);
                             if (auxiliaryLine != null)
                             {
                                 adornerLayer.Add(auxiliaryLine);

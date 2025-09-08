@@ -64,8 +64,7 @@
                                                                     Grid.Column="0"
                                                                     Grid.ColumnSpan="2"
                                                                     Orientation="Horizontal">
-                                                                    <Button x:Name="Visibility_Button"
-                                                                            Command="{Binding SwitchVisibilityCommand}">
+                                                                    <Button x:Name="Visibility_Button" Command="{Binding SwitchVisibilityCommand}">
                                                                         <Button.Template>
                                                                             <ControlTemplate TargetType="{x:Type Button}">
                                                                                 <Image
@@ -85,7 +84,10 @@
                                                                             </ControlTemplate>
                                                                         </Button.Template>
                                                                     </Button>
-                                                                    <Rectangle x:Name="LayerItem_Color"  Width="5" Fill="{Binding Color.Value, Converter={StaticResource ToSolidColorBrushConverter}}" />
+                                                                    <Rectangle
+                                                                        x:Name="LayerItem_Color"
+                                                                        Width="5"
+                                                                        Fill="{Binding Color.Value, Converter={StaticResource ToSolidColorBrushConverter}}" />
                                                                     <ToggleButton x:Name="LayerItem_ToggleButton" IsChecked="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=IsExpanded, Mode=TwoWay}">
                                                                         <ToggleButton.Template>
                                                                             <ControlTemplate TargetType="ToggleButton">
@@ -118,31 +120,34 @@
                                                                             </ControlTemplate>
                                                                         </ToggleButton.Template>
                                                                     </ToggleButton>
-                                                                    <Border x:Name="Appearance_OuterBorder"
-                                                                            AutomationProperties.AutomationId="Appearance_OuterBorder"
-                                                                            BorderBrush="{Binding IsSelected.Value, Converter={StaticResource IsSelectedToBorderBrushConverter}}" BorderThickness="1">
+                                                                    <Border
+                                                                        x:Name="Appearance_OuterBorder"
+                                                                        AutomationProperties.AutomationId="Appearance_OuterBorder"
+                                                                        BorderBrush="{Binding IsSelected.Value, Converter={StaticResource IsSelectedToBorderBrushConverter}}"
+                                                                        BorderThickness="1">
                                                                         <Border.ToolTip>
                                                                             <ToolTip
                                                                                 x:Name="Appearance_ToolTip"
-                                                                                Style="{StaticResource LayerWindow_LayerItem_Appearance_ToolTip}"
                                                                                 AutomationProperties.AutomationId="Appearance_ToolTip"
+                                                                                Background="Transparent"
                                                                                 BorderBrush="Transparent"
                                                                                 BorderThickness="0"
-                                                                                Background="Transparent">
+                                                                                Style="{StaticResource LayerWindow_LayerItem_Appearance_ToolTip}">
                                                                                 <Image
                                                                                     x:Name="Appearance_ToolTip_Image"
                                                                                     Width="{Binding Appearance.Value.Width}"
                                                                                     Height="{Binding Appearance.Value.Height}"
-                                                                                    Stretch="UniformToFill"
                                                                                     RenderOptions.BitmapScalingMode="HighQuality"
-                                                                                    Source="{Binding Appearance.Value}" />
+                                                                                    Source="{Binding Appearance.Value}"
+                                                                                    Stretch="UniformToFill" />
                                                                             </ToolTip>
                                                                         </Border.ToolTip>
                                                                         <Border.Background>
-                                                                            <VisualBrush Stretch="None"
-                                                                                         TileMode="Tile"
-                                                                                         Viewport="0,0,16,16"
-                                                                                         ViewportUnits="Absolute">       
+                                                                            <VisualBrush
+                                                                                Stretch="None"
+                                                                                TileMode="Tile"
+                                                                                Viewport="0,0,16,16"
+                                                                                ViewportUnits="Absolute">
                                                                                 <VisualBrush.Visual>
                                                                                     <Grid>
                                                                                         <Grid.ColumnDefinitions>
@@ -153,27 +158,31 @@
                                                                                             <RowDefinition Height="8" />
                                                                                             <RowDefinition Height="8" />
                                                                                         </Grid.RowDefinitions>
-                                                                                        <Rectangle Grid.Row="0"
-                                                                                                   Grid.Column="0"
-                                                                                                   Fill="#EEE" />
-                                                                                        <Rectangle Grid.Row="0"
-                                                                                                   Grid.Column="1"
-                                                                                                   Fill="#AAA" />
-                                                                                        <Rectangle Grid.Row="1"
-                                                                                                   Grid.Column="0"
-                                                                                                   Fill="#AAA" />
-                                                                                        <Rectangle Grid.Row="1"
-                                                                                                   Grid.Column="1"
-                                                                                                   Fill="#EEE" />
+                                                                                        <Rectangle
+                                                                                            Grid.Row="0"
+                                                                                            Grid.Column="0"
+                                                                                            Fill="#EEE" />
+                                                                                        <Rectangle
+                                                                                            Grid.Row="0"
+                                                                                            Grid.Column="1"
+                                                                                            Fill="#AAA" />
+                                                                                        <Rectangle
+                                                                                            Grid.Row="1"
+                                                                                            Grid.Column="0"
+                                                                                            Fill="#AAA" />
+                                                                                        <Rectangle
+                                                                                            Grid.Row="1"
+                                                                                            Grid.Column="1"
+                                                                                            Fill="#EEE" />
                                                                                     </Grid>
                                                                                 </VisualBrush.Visual>
                                                                             </VisualBrush>
                                                                         </Border.Background>
                                                                         <Image
                                                                             x:Name="Appearance_Image"
-                                                                            AutomationProperties.AutomationId="Appearance_Image"
                                                                             Width="25"
                                                                             Height="25"
+                                                                            AutomationProperties.AutomationId="Appearance_Image"
                                                                             RenderOptions.BitmapScalingMode="HighQuality"
                                                                             Source="{Binding Appearance.Value}" />
                                                                     </Border>
@@ -214,9 +223,10 @@
                                         </TreeView.Resources>
                                         <TreeView.ItemTemplate>
                                             <HierarchicalDataTemplate ItemsSource="{Binding Children}">
-                                                <Grid x:Name="LayerItem"
-                                                      AutomationProperties.AutomationId="LayerItem"
-                                                      Background="{Binding Background.Value}">
+                                                <Grid
+                                                    x:Name="LayerItem"
+                                                    AutomationProperties.AutomationId="LayerItem"
+                                                    Background="{Binding Background.Value}">
                                                     <StackPanel Orientation="Vertical">
                                                         <Separator
                                                             BorderBrush="{StaticResource LightBorderBrush}"

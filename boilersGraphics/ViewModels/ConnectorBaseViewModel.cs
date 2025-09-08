@@ -25,12 +25,12 @@ public abstract class ConnectorBaseViewModel : SelectableDesignerItemViewModelBa
         Init();
     }
 
-    public R3.ReactiveProperty<Point> LeftTop { get; set; }
+    public R3.BindableReactiveProperty<Point> LeftTop { get; set; }
 
-    public R3.ReadOnlyReactiveProperty<double> Width { get; set; }
+    public R3.IReadOnlyBindableReactiveProperty<double> Width { get; set; }
 
-    public R3.ReadOnlyReactiveProperty<double> Height { get; set; }
-    public R3.ReadOnlyReactiveProperty<Rect> Rect { get; set; }
+    public R3.IReadOnlyBindableReactiveProperty<double> Height { get; set; }
+    public R3.IReadOnlyBindableReactiveProperty<Rect> Rect { get; set; }
 
     public ObservableCollection<Point> Points
     {
@@ -123,13 +123,13 @@ public abstract class ConnectorBaseViewModel : SelectableDesignerItemViewModelBa
         Width = Points.ObservePropertyChanged(x => x.Count)
             .Where(x => x > 0)
             .Select(_ => Points.AsValueEnumerable().Max(x => x.X) - Points.AsValueEnumerable().Min(x => x.X))
-            .ToReadOnlyReactiveProperty();
+            .ToReadOnlyBindableReactiveProperty();
         Height = Points.ObservePropertyChanged(x => x.Count)
             .Where(x => x > 0)
             .Select(_ => Points.AsValueEnumerable().Max(x => x.Y) - Points.AsValueEnumerable().Min(x => x.Y))
-            .ToReadOnlyReactiveProperty();
-        Rect = LeftTop.CombineLatest(Width, Height, (lt, width, height) => new Rect(lt, new Size(width, height)))
-            .ToReadOnlyReactiveProperty();
+            .ToReadOnlyBindableReactiveProperty();
+        Rect = LeftTop.CombineLatest(Width.AsObservable(), Height.AsObservable(), (lt, width, height) => new Rect(lt, new Size(width, height)))
+            .ToReadOnlyBindableReactiveProperty();
         PenLineCaps = new ObservableList<PenLineCap>().ToWritableNotifyCollectionChanged();
         PenLineCaps.Add(PenLineCap.Flat);
         PenLineCaps.Add(PenLineCap.Round);

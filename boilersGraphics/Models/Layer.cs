@@ -107,7 +107,7 @@ public class Layer : LayerTreeViewItemBase, IObservable<LayerObservable>, ICompa
             return;
 
         Rect? sliceRect = null;
-        _items.AsValueEnumerable().Cast<IRect>().ToList().ForEach(x => sliceRect = (!sliceRect.HasValue ? x.Rect.CurrentValue : Rect.Union(sliceRect.Value, x.Rect.CurrentValue)));
+        _items.AsValueEnumerable().Cast<IRect>().ToList().ForEach(x => sliceRect = (!sliceRect.HasValue ? x.Rect.Value : Rect.Union(sliceRect.Value, x.Rect.Value)));
         var renderer = new Renderer(new WpfVisualTreeHelper());
         
         //背景オブジェクトを除く、アイテムがない場合

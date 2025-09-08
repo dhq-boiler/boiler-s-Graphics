@@ -83,7 +83,7 @@ public class NPolygonViewModel : DesignerItemViewModelBase
                 if (!(PathGeometryNoRotate.Value is null)) Data.Value = PathGeometryNoRotate.Value.ToString();
             }
 
-            if (RotationAngle.Value != 0d) PathGeometryRotate.Value = GeometryCreator.Rotate(PathGeometryNoRotate.Value, RotationAngle.Value, CenterPoint.CurrentValue);
+            if (RotationAngle.Value != 0d) PathGeometryRotate.Value = GeometryCreator.Rotate(PathGeometryNoRotate.Value, RotationAngle.Value, CenterPoint.Value);
         }
     }
 

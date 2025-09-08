@@ -47,16 +47,16 @@ public class SnapPointViewModel : SelectableDesignerItemViewModelBase
             .AddTo(_CompositeDisposable);
     }
 
-    public ReactiveProperty<SelectableDesignerItemViewModelBase> Parent { get; } = new();
+    public BindableReactiveProperty<SelectableDesignerItemViewModelBase> Parent { get; } = new();
 
-    public ReactiveProperty<double> Left { get; } = new(0);
+    public BindableReactiveProperty<double> Left { get; } = new(0);
 
-    public ReactiveProperty<double> Top { get; } = new(0);
-    public ReactiveProperty<double> Width { get; } = new();
+    public BindableReactiveProperty<double> Top { get; } = new(0);
+    public BindableReactiveProperty<double> Width { get; } = new();
 
-    public ReactiveProperty<double> Height { get; } = new();
+    public BindableReactiveProperty<double> Height { get; } = new();
 
-    public ReactiveProperty<double> Opacity { get; } = new();
+    public BindableReactiveProperty<double> Opacity { get; } = new();
 
     public List<IDisposable> SnapObjs { get; set; } = new();
 

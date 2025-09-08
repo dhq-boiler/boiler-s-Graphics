@@ -431,26 +431,26 @@ public class MainWindowViewModel : BindableBase, IDisposable
         set => SetProperty(ref _ToolBarViewModel, value);
     }
 
-    public ReactiveProperty<string> CurrentOperation { get; } = new();
+    public BindableReactiveProperty<string> CurrentOperation { get; } = new();
 
-    public ReactiveProperty<string> Details { get; } = new();
-    public ReactiveProperty<string> Message { get; } = new();
+    public BindableReactiveProperty<string> Details { get; } = new();
+    public BindableReactiveProperty<string> Message { get; } = new();
 
-    public ReactiveProperty<double> SnapPower { get; } = new();
+    public BindableReactiveProperty<double> SnapPower { get; } = new();
 
-    public ObservableList<double> EdgeThicknessOptions { get; } = new();
+    public NotifyCollectionChangedSynchronizedViewList<double> EdgeThicknessOptions { get; } = new ObservableList<double>().ToWritableNotifyCollectionChanged();
 
-    public R3.ReactiveProperty<string> Title { get; } = new();
+    public R3.BindableReactiveProperty<string> Title { get; } = new();
 
-    public R3.ReactiveProperty<Statistics> Statistics { get; } = new();
+    public R3.BindableReactiveProperty<Statistics> Statistics { get; } = new();
 
-    public R3.ReactiveProperty<TerminalInfo> TerminalInfo { get; } = new();
+    public R3.BindableReactiveProperty<TerminalInfo> TerminalInfo { get; } = new();
 
     public IOperationController Controller { get; } = new OperationController();
 
     public OperationRecorder Recorder { get; }
 
-    public R3.ReactiveProperty<LogLevel> LogLevel { get; } = new();
+    public R3.BindableReactiveProperty<LogLevel> LogLevel { get; } = new();
 
     public DelegateCommand<object> DeleteSelectedItemsCommand { get; }
 

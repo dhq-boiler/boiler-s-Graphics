@@ -21,14 +21,14 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
         Left.Value = left;
         Top.Value = top;
         Rect = Left.CombineLatest(Top, Width, Height, (left, top, width, height) => new Rect(left, top, width, height))
-            .ToReadOnlyReactiveProperty();
+            .ToReadOnlyBindableReactiveProperty();
         Init();
     }
 
     public DesignerItemViewModelBase()
     {
         Rect = Left.CombineLatest(Top, Width, Height, (left, top, width, height) => new Rect(left, top, width, height))
-            .ToReadOnlyReactiveProperty();
+            .ToReadOnlyBindableReactiveProperty();
         Init();
     }
 
@@ -44,15 +44,15 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
         set => SetProperty(ref _MinHeight, value);
     }
 
-    public ReactiveProperty<double> Width { get; } = new();
+    public BindableReactiveProperty<double> Width { get; } = new();
 
-    public ReactiveProperty<double> Height { get; } = new();
+    public BindableReactiveProperty<double> Height { get; } = new();
 
-    public ReadOnlyReactiveProperty<Size> Size =>
-        Width.CombineLatest(Height, (w, h) => new Size(w, h)).ToReadOnlyReactiveProperty();
+    public IReadOnlyBindableReactiveProperty<Size> Size =>
+        Width.CombineLatest(Height, (w, h) => new Size(w, h)).ToReadOnlyBindableReactiveProperty();
 
-    public ReadOnlyReactiveProperty<Size> SizeIncludeFrame =>
-        Width.CombineLatest(Height, (w, h) => new Size(w + 1, h + 1)).ToReadOnlyReactiveProperty();
+    public IReadOnlyBindableReactiveProperty<Size> SizeIncludeFrame =>
+        Width.CombineLatest(Height, (w, h) => new Size(w + 1, h + 1)).ToReadOnlyBindableReactiveProperty();
 
     public bool ShowConnectors
     {
@@ -67,36 +67,36 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
         }
     }
 
-    public ReactiveProperty<bool> RenderingEnabled { get; } = new ReactiveProperty<bool>(true);
+    public BindableReactiveProperty<bool> RenderingEnabled { get; } = new(true);
 
-    public ReactiveProperty<string> Pool { get; } = new();
+    public BindableReactiveProperty<string> Pool { get; } = new();
 
-    public ReactiveProperty<double> Left { get; } = new();
+    public BindableReactiveProperty<double> Left { get; } = new();
 
-    public ReactiveProperty<double> Top { get; } = new();
+    public BindableReactiveProperty<double> Top { get; } = new();
 
-    public ReadOnlyReactiveProperty<double> Right { get; private set; }
+    public IReadOnlyBindableReactiveProperty<double> Right { get; private set; }
 
-    public ReadOnlyReactiveProperty<double> Bottom { get; private set; }
+    public IReadOnlyBindableReactiveProperty<double> Bottom { get; private set; }
 
-    public ReadOnlyReactiveProperty<Rect> Rect { get; set; }
+    public IReadOnlyBindableReactiveProperty<Rect> Rect { get; set; }
 
-    public ReactiveProperty<double> CenterX { get; } = new();
-    public ReactiveProperty<double> CenterY { get; } = new();
+    public BindableReactiveProperty<double> CenterX { get; } = new();
+    public BindableReactiveProperty<double> CenterY { get; } = new();
 
-    public ReadOnlyReactiveProperty<Point> CenterPoint { get; private set; }
+    public IReadOnlyBindableReactiveProperty<Point> CenterPoint { get; private set; }
 
-    public ReactiveProperty<Thickness> Margin { get; } = new();
+    public BindableReactiveProperty<Thickness> Margin { get; } = new();
 
-    public ReadOnlyReactiveProperty<Thickness> MarginLeftTop { get; private set; }
-    public ReadOnlyReactiveProperty<Thickness> MarginLeftBottom { get; private set; }
-    public ReadOnlyReactiveProperty<Thickness> MarginRightTop { get; private set; }
-    public ReadOnlyReactiveProperty<Thickness> MarginRightBottom { get; private set; }
-    public ReadOnlyReactiveProperty<Thickness> MarginLeft { get; private set; }
-    public ReadOnlyReactiveProperty<Thickness> MarginTop { get; private set; }
-    public ReadOnlyReactiveProperty<Thickness> MarginRight { get; private set; }
-    public ReadOnlyReactiveProperty<Thickness> MarginBottom { get; private set; }
-    public ReactiveProperty<TransformNotification> TransformNortification { get; } = new();
+    public IReadOnlyBindableReactiveProperty<Thickness> MarginLeftTop { get; private set; }
+    public IReadOnlyBindableReactiveProperty<Thickness> MarginLeftBottom { get; private set; }
+    public IReadOnlyBindableReactiveProperty<Thickness> MarginRightTop { get; private set; }
+    public IReadOnlyBindableReactiveProperty<Thickness> MarginRightBottom { get; private set; }
+    public IReadOnlyBindableReactiveProperty<Thickness> MarginLeft { get; private set; }
+    public IReadOnlyBindableReactiveProperty<Thickness> MarginTop { get; private set; }
+    public IReadOnlyBindableReactiveProperty<Thickness> MarginRight { get; private set; }
+    public IReadOnlyBindableReactiveProperty<Thickness> MarginBottom { get; private set; }
+    public BindableReactiveProperty<TransformNotification> TransformNortification { get; } = new();
 
     internal SnapPointPosition snapPointPosition { get; set; }
 
@@ -195,15 +195,15 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
             })
             .AddTo(_CompositeDisposable);
         Right = Left.CombineLatest(Width, (a, b) => a + b)
-            .ToReadOnlyReactiveProperty();
+            .ToReadOnlyBindableReactiveProperty();
         Bottom = Top.CombineLatest(Height, (a, b) => a + b)
-            .ToReadOnlyReactiveProperty();
+            .ToReadOnlyBindableReactiveProperty();
         CenterX.Subscribe(x => UpdateLeft(x))
             .AddTo(_CompositeDisposable);
         CenterY.Subscribe(x => UpdateTop(x))
             .AddTo(_CompositeDisposable);
         CenterPoint = CenterX.CombineLatest(CenterY, (x, y) => new Point(x, y))
-            .ToReadOnlyReactiveProperty();
+            .ToReadOnlyBindableReactiveProperty();
         EdgeThickness
             .Zip(EdgeThickness.Skip(1), (Old, New) => new { OldItem = Old, NewItem = New })
             .Subscribe(x =>
@@ -222,19 +222,19 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
             UpdatePathGeometryIfEnable(nameof(UpdatingStrategy), PathGeometryUpdatingStrategy.Unknown, PathGeometryUpdatingStrategy.Initial);
         }).AddTo(_CompositeDisposable);
 
-        MarginLeftTop = ThumbSize.Select(size => new Thickness(-size, -size, 0, 0)).ToReadOnlyReactiveProperty();
-        MarginLeftBottom = ThumbSize.Select(size => new Thickness(-size, 0, 0, -size)).ToReadOnlyReactiveProperty();
-        MarginRightTop = ThumbSize.Select(size => new Thickness(0, -size, -size, 0)).ToReadOnlyReactiveProperty();
+        MarginLeftTop = ThumbSize.Select(size => new Thickness(-size, -size, 0, 0)).ToReadOnlyBindableReactiveProperty();
+        MarginLeftBottom = ThumbSize.Select(size => new Thickness(-size, 0, 0, -size)).ToReadOnlyBindableReactiveProperty();
+        MarginRightTop = ThumbSize.Select(size => new Thickness(0, -size, -size, 0)).ToReadOnlyBindableReactiveProperty();
         MarginRightBottom =
-            ThumbSize.Select(size => new Thickness(0, 0, -size, -size)).ToReadOnlyReactiveProperty();
+            ThumbSize.Select(size => new Thickness(0, 0, -size, -size)).ToReadOnlyBindableReactiveProperty();
         MarginLeft = Observable.Return(ThumbSize.CurrentValue / 2).CombineLatest(DiagramViewModel.Instance.MagnificationRate,
-            (size, rate) => { return new Thickness(-size / (rate / 100d), 0, 0, 0); }).ToReadOnlyReactiveProperty();
+            (size, rate) => { return new Thickness(-size / (rate / 100d), 0, 0, 0); }).ToReadOnlyBindableReactiveProperty();
         MarginTop = Observable.Return(ThumbSize.CurrentValue / 2).CombineLatest(DiagramViewModel.Instance.MagnificationRate,
-            (size, rate) => { return new Thickness(0, -size / (rate / 100d), 0, 0); }).ToReadOnlyReactiveProperty();
+            (size, rate) => { return new Thickness(0, -size / (rate / 100d), 0, 0); }).ToReadOnlyBindableReactiveProperty();
         MarginRight = Observable.Return(ThumbSize.CurrentValue / 2).CombineLatest(DiagramViewModel.Instance.MagnificationRate,
-            (size, rate) => { return new Thickness(0, 0, -size / (rate / 100d), 0); }).ToReadOnlyReactiveProperty();
+            (size, rate) => { return new Thickness(0, 0, -size / (rate / 100d), 0); }).ToReadOnlyBindableReactiveProperty();
         MarginBottom = Observable.Return(ThumbSize.CurrentValue / 2).CombineLatest(DiagramViewModel.Instance.MagnificationRate,
-            (size, rate) => { return new Thickness(0, 0, 0, -size / (rate / 100d)); }).ToReadOnlyReactiveProperty();
+            (size, rate) => { return new Thickness(0, 0, 0, -size / (rate / 100d)); }).ToReadOnlyBindableReactiveProperty();
         RenderingEnabled.Subscribe(async renderingEnabled =>
         {
             if (renderingEnabled)
@@ -316,7 +316,7 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
         {
             if (!flag) PathGeometryNoRotate.Value = CreateGeometry(flag);
 
-            if (RotationAngle.Value != 0d) PathGeometryRotate.Value = GeometryCreator.Rotate(PathGeometryNoRotate.Value, RotationAngle.Value, CenterPoint.CurrentValue);
+            if (RotationAngle.Value != 0d) PathGeometryRotate.Value = GeometryCreator.Rotate(PathGeometryNoRotate.Value, RotationAngle.Value, CenterPoint.Value);
         }
 
         if (UpdatingStrategy.Value == PathGeometryUpdatingStrategy.Initial)
@@ -382,7 +382,7 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
     {
         var compositeDisposable = new CompositeDisposable();
         base.BeginMonitor(action).AddTo(compositeDisposable);
-        Rect.Subscribe(_ => action()).AddTo(compositeDisposable);
+        Rect.AsObservable().Subscribe(_ => action()).AddTo(compositeDisposable);
         RotationAngle.Subscribe(_ => action()).AddTo(compositeDisposable);
         return compositeDisposable;
     }

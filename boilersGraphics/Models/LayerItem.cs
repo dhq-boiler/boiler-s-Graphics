@@ -146,7 +146,7 @@ public class LayerItem : LayerTreeViewItemBase, IDisposable, IComparable<LayerTr
             return;
 
         Rect? sliceRect = null;
-        _items.AsValueEnumerable().Cast<IRect>().ToList().ForEach(x => sliceRect = (!sliceRect.HasValue ? x.Rect.CurrentValue : Rect.Union(sliceRect.Value, x.Rect.CurrentValue)));
+        _items.AsValueEnumerable().Cast<IRect>().ToList().ForEach(x => sliceRect = (!sliceRect.HasValue ? x.Rect.Value : Rect.Union(sliceRect.Value, x.Rect.Value)));
         var renderer = new AppearanceRenderer(new WpfVisualTreeHelper());
         Appearance.Value = renderer.Render(sliceRect, DesignerCanvas.GetInstance(),
             DiagramViewModel.Instance,

@@ -27,7 +27,7 @@ namespace boilersGraphics.Helpers
             {
                 var matrix = new Matrix();
                 matrix.RotateAt(x.RotationAngle.Value, x.CenterX.Value, x.CenterY.Value);
-                return Rect.Transform(x.Rect.CurrentValue, matrix);
+                return Rect.Transform(x.Rect.Value, matrix);
             });
             var boundingRect = Rect.Empty;
             foreach (var _rect in rects)
@@ -119,8 +119,8 @@ namespace boilersGraphics.Helpers
                 }
                 else if (item is ISizeReadOnlyRps size2)
                 {
-                    view.Measure(new Size(size2.Width.CurrentValue, size2.Height.CurrentValue));
-                    view.Arrange(new Rect(new Point(), new Size(size2.Width.CurrentValue, size2.Height.CurrentValue)));
+                    view.Measure(new Size(size2.Width.Value, size2.Height.Value));
+                    view.Arrange(new Rect(new Point(), new Size(size2.Width.Value, size2.Height.Value)));
                 }
                 view.UpdateLayout();
                 view.SnapsToDevicePixels = true;
@@ -147,10 +147,10 @@ namespace boilersGraphics.Helpers
                                     var intersectSrc = new Rect(designerItem.Left.Value, designerItem.Top.Value, bounds.Width,
                                         bounds.Height);
                                     rect = Rect.Union(rect, intersectSrc);
-                                    rect = Rect.Intersect(rect, designerItem.Rect.CurrentValue);
+                                    rect = Rect.Intersect(rect, designerItem.Rect.Value);
                                     if (background is not null)
                                     {
-                                        rect = Rect.Intersect(rect, background.Rect.CurrentValue);
+                                        rect = Rect.Intersect(rect, background.Rect.Value);
                                     }
 
                                     if (rect != Rect.Empty)
@@ -203,12 +203,12 @@ namespace boilersGraphics.Helpers
                                 var baseMatrix = new Matrix();
 
                                 //rotateBounds計算
-                                baseMatrix.RotateAt(id.RotationAngle.Value, id.CenterPoint.CurrentValue.X, id.CenterPoint.CurrentValue.Y);
+                                baseMatrix.RotateAt(id.RotationAngle.Value, id.CenterPoint.Value.X, id.CenterPoint.Value.Y);
                                 var leftTop = new Vector(0, 0);
                                 var rotatedLeftTop = baseMatrix.Transform(new Point(id.Left.Value, id.Top.Value)) + leftTop;
-                                var rotatedLeftBottom = baseMatrix.Transform(new Point(id.Left.Value, id.Bottom.CurrentValue)) + leftTop;
-                                var rotatedRightTop = baseMatrix.Transform(new Point(id.Right.CurrentValue, id.Top.Value)) + leftTop;
-                                var rotatedRightBottom = baseMatrix.Transform(new Point(id.Right.CurrentValue, id.Bottom.CurrentValue)) + leftTop;
+                                var rotatedLeftBottom = baseMatrix.Transform(new Point(id.Left.Value, id.Bottom.Value)) + leftTop;
+                                var rotatedRightTop = baseMatrix.Transform(new Point(id.Right.Value, id.Top.Value)) + leftTop;
+                                var rotatedRightBottom = baseMatrix.Transform(new Point(id.Right.Value, id.Bottom.Value)) + leftTop;
                                 var rotatedBounds = new Rect(Math.Min(Math.Min(rotatedLeftTop.X, rotatedLeftBottom.X), Math.Min(rotatedRightTop.X, rotatedRightBottom.X)),
                                                              Math.Min(Math.Min(rotatedLeftTop.Y, rotatedLeftBottom.Y), Math.Min(rotatedRightTop.Y, rotatedRightBottom.Y)),
                                                              Math.Max(Math.Max(rotatedLeftTop.X, rotatedLeftBottom.X), Math.Max(rotatedRightTop.X, rotatedRightBottom.X)) - Math.Min(Math.Min(rotatedLeftTop.X, rotatedLeftBottom.X), Math.Min(rotatedRightTop.X, rotatedRightBottom.X)),
@@ -217,7 +217,7 @@ namespace boilersGraphics.Helpers
 
                                 //PushTransform用にMatrixを初期化
                                 baseMatrix = new Matrix();
-                                baseMatrix.RotateAt(id.RotationAngle.Value, id.CenterPoint.CurrentValue.X - id.Left.Value, id.CenterPoint.CurrentValue.Y - id.Top.Value);
+                                baseMatrix.RotateAt(id.RotationAngle.Value, id.CenterPoint.Value.X - id.Left.Value, id.CenterPoint.Value.Y - id.Top.Value);
                                 baseMatrix.Translate(-rotatedBounds.X + id.Left.Value, -rotatedBounds.Y + id.Top.Value);
                                 context.PushTransform(new MatrixTransform(baseMatrix));
                             }
@@ -313,7 +313,7 @@ namespace boilersGraphics.Helpers
             }
 
             view.Measure(new Size(background.Width.Value, background.Height.Value));
-            view.Arrange(background.Rect.CurrentValue);
+            view.Arrange(background.Rect.Value);
             view.UpdateLayout();
 
             var bounds = VisualTreeHelper.GetDescendantBounds(view);
@@ -334,10 +334,10 @@ namespace boilersGraphics.Helpers
             {
                 var baseMatrix = new Matrix();
                 baseMatrix.Translate(-designer.Left.Value, -designer.Top.Value);
-                baseMatrix.RotateAt(-designer.RotationAngle.Value, designer.CenterPoint.CurrentValue.X - designer.Left.Value, designer.CenterPoint.CurrentValue.Y - designer.Top.Value);
+                baseMatrix.RotateAt(-designer.RotationAngle.Value, designer.CenterPoint.Value.X - designer.Left.Value, designer.CenterPoint.Value.Y - designer.Top.Value);
                 context.PushTransform(new MatrixTransform(baseMatrix));
             }
-            context.DrawRectangle(brush, null, background.Rect.CurrentValue);
+            context.DrawRectangle(brush, null, background.Rect.Value);
             if (caller is DesignerItemViewModelBase)
             {
                 context.Pop();

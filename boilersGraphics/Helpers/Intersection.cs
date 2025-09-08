@@ -29,13 +29,13 @@ public static class Intersection
         // Make sure the rectangle has non-negative width and height.
         if (clone.Width.Value < 0)
         {
-            clone.Left.Value = clone.Right.CurrentValue;
+            clone.Left.Value = clone.Right.Value;
             clone.Width.Value = -clone.Width.Value;
         }
 
         if (clone.Height.Value < 0)
         {
-            clone.Top.Value = clone.Bottom.CurrentValue;
+            clone.Top.Value = clone.Bottom.Value;
             clone.Height.Value = -clone.Height.Value;
         }
 
@@ -139,13 +139,13 @@ public static class Intersection
         // Make sure the rectangle has non-negative width and height.
         if (clone.Width.Value < 0)
         {
-            clone.Left.Value = clone.Right.CurrentValue;
+            clone.Left.Value = clone.Right.Value;
             clone.Width.Value = -clone.Width.Value;
         }
 
         if (clone.Height.Value < 0)
         {
-            clone.Top.Value = clone.Bottom.CurrentValue;
+            clone.Top.Value = clone.Bottom.Value;
             clone.Height.Value = -clone.Height.Value;
         }
 
@@ -225,13 +225,13 @@ public static class Intersection
         // Make sure the rectangle has non-negative width and height.
         if (clone.Width.Value < 0)
         {
-            clone.Left.Value = clone.Right.CurrentValue;
+            clone.Left.Value = clone.Right.Value;
             clone.Width.Value = -clone.Width.Value;
         }
 
         if (clone.Height.Value < 0)
         {
-            clone.Top.Value = clone.Bottom.CurrentValue;
+            clone.Top.Value = clone.Bottom.Value;
             clone.Height.Value = -clone.Height.Value;
         }
 

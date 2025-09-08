@@ -67,14 +67,14 @@ public static class GeometryCreator
                 new Point(item.Width.Value / 2, item.Height.Value / 2),
                 item.Width.Value / 2 - item.EdgeThickness.Value / 2,
                 item.Height.Value / 2 - item.EdgeThickness.Value / 2,
-                new RotateTransform(angle, item.CenterPoint.CurrentValue.X, item.CenterPoint.CurrentValue.Y)));
+                new RotateTransform(angle, item.CenterPoint.Value.X, item.CenterPoint.Value.Y)));
         var temp = item.PathGeometryRotate.Value.Clone();
-        temp.Transform = new RotateTransform(angle, item.CenterPoint.CurrentValue.X, item.CenterPoint.CurrentValue.Y);
+        temp.Transform = new RotateTransform(angle, item.CenterPoint.Value.X, item.CenterPoint.Value.Y);
         return Geometry.Combine(temp,
             PathGeometry.CreateFromGeometry(new EllipseGeometry(new Point(item.Width.Value / 2, item.Height.Value / 2),
                 item.Width.Value / 2 - item.EdgeThickness.Value / 2,
                 item.Height.Value / 2 - item.EdgeThickness.Value / 2,
-                new RotateTransform(angle, item.CenterPoint.CurrentValue.X, item.CenterPoint.CurrentValue.Y))),
+                new RotateTransform(angle, item.CenterPoint.Value.X, item.CenterPoint.Value.Y))),
             GeometryCombineMode.Intersect, null);
     }
 
@@ -209,15 +209,15 @@ public static class GeometryCreator
                 new Rect(new Point(item.EdgeThickness.Value / 2, item.EdgeThickness.Value / 2),
                     new Point(item.Width.Value - item.EdgeThickness.Value / 2,
                         item.Height.Value - item.EdgeThickness.Value / 2)), radiusX, radiusY,
-                new RotateTransform(angle, item.CenterPoint.CurrentValue.X, item.CenterPoint.CurrentValue.Y)));
+                new RotateTransform(angle, item.CenterPoint.Value.X, item.CenterPoint.Value.Y)));
         var temp = item.PathGeometryRotate.Value.Clone();
-        temp.Transform = new RotateTransform(angle, item.CenterPoint.CurrentValue.X, item.CenterPoint.CurrentValue.Y);
+        temp.Transform = new RotateTransform(angle, item.CenterPoint.Value.X, item.CenterPoint.Value.Y);
         return Geometry.Combine(temp,
             PathGeometry.CreateFromGeometry(new RectangleGeometry(
                 new Rect(new Point(item.EdgeThickness.Value / 2, item.EdgeThickness.Value / 2),
                     new Point(item.Width.Value - item.EdgeThickness.Value / 2,
                         item.Height.Value - item.EdgeThickness.Value / 2)), radiusX, radiusY,
-                new RotateTransform(angle, item.CenterPoint.CurrentValue.X, item.CenterPoint.CurrentValue.Y))),
+                new RotateTransform(angle, item.CenterPoint.Value.X, item.CenterPoint.Value.Y))),
             GeometryCombineMode.Intersect, null);
     }
 
@@ -484,15 +484,15 @@ public static class GeometryCreator
                 new Rect(new Point(0, 0),
                     new Point(item.Width.Value - item.EdgeThickness.Value / 2,
                         item.Height.Value - item.EdgeThickness.Value / 2)), 0, 0,
-                new RotateTransform(angle, item.CenterPoint.CurrentValue.X, item.CenterPoint.CurrentValue.Y)));
+                new RotateTransform(angle, item.CenterPoint.Value.X, item.CenterPoint.Value.Y)));
         var temp = item.PathGeometryRotate.Value.Clone();
-        temp.Transform = new RotateTransform(angle, item.CenterPoint.CurrentValue.X, item.CenterPoint.CurrentValue.Y);
+        temp.Transform = new RotateTransform(angle, item.CenterPoint.Value.X, item.CenterPoint.Value.Y);
         return Geometry.Combine(temp,
             PathGeometry.CreateFromGeometry(new RectangleGeometry(
                 new Rect(new Point(0, 0),
                     new Point(item.Width.Value - item.EdgeThickness.Value / 2,
                         item.Height.Value - item.EdgeThickness.Value / 2)), 0, 0,
-                new RotateTransform(angle, item.CenterPoint.CurrentValue.X, item.CenterPoint.CurrentValue.Y))),
+                new RotateTransform(angle, item.CenterPoint.Value.X, item.CenterPoint.Value.Y))),
             GeometryCombineMode.Intersect, null);
     }
 
