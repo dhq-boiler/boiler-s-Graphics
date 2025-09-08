@@ -20,12 +20,12 @@ public static class EraserInternal
         {
             if (item.RotationAngle.Value == 0)
             {
-                point = RotatePoint(point, item.CenterPoint.Value, -item.RotationAngle.Value);
+                point = RotatePoint(point, item.CenterPoint.CurrentValue, -item.RotationAngle.Value);
             }
             else
             {
-                point = new RotateTransform(-item.RotationAngle.Value, item.CenterPoint.Value.X,
-                    item.CenterPoint.Value.Y).Transform(point);
+                point = new RotateTransform(-item.RotationAngle.Value, item.CenterPoint.CurrentValue.X,
+                    item.CenterPoint.CurrentValue.Y).Transform(point);
                 point = new TranslateTransform(-item.Left.Value, -item.Top.Value).Transform(point);
             }
         }
@@ -51,8 +51,8 @@ public static class EraserInternal
             }
             else
             {
-                point = new RotateTransform(-designer.RotationAngle.Value, designer.CenterPoint.Value.X,
-                    designer.CenterPoint.Value.Y).Transform(point);
+                point = new RotateTransform(-designer.RotationAngle.Value, designer.CenterPoint.CurrentValue.X,
+                    designer.CenterPoint.CurrentValue.Y).Transform(point);
                 point = new TranslateTransform(-designer.Left.Value, -designer.Top.Value).Transform(point);
             }
         }

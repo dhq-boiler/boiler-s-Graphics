@@ -2,20 +2,19 @@
 using boilersGraphics.Models;
 using boilersGraphics.Views;
 using boilersGraphics.Views.Behaviors;
+using ObservableCollections;
 using OpenCvSharp;
 using OpenCvSharp.WpfExtensions;
 using Prism.Mvvm;
 using Prism.Regions;
-using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
+using R3;
 using Rulyotano.Math.Interpolation.Bezier;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
@@ -33,7 +32,7 @@ namespace boilersGraphics.ViewModels.ColorCorrect
     {
         private CompositeDisposable _disposable = new CompositeDisposable();
         private bool _disposedValue;
-        public ReactivePropertySlim<ColorCorrectViewModel> ViewModel { get; } = new();
+        public BindableReactiveProperty<ColorCorrectViewModel> ViewModel { get; } = new();
         public ReactiveCommand<Point> CanvasClickCommand { get; } = new();
         public ReactiveCommand<KeyEventArgs> PreviewKeyDownCommand { get; } = new();
         public ReactiveCommand<RoutedEventArgs> LoadedCommand { get; } = new();
@@ -41,8 +40,8 @@ namespace boilersGraphics.ViewModels.ColorCorrect
         public ReactiveCommand DropperWhiteEnabledCommand { get; } = new();
         public ReactiveCommand DropperBlackDisabledCommand { get; } = new();
         public ReactiveCommand DropperWhiteDisabledCommand { get; } = new();
-        public ReactivePropertySlim<bool> IsCheckedDropperBlack { get; } = new();
-        public ReactivePropertySlim<bool> IsCheckedDropperWhite { get; } = new();
+        public BindableReactiveProperty<bool> IsCheckedDropperBlack { get; } = new();
+        public BindableReactiveProperty<bool> IsCheckedDropperWhite { get; } = new();
 
         public class Point : BindableBase
         {
@@ -56,8 +55,8 @@ namespace boilersGraphics.ViewModels.ColorCorrect
                 Y.Value = y;
             }
 
-            public ReactivePropertySlim<double> X { get; } = new ReactivePropertySlim<double>();
-            public ReactivePropertySlim<double> Y { get; } = new ReactivePropertySlim<double>();
+            public BindableReactiveProperty<double> X { get; } = new BindableReactiveProperty<double>();
+            public BindableReactiveProperty<double> Y { get; } = new BindableReactiveProperty<double>();
 
             public Rulyotano.Math.Geometry.Point ToPoint()
             {
@@ -84,27 +83,27 @@ namespace boilersGraphics.ViewModels.ColorCorrect
 
         public ReactiveCommand<DragDeltaEventArgs> DragDeltaCommand { get; } = new();
 
-        public ReactivePropertySlim<Channel> TargetChannel { get; } = new(Channel.RGB);
+        public BindableReactiveProperty<Channel> TargetChannel { get; } = new(Channel.RGB);
 
         public ReactiveCommand<SelectionChangedEventArgs> TargetChannelChangedCommand { get; } = new();
 
-        public ReactiveCollection<Curve> Curves { get; private set; } = new ReactiveCollection<Curve>();
+        public NotifyCollectionChangedSynchronizedViewList<Curve> Curves { get; private set; } = new ObservableList<Curve>().ToWritableNotifyCollectionChanged();
 
-        public ReactiveCollection<Curve> OrderedCurves { get; set; }
+        public NotifyCollectionChangedSynchronizedViewList<Curve> OrderedCurves { get; set; }
 
-        public ReactivePropertySlim<Curve> TargetCurve { get; } = new ReactivePropertySlim<Curve>();
+        public BindableReactiveProperty<Curve> TargetCurve { get; } = new BindableReactiveProperty<Curve>();
 
         public class Curve : BindableBase
         {
-            public ReactivePropertySlim<Channel> TargetChannel { get; } = new(Channel.RGB);
+            public BindableReactiveProperty<Channel> TargetChannel { get; } = new(Channel.RGB);
 
-            public ReactiveCollection<Point> Points { get; set; } = new();
+            public NotifyCollectionChangedSynchronizedViewList<Point> Points { get; set; } = new ObservableList<Point>().ToWritableNotifyCollectionChanged();
 
-            public ReactivePropertySlim<WriteableBitmap> Histogram { get; } = new();
+            public BindableReactiveProperty<WriteableBitmap> Histogram { get; } = new();
 
 
-            private ReactiveCollection<InOutPair> _InOutPairs = new ReactiveCollection<InOutPair>();
-            public ReactiveCollection<InOutPair> InOutPairs
+            private NotifyCollectionChangedSynchronizedViewList<InOutPair> _InOutPairs = new ObservableList<InOutPair>().ToWritableNotifyCollectionChanged();
+            public NotifyCollectionChangedSynchronizedViewList<InOutPair> InOutPairs
             {
                 get
                 {
@@ -118,7 +117,7 @@ namespace boilersGraphics.ViewModels.ColorCorrect
                 }
             }
 
-            public ReactivePropertySlim<Brush> Color { get; } = new();
+            public BindableReactiveProperty<Brush> Color { get; } = new();
 
             public Curve()
             {
@@ -189,7 +188,7 @@ namespace boilersGraphics.ViewModels.ColorCorrect
 
             TargetCurve.Subscribe(x =>
             {
-                OrderedCurves = Curves.Sort(TargetCurve.Value).ToReactiveCollection();
+                OrderedCurves = Curves.Sort(TargetCurve.Value);
                 OnPropertyChanged(new PropertyChangedEventArgs(nameof(OrderedCurves)));
             }).AddTo(_disposable);
 
@@ -454,7 +453,7 @@ namespace boilersGraphics.ViewModels.ColorCorrect
                 if (landmark.DataContext != curve)
                     continue;
                 var list = Helpers.Curve.CalcInOutPairs(landmark);
-                curve.InOutPairs = new ReactiveCollection<InOutPair>();
+                curve.InOutPairs = new ObservableList<InOutPair>().ToWritableNotifyCollectionChanged();
                 foreach (var elm in list)
                 {
                     curve.InOutPairs.Add(new InOutPair(elm.In, byte.MaxValue - elm.Out));
@@ -552,7 +551,7 @@ namespace boilersGraphics.ViewModels.ColorCorrect
                 }
             }
 
-            ViewModel.Value.TargetCurve.Value.InOutPairs = ret.ToObservable().ToReactiveCollection();
+            ViewModel.Value.TargetCurve.Value.InOutPairs = new ObservableList<InOutPair>(ret).ToWritableNotifyCollectionChanged();
         }
 
         private double FindT(double x, Rulyotano.Math.Geometry.Point P0, Rulyotano.Math.Geometry.Point P1, Rulyotano.Math.Geometry.Point P2, Rulyotano.Math.Geometry.Point P3)

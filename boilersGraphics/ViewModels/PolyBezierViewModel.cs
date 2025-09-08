@@ -3,11 +3,10 @@ using boilersGraphics.Views;
 using Prism.Ioc;
 using Prism.Services.Dialogs;
 using Prism.Unity;
-using Reactive.Bindings;
 using System;
 using System.Collections.Specialized;
-using System.Reactive.Linq;
 using System.Windows;
+using R3;
 using ZLinq;
 using Path = System.Windows.Shapes.Path;
 
@@ -38,10 +37,10 @@ public class PolyBezierViewModel : ConnectorBaseViewModel
     {
         SnapPoint0VM = Observable.Return(begin)
             .Select(x => new SnapPointViewModel(this, 0, Owner, x.X, x.Y, 3, 3))
-            .ToReadOnlyReactivePropertySlim();
+            .ToReadOnlyBindableReactiveProperty();
         SnapPoint1VM = Observable.Return(end)
             .Select(x => new SnapPointViewModel(this, 1, Owner, x.X, x.Y, 3, 3))
-            .ToReadOnlyReactivePropertySlim();
+            .ToReadOnlyBindableReactiveProperty();
     }
 
     private void Init(IDiagramViewModel diagramViewModel)
@@ -55,12 +54,12 @@ public class PolyBezierViewModel : ConnectorBaseViewModel
             SnapPoint0VM.Dispose();
         SnapPoint0VM = Observable.Return(Points.AsValueEnumerable().First())
             .Select(x => new SnapPointViewModel(this, 0, Owner, x.X, x.Y, 3, 3))
-            .ToReadOnlyReactivePropertySlim();
+            .ToReadOnlyBindableReactiveProperty();
         if (SnapPoint1VM != null)
             SnapPoint1VM.Dispose();
         SnapPoint1VM = Observable.Return(Points.AsValueEnumerable().Last())
             .Select(x => new SnapPointViewModel(this, 1, Owner, x.X, x.Y, 3, 3))
-            .ToReadOnlyReactivePropertySlim();
+            .ToReadOnlyBindableReactiveProperty();
     }
 
     public override object Clone()

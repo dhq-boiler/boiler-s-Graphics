@@ -1,10 +1,11 @@
 ﻿using boilersGraphics.Controls;
 using boilersGraphics.Helpers;
 using boilersGraphics.Views;
+using ObservableCollections;
 using Prism.Ioc;
 using Prism.Services.Dialogs;
 using Prism.Unity;
-using Reactive.Bindings;
+using R3;
 using System;
 using System.Windows;
 using System.Windows.Media;
@@ -41,9 +42,9 @@ public class NPolygonViewModel : DesignerItemViewModelBase
         Init();
     }
 
-    public ReactiveCollection<SnapPoint> SnapPoints { get; } = new();
+    public NotifyCollectionChangedSynchronizedViewList<SnapPoint> SnapPoints { get; } = new ObservableList<SnapPoint>().ToWritableNotifyCollectionChanged();
 
-    public ReactivePropertySlim<string> Data { get; set; } = new();
+    public BindableReactiveProperty<string> Data { get; set; } = new();
 
     public override bool SupportsPropertyDialog => true;
 
@@ -82,7 +83,7 @@ public class NPolygonViewModel : DesignerItemViewModelBase
                 if (!(PathGeometryNoRotate.Value is null)) Data.Value = PathGeometryNoRotate.Value.ToString();
             }
 
-            if (RotationAngle.Value != 0d) PathGeometryRotate.Value = GeometryCreator.Rotate(PathGeometryNoRotate.Value, RotationAngle.Value, CenterPoint.Value);
+            if (RotationAngle.Value != 0d) PathGeometryRotate.Value = GeometryCreator.Rotate(PathGeometryNoRotate.Value, RotationAngle.Value, CenterPoint.CurrentValue);
         }
     }
 

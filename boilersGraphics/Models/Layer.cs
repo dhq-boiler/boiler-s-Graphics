@@ -3,16 +3,13 @@ using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
 using boilersGraphics.ViewModels;
 using Prism.Mvvm;
-using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
+using R3;
 using System;
 using System.Collections.Generic;
-using System.Reactive.Concurrency;
-using System.Reactive.Linq;
+using System.Linq;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Threading;
 using ZLinq;
 
 namespace boilersGraphics.Models;
@@ -35,7 +32,7 @@ public class Layer : LayerTreeViewItemBase, IObservable<LayerObservable>, ICompa
 
         if (!isPreview)
         {
-            var temp = Children.ObserveElementProperty(x => (x as LayerItem).Item.Value)
+            var temp = Children.ObserveElementObservableProperty(x => (x as LayerItem).Item.Value)
                 .ToUnit()
                 .Merge(Children.ObserveElementObservableProperty(x => x.IsSelected).ToUnit())
                 .ToUnit()
@@ -55,7 +52,7 @@ public class Layer : LayerTreeViewItemBase, IObservable<LayerObservable>, ICompa
                     !MainWindowViewModel.Instance.ToolBarViewModel.Behaviors.Contains(MainWindowViewModel.Instance
                         .ToolBarViewModel.BrushBehavior));
 
-            temp.ObserveOn(new DispatcherScheduler(Dispatcher.CurrentDispatcher, DispatcherPriority.ApplicationIdle))
+            temp.ObserveOnCurrentSynchronizationContext()
                 .Subscribe(x => { UpdateAppearanceBothParentAndChild(); })
                 .AddTo(_disposable);
         }
@@ -83,7 +80,7 @@ public class Layer : LayerTreeViewItemBase, IObservable<LayerObservable>, ICompa
         if (other == null)
             return 1;
         return Children.AsValueEnumerable().OfType<LayerItem>().Max(x => x.Item.Value.ZIndex.Value)
-            .CompareTo(other.OfType<LayerItem>().Max(x => x.Item.Value.ZIndex.Value));
+            .CompareTo(other.Children.OfType<LayerItem>().Max(x => x.Item.Value.ZIndex.Value));
     }
 
     public IDisposable Subscribe(IObserver<LayerObservable> observer)
@@ -110,7 +107,7 @@ public class Layer : LayerTreeViewItemBase, IObservable<LayerObservable>, ICompa
             return;
 
         Rect? sliceRect = null;
-        _items.AsValueEnumerable().Cast<IRect>().ToList().ForEach(x => sliceRect = (!sliceRect.HasValue ? x.Rect.Value : Rect.Union(sliceRect.Value, x.Rect.Value)));
+        _items.AsValueEnumerable().Cast<IRect>().ToList().ForEach(x => sliceRect = (!sliceRect.HasValue ? x.Rect.CurrentValue : Rect.Union(sliceRect.Value, x.Rect.CurrentValue)));
         var renderer = new Renderer(new WpfVisualTreeHelper());
         
         //背景オブジェクトを除く、アイテムがない場合

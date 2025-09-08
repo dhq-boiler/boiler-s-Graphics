@@ -160,24 +160,25 @@
     <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.2.0" />
     <PackageReference Include="NLog" Version="6.0.1" />
     <PackageReference Include="NLog.Schema" Version="6.0.1" />
+    <PackageReference Include="ObservableCollections" Version="3.3.4" />
+    <PackageReference Include="ObservableCollections.R3" Version="3.3.4" />
     <PackageReference Include="OpenCvSharp4.Windows" Version="4.11.0.20250507" />
     <PackageReference Include="OpenCvSharp4.WpfExtensions" Version="4.11.0.20250507" />
     <PackageReference Include="Prism.Unity" Version="8.1.97" />
-    <PackageReference Include="ReactiveProperty.WPF" Version="9.7.0" />
+    <PackageReference Include="R3" Version="1.3.0" />
+    <PackageReference Include="R3Extensions.WPF" Version="1.3.0" />
     <PackageReference Include="Rulyotano.Math.Geometry" Version="2.0.0" />
     <PackageReference Include="Rulyotano.Math.Interpolation.Bezier" Version="3.0.0" />
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.119" />
     <PackageReference Include="System.Data.SQLite.Linq" Version="1.0.119" />
     <PackageReference Include="System.Linq.Async" Version="6.0.3" />
-    <PackageReference Include="System.Reactive" Version="6.0.1" />
-    <PackageReference Include="System.Reactive.Windows.Threading" Version="6.0.1" />
     <PackageReference Include="Tesseract" Version="5.2.0" />
     <PackageReference Include="WriteableBitmapEx" Version="1.6.8" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="9.0.7" />
     <PackageReference Include="System.ServiceModel.Duplex" Version="6.0.0" />
     <PackageReference Include="System.ServiceModel.NetTcp" Version="8.1.2" />
     <PackageReference Include="System.ServiceModel.Federation" Version="8.1.2" />
-    <PackageReference Include="ZLinq" Version="1.5.1" />
+    <PackageReference Include="ZLinq" Version="1.5.2" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Assets\img\art-pallete.png" />

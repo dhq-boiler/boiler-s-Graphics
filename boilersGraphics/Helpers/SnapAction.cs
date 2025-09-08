@@ -134,7 +134,7 @@ internal class SnapAction
                     if (!_adorners.ContainsKey(snapped.Item2))
                     {
                         var adorner = new SnapPointAdorner(designerCanvas, snapped.Item2,
-                            _SnapTargetDataContext.SnapPointSize.Value, _SnapTargetDataContext.ThumbThickness.Value);
+                            _SnapTargetDataContext.SnapPointSize.CurrentValue, _SnapTargetDataContext.ThumbThickness.CurrentValue);
                         if (adorner != null)
                         {
                             adornerLayer.Add(adorner);
@@ -146,7 +146,7 @@ internal class SnapAction
                         if (snapped.Item1.SnapPointPosition == SnapPointPosition.Intersection)
                         {
                             var auxiliaryLine = new AuxiliaryLine(designerCanvas,
-                                (snapped.Item1.DataContext as NEllipseViewModel).CenterPoint.Value, snapped.Item2);
+                                (snapped.Item1.DataContext as NEllipseViewModel).CenterPoint.CurrentValue, snapped.Item2);
                             if (auxiliaryLine != null)
                             {
                                 adornerLayer.Add(auxiliaryLine);
@@ -169,9 +169,9 @@ internal class SnapAction
                     var adornerLayer = AdornerLayer.GetAdornerLayer(designerCanvas);
                     var adorner = new SnapPointAdorner(designerCanvas, appendIntersectionPoints.AsValueEnumerable().First().Item1,
                         (appendIntersectionPoints.AsValueEnumerable().First().Item2 as SelectableDesignerItemViewModelBase).SnapPointSize
-                        .Value,
+                        .CurrentValue,
                         (appendIntersectionPoints.AsValueEnumerable().First().Item2 as SelectableDesignerItemViewModelBase).ThumbThickness
-                        .Value);
+                        .CurrentValue);
                     if (adorner != null)
                     {
                         adornerLayer.Add(adorner);
@@ -226,7 +226,7 @@ internal class SnapAction
                     if (!_adorners.ContainsKey(snapped.Item2))
                     {
                         var adorner = new SnapPointAdorner(designerCanvas, snapped.Item2,
-                            _SnapTargetDataContext.SnapPointSize.Value, _SnapTargetDataContext.ThumbThickness.Value);
+                            _SnapTargetDataContext.SnapPointSize.CurrentValue, _SnapTargetDataContext.ThumbThickness.CurrentValue);
                         if (adorner != null)
                         {
                             adornerLayer.Add(adorner);
@@ -265,9 +265,9 @@ internal class SnapAction
                     var adornerLayer = AdornerLayer.GetAdornerLayer(designerCanvas);
                     var adorner = new SnapPointAdorner(designerCanvas, appendIntersectionPoints.AsValueEnumerable().First().Item1,
                         (appendIntersectionPoints.AsValueEnumerable().First().Item2 as SelectableDesignerItemViewModelBase).SnapPointSize
-                        .Value,
+                        .CurrentValue,
                         (appendIntersectionPoints.AsValueEnumerable().First().Item2 as SelectableDesignerItemViewModelBase).ThumbThickness
-                        .Value);
+                        .CurrentValue);
                     if (adorner != null)
                     {
                         adornerLayer.Add(adorner);
@@ -321,7 +321,7 @@ internal class SnapAction
                     if (!_adorners.ContainsKey(snapped.Item2))
                     {
                         var adorner = new SnapPointAdorner(designerCanvas, snapped.Item2,
-                            _SnapTargetDataContext.SnapPointSize.Value, _SnapTargetDataContext.ThumbThickness.Value);
+                            _SnapTargetDataContext.SnapPointSize.CurrentValue, _SnapTargetDataContext.ThumbThickness.CurrentValue);
                         if (adorner != null)
                         {
                             adornerLayer.Add(adorner);

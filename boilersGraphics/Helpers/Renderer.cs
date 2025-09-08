@@ -139,8 +139,8 @@ public class Renderer
             }
             else if (item is ISizeReadOnlyRps size2)
             {
-                view.Measure(new Size(size2.Width.Value, size2.Height.Value));
-                view.Arrange(new Rect(new Point(), new Size(size2.Width.Value, size2.Height.Value)));
+                view.Measure(new Size(size2.Width.CurrentValue, size2.Height.CurrentValue));
+                view.Arrange(new Rect(new Point(), new Size(size2.Width.CurrentValue, size2.Height.CurrentValue)));
             }
             view.UpdateLayout();
             view.SnapsToDevicePixels = true;
@@ -288,7 +288,7 @@ public class Renderer
         }
 
         view.Measure(new Size(background.Width.Value, background.Height.Value));
-        view.Arrange(background.Rect.Value);
+        view.Arrange(background.Rect.CurrentValue);
         view.UpdateLayout();
 
         var bounds = VisualTreeHelper.GetDescendantBounds(view);

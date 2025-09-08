@@ -3,7 +3,7 @@ using boilersGraphics.Views;
 using Prism.Ioc;
 using Prism.Services.Dialogs;
 using Prism.Unity;
-using Reactive.Bindings;
+using R3;
 using System;
 using System.Windows;
 using System.Windows.Controls;
@@ -42,11 +42,11 @@ public class PictureDesignerItemViewModel : DesignerItemViewModelBase, IEmbedded
         set => SetProperty(ref _FileHeight, value);
     }
 
-    public ReactivePropertySlim<Rect> ClippingOriginRect { get; set; } = new();
+    public BindableReactiveProperty<Rect> ClippingOriginRect { get; set; } = new();
 
-    public ReactivePropertySlim<Thickness> Margin { get; set; } = new();
+    public BindableReactiveProperty<Thickness> Margin { get; set; } = new();
 
-    public ReactivePropertySlim<DesignerItemViewModelBase> ClipObject { get; set; } = new();
+    public BindableReactiveProperty<DesignerItemViewModelBase> ClipObject { get; set; } = new();
 
     public override bool SupportsPropertyDialog => true;
 
@@ -56,7 +56,7 @@ public class PictureDesignerItemViewModel : DesignerItemViewModelBase, IEmbedded
         set => SetProperty(ref _FileName, value);
     }
 
-    public ReactivePropertySlim<BitmapImage> EmbeddedImage { get; set; } = new();
+    public BindableReactiveProperty<BitmapImage> EmbeddedImage { get; set; } = new();
 
     protected virtual void Init()
     {
@@ -71,7 +71,7 @@ public class PictureDesignerItemViewModel : DesignerItemViewModelBase, IEmbedded
         {
             PathGeometryNoRotate.Value = CreateGeometry();
 
-            if (RotationAngle.Value != 0d) PathGeometryRotate.Value = GeometryCreator.Rotate(PathGeometryNoRotate.Value, RotationAngle.Value, CenterPoint.Value);
+            if (RotationAngle.Value != 0d) PathGeometryRotate.Value = GeometryCreator.Rotate(PathGeometryNoRotate.Value, RotationAngle.Value, CenterPoint.CurrentValue);
         }
     }
 

@@ -3,16 +3,14 @@ using boilersGraphics.Extensions;
 using Prism.Ioc;
 using Prism.Services.Dialogs;
 using Prism.Unity;
-using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.Generic;
-using System.Reactive.Concurrency;
-using System.Reactive.Linq;
+using System.Threading;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using R3;
 using ZLinq;
 
 namespace boilersGraphics.ViewModels;
@@ -32,9 +30,9 @@ public class BrushViewModel : DesignerItemViewModelBase
     public ReactiveCommand GotFocusCommand { get; } = new();
     public ReactiveCommand LostFocusCommand { get; } = new();
 
-    public ReactivePropertySlim<Thickness> Thickness { get; } = new();
+    public BindableReactiveProperty<Thickness> Thickness { get; } = new();
 
-    public ReactivePropertySlim<bool> ThicknessDialogIsOpen { get; } = new();
+    public BindableReactiveProperty<bool> ThicknessDialogIsOpen { get; } = new();
 
     public override bool SupportsPropertyDialog => false;
 
@@ -51,7 +49,7 @@ public class BrushViewModel : DesignerItemViewModelBase
     {
         Observable.Return(this)
             .Delay(TimeSpan.FromMilliseconds(100))
-            .ObserveOn(new DispatcherScheduler(Dispatcher.CurrentDispatcher))
+            .ObserveOn(SynchronizationContext.Current)
             .Subscribe(x =>
             {
                 var view = Application.Current.MainWindow.GetChildOfType<DesignerCanvas>()

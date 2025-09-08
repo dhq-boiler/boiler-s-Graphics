@@ -11,11 +11,11 @@ using NLog;
 using NLog.Config;
 using NLog.Targets;
 using NLog.Targets.Wrappers;
+using ObservableCollections;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
-using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
+using R3;
 using REghZyFramework.Themes;
 using System;
 using System.Collections.Generic;
@@ -24,8 +24,6 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Net;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -433,26 +431,26 @@ public class MainWindowViewModel : BindableBase, IDisposable
         set => SetProperty(ref _ToolBarViewModel, value);
     }
 
-    public ReactivePropertySlim<string> CurrentOperation { get; } = new();
+    public ReactiveProperty<string> CurrentOperation { get; } = new();
 
-    public ReactivePropertySlim<string> Details { get; } = new();
-    public ReactivePropertySlim<string> Message { get; } = new();
+    public ReactiveProperty<string> Details { get; } = new();
+    public ReactiveProperty<string> Message { get; } = new();
 
-    public ReactivePropertySlim<double> SnapPower { get; } = new();
+    public ReactiveProperty<double> SnapPower { get; } = new();
 
-    public ReactiveCollection<double> EdgeThicknessOptions { get; } = new();
+    public ObservableList<double> EdgeThicknessOptions { get; } = new();
 
-    public ReactivePropertySlim<string> Title { get; } = new();
+    public R3.ReactiveProperty<string> Title { get; } = new();
 
-    public ReactivePropertySlim<Statistics> Statistics { get; } = new();
+    public R3.ReactiveProperty<Statistics> Statistics { get; } = new();
 
-    public ReactivePropertySlim<TerminalInfo> TerminalInfo { get; } = new();
+    public R3.ReactiveProperty<TerminalInfo> TerminalInfo { get; } = new();
 
     public IOperationController Controller { get; } = new OperationController();
 
     public OperationRecorder Recorder { get; }
 
-    public ReactivePropertySlim<LogLevel> LogLevel { get; } = new();
+    public R3.ReactiveProperty<LogLevel> LogLevel { get; } = new();
 
     public DelegateCommand<object> DeleteSelectedItemsCommand { get; }
 

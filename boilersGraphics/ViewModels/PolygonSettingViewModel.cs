@@ -1,13 +1,12 @@
-﻿using boilersGraphics.Models;
+﻿using boilersGraphics.Extensions;
+using boilersGraphics.Models;
+using ObservableCollections;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
-using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
+using R3;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Reactive.Disposables;
 using System.Windows;
 using System.Windows.Input;
 using ZLinq;
@@ -27,10 +26,10 @@ internal class PolygonSettingViewModel : BindableBase, IDialogAware, IDisposable
             .AddTo(_disposables);
         Angle.Subscribe(x => { UpdateSegments(); })
             .AddTo(_disposables);
-        Corners.ObserveElementObservableProperty(x => x.Angle)
+        Corners.ObserveElementPropertyChanged(x => x.Angle)
             .Subscribe(x => { UpdateSegments(); })
             .AddTo(_disposables);
-        Corners.ObserveElementObservableProperty(x => x.Radius)
+        Corners.ObserveElementPropertyChanged(x => x.Radius)
             .Subscribe(x => { UpdateSegments(); })
             .AddTo(_disposables);
         DrawCommand = new ReactiveCommand();
@@ -118,10 +117,10 @@ internal class PolygonSettingViewModel : BindableBase, IDialogAware, IDisposable
         UpdateSegments();
     }
 
-    public ReactivePropertySlim<string> Data { get; } = new();
-    public ReactivePropertySlim<int> Angle { get; } = new();
+    public BindableReactiveProperty<string> Data { get; } = new();
+    public BindableReactiveProperty<int> Angle { get; } = new();
 
-    public ObservableCollection<Corner> Corners { get; } = new();
+    public NotifyCollectionChangedSynchronizedViewList<Corner> Corners { get; } = new ObservableList<Corner>().ToWritableNotifyCollectionChanged();
 
     public ReactiveCommand AddCornerCommand { get; } = new();
 

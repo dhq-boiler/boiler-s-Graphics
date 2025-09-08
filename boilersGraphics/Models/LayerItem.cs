@@ -6,11 +6,9 @@ using boilersGraphics.Views;
 using Prism.Ioc;
 using Prism.Services.Dialogs;
 using Prism.Unity;
-using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
+using R3;
 using System;
 using System.Collections.Generic;
-using System.Reactive.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
@@ -40,9 +38,9 @@ public class LayerItem : LayerTreeViewItemBase, IDisposable, IComparable<LayerTr
         Init();
     }
 
-    public ReactivePropertySlim<ImageSource> Appearance { get; } = new();
+    public ReactiveProperty<ImageSource> Appearance { get; } = new();
     public ReactiveCommand SwitchVisibilityCommand { get; } = new();
-    public ReactivePropertySlim<SelectableDesignerItemViewModelBase> Item { get; } = new();
+    public ReactiveProperty<SelectableDesignerItemViewModelBase> Item { get; } = new();
     public ReactiveCommand MoveSnapPointCommand { get; } = new();
 
     public int CompareTo(object obj)
@@ -73,9 +71,9 @@ public class LayerItem : LayerTreeViewItemBase, IDisposable, IComparable<LayerTr
                 ChildrenSwitchVisibility(isVisible);
             })
             .AddTo(_disposable);
-        IsSelected = this.ObserveProperty(x => x.Item.Value.IsSelected)
+        IsSelected = this.ObservePropertyChanged(x => x.Item.Value.IsSelected)
             .Select(x => x.Value)
-            .ToReactiveProperty()
+            .ToBindableReactiveProperty()
             .AddTo(_disposable);
         IsSelected.Subscribe(x =>
             {
@@ -148,7 +146,7 @@ public class LayerItem : LayerTreeViewItemBase, IDisposable, IComparable<LayerTr
             return;
 
         Rect? sliceRect = null;
-        _items.AsValueEnumerable().Cast<IRect>().ToList().ForEach(x => sliceRect = (!sliceRect.HasValue ? x.Rect.Value : Rect.Union(sliceRect.Value, x.Rect.Value)));
+        _items.AsValueEnumerable().Cast<IRect>().ToList().ForEach(x => sliceRect = (!sliceRect.HasValue ? x.Rect.CurrentValue : Rect.Union(sliceRect.Value, x.Rect.CurrentValue)));
         var renderer = new AppearanceRenderer(new WpfVisualTreeHelper());
         Appearance.Value = renderer.Render(sliceRect, DesignerCanvas.GetInstance(),
             DiagramViewModel.Instance,

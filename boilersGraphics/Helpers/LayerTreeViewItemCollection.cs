@@ -1,5 +1,5 @@
 ﻿using boilersGraphics.Models;
-using Reactive.Bindings;
+using ObservableCollections;
 using System.Collections.Generic;
 using TsOperationHistory;
 using TsOperationHistory.Extensions;
@@ -10,7 +10,7 @@ namespace boilersGraphics.Helpers;
 public static class LayerTreeViewItemCollection
 {
     public static void InsertBeforeChildren(OperationRecorder recorder,
-        ReactiveCollection<LayerTreeViewItemBase> layers, ReactiveCollection<LayerTreeViewItemBase> children,
+        NotifyCollectionChangedSynchronizedViewList<LayerTreeViewItemBase> layers, NotifyCollectionChangedSynchronizedViewList<LayerTreeViewItemBase> children,
         LayerTreeViewItemBase from, LayerTreeViewItemBase to)
     {
         var index = children.IndexOf(to);
@@ -21,8 +21,8 @@ public static class LayerTreeViewItemCollection
         Rearrangement(recorder, layers);
     }
 
-    public static void InsertAfterChildren(OperationRecorder recorder, ReactiveCollection<LayerTreeViewItemBase> layers,
-        ReactiveCollection<LayerTreeViewItemBase> children, LayerTreeViewItemBase from, LayerTreeViewItemBase to)
+    public static void InsertAfterChildren(OperationRecorder recorder, NotifyCollectionChangedSynchronizedViewList<LayerTreeViewItemBase> layers,
+        NotifyCollectionChangedSynchronizedViewList<LayerTreeViewItemBase> children, LayerTreeViewItemBase from, LayerTreeViewItemBase to)
     {
         var index = children.IndexOf(to);
         if (index < 0)
@@ -32,14 +32,14 @@ public static class LayerTreeViewItemCollection
         Rearrangement(recorder, layers);
     }
 
-    public static void AddChildren(OperationRecorder recorder, ReactiveCollection<LayerTreeViewItemBase> layers,
-        ReactiveCollection<LayerTreeViewItemBase> children, LayerTreeViewItemBase to)
+    public static void AddChildren(OperationRecorder recorder, NotifyCollectionChangedSynchronizedViewList<LayerTreeViewItemBase> layers,
+        NotifyCollectionChangedSynchronizedViewList<LayerTreeViewItemBase> children, LayerTreeViewItemBase to)
     {
         recorder.Current.ExecuteAdd(children, to);
         Rearrangement(recorder, layers);
     }
 
-    private static void Rearrangement(OperationRecorder recorder, ReactiveCollection<LayerTreeViewItemBase> layers)
+    private static void Rearrangement(OperationRecorder recorder, NotifyCollectionChangedSynchronizedViewList<LayerTreeViewItemBase> layers)
     {
         var queue = new Queue<LayerTreeViewItemBase>(layers);
         LayerTreeViewItemBase item = null;

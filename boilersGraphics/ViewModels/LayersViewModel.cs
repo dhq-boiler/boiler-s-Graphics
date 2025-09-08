@@ -5,16 +5,15 @@ using boilersGraphics.Models;
 using boilersGraphics.Properties;
 using boilersGraphics.Views.Behaviors;
 using NLog;
+using ObservableCollections;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
-using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.Generic;
-using System.Reactive.Disposables;
 using System.Windows;
 using System.Windows.Input;
+using R3;
 using TsOperationHistory.Extensions;
 using ZLinq;
 
@@ -171,7 +170,7 @@ internal class LayersViewModel : BindableBase, IDialogAware
     public ICommand DropCommand { get; }
 
 
-    public ReactiveCollection<LayerTreeViewItemBase> Layers { get; }
+    public NotifyCollectionChangedSynchronizedViewList<LayerTreeViewItemBase> Layers { get; }
 
     public string Title => Resources.ResourceManager.GetString("Title_Layers", Resources.Culture);
 
@@ -209,7 +208,7 @@ internal class LayersViewModel : BindableBase, IDialogAware
     }
 
     private IEnumerable<SelectableDesignerItemViewModelBase> IfGroupBringChildren(
-        ReactiveCollection<LayerTreeViewItemBase> Children, SelectableDesignerItemViewModelBase value)
+        NotifyCollectionChangedSynchronizedViewList<LayerTreeViewItemBase> Children, SelectableDesignerItemViewModelBase value)
     {
         if (value is GroupItemViewModel groupItemVM)
         {

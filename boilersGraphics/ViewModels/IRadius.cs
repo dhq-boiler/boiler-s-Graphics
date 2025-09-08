@@ -1,9 +1,9 @@
-﻿using Reactive.Bindings;
+﻿using R3;
 
 namespace boilersGraphics.ViewModels;
 
 public interface IRadius
 {
-    public ReactivePropertySlim<double> RadiusX { get; }
-    public ReactivePropertySlim<double> RadiusY { get; }
+    public BindableReactiveProperty<double> RadiusX { get; }
+    public BindableReactiveProperty<double> RadiusY { get; }
 }

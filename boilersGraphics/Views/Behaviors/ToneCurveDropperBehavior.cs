@@ -100,7 +100,7 @@ namespace boilersGraphics.Views.Behaviors
             {
                 Kurukuru.Set(_cursor);
                 var designerCanvas = Application.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-                var rtb = new EffectRenderer(new WpfVisualTreeHelper()).Render(_viewModel.ViewModel.Value.Rect.Value,
+                var rtb = new EffectRenderer(new WpfVisualTreeHelper()).Render(_viewModel.ViewModel.Value.Rect.CurrentValue,
                     DesignerCanvas.GetInstance(), DiagramViewModel.Instance, DiagramViewModel.Instance.BackgroundItem.Value,
                     _viewModel.ViewModel.Value, 0, _viewModel.ViewModel.Value.ZIndex.Value - 1);
                 var writeableBitmap = new WriteableBitmap(rtb);
@@ -144,7 +144,7 @@ namespace boilersGraphics.Views.Behaviors
             {
                 Kurukuru.Set(_cursor);
                 var designerCanvas = Application.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-                var rtb = new EffectRenderer(new WpfVisualTreeHelper()).Render(_viewModel.ViewModel.Value.Rect.Value,
+                var rtb = new EffectRenderer(new WpfVisualTreeHelper()).Render(_viewModel.ViewModel.Value.Rect.CurrentValue,
                     DesignerCanvas.GetInstance(), DiagramViewModel.Instance, DiagramViewModel.Instance.BackgroundItem.Value,
                     _viewModel.ViewModel.Value);
                 var writeableBitmap = new WriteableBitmap(rtb);
@@ -186,7 +186,7 @@ namespace boilersGraphics.Views.Behaviors
             {
                 Kurukuru.Set(_cursor);
                 var designerCanvas = Application.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-                var rtb = new EffectRenderer(new WpfVisualTreeHelper()).Render(_viewModel.ViewModel.Value.Rect.Value,
+                var rtb = new EffectRenderer(new WpfVisualTreeHelper()).Render(_viewModel.ViewModel.Value.Rect.CurrentValue,
                     DesignerCanvas.GetInstance(), DiagramViewModel.Instance, DiagramViewModel.Instance.BackgroundItem.Value,
                     _viewModel.ViewModel.Value);
                 var writeableBitmap = new WriteableBitmap(rtb);

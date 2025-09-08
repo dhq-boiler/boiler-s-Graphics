@@ -2,14 +2,14 @@
 using boilersGraphics.Models;
 using boilersGraphics.ViewModels;
 using boilersGraphics.ViewModels.ColorCorrect;
-using Reactive.Bindings;
+using ObservableCollections;
+using R3;
 using Rulyotano.Math.Interpolation.Bezier;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -38,14 +38,14 @@ namespace boilersGraphics.Views
 
         #endregion
 
-        public ReactiveCollection<InOutPair> AllScales
+        public NotifyCollectionChangedSynchronizedViewList<InOutPair> AllScales
         {
-            get { return (ReactiveCollection<InOutPair>)GetValue(AllScalesProperty); }
+            get { return (NotifyCollectionChangedSynchronizedViewList<InOutPair>)GetValue(AllScalesProperty); }
             set { SetValue(AllScalesProperty, value); }
         }
 
         public static readonly DependencyProperty AllScalesProperty =
-            DependencyProperty.Register("AllScales", typeof(ReactiveCollection<InOutPair>),
+            DependencyProperty.Register("AllScales", typeof(NotifyCollectionChangedSynchronizedViewList<InOutPair>),
                 typeof(LandmarkControl), new PropertyMetadata(null));
 
         public List<InOutPair> Scales
@@ -139,7 +139,7 @@ namespace boilersGraphics.Views
             InitializeComponent();
 
             Scales = new List<InOutPair>();
-            AllScales = new ReactiveCollection<InOutPair>();
+            AllScales = new ObservableList<InOutPair>().ToWritableNotifyCollectionChanged();
         }
 
         private System.Windows.Point ConvertToVisualPoint(Point p)
@@ -160,8 +160,8 @@ namespace boilersGraphics.Views
                 if (pointProperties.All(p => p.Name != "X") ||
                 pointProperties.All(p => p.Name != "Y"))
                     continue;
-                var x = (float)(point.GetType().GetProperty("X").GetValue(point, new object[] { }) as ReactivePropertySlim<double>).Value;
-                var y = (float)(point.GetType().GetProperty("Y").GetValue(point, new object[] { }) as ReactivePropertySlim<double>).Value; 
+                var x = (float)(point.GetType().GetProperty("X").GetValue(point, new object[] { }) as BindableReactiveProperty<double>).Value;
+                var y = (float)(point.GetType().GetProperty("Y").GetValue(point, new object[] { }) as BindableReactiveProperty<double>).Value; 
                 points.Add(new Point(x, y));
             }
 
@@ -209,7 +209,7 @@ namespace boilersGraphics.Views
             path.Data = myPathGeometry;
 
             var inoutPairs = InOutPairs;
-            var allScales = new ReactiveCollection<InOutPair>();
+            var allScales = new ObservableList<InOutPair>().ToWritableNotifyCollectionChanged();
             var ret = new List<InOutPair>();
 
             foreach (var pair in inoutPairs)

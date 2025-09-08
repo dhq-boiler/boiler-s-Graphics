@@ -41,7 +41,7 @@ public static class BrushInternal
     {
         var item = views.DataContext as BrushViewModel;
         mainWindowViewModel.Recorder.Current.ExecuteSetProperty(item, "PathGeometryNoRotate.Value",
-            Geometry.Combine(item.PathGeometry.Value,
+            Geometry.Combine(item.PathGeometry.CurrentValue,
                 GeometryCreator.CreateEllipse(point.X, point.Y, item.Thickness.Value), GeometryCombineMode.Union,
                 null));
         if (currentBrush.RotationAngle.Value != 0)
@@ -54,7 +54,7 @@ public static class BrushInternal
     public static void Draw(MainWindowViewModel mainWindowViewModel, ref BrushViewModel currentBrush, Point point)
     {
         mainWindowViewModel.Recorder.Current.ExecuteSetProperty(currentBrush, "PathGeometryNoRotate.Value",
-            Geometry.Combine(currentBrush.PathGeometry.Value,
+            Geometry.Combine(currentBrush.PathGeometry.CurrentValue,
                 GeometryCreator.CreateEllipse(point.X, point.Y, currentBrush.Thickness.Value),
                 GeometryCombineMode.Union, null));
         if (currentBrush.RotationAngle.Value != 0)

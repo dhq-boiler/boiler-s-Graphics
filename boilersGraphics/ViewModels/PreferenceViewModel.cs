@@ -3,11 +3,8 @@ using boilersGraphics.Properties;
 using boilersGraphics.Views;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
-using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
+using R3;
 using System;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
 using System.Windows;
 using Preference = boilersGraphics.Models.Preference;
 
@@ -102,12 +99,12 @@ internal class PreferenceViewModel : BindableBase, IDialogAware, IDisposable
             .AddTo(_disposables);
     }
 
-    public ReactivePropertySlim<ReactiveCommand> OkCommand { get; set; } = new();
+    public BindableReactiveProperty<ReactiveCommand> OkCommand { get; set; } = new();
     public ReactiveCommand CancelCommand { get; set; }
     public ReactiveCommand ChangeCanvasFillBrushCommand { get; set; } = new();
     public ReactiveCommand ChangeCanvasEdgeBrushCommand { get; set; } = new();
 
-    public ReactivePropertySlim<Preference> EditTarget { get; set; } = new();
+    public BindableReactiveProperty<Preference> EditTarget { get; set; } = new();
 
     public string Title => Resources.Title_Preferences;
 

@@ -1,10 +1,10 @@
-﻿using Reactive.Bindings;
+﻿using R3;
 using System.Windows;
 
 namespace boilersGraphics.ViewModels
 {
     public interface IRect
     {
-        ReadOnlyReactivePropertySlim<Rect> Rect { get; set; }
+        ReadOnlyReactiveProperty<Rect> Rect { get; set; }
     }
 }

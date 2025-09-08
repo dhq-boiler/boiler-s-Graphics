@@ -62,8 +62,8 @@ namespace boilersGraphics.Helpers
                 }
                 else if (item is ISizeReadOnlyRps size2)
                 {
-                    view.Measure(new Size(size2.Width.Value, size2.Height.Value));
-                    view.Arrange(new Rect(new Point(), new Size(size2.Width.Value, size2.Height.Value)));
+                    view.Measure(new Size(size2.Width.CurrentValue, size2.Height.CurrentValue));
+                    view.Arrange(new Rect(new Point(), new Size(size2.Width.CurrentValue, size2.Height.CurrentValue)));
                 }
                 view.UpdateLayout();
                 view.SnapsToDevicePixels = true;
@@ -90,8 +90,8 @@ namespace boilersGraphics.Helpers
                                     var intersectSrc = new Rect(designerItem.Left.Value, designerItem.Top.Value, bounds.Width,
                                         bounds.Height);
                                     rect = Rect.Union(rect, intersectSrc);
-                                    rect = Rect.Intersect(rect, designerItem.Rect.Value);
-                                    rect = Rect.Intersect(rect, background.Rect.Value);
+                                    rect = Rect.Intersect(rect, designerItem.Rect.CurrentValue);
+                                    rect = Rect.Intersect(rect, background.Rect.CurrentValue);
 
                                     if (rect != Rect.Empty)
                                     {
@@ -140,11 +140,11 @@ namespace boilersGraphics.Helpers
                             if (item is DesignerItemViewModelBase id && caller is DesignerItemViewModelBase des)
                             {
                                 var baseMatrix = new Matrix();
-                                baseMatrix.Translate((des.CenterPoint.Value.X - id.Width.Value / 2) * 1, (des.CenterPoint.Value.Y - id.Height.Value / 2) * 1);
+                                baseMatrix.Translate((des.CenterPoint.CurrentValue.X - id.Width.Value / 2) * 1, (des.CenterPoint.CurrentValue.Y - id.Height.Value / 2) * 1);
                                 baseMatrix.Translate(-des.Left.Value, -des.Top.Value);
                                 baseMatrix.Translate((-des.Width.Value + id.Width.Value) / 2, (-des.Height.Value + id.Height.Value) / 2);
-                                baseMatrix.RotateAt(item.RotationAngle.Value, id.CenterPoint.Value.X - des.Left.Value, id.CenterPoint.Value.Y - des.Top.Value);
-                                baseMatrix.RotateAt(-des.RotationAngle.Value, des.CenterPoint.Value.X - des.Left.Value, des.CenterPoint.Value.Y - des.Top.Value);
+                                baseMatrix.RotateAt(item.RotationAngle.Value, id.CenterPoint.CurrentValue.X - des.Left.Value, id.CenterPoint.CurrentValue.Y - des.Top.Value);
+                                baseMatrix.RotateAt(-des.RotationAngle.Value, des.CenterPoint.CurrentValue.X - des.Left.Value, des.CenterPoint.CurrentValue.Y - des.Top.Value);
                                 context.PushTransform(new MatrixTransform(baseMatrix));
                             }
 
@@ -223,7 +223,7 @@ namespace boilersGraphics.Helpers
             }
 
             view.Measure(new Size(background.Width.Value, background.Height.Value));
-            view.Arrange(background.Rect.Value);
+            view.Arrange(background.Rect.CurrentValue);
             view.UpdateLayout();
 
             var bounds = VisualTreeHelper.GetDescendantBounds(view);
@@ -244,10 +244,10 @@ namespace boilersGraphics.Helpers
             {
                 var baseMatrix = new Matrix();
                 baseMatrix.Translate(-designer.Left.Value, -designer.Top.Value);
-                baseMatrix.RotateAt(-designer.RotationAngle.Value, designer.CenterPoint.Value.X - designer.Left.Value, designer.CenterPoint.Value.Y - designer.Top.Value);
+                baseMatrix.RotateAt(-designer.RotationAngle.Value, designer.CenterPoint.CurrentValue.X - designer.Left.Value, designer.CenterPoint.CurrentValue.Y - designer.Top.Value);
                 context.PushTransform(new MatrixTransform(baseMatrix));
             }
-            context.DrawRectangle(brush, null, background.Rect.Value);
+            context.DrawRectangle(brush, null, background.Rect.CurrentValue);
             if (caller is DesignerItemViewModelBase)
             {
                 context.Pop();

@@ -1,12 +1,12 @@
 ﻿using boilersGraphics.Properties;
 using boilersGraphics.Views;
+using ObservableCollections;
 using Prism.Mvvm;
 using Prism.Regions;
 using Prism.Services.Dialogs;
-using Reactive.Bindings;
+using R3;
 using System;
-using System.Collections.ObjectModel;
-using System.Reactive.Disposables;
+using boilersGraphics.Extensions;
 using ZLinq;
 
 namespace boilersGraphics.ViewModels;
@@ -23,11 +23,11 @@ public class DetailViewModelBase<T> : BindableBase, IDialogAware, INavigationAwa
         this.regionManager = regionManager;
     }
 
-    public ReactivePropertySlim<int> OKTabIndex { get; } = new();
+    public BindableReactiveProperty<int> OKTabIndex { get; } = new();
 
-    public ReactivePropertySlim<T> ViewModel { get; } = new();
+    public BindableReactiveProperty<T> ViewModel { get; } = new();
 
-    public ReactiveCollection<PropertyOptionsValueCombination> Properties { get; } = new();
+    public NotifyCollectionChangedSynchronizedViewList<PropertyOptionsValueCombination> Properties { get; } = new ObservableList<PropertyOptionsValueCombination>().ToWritableNotifyCollectionChanged();
 
     public string Title => Resources.ResourceManager.GetString("Title_Property", Resources.Culture);
 

@@ -121,7 +121,7 @@ public class ResizeThumb : SnapPoint
                         pictureDesignerItemViewModel.Height.Value =
                             pictureDesignerItemViewModel.Width.Value / pictureDesignerItemViewModel.FileWidth *
                             pictureDesignerItemViewModel.FileHeight;
-                        pictureDesignerItemViewModel.Top.Value = pictureDesignerItemViewModel.Bottom.Value -
+                        pictureDesignerItemViewModel.Top.Value = pictureDesignerItemViewModel.Bottom.CurrentValue -
                                                                  pictureDesignerItemViewModel.Height.Value;
                     }
                     else if (VerticalAlignment == VerticalAlignment.Top &&
@@ -170,7 +170,7 @@ public class ResizeThumb : SnapPoint
                         ellipseViewModel.Left.Value = left + dragDeltaHorizontal;
                         ellipseViewModel.Width.Value = ellipseViewModel.Width.Value - dragDeltaHorizontal;
                         ellipseViewModel.Height.Value = ellipseViewModel.Width.Value - dragDeltaHorizontal;
-                        ellipseViewModel.Top.Value = ellipseViewModel.Bottom.Value - ellipseViewModel.Height.Value;
+                        ellipseViewModel.Top.Value = ellipseViewModel.Bottom.CurrentValue - ellipseViewModel.Height.Value;
                     }
                     else if (VerticalAlignment == VerticalAlignment.Top &&
                              HorizontalAlignment == HorizontalAlignment.Right)
@@ -248,7 +248,7 @@ public class ResizeThumb : SnapPoint
                                 if (!_adorners.ContainsKey(snapped.Item2))
                                 {
                                     var adorner = new SnapPointAdorner(designerCanvas, snapped.Item2,
-                                        viewModel.SnapPointSize.Value, viewModel.ThumbThickness.Value);
+                                        viewModel.SnapPointSize.CurrentValue, viewModel.ThumbThickness.CurrentValue);
                                     if (adorner != null)
                                     {
                                         adornerLayer.Add(adorner);

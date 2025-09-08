@@ -10,11 +10,12 @@ using Microsoft.Xaml.Behaviors;
 using NLog;
 using Prism.Commands;
 using Prism.Services.Dialogs;
-using Reactive.Bindings;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Windows;
 using System.Windows.Media.Imaging;
+using ObservableCollections;
+using R3;
 using ZLinq;
 
 namespace boilersGraphics.ViewModels;
@@ -30,13 +31,13 @@ public class ToolBarViewModel
         InitializeToolItems2();
     }
 
-    public ReactiveCollection<ToolItemData> ToolItems { get; } = new();
-    public ReactiveCollection<ToolItemData> ToolItems2 { get; } = new();
+    public NotifyCollectionChangedSynchronizedViewList<ToolItemData> ToolItems { get; } = new ObservableList<ToolItemData>().ToWritableNotifyCollectionChanged();
+    public NotifyCollectionChangedSynchronizedViewList<ToolItemData> ToolItems2 { get; } = new ObservableList<ToolItemData>().ToWritableNotifyCollectionChanged();
 
     public BehaviorCollection Behaviors =>
         Interaction.GetBehaviors(App.GetCurrentApp().MainWindow.GetChildOfType<DesignerCanvas>());
 
-    public ReactivePropertySlim<bool> CurrentHitTestVisibleState { get; } = new();
+    public BindableReactiveProperty<bool> CurrentHitTestVisibleState { get; } = new();
 
     public DeselectBehavior DeselectBehavior { get; } = new();
     public LassoBehavior RubberbandBehavior { get; } = new();

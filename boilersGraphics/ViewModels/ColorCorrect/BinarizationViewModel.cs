@@ -3,10 +3,8 @@ using boilersGraphics.Helpers;
 using OpenCvSharp.WpfExtensions;
 using Prism.Mvvm;
 using Prism.Regions;
-using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
+using R3;
 using System;
-using System.Reactive.Disposables;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -21,11 +19,11 @@ namespace boilersGraphics.ViewModels.ColorCorrect
         private bool callFromThreshold = false;
         private bool callFromOtsuEnabled = false;
 
-        public ReactivePropertySlim<ColorCorrectViewModel> ViewModel { get; } = new();
-        public ReactivePropertySlim<ThresholdTypes> ThresholdTypes { get; } = new();
-        public ReactivePropertySlim<double> Threshold { get; } = new();
-        public ReactivePropertySlim<double> MaxValue { get; } = new();
-        public ReactivePropertySlim<bool> OtsuEnabled { get; } = new();
+        public BindableReactiveProperty<ColorCorrectViewModel> ViewModel { get; } = new();
+        public BindableReactiveProperty<ThresholdTypes> ThresholdTypes { get; } = new();
+        public BindableReactiveProperty<double> Threshold { get; } = new();
+        public BindableReactiveProperty<double> MaxValue { get; } = new();
+        public BindableReactiveProperty<bool> OtsuEnabled { get; } = new();
 
         public ReactiveCommand<SelectionChangedEventArgs> ThresholdTypesChangedCommand { get; } = new();
 
@@ -95,7 +93,7 @@ namespace boilersGraphics.ViewModels.ColorCorrect
         private double GetThresholdByOtsu()
         {
             var renderer = new EffectRenderer(new WpfVisualTreeHelper());
-            var rtb = renderer.Render(ViewModel.Value.Rect.Value, DesignerCanvas.GetInstance(),
+            var rtb = renderer.Render(ViewModel.Value.Rect.CurrentValue, DesignerCanvas.GetInstance(),
                 MainWindowViewModel.Instance.DiagramViewModel, MainWindowViewModel.Instance.DiagramViewModel.BackgroundItem.Value, ViewModel.Value, ViewModel.Value.ZIndex.Value - 1);
             var newFormattedBitmapSource = new FormatConvertedBitmap();
             newFormattedBitmapSource.BeginInit();

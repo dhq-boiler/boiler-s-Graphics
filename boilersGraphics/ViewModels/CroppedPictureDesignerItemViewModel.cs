@@ -1,8 +1,8 @@
-﻿using Reactive.Bindings;
-using System;
+﻿using System;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using R3;
 
 namespace boilersGraphics.ViewModels;
 
@@ -48,7 +48,7 @@ public class CroppedPictureDesignerItemViewModel : DesignerItemViewModelBase, IE
         set => SetProperty(ref _FileName, value);
     }
 
-    public ReactivePropertySlim<BitmapImage> EmbeddedImage { get; set; } = new();
+    public BindableReactiveProperty<BitmapImage> EmbeddedImage { get; set; } = new();
 
     public override PathGeometry CreateGeometry(bool flag = false)
     {

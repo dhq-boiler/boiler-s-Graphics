@@ -1,12 +1,9 @@
 ﻿using boilersGraphics.Models;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
-using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
 using System;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
 using System.Windows;
+using R3;
 
 namespace boilersGraphics.ViewModels;
 
@@ -37,9 +34,9 @@ internal class SetSnapPointViewModel : BindableBase, IDialogAware, IDisposable
 
     public LayerItem LayerItem { get; set; }
 
-    public ReactivePropertySlim<double> X { get; } = new();
+    public BindableReactiveProperty<double> X { get; } = new();
 
-    public ReactivePropertySlim<double> Y { get; } = new();
+    public BindableReactiveProperty<double> Y { get; } = new();
 
     public ReactiveCommand OKCommand { get; }
     public ReactiveCommand CancelCommand { get; }

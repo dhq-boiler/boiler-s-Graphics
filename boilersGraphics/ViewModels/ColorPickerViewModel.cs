@@ -5,12 +5,10 @@ using boilersGraphics.Views;
 using Prism.Mvvm;
 using Prism.Regions;
 using Prism.Services.Dialogs;
-using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
 using System;
-using System.Reactive.Disposables;
 using System.Windows;
 using System.Windows.Media;
+using R3;
 using ZLinq;
 
 namespace boilersGraphics.ViewModels;
@@ -417,8 +415,8 @@ public class ColorPickerViewModel : BindableBase, IDialogAware, IDisposable
     public ReactiveCommand SelectSolidColorCommand { get; } = new();
     public ReactiveCommand SelectLinearGradientCommand { get; } = new();
     public ReactiveCommand SelectRadialGradientCommand { get; } = new();
-    public ReactivePropertySlim<ColorExchange> EditTarget { get; } = new();
-    public ReactivePropertySlim<ColorSpots> ColorSpots { get; } = new();
+    public BindableReactiveProperty<ColorExchange> EditTarget { get; } = new();
+    public BindableReactiveProperty<ColorSpots> ColorSpots { get; } = new();
 
     public ReactiveCommand<RoutedEventArgs> UnloadedCommand { get; } = new();
     public ReactiveCommand<RoutedEventArgs> LoadedCommand { get; } = new();

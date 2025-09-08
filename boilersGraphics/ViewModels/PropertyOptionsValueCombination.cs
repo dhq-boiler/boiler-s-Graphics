@@ -1,6 +1,8 @@
-﻿using NLog;
+﻿using boilersGraphics.Extensions;
+using NLog;
+using ObservableCollections;
 using Prism.Mvvm;
-using Reactive.Bindings;
+using R3;
 using System.Collections.ObjectModel;
 using System.Reflection;
 using System.Windows;
@@ -17,8 +19,8 @@ public abstract class PropertyOptionsValueCombination : BindableBase
         PropertyName.Value = name;
     }
 
-    public ReactivePropertySlim<string> PropertyName { get; set; } = new();
-    public ReactivePropertySlim<int> TabIndex { get; set; } = new();
+    public BindableReactiveProperty<string> PropertyName { get; set; } = new();
+    public BindableReactiveProperty<int> TabIndex { get; set; } = new();
 
     public virtual string Type => "NONE";
 
@@ -41,7 +43,7 @@ public abstract class PropertyOptionsValueCombination : BindableBase
             BindingFlags.Public
             | BindingFlags.Instance);
 
-        foreach (var field in fields) ret += $"{field.Name}={field.GetValue(this)},";
+        foreach (var field in fields) ret += $"{field.Name}={field.GetValue(this)},"; 
         ret = ret.Remove(ret.Length - 1, 1);
         ret += "}";
         return ret;
@@ -81,11 +83,11 @@ public class PropertyOptionsValueCombinationClass<E, V> : PropertyOptionsValueCo
         HorizontalContentAlignment.Value = horizontalContentAlignment;
     }
 
-    public ReactivePropertySlim<E> Object { get; set; } = new();
-    public ReactiveCollection<V> Options { get; set; } = new();
-    public ReactivePropertySlim<HorizontalAlignment> HorizontalContentAlignment { get; set; } = new();
+    public BindableReactiveProperty<E> Object { get; set; } = new();
+    public NotifyCollectionChangedSynchronizedViewList<V> Options { get; set; } = new ObservableList<V>().ToWritableNotifyCollectionChanged();
+    public BindableReactiveProperty<HorizontalAlignment> HorizontalContentAlignment { get; set; } = new();
 
-    public ReactivePropertySlim<V> PropertyValue
+    public BindableReactiveProperty<V> PropertyValue
     {
         get
         {
@@ -93,15 +95,35 @@ public class PropertyOptionsValueCombinationClass<E, V> : PropertyOptionsValueCo
             object obj = Object.Value;
             foreach (var split in splits.Except(new[] { splits.Last() }))
             {
-                var a = ((IReactiveProperty)typeof(E).GetProperty(split).GetValue(obj)).Value;
-                obj = a;
+                var property = obj.GetType().GetProperty(split);
+                if (property != null)
+                {
+                    var propertyValue = property.GetValue(obj);
+                    // より汎用的なアプローチでReactivePropertyの値を取得
+                    if (propertyValue != null && propertyValue.GetType().IsGenericType)
+                    {
+                        var valueProperty = propertyValue.GetType().GetProperty("Value");
+                        if (valueProperty != null)
+                        {
+                            obj = valueProperty.GetValue(propertyValue);
+                        }
+                        else
+                        {
+                            obj = propertyValue;
+                        }
+                    }
+                    else
+                    {
+                        obj = propertyValue;
+                    }
+                }
                 if (obj is null)
                     return null;
             }
 
             if (obj is null)
                 return null;
-            return (ReactivePropertySlim<V>)typeof(E).GetProperty(splits.Last()).GetValue(obj);
+            return (BindableReactiveProperty<V>)obj.GetType().GetProperty(splits.Last()).GetValue(obj);
         }
         set
         {
@@ -109,13 +131,33 @@ public class PropertyOptionsValueCombinationClass<E, V> : PropertyOptionsValueCo
             object obj = Object.Value;
             foreach (var split in splits.Except(new[] { splits.Last() }))
             {
-                var a = ((IReactiveProperty)typeof(E).GetProperty(split).GetValue(obj)).Value;
-                obj = a;
+                var property = obj.GetType().GetProperty(split);
+                if (property != null)
+                {
+                    var propertyValue = property.GetValue(obj);
+                    // より汎用的なアプローチでReactivePropertyの値を取得
+                    if (propertyValue != null && propertyValue.GetType().IsGenericType)
+                    {
+                        var valueProperty = propertyValue.GetType().GetProperty("Value");
+                        if (valueProperty != null)
+                        {
+                            obj = valueProperty.GetValue(propertyValue);
+                        }
+                        else
+                        {
+                            obj = propertyValue;
+                        }
+                    }
+                    else
+                    {
+                        obj = propertyValue;
+                    }
+                }
             }
 
             if (obj is null)
                 return;
-            typeof(E).GetProperty(splits.Last()).SetValue(obj, value);
+            obj.GetType().GetProperty(splits.Last()).SetValue(obj, value);
         }
     }
 
@@ -152,11 +194,11 @@ public class PropertyOptionsValueCombinationReadOnlyClass<E, V> : PropertyOption
         HorizontalContentAlignment.Value = horizontalContentAlignment;
     }
 
-    public ReactivePropertySlim<E> Object { get; set; } = new();
-    public ReactiveCollection<V> Options { get; set; } = new();
-    public ReactivePropertySlim<HorizontalAlignment> HorizontalContentAlignment { get; set; } = new();
+    public BindableReactiveProperty<E> Object { get; set; } = new();
+    public NotifyCollectionChangedSynchronizedViewList<V> Options { get; set; } = new ObservableList<V>().ToWritableNotifyCollectionChanged();
+    public BindableReactiveProperty<HorizontalAlignment> HorizontalContentAlignment { get; set; } = new();
 
-    public ReadOnlyReactivePropertySlim<V> PropertyValue
+    public IReadOnlyBindableReactiveProperty<V> PropertyValue
     {
         get
         {
@@ -164,15 +206,35 @@ public class PropertyOptionsValueCombinationReadOnlyClass<E, V> : PropertyOption
             object obj = Object.Value;
             foreach (var split in splits.Except(new[] { splits.Last() }))
             {
-                var a = ((IReactiveProperty)typeof(E).GetProperty(split).GetValue(obj)).Value;
-                obj = a;
+                var property = obj.GetType().GetProperty(split);
+                if (property != null)
+                {
+                    var propertyValue = property.GetValue(obj);
+                    // より汎用的なアプローチでReactivePropertyの値を取得
+                    if (propertyValue != null && propertyValue.GetType().IsGenericType)
+                    {
+                        var valueProperty = propertyValue.GetType().GetProperty("Value");
+                        if (valueProperty != null)
+                        {
+                            obj = valueProperty.GetValue(propertyValue);
+                        }
+                        else
+                        {
+                            obj = propertyValue;
+                        }
+                    }
+                    else
+                    {
+                        obj = propertyValue;
+                    }
+                }
                 if (obj is null)
                     return null;
             }
 
             if (obj is null)
                 return null;
-            return (ReadOnlyReactivePropertySlim<V>)typeof(E).GetProperty(splits.Last()).GetValue(obj);
+            return (IReadOnlyBindableReactiveProperty<V>)obj.GetType().GetProperty(splits.Last()).GetValue(obj);
         }
         set { }
     }
@@ -209,11 +271,11 @@ public class PropertyOptionsValueCombinationStruct<E, V> : PropertyOptionsValueC
         HorizontalContentAlignment.Value = horizontalContentAlignment;
     }
 
-    public ReactivePropertySlim<E> Object { get; } = new();
-    public ReactiveCollection<V> Options { get; } = new();
-    public ReactivePropertySlim<HorizontalAlignment> HorizontalContentAlignment { get; set; } = new();
+    public BindableReactiveProperty<E> Object { get; } = new();
+    public NotifyCollectionChangedSynchronizedViewList<V> Options { get; } = new ObservableList<V>().ToWritableNotifyCollectionChanged();
+    public BindableReactiveProperty<HorizontalAlignment> HorizontalContentAlignment { get; set; } = new();
 
-    public ReactivePropertySlim<V> PropertyValue
+    public BindableReactiveProperty<V> PropertyValue
     {
         get
         {
@@ -221,15 +283,35 @@ public class PropertyOptionsValueCombinationStruct<E, V> : PropertyOptionsValueC
             object obj = Object.Value;
             foreach (var split in splits.Except(new[] { splits.Last() }))
             {
-                var a = ((IReactiveProperty)typeof(E).GetProperty(split).GetValue(obj)).Value;
-                obj = a;
+                var property = obj.GetType().GetProperty(split);
+                if (property != null)
+                {
+                    var propertyValue = property.GetValue(obj);
+                    // より汎用的なアプローチでReactivePropertyの値を取得
+                    if (propertyValue != null && propertyValue.GetType().IsGenericType)
+                    {
+                        var valueProperty = propertyValue.GetType().GetProperty("Value");
+                        if (valueProperty != null)
+                        {
+                            obj = valueProperty.GetValue(propertyValue);
+                        }
+                        else
+                        {
+                            obj = propertyValue;
+                        }
+                    }
+                    else
+                    {
+                        obj = propertyValue;
+                    }
+                }
                 if (obj is null)
                     return null;
             }
 
             if (obj is null)
                 return null;
-            return (ReactivePropertySlim<V>)typeof(E).GetProperty(splits.Last()).GetValue(obj);
+            return (BindableReactiveProperty<V>)obj.GetType().GetProperty(splits.Last()).GetValue(obj);
         }
         set
         {
@@ -237,13 +319,33 @@ public class PropertyOptionsValueCombinationStruct<E, V> : PropertyOptionsValueC
             object obj = Object.Value;
             foreach (var split in splits.Except(new[] { splits.Last() }))
             {
-                var a = ((IReactiveProperty)typeof(E).GetProperty(split).GetValue(obj)).Value;
-                obj = a;
+                var property = obj.GetType().GetProperty(split);
+                if (property != null)
+                {
+                    var propertyValue = property.GetValue(obj);
+                    // より汎用的なアプローチでReactivePropertyの値を取得
+                    if (propertyValue != null && propertyValue.GetType().IsGenericType)
+                    {
+                        var valueProperty = propertyValue.GetType().GetProperty("Value");
+                        if (valueProperty != null)
+                        {
+                            obj = valueProperty.GetValue(propertyValue);
+                        }
+                        else
+                        {
+                            obj = propertyValue;
+                        }
+                    }
+                    else
+                    {
+                        obj = propertyValue;
+                    }
+                }
             }
 
             if (obj is null)
                 return;
-            typeof(E).GetProperty(splits.Last()).SetValue(obj, value);
+            obj.GetType().GetProperty(splits.Last()).SetValue(obj, value);
         }
     }
 
@@ -280,11 +382,11 @@ public class PropertyOptionsValueCombinationReadOnlyStruct<E, V> : PropertyOptio
         HorizontalContentAlignment.Value = horizontalContentAlignment;
     }
 
-    public ReactivePropertySlim<E> Object { get; } = new();
-    public ReactiveCollection<V> Options { get; } = new();
-    public ReactivePropertySlim<HorizontalAlignment> HorizontalContentAlignment { get; set; } = new();
+    public BindableReactiveProperty<E> Object { get; } = new();
+    public NotifyCollectionChangedSynchronizedViewList<V> Options { get; } = new ObservableList<V>().ToWritableNotifyCollectionChanged();
+    public BindableReactiveProperty<HorizontalAlignment> HorizontalContentAlignment { get; set; } = new();
 
-    public ReadOnlyReactivePropertySlim<V> PropertyValue
+    public IReadOnlyBindableReactiveProperty<V> PropertyValue
     {
         get
         {
@@ -292,16 +394,36 @@ public class PropertyOptionsValueCombinationReadOnlyStruct<E, V> : PropertyOptio
             object obj = Object.Value;
             foreach (var split in splits.Except(new[] { splits.Last() }))
             {
-                var a = ((IReactiveProperty)typeof(E).GetProperty(split).GetValue(obj)).Value;
-                obj = a;
+                var property = obj.GetType().GetProperty(split);
+                if (property != null)
+                {
+                    var propertyValue = property.GetValue(obj);
+                    // より汎用的なアプローチでReactivePropertyの値を取得
+                    if (propertyValue != null && propertyValue.GetType().IsGenericType)
+                    {
+                        var valueProperty = propertyValue.GetType().GetProperty("Value");
+                        if (valueProperty != null)
+                        {
+                            obj = valueProperty.GetValue(propertyValue);
+                        }
+                        else
+                        {
+                            obj = propertyValue;
+                        }
+                    }
+                    else
+                    {
+                        obj = propertyValue;
+                    }
+                }
                 if (obj is null)
                     return null;
             }
 
             if (obj is null)
                 return null;
-            var ret = typeof(E).GetProperty(splits.Last()).GetValue(obj);
-            return ret as ReadOnlyReactivePropertySlim<V>;
+            var ret = obj.GetType().GetProperty(splits.Last()).GetValue(obj);
+            return ret as IReadOnlyBindableReactiveProperty<V>;
         }
         set { }
     }
@@ -338,9 +460,9 @@ public class PropertyOptionsValueCombinationStructRP<E, V> : PropertyOptionsValu
         HorizontalContentAlignment.Value = horizontalContentAlignment;
     }
 
-    public ReactivePropertySlim<E> Object { get; } = new();
-    public ReactiveCollection<V> Options { get; } = new();
-    public ReactivePropertySlim<HorizontalAlignment> HorizontalContentAlignment { get; set; } = new();
+    public BindableReactiveProperty<E> Object { get; } = new();
+    public NotifyCollectionChangedSynchronizedViewList<V> Options { get; } = new ObservableList<V>().ToWritableNotifyCollectionChanged();
+    public BindableReactiveProperty<HorizontalAlignment> HorizontalContentAlignment { get; set; } = new();
 
     public ReactiveProperty<V> PropertyValue
     {
@@ -350,15 +472,35 @@ public class PropertyOptionsValueCombinationStructRP<E, V> : PropertyOptionsValu
             object obj = Object.Value;
             foreach (var split in splits.Except(new[] { splits.Last() }))
             {
-                var a = ((IReactiveProperty)typeof(E).GetProperty(split).GetValue(obj)).Value;
-                obj = a;
+                var property = obj.GetType().GetProperty(split);
+                if (property != null)
+                {
+                    var propertyValue = property.GetValue(obj);
+                    // より汎用的なアプローチでReactivePropertyの値を取得
+                    if (propertyValue != null && propertyValue.GetType().IsGenericType)
+                    {
+                        var valueProperty = propertyValue.GetType().GetProperty("Value");
+                        if (valueProperty != null)
+                        {
+                            obj = valueProperty.GetValue(propertyValue);
+                        }
+                        else
+                        {
+                            obj = propertyValue;
+                        }
+                    }
+                    else
+                    {
+                        obj = propertyValue;
+                    }
+                }
                 if (obj is null)
                     return null;
             }
 
             if (obj is null)
                 return null;
-            return (ReactiveProperty<V>)typeof(E).GetProperty(splits.Last()).GetValue(obj);
+            return (ReactiveProperty<V>)obj.GetType().GetProperty(splits.Last()).GetValue(obj);
         }
         set
         {
@@ -366,13 +508,33 @@ public class PropertyOptionsValueCombinationStructRP<E, V> : PropertyOptionsValu
             object obj = Object.Value;
             foreach (var split in splits.Except(new[] { splits.Last() }))
             {
-                var a = ((IReactiveProperty)typeof(E).GetProperty(split).GetValue(obj)).Value;
-                obj = a;
+                var property = obj.GetType().GetProperty(split);
+                if (property != null)
+                {
+                    var propertyValue = property.GetValue(obj);
+                    // より汎用的なアプローチでReactivePropertyの値を取得
+                    if (propertyValue != null && propertyValue.GetType().IsGenericType)
+                    {
+                        var valueProperty = propertyValue.GetType().GetProperty("Value");
+                        if (valueProperty != null)
+                        {
+                            obj = valueProperty.GetValue(propertyValue);
+                        }
+                        else
+                        {
+                            obj = propertyValue;
+                        }
+                    }
+                    else
+                    {
+                        obj = propertyValue;
+                    }
+                }
             }
 
             if (obj is null)
                 return;
-            typeof(E).GetProperty(splits.Last()).SetValue(obj, value);
+            obj.GetType().GetProperty(splits.Last()).SetValue(obj, value);
         }
     }
 
@@ -409,9 +571,9 @@ public class PropertyOptionsValueCombinationReadOnlyStructRP<E, V> : PropertyOpt
         HorizontalContentAlignment.Value = horizontalContentAlignment;
     }
 
-    public ReactivePropertySlim<E> Object { get; } = new();
-    public ReactiveCollection<V> Options { get; } = new();
-    public ReactivePropertySlim<HorizontalAlignment> HorizontalContentAlignment { get; set; } = new();
+    public BindableReactiveProperty<E> Object { get; } = new();
+    public NotifyCollectionChangedSynchronizedViewList<V> Options { get; } = new ObservableList<V>().ToWritableNotifyCollectionChanged();
+    public BindableReactiveProperty<HorizontalAlignment> HorizontalContentAlignment { get; set; } = new();
 
     public ReadOnlyReactiveProperty<V> PropertyValue
     {
@@ -421,15 +583,35 @@ public class PropertyOptionsValueCombinationReadOnlyStructRP<E, V> : PropertyOpt
             object obj = Object.Value;
             foreach (var split in splits.Except(new[] { splits.Last() }))
             {
-                var a = ((IReactiveProperty)typeof(E).GetProperty(split).GetValue(obj)).Value;
-                obj = a;
+                var property = obj.GetType().GetProperty(split);
+                if (property != null)
+                {
+                    var propertyValue = property.GetValue(obj);
+                    // より汎用的なアプローチでReactivePropertyの値を取得
+                    if (propertyValue != null && propertyValue.GetType().IsGenericType)
+                    {
+                        var valueProperty = propertyValue.GetType().GetProperty("Value");
+                        if (valueProperty != null)
+                        {
+                            obj = valueProperty.GetValue(propertyValue);
+                        }
+                        else
+                        {
+                            obj = propertyValue;
+                        }
+                    }
+                    else
+                    {
+                        obj = propertyValue;
+                    }
+                }
                 if (obj is null)
                     return null;
             }
 
             if (obj is null)
                 return null;
-            return (ReadOnlyReactiveProperty<V>)typeof(E).GetProperty(splits.Last()).GetValue(obj);
+            return (ReadOnlyReactiveProperty<V>)obj.GetType().GetProperty(splits.Last()).GetValue(obj);
         }
         set { }
     }

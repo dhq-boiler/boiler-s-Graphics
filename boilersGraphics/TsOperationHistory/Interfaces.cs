@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows;
-using Reactive.Bindings;
+using R3;
 using TsOperationHistory.Internal;
 
 namespace TsOperationHistory;
@@ -14,12 +14,12 @@ public interface IOperation
     /// <summary>
     ///     メッセージ
     /// </summary>
-    ReactivePropertySlim<string> Message { get; }
+    BindableReactiveProperty<string> Message { get; }
 
     /// <summary>
     ///     インデックス
     /// </summary>
-    ReactivePropertySlim<Visibility> ArrowVisibility { get; }
+    BindableReactiveProperty<Visibility> ArrowVisibility { get; }
 
     /// <summary>
     ///     実行 / 前進回帰

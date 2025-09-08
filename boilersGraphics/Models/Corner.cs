@@ -1,18 +1,18 @@
 ﻿using Prism.Mvvm;
-using Reactive.Bindings;
 using System.Windows;
+using R3;
 
 namespace boilersGraphics.Models;
 
 public class Corner : BindableBase
 {
-    public ReactivePropertySlim<int> Number { get; set; } = new();
+    public BindableReactiveProperty<int> Number { get; set; } = new();
 
-    public ReactivePropertySlim<double> Radius { get; set; } = new();
+    public BindableReactiveProperty<double> Radius { get; set; } = new();
 
-    public ReactivePropertySlim<double> Angle { get; set; } = new();
+    public BindableReactiveProperty<double> Angle { get; set; } = new();
 
-    public ReactivePropertySlim<Point> Point { get; set; } = new();
+    public BindableReactiveProperty<Point> Point { get; set; } = new();
 
     public override bool Equals(object obj)
     {

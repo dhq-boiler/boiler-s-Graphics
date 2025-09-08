@@ -1,19 +1,18 @@
-﻿using System;
+﻿using boilersGraphics.Extensions;
+using boilersGraphics.ViewModels;
+using boilersGraphics.Views;
+using boilersGraphics.Helpers;
+using Prism.Mvvm;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using boilersGraphics.Extensions;
-using boilersGraphics.ViewModels;
-using boilersGraphics.Views;
-using Prism.Mvvm;
-using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
+using R3;
+using ObservableCollections;
 
 namespace TsOperationHistory.Internal;
 
@@ -27,11 +26,22 @@ public class UndoStack<T> : BindableBase, IStack<T>, IDisposable where T : IOper
         Undos.Value = new CapacityStack<T>(capacity);
         Redos.Value = new CapacityStack<T>(capacity);
         Redos.Subscribe(x => { Debug.WriteLine(string.Join(", ", Redos.Select(y => y?.ToString() ?? "null"))); });
-        History = Undos.Value.CollectionChangedAsObservable()
-            .Merge(Redos.Value.CollectionChangedAsObservable())
+        
+        var undosObservable = Observable.FromEvent<NotifyCollectionChangedEventHandler, NotifyCollectionChangedEventArgs>(
+            h => (s, e) => h(e),
+            h => ((INotifyCollectionChanged)Undos.Value).CollectionChanged += h,
+            h => ((INotifyCollectionChanged)Undos.Value).CollectionChanged -= h);
+            
+        var redosObservable = Observable.FromEvent<NotifyCollectionChangedEventHandler, NotifyCollectionChangedEventArgs>(
+            h => (s, e) => h(e),
+            h => ((INotifyCollectionChanged)Redos.Value).CollectionChanged += h,
+            h => ((INotifyCollectionChanged)Redos.Value).CollectionChanged -= h);
+        
+        History = undosObservable
+            .Merge(redosObservable)
             .Select(_ => (IStack<T>)new CapacityStack<T>(Undos.Value.Union(Redos.Value.Reverse())))
             .Do(x => ScrollToCurrentPosition())
-            .ToReadOnlyReactivePropertySlim();
+            .ToReadOnlyBindableReactiveProperty();
     }
 
     public bool CanUndo => Undos.Value.Any();
@@ -39,9 +49,9 @@ public class UndoStack<T> : BindableBase, IStack<T>, IDisposable where T : IOper
 
     public int Count => Undos.Value.Union(Redos.Value).Count();
 
-    public ReactivePropertySlim<IStack<T>> Undos { get; } = new();
-    public ReactivePropertySlim<IStack<T>> Redos { get; } = new();
-    public ReadOnlyReactivePropertySlim<IStack<T>> History { get; }
+    public BindableReactiveProperty<IStack<T>> Undos { get; } = new();
+    public BindableReactiveProperty<IStack<T>> Redos { get; } = new();
+    public IReadOnlyBindableReactiveProperty<IStack<T>> History { get; }
 
     public T this[int index] => Undos.Value.Union(Redos.Value.Reverse()).ElementAt(index);
 

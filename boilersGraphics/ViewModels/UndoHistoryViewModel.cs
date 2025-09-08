@@ -1,15 +1,13 @@
 ﻿using boilersGraphics.Properties;
 using boilersGraphics.Views;
+using ObservableCollections;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
-using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
+using R3;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -85,7 +83,7 @@ public class UndoHistoryViewModel : BindableBase, IDialogAware
             .AddTo(compositeDisposable);
         Operations = Observable
             .Return((Application.Current.MainWindow.DataContext as MainWindowViewModel).Controller.UndoStack)
-            .ToReadOnlyReactivePropertySlim();
+            .ToReadOnlyBindableReactiveProperty();
         CurrentPosition.Subscribe(cp =>
             {
                 var mainWindowViewModel = Application.Current.MainWindow.DataContext as MainWindowViewModel;
@@ -100,7 +98,7 @@ public class UndoHistoryViewModel : BindableBase, IDialogAware
                 }
             })
             .AddTo(compositeDisposable);
-        Operations.Value.History.Subscribe(_ =>
+        Operations.Value.History.AsObservable().Subscribe(_ =>
             {
                 if (Operations.Value.AsValueEnumerable().Count() == Operations.Value.Undos.Value.AsValueEnumerable().Count())
                     CurrentPosition.Value = Operations.Value.AsValueEnumerable().Count() - 1;
@@ -114,11 +112,11 @@ public class UndoHistoryViewModel : BindableBase, IDialogAware
     public ReactiveCommand<AutoScrollingLabel> MouseLeaveCommand { get; } = new();
     public ReactiveCommand<IOperation> UndoCommand { get; } = new();
     public ReactiveCommand<IOperation> RedoCommand { get; } = new();
-    public ReactiveCollection<MenuItem> ContextMenuItems { get; } = new();
+    public NotifyCollectionChangedSynchronizedViewList<MenuItem> ContextMenuItems { get; } = new ObservableList<MenuItem>().ToWritableNotifyCollectionChanged();
     public ReactiveCommand<RoutedEventArgs> ContextMenuOpeningCommand { get; } = new();
-    public ReadOnlyReactivePropertySlim<UndoStack<IOperation>> Operations { get; }
-    public ReactivePropertySlim<int> CurrentPosition { get; } = new();
-    public ReactivePropertySlim<object> SelectedOperation { get; } = new();
+    public IReadOnlyBindableReactiveProperty<UndoStack<IOperation>> Operations { get; }
+    public BindableReactiveProperty<int> CurrentPosition { get; } = new();
+    public BindableReactiveProperty<object> SelectedOperation { get; } = new();
 
     public event Action<IDialogResult> RequestClose;
 

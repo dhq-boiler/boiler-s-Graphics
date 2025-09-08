@@ -2,11 +2,9 @@
 using OpenCvSharp.WpfExtensions;
 using Prism.Mvvm;
 using Prism.Regions;
-using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
 using System;
-using System.Reactive.Disposables;
 using System.Windows.Media.Imaging;
+using R3;
 
 namespace boilersGraphics.ViewModels.ColorCorrect
 {
@@ -15,13 +13,13 @@ namespace boilersGraphics.ViewModels.ColorCorrect
         private CompositeDisposable _disposable = new CompositeDisposable();
 
         private bool _disposedValue;
-        public ReactivePropertySlim<int> AddHue { get; } = new();
-        public ReactivePropertySlim<int> AddSaturation { get; } = new();
-        public ReactivePropertySlim<int> AddValue { get; } = new();
-        public ReactivePropertySlim<ColorCorrectViewModel> ViewModel { get; } = new();
+        public BindableReactiveProperty<int> AddHue { get; } = new();
+        public BindableReactiveProperty<int> AddSaturation { get; } = new();
+        public BindableReactiveProperty<int> AddValue { get; } = new();
+        public BindableReactiveProperty<ColorCorrectViewModel> ViewModel { get; } = new();
 
 
-        public ReactivePropertySlim<WriteableBitmap> HueSelector { get; } = new();
+        public BindableReactiveProperty<WriteableBitmap> HueSelector { get; } = new();
 
         public HsvViewModel()
         {

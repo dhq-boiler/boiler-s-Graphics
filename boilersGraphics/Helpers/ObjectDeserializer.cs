@@ -3,7 +3,6 @@ using boilersGraphics.Models;
 using boilersGraphics.Properties;
 using boilersGraphics.ViewModels;
 using boilersGraphics.ViewModels.ColorCorrect;
-using Reactive.Bindings;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -15,6 +14,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using System.Xml.Linq;
+using boilersGraphics.Extensions;
+using ObservableCollections;
 using ZLinq;
 using Brush = System.Windows.Media.Brush;
 using Color = System.Windows.Media.Color;
@@ -527,7 +528,7 @@ public class ObjectDeserializer
                             if (curveElm.Elements("Points").AsValueEnumerable().Any())
                             {
                                 curve.Points =
-                                    new ReactiveCollection<ToneCurveViewModel.Point>();
+                                    new ObservableList<ToneCurveViewModel.Point>().ToWritableNotifyCollectionChanged();
                                 curve.Points.AddRange(curveElm.Elements("Points").AsValueEnumerable()
                                     .SelectMany(x => x.Elements("Point")).Select(x =>
                                         new ToneCurveViewModel.Point(
@@ -543,7 +544,7 @@ public class ObjectDeserializer
                             if (curveElm.Elements("InOutPairs").AsValueEnumerable().Any())
                             {
                                 curve.InOutPairs =
-                                    new ReactiveCollection<InOutPair>();
+                                    new ObservableList<InOutPair>().ToWritableNotifyCollectionChanged();
                                 curve.InOutPairs.AddRange(curveElm.Elements("InOutPairs").AsValueEnumerable()
                                     .SelectMany(x => x.Elements("InOutPair")).Select(x =>
                                         new InOutPair(

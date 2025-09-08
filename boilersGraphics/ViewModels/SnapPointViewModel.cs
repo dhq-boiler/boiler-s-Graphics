@@ -1,7 +1,6 @@
 ﻿using boilersGraphics.Controls;
 using boilersGraphics.Helpers;
-using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
+using R3;
 using System;
 using System.Collections.Generic;
 using ZLinq;
@@ -48,16 +47,16 @@ public class SnapPointViewModel : SelectableDesignerItemViewModelBase
             .AddTo(_CompositeDisposable);
     }
 
-    public ReactivePropertySlim<SelectableDesignerItemViewModelBase> Parent { get; } = new();
+    public ReactiveProperty<SelectableDesignerItemViewModelBase> Parent { get; } = new();
 
-    public ReactivePropertySlim<double> Left { get; } = new(0, ReactivePropertyMode.RaiseLatestValueOnSubscribe);
+    public ReactiveProperty<double> Left { get; } = new(0);
 
-    public ReactivePropertySlim<double> Top { get; } = new(0, ReactivePropertyMode.RaiseLatestValueOnSubscribe);
-    public ReactivePropertySlim<double> Width { get; } = new();
+    public ReactiveProperty<double> Top { get; } = new(0);
+    public ReactiveProperty<double> Width { get; } = new();
 
-    public ReactivePropertySlim<double> Height { get; } = new();
+    public ReactiveProperty<double> Height { get; } = new();
 
-    public ReactivePropertySlim<double> Opacity { get; } = new();
+    public ReactiveProperty<double> Opacity { get; } = new();
 
     public List<IDisposable> SnapObjs { get; set; } = new();
 

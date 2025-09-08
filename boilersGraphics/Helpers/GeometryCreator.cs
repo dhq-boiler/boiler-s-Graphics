@@ -67,14 +67,14 @@ public static class GeometryCreator
                 new Point(item.Width.Value / 2, item.Height.Value / 2),
                 item.Width.Value / 2 - item.EdgeThickness.Value / 2,
                 item.Height.Value / 2 - item.EdgeThickness.Value / 2,
-                new RotateTransform(angle, item.CenterPoint.Value.X, item.CenterPoint.Value.Y)));
+                new RotateTransform(angle, item.CenterPoint.CurrentValue.X, item.CenterPoint.CurrentValue.Y)));
         var temp = item.PathGeometryRotate.Value.Clone();
-        temp.Transform = new RotateTransform(angle, item.CenterPoint.Value.X, item.CenterPoint.Value.Y);
+        temp.Transform = new RotateTransform(angle, item.CenterPoint.CurrentValue.X, item.CenterPoint.CurrentValue.Y);
         return Geometry.Combine(temp,
             PathGeometry.CreateFromGeometry(new EllipseGeometry(new Point(item.Width.Value / 2, item.Height.Value / 2),
                 item.Width.Value / 2 - item.EdgeThickness.Value / 2,
                 item.Height.Value / 2 - item.EdgeThickness.Value / 2,
-                new RotateTransform(angle, item.CenterPoint.Value.X, item.CenterPoint.Value.Y))),
+                new RotateTransform(angle, item.CenterPoint.CurrentValue.X, item.CenterPoint.CurrentValue.Y))),
             GeometryCombineMode.Intersect, null);
     }
 
@@ -209,15 +209,15 @@ public static class GeometryCreator
                 new Rect(new Point(item.EdgeThickness.Value / 2, item.EdgeThickness.Value / 2),
                     new Point(item.Width.Value - item.EdgeThickness.Value / 2,
                         item.Height.Value - item.EdgeThickness.Value / 2)), radiusX, radiusY,
-                new RotateTransform(angle, item.CenterPoint.Value.X, item.CenterPoint.Value.Y)));
+                new RotateTransform(angle, item.CenterPoint.CurrentValue.X, item.CenterPoint.CurrentValue.Y)));
         var temp = item.PathGeometryRotate.Value.Clone();
-        temp.Transform = new RotateTransform(angle, item.CenterPoint.Value.X, item.CenterPoint.Value.Y);
+        temp.Transform = new RotateTransform(angle, item.CenterPoint.CurrentValue.X, item.CenterPoint.CurrentValue.Y);
         return Geometry.Combine(temp,
             PathGeometry.CreateFromGeometry(new RectangleGeometry(
                 new Rect(new Point(item.EdgeThickness.Value / 2, item.EdgeThickness.Value / 2),
                     new Point(item.Width.Value - item.EdgeThickness.Value / 2,
                         item.Height.Value - item.EdgeThickness.Value / 2)), radiusX, radiusY,
-                new RotateTransform(angle, item.CenterPoint.Value.X, item.CenterPoint.Value.Y))),
+                new RotateTransform(angle, item.CenterPoint.CurrentValue.X, item.CenterPoint.CurrentValue.Y))),
             GeometryCombineMode.Intersect, null);
     }
 
@@ -484,15 +484,15 @@ public static class GeometryCreator
                 new Rect(new Point(0, 0),
                     new Point(item.Width.Value - item.EdgeThickness.Value / 2,
                         item.Height.Value - item.EdgeThickness.Value / 2)), 0, 0,
-                new RotateTransform(angle, item.CenterPoint.Value.X, item.CenterPoint.Value.Y)));
+                new RotateTransform(angle, item.CenterPoint.CurrentValue.X, item.CenterPoint.CurrentValue.Y)));
         var temp = item.PathGeometryRotate.Value.Clone();
-        temp.Transform = new RotateTransform(angle, item.CenterPoint.Value.X, item.CenterPoint.Value.Y);
+        temp.Transform = new RotateTransform(angle, item.CenterPoint.CurrentValue.X, item.CenterPoint.CurrentValue.Y);
         return Geometry.Combine(temp,
             PathGeometry.CreateFromGeometry(new RectangleGeometry(
                 new Rect(new Point(0, 0),
                     new Point(item.Width.Value - item.EdgeThickness.Value / 2,
                         item.Height.Value - item.EdgeThickness.Value / 2)), 0, 0,
-                new RotateTransform(angle, item.CenterPoint.Value.X, item.CenterPoint.Value.Y))),
+                new RotateTransform(angle, item.CenterPoint.CurrentValue.X, item.CenterPoint.CurrentValue.Y))),
             GeometryCombineMode.Intersect, null);
     }
 
@@ -648,9 +648,9 @@ public static class GeometryCreator
                 else if (item2.GetType() == typeof(CombineGeometryViewModel))
                 {
                     var item2_ = item2 as CombineGeometryViewModel;
-                    var beginPoint = GetBeginPoint(item2_.PathGeometry.Value);
+                    var beginPoint = GetBeginPoint(item2_.PathGeometry.CurrentValue);
                     ctx.BeginFigure(beginPoint, true, true);
-                    foreach (var figure in item2_.PathGeometry.Value.Figures)
+                    foreach (var figure in item2_.PathGeometry.CurrentValue.Figures)
                     foreach (var segment in figure.Segments)
                     {
                         if (segment is ArcSegment arcSegment)
@@ -676,7 +676,7 @@ public static class GeometryCreator
                 else if (item2.GetType() == typeof(PolyBezierViewModel))
                 {
                     var item2_ = item2 as PolyBezierViewModel;
-                    var beginPoint = GetBeginPoint(item1_.PathGeometry.Value);
+                    var beginPoint = GetBeginPoint(item1_.PathGeometry.CurrentValue);
                     ctx.BeginFigure(beginPoint, true, true);
                     ctx.LineTo(item1_.Points[1], true, false);
                     ctx.PolyBezierTo(item2_.Points.AsValueEnumerable().ToList(), true, false);
@@ -803,9 +803,9 @@ public static class GeometryCreator
                 var item1_ = item1 as CombineGeometryViewModel;
                 if (item2.GetType() == typeof(StraightConnectorViewModel))
                 {
-                    var beginPoint = GetBeginPoint(item1_.PathGeometry.Value);
+                    var beginPoint = GetBeginPoint(item1_.PathGeometry.CurrentValue);
                     ctx.BeginFigure(beginPoint, true, true);
-                    foreach (var figure in item1_.PathGeometry.Value.Figures)
+                    foreach (var figure in item1_.PathGeometry.CurrentValue.Figures)
                     foreach (var segment in figure.Segments)
                     {
                         if (segment is ArcSegment arcSegment)
@@ -863,9 +863,9 @@ public static class GeometryCreator
                 var item1_ = item1 as PolyBezierViewModel;
                 if (item2.GetType() == typeof(StraightConnectorViewModel))
                 {
-                    var beginPoint = GetBeginPoint(item1_.PathGeometry.Value);
+                    var beginPoint = GetBeginPoint(item1_.PathGeometry.CurrentValue);
                     ctx.BeginFigure(beginPoint, true, true);
-                    foreach (var figure in item1_.PathGeometry.Value.Figures)
+                    foreach (var figure in item1_.PathGeometry.CurrentValue.Figures)
                     foreach (var segment in figure.Segments)
                     {
                         if (segment is ArcSegment arcSegment)
@@ -892,7 +892,7 @@ public static class GeometryCreator
                 else if (item2.GetType() == typeof(BezierCurveViewModel))
                 {
                     var item2_ = item2 as BezierCurveViewModel;
-                    var beginPoint = GetBeginPoint(item1_.PathGeometry.Value);
+                    var beginPoint = GetBeginPoint(item1_.PathGeometry.CurrentValue);
                     ctx.BeginFigure(beginPoint, true, true);
                     ctx.PolyBezierTo(item1_.Points.AsValueEnumerable().Skip(1).ToList(), true, false);
                     ctx.BezierTo(item2_.ControlPoint1.Value, item2_.ControlPoint2.Value, item2_.Points[1], true, false);
@@ -924,7 +924,7 @@ public static class GeometryCreator
                 else if (item2.GetType() == typeof(PolyBezierViewModel))
                 {
                     var item2_ = item2 as PolyBezierViewModel;
-                    var beginPoint = GetBeginPoint(item1_.PathGeometry.Value);
+                    var beginPoint = GetBeginPoint(item1_.PathGeometry.CurrentValue);
                     ctx.BeginFigure(beginPoint, true, true);
                     ctx.PolyBezierTo(item1_.Points.AsValueEnumerable().Skip(1).ToList(), true, false);
                     ctx.PolyBezierTo(item2_.Points.AsValueEnumerable().ToList(), true, false);

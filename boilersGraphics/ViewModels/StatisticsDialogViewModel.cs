@@ -2,11 +2,8 @@
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
-using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
+using R3;
 using System;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Threading;
 
@@ -25,78 +22,78 @@ internal class StatisticsDialogViewModel : BindableBase, IDialogAware, IDisposab
     public MainWindowViewModel MainWindowViewModel { get; set; }
     public DelegateCommand LoadedCommand { get; }
 
-    public ReactivePropertySlim<int> NumberOfBoots { get; } = new();
+    public BindableReactiveProperty<int> NumberOfBoots { get; } = new();
 
-    public ReactivePropertySlim<int> NumberOfTimesTheFileWasOpenedBySpecifyingIt { get; } = new();
+    public BindableReactiveProperty<int> NumberOfTimesTheFileWasOpenedBySpecifyingIt { get; } = new();
 
-    public ReactivePropertySlim<int> NumberOfTimesTheAutoSaveFileIsSpecifiedAndOpened { get; } = new();
+    public BindableReactiveProperty<int> NumberOfTimesTheAutoSaveFileIsSpecifiedAndOpened { get; } = new();
 
-    public ReactivePropertySlim<int> NumberOfClicksWithThePointerTool { get; } = new();
+    public BindableReactiveProperty<int> NumberOfClicksWithThePointerTool { get; } = new();
 
-    public ReactivePropertySlim<int> CumulativeTotalOfItemsSelectedWithTheLassoTool { get; } = new();
+    public BindableReactiveProperty<int> CumulativeTotalOfItemsSelectedWithTheLassoTool { get; } = new();
 
-    public ReactivePropertySlim<int> NumberOfDrawsOfTheStraightLineTool { get; } = new();
-    public ReactivePropertySlim<int> NumberOfDrawsOfTheRectangleTool { get; } = new();
-    public ReactivePropertySlim<int> NumberOfDrawsOfTheEllipseTool { get; } = new();
-    public ReactivePropertySlim<int> NumberOfDrawsOfTheImageFileTool { get; } = new();
-    public ReactivePropertySlim<int> NumberOfDrawsOfTheLetterTool { get; } = new();
-    public ReactivePropertySlim<int> NumberOfDrawsOfTheVerticalLetterTool { get; } = new();
-    public ReactivePropertySlim<int> NumberOfDrawsOfPolygonTool { get; } = new();
-    public ReactivePropertySlim<int> NumberOfDrawsOfBezierCurveTool { get; } = new();
-    public ReactivePropertySlim<int> NumberOfSnapPointToolInstallations { get; } = new();
-    public ReactivePropertySlim<int> BrushToolDrawCount { get; } = new();
-    public ReactivePropertySlim<int> NumberOfTimesTheEraserToolHasBeenUsed { get; } = new();
-    public ReactivePropertySlim<int> NumberOfTimesSaved { get; } = new();
-    public ReactivePropertySlim<int> NumberOfTimesYouHaveNamedAndSaved { get; } = new();
-    public ReactivePropertySlim<int> NumberOfExports { get; } = new();
-    public ReactivePropertySlim<int> NumberOfJpegExports { get; } = new();
-    public ReactivePropertySlim<int> NumberOfPngExports { get; } = new();
-    public ReactivePropertySlim<int> NumberOfGifExports { get; } = new();
-    public ReactivePropertySlim<int> NumberOfBmpExports { get; } = new();
-    public ReactivePropertySlim<int> NumberOfTiffExports { get; } = new();
-    public ReactivePropertySlim<int> NumberOfWmpExports { get; } = new();
-    public ReactivePropertySlim<int> NumberOfTimesGrouped { get; } = new();
-    public ReactivePropertySlim<int> NumberOfUngrouped { get; } = new();
-    public ReactivePropertySlim<int> NumberOfMovesToTheFrontend { get; } = new();
-    public ReactivePropertySlim<int> NumberOfMovesToTheFront { get; } = new();
-    public ReactivePropertySlim<int> NumberOfMovesToTheBack { get; } = new();
-    public ReactivePropertySlim<int> NumberOfMovesToTheBackend { get; } = new();
-    public ReactivePropertySlim<int> NumberOfTopAlignment { get; } = new();
-    public ReactivePropertySlim<int> NumberOfTimesTheTopAndBottomAreCentered { get; } = new();
-    public ReactivePropertySlim<int> NumberOfBottomAlignment { get; } = new();
-    public ReactivePropertySlim<int> NumberOfLeftAlignment { get; } = new();
-    public ReactivePropertySlim<int> NumberOfTimesLeftAndRightCentered { get; } = new();
-    public ReactivePropertySlim<int> NumberOfRightAlignment { get; } = new();
-    public ReactivePropertySlim<int> NumberOfTimesAlignedLeftAndRight { get; } = new();
-    public ReactivePropertySlim<int> NumberOfTimesAlignedUpAndDown { get; } = new();
-    public ReactivePropertySlim<int> NumberOfTimesToMatchTheWidth { get; } = new();
-    public ReactivePropertySlim<int> NumberOfTimesToMatchTheHeight { get; } = new();
-    public ReactivePropertySlim<int> NumberOfUnions { get; } = new();
-    public ReactivePropertySlim<int> NumberOfIntersects { get; } = new();
-    public ReactivePropertySlim<int> NumberOfXors { get; } = new();
-    public ReactivePropertySlim<int> NumberOfExcludes { get; } = new();
-    public ReactivePropertySlim<int> NumberOfCuts { get; } = new();
-    public ReactivePropertySlim<int> NumberOfCopies { get; } = new();
-    public ReactivePropertySlim<int> NumberOfPasted { get; } = new();
-    public ReactivePropertySlim<int> NumberOfUndos { get; } = new();
-    public ReactivePropertySlim<int> NumberOfRedoes { get; } = new();
-    public ReactivePropertySlim<int> NumberOfTimesAutomaticallySaved { get; } = new();
+    public BindableReactiveProperty<int> NumberOfDrawsOfTheStraightLineTool { get; } = new();
+    public BindableReactiveProperty<int> NumberOfDrawsOfTheRectangleTool { get; } = new();
+    public BindableReactiveProperty<int> NumberOfDrawsOfTheEllipseTool { get; } = new();
+    public BindableReactiveProperty<int> NumberOfDrawsOfTheImageFileTool { get; } = new();
+    public BindableReactiveProperty<int> NumberOfDrawsOfTheLetterTool { get; } = new();
+    public BindableReactiveProperty<int> NumberOfDrawsOfTheVerticalLetterTool { get; } = new();
+    public BindableReactiveProperty<int> NumberOfDrawsOfPolygonTool { get; } = new();
+    public BindableReactiveProperty<int> NumberOfDrawsOfBezierCurveTool { get; } = new();
+    public BindableReactiveProperty<int> NumberOfSnapPointToolInstallations { get; } = new();
+    public BindableReactiveProperty<int> BrushToolDrawCount { get; } = new();
+    public BindableReactiveProperty<int> NumberOfTimesTheEraserToolHasBeenUsed { get; } = new();
+    public BindableReactiveProperty<int> NumberOfTimesSaved { get; } = new();
+    public BindableReactiveProperty<int> NumberOfTimesYouHaveNamedAndSaved { get; } = new();
+    public BindableReactiveProperty<int> NumberOfExports { get; } = new();
+    public BindableReactiveProperty<int> NumberOfJpegExports { get; } = new();
+    public BindableReactiveProperty<int> NumberOfPngExports { get; } = new();
+    public BindableReactiveProperty<int> NumberOfGifExports { get; } = new();
+    public BindableReactiveProperty<int> NumberOfBmpExports { get; } = new();
+    public BindableReactiveProperty<int> NumberOfTiffExports { get; } = new();
+    public BindableReactiveProperty<int> NumberOfWmpExports { get; } = new();
+    public BindableReactiveProperty<int> NumberOfTimesGrouped { get; } = new();
+    public BindableReactiveProperty<int> NumberOfUngrouped { get; } = new();
+    public BindableReactiveProperty<int> NumberOfMovesToTheFrontend { get; } = new();
+    public BindableReactiveProperty<int> NumberOfMovesToTheFront { get; } = new();
+    public BindableReactiveProperty<int> NumberOfMovesToTheBack { get; } = new();
+    public BindableReactiveProperty<int> NumberOfMovesToTheBackend { get; } = new();
+    public BindableReactiveProperty<int> NumberOfTopAlignment { get; } = new();
+    public BindableReactiveProperty<int> NumberOfTimesTheTopAndBottomAreCentered { get; } = new();
+    public BindableReactiveProperty<int> NumberOfBottomAlignment { get; } = new();
+    public BindableReactiveProperty<int> NumberOfLeftAlignment { get; } = new();
+    public BindableReactiveProperty<int> NumberOfTimesLeftAndRightCentered { get; } = new();
+    public BindableReactiveProperty<int> NumberOfRightAlignment { get; } = new();
+    public BindableReactiveProperty<int> NumberOfTimesAlignedLeftAndRight { get; } = new();
+    public BindableReactiveProperty<int> NumberOfTimesAlignedUpAndDown { get; } = new();
+    public BindableReactiveProperty<int> NumberOfTimesToMatchTheWidth { get; } = new();
+    public BindableReactiveProperty<int> NumberOfTimesToMatchTheHeight { get; } = new();
+    public BindableReactiveProperty<int> NumberOfUnions { get; } = new();
+    public BindableReactiveProperty<int> NumberOfIntersects { get; } = new();
+    public BindableReactiveProperty<int> NumberOfXors { get; } = new();
+    public BindableReactiveProperty<int> NumberOfExcludes { get; } = new();
+    public BindableReactiveProperty<int> NumberOfCuts { get; } = new();
+    public BindableReactiveProperty<int> NumberOfCopies { get; } = new();
+    public BindableReactiveProperty<int> NumberOfPasted { get; } = new();
+    public BindableReactiveProperty<int> NumberOfUndos { get; } = new();
+    public BindableReactiveProperty<int> NumberOfRedoes { get; } = new();
+    public BindableReactiveProperty<int> NumberOfTimesAutomaticallySaved { get; } = new();
 
-    public ReactivePropertySlim<int> NumberOfNewlyCreatedLayers { get; } = new();
-    public ReactivePropertySlim<int> NumberOfDeletedLayers { get; } = new();
-    public ReactivePropertySlim<int> NumberOfTimesTheItemWasDrawn { get; } = new();
-    public ReactivePropertySlim<int> NumberOfTimesTheItemWasDeleted { get; } = new();
-    public ReactivePropertySlim<int> NumberOfLogLevelChanges { get; } = new();
-    public ReactivePropertySlim<int> NumberOfTimesTheVersionInformationDialogWasDisplayed { get; } = new();
-    public ReactivePropertySlim<int> NumberOfTimesTheApplicationLogWasDisplayed { get; } = new();
-    public ReactivePropertySlim<int> NumberOfTimesSliceToolHasBeenUsed { get; } = new();
-    public ReactivePropertySlim<int> NumberOfDrawsOfFreeHandTool { get; } = new();
-    public ReactivePropertySlim<int> NumberOfDrawsOfThePieTool { get; } = new();
-    public ReactivePropertySlim<int> NumberOfDrawsOfTheMosaicTool { get; } = new();
-    public ReactivePropertySlim<int> NumberOfDrawsOfTheGaussianFilterTool { get; } = new();
-    public ReactivePropertySlim<int> NumberOfDrawsOfTheColorCorrectTool { get; } = new();
+    public BindableReactiveProperty<int> NumberOfNewlyCreatedLayers { get; } = new();
+    public BindableReactiveProperty<int> NumberOfDeletedLayers { get; } = new();
+    public BindableReactiveProperty<int> NumberOfTimesTheItemWasDrawn { get; } = new();
+    public BindableReactiveProperty<int> NumberOfTimesTheItemWasDeleted { get; } = new();
+    public BindableReactiveProperty<int> NumberOfLogLevelChanges { get; } = new();
+    public BindableReactiveProperty<int> NumberOfTimesTheVersionInformationDialogWasDisplayed { get; } = new();
+    public BindableReactiveProperty<int> NumberOfTimesTheApplicationLogWasDisplayed { get; } = new();
+    public BindableReactiveProperty<int> NumberOfTimesSliceToolHasBeenUsed { get; } = new();
+    public BindableReactiveProperty<int> NumberOfDrawsOfFreeHandTool { get; } = new();
+    public BindableReactiveProperty<int> NumberOfDrawsOfThePieTool { get; } = new();
+    public BindableReactiveProperty<int> NumberOfDrawsOfTheMosaicTool { get; } = new();
+    public BindableReactiveProperty<int> NumberOfDrawsOfTheGaussianFilterTool { get; } = new();
+    public BindableReactiveProperty<int> NumberOfDrawsOfTheColorCorrectTool { get; } = new();
 
-    public ReactivePropertySlim<TimeSpan> Uptime { get; } = new();
+    public BindableReactiveProperty<TimeSpan> Uptime { get; } = new();
 
     public string Title => Resources.Title_Statistics;
 

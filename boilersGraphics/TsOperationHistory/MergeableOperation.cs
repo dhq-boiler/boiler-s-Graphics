@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Windows;
-using Reactive.Bindings;
+using R3;
 using TsOperationHistory.Extensions;
 
 namespace TsOperationHistory;
@@ -60,8 +60,8 @@ public class MergeableOperation : IMergeableOperation, IOperationWithEvent
     public string RollForwardInfo => _rollForward.Name;
     public string RollBackInfo => _rollBack.Name;
     public IMergeJudge MergeJudge { get; private set; }
-    public ReactivePropertySlim<string> Message { get; } = new();
-    public ReactivePropertySlim<Visibility> ArrowVisibility { get; } = new(Visibility.Hidden);
+    public BindableReactiveProperty<string> Message { get; } = new();
+    public BindableReactiveProperty<Visibility> ArrowVisibility { get; } = new(Visibility.Hidden);
 
     public void RollForward()
     {
@@ -158,8 +158,8 @@ public class MergeableOperation<T> : IMergeableOperation, IOperationWithEvent
     private Action<T> Setter { get; }
     public IMergeJudge MergeJudge { get; set; }
 
-    public ReactivePropertySlim<string> Message { get; } = new();
-    public ReactivePropertySlim<Visibility> ArrowVisibility { get; } = new(Visibility.Hidden);
+    public BindableReactiveProperty<string> Message { get; } = new();
+    public BindableReactiveProperty<Visibility> ArrowVisibility { get; } = new(Visibility.Hidden);
 
     public void RollForward()
     {
@@ -248,8 +248,8 @@ public class DisposeOperation<T> : IOperation, IOperationWithEvent where T : IDi
         RegenerateAction = regenerateAction;
     }
 
-    public ReactivePropertySlim<string> Message { get; } = new();
-    public ReactivePropertySlim<Visibility> ArrowVisibility { get; } = new(Visibility.Hidden);
+    public BindableReactiveProperty<string> Message { get; } = new();
+    public BindableReactiveProperty<Visibility> ArrowVisibility { get; } = new(Visibility.Hidden);
 
     public void RollForward()
     {

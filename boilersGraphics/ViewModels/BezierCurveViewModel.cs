@@ -4,11 +4,9 @@ using NLog;
 using Prism.Ioc;
 using Prism.Services.Dialogs;
 using Prism.Unity;
-using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
+using R3;
 using System;
 using System.Collections.Specialized;
-using System.Reactive.Linq;
 using System.Windows;
 using Path = System.Windows.Shapes.Path;
 
@@ -33,30 +31,30 @@ public class BezierCurveViewModel : ConnectorBaseViewModel
         AddPoints(diagramViewModel, p1, p2);
         ControlPoint1.Value = c1;
         ControlPoint2.Value = c2;
-        P1X = Observable.Return(p1.X).ToReactiveProperty();
-        P1Y = Observable.Return(p1.Y).ToReactiveProperty();
-        P2X = Observable.Return(p2.X).ToReactiveProperty();
-        P2Y = Observable.Return(p2.Y).ToReactiveProperty();
-        C1X = Observable.Return(c1.X).ToReactiveProperty();
-        C1Y = Observable.Return(c1.Y).ToReactiveProperty();
-        C2X = Observable.Return(c2.X).ToReactiveProperty();
-        C2Y = Observable.Return(c2.Y).ToReactiveProperty();
+        P1X = Observable.Return(p1.X).ToBindableReactiveProperty();
+        P1Y = Observable.Return(p1.Y).ToBindableReactiveProperty();
+        P2X = Observable.Return(p2.X).ToBindableReactiveProperty();
+        P2Y = Observable.Return(p2.Y).ToBindableReactiveProperty();
+        C1X = Observable.Return(c1.X).ToBindableReactiveProperty();
+        C1Y = Observable.Return(c1.Y).ToBindableReactiveProperty();
+        C2X = Observable.Return(c2.X).ToBindableReactiveProperty();
+        C2Y = Observable.Return(c2.Y).ToBindableReactiveProperty();
     }
 
-    public ReactivePropertySlim<Point> ControlPoint1 { get; set; } = new();
-    public ReactivePropertySlim<Point> ControlPoint2 { get; set; } = new();
+    public BindableReactiveProperty<Point> ControlPoint1 { get; set; } = new();
+    public BindableReactiveProperty<Point> ControlPoint2 { get; set; } = new();
 
-    public ReactivePropertySlim<Point> ControlLine1LeftTop { get; set; } = new();
-    public ReactivePropertySlim<Point> ControlLine2LeftTop { get; set; } = new();
+    public BindableReactiveProperty<Point> ControlLine1LeftTop { get; set; } = new();
+    public BindableReactiveProperty<Point> ControlLine2LeftTop { get; set; } = new();
 
-    public ReactiveProperty<double> P1X { get; set; }
-    public ReactiveProperty<double> P1Y { get; set; }
-    public ReactiveProperty<double> P2X { get; set; }
-    public ReactiveProperty<double> P2Y { get; set; }
-    public ReactiveProperty<double> C1X { get; set; }
-    public ReactiveProperty<double> C1Y { get; set; }
-    public ReactiveProperty<double> C2X { get; set; }
-    public ReactiveProperty<double> C2Y { get; set; }
+    public BindableReactiveProperty<double> P1X { get; set; }
+    public BindableReactiveProperty<double> P1Y { get; set; }
+    public BindableReactiveProperty<double> P2X { get; set; }
+    public BindableReactiveProperty<double> P2Y { get; set; }
+    public BindableReactiveProperty<double> C1X { get; set; }
+    public BindableReactiveProperty<double> C1Y { get; set; }
+    public BindableReactiveProperty<double> C2X { get; set; }
+    public BindableReactiveProperty<double> C2Y { get; set; }
 
     public override bool SupportsPropertyDialog => true;
 

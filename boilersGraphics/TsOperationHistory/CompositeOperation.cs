@@ -1,6 +1,6 @@
-﻿using Reactive.Bindings;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Windows;
+using R3;
 using ZLinq;
 
 namespace TsOperationHistory;
@@ -26,8 +26,8 @@ public class CompositeOperation : ICompositeOperation
     }
 
     public IEnumerable<IOperation> Operations => _operations;
-    public ReactivePropertySlim<string> Message { get; } = new();
-    public ReactivePropertySlim<Visibility> ArrowVisibility { get; } = new(Visibility.Hidden);
+    public BindableReactiveProperty<string> Message { get; } = new();
+    public BindableReactiveProperty<Visibility> ArrowVisibility { get; } = new(Visibility.Hidden);
 
     public void RollForward()
     {

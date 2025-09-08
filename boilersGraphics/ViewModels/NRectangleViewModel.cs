@@ -3,10 +3,8 @@ using boilersGraphics.Views;
 using Prism.Ioc;
 using Prism.Services.Dialogs;
 using Prism.Unity;
-using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
+using R3;
 using System;
-using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Media;
 using Path = System.Windows.Shapes.Path;
@@ -47,11 +45,9 @@ public class NRectangleViewModel : DesignerItemViewModelBase, IRadius
 
     public override bool SupportsPropertyDialog => true;
 
-    public ReactivePropertySlim<double> RadiusX { get; } = new(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe |
-                                                                     ReactivePropertyMode.DistinctUntilChanged);
+    public BindableReactiveProperty<double> RadiusX { get; } = new();
 
-    public ReactivePropertySlim<double> RadiusY { get; } = new(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe |
-                                                                     ReactivePropertyMode.DistinctUntilChanged);
+    public BindableReactiveProperty<double> RadiusY { get; } = new();
 
     private void Init()
     {

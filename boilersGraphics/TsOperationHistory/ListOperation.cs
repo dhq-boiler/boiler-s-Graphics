@@ -1,4 +1,4 @@
-﻿using Reactive.Bindings;
+﻿using R3;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -36,8 +36,8 @@ public class InsertOperation<T> : IOperation
         Message.Value = message;
     }
 
-    public ReactivePropertySlim<string> Message { get; } = new();
-    public ReactivePropertySlim<Visibility> ArrowVisibility { get; } = new(Visibility.Hidden);
+    public BindableReactiveProperty<string> Message { get; } = new();
+    public BindableReactiveProperty<Visibility> ArrowVisibility { get; } = new(Visibility.Hidden);
 
     public void RollForward()
     {
@@ -85,8 +85,8 @@ public class RemoveOperation<T> : IOperation
         Message.Value = message;
     }
 
-    public ReactivePropertySlim<string> Message { get; } = new();
-    public ReactivePropertySlim<Visibility> ArrowVisibility { get; } = new(Visibility.Hidden);
+    public BindableReactiveProperty<string> Message { get; } = new();
+    public BindableReactiveProperty<Visibility> ArrowVisibility { get; } = new(Visibility.Hidden);
 
     public void RollForward()
     {
@@ -139,8 +139,8 @@ public class RemoveAtOperation : IOperation
         _index = index;
     }
 
-    public ReactivePropertySlim<string> Message { get; } = new();
-    public ReactivePropertySlim<Visibility> ArrowVisibility { get; } = new(Visibility.Hidden);
+    public BindableReactiveProperty<string> Message { get; } = new();
+    public BindableReactiveProperty<Visibility> ArrowVisibility { get; } = new(Visibility.Hidden);
 
     public void RollForward()
     {
@@ -182,8 +182,8 @@ public class ClearOperation<T> : IOperation
         _list = list;
     }
 
-    public ReactivePropertySlim<string> Message { get; } = new();
-    public ReactivePropertySlim<Visibility> ArrowVisibility { get; } = new(Visibility.Hidden);
+    public BindableReactiveProperty<string> Message { get; } = new();
+    public BindableReactiveProperty<Visibility> ArrowVisibility { get; } = new(Visibility.Hidden);
 
     public void RollForward()
     {

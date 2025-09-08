@@ -1,4 +1,4 @@
-﻿using Reactive.Bindings;
+﻿using R3;
 using System.Windows;
 
 namespace boilersGraphics.ViewModels
@@ -13,15 +13,15 @@ namespace boilersGraphics.ViewModels
         T Height { get; }
     }
 
-    public interface ISizeRps : ISize<ReactivePropertySlim<double>>
+    public interface ISizeRps : ISize<ReactiveProperty<double>>
     {
-        ReactivePropertySlim<double> Left { get; } 
+        ReactiveProperty<double> Left { get; } 
 
-        ReactivePropertySlim<double> Top { get; }
-        ReadOnlyReactivePropertySlim<Rect> Rect { get; }
+        ReactiveProperty<double> Top { get; }
+        ReadOnlyReactiveProperty<Rect> Rect { get; }
     }
 
-    public interface ISizeReadOnlyRps : ISize<ReadOnlyReactivePropertySlim<double>>
+    public interface ISizeReadOnlyRps : ISize<ReadOnlyReactiveProperty<double>>
     {
         ReactiveProperty<Point> LeftTop { get; }
     }

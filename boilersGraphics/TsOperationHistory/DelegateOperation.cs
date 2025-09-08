@@ -1,7 +1,7 @@
-﻿using System;
+﻿using R3;
+using System;
 using System.Diagnostics;
 using System.Windows;
-using Reactive.Bindings;
 
 namespace TsOperationHistory;
 
@@ -21,8 +21,8 @@ public class DelegateOperation : IOperation
         _rollback = rollback;
     }
 
-    public ReactivePropertySlim<string> Message { get; } = new();
-    public ReactivePropertySlim<Visibility> ArrowVisibility { get; } = new(Visibility.Hidden);
+    public BindableReactiveProperty<string> Message { get; } = new();
+    public BindableReactiveProperty<Visibility> ArrowVisibility { get; } = new(Visibility.Hidden);
 
     public void RollForward()
     {
@@ -48,8 +48,8 @@ public class DelegateOperation<T> : IOperation
         _newValue = newValue;
     }
 
-    public ReactivePropertySlim<string> Message { get; } = new();
-    public ReactivePropertySlim<Visibility> ArrowVisibility { get; } = new(Visibility.Hidden);
+    public BindableReactiveProperty<string> Message { get; } = new();
+    public BindableReactiveProperty<Visibility> ArrowVisibility { get; } = new(Visibility.Hidden);
 
     public void RollForward()
     {

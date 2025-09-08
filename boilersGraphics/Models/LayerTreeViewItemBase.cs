@@ -5,16 +5,14 @@ using boilersGraphics.UserControls;
 using boilersGraphics.ViewModels;
 using boilersGraphics.Views;
 using NLog;
+using ObservableCollections;
 using Prism.Mvvm;
-using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
+using R3;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Diagnostics;
 using System.Linq;
-using System.Reactive;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -23,13 +21,13 @@ using TsOperationHistory;
 using TsOperationHistory.Extensions;
 using ZLinq;
 using Layers = boilersGraphics.Views.Layers;
+using ReactiveCommand = R3.ReactiveCommand;
 
 namespace boilersGraphics.Models;
 
 public abstract class LayerTreeViewItemBase : BindableBase, IDisposable, IObservable<LayerTreeViewItemBaseObservable>
 {
-    protected CompositeDisposable _disposable = new();
-
+    protected R3.CompositeDisposable _disposable = new();
 
     private readonly List<IObserver<LayerTreeViewItemBaseObservable>> _observers = new();
     private bool disposedValue;
@@ -82,29 +80,29 @@ public abstract class LayerTreeViewItemBase : BindableBase, IDisposable, IObserv
         }
     }
 
-    public ReactivePropertySlim<LayerTreeViewItemBase> Parent { get; } = new();
+    public R3.ReactiveProperty<LayerTreeViewItemBase> Parent { get; } = new();
 
-    public ReactivePropertySlim<string> Name { get; } = new();
+    public R3.ReactiveProperty<string> Name { get; } = new();
 
-    public ReactivePropertySlim<Brush> Background { get; } = new();
+    public R3.ReactiveProperty<Brush> Background { get; } = new();
 
-    public ReactivePropertySlim<bool> IsExpanded { get; } = new(true);
+    public R3.ReactiveProperty<bool> IsExpanded { get; } = new(true);
 
-    public ReactiveProperty<bool> IsSelected { get; set; } = new();
+    public R3.ReactiveProperty<bool> IsSelected { get; protected set; } = new();
 
-    public ReactivePropertySlim<bool> IsVisible { get; } = new();
+    public R3.ReactiveProperty<bool> IsVisible { get; } = new();
 
-    public ReactivePropertySlim<Color> Color { get; } = new();
+    public R3.ReactiveProperty<Color> Color { get; } = new();
 
-    public ReactivePropertySlim<ImageSource> Appearance { get; } = new();
+    public R3.ReactiveProperty<ImageSource> Appearance { get; } = new();
 
-    public ReactivePropertySlim<Visibility> BeforeSeparatorVisibility { get; } = new(Visibility.Hidden);
+    public R3.ReactiveProperty<Visibility> BeforeSeparatorVisibility { get; } = new(Visibility.Hidden);
 
-    public ReactivePropertySlim<Visibility> AfterSeparatorVisibility { get; } = new(Visibility.Hidden);
+    public R3.ReactiveProperty<Visibility> AfterSeparatorVisibility { get; } = new(Visibility.Hidden);
 
-    public ReactiveCollection<LayerTreeViewItemBase> Children { get; set; } = new();
+    public NotifyCollectionChangedSynchronizedViewList<LayerTreeViewItemBase> Children { get; set; } = new ObservableList<LayerTreeViewItemBase>().ToWritableNotifyCollectionChanged();
 
-    public ReactiveCollection<Control> LayerTreeViewItemContextMenu { get; } = new();
+    public ObservableList<Control> LayerTreeViewItemContextMenu { get; } = new();
 
     public ReactiveCommand ChangeNameCommand { get; } = new();
 
@@ -176,62 +174,104 @@ public abstract class LayerTreeViewItemBase : BindableBase, IDisposable, IObserv
         return new LayerTreeViewItemBaseDisposable(this, observer);
     }
 
-    public IObservable<Unit> LayerChangedAsObservable()
+    public R3.Observable<Unit> LayerChangedAsObservable()
     {
         return Children.CollectionChangedAsObservable()
             .Where(x => x.Action == NotifyCollectionChangedAction.Remove ||
                         x.Action == NotifyCollectionChangedAction.Reset)
             .ToUnit()
-            .Merge(Children.Select(x => x.LayerChangedAsObservable()).Merge());
+            .Merge(R3.Observable.Merge(Children.Select(x => x.LayerChangedAsObservable())));
     }
 
-    public IObservable<Unit> LayerItemsChangedAsObservable()
+    public R3.Observable<Unit> LayerItemsChangedAsObservable()
     {
-        return Children.ObserveElementObservableProperty(x => (x as LayerItem).Item)
+        Debug.WriteLine("LayerItemsChangedAsObservable called"); // ここにブレークポイント
+
+        return Children.CollectionChangedAsObservable()
+            .Do(x => Debug.WriteLine($"LayerItemsChanged - Children.CollectionChanged: {x.Action} in {Name.Value}"))
             .ToUnit()
-            .Merge(Children.CollectionChangedAsObservable().Where(x =>
-                    x.Action == NotifyCollectionChangedAction.Remove || x.Action == NotifyCollectionChangedAction.Reset)
-                .ToUnit());
+            .Merge(
+                Children.ObserveElementObservableProperty(x => (x as LayerItem)?.Item)
+                    .Where(x => x != null)
+                    .Do(x => Debug.WriteLine($"LayerItemsChanged - Item property changed in {Name.Value}"))
+                    .ToUnit()
+            );
     }
 
-    public IObservable<Unit> SelectedLayerItemsChangedAsObservable()
+    public R3.Observable<Unit> SelectedLayerItemsChangedAsObservable()
     {
         var ox1 = Children
-            .ObserveElementObservableProperty(x => (x as LayerItem).Item.Value.IsSelected)
+            .ObserveElementObservableProperty(x => (x as LayerItem)?.Item?.Value?.IsSelected)
+            .Where(x => x != null)
             .ToUnit()
             .Merge(Children.CollectionChangedAsObservable().Where(x =>
                     x.Action == NotifyCollectionChangedAction.Remove || x.Action == NotifyCollectionChangedAction.Reset)
                 .ToUnit());
 
         var ox2 = Children.CollectionChangedAsObservable()
-            .Select(_ => Children.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
-                .OfType<LayerItem>()
-                .Select(x => x.Item.Value)
-                .OfType<ConnectorBaseViewModel>()
-                .SelectMany(x => new[] { x.SnapPoint0VM.Value, x.SnapPoint1VM.Value })
-                .Select(x => x.IsSelected.ToUnit())
-                .Merge())
+            .Select(_ => 
+            {
+                var snapPoints = Children.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                    .OfType<LayerItem>()
+                    .Select(x => x.Item.Value)
+                    .OfType<ConnectorBaseViewModel>()
+                    .SelectMany(x => new[] { x.SnapPoint0VM.Value, x.SnapPoint1VM.Value })
+                    .ToArray();
+                    
+                if (snapPoints.Length > 0)
+                {
+                    var observables = snapPoints.Select(snapPoint => snapPoint.IsSelected.ToUnit()).ToArray();
+                    return observables.Length > 0 ? R3.Observable.Merge(observables) : R3.Observable.Return(Unit.Default);
+                }
+                return R3.Observable.Return(Unit.Default);
+            })
             .Switch();
+            
         var ox3 = Children.CollectionChangedAsObservable()
-            .Select(_ => Children.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
-                .OfType<LayerItem>()
-                .Select(x => x.Item.Value)
-                .Select(x => x.IsSelected.ToUnit())
-                .Merge())
+            .Select(_ => 
+            {
+                var layerItems = Children.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                    .OfType<LayerItem>()
+                    .ToArray();
+                    
+                if (layerItems.Length > 0)
+                {
+                    var observables = layerItems.Select(item => item.Item.Value.IsSelected.ToUnit()).ToArray();
+                    return observables.Length > 0 ? R3.Observable.Merge(observables) : R3.Observable.Return(Unit.Default);
+                }
+                return R3.Observable.Return(Unit.Default);
+            })
             .Switch();
-        return ox1.Merge(ox2).Merge(ox3);
+            
+        return R3.Observable.Merge<Unit>(ox1, ox2, ox3);
     }
 
     public void AddItem(MainWindowViewModel mainWindowViewModel, DiagramViewModel diagramViewModel,
         SelectableDesignerItemViewModelBase item, string layerItemName = null)
     {
+        Debug.WriteLine($"=== LayerTreeViewItemBase.AddItem START ===");
+        Debug.WriteLine($"Layer: {Name.Value}");
+        Debug.WriteLine($"Item: {item}");
+        Debug.WriteLine($"LayerItemName: {layerItemName ?? "null"}");
+
         if (layerItemName == null) layerItemName = Helpers.Name.GetNewLayerItemName(diagramViewModel);
+        Debug.WriteLine($"Final layerItemName: {layerItemName}");
+
         var layerItem = new LayerItem(item, this, layerItemName);
+        Debug.WriteLine($"Created LayerItem: {layerItem}");
+
         layerItem.IsVisible.Value = true;
         layerItem.Parent.Value = this;
         var rand = new Random();
         layerItem.Color.Value = Randomizer.RandomColor(rand);
+
+        Debug.WriteLine($"Children count before ExecuteAdd: {Children.Count}");
+        Debug.WriteLine($"About to call ExecuteAdd...");
+
         mainWindowViewModel.Recorder.Current.ExecuteAdd(Children, layerItem);
+
+        Debug.WriteLine($"Children count after ExecuteAdd: {Children.Count}");
+        Debug.WriteLine("=== LayerTreeViewItemBase.AddItem END ===");
     }
 
     public void AddItem(MainWindowViewModel mainWindowVM, DiagramViewModel diagramViewModel, LayerItem item)
@@ -343,9 +383,10 @@ public abstract class LayerTreeViewItemBase : BindableBase, IDisposable, IObserv
                 Color.Dispose();
                 BeforeSeparatorVisibility.Dispose();
                 AfterSeparatorVisibility.Dispose();
-                Children.Dispose();
-                LayerTreeViewItemContextMenu.Dispose();
+                Children.Dispose(); // This now uses the extension method
+                LayerTreeViewItemContextMenu.Dispose(); // This now uses the extension method
                 ChangeNameCommand.Dispose();
+                _disposable.Dispose();
             }
 
             disposedValue = true;

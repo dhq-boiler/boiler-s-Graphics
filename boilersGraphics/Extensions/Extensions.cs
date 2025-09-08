@@ -3,17 +3,17 @@ using boilersGraphics.ViewModels;
 using NLog;
 using Prism.Services.Dialogs;
 using System;
-using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Reactive.Linq;
+using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
+using ObservableCollections;
 using ZLinq;
 
 namespace boilersGraphics.Extensions;
@@ -1944,9 +1944,9 @@ public static class Extensions
         return child;
     }
 
-    public static IObservable<T> Sort<T>(this ObservableCollection<T> source, T top)
+    public static NotifyCollectionChangedSynchronizedViewList<T> Sort<T>(this NotifyCollectionChangedSynchronizedViewList<T> source, T top)
     {
-        var newCollection = new ObservableCollection<T>
+        var newCollection = new ObservableList<T>
         {
             top
         };
@@ -1954,7 +1954,7 @@ public static class Extensions
         {
             newCollection.Add(elm);
         }
-        return newCollection.AsValueEnumerable().Reverse().ToArray().ToObservable();
+        return new ObservableList<T>(newCollection.AsValueEnumerable().Reverse().ToArray()).ToWritableNotifyCollectionChanged();
     }
 
     public static IEnumerable<Window> OfType<T>(this WindowCollection collection) where T : Window
@@ -1962,5 +1962,10 @@ public static class Extensions
         var windowArray = new Window[collection.Count];
         collection.CopyTo(windowArray, 0);
         return windowArray.AsValueEnumerable().OfType<T>().ToArray();
+    }
+
+    public static void AddRange<T>(this NotifyCollectionChangedSynchronizedViewList<T> target, IEnumerable<T> source)
+    {
+        source.ToList().ForEach(target.Add);
     }
 }

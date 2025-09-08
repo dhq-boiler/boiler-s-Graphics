@@ -1,10 +1,9 @@
 ﻿using Prism.Services.Dialogs;
-using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.Generic;
-using System.Reactive.Disposables;
 using System.Windows.Input;
+using ObservableCollections;
+using R3;
 using ZLinq;
 
 namespace boilersGraphics.ViewModels;
@@ -20,11 +19,11 @@ internal class CustomMessageBoxViewModel : IDialogAware, IDisposable
             .AddTo(disposables);
     }
 
-    public ReactivePropertySlim<string> Text { get; } = new();
+    public BindableReactiveProperty<string> Text { get; } = new();
 
     public ReactiveCommand OKCommand { get; } = new();
 
-    public ReactiveCollection<Button> Buttons { get; set; } = new();
+    public NotifyCollectionChangedSynchronizedViewList<Button> Buttons { get; set; } = new ObservableList<Button>().ToWritableNotifyCollectionChanged();
 
     public string Title { get; private set; }
 
@@ -74,7 +73,7 @@ internal class CustomMessageBoxViewModel : IDialogAware, IDisposable
             ClickCommand = clickCommand;
         }
 
-        public ReactivePropertySlim<string> Content { get; set; } = new();
+        public BindableReactiveProperty<string> Content { get; set; } = new();
 
         public ICommand ClickCommand { get; set; }
 

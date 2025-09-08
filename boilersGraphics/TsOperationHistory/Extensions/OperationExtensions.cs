@@ -1,4 +1,4 @@
-﻿using Reactive.Bindings;
+﻿using R3;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -29,8 +29,8 @@ public static class Operation
             Message.Value = "Empty Operation";
         }
 
-        public ReactivePropertySlim<string> Message { get; } = new();
-        public ReactivePropertySlim<Visibility> ArrowVisibility { get; } = new(Visibility.Hidden);
+        public BindableReactiveProperty<string> Message { get; } = new();
+        public BindableReactiveProperty<Visibility> ArrowVisibility { get; } = new(Visibility.Hidden);
 
         public void RollForward()
         {
