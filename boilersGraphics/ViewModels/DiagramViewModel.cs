@@ -585,8 +585,8 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
             Layers.CollectionChangedAsObservable()
                 .Subscribe(x =>
                 {
-                    RootLayer.Value.Children = new ObservableList<LayerTreeViewItemBase>(Layers).ToWritableNotifyCollectionChanged();
-                    x.NewItems.Cast<LayerTreeViewItemBase>().ToList().ForEach(x => x.SetParentToChildren(RootLayer.Value));
+                    RootLayer.Value.Children = new ObservableList<LayerTreeViewItemBase>(Layers.AsValueEnumerable().ToList()).ToWritableNotifyCollectionChanged();
+                    x.NewItems?.OfType<LayerTreeViewItemBase>().ToList().ForEach(x => x.SetParentToChildren(RootLayer.Value));
                 })
                 .AddTo(_CompositeDisposable);
         }

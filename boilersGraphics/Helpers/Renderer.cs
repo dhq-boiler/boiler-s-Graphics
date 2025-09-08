@@ -65,7 +65,7 @@ public class Renderer
         var visual = new DrawingVisual();
         using (var context = visual.RenderOpen())
         {
-            var allViews = designerCanvas.EnumVisualChildren<FrameworkElement>().AsValueEnumerable()
+            var allViews = designerCanvas.EnumerateChildOfType<FrameworkElement>().AsValueEnumerable()
                 .Where(x => x.DataContext is not null).ToList();
             //背景を描画
             if (RenderBackgroundViewModel(sliceRect, designerCanvas, context, backgroundItem, allViews, caller))
