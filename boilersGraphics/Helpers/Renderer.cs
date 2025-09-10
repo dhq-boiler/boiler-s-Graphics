@@ -2,6 +2,7 @@
 using boilersGraphics.Extensions;
 using boilersGraphics.ViewModels;
 using NLog;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -14,14 +15,107 @@ using ZLinq;
 
 namespace boilersGraphics.Helpers;
 
-public class Renderer
+public class Renderer : IDisposable
 {
     public IVisualTreeHelper VisualTreeHelper { get; private set; }
     private static readonly Logger s_logger = LogManager.GetCurrentClassLogger();
 
+    // キャッシュ用フィールド
+    private List<FrameworkElement> _cachedAllViews;
+    private Dictionary<object, FrameworkElement> _dataContextToViewCache = new();
+    private bool _viewCacheInvalidated = true;
+    private DesignerCanvas _lastDesignerCanvas;
+    private bool _disposed = false;
+
     public Renderer(IVisualTreeHelper visualTreeHelper)
     {
         VisualTreeHelper = visualTreeHelper;
+    }
+
+    // 公開キャッシュ無効化メソッド
+    public void InvalidateViewCache()
+    {
+        _viewCacheInvalidated = true;
+        _cachedAllViews = null;
+        _dataContextToViewCache.Clear();
+    }
+
+    // リソースの解放
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!_disposed)
+        {
+            if (disposing)
+            {
+                _cachedAllViews?.Clear();
+                _dataContextToViewCache?.Clear();
+                _cachedAllViews = null;
+                _dataContextToViewCache = null;
+            }
+            _disposed = true;
+        }
+    }
+
+    // キャッシュされたビューを取得
+    private List<FrameworkElement> GetCachedAllViews(DesignerCanvas designerCanvas)
+    {
+        if (_viewCacheInvalidated || _cachedAllViews == null || _lastDesignerCanvas != designerCanvas)
+        {
+            _cachedAllViews = designerCanvas.EnumerateChildOfType<FrameworkElement>()
+                .AsValueEnumerable()
+                .Where(x => x.DataContext is not null)
+                .ToList();
+            
+            // DataContextからViewへのマッピングキャッシュを構築
+            _dataContextToViewCache.Clear();
+            foreach (var view in _cachedAllViews)
+            {
+                if (view.DataContext != null)
+                {
+                    _dataContextToViewCache[view.DataContext] = view;
+                }
+            }
+            
+            _lastDesignerCanvas = designerCanvas;
+            _viewCacheInvalidated = false;
+        }
+        return _cachedAllViews;
+    }
+
+    // 効率的なビュー検索
+    protected FrameworkElement FindViewForDataContext(object dataContext, List<FrameworkElement> allViews)
+    {
+        // キャッシュから高速検索
+        if (_dataContextToViewCache.TryGetValue(dataContext, out var cachedView))
+        {
+            return cachedView;
+        }
+
+        // キャッシュにない場合はフォールバック検索
+        FrameworkElement view = null;
+        if (App.IsTest)
+        {
+            view = allViews.AsValueEnumerable().FirstOrDefault(x => x.DataContext == dataContext);
+        }
+        else
+        {
+            view = allViews.AsValueEnumerable().FirstOrDefault(x => 
+                x.DataContext == dataContext && x.FindName("PART_ContentPresenter") is not null);
+        }
+
+        // 見つかった場合はキャッシュに追加
+        if (view != null)
+        {
+            _dataContextToViewCache[dataContext] = view;
+        }
+
+        return view;
     }
 
     public virtual RenderTargetBitmap Render(Rect? sliceRect, DesignerCanvas designerCanvas,
@@ -65,11 +159,13 @@ public class Renderer
         var visual = new DrawingVisual();
         using (var context = visual.RenderOpen())
         {
-            var allViews = designerCanvas.EnumerateChildOfType<FrameworkElement>().AsValueEnumerable()
-                .Where(x => x.DataContext is not null).ToList();
+            // キャッシュされたビューを取得（パフォーマンス改善）
+            var allViews = GetCachedAllViews(designerCanvas);
+            
             //背景を描画
             if (RenderBackgroundViewModel(sliceRect, designerCanvas, context, backgroundItem, allViews, caller))
                 renderedCount++;
+            
             //前景を描画
             renderedCount += RenderForeground(sliceRect, diagramViewModel, designerCanvas, context,
                 DiagramViewModel.Instance.BackgroundItem.Value,
@@ -98,18 +194,21 @@ public class Renderer
     {
         var renderedCount = 0;
         var except = new SelectableDesignerItemViewModelBase[] { background }.AsValueEnumerable().Where(x => x is not null);
-        foreach (var item in diagramViewModel.AllItems.Value.AsValueEnumerable().Except(except).Where(x => x.IsVisible.Value && x.ZIndex.Value >= minZIndex && x.ZIndex.Value <= maxZIndex).OrderBy(x => x.ZIndex.Value))
-        {
-            var view = default(FrameworkElement);
-            if (App.IsTest)
-            {
-                view = allViews.AsValueEnumerable().FirstOrDefault(x => x.DataContext == item);
-            }
-            else
-            {
-                view = allViews.AsValueEnumerable().FirstOrDefault(x => x.DataContext == item && x.FindName("PART_ContentPresenter") is not null);
-            }
+        
+        // 描画対象アイテムを事前にフィルタリングして並べ替え（パフォーマンス改善）
+        var itemsToRender = diagramViewModel.AllItems.Value.AsValueEnumerable()
+            .Except(except)
+            .Where(x => x.IsVisible.Value && x.ZIndex.Value >= minZIndex && x.ZIndex.Value <= maxZIndex)
+            .OrderBy(x => x.ZIndex.Value)
+            .ToList(); // ToList()でキャッシュ化
 
+        // バッチでレイアウト更新を処理するためのリスト
+        var viewsNeedingLayout = new List<(FrameworkElement view, SelectableDesignerItemViewModelBase item)>();
+
+        foreach (var item in itemsToRender)
+        {
+            // 効率的なビュー検索を使用
+            var view = FindViewForDataContext(item, allViews);
             if (view is null)
                 continue;
 
@@ -119,158 +218,196 @@ public class Renderer
                 view = PART_ContentPresenter;
             }
 
-            if (item is DesignerItemViewModelBase des)
-            {
-                Canvas.SetLeft(view, des.Left.Value);
-                Canvas.SetTop(view, des.Top.Value);
-            }
-            Size renderSize;
-            if (item is ISizeRps size1)
-            {
-                view.Measure(new Size(size1.Width.Value, size1.Height.Value));
-                if (App.IsTest)
-                {
-                    view.Arrange(new Rect(0, 0, size1.Width.Value, size1.Height.Value));
-                }
-                else
-                {
-                    view.InvalidateArrange();
-                }
-            }
-            else if (item is ISizeReadOnlyRps size2)
-            {
-                view.Measure(new Size(size2.Width.Value, size2.Height.Value));
-                view.Arrange(new Rect(new Point(), new Size(size2.Width.Value, size2.Height.Value)));
-            }
-            view.UpdateLayout();
-            view.SnapsToDevicePixels = true;
-            var brush = new VisualBrush(view)
-            {
-                Stretch = Stretch.None,
-                TileMode = TileMode.None
-            };
-            var rect = new Rect();
-            switch (item)
-            {
-                case DesignerItemViewModelBase designerItem:
-                    {
-                        if (designerItem is PictureDesignerItemViewModel picture)
-                        {
-                            var bounds = VisualTreeHelper.GetDescendantBounds(view);
-                            if (bounds.IsEmpty)
-                            {
-                                continue;
-                            }
-                            if (sliceRect.HasValue)
-                            {
-                                rect = sliceRect.Value;
-                                var intersectSrc = new Rect(designerItem.Left.Value, designerItem.Top.Value, bounds.Width,
-                                    bounds.Height);
-                                rect = Rect.Intersect(rect, intersectSrc);
+            // レイアウト更新が必要なビューをリストに追加
+            viewsNeedingLayout.Add((view, item));
+        }
 
-                                if (rect != Rect.Empty)
-                                {
-                                    rect.X -= sliceRect.Value.X;
-                                    rect.Y -= sliceRect.Value.Y;
-                                }
-                            }
-                            else
-                            {
-                                rect = new Rect(designerItem.Left.Value, designerItem.Top.Value, designerItem.Width.Value,
-                                    designerItem.Height.Value);
-                            }
-                        }
-                        else
-                        {
-                            var bounds = VisualTreeHelper.GetDescendantBounds(view);
-                            if (bounds.IsEmpty)
-                            {
-                                continue;
-                            }
-                            if (sliceRect.HasValue)
-                            {
-                                rect = sliceRect.Value;
-                                var intersectSrc = new Rect(designerItem.Left.Value, designerItem.Top.Value, bounds.Width,
-                                    bounds.Height);
-                                rect = Rect.Intersect(rect, intersectSrc);
-                                if (rect != Rect.Empty)
-                                {
-                                    rect.X -= sliceRect.Value.X;
-                                    rect.Y -= sliceRect.Value.Y;
-                                }
-                            }
-                            else
-                            {
-                                rect = new Rect(designerItem.Left.Value, designerItem.Top.Value, designerItem.Width.Value,
-                                    designerItem.Height.Value);
-                            }
-                        }
+        // バッチでレイアウト更新を実行（パフォーマンス改善）
+        foreach (var (view, item) in viewsNeedingLayout)
+        {
+            PrepareViewForRendering(view, item);
+        }
 
-                        if (rect != Rect.Empty)
-                        {
-                            rect.X -= background.Left.Value;
-                            rect.Y -= background.Top.Value;
-                        }
-
-                        context.PushTransform(new RotateTransform(designerItem.RotationAngle.Value,
-                            designerItem.CenterX.Value,
-                            designerItem.CenterY.Value));
-                        context.DrawRectangle(brush, null, rect);
-                        context.Pop();
-                        renderedCount++;
-                        break;
-                    }
-                case ConnectorBaseViewModel connector:
-                    {
-                        var bounds = VisualTreeHelper.GetDescendantBounds(view);
-                        if (bounds.IsEmpty)
-                        {
-                            continue;
-                        }
-                        if (sliceRect.HasValue)
-                        {
-                            rect = sliceRect.Value;
-                            var intersectSrc = new Rect(connector.LeftTop.Value, bounds.Size);
-                            rect = Rect.Intersect(rect, intersectSrc);
-                            if (rect != Rect.Empty)
-                            {
-                                rect.X -= sliceRect.Value.X;
-                                rect.Y -= sliceRect.Value.Y;
-                            }
-                        }
-                        else
-                        {
-                            rect = new Rect(connector.LeftTop.Value, bounds.Size);
-                        }
-
-                        rect.X -= background.Left.Value;
-                        rect.Y -= background.Top.Value;
-                        context.DrawRectangle(brush, null, rect);
-                        renderedCount++;
-                        break;
-                    }
+        // 実際の描画処理
+        foreach (var (view, item) in viewsNeedingLayout)
+        {
+            if (RenderSingleItem(sliceRect, context, background, view, item))
+            {
+                renderedCount++;
             }
         }
 
         return renderedCount;
     }
+
+    // ビューのレンダリング準備を行う（分離してパフォーマンス改善）
+    protected void PrepareViewForRendering(FrameworkElement view, SelectableDesignerItemViewModelBase item)
+    {
+        if (item is DesignerItemViewModelBase des)
+        {
+            Canvas.SetLeft(view, des.Left.Value);
+            Canvas.SetTop(view, des.Top.Value);
+        }
+
+        if (item is ISizeRps size1)
+        {
+            view.Measure(new Size(size1.Width.Value, size1.Height.Value));
+            if (App.IsTest)
+            {
+                view.Arrange(new Rect(0, 0, size1.Width.Value, size1.Height.Value));
+            }
+            else
+            {
+                view.InvalidateArrange();
+            }
+        }
+        else if (item is ISizeReadOnlyRps size2)
+        {
+            view.Measure(new Size(size2.Width.Value, size2.Height.Value));
+            view.Arrange(new Rect(new Point(), new Size(size2.Width.Value, size2.Height.Value)));
+        }
+
+        view.UpdateLayout();
+        view.SnapsToDevicePixels = true;
+    }
+
+    // 単一アイテムの描画処理（分離してパフォーマンス改善）
+    private bool RenderSingleItem(Rect? sliceRect, DrawingContext context, BackgroundViewModel background, 
+        FrameworkElement view, SelectableDesignerItemViewModelBase item)
+    {
+        var brush = new VisualBrush(view)
+        {
+            Stretch = Stretch.None,
+            TileMode = TileMode.None
+        };
+        
+        var rect = new Rect();
+        
+        switch (item)
+        {
+            case DesignerItemViewModelBase designerItem:
+                {
+                    rect = CalculateDesignerItemRect(sliceRect, view, designerItem, background);
+                    if (rect == Rect.Empty) return false;
+
+                    context.PushTransform(new RotateTransform(designerItem.RotationAngle.Value,
+                        designerItem.CenterX.Value, designerItem.CenterY.Value));
+                    context.DrawRectangle(brush, null, rect);
+                    context.Pop();
+                    return true;
+                }
+            case ConnectorBaseViewModel connector:
+                {
+                    rect = CalculateConnectorRect(sliceRect, view, connector, background);
+                    if (rect == Rect.Empty) return false;
+
+                    context.DrawRectangle(brush, null, rect);
+                    return true;
+                }
+        }
+        
+        return false;
+    }
+
+    // DesignerItemの矩形計算（分離してコードの可読性向上）
+    private Rect CalculateDesignerItemRect(Rect? sliceRect, FrameworkElement view, 
+        DesignerItemViewModelBase designerItem, BackgroundViewModel background)
+    {
+        var bounds = VisualTreeHelper.GetDescendantBounds(view);
+        if (bounds.IsEmpty) return Rect.Empty;
+
+        Rect rect;
+        if (designerItem is PictureDesignerItemViewModel)
+        {
+            if (sliceRect.HasValue)
+            {
+                rect = sliceRect.Value;
+                var intersectSrc = new Rect(designerItem.Left.Value, designerItem.Top.Value, bounds.Width, bounds.Height);
+                rect = Rect.Intersect(rect, intersectSrc);
+                if (rect != Rect.Empty)
+                {
+                    rect.X -= sliceRect.Value.X;
+                    rect.Y -= sliceRect.Value.Y;
+                }
+            }
+            else
+            {
+                rect = new Rect(designerItem.Left.Value, designerItem.Top.Value, designerItem.Width.Value, designerItem.Height.Value);
+            }
+        }
+        else
+        {
+            if (sliceRect.HasValue)
+            {
+                rect = sliceRect.Value;
+                var intersectSrc = new Rect(designerItem.Left.Value, designerItem.Top.Value, bounds.Width, bounds.Height);
+                rect = Rect.Intersect(rect, intersectSrc);
+                if (rect != Rect.Empty)
+                {
+                    rect.X -= sliceRect.Value.X;
+                    rect.Y -= sliceRect.Value.Y;
+                }
+            }
+            else
+            {
+                rect = new Rect(designerItem.Left.Value, designerItem.Top.Value, designerItem.Width.Value, designerItem.Height.Value);
+            }
+        }
+
+        if (rect != Rect.Empty)
+        {
+            rect.X -= background.Left.Value;
+            rect.Y -= background.Top.Value;
+        }
+
+        return rect;
+    }
+
+    // Connectorの矩形計算（分離してコードの可読性向上）
+    private Rect CalculateConnectorRect(Rect? sliceRect, FrameworkElement view, 
+        ConnectorBaseViewModel connector, BackgroundViewModel background)
+    {
+        var bounds = VisualTreeHelper.GetDescendantBounds(view);
+        if (bounds.IsEmpty) return Rect.Empty;
+
+        Rect rect;
+        if (sliceRect.HasValue)
+        {
+            rect = sliceRect.Value;
+            var intersectSrc = new Rect(connector.LeftTop.Value, bounds.Size);
+            rect = Rect.Intersect(rect, intersectSrc);
+            if (rect != Rect.Empty)
+            {
+                rect.X -= sliceRect.Value.X;
+                rect.Y -= sliceRect.Value.Y;
+            }
+        }
+        else
+        {
+            rect = new Rect(connector.LeftTop.Value, bounds.Size);
+        }
+
+        rect.X -= background.Left.Value;
+        rect.Y -= background.Top.Value;
+        return rect;
+    }
     
     public virtual bool RenderBackgroundViewModel(Rect? sliceRect, DesignerCanvas designerCanvas,
         DrawingContext context, BackgroundViewModel background, List<FrameworkElement> allViews, SelectableDesignerItemViewModelBase caller)
     {
-        var view = default(FrameworkElement);
+        FrameworkElement view = null;
+        
         if (!boilersGraphics.App.IsTest)
         {
             var result = Application.Current.Dispatcher.Invoke(() =>
             {
-                view = allViews.AsValueEnumerable().FirstOrDefault(x =>
-                    x.DataContext == background);
+                // 効率的なビュー検索を使用
+                view = FindViewForDataContext(background, allViews);
                 if (view is null)
                 {
                     s_logger.Warn($"Not Found: view of {background}");
                     return false;
                 }
-
                 return true;
             });
             if (!result)
@@ -278,8 +415,8 @@ public class Renderer
         }
         else
         {
-            view = allViews.AsValueEnumerable().FirstOrDefault(x =>
-                x.DataContext == background);
+            // 効率的なビュー検索を使用
+            view = FindViewForDataContext(background, allViews);
             if (view is null)
             {
                 s_logger.Warn($"Not Found: view of {background}");
@@ -292,13 +429,13 @@ public class Renderer
         view.UpdateLayout();
 
         var bounds = VisualTreeHelper.GetDescendantBounds(view);
-
         var rect = sliceRect ?? bounds;
 
         var brush = new VisualBrush(view)
         {
             Stretch = Stretch.None
         };
+        
         if (sliceRect.HasValue)
         {
             rect.X = 0;
@@ -306,7 +443,6 @@ public class Renderer
         }
 
         context.DrawRectangle(brush, null, rect);
-
         return true;
     }
 

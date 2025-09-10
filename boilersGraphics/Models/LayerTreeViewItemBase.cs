@@ -32,6 +32,11 @@ public abstract class LayerTreeViewItemBase : BindableBase, IDisposable, IObserv
     private readonly List<IObserver<LayerTreeViewItemBaseObservable>> _observers = new();
     private bool disposedValue;
 
+    // キャッシュ用フィールド
+    private List<LayerTreeViewItemBase> _cachedAllChildren;
+    private Dictionary<LayerTreeViewItemBase, List<LayerItem>> _cachedLayerItems = new();
+    private bool _cacheInvalidated = true;
+
     public LayerTreeViewItemBase()
     {
         Parent.Subscribe(x =>
@@ -43,6 +48,12 @@ public abstract class LayerTreeViewItemBase : BindableBase, IDisposable, IObserv
                         .Trace($"Set Parent Parent={{{x.Name.Value}}} Child={{{Name.Value}}}");
             })
             .AddTo(_disposable);
+
+        // Childrenの変更を監視してキャッシュを無効化
+        Children.CollectionChangedAsObservable()
+            .Subscribe(_ => InvalidateCache())
+            .AddTo(_disposable);
+
         ChangeNameCommand.Subscribe(_ =>
         {
             var diagramControl = Application.Current.MainWindow.FindName("DiagramControl") as DiagramControl;
@@ -111,37 +122,44 @@ public abstract class LayerTreeViewItemBase : BindableBase, IDisposable, IObserv
     internal void UpdateAppearanceBothParentAndChild()
     {
         LogManager.GetCurrentClassLogger().Trace("detected Layer changes. run Layer.UpdateAppearance().");
-        UpdateAppearance(Children
-            .SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(xx => xx.Children)
-            .AsValueEnumerable()
+        
+        // キャッシュされた全子要素を取得
+        var allChildren = GetCachedAllChildren();
+
+        // 自分自身の更新: キャッシュされた結果を使用
+        var allItems = allChildren
             .Select(x => (x as LayerItem)?.Item?.Value)
-                .Where(x => x is not null).ToArray(), true);
-        Children.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
-            .AsValueEnumerable()
-            .ToList()
-            .ForEach(x =>
+            .Where(x => x is not null)
+            .ToArray();
+        UpdateAppearance(allItems, true);
+
+        // Layerとその子要素を分離して処理
+        var layers = allChildren.OfType<Layer>().ToList();
+        var directLayerItems = allChildren.OfType<LayerItem>().ToList();
+
+        // 各Layerの更新処理（並列処理可能な場合は並列化）
+        foreach (var layer in layers)
+        {
+            // キャッシュされたLayerItemsを取得
+            var layerItems = GetCachedLayerItems(layer)
+                .Select(x => x.Item.Value)
+                .ToArray();
+            
+            layer.UpdateAppearance(layerItems, true);
+
+            // そのLayerの直接の子LayerItemsを更新
+            var directChildren = GetCachedLayerItems(layer);
+            foreach (var layerItem in directChildren)
             {
-                if (x is Layer l)
-                {
-                    l.UpdateAppearance(l.Children.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(xx => xx.Children)
-                                               .AsValueEnumerable()
-                                               .Select(x => (x as LayerItem).Item.Value).ToArray(), true);
-                    l.Children.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
-                              .AsValueEnumerable()
-                              .ToList()
-                              .ForEach(x =>
-                              {
-                                  if (x is LayerItem li)
-                                  {
-                                      li.UpdateAppearance(IfGroupBringChildren(li.Item.Value));
-                                  }
-                              });
-                }
-                else if (x is LayerItem li)
-                {
-                    li.UpdateAppearance(IfGroupBringChildren(li.Item.Value));
-                }
-            });
+                layerItem.UpdateAppearance(IfGroupBringChildren(layerItem.Item.Value));
+            }
+        }
+
+        // 直接のLayerItemsを更新
+        foreach (var layerItem in directLayerItems)
+        {
+            layerItem.UpdateAppearance(IfGroupBringChildren(layerItem.Item.Value));
+        }
     }
 
     private IEnumerable<SelectableDesignerItemViewModelBase> IfGroupBringChildren(
@@ -387,6 +405,12 @@ public abstract class LayerTreeViewItemBase : BindableBase, IDisposable, IObserv
                 LayerTreeViewItemContextMenu.Dispose(); // This now uses the extension method
                 ChangeNameCommand.Dispose();
                 _disposable.Dispose();
+
+                // キャッシュをクリア
+                _cachedAllChildren?.Clear();
+                _cachedLayerItems?.Clear();
+                _cachedAllChildren = null;
+                _cachedLayerItems = null;
             }
 
             disposedValue = true;
@@ -419,6 +443,45 @@ public abstract class LayerTreeViewItemBase : BindableBase, IDisposable, IObserv
         var zindex = foregroundZIndex;
         foreach (var child in Children) zindex = child.SetZIndex(recorder, zindex);
         return zindex;
+    }
+
+    // キャッシュを無効化するメソッド
+    private void InvalidateCache()
+    {
+        _cacheInvalidated = true;
+        _cachedAllChildren = null;
+        _cachedLayerItems.Clear();
+        
+        // 親にも通知してキャッシュを無効化
+        Parent.Value?.InvalidateCache();
+    }
+
+    // キャッシュされた全子要素を取得
+    private List<LayerTreeViewItemBase> GetCachedAllChildren()
+    {
+        if (_cacheInvalidated || _cachedAllChildren == null)
+        {
+            _cachedAllChildren = Children
+                .SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(xx => xx.Children)
+                .AsValueEnumerable()
+                .ToList();
+            _cacheInvalidated = false;
+        }
+        return _cachedAllChildren;
+    }
+
+    // 特定のLayerの子LayerItemsをキャッシュ付きで取得
+    private List<LayerItem> GetCachedLayerItems(LayerTreeViewItemBase layer)
+    {
+        if (!_cachedLayerItems.ContainsKey(layer) || _cacheInvalidated)
+        {
+            _cachedLayerItems[layer] = layer.Children
+                .SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                .AsValueEnumerable()
+                .OfType<LayerItem>()
+                .ToList();
+        }
+        return _cachedLayerItems[layer];
     }
 
     public class LayerTreeViewItemBaseDisposable : IDisposable
