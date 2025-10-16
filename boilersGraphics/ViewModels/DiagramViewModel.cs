@@ -800,19 +800,22 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
 
     private void PackAutoSaveFiles()
     {
-        AutoSaveFiles?.Clear();
-        try
+        App.Current.Dispatcher.Invoke(() =>
         {
-            var files = Directory.EnumerateFiles(
-                System.IO.Path.Combine(Helpers.Path.GetRoamingDirectory(), "dhq_boiler\\boilersGraphics\\AutoSave"),
-                "AutoSave-*-*-*-*-*-*.bgff");
-            foreach (var file in files.AsValueEnumerable().OrderByDescending(x => new FileInfo(x).LastWriteTime))
-                AutoSaveFiles.Add(file);
-        }
-        catch (DirectoryNotFoundException)
-        {
-            //Ignore it as it only happens on Azure DevOps
-        }
+            AutoSaveFiles?.Clear();
+            try
+            {
+                var files = Directory.EnumerateFiles(
+                    System.IO.Path.Combine(Helpers.Path.GetRoamingDirectory(), "dhq_boiler\\boilersGraphics\\AutoSave"),
+                    "AutoSave-*-*-*-*-*-*.bgff");
+                foreach (var file in files.AsValueEnumerable().OrderByDescending(x => new FileInfo(x).LastWriteTime))
+                    AutoSaveFiles.Add(file);
+            }
+            catch (DirectoryNotFoundException)
+            {
+                //Ignore it as it only happens on Azure DevOps
+            }
+        });
     }
 
     private bool CanOpenPropertyDialog()
@@ -2102,7 +2105,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
 
     public BindableReactiveProperty<TimeSpan> AutoSaveInterval { get; } = new(TimeSpan.FromMinutes(1));
 
-    public ObservableList<string> AutoSaveFiles { get; set; } = new();
+    public NotifyCollectionChangedSynchronizedViewList<string> AutoSaveFiles { get; set; } = new ObservableList<string>().ToWritableNotifyCollectionChanged();
 
     public BindableReactiveProperty<AngleType> AngleType { get; set; } = new();
 
