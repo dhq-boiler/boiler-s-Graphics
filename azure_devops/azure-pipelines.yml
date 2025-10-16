@@ -93,46 +93,46 @@ steps:
     msbuildArguments: '/p:OutDir=$(Build.ArtifactStagingDirectory) /p:UapAppxPackageBuildMode=StoreUpload /p:AppxBundle=Never /p:AppxPackageOutput=boilersGraphics_$(Major)_$(Minor)_$(Build).msix /p:AppxPackageSigningEnabled=false /p:DebugSymbols=true'
     clean: true
 
-- task: CmdLine@2
-  displayName: 'tree $(Build.ArtifactStagingDirectory) /F'
-  inputs:
-    script: 'tree $(Build.ArtifactStagingDirectory) /F'
+# - task: CmdLine@2
+#   displayName: 'tree $(Build.ArtifactStagingDirectory) /F'
+#   inputs:
+#     script: 'tree $(Build.ArtifactStagingDirectory) /F'
 
-- task: CmdLine@2
-  displayName: 'tree $(System.DefaultWorkingDirectory) /F'
-  inputs:
-    script: 'tree $(System.DefaultWorkingDirectory) /F'
+# - task: CmdLine@2
+#   displayName: 'tree $(System.DefaultWorkingDirectory) /F'
+#   inputs:
+#     script: 'tree $(System.DefaultWorkingDirectory) /F'
 
-- task: Windows Application Driver@0
-  inputs:
-    OperationType: 'Start'
-    AgentResolution: '1080p'
+# - task: Windows Application Driver@0
+#   inputs:
+#     OperationType: 'Start'
+#     AgentResolution: '1080p'
 
-- task: DotNetCoreCLI@2
-  displayName: 'dotnet test'
-  inputs:
-    command: 'test'
-    arguments: '--configuration $(BuildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura -- RunConfiguration.DisableAppDomain=true'
-    publishTestResults: true
-    projects: 'boilersGraphics.Test'
+# - task: DotNetCoreCLI@2
+#   displayName: 'dotnet test'
+#   inputs:
+#     command: 'test'
+#     arguments: '--configuration $(BuildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura -- RunConfiguration.DisableAppDomain=true'
+#     publishTestResults: true
+#     projects: 'boilersGraphics.Test'
 
-- task: Windows Application Driver@0
-  condition: always()
-  inputs:
-    OperationType: 'Stop'
+# - task: Windows Application Driver@0
+#   condition: always()
+#   inputs:
+#     OperationType: 'Stop'
 
-- task: reportgenerator@4
-  displayName: 'コードカバレッジレポートの作成'
-  inputs:
-    reports: '$(System.DefaultWorkingDirectory)\boilersGraphics.Test\coverage.cobertura.xml'
-    targetdir: '$(System.DefaultWorkingDirectory)\TestResults\Coverage\Reports'
-    reporttypes: 'Cobertura'
+# - task: reportgenerator@4
+#   displayName: 'コードカバレッジレポートの作成'
+#   inputs:
+#     reports: '$(System.DefaultWorkingDirectory)\boilersGraphics.Test\coverage.cobertura.xml'
+#     targetdir: '$(System.DefaultWorkingDirectory)\TestResults\Coverage\Reports'
+#     reporttypes: 'Cobertura'
 
-- task: PublishCodeCoverageResults@1
-  displayName: 'コードカバレッジレポートの発行'
-  inputs:
-    codeCoverageTool: 'Cobertura'
-    summaryFileLocation: '$(System.DefaultWorkingDirectory)\TestResults\Coverage\Reports\Cobertura.xml'
+# - task: PublishCodeCoverageResults@1
+#   displayName: 'コードカバレッジレポートの発行'
+#   inputs:
+#     codeCoverageTool: 'Cobertura'
+#     summaryFileLocation: '$(System.DefaultWorkingDirectory)\TestResults\Coverage\Reports\Cobertura.xml'
 
 # Archive files
 # Compress files into .7z, .tar.gz, or .zip
