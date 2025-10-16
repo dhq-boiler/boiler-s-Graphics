@@ -3210,6 +3210,42 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
 
                 App.Current.Dispatcher.Invoke(() =>
                 {
+                    vm.Current.Value++;
+                    vm.Output.Value += Environment.NewLine;
+                    vm.Output.Value += $"{Resources.String_SetupCanvas}...";
+                }, DispatcherPriority.ApplicationIdle);
+                InitialSetting(mainwindowViewModel, false, false, isPreview);
+                App.Current.Dispatcher.Invoke(() =>
+                {
+                    vm.Current.Value++;
+                    vm.Output.Value += $"{Resources.String_Completed}";
+                }, DispatcherPriority.ApplicationIdle);
+
+                if (configuration.Element("Left") != null)
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.Left.Value",
+                        double.Parse(configuration.Element("Left").Value));
+                if (configuration.Element("Top") != null)
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this, "BackgroundItem.Value.Top.Value",
+                        double.Parse(configuration.Element("Top").Value));
+                if (configuration.Element("Width") != null)
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this,
+                        "BackgroundItem.Value.Width.Value",
+                        double.Parse(configuration.Element("Width").Value));
+                if (configuration.Element("Height") != null)
+                    mainwindowViewModel.Recorder.Current.ExecuteSetProperty(this,
+                        "BackgroundItem.Value.Height.Value",
+                        double.Parse(configuration.Element("Height").Value));
+                ObjectDeserializer.ReadObjectsFromXML(this, vm, root,
+                    isPreview);
+
+                await PostProcessInFileLoadingSequence(mainwindowViewModel).ConfigureAwait(false);
+
+                vm.Output.Value += Environment.NewLine;
+                vm.Output.Value += Resources.Log_FinishLoadFromFile;
+                LogManager.GetCurrentClassLogger().Info(Resources.Log_FinishLoadFromFile);
+
+                App.Current.Dispatcher.Invoke(() =>
+                {
                     RootLayer.Value.UpdateAppearanceBothParentAndChildBatched();
                 }, DispatcherPriority.Render);
             }
@@ -3520,6 +3556,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
 
         LogManager.GetCurrentClassLogger().Info(string.Format(Resources.Log_LoadedFile, filename));
     }
+
     private async Task PostProcessInFileLoadingSequence(MainWindowViewModel mainwindowViewModel)
     {
         LogManager.GetCurrentClassLogger().Info(Resources.Log_BeginPostProcessInFileLoadingSequence);
