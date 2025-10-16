@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows;
-using System.Windows.Documents;
-using System.Windows.Input;
-using boilersGraphics.Adorners;
+﻿using boilersGraphics.Adorners;
 using boilersGraphics.Controls;
 using boilersGraphics.Helpers;
 using boilersGraphics.ViewModels;
 using Microsoft.Xaml.Behaviors;
+using System;
+using System.Collections.Generic;
+using System.Windows;
+using System.Windows.Documents;
+using System.Windows.Input;
+using ZLinq;
 
 namespace boilersGraphics.Views.Behaviors;
 
@@ -86,7 +86,7 @@ public class NDrawPolyBezierBehavior : Behavior<DesignerCanvas>
 
         var canvas = AssociatedObject;
         var current = e.GetPosition(canvas);
-        var ellipses = (AssociatedObject.DataContext as DiagramViewModel).AllItems.Value.OfType<NEllipseViewModel>();
+        var ellipses = (AssociatedObject.DataContext as DiagramViewModel).AllItems.Value.AsValueEnumerable().OfType<NEllipseViewModel>();
         var appendIntersectionPoints = new List<Tuple<Point, object>>();
         var vec = new Vector();
         if (_straightLineStartPoint.HasValue)
@@ -119,7 +119,7 @@ public class NDrawPolyBezierBehavior : Behavior<DesignerCanvas>
     {
         var canvas = AssociatedObject;
         var current = e.GetPosition(canvas);
-        var ellipses = (AssociatedObject.DataContext as DiagramViewModel).AllItems.Value.OfType<NEllipseViewModel>();
+        var ellipses = (AssociatedObject.DataContext as DiagramViewModel).AllItems.Value.AsValueEnumerable().OfType<NEllipseViewModel>();
         var appendIntersectionPoints = new List<Tuple<Point, object>>();
         var vec = new Vector();
         if (_straightLineStartPoint.HasValue)

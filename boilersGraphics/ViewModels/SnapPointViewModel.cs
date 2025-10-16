@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using boilersGraphics.Controls;
+﻿using boilersGraphics.Controls;
 using boilersGraphics.Helpers;
-using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
+using R3;
+using System;
+using System.Collections.Generic;
+using ZLinq;
 
 namespace boilersGraphics.ViewModels;
 
@@ -32,7 +31,7 @@ public class SnapPointViewModel : SelectableDesignerItemViewModelBase
             .AddTo(_CompositeDisposable);
         Left.Subscribe(x =>
             {
-                if (parent.Points.Count() < index + 1)
+                if (parent.Points.AsValueEnumerable().Count() < index + 1)
                     return;
                 var point = parent.Points[index];
                 point.X = x;
@@ -40,7 +39,7 @@ public class SnapPointViewModel : SelectableDesignerItemViewModelBase
             .AddTo(_CompositeDisposable);
         Top.Subscribe(y =>
             {
-                if (parent.Points.Count() < index + 1)
+                if (parent.Points.AsValueEnumerable().Count() < index + 1)
                     return;
                 var point = parent.Points[index];
                 point.Y = y;
@@ -48,16 +47,16 @@ public class SnapPointViewModel : SelectableDesignerItemViewModelBase
             .AddTo(_CompositeDisposable);
     }
 
-    public ReactivePropertySlim<SelectableDesignerItemViewModelBase> Parent { get; } = new();
+    public BindableReactiveProperty<SelectableDesignerItemViewModelBase> Parent { get; } = new();
 
-    public ReactivePropertySlim<double> Left { get; } = new(0, ReactivePropertyMode.RaiseLatestValueOnSubscribe);
+    public BindableReactiveProperty<double> Left { get; } = new(0);
 
-    public ReactivePropertySlim<double> Top { get; } = new(0, ReactivePropertyMode.RaiseLatestValueOnSubscribe);
-    public ReactivePropertySlim<double> Width { get; } = new();
+    public BindableReactiveProperty<double> Top { get; } = new(0);
+    public BindableReactiveProperty<double> Width { get; } = new();
 
-    public ReactivePropertySlim<double> Height { get; } = new();
+    public BindableReactiveProperty<double> Height { get; } = new();
 
-    public ReactivePropertySlim<double> Opacity { get; } = new();
+    public BindableReactiveProperty<double> Opacity { get; } = new();
 
     public List<IDisposable> SnapObjs { get; set; } = new();
 

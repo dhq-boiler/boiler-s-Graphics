@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Reactive.Disposables;
-using boilersGraphics.Helpers;
-using boilersGraphics.Properties;
+﻿using boilersGraphics.Properties;
 using boilersGraphics.Views;
+using ObservableCollections;
 using Prism.Mvvm;
 using Prism.Regions;
 using Prism.Services.Dialogs;
-using Reactive.Bindings;
+using R3;
+using System;
+using boilersGraphics.Extensions;
+using ZLinq;
 
 namespace boilersGraphics.ViewModels;
 
@@ -24,11 +23,11 @@ public class DetailViewModelBase<T> : BindableBase, IDialogAware, INavigationAwa
         this.regionManager = regionManager;
     }
 
-    public ReactivePropertySlim<int> OKTabIndex { get; } = new();
+    public BindableReactiveProperty<int> OKTabIndex { get; } = new();
 
-    public ReactivePropertySlim<T> ViewModel { get; } = new();
+    public BindableReactiveProperty<T> ViewModel { get; } = new();
 
-    public ReactiveCollection<PropertyOptionsValueCombination> Properties { get; } = new();
+    public NotifyCollectionChangedSynchronizedViewList<PropertyOptionsValueCombination> Properties { get; } = new ObservableList<PropertyOptionsValueCombination>().ToWritableNotifyCollectionChanged();
 
     public string Title => Resources.ResourceManager.GetString("Title_Property", Resources.Culture);
 
@@ -49,7 +48,7 @@ public class DetailViewModelBase<T> : BindableBase, IDialogAware, INavigationAwa
         ViewModel.Value = parameters.GetValue<T>("ViewModel");
         regionManager.RequestNavigate("DetailRegion", nameof(Detail));
         SetProperties();
-        var properties = Properties.OrderBy(x => x.PropertyName.Value).ToList();
+        var properties = Properties.AsValueEnumerable().OrderBy(x => x.PropertyName.Value).ToList();
         Properties.Clear();
         Properties.AddRange(properties);
         var i = 0;

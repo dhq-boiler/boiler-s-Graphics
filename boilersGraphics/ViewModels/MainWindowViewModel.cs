@@ -1,18 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.SQLite;
-using System.Diagnostics;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading;
-using System.Windows;
-using boilersGraphics.Dao;
+﻿using boilersGraphics.Dao;
 using boilersGraphics.Dao.Migration.Plan;
 using boilersGraphics.Helpers;
 using boilersGraphics.Models;
@@ -25,15 +11,27 @@ using NLog;
 using NLog.Config;
 using NLog.Targets;
 using NLog.Targets.Wrappers;
+using ObservableCollections;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
-using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
+using R3;
 using REghZyFramework.Themes;
+using System;
+using System.Collections.Generic;
+using System.Data.SQLite;
+using System.Diagnostics;
+using System.Globalization;
+using System.IO;
+using System.Net;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading;
+using System.Windows;
 using TsOperationHistory;
 using TsOperationHistory.Extensions;
 using Unity;
+using ZLinq;
 using Path = System.IO.Path;
 using Statistics = boilersGraphics.Models.Statistics;
 using Version = boilersGraphics.Views.Version;
@@ -139,7 +137,7 @@ public class MainWindowViewModel : BindableBase, IDisposable
                 {
                     Recorder.BeginRecode();
                     Recorder.Current.ExecuteSetProperty(DiagramViewModel, "EdgeBrush.Value", exchange.New);
-                    foreach (var item in DiagramViewModel.SelectedItems.Value
+                    foreach (var item in DiagramViewModel.SelectedItems.Value.AsValueEnumerable()
                                  .OfType<SelectableDesignerItemViewModelBase>())
                         if (item is SnapPointViewModel snapPoint)
                             Recorder.Current.ExecuteSetProperty(snapPoint.Parent.Value, "EdgeBrush.Value",
@@ -179,7 +177,7 @@ public class MainWindowViewModel : BindableBase, IDisposable
                 {
                     Recorder.BeginRecode();
                     Recorder.Current.ExecuteSetProperty(DiagramViewModel, "FillBrush.Value", exchange.New);
-                    foreach (var item in DiagramViewModel.SelectedItems.Value.OfType<DesignerItemViewModelBase>())
+                    foreach (var item in DiagramViewModel.SelectedItems.Value.AsValueEnumerable().OfType<DesignerItemViewModelBase>())
                         Recorder.Current.ExecuteSetProperty(item, "FillBrush.Value", exchange.New);
                     Recorder.EndRecode();
                 }
@@ -192,25 +190,25 @@ public class MainWindowViewModel : BindableBase, IDisposable
         SwitchMiniMapCommand = new DelegateCommand(() =>
         {
             DiagramViewModel.EnableMiniMap.Value = !DiagramViewModel.EnableMiniMap.Value;
-            ToolBarViewModel.ToolItems2.First(x => x.Name.Value == "minimap").IsChecked =
+            ToolBarViewModel.ToolItems2.AsValueEnumerable().First(x => x.Name.Value == "minimap").IsChecked =
                 DiagramViewModel.EnableMiniMap.Value;
         });
         SwitchCombineCommand = new DelegateCommand(() =>
         {
             DiagramViewModel.EnableCombine.Value = !DiagramViewModel.EnableCombine.Value;
-            ToolBarViewModel.ToolItems2.First(x => x.Name.Value == "combine").IsChecked =
+            ToolBarViewModel.ToolItems2.AsValueEnumerable().First(x => x.Name.Value == "combine").IsChecked =
                 DiagramViewModel.EnableCombine.Value;
         });
         SwitchLayersCommand = new DelegateCommand(() =>
         {
             DiagramViewModel.EnableLayers.Value = !DiagramViewModel.EnableLayers.Value;
-            ToolBarViewModel.ToolItems2.First(x => x.Name.Value == "layers").IsChecked =
+            ToolBarViewModel.ToolItems2.AsValueEnumerable().First(x => x.Name.Value == "layers").IsChecked =
                 DiagramViewModel.EnableLayers.Value;
         });
         SwitchWorkHistoryCommand = new DelegateCommand(() =>
         {
             DiagramViewModel.EnableWorkHistory.Value = !DiagramViewModel.EnableWorkHistory.Value;
-            ToolBarViewModel.ToolItems2.First(x => x.Name.Value == "workHistory").IsChecked =
+            ToolBarViewModel.ToolItems2.AsValueEnumerable().First(x => x.Name.Value == "workHistory").IsChecked =
                 DiagramViewModel.EnableWorkHistory.Value;
         });
         SwitchBrushThicknessCommand = new DelegateCommand(() =>
@@ -246,8 +244,8 @@ public class MainWindowViewModel : BindableBase, IDisposable
                 if (x.HasValue && !double.IsNaN(x.Value) && DiagramViewModel.SelectedItems.Value != null)
                 {
                     Recorder.BeginRecode();
-                    foreach (var item in DiagramViewModel.SelectedItems.Value
-                                 ?.OfType<SelectableDesignerItemViewModelBase>())
+                    foreach (var item in DiagramViewModel.SelectedItems.Value.AsValueEnumerable()
+                                 .OfType<SelectableDesignerItemViewModelBase>())
                         if (item is SnapPointViewModel snapPoint)
                             Recorder.Current.ExecuteSetProperty(snapPoint.Parent.Value, "EdgeThickness.Value", x.Value);
                         else
@@ -303,7 +301,7 @@ public class MainWindowViewModel : BindableBase, IDisposable
         var id = Guid.Parse("00000000-0000-0000-0000-000000000000");
         var dao = new StatisticsDao();
         var statistics = dao.FindBy(new Dictionary<string, object> { { "ID", id } });
-        var statisticsObj = statistics.First();
+        var statisticsObj = statistics.AsValueEnumerable().First();
         Statistics.Value = statisticsObj;
         updateTicks = statisticsObj.UptimeTicks;
 
@@ -311,7 +309,7 @@ public class MainWindowViewModel : BindableBase, IDisposable
         {
             if (startupEventArgs is not null && startupEventArgs.Args.Length > 0)
             {
-                DiagramViewModel.Load(startupEventArgs.Args.First());
+                DiagramViewModel.Load(startupEventArgs.Args.AsValueEnumerable().First());
             }
         });
 
@@ -323,14 +321,14 @@ public class MainWindowViewModel : BindableBase, IDisposable
                 var dao = new LogSettingDao();
                 var id = Guid.Parse("00000000-0000-0000-0000-000000000000");
                 var logSettings = dao.FindBy(new Dictionary<string, object> { { "ID", id } });
-                if (logSettings.Count() == 1)
+                if (logSettings.AsValueEnumerable().Count() == 1)
                 {
                     var finished = false;
                     do
                     {
                         try
                         {
-                            var logSetting = logSettings.First();
+                            var logSetting = logSettings.AsValueEnumerable().First();
                             logSetting.LogLevel = LogLevel.Value.ToString();
                             dao.Update(logSetting);
                             finished = true;
@@ -433,26 +431,26 @@ public class MainWindowViewModel : BindableBase, IDisposable
         set => SetProperty(ref _ToolBarViewModel, value);
     }
 
-    public ReactivePropertySlim<string> CurrentOperation { get; } = new();
+    public BindableReactiveProperty<string> CurrentOperation { get; } = new();
 
-    public ReactivePropertySlim<string> Details { get; } = new();
-    public ReactivePropertySlim<string> Message { get; } = new();
+    public BindableReactiveProperty<string> Details { get; } = new();
+    public BindableReactiveProperty<string> Message { get; } = new();
 
-    public ReactivePropertySlim<double> SnapPower { get; } = new();
+    public BindableReactiveProperty<double> SnapPower { get; } = new();
 
-    public ReactiveCollection<double> EdgeThicknessOptions { get; } = new();
+    public NotifyCollectionChangedSynchronizedViewList<double> EdgeThicknessOptions { get; } = new ObservableList<double>().ToWritableNotifyCollectionChanged();
 
-    public ReactivePropertySlim<string> Title { get; } = new();
+    public R3.BindableReactiveProperty<string> Title { get; } = new();
 
-    public ReactivePropertySlim<Statistics> Statistics { get; } = new();
+    public R3.BindableReactiveProperty<Statistics> Statistics { get; } = new();
 
-    public ReactivePropertySlim<TerminalInfo> TerminalInfo { get; } = new();
+    public R3.BindableReactiveProperty<TerminalInfo> TerminalInfo { get; } = new();
 
     public IOperationController Controller { get; } = new OperationController();
 
     public OperationRecorder Recorder { get; }
 
-    public ReactivePropertySlim<LogLevel> LogLevel { get; } = new();
+    public R3.BindableReactiveProperty<LogLevel> LogLevel { get; } = new();
 
     public DelegateCommand<object> DeleteSelectedItemsCommand { get; }
 
@@ -505,8 +503,7 @@ public class MainWindowViewModel : BindableBase, IDisposable
             ArchiveEvery = FileArchivePeriod.Day,
             ArchiveFileName =
                 $"{Helpers.Path.GetRoamingDirectory()}\\dhq_boiler\\boilersGraphics\\Logs\\boilersGraphics_{{#}}.log",
-            ArchiveNumbering = ArchiveNumberingMode.Date,
-            ArchiveDateFormat = "yyyy-MM-dd",
+            ArchiveSuffixFormat = "yyyy-MM-dd",
             Encoding = Encoding.UTF8
         };
         var wrapper = new AsyncTargetWrapper(fileTarget, 5000, AsyncTargetWrapperOverflowAction.Grow);
@@ -520,8 +517,7 @@ public class MainWindowViewModel : BindableBase, IDisposable
             ArchiveEvery = FileArchivePeriod.Day,
             ArchiveFileName =
                 $"{Helpers.Path.GetRoamingDirectory()}\\dhq_boiler\\boilersGraphics\\Logs\\boilersGraphics_error_{{#}}.log",
-            ArchiveNumbering = ArchiveNumberingMode.Date,
-            ArchiveDateFormat = "yyyy-MM-dd",
+            ArchiveSuffixFormat = "yyyy-MM-dd",
             Encoding = Encoding.UTF8
         };
         wrapper = new AsyncTargetWrapper(fileErrTarget, 5000, AsyncTargetWrapperOverflowAction.Grow);
@@ -554,7 +550,7 @@ public class MainWindowViewModel : BindableBase, IDisposable
         {
             var markdown = client.DownloadString(privacyPolicyUrl);
             var lines = markdown.Split("\n");
-            foreach (var line in lines.Reverse())
+            foreach (var line in lines.AsValueEnumerable().Reverse())
             {
                 var regex = new Regex("^改定：(?<year>\\d+?)年(?<month>\\d+?)月(?<day>\\d+?)日$");
                 if (regex.IsMatch(line))
@@ -581,14 +577,14 @@ public class MainWindowViewModel : BindableBase, IDisposable
     {
         var dao = new PrivacyPolicyAgreementDao();
         var list = dao.GetAgree();
-        return list.FirstOrDefault();
+        return list.AsValueEnumerable().FirstOrDefault();
     }
 
     private PrivacyPolicyAgreement PickoutPrivacyPolicyAgreementTop1AgreeOrDisagree()
     {
         var dao = new PrivacyPolicyAgreementDao();
         var list = dao.GetAgreeOrDisagree();
-        return list.FirstOrDefault();
+        return list.AsValueEnumerable().FirstOrDefault();
     }
 
     private void UpdateStatisticsCountLogLevelChanged()
@@ -637,7 +633,7 @@ public class MainWindowViewModel : BindableBase, IDisposable
         var id = Guid.Parse("00000000-0000-0000-0000-000000000000");
         var statisticsDao = new StatisticsDao();
         var statistics = statisticsDao.FindBy(new Dictionary<string, object> { { "ID", id } });
-        if (statistics.Count() == 0)
+        if (statistics.AsValueEnumerable().Count() == 0)
         {
             var newStatistics = new Statistics();
             newStatistics.ID = id;
@@ -646,7 +642,7 @@ public class MainWindowViewModel : BindableBase, IDisposable
         }
         else
         {
-            var existStatistics = statistics.First();
+            var existStatistics = statistics.AsValueEnumerable().First();
             existStatistics.NumberOfBoots += 1;
             statisticsDao.Update(existStatistics);
         }
@@ -657,7 +653,7 @@ public class MainWindowViewModel : BindableBase, IDisposable
         var id = Guid.Parse("00000000-0000-0000-0000-000000000000");
         var terminalInfoDao = new TerminalInfoDao();
         var terminalInfos = terminalInfoDao.FindBy(new Dictionary<string, object> { { "ID", id } });
-        if (terminalInfos.Count() == 0)
+        if (terminalInfos.AsValueEnumerable().Count() == 0)
         {
             var newTerminalInfo = new TerminalInfo();
             newTerminalInfo.ID = id;
@@ -670,7 +666,7 @@ public class MainWindowViewModel : BindableBase, IDisposable
             return newTerminalInfo;
         }
 
-        var terminalInfo = terminalInfos.First();
+        var terminalInfo = terminalInfos.AsValueEnumerable().First();
         GoogleAnalyticsUtil.Beacon(terminalInfo, BeaconPlace.Launch, BeaconPath.Launch);
         return terminalInfo;
     }
@@ -692,7 +688,7 @@ public class MainWindowViewModel : BindableBase, IDisposable
 
     private void ExecuteDeleteSelectedItemsCommand(object parameter)
     {
-        var itemsToRemove = DiagramViewModel.SelectedItems.Value.ToList();
+        var itemsToRemove = DiagramViewModel.SelectedItems.Value.AsValueEnumerable().ToList();
         foreach (var selectedItem in itemsToRemove) DiagramViewModel.RemoveItemCommand.Execute(selectedItem);
     }
 }

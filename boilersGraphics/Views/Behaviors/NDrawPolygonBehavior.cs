@@ -1,14 +1,14 @@
-﻿using System.Collections.ObjectModel;
-using System.Windows;
-using System.Windows.Documents;
-using System.Windows.Input;
-using boilersGraphics.Adorners;
+﻿using boilersGraphics.Adorners;
 using boilersGraphics.Controls;
 using boilersGraphics.Helpers;
 using boilersGraphics.Models;
 using boilersGraphics.Properties;
 using boilersGraphics.ViewModels;
 using Microsoft.Xaml.Behaviors;
+using System.Collections.ObjectModel;
+using System.Windows;
+using System.Windows.Documents;
+using System.Windows.Input;
 
 namespace boilersGraphics.Views.Behaviors;
 

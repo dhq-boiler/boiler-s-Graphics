@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows;
-using System.Windows.Media;
-using boilersGraphics.Controls;
+﻿using boilersGraphics.Controls;
 using boilersGraphics.Extensions;
 using boilersGraphics.Views;
 using Prism.Ioc;
 using Prism.Services.Dialogs;
 using Prism.Unity;
+using System;
+using System.Collections.Generic;
+using System.Windows;
+using System.Windows.Media;
+using ZLinq;
 
 namespace boilersGraphics.ViewModels;
 
@@ -36,10 +36,10 @@ public class LetterVerticalDesignerItemViewModel : AbstractLetterDesignerItemVie
         var offsetX = 0d;
         var next = 0;
         var allcount = 0;
-        while (allcount < LetterString.Value.Count() && Height.Value > 0)
+        while (allcount < LetterString.Value.AsValueEnumerable().Count() && Height.Value > 0)
         {
             var maxWidth = 0d;
-            var letterString = LetterString.Value.Skip(allcount);
+            var letterString = LetterString.Value.AsValueEnumerable().Skip(allcount);
 
             listLineBreak.Clear();
             height = 0d;

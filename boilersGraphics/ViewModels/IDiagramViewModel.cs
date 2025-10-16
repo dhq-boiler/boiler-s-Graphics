@@ -1,7 +1,8 @@
-﻿using System.Windows.Media;
-using boilersGraphics.Models;
+﻿using boilersGraphics.Models;
+using ObservableCollections;
 using Prism.Commands;
-using Reactive.Bindings;
+using R3;
+using System.Windows.Media;
 
 namespace boilersGraphics.ViewModels;
 
@@ -11,12 +12,13 @@ public interface IDiagramViewModel
     DelegateCommand<object> AddItemCommand { get; }
     DelegateCommand<object> RemoveItemCommand { get; }
     DelegateCommand<object> ClearSelectedItemsCommand { get; }
-    ReadOnlyReactivePropertySlim<SelectableDesignerItemViewModelBase[]> SelectedItems { get; }
-    ReactivePropertySlim<Brush> EdgeBrush { get; }
-    ReactivePropertySlim<Brush> FillBrush { get; }
-    ReactivePropertySlim<double?> EdgeThickness { get; }
-    ReactiveCollection<LayerTreeViewItemBase> Layers { get; }
-    ReactivePropertySlim<BackgroundViewModel> BackgroundItem { get; }
+    IReadOnlyBindableReactiveProperty<SelectableDesignerItemViewModelBase[]> SelectedItems { get; }
+    BindableReactiveProperty<Brush> EdgeBrush { get; }
+    BindableReactiveProperty<Brush> FillBrush { get; }
+    BindableReactiveProperty<double?> EdgeThickness { get; }
+    NotifyCollectionChangedSynchronizedViewList<LayerTreeViewItemBase> Layers { get; }
+    IReadOnlyBindableReactiveProperty<SelectableDesignerItemViewModelBase[]> AllItems { get; }
+    BindableReactiveProperty<BackgroundViewModel> BackgroundItem { get; }
 
     void DeselectAll();
 }

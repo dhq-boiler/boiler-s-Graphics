@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Reflection;
+using ZLinq;
 
 namespace boilersGraphics.Messenger;
 
@@ -303,9 +303,8 @@ public class Mediator
     public bool NotifyColleagues<T>(T message)
     {
         var actionType = typeof(Action<>).MakeGenericType(typeof(T));
-        var keyList = from key in _registeredHandlers.Keys
-            where key is Type && ((Type)key).IsAssignableFrom(actionType)
-            select key;
+        var keyList = _registeredHandlers.Keys.AsValueEnumerable().Where(key =>
+            key is Type type && type.IsAssignableFrom(actionType)).ToList();
         var rc = false;
         foreach (var key in keyList)
             rc |= NotifyColleagues(key, message);

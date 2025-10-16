@@ -1,6 +1,6 @@
-﻿using System.Globalization;
-using boilersGraphics.Properties;
+﻿using boilersGraphics.Properties;
 using Prism.Mvvm;
+using System.Globalization;
 
 namespace boilersGraphics.Helpers;
 

@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Linq;
+using ZLinq;
 
 namespace boilersGraphics.Helpers;
 
@@ -154,7 +154,7 @@ public class ObservableLinkedList<T> : INotifyCollectionChanged, IEnumerable<T>
         OnNotifyCollectionChanged();
     }
 
-    public T this[int index] => m_UnderLyingLinkedList.ElementAt(index);
+    public T this[int index] => m_UnderLyingLinkedList.AsValueEnumerable().ElementAt(index);
 
     #endregion
 

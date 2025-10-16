@@ -2,12 +2,12 @@
 using boilersGraphics.Models;
 using boilersGraphics.Views;
 using boilersGraphics.Views.Behaviors;
+using ObservableCollections;
 using OpenCvSharp;
 using OpenCvSharp.WpfExtensions;
 using Prism.Mvvm;
 using Prism.Regions;
-using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
+using R3;
 using Rulyotano.Math.Interpolation.Bezier;
 using System;
 using System.Collections.Generic;
@@ -15,8 +15,6 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
@@ -25,6 +23,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using ZLinq;
 using Window = System.Windows.Window;
 
 namespace boilersGraphics.ViewModels.ColorCorrect
@@ -33,7 +32,7 @@ namespace boilersGraphics.ViewModels.ColorCorrect
     {
         private CompositeDisposable _disposable = new CompositeDisposable();
         private bool _disposedValue;
-        public ReactivePropertySlim<ColorCorrectViewModel> ViewModel { get; } = new();
+        public BindableReactiveProperty<ColorCorrectViewModel> ViewModel { get; } = new();
         public ReactiveCommand<Point> CanvasClickCommand { get; } = new();
         public ReactiveCommand<KeyEventArgs> PreviewKeyDownCommand { get; } = new();
         public ReactiveCommand<RoutedEventArgs> LoadedCommand { get; } = new();
@@ -41,8 +40,8 @@ namespace boilersGraphics.ViewModels.ColorCorrect
         public ReactiveCommand DropperWhiteEnabledCommand { get; } = new();
         public ReactiveCommand DropperBlackDisabledCommand { get; } = new();
         public ReactiveCommand DropperWhiteDisabledCommand { get; } = new();
-        public ReactivePropertySlim<bool> IsCheckedDropperBlack { get; } = new();
-        public ReactivePropertySlim<bool> IsCheckedDropperWhite { get; } = new();
+        public BindableReactiveProperty<bool> IsCheckedDropperBlack { get; } = new();
+        public BindableReactiveProperty<bool> IsCheckedDropperWhite { get; } = new();
 
         public class Point : BindableBase
         {
@@ -56,8 +55,8 @@ namespace boilersGraphics.ViewModels.ColorCorrect
                 Y.Value = y;
             }
 
-            public ReactivePropertySlim<double> X { get; } = new ReactivePropertySlim<double>();
-            public ReactivePropertySlim<double> Y { get; } = new ReactivePropertySlim<double>();
+            public BindableReactiveProperty<double> X { get; } = new BindableReactiveProperty<double>();
+            public BindableReactiveProperty<double> Y { get; } = new BindableReactiveProperty<double>();
 
             public Rulyotano.Math.Geometry.Point ToPoint()
             {
@@ -84,27 +83,27 @@ namespace boilersGraphics.ViewModels.ColorCorrect
 
         public ReactiveCommand<DragDeltaEventArgs> DragDeltaCommand { get; } = new();
 
-        public ReactivePropertySlim<Channel> TargetChannel { get; } = new(Channel.RGB);
+        public BindableReactiveProperty<Channel> TargetChannel { get; } = new(Channel.RGB);
 
         public ReactiveCommand<SelectionChangedEventArgs> TargetChannelChangedCommand { get; } = new();
 
-        public ReactiveCollection<Curve> Curves { get; private set; } = new ReactiveCollection<Curve>();
+        public NotifyCollectionChangedSynchronizedViewList<Curve> Curves { get; private set; } = new ObservableList<Curve>().ToWritableNotifyCollectionChanged();
 
-        public ReactiveCollection<Curve> OrderedCurves { get; set; }
+        public NotifyCollectionChangedSynchronizedViewList<Curve> OrderedCurves { get; set; }
 
-        public ReactivePropertySlim<Curve> TargetCurve { get; } = new ReactivePropertySlim<Curve>();
+        public BindableReactiveProperty<Curve> TargetCurve { get; } = new BindableReactiveProperty<Curve>();
 
         public class Curve : BindableBase
         {
-            public ReactivePropertySlim<Channel> TargetChannel { get; } = new(Channel.RGB);
+            public BindableReactiveProperty<Channel> TargetChannel { get; } = new(Channel.RGB);
 
-            public ReactiveCollection<Point> Points { get; set; } = new();
+            public NotifyCollectionChangedSynchronizedViewList<Point> Points { get; set; } = new ObservableList<Point>().ToWritableNotifyCollectionChanged();
 
-            public ReactivePropertySlim<WriteableBitmap> Histogram { get; } = new();
+            public BindableReactiveProperty<WriteableBitmap> Histogram { get; } = new();
 
 
-            private ReactiveCollection<InOutPair> _InOutPairs = new ReactiveCollection<InOutPair>();
-            public ReactiveCollection<InOutPair> InOutPairs
+            private NotifyCollectionChangedSynchronizedViewList<InOutPair> _InOutPairs = new ObservableList<InOutPair>().ToWritableNotifyCollectionChanged();
+            public NotifyCollectionChangedSynchronizedViewList<InOutPair> InOutPairs
             {
                 get
                 {
@@ -118,7 +117,7 @@ namespace boilersGraphics.ViewModels.ColorCorrect
                 }
             }
 
-            public ReactivePropertySlim<Brush> Color { get; } = new();
+            public BindableReactiveProperty<Brush> Color { get; } = new();
 
             public Curve()
             {
@@ -189,16 +188,16 @@ namespace boilersGraphics.ViewModels.ColorCorrect
 
             TargetCurve.Subscribe(x =>
             {
-                OrderedCurves = Curves.Sort(TargetCurve.Value).ToReactiveCollection();
+                OrderedCurves = Curves.Sort(TargetCurve.Value);
                 OnPropertyChanged(new PropertyChangedEventArgs(nameof(OrderedCurves)));
             }).AddTo(_disposable);
 
-            TargetCurve.Value = Curves.First();
+            TargetCurve.Value = Curves.AsValueEnumerable().First();
 
             DragDeltaCommand.Subscribe(x =>
             { 
                 Point unboxedPoint = (Point)(x.Source as Thumb).DataContext;
-                if (TargetCurve.Value.Points.First() == unboxedPoint || TargetCurve.Value.Points.Last() == unboxedPoint)
+                if (TargetCurve.Value.Points.AsValueEnumerable().First() == unboxedPoint || TargetCurve.Value.Points.AsValueEnumerable().Last() == unboxedPoint)
                 {
                     unboxedPoint.Y.Value = Math.Clamp(unboxedPoint.Y.Value + x.VerticalChange, 0, 255);
                     UpdatePoints(x);
@@ -215,9 +214,9 @@ namespace boilersGraphics.ViewModels.ColorCorrect
             TargetChannelChangedCommand.Subscribe(x =>
             {
                 var window = System.Windows.Window.GetWindow(x.Source as System.Windows.Controls.ComboBox);
-                var landmarks = window.EnumerateChildOfType<LandmarkControl>().Distinct();
+                var landmarks = window.EnumerateChildOfType<LandmarkControl>().AsValueEnumerable().Distinct();
                 var landmark = landmarks.First(x => x.PathColor == TargetCurve.Value.Color.Value);
-                TargetCurve.Value = ViewModel.Value.TargetCurve.Value = Curves.First(y => y.TargetChannel.Value == (Channel)x.AddedItems[0]);
+                TargetCurve.Value = ViewModel.Value.TargetCurve.Value = Curves.AsValueEnumerable().First(y => y.TargetChannel.Value == (Channel)x.AddedItems[0]);
                 ViewModel.Value.TargetCurve.Value.InOutPairs = landmark.AllScales;
                 ViewModel.Value.TargetChannel.Value = (Channel)x.AddedItems[0];
                 ViewModel.Value.TargetCurve.Value.Color.Value = TargetCurve.Value.Color.Value;
@@ -236,7 +235,7 @@ namespace boilersGraphics.ViewModels.ColorCorrect
                     {
                         return;
                     }
-                    if (TargetCurve.Value.Points.Count() <= 3)
+                    if (TargetCurve.Value.Points.AsValueEnumerable().Count() <= 3)
                     {
                         return;
                     }
@@ -246,9 +245,9 @@ namespace boilersGraphics.ViewModels.ColorCorrect
             LoadedCommand.Subscribe(x =>
             {
                 var window = System.Windows.Window.GetWindow(x.Source as Views.ColorCorrect.ToneCurve);
-                var landmarks = window.EnumerateChildOfType<LandmarkControl>().Distinct();
+                var landmarks = window.EnumerateChildOfType<LandmarkControl>().AsValueEnumerable().Distinct();
                 var set = landmarks.Select(x => new
-                    { Landmark = x, Color = Channel.GetValues().First(y => y.Brush == x.PathColor) });
+                    { Landmark = x, Color = Channel.GetValues().AsValueEnumerable().First(y => y.Brush == x.PathColor) });
 
                 foreach (var curve in Curves)
                 {
@@ -292,7 +291,7 @@ namespace boilersGraphics.ViewModels.ColorCorrect
         {
             var newPoint = new Point(t.X.Value, t.Y.Value);
             var newPointModel = new Point(t.X.Value, t.Y.Value);
-            var pointsList = curve.Points.Select(it => new Rulyotano.Math.Geometry.Point(it.X.Value, it.Y.Value));
+            var pointsList = curve.Points.AsValueEnumerable().Select(it => new Rulyotano.Math.Geometry.Point(it.X.Value, it.Y.Value));
             var insertIndex = Rulyotano.Math.Geometry.Helpers.BestPlaceToInsert(newPoint.ToPoint(), pointsList.ToList());
             if (insertIndex == curve.Points.Count)
             {
@@ -309,17 +308,17 @@ namespace boilersGraphics.ViewModels.ColorCorrect
             if (MainWindowViewModel.Instance.ToolBarViewModel.Behaviors.Contains(MainWindowViewModel.Instance.ToolBarViewModel.BlackDropperBehavior))
             {
                 //点(0, 255)を除く、下半分をリセット
-                curve.Points.Where(p => !(p.X.Value == 0 && p.Y.Value == 255) && p.Y.Value >= 255 / 2 && p.Y.Value <= 255)
+                curve.Points.AsValueEnumerable().Where(p => !(p.X.Value == 0 && p.Y.Value == 255) && p.Y.Value >= 255 / 2 && p.Y.Value <= 255)
                                     .ToList().ForEach(p => curve.Points.Remove(p));
             }
             else if (MainWindowViewModel.Instance.ToolBarViewModel.Behaviors.Contains(MainWindowViewModel.Instance.ToolBarViewModel.WhiteDropperBehavior))
             {
                 //点(255, 0)を除く、上半分をリセット
-                curve.Points.Where(p => !(p.X.Value == 255 && p.Y.Value == 0) && p.Y.Value >= 0 && p.Y.Value <= 255 / 2)
+                curve.Points.AsValueEnumerable().Where(p => !(p.X.Value == 255 && p.Y.Value == 0) && p.Y.Value >= 0 && p.Y.Value <= 255 / 2)
                                     .ToList().ForEach(p => curve.Points.Remove(p));
             }
-            var except = curve.Points.ToList();
-            var adds = resetPoints.Except(except);
+            var except = curve.Points.AsValueEnumerable().ToList();
+            var adds = resetPoints.AsValueEnumerable().Except(except).ToArray();
             curve.Points.AddRange(adds);
         }
 
@@ -454,7 +453,7 @@ namespace boilersGraphics.ViewModels.ColorCorrect
                 if (landmark.DataContext != curve)
                     continue;
                 var list = Helpers.Curve.CalcInOutPairs(landmark);
-                curve.InOutPairs = new ReactiveCollection<InOutPair>();
+                curve.InOutPairs = new ObservableList<InOutPair>().ToWritableNotifyCollectionChanged();
                 foreach (var elm in list)
                 {
                     curve.InOutPairs.Add(new InOutPair(elm.In, byte.MaxValue - elm.Out));
@@ -472,16 +471,16 @@ namespace boilersGraphics.ViewModels.ColorCorrect
         {
             ViewModel.Value.Curves = Curves;
 
-            var _Points = TargetCurve.Value.Points.Select(x => new Rulyotano.Math.Geometry.Point(x.X.Value, x.Y.Value)).ToList();
+            var _Points = TargetCurve.Value.Points.AsValueEnumerable().Select(x => new Rulyotano.Math.Geometry.Point(x.X.Value, x.Y.Value)).ToList();
 
 
-            var myPathFigure = new PathFigure { StartPoint = ConvertToVisualPoint(_Points.FirstOrDefault()) };
+            var myPathFigure = new PathFigure { StartPoint = ConvertToVisualPoint(_Points.AsValueEnumerable().FirstOrDefault()) };
 
             var bezierSegments = BezierInterpolation.PointsToBezierCurves(_Points, false);
 
             var _myPathSegmentCollection = new PathSegmentCollection();
 
-            if (bezierSegments == null || bezierSegments.Count < 1)
+            if (bezierSegments == null || bezierSegments.Segments.AsValueEnumerable().Count() < 1)
             {
                 //Add a line segment <this is generic for more than one line>
                 foreach (var point in _Points.GetRange(1, _Points.Count - 1))
@@ -493,7 +492,7 @@ namespace boilersGraphics.ViewModels.ColorCorrect
             }
             else
             {
-                foreach (var bezierCurveSegment in bezierSegments)
+                foreach (var bezierCurveSegment in bezierSegments.Segments)
                 {
                     var segment = new BezierSegment
                     {
@@ -517,11 +516,11 @@ namespace boilersGraphics.ViewModels.ColorCorrect
             for (int x = 0; x <= byte.MaxValue; x++)
             {
                 var P0 = default(Rulyotano.Math.Geometry.Point);
-                foreach (BezierSegment segment in _myPathSegmentCollection.Cast<BezierSegment>())
+                foreach (BezierSegment segment in _myPathSegmentCollection.AsValueEnumerable().Cast<BezierSegment>())
                 {
-                    if (segment == segments.First())
+                    if (segment == segments.AsValueEnumerable().First())
                     {
-                        P0 = TargetCurve.Value.Points.First().ToPoint();
+                        P0 = TargetCurve.Value.Points.AsValueEnumerable().First().ToPoint();
                     }
                     else
                     {
@@ -543,7 +542,7 @@ namespace boilersGraphics.ViewModels.ColorCorrect
                     double y = Math.Round(Math.Pow(1 - t, 3) * P0.Y + 3 * Math.Pow(1 - t, 2) * t * P1.Y + 3 * (1 - t) * Math.Pow(t, 2) * P2.Y + Math.Pow(t, 3) * P3.Y);
                     if (y >= byte.MinValue && y <= byte.MaxValue)
                     {
-                        if (!ret.Any(a => a.In == x))
+                        if (!ret.AsValueEnumerable().Any(a => a.In == x))
                         {
                             ret.Add(new InOutPair(x, (int)y));
                             break;
@@ -552,7 +551,7 @@ namespace boilersGraphics.ViewModels.ColorCorrect
                 }
             }
 
-            ViewModel.Value.TargetCurve.Value.InOutPairs = ret.ToObservable().ToReactiveCollection();
+            ViewModel.Value.TargetCurve.Value.InOutPairs = new ObservableList<InOutPair>(ret).ToWritableNotifyCollectionChanged();
         }
 
         private double FindT(double x, Rulyotano.Math.Geometry.Point P0, Rulyotano.Math.Geometry.Point P1, Rulyotano.Math.Geometry.Point P2, Rulyotano.Math.Geometry.Point P3)

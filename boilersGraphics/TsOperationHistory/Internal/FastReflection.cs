@@ -2,9 +2,9 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using ZLinq;
 
 namespace TsOperationHistory.Internal;
 
@@ -26,7 +26,7 @@ internal static class FastReflection
         foreach (var propertyNameSplit in propertyName.Split('.'))
         {
             var p = propertyNameSplit;
-            if (p.First() == '[')
+            if (p.AsValueEnumerable().First() == '[')
             {
                 p = "Item";
                 var index = int.Parse(propertyNameSplit.Replace("[", "").Replace("]", ""));
@@ -217,6 +217,7 @@ internal static class FastReflection
         if (_regisMethodInfo is null)
             _regisMethodInfo = classInstance.GetType()
                 .GetMethods()
+                .AsValueEnumerable()
                 .Where(x => x.Name == methodName)
                 .Where(x => x.IsGenericMethod)
                 .OrderBy(x => x.GetParameters().Length)

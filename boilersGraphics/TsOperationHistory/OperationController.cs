@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using TsOperationHistory.Internal;
+using ZLinq;
 
 namespace TsOperationHistory;
 
@@ -88,7 +88,7 @@ public class OperationController : IOperationController
 
     private int _preStackChangedCall;
 
-    public IEnumerable<IOperation> RollForwardTargets => UndoStack.RedoStack.Reverse();
+    public IEnumerable<IOperation> RollForwardTargets => UndoStack.RedoStack.AsValueEnumerable().Reverse().ToArray();
     public event EventHandler<OperationStackChangedEventArgs> StackChanged;
 
     private void PreStackChanged()

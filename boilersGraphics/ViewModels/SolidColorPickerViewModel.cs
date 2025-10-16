@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reactive.Disposables;
-using System.Windows;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using boilersGraphics.Extensions;
+﻿using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
 using boilersGraphics.Models;
 using boilersGraphics.Properties;
@@ -15,8 +8,13 @@ using OpenCvSharp.WpfExtensions;
 using Prism.Mvvm;
 using Prism.Regions;
 using Prism.Services.Dialogs;
-using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
+using System;
+using System.Collections.Generic;
+using System.Windows;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using R3;
+using ZLinq;
 
 namespace boilersGraphics.ViewModels;
 
@@ -180,7 +178,7 @@ public class SolidColorPickerViewModel : BindableBase, IDialogAware, INavigation
                 {
                     if (!colorSpot.IsSelected.Value)
                     {
-                        _spots.ToList().ForEach(x => x.IsSelected.Value = false);
+                        _spots.AsValueEnumerable().ToList().ForEach(x => x.IsSelected.Value = false);
                         colorSpot.IsSelected.Value = true;
                         try
                         {
@@ -251,136 +249,136 @@ public class SolidColorPickerViewModel : BindableBase, IDialogAware, INavigation
     /// <summary>
     ///     0 ≦ Hue ≦ 180
     /// </summary>
-    public ReactivePropertySlim<byte> Hue { get; } = new(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe);
+    public BindableReactiveProperty<byte> Hue { get; } = new();
 
-    public ReactivePropertySlim<byte> Saturation { get; } = new(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe);
+    public BindableReactiveProperty<byte> Saturation { get; } = new();
 
-    public ReactivePropertySlim<byte> Value { get; } = new(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe);
+    public BindableReactiveProperty<byte> Value { get; } = new();
 
-    public ReactivePropertySlim<byte> A { get; } = new(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe);
+    public BindableReactiveProperty<byte> A { get; } = new();
 
-    public ReactivePropertySlim<byte> R { get; } = new(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe);
+    public BindableReactiveProperty<byte> R { get; } = new();
 
-    public ReactivePropertySlim<byte> G { get; } = new(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe);
+    public BindableReactiveProperty<byte> G { get; } = new();
 
-    public ReactivePropertySlim<byte> B { get; } = new(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe);
+    public BindableReactiveProperty<byte> B { get; } = new();
 
-    public ReactivePropertySlim<Brush> Color { get; } = new(Brushes.Transparent);
+    public BindableReactiveProperty<Brush> Color { get; } = new(Brushes.Transparent);
 
-    public ReactivePropertySlim<Visibility> ColorPalleteVisibility { get; } = new(Visibility.Collapsed);
+    public BindableReactiveProperty<Visibility> ColorPalleteVisibility { get; } = new(Visibility.Collapsed);
 
-    public ReactivePropertySlim<ColorSpots> ColorSpots { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot0 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot1 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot2 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot3 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot4 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot5 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot6 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot7 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot8 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot9 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot10 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot11 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot12 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot13 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot14 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot15 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot16 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot17 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot18 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot19 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot20 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot21 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot22 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot23 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot24 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot25 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot26 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot27 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot28 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot29 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot30 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot31 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot32 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot33 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot34 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot35 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot36 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot37 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot38 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot39 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot40 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot41 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot42 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot43 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot44 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot45 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot46 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot47 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot48 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot49 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot50 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot51 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot52 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot53 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot54 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot55 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot56 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot57 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot58 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot59 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot60 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot61 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot62 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot63 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot64 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot65 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot66 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot67 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot68 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot69 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot70 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot71 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot72 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot73 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot74 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot75 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot76 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot77 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot78 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot79 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot80 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot81 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot82 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot83 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot84 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot85 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot86 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot87 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot88 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot89 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot90 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot91 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot92 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot93 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot94 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot95 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot96 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot97 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot98 { get; } = new();
-    public ReactivePropertySlim<Brush> ColorSpot99 { get; } = new();
+    public BindableReactiveProperty<ColorSpots> ColorSpots { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot0 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot1 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot2 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot3 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot4 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot5 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot6 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot7 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot8 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot9 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot10 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot11 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot12 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot13 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot14 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot15 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot16 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot17 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot18 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot19 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot20 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot21 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot22 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot23 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot24 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot25 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot26 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot27 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot28 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot29 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot30 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot31 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot32 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot33 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot34 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot35 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot36 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot37 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot38 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot39 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot40 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot41 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot42 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot43 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot44 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot45 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot46 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot47 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot48 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot49 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot50 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot51 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot52 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot53 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot54 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot55 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot56 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot57 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot58 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot59 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot60 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot61 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot62 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot63 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot64 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot65 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot66 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot67 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot68 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot69 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot70 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot71 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot72 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot73 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot74 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot75 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot76 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot77 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot78 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot79 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot80 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot81 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot82 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot83 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot84 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot85 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot86 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot87 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot88 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot89 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot90 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot91 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot92 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot93 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot94 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot95 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot96 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot97 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot98 { get; } = new();
+    public BindableReactiveProperty<Brush> ColorSpot99 { get; } = new();
 
 
     //public ReactiveCommand OKCommand { get; }
 
     public ReactiveCommand OpenCloseColorPalleteCommand { get; } = new();
 
-    public ReactiveCommand SpotSelectCommand { get; } = new();
+    public ReactiveCommand<ColorSpot> SpotSelectCommand { get; } = new();
 
     public ReactiveCommand<RoutedEventArgs> LoadedCommand { get; } = new();
 
-    public ReactivePropertySlim<ColorExchange> EditTarget { get; } = new(new ColorExchange());
+    public BindableReactiveProperty<ColorExchange> EditTarget { get; } = new(new ColorExchange());
 
     public event Action<IDialogResult> RequestClose;
 
@@ -512,7 +510,7 @@ public class SolidColorPickerViewModel : BindableBase, IDialogAware, INavigation
     private void SetColorToSpot()
     {
         if (_spots != null && _flag)
-            _spots.Where(x => x.IsSelected.Value)
+            _spots.AsValueEnumerable().Where(x => x.IsSelected.Value)
                 .ToList()
                 .ForEach(x => { x.Brush = Color.Value; });
     }

@@ -1,12 +1,12 @@
-﻿using System;
+﻿using boilersGraphics.ViewModels;
+using NLog;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Media;
-using boilersGraphics.ViewModels;
-using NLog;
+using ZLinq;
 
 namespace boilersGraphics.Helpers;
 
@@ -314,10 +314,10 @@ public static class GeometryCreator
     {
         var geometry = new PathGeometry();
         var pathFigure = new PathFigure();
-        pathFigure.StartPoint = clone.Points.First();
+        pathFigure.StartPoint = clone.Points.AsValueEnumerable().First();
         var pathFigureCollection = new PathFigureCollection();
         var pathSegmentCollection = new PathSegmentCollection();
-        pathSegmentCollection.Add(new PolyBezierSegment(clone.Points.Skip(1), true));
+        pathSegmentCollection.Add(new PolyBezierSegment(clone.Points.AsValueEnumerable().Skip(1).ToArray(), true));
         pathFigure.Segments = pathSegmentCollection;
         pathFigureCollection.Add(pathFigure);
         geometry.Figures = pathFigureCollection;
@@ -527,7 +527,7 @@ public static class GeometryCreator
 
     private static IList<Point> ExtractSegment(ObservableCollection<Point> points, int beginI, int endJ)
     {
-        return points.Skip(beginI).Take(endJ - beginI).ToList();
+        return points.AsValueEnumerable().Skip(beginI).Take(endJ - beginI).ToList();
     }
 
     private static bool Intersects(Point a1, Point a2, Point b1, Point b2, out Point intersection)
@@ -679,7 +679,7 @@ public static class GeometryCreator
                     var beginPoint = GetBeginPoint(item1_.PathGeometry.Value);
                     ctx.BeginFigure(beginPoint, true, true);
                     ctx.LineTo(item1_.Points[1], true, false);
-                    ctx.PolyBezierTo(item2_.Points.ToList(), true, false);
+                    ctx.PolyBezierTo(item2_.Points.AsValueEnumerable().ToList(), true, false);
                 }
             }
             else if (item1.GetType() == typeof(BezierCurveViewModel))
@@ -894,7 +894,7 @@ public static class GeometryCreator
                     var item2_ = item2 as BezierCurveViewModel;
                     var beginPoint = GetBeginPoint(item1_.PathGeometry.Value);
                     ctx.BeginFigure(beginPoint, true, true);
-                    ctx.PolyBezierTo(item1_.Points.Skip(1).ToList(), true, false);
+                    ctx.PolyBezierTo(item1_.Points.AsValueEnumerable().Skip(1).ToList(), true, false);
                     ctx.BezierTo(item2_.ControlPoint1.Value, item2_.ControlPoint2.Value, item2_.Points[1], true, false);
                 }
                 else if (item2.GetType() == typeof(NRectangleViewModel))
@@ -926,8 +926,8 @@ public static class GeometryCreator
                     var item2_ = item2 as PolyBezierViewModel;
                     var beginPoint = GetBeginPoint(item1_.PathGeometry.Value);
                     ctx.BeginFigure(beginPoint, true, true);
-                    ctx.PolyBezierTo(item1_.Points.Skip(1).ToList(), true, false);
-                    ctx.PolyBezierTo(item2_.Points.ToList(), true, false);
+                    ctx.PolyBezierTo(item1_.Points.AsValueEnumerable().Skip(1).ToList(), true, false);
+                    ctx.PolyBezierTo(item2_.Points.AsValueEnumerable().ToList(), true, false);
                 }
             }
         }
@@ -1135,7 +1135,7 @@ public static class GeometryCreator
         for (var i = 0; i < target.Length; i++)
         {
             var c = target[i];
-            if (splitchars.Contains(c))
+            if (splitchars.AsValueEnumerable().Contains(c))
             {
                 result.Add(tmp);
                 result.Add($"{c}");
@@ -1349,8 +1349,8 @@ public static class GeometryCreator
 
     private static int Max(params int[] array)
     {
-        var left = array.First();
-        return array.Skip(1).Prepend(left).Max();
+        var left = array.AsValueEnumerable().First();
+        return array.AsValueEnumerable().Skip(1).Prepend(left).Max();
     }
 
     public static PathGeometry Rotate(PathGeometry pathGeometry, double angle, Point center)

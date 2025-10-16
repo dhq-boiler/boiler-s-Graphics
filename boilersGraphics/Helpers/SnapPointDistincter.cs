@@ -1,7 +1,7 @@
-﻿using System;
+﻿using boilersGraphics.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Windows;
-using boilersGraphics.ViewModels;
 
 namespace boilersGraphics.Helpers;
 

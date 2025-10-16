@@ -1,18 +1,10 @@
 ﻿using boilersGraphics.Adorners;
 using boilersGraphics.Controls;
-using boilersGraphics.Helpers;
 using boilersGraphics.ViewModels;
 using Moq;
 using NUnit.Framework;
 using Prism.Services.Dialogs;
-using Prism.Unity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media;
-using Unity;
 
 namespace boilersGraphics.Test
 {

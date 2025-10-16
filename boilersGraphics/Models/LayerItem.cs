@@ -6,17 +6,15 @@ using boilersGraphics.Views;
 using Prism.Ioc;
 using Prism.Services.Dialogs;
 using Prism.Unity;
-using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
+using R3;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reactive.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using ZLinq;
 
 namespace boilersGraphics.Models;
 
@@ -40,9 +38,9 @@ public class LayerItem : LayerTreeViewItemBase, IDisposable, IComparable<LayerTr
         Init();
     }
 
-    public ReactivePropertySlim<ImageSource> Appearance { get; } = new();
+    public BindableReactiveProperty<ImageSource> Appearance { get; } = new();
     public ReactiveCommand SwitchVisibilityCommand { get; } = new();
-    public ReactivePropertySlim<SelectableDesignerItemViewModelBase> Item { get; } = new();
+    public BindableReactiveProperty<SelectableDesignerItemViewModelBase> Item { get; } = new();
     public ReactiveCommand MoveSnapPointCommand { get; } = new();
 
     public int CompareTo(object obj)
@@ -73,9 +71,9 @@ public class LayerItem : LayerTreeViewItemBase, IDisposable, IComparable<LayerTr
                 ChildrenSwitchVisibility(isVisible);
             })
             .AddTo(_disposable);
-        IsSelected = this.ObserveProperty(x => x.Item.Value.IsSelected)
+        IsSelected = this.ObservePropertyChanged(x => x.Item.Value.IsSelected)
             .Select(x => x.Value)
-            .ToReactiveProperty()
+            .ToBindableReactiveProperty()
             .AddTo(_disposable);
         IsSelected.Subscribe(x =>
             {
@@ -109,19 +107,38 @@ public class LayerItem : LayerTreeViewItemBase, IDisposable, IComparable<LayerTr
                     new DialogService((Application.Current as PrismApplication).Container as IContainerExtension);
                 IDialogResult result = null;
                 var snapPointVM = Item.Value as SnapPointViewModel;
-                var point = new Point(snapPointVM.Left.Value, snapPointVM.Top.Value);
+                var point = new System.Windows.Point(snapPointVM.Left.Value, snapPointVM.Top.Value);
                 dialogService.ShowDialog(nameof(SetSnapPoint),
                     new DialogParameters { { "Point", point }, { "LayerItem", this } }, ret => result = ret);
                 if (result != null
                     && result.Parameters != null
                     && result.Parameters.ContainsKey("Point"))
                 {
-                    var newPoint = result.Parameters.GetValue<Point>("Point");
+                    var newPoint = result.Parameters.GetValue<System.Windows.Point>("Point");
                     snapPointVM.Left.Value = newPoint.X;
                     snapPointVM.Top.Value = newPoint.Y;
                 }
             })
             .AddTo(_disposable);
+    }
+    
+    // レンダリング呼び出し制限用
+    private static readonly Dictionary<object, DateTime> _lastRenderTimes = new();
+    private static readonly TimeSpan _minRenderInterval = TimeSpan.FromMilliseconds(16); // 60FPS相当
+
+    public static bool ShouldRender(object key)
+    {
+        var now = DateTime.UtcNow;
+        if (_lastRenderTimes.TryGetValue(key, out var lastTime))
+        {
+            if (now - lastTime < _minRenderInterval)
+            {
+                return false; // まだ間隔が短いのでスキップ
+            }
+        }
+
+        _lastRenderTimes[key] = now;
+        return true;
     }
 
     public void UpdateAppearance()
@@ -133,13 +150,16 @@ public class LayerItem : LayerTreeViewItemBase, IDisposable, IComparable<LayerTr
     {
         if ((DateTime.Now - Item.Value.ChangeFormDateTime.Value).TotalMilliseconds < 100)
             return;
-        if (!backgroundIncluded && items.Count() == 0)
+        if (!backgroundIncluded && items.AsValueEnumerable().Count() == 0)
             return;
+        if (!ShouldRender(this))
+            return; // 頻繁な更新をスキップ
+
         double minX, maxX, minY, maxY;
         var _items = items;
         if (backgroundIncluded)
         {
-            _items = _items.Union(new SelectableDesignerItemViewModelBase[] { DiagramViewModel.Instance.BackgroundItem.Value });
+            _items = _items.AsValueEnumerable().Union(new SelectableDesignerItemViewModelBase[] { DiagramViewModel.Instance.BackgroundItem.Value }).ToArray();
         }
         var width = Measure.GetWidth(_items, out minX, out maxX);
         var height = Measure.GetHeight(_items, out minY, out maxY);
@@ -148,19 +168,38 @@ public class LayerItem : LayerTreeViewItemBase, IDisposable, IComparable<LayerTr
             return;
 
         Rect? sliceRect = null;
-        _items.Cast<IRect>().ToList().ForEach(x => sliceRect = (!sliceRect.HasValue ? x.Rect.Value : Rect.Union(sliceRect.Value, x.Rect.Value)));
-        var renderer = new AppearanceRenderer(new WpfVisualTreeHelper());
+        _items.AsValueEnumerable().Cast<IRect>().ToList().ForEach(x => sliceRect = (!sliceRect.HasValue ? x.Rect.Value : Rect.Union(sliceRect.Value, x.Rect.Value)));
+        var renderer = new AppearanceRenderer(new WpfVisualTreeHelper(), DiagramViewModel.Instance.Renderer.GetCache());
+        var cache = renderer.GetCache();
+
+        // Dirtyなアイテムのみをフィルタリング
+        var dirtyItems = items.AsValueEnumerable()
+            .Where(item => cache.IsDirty(item))
+            .ToList();
+
+        // Dirtyなアイテムがない場合は更新をスキップ
+        if (dirtyItems.Count == 0 && !backgroundIncluded)
+        {
+            return;
+        }
+
         Appearance.Value = renderer.Render(sliceRect, DesignerCanvas.GetInstance(),
             DiagramViewModel.Instance,
-            null, null, _items.Min(x => x.ZIndex.Value), _items.Max(x => x.ZIndex.Value));
+            null, null, _items.AsValueEnumerable().Min(x => x.ZIndex.Value), _items.AsValueEnumerable().Max(x => x.ZIndex.Value));
 
         Item.Value.ChangeFormDateTime.Value = DateTime.Now;
+
+        //// レンダリング完了後、Dirtyフラグをクリア
+        //foreach (var item in dirtyItems)
+        //{
+        //    cache.ClearDirtyFlag(item);
+        //}
     }
 
     private static void UpdateAppearanceByItem(DesignerCanvas designerCanvas, double minX, double minY,
         RenderTargetBitmap rtb, DrawingVisual visual, SelectableDesignerItemViewModelBase item)
     {
-        var views = designerCanvas.EnumVisualChildren<FrameworkElement>(item).Where(x => x.DataContext == item);
+        var views = designerCanvas.EnumVisualChildren<FrameworkElement>(item).AsValueEnumerable().Where(x => x.DataContext == item);
         foreach (var view in views)
             if (view != null)
             {

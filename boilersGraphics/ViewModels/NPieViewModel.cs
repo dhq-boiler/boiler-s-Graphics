@@ -1,13 +1,12 @@
-﻿using System;
-using System.Windows;
-using System.Windows.Media;
-using boilersGraphics.Helpers;
+﻿using boilersGraphics.Helpers;
 using boilersGraphics.Views;
 using Prism.Ioc;
 using Prism.Services.Dialogs;
 using Prism.Unity;
-using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
+using System;
+using System.Windows;
+using System.Windows.Media;
+using R3;
 using Path = System.Windows.Shapes.Path;
 using Thickness = System.Windows.Thickness;
 
@@ -46,17 +45,17 @@ public class NPieViewModel : DesignerItemViewModelBase
 
     public override bool SupportsPropertyDialog => true;
 
-    public ReactivePropertySlim<Point> PieCenterPoint { get; } = new();
+    public BindableReactiveProperty<Point> PieCenterPoint { get; } = new();
 
-    public ReactivePropertySlim<double> DonutWidth { get; } = new();
+    public BindableReactiveProperty<double> DonutWidth { get; } = new();
 
-    public ReactivePropertySlim<double> Distance { get; } = new();
+    public BindableReactiveProperty<double> Distance { get; } = new();
 
-    public ReactivePropertySlim<double> StartDegree { get; } = new();
+    public BindableReactiveProperty<double> StartDegree { get; } = new();
 
-    public ReactivePropertySlim<double> EndDegree { get; } = new();
+    public BindableReactiveProperty<double> EndDegree { get; } = new();
 
-    public ReactivePropertySlim<SweepDirection> SweepDirection { get; } = new();
+    public BindableReactiveProperty<SweepDirection> SweepDirection { get; } = new();
 
     private void Init()
     {

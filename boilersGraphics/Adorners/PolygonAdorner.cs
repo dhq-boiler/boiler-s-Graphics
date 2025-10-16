@@ -1,20 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Shapes;
-using boilersGraphics.Controls;
+﻿using boilersGraphics.Controls;
 using boilersGraphics.Dao;
 using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
 using boilersGraphics.Models;
 using boilersGraphics.ViewModels;
 using NLog;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Shapes;
+using ZLinq;
 using Ellipse = System.Windows.Shapes.Ellipse;
 
 namespace boilersGraphics.Adorners;
@@ -96,15 +96,15 @@ public class PolygonAdorner : Adorner
             item.FillBrush.Value = item.Owner.FillBrush.Value.Clone();
             item.EdgeThickness.Value = item.Owner.EdgeThickness.Value.Value;
             item.ZIndex.Value = item.Owner.Layers
-                .SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).Count();
+                .SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).AsValueEnumerable().Count();
             item.SnapPoints.Clear();
-            _corners.ToList().ForEach(x => LogManager.GetCurrentClassLogger().Debug($"corner:{x.Point.Value}"));
-            item.SnapPoints.AddRange(_corners.Select(x =>
+            _corners.AsValueEnumerable().ToList().ForEach(x => LogManager.GetCurrentClassLogger().Debug($"corner:{x.Point.Value}"));
+            item.SnapPoints.AddRange(_corners.AsValueEnumerable().Select(x =>
             {
                 var itemPathGeometry = item.PathGeometry.Value;
-                var _x = (-_corners.Select(x => x.Point.Value.X).Min() + x.Point.Value.X) /
+                var _x = (-_corners.AsValueEnumerable().Select(x => x.Point.Value.X).Min() + x.Point.Value.X) /
                     itemPathGeometry.Bounds.Width * item.Width.Value - 3;
-                var _y = (-_corners.Select(x => x.Point.Value.Y).Min() + x.Point.Value.Y) /
+                var _y = (-_corners.AsValueEnumerable().Select(x => x.Point.Value.Y).Min() + x.Point.Value.Y) /
                     itemPathGeometry.Bounds.Height * item.Height.Value - 3;
                 LogManager.GetCurrentClassLogger().Debug($"_x:{_x}, _y:{_y}");
                 var snapPoint = new SnapPoint(_x, _y);
@@ -122,7 +122,7 @@ public class PolygonAdorner : Adorner
                 controlTemplate.VisualTree = ellipse;
                 snapPoint.Template = controlTemplate;
                 return snapPoint;
-            }));
+            }).ToArray());
             item.IsSelected.Value = true;
             item.IsVisible.Value = true;
             item.Owner.DeselectAll();
@@ -158,19 +158,19 @@ public class PolygonAdorner : Adorner
         {
             var diff = _dragEndPoint.Value - _dragStartPoint.Value;
             var points = new List<Point>();
-            points.AddRange(_corners.Select(x => x.Point.Value));
-            var width = points.Select(x => x.X).Max() - points.Select(x => x.X).Min();
-            var height = points.Select(y => y.Y).Max() - points.Select(y => y.Y).Min();
+            points.AddRange(_corners.AsValueEnumerable().Select(x => x.Point.Value).ToArray());
+            var width = points.AsValueEnumerable().Select(x => x.X).Max() - points.AsValueEnumerable().Select(x => x.X).Min();
+            var height = points.AsValueEnumerable().Select(y => y.Y).Max() - points.AsValueEnumerable().Select(y => y.Y).Min();
 
             var geometry = new StreamGeometry();
             geometry.FillRule = FillRule.EvenOdd;
             using (var ctx = geometry.Open())
             {
-                ctx.BeginFigure(_corners.Skip(1).First().Point.Value.Multiple(diff.X / width, diff.Y / height)
+                ctx.BeginFigure(_corners.AsValueEnumerable().Skip(1).First().Point.Value.Multiple(diff.X / width, diff.Y / height)
                     .Shift((_dragStartPoint.Value.X + _dragEndPoint.Value.X) / 2,
                         (_dragStartPoint.Value.Y + _dragEndPoint.Value.Y) / 2), true, true);
 
-                foreach (var corner in _corners.Skip(1))
+                foreach (var corner in _corners.AsValueEnumerable().Skip(1))
                     ctx.LineTo(corner.Point.Value.Multiple(diff.X / width, diff.Y / height)
                         .Shift((_dragStartPoint.Value.X + _dragEndPoint.Value.X) / 2,
                             (_dragStartPoint.Value.Y + _dragEndPoint.Value.Y) / 2), true, false);

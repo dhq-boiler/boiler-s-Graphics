@@ -1,12 +1,11 @@
-﻿using System;
-using System.Linq;
-using System.Windows;
-using System.Windows.Controls;
-using boilersGraphics.Controls;
+﻿using boilersGraphics.Controls;
 using boilersGraphics.Exceptions;
 using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
 using NLog;
+using System;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace boilersGraphics.ViewModels;
 

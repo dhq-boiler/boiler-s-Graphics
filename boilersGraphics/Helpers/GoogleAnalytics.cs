@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Text;
+using ZLinq;
 
 namespace boilersGraphics.Helpers;
 
@@ -28,7 +28,7 @@ internal static class GoogleAnalytics
         };
         if (!string.IsNullOrEmpty(label)) postData.Add("el", label);
 
-        var postDataString = postData
+        var postDataString = postData.AsValueEnumerable()
             .Aggregate("", (data, next) => string.Format("{0}&{1}={2}", data, next.Key,
                 Uri.EscapeDataString(next.Value)))
             .TrimEnd('&');

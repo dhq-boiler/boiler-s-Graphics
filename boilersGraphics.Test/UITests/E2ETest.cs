@@ -29,6 +29,8 @@ namespace boilersGraphics.Test.UITests
                 //メインウィンドウを最大化する
                 MaximizeWindow();
             }
+
+            FocusFrontWindow();
         }
     }
 }

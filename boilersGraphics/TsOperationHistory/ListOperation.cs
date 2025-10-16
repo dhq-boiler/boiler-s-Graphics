@@ -1,10 +1,10 @@
-﻿using System;
+﻿using R3;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Windows;
-using Reactive.Bindings;
+using ZLinq;
 
 namespace TsOperationHistory;
 
@@ -36,8 +36,8 @@ public class InsertOperation<T> : IOperation
         Message.Value = message;
     }
 
-    public ReactivePropertySlim<string> Message { get; } = new();
-    public ReactivePropertySlim<Visibility> ArrowVisibility { get; } = new(Visibility.Hidden);
+    public BindableReactiveProperty<string> Message { get; } = new();
+    public BindableReactiveProperty<Visibility> ArrowVisibility { get; } = new(Visibility.Hidden);
 
     public void RollForward()
     {
@@ -85,8 +85,8 @@ public class RemoveOperation<T> : IOperation
         Message.Value = message;
     }
 
-    public ReactivePropertySlim<string> Message { get; } = new();
-    public ReactivePropertySlim<Visibility> ArrowVisibility { get; } = new(Visibility.Hidden);
+    public BindableReactiveProperty<string> Message { get; } = new();
+    public BindableReactiveProperty<Visibility> ArrowVisibility { get; } = new(Visibility.Hidden);
 
     public void RollForward()
     {
@@ -95,7 +95,7 @@ public class RemoveOperation<T> : IOperation
         if (_insertIndex < 0)
             return;
 
-        get_list().RemoveAt(_insertIndex);
+        (get_list() as IList).RemoveAt(_insertIndex);
     }
 
     public void Rollback()
@@ -139,8 +139,8 @@ public class RemoveAtOperation : IOperation
         _index = index;
     }
 
-    public ReactivePropertySlim<string> Message { get; } = new();
-    public ReactivePropertySlim<Visibility> ArrowVisibility { get; } = new(Visibility.Hidden);
+    public BindableReactiveProperty<string> Message { get; } = new();
+    public BindableReactiveProperty<Visibility> ArrowVisibility { get; } = new(Visibility.Hidden);
 
     public void RollForward()
     {
@@ -182,12 +182,12 @@ public class ClearOperation<T> : IOperation
         _list = list;
     }
 
-    public ReactivePropertySlim<string> Message { get; } = new();
-    public ReactivePropertySlim<Visibility> ArrowVisibility { get; } = new(Visibility.Hidden);
+    public BindableReactiveProperty<string> Message { get; } = new();
+    public BindableReactiveProperty<Visibility> ArrowVisibility { get; } = new(Visibility.Hidden);
 
     public void RollForward()
     {
-        _prevData = get_list().ToArray();
+        _prevData = get_list().AsValueEnumerable().ToArray();
         get_list().Clear();
     }
 

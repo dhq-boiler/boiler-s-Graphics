@@ -9,7 +9,7 @@ namespace boilersGraphics.Test.UITests.PageObjects
 {
     public class PictureOpenFileDialogPO : PageObjectBase
     {
-        public PictureOpenFileDialogPO(WindowsDriver<WindowsElement> session, E2ETestFixture testFixture) : base(session, testFixture)
+        public PictureOpenFileDialogPO(WindowsDriver<AppiumElement> session, E2ETestFixture testFixture) : base(session, testFixture)
         { }
 
         private Actions action;

@@ -1,6 +1,6 @@
-﻿using System;
+﻿using NLog;
+using System;
 using Windows.Storage;
-using NLog;
 
 namespace boilersGraphics.Helpers;
 

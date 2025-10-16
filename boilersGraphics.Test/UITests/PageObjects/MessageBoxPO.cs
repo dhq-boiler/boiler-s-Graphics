@@ -8,7 +8,7 @@ namespace boilersGraphics.Test.UITests.PageObjects
     /// </summary>
     public class MessageBoxPO : PageObjectBase
     {
-        public MessageBoxPO(WindowsDriver<WindowsElement> Session, E2ETestFixture testFixture)
+        public MessageBoxPO(WindowsDriver<AppiumElement> Session, E2ETestFixture testFixture)
             : base(Session, testFixture)
         { }
 

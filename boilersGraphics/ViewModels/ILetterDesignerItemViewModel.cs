@@ -1,17 +1,17 @@
 ﻿using boilersGraphics.Models;
-using Reactive.Bindings;
+using R3;
 
 namespace boilersGraphics.ViewModels;
 
 internal interface ILetterDesignerItemViewModel
 {
-    ReactivePropertySlim<bool> LetterSettingDialogIsOpen { get; }
-    ReactivePropertySlim<string> LetterString { get; }
-    ReactivePropertySlim<FontFamilyEx> SelectedFontFamily { get; }
-    ReactivePropertySlim<bool> IsBold { get; }
-    ReactivePropertySlim<bool> IsItalic { get; }
-    ReactivePropertySlim<int> FontSize { get; }
-    ReactivePropertySlim<bool> IsAutoLineBreak { get; }
+    BindableReactiveProperty<bool> LetterSettingDialogIsOpen { get; }
+    BindableReactiveProperty<string> LetterString { get; }
+    BindableReactiveProperty<FontFamilyEx> SelectedFontFamily { get; }
+    BindableReactiveProperty<bool> IsBold { get; }
+    BindableReactiveProperty<bool> IsItalic { get; }
+    BindableReactiveProperty<int> FontSize { get; }
+    BindableReactiveProperty<bool> IsAutoLineBreak { get; }
 
     void CloseLetterSettingDialog();
 }

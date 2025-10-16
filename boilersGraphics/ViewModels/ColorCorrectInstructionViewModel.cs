@@ -6,14 +6,13 @@ using boilersGraphics.Views.Behaviors;
 using Prism.Mvvm;
 using Prism.Regions;
 using Prism.Services.Dialogs;
-using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
 using System;
-using System.Linq;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using boilersGraphics.Models;
+using ObservableCollections;
+using R3;
+using ZLinq;
 
 namespace boilersGraphics.ViewModels
 {
@@ -29,8 +28,8 @@ namespace boilersGraphics.ViewModels
 
 
         public ReactiveCommand<RoutedEventArgs> UnloadedCommand { get; } = new();
-        public ReactivePropertySlim<int> OKTabIndex { get; } = new();
-        public ReactivePropertySlim<ColorCorrectViewModel> ViewModel { get; } = new();
+        public BindableReactiveProperty<int> OKTabIndex { get; } = new();
+        public BindableReactiveProperty<ColorCorrectViewModel> ViewModel { get; } = new();
 
         public ReactiveCommand OKCommand { get; } = new();
         public ReactiveCommand<SelectionChangedEventArgs> CCTypeChangedCommand { get; } = new();
@@ -50,7 +49,7 @@ namespace boilersGraphics.ViewModels
                         var landmarkControls = System.Windows.Window.GetWindow(x.Source as Grid).EnumerateChildOfType<LandmarkControl>();
                         foreach (var landmark in landmarkControls)
                         {
-                            curve.InOutPairs = Curve.CalcInOutPairs(landmark).ToObservable().ToReactiveCollection();
+                            curve.InOutPairs = new ObservableList<InOutPair>(Curve.CalcInOutPairs(landmark)).ToWritableNotifyCollectionChanged();
                         }
                     }
                 }
@@ -66,7 +65,7 @@ namespace boilersGraphics.ViewModels
         public void OnDialogClosed()
         {
             ViewModel.Value.IsOpenedInstructionDialog.Value = false;
-            MainWindowViewModel.Instance.ToolBarViewModel.Behaviors.OfType<ToneCurveDropperBehavior>().ToList().ForEach(x => MainWindowViewModel.Instance.ToolBarViewModel.Behaviors.Remove(x));
+            MainWindowViewModel.Instance.ToolBarViewModel.Behaviors.AsValueEnumerable().OfType<ToneCurveDropperBehavior>().ToList().ForEach(x => MainWindowViewModel.Instance.ToolBarViewModel.Behaviors.Remove(x));
             MainWindowViewModel.Instance.ToolBarViewModel.Behaviors.Add(MainWindowViewModel.Instance.ToolBarViewModel.DeselectBehavior);
             MainWindowViewModel.Instance.ToolBarViewModel.ChangeHitTestToEnable();
         }

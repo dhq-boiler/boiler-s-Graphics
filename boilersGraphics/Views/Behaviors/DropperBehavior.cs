@@ -1,15 +1,13 @@
-﻿using System.Linq;
+﻿using boilersGraphics.Controls;
+using boilersGraphics.Extensions;
+using boilersGraphics.Helpers;
+using boilersGraphics.ViewModels;
+using Microsoft.Xaml.Behaviors;
+using NLog;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using boilersGraphics.Controls;
-using boilersGraphics.Extensions;
-using boilersGraphics.Helpers;
-using boilersGraphics.Models;
-using boilersGraphics.ViewModels;
-using Microsoft.Xaml.Behaviors;
-using NLog;
 
 namespace boilersGraphics.Views.Behaviors;
 
@@ -100,7 +98,7 @@ public class DropperBehavior : Behavior<DesignerCanvas>
     private static void SetFillColor(TouchEventArgs e)
     {
         var designerCanvas = Application.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-        var rtb = new EffectRenderer(new WpfVisualTreeHelper()).Render(null,
+        var rtb = new EffectRenderer(new WpfVisualTreeHelper(), DiagramViewModel.Instance.Renderer.GetCache()).Render(null,
             DesignerCanvas.GetInstance(), DiagramViewModel.Instance, DiagramViewModel.Instance.BackgroundItem.Value,
             null);
         var writeableBitmap = new WriteableBitmap(rtb);
@@ -112,7 +110,7 @@ public class DropperBehavior : Behavior<DesignerCanvas>
     private static void SetEdgeColor(TouchEventArgs e)
     {
         var designerCanvas = Application.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-        var rtb = new EffectRenderer(new WpfVisualTreeHelper()).Render(null,
+        var rtb = new EffectRenderer(new WpfVisualTreeHelper(), DiagramViewModel.Instance.Renderer.GetCache()).Render(null,
             DesignerCanvas.GetInstance(), DiagramViewModel.Instance, DiagramViewModel.Instance.BackgroundItem.Value,
             null);
         var writeableBitmap = new WriteableBitmap(rtb);
@@ -124,7 +122,7 @@ public class DropperBehavior : Behavior<DesignerCanvas>
     private static void SetFillColor(StylusEventArgs e)
     {
         var designerCanvas = Application.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-        var rtb = new EffectRenderer(new WpfVisualTreeHelper()).Render(null,
+        var rtb = new EffectRenderer(new WpfVisualTreeHelper(), DiagramViewModel.Instance.Renderer.GetCache()).Render(null,
             DesignerCanvas.GetInstance(), DiagramViewModel.Instance, DiagramViewModel.Instance.BackgroundItem.Value,
             null);
         var writeableBitmap = new WriteableBitmap(rtb);
@@ -136,7 +134,7 @@ public class DropperBehavior : Behavior<DesignerCanvas>
     private static void SetEdgeColor(StylusEventArgs e)
     {
         var designerCanvas = Application.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-        var rtb = new EffectRenderer(new WpfVisualTreeHelper()).Render(null,
+        var rtb = new EffectRenderer(new WpfVisualTreeHelper(), DiagramViewModel.Instance.Renderer.GetCache()).Render(null,
             DesignerCanvas.GetInstance(), DiagramViewModel.Instance, DiagramViewModel.Instance.BackgroundItem.Value,
             null);
         var writeableBitmap = new WriteableBitmap(rtb);
@@ -148,7 +146,7 @@ public class DropperBehavior : Behavior<DesignerCanvas>
     private static void SetFillColor(MouseEventArgs e)
     {
         var designerCanvas = Application.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-        var rtb = new EffectRenderer(new WpfVisualTreeHelper()).Render(null,
+        var rtb = new EffectRenderer(new WpfVisualTreeHelper(), DiagramViewModel.Instance.Renderer.GetCache()).Render(null,
             DesignerCanvas.GetInstance(), DiagramViewModel.Instance, DiagramViewModel.Instance.BackgroundItem.Value,
             null);
         var writeableBitmap = new WriteableBitmap(rtb);
@@ -160,7 +158,7 @@ public class DropperBehavior : Behavior<DesignerCanvas>
     private static void SetEdgeColor(MouseEventArgs e)
     {
         var designerCanvas = Application.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-        var rtb = new EffectRenderer(new WpfVisualTreeHelper()).Render(null,
+        var rtb = new EffectRenderer(new WpfVisualTreeHelper(), DiagramViewModel.Instance.Renderer.GetCache()).Render(null,
             DesignerCanvas.GetInstance(), DiagramViewModel.Instance, DiagramViewModel.Instance.BackgroundItem.Value,
             null);
         var writeableBitmap = new WriteableBitmap(rtb);
@@ -172,7 +170,7 @@ public class DropperBehavior : Behavior<DesignerCanvas>
     private static void AddNewColorSpot(MouseEventArgs e)
     {
         var designerCanvas = Application.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-        var rtb = new EffectRenderer(new WpfVisualTreeHelper()).Render(null,
+        var rtb = new EffectRenderer(new WpfVisualTreeHelper(), DiagramViewModel.Instance.Renderer.GetCache()).Render(null,
             DesignerCanvas.GetInstance(), DiagramViewModel.Instance, DiagramViewModel.Instance.BackgroundItem.Value,
             null);
         var writeableBitmap = new WriteableBitmap(rtb);

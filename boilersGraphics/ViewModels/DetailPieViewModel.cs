@@ -1,6 +1,6 @@
-﻿using System.Windows;
+﻿using Prism.Regions;
+using System.Windows;
 using System.Windows.Media;
-using Prism.Regions;
 
 namespace boilersGraphics.ViewModels;
 

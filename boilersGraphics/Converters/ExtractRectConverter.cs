@@ -1,8 +1,8 @@
-﻿using System;
+﻿using boilersGraphics.ViewModels;
+using System;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
-using boilersGraphics.ViewModels;
 
 namespace boilersGraphics.Converters;
 

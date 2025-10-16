@@ -1,15 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
-using boilersGraphics.Extensions;
+﻿using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
 using boilersGraphics.ViewModels;
 using NLog;
+using System;
+using System.Collections.Generic;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 using TsOperationHistory;
 using TsOperationHistory.Extensions;
+using ZLinq;
 
 namespace boilersGraphics.Controls;
 
@@ -84,9 +84,9 @@ public class LineResizeHandle : SnapPoint
             Canvas.SetTop(this, currentPosition.Y - Height / 2);
 
             var ellipses = (Application.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.AllItems
-                .Value.OfType<NEllipseViewModel>();
+                .Value.AsValueEnumerable().OfType<NEllipseViewModel>();
             var pies = (Application.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel.AllItems
-                .Value.OfType<NPieViewModel>();
+                .Value.AsValueEnumerable().OfType<NPieViewModel>();
             var appendIntersectionPoints = new List<Tuple<Point, object>>();
 
             var designerCanvas = Application.Current.MainWindow.GetChildOfType<DesignerCanvas>();

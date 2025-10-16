@@ -2,16 +2,14 @@
 using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
 using boilersGraphics.Models;
-using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
+using R3;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using ZLinq;
+using Disposable = R3.Disposable;
 
 namespace boilersGraphics.ViewModels
 {
@@ -19,40 +17,41 @@ namespace boilersGraphics.ViewModels
     {
         private bool isMonitored = false;
         private Dictionary<Guid, IDisposable> monitoringItems = new Dictionary<Guid, IDisposable>();
-        public ReactivePropertySlim<WriteableBitmap> Bitmap { get; }
+        public R3.ReactiveProperty<WriteableBitmap> Bitmap { get; }
 
         public virtual void Initialize()
         {
-            monitoringItems.ToList().ForEach(x => x.Value.Dispose());
+            monitoringItems.AsValueEnumerable().ToList().ForEach(x => x.Value.Dispose());
             monitoringItems.Clear();
 
             BeginMonitoring(DiagramViewModel.Instance.AllItems.Value);
 
-            DiagramViewModel.Instance.AllItems.Subscribe(items =>
+            Disposable.AddTo(DiagramViewModel.Instance.AllItems.AsObservable().Subscribe(new Action<SelectableDesignerItemViewModelBase[]>(items =>
             {
                 BeginMonitoring(items);
-            }).AddTo(_CompositeDisposable);
+            })), _CompositeDisposable);
             DiagramViewModel.Instance.AllItems.Value
-                .ToObservable().ToReadOnlyReactiveCollection().ObserveElementProperty(x => x.ZIndex.Value).Subscribe(
+                .ToObservable().ToObservableList().ObserveElementObservableProperty(x => x).Subscribe(
                     x =>
                     {
-                        if (x.Value < this.ZIndex.Value)
+                        if (x.ZIndex.Value < this.ZIndex.Value)
                         {
-                            BeginMonitoring(x.Instance);
+                            BeginMonitoring(x);
                         }
                         else
                         {
-                            DisposeMonitoringItem(x.Instance);
+                            DisposeMonitoringItem(x);
                         }
                     }).AddTo(_CompositeDisposable);
-            DiagramViewModel.Instance.Layers.SelectRecursive((Func<LayerTreeViewItemBase, IEnumerable<LayerTreeViewItemBase>>)(x => x.Children)).ToObservable().ToReadOnlyReactiveCollection().ObserveElementProperty(x => x.IsVisible.Value).Subscribe(pp =>
+            DiagramViewModel.Instance.Layers.SelectRecursive((Func<LayerTreeViewItemBase, IEnumerable<LayerTreeViewItemBase>>)(x => x.Children))
+                .ToObservable().ToObservableList().ObserveElementObservableProperty(x => x).Subscribe(pp =>
             {
-                if (pp.Instance is Layer)
+                if (pp is Layer)
                 {
                     return;
                 }
-                var x = pp.Instance as LayerItem;
-                if (pp.Value) //IsVisible == true
+                var x = pp as LayerItem;
+                if (pp.IsVisible.Value) //IsVisible == true
                 {
                     BeginMonitoring(x.Item.Value);
                 }
@@ -67,7 +66,7 @@ namespace boilersGraphics.ViewModels
 
         public void BeginMonitoring(params SelectableDesignerItemViewModelBase[] items)
         {
-            foreach (var item in items.Where(x => !monitoringItems.ContainsKey(x.ID) && x.ZIndex.Value < this.ZIndex.Value))
+            foreach (var item in items.AsValueEnumerable().Where(x => !monitoringItems.ContainsKey(x.ID) && x.ZIndex.Value < this.ZIndex.Value))
             {
                 monitoringItems.Add(item.ID, item.BeginMonitor(() => Render()));
             }
@@ -100,10 +99,10 @@ namespace boilersGraphics.ViewModels
         public override IDisposable BeginMonitor(Action action)
         {
             var compositeDisposable = new CompositeDisposable();
-            base.BeginMonitor(action).AddTo(compositeDisposable);
+            Disposable.AddTo(base.BeginMonitor(action), compositeDisposable);
             if (!isMonitored)
             {
-                this.ObserveProperty(x => x.Bitmap).Subscribe(_ => action()).AddTo(compositeDisposable);
+                this.ObservePropertyChanged(x => x.Bitmap).Subscribe(_ => action()).AddTo(compositeDisposable);
                 isMonitored = true;
             }
 

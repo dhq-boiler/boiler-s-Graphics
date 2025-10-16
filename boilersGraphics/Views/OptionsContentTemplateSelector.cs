@@ -1,6 +1,6 @@
-﻿using System.Windows;
+﻿using boilersGraphics.ViewModels;
+using System.Windows;
 using System.Windows.Controls;
-using boilersGraphics.ViewModels;
 
 namespace boilersGraphics.Views;
 

@@ -9,10 +9,10 @@ namespace boilersGraphics.Test.UITests.PageObjects
 {
     public class PreviewDialogPO : PageObjectBase
     {
-        public PreviewDialogPO(WindowsDriver<WindowsElement> session, E2ETestFixture testFixture) : base(session, testFixture)
+        public PreviewDialogPO(WindowsDriver<AppiumElement> session, E2ETestFixture testFixture) : base(session, testFixture)
         { }
 
-        public WindowsElement PreviewImage => GetElementBy(By.XPath($"//*/Image[@Name=\"Preview\"][@AutomationId=\"Preview\"]"));
+        public AppiumElement PreviewImage => GetElementBy(By.XPath($"//*/Image[@Name=\"Preview\"][@AutomationId=\"Preview\"]"));
 
 
         private Actions action;

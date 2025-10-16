@@ -4,8 +4,8 @@ using boilersGraphics.Views;
 using Rulyotano.Math.Geometry;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Media;
+using ZLinq;
 
 namespace boilersGraphics.Helpers
 {
@@ -19,16 +19,16 @@ namespace boilersGraphics.Helpers
         public static List<InOutPair> CalcInOutPairs(PathGeometry myPathGeometry, PathSegmentCollection _myPathSegmentCollection, ToneCurveViewModel.Point beginPoint)
         {
                 var myPathFigureCollection = myPathGeometry.Figures;
-                var myPathFigure = myPathFigureCollection.First();
+                var myPathFigure = myPathFigureCollection.AsValueEnumerable().First();
                 var segments = myPathFigure.Segments;
 
                 var ret = new List<InOutPair>();
                 for (int x = 0; x <= byte.MaxValue; x++)
                 {
                     Point P0 = default(Point);
-                    foreach (BezierSegment segment in _myPathSegmentCollection.OfType<BezierSegment>())
+                    foreach (BezierSegment segment in _myPathSegmentCollection.AsValueEnumerable().OfType<BezierSegment>())
                     {
-                        if (segment == segments.First())
+                        if (segment == segments.AsValueEnumerable().First())
                         {
                             P0 = beginPoint.ToPoint();
                         }
@@ -52,7 +52,7 @@ namespace boilersGraphics.Helpers
                         double y = Math.Round(Math.Pow(1 - t, 3) * P0.Y + 3 * Math.Pow(1 - t, 2) * t * P1.Y + 3 * (1 - t) * Math.Pow(t, 2) * P2.Y + Math.Pow(t, 3) * P3.Y);
                         if (y >= byte.MinValue && y <= byte.MaxValue)
                         {
-                            if (!ret.Any(a => a.In == x))
+                            if (!ret.AsValueEnumerable().Any(a => a.In == x))
                             {
                                 ret.Add(new InOutPair(x, (int)y));
                                 break;

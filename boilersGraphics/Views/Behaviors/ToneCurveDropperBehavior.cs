@@ -1,17 +1,16 @@
 ﻿using boilersGraphics.Controls;
 using boilersGraphics.Extensions;
-using boilersGraphics.Models;
+using boilersGraphics.Helpers;
 using boilersGraphics.ViewModels;
 using boilersGraphics.ViewModels.ColorCorrect;
 using Microsoft.Xaml.Behaviors;
 using NLog;
-using System.Linq;
+using Prism.Services.Dialogs;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using boilersGraphics.Helpers;
-using Prism.Services.Dialogs;
+using ZLinq;
 
 namespace boilersGraphics.Views.Behaviors
 {
@@ -101,17 +100,17 @@ namespace boilersGraphics.Views.Behaviors
             {
                 Kurukuru.Set(_cursor);
                 var designerCanvas = Application.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-                var rtb = new EffectRenderer(new WpfVisualTreeHelper()).Render(_viewModel.ViewModel.Value.Rect.Value,
+                var rtb = new EffectRenderer(new WpfVisualTreeHelper(), DiagramViewModel.Instance.Renderer.GetCache()).Render(_viewModel.ViewModel.Value.Rect.Value,
                     DesignerCanvas.GetInstance(), DiagramViewModel.Instance, DiagramViewModel.Instance.BackgroundItem.Value,
                     _viewModel.ViewModel.Value, 0, _viewModel.ViewModel.Value.ZIndex.Value - 1);
                 var writeableBitmap = new WriteableBitmap(rtb);
                 var position = e.GetPosition(designerCanvas);
                 var color = writeableBitmap.GetPixel((int)position.X, (int)position.Y);
 
-                var window = System.Windows.Window.GetWindow(App.Current.Windows.OfType<DialogWindow>().FirstOrDefault());
+                var window = System.Windows.Window.GetWindow(App.Current.Windows.AsValueEnumerable().OfType<DialogWindow>().FirstOrDefault());
                 if (window is null)
                     return;
-                var landmarks = window.EnumerateChildOfType<LandmarkControl>().Distinct();
+                var landmarks = window.EnumerateChildOfType<LandmarkControl>().AsValueEnumerable().Distinct();
                 var landmark = landmarks.First(x => x.PathColor == _viewModel.Curves[1].Color.Value);
 
                 _viewModel.ResetPoints(_viewModel.Curves[1]);
@@ -145,15 +144,15 @@ namespace boilersGraphics.Views.Behaviors
             {
                 Kurukuru.Set(_cursor);
                 var designerCanvas = Application.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-                var rtb = new EffectRenderer(new WpfVisualTreeHelper()).Render(_viewModel.ViewModel.Value.Rect.Value,
+                var rtb = new EffectRenderer(new WpfVisualTreeHelper(), DiagramViewModel.Instance.Renderer.GetCache()).Render(_viewModel.ViewModel.Value.Rect.Value,
                     DesignerCanvas.GetInstance(), DiagramViewModel.Instance, DiagramViewModel.Instance.BackgroundItem.Value,
                     _viewModel.ViewModel.Value);
                 var writeableBitmap = new WriteableBitmap(rtb);
                 var position = e.GetPosition(designerCanvas);
                 var color = writeableBitmap.GetPixel((int)position.X, (int)position.Y);
 
-                var window = System.Windows.Window.GetWindow(App.Current.Windows.OfType<DialogWindow>().First());
-                var landmarks = window.EnumerateChildOfType<LandmarkControl>().Distinct();
+                var window = System.Windows.Window.GetWindow(App.Current.Windows.AsValueEnumerable().OfType<DialogWindow>().First());
+                var landmarks = window.EnumerateChildOfType<LandmarkControl>().AsValueEnumerable().Distinct();
                 var landmark = landmarks.First(x => x.PathColor == _viewModel.Curves[1].Color.Value);
 
                 _viewModel.ResetPoints(_viewModel.Curves[1]);
@@ -187,15 +186,15 @@ namespace boilersGraphics.Views.Behaviors
             {
                 Kurukuru.Set(_cursor);
                 var designerCanvas = Application.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-                var rtb = new EffectRenderer(new WpfVisualTreeHelper()).Render(_viewModel.ViewModel.Value.Rect.Value,
+                var rtb = new EffectRenderer(new WpfVisualTreeHelper(), DiagramViewModel.Instance.Renderer.GetCache()).Render(_viewModel.ViewModel.Value.Rect.Value,
                     DesignerCanvas.GetInstance(), DiagramViewModel.Instance, DiagramViewModel.Instance.BackgroundItem.Value,
                     _viewModel.ViewModel.Value);
                 var writeableBitmap = new WriteableBitmap(rtb);
                 var position = e.GetTouchPoint(designerCanvas);
                 var color = writeableBitmap.GetPixel((int)position.Position.X, (int)position.Position.Y);
 
-                var window = System.Windows.Window.GetWindow(App.Current.Windows.OfType<DialogWindow>().First());
-                var landmarks = window.EnumerateChildOfType<LandmarkControl>().Distinct();
+                var window = System.Windows.Window.GetWindow(App.Current.Windows.AsValueEnumerable().OfType<DialogWindow>().First());
+                var landmarks = window.EnumerateChildOfType<LandmarkControl>().AsValueEnumerable().Distinct();
                 var landmark = landmarks.First(x => x.PathColor == _viewModel.Curves[1].Color.Value);
 
                 _viewModel.ResetPoints(_viewModel.Curves[1]);

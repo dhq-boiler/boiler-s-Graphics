@@ -1,10 +1,10 @@
-﻿using System;
+﻿using boilersGraphics.Exceptions;
+using System;
 using System.Globalization;
-using System.Linq;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
-using boilersGraphics.Exceptions;
+using ZLinq;
 
 namespace boilersGraphics.Converters;
 
@@ -22,7 +22,7 @@ public class BrushToStringConverter : IValueConverter
             foreach (var gs in lgb.GradientStops)
             {
                 ret += $"[{gs.Color.ToString()}, {gs.Offset}]";
-                if (lgb.GradientStops.Last() != gs)
+                if (lgb.GradientStops.AsValueEnumerable().Last() != gs)
                     ret += ", ";
             }
 
@@ -36,7 +36,7 @@ public class BrushToStringConverter : IValueConverter
             foreach (var gs in rgb.GradientStops)
             {
                 ret += $"[{gs.Color.ToString()}, {gs.Offset}]";
-                if (rgb.GradientStops.Last() != gs)
+                if (rgb.GradientStops.AsValueEnumerable().Last() != gs)
                     ret += ", ";
             }
 

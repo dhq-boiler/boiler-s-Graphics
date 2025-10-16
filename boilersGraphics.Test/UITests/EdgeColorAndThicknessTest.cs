@@ -71,27 +71,27 @@ namespace boilersGraphics.Test.UITests
         {
             Vec3b pic = mat.At<Vec3b>(y, x);
 
-            Assert.That(pic.Item0, Is.EqualTo(0), "{0},{1}", y, x);
-            Assert.That(pic.Item1, Is.EqualTo(0), "{0},{1}", y, x);
-            Assert.That(pic.Item2, Is.EqualTo(0), "{0},{1}", y, x);
+            Assert.That(pic.Item0, Is.EqualTo(0), $"{y},{x}");
+            Assert.That(pic.Item1, Is.EqualTo(0), $"{y},{x}");
+            Assert.That(pic.Item2, Is.EqualTo(0), $"{y},{x}");
         }
 
         private void PixelIsWhite(Mat mat, int y, int x)
         {
             Vec3b pic = mat.At<Vec3b>(y, x);
 
-            Assert.That(pic.Item0, Is.EqualTo(255), "{0},{1}", y, x);
-            Assert.That(pic.Item1, Is.EqualTo(255), "{0},{1}", y, x);
-            Assert.That(pic.Item2, Is.EqualTo(255), "{0},{1}", y, x);
+            Assert.That(pic.Item0, Is.EqualTo(255), $"{y},{x}");
+            Assert.That(pic.Item1, Is.EqualTo(255), $"{y},{x}");
+            Assert.That(pic.Item2, Is.EqualTo(255), $"{y},{x}");
         }
 
         private void PixelIs(Mat mat, int y, int x, int b, int g, int r)
         {
             Vec3b pic = mat.At<Vec3b>(y, x);
             Console.WriteLine($"(b, g, r) = ({pic.Item0}, {pic.Item1}, {pic.Item2})");
-            Assert.That(pic.Item0, Is.EqualTo(b), "{0},{1}", y, x);
-            Assert.That(pic.Item1, Is.EqualTo(g), "{0},{1}", y, x);
-            Assert.That(pic.Item2, Is.EqualTo(r), "{0},{1}", y, x);
+            Assert.That(pic.Item0, Is.EqualTo(b), $"{y},{x}");
+            Assert.That(pic.Item1, Is.EqualTo(g), $"{y},{x}");
+            Assert.That(pic.Item2, Is.EqualTo(r), $"{y},{x}");
         }
     }
 }

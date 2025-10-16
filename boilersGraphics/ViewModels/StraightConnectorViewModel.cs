@@ -1,12 +1,11 @@
-﻿using System;
-using System.Reactive.Linq;
-using System.Windows;
-using System.Windows.Shapes;
-using boilersGraphics.Views;
+﻿using boilersGraphics.Views;
 using Prism.Ioc;
 using Prism.Services.Dialogs;
 using Prism.Unity;
-using Reactive.Bindings;
+using R3;
+using System;
+using System.Windows;
+using System.Windows.Shapes;
 
 namespace boilersGraphics.ViewModels;
 
@@ -35,21 +34,21 @@ public class StraightConnectorViewModel : ConnectorBaseViewModel
 
     public override bool SupportsPropertyDialog => true;
 
-    public ReactiveProperty<double> P1X { get; set; }
-    public ReactiveProperty<double> P1Y { get; set; }
-    public ReactiveProperty<double> P2X { get; set; }
-    public ReactiveProperty<double> P2Y { get; set; }
+    public BindableReactiveProperty<double> P1X { get; set; }
+    public BindableReactiveProperty<double> P1Y { get; set; }
+    public BindableReactiveProperty<double> P2X { get; set; }
+    public BindableReactiveProperty<double> P2Y { get; set; }
 
     public override void PostProcess_AddPointP1(Point p1)
     {
-        P1X = Observable.Return(p1.X).ToReactiveProperty();
-        P1Y = Observable.Return(p1.Y).ToReactiveProperty();
+        P1X = Observable.Return(p1.X).ToBindableReactiveProperty();
+        P1Y = Observable.Return(p1.Y).ToBindableReactiveProperty();
     }
 
     public override void PostProcess_AddPointP2(Point p2)
     {
-        P2X = Observable.Return(p2.X).ToReactiveProperty();
-        P2Y = Observable.Return(p2.Y).ToReactiveProperty();
+        P2X = Observable.Return(p2.X).ToBindableReactiveProperty();
+        P2Y = Observable.Return(p2.Y).ToBindableReactiveProperty();
     }
 
     public override Type GetViewType()

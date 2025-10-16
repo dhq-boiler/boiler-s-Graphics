@@ -1,19 +1,20 @@
-﻿using System;
+﻿using boilersGraphics.Extensions;
+using boilersGraphics.Helpers;
+using boilersGraphics.Models;
+using Cysharp.Text;
+using ObservableCollections;
+using Prism.Commands;
+using Prism.Mvvm;
+using R3;
+using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Media;
-using boilersGraphics.Helpers;
-using boilersGraphics.Models;
-using Prism.Commands;
-using Prism.Mvvm;
-using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
 using TsOperationHistory;
 using TsOperationHistory.Extensions;
+using ZLinq;
 
 namespace boilersGraphics.ViewModels;
 
@@ -32,11 +33,13 @@ public abstract class SelectableDesignerItemViewModelBase : BindableBase, ISelec
     {
         Id = id;
         Owner = parent;
+        HalfEdgeThickness = EdgeThickness.Select(x => x / 2).ToReadOnlyBindableReactiveProperty();
         Init();
     }
 
     public SelectableDesignerItemViewModelBase()
     {
+        HalfEdgeThickness = EdgeThickness.Select(x => x / 2).ToReadOnlyBindableReactiveProperty();
         Init();
     }
 
@@ -49,9 +52,9 @@ public abstract class SelectableDesignerItemViewModelBase : BindableBase, ISelec
 
     // ↓ Flags ↓
 
-    public ReactivePropertySlim<bool> IsSelected { get; } = new();
-    public ReactivePropertySlim<bool> EnableForSelection { get; } = new();
-    public ReactivePropertySlim<PathGeometryUpdatingStrategy> UpdatingStrategy { get; } = new();
+    public R3.BindableReactiveProperty<bool> IsSelected { get; } = new();
+    public R3.BindableReactiveProperty<bool> EnableForSelection { get; } = new();
+    public R3.BindableReactiveProperty<PathGeometryUpdatingStrategy> UpdatingStrategy { get; } = new();
     public enum PathGeometryUpdatingStrategy
     {
         Unknown,
@@ -59,43 +62,37 @@ public abstract class SelectableDesignerItemViewModelBase : BindableBase, ISelec
         ResizeWhilePreservingOriginalShape,
         Fixed,
     }
-    public ReactivePropertySlim<bool> IsVisible { get; } = new();
-    public ReactivePropertySlim<bool> IsHitTestVisible { get; set; } = new();
-    public ReactivePropertySlim<bool> CanDrag { get; set; } = new(true);
+    public R3.BindableReactiveProperty<bool> IsVisible { get; } = new();
+    public R3.BindableReactiveProperty<bool> IsHitTestVisible { get; set; } = new();
+    public R3.BindableReactiveProperty<bool> CanDrag { get; set; } = new(true);
 
     // ↑ Flags ↑
 
-    public ReactivePropertySlim<object> ChangeFormTriggerObject { get; } = new();
-    public ReactivePropertySlim<DateTime> ChangeFormDateTime { get; } = new(DateTime.Now);
-    public ReactivePropertySlim<LayerItem> LayerItem { get; } = new();
+    public R3.BindableReactiveProperty<object> ChangeFormTriggerObject { get; } = new();
+    public R3.BindableReactiveProperty<DateTime> ChangeFormDateTime { get; } = new(DateTime.Now);
+    public R3.BindableReactiveProperty<LayerItem> LayerItem { get; } = new();
 
-    public ReactivePropertySlim<int> SelectedOrder { get; } = new();
+    public R3.BindableReactiveProperty<int> SelectedOrder { get; } = new();
 
-    public ReactivePropertySlim<Matrix> Matrix { get; } = new(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe |
-                                                                    ReactivePropertyMode.DistinctUntilChanged);
+    public R3.BindableReactiveProperty<Matrix> Matrix { get; } = new();
 
-    public ReactivePropertySlim<double> RotationAngle { get; } =
-        new(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe | ReactivePropertyMode.DistinctUntilChanged);
+    public R3.BindableReactiveProperty<double> RotationAngle { get; } = new();
 
-    public ReactivePropertySlim<int> ZIndex { get; } = new();
-    public ReactivePropertySlim<Brush> EdgeBrush { get; } = new(Brushes.Transparent);
-    public ReactivePropertySlim<Brush> FillBrush { get; } = new(Brushes.Transparent);
+    public R3.BindableReactiveProperty<int> ZIndex { get; } = new();
+    public R3.BindableReactiveProperty<Brush> EdgeBrush { get; } = new(Brushes.Transparent);
+    public R3.BindableReactiveProperty<Brush> FillBrush { get; } = new(Brushes.Transparent);
 
-    public ReactivePropertySlim<double> EdgeThickness { get; } =
-        new(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe);
+    public R3.BindableReactiveProperty<double> EdgeThickness { get; } = new();
 
-    public ReadOnlyReactivePropertySlim<double> HalfEdgeThickness
-    {
-        get { return EdgeThickness.Select(x => x / 2).ToReadOnlyReactivePropertySlim(); }
-    }
+    public R3.IReadOnlyBindableReactiveProperty<double> HalfEdgeThickness { get; }
 
-    public ReadOnlyReactivePropertySlim<PathGeometry> PathGeometry { get; set; }
-    public ReactivePropertySlim<PathGeometry> PathGeometryNoRotate { get; } = new();
-    public ReactivePropertySlim<PathGeometry> PathGeometryRotate { get; } = new();
-    public ReactivePropertySlim<PenLineJoin> StrokeLineJoin { get; } = new();
-    public ReactiveCollection<PenLineJoin> PenLineJoins { get; private set; }
-    public ReactivePropertySlim<DoubleCollection> StrokeDashArray { get; } = new();
-    public ReactivePropertySlim<double> StrokeMiterLimit { get; } = new();
+    public R3.IReadOnlyBindableReactiveProperty<PathGeometry> PathGeometry { get; set; }
+    public R3.BindableReactiveProperty<PathGeometry> PathGeometryNoRotate { get; } = new();
+    public R3.BindableReactiveProperty<PathGeometry> PathGeometryRotate { get; } = new();
+    public R3.BindableReactiveProperty<PenLineJoin> StrokeLineJoin { get; } = new();
+    public ObservableList<PenLineJoin> PenLineJoins { get; private set; }
+    public R3.BindableReactiveProperty<DoubleCollection> StrokeDashArray { get; } = new();
+    public R3.BindableReactiveProperty<double> StrokeMiterLimit { get; } = new();
 
     public string Name { get; set; }
 
@@ -105,47 +102,47 @@ public abstract class SelectableDesignerItemViewModelBase : BindableBase, ISelec
 
     public IDisposable GroupDisposable { get; set; }
 
-    public ReadOnlyReactivePropertySlim<double> SnapPointSize { get; } = Observable.Return(4)
+    public R3.ReadOnlyReactiveProperty<double> SnapPointSize { get; } = Observable.Return(4)
         .CombineLatest(DiagramViewModel.Instance.MagnificationRate,
-            (standardSize, rate) => { return standardSize / (rate / 100d); }).ToReadOnlyReactivePropertySlim();
+            (standardSize, rate) => { return standardSize / (rate / 100d); }).ToReadOnlyReactiveProperty();
 
-    public ReadOnlyReactivePropertySlim<double> ThumbSize { get; } = Observable.Return(7)
+    public R3.ReadOnlyReactiveProperty<double> ThumbSize { get; } = Observable.Return(7)
         .CombineLatest(DiagramViewModel.Instance.MagnificationRate,
-            (standardSize, rate) => { return standardSize / (rate / 100d); }).ToReadOnlyReactivePropertySlim();
+            (standardSize, rate) => { return standardSize / (rate / 100d); }).ToReadOnlyReactiveProperty();
 
-    public ReadOnlyReactivePropertySlim<double> ThumbThickness { get; } = Observable.Return(1)
+    public R3.ReadOnlyReactiveProperty<double> ThumbThickness { get; } = Observable.Return(1)
         .CombineLatest(DiagramViewModel.Instance.MagnificationRate,
-            (standardSize, rate) => { return standardSize / (rate / 100d); }).ToReadOnlyReactivePropertySlim();
+            (standardSize, rate) => { return standardSize / (rate / 100d); }).ToReadOnlyReactiveProperty();
 
-    public ReadOnlyReactivePropertySlim<Thickness> RotateThumbMargin { get; } = Observable.Return(-20)
-        .CombineLatest(DiagramViewModel.Instance.MagnificationRate,
-            (standardSize, rate) => { return new Thickness(0, standardSize / (rate / 100d), 0, 0); })
-        .ToReadOnlyReactivePropertySlim();
-
-    public ReadOnlyReactivePropertySlim<Thickness> RotateThumbConnectorMargin { get; } = Observable.Return(-11)
+    public R3.ReadOnlyReactiveProperty<Thickness> RotateThumbMargin { get; } = Observable.Return(-20)
         .CombineLatest(DiagramViewModel.Instance.MagnificationRate,
             (standardSize, rate) => { return new Thickness(0, standardSize / (rate / 100d), 0, 0); })
-        .ToReadOnlyReactivePropertySlim();
+        .ToReadOnlyReactiveProperty();
 
-    public ReadOnlyReactivePropertySlim<double> RotateThumbConnectorY2 { get; } = Observable.Return(11)
+    public R3.ReadOnlyReactiveProperty<Thickness> RotateThumbConnectorMargin { get; } = Observable.Return(-11)
         .CombineLatest(DiagramViewModel.Instance.MagnificationRate,
-            (standardSize, rate) => { return standardSize / (rate / 100d); }).ToReadOnlyReactivePropertySlim();
+            (standardSize, rate) => { return new Thickness(0, standardSize / (rate / 100d), 0, 0); })
+        .ToReadOnlyReactiveProperty();
 
-    public ReadOnlyReactivePropertySlim<double> RotateThumbConnectorThickness { get; } = Observable.Return(1)
+    public R3.ReadOnlyReactiveProperty<double> RotateThumbConnectorY2 { get; } = Observable.Return(11)
         .CombineLatest(DiagramViewModel.Instance.MagnificationRate,
-            (standardSize, rate) => { return standardSize / (rate / 100d); }).ToReadOnlyReactivePropertySlim();
+            (standardSize, rate) => { return standardSize / (rate / 100d); }).ToReadOnlyReactiveProperty();
 
-    public ReadOnlyReactivePropertySlim<Thickness> RotateThumbGridMargin { get; } = Observable.Return(-3)
+    public R3.ReadOnlyReactiveProperty<double> RotateThumbConnectorThickness { get; } = Observable.Return(1)
+        .CombineLatest(DiagramViewModel.Instance.MagnificationRate,
+            (standardSize, rate) => { return standardSize / (rate / 100d); }).ToReadOnlyReactiveProperty();
+
+    public R3.ReadOnlyReactiveProperty<Thickness> RotateThumbGridMargin { get; } = Observable.Return(-3)
         .CombineLatest(DiagramViewModel.Instance.MagnificationRate,
             (standardSize, rate) =>
             {
                 return new Thickness(standardSize / (rate / 100d), standardSize / (rate / 100d),
                     standardSize / (rate / 100d), standardSize / (rate / 100d));
-            }).ToReadOnlyReactivePropertySlim();
+            }).ToReadOnlyReactiveProperty();
 
     public abstract bool SupportsPropertyDialog { get; }
 
-    public ReactivePropertySlim<bool> IsOpenedInstructionDialog { get; } = new();
+    public R3.BindableReactiveProperty<bool> IsOpenedInstructionDialog { get; } = new();
 
     #region IClonable
 
@@ -214,7 +211,7 @@ public abstract class SelectableDesignerItemViewModelBase : BindableBase, ISelec
     }
 
     public DelegateCommand<object> SelectItemCommand { get; private set; }
-
+    
     public IDisposable Connect(SnapPointPosition snapPointEdgeTo, SnapPointPosition snapPointEdgeFrom,
         SelectableDesignerItemViewModelBase item)
     {
@@ -243,7 +240,7 @@ public abstract class SelectableDesignerItemViewModelBase : BindableBase, ISelec
     private void SelectItem(bool newselect, bool select)
     {
         if (newselect)
-            foreach (var designerItemViewModelBase in Owner.SelectedItems.Value.ToList())
+            foreach (var designerItemViewModelBase in Owner.SelectedItems.Value.AsValueEnumerable().ToList())
                 Owner.MainWindowVM.Recorder.Current.ExecuteSetProperty(designerItemViewModelBase, "IsSelected.Value",
                     false);
 
@@ -253,6 +250,16 @@ public abstract class SelectableDesignerItemViewModelBase : BindableBase, ISelec
     public bool IsSameGroup(SelectableDesignerItemViewModelBase target)
     {
         return ParentID == target.ParentID && ParentID != Guid.Empty;
+    }
+
+    public SelectableDesignerItemViewModelBase GetParent()
+    {
+        if (ParentID == Guid.Empty)
+        {
+            return null;
+        }
+
+        return Owner.AllItems.Value.AsValueEnumerable().FirstOrDefault(x => x.ID == ParentID);
     }
 
     private void Init()
@@ -266,7 +273,7 @@ public abstract class SelectableDesignerItemViewModelBase : BindableBase, ISelec
                 if (angle > 360) RotationAngle.Value = angle % 360;
             })
             .AddTo(_CompositeDisposable);
-        PenLineJoins = new ReactiveCollection<PenLineJoin>
+        PenLineJoins = new ObservableList<PenLineJoin>
         {
             PenLineJoin.Miter,
             PenLineJoin.Bevel,
@@ -311,30 +318,82 @@ public abstract class SelectableDesignerItemViewModelBase : BindableBase, ISelec
         }
     }
 
+    private static readonly ConcurrentDictionary<Type, (PropertyInfo[] properties, FieldInfo[] fields)> _reflectionCache = new();
+    private static readonly HashSet<string> _excludedPropertyNames = new()
+    {
+        "Parent",
+        "SelectedItems", 
+        "LayerItem"
+    };
+
     public string ShowPropertiesAndFields()
     {
-        var ret = $"<{GetType().Name}>{{";
+        var type = GetType();
+        var (properties, fields) = _reflectionCache.GetOrAdd(type, GetPropertiesAndFields);
 
-        var properties = GetType().GetProperties(
-            BindingFlags.Public
-            | BindingFlags.Instance);
+        using (var sb = ZString.CreateStringBuilder())
+        {
+            sb.Append('<');
+            sb.Append(type.Name);
+            sb.Append(">");
+#if DEBUG
+            sb.Append('{');
+            // プロパティの処理
+            for (int i = 0; i < properties.Length; i++)
+            {
+                var property = properties[i];
+                if (_excludedPropertyNames.Contains(property.Name))
+                    continue;
 
-        foreach (var property in properties.Except(new[]
-                 {
-                     GetType().GetProperty("Parent"),
-                     GetType().GetProperty("SelectedItems"),
-                     GetType().GetProperty("LayerItem"),
-                 }))
-            ret += $"{property.Name}={property.GetValue(this)},";
+                try
+                {
+                    var value = property.GetValue(this);
+                    sb.Append(property.Name);
+                    sb.Append('=');
+                    sb.Append(value?.ToString() ?? "null");
+                    sb.Append(',');
+                }
+                catch (Exception)
+                {
+                    sb.Append(property.Name);
+                    sb.Append("=<error>,");
+                }
+            }
 
-        var fields = GetType().GetFields(
-            BindingFlags.Public
-            | BindingFlags.Instance);
+            // フィールドの処理
+            for (int i = 0; i < fields.Length; i++)
+            {
+                var field = fields[i];
+                try
+                {
+                    var value = field.GetValue(this);
+                    sb.Append(field.Name);
+                    sb.Append('=');
+                    sb.Append(value?.ToString() ?? "null");
+                    sb.Append(',');
+                }
+                catch (Exception)
+                {
+                    sb.Append(field.Name);
+                    sb.Append("=<error>,");
+                }
+            }
 
-        foreach (var field in fields) ret += $"{field.Name}={field.GetValue(this)},";
-        ret = ret.Remove(ret.Length - 1, 1);
-        ret += "}";
-        return ret;
+            // 最後のカンマを削除
+            if (sb.Length > 0 && sb.ToString()[sb.Length - 1] == ',')
+                sb.Remove(sb.Length - 1, 1);
+
+            sb.Append('}');
+#endif
+            return sb.ToString();
+        }
+    }
+
+    private static (PropertyInfo[] properties, FieldInfo[] fields) GetPropertiesAndFields(Type type)
+    {
+        var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+        var fields = type.GetFields(BindingFlags.Public | BindingFlags.Instance);
+        return (properties, fields);
     }
 
     public override string ToString()

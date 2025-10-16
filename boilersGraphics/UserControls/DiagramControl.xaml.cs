@@ -1,7 +1,7 @@
-﻿using System.Windows;
-using System.Windows.Controls;
-using boilersGraphics.Controls;
+﻿using boilersGraphics.Controls;
 using boilersGraphics.Extensions;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace boilersGraphics.UserControls;
 

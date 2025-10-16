@@ -1,14 +1,14 @@
-﻿using System;
-using System.Linq;
+﻿using boilersGraphics.ViewModels;
+using NLog;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
-using boilersGraphics.ViewModels;
-using NLog;
 using TsOperationHistory;
 using TsOperationHistory.Extensions;
+using ZLinq;
 
 namespace boilersGraphics.Controls;
 
@@ -57,12 +57,12 @@ public class DragThumb : Thumb
             var minTop = double.MaxValue;
 
             // we only move DesignerItems
-            var designerItems = designerItem.SelectedItems.OfType<DesignerItemViewModelBase>();
+            var designerItems = designerItem.SelectedItems.AsValueEnumerable().OfType<DesignerItemViewModelBase>().ToList();
 
             if (designerItem.Owner.BackgroundItem.Value.EdgeBrush.Value == Brushes.Magenta
                 && designerItem.Owner.BackgroundItem.Value.EdgeThickness.Value == 10)
-                designerItems = designerItems.Union(new DesignerItemViewModelBase[]
-                    { designerItem.Owner.BackgroundItem.Value });
+                designerItems = designerItems.AsValueEnumerable().Union(new DesignerItemViewModelBase[]
+                    { designerItem.Owner.BackgroundItem.Value }).ToList();
 
             foreach (var item in designerItems)
             {

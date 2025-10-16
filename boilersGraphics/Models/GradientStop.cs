@@ -1,10 +1,6 @@
-﻿using System;
-using System.Reactive;
-using System.Reactive.Linq;
-using System.Windows.Media;
+﻿using System.Windows.Media;
 using Prism.Mvvm;
-using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
+using R3;
 
 namespace boilersGraphics.Models;
 
@@ -16,17 +12,18 @@ public class GradientStop : BindableBase
         Offset.Value = offset;
     }
 
-    public ReactivePropertySlim<Color> Color { get; } = new();
-    public ReactivePropertySlim<double> Offset { get; } = new();
+    public BindableReactiveProperty<Color> Color { get; } = new();
+    public BindableReactiveProperty<double> Offset { get; } = new();
 
     public System.Windows.Media.GradientStop ConvertToGradientStop()
     {
         return new System.Windows.Media.GradientStop(Color.Value, Offset.Value);
     }
 
-    internal IObservable<Unit> GradientStopChangedAsObservable()
+    internal R3.Observable<R3.Unit> GradientStopChangedAsObservable()
     {
-        return this.ObserveProperty(x => x.Color).ToUnit()
-            .Merge(this.ObserveProperty(x => x.Offset).ToUnit());
+        return this.ObservePropertyChanged(x => x.Color)
+            .Select(_ => R3.Unit.Default)
+            .Merge(this.ObservePropertyChanged(x => x.Offset).Select(_ => R3.Unit.Default));
     }
 }

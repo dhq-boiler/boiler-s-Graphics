@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Linq;
+using ZLinq;
 
 namespace TsOperationHistory.Extensions;
 
@@ -7,9 +7,9 @@ public static class OperationControllerExtensions
 {
     public static void MoveTo(this IOperationController controller, IOperation target)
     {
-        var isRollBack = controller.UndoStack.Contains(target);
+        var isRollBack = controller.UndoStack.AsValueEnumerable().Contains(target);
 
-        var isRollForward = controller.RollForwardTargets.Contains(target);
+        var isRollForward = controller.RollForwardTargets.AsValueEnumerable().Contains(target);
 
         if (isRollBack is false && isRollForward is false)
             return;
@@ -20,7 +20,7 @@ public static class OperationControllerExtensions
 
         if (isRollForward)
         {
-            while (controller.RollForwardTargets.FirstOrDefault() != target)
+            while (controller.RollForwardTargets.AsValueEnumerable().FirstOrDefault() != target)
                 controller.Redo();
             controller.Redo();
         }
@@ -42,15 +42,15 @@ public static class OperationControllerExtensions
         Func<T, T, IOperation> generateMergedOperation)
         where T : class, IMergeableOperation
     {
-        var operations = controller.UndoStack.ToList();
+        var operations = controller.UndoStack.AsValueEnumerable().ToList();
 
-        var mergeable = operations
+        var mergeable = operations.AsValueEnumerable()
             .OfType<T>()
             .Where(x => x.MergeJudge.GetMergeKey() == key)
             .ToArray();
 
-        var first = mergeable.FirstOrDefault();
-        var last = mergeable.LastOrDefault();
+        var first = mergeable.AsValueEnumerable().FirstOrDefault();
+        var last = mergeable.AsValueEnumerable().LastOrDefault();
 
         if (first is null || last is null)
             return;

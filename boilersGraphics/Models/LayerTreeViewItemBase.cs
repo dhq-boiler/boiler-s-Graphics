@@ -5,33 +5,37 @@ using boilersGraphics.UserControls;
 using boilersGraphics.ViewModels;
 using boilersGraphics.Views;
 using NLog;
+using ObservableCollections;
 using Prism.Mvvm;
-using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
+using R3;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Diagnostics;
 using System.Linq;
-using System.Reactive;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
 using TsOperationHistory;
 using TsOperationHistory.Extensions;
+using ZLinq;
 using Layers = boilersGraphics.Views.Layers;
+using ReactiveCommand = R3.ReactiveCommand;
 
 namespace boilersGraphics.Models;
 
 public abstract class LayerTreeViewItemBase : BindableBase, IDisposable, IObservable<LayerTreeViewItemBaseObservable>
 {
-    protected CompositeDisposable _disposable = new();
-
+    protected R3.CompositeDisposable _disposable = new();
 
     private readonly List<IObserver<LayerTreeViewItemBaseObservable>> _observers = new();
     private bool disposedValue;
+
+    // キャッシュ用フィールド
+    private List<LayerTreeViewItemBase> _cachedAllChildren;
+    private Dictionary<LayerTreeViewItemBase, List<LayerItem>> _cachedLayerItems = new();
+    private bool _cacheInvalidated = true;
 
     public LayerTreeViewItemBase()
     {
@@ -44,11 +48,29 @@ public abstract class LayerTreeViewItemBase : BindableBase, IDisposable, IObserv
                         .Trace($"Set Parent Parent={{{x.Name.Value}}} Child={{{Name.Value}}}");
             })
             .AddTo(_disposable);
+
+        // 複数のObservableを統合してデバウンス
+        var updateTrigger = R3.Observable.Merge(
+                Children.CollectionChangedAsObservable().ToUnit(),
+                LayerItemsChangedAsObservable(),
+                SelectedLayerItemsChangedAsObservable()
+            )
+            .Debounce(TimeSpan.FromMilliseconds(50)) // 50ms内の連続する変更をまとめる
+            .ObserveOnCurrentSynchronizationContext();
+
+        updateTrigger.Subscribe(_ =>
+            {
+                InvalidateCache();
+                // レンダリングの更新も必要に応じてここで呼び出す
+                UpdateAppearanceBothParentAndChildBatched();
+            })
+            .AddTo(_disposable);
+
         ChangeNameCommand.Subscribe(_ =>
         {
             var diagramControl = Application.Current.MainWindow.FindName("DiagramControl") as DiagramControl;
             var layers = diagramControl.FindName("layers") as Layers; 
-            var labelTextBox = layers.EnumVisualChildren<LabelTextBox>(this).FirstOrDefault(x => x.DataContext == this);
+            var labelTextBox = layers.EnumVisualChildren<LabelTextBox>(this).AsValueEnumerable().FirstOrDefault(x => x.DataContext == this);
             labelTextBox?.FocusTextBox();
         })
         .AddTo(_disposable);
@@ -81,63 +103,225 @@ public abstract class LayerTreeViewItemBase : BindableBase, IDisposable, IObserv
         }
     }
 
-    public ReactivePropertySlim<LayerTreeViewItemBase> Parent { get; } = new();
+    public R3.BindableReactiveProperty<LayerTreeViewItemBase> Parent { get; } = new();
 
-    public ReactivePropertySlim<string> Name { get; } = new();
+    public R3.BindableReactiveProperty<string> Name { get; } = new();
 
-    public ReactivePropertySlim<Brush> Background { get; } = new();
+    public R3.BindableReactiveProperty<Brush> Background { get; } = new();
 
-    public ReactivePropertySlim<bool> IsExpanded { get; } = new(true);
+    public R3.BindableReactiveProperty<bool> IsExpanded { get; } = new(true);
 
-    public ReactiveProperty<bool> IsSelected { get; set; } = new();
+    public R3.BindableReactiveProperty<bool> IsSelected { get; protected set; } = new();
 
-    public ReactivePropertySlim<bool> IsVisible { get; } = new();
+    public R3.BindableReactiveProperty<bool> IsVisible { get; } = new();
 
-    public ReactivePropertySlim<Color> Color { get; } = new();
+    public R3.BindableReactiveProperty<Color> Color { get; } = new();
 
-    public ReactivePropertySlim<ImageSource> Appearance { get; } = new();
+    public R3.BindableReactiveProperty<ImageSource> Appearance { get; } = new();
 
-    public ReactivePropertySlim<Visibility> BeforeSeparatorVisibility { get; } = new(Visibility.Hidden);
+    public R3.BindableReactiveProperty<Visibility> BeforeSeparatorVisibility { get; } = new(Visibility.Hidden);
 
-    public ReactivePropertySlim<Visibility> AfterSeparatorVisibility { get; } = new(Visibility.Hidden);
+    public R3.BindableReactiveProperty<Visibility> AfterSeparatorVisibility { get; } = new(Visibility.Hidden);
 
-    public ReactiveCollection<LayerTreeViewItemBase> Children { get; set; } = new();
+    public NotifyCollectionChangedSynchronizedViewList<LayerTreeViewItemBase> Children { get; set; } = new ObservableList<LayerTreeViewItemBase>().ToWritableNotifyCollectionChanged();
 
-    public ReactiveCollection<Control> LayerTreeViewItemContextMenu { get; } = new();
+    public NotifyCollectionChangedSynchronizedViewList<Control> LayerTreeViewItemContextMenu { get; } = new ObservableList<Control>().ToWritableNotifyCollectionChanged();
 
     public ReactiveCommand ChangeNameCommand { get; } = new();
 
     public abstract void UpdateAppearance(IEnumerable<SelectableDesignerItemViewModelBase> items, bool backgroundIncluded = false);
 
-    internal void UpdateAppearanceBothParentAndChild()
+    //internal void UpdateAppearanceBothParentAndChild()
+    //{
+    //    LogManager.GetCurrentClassLogger().Trace("detected Layer changes. run Layer.UpdateAppearance().");
+
+    //    // キャッシュされた全子要素を取得
+    //    var allChildren = GetCachedAllChildren();
+
+    //    // 自分自身の更新: キャッシュされた結果を使用
+    //    var allItems = allChildren
+    //        .Select(x => (x as LayerItem)?.Item?.Value)
+    //        .Where(x => x is not null)
+    //        .ToArray();
+    //    UpdateAppearance(allItems, true);
+
+    //    // Layerとその子要素を分離して処理
+    //    var layers = allChildren.OfType<Layer>().ToList();
+    //    var directLayerItems = allChildren.OfType<LayerItem>().ToList();
+
+    //    // 各Layerの更新処理（並列処理可能な場合は並列化）
+    //    foreach (var layer in layers)
+    //    {
+    //        // キャッシュされたLayerItemsを取得
+    //        var layerItems = GetCachedLayerItems(layer)
+    //            .Select(x => x.Item.Value)
+    //            .ToArray();
+
+    //        layer.UpdateAppearance(layerItems, true);
+
+    //        // そのLayerの直接の子LayerItemsを更新
+    //        var directChildren = GetCachedLayerItems(layer);
+    //        foreach (var layerItem in directChildren)
+    //        {
+    //            layerItem.UpdateAppearance(IfGroupBringChildren(layerItem.Item.Value));
+    //        }
+    //    }
+
+    //    // 直接のLayerItemsを更新
+    //    foreach (var layerItem in directLayerItems)
+    //    {
+    //        layerItem.UpdateAppearance(IfGroupBringChildren(layerItem.Item.Value));
+    //    }
+    //}
+
+    private bool _isUpdatingAppearance = false;
+    private readonly List<LayerTreeViewItemBase> _pendingUpdates = new();
+
+    internal void UpdateAppearanceBothParentAndChildBatched()
+    {
+        if (_isUpdatingAppearance)
+        {
+            // 既に更新中の場合は、保留リストに追加
+            if (!_pendingUpdates.Contains(this))
+                _pendingUpdates.Add(this);
+            return;
+        }
+
+        _isUpdatingAppearance = true;
+
+        try
+        {
+            // 実際の更新処理を一度だけ実行
+            UpdateAppearanceBothParentAndChildInternal();
+
+            // 保留中の更新があれば処理
+            while (_pendingUpdates.Count > 0)
+            {
+                var pending = _pendingUpdates.ToList();
+                _pendingUpdates.Clear();
+
+                foreach (var item in pending)
+                {
+                    item.UpdateAppearanceBothParentAndChildInternal();
+                }
+            }
+        }
+        finally
+        {
+            _isUpdatingAppearance = false;
+        }
+    }
+
+    internal void UpdateAppearanceBothParentAndChildInternal()
     {
         LogManager.GetCurrentClassLogger().Trace("detected Layer changes. run Layer.UpdateAppearance().");
-        UpdateAppearance(Children
-            .SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(xx => xx.Children)
-            .Select(x => (x as LayerItem).Item.Value), true);
-        Children.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
-            .ToList()
-            .ForEach(x =>
+
+        var renderer = DiagramViewModel.Instance?.Renderer;
+        if (renderer == null)
+        {
+            LogManager.GetCurrentClassLogger().Warn("Renderer is null, skipping appearance update.");
+            return;
+        }
+
+        var cache = renderer.GetCache();
+
+        // 重複した更新処理を防ぐためのセット
+        var updatedItems = new HashSet<LayerTreeViewItemBase>();
+
+        // キャッシュされた全子要素を取得
+        var allChildren = GetCachedAllChildren();
+
+        // 全LayerItemsからDirtyなアイテムを収集
+        var allLayerItems = allChildren.OfType<LayerItem>().ToList();
+        var dirtyViewModels = allLayerItems
+            .Select(x => x.Item?.Value)
+            .Where(x => x != null && cache.IsDirty(x))
+            .ToHashSet();
+
+        // Dirtyなアイテムがない場合は更新をスキップ
+        if (dirtyViewModels.Count == 0)
+        {
+            LogManager.GetCurrentClassLogger().Trace("No dirty items found, skipping appearance update.");
+            return;
+        }
+
+        LogManager.GetCurrentClassLogger().Debug($"Found {dirtyViewModels.Count} dirty items to update.");
+
+        // Dirtyなアイテムを含むLayerItemsのみを対象とする
+        var dirtyLayerItems = allLayerItems
+            .Where(x => dirtyViewModels.Contains(x.Item?.Value))
+            .ToList();
+
+        // DirtyなLayerItemsのみ更新
+        foreach (var layerItem in dirtyLayerItems)
+        {
+            if (!updatedItems.Contains(layerItem))
             {
-                if (x is Layer l)
+                var itemsToUpdate = IfGroupBringChildren(layerItem.Item.Value);
+
+                // GroupItemの場合、子要素にDirtyなものがあるかチェック
+                var hasDirtyChildren = itemsToUpdate.Any(x => dirtyViewModels.Contains(x));
+
+                if (hasDirtyChildren || dirtyViewModels.Contains(layerItem.Item.Value))
                 {
-                    l.UpdateAppearance(l.Children.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(xx => xx.Children)
-                                               .Select(x => (x as LayerItem).Item.Value), true);
-                    l.Children.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
-                              .ToList()
-                              .ForEach(x =>
-                              {
-                                  if (x is LayerItem li)
-                                  {
-                                      li.UpdateAppearance(IfGroupBringChildren(li.Item.Value));
-                                  }
-                              });
+                    layerItem.UpdateAppearance(itemsToUpdate);
+                    updatedItems.Add(layerItem);
+                    LogManager.GetCurrentClassLogger().Debug($"Updated LayerItem: {layerItem.Name.Value}");
                 }
-                else if (x is LayerItem li)
+            }
+        }
+
+        // Dirtyなアイテムを含む親Layersを特定
+        var dirtyLayers = new HashSet<Layer>();
+        foreach (var dirtyLayerItem in dirtyLayerItems)
+        {
+            var parent = dirtyLayerItem.Parent.Value;
+            while (parent != null)
+            {
+                if (parent is Layer layer)
                 {
-                    li.UpdateAppearance(IfGroupBringChildren(li.Item.Value));
+                    dirtyLayers.Add(layer);
                 }
-            });
+                parent = parent.Parent.Value;
+            }
+        }
+
+        // 自分自身がLayerで、Dirtyなアイテムを含む場合のみ更新
+        if (this is Layer currentLayer && dirtyLayers.Contains(currentLayer) && !updatedItems.Contains(this))
+        {
+            var itemsToUpdate = allLayerItems
+                //.Where(x => dirtyViewModels.Contains(x.Item?.Value))
+                .Select(x => x.Item.Value)
+                .ToArray();
+
+            if (itemsToUpdate.Length > 0)
+            {
+                UpdateAppearance(itemsToUpdate, true);
+                updatedItems.Add(this);
+                LogManager.GetCurrentClassLogger().Debug($"Updated Layer: {Name.Value} with {itemsToUpdate.Length} dirty items.");
+            }
+        }
+
+        // Dirtyなアイテムを含むLayersのみ更新
+        foreach (var layer in dirtyLayers)
+        {
+            if (!updatedItems.Contains(layer))
+            {
+                var layerItems = GetCachedLayerItems(layer)
+                    //.Where(x => dirtyViewModels.Contains(x.Item?.Value))
+                    .Select(x => x.Item.Value)
+                    .ToArray();
+
+                if (layerItems.Length > 0)
+                {
+                    layer.UpdateAppearance(layerItems, true);
+                    updatedItems.Add(layer);
+                    LogManager.GetCurrentClassLogger().Debug($"Updated Layer: {layer.Name.Value} with {layerItems.Length} dirty items.");
+                }
+            }
+        }
+
+        LogManager.GetCurrentClassLogger().Debug($"Total updated items: {updatedItems.Count}");
     }
 
     private IEnumerable<SelectableDesignerItemViewModelBase> IfGroupBringChildren(
@@ -146,8 +330,10 @@ public abstract class LayerTreeViewItemBase : BindableBase, IDisposable, IObserv
         if (value is GroupItemViewModel groupItemVM)
         {
             var children = Children.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                .AsValueEnumerable()
                 .Select(x => (x as LayerItem).Item.Value)
-                .Where(x => x.ParentID == groupItemVM.ID);
+                .Where(x => x.ParentID == groupItemVM.ID)
+                .ToArray();
             return children;
         }
 
@@ -168,62 +354,108 @@ public abstract class LayerTreeViewItemBase : BindableBase, IDisposable, IObserv
         return new LayerTreeViewItemBaseDisposable(this, observer);
     }
 
-    public IObservable<Unit> LayerChangedAsObservable()
+    public R3.Observable<Unit> LayerChangedAsObservable()
     {
         return Children.CollectionChangedAsObservable()
             .Where(x => x.Action == NotifyCollectionChangedAction.Remove ||
                         x.Action == NotifyCollectionChangedAction.Reset)
             .ToUnit()
-            .Merge(Children.Select(x => x.LayerChangedAsObservable()).Merge());
+            .Merge(R3.Observable.Merge(Children.Select(x => x.LayerChangedAsObservable())));
     }
 
-    public IObservable<Unit> LayerItemsChangedAsObservable()
+    public R3.Observable<Unit> LayerItemsChangedAsObservable()
     {
-        return Children.ObserveElementObservableProperty(x => (x as LayerItem).Item)
+        Debug.WriteLine("LayerItemsChangedAsObservable called"); // ここにブレークポイント
+
+        return Children.CollectionChangedAsObservable()
+            .Do(x => Debug.WriteLine($"LayerItemsChanged - Children.CollectionChanged: {x.Action} in {Name.Value}"))
             .ToUnit()
-            .Merge(Children.CollectionChangedAsObservable().Where(x =>
-                    x.Action == NotifyCollectionChangedAction.Remove || x.Action == NotifyCollectionChangedAction.Reset)
-                .ToUnit());
+            .Merge(
+                Children.ObserveElementObservableProperty(x => (x as LayerItem)?.Item)
+                    .Where(x => x != null)
+                    .Do(x => Debug.WriteLine($"LayerItemsChanged - Item property changed in {Name.Value}"))
+                    .ToUnit()
+            );
     }
 
-    public IObservable<Unit> SelectedLayerItemsChangedAsObservable()
+    public R3.Observable<Unit> SelectedLayerItemsChangedAsObservable()
     {
         var ox1 = Children
-            .ObserveElementObservableProperty(x => (x as LayerItem).Item.Value.IsSelected)
+            .ObserveElementObservableProperty(x => (x as LayerItem)?.Item?.Value?.IsSelected)
+            .Where(x => x != null)
             .ToUnit()
             .Merge(Children.CollectionChangedAsObservable().Where(x =>
                     x.Action == NotifyCollectionChangedAction.Remove || x.Action == NotifyCollectionChangedAction.Reset)
                 .ToUnit());
 
         var ox2 = Children.CollectionChangedAsObservable()
-            .Select(_ => Children.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
-                .OfType<LayerItem>()
-                .Select(x => x.Item.Value)
-                .OfType<ConnectorBaseViewModel>()
-                .SelectMany(x => new[] { x.SnapPoint0VM.Value, x.SnapPoint1VM.Value })
-                .Select(x => x.IsSelected.ToUnit())
-                .Merge())
+            .Select(_ => 
+            {
+                var snapPoints = Children.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                    .OfType<LayerItem>()
+                    .Select(x => x.Item.Value)
+                    .OfType<ConnectorBaseViewModel>()
+                    .SelectMany(x => new[] { x.SnapPoint0VM.Value, x.SnapPoint1VM.Value })
+                    .ToArray();
+                    
+                if (snapPoints.Length > 0)
+                {
+                    var observables = snapPoints.Select(snapPoint => snapPoint.IsSelected.ToUnit()).ToArray();
+                    return observables.Length > 0 ? R3.Observable.Merge(observables) : R3.Observable.Return(Unit.Default);
+                }
+                return R3.Observable.Return(Unit.Default);
+            })
             .Switch();
+            
         var ox3 = Children.CollectionChangedAsObservable()
-            .Select(_ => Children.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
-                .OfType<LayerItem>()
-                .Select(x => x.Item.Value)
-                .Select(x => x.IsSelected.ToUnit())
-                .Merge())
+            .Select(_ => 
+            {
+                var layerItems = Children.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                    .OfType<LayerItem>()
+                    .ToArray();
+                    
+                if (layerItems.Length > 0)
+                {
+                    var observables = layerItems.Select(item => item.Item.Value.IsSelected.ToUnit()).ToArray();
+                    return observables.Length > 0 ? R3.Observable.Merge(observables) : R3.Observable.Return(Unit.Default);
+                }
+                return R3.Observable.Return(Unit.Default);
+            })
             .Switch();
-        return ox1.Merge(ox2).Merge(ox3);
+            
+        return R3.Observable.Merge<Unit>(ox1, ox2, ox3);
     }
 
     public void AddItem(MainWindowViewModel mainWindowViewModel, DiagramViewModel diagramViewModel,
         SelectableDesignerItemViewModelBase item, string layerItemName = null)
     {
+        Debug.WriteLine($"=== LayerTreeViewItemBase.AddItem START ===");
+        Debug.WriteLine($"Layer: {Name.Value}");
+        Debug.WriteLine($"Item: {item}");
+        Debug.WriteLine($"LayerItemName: {layerItemName ?? "null"}");
+
         if (layerItemName == null) layerItemName = Helpers.Name.GetNewLayerItemName(diagramViewModel);
+        Debug.WriteLine($"Final layerItemName: {layerItemName}");
+
         var layerItem = new LayerItem(item, this, layerItemName);
+        Debug.WriteLine($"Created LayerItem: {layerItem}");
+
         layerItem.IsVisible.Value = true;
         layerItem.Parent.Value = this;
         var rand = new Random();
         layerItem.Color.Value = Randomizer.RandomColor(rand);
+
+        Debug.WriteLine($"Children count before ExecuteAdd: {Children.Count}");
+        Debug.WriteLine($"About to call ExecuteAdd...");
+
         mainWindowViewModel.Recorder.Current.ExecuteAdd(Children, layerItem);
+
+        Debug.WriteLine($"Children count after ExecuteAdd: {Children.Count}");
+
+        //ダーティとしてアイテムをマーク
+        diagramViewModel.Renderer.MarkItemDirty(item);
+
+        Debug.WriteLine("=== LayerTreeViewItemBase.AddItem END ===");
     }
 
     public void AddItem(MainWindowViewModel mainWindowVM, DiagramViewModel diagramViewModel, LayerItem item)
@@ -237,7 +469,7 @@ public abstract class LayerTreeViewItemBase : BindableBase, IDisposable, IObserv
 
     public void RemoveItem(MainWindowViewModel mainWindowViewModel, SelectableDesignerItemViewModelBase item)
     {
-        var layerItems = Children.Where(x => (x as LayerItem).Item.Value == item);
+        var layerItems = Children.AsValueEnumerable().Where(x => (x as LayerItem).Item.Value == item);
         layerItems.ToList().ForEach(x =>
         {
             mainWindowViewModel.Recorder.Current.ExecuteRemove(Children, x);
@@ -247,7 +479,7 @@ public abstract class LayerTreeViewItemBase : BindableBase, IDisposable, IObserv
 
     public void ChildrenSwitchIsHitTestVisible(bool isVisible)
     {
-        Children.ToList().ForEach(x =>
+        Children.AsValueEnumerable().ToList().ForEach(x =>
         {
             if (x is LayerItem layerItem)
             {
@@ -262,7 +494,7 @@ public abstract class LayerTreeViewItemBase : BindableBase, IDisposable, IObserv
 
     public void ChildrenSwitchVisibility(bool isVisible)
     {
-        Children.ToList().ForEach(x =>
+        Children.AsValueEnumerable().ToList().ForEach(x =>
         {
             x.IsVisible.Value = isVisible;
             x.ChildrenSwitchVisibility(isVisible);
@@ -335,9 +567,16 @@ public abstract class LayerTreeViewItemBase : BindableBase, IDisposable, IObserv
                 Color.Dispose();
                 BeforeSeparatorVisibility.Dispose();
                 AfterSeparatorVisibility.Dispose();
-                Children.Dispose();
-                LayerTreeViewItemContextMenu.Dispose();
+                Children.Dispose(); // This now uses the extension method
+                LayerTreeViewItemContextMenu.Dispose(); // This now uses the extension method
                 ChangeNameCommand.Dispose();
+                _disposable.Dispose();
+
+                // キャッシュをクリア
+                _cachedAllChildren?.Clear();
+                _cachedLayerItems?.Clear();
+                _cachedAllChildren = null;
+                _cachedLayerItems = null;
             }
 
             disposedValue = true;
@@ -347,8 +586,9 @@ public abstract class LayerTreeViewItemBase : BindableBase, IDisposable, IObserv
     public int GetNewZIndex(IEnumerable<LayerTreeViewItemBase> layers)
     {
         var layerItems = layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+            .AsValueEnumerable()
             .Where(x => x is LayerItem);
-        var zindexes = Children.Union(layerItems).Cast<LayerItem>().Select(x => x.Item.Value.ZIndex.Value);
+        var zindexes = Children.AsValueEnumerable().Union(layerItems).Cast<LayerItem>().Select(x => x.Item.Value.ZIndex.Value);
         if (zindexes.Count() == 0)
             return 0;
         return zindexes.Max() + 1;
@@ -356,7 +596,7 @@ public abstract class LayerTreeViewItemBase : BindableBase, IDisposable, IObserv
 
     public void PushZIndex(OperationRecorder recorder, int newZIndex)
     {
-        var targetChildren = Children.Cast<LayerItem>().Where(x => x.Item.Value.ZIndex.Value >= newZIndex);
+        var targetChildren = Children.AsValueEnumerable().Cast<LayerItem>().Where(x => x.Item.Value.ZIndex.Value >= newZIndex);
         foreach (var target in targetChildren)
             recorder.Current.ExecuteSetProperty(target.Item.Value, "ZIndex.Value", target.Item.Value.ZIndex.Value + 1);
     }
@@ -369,6 +609,45 @@ public abstract class LayerTreeViewItemBase : BindableBase, IDisposable, IObserv
         var zindex = foregroundZIndex;
         foreach (var child in Children) zindex = child.SetZIndex(recorder, zindex);
         return zindex;
+    }
+
+    // キャッシュを無効化するメソッド
+    protected void InvalidateCache()
+    {
+        _cacheInvalidated = true;
+        _cachedAllChildren = null;
+        _cachedLayerItems.Clear();
+        
+        // 親にも通知してキャッシュを無効化
+        Parent.Value?.InvalidateCache();
+    }
+
+    // キャッシュされた全子要素を取得
+    private List<LayerTreeViewItemBase> GetCachedAllChildren()
+    {
+        if (_cacheInvalidated || _cachedAllChildren == null)
+        {
+            _cachedAllChildren = Children
+                .SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(xx => xx.Children)
+                .AsValueEnumerable()
+                .ToList();
+            _cacheInvalidated = false;
+        }
+        return _cachedAllChildren;
+    }
+
+    // 特定のLayerの子LayerItemsをキャッシュ付きで取得
+    private List<LayerItem> GetCachedLayerItems(LayerTreeViewItemBase layer)
+    {
+        if (!_cachedLayerItems.ContainsKey(layer) || _cacheInvalidated)
+        {
+            _cachedLayerItems[layer] = layer.Children
+                .SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children)
+                .AsValueEnumerable()
+                .OfType<LayerItem>()
+                .ToList();
+        }
+        return _cachedLayerItems[layer];
     }
 
     public class LayerTreeViewItemBaseDisposable : IDisposable

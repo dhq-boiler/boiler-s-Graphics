@@ -1,20 +1,19 @@
-﻿using boilersGraphics.Models;
+﻿using boilersGraphics.Extensions;
+using boilersGraphics.Models;
 using boilersGraphics.ViewModels;
 using boilersGraphics.ViewModels.ColorCorrect;
-using Reactive.Bindings;
+using ObservableCollections;
+using R3;
 using Rulyotano.Math.Interpolation.Bezier;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Linq;
-using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using boilersGraphics.Extensions;
+using ZLinq;
 using Point = Rulyotano.Math.Geometry.Point;
 
 namespace boilersGraphics.Views
@@ -39,14 +38,14 @@ namespace boilersGraphics.Views
 
         #endregion
 
-        public ReactiveCollection<InOutPair> AllScales
+        public NotifyCollectionChangedSynchronizedViewList<InOutPair> AllScales
         {
-            get { return (ReactiveCollection<InOutPair>)GetValue(AllScalesProperty); }
+            get { return (NotifyCollectionChangedSynchronizedViewList<InOutPair>)GetValue(AllScalesProperty); }
             set { SetValue(AllScalesProperty, value); }
         }
 
         public static readonly DependencyProperty AllScalesProperty =
-            DependencyProperty.Register("AllScales", typeof(ReactiveCollection<InOutPair>),
+            DependencyProperty.Register("AllScales", typeof(NotifyCollectionChangedSynchronizedViewList<InOutPair>),
                 typeof(LandmarkControl), new PropertyMetadata(null));
 
         public List<InOutPair> Scales
@@ -86,7 +85,7 @@ namespace boilersGraphics.Views
             {
                 var window = System.Windows.Window.GetWindow(landmarkControl);
                 landmarkControl.SetPathData(window);
-                var toneCurve = window.EnumerateChildOfType<Views.ColorCorrect.ToneCurve>().First();
+                var toneCurve = window.EnumerateChildOfType<Views.ColorCorrect.ToneCurve>().AsValueEnumerable().First();
                 var dataContext = toneCurve.DataContext as ToneCurveViewModel;
                 (dataContext.ViewModel.Value as ColorCorrectViewModel).Curves = dataContext.Curves;
                 (dataContext.ViewModel.Value as ColorCorrectViewModel).Render();
@@ -121,7 +120,7 @@ namespace boilersGraphics.Views
                 return;
             var window = System.Windows.Window.GetWindow(landmarkControl);
             landmarkControl.SetPathData(window);
-            var toneCurve = window.EnumerateChildOfType<Views.ColorCorrect.ToneCurve>().First();
+            var toneCurve = window.EnumerateChildOfType<Views.ColorCorrect.ToneCurve>().AsValueEnumerable().First();
             var dataContext = toneCurve.DataContext as ToneCurveViewModel;
             (dataContext.ViewModel.Value as ColorCorrectViewModel).Render();
         }
@@ -140,7 +139,7 @@ namespace boilersGraphics.Views
             InitializeComponent();
 
             Scales = new List<InOutPair>();
-            AllScales = new ReactiveCollection<InOutPair>();
+            AllScales = new ObservableList<InOutPair>().ToWritableNotifyCollectionChanged();
         }
 
         private System.Windows.Point ConvertToVisualPoint(Point p)
@@ -157,12 +156,12 @@ namespace boilersGraphics.Views
 
             foreach (var point in Points)
             {
-                var pointProperties = point.GetType().GetProperties();
+                var pointProperties = point.GetType().GetProperties().AsValueEnumerable();
                 if (pointProperties.All(p => p.Name != "X") ||
                 pointProperties.All(p => p.Name != "Y"))
                     continue;
-                var x = (float)(point.GetType().GetProperty("X").GetValue(point, new object[] { }) as ReactivePropertySlim<double>).Value;
-                var y = (float)(point.GetType().GetProperty("Y").GetValue(point, new object[] { }) as ReactivePropertySlim<double>).Value; 
+                var x = (float)(point.GetType().GetProperty("X").GetValue(point, new object[] { }) as BindableReactiveProperty<double>).Value;
+                var y = (float)(point.GetType().GetProperty("Y").GetValue(point, new object[] { }) as BindableReactiveProperty<double>).Value; 
                 points.Add(new Point(x, y));
             }
 
@@ -171,11 +170,11 @@ namespace boilersGraphics.Views
 
             _myPathSegmentCollection = new PathSegmentCollection();
 
-            var myPathFigure = new PathFigure { StartPoint = ConvertToVisualPoint(points.FirstOrDefault()) };
+            var myPathFigure = new PathFigure { StartPoint = ConvertToVisualPoint(points.AsValueEnumerable().FirstOrDefault()) };
 
             var bezierSegments = BezierInterpolation.PointsToBezierCurves(points, IsClosedCurve);
 
-            if (bezierSegments == null || bezierSegments.Count < 1)
+            if (bezierSegments == null || bezierSegments.Segments.AsValueEnumerable().Count() < 1)
             {
                 //Add a line segment <this is generic for more than one line>
                 foreach (var point in points.GetRange(1, points.Count - 1))
@@ -187,7 +186,7 @@ namespace boilersGraphics.Views
             }
             else
             {
-                foreach (var bezierCurveSegment in bezierSegments)
+                foreach (var bezierCurveSegment in bezierSegments.Segments)
                 {
                     var segment = new BezierSegment
                     {
@@ -210,7 +209,7 @@ namespace boilersGraphics.Views
             path.Data = myPathGeometry;
 
             var inoutPairs = InOutPairs;
-            var allScales = new ReactiveCollection<InOutPair>();
+            var allScales = new ObservableList<InOutPair>().ToWritableNotifyCollectionChanged();
             var ret = new List<InOutPair>();
 
             foreach (var pair in inoutPairs)
@@ -226,7 +225,7 @@ namespace boilersGraphics.Views
             AllScales = allScales;
             Scales = ret;
             
-            var toneCurve = window.EnumerateChildOfType<Views.ColorCorrect.ToneCurve>().First();
+            var toneCurve = window.EnumerateChildOfType<Views.ColorCorrect.ToneCurve>().AsValueEnumerable().First();
             var dataContext = toneCurve.DataContext as ToneCurveViewModel;
             dataContext.TargetCurve.Value.InOutPairs = AllScales;
             dataContext.ViewModel.Value.TargetCurve.Value = dataContext.TargetCurve.Value;
@@ -238,7 +237,7 @@ namespace boilersGraphics.Views
             get
             {
                 var myPathGeometry = path.Data as PathGeometry;
-                var myPathFigureCollection = myPathGeometry.Figures;
+                var myPathFigureCollection = myPathGeometry.Figures.AsValueEnumerable();
                 var myPathFigure = myPathFigureCollection.First();
                 var segments = myPathFigure.Segments;
 
@@ -246,11 +245,11 @@ namespace boilersGraphics.Views
                 for (int x = 0; x <= byte.MaxValue; x++)
                 {
                     Point P0 = default(Point);
-                    foreach (BezierSegment segment in _myPathSegmentCollection.OfType<BezierSegment>())
+                    foreach (BezierSegment segment in _myPathSegmentCollection.AsValueEnumerable().OfType<BezierSegment>())
                     {
-                        if (segment == segments.First())
+                        if (segment == segments.AsValueEnumerable().First())
                         {
-                            P0 = Points.First().ToPoint();
+                            P0 = Points.AsValueEnumerable().First().ToPoint();
                         }
                         else
                         {
@@ -272,7 +271,7 @@ namespace boilersGraphics.Views
                         double y = Math.Round(Math.Pow(1 - t, 3) * P0.Y + 3 * Math.Pow(1 - t, 2) * t * P1.Y + 3 * (1 - t) * Math.Pow(t, 2) * P2.Y + Math.Pow(t, 3) * P3.Y);
                         if (y >= byte.MinValue && y <= byte.MaxValue)
                         {
-                            if (!ret.Any(a => a.In == x))
+                            if (!ret.AsValueEnumerable().Any(a => a.In == x))
                             {
                                 ret.Add(new InOutPair(x, (int)y));
                                 break;

@@ -1,8 +1,8 @@
-﻿using System;
+﻿using boilersGraphics.ViewModels;
+using System;
 using System.Globalization;
-using System.Linq;
 using System.Windows.Data;
-using boilersGraphics.ViewModels;
+using ZLinq;
 
 namespace boilersGraphics.Converters;
 
@@ -10,8 +10,8 @@ internal class StraightLineBaseShiftConverter : IMultiValueConverter
 {
     public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
     {
-        var x = (double)values.ElementAt(0);
-        var viewModel = (ConnectorBaseViewModel)values.ElementAt(1);
+        var x = (double)values.AsValueEnumerable().ElementAt(0);
+        var viewModel = (ConnectorBaseViewModel)values.AsValueEnumerable().ElementAt(1);
         double temp = 0;
         if (parameter.ToString().StartsWith("X"))
             temp = viewModel.LeftTop.Value.X;

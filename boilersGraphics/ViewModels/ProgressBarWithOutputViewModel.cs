@@ -2,15 +2,13 @@
 using boilersGraphics.Properties;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
-using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
+using R3;
 using System;
-using System.Linq;
-using System.Reactive.Disposables;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
+using ZLinq;
 
 namespace boilersGraphics.ViewModels
 {
@@ -27,7 +25,7 @@ namespace boilersGraphics.ViewModels
                 {
                     var windows = new Window[App.Current.Windows.Count];
                     App.Current.Windows.CopyTo(windows, 0);
-                    _scrollViewer = windows.OfType<Prism.Services.Dialogs.DialogWindow>()
+                    _scrollViewer = windows.AsValueEnumerable().OfType<Prism.Services.Dialogs.DialogWindow>()
                     .Select(x =>
                     {
                         return x.GetVisualChild<ScrollViewer>();
@@ -66,9 +64,9 @@ namespace boilersGraphics.ViewModels
         public string Title => Resources.Title_NowLoading;
         public event Action<IDialogResult>? RequestClose;
 
-        public ReactivePropertySlim<double> Maximum { get; } = new ReactivePropertySlim<double>(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe);
-        public ReactivePropertySlim<double> Current { get; } = new ReactivePropertySlim<double>(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe);
-        public ReactivePropertySlim<string> Output { get; } = new ReactivePropertySlim<string>(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe);
+        public BindableReactiveProperty<double> Maximum { get; } = new BindableReactiveProperty<double>();
+        public BindableReactiveProperty<double> Current { get; } = new BindableReactiveProperty<double>();
+        public BindableReactiveProperty<string> Output { get; } = new BindableReactiveProperty<string>();
         public Func<ProgressBarWithOutputViewModel, Task> Action { get; set; }
         public ReactiveCommand<RoutedEventArgs> ScrollCommand { get; } = new();
 

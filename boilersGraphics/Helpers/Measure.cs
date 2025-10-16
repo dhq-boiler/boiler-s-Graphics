@@ -1,7 +1,7 @@
-﻿using System;
+﻿using boilersGraphics.ViewModels;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using boilersGraphics.ViewModels;
+using ZLinq;
 
 namespace boilersGraphics.Helpers;
 
@@ -9,7 +9,7 @@ public static class Measure
 {
     public static double GetWidth(IEnumerable<SelectableDesignerItemViewModelBase> items, out double minX, out double maxX)
     {
-        if (items.Count() == 0) throw new ArgumentException("items.Count() > 0");
+        if (items.AsValueEnumerable().Count() == 0) throw new ArgumentException("items.Count() > 0");
         minX = double.MaxValue;
         maxX = 0d;
         foreach (var item in items)
@@ -37,7 +37,7 @@ public static class Measure
     public static double GetHeight(IEnumerable<SelectableDesignerItemViewModelBase> items, out double minY,
         out double maxY)
     {
-        if (items.Count() == 0) throw new ArgumentException("items.Count() > 0");
+        if (items.AsValueEnumerable().Count() == 0) throw new ArgumentException("items.Count() > 0");
         minY = double.MaxValue;
         maxY = 0d;
         foreach (var item in items)

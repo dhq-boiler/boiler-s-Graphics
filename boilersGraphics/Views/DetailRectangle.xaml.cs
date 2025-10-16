@@ -1,5 +1,5 @@
-﻿using System.Windows.Controls;
-using Prism.Regions;
+﻿using Prism.Regions;
+using System.Windows.Controls;
 
 namespace boilersGraphics.Views;
 

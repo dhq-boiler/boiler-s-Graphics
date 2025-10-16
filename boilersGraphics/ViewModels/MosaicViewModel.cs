@@ -7,11 +7,9 @@ using OpenCvSharp.WpfExtensions;
 using Prism.Ioc;
 using Prism.Services.Dialogs;
 using Prism.Unity;
-using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
+using R3;
 using System;
 using System.Collections.Generic;
-using System.Reactive.Disposables;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -35,15 +33,15 @@ public class MosaicViewModel : EffectViewModel
         RowPixels.Subscribe(_ => { Render(); }).AddTo(_CompositeDisposable);
     }
 
-    public ReactivePropertySlim<WriteableBitmap> Bitmap { get; } = new();
-    public ReactivePropertySlim<double> ColumnPixels { get; } = new(30d);
-    public ReactivePropertySlim<double> RowPixels { get; } = new(30d);
+    public BindableReactiveProperty<WriteableBitmap> Bitmap { get; } = new();
+    public BindableReactiveProperty<double> ColumnPixels { get; } = new(30d);
+    public BindableReactiveProperty<double> RowPixels { get; } = new(30d);
 
-    public ReactivePropertySlim<string> Source { get; }
+    public BindableReactiveProperty<string> Source { get; }
 
-    public ReadOnlyReactivePropertySlim<IList<byte>> Bytecode { get; }
+    public IReadOnlyBindableReactiveProperty<IList<byte>> Bytecode { get; }
 
-    public ReadOnlyReactivePropertySlim<string> ErrorMessage { get; }
+    public IReadOnlyBindableReactiveProperty<string> ErrorMessage { get; }
 
     public override bool SupportsPropertyDialog => true;
 
@@ -54,7 +52,7 @@ public class MosaicViewModel : EffectViewModel
         Application.Current.Dispatcher.Invoke(() =>
         {
             var mainWindowViewModel = Application.Current.MainWindow.DataContext as MainWindowViewModel;
-            var renderer = new EffectRenderer(new WpfVisualTreeHelper());
+            var renderer = new EffectRenderer(new WpfVisualTreeHelper(), DiagramViewModel.Instance.Renderer.GetCache());
             var rtb = renderer.Render(Rect.Value, Application.Current.MainWindow.GetChildOfType<DesignerCanvas>(),
                 mainWindowViewModel.DiagramViewModel, mainWindowViewModel.DiagramViewModel.BackgroundItem.Value, this, 0, this.ZIndex.Value - 1);
             var newFormattedBitmapSource = new FormatConvertedBitmap();
@@ -70,6 +68,8 @@ public class MosaicViewModel : EffectViewModel
                 Bitmap.Value = dest.ToWriteableBitmap();
                 UpdateLayout();
             }
+
+            renderer?.MarkItemDirty(this);
         });
     }
 
@@ -200,7 +200,7 @@ public class MosaicViewModel : EffectViewModel
     {
         var compositeDisposable = new CompositeDisposable();
         base.BeginMonitor(action).AddTo(compositeDisposable);
-        this.ObserveProperty(x => x.Bitmap).Subscribe(_ => action()).AddTo(compositeDisposable);
+        this.ObservePropertyChanged(x => x.Bitmap).Subscribe(_ => action()).AddTo(compositeDisposable);
         return compositeDisposable;
     }
 }

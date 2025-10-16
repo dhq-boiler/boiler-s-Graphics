@@ -1,15 +1,15 @@
-﻿using System;
-using System.Linq;
-using System.Windows;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using boilersGraphics.Controls;
+﻿using boilersGraphics.Controls;
 using boilersGraphics.Dao;
 using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
 using boilersGraphics.Models;
 using boilersGraphics.ViewModels;
+using System;
+using System.Windows;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using ZLinq;
 
 namespace boilersGraphics.Adorners;
 
@@ -135,7 +135,7 @@ internal class EllipseAdorner : Adorner
             item.EdgeThickness.Value = item.Owner.EdgeThickness.Value.Value;
             item.FillBrush.Value = item.Owner.FillBrush.Value.Clone();
             item.ZIndex.Value = item.Owner.Layers
-                .SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).Count();
+                .SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).AsValueEnumerable().Count();
             item.PathGeometryNoRotate.Value = GeometryCreator.CreateEllipse(item);
             item.IsSelected.Value = true;
             item.IsVisible.Value = true;

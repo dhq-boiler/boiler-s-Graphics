@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using boilersGraphics.Dao.Migration.Version;
+﻿using boilersGraphics.Dao.Migration.Version;
 using Homura.ORM.Migration;
+using System.Collections.Generic;
 
 namespace boilersGraphics.Dao.Migration.Plan;
 

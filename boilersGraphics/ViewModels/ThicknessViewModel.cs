@@ -1,9 +1,7 @@
-﻿using System;
-using System.Reactive.Disposables;
-using Prism.Mvvm;
+﻿using Prism.Mvvm;
 using Prism.Services.Dialogs;
-using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
+using System;
+using R3;
 
 namespace boilersGraphics.ViewModels;
 
@@ -23,10 +21,10 @@ public class ThicknessViewModel : BindableBase, IDialogAware
 
     public static double StaticTop { get; set; }
 
-    public ReactivePropertySlim<BrushViewModel> ViewModel { get; } = new();
+    public BindableReactiveProperty<BrushViewModel> ViewModel { get; } = new();
 
-    public ReactivePropertySlim<double> Left { get; } = new();
-    public ReactivePropertySlim<double> Top { get; } = new();
+    public BindableReactiveProperty<double> Left { get; } = new();
+    public BindableReactiveProperty<double> Top { get; } = new();
 
     public string Title => "ブラシの太さ";
 

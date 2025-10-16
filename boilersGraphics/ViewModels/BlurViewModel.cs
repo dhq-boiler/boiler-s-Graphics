@@ -7,11 +7,9 @@ using OpenCvSharp.WpfExtensions;
 using Prism.Ioc;
 using Prism.Services.Dialogs;
 using Prism.Unity;
-using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
+using R3;
 using System;
 using System.Collections.Generic;
-using System.Reactive.Disposables;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -36,16 +34,16 @@ public class BlurEffectViewModel : EffectViewModel
         KernelHeight.Subscribe(_ => { Render(); }).AddTo(_CompositeDisposable);
     }
 
-    public ReactivePropertySlim<WriteableBitmap> Bitmap { get; } = new();
-    public ReactivePropertySlim<double> KernelWidth { get; } = new(111d);
-    public ReactivePropertySlim<double> KernelHeight { get; } = new(111d);
-    public ReactivePropertySlim<double> Sigma { get; } = new(16d);
+    public BindableReactiveProperty<WriteableBitmap> Bitmap { get; } = new();
+    public BindableReactiveProperty<double> KernelWidth { get; } = new(111d);
+    public BindableReactiveProperty<double> KernelHeight { get; } = new(111d);
+    public BindableReactiveProperty<double> Sigma { get; } = new(16d);
 
-    public ReactivePropertySlim<string> Source { get; }
+    public BindableReactiveProperty<string> Source { get; }
 
-    public ReadOnlyReactivePropertySlim<IList<byte>> Bytecode { get; }
+    public IReadOnlyBindableReactiveProperty<IList<byte>> Bytecode { get; }
 
-    public ReadOnlyReactivePropertySlim<string> ErrorMessage { get; }
+    public IReadOnlyBindableReactiveProperty<string> ErrorMessage { get; }
 
     public override bool SupportsPropertyDialog => true;
 
@@ -53,7 +51,7 @@ public class BlurEffectViewModel : EffectViewModel
     {
         if (Width.Value <= 0 || Height.Value <= 0) return;
 
-        var renderer = new EffectRenderer(new WpfVisualTreeHelper());
+        var renderer = new EffectRenderer(new WpfVisualTreeHelper(), DiagramViewModel.Instance.Renderer.GetCache());
         var rtb = renderer.Render(new Rect(Left.Value, Top.Value, Width.Value, Height.Value),
             Application.Current.MainWindow.GetChildOfType<DesignerCanvas>(),
             (Application.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel,
@@ -83,6 +81,8 @@ public class BlurEffectViewModel : EffectViewModel
         Cv2.GaussianBlur(mat, dest, new Size(KernelWidth.Value, KernelHeight.Value), Sigma.Value);
         Bitmap.Value = dest.ToWriteableBitmap();
         UpdateLayout();
+
+        renderer?.MarkItemDirty(this);
     }
 
     public override async Task OnRectChanged(Rect rect)
@@ -132,7 +132,7 @@ public class BlurEffectViewModel : EffectViewModel
     {
         var compositeDisposable = new CompositeDisposable();
         base.BeginMonitor(action).AddTo(compositeDisposable);
-        this.ObserveProperty(x => x.Bitmap).Subscribe(_ => action()).AddTo(compositeDisposable);
+        this.ObservePropertyChanged(x => x.Bitmap).Subscribe(_ => action()).AddTo(compositeDisposable);
         return compositeDisposable;
     }
 }

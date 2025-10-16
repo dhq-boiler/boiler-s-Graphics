@@ -1,20 +1,18 @@
-﻿using System;
-using System.Diagnostics;
-using System.IO;
-using System.Net;
-using System.Reactive.Disposables;
-using System.Reflection;
-using System.Threading.Tasks;
-using System.Windows;
-using Windows.Services.Store;
-using boilersGraphics.Dao;
+﻿using boilersGraphics.Dao;
 using boilersGraphics.Exceptions;
 using boilersGraphics.Properties;
 using NLog;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
-using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
+using System;
+using System.Diagnostics;
+using System.IO;
+using System.Net;
+using System.Reflection;
+using System.Threading.Tasks;
+using System.Windows;
+using Windows.Services.Store;
+using R3;
 
 namespace boilersGraphics.ViewModels;
 
@@ -29,7 +27,7 @@ public class VersionViewModel : BindableBase, IDialogAware
         Version.Value = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion;
         License.Value = LicenseReadToEnd();
         Markdown.Value = LicenseMdReadToEnd();
-        OKCommand.Subscribe(() =>
+        OKCommand.Subscribe(_ =>
             {
                 var result = new DialogResult(ButtonResult.OK);
                 RequestClose.Invoke(result);
@@ -39,15 +37,15 @@ public class VersionViewModel : BindableBase, IDialogAware
         InitializeLicenseMessage();
     }
 
-    public ReactivePropertySlim<string> Version { get; } = new();
+    public BindableReactiveProperty<string> Version { get; } = new();
 
-    public ReactivePropertySlim<string> License { get; } = new();
+    public BindableReactiveProperty<string> License { get; } = new();
 
-    public ReactivePropertySlim<string> Markdown { get; } = new();
+    public BindableReactiveProperty<string> Markdown { get; } = new();
 
     public ReactiveCommand OKCommand { get; } = new();
 
-    public ReactivePropertySlim<string> LicenseMessage { get; } = new();
+    public BindableReactiveProperty<string> LicenseMessage { get; } = new();
     public string Title => Resources.Dialog_Title_Version;
 
     public event Action<IDialogResult> RequestClose;

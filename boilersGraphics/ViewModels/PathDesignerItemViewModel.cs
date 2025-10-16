@@ -2,13 +2,13 @@
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using Reactive.Bindings;
+using ObservableCollections;
 
 namespace boilersGraphics.ViewModels;
 
 public class PathDesignerItemViewModel : DesignerItemViewModelBase
 {
-    public ReactiveCollection<Point> Points { get; } = new();
+    public NotifyCollectionChangedSynchronizedViewList<Point> Points { get; } = new ObservableList<Point>().ToWritableNotifyCollectionChanged();
 
     public override bool SupportsPropertyDialog => false;
 

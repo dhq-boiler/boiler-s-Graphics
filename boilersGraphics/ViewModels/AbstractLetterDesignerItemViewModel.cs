@@ -1,10 +1,9 @@
-﻿using System;
+﻿using boilersGraphics.Models;
+using System;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using boilersGraphics.Models;
-using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
+using R3;
 
 namespace boilersGraphics.ViewModels;
 
@@ -21,19 +20,19 @@ public abstract class AbstractLetterDesignerItemViewModel : DesignerItemViewMode
         Init();
     }
 
-    public ReactivePropertySlim<bool> LetterSettingDialogIsOpen { get; } = new();
+    public BindableReactiveProperty<bool> LetterSettingDialogIsOpen { get; } = new();
 
-    public ReactivePropertySlim<string> LetterString { get; } = new(string.Empty);
+    public BindableReactiveProperty<string> LetterString { get; } = new(string.Empty);
 
-    public ReactivePropertySlim<FontFamilyEx> SelectedFontFamily { get; } = new();
+    public BindableReactiveProperty<FontFamilyEx> SelectedFontFamily { get; } = new();
 
-    public ReactivePropertySlim<bool> IsBold { get; } = new();
+    public BindableReactiveProperty<bool> IsBold { get; } = new();
 
-    public ReactivePropertySlim<bool> IsItalic { get; } = new();
+    public BindableReactiveProperty<bool> IsItalic { get; } = new();
 
-    public ReactivePropertySlim<int> FontSize { get; } = new();
+    public BindableReactiveProperty<int> FontSize { get; } = new();
 
-    public ReactivePropertySlim<bool> IsAutoLineBreak { get; } = new();
+    public BindableReactiveProperty<bool> IsAutoLineBreak { get; } = new();
 
     public ReactiveCommand GotFocusCommand { get; } = new();
     public ReactiveCommand LostFocusCommand { get; } = new();
@@ -57,25 +56,25 @@ public abstract class AbstractLetterDesignerItemViewModel : DesignerItemViewMode
             })
             .AddTo(_CompositeDisposable);
         ShowConnectors = false;
-        this.ObserveProperty(x => x.LetterString.Value)
+        this.ObservePropertyChanged(x => x.LetterString.Value)
             .Subscribe(_ => RenderLetter())
             .AddTo(_CompositeDisposable);
-        this.ObserveProperty(x => x.SelectedFontFamily.Value)
+        this.ObservePropertyChanged(x => x.SelectedFontFamily.Value)
             .Subscribe(_ => RenderLetter())
             .AddTo(_CompositeDisposable);
-        this.ObserveProperty(x => x.IsBold.Value)
+        this.ObservePropertyChanged(x => x.IsBold.Value)
             .Subscribe(_ => RenderLetter())
             .AddTo(_CompositeDisposable);
-        this.ObserveProperty(x => x.IsItalic.Value)
+        this.ObservePropertyChanged(x => x.IsItalic.Value)
             .Subscribe(_ => RenderLetter())
             .AddTo(_CompositeDisposable);
-        this.ObserveProperty(x => x.FontSize.Value)
+        this.ObservePropertyChanged(x => x.FontSize.Value)
             .Subscribe(_ => RenderLetter())
             .AddTo(_CompositeDisposable);
-        this.ObserveProperty(x => x.Width.Value)
+        this.ObservePropertyChanged(x => x.Width.Value)
             .Subscribe(_ => RenderLetter())
             .AddTo(_CompositeDisposable);
-        this.ObserveProperty(x => x.IsAutoLineBreak.Value)
+        this.ObservePropertyChanged(x => x.IsAutoLineBreak.Value)
             .Subscribe(_ => RenderLetter())
             .AddTo(_CompositeDisposable);
         UpdatingStrategy.Value = PathGeometryUpdatingStrategy.Initial;

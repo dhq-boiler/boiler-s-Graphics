@@ -1,10 +1,10 @@
-﻿using System.Diagnostics;
+﻿using OpenCvSharp;
+using OpenCvSharp.WpfExtensions;
+using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using OpenCvSharp;
-using OpenCvSharp.WpfExtensions;
 using Point = System.Windows.Point;
 using Rect = System.Windows.Rect;
 using Size = System.Windows.Size;

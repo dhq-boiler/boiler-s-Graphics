@@ -1,6 +1,6 @@
-﻿using System.Windows;
+﻿using boilersGraphics.Extensions;
+using System.Windows;
 using System.Windows.Controls;
-using boilersGraphics.Extensions;
 
 namespace boilersGraphics.Controls;
 

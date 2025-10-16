@@ -1,6 +1,6 @@
-﻿using System.Windows.Input;
-using Prism.Mvvm;
-using Reactive.Bindings;
+﻿using Prism.Mvvm;
+using System.Windows.Input;
+using R3;
 
 namespace boilersGraphics.Helpers;
 
@@ -24,10 +24,10 @@ public class ToolItemData : BindableBase
     }
 
     //public string Name { get; private set; }
-    public ReactivePropertySlim<string> Name { get; } = new();
+    public BindableReactiveProperty<string> Name { get; } = new();
     public string ImageUrl { get; }
     public ICommand Command { get; }
-    public ReactivePropertySlim<string> Tooltip { get; } = new();
+    public BindableReactiveProperty<string> Tooltip { get; } = new();
 
     public bool IsChecked
     {

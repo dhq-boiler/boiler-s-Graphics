@@ -2,7 +2,7 @@
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using Reactive.Bindings;
+using R3;
 
 namespace boilersGraphics.Views;
 
@@ -26,7 +26,7 @@ public partial class ColorSpot : UserControl
         Brush = Brushes.White;
     }
 
-    public ReactivePropertySlim<bool> IsSelected { get; } = new();
+    public BindableReactiveProperty<bool> IsSelected { get; } = new();
 
     public Brush Brush
     {

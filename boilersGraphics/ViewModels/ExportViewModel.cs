@@ -1,13 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
-using System.Windows;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using boilersGraphics.Controls;
+﻿using boilersGraphics.Controls;
 using boilersGraphics.Dao;
 using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
@@ -17,8 +8,14 @@ using Microsoft.Win32;
 using NLog;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
-using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
+using R3;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Windows;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using ZLinq;
 
 namespace boilersGraphics.ViewModels;
 
@@ -70,7 +67,7 @@ public class ExportViewModel : BindableBase, IDialogAware, IDisposable
                 designerCanvas.LayoutTransform = new MatrixTransform();
 
                 var backgroundItem = diagramViewModel.BackgroundItem.Value;
-                var renderer = new Renderer(new WpfVisualTreeHelper());
+                var renderer = DiagramViewModel.Instance.Renderer;
                 var rtb = renderer.Render(x, designerCanvas, diagramViewModel, backgroundItem, backgroundItem);
                 //OpenCvSharpHelper.ImShow("preview", rtb);
                 Preview.Value = rtb;
@@ -80,13 +77,13 @@ public class ExportViewModel : BindableBase, IDialogAware, IDisposable
             .AddTo(_disposables);
     }
 
-    public ReactivePropertySlim<string> Path { get; set; } = new();
+    public BindableReactiveProperty<string> Path { get; set; } = new();
 
-    public ReactivePropertySlim<int> QualityLevel { get; set; } = new(100);
+    public BindableReactiveProperty<int> QualityLevel { get; set; } = new(100);
 
-    public ReactivePropertySlim<Rect?> SliceRect { get; set; } = new();
+    public BindableReactiveProperty<Rect?> SliceRect { get; set; } = new();
 
-    public ReactivePropertySlim<RenderTargetBitmap> Preview { get; set; } = new();
+    public BindableReactiveProperty<RenderTargetBitmap> Preview { get; set; } = new();
 
     public ReactiveCommand PathFinderCommand { get; set; }
 
@@ -147,7 +144,7 @@ public class ExportViewModel : BindableBase, IDialogAware, IDisposable
             item.IsSelected.Value = false;
         }
 
-        foreach (var snapPointVM in diagramViewModel.AllItems.Value.OfType<SnapPointViewModel>())
+        foreach (var snapPointVM in diagramViewModel.AllItems.Value.AsValueEnumerable().OfType<SnapPointViewModel>())
             //一時的に非表示にする
             snapPointVM.Opacity.Value = 0;
 
@@ -162,7 +159,7 @@ public class ExportViewModel : BindableBase, IDialogAware, IDisposable
         DiagramViewModel diagramViewModel)
     {
         var backgroundItem = diagramViewModel.BackgroundItem.Value;
-        var renderer = new Renderer(new WpfVisualTreeHelper());
+        var renderer = DiagramViewModel.Instance.Renderer;
         var rtb = renderer.Render(SliceRect.Value, designerCanvas, diagramViewModel, backgroundItem, diagramViewModel.BackgroundItem.Value);
 
         //OpenCvSharpHelper.ImShow("test", rtb);
@@ -200,7 +197,7 @@ public class ExportViewModel : BindableBase, IDialogAware, IDisposable
             if (tempIsSelected.TryGetValue(item, out outIsSelected)) item.IsSelected.Value = outIsSelected;
         }
 
-        foreach (var snapPointVM in diagramViewModel.AllItems.Value.OfType<SnapPointViewModel>())
+        foreach (var snapPointVM in diagramViewModel.AllItems.Value.AsValueEnumerable().OfType<SnapPointViewModel>())
             //スナップポイントを半透明に復元する
             snapPointVM.Opacity.Value = 0.5;
 

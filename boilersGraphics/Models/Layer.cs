@@ -2,18 +2,19 @@
 using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
 using boilersGraphics.ViewModels;
+using OpenCvSharp;
 using Prism.Mvvm;
-using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
+using R3;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reactive.Concurrency;
-using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Threading;
+using ZLinq;
+using Point = System.Windows.Point;
+using Rect = System.Windows.Rect;
+using Size = System.Windows.Size;
 
 namespace boilersGraphics.Models;
 
@@ -35,7 +36,7 @@ public class Layer : LayerTreeViewItemBase, IObservable<LayerObservable>, ICompa
 
         if (!isPreview)
         {
-            var temp = Children.ObserveElementProperty(x => (x as LayerItem).Item.Value)
+            var temp = Children.ObserveElementObservableProperty(x => (x as LayerItem).Item.Value)
                 .ToUnit()
                 .Merge(Children.ObserveElementObservableProperty(x => x.IsSelected).ToUnit())
                 .ToUnit()
@@ -55,8 +56,13 @@ public class Layer : LayerTreeViewItemBase, IObservable<LayerObservable>, ICompa
                     !MainWindowViewModel.Instance.ToolBarViewModel.Behaviors.Contains(MainWindowViewModel.Instance
                         .ToolBarViewModel.BrushBehavior));
 
-            temp.ObserveOn(new DispatcherScheduler(Dispatcher.CurrentDispatcher, DispatcherPriority.ApplicationIdle))
-                .Subscribe(x => { UpdateAppearanceBothParentAndChild(); })
+            temp.ObserveOnCurrentSynchronizationContext()
+                .Subscribe(x =>
+                {
+                    DiagramViewModel.Instance.Renderer.InvalidateViewCache();
+                    InvalidateCache();
+                    UpdateAppearanceBothParentAndChildBatched();
+                })
                 .AddTo(_disposable);
         }
 
@@ -74,16 +80,16 @@ public class Layer : LayerTreeViewItemBase, IObservable<LayerObservable>, ICompa
             return 1;
         }
 
-        var otherInt = other.Children.OfType<LayerItem>().Max(x => x.Item.Value.ZIndex.Value);
-        return Children.OfType<LayerItem>().Max(x => x.Item.Value.ZIndex.Value).CompareTo(otherInt);
+        var otherInt = other.Children.AsValueEnumerable().OfType<LayerItem>().Max(x => x.Item.Value.ZIndex.Value);
+        return Children.AsValueEnumerable().OfType<LayerItem>().Max(x => x.Item.Value.ZIndex.Value).CompareTo(otherInt);
     }
 
     public int CompareTo(LayerTreeViewItemBase other)
     {
         if (other == null)
             return 1;
-        return Children.OfType<LayerItem>().Max(x => x.Item.Value.ZIndex.Value)
-            .CompareTo(other.OfType<LayerItem>().Max(x => x.Item.Value.ZIndex.Value));
+        return Children.AsValueEnumerable().OfType<LayerItem>().Max(x => x.Item.Value.ZIndex.Value)
+            .CompareTo(other.Children.OfType<LayerItem>().Max(x => x.Item.Value.ZIndex.Value));
     }
 
     public IDisposable Subscribe(IObserver<LayerObservable> observer)
@@ -93,15 +99,38 @@ public class Layer : LayerTreeViewItemBase, IObservable<LayerObservable>, ICompa
         return new LayerDisposable(this, observer);
     }
 
+    // レンダリング呼び出し制限用
+    private static readonly Dictionary<object, DateTime> _lastRenderTimes = new();
+    private static readonly TimeSpan _minRenderInterval = TimeSpan.FromMilliseconds(16); // 60FPS相当
+
+    public static bool ShouldRender(object key)
+    {
+        var now = DateTime.UtcNow;
+        if (_lastRenderTimes.TryGetValue(key, out var lastTime))
+        {
+            if (now - lastTime < _minRenderInterval)
+            {
+                return false; // まだ間隔が短いのでスキップ
+            }
+        }
+
+        _lastRenderTimes[key] = now;
+        return true;
+    }
+
     public override void UpdateAppearance(IEnumerable<SelectableDesignerItemViewModelBase> items, bool backgroundIncluded = false)
     {
-        if (!backgroundIncluded && items.Count() == 0)
+        if (!backgroundIncluded && items.AsValueEnumerable().Count() == 0)
             return;
+
+        if (!ShouldRender(this))
+            return; // 頻繁な更新をスキップ
+
         double minX, maxX, minY, maxY;
         var _items = items;
         if (backgroundIncluded)
         {
-            _items = _items.Union(new SelectableDesignerItemViewModelBase[] { DiagramViewModel.Instance.BackgroundItem.Value });
+            _items = _items.AsValueEnumerable().Union(new SelectableDesignerItemViewModelBase[] { DiagramViewModel.Instance.BackgroundItem.Value }).ToArray();
         }
         var width = Measure.GetWidth(_items, out minX, out maxX);
         var height = Measure.GetHeight(_items, out minY, out maxY);
@@ -110,11 +139,17 @@ public class Layer : LayerTreeViewItemBase, IObservable<LayerObservable>, ICompa
             return;
 
         Rect? sliceRect = null;
-        _items.Cast<IRect>().ToList().ForEach(x => sliceRect = (!sliceRect.HasValue ? x.Rect.Value : Rect.Union(sliceRect.Value, x.Rect.Value)));
-        var renderer = new Renderer(new WpfVisualTreeHelper());
-        
+        _items.AsValueEnumerable().Cast<IRect>().ToList().ForEach(x => sliceRect = (!sliceRect.HasValue ? x.Rect.Value : Rect.Union(sliceRect.Value, x.Rect.Value)));
+        var renderer = DiagramViewModel.Instance.Renderer;
+        var cache = renderer.GetCache();
+
+        // Dirtyなアイテムのみをフィルタリング
+        var dirtyItems = items.AsValueEnumerable()
+            .Where(item => cache.IsDirty(item))
+            .ToList();
+
         //背景オブジェクトを除く、アイテムがない場合
-        if (_items.Except(new SelectableDesignerItemViewModelBase[]{ DiagramViewModel.Instance.BackgroundItem.Value }).Count() == 0)
+        if (_items.AsValueEnumerable().Except(new SelectableDesignerItemViewModelBase[]{ DiagramViewModel.Instance.BackgroundItem.Value }).Count() == 0)
         {
             //アピアランスには背景オブジェクトのみをレンダリングする
             Appearance.Value = renderer.Render(sliceRect, DesignerCanvas.GetInstance(),
@@ -127,8 +162,14 @@ public class Layer : LayerTreeViewItemBase, IObservable<LayerObservable>, ICompa
             //アピアランスには背景オブジェクトを除いて、ZIndexが範囲内のオブジェクトのみをレンダリングする
             Appearance.Value = renderer.Render(sliceRect, DesignerCanvas.GetInstance(),
                 DiagramViewModel.Instance,
-                DiagramViewModel.Instance.BackgroundItem.Value, null, _items.Except(new SelectableDesignerItemViewModelBase[] { DiagramViewModel.Instance.BackgroundItem.Value }).Min(x => x.ZIndex.Value),
-                _items.Max(x => x.ZIndex.Value));
+                DiagramViewModel.Instance.BackgroundItem.Value, null, _items.AsValueEnumerable().Except(new SelectableDesignerItemViewModelBase[] { DiagramViewModel.Instance.BackgroundItem.Value }).Min(x => x.ZIndex.Value),
+                _items.AsValueEnumerable().Max(x => x.ZIndex.Value));
+        }
+
+        // レンダリング完了後、Dirtyフラグをクリア
+        foreach (var item in dirtyItems)
+        {
+            cache.ClearDirtyFlag(item);
         }
     }
 

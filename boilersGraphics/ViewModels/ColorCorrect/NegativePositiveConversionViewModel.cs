@@ -1,8 +1,7 @@
 ﻿using Prism.Mvvm;
 using Prism.Regions;
-using Reactive.Bindings;
 using System;
-using System.Reactive.Disposables;
+using R3;
 
 namespace boilersGraphics.ViewModels.ColorCorrect
 {
@@ -12,7 +11,7 @@ namespace boilersGraphics.ViewModels.ColorCorrect
 
         private bool _disposedValue;
 
-        public ReactivePropertySlim<ColorCorrectViewModel> ViewModel { get; } = new();
+        public BindableReactiveProperty<ColorCorrectViewModel> ViewModel { get; } = new();
 
         public void OnNavigatedTo(NavigationContext navigationContext)
         {

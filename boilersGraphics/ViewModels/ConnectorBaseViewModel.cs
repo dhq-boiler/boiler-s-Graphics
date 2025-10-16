@@ -1,14 +1,13 @@
 ﻿using boilersGraphics.Exceptions;
 using boilersGraphics.Helpers;
 using NLog;
-using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
+using R3;
 using System;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Media;
+using ObservableCollections;
+using ZLinq;
 
 namespace boilersGraphics.ViewModels;
 
@@ -26,12 +25,12 @@ public abstract class ConnectorBaseViewModel : SelectableDesignerItemViewModelBa
         Init();
     }
 
-    public ReactiveProperty<Point> LeftTop { get; set; }
+    public R3.BindableReactiveProperty<Point> LeftTop { get; set; }
 
-    public ReadOnlyReactivePropertySlim<double> Width { get; set; }
+    public R3.IReadOnlyBindableReactiveProperty<double> Width { get; set; }
 
-    public ReadOnlyReactivePropertySlim<double> Height { get; set; }
-    public ReadOnlyReactivePropertySlim<Rect> Rect { get; set; }
+    public R3.IReadOnlyBindableReactiveProperty<double> Height { get; set; }
+    public R3.IReadOnlyBindableReactiveProperty<Rect> Rect { get; set; }
 
     public ObservableCollection<Point> Points
     {
@@ -39,16 +38,16 @@ public abstract class ConnectorBaseViewModel : SelectableDesignerItemViewModelBa
         set => SetProperty(ref _Points, value);
     }
 
-    public ReadOnlyReactivePropertySlim<SnapPointViewModel> SnapPoint0VM { get; protected set; }
-    public ReadOnlyReactivePropertySlim<SnapPointViewModel> SnapPoint1VM { get; protected set; }
+    public IReadOnlyBindableReactiveProperty<SnapPointViewModel> SnapPoint0VM { get; protected set; }
+    public IReadOnlyBindableReactiveProperty<SnapPointViewModel> SnapPoint1VM { get; protected set; }
 
-    public ReactiveCollection<PenLineCap> PenLineCaps { get; private set; }
+    public NotifyCollectionChangedSynchronizedViewList<PenLineCap> PenLineCaps { get; private set; }
 
-    public ReactivePropertySlim<PenLineCap> StrokeStartLineCap { get; } = new();
+    public BindableReactiveProperty<PenLineCap> StrokeStartLineCap { get; } = new();
 
-    public ReactivePropertySlim<PenLineCap> StrokeEndLineCap { get; } = new();
+    public BindableReactiveProperty<PenLineCap> StrokeEndLineCap { get; } = new();
 
-    public ReadOnlyReactivePropertySlim<Thickness> ResizeHandleMargin { get; set; }
+    public IReadOnlyBindableReactiveProperty<Thickness> ResizeHandleMargin { get; set; }
 
     public virtual void PostProcess_AddPointP1(Point p1)
     {
@@ -60,24 +59,24 @@ public abstract class ConnectorBaseViewModel : SelectableDesignerItemViewModelBa
 
     public void AddPointP1(IDiagramViewModel diagramViewModel, Point p1)
     {
-        if (Points.Count() != 0)
+        if (Points.AsValueEnumerable().Count() != 0)
             throw new UnexpectedException("Points.Count() != 0");
         Points.Add(p1);
         SnapPoint0VM = Observable.Return(Points[0])
             .Select(x => new SnapPointViewModel(this, 0, diagramViewModel, x.X, x.Y, 3, 3))
-            .ToReadOnlyReactivePropertySlim();
+            .ToReadOnlyBindableReactiveProperty();
         LogManager.GetCurrentClassLogger().Debug($"{ID} AddPointP1 {p1}");
         PostProcess_AddPointP1(p1);
     }
 
     public void AddPointP2(IDiagramViewModel diagramViewModel, Point p2)
     {
-        if (Points.Count() != 1)
+        if (Points.AsValueEnumerable().Count() != 1)
             throw new UnexpectedException("Points.Count() != 1");
         Points.Add(p2);
         SnapPoint1VM = Observable.Return(Points[1])
             .Select(x => new SnapPointViewModel(this, 1, diagramViewModel, x.X, x.Y, 3, 3))
-            .ToReadOnlyReactivePropertySlim();
+            .ToReadOnlyBindableReactiveProperty();
         LogManager.GetCurrentClassLogger().Debug($"{ID} AddPointP2 {p2}");
         PostProcess_AddPointP2(p2);
     }
@@ -88,10 +87,10 @@ public abstract class ConnectorBaseViewModel : SelectableDesignerItemViewModelBa
         Points.Add(p2);
         SnapPoint0VM = Observable.Return(Points[0])
             .Select(x => new SnapPointViewModel(this, 0, diagramViewModel, x.X, x.Y, 3, 3))
-            .ToReadOnlyReactivePropertySlim();
+            .ToReadOnlyBindableReactiveProperty();
         SnapPoint1VM = Observable.Return(Points[1])
             .Select(x => new SnapPointViewModel(this, 1, diagramViewModel, x.X, x.Y, 3, 3))
-            .ToReadOnlyReactivePropertySlim();
+            .ToReadOnlyBindableReactiveProperty();
     }
 
     public void InitIsSelectedOnSnapPoints()
@@ -117,27 +116,27 @@ public abstract class ConnectorBaseViewModel : SelectableDesignerItemViewModelBa
     {
         _Points = new ObservableCollection<Point>();
         InitPathFinder();
-        LeftTop = Points.ObserveProperty(x => x.Count)
+        LeftTop = Points.ObservePropertyChanged(x => x.Count)
             .Where(x => x > 0)
-            .Select(_ => new Point(Points.Min(x => x.X), Points.Min(x => x.Y)))
-            .ToReactiveProperty();
-        Width = Points.ObserveProperty(x => x.Count)
+            .Select(_ => new Point(Points.AsValueEnumerable().Min(x => x.X), Points.AsValueEnumerable().Min(x => x.Y)))
+            .ToBindableReactiveProperty();
+        Width = Points.ObservePropertyChanged(x => x.Count)
             .Where(x => x > 0)
-            .Select(_ => Points.Max(x => x.X) - Points.Min(x => x.X))
-            .ToReadOnlyReactivePropertySlim();
-        Height = Points.ObserveProperty(x => x.Count)
+            .Select(_ => Points.AsValueEnumerable().Max(x => x.X) - Points.AsValueEnumerable().Min(x => x.X))
+            .ToReadOnlyBindableReactiveProperty();
+        Height = Points.ObservePropertyChanged(x => x.Count)
             .Where(x => x > 0)
-            .Select(_ => Points.Max(x => x.Y) - Points.Min(x => x.Y))
-            .ToReadOnlyReactivePropertySlim();
-        Rect = LeftTop.CombineLatest(Width, Height, (lt, width, height) => new Rect(lt, new Size(width, height)))
-            .ToReadOnlyReactivePropertySlim();
-        PenLineCaps = new ReactiveCollection<PenLineCap>();
+            .Select(_ => Points.AsValueEnumerable().Max(x => x.Y) - Points.AsValueEnumerable().Min(x => x.Y))
+            .ToReadOnlyBindableReactiveProperty();
+        Rect = LeftTop.CombineLatest(Width.AsObservable(), Height.AsObservable(), (lt, width, height) => new Rect(lt, new Size(width, height)))
+            .ToReadOnlyBindableReactiveProperty();
+        PenLineCaps = new ObservableList<PenLineCap>().ToWritableNotifyCollectionChanged();
         PenLineCaps.Add(PenLineCap.Flat);
         PenLineCaps.Add(PenLineCap.Round);
         PenLineCaps.Add(PenLineCap.Square);
         PenLineCaps.Add(PenLineCap.Triangle);
         ResizeHandleMargin = Observable.Return(3).Select(size => new Thickness(-size, -size, -size, -size))
-            .ToReadOnlyReactivePropertySlim();
+            .ToReadOnlyBindableReactiveProperty();
     }
 
     protected virtual void InitPathFinder()

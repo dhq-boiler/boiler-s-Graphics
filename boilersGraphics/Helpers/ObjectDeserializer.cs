@@ -1,22 +1,22 @@
-﻿using System;
+﻿using boilersGraphics.Exceptions;
+using boilersGraphics.Models;
+using boilersGraphics.Properties;
+using boilersGraphics.ViewModels;
+using boilersGraphics.ViewModels.ColorCorrect;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using System.Xml.Linq;
-using boilersGraphics.Exceptions;
-using boilersGraphics.Models;
-using boilersGraphics.Properties;
-using boilersGraphics.ViewModels;
-using boilersGraphics.ViewModels.ColorCorrect;
-using Reactive.Bindings;
-using Reactive.Bindings.ObjectExtensions;
+using boilersGraphics.Extensions;
+using ObservableCollections;
+using ZLinq;
 using Brush = System.Windows.Media.Brush;
 using Color = System.Windows.Media.Color;
 using ColorConverter = System.Windows.Media.ColorConverter;
@@ -35,11 +35,11 @@ public class ObjectDeserializer
 
     public static void ReadCopyObjectsFromXML(DiagramViewModel diagramViewModel, XElement root)
     {
-        var copyObjs = root.Elements().Where(x => x.Name == "CopyObjects").FirstOrDefault();
+        var copyObjs = root.Elements().AsValueEnumerable().Where(x => x.Name == "CopyObjects").FirstOrDefault();
         if (copyObjs is null)
             throw new UnexpectedException("must be copyObjs is not null");
-        var layers = copyObjs.Elements().Where(x => x.Name == "Layers").FirstOrDefault();
-        var layerItems = copyObjs.Elements().Where(x => x.Name == "LayerItems").FirstOrDefault();
+        var layers = copyObjs.Elements().AsValueEnumerable().Where(x => x.Name == "Layers").FirstOrDefault();
+        var layerItems = copyObjs.Elements().AsValueEnumerable().Where(x => x.Name == "LayerItems").FirstOrDefault();
         if (layers is null && layerItems is null)
             throw new UnexpectedException("must be layers is not null or items is not null");
         if (layers is not null)
@@ -65,13 +65,13 @@ public class ObjectDeserializer
         }
         else if (layerItems is not null)
         {
-            var layerObj = diagramViewModel.SelectedLayers.Value.First();
+            var layerObj = diagramViewModel.SelectedLayers.Value.AsValueEnumerable().First();
             foreach (var layerItem in layerItems.Descendants("LayerItem"))
             {
-                if (layerItem.Descendants("Item").First().Descendants("DesignerItem").Count() == 0)
+                if (layerItem.Descendants("Item").AsValueEnumerable().First().Descendants("DesignerItem").AsValueEnumerable().Count() == 0)
                     break;
                 var designerItemObj = ExtractDesignerItemViewModelBase(diagramViewModel,
-                    layerItem.Descendants("Item").First().Descendants("DesignerItem").First());
+                    layerItem.Descendants("Item").AsValueEnumerable().First().Descendants("DesignerItem").AsValueEnumerable().First());
                 if (designerItemObj is null)
                     continue;
                 var layerItemObj = new LayerItem(designerItemObj, layerObj, layerItem.Element("Name").Value);
@@ -81,10 +81,10 @@ public class ObjectDeserializer
 
             foreach (var layerItem in layerItems.Descendants("LayerItem"))
             {
-                if (layerItem.Descendants("Item").First().Descendants("ConnectorItem").Count() == 0)
+                if (layerItem.Descendants("Item").AsValueEnumerable().First().Descendants("ConnectorItem").AsValueEnumerable().Count() == 0)
                     break;
                 var connectorObj = ExtractConnectorBaseViewModel(diagramViewModel,
-                    layerItem.Descendants("Item").First().Descendants("ConnectorItem").First());
+                    layerItem.Descendants("Item").AsValueEnumerable().First().Descendants("ConnectorItem").AsValueEnumerable().First());
                 if (connectorObj is null)
                     continue;
                 var layerItemObj = new LayerItem(connectorObj, layerObj, layerItem.Element("Name").Value);
@@ -97,7 +97,7 @@ public class ObjectDeserializer
     public static int CountObjectsFromXML(XElement root)
     {
         var ret = 0;
-        var layers = root.Elements().FirstOrDefault(x => x.Name == "Layers");
+        var layers = root.Elements().AsValueEnumerable().FirstOrDefault(x => x.Name == "Layers");
         if (layers is not null)
         {
             foreach (var layer in layers.Elements("Layer"))
@@ -131,7 +131,7 @@ public class ObjectDeserializer
     public static void ReadObjectsFromXML(DiagramViewModel diagramViewModel,
         ProgressBarWithOutputViewModel progressBarWithOutputViewModel, XElement root, bool isPreview = false)
     {
-        var layers = root.Elements().Where(x => x.Name == "Layers").FirstOrDefault();
+        var layers = root.Elements().AsValueEnumerable().Where(x => x.Name == "Layers").FirstOrDefault();
         if (layers is not null)
         {
             foreach (var layer in layers.Elements("Layer"))
@@ -139,7 +139,7 @@ public class ObjectDeserializer
                 var layerObj = new Layer(isPreview);
                 layerObj.Color.Value = (Color)ColorConverter.ConvertFromString(layer.Element("Color").Value);
                 layerObj.IsVisible.Value = bool.Parse(layer.Element("IsVisible").Value);
-                if (layer.Elements("IsExpanded").Any())
+                if (layer.Elements("IsExpanded").AsValueEnumerable().Any())
                 {
                     layerObj.IsExpanded.Value = bool.Parse(layer.Element("IsExpanded").Value);
                 }
@@ -235,30 +235,28 @@ public class ObjectDeserializer
         DesignerItemViewModelBase designerItemObj = null;
         ConnectorBaseViewModel connectorObj = null;
         SnapPointViewModel snapPointObj = null;
-        if (layerItem.Descendants("Item").First().Descendants("DesignerItem").Count() >= 1)
+        if (layerItem.Descendants("Item").AsValueEnumerable().First().Descendants("DesignerItem").AsValueEnumerable().Count() >= 1)
             designerItemObj = ExtractDesignerItemViewModelBase(diagramViewModel,
-                layerItem.Descendants("Item").First().Descendants("DesignerItem").First());
-        if (layerItem.Descendants("Item").First().Descendants("ConnectorItem").Count() >= 1)
+                layerItem.Descendants("Item").AsValueEnumerable().First().Descendants("DesignerItem").AsValueEnumerable().First());
+        if (layerItem.Descendants("Item").AsValueEnumerable().First().Descendants("ConnectorItem").AsValueEnumerable().Count() >= 1)
             connectorObj = ExtractConnectorBaseViewModel(diagramViewModel,
-                layerItem.Descendants("Item").First().Descendants("ConnectorItem").First());
-        if (layerItem.Descendants("Item").First().Descendants("SnapPointItem").Count() >= 1)
+                layerItem.Descendants("Item").AsValueEnumerable().First().Descendants("ConnectorItem").AsValueEnumerable().First());
+        if (layerItem.Descendants("Item").AsValueEnumerable().First().Descendants("SnapPointItem").AsValueEnumerable().Count() >= 1)
             snapPointObj = ExtractSnapPointViewModel(diagramViewModel,
-                layerItem.Descendants("Item").First().Descendants("SnapPointItem").First());
+                layerItem.Descendants("Item").AsValueEnumerable().First().Descendants("SnapPointItem").AsValueEnumerable().First());
         var item = EitherNotNull(designerItemObj, EitherNotNull(connectorObj, snapPointObj));
         if (item is null)
             throw new UnexpectedException("All of them are null.");
         var layerItemObj = new LayerItem(item, layerObj, layerItem.Element("Name").Value);
         layerItemObj.Color.Value = (Color)ColorConverter.ConvertFromString(layerItem.Element("Color").Value);
         layerItemObj.IsVisible.Value = bool.Parse(layerItem.Element("IsVisible").Value);
-        if (layerItem.Elements("IsExpanded").Any())
+        if (layerItem.Elements("IsExpanded").AsValueEnumerable().Any())
         {
             layerItemObj.IsExpanded.Value = bool.Parse(layerItem.Element("IsExpanded").Value);
         }
         var children = layerItem.Elements("Children").Descendants("LayerItem");
-        var children_layerItems = from child in children
-            let li = ReadLayerItemFromXML(diagramViewModel, layerObj, child)
-            where li is not null
-            select li;
+        var children_layerItems = children.AsValueEnumerable()
+            .Select(child => ReadLayerItemFromXML(diagramViewModel, layerObj, child)).Where(x => x is not null);
         foreach (var c in children_layerItems)
         {
             layerItemObj.Children.Add(c);
@@ -300,12 +298,9 @@ public class ObjectDeserializer
         }
 
         //grouping
-        foreach (var groupItem in list.OfType<GroupItemViewModel>().ToList())
+        foreach (var groupItem in list.AsValueEnumerable().OfType<GroupItemViewModel>().ToList())
         {
-            var children = from item in list
-                where item.ParentID == groupItem.ID
-                select item;
-
+            var children = list.AsValueEnumerable().Where(item => item.ParentID == groupItem.ID);
             children.ToList().ForEach(x => groupItem.AddGroup(diagramViewModel.MainWindowVM.Recorder, x));
         }
 
@@ -330,13 +325,13 @@ public class ObjectDeserializer
                 new SolidColorBrush((Color)ColorConverter.ConvertFromString(snapPointElm.Element("EdgeColor").Value));
         else
             item.EdgeBrush.Value =
-                WpfObjectSerializer.Deserialize(snapPointElm.Element("EdgeBrush").Nodes().First().ToString()) as Brush;
+                WpfObjectSerializer.Deserialize(snapPointElm.Element("EdgeBrush").Nodes().AsValueEnumerable().First().ToString()) as Brush;
         if (snapPointElm.Element("FillColor") is not null)
             item.FillBrush.Value =
                 new SolidColorBrush((Color)ColorConverter.ConvertFromString(snapPointElm.Element("FillColor").Value));
         else
             item.FillBrush.Value =
-                WpfObjectSerializer.Deserialize(snapPointElm.Element("FillBrush").Nodes().First().ToString()) as Brush;
+                WpfObjectSerializer.Deserialize(snapPointElm.Element("FillBrush").Nodes().AsValueEnumerable().First().ToString()) as Brush;
         item.EdgeThickness.Value = double.Parse(snapPointElm.Element("EdgeThickness").Value);
         item.PathGeometryNoRotate.Value =
             PathGeometry.CreateFromGeometry(Geometry.Parse(snapPointElm.Element("PathGeometry").Value));
@@ -361,13 +356,13 @@ public class ObjectDeserializer
                 Point.Parse(connectorElm.Element("EndPoint").Value));
         item.ZIndex.Value = int.Parse(connectorElm.Element("ZIndex").Value);
         item.EdgeBrush.Value =
-            WpfObjectSerializer.Deserialize(connectorElm.Element("EdgeBrush").Nodes().First().ToString()) as Brush;
+            WpfObjectSerializer.Deserialize(connectorElm.Element("EdgeBrush").Nodes().AsValueEnumerable().First().ToString()) as Brush;
         item.EdgeThickness.Value = double.Parse(connectorElm.Element("EdgeThickness").Value);
-        if (connectorElm.Elements("StrokeLineJoin").Any())
+        if (connectorElm.Elements("StrokeLineJoin").AsValueEnumerable().Any())
             item.StrokeLineJoin.Value = Enum.Parse<PenLineJoin>(connectorElm.Element("StrokeLineJoin").Value);
-        if (connectorElm.Elements("StrokeMiterLimit").Any())
+        if (connectorElm.Elements("StrokeMiterLimit").AsValueEnumerable().Any())
             item.StrokeMiterLimit.Value = double.Parse(connectorElm.Element("StrokeMiterLimit").Value);
-        if (connectorElm.Elements("StrokeDashArray").Any())
+        if (connectorElm.Elements("StrokeDashArray").AsValueEnumerable().Any())
             item.StrokeDashArray.Value = DoubleCollection.Parse(connectorElm.Element("StrokeDashArray").Value);
         item.LeftTop.Value = Point.Parse(connectorElm.Element("LeftTop").Value);
         if (item is StraightConnectorViewModel || item is BezierCurveViewModel)
@@ -378,7 +373,7 @@ public class ObjectDeserializer
         else if (item is PolyBezierViewModel poly)
         {
             poly.Points = StrToPoints(connectorElm.Element("Points").Value);
-            poly.InitializeSnapPoints(poly.Points.First(), poly.Points.Last());
+            poly.InitializeSnapPoints(poly.Points.AsValueEnumerable().First(), poly.Points.AsValueEnumerable().Last());
             item.PathGeometryNoRotate.Value = GeometryCreator.CreatePolyBezier(poly);
         }
 
@@ -437,7 +432,7 @@ public class ObjectDeserializer
                     (Color)ColorConverter.ConvertFromString(designerItemElm.Element("EdgeColor").Value));
         else
             item.EdgeBrush.Value =
-                WpfObjectSerializer.Deserialize(designerItemElm.Element("EdgeBrush").Nodes().First().ToString()) as
+                WpfObjectSerializer.Deserialize(designerItemElm.Element("EdgeBrush").Nodes().AsValueEnumerable().First().ToString()) as
                     Brush;
         if (designerItemElm.Element("FillColor") is not null)
             item.FillBrush.Value =
@@ -445,13 +440,13 @@ public class ObjectDeserializer
                     (Color)ColorConverter.ConvertFromString(designerItemElm.Element("FillColor").Value));
         else
             item.FillBrush.Value =
-                WpfObjectSerializer.Deserialize(designerItemElm.Element("FillBrush").Nodes().First().ToString()) as
+                WpfObjectSerializer.Deserialize(designerItemElm.Element("FillBrush").Nodes().AsValueEnumerable().First().ToString()) as
                     Brush;
-        if (designerItemElm.Elements("StrokeLineJoin").Any())
+        if (designerItemElm.Elements("StrokeLineJoin").AsValueEnumerable().Any())
             item.StrokeLineJoin.Value = Enum.Parse<PenLineJoin>(designerItemElm.Element("StrokeLineJoin").Value);
-        if (designerItemElm.Elements("StrokeMiterLimit").Any())
+        if (designerItemElm.Elements("StrokeMiterLimit").AsValueEnumerable().Any())
             item.StrokeMiterLimit.Value = double.Parse(designerItemElm.Element("StrokeMiterLimit").Value);
-        if (designerItemElm.Elements("StrokeDashArray").Any())
+        if (designerItemElm.Elements("StrokeDashArray").AsValueEnumerable().Any())
             item.StrokeDashArray.Value = DoubleCollection.Parse(designerItemElm.Element("StrokeDashArray").Value);
         item.EdgeThickness.Value = double.Parse(designerItemElm.Element("EdgeThickness").Value);
         item.RotationAngle.Value = designerItemElm.Element("RotationAngle") is not null
@@ -460,15 +455,15 @@ public class ObjectDeserializer
         item.Owner = diagramViewModel;
         if (item is NRectangleViewModel rectangle)
         {
-            if (designerItemElm.Elements("RadiusX").Any())
+            if (designerItemElm.Elements("RadiusX").AsValueEnumerable().Any())
                 rectangle.RadiusX.Value = double.Parse(designerItemElm.Element("RadiusX").Value);
-            if (designerItemElm.Elements("RadiusY").Any())
+            if (designerItemElm.Elements("RadiusY").AsValueEnumerable().Any())
                 rectangle.RadiusY.Value = double.Parse(designerItemElm.Element("RadiusY").Value);
         }
 
         if (item is PictureDesignerItemViewModel picture)
         {
-            if (designerItemElm.Elements("EnableImageEmbedding").Any() &&
+            if (designerItemElm.Elements("EnableImageEmbedding").AsValueEnumerable().Any() &&
                 bool.TryParse(designerItemElm.Element("EnableImageEmbedding").Value, out var enableImageEmbedding))
                 picture.EmbeddedImage.Value =
                     Base64StringToBitmap(designerItemElm.Element("EmbeddedImageBase64").Value);
@@ -477,89 +472,89 @@ public class ObjectDeserializer
         }
 
         if (item is CroppedPictureDesignerItemViewModel cropped)
-            if (designerItemElm.Elements("EnableImageEmbedding").Any() &&
+            if (designerItemElm.Elements("EnableImageEmbedding").AsValueEnumerable().Any() &&
                 bool.TryParse(designerItemElm.Element("EnableImageEmbedding").Value, out var enableImageEmbedding))
                 cropped.EmbeddedImage.Value =
                     Base64StringToBitmap(designerItemElm.Element("EmbeddedImageBase64").Value);
         if (item is MosaicViewModel mosaic)
         {
-            if (designerItemElm.Elements("ColumnPixels").Any())
+            if (designerItemElm.Elements("ColumnPixels").AsValueEnumerable().Any())
                 mosaic.ColumnPixels.Value = double.Parse(designerItemElm.Element("ColumnPixels").Value);
-            if (designerItemElm.Elements("RowPixels").Any())
+            if (designerItemElm.Elements("RowPixels").AsValueEnumerable().Any())
                 mosaic.RowPixels.Value = double.Parse(designerItemElm.Element("RowPixels").Value);
         }
 
         if (item is BlurEffectViewModel blurEffect)
         {
-            if (designerItemElm.Elements("KernelWidth").Any())
+            if (designerItemElm.Elements("KernelWidth").AsValueEnumerable().Any())
                 blurEffect.KernelWidth.Value = double.Parse(designerItemElm.Element("KernelWidth").Value);
-            if (designerItemElm.Elements("KernelHeight").Any())
+            if (designerItemElm.Elements("KernelHeight").AsValueEnumerable().Any())
                 blurEffect.KernelHeight.Value = double.Parse(designerItemElm.Element("KernelHeight").Value);
-            if (designerItemElm.Elements("Sigma").Any())
+            if (designerItemElm.Elements("Sigma").AsValueEnumerable().Any())
                 blurEffect.Sigma.Value = double.Parse(designerItemElm.Element("Sigma").Value);
         }
 
         if (item is ColorCorrectViewModel colorCorrect)
         {
-            if (designerItemElm.Elements("CCType").Any())
+            if (designerItemElm.Elements("CCType").AsValueEnumerable().Any())
                 colorCorrect.CCType.Value = GetCorrespondingStaticValue<ColorCorrectType>(designerItemElm.Element("CCType").Value);
 
             if (colorCorrect.CCType.Value == ColorCorrectType.HSV)
             {
-                if (designerItemElm.Elements("AddHue").Any())
+                if (designerItemElm.Elements("AddHue").AsValueEnumerable().Any())
                     colorCorrect.AddHue.Value = int.Parse(designerItemElm.Element("AddHue").Value);
-                if (designerItemElm.Elements("AddSaturation").Any())
+                if (designerItemElm.Elements("AddSaturation").AsValueEnumerable().Any())
                     colorCorrect.AddSaturation.Value = int.Parse(designerItemElm.Element("AddSaturation").Value);
-                if (designerItemElm.Elements("AddValue").Any())
+                if (designerItemElm.Elements("AddValue").AsValueEnumerable().Any())
                     colorCorrect.AddValue.Value = int.Parse(designerItemElm.Element("AddValue").Value);
             }
             else if (colorCorrect.CCType.Value == ColorCorrectType.ToneCurve)
             {
-                if (designerItemElm.Elements("TargetChannel").Any())
+                if (designerItemElm.Elements("TargetChannel").AsValueEnumerable().Any())
                 {
                     colorCorrect.TargetChannel.Value = GetCorrespondingStaticValue<Channel>(designerItemElm.Element("TargetChannel").Value);
                 }
 
-                if (designerItemElm.Elements("Curves").Any())
+                if (designerItemElm.Elements("Curves").AsValueEnumerable().Any())
                 {
                     var curvesElm = designerItemElm.Element("Curves");
 
-                    if (curvesElm.Elements("Curve").Any())
+                    if (curvesElm.Elements("Curve").AsValueEnumerable().Any())
                     {
 
                         foreach (var curveElm in curvesElm.Elements("Curve"))
                         {
                             var curve = new ToneCurveViewModel.Curve();
-                            if (curveElm.Elements("Points").Any())
+                            if (curveElm.Elements("Points").AsValueEnumerable().Any())
                             {
                                 curve.Points =
-                                    new ReactiveCollection<ToneCurveViewModel.Point>();
-                                curve.Points.AddRange(curveElm.Elements("Points")
+                                    new ObservableList<ToneCurveViewModel.Point>().ToWritableNotifyCollectionChanged();
+                                curve.Points.AddRange(curveElm.Elements("Points").AsValueEnumerable()
                                     .SelectMany(x => x.Elements("Point")).Select(x =>
                                         new ToneCurveViewModel.Point(
-                                            int.Parse(x.Elements("X").Any()
+                                            int.Parse(x.Elements("X").AsValueEnumerable().Any()
                                                 ? CastToDoubleRound(x.Element("X").Value)
                                                 : "0"),
-                                            int.Parse(x.Elements("Y").Any()
+                                            int.Parse(x.Elements("Y").AsValueEnumerable().Any()
                                                 ? CastToDoubleRound(x.Element("Y").Value)
                                                 : "0"))
-                                    ));
+                                    ).ToArray());
                             }
 
-                            if (curveElm.Elements("InOutPairs").Any())
+                            if (curveElm.Elements("InOutPairs").AsValueEnumerable().Any())
                             {
                                 curve.InOutPairs =
-                                    new ReactiveCollection<InOutPair>();
-                                curve.InOutPairs.AddRange(curveElm.Elements("InOutPairs")
+                                    new ObservableList<InOutPair>().ToWritableNotifyCollectionChanged();
+                                curve.InOutPairs.AddRange(curveElm.Elements("InOutPairs").AsValueEnumerable()
                                     .SelectMany(x => x.Elements("InOutPair")).Select(x =>
                                         new InOutPair(
-                                            int.Parse(x.Elements("In").Any()
+                                            int.Parse(x.Elements("In").AsValueEnumerable().Any()
                                                 ? CastToDoubleRound(x.Element("In").Value)
                                                 : "0"),
-                                            int.Parse(x.Elements("Out").Any()
+                                            int.Parse(x.Elements("Out").AsValueEnumerable().Any()
                                                 ? CastToDoubleRound(x.Element("Out").Value)
                                                 : "0"))
-                                    ));
+                                    ).ToArray());
                             }
                             colorCorrect.Curves.Add(curve);
                         }

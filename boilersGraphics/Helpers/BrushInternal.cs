@@ -2,13 +2,12 @@
 using boilersGraphics.Extensions;
 using boilersGraphics.Models;
 using boilersGraphics.ViewModels;
-using OpenCvSharp.ML;
 using System;
-using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using TsOperationHistory.Extensions;
+using ZLinq;
 
 namespace boilersGraphics.Helpers;
 
@@ -26,7 +25,7 @@ public static class BrushInternal
         currentBrush.EdgeBrush.Value = currentBrush.Owner.EdgeBrush.Value.Clone();
         currentBrush.EdgeThickness.Value = currentBrush.Owner.EdgeThickness.Value.Value;
         currentBrush.ZIndex.Value = currentBrush.Owner.Layers
-            .SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).Count();
+            .SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).AsValueEnumerable().Count();
         currentBrush.PathGeometryNoRotate.Value =
             GeometryCreator.CreateEllipse(point.X, point.Y, currentBrush.Thickness.Value);
         currentBrush.IsSelected.Value = true;
@@ -67,7 +66,7 @@ public static class BrushInternal
     public static void Down(MainWindowViewModel mainWindowViewModel, DesignerCanvas AssociatedObject,
         ref BrushViewModel currentBrush, Action captureAction, RoutedEventArgs e, Point point)
     {
-        var selectedDataContext = mainWindowViewModel.DiagramViewModel.AllItems.Value.Where(x => x.IsSelected.Value)
+        var selectedDataContext = mainWindowViewModel.DiagramViewModel.AllItems.Value.AsValueEnumerable().Where(x => x.IsSelected.Value)
             .Select(x => x);
         if (selectedDataContext.Count() > 0)
         {

@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows;
-using System.Windows.Media;
-using boilersGraphics.Controls;
+﻿using boilersGraphics.Controls;
 using boilersGraphics.Extensions;
 using boilersGraphics.ViewModels;
+using System;
+using System.Windows;
+using System.Windows.Media;
 using TsOperationHistory.Extensions;
+using ZLinq;
 
 namespace boilersGraphics.Helpers;
 
@@ -77,7 +76,7 @@ public static class EraserInternal
     public static void Down(MainWindowViewModel mainWindowViewModel, DesignerCanvas AssociatedObject,
         ref SelectableDesignerItemViewModelBase currentBrush, RoutedEventArgs e, Point point)
     {
-        var selectedDataContext = mainWindowViewModel.DiagramViewModel.AllItems.Value.Where(x => x.IsSelected.Value)
+        var selectedDataContext = mainWindowViewModel.DiagramViewModel.AllItems.Value.AsValueEnumerable().Where(x => x.IsSelected.Value)
             .Select(x => x);
         if (selectedDataContext.Count() > 0)
         {

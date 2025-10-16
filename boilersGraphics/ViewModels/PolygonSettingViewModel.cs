@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Reactive.Disposables;
-using System.Windows;
-using System.Windows.Input;
+﻿using boilersGraphics.Extensions;
 using boilersGraphics.Models;
+using ObservableCollections;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
-using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
+using R3;
+using System;
+using System.Collections.Generic;
+using System.Windows;
+using System.Windows.Input;
+using ZLinq;
 
 namespace boilersGraphics.ViewModels;
 
@@ -27,10 +26,10 @@ internal class PolygonSettingViewModel : BindableBase, IDialogAware, IDisposable
             .AddTo(_disposables);
         Angle.Subscribe(x => { UpdateSegments(); })
             .AddTo(_disposables);
-        Corners.ObserveElementObservableProperty(x => x.Angle)
+        Corners.ObserveElementPropertyChanged(x => x.Angle)
             .Subscribe(x => { UpdateSegments(); })
             .AddTo(_disposables);
-        Corners.ObserveElementObservableProperty(x => x.Radius)
+        Corners.ObserveElementPropertyChanged(x => x.Radius)
             .Subscribe(x => { UpdateSegments(); })
             .AddTo(_disposables);
         DrawCommand = new ReactiveCommand();
@@ -118,10 +117,10 @@ internal class PolygonSettingViewModel : BindableBase, IDialogAware, IDisposable
         UpdateSegments();
     }
 
-    public ReactivePropertySlim<string> Data { get; } = new();
-    public ReactivePropertySlim<int> Angle { get; } = new();
+    public BindableReactiveProperty<string> Data { get; } = new();
+    public BindableReactiveProperty<int> Angle { get; } = new();
 
-    public ObservableCollection<Corner> Corners { get; } = new();
+    public NotifyCollectionChangedSynchronizedViewList<Corner> Corners { get; } = new ObservableList<Corner>().ToWritableNotifyCollectionChanged();
 
     public ReactiveCommand AddCornerCommand { get; } = new();
 
@@ -159,7 +158,7 @@ internal class PolygonSettingViewModel : BindableBase, IDialogAware, IDisposable
     {
         var indexOf = Corners.IndexOf(x);
         Corners.Remove(x);
-        Corners.Where(y => y.Number.Value - 1 > indexOf).ToList().ForEach(y => y.Number.Value -= 1);
+        Corners.AsValueEnumerable().Where(y => y.Number.Value - 1 > indexOf).ToList().ForEach(y => y.Number.Value -= 1);
         UpdateSegments();
     }
 
@@ -173,14 +172,14 @@ internal class PolygonSettingViewModel : BindableBase, IDialogAware, IDisposable
 
     private void UpdateSegments()
     {
-        if (Corners.Count() <= 1) return;
+        if (Corners.AsValueEnumerable().Count() <= 1) return;
         Data.Value = "";
-        var x = Corners.Skip(1);
+        var x = Corners.AsValueEnumerable().Skip(1);
         var data = $"M {x.First().Point.Value}";
         var list = new List<Corner>();
-        foreach (var corner in Corners.Skip(1))
+        foreach (var corner in Corners.AsValueEnumerable().Skip(1))
         {
-            var angle = list.Sum(x => x.Angle.Value);
+            var angle = list.AsValueEnumerable().Sum(x => x.Angle.Value);
             var θ = (angle - Angle.Value) * Math.PI / 180.0;
             var point = new Point(
                 Math.Round(corner.Radius.Value * Math.Cos(θ), 2, MidpointRounding.AwayFromZero),

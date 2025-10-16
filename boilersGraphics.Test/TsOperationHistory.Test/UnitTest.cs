@@ -97,16 +97,16 @@ namespace TsOperationHistory.Test
             };
 
             controller.Execute(person.GenerateSetPropertyOperation(x => x.Name, "Yamada"));
-            Assert.AreEqual("Yamada", person.Name);
+            Assert.That(person.Name, Is.EqualTo("Yamada"));
 
             controller.Execute(person.GenerateSetPropertyOperation(x => x.Name, "Tanaka"));
-            Assert.AreEqual("Tanaka", person.Name);
+            Assert.That(person.Name, Is.EqualTo("Tanaka"));
 
             controller.Undo();
-            Assert.AreEqual("Yamada", person.Name);
+            Assert.That(person.Name, Is.EqualTo("Yamada"));
 
             controller.Undo();
-            Assert.AreEqual("Venus", person.Name);
+            Assert.That(person.Name, Is.EqualTo("Venus"));
         }
 
         /// <summary>
@@ -124,20 +124,20 @@ namespace TsOperationHistory.Test
             Person.StaticValue = "Geso";
 
             controller.ExecuteSetStaticProperty(typeof(Person), "StaticValue", "ika");
-            Assert.AreEqual("ika", Person.StaticValue);
+            Assert.That(Person.StaticValue, Is.EqualTo("ika"));
 
             await Task.Delay(75);
 
             controller.ExecuteSetStaticProperty(typeof(Person), "StaticValue", "tako");
-            Assert.AreEqual("tako", Person.StaticValue);
+            Assert.That(Person.StaticValue, Is.EqualTo("tako"));
 
             await Task.Delay(75);
 
             controller.Undo();
-            Assert.AreEqual("ika", Person.StaticValue);
+            Assert.That(Person.StaticValue, Is.EqualTo("ika"));
 
             controller.Undo();
-            Assert.AreEqual("Geso", Person.StaticValue);
+            Assert.That(Person.StaticValue, Is.EqualTo("Geso"));
         }
 
         /// <summary>
@@ -166,19 +166,19 @@ namespace TsOperationHistory.Test
                     Name = "Child2"
                 });
             
-            Assert.AreEqual(2 , person.Children.Count);
+            Assert.That(person.Children.Count, Is.EqualTo(2));
             
             controller.ExecuteRemoveAt(person.Children,0);
             Assert.That(person.Children.Count, Is.EqualTo(1));
             
             controller.Undo();
-            Assert.AreEqual(2 , person.Children.Count);
+            Assert.That(person.Children.Count, Is.EqualTo(2));
             
             controller.Undo();
             Assert.That(person.Children.Count, Is.EqualTo(1));
 
             controller.Undo();
-            Assert.IsEmpty(person.Children);
+            Assert.That(person.Children, Is.Empty);
         }
 
         /// <summary>
@@ -204,23 +204,23 @@ namespace TsOperationHistory.Test
                 person.Name = "Yammada";
                 person.Name = "Tanaka";
             
-                Assert.True(controller.CanUndo);
+                Assert.That(controller.CanUndo, Is.True);
             
                 controller.Undo();
-                Assert.AreEqual("Yammada",person.Name);
+                Assert.That(person.Name, Is.EqualTo("Yammada"));
 
                 controller.Undo();
-                Assert.AreEqual("First",person.Name);                
+                Assert.That(person.Name, Is.EqualTo("First"));                
             }
 
             // Dispose後は変更通知が自動的にOperationに変更されないことを確認
             {
                 nameChangedWatcher.Dispose();
                 person.Name = "Tanaka";
-                Assert.False(controller.CanUndo);
+                Assert.That(controller.CanUndo, Is.False);
 
                 controller.Undo();
-                Assert.AreEqual("Tanaka",person.Name);
+                Assert.That(person.Name, Is.EqualTo("Tanaka"));
             }
 
             // Ageは自動マージ有効なため1回のUndoで初期値に戻ることを確認
@@ -230,10 +230,10 @@ namespace TsOperationHistory.Test
                     person.Age = i;
                 }
                 
-                Assert.AreEqual(29,person.Age);
+                Assert.That(person.Age, Is.EqualTo(29));
                 
                 controller.Undo();
-                Assert.AreEqual(0,person.Age);
+                Assert.That(person.Age, Is.EqualTo(0));
                 
                 ageChangedWatcher.Dispose();
             }
@@ -271,14 +271,14 @@ namespace TsOperationHistory.Test
             
             // 1回のUndoでレコード前のデータが復元される
             controller.Undo();
-            Assert.AreEqual("Default",person.Name);
-            Assert.AreEqual(5,person.Age);
-            Assert.IsEmpty(person.Children);
+            Assert.That(person.Name, Is.EqualTo("Default"));
+            Assert.That(person.Age, Is.EqualTo(5));
+            Assert.That(person.Children, Is.Empty);
             
             // Redoでレコード終了後のデータが復元される
             controller.Redo();
-            Assert.AreEqual("Changed",person.Name);
-            Assert.AreEqual(14,person.Age);
+            Assert.That(person.Name, Is.EqualTo("Changed"));
+            Assert.That(person.Age, Is.EqualTo(14));
             Assert.That(person.Children.Count, Is.EqualTo(1));
         }
 
@@ -293,22 +293,22 @@ namespace TsOperationHistory.Test
             };
 
             controller.Execute(person.GenerateSetPropertyOperation(x => x.Name, "Yamada"));
-            Assert.AreEqual("Yamada", person.Name);
+            Assert.That(person.Name, Is.EqualTo("Yamada"));
 
             controller.Execute(person.GenerateSetPropertyOperation(x => x.Name, "Tanaka"));
-            Assert.AreEqual("Tanaka", person.Name);
+            Assert.That(person.Name, Is.EqualTo("Tanaka"));
 
             controller.ExecuteDispose(person, () => person.Restore(() => person.Name = "Tanaka"));
             Assert.That(person.Name, Is.Null);
 
             controller.Undo();
-            Assert.AreEqual("Tanaka", person.Name);
+            Assert.That(person.Name, Is.EqualTo("Tanaka"));
 
             controller.Undo();
-            Assert.AreEqual("Yamada", person.Name);
+            Assert.That(person.Name, Is.EqualTo("Yamada"));
 
             controller.Undo();
-            Assert.AreEqual("Venus", person.Name);
+            Assert.That(person.Name, Is.EqualTo("Venus"));
         }
 
         [Test]
@@ -326,19 +326,19 @@ namespace TsOperationHistory.Test
             await Task.Delay(75);
 
             controller.ExecuteSetProperty(person, "RP.Value", "Value2");
-            Assert.AreEqual("Value2", person.RP.Value);
+            Assert.That(person.RP.Value, Is.EqualTo("Value2"));
 
             //75ms 待つ
             await Task.Delay(75);
 
             controller.ExecuteSetProperty(person, "RP.Value", "Value3");
-            Assert.AreEqual("Value3", person.RP.Value);
+            Assert.That(person.RP.Value, Is.EqualTo("Value3"));
 
             controller.Undo();
-            Assert.AreEqual("Value2", person.RP.Value);
+            Assert.That(person.RP.Value, Is.EqualTo("Value2"));
 
             controller.Undo();
-            Assert.AreEqual("Value1", person.RP.Value);
+            Assert.That(person.RP.Value, Is.EqualTo("Value1"));
 
             Assert.That(controller.CanUndo, Is.False);
         }
@@ -358,10 +358,10 @@ namespace TsOperationHistory.Test
                 person.RP.Value = "Value3";
 
                 controller.Undo();
-                Assert.AreEqual("Value2", person.RP.Value);
+                Assert.That(person.RP.Value, Is.EqualTo("Value2"));
 
                 controller.Undo();
-                Assert.AreEqual("Value1", person.RP.Value);
+                Assert.That(person.RP.Value, Is.EqualTo("Value1"));
             }
 
             Assert.That(controller.CanUndo, Is.False);

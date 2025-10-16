@@ -3,21 +3,21 @@ using boilersGraphics.Exceptions;
 using boilersGraphics.Helpers;
 using boilersGraphics.ViewModels.ColorCorrect;
 using boilersGraphics.Views;
+using ObservableCollections;
 using OpenCvSharp;
 using OpenCvSharp.WpfExtensions;
 using Prism.Ioc;
 using Prism.Services.Dialogs;
 using Prism.Unity;
-using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
+using R3;
 using System;
-using System.Linq;
-using System.Reactive.Disposables;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using boilersGraphics.Models;
+using ZLinq;
 using Rect = System.Windows.Rect;
 
 namespace boilersGraphics.ViewModels;
@@ -29,27 +29,27 @@ public class ColorCorrectViewModel : EffectViewModel
         Initialize();
     }
 
-    public ReactivePropertySlim<ColorCorrectType> CCType { get; } = new(ColorCorrectType.HSV);
-    public ReactivePropertySlim<Channel> TargetChannel { get; } = new(Channel.RGB);
+    public BindableReactiveProperty<ColorCorrectType> CCType { get; } = new(ColorCorrectType.HSV);
+    public BindableReactiveProperty<Channel> TargetChannel { get; } = new(Channel.RGB);
 
-    public ReactivePropertySlim<WriteableBitmap> Bitmap { get; } = new();
+    public BindableReactiveProperty<WriteableBitmap> Bitmap { get; } = new();
 
     #region 色相・彩度・輝度
-    public ReactivePropertySlim<int> AddHue { get; } = new();
-    public ReactivePropertySlim<int> AddSaturation { get; } = new();
-    public ReactivePropertySlim<int> AddValue { get; } = new();
+    public BindableReactiveProperty<int> AddHue { get; } = new();
+    public BindableReactiveProperty<int> AddSaturation { get; } = new();
+    public BindableReactiveProperty<int> AddValue { get; } = new();
     #endregion
 
     #region トーンカーブ
-    public ReactiveCollection<ToneCurveViewModel.Curve> Curves { get; set; } = new();
-    public ReactivePropertySlim<ToneCurveViewModel.Curve> TargetCurve { get; set; } = new();
+    public NotifyCollectionChangedSynchronizedViewList<ToneCurveViewModel.Curve> Curves { get; set; } = new ObservableList<ToneCurveViewModel.Curve>().ToWritableNotifyCollectionChanged();
+    public BindableReactiveProperty<ToneCurveViewModel.Curve> TargetCurve { get; set; } = new();
     #endregion
 
     #region 2値化
-    public ReactivePropertySlim<double> Threshold { get; } = new();
-    public ReactivePropertySlim<double> MaxValue { get; } = new(255);
-    public ReactivePropertySlim<ThresholdTypes> ThresholdTypes { get; } = new(boilersGraphics.ViewModels.ThresholdTypes.Binary);
-    public ReactivePropertySlim<bool> OtsuEnabled { get; } = new();
+    public BindableReactiveProperty<double> Threshold { get; } = new();
+    public BindableReactiveProperty<double> MaxValue { get; } = new(255);
+    public BindableReactiveProperty<ThresholdTypes> ThresholdTypes { get; } = new(boilersGraphics.ViewModels.ThresholdTypes.Binary);
+    public BindableReactiveProperty<bool> OtsuEnabled { get; } = new();
     #endregion
 
 
@@ -61,7 +61,7 @@ public class ColorCorrectViewModel : EffectViewModel
 
         Application.Current.Dispatcher.Invoke(() =>
         {
-            var renderer = new EffectRenderer(new WpfVisualTreeHelper());
+            var renderer = new EffectRenderer(new WpfVisualTreeHelper(), DiagramViewModel.Instance.Renderer.GetCache());
             var rtb = renderer.Render(Rect.Value, DesignerCanvas.GetInstance(), 
                 MainWindowViewModel.Instance.DiagramViewModel, MainWindowViewModel.Instance.DiagramViewModel.BackgroundItem.Value, this, 0, this.ZIndex.Value - 1);
             var newFormattedBitmapSource = new FormatConvertedBitmap();
@@ -72,7 +72,7 @@ public class ColorCorrectViewModel : EffectViewModel
 
             if (TargetCurve.Value is not null && TargetCurve.Value.InOutPairs is null)
             {
-                TargetCurve.Value.InOutPairs = new();
+                TargetCurve.Value.InOutPairs = new ObservableList<InOutPair>().ToWritableNotifyCollectionChanged();
             }
 
             using (var a = newFormattedBitmapSource.ToMat())
@@ -89,7 +89,7 @@ public class ColorCorrectViewModel : EffectViewModel
                         Cv2.CvtColor(b, z, ColorConversionCodes.HSV2BGR);
                         break;
                     case ToneCurve:
-                        if (Curves.Count() != 4)
+                        if (Curves.AsValueEnumerable().Count() != 4)
                             break;
                         var arr3 = Cv2.Split(a);
                         OperateToneCurve(arr3[0], Curves[1]); //B
@@ -123,6 +123,8 @@ public class ColorCorrectViewModel : EffectViewModel
                 Bitmap.Value = z.ToWriteableBitmap();
                 UpdateLayout();
             }
+
+            renderer?.MarkItemDirty(this);
         });
     }
 
@@ -149,7 +151,7 @@ public class ColorCorrectViewModel : EffectViewModel
             for (int x = 0; x < width; x++)
             {
                 *(p + y * step + x * 1) =
-                    (byte)Math.Clamp(inOutPairs.First(z => z.In == *(p + y * step + x * 1)).Out, byte.MinValue,
+                    (byte)Math.Clamp(inOutPairs.AsValueEnumerable().First(z => z.In == *(p + y * step + x * 1)).Out, byte.MinValue,
                         byte.MaxValue);
             }
         });
@@ -242,7 +244,7 @@ public class ColorCorrectViewModel : EffectViewModel
     {
         var compositeDisposable = new CompositeDisposable();
         base.BeginMonitor(action).AddTo(compositeDisposable);
-        this.ObserveProperty(x => x.Bitmap).Subscribe(_ => action()).AddTo(compositeDisposable);
+        this.ObservePropertyChanged(x => x.Bitmap).Subscribe(_ => action()).AddTo(compositeDisposable);
         return compositeDisposable;
     }
 }

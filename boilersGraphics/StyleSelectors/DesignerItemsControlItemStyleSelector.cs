@@ -1,7 +1,7 @@
-﻿using System;
+﻿using boilersGraphics.ViewModels;
+using System;
 using System.Windows;
 using System.Windows.Controls;
-using boilersGraphics.ViewModels;
 
 namespace boilersGraphics.StyleSelectors;
 

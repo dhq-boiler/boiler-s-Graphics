@@ -1,8 +1,8 @@
-﻿using System;
+﻿using boilersGraphics.ViewModels;
+using NLog;
+using System;
 using System.Collections.Generic;
 using System.Windows;
-using boilersGraphics.ViewModels;
-using NLog;
 using static System.Math;
 
 namespace boilersGraphics.Helpers;

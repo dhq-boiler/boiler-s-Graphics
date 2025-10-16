@@ -1,27 +1,28 @@
 ﻿using boilersGraphics.Helpers;
 using Prism.Mvvm;
-using Reactive.Bindings;
+using R3;
 using System;
 using System.Windows.Media;
+using ObservableCollections;
 
 namespace boilersGraphics.Models;
 
 internal class Preference : BindableBase
 {
-    public ReactivePropertySlim<int> Width { get; set; } = new();
-    public ReactivePropertySlim<int> Height { get; set; } = new();
-    public ReactivePropertySlim<Brush> CanvasFillBrush { get; set; } = new();
-    public ReactivePropertySlim<double> CanvasEdgeThickness { get; set; } = new();
-    public ReactivePropertySlim<Brush> CanvasEdgeBrush { get; set; } = new();
-    public ReactivePropertySlim<bool> EnablePointSnap { get; set; } = new();
-    public ReactivePropertySlim<double> SnapPower { get; set; } = new();
-    public ReactivePropertySlim<bool> EnableAutoSave { get; set; } = new();
-    public ReactivePropertySlim<AutoSaveType> AutoSaveType { get; set; } = new();
-    public ReactivePropertySlim<TimeSpan> AutoSaveInterval { get; set; } = new();
-    public ReactivePropertySlim<AngleType> AngleType { get; set; } = new();
-    public ReactivePropertySlim<bool> EnableImageEmbedding { get; set; } = new();
+    public BindableReactiveProperty<int> Width { get; set; } = new();
+    public BindableReactiveProperty<int> Height { get; set; } = new();
+    public BindableReactiveProperty<Brush> CanvasFillBrush { get; set; } = new();
+    public BindableReactiveProperty<double> CanvasEdgeThickness { get; set; } = new();
+    public BindableReactiveProperty<Brush> CanvasEdgeBrush { get; set; } = new();
+    public BindableReactiveProperty<bool> EnablePointSnap { get; set; } = new();
+    public BindableReactiveProperty<double> SnapPower { get; set; } = new();
+    public BindableReactiveProperty<bool> EnableAutoSave { get; set; } = new();
+    public BindableReactiveProperty<AutoSaveType> AutoSaveType { get; set; } = new();
+    public BindableReactiveProperty<TimeSpan> AutoSaveInterval { get; set; } = new();
+    public BindableReactiveProperty<AngleType> AngleType { get; set; } = new();
+    public BindableReactiveProperty<bool> EnableImageEmbedding { get; set; } = new();
 
-    public ReactiveCollection<double> EdgeThicknessOptions { get; } = new ReactiveCollection<double>()
+    public ObservableList<double> EdgeThicknessOptions { get; } = new ObservableList<double>()
     {
         0.0,
         1.0,

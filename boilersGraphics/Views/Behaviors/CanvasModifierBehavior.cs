@@ -1,8 +1,8 @@
-﻿using System.Windows;
-using System.Windows.Media;
-using boilersGraphics.Controls;
+﻿using boilersGraphics.Controls;
 using boilersGraphics.ViewModels;
 using Microsoft.Xaml.Behaviors;
+using System.Windows;
+using System.Windows.Media;
 
 namespace boilersGraphics.Views.Behaviors;
 
