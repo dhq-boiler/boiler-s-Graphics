@@ -15,7 +15,7 @@ namespace boilersGraphics.Helpers
     {
         private static readonly Logger s_logger = LogManager.GetCurrentClassLogger();
 
-        public AppearanceRenderer(IVisualTreeHelper visualTreeHelper) : base(visualTreeHelper)
+        public AppearanceRenderer(IVisualTreeHelper visualTreeHelper, RendererCache cache) : base(visualTreeHelper, cache)
         {
         }
 

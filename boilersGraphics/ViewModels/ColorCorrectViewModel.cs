@@ -61,7 +61,7 @@ public class ColorCorrectViewModel : EffectViewModel
 
         Application.Current.Dispatcher.Invoke(() =>
         {
-            var renderer = new EffectRenderer(new WpfVisualTreeHelper());
+            var renderer = new EffectRenderer(new WpfVisualTreeHelper(), DiagramViewModel.Instance.Renderer.GetCache());
             var rtb = renderer.Render(Rect.Value, DesignerCanvas.GetInstance(), 
                 MainWindowViewModel.Instance.DiagramViewModel, MainWindowViewModel.Instance.DiagramViewModel.BackgroundItem.Value, this, 0, this.ZIndex.Value - 1);
             var newFormattedBitmapSource = new FormatConvertedBitmap();
@@ -123,6 +123,8 @@ public class ColorCorrectViewModel : EffectViewModel
                 Bitmap.Value = z.ToWriteableBitmap();
                 UpdateLayout();
             }
+
+            renderer?.MarkItemDirty(this);
         });
     }
 

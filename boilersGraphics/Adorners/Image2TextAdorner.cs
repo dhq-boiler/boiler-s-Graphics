@@ -73,7 +73,7 @@ internal class Image2TextAdorner : Adorner
         if (_startPoint.HasValue && _endPoint.HasValue)
         {
             var rect = new System.Windows.Rect(_startPoint.Value, _endPoint.Value);
-            var renderer = new Renderer(new WpfVisualTreeHelper());
+            var renderer = DiagramViewModel.Instance.Renderer;
             var mainWindow = Application.Current.MainWindow;
             var diagramViewModel = mainWindow.GetChildOfType<DiagramControl>().DataContext as DiagramViewModel;
             var rtb = renderer.Render(rect, DesignerCanvas.GetInstance(), diagramViewModel, diagramViewModel.BackgroundItem.Value, null);

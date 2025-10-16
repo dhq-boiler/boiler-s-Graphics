@@ -266,7 +266,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
 
                 App.Current.Dispatcher.Invoke(() =>
                 {
-                    RootLayer.Value.UpdateAppearanceBothParentAndChild();
+                    RootLayer.Value.UpdateAppearanceBothParentAndChildBatched();
                 }, DispatcherPriority.Render);
             });
             FitCanvasCommand = new DelegateCommand(() =>
@@ -344,7 +344,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
             OnLoaded = new ReactiveCommand().WithSubscribe(() =>
             {
                 DesignerCanvas = Application.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-                Layers.AsValueEnumerable().ToList().ForEach(x => x.UpdateAppearanceBothParentAndChild());
+                Layers.AsValueEnumerable().ToList().ForEach(x => x.UpdateAppearanceBothParentAndChildBatched());
             }).AddTo(_CompositeDisposable);
             Image2TextEngCommand = new ReactiveCommand().WithSubscribe(() =>
             {
@@ -678,6 +678,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     }
 
     public static DiagramViewModel Instance { get; private set; }
+    public Renderer Renderer { get; } = new(new WpfVisualTreeHelper());
     public DelegateCommand<object> CreateNewDiagramCommand { get; }
     public DelegateCommand LoadCommand { get; }
     public DelegateCommand<string> LoadFileCommand { get; }
@@ -786,7 +787,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
 
     private void ExecuteCopyCanvasToClipboardCommand()
     {
-        var renderer = new Renderer(new WpfVisualTreeHelper());
+        var renderer = DiagramViewModel.Instance.Renderer;
         var bitmap = renderer.Render(null, DesignerCanvas.GetInstance(), this, BackgroundItem.Value, BackgroundItem.Value);
         Clipboard.SetImage(bitmap);
     }
@@ -3206,7 +3207,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
 
                 App.Current.Dispatcher.Invoke(() =>
                 {
-                    RootLayer.Value.UpdateAppearanceBothParentAndChild();
+                    RootLayer.Value.UpdateAppearanceBothParentAndChildBatched();
                 }, DispatcherPriority.Render);
             }
             catch (Exception)
@@ -3238,7 +3239,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
         }
         App.Current.Dispatcher.Invoke(() =>
         {
-            RootLayer.Value.UpdateAppearanceBothParentAndChild();
+            RootLayer.Value.UpdateAppearanceBothParentAndChildBatched();
         }, DispatcherPriority.Render);
     }
 

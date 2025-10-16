@@ -13,7 +13,7 @@ namespace boilersGraphics.Helpers
     {
         private static readonly Logger s_logger = LogManager.GetCurrentClassLogger();
 
-        public EffectRenderer(IVisualTreeHelper visualTreeHelper) : base(visualTreeHelper)
+        public EffectRenderer(IVisualTreeHelper visualTreeHelper, RendererCache cache) : base(visualTreeHelper, cache)
         {
         }
 

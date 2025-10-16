@@ -4,6 +4,7 @@ using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
+using boilersGraphics.Models;
 
 namespace boilersGraphics.ViewModels;
 
@@ -22,6 +23,8 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
         Top.Value = top;
         Rect = Left.CombineLatest(Top, Width, Height, (left, top, width, height) => new Rect(left, top, width, height))
             .ToReadOnlyBindableReactiveProperty();
+        Size = Width.CombineLatest(Height, (w, h) => new Size(w, h)).ToReadOnlyBindableReactiveProperty();
+        SizeIncludeFrame = Width.CombineLatest(Height, (w, h) => new Size(w + 1, h + 1)).ToReadOnlyBindableReactiveProperty();
         Init();
     }
 
@@ -29,6 +32,8 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
     {
         Rect = Left.CombineLatest(Top, Width, Height, (left, top, width, height) => new Rect(left, top, width, height))
             .ToReadOnlyBindableReactiveProperty();
+        Size = Width.CombineLatest(Height, (w, h) => new Size(w, h)).ToReadOnlyBindableReactiveProperty();
+        SizeIncludeFrame = Width.CombineLatest(Height, (w, h) => new Size(w + 1, h + 1)).ToReadOnlyBindableReactiveProperty();
         Init();
     }
 
@@ -48,11 +53,9 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
 
     public BindableReactiveProperty<double> Height { get; } = new();
 
-    public IReadOnlyBindableReactiveProperty<Size> Size =>
-        Width.CombineLatest(Height, (w, h) => new Size(w, h)).ToReadOnlyBindableReactiveProperty();
+    public IReadOnlyBindableReactiveProperty<Size> Size { get; }
 
-    public IReadOnlyBindableReactiveProperty<Size> SizeIncludeFrame =>
-        Width.CombineLatest(Height, (w, h) => new Size(w + 1, h + 1)).ToReadOnlyBindableReactiveProperty();
+    public IReadOnlyBindableReactiveProperty<Size> SizeIncludeFrame { get; }
 
     public bool ShowConnectors
     {
@@ -147,6 +150,9 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
                 if (RenderingEnabled.Value)
                 {
                     await OnRectChanged(new Rect(Left.Value, Top.Value, Width.Value, Height.Value));
+
+                    var renderer = DiagramViewModel.Instance.Renderer;
+                    renderer?.MarkItemDirty(this);
                 }
                 UpdateChangeFormTriggerObject();
             })
@@ -159,6 +165,9 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
                 if (RenderingEnabled.Value)
                 {
                     await OnRectChanged(new Rect(Left.Value, Top.Value, Width.Value, Height.Value));
+
+                    var renderer = DiagramViewModel.Instance.Renderer;
+                    renderer?.MarkItemDirty(this);
                 }
                 UpdateChangeFormTriggerObject();
             })
@@ -172,6 +181,9 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
                 if (RenderingEnabled.Value)
                 {
                     await OnRectChanged(new Rect(Left.Value, Top.Value, Width.Value, Height.Value));
+
+                    var renderer = DiagramViewModel.Instance.Renderer;
+                    renderer?.MarkItemDirty(this);
                 }
                 UpdateChangeFormTriggerObject();
             })
@@ -183,6 +195,9 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
                 if (RenderingEnabled.Value)
                 {
                     await OnRectChanged(new Rect(Left.Value, Top.Value, Width.Value, Height.Value));
+
+                    var renderer = DiagramViewModel.Instance.Renderer;
+                    renderer?.MarkItemDirty(this);
                 }
             })
             .AddTo(_CompositeDisposable);
@@ -192,6 +207,9 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
             {
                 UpdateTransform(nameof(Matrix), x.OldItem, x.NewItem);
                 UpdateChangeFormTriggerObject();
+
+                var renderer = DiagramViewModel.Instance.Renderer;
+                renderer?.MarkItemDirty(this);
             })
             .AddTo(_CompositeDisposable);
         Right = Left.CombineLatest(Width, (a, b) => a + b)
@@ -210,6 +228,9 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
             {
                 UpdateTransform(nameof(EdgeThickness), x.OldItem, x.NewItem);
                 UpdateChangeFormTriggerObject();
+
+                var renderer = DiagramViewModel.Instance.Renderer;
+                renderer?.MarkItemDirty(this);
             })
             .AddTo(_CompositeDisposable);
 
@@ -240,6 +261,9 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
             if (renderingEnabled)
             {
                 await OnRectChanged(new Rect(Left.Value, Top.Value, Width.Value, Height.Value));
+
+                var renderer = DiagramViewModel.Instance.Renderer;
+                renderer?.MarkItemDirty(this);
             }
         }).AddTo(_CompositeDisposable);
     }

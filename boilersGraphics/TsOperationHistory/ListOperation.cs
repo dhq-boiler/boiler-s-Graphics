@@ -95,7 +95,7 @@ public class RemoveOperation<T> : IOperation
         if (_insertIndex < 0)
             return;
 
-        get_list().RemoveAt(_insertIndex);
+        (get_list() as IList).RemoveAt(_insertIndex);
     }
 
     public void Rollback()

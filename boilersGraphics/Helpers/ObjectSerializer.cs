@@ -582,7 +582,7 @@ internal class ObjectSerializer
     {
         using (var memStream = new MemoryStream())
         {
-            var renderer = new Renderer(new WpfVisualTreeHelper());
+            var renderer = DiagramViewModel.Instance.Renderer;
             var image = renderer.Render(null, DesignerCanvas.GetInstance(), DiagramViewModel.Instance, DiagramViewModel.Instance.BackgroundItem.Value, DiagramViewModel.Instance.BackgroundItem.Value);
             var writeableBitmap = new WriteableBitmap(image);
             var encoder = new PngBitmapEncoder();

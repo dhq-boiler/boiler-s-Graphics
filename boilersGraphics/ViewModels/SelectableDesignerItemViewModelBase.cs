@@ -33,11 +33,13 @@ public abstract class SelectableDesignerItemViewModelBase : BindableBase, ISelec
     {
         Id = id;
         Owner = parent;
+        HalfEdgeThickness = EdgeThickness.Select(x => x / 2).ToReadOnlyReactiveProperty();
         Init();
     }
 
     public SelectableDesignerItemViewModelBase()
     {
+        HalfEdgeThickness = EdgeThickness.Select(x => x / 2).ToReadOnlyReactiveProperty();
         Init();
     }
 
@@ -82,10 +84,7 @@ public abstract class SelectableDesignerItemViewModelBase : BindableBase, ISelec
 
     public R3.ReactiveProperty<double> EdgeThickness { get; } = new();
 
-    public R3.ReadOnlyReactiveProperty<double> HalfEdgeThickness
-    {
-        get { return EdgeThickness.Select(x => x / 2).ToReadOnlyReactiveProperty(); }
-    }
+    public R3.ReadOnlyReactiveProperty<double> HalfEdgeThickness { get; }
 
     public R3.ReadOnlyReactiveProperty<PathGeometry> PathGeometry { get; set; }
     public R3.ReactiveProperty<PathGeometry> PathGeometryNoRotate { get; } = new();
@@ -251,6 +250,16 @@ public abstract class SelectableDesignerItemViewModelBase : BindableBase, ISelec
     public bool IsSameGroup(SelectableDesignerItemViewModelBase target)
     {
         return ParentID == target.ParentID && ParentID != Guid.Empty;
+    }
+
+    public SelectableDesignerItemViewModelBase GetParent()
+    {
+        if (ParentID == Guid.Empty)
+        {
+            return null;
+        }
+
+        return Owner.AllItems.Value.AsValueEnumerable().FirstOrDefault(x => x.ID == ParentID);
     }
 
     private void Init()

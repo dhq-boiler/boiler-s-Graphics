@@ -92,7 +92,7 @@ namespace boilersGraphics.ViewModels.ColorCorrect
 
         private double GetThresholdByOtsu()
         {
-            var renderer = new EffectRenderer(new WpfVisualTreeHelper());
+            var renderer = new EffectRenderer(new WpfVisualTreeHelper(), DiagramViewModel.Instance.Renderer.GetCache());
             var rtb = renderer.Render(ViewModel.Value.Rect.Value, DesignerCanvas.GetInstance(),
                 MainWindowViewModel.Instance.DiagramViewModel, MainWindowViewModel.Instance.DiagramViewModel.BackgroundItem.Value, ViewModel.Value, ViewModel.Value.ZIndex.Value - 1);
             var newFormattedBitmapSource = new FormatConvertedBitmap();

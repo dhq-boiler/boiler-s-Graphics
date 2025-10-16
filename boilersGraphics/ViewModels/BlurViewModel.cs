@@ -51,7 +51,7 @@ public class BlurEffectViewModel : EffectViewModel
     {
         if (Width.Value <= 0 || Height.Value <= 0) return;
 
-        var renderer = new EffectRenderer(new WpfVisualTreeHelper());
+        var renderer = new EffectRenderer(new WpfVisualTreeHelper(), DiagramViewModel.Instance.Renderer.GetCache());
         var rtb = renderer.Render(new Rect(Left.Value, Top.Value, Width.Value, Height.Value),
             Application.Current.MainWindow.GetChildOfType<DesignerCanvas>(),
             (Application.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel,
@@ -81,6 +81,8 @@ public class BlurEffectViewModel : EffectViewModel
         Cv2.GaussianBlur(mat, dest, new Size(KernelWidth.Value, KernelHeight.Value), Sigma.Value);
         Bitmap.Value = dest.ToWriteableBitmap();
         UpdateLayout();
+
+        renderer?.MarkItemDirty(this);
     }
 
     public override async Task OnRectChanged(Rect rect)

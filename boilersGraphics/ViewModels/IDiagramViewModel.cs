@@ -17,6 +17,7 @@ public interface IDiagramViewModel
     BindableReactiveProperty<Brush> FillBrush { get; }
     BindableReactiveProperty<double?> EdgeThickness { get; }
     NotifyCollectionChangedSynchronizedViewList<LayerTreeViewItemBase> Layers { get; }
+    IReadOnlyBindableReactiveProperty<SelectableDesignerItemViewModelBase[]> AllItems { get; }
     BindableReactiveProperty<BackgroundViewModel> BackgroundItem { get; }
 
     void DeselectAll();

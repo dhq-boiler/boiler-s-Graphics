@@ -107,19 +107,38 @@ public class LayerItem : LayerTreeViewItemBase, IDisposable, IComparable<LayerTr
                     new DialogService((Application.Current as PrismApplication).Container as IContainerExtension);
                 IDialogResult result = null;
                 var snapPointVM = Item.Value as SnapPointViewModel;
-                var point = new Point(snapPointVM.Left.Value, snapPointVM.Top.Value);
+                var point = new System.Windows.Point(snapPointVM.Left.Value, snapPointVM.Top.Value);
                 dialogService.ShowDialog(nameof(SetSnapPoint),
                     new DialogParameters { { "Point", point }, { "LayerItem", this } }, ret => result = ret);
                 if (result != null
                     && result.Parameters != null
                     && result.Parameters.ContainsKey("Point"))
                 {
-                    var newPoint = result.Parameters.GetValue<Point>("Point");
+                    var newPoint = result.Parameters.GetValue<System.Windows.Point>("Point");
                     snapPointVM.Left.Value = newPoint.X;
                     snapPointVM.Top.Value = newPoint.Y;
                 }
             })
             .AddTo(_disposable);
+    }
+    
+    // レンダリング呼び出し制限用
+    private static readonly Dictionary<object, DateTime> _lastRenderTimes = new();
+    private static readonly TimeSpan _minRenderInterval = TimeSpan.FromMilliseconds(16); // 60FPS相当
+
+    public static bool ShouldRender(object key)
+    {
+        var now = DateTime.UtcNow;
+        if (_lastRenderTimes.TryGetValue(key, out var lastTime))
+        {
+            if (now - lastTime < _minRenderInterval)
+            {
+                return false; // まだ間隔が短いのでスキップ
+            }
+        }
+
+        _lastRenderTimes[key] = now;
+        return true;
     }
 
     public void UpdateAppearance()
@@ -133,6 +152,9 @@ public class LayerItem : LayerTreeViewItemBase, IDisposable, IComparable<LayerTr
             return;
         if (!backgroundIncluded && items.AsValueEnumerable().Count() == 0)
             return;
+        if (!ShouldRender(this))
+            return; // 頻繁な更新をスキップ
+
         double minX, maxX, minY, maxY;
         var _items = items;
         if (backgroundIncluded)
@@ -147,12 +169,31 @@ public class LayerItem : LayerTreeViewItemBase, IDisposable, IComparable<LayerTr
 
         Rect? sliceRect = null;
         _items.AsValueEnumerable().Cast<IRect>().ToList().ForEach(x => sliceRect = (!sliceRect.HasValue ? x.Rect.Value : Rect.Union(sliceRect.Value, x.Rect.Value)));
-        var renderer = new AppearanceRenderer(new WpfVisualTreeHelper());
+        var renderer = new AppearanceRenderer(new WpfVisualTreeHelper(), DiagramViewModel.Instance.Renderer.GetCache());
+        var cache = renderer.GetCache();
+
+        // Dirtyなアイテムのみをフィルタリング
+        var dirtyItems = items.AsValueEnumerable()
+            .Where(item => cache.IsDirty(item))
+            .ToList();
+
+        // Dirtyなアイテムがない場合は更新をスキップ
+        if (dirtyItems.Count == 0 && !backgroundIncluded)
+        {
+            return;
+        }
+
         Appearance.Value = renderer.Render(sliceRect, DesignerCanvas.GetInstance(),
             DiagramViewModel.Instance,
             null, null, _items.AsValueEnumerable().Min(x => x.ZIndex.Value), _items.AsValueEnumerable().Max(x => x.ZIndex.Value));
 
         Item.Value.ChangeFormDateTime.Value = DateTime.Now;
+
+        //// レンダリング完了後、Dirtyフラグをクリア
+        //foreach (var item in dirtyItems)
+        //{
+        //    cache.ClearDirtyFlag(item);
+        //}
     }
 
     private static void UpdateAppearanceByItem(DesignerCanvas designerCanvas, double minX, double minY,

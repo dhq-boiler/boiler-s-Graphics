@@ -19,6 +19,10 @@ public class Renderer : IDisposable
 {
     public IVisualTreeHelper VisualTreeHelper { get; private set; }
     private static readonly Logger s_logger = LogManager.GetCurrentClassLogger();
+    // DrawingVisualキャッシュ用フィールド
+    private readonly Dictionary<object, CachedDrawingVisual> _drawingVisualCache = new();
+    private readonly HashSet<object> _dirtyItems = new();
+    private object _lastModifiedItem;
 
     // キャッシュ用フィールド
     private List<FrameworkElement> _cachedAllViews;
@@ -27,9 +31,16 @@ public class Renderer : IDisposable
     private DesignerCanvas _lastDesignerCanvas;
     private bool _disposed = false;
 
-    public Renderer(IVisualTreeHelper visualTreeHelper)
+    protected readonly RendererCache _cache;
+
+    protected Renderer(IVisualTreeHelper visualTreeHelper, RendererCache cache)
     {
         VisualTreeHelper = visualTreeHelper;
+        _cache = cache;
+    }
+
+    public Renderer(IVisualTreeHelper visualTreeHelper) : this(visualTreeHelper, new RendererCache())
+    {
     }
 
     // 公開キャッシュ無効化メソッド
@@ -105,8 +116,10 @@ public class Renderer : IDisposable
         }
         else
         {
-            view = allViews.AsValueEnumerable().FirstOrDefault(x => 
-                x.DataContext == dataContext && x.FindName("PART_ContentPresenter") is not null);
+            //view = allViews.AsValueEnumerable().FirstOrDefault(x => 
+            //    x.DataContext == dataContext && x.FindName("PART_ContentPresenter") is not null);
+
+            view = allViews.AsValueEnumerable().FirstOrDefault(x => x.DataContext == dataContext);
         }
 
         // 見つかった場合はキャッシュに追加
@@ -123,8 +136,6 @@ public class Renderer : IDisposable
     {
         var size = GetRenderSize(sliceRect, diagramViewModel, minZIndex, maxZIndex);
 
-        s_logger.Debug($"SliceRect size:{size}");
-
         var width = (int)size.Width;
         var height = (int)size.Height;
         if (width <= 0) width = 1;
@@ -135,22 +146,381 @@ public class Renderer : IDisposable
         var renderedCount = 0;
         if (!App.IsTest)
         {
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                renderedCount = RenderInternal(sliceRect, designerCanvas, diagramViewModel, backgroundItem, minZIndex, maxZIndex, renderedCount, rtb, caller);
-            });
+            // UI要素のアクセスのみをDispatcher内で実行
+            var renderData = Application.Current.Dispatcher.Invoke(() =>
+                PrepareRenderData(sliceRect, designerCanvas, diagramViewModel, backgroundItem, minZIndex, maxZIndex, caller));
+
+            // 実際の描画処理はDispatcher外で実行
+            renderedCount = RenderWithPreparedData(renderData, rtb);
         }
         else
         {
             renderedCount = RenderInternal(sliceRect, designerCanvas, diagramViewModel, backgroundItem, minZIndex, maxZIndex, renderedCount, rtb, caller);
         }
 
-        if (renderedCount == 0)
-            s_logger.Warn("レンダリングが試みられましたが、レンダリングされませんでした。");
-        else
-            s_logger.Debug("レンダリングされました。");
-
         return rtb;
+    }
+
+    private RenderData PrepareRenderData(Rect? sliceRect, DesignerCanvas designerCanvas,
+        DiagramViewModel diagramViewModel, BackgroundViewModel backgroundItem,
+        int minZIndex, int maxZIndex, SelectableDesignerItemViewModelBase caller)
+    {
+        var allViews = GetCachedAllViews(designerCanvas);
+
+        var renderItems = new List<RenderItemData>();
+        var except = new SelectableDesignerItemViewModelBase[] { backgroundItem }.AsValueEnumerable().Where(x => x is not null);
+
+        var itemsToRender = diagramViewModel.AllItems.Value.AsValueEnumerable()
+            .Except(except)
+            .Where(x => x.IsVisible.Value && x.ZIndex.Value >= minZIndex && x.ZIndex.Value <= maxZIndex)
+            .OrderBy(x => x.ZIndex.Value)
+            .OfType<DesignerItemViewModelBase>();
+
+        foreach (var item in itemsToRender)
+        {
+            var view = FindViewForDataContext(item, allViews);
+            if (view != null)
+            {
+                // UI要素の情報を取得してキャッシュ
+                var itemData = CreateRenderItemData(view, item);
+                renderItems.Add(itemData);
+            }
+        }
+
+        var backgroundData = CreateBackgroundRenderData(backgroundItem, allViews);
+
+        return new RenderData
+        {
+            SliceRect = sliceRect,
+            RenderItems = renderItems,
+            BackgroundData = backgroundData,
+            BackgroundItem = backgroundItem
+        };
+    }
+
+    private int RenderWithPreparedData(RenderData renderData, RenderTargetBitmap rtb)
+    {
+        var visual = new DrawingVisual();
+        var renderedCount = 0;
+
+        using (var context = visual.RenderOpen())
+        {
+            // 描画領域外の要素を事前に除外
+            var visibleItems = FilterVisibleItems(renderData.RenderItems, renderData.SliceRect);
+
+            // 背景を描画
+            if (RenderBackgroundWithData(renderData.SliceRect, context, renderData.BackgroundData, renderData.BackgroundItem))
+            {
+                renderedCount++;
+            }
+
+            // 可視要素のみを描画
+            foreach (var itemData in visibleItems)
+            {
+                if (RenderItemWithDataCached(renderData.SliceRect, context, itemData, renderData.BackgroundItem))
+                {
+                    renderedCount++;
+                }
+            }
+        }
+
+        rtb.Render(visual);
+        rtb.Freeze();
+
+        return renderedCount;
+    }
+
+    private List<RenderItemData> FilterVisibleItems(List<RenderItemData> items, Rect? sliceRect)
+    {
+        if (!sliceRect.HasValue)
+            return items;
+
+        var visibleRect = sliceRect.Value;
+        return items.Where(item =>
+        {
+            var itemRect = GetItemBounds(item);
+            return visibleRect.IntersectsWith(itemRect);
+        }).ToList();
+    }
+
+    private Rect GetItemBounds(RenderItemData item)
+    {
+        switch (item.Item)
+        {
+            case DesignerItemViewModelBase designerItem:
+                return new Rect(item.Left, item.Top, item.Width, item.Height);
+            case ConnectorBaseViewModel connector:
+                return new Rect(item.LeftTop, item.Bounds.Size);
+            default:
+                return item.Bounds;
+        }
+    }
+
+    private bool RenderItemWithData(Rect? sliceRect, DrawingContext context, RenderItemData itemData, BackgroundViewModel background)
+    {
+        // VisualBrushのキャッシュ
+        var brush = GetOrCreateVisualBrush(itemData.View);
+
+        var rect = CalculateRenderRect(sliceRect, itemData, background);
+        if (rect == Rect.Empty) return false;
+
+        switch (itemData.Item)
+        {
+            case DesignerItemViewModelBase designerItem:
+                if (Math.Abs(designerItem.RotationAngle.Value) > 0.01) // 回転がある場合のみ変換を適用
+                {
+                    context.PushTransform(new RotateTransform(designerItem.RotationAngle.Value,
+                        designerItem.CenterX.Value, designerItem.CenterY.Value));
+                    context.DrawRectangle(brush, null, rect);
+                    context.Pop();
+                }
+                else
+                {
+                    context.DrawRectangle(brush, null, rect);
+                }
+                return true;
+
+            case ConnectorBaseViewModel:
+                context.DrawRectangle(brush, null, rect);
+                return true;
+        }
+
+        return false;
+    }
+
+    private Rect CalculateRenderRect(Rect? sliceRect, RenderItemData itemData, BackgroundViewModel background)
+    {
+        switch (itemData.Item)
+        {
+            case DesignerItemViewModelBase designerItem:
+                return CalculateDesignerItemRectWithData(sliceRect, itemData, designerItem, background);
+
+            case ConnectorBaseViewModel connector:
+                return CalculateConnectorRectWithData(sliceRect, itemData, connector, background);
+
+            default:
+                // フォールバック処理
+                return CalculateDefaultRectWithData(sliceRect, itemData, background);
+        }
+    }
+
+    private Rect CalculateDefaultRectWithData(Rect? sliceRect, RenderItemData itemData, BackgroundViewModel background)
+    {
+        var bounds = itemData.Bounds;
+        if (bounds.IsEmpty) return Rect.Empty;
+
+        Rect rect;
+        if (sliceRect.HasValue)
+        {
+            rect = sliceRect.Value;
+            var intersectSrc = new Rect(itemData.Left, itemData.Top, bounds.Width, bounds.Height);
+            rect = Rect.Intersect(rect, intersectSrc);
+            if (rect != Rect.Empty)
+            {
+                rect.X -= sliceRect.Value.X;
+                rect.Y -= sliceRect.Value.Y;
+            }
+        }
+        else
+        {
+            rect = new Rect(itemData.Left, itemData.Top, bounds.Width, bounds.Height);
+        }
+
+        if (rect != Rect.Empty)
+        {
+            rect.X -= background.Left.Value;
+            rect.Y -= background.Top.Value;
+        }
+
+        return rect;
+    }
+
+    private Rect CalculateDesignerItemRectWithData(Rect? sliceRect, RenderItemData itemData,
+    DesignerItemViewModelBase designerItem, BackgroundViewModel background)
+    {
+        var bounds = itemData.Bounds;
+        if (bounds.IsEmpty) return Rect.Empty;
+
+        Rect rect;
+        if (designerItem is PictureDesignerItemViewModel)
+        {
+            if (sliceRect.HasValue)
+            {
+                rect = sliceRect.Value;
+                var intersectSrc = new Rect(itemData.Left, itemData.Top, bounds.Width, bounds.Height);
+                rect = Rect.Intersect(rect, intersectSrc);
+                if (rect != Rect.Empty)
+                {
+                    rect.X -= sliceRect.Value.X;
+                    rect.Y -= sliceRect.Value.Y;
+                }
+            }
+            else
+            {
+                rect = new Rect(itemData.Left, itemData.Top, itemData.Width, itemData.Height);
+            }
+        }
+        else
+        {
+            if (sliceRect.HasValue)
+            {
+                rect = sliceRect.Value;
+                var intersectSrc = new Rect(itemData.Left, itemData.Top, bounds.Width, bounds.Height);
+                rect = Rect.Intersect(rect, intersectSrc);
+                if (rect != Rect.Empty)
+                {
+                    rect.X -= sliceRect.Value.X;
+                    rect.Y -= sliceRect.Value.Y;
+                }
+            }
+            else
+            {
+                rect = new Rect(itemData.Left, itemData.Top, itemData.Width, itemData.Height);
+            }
+        }
+
+        if (rect != Rect.Empty)
+        {
+            rect.X -= background.Left.Value;
+            rect.Y -= background.Top.Value;
+        }
+
+        return rect;
+    }
+
+    private Rect CalculateConnectorRectWithData(Rect? sliceRect, RenderItemData itemData,
+        ConnectorBaseViewModel connector, BackgroundViewModel background)
+    {
+        var bounds = itemData.Bounds;
+        if (bounds.IsEmpty) return Rect.Empty;
+
+        Rect rect;
+        if (sliceRect.HasValue)
+        {
+            rect = sliceRect.Value;
+            var intersectSrc = new Rect(itemData.LeftTop, bounds.Size);
+            rect = Rect.Intersect(rect, intersectSrc);
+            if (rect != Rect.Empty)
+            {
+                rect.X -= sliceRect.Value.X;
+                rect.Y -= sliceRect.Value.Y;
+            }
+        }
+        else
+        {
+            rect = new Rect(itemData.LeftTop, bounds.Size);
+        }
+
+        rect.X -= background.Left.Value;
+        rect.Y -= background.Top.Value;
+        return rect;
+    }
+
+    private BackgroundRenderData CreateBackgroundRenderData(BackgroundViewModel background, List<FrameworkElement> allViews)
+    {
+        var view = FindViewForDataContext(background, allViews);
+        if (view == null)
+        {
+            s_logger.Warn($"背景ビューが見つかりません: {background}");
+            return null;
+        }
+
+        // 背景ビューの準備
+        view.Measure(new Size(background.Width.Value, background.Height.Value));
+        view.Arrange(background.Rect.Value);
+        view.UpdateLayout();
+        view.SnapsToDevicePixels = true;
+
+        var bounds = VisualTreeHelper.GetDescendantBounds(view);
+
+        return new BackgroundRenderData
+        {
+            View = view,
+            Bounds = bounds,
+            Width = background.Width.Value,
+            Height = background.Height.Value,
+            Left = background.Left.Value,
+            Top = background.Top.Value,
+            Rect = background.Rect.Value
+        };
+    }
+
+    private bool RenderBackgroundWithData(Rect? sliceRect, DrawingContext context, BackgroundRenderData backgroundData, BackgroundViewModel background)
+    {
+        if (backgroundData?.View == null)
+        {
+            s_logger.Warn($"背景ビューが見つかりません: {background}");
+            return false;
+        }
+
+        var rect = sliceRect ?? backgroundData.Bounds;
+
+        var brush = new VisualBrush(backgroundData.View)
+        {
+            Stretch = Stretch.None
+        };
+
+        if (sliceRect.HasValue)
+        {
+            rect.X = 0;
+            rect.Y = 0;
+        }
+
+        context.DrawRectangle(brush, null, rect);
+        return true;
+    }
+
+    private RenderItemData CreateRenderItemData(FrameworkElement view, DesignerItemViewModelBase item)
+    {
+        var PART_ContentPresenter = view.FindName("PART_ContentPresenter") as ContentPresenter;
+        var actualView = PART_ContentPresenter ?? view;
+
+        // ビューの現在の状態をキャプチャ
+        PrepareViewForRendering(actualView, item);
+
+        var bounds = VisualTreeHelper.GetDescendantBounds(actualView);
+        return new RenderItemData
+        {
+            View = actualView,
+            Item = item,
+            Bounds = bounds,
+            Left = item.Left.Value,
+            Top = item.Top.Value,
+            Width = item.Width.Value,
+            Height = item.Height.Value,
+            LeftTop = new Point(item.Left.Value, item.Top.Value)
+        };
+    }
+
+    public class RenderData
+    {
+        public Rect? SliceRect { get; set; }
+        public List<RenderItemData> RenderItems { get; set; }
+        public BackgroundRenderData BackgroundData { get; set; }
+        public BackgroundViewModel BackgroundItem { get; set; }
+    }
+
+    public class BackgroundRenderData
+    {
+        public FrameworkElement View { get; set; }
+        public Rect Bounds { get; set; }
+        public double Width { get; set; }
+        public double Height { get; set; }
+        public double Left { get; set; }
+        public double Top { get; set; }
+        public Rect Rect { get; set; }
+    }
+
+    public class RenderItemData
+    {
+        public FrameworkElement View { get; set; }
+        public SelectableDesignerItemViewModelBase Item { get; set; }
+        public Rect Bounds { get; set; }
+        public double Left { get; set; }
+        public double Top { get; set; }
+        public double Width { get; set; }
+        public double Height { get; set; }
+        public Point LeftTop { get; set; } // Connector用
     }
 
     protected int RenderInternal(Rect? sliceRect, DesignerCanvas designerCanvas, DiagramViewModel diagramViewModel,
@@ -511,5 +881,169 @@ public class Renderer : IDisposable
         }
 
         return true;
+    }
+
+    /// <summary>
+    /// キャッシュインスタンスを取得（EffectRendererなどが共有するため）
+    /// </summary>
+    public RendererCache GetCache()
+    {
+        return _cache;
+    }
+
+    /// <summary>
+    /// DrawingVisualキャッシュの無効化
+    /// </summary>
+    /// <param name="item">無効化する特定のアイテム。nullの場合は全てクリア</param>
+    public void InvalidateDrawingVisualCache(object item = null)
+    {
+        _cache.InvalidateDrawingVisualCache(item);
+
+        if (item == null)
+        {
+            s_logger.Debug("DrawingVisualキャッシュを全てクリアしました");
+        }
+        else
+        {
+            s_logger.Debug($"アイテムをダーティマーク: {item.GetType().Name}");
+        }
+    }
+
+    /// <summary>
+    /// 特定のアイテムとその親をダーティマークする
+    /// </summary>
+    public void MarkItemDirty(object item)
+    {
+        _cache.MarkItemDirty(item);
+        s_logger.Debug($"アイテムとその親をダーティマーク: {item?.GetType().Name}");
+    }
+
+    /// <summary>
+    /// キャッシュを使用してアイテムを描画
+    /// </summary>
+    private bool RenderItemWithDataCached(Rect? sliceRect, DrawingContext context, RenderItemData itemData, BackgroundViewModel background)
+    {
+        var itemKey = itemData.Item;
+        var isDirty = _cache.IsDirty(itemKey);
+
+        // キャッシュの取得または生成
+        if (!isDirty && _cache.TryGetDrawingVisual(itemKey, out var cachedVisual))
+        {
+            // キャッシュが有効な場合、キャッシュされたDrawingVisualを使用
+            if (cachedVisual.IsValid(itemData))
+            {
+                var cachedRect = CalculateRenderRect(sliceRect, itemData, background);
+                if (cachedRect == Rect.Empty) return false;
+
+                // キャッシュされたVisualBrushを描画
+                context.DrawRectangle(cachedVisual.Brush, null, cachedRect);
+                s_logger.Trace($"キャッシュから描画: {itemData.Item.GetType().Name}");
+                return true;
+            }
+            else
+            {
+                // キャッシュが無効になった場合は削除
+                _cache.RemoveDrawingVisual(itemKey);
+                s_logger.Debug($"キャッシュが無効: {itemData.Item.GetType().Name}");
+            }
+        }
+
+        // キャッシュがない、またはダーティな場合は新規に描画してキャッシュ
+        var drawingVisual = new DrawingVisual();
+        using (var drawingContext = drawingVisual.RenderOpen())
+        {
+            var brush = GetOrCreateVisualBrush(itemData.View);
+            var rect = new Rect(itemData.Left, itemData.Top, itemData.Width, itemData.Height);
+
+            switch (itemData.Item)
+            {
+                case DesignerItemViewModelBase designerItem:
+                    if (Math.Abs(designerItem.RotationAngle.Value) > 0.01)
+                    {
+                        drawingContext.PushTransform(new RotateTransform(designerItem.RotationAngle.Value,
+                            designerItem.CenterX.Value, designerItem.CenterY.Value));
+                        drawingContext.DrawRectangle(brush, null, rect);
+                        drawingContext.Pop();
+                    }
+                    else
+                    {
+                        drawingContext.DrawRectangle(brush, null, rect);
+                    }
+                    break;
+
+                case ConnectorBaseViewModel:
+                    drawingContext.DrawRectangle(brush, null, rect);
+                    break;
+
+                default:
+                    return false;
+            }
+        }
+
+        // DrawingVisualをキャッシュに保存
+        var visualBrush = new VisualBrush(drawingVisual)
+        {
+            Stretch = Stretch.None,
+            TileMode = TileMode.None
+        };
+
+        var cached = new CachedDrawingVisual
+        {
+            Visual = drawingVisual,
+            Brush = visualBrush,
+            ItemHash = itemData.GetHashCode(),
+            Bounds = itemData.Bounds,
+            LastUpdateTime = DateTime.UtcNow
+        };
+
+        _cache.AddDrawingVisual(itemKey, cached);
+
+        // ダーティフラグをクリア
+        _cache.ClearDirtyFlag(itemKey);
+
+        s_logger.Debug($"新規キャッシュ作成: {itemData.Item.GetType().Name}");
+
+        // 実際の描画
+        var renderRect = CalculateRenderRect(sliceRect, itemData, background);
+        if (renderRect == Rect.Empty) return false;
+
+        context.DrawRectangle(visualBrush, null, renderRect);
+        return true;
+    }
+
+    /// <summary>
+    /// VisualBrushのキャッシュ取得
+    /// </summary>
+    private VisualBrush GetOrCreateVisualBrush(FrameworkElement view)
+    {
+        return _cache.GetOrCreateVisualBrush(view);
+    }
+
+    /// <summary>
+    /// キャッシュ統計情報の取得（デバッグ用）
+    /// </summary>
+    public CacheStatistics GetCacheStatistics()
+    {
+        return _cache.GetStatistics(_dataContextToViewCache.Count);
+    }
+
+    /// <summary>
+    /// 全てのキャッシュをクリア（拡張版）
+    /// </summary>
+    public void ClearAllCaches()
+    {
+        ClearVisualBrushCache();
+        InvalidateDrawingVisualCache();
+        InvalidateViewCache();
+
+        s_logger.Info("全てのキャッシュをクリアしました");
+    }
+
+    /// <summary>
+    /// VisualBrushキャッシュをクリア
+    /// </summary>
+    public void ClearVisualBrushCache()
+    {
+        _cache.ClearVisualBrushCache();
     }
 }

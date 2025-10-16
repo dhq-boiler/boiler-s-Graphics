@@ -96,7 +96,7 @@ internal class LayersViewModel : BindableBase, IDialogAware
                     selectedLayer.IsSelected.Value = true;
                     selectedLayer.ChildrenSwitchIsHitTestVisible(true);
 
-                    selectedLayer.UpdateAppearanceBothParentAndChild();
+                    selectedLayer.UpdateAppearanceBothParentAndChildBatched();
                 }
                 else if (newItem.GetType() == typeof(LayerItem))
                 {
