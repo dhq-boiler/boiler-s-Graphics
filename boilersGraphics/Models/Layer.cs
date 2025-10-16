@@ -148,12 +148,6 @@ public class Layer : LayerTreeViewItemBase, IObservable<LayerObservable>, ICompa
             .Where(item => cache.IsDirty(item))
             .ToList();
 
-        //// Dirtyなアイテムがない場合は更新をスキップ
-        //if (dirtyItems.Count == 0 && !backgroundIncluded)
-        //{
-        //    return;
-        //}
-
         //背景オブジェクトを除く、アイテムがない場合
         if (_items.AsValueEnumerable().Except(new SelectableDesignerItemViewModelBase[]{ DiagramViewModel.Instance.BackgroundItem.Value }).Count() == 0)
         {
