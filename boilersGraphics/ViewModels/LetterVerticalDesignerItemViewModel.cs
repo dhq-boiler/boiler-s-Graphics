@@ -121,7 +121,7 @@ public class LetterVerticalDesignerItemViewModel : AbstractLetterDesignerItemVie
                     list.SumHeightExceptInfinity(glyphTypeface, FontSize.Value) + pg.Bounds.Height);
                 matrixTransform.Matrix = matrix;
                 pg.Transform = matrixTransform;
-                PathGeometry.CurrentValue.AddGeometry(pg);
+                PathGeometry.Value.AddGeometry(pg);
                 list.Add(pg);
             }
 
@@ -181,7 +181,7 @@ public class LetterVerticalDesignerItemViewModel : AbstractLetterDesignerItemVie
                 list.SumHeightExceptInfinity(glyphTypeface, FontSize.Value) + pg.Bounds.Height);
             matrixTransform.Matrix = matrix;
             pg.Transform = matrixTransform;
-            PathGeometry.CurrentValue.AddGeometry(pg);
+            PathGeometry.Value.AddGeometry(pg);
             list.Add(pg);
         }
     }

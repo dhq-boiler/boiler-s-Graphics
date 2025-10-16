@@ -117,7 +117,7 @@ public abstract class AbstractLetterDesignerItemViewModel : DesignerItemViewMode
     public override PathGeometry CreateGeometry(bool flag = false)
     {
         RenderLetter();
-        return PathGeometry.CurrentValue;
+        return PathGeometry.Value;
     }
 
 

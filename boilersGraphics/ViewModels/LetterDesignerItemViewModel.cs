@@ -91,7 +91,7 @@ public class LetterDesignerItemViewModel : AbstractLetterDesignerItemViewModel, 
 
                 pg.Transform = new MatrixTransform(1.0, 0, 0, 1.0,
                     list.SumWidthExceptInfinity(glyphTypeface, FontSize.Value), maxHeight + offsetY);
-                PathGeometry.CurrentValue.AddGeometry(pg);
+                PathGeometry.Value.AddGeometry(pg);
                 list.Add(pg);
             }
 
@@ -121,7 +121,7 @@ public class LetterDesignerItemViewModel : AbstractLetterDesignerItemViewModel, 
         {
             pg.Transform = new MatrixTransform(1.0, 0, 0, 1.0,
                 list.SumWidthExceptInfinity(glyphTypeface, FontSize.Value), maxHeight);
-            PathGeometry.CurrentValue.AddGeometry(pg);
+            PathGeometry.Value.AddGeometry(pg);
             list.Add(pg);
         }
     }

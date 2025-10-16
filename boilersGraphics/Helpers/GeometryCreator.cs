@@ -648,9 +648,9 @@ public static class GeometryCreator
                 else if (item2.GetType() == typeof(CombineGeometryViewModel))
                 {
                     var item2_ = item2 as CombineGeometryViewModel;
-                    var beginPoint = GetBeginPoint(item2_.PathGeometry.CurrentValue);
+                    var beginPoint = GetBeginPoint(item2_.PathGeometry.Value);
                     ctx.BeginFigure(beginPoint, true, true);
-                    foreach (var figure in item2_.PathGeometry.CurrentValue.Figures)
+                    foreach (var figure in item2_.PathGeometry.Value.Figures)
                     foreach (var segment in figure.Segments)
                     {
                         if (segment is ArcSegment arcSegment)
@@ -676,7 +676,7 @@ public static class GeometryCreator
                 else if (item2.GetType() == typeof(PolyBezierViewModel))
                 {
                     var item2_ = item2 as PolyBezierViewModel;
-                    var beginPoint = GetBeginPoint(item1_.PathGeometry.CurrentValue);
+                    var beginPoint = GetBeginPoint(item1_.PathGeometry.Value);
                     ctx.BeginFigure(beginPoint, true, true);
                     ctx.LineTo(item1_.Points[1], true, false);
                     ctx.PolyBezierTo(item2_.Points.AsValueEnumerable().ToList(), true, false);
@@ -803,9 +803,9 @@ public static class GeometryCreator
                 var item1_ = item1 as CombineGeometryViewModel;
                 if (item2.GetType() == typeof(StraightConnectorViewModel))
                 {
-                    var beginPoint = GetBeginPoint(item1_.PathGeometry.CurrentValue);
+                    var beginPoint = GetBeginPoint(item1_.PathGeometry.Value);
                     ctx.BeginFigure(beginPoint, true, true);
-                    foreach (var figure in item1_.PathGeometry.CurrentValue.Figures)
+                    foreach (var figure in item1_.PathGeometry.Value.Figures)
                     foreach (var segment in figure.Segments)
                     {
                         if (segment is ArcSegment arcSegment)
@@ -863,9 +863,9 @@ public static class GeometryCreator
                 var item1_ = item1 as PolyBezierViewModel;
                 if (item2.GetType() == typeof(StraightConnectorViewModel))
                 {
-                    var beginPoint = GetBeginPoint(item1_.PathGeometry.CurrentValue);
+                    var beginPoint = GetBeginPoint(item1_.PathGeometry.Value);
                     ctx.BeginFigure(beginPoint, true, true);
-                    foreach (var figure in item1_.PathGeometry.CurrentValue.Figures)
+                    foreach (var figure in item1_.PathGeometry.Value.Figures)
                     foreach (var segment in figure.Segments)
                     {
                         if (segment is ArcSegment arcSegment)
@@ -892,7 +892,7 @@ public static class GeometryCreator
                 else if (item2.GetType() == typeof(BezierCurveViewModel))
                 {
                     var item2_ = item2 as BezierCurveViewModel;
-                    var beginPoint = GetBeginPoint(item1_.PathGeometry.CurrentValue);
+                    var beginPoint = GetBeginPoint(item1_.PathGeometry.Value);
                     ctx.BeginFigure(beginPoint, true, true);
                     ctx.PolyBezierTo(item1_.Points.AsValueEnumerable().Skip(1).ToList(), true, false);
                     ctx.BezierTo(item2_.ControlPoint1.Value, item2_.ControlPoint2.Value, item2_.Points[1], true, false);
@@ -924,7 +924,7 @@ public static class GeometryCreator
                 else if (item2.GetType() == typeof(PolyBezierViewModel))
                 {
                     var item2_ = item2 as PolyBezierViewModel;
-                    var beginPoint = GetBeginPoint(item1_.PathGeometry.CurrentValue);
+                    var beginPoint = GetBeginPoint(item1_.PathGeometry.Value);
                     ctx.BeginFigure(beginPoint, true, true);
                     ctx.PolyBezierTo(item1_.Points.AsValueEnumerable().Skip(1).ToList(), true, false);
                     ctx.PolyBezierTo(item2_.Points.AsValueEnumerable().ToList(), true, false);

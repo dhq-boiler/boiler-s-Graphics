@@ -234,7 +234,7 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
             })
             .AddTo(_CompositeDisposable);
 
-        PathGeometry = PathGeometryNoRotate.ToReadOnlyReactiveProperty();
+        PathGeometry = PathGeometryNoRotate.ToReadOnlyBindableReactiveProperty();
 
         Matrix.Value = new Matrix();
 

@@ -101,7 +101,7 @@ public class PolygonAdorner : Adorner
             _corners.AsValueEnumerable().ToList().ForEach(x => LogManager.GetCurrentClassLogger().Debug($"corner:{x.Point.Value}"));
             item.SnapPoints.AddRange(_corners.AsValueEnumerable().Select(x =>
             {
-                var itemPathGeometry = item.PathGeometry.CurrentValue;
+                var itemPathGeometry = item.PathGeometry.Value;
                 var _x = (-_corners.AsValueEnumerable().Select(x => x.Point.Value.X).Min() + x.Point.Value.X) /
                     itemPathGeometry.Bounds.Width * item.Width.Value - 3;
                 var _y = (-_corners.AsValueEnumerable().Select(x => x.Point.Value.Y).Min() + x.Point.Value.Y) /

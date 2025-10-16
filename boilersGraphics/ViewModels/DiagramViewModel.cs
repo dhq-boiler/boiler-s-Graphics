@@ -1123,7 +1123,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
         image.Source = picture.EmbeddedImage.Value != null
             ? picture.EmbeddedImage.Value
             : ToBitmapSource(picture.FileName);
-        var g = GeometryCreator.Translate(other.PathGeometry.CurrentValue, -left, -top);
+        var g = GeometryCreator.Translate(other.PathGeometry.Value, -left, -top);
         image.Clip = g;
         image.Stretch = Stretch.Fill;
         image.EndInit();
@@ -1326,13 +1326,13 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
             MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "PathGeometry.Value",
                 GeometryCreator.CreateCombineGeometry(pb));
             MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "Left.Value",
-                combine.PathGeometry.CurrentValue.Bounds.Left);
+                combine.PathGeometry.Value.Bounds.Left);
             MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "Top.Value",
-                combine.PathGeometry.CurrentValue.Bounds.Top);
+                combine.PathGeometry.Value.Bounds.Top);
             MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "Width.Value",
-                combine.PathGeometry.CurrentValue.Bounds.Width);
+                combine.PathGeometry.Value.Bounds.Width);
             MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "Height.Value",
-                combine.PathGeometry.CurrentValue.Bounds.Height);
+                combine.PathGeometry.Value.Bounds.Height);
             Add(combine);
         }
         else if (selectedItems.AsValueEnumerable().Count() == 2 && item1 is EffectViewModel effect)

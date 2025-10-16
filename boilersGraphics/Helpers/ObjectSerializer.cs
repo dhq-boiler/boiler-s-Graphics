@@ -290,7 +290,7 @@ internal class ObjectSerializer
             list.Add(new XElement("FillBrush",
                 XElement.Parse(WpfObjectSerializer.Serialize(snapPointItem.FillBrush.Value))));
             list.Add(new XElement("EdgeThickness", snapPointItem.EdgeThickness.Value));
-            list.Add(new XElement("PathGeometry", snapPointItem.PathGeometry.CurrentValue));
+            list.Add(new XElement("PathGeometry", snapPointItem.PathGeometry.Value));
             var snappointItemXML = new XElement("SnapPointItem", list);
             return snappointItemXML;
         }
@@ -330,7 +330,7 @@ internal class ObjectSerializer
                     new XElement("EdgeBrush",
                         XElement.Parse(WpfObjectSerializer.Serialize(connection.EdgeBrush.Value))),
                     new XElement("EdgeThickness", connection.EdgeThickness.Value),
-                    new XElement("PathGeometry", connection.PathGeometry.CurrentValue)
+                    new XElement("PathGeometry", connection.PathGeometry.Value)
                 ))
             .Union(
                 from connection in items.WithPickupChildren(dialogViewModel.Layers
@@ -352,7 +352,7 @@ internal class ObjectSerializer
                     new XElement("EdgeThickness", connection.EdgeThickness.Value),
                     new XElement("ControlPoint1", connection.ControlPoint1.Value),
                     new XElement("ControlPoint2", connection.ControlPoint2.Value),
-                    new XElement("PathGeometry", connection.PathGeometry.CurrentValue)
+                    new XElement("PathGeometry", connection.PathGeometry.Value)
                 )).ToArray();
     }
 

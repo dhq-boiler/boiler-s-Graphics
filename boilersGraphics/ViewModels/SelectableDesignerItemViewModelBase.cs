@@ -33,13 +33,13 @@ public abstract class SelectableDesignerItemViewModelBase : BindableBase, ISelec
     {
         Id = id;
         Owner = parent;
-        HalfEdgeThickness = EdgeThickness.Select(x => x / 2).ToReadOnlyReactiveProperty();
+        HalfEdgeThickness = EdgeThickness.Select(x => x / 2).ToReadOnlyBindableReactiveProperty();
         Init();
     }
 
     public SelectableDesignerItemViewModelBase()
     {
-        HalfEdgeThickness = EdgeThickness.Select(x => x / 2).ToReadOnlyReactiveProperty();
+        HalfEdgeThickness = EdgeThickness.Select(x => x / 2).ToReadOnlyBindableReactiveProperty();
         Init();
     }
 
@@ -52,9 +52,9 @@ public abstract class SelectableDesignerItemViewModelBase : BindableBase, ISelec
 
     // ↓ Flags ↓
 
-    public R3.ReactiveProperty<bool> IsSelected { get; } = new();
-    public R3.ReactiveProperty<bool> EnableForSelection { get; } = new();
-    public R3.ReactiveProperty<PathGeometryUpdatingStrategy> UpdatingStrategy { get; } = new();
+    public R3.BindableReactiveProperty<bool> IsSelected { get; } = new();
+    public R3.BindableReactiveProperty<bool> EnableForSelection { get; } = new();
+    public R3.BindableReactiveProperty<PathGeometryUpdatingStrategy> UpdatingStrategy { get; } = new();
     public enum PathGeometryUpdatingStrategy
     {
         Unknown,
@@ -62,37 +62,37 @@ public abstract class SelectableDesignerItemViewModelBase : BindableBase, ISelec
         ResizeWhilePreservingOriginalShape,
         Fixed,
     }
-    public R3.ReactiveProperty<bool> IsVisible { get; } = new();
-    public R3.ReactiveProperty<bool> IsHitTestVisible { get; set; } = new();
-    public R3.ReactiveProperty<bool> CanDrag { get; set; } = new(true);
+    public R3.BindableReactiveProperty<bool> IsVisible { get; } = new();
+    public R3.BindableReactiveProperty<bool> IsHitTestVisible { get; set; } = new();
+    public R3.BindableReactiveProperty<bool> CanDrag { get; set; } = new(true);
 
     // ↑ Flags ↑
 
-    public R3.ReactiveProperty<object> ChangeFormTriggerObject { get; } = new();
-    public R3.ReactiveProperty<DateTime> ChangeFormDateTime { get; } = new(DateTime.Now);
-    public R3.ReactiveProperty<LayerItem> LayerItem { get; } = new();
+    public R3.BindableReactiveProperty<object> ChangeFormTriggerObject { get; } = new();
+    public R3.BindableReactiveProperty<DateTime> ChangeFormDateTime { get; } = new(DateTime.Now);
+    public R3.BindableReactiveProperty<LayerItem> LayerItem { get; } = new();
 
-    public R3.ReactiveProperty<int> SelectedOrder { get; } = new();
+    public R3.BindableReactiveProperty<int> SelectedOrder { get; } = new();
 
-    public R3.ReactiveProperty<Matrix> Matrix { get; } = new();
+    public R3.BindableReactiveProperty<Matrix> Matrix { get; } = new();
 
-    public R3.ReactiveProperty<double> RotationAngle { get; } = new();
+    public R3.BindableReactiveProperty<double> RotationAngle { get; } = new();
 
-    public R3.ReactiveProperty<int> ZIndex { get; } = new();
-    public R3.ReactiveProperty<Brush> EdgeBrush { get; } = new(Brushes.Transparent);
-    public R3.ReactiveProperty<Brush> FillBrush { get; } = new(Brushes.Transparent);
+    public R3.BindableReactiveProperty<int> ZIndex { get; } = new();
+    public R3.BindableReactiveProperty<Brush> EdgeBrush { get; } = new(Brushes.Transparent);
+    public R3.BindableReactiveProperty<Brush> FillBrush { get; } = new(Brushes.Transparent);
 
-    public R3.ReactiveProperty<double> EdgeThickness { get; } = new();
+    public R3.BindableReactiveProperty<double> EdgeThickness { get; } = new();
 
-    public R3.ReadOnlyReactiveProperty<double> HalfEdgeThickness { get; }
+    public R3.IReadOnlyBindableReactiveProperty<double> HalfEdgeThickness { get; }
 
-    public R3.ReadOnlyReactiveProperty<PathGeometry> PathGeometry { get; set; }
-    public R3.ReactiveProperty<PathGeometry> PathGeometryNoRotate { get; } = new();
-    public R3.ReactiveProperty<PathGeometry> PathGeometryRotate { get; } = new();
-    public R3.ReactiveProperty<PenLineJoin> StrokeLineJoin { get; } = new();
+    public R3.IReadOnlyBindableReactiveProperty<PathGeometry> PathGeometry { get; set; }
+    public R3.BindableReactiveProperty<PathGeometry> PathGeometryNoRotate { get; } = new();
+    public R3.BindableReactiveProperty<PathGeometry> PathGeometryRotate { get; } = new();
+    public R3.BindableReactiveProperty<PenLineJoin> StrokeLineJoin { get; } = new();
     public ObservableList<PenLineJoin> PenLineJoins { get; private set; }
-    public R3.ReactiveProperty<DoubleCollection> StrokeDashArray { get; } = new();
-    public R3.ReactiveProperty<double> StrokeMiterLimit { get; } = new();
+    public R3.BindableReactiveProperty<DoubleCollection> StrokeDashArray { get; } = new();
+    public R3.BindableReactiveProperty<double> StrokeMiterLimit { get; } = new();
 
     public string Name { get; set; }
 
@@ -142,7 +142,7 @@ public abstract class SelectableDesignerItemViewModelBase : BindableBase, ISelec
 
     public abstract bool SupportsPropertyDialog { get; }
 
-    public R3.ReactiveProperty<bool> IsOpenedInstructionDialog { get; } = new();
+    public R3.BindableReactiveProperty<bool> IsOpenedInstructionDialog { get; } = new();
 
     #region IClonable
 
