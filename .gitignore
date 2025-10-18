@@ -20,3 +20,5 @@ boilersGraphics.Msix/BundleArtifacts/
 x64/
 Release/
 Debug/
+boilersGraphics.MsixPublish/AppPackages
+boilersGraphics.MsixPublish/BundleArtifacts
