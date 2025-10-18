@@ -139,7 +139,7 @@ public class Layer : LayerTreeViewItemBase, IObservable<LayerObservable>, ICompa
             return;
 
         Rect? sliceRect = null;
-        _items.AsValueEnumerable().Cast<IRect>().ToList().ForEach(x => sliceRect = (!sliceRect.HasValue ? x.Rect.Value : Rect.Union(sliceRect.Value, x.Rect.Value)));
+        _items.AsValueEnumerable().OfType<IRect>().ToList().ForEach(x => sliceRect = (!sliceRect.HasValue ? x.Rect.Value : Rect.Union(sliceRect.Value, x.Rect.Value)));
         var renderer = DiagramViewModel.Instance.Renderer;
         var cache = renderer.GetCache();
 
