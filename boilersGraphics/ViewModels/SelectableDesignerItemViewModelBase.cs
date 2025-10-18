@@ -10,11 +10,12 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Windows;
 using System.Windows.Media;
+using boilersGraphics.Views;
 using TsOperationHistory;
 using TsOperationHistory.Extensions;
 using ZLinq;
+using Thickness = System.Windows.Thickness;
 
 namespace boilersGraphics.ViewModels;
 
@@ -27,7 +28,7 @@ public abstract class SelectableDesignerItemViewModelBase : BindableBase, ISelec
     IObserver<TransformNotification>, IObserver<GroupTransformNotification>, IObservable<TransformNotification>,
     IDisposable, ICloneable, IRestore
 {
-    protected CompositeDisposable _CompositeDisposable = new();
+    protected CompositeDisposable _CompositeDisposable { get; set; } = new();
 
     public SelectableDesignerItemViewModelBase(int id, IDiagramViewModel parent)
     {
@@ -52,9 +53,9 @@ public abstract class SelectableDesignerItemViewModelBase : BindableBase, ISelec
 
     // ↓ Flags ↓
 
-    public R3.BindableReactiveProperty<bool> IsSelected { get; } = new();
-    public R3.BindableReactiveProperty<bool> EnableForSelection { get; } = new();
-    public R3.BindableReactiveProperty<PathGeometryUpdatingStrategy> UpdatingStrategy { get; } = new();
+    public R3.BindableReactiveProperty<bool> IsSelected { get; private set; } = new();
+    public R3.BindableReactiveProperty<bool> EnableForSelection { get; private set; } = new();
+    public R3.BindableReactiveProperty<PathGeometryUpdatingStrategy> UpdatingStrategy { get; private set; } = new();
     public enum PathGeometryUpdatingStrategy
     {
         Unknown,
@@ -62,7 +63,7 @@ public abstract class SelectableDesignerItemViewModelBase : BindableBase, ISelec
         ResizeWhilePreservingOriginalShape,
         Fixed,
     }
-    public R3.BindableReactiveProperty<bool> IsVisible { get; } = new();
+    public R3.BindableReactiveProperty<bool> IsVisible { get; private set; } = new();
     public R3.BindableReactiveProperty<bool> IsHitTestVisible { get; set; } = new();
     public R3.BindableReactiveProperty<bool> CanDrag { get; set; } = new(true);
 
@@ -72,27 +73,27 @@ public abstract class SelectableDesignerItemViewModelBase : BindableBase, ISelec
     public R3.BindableReactiveProperty<DateTime> ChangeFormDateTime { get; } = new(DateTime.Now);
     public R3.BindableReactiveProperty<LayerItem> LayerItem { get; } = new();
 
-    public R3.BindableReactiveProperty<int> SelectedOrder { get; } = new();
+    public R3.BindableReactiveProperty<int> SelectedOrder { get; private set; } = new();
 
-    public R3.BindableReactiveProperty<Matrix> Matrix { get; } = new();
+    public R3.BindableReactiveProperty<Matrix> Matrix { get; private set; } = new();
 
-    public R3.BindableReactiveProperty<double> RotationAngle { get; } = new();
+    public R3.BindableReactiveProperty<double> RotationAngle { get; private set; } = new();
 
-    public R3.BindableReactiveProperty<int> ZIndex { get; } = new();
-    public R3.BindableReactiveProperty<Brush> EdgeBrush { get; } = new(Brushes.Transparent);
-    public R3.BindableReactiveProperty<Brush> FillBrush { get; } = new(Brushes.Transparent);
+    public R3.BindableReactiveProperty<int> ZIndex { get; private set; } = new();
+    public R3.BindableReactiveProperty<Brush> EdgeBrush { get; private set; } = new(Brushes.Transparent);
+    public R3.BindableReactiveProperty<Brush> FillBrush { get; private set; } = new(Brushes.Transparent);
 
-    public R3.BindableReactiveProperty<double> EdgeThickness { get; } = new();
+    public R3.BindableReactiveProperty<double> EdgeThickness { get; private set; } = new();
 
-    public R3.IReadOnlyBindableReactiveProperty<double> HalfEdgeThickness { get; }
+    public R3.IReadOnlyBindableReactiveProperty<double> HalfEdgeThickness { get; private set; }
 
     public R3.IReadOnlyBindableReactiveProperty<PathGeometry> PathGeometry { get; set; }
-    public R3.BindableReactiveProperty<PathGeometry> PathGeometryNoRotate { get; } = new();
-    public R3.BindableReactiveProperty<PathGeometry> PathGeometryRotate { get; } = new();
-    public R3.BindableReactiveProperty<PenLineJoin> StrokeLineJoin { get; } = new();
+    public R3.BindableReactiveProperty<PathGeometry> PathGeometryNoRotate { get; private set; } = new();
+    public R3.BindableReactiveProperty<PathGeometry> PathGeometryRotate { get; private set; } = new();
+    public R3.BindableReactiveProperty<PenLineJoin> StrokeLineJoin { get; private set; } = new();
     public ObservableList<PenLineJoin> PenLineJoins { get; private set; }
-    public R3.BindableReactiveProperty<DoubleCollection> StrokeDashArray { get; } = new();
-    public R3.BindableReactiveProperty<double> StrokeMiterLimit { get; } = new();
+    public R3.BindableReactiveProperty<DoubleCollection> StrokeDashArray { get; private set; } = new();
+    public R3.BindableReactiveProperty<double> StrokeMiterLimit { get; private set; } = new();
 
     public string Name { get; set; }
 
@@ -102,37 +103,37 @@ public abstract class SelectableDesignerItemViewModelBase : BindableBase, ISelec
 
     public IDisposable GroupDisposable { get; set; }
 
-    public R3.ReadOnlyReactiveProperty<double> SnapPointSize { get; } = Observable.Return(4)
+    public R3.ReadOnlyReactiveProperty<double> SnapPointSize { get; private set; } = Observable.Return(4)
         .CombineLatest(DiagramViewModel.Instance.MagnificationRate,
             (standardSize, rate) => { return standardSize / (rate / 100d); }).ToReadOnlyReactiveProperty();
 
-    public R3.ReadOnlyReactiveProperty<double> ThumbSize { get; } = Observable.Return(7)
+    public R3.ReadOnlyReactiveProperty<double> ThumbSize { get; private set; } = Observable.Return(7)
         .CombineLatest(DiagramViewModel.Instance.MagnificationRate,
             (standardSize, rate) => { return standardSize / (rate / 100d); }).ToReadOnlyReactiveProperty();
 
-    public R3.ReadOnlyReactiveProperty<double> ThumbThickness { get; } = Observable.Return(1)
+    public R3.ReadOnlyReactiveProperty<double> ThumbThickness { get; private set; } = Observable.Return(1)
         .CombineLatest(DiagramViewModel.Instance.MagnificationRate,
             (standardSize, rate) => { return standardSize / (rate / 100d); }).ToReadOnlyReactiveProperty();
 
-    public R3.ReadOnlyReactiveProperty<Thickness> RotateThumbMargin { get; } = Observable.Return(-20)
+    public R3.ReadOnlyReactiveProperty<Thickness> RotateThumbMargin { get; private set; } = Observable.Return(-20)
         .CombineLatest(DiagramViewModel.Instance.MagnificationRate,
             (standardSize, rate) => { return new Thickness(0, standardSize / (rate / 100d), 0, 0); })
         .ToReadOnlyReactiveProperty();
 
-    public R3.ReadOnlyReactiveProperty<Thickness> RotateThumbConnectorMargin { get; } = Observable.Return(-11)
+    public R3.ReadOnlyReactiveProperty<Thickness> RotateThumbConnectorMargin { get; private set; } = Observable.Return(-11)
         .CombineLatest(DiagramViewModel.Instance.MagnificationRate,
             (standardSize, rate) => { return new Thickness(0, standardSize / (rate / 100d), 0, 0); })
         .ToReadOnlyReactiveProperty();
 
-    public R3.ReadOnlyReactiveProperty<double> RotateThumbConnectorY2 { get; } = Observable.Return(11)
+    public R3.ReadOnlyReactiveProperty<double> RotateThumbConnectorY2 { get; private set; } = Observable.Return(11)
         .CombineLatest(DiagramViewModel.Instance.MagnificationRate,
             (standardSize, rate) => { return standardSize / (rate / 100d); }).ToReadOnlyReactiveProperty();
 
-    public R3.ReadOnlyReactiveProperty<double> RotateThumbConnectorThickness { get; } = Observable.Return(1)
+    public R3.ReadOnlyReactiveProperty<double> RotateThumbConnectorThickness { get; private set; } = Observable.Return(1)
         .CombineLatest(DiagramViewModel.Instance.MagnificationRate,
             (standardSize, rate) => { return standardSize / (rate / 100d); }).ToReadOnlyReactiveProperty();
 
-    public R3.ReadOnlyReactiveProperty<Thickness> RotateThumbGridMargin { get; } = Observable.Return(-3)
+    public R3.ReadOnlyReactiveProperty<Thickness> RotateThumbGridMargin { get; private set;} = Observable.Return(-3)
         .CombineLatest(DiagramViewModel.Instance.MagnificationRate,
             (standardSize, rate) =>
             {
@@ -154,40 +155,98 @@ public abstract class SelectableDesignerItemViewModelBase : BindableBase, ISelec
 
     public virtual void Dispose()
     {
-        IsSelected.Dispose();
-        EnableForSelection.Dispose();
-        UpdatingStrategy.Dispose();
-        IsVisible.Dispose();
-        IsHitTestVisible.Dispose();
-        CanDrag.Dispose();
-        SelectedOrder.Dispose();
-        Matrix.Dispose();
-        RotationAngle.Dispose();
-        ZIndex.Dispose();
-        EdgeBrush.Dispose();
-        FillBrush.Dispose();
-        EdgeThickness.Dispose();
-        HalfEdgeThickness.Dispose();
-        if (PathGeometry is not null)
-            PathGeometry.Dispose();
-        if (PathGeometryNoRotate is not null)
-            PathGeometryNoRotate.Dispose();
-        if (PathGeometryRotate is not null)
-            PathGeometryRotate.Dispose();
-        StrokeLineJoin.Dispose();
+        // BindableReactiveProperty<T>のプロパティを保存してExecuteDisposeで処理
+        var isSelected = IsSelected.Value;
+        var enableForSelection = EnableForSelection.Value;
+        var updatingStrategy = UpdatingStrategy.Value;
+        var isVisible = IsVisible.Value;
+        var isHitTestVisible = IsHitTestVisible.Value;
+        var canDrag = CanDrag.Value;
+        var selectedOrder = SelectedOrder.Value;
+        var matrix = Matrix.Value;
+        var rotationAngle = RotationAngle.Value;
+        var zIndex = ZIndex.Value;
+        var edgeBrush = EdgeBrush.Value;
+        var fillBrush = FillBrush.Value;
+        var edgeThickness = EdgeThickness.Value;
+        var pathGeometryNoRotate = PathGeometryNoRotate.Value;
+        var pathGeometryRotate = PathGeometryRotate.Value;
+        var strokeLineJoin = StrokeLineJoin.Value;
+        var strokeDashArray = StrokeDashArray.Value;
+        var strokeMiterLimit = StrokeMiterLimit.Value;
+
+        MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(IsSelected, () => IsSelected = new BindableReactiveProperty<bool>(isSelected));
+        MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(EnableForSelection, () => EnableForSelection = new BindableReactiveProperty<bool>(enableForSelection));
+        MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(UpdatingStrategy, () => UpdatingStrategy = new BindableReactiveProperty<PathGeometryUpdatingStrategy>(updatingStrategy));
+        MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(IsVisible, () => IsVisible = new BindableReactiveProperty<bool>(isVisible));
+        MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(IsHitTestVisible, () => IsHitTestVisible = new BindableReactiveProperty<bool>(isHitTestVisible));
+        MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(CanDrag, () => CanDrag = new BindableReactiveProperty<bool>(canDrag));
+        MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(SelectedOrder, () => SelectedOrder = new BindableReactiveProperty<int>(selectedOrder));
+        MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(Matrix, () => Matrix = new BindableReactiveProperty<Matrix>(matrix));
+        MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(RotationAngle, () => RotationAngle = new BindableReactiveProperty<double>(rotationAngle));
+        MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(ZIndex, () => ZIndex = new BindableReactiveProperty<int>(zIndex));
+        MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(EdgeBrush, () => EdgeBrush = new BindableReactiveProperty<Brush>(edgeBrush));
+        MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(FillBrush, () => FillBrush = new BindableReactiveProperty<Brush>(fillBrush));
+        MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(EdgeThickness, () => EdgeThickness = new BindableReactiveProperty<double>(edgeThickness));
+
+        MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(HalfEdgeThickness, () => HalfEdgeThickness = EdgeThickness.Select(x => x / 2).ToReadOnlyBindableReactiveProperty());
+
+        MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(PathGeometry, () => PathGeometry = PathGeometryNoRotate.ToReadOnlyBindableReactiveProperty());
+        
+        MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(PathGeometryNoRotate, () => PathGeometryNoRotate = new BindableReactiveProperty<PathGeometry>(pathGeometryNoRotate));
+        MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(PathGeometryRotate, () => PathGeometryRotate = new BindableReactiveProperty<PathGeometry>(pathGeometryRotate));
+        MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(StrokeLineJoin, () => StrokeLineJoin = new BindableReactiveProperty<PenLineJoin>(strokeLineJoin));
+
+        // ObservableListは通常のDisposeのみ
         PenLineJoins.Dispose();
-        StrokeDashArray.Dispose();
-        StrokeMiterLimit.Dispose();
-        SnapPointSize.Dispose();
-        ThumbSize.Dispose();
-        ThumbThickness.Dispose();
-        RotateThumbMargin.Dispose();
-        RotateThumbConnectorMargin.Dispose();
-        RotateThumbConnectorY2.Dispose();
-        RotateThumbConnectorThickness.Dispose();
-        RotateThumbGridMargin.Dispose();
-        if (_CompositeDisposable != null) _CompositeDisposable.Dispose();
-        _CompositeDisposable = null;
+
+        MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(StrokeDashArray, () => StrokeDashArray = new BindableReactiveProperty<DoubleCollection>(strokeDashArray));
+        MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(StrokeMiterLimit, () => StrokeMiterLimit = new BindableReactiveProperty<double>(strokeMiterLimit));
+
+        // ReadOnlyReactivePropertyは通常のDisposeのみ
+        MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(SnapPointSize, () => SnapPointSize = Observable.Return(4)
+            .CombineLatest(DiagramViewModel.Instance.MagnificationRate,
+                (standardSize, rate) => { return standardSize / (rate / 100d); }).ToReadOnlyReactiveProperty());
+
+        MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(ThumbSize, () => ThumbSize = Observable.Return(7)
+            .CombineLatest(DiagramViewModel.Instance.MagnificationRate,
+                (standardSize, rate) => { return standardSize / (rate / 100d); }).ToReadOnlyReactiveProperty());
+
+        MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(ThumbThickness, () => ThumbThickness = Observable.Return(1)
+            .CombineLatest(DiagramViewModel.Instance.MagnificationRate,
+                (standardSize, rate) => { return standardSize / (rate / 100d); }).ToReadOnlyReactiveProperty());
+
+        MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(RotateThumbMargin, () => RotateThumbMargin = Observable.Return(-20)
+            .CombineLatest(DiagramViewModel.Instance.MagnificationRate,
+                (standardSize, rate) => { return new Thickness(0, standardSize / (rate / 100d), 0, 0); })
+            .ToReadOnlyReactiveProperty());
+
+        MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(RotateThumbConnectorMargin, () => RotateThumbConnectorMargin = Observable.Return(-11)
+            .CombineLatest(DiagramViewModel.Instance.MagnificationRate,
+                (standardSize, rate) => { return new Thickness(0, standardSize / (rate / 100d), 0, 0); })
+            .ToReadOnlyReactiveProperty());
+
+        MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(RotateThumbConnectorY2, () => RotateThumbConnectorY2 = Observable.Return(11)
+            .CombineLatest(DiagramViewModel.Instance.MagnificationRate,
+                (standardSize, rate) => { return standardSize / (rate / 100d); }).ToReadOnlyReactiveProperty());
+
+        MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(RotateThumbConnectorThickness, () => RotateThumbConnectorThickness = Observable.Return(1)
+            .CombineLatest(DiagramViewModel.Instance.MagnificationRate,
+                (standardSize, rate) => { return standardSize / (rate / 100d); }).ToReadOnlyReactiveProperty());
+
+        MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(RotateThumbGridMargin, () => RotateThumbGridMargin = Observable.Return(-3)
+            .CombineLatest(DiagramViewModel.Instance.MagnificationRate,
+                (standardSize, rate) =>
+                {
+                    return new Thickness(standardSize / (rate / 100d), standardSize / (rate / 100d),
+                        standardSize / (rate / 100d), standardSize / (rate / 100d));
+                }).ToReadOnlyReactiveProperty());
+
+        if (_CompositeDisposable != null)
+        {
+            MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(_CompositeDisposable, () => _CompositeDisposable = new CompositeDisposable());
+            MainWindowViewModel.Instance.Recorder.Current.ExecuteSetProperty<SelectableDesignerItemViewModelBase, CompositeDisposable>(this, nameof(_CompositeDisposable), null);
+        }
     }
 
     #endregion //IDisposable
