@@ -86,7 +86,6 @@ public partial class App : PrismApplication
                    e.GetType().Name + Environment.NewLine +
                    stackTrace.ToString();
         dialogParameters.Add("Text", body);
-        body = Uri.EscapeDataString(stackTrace.ToString());
         dialogParameters.Add("Buttons", new List<Button>
         {
             new(boilersGraphics.Properties.Resources.Button_PostIssue, new DelegateCommand(() =>
