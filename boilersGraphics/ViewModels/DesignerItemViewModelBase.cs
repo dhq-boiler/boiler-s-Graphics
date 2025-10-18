@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using boilersGraphics.Models;
+using TsOperationHistory.Extensions;
 
 namespace boilersGraphics.ViewModels;
 
@@ -49,13 +50,13 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
         set => SetProperty(ref _MinHeight, value);
     }
 
-    public BindableReactiveProperty<double> Width { get; } = new();
+    public BindableReactiveProperty<double> Width { get; private set; } = new();
 
-    public BindableReactiveProperty<double> Height { get; } = new();
+    public BindableReactiveProperty<double> Height { get; private set; } = new();
 
-    public IReadOnlyBindableReactiveProperty<Size> Size { get; }
+    public IReadOnlyBindableReactiveProperty<Size> Size { get; private set; }
 
-    public IReadOnlyBindableReactiveProperty<Size> SizeIncludeFrame { get; }
+    public IReadOnlyBindableReactiveProperty<Size> SizeIncludeFrame { get; private set; }
 
     public bool ShowConnectors
     {
@@ -72,11 +73,11 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
 
     public BindableReactiveProperty<bool> RenderingEnabled { get; } = new(true);
 
-    public BindableReactiveProperty<string> Pool { get; } = new();
+    public BindableReactiveProperty<string> Pool { get; private set; } = new();
 
-    public BindableReactiveProperty<double> Left { get; } = new();
+    public BindableReactiveProperty<double> Left { get; private set; } = new();
 
-    public BindableReactiveProperty<double> Top { get; } = new();
+    public BindableReactiveProperty<double> Top { get; private set; } = new();
 
     public IReadOnlyBindableReactiveProperty<double> Right { get; private set; }
 
@@ -84,8 +85,8 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
 
     public IReadOnlyBindableReactiveProperty<Rect> Rect { get; set; }
 
-    public BindableReactiveProperty<double> CenterX { get; } = new();
-    public BindableReactiveProperty<double> CenterY { get; } = new();
+    public BindableReactiveProperty<double> CenterX { get; private set; } = new();
+    public BindableReactiveProperty<double> CenterY { get; private set; } = new();
 
     public IReadOnlyBindableReactiveProperty<Point> CenterPoint { get; private set; }
 
@@ -99,11 +100,11 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
     public IReadOnlyBindableReactiveProperty<Thickness> MarginTop { get; private set; }
     public IReadOnlyBindableReactiveProperty<Thickness> MarginRight { get; private set; }
     public IReadOnlyBindableReactiveProperty<Thickness> MarginBottom { get; private set; }
-    public BindableReactiveProperty<TransformNotification> TransformNortification { get; } = new();
+    public BindableReactiveProperty<TransformNotification> TransformNortification { get; private set; } = new();
 
     internal SnapPointPosition snapPointPosition { get; set; }
 
-    public CompositeDisposable SnapObjs { get; } = new();
+    public CompositeDisposable SnapObjs { get; private set; } = new();
 
     private void UpdateCenterPoint()
     {
@@ -415,29 +416,34 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
 
     public override void Dispose()
     {
-        Width.Dispose();
-        Height.Dispose();
-        Size.Dispose();
-        SizeIncludeFrame.Dispose();
-        Pool.Dispose();
-        Left.Dispose();
-        Top.Dispose();
-        Right.Dispose();
-        Bottom.Dispose();
-        Rect.Dispose();
-        CenterX.Dispose();
-        CenterY.Dispose();
-        CenterPoint.Dispose();
-        MarginLeftTop.Dispose();
-        MarginLeftBottom.Dispose();
-        MarginRightTop.Dispose();
-        MarginRightBottom.Dispose();
-        MarginLeft.Dispose();
-        MarginTop.Dispose();
-        MarginRight.Dispose();
-        MarginBottom.Dispose();
-        TransformNortification.Dispose();
-        SnapObjs.Dispose();
+        MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(Width, () => Width = new BindableReactiveProperty<double>());
+        MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(Height, () => Height = new BindableReactiveProperty<double>());
+        MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(Size, () => Size = Width.CombineLatest(Height, (w, h) => new Size(w, h)).ToReadOnlyBindableReactiveProperty());
+        MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(SizeIncludeFrame, () => SizeIncludeFrame = Width.CombineLatest(Height, (w, h) => new Size(w + 1, h + 1)).ToReadOnlyBindableReactiveProperty());
+        MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(Pool, () => Pool = new BindableReactiveProperty<string>());
+        MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(Left, () => Left = new BindableReactiveProperty<double>());
+        MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(Top, () => Top = new BindableReactiveProperty<double>());
+        MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(Right, () => Right = Left.CombineLatest(Width, (a, b) => a + b).ToReadOnlyBindableReactiveProperty());
+        MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(Bottom, () => Bottom = Top.CombineLatest(Height, (a, b) => a + b).ToReadOnlyBindableReactiveProperty());
+        MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(Rect, () => Rect = Left.CombineLatest(Top, Width, Height, (left, top, width, height) => new Rect(left, top, width, height)).ToReadOnlyBindableReactiveProperty());
+        MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(CenterX, () => CenterX = new BindableReactiveProperty<double>());
+        MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(CenterY, () => CenterY = new BindableReactiveProperty<double>());
+        MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(CenterPoint, () => CenterPoint = CenterX.CombineLatest(CenterY, (x, y) => new Point(x, y)).ToReadOnlyBindableReactiveProperty());
+        MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(MarginLeftTop, () => MarginLeftTop = ThumbSize.Select(size => new Thickness(-size, -size, 0, 0)).ToReadOnlyBindableReactiveProperty());
+        MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(MarginLeftBottom, () => MarginLeftBottom = ThumbSize.Select(size => new Thickness(-size, 0, 0, -size)).ToReadOnlyBindableReactiveProperty());
+        MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(MarginRightTop, () => MarginRightTop = ThumbSize.Select(size => new Thickness(0, -size, -size, 0)).ToReadOnlyBindableReactiveProperty());
+        MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(MarginRightBottom, () => MarginRightBottom = ThumbSize.Select(size => new Thickness(0, 0, -size, -size)).ToReadOnlyBindableReactiveProperty());
+        MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(MarginLeft, () => MarginLeft = Observable.Return(ThumbSize.CurrentValue / 2).CombineLatest(DiagramViewModel.Instance.MagnificationRate,
+            (size, rate) => new Thickness(-size / (rate / 100d), 0, 0, 0)).ToReadOnlyBindableReactiveProperty());
+        MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(MarginTop, () => MarginTop = Observable.Return(ThumbSize.CurrentValue / 2).CombineLatest(DiagramViewModel.Instance.MagnificationRate,
+            (size, rate) => new Thickness(0, -size / (rate / 100d), 0, 0)).ToReadOnlyBindableReactiveProperty());
+        MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(MarginRight, () => MarginRight = Observable.Return(ThumbSize.CurrentValue / 2).CombineLatest(DiagramViewModel.Instance.MagnificationRate,
+            (size, rate) => new Thickness(0, 0, -size / (rate / 100d), 0)).ToReadOnlyBindableReactiveProperty());
+        MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(MarginBottom, () => MarginBottom = Observable.Return(ThumbSize.CurrentValue / 2).CombineLatest(DiagramViewModel.Instance.MagnificationRate,
+            (size, rate) => new Thickness(0, 0, 0, -size / (rate / 100d))).ToReadOnlyBindableReactiveProperty());
+        MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(TransformNortification, () => TransformNortification = new BindableReactiveProperty<TransformNotification>());
+        MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(SnapObjs, () => SnapObjs = new CompositeDisposable());
+
         base.Dispose();
     }
 
