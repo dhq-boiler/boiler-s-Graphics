@@ -11,7 +11,10 @@ using Prism.Unity;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
+using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Threading;
 using Unity;
@@ -70,7 +73,6 @@ public partial class App : PrismApplication
 
     private void ReportUnhandledException(Exception e)
     {
-        LogManager.GetCurrentClassLogger().Fatal(e);
         IDialogParameters dialogParameters = new DialogParameters();
         dialogParameters.Add("Title", boilersGraphics.Properties.Resources.DialogTitle_Error);
         var title = Uri.EscapeDataString(e.Message);
@@ -103,7 +105,33 @@ public partial class App : PrismApplication
                     body += $"Exception details truncated at {maxExceptionDetailsLength} chars.";
                 }
 
-                body = Uri.EscapeDataString(body);
+                //boilersGraphics.logの末尾50行をbodyに追加
+                const int lineCount = 50; 
+                var logFilePath = Path.Combine(Helpers.Path.GetRoamingDirectory(),
+                    "dhq_boiler\\boilersGraphics\\Logs\\boilersGraphics.log");
+                using (var fileStream = new FileStream(logFilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                using (var streamReader = new StreamReader(fileStream))
+                {
+                    var logLines = streamReader.ReadToEnd().Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+                    var countedLogLines = logLines.Length <= lineCount ? logLines : logLines[^lineCount..];
+                    var filteredLogLines = countedLogLines.Where(line => Regex.IsMatch(line, @"^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{4}\|.+?\|.+?\|.+?$")).ToList();
+
+                    for (int i = Math.Min(lineCount, filteredLogLines.Count); i > 0; i--)
+                    {
+                        var last_i_Lines = string.Join(Environment.NewLine, filteredLogLines[^i..]);
+                        var testBody = body + Environment.NewLine + Environment.NewLine +
+                                $"---- Last {i} lines of boilersGraphics.log ----" + Environment.NewLine +
+                                last_i_Lines;
+
+                        testBody = Uri.EscapeDataString(testBody);
+                        var testUrl = $"https://github.com/dhq-boiler/boiler-s-Graphics/issues/new?title={title}&body={testBody}";
+                        if (testUrl.Length <= 7000)
+                        {
+                            body = testBody;
+                            break;
+                        }
+                    }
+                }
 
                 var url = $"https://github.com/dhq-boiler/boiler-s-Graphics/issues/new?title={title}&body={body}";
 
@@ -119,6 +147,11 @@ public partial class App : PrismApplication
         IDialogResult dialogResult = new DialogResult();
         Container.Resolve<IDialogService>()
             .ShowDialog(nameof(CustomMessageBox), dialogParameters, ret => dialogResult = ret);
+
+        LogManager.GetCurrentClassLogger().Fatal(e);
+
+        if (Current.MainWindow?.DataContext is not MainWindowViewModel)
+            return;
         var message = GoogleAnalyticsUtil.GetStringLimit500Bytes(e.Message);
         GoogleAnalyticsUtil.Beacon((Current.MainWindow.DataContext as MainWindowViewModel).TerminalInfo.Value,
             BeaconPlace.Crash, BeaconPath.Crash, message);
