@@ -205,6 +205,8 @@ public partial class App : PrismApplication
 
     protected override void RegisterTypes(IContainerRegistry containerRegistry)
     {
+        containerRegistry.RegisterForNavigation<MainWindow, MainWindowViewModel>();
+
         containerRegistry.RegisterForNavigation<SolidColorPicker>();
         containerRegistry.RegisterForNavigation<LinearGradientBrushPicker>();
         containerRegistry.RegisterForNavigation<RadialGradientBrushPicker>();
