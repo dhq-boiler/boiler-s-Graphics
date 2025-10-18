@@ -2347,6 +2347,15 @@ namespace boilersGraphics.Properties {
         }
         
         /// <summary>
+        ///   Providing the steps to reproduce the issue will help app developers identify and fix the bug more easily. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_WriteReproSteps {
+            get {
+                return ResourceManager.GetString("String_WriteReproSteps", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Color correction に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Title_ColorCorrection {

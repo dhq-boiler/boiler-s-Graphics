@@ -879,6 +879,9 @@
   <data name="String_Version" xml:space="preserve">
     <value>バージョン</value>
   </data>
+  <data name="String_WriteReproSteps" xml:space="preserve">
+    <value>問題の再現手順を記していただけると、アプリ開発者がバグを特定して修正しやすくなります。</value>
+  </data>
   <data name="Title_ColorCorrection" xml:space="preserve">
     <value>色調補正</value>
   </data>

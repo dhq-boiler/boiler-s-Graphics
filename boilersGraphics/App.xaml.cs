@@ -94,6 +94,8 @@ public partial class App : PrismApplication
                 var stackTrace = new StackTrace(e, true);
                 body = boilersGraphics.Properties.Resources.String_PleaseDescribeError +
                        Environment.NewLine +
+                       boilersGraphics.Properties.Resources.String_WriteReproSteps +
+                       Environment.NewLine +
                        Environment.NewLine +
                        e.GetType() + Environment.NewLine +
                        stackTrace.ToString();
