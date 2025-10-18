@@ -53,9 +53,9 @@ public class InsertOperation<T> : IOperation
         list.RemoveAt(_insertIndex < 0 ? list.Count - 1 : _insertIndex);
     }
 
-    private IList<T> get_list()
+    private IList get_list()
     {
-        return _list ?? _generator?.Invoke();
+        return (_list ?? _generator?.Invoke()) as IList;
     }
 }
 
@@ -106,9 +106,9 @@ public class RemoveOperation<T> : IOperation
         get_list().Insert(_insertIndex, _property);
     }
 
-    private IList<T> get_list()
+    private IList get_list()
     {
-        return _list ?? _generator?.Invoke();
+        return (_list ?? _generator?.Invoke()) as IList;
     }
 }
 
