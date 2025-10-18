@@ -1,6 +1,15 @@
 
 # リリースノート
 
+## v12.0.4
+
+### バグフィックス
+
+* 以下のバグを修正しました：
+	* Unable to cast object of type 'boilersGraphics.ViewModels.SnapPointViewModel' to type 'boilersGraphics.ViewModels.IRect'. #92
+	* An unexpected error occurred while resolving 'boilersGraphics.Views.MainWindow' #93
+	* Object reference not set to an instance of an object. #95
+
 ## v12
 
 ### 変更
