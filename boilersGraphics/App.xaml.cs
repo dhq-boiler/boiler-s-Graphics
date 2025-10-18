@@ -68,7 +68,7 @@ public partial class App : PrismApplication
     {
         ReportUnhandledException(e.Exception);
         e.Handled = true;
-        throw e.Exception;
+        Environment.Exit(-1);
     }
 
     private void ReportUnhandledException(Exception e)
@@ -164,6 +164,7 @@ public partial class App : PrismApplication
     private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
     {
         ReportUnhandledException(e.ExceptionObject as Exception);
+        Environment.Exit(-2);
     }
 
     protected override void OnStartup(StartupEventArgs e)
