@@ -22,3 +22,4 @@ Release/
 Debug/
 boilersGraphics.MsixPublish/AppPackages
 boilersGraphics.MsixPublish/BundleArtifacts
+.claude/settings.local.json
