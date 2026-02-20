@@ -8,6 +8,7 @@ using Prism.Mvvm;
 using Prism.Services.Dialogs;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Net;
 using System.Text.RegularExpressions;
 using System.Windows;
@@ -87,8 +88,10 @@ public class PrivacyPolicyViewModel : BindableBase, IDialogAware
 
         try
         {
+            var cultureName = CultureInfo.CurrentUICulture.Name;
+            var fileName = cultureName.StartsWith("ja") ? "PrivacyPolicy_ja-JP.md" : "PrivacyPolicy_en-US.md";
             var privacyPolicyUrl =
-                "https://raw.githubusercontent.com/dhq-boiler/boiler-s-Graphics/master/PrivacyPolicy.md";
+                $"https://raw.githubusercontent.com/dhq-boiler/boiler-s-Graphics/master/{fileName}";
             using (var client = new WebClient())
             {
                 Markdown.Value = client.DownloadString(privacyPolicyUrl);
@@ -97,7 +100,7 @@ public class PrivacyPolicyViewModel : BindableBase, IDialogAware
         catch (WebException e)
         {
             LogManager.GetCurrentClassLogger().Warn(e);
-            LogManager.GetCurrentClassLogger().Warn("インターネットに接続されていないため、最新のプライバシーポリシーを確認できませんでした。");
+            LogManager.GetCurrentClassLogger().Warn(Resources.Message_CantDownloadPrivacyPolicy);
             Markdown.Value = Resources.Message_CantDownloadPrivacyPolicy;
             AgreeDisagreeVisibility.Value = Visibility.Collapsed;
             OKVisibility.Value = Visibility.Visible;
@@ -142,18 +145,22 @@ public class PrivacyPolicyViewModel : BindableBase, IDialogAware
         var lines = markdown.Split("\n");
         foreach (var line in lines.AsValueEnumerable().Reverse())
         {
-            var regex = new Regex("^改定：(?<year>\\d+?)年(?<month>\\d+?)月(?<day>\\d+?)日$");
-            if (regex.IsMatch(line))
+            var trimmed = line.Trim();
+
+            // Japanese format: 改定：2022年2月6日 / 制定：2021年12月15日
+            var regex = new Regex("^(?:改定|制定)：(?<year>\\d+?)年(?<month>\\d+?)月(?<day>\\d+?)日$");
+            if (regex.IsMatch(trimmed))
             {
-                var mc = regex.Match(line);
+                var mc = regex.Match(trimmed);
                 return DateTime.Parse($"{mc.Groups["year"].Value}/{mc.Groups["month"].Value}/{mc.Groups["day"].Value}");
             }
 
-            regex = new Regex("^制定：(?<year>\\d+?)年(?<month>\\d+?)月(?<day>\\d+?)日$");
-            if (regex.IsMatch(line))
+            // English format: Revised: February 6, 2022 / Established: December 15, 2021
+            var enRegex = new Regex("^(?:Revised|Established):\\s*(?<date>.+)$");
+            if (enRegex.IsMatch(trimmed))
             {
-                var mc = regex.Match(line);
-                return DateTime.Parse($"{mc.Groups["year"].Value}/{mc.Groups["month"].Value}/{mc.Groups["day"].Value}");
+                var mc = enRegex.Match(trimmed);
+                return DateTime.Parse(mc.Groups["date"].Value, CultureInfo.InvariantCulture);
             }
         }
 
