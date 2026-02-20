@@ -669,7 +669,7 @@
                                         <MenuItem.ItemContainerStyle>
                                             <Style TargetType="MenuItem">
                                                 <Setter Property="Header" Value="{Binding Converter={StaticResource FilenameWithFileSize}}" />
-                                                <Setter Property="Command" Value="{Binding Path=DataContext.DiagramViewModel.LoadFileCommand, ElementName=MainWindowInstance}" />
+                                                <Setter Property="Command" Value="{Binding Path=DataContext.DiagramViewModel.LoadFileCommand, RelativeSource={RelativeSource AncestorType=Window}}" />
                                                 <Setter Property="CommandParameter" Value="{Binding}" />
                                                 <Setter Property="ToolTip">
                                                     <Setter.Value>
@@ -913,7 +913,7 @@
                                 Content="1"
                                 Foreground="Gray"
                                 Style="{DynamicResource CaptionButtonStyleKey}"
-                                Visibility="{Binding ElementName=MainWindowInstance, Path=WindowState, Converter={StaticResource WindowStateToVisibilityConverter}, ConverterParameter=最大化}">
+                                Visibility="{Binding WindowState, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource WindowStateToVisibilityConverter}, ConverterParameter=最大化}">
                                 <Button.ToolTip>
                                     <ToolTip FontFamily="メイリオ">
                                         <TextBlock Text="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Button_MaximizeWindow, Mode=OneWay}" />
@@ -994,7 +994,7 @@
                                 Content="2"
                                 Foreground="Gray"
                                 Style="{DynamicResource CaptionButtonStyleKey}"
-                                Visibility="{Binding ElementName=MainWindowInstance, Path=WindowState, Converter={StaticResource WindowStateToVisibilityConverter}, ConverterParameter=元に戻す}">
+                                Visibility="{Binding WindowState, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource WindowStateToVisibilityConverter}, ConverterParameter=元に戻す}">
                                 <Button.ToolTip>
                                     <ToolTip FontFamily="メイリオ">
                                         <TextBlock Text="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Button_Restore, Mode=OneWay}" />
@@ -1165,7 +1165,7 @@
                                             Margin="5,0,0,0"
                                             HorizontalAlignment="Right"
                                             VerticalAlignment="Center"
-                                            Text="{Binding DataContext.Title.Value, ElementName=MainWindowInstance}" />
+                                            Text="{Binding DataContext.Title.Value, RelativeSource={RelativeSource AncestorType=Window}}" />
                                     </DockPanel>
                                 </DataTemplate>
                             </Button.ContentTemplate>
