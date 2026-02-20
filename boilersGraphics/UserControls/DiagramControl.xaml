@@ -180,6 +180,10 @@
                                         <Setter.Value>
                                             <DataTemplate>
                                                 <Grid x:Name="selectedGrid">
+                                                    <Grid.Resources>
+                                                        <helper:BindingProxy x:Key="DataContextProxy" Data="{Binding}" />
+                                                        <converter:NegateConverter x:Key="NegateConverter" />
+                                                    </Grid.Resources>
                                                     <Grid.Style>
                                                         <Style TargetType="{x:Type Grid}">
                                                             <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
@@ -207,7 +211,7 @@
                                                                     <DataTrigger Binding="{Binding Converter={StaticResource Obj2TypeConverter}}" Value="{x:Type viewModel:NEllipseViewModel}">
                                                                         <Setter Property="RenderTransform">
                                                                             <Setter.Value>
-                                                                                <TranslateTransform X="{c:Binding HalfEdgeThickness.Value}" Y="{c:Binding HalfEdgeThickness.Value}" />
+                                                                                <TranslateTransform X="{Binding Data.HalfEdgeThickness.Value, Source={StaticResource DataContextProxy}}" Y="{Binding Data.HalfEdgeThickness.Value, Source={StaticResource DataContextProxy}}" />
                                                                             </Setter.Value>
                                                                         </Setter>
                                                                     </DataTrigger>
@@ -293,6 +297,10 @@
                                                         Margin="0"
                                                         HorizontalAlignment="Stretch"
                                                         VerticalAlignment="Stretch">
+                                                        <Canvas.Resources>
+                                                            <helper:BindingProxy x:Key="DataContextProxy" Data="{Binding}" />
+                                                            <converter:NegateConverter x:Key="NegateConverter" />
+                                                        </Canvas.Resources>
                                                         <Canvas.Style>
                                                             <Style TargetType="{x:Type Canvas}">
                                                                 <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
@@ -332,7 +340,7 @@
                                                                         <DataTrigger Binding="{Binding Converter={StaticResource Obj2TypeConverter}}" Value="{x:Type viewModel:BezierCurveViewModel}">
                                                                             <Setter Property="RenderTransform">
                                                                                 <Setter.Value>
-                                                                                    <TranslateTransform X="{c:Binding -HalfEdgeThickness.Value}" Y="{c:Binding -HalfEdgeThickness.Value}" />
+                                                                                    <TranslateTransform X="{Binding Data.HalfEdgeThickness.Value, Source={StaticResource DataContextProxy}, Converter={StaticResource NegateConverter}}" Y="{Binding Data.HalfEdgeThickness.Value, Source={StaticResource DataContextProxy}, Converter={StaticResource NegateConverter}}" />
                                                                                 </Setter.Value>
                                                                             </Setter>
                                                                         </DataTrigger>

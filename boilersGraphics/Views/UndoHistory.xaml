@@ -42,6 +42,8 @@
                                         ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                                         <local:BindableSelectedItemTreeView.Resources>
                                             <Style TargetType="TreeViewItem">
+                                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                                <Setter Property="VerticalContentAlignment" Value="Center" />
                                                 <Setter Property="Template">
                                                     <Setter.Value>
                                                         <ControlTemplate TargetType="TreeViewItem">
