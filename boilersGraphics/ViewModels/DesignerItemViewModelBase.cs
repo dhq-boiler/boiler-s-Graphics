@@ -96,6 +96,7 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
     public IReadOnlyBindableReactiveProperty<Thickness> MarginLeftBottom { get; private set; }
     public IReadOnlyBindableReactiveProperty<Thickness> MarginRightTop { get; private set; }
     public IReadOnlyBindableReactiveProperty<Thickness> MarginRightBottom { get; private set; }
+    public IReadOnlyBindableReactiveProperty<Thickness> ResizeHandleMargin { get; private set; }
     public IReadOnlyBindableReactiveProperty<Thickness> MarginLeft { get; private set; }
     public IReadOnlyBindableReactiveProperty<Thickness> MarginTop { get; private set; }
     public IReadOnlyBindableReactiveProperty<Thickness> MarginRight { get; private set; }
@@ -244,6 +245,7 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
             UpdatePathGeometryIfEnable(nameof(UpdatingStrategy), PathGeometryUpdatingStrategy.Unknown, PathGeometryUpdatingStrategy.Initial);
         }).AddTo(_CompositeDisposable);
 
+        ResizeHandleMargin = ThumbSize.Select(size => new Thickness(-size / 2, -size / 2, -size / 2, -size / 2)).ToReadOnlyBindableReactiveProperty();
         MarginLeftTop = ThumbSize.Select(size => new Thickness(-size, -size, 0, 0)).ToReadOnlyBindableReactiveProperty();
         MarginLeftBottom = ThumbSize.Select(size => new Thickness(-size, 0, 0, -size)).ToReadOnlyBindableReactiveProperty();
         MarginRightTop = ThumbSize.Select(size => new Thickness(0, -size, -size, 0)).ToReadOnlyBindableReactiveProperty();
@@ -429,6 +431,7 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
         MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(CenterX, () => CenterX = new BindableReactiveProperty<double>());
         MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(CenterY, () => CenterY = new BindableReactiveProperty<double>());
         MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(CenterPoint, () => CenterPoint = CenterX.CombineLatest(CenterY, (x, y) => new Point(x, y)).ToReadOnlyBindableReactiveProperty());
+        MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(ResizeHandleMargin, () => ResizeHandleMargin = ThumbSize.Select(size => new Thickness(-size / 2, -size / 2, -size / 2, -size / 2)).ToReadOnlyBindableReactiveProperty());
         MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(MarginLeftTop, () => MarginLeftTop = ThumbSize.Select(size => new Thickness(-size, -size, 0, 0)).ToReadOnlyBindableReactiveProperty());
         MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(MarginLeftBottom, () => MarginLeftBottom = ThumbSize.Select(size => new Thickness(-size, 0, 0, -size)).ToReadOnlyBindableReactiveProperty());
         MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(MarginRightTop, () => MarginRightTop = ThumbSize.Select(size => new Thickness(0, -size, -size, 0)).ToReadOnlyBindableReactiveProperty());
