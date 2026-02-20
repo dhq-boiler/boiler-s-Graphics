@@ -45,6 +45,8 @@
                                         </i:Interaction.Behaviors>
                                         <TreeView.Resources>
                                             <Style TargetType="TreeViewItem">
+                                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                                <Setter Property="VerticalContentAlignment" Value="Center" />
                                                 <Setter Property="IsExpanded" Value="{Binding IsExpanded.Value, Mode=TwoWay}" />
                                                 <Setter Property="Template">
                                                     <Setter.Value>
