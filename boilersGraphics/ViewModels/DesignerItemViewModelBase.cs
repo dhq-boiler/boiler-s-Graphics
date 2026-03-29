@@ -22,19 +22,19 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
     {
         Left.Value = left;
         Top.Value = top;
-        Rect = Left.CombineLatest(Top, Width, Height, (left, top, width, height) => new Rect(left, top, width, height))
+        Rect = Left.CombineLatest(Top, Width, Height, (left, top, width, height) => width > 0 && height > 0 ? new Rect(left, top, width, height) : new Rect())
             .ToReadOnlyBindableReactiveProperty();
-        Size = Width.CombineLatest(Height, (w, h) => new Size(w, h)).ToReadOnlyBindableReactiveProperty();
-        SizeIncludeFrame = Width.CombineLatest(Height, (w, h) => new Size(w + 1, h + 1)).ToReadOnlyBindableReactiveProperty();
+        Size = Width.CombineLatest(Height, (w, h) => w > 0 && h > 0 ? new Size(w, h) : new Size()).ToReadOnlyBindableReactiveProperty();
+        SizeIncludeFrame = Width.CombineLatest(Height, (w, h) => w >= 0 && h >= 0 ? new Size(w + 1, h + 1) : new Size()).ToReadOnlyBindableReactiveProperty();
         Init();
     }
 
     public DesignerItemViewModelBase()
     {
-        Rect = Left.CombineLatest(Top, Width, Height, (left, top, width, height) => new Rect(left, top, width, height))
+        Rect = Left.CombineLatest(Top, Width, Height, (left, top, width, height) => width > 0 && height > 0 ? new Rect(left, top, width, height) : new Rect())
             .ToReadOnlyBindableReactiveProperty();
-        Size = Width.CombineLatest(Height, (w, h) => new Size(w, h)).ToReadOnlyBindableReactiveProperty();
-        SizeIncludeFrame = Width.CombineLatest(Height, (w, h) => new Size(w + 1, h + 1)).ToReadOnlyBindableReactiveProperty();
+        Size = Width.CombineLatest(Height, (w, h) => w > 0 && h > 0 ? new Size(w, h) : new Size()).ToReadOnlyBindableReactiveProperty();
+        SizeIncludeFrame = Width.CombineLatest(Height, (w, h) => w >= 0 && h >= 0 ? new Size(w + 1, h + 1) : new Size()).ToReadOnlyBindableReactiveProperty();
         Init();
     }
 
@@ -127,7 +127,8 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
                 UpdateTransform(nameof(Left), x.OldItem, x.NewItem);
                 if (RenderingEnabled.Value)
                 {
-                    await OnRectChanged(new Rect(Left.Value, Top.Value, Width.Value, Height.Value));
+                    if (Width.Value > 0 && Height.Value > 0)
+                        await OnRectChanged(new Rect(Left.Value, Top.Value, Width.Value, Height.Value));
                 }
                 UpdateChangeFormTriggerObject();
             })
@@ -139,7 +140,8 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
                 UpdateTransform(nameof(Top), x.OldItem, x.NewItem);
                 if (RenderingEnabled.Value)
                 {
-                    await OnRectChanged(new Rect(Left.Value, Top.Value, Width.Value, Height.Value));
+                    if (Width.Value > 0 && Height.Value > 0)
+                        await OnRectChanged(new Rect(Left.Value, Top.Value, Width.Value, Height.Value));
                 }
                 UpdateChangeFormTriggerObject();
             })
@@ -151,7 +153,8 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
                 UpdateTransform(nameof(Width), x.OldItem, x.NewItem);
                 if (RenderingEnabled.Value)
                 {
-                    await OnRectChanged(new Rect(Left.Value, Top.Value, Width.Value, Height.Value));
+                    if (Width.Value > 0 && Height.Value > 0)
+                        await OnRectChanged(new Rect(Left.Value, Top.Value, Width.Value, Height.Value));
 
                     var renderer = DiagramViewModel.Instance.Renderer;
                     renderer?.MarkItemDirty(this);
@@ -166,7 +169,8 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
                 UpdateTransform(nameof(Height), x.OldItem, x.NewItem);
                 if (RenderingEnabled.Value)
                 {
-                    await OnRectChanged(new Rect(Left.Value, Top.Value, Width.Value, Height.Value));
+                    if (Width.Value > 0 && Height.Value > 0)
+                        await OnRectChanged(new Rect(Left.Value, Top.Value, Width.Value, Height.Value));
 
                     var renderer = DiagramViewModel.Instance.Renderer;
                     renderer?.MarkItemDirty(this);
@@ -182,7 +186,8 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
                 UpdateMatrix(x.OldItem, x.NewItem);
                 if (RenderingEnabled.Value)
                 {
-                    await OnRectChanged(new Rect(Left.Value, Top.Value, Width.Value, Height.Value));
+                    if (Width.Value > 0 && Height.Value > 0)
+                        await OnRectChanged(new Rect(Left.Value, Top.Value, Width.Value, Height.Value));
 
                     var renderer = DiagramViewModel.Instance.Renderer;
                     renderer?.MarkItemDirty(this);
@@ -196,7 +201,8 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
             {
                 if (RenderingEnabled.Value)
                 {
-                    await OnRectChanged(new Rect(Left.Value, Top.Value, Width.Value, Height.Value));
+                    if (Width.Value > 0 && Height.Value > 0)
+                        await OnRectChanged(new Rect(Left.Value, Top.Value, Width.Value, Height.Value));
 
                     var renderer = DiagramViewModel.Instance.Renderer;
                     renderer?.MarkItemDirty(this);
@@ -263,7 +269,8 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
         {
             if (renderingEnabled)
             {
-                await OnRectChanged(new Rect(Left.Value, Top.Value, Width.Value, Height.Value));
+                if (Width.Value > 0 && Height.Value > 0)
+                    await OnRectChanged(new Rect(Left.Value, Top.Value, Width.Value, Height.Value));
 
                 var renderer = DiagramViewModel.Instance.Renderer;
                 renderer?.MarkItemDirty(this);
@@ -427,7 +434,7 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
         MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(Top, () => Top = new BindableReactiveProperty<double>());
         MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(Right, () => Right = Left.CombineLatest(Width, (a, b) => a + b).ToReadOnlyBindableReactiveProperty());
         MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(Bottom, () => Bottom = Top.CombineLatest(Height, (a, b) => a + b).ToReadOnlyBindableReactiveProperty());
-        MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(Rect, () => Rect = Left.CombineLatest(Top, Width, Height, (left, top, width, height) => new Rect(left, top, width, height)).ToReadOnlyBindableReactiveProperty());
+        MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(Rect, () => Rect = Left.CombineLatest(Top, Width, Height, (left, top, width, height) => width > 0 && height > 0 ? new Rect(left, top, width, height) : new Rect()).ToReadOnlyBindableReactiveProperty());
         MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(CenterX, () => CenterX = new BindableReactiveProperty<double>());
         MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(CenterY, () => CenterY = new BindableReactiveProperty<double>());
         MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(CenterPoint, () => CenterPoint = CenterX.CombineLatest(CenterY, (x, y) => new Point(x, y)).ToReadOnlyBindableReactiveProperty());

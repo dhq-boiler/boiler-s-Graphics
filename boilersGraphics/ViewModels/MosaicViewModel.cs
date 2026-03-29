@@ -133,26 +133,8 @@ public class MosaicViewModel : EffectViewModel
 
     private static long GetMosaicPixelIndex(int a, double b)
     {
-        var aDivideByB = a / b;
-        var mod = aDivideByB % 1;
-        double ceiling;
-        double floor;
-        if (mod < 0.5)
-        {
-            //mod = 0.4 -> 1.4 -> (long)1.4 -> 1
-            floor = (long)aDivideByB + (long)(1d + mod);
-            //mod = 0.4 -> -0.1 -> (long)-0.1 -> 0
-            ceiling = (long)aDivideByB + (long)(mod - 0.5);
-        }
-        else
-        {
-            //mod = 0.6 -> 1.1 -> (long)1.1 -> 1
-            floor = (long)aDivideByB + (long)(0.5 + mod);
-            //mod = 0.6 -> -0.4 -> (long)-0.4 -> 0
-            ceiling = (long)aDivideByB + (long)(mod - 1);
-        }
-
-        return (long)(0.5 * (floor + ceiling) * b);
+        var blockIndex = (long)(a / b);
+        return (long)Math.Round(blockIndex * b + b / 2.0);
     }
 
     public override async Task OnRectChanged(Rect rect)

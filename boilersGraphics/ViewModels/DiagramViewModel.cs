@@ -1338,39 +1338,47 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                 combine.PathGeometry.Value.Bounds.Height);
             Add(combine);
         }
-        else if (selectedItems.AsValueEnumerable().Count() == 2 && item1 is EffectViewModel effect)
+        else if (selectedItems.AsValueEnumerable().Count() == 2 && (item1 is EffectViewModel || GetSelectedItemLast() is EffectViewModel))
         {
             var item2 = GetSelectedItemLast();
-            Remove(item2);
 
-            var designerItem1 = item1 as DesignerItemViewModelBase;
-            var designerItem2 = item2 as DesignerItemViewModelBase;
+            // EffectViewModelを保持し、もう一方を削除する
+            EffectViewModel effect;
+            SelectableDesignerItemViewModelBase otherItem;
+            if (item1 is EffectViewModel effect1)
+            {
+                effect = effect1;
+                otherItem = item2;
+            }
+            else
+            {
+                effect = (EffectViewModel)item2;
+                otherItem = item1;
+            }
+            Remove(otherItem);
 
-            var item1PathGeometry = item1.PathGeometryNoRotate.Value;
-            var item2PathGeometry = item2.PathGeometryNoRotate.Value;
+            var designerEffect = effect as DesignerItemViewModelBase;
+            var designerOther = otherItem as DesignerItemViewModelBase;
 
-            if (item1.RotationAngle.Value != 0) item1PathGeometry = designerItem1.PathGeometryRotate.Value;
-            if (designerItem1 is not CombineGeometryViewModel)
-                item1PathGeometry = GeometryCreator.Translate(item1PathGeometry, designerItem1.Left.Value,
-                    designerItem1.Top.Value);
+            var effectPathGeometry = effect.PathGeometryNoRotate.Value;
+            var otherPathGeometry = otherItem.PathGeometryNoRotate.Value;
 
-            if (item2.RotationAngle.Value != 0) item2PathGeometry = designerItem2.PathGeometryRotate.Value;
+            if (effect.RotationAngle.Value != 0) effectPathGeometry = designerEffect.PathGeometryRotate.Value;
+            if (designerEffect is not CombineGeometryViewModel)
+                effectPathGeometry = GeometryCreator.Translate(effectPathGeometry, designerEffect.Left.Value,
+                    designerEffect.Top.Value);
 
-            if (designerItem2 is not CombineGeometryViewModel)
-                item2PathGeometry = GeometryCreator.Translate(item2PathGeometry, designerItem2.Left.Value,
-                    designerItem2.Top.Value);
+            if (otherItem.RotationAngle.Value != 0) otherPathGeometry = designerOther.PathGeometryRotate.Value;
 
-            MainWindowVM.Recorder.Current.ExecuteSetProperty(effect, "PathGeometryNoRotate.Value",
-                GeometryCreator.Translate(Geometry.Combine(item1PathGeometry, item2PathGeometry, mode, null), -designerItem1.Left.Value, -designerItem1.Top.Value));
-            
-            MainWindowVM.Recorder.Current.ExecuteSetProperty(effect, "UpdatingStrategy.Value", SelectableDesignerItemViewModelBase.PathGeometryUpdatingStrategy.ResizeWhilePreservingOriginalShape);
+            if (designerOther is not CombineGeometryViewModel)
+                otherPathGeometry = GeometryCreator.Translate(otherPathGeometry, designerOther.Left.Value,
+                    designerOther.Top.Value);
 
-            var rect = Geometry.Combine(item1PathGeometry, item2PathGeometry, mode, null).Bounds;
-            MainWindowVM.Recorder.Current.ExecuteSetProperty(effect, "Left.Value", rect.Left);
-            MainWindowVM.Recorder.Current.ExecuteSetProperty(effect, "Top.Value", rect.Top);
-            MainWindowVM.Recorder.Current.ExecuteSetProperty(effect, "PathGeometryNoRotate.Value", GeometryCreator.Translate(effect.PathGeometryNoRotate.Value, -effect.PathGeometryNoRotate.Value.Bounds.Left, -effect.PathGeometryNoRotate.Value.Bounds.Top));
-            MainWindowVM.Recorder.Current.ExecuteSetProperty(effect, "Width.Value", rect.Width);
-            MainWindowVM.Recorder.Current.ExecuteSetProperty(effect, "Height.Value", rect.Height);
+            var combinedAbsolute = Geometry.Combine(effectPathGeometry, otherPathGeometry, mode, null);
+            var combinedLocal = GeometryCreator.Translate(combinedAbsolute, -designerEffect.Left.Value, -designerEffect.Top.Value);
+
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(effect, "UpdatingStrategy.Value", SelectableDesignerItemViewModelBase.PathGeometryUpdatingStrategy.Fixed);
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(effect, "PathGeometryNoRotate.Value", combinedLocal);
         }
         else
         {
@@ -1417,14 +1425,13 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                     Geometry.Combine(item1PathGeometry, item2PathGeometry, mode, null));
             }
 
-            MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "Left.Value",
-                combine.PathGeometryNoRotate.Value.Bounds.Left);
-            MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "Top.Value",
-                combine.PathGeometryNoRotate.Value.Bounds.Top);
-            MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "Width.Value",
-                combine.PathGeometryNoRotate.Value.Bounds.Width);
-            MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "Height.Value",
-                combine.PathGeometryNoRotate.Value.Bounds.Height);
+            var bounds = combine.PathGeometryNoRotate.Value.Bounds;
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "Left.Value", bounds.Left);
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "Top.Value", bounds.Top);
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "PathGeometryNoRotate.Value",
+                GeometryCreator.Translate(combine.PathGeometryNoRotate.Value, -bounds.Left, -bounds.Top));
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "Width.Value", bounds.Width);
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "Height.Value", bounds.Height);
             Add(combine);
         }
 

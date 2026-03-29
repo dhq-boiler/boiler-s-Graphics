@@ -136,8 +136,8 @@ public class Renderer : IDisposable
     {
         var size = GetRenderSize(sliceRect, diagramViewModel, minZIndex, maxZIndex);
 
-        var width = (int)size.Width;
-        var height = (int)size.Height;
+        var width = (int)Math.Ceiling(size.Width);
+        var height = (int)Math.Ceiling(size.Height);
         if (width <= 0) width = 1;
         if (height <= 0) height = 1;
 
@@ -248,6 +248,8 @@ public class Renderer : IDisposable
         switch (item.Item)
         {
             case DesignerItemViewModelBase designerItem:
+                if (item.Width <= 0 || item.Height <= 0)
+                    return Rect.Empty;
                 return new Rect(item.Left, item.Top, item.Width, item.Height);
             case ConnectorBaseViewModel connector:
                 return new Rect(item.LeftTop, item.Bounds.Size);
@@ -621,6 +623,8 @@ public class Renderer : IDisposable
 
         if (item is ISizeRps size1)
         {
+            if (size1.Width.Value <= 0 || size1.Height.Value <= 0)
+                return;
             view.Measure(new Size(size1.Width.Value, size1.Height.Value));
             if (App.IsTest)
             {
@@ -633,6 +637,8 @@ public class Renderer : IDisposable
         }
         else if (item is ISizeReadOnlyRps size2)
         {
+            if (size2.Width.Value <= 0 || size2.Height.Value <= 0)
+                return;
             view.Measure(new Size(size2.Width.Value, size2.Height.Value));
             view.Arrange(new Rect(new Point(), new Size(size2.Width.Value, size2.Height.Value)));
         }
