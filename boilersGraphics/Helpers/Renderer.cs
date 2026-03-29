@@ -939,7 +939,13 @@ public class Renderer : IDisposable
         // sliceRect指定時はキャッシュを使わず、ビューのVisualBrushを直接描画
         if (sliceRect.HasValue)
         {
-            var viewBrush = GetOrCreateVisualBrush(itemData.View);
+            var viewBrush = new VisualBrush(itemData.View)
+            {
+                Stretch = Stretch.Fill,
+                ViewboxUnits = BrushMappingMode.Absolute,
+                Viewbox = new Rect(0, 0, itemData.Width, itemData.Height),
+                TileMode = TileMode.None
+            };
             var drawRect = new Rect(
                 itemData.Left - sliceRect.Value.X,
                 itemData.Top - sliceRect.Value.Y,
