@@ -98,6 +98,7 @@ namespace boilersGraphics.Helpers
                                         rect.X -= sliceRect.Value.X;
                                         rect.Y -= sliceRect.Value.Y;
                                     }
+                                    System.Diagnostics.Debug.WriteLine($"[EffectRenderer] Picture draw rect={rect}");
                                 }
                                 else
                                 {

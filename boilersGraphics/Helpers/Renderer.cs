@@ -464,11 +464,18 @@ public class Renderer : IDisposable
 
         if (sliceRect.HasValue)
         {
-            rect.X = 0;
-            rect.Y = 0;
+            // sliceRectオフセットを適用して背景を正しい位置に描画
+            var bgRect = new Rect(
+                backgroundData.Left - sliceRect.Value.X,
+                backgroundData.Top - sliceRect.Value.Y,
+                backgroundData.Width,
+                backgroundData.Height);
+            context.DrawRectangle(brush, null, bgRect);
         }
-
-        context.DrawRectangle(brush, null, rect);
+        else
+        {
+            context.DrawRectangle(brush, null, rect);
+        }
         return true;
     }
 
@@ -929,6 +936,43 @@ public class Renderer : IDisposable
     /// </summary>
     private bool RenderItemWithDataCached(Rect? sliceRect, DrawingContext context, RenderItemData itemData, BackgroundViewModel background)
     {
+        // sliceRect指定時はキャッシュを使わず、ビューのVisualBrushを直接描画
+        if (sliceRect.HasValue)
+        {
+            var viewBrush = GetOrCreateVisualBrush(itemData.View);
+            var drawRect = new Rect(
+                itemData.Left - sliceRect.Value.X,
+                itemData.Top - sliceRect.Value.Y,
+                itemData.Width,
+                itemData.Height);
+
+            switch (itemData.Item)
+            {
+                case DesignerItemViewModelBase designerItem:
+                    if (Math.Abs(designerItem.RotationAngle.Value) > 0.01)
+                    {
+                        context.PushTransform(new RotateTransform(designerItem.RotationAngle.Value,
+                            designerItem.CenterX.Value - sliceRect.Value.X,
+                            designerItem.CenterY.Value - sliceRect.Value.Y));
+                        context.DrawRectangle(viewBrush, null, drawRect);
+                        context.Pop();
+                    }
+                    else
+                    {
+                        context.DrawRectangle(viewBrush, null, drawRect);
+                    }
+                    break;
+
+                case ConnectorBaseViewModel:
+                    context.DrawRectangle(viewBrush, null, drawRect);
+                    break;
+
+                default:
+                    return false;
+            }
+            return true;
+        }
+
         var itemKey = itemData.Item;
         var isDirty = _cache.IsDirty(itemKey);
 
@@ -938,7 +982,7 @@ public class Renderer : IDisposable
             // キャッシュが有効な場合、キャッシュされたDrawingVisualを使用
             if (cachedVisual.IsValid(itemData))
             {
-                var cachedRect = CalculateRenderRect(sliceRect, itemData, background);
+                var cachedRect = CalculateRenderRect(null, itemData, background);
                 if (cachedRect == Rect.Empty) return false;
 
                 // キャッシュされたVisualBrushを描画
@@ -1010,7 +1054,7 @@ public class Renderer : IDisposable
         s_logger.Debug($"新規キャッシュ作成: {itemData.Item.GetType().Name}");
 
         // 実際の描画
-        var renderRect = CalculateRenderRect(sliceRect, itemData, background);
+        var renderRect = CalculateRenderRect(null, itemData, background);
         if (renderRect == Rect.Empty) return false;
 
         context.DrawRectangle(visualBrush, null, renderRect);
