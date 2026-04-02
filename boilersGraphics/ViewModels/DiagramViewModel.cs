@@ -1908,6 +1908,94 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
         Layers.Add(new Layer());
     }
 
+    private void LoadCanvasPagesFromXml(XElement root, MainWindowViewModel mainWindowVM)
+    {
+        var canvasesElement = root.Element("Canvases");
+        if (canvasesElement == null)
+        {
+            // Legacy single-canvas file: create one page with current canvas state
+            mainWindowVM.CanvasPages.Clear();
+            var page = new Models.CanvasPage("Canvas 1");
+            page.SerializedData = SerializeCanvasState();
+            mainWindowVM.CanvasPages.Add(page);
+            mainWindowVM.ActiveCanvasIndex.Value = 0;
+            return;
+        }
+
+        mainWindowVM.CanvasPages.Clear();
+        int index = 0;
+        foreach (var canvasElement in canvasesElement.Elements("Canvas"))
+        {
+            var name = canvasElement.Attribute("Name")?.Value ?? $"Canvas {index + 1}";
+            var page = new Models.CanvasPage(name);
+            page.SerializedData = new XElement(canvasElement);
+            mainWindowVM.CanvasPages.Add(page);
+            index++;
+        }
+
+        var activeIndexElement = root.Element("ActiveCanvasIndex");
+        int activeIndex = 0;
+        if (activeIndexElement != null)
+            int.TryParse(activeIndexElement.Value, out activeIndex);
+
+        activeIndex = Math.Max(0, Math.Min(activeIndex, mainWindowVM.CanvasPages.Count - 1));
+        mainWindowVM.ActiveCanvasIndex.Value = activeIndex;
+
+        // The current canvas (loaded via legacy path) represents the active canvas
+        // Update its serialized data
+        if (mainWindowVM.CanvasPages.Count > 0)
+        {
+            mainWindowVM.CanvasPages[activeIndex].SerializedData = SerializeCanvasState();
+        }
+    }
+
+    public XElement SerializeCanvasState()
+    {
+        var canvas = new XElement("Canvas");
+        canvas.Add(new XElement("Layers", ObjectSerializer.SerializeLayers(Layers)));
+
+        var background = BackgroundItem.Value;
+        var bgElement = new XElement("Background");
+        bgElement.Add(new XElement("Left", background.Left.Value));
+        bgElement.Add(new XElement("Top", background.Top.Value));
+        bgElement.Add(new XElement("Width", background.Width.Value));
+        bgElement.Add(new XElement("Height", background.Height.Value));
+        bgElement.Add(new XElement("FillBrush",
+            XElement.Parse(Helpers.WpfObjectSerializer.Serialize(CanvasFillBrush.Value))));
+        canvas.Add(bgElement);
+
+        return canvas;
+    }
+
+    public void RestoreCanvasState(XElement canvas)
+    {
+        Layers.Clear();
+
+        var bgElement = canvas.Element("Background");
+        if (bgElement != null)
+        {
+            var background = BackgroundItem.Value;
+            background.Left.Value = double.Parse(bgElement.Element("Left").Value);
+            background.Top.Value = double.Parse(bgElement.Element("Top").Value);
+            background.Width.Value = double.Parse(bgElement.Element("Width").Value);
+            background.Height.Value = double.Parse(bgElement.Element("Height").Value);
+
+            var fillBrushElement = bgElement.Element("FillBrush");
+            if (fillBrushElement != null && fillBrushElement.HasElements)
+            {
+                var brush = Helpers.WpfObjectSerializer.Deserialize(
+                    fillBrushElement.Elements().First().ToString());
+                if (brush is System.Windows.Media.Brush b)
+                    CanvasFillBrush.Value = b;
+            }
+        }
+
+        ObjectDeserializer.ReadObjectsFromXML(this, null, canvas);
+
+        if (Layers.Count == 0)
+            Layers.Add(new Layer());
+    }
+
     private void ExecuteExportCommand()
     {
         ExportCanvas();
@@ -2181,18 +2269,39 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
 
     private void ExecuteSaveAsCommand()
     {
-        var versionXML = new XElement("Version", BGSXFileVersion.ToString());
-        var layersXML = new XElement("Layers", ObjectSerializer.SerializeLayers(Layers));
-        var configurationXML = new XElement("Configuration", ObjectSerializer.SerializeConfiguration(this));
-        var attachmentsXML = new XElement("Attachments", ObjectSerializer.SerializeAttachments());
-
-        var root = new XElement("boilersGraphics");
-        root.Add(versionXML);
-        root.Add(layersXML);
-        root.Add(configurationXML);
-        root.Add(attachmentsXML);
-
+        var root = BuildSaveXElement();
         SaveFileWithSaveFileDialog(root);
+    }
+
+    internal XElement BuildSaveXElement()
+    {
+        var root = new XElement("boilersGraphics");
+        root.Add(new XElement("Version", BGSXFileVersion.ToString()));
+
+        var canvasPages = MainWindowVM.CanvasPages;
+        if (canvasPages.Count > 1 || (canvasPages.Count == 1 && canvasPages[0].SerializedData != null))
+        {
+            // Save current canvas state before serializing all pages
+            MainWindowVM.SaveCurrentCanvasState();
+
+            var canvasesXml = new XElement("Canvases");
+            for (int i = 0; i < canvasPages.Count; i++)
+            {
+                var page = canvasPages[i];
+                var canvasXml = page.SerializedData ?? SerializeCanvasState();
+                canvasXml.SetAttributeValue("Name", page.Name);
+                canvasesXml.Add(canvasXml);
+            }
+            root.Add(canvasesXml);
+            root.Add(new XElement("ActiveCanvasIndex", MainWindowVM.ActiveCanvasIndex.Value));
+        }
+
+        // Always include legacy-compatible single-canvas format
+        root.Add(new XElement("Layers", ObjectSerializer.SerializeLayers(Layers)));
+        root.Add(new XElement("Configuration", ObjectSerializer.SerializeConfiguration(this)));
+        root.Add(new XElement("Attachments", ObjectSerializer.SerializeAttachments()));
+
+        return root;
     }
 
     private void SaveFileWithSaveFileDialog(XElement xElement)
@@ -2259,16 +2368,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
 
     private void ExecuteOverwriteCommand()
     {
-        var versionXML = new XElement("Version", BGSXFileVersion.ToString());
-        var layersXML = new XElement("Layers", ObjectSerializer.SerializeLayers(Layers));
-        var configurationXML = new XElement("Configuration", ObjectSerializer.SerializeConfiguration(this));
-        var attachmentsXML = new XElement("Attachments", ObjectSerializer.SerializeAttachments());
-
-        var root = new XElement("boilersGraphics");
-        root.Add(versionXML);
-        root.Add(layersXML);
-        root.Add(configurationXML);
-        root.Add(attachmentsXML);
+        var root = BuildSaveXElement();
         Save(root);
     }
 
@@ -3246,6 +3346,9 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                     isPreview);
 
                 await PostProcessInFileLoadingSequence(mainwindowViewModel).ConfigureAwait(false);
+
+                // Load multi-canvas pages if present
+                LoadCanvasPagesFromXml(root, mainwindowViewModel);
 
                 vm.Output.Value += Environment.NewLine;
                 vm.Output.Value += Resources.Log_FinishLoadFromFile;
