@@ -98,84 +98,84 @@ public class DropperBehavior : Behavior<DesignerCanvas>
     private static void SetFillColor(TouchEventArgs e)
     {
         var designerCanvas = Application.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-        var rtb = new EffectRenderer(new WpfVisualTreeHelper(), DiagramViewModel.Instance.Renderer.GetCache()).Render(null,
-            DesignerCanvas.GetInstance(), DiagramViewModel.Instance, DiagramViewModel.Instance.BackgroundItem.Value,
+        var rtb = new EffectRenderer(new WpfVisualTreeHelper(), MainWindowViewModel.Instance.DiagramViewModel.Renderer.GetCache()).Render(null,
+            DesignerCanvas.GetInstance(), MainWindowViewModel.Instance.DiagramViewModel, MainWindowViewModel.Instance.DiagramViewModel.BackgroundItem.Value,
             null);
         var writeableBitmap = new WriteableBitmap(rtb);
         var position = e.GetTouchPoint(designerCanvas);
         var color = writeableBitmap.GetPixel((int)position.Position.X, (int)position.Position.Y);
-        DiagramViewModel.Instance.FillBrush.Value = new SolidColorBrush(color);
+        MainWindowViewModel.Instance.DiagramViewModel.FillBrush.Value = new SolidColorBrush(color);
     }
 
     private static void SetEdgeColor(TouchEventArgs e)
     {
         var designerCanvas = Application.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-        var rtb = new EffectRenderer(new WpfVisualTreeHelper(), DiagramViewModel.Instance.Renderer.GetCache()).Render(null,
-            DesignerCanvas.GetInstance(), DiagramViewModel.Instance, DiagramViewModel.Instance.BackgroundItem.Value,
+        var rtb = new EffectRenderer(new WpfVisualTreeHelper(), MainWindowViewModel.Instance.DiagramViewModel.Renderer.GetCache()).Render(null,
+            DesignerCanvas.GetInstance(), MainWindowViewModel.Instance.DiagramViewModel, MainWindowViewModel.Instance.DiagramViewModel.BackgroundItem.Value,
             null);
         var writeableBitmap = new WriteableBitmap(rtb);
         var position = e.GetTouchPoint(designerCanvas);
         var color = writeableBitmap.GetPixel((int)position.Position.X, (int)position.Position.Y);
-        DiagramViewModel.Instance.EdgeBrush.Value = new SolidColorBrush(color);
+        MainWindowViewModel.Instance.DiagramViewModel.EdgeBrush.Value = new SolidColorBrush(color);
     }
 
     private static void SetFillColor(StylusEventArgs e)
     {
         var designerCanvas = Application.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-        var rtb = new EffectRenderer(new WpfVisualTreeHelper(), DiagramViewModel.Instance.Renderer.GetCache()).Render(null,
-            DesignerCanvas.GetInstance(), DiagramViewModel.Instance, DiagramViewModel.Instance.BackgroundItem.Value,
+        var rtb = new EffectRenderer(new WpfVisualTreeHelper(), MainWindowViewModel.Instance.DiagramViewModel.Renderer.GetCache()).Render(null,
+            DesignerCanvas.GetInstance(), MainWindowViewModel.Instance.DiagramViewModel, MainWindowViewModel.Instance.DiagramViewModel.BackgroundItem.Value,
             null);
         var writeableBitmap = new WriteableBitmap(rtb);
         var position = e.GetPosition(designerCanvas);
         var color = writeableBitmap.GetPixel((int)position.X, (int)position.Y);
-        DiagramViewModel.Instance.FillBrush.Value = new SolidColorBrush(color);
+        MainWindowViewModel.Instance.DiagramViewModel.FillBrush.Value = new SolidColorBrush(color);
     }
 
     private static void SetEdgeColor(StylusEventArgs e)
     {
         var designerCanvas = Application.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-        var rtb = new EffectRenderer(new WpfVisualTreeHelper(), DiagramViewModel.Instance.Renderer.GetCache()).Render(null,
-            DesignerCanvas.GetInstance(), DiagramViewModel.Instance, DiagramViewModel.Instance.BackgroundItem.Value,
+        var rtb = new EffectRenderer(new WpfVisualTreeHelper(), MainWindowViewModel.Instance.DiagramViewModel.Renderer.GetCache()).Render(null,
+            DesignerCanvas.GetInstance(), MainWindowViewModel.Instance.DiagramViewModel, MainWindowViewModel.Instance.DiagramViewModel.BackgroundItem.Value,
             null);
         var writeableBitmap = new WriteableBitmap(rtb);
         var position = e.GetPosition(designerCanvas);
         var color = writeableBitmap.GetPixel((int)position.X, (int)position.Y);
-        DiagramViewModel.Instance.EdgeBrush.Value = new SolidColorBrush(color);
+        MainWindowViewModel.Instance.DiagramViewModel.EdgeBrush.Value = new SolidColorBrush(color);
     }
 
     private static void SetFillColor(MouseEventArgs e)
     {
         var designerCanvas = Application.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-        var rtb = new EffectRenderer(new WpfVisualTreeHelper(), DiagramViewModel.Instance.Renderer.GetCache()).Render(null,
-            DesignerCanvas.GetInstance(), DiagramViewModel.Instance, DiagramViewModel.Instance.BackgroundItem.Value,
+        var rtb = new EffectRenderer(new WpfVisualTreeHelper(), MainWindowViewModel.Instance.DiagramViewModel.Renderer.GetCache()).Render(null,
+            DesignerCanvas.GetInstance(), MainWindowViewModel.Instance.DiagramViewModel, MainWindowViewModel.Instance.DiagramViewModel.BackgroundItem.Value,
             null);
         var writeableBitmap = new WriteableBitmap(rtb);
         var position = e.GetPosition(designerCanvas);
         var color = writeableBitmap.GetPixel((int)position.X, (int)position.Y);
-        DiagramViewModel.Instance.FillBrush.Value = new SolidColorBrush(color);
+        MainWindowViewModel.Instance.DiagramViewModel.FillBrush.Value = new SolidColorBrush(color);
     }
 
     private static void SetEdgeColor(MouseEventArgs e)
     {
         var designerCanvas = Application.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-        var rtb = new EffectRenderer(new WpfVisualTreeHelper(), DiagramViewModel.Instance.Renderer.GetCache()).Render(null,
-            DesignerCanvas.GetInstance(), DiagramViewModel.Instance, DiagramViewModel.Instance.BackgroundItem.Value,
+        var rtb = new EffectRenderer(new WpfVisualTreeHelper(), MainWindowViewModel.Instance.DiagramViewModel.Renderer.GetCache()).Render(null,
+            DesignerCanvas.GetInstance(), MainWindowViewModel.Instance.DiagramViewModel, MainWindowViewModel.Instance.DiagramViewModel.BackgroundItem.Value,
             null);
         var writeableBitmap = new WriteableBitmap(rtb);
         var position = e.GetPosition(designerCanvas);
         var color = writeableBitmap.GetPixel((int)position.X, (int)position.Y);
-        DiagramViewModel.Instance.EdgeBrush.Value = new SolidColorBrush(color);
+        MainWindowViewModel.Instance.DiagramViewModel.EdgeBrush.Value = new SolidColorBrush(color);
     }
 
     private static void AddNewColorSpot(MouseEventArgs e)
     {
         var designerCanvas = Application.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-        var rtb = new EffectRenderer(new WpfVisualTreeHelper(), DiagramViewModel.Instance.Renderer.GetCache()).Render(null,
-            DesignerCanvas.GetInstance(), DiagramViewModel.Instance, DiagramViewModel.Instance.BackgroundItem.Value,
+        var rtb = new EffectRenderer(new WpfVisualTreeHelper(), MainWindowViewModel.Instance.DiagramViewModel.Renderer.GetCache()).Render(null,
+            DesignerCanvas.GetInstance(), MainWindowViewModel.Instance.DiagramViewModel, MainWindowViewModel.Instance.DiagramViewModel.BackgroundItem.Value,
             null);
         var writeableBitmap = new WriteableBitmap(rtb);
         var position = e.GetPosition(designerCanvas);
         var color = writeableBitmap.GetPixel((int)position.X, (int)position.Y);
-        DiagramViewModel.Instance.OverwriteColorSpot(new SolidColorBrush(color));
+        MainWindowViewModel.Instance.DiagramViewModel.OverwriteColorSpot(new SolidColorBrush(color));
     }
 }

@@ -28,7 +28,7 @@ internal class RectangleAdorner : Adorner
         _startPoint = rect.TopLeft;
         _endPoint= rect.BottomRight;
         _snapAction = new SnapAction();
-        var parent = DiagramViewModel.Instance;
+        var parent = MainWindowViewModel.Instance.DiagramViewModel;
         var brush = parent.EdgeBrush.Value.Clone();
         brush.Opacity = 0.5;
         _rectanglePen = new Pen(brush, parent.EdgeThickness.Value.Value);
@@ -41,7 +41,7 @@ internal class RectangleAdorner : Adorner
         _designerCanvas = designerCanvas;
         _startPoint = dragStartPoint;
         this.item = item;
-        var parent = DiagramViewModel.Instance;
+        var parent = MainWindowViewModel.Instance.DiagramViewModel;
         var brush = parent.EdgeBrush.Value.Clone();
         brush.Opacity = 0.5;
         _rectanglePen = new Pen(brush, parent.EdgeThickness.Value.Value);
@@ -86,7 +86,7 @@ internal class RectangleAdorner : Adorner
         if (_startPoint.HasValue && _endPoint.HasValue && item is not null)
         {
             var rand = new Random();
-            item.Owner = DiagramViewModel.Instance;
+            item.Owner = MainWindowViewModel.Instance.DiagramViewModel;
             item.Left.Value = Math.Min(_startPoint.Value.X, _endPoint.Value.X);
             item.Top.Value = Math.Min(_startPoint.Value.Y, _endPoint.Value.Y);
             item.Width.Value = Math.Max(_startPoint.Value.X - _endPoint.Value.X,
@@ -104,7 +104,7 @@ internal class RectangleAdorner : Adorner
             item.IsSelected.Value = true;
             item.IsVisible.Value = true;
             item.Owner.DeselectAll();
-            DiagramViewModel.Instance.AddItemCommand.Execute(item);
+            MainWindowViewModel.Instance.DiagramViewModel.AddItemCommand.Execute(item);
 
             if (_startPoint.Value.X < _endPoint.Value.X && _startPoint.Value.Y <= _endPoint.Value.Y)
                 //右下
@@ -147,13 +147,13 @@ internal class RectangleAdorner : Adorner
 
         if (_startPoint.HasValue && _endPoint.HasValue)
             dc.DrawRectangle(
-                DiagramViewModel.Instance.FillBrush.Value.Clone(),
+                MainWindowViewModel.Instance.DiagramViewModel.FillBrush.Value.Clone(),
                 _rectanglePen, ShiftEdgeThickness());
     }
 
     private Rect ShiftEdgeThickness()
     {
-        var parent = DiagramViewModel.Instance;
+        var parent = MainWindowViewModel.Instance.DiagramViewModel;
         var point1 = _startPoint.Value;
         point1.X += parent.EdgeThickness.Value.Value / 2;
         point1.Y += parent.EdgeThickness.Value.Value / 2;
