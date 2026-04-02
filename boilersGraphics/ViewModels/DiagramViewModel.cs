@@ -677,6 +677,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
         Mediator.Instance.Register(this);
     }
 
+    [System.Obsolete("Use Owner property or MainWindowViewModel.Instance.DiagramViewModel instead. Remaining 12 refs in property initializers need lazy init refactoring.")]
     public static DiagramViewModel Instance { get; private set; }
     public Renderer Renderer { get; } = new(new WpfVisualTreeHelper());
     public DelegateCommand<object> CreateNewDiagramCommand { get; }
