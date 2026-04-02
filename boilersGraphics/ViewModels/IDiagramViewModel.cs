@@ -1,4 +1,5 @@
-﻿using boilersGraphics.Models;
+﻿using boilersGraphics.Helpers;
+using boilersGraphics.Models;
 using ObservableCollections;
 using Prism.Commands;
 using R3;
@@ -19,6 +20,8 @@ public interface IDiagramViewModel
     NotifyCollectionChangedSynchronizedViewList<LayerTreeViewItemBase> Layers { get; }
     IReadOnlyBindableReactiveProperty<SelectableDesignerItemViewModelBase[]> AllItems { get; }
     BindableReactiveProperty<BackgroundViewModel> BackgroundItem { get; }
+    Renderer Renderer { get; }
+    BindableReactiveProperty<double> MagnificationRate { get; }
 
     void DeselectAll();
 }
