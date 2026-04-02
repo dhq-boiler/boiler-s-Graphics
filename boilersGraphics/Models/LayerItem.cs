@@ -159,7 +159,7 @@ public class LayerItem : LayerTreeViewItemBase, IDisposable, IComparable<LayerTr
         var _items = items;
         if (backgroundIncluded)
         {
-            _items = _items.AsValueEnumerable().Union(new SelectableDesignerItemViewModelBase[] { DiagramViewModel.Instance.BackgroundItem.Value }).ToArray();
+            _items = _items.AsValueEnumerable().Union(new SelectableDesignerItemViewModelBase[] { MainWindowViewModel.Instance.DiagramViewModel.BackgroundItem.Value }).ToArray();
         }
         var width = Measure.GetWidth(_items, out minX, out maxX);
         var height = Measure.GetHeight(_items, out minY, out maxY);
@@ -169,7 +169,7 @@ public class LayerItem : LayerTreeViewItemBase, IDisposable, IComparable<LayerTr
 
         Rect? sliceRect = null;
         _items.AsValueEnumerable().Cast<IRect>().ToList().ForEach(x => sliceRect = (!sliceRect.HasValue ? x.Rect.Value : Rect.Union(sliceRect.Value, x.Rect.Value)));
-        var renderer = new AppearanceRenderer(new WpfVisualTreeHelper(), DiagramViewModel.Instance.Renderer.GetCache());
+        var renderer = new AppearanceRenderer(new WpfVisualTreeHelper(), MainWindowViewModel.Instance.DiagramViewModel.Renderer.GetCache());
         var cache = renderer.GetCache();
 
         // Dirtyなアイテムのみをフィルタリング
@@ -184,7 +184,7 @@ public class LayerItem : LayerTreeViewItemBase, IDisposable, IComparable<LayerTr
         }
 
         Appearance.Value = renderer.Render(sliceRect, DesignerCanvas.GetInstance(),
-            DiagramViewModel.Instance,
+            MainWindowViewModel.Instance.DiagramViewModel,
             null, null, _items.AsValueEnumerable().Min(x => x.ZIndex.Value), _items.AsValueEnumerable().Max(x => x.ZIndex.Value));
 
         Item.Value.ChangeFormDateTime.Value = DateTime.Now;
