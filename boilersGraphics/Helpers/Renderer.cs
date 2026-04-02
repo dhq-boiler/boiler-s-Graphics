@@ -547,7 +547,7 @@ public class Renderer : IDisposable
             
             //前景を描画
             renderedCount += RenderForeground(sliceRect, diagramViewModel, designerCanvas, context,
-                DiagramViewModel.Instance.BackgroundItem.Value,
+                diagramViewModel.BackgroundItem.Value,
                 allViews, minZIndex, maxZIndex, caller);
         }
 

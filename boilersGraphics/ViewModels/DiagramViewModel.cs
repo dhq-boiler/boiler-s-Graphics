@@ -901,7 +901,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
             var versionXML = new XElement("Version", BGSXFileVersion.ToString());
             var layersXML = new XElement("Layers", ObjectSerializer.SerializeLayers(Layers));
             var configurationXML = new XElement("Configuration", ObjectSerializer.SerializeConfiguration(this));
-            var attachmentsXML = new XElement("Attachments", ObjectSerializer.SerializeAttachments());
+            var attachmentsXML = new XElement("Attachments", ObjectSerializer.SerializeAttachments(this));
 
             var root = new XElement("boilersGraphics");
             root.Add(versionXML);
@@ -2299,7 +2299,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
         // Always include legacy-compatible single-canvas format
         root.Add(new XElement("Layers", ObjectSerializer.SerializeLayers(Layers)));
         root.Add(new XElement("Configuration", ObjectSerializer.SerializeConfiguration(this)));
-        root.Add(new XElement("Attachments", ObjectSerializer.SerializeAttachments()));
+        root.Add(new XElement("Attachments", ObjectSerializer.SerializeAttachments(this)));
 
         return root;
     }
