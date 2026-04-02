@@ -12,6 +12,7 @@ public class CanvasPage : BindableBase
     private BitmapSource _thumbnail;
     private bool _isActive;
     private bool _isEditing;
+    private int _durationMs = 100;
 
     public CanvasPage(string name)
     {
@@ -40,6 +41,12 @@ public class CanvasPage : BindableBase
     {
         get => _serializedData;
         set => SetProperty(ref _serializedData, value);
+    }
+
+    public int DurationMs
+    {
+        get => _durationMs;
+        set => SetProperty(ref _durationMs, value);
     }
 
     public BitmapSource Thumbnail
