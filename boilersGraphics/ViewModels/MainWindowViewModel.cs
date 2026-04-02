@@ -87,6 +87,8 @@ public class MainWindowViewModel : BindableBase, IDisposable
         DiagramViewModel.EnableMiniMap.Value = true;
         DiagramViewModel.EnableBrushThickness.Value = true;
 
+        InitializeCanvasManagement();
+
         Title.Value = $"{App.GetAppNameAndVersion()}";
         DiagramViewModel.FileName.Value = "*";
 
@@ -423,6 +425,100 @@ public class MainWindowViewModel : BindableBase, IDisposable
     {
         get => _DiagramViewModel;
         set => SetProperty(ref _DiagramViewModel, value);
+    }
+
+    public System.Collections.ObjectModel.ObservableCollection<CanvasPage> CanvasPages { get; } = new();
+    public BindableReactiveProperty<int> ActiveCanvasIndex { get; } = new(0);
+
+    public DelegateCommand AddCanvasCommand { get; private set; }
+    public DelegateCommand<int?> SwitchCanvasCommand { get; private set; }
+    public DelegateCommand<int?> RemoveCanvasCommand { get; private set; }
+
+    public void InitializeCanvasManagement()
+    {
+        AddCanvasCommand = new DelegateCommand(AddCanvas);
+        SwitchCanvasCommand = new DelegateCommand<int?>(i => { if (i.HasValue) SwitchCanvas(i.Value); });
+        RemoveCanvasCommand = new DelegateCommand<int?>(i => { if (i.HasValue) RemoveCanvas(i.Value); });
+
+        // Initialize with one default canvas page
+        if (CanvasPages.Count == 0)
+        {
+            CanvasPages.Add(new CanvasPage("Canvas" + " 1"));
+        }
+    }
+
+    public void AddCanvas()
+    {
+        // Save current canvas state
+        SaveCurrentCanvasState();
+
+        // Create new page
+        var newIndex = CanvasPages.Count;
+        var newPage = new CanvasPage("Canvas" + $" {newIndex + 1}");
+        CanvasPages.Add(newPage);
+
+        // Switch to the new page (creates a blank canvas)
+        ActiveCanvasIndex.Value = newIndex;
+        DiagramViewModel.Layers.Clear();
+        DiagramViewModel.Layers.Add(new Layer());
+    }
+
+    public void SwitchCanvas(int targetIndex)
+    {
+        if (targetIndex < 0 || targetIndex >= CanvasPages.Count) return;
+        if (targetIndex == ActiveCanvasIndex.Value) return;
+
+        // Save current canvas state
+        SaveCurrentCanvasState();
+
+        // Load target canvas state
+        ActiveCanvasIndex.Value = targetIndex;
+        var targetPage = CanvasPages[targetIndex];
+
+        if (targetPage.SerializedData != null)
+        {
+            DiagramViewModel.RestoreCanvasState(targetPage.SerializedData);
+        }
+        else
+        {
+            // New blank canvas
+            DiagramViewModel.Layers.Clear();
+            DiagramViewModel.Layers.Add(new Layer());
+        }
+
+        // Reset undo/redo for the new canvas
+        Controller.Flush();
+    }
+
+    public void RemoveCanvas(int index)
+    {
+        if (CanvasPages.Count <= 1) return; // Must keep at least one
+        if (index < 0 || index >= CanvasPages.Count) return;
+
+        CanvasPages.RemoveAt(index);
+
+        if (index <= ActiveCanvasIndex.Value)
+        {
+            var newIndex = Math.Max(0, ActiveCanvasIndex.Value - 1);
+            ActiveCanvasIndex.Value = newIndex;
+            var page = CanvasPages[newIndex];
+            if (page.SerializedData != null)
+                DiagramViewModel.RestoreCanvasState(page.SerializedData);
+            else
+            {
+                DiagramViewModel.Layers.Clear();
+                DiagramViewModel.Layers.Add(new Layer());
+            }
+        }
+    }
+
+    public void SaveCurrentCanvasState()
+    {
+        if (ActiveCanvasIndex.Value >= 0 && ActiveCanvasIndex.Value < CanvasPages.Count)
+        {
+            var currentPage = CanvasPages[ActiveCanvasIndex.Value];
+            currentPage.SerializedData = DiagramViewModel.SerializeCanvasState();
+        }
     }
 
     public ToolBarViewModel ToolBarViewModel

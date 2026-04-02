@@ -669,6 +669,9 @@
   <data name="String_Cancel" xml:space="preserve">
     <value>キャンセル</value>
   </data>
+  <data name="String_Canvas" xml:space="preserve">
+    <value>キャンバス</value>
+  </data>
   <data name="String_CanvasEdgeBrush" xml:space="preserve">
     <value>キャンバスのエッジブラシ</value>
   </data>

@@ -669,6 +669,9 @@
   <data name="String_Cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
+  <data name="String_Canvas" xml:space="preserve">
+    <value>Canvas</value>
+  </data>
   <data name="String_CanvasEdgeBrush" xml:space="preserve">
     <value>Canvas EdgeBrush</value>
   </data>
