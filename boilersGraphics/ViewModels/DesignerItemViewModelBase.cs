@@ -257,14 +257,18 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
         MarginRightTop = ThumbSize.Select(size => new Thickness(0, -size, -size, 0)).ToReadOnlyBindableReactiveProperty();
         MarginRightBottom =
             ThumbSize.Select(size => new Thickness(0, 0, -size, -size)).ToReadOnlyBindableReactiveProperty();
-        MarginLeft = Observable.Return(ThumbSize.CurrentValue / 2).CombineLatest(DiagramViewModel.Instance.MagnificationRate,
-            (size, rate) => { return new Thickness(-size / (rate / 100d), 0, 0, 0); }).ToReadOnlyBindableReactiveProperty();
-        MarginTop = Observable.Return(ThumbSize.CurrentValue / 2).CombineLatest(DiagramViewModel.Instance.MagnificationRate,
-            (size, rate) => { return new Thickness(0, -size / (rate / 100d), 0, 0); }).ToReadOnlyBindableReactiveProperty();
-        MarginRight = Observable.Return(ThumbSize.CurrentValue / 2).CombineLatest(DiagramViewModel.Instance.MagnificationRate,
-            (size, rate) => { return new Thickness(0, 0, -size / (rate / 100d), 0); }).ToReadOnlyBindableReactiveProperty();
-        MarginBottom = Observable.Return(ThumbSize.CurrentValue / 2).CombineLatest(DiagramViewModel.Instance.MagnificationRate,
-            (size, rate) => { return new Thickness(0, 0, 0, -size / (rate / 100d)); }).ToReadOnlyBindableReactiveProperty();
+        var magnificationRate = Owner?.MagnificationRate ?? MainWindowViewModel.Instance?.DiagramViewModel?.MagnificationRate;
+        if (magnificationRate != null)
+        {
+            MarginLeft = Observable.Return(ThumbSize.CurrentValue / 2).CombineLatest(magnificationRate,
+                (size, rate) => new Thickness(-size / (rate / 100d), 0, 0, 0)).ToReadOnlyBindableReactiveProperty();
+            MarginTop = Observable.Return(ThumbSize.CurrentValue / 2).CombineLatest(magnificationRate,
+                (size, rate) => new Thickness(0, -size / (rate / 100d), 0, 0)).ToReadOnlyBindableReactiveProperty();
+            MarginRight = Observable.Return(ThumbSize.CurrentValue / 2).CombineLatest(magnificationRate,
+                (size, rate) => new Thickness(0, 0, -size / (rate / 100d), 0)).ToReadOnlyBindableReactiveProperty();
+            MarginBottom = Observable.Return(ThumbSize.CurrentValue / 2).CombineLatest(magnificationRate,
+                (size, rate) => new Thickness(0, 0, 0, -size / (rate / 100d))).ToReadOnlyBindableReactiveProperty();
+        }
         RenderingEnabled.Subscribe(async renderingEnabled =>
         {
             if (renderingEnabled)
