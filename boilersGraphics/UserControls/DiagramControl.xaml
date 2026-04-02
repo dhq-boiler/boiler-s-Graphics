@@ -164,8 +164,8 @@
                             <ItemsControl.Resources>
 
                                 <Style x:Key="designerItemStyle" TargetType="{x:Type ContentPresenter}">
-                                    <Setter Property="Canvas.Top" Value="{c:Binding Top.Value}" />
-                                    <Setter Property="Canvas.Left" Value="{c:Binding Left.Value}" />
+                                    <Setter Property="Canvas.Top" Value="{Binding Top.Value}" />
+                                    <Setter Property="Canvas.Left" Value="{Binding Left.Value}" />
                                     <Setter Property="Panel.ZIndex" Value="{Binding ZIndex.Value}" />
                                     <Setter Property="attached:SelectionProps.EnabledForSelection" Value="{Binding EnableForSelection.Value}" />
                                     <Setter Property="attached:ItemConnectProps.EnabledForConnection" Value="True" />
