@@ -433,12 +433,22 @@ public class MainWindowViewModel : BindableBase, IDisposable
     public DelegateCommand AddCanvasCommand { get; private set; }
     public DelegateCommand<int?> SwitchCanvasCommand { get; private set; }
     public DelegateCommand<int?> RemoveCanvasCommand { get; private set; }
+    public DelegateCommand PlayAnimationCommand { get; private set; }
+    public DelegateCommand StopAnimationCommand { get; private set; }
+    public DelegateCommand ExportAnimationGifCommand { get; private set; }
+    public BindableReactiveProperty<bool> IsAnimationPlaying { get; } = new(false);
+    public BindableReactiveProperty<int> AnimationFps { get; } = new(10);
+
+    private System.Windows.Threading.DispatcherTimer _animationTimer;
 
     public void InitializeCanvasManagement()
     {
         AddCanvasCommand = new DelegateCommand(AddCanvas);
         SwitchCanvasCommand = new DelegateCommand<int?>(i => { if (i.HasValue) SwitchCanvas(i.Value); });
         RemoveCanvasCommand = new DelegateCommand<int?>(i => { if (i.HasValue) RemoveCanvas(i.Value); });
+        PlayAnimationCommand = new DelegateCommand(PlayAnimation, () => CanvasPages.Count > 1 && !IsAnimationPlaying.Value);
+        StopAnimationCommand = new DelegateCommand(StopAnimation, () => IsAnimationPlaying.Value);
+        ExportAnimationGifCommand = new DelegateCommand(ExportAnimationGif, () => CanvasPages.Count > 1);
 
         // Initialize with one default canvas page
         if (CanvasPages.Count == 0)
@@ -449,7 +459,7 @@ public class MainWindowViewModel : BindableBase, IDisposable
         }
     }
 
-    private void UpdateActiveStates()
+    public void UpdateActiveStates()
     {
         for (int i = 0; i < CanvasPages.Count; i++)
             CanvasPages[i].IsActive = (i == ActiveCanvasIndex.Value);
@@ -470,6 +480,14 @@ public class MainWindowViewModel : BindableBase, IDisposable
         UpdateActiveStates();
         DiagramViewModel.Layers.Clear();
         DiagramViewModel.Layers.Add(new Layer());
+        RaiseAnimationCanExecuteChanged();
+    }
+
+    private void RaiseAnimationCanExecuteChanged()
+    {
+        PlayAnimationCommand?.RaiseCanExecuteChanged();
+        StopAnimationCommand?.RaiseCanExecuteChanged();
+        ExportAnimationGifCommand?.RaiseCanExecuteChanged();
     }
 
     public void SwitchCanvas(int targetIndex)
@@ -525,6 +543,7 @@ public class MainWindowViewModel : BindableBase, IDisposable
         {
             UpdateActiveStates();
         }
+        RaiseAnimationCanExecuteChanged();
     }
 
     public void SaveCurrentCanvasState()
@@ -533,6 +552,56 @@ public class MainWindowViewModel : BindableBase, IDisposable
         {
             var currentPage = CanvasPages[ActiveCanvasIndex.Value];
             currentPage.SerializedData = DiagramViewModel.SerializeCanvasState();
+        }
+    }
+
+    private void PlayAnimation()
+    {
+        if (CanvasPages.Count <= 1) return;
+
+        SaveCurrentCanvasState();
+        IsAnimationPlaying.Value = true;
+        PlayAnimationCommand.RaiseCanExecuteChanged();
+        StopAnimationCommand.RaiseCanExecuteChanged();
+
+        _animationTimer = new System.Windows.Threading.DispatcherTimer();
+        _animationTimer.Interval = TimeSpan.FromMilliseconds(CanvasPages[ActiveCanvasIndex.Value].DurationMs);
+        _animationTimer.Tick += AnimationTimer_Tick;
+        _animationTimer.Start();
+    }
+
+    private void AnimationTimer_Tick(object sender, EventArgs e)
+    {
+        int nextIndex = (ActiveCanvasIndex.Value + 1) % CanvasPages.Count;
+        SwitchCanvas(nextIndex);
+
+        // Update interval for next frame
+        if (_animationTimer != null)
+            _animationTimer.Interval = TimeSpan.FromMilliseconds(CanvasPages[ActiveCanvasIndex.Value].DurationMs);
+    }
+
+    private void StopAnimation()
+    {
+        if (_animationTimer != null)
+        {
+            _animationTimer.Stop();
+            _animationTimer.Tick -= AnimationTimer_Tick;
+            _animationTimer = null;
+        }
+
+        IsAnimationPlaying.Value = false;
+        PlayAnimationCommand.RaiseCanExecuteChanged();
+        StopAnimationCommand.RaiseCanExecuteChanged();
+    }
+
+    private void ExportAnimationGif()
+    {
+        var saveDialog = new Microsoft.Win32.SaveFileDialog();
+        saveDialog.Filter = "Animated GIF|*.gif";
+        if (saveDialog.ShowDialog() == true)
+        {
+            SaveCurrentCanvasState();
+            Helpers.AnimationGifExporter.Export(saveDialog.FileName, this);
         }
     }
 
