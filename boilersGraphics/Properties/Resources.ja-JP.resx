@@ -294,6 +294,9 @@
   <data name="Dialog_Statistics_NumberOfExportsAsWmp" xml:space="preserve">
     <value>WMPエクスポートした回数</value>
   </data>
+  <data name="Dialog_Statistics_NumberOfExportsAsPdf" xml:space="preserve">
+    <value>PDFエクスポートした回数</value>
+  </data>
   <data name="Dialog_Statistics_NumberOfIntersects" xml:space="preserve">
     <value>Intersectした回数</value>
   </data>

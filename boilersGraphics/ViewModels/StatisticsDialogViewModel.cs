@@ -52,6 +52,7 @@ internal class StatisticsDialogViewModel : BindableBase, IDialogAware, IDisposab
     public BindableReactiveProperty<int> NumberOfBmpExports { get; } = new();
     public BindableReactiveProperty<int> NumberOfTiffExports { get; } = new();
     public BindableReactiveProperty<int> NumberOfWmpExports { get; } = new();
+    public BindableReactiveProperty<int> NumberOfPdfExports { get; } = new();
     public BindableReactiveProperty<int> NumberOfTimesGrouped { get; } = new();
     public BindableReactiveProperty<int> NumberOfUngrouped { get; } = new();
     public BindableReactiveProperty<int> NumberOfMovesToTheFrontend { get; } = new();
@@ -154,6 +155,7 @@ internal class StatisticsDialogViewModel : BindableBase, IDialogAware, IDisposab
         NumberOfBmpExports.Value = statistics.NumberOfBmpExports;
         NumberOfTiffExports.Value = statistics.NumberOfTiffExports;
         NumberOfWmpExports.Value = statistics.NumberOfWmpExports;
+        NumberOfPdfExports.Value = statistics.NumberOfPdfExports;
         NumberOfTimesGrouped.Value = statistics.NumberOfTimesGrouped;
         NumberOfUngrouped.Value = statistics.NumberOfUngrouped;
         NumberOfMovesToTheFrontend.Value = statistics.NumberOfMovesToTheFrontend;

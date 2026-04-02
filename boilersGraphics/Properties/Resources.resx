@@ -294,6 +294,9 @@
   <data name="Dialog_Statistics_NumberOfExportsAsWmp" xml:space="preserve">
     <value>Number of exports as WMP</value>
   </data>
+  <data name="Dialog_Statistics_NumberOfExportsAsPdf" xml:space="preserve">
+    <value>Number of exports as PDF</value>
+  </data>
   <data name="Dialog_Statistics_NumberOfIntersects" xml:space="preserve">
     <value>Number of intersects</value>
   </data>
