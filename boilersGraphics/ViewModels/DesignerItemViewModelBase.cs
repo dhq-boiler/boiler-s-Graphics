@@ -156,7 +156,7 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
                     if (Width.Value > 0 && Height.Value > 0)
                         await OnRectChanged(new Rect(Left.Value, Top.Value, Width.Value, Height.Value));
 
-                    var renderer = DiagramViewModel.Instance.Renderer;
+                    var renderer = Owner?.Renderer;
                     renderer?.MarkItemDirty(this);
                 }
                 UpdateChangeFormTriggerObject();
@@ -172,7 +172,7 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
                     if (Width.Value > 0 && Height.Value > 0)
                         await OnRectChanged(new Rect(Left.Value, Top.Value, Width.Value, Height.Value));
 
-                    var renderer = DiagramViewModel.Instance.Renderer;
+                    var renderer = Owner?.Renderer;
                     renderer?.MarkItemDirty(this);
                 }
                 UpdateChangeFormTriggerObject();
@@ -189,7 +189,7 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
                     if (Width.Value > 0 && Height.Value > 0)
                         await OnRectChanged(new Rect(Left.Value, Top.Value, Width.Value, Height.Value));
 
-                    var renderer = DiagramViewModel.Instance.Renderer;
+                    var renderer = Owner?.Renderer;
                     renderer?.MarkItemDirty(this);
                 }
                 UpdateChangeFormTriggerObject();
@@ -204,7 +204,7 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
                     if (Width.Value > 0 && Height.Value > 0)
                         await OnRectChanged(new Rect(Left.Value, Top.Value, Width.Value, Height.Value));
 
-                    var renderer = DiagramViewModel.Instance.Renderer;
+                    var renderer = Owner?.Renderer;
                     renderer?.MarkItemDirty(this);
                 }
             })
@@ -216,7 +216,7 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
                 UpdateTransform(nameof(Matrix), x.OldItem, x.NewItem);
                 UpdateChangeFormTriggerObject();
 
-                var renderer = DiagramViewModel.Instance.Renderer;
+                var renderer = Owner?.Renderer;
                 renderer?.MarkItemDirty(this);
             })
             .AddTo(_CompositeDisposable);
@@ -237,7 +237,7 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
                 UpdateTransform(nameof(EdgeThickness), x.OldItem, x.NewItem);
                 UpdateChangeFormTriggerObject();
 
-                var renderer = DiagramViewModel.Instance.Renderer;
+                var renderer = Owner?.Renderer;
                 renderer?.MarkItemDirty(this);
             })
             .AddTo(_CompositeDisposable);
@@ -272,7 +272,7 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
                 if (Width.Value > 0 && Height.Value > 0)
                     await OnRectChanged(new Rect(Left.Value, Top.Value, Width.Value, Height.Value));
 
-                var renderer = DiagramViewModel.Instance.Renderer;
+                var renderer = Owner?.Renderer;
                 renderer?.MarkItemDirty(this);
             }
         }).AddTo(_CompositeDisposable);
@@ -443,13 +443,13 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
         MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(MarginLeftBottom, () => MarginLeftBottom = ThumbSize.Select(size => new Thickness(-size, 0, 0, -size)).ToReadOnlyBindableReactiveProperty());
         MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(MarginRightTop, () => MarginRightTop = ThumbSize.Select(size => new Thickness(0, -size, -size, 0)).ToReadOnlyBindableReactiveProperty());
         MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(MarginRightBottom, () => MarginRightBottom = ThumbSize.Select(size => new Thickness(0, 0, -size, -size)).ToReadOnlyBindableReactiveProperty());
-        MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(MarginLeft, () => MarginLeft = Observable.Return(ThumbSize.CurrentValue / 2).CombineLatest(DiagramViewModel.Instance.MagnificationRate,
+        MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(MarginLeft, () => MarginLeft = Observable.Return(ThumbSize.CurrentValue / 2).CombineLatest(Owner.MagnificationRate,
             (size, rate) => new Thickness(-size / (rate / 100d), 0, 0, 0)).ToReadOnlyBindableReactiveProperty());
-        MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(MarginTop, () => MarginTop = Observable.Return(ThumbSize.CurrentValue / 2).CombineLatest(DiagramViewModel.Instance.MagnificationRate,
+        MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(MarginTop, () => MarginTop = Observable.Return(ThumbSize.CurrentValue / 2).CombineLatest(Owner.MagnificationRate,
             (size, rate) => new Thickness(0, -size / (rate / 100d), 0, 0)).ToReadOnlyBindableReactiveProperty());
-        MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(MarginRight, () => MarginRight = Observable.Return(ThumbSize.CurrentValue / 2).CombineLatest(DiagramViewModel.Instance.MagnificationRate,
+        MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(MarginRight, () => MarginRight = Observable.Return(ThumbSize.CurrentValue / 2).CombineLatest(Owner.MagnificationRate,
             (size, rate) => new Thickness(0, 0, -size / (rate / 100d), 0)).ToReadOnlyBindableReactiveProperty());
-        MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(MarginBottom, () => MarginBottom = Observable.Return(ThumbSize.CurrentValue / 2).CombineLatest(DiagramViewModel.Instance.MagnificationRate,
+        MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(MarginBottom, () => MarginBottom = Observable.Return(ThumbSize.CurrentValue / 2).CombineLatest(Owner.MagnificationRate,
             (size, rate) => new Thickness(0, 0, 0, -size / (rate / 100d))).ToReadOnlyBindableReactiveProperty());
         MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(TransformNortification, () => TransformNortification = new BindableReactiveProperty<TransformNotification>());
         MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(SnapObjs, () => SnapObjs = new CompositeDisposable());

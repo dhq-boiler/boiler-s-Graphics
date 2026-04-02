@@ -205,37 +205,37 @@ public abstract class SelectableDesignerItemViewModelBase : BindableBase, ISelec
 
         // ReadOnlyReactivePropertyは通常のDisposeのみ
         MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(SnapPointSize, () => SnapPointSize = Observable.Return(4)
-            .CombineLatest(DiagramViewModel.Instance.MagnificationRate,
+            .CombineLatest(Owner.MagnificationRate,
                 (standardSize, rate) => { return standardSize / (rate / 100d); }).ToReadOnlyReactiveProperty());
 
         MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(ThumbSize, () => ThumbSize = Observable.Return(7)
-            .CombineLatest(DiagramViewModel.Instance.MagnificationRate,
+            .CombineLatest(Owner.MagnificationRate,
                 (standardSize, rate) => { return standardSize / (rate / 100d); }).ToReadOnlyReactiveProperty());
 
         MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(ThumbThickness, () => ThumbThickness = Observable.Return(1)
-            .CombineLatest(DiagramViewModel.Instance.MagnificationRate,
+            .CombineLatest(Owner.MagnificationRate,
                 (standardSize, rate) => { return standardSize / (rate / 100d); }).ToReadOnlyReactiveProperty());
 
         MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(RotateThumbMargin, () => RotateThumbMargin = Observable.Return(-20)
-            .CombineLatest(DiagramViewModel.Instance.MagnificationRate,
+            .CombineLatest(Owner.MagnificationRate,
                 (standardSize, rate) => { return new Thickness(0, standardSize / (rate / 100d), 0, 0); })
             .ToReadOnlyReactiveProperty());
 
         MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(RotateThumbConnectorMargin, () => RotateThumbConnectorMargin = Observable.Return(-11)
-            .CombineLatest(DiagramViewModel.Instance.MagnificationRate,
+            .CombineLatest(Owner.MagnificationRate,
                 (standardSize, rate) => { return new Thickness(0, standardSize / (rate / 100d), 0, 0); })
             .ToReadOnlyReactiveProperty());
 
         MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(RotateThumbConnectorY2, () => RotateThumbConnectorY2 = Observable.Return(11)
-            .CombineLatest(DiagramViewModel.Instance.MagnificationRate,
+            .CombineLatest(Owner.MagnificationRate,
                 (standardSize, rate) => { return standardSize / (rate / 100d); }).ToReadOnlyReactiveProperty());
 
         MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(RotateThumbConnectorThickness, () => RotateThumbConnectorThickness = Observable.Return(1)
-            .CombineLatest(DiagramViewModel.Instance.MagnificationRate,
+            .CombineLatest(Owner.MagnificationRate,
                 (standardSize, rate) => { return standardSize / (rate / 100d); }).ToReadOnlyReactiveProperty());
 
         MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(RotateThumbGridMargin, () => RotateThumbGridMargin = Observable.Return(-3)
-            .CombineLatest(DiagramViewModel.Instance.MagnificationRate,
+            .CombineLatest(Owner.MagnificationRate,
                 (standardSize, rate) =>
                 {
                     return new Thickness(standardSize / (rate / 100d), standardSize / (rate / 100d),
