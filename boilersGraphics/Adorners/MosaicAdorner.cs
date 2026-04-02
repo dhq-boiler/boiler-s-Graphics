@@ -88,9 +88,9 @@ internal class MosaicAdorner : Adorner
                 .SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).AsValueEnumerable().Count();
             item.UpdatingStrategy.Value = SelectableDesignerItemViewModelBase.PathGeometryUpdatingStrategy.Initial;
             item.PathGeometryNoRotate.Value = item.CreateGeometry();
-            item.IsSelected.Value = true;
             item.IsVisible.Value = true;
             item.Owner.DeselectAll();
+            item.IsSelected.Value = true;
             ((AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel).AddItemCommand.Execute(item);
 
             if (_startPoint.Value.X < _endPoint.Value.X && _startPoint.Value.Y <= _endPoint.Value.Y)

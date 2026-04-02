@@ -92,15 +92,15 @@ internal class StraightLineAdorner : Adorner
             item.EdgeThickness.Value = item.Owner.EdgeThickness.Value.Value;
             item.ZIndex.Value = item.Owner.Layers
                 .SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).AsValueEnumerable().Count();
-            item.IsSelected.Value = true;
             item.IsVisible.Value = true;
             item.AddPointP2(viewModel, _endPoint.Value);
             item.PathGeometryNoRotate.Value = GeometryCreator.CreateLine(item);
-            item.SnapPoint0VM.Value.IsSelected.Value = true;
-            item.SnapPoint1VM.Value.IsSelected.Value = true;
             item.SnapPoint0VM.Value.IsHitTestVisible.Value = true;
             item.SnapPoint1VM.Value.IsHitTestVisible.Value = true;
             item.Owner.DeselectAll();
+            item.IsSelected.Value = true;
+            item.SnapPoint0VM.Value.IsSelected.Value = true;
+            item.SnapPoint1VM.Value.IsSelected.Value = true;
             LogManager.GetCurrentClassLogger().Debug($"Confirm straight line P1:{item.Points[0]} P2:{item.Points[1]}");
             ((AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel).AddItemCommand.Execute(item);
 

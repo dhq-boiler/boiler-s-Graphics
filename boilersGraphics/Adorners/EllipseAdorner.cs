@@ -137,9 +137,9 @@ internal class EllipseAdorner : Adorner
             item.ZIndex.Value = item.Owner.Layers
                 .SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).AsValueEnumerable().Count();
             item.PathGeometryNoRotate.Value = GeometryCreator.CreateEllipse(item);
-            item.IsSelected.Value = true;
             item.IsVisible.Value = true;
             item.Owner.DeselectAll();
+            item.IsSelected.Value = true;
             ((AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel).AddItemCommand.Execute(item);
 
             UpdateStatisticsCount();

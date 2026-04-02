@@ -83,14 +83,14 @@ internal class PolyBezierAdorner : Adorner
             _item.EdgeThickness.Value = _item.Owner.EdgeThickness.Value.Value;
             _item.ZIndex.Value = _item.Owner.Layers
                 .SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).AsValueEnumerable().Count();
-            _item.IsSelected.Value = true;
             _item.PathGeometryNoRotate.Value = GeometryCreator.CreatePolyBezier(_item);
             _item.IsVisible.Value = true;
-            _item.SnapPoint0VM.Value.IsSelected.Value = true;
-            _item.SnapPoint1VM.Value.IsSelected.Value = true;
             _item.SnapPoint0VM.Value.IsHitTestVisible.Value = true;
             _item.SnapPoint1VM.Value.IsHitTestVisible.Value = true;
             _item.Owner.DeselectAll();
+            _item.IsSelected.Value = true;
+            _item.SnapPoint0VM.Value.IsSelected.Value = true;
+            _item.SnapPoint1VM.Value.IsSelected.Value = true;
             ((AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel).AddItemCommand.Execute(_item);
 
             UpdateStatisticsCount();

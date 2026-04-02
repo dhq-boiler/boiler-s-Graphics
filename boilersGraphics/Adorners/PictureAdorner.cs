@@ -87,9 +87,9 @@ public class PictureAdorner : Adorner
             itemBase.PathGeometryNoRotate.Value = null;
             itemBase.Height.Value = Math.Max(_startPoint.Value.Y - _endPoint.Value.Y,
                 _endPoint.Value.Y - _startPoint.Value.Y);
-            itemBase.IsSelected.Value = true;
             itemBase.IsVisible.Value = true;
             itemBase.Owner.DeselectAll();
+            itemBase.IsSelected.Value = true;
             itemBase.ZIndex.Value = itemBase.Owner.Layers
                 .SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).AsValueEnumerable().Count();
             ((AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel).AddItemCommand.Execute(itemBase);

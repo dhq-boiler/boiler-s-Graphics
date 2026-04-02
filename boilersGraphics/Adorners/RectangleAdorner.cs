@@ -101,9 +101,9 @@ internal class RectangleAdorner : Adorner
                 .SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).AsValueEnumerable().Count();
             item.PathGeometryNoRotate.Value =
                 GeometryCreator.CreateRectangle(item, item.RadiusX.Value, item.RadiusY.Value);
-            item.IsSelected.Value = true;
             item.IsVisible.Value = true;
             item.Owner.DeselectAll();
+            item.IsSelected.Value = true;
             MainWindowViewModel.Instance.DiagramViewModel.AddItemCommand.Execute(item);
 
             if (_startPoint.Value.X < _endPoint.Value.X && _startPoint.Value.Y <= _endPoint.Value.Y)
