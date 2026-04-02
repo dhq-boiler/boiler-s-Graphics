@@ -443,8 +443,16 @@ public class MainWindowViewModel : BindableBase, IDisposable
         // Initialize with one default canvas page
         if (CanvasPages.Count == 0)
         {
-            CanvasPages.Add(new CanvasPage("Canvas" + " 1"));
+            var firstPage = new CanvasPage("Canvas" + " 1");
+            firstPage.IsActive = true;
+            CanvasPages.Add(firstPage);
         }
+    }
+
+    private void UpdateActiveStates()
+    {
+        for (int i = 0; i < CanvasPages.Count; i++)
+            CanvasPages[i].IsActive = (i == ActiveCanvasIndex.Value);
     }
 
     public void AddCanvas()
@@ -459,6 +467,7 @@ public class MainWindowViewModel : BindableBase, IDisposable
 
         // Switch to the new page (creates a blank canvas)
         ActiveCanvasIndex.Value = newIndex;
+        UpdateActiveStates();
         DiagramViewModel.Layers.Clear();
         DiagramViewModel.Layers.Add(new Layer());
     }
@@ -473,6 +482,7 @@ public class MainWindowViewModel : BindableBase, IDisposable
 
         // Load target canvas state
         ActiveCanvasIndex.Value = targetIndex;
+        UpdateActiveStates();
         var targetPage = CanvasPages[targetIndex];
 
         if (targetPage.SerializedData != null)
@@ -501,6 +511,7 @@ public class MainWindowViewModel : BindableBase, IDisposable
         {
             var newIndex = Math.Max(0, ActiveCanvasIndex.Value - 1);
             ActiveCanvasIndex.Value = newIndex;
+            UpdateActiveStates();
             var page = CanvasPages[newIndex];
             if (page.SerializedData != null)
                 DiagramViewModel.RestoreCanvasState(page.SerializedData);
@@ -509,6 +520,10 @@ public class MainWindowViewModel : BindableBase, IDisposable
                 DiagramViewModel.Layers.Clear();
                 DiagramViewModel.Layers.Add(new Layer());
             }
+        }
+        else
+        {
+            UpdateActiveStates();
         }
     }
 
