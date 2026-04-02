@@ -116,6 +116,20 @@ public partial class MainWindow : Window
         SystemCommands.CloseWindow(this);
     }
 
+    private void CanvasTab_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        if (sender is FrameworkElement fe && fe.DataContext is Models.CanvasPage page)
+        {
+            var vm = DataContext as ViewModels.MainWindowViewModel;
+            if (vm != null)
+            {
+                var index = vm.CanvasPages.IndexOf(page);
+                if (index >= 0)
+                    vm.SwitchCanvas(index);
+            }
+        }
+    }
+
     private void CommandBinding_CanExecute_Maximize(object sender, CanExecuteRoutedEventArgs e)
     {
         e.CanExecute = true;
