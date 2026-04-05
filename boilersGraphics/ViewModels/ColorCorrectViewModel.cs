@@ -26,7 +26,6 @@ public class ColorCorrectViewModel : EffectViewModel
 {
     public ColorCorrectViewModel()
     {
-        Initialize();
     }
 
     public BindableReactiveProperty<ColorCorrectType> CCType { get; } = new(ColorCorrectType.HSV);
@@ -192,6 +191,7 @@ public class ColorCorrectViewModel : EffectViewModel
     {
         var clone = new ColorCorrectViewModel();
         clone.Owner = Owner;
+        clone.Initialize();
         clone.Left.Value = Left.Value;
         clone.Top.Value = Top.Value;
         clone.Width.Value = Width.Value;

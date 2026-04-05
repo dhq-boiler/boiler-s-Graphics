@@ -23,7 +23,6 @@ public class MosaicViewModel : EffectViewModel
 {
     public MosaicViewModel()
     {
-        Initialize();
     }
 
     public override void Initialize()
@@ -146,6 +145,7 @@ public class MosaicViewModel : EffectViewModel
     {
         var clone = new MosaicViewModel();
         clone.Owner = Owner;
+        clone.Initialize();
         clone.Left.Value = Left.Value;
         clone.Top.Value = Top.Value;
         clone.Width.Value = Width.Value;

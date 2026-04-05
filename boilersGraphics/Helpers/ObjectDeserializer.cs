@@ -453,6 +453,10 @@ public class ObjectDeserializer
             ? double.Parse(designerItemElm.Element("RotationAngle").Value)
             : 0;
         item.Owner = diagramViewModel;
+        if (item is EffectViewModel effectVM)
+        {
+            effectVM.Initialize();
+        }
         if (item is NRectangleViewModel rectangle)
         {
             if (designerItemElm.Elements("RadiusX").AsValueEnumerable().Any())
