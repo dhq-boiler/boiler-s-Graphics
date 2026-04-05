@@ -108,6 +108,7 @@ public static class Extensions
                      dataContext1.GetType().GetProperty("Parent"),
                      dataContext1.GetType().GetProperty("SelectedItems"),
                      dataContext1.GetType().GetProperty("Chars"),
+                     dataContext1.GetType().GetProperty("SnapObjs"),
                  }))
         {
             var val = property.GetValue(dataContext1);
