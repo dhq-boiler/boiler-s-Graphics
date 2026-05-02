@@ -798,6 +798,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
 
     private void PackAutoSaveFiles()
     {
+        if (App.IsTest || App.Current is null) return;
         App.Current.Dispatcher.Invoke(() =>
         {
             AutoSaveFiles?.Clear();
