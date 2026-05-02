@@ -154,13 +154,17 @@
   <ItemGroup>
     <PackageReference Include="CalcBinding" Version="2.5.2" />
     <PackageReference Include="Dapper.StrongName" Version="2.1.66" />
-    <!-- GitInfo skipped for WPF intermediate projects (*_wpftmp.csproj). The
-         wpftmp project shares obj/ with the main build, so a second GitInfo
-         generator run produces a duplicate ThisAssembly.GitInfo.g.cs at a
-         deeper obj path; both files end up in the wpftmp Compile glob and
-         CS0102 fires across the entire ThisAssembly.Git surface. The main
-         project still produces the .g.cs once, so AssemblyInfo.cs compiles. -->
-    <PackageReference Include="GitInfo" Version="2.3.0" Condition="!$(MSBuildProjectName.EndsWith('_wpftmp'))" />
+    <!-- GitInfo removed: it generates ThisAssembly.GitInfo.g.cs into obj/,
+         and the WPF SDK's wpftmp intermediate project shares the parent
+         obj/ while also nesting its own. Both generated files end up in
+         wpftmp's Compile glob and CS0102 / CS0229 fire across every
+         ThisAssembly.Git member. The wdac-mcp-staging Linux build host
+         hits the same path. PackageReference Condition tricks don't help
+         because PackageReference flows through project.assets.json which
+         is shared between the main build and wpftmp.
+         If git-derived versioning is needed, restore via a property that
+         the WPF SDK does not echo into the wpftmp Compile glob. -->
+    <!-- <PackageReference Include="GitInfo" Version="2.3.0" /> -->
     <PackageReference Include="Homura" Version="3.4.2" />
     <PackageReference Include="MdXaml" Version="1.27.0" />
     <!-- Microsoft.Windows.CsWinRT explicit reference removed: the

@@ -54,20 +54,12 @@ using boilersGraphics;
 // 既定値にすることができます:
 // [assembly: AssemblyVersion("1.0.*")]
 
-//[assembly: boilersGraphics.Helpers.AssemblyErrorLog(boilersGraphics.ThisAssembly.Git.BaseVersion.Major + "." + boilersGraphics.ThisAssembly.Git.BaseVersion.Minor + "." + boilersGraphics.ThisAssembly.Git.BaseVersion.Patch)]
-[assembly:
-    AssemblyVersion(ThisAssembly.Git.BaseVersion.Major + "." + ThisAssembly.Git.BaseVersion.Minor + "." +
-                    ThisAssembly.Git.BaseVersion.Patch)]
-
-[assembly:
-    AssemblyFileVersion(ThisAssembly.Git.SemVer.Major + "." + ThisAssembly.Git.SemVer.Minor + "." +
-                        ThisAssembly.Git.SemVer.Patch)]
-
-[assembly: AssemblyInformationalVersion(
-    "v" +
-    ThisAssembly.Git.SemVer.Major + "." +
-    ThisAssembly.Git.SemVer.Minor + "." +
-    ThisAssembly.Git.SemVer.Patch + "." +
-    ThisAssembly.Git.Commits + "-" +
-    ThisAssembly.Git.Branch + "+" +
-    ThisAssembly.Git.Commit)]
+// Versions used to be derived from GitInfo's ThisAssembly.Git.* compile-time
+// constants. GitInfo was removed because its source-generated
+// ThisAssembly.GitInfo.g.cs ends up duplicated in WPF SDK's wpftmp
+// intermediate project, breaking compilation on build hosts that share obj/
+// (e.g. wdac-mcp-staging Linux enclave). Hardcoded fallback values keep the
+// assembly metadata in a sane shape; bump these manually on releases.
+[assembly: AssemblyVersion("0.0.0")]
+[assembly: AssemblyFileVersion("0.0.0")]
+[assembly: AssemblyInformationalVersion("v0.0.0.0-develop")]
