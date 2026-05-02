@@ -4235,36 +4235,29 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                 }
                 else
                 {
-                    var exists = Layers.AsValueEnumerable().SelectMany(x => x.Children).Where(item =>
-                        (item as LayerItem).Item.Value.ZIndex.Value == newIndex);
+                    // Shift every item in (oldCurrentIndex, newIndex] within the
+                    // selected layers down by 1 so the slot at newIndex is freed
+                    // without leaving a gap or duplicate ZIndex.
+                    var movedItem = current;
+                    var lowerBound = oldCurrentIndex;
+                    var upperBound = newIndex;
+                    var shiftTargets = SelectedLayers.Value
+                        .SelectMany(x => x.Children)
+                        .OfType<LayerItem>()
+                        .Where(li => li.Item.Value != movedItem
+                                     && li.Item.Value.ZIndex.Value > lowerBound
+                                     && li.Item.Value.ZIndex.Value <= upperBound)
+                        .OrderBy(li => li.Item.Value.ZIndex.Value)
+                        .ToList();
 
-                    foreach (var item in exists)
+                    foreach (var li in shiftTargets)
                     {
-                        ((item as LayerItem).Item.Value as EffectViewModel)?.DisposeMonitoringItem(ordered.ElementAt(i));
-                        if ((item as LayerItem).Item.Value != ordered.ElementAt(i))
-                        {
-                            if ((item as LayerItem).Item.Value is GroupItemViewModel)
-                            {
-                                var children = from it in Layers.AsValueEnumerable().SelectMany(x => x.Children)
-                                               where (it as LayerItem).Item.Value.ParentID == (item as LayerItem).Item.Value.ID
-                                               select it;
-
-                                foreach (var child in children)
-                                    MainWindowVM.Recorder.Current.ExecuteSetProperty((child as LayerItem).Item.Value,
-                                        "ZIndex.Value", newIndex);
-
-                                MainWindowVM.Recorder.Current.ExecuteSetProperty((item as LayerItem).Item.Value,
-                                    "ZIndex.Value", currentIndex + children.Count());
-                            }
-                            else
-                            {
-                                MainWindowVM.Recorder.Current.ExecuteSetProperty((item as LayerItem).Item.Value,
-                                    "ZIndex.Value", currentIndex);
-                            }
-
-                            (ordered.ElementAt(i) as EffectViewModel)?.Render();
-                        }
+                        (li.Item.Value as EffectViewModel)?.DisposeMonitoringItem(movedItem);
+                        MainWindowVM.Recorder.Current.ExecuteSetProperty(
+                            li.Item.Value, "ZIndex.Value", li.Item.Value.ZIndex.Value - 1);
                     }
+
+                    (movedItem as EffectViewModel)?.Render();
                 }
             }
         }
@@ -4939,15 +4932,23 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
         LayerItem parentLayerItem = null)
     {
         var clone = connector.Clone() as ConnectorBaseViewModel;
-        clone.ZIndex.Value = Layers.SelectMany(x => x.Children).Count();
+        var items = Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children);
+        if (parentLayerItem != null)
+            items = items.Union(
+                parentLayerItem.Children.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children));
+        clone.ZIndex.Value = items.OfType<LayerItem>().Max(x => x.Item.Value.ZIndex.Value) + 1;
         if (groupItem != null)
         {
             clone.ParentID = groupItem.ID;
             clone.EnableForSelection.Value = false;
             groupItem.AddGroup(MainWindowVM.Recorder, clone);
+            var newLayerItem = new LayerItem(clone, parentLayerItem, layerItemName);
+            parentLayerItem.Children.Add(newLayerItem);
         }
-
-        Add(clone);
+        else
+        {
+            Add(clone);
+        }
 
         oldNewList.Add(
             new Tuple<SelectableDesignerItemViewModelBase, SelectableDesignerItemViewModelBase>(connector, clone));
