@@ -154,7 +154,13 @@
   <ItemGroup>
     <PackageReference Include="CalcBinding" Version="2.5.2" />
     <PackageReference Include="Dapper.StrongName" Version="2.1.66" />
-    <PackageReference Include="GitInfo" Version="2.3.0" />
+    <!-- GitInfo skipped for WPF intermediate projects (*_wpftmp.csproj). The
+         wpftmp project shares obj/ with the main build, so a second GitInfo
+         generator run produces a duplicate ThisAssembly.GitInfo.g.cs at a
+         deeper obj path; both files end up in the wpftmp Compile glob and
+         CS0102 fires across the entire ThisAssembly.Git surface. The main
+         project still produces the .g.cs once, so AssemblyInfo.cs compiles. -->
+    <PackageReference Include="GitInfo" Version="2.3.0" Condition="!$(MSBuildProjectName.EndsWith('_wpftmp'))" />
     <PackageReference Include="Homura" Version="3.4.2" />
     <PackageReference Include="MdXaml" Version="1.27.0" />
     <!-- Microsoft.Windows.CsWinRT explicit reference removed: the
