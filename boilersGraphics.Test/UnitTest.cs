@@ -1,5 +1,5 @@
 ﻿using NUnit.Framework;
-using Reactive.Bindings;
+using R3;
 using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
@@ -31,7 +31,7 @@ namespace TsOperationHistory.Test
             set => SetProperty(ref _age, value);
         }
 
-        public ReactivePropertySlim<string> RP { get; set; } = new ReactivePropertySlim<string>();
+        public BindableReactiveProperty<string> RP { get; set; } = new BindableReactiveProperty<string>();
 
         private ObservableCollection<Person> _children = new ObservableCollection<Person>();
         private bool disposedValue;
@@ -73,7 +73,7 @@ namespace TsOperationHistory.Test
             _name = string.Empty;
             _age = 0;
             _children = new ObservableCollection<Person>();
-            RP = new ReactivePropertySlim<string>();
+            RP = new BindableReactiveProperty<string>();
 
             restorePropertiesAction.Invoke();
             GC.ReRegisterForFinalize(this);

@@ -44,9 +44,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Appium.WebDriver" Version="8.0.0" />
-    <PackageReference Include="boilersE2E.Core" Version="5.0.4" />
-    <PackageReference Include="boilersE2E.NUnit" Version="5.0.4" />
     <PackageReference Include="coverlet.collector" Version="6.0.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -56,7 +53,6 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Dapper.StrongName" Version="2.1.66" />
-    <PackageReference Include="DotNetSeleniumExtras.WaitHelpers" Version="3.11.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
     <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.2.0" />
     <PackageReference Include="Microsoft.Windows.SDK.Contracts" Version="10.0.26100.4654" />
