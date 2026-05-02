@@ -112,6 +112,83 @@ namespace boilersGraphics.Test
             Assert.That(minDeltaVertical, Is.EqualTo(100 - 30));
         }
 
+        // Regression: dragging the LEFT resize handle further left than the
+        // rectangle's current Left was clamped to Left = 0 by a leftover
+        // -minLeft clamp inherited from DragThumb (move). The right handle has
+        // no symmetric canvas-right clamp, so this was a real asymmetry: the
+        // left edge could not extend past the canvas left edge while the right
+        // edge could grow Width past the canvas right edge freely.
+
+        [Test]
+        public void AffectHorizontal_LeftHandle_AllowsLeftToGoNegative()
+        {
+            var rect = new NRectangleViewModel();
+            rect.Left.Value = 100;
+            rect.Top.Value = 0;
+            rect.Width.Value = 50;
+            rect.Height.Value = 50;
+
+            // Drag the left handle 200 to the left. minLeft = current Left = 100.
+            // minDeltaHorizontal would be 40 (Width - effectiveMinWidth) in
+            // production; only relevant for the shrink direction so any positive
+            // value is fine here.
+            ResizeThumb.AffectHorizontal(
+                new System.Windows.Controls.Primitives.DragDeltaEventArgs(-200, 0),
+                System.Windows.HorizontalAlignment.Left,
+                100,
+                40,
+                rect);
+
+            // Left should go to -100 (200 to the left of original 100); Width
+            // should grow by the full 200, not be clamped at the canvas edge.
+            Assert.That(rect.Left.Value, Is.EqualTo(-100));
+            Assert.That(rect.Width.Value, Is.EqualTo(250));
+        }
+
+        [Test]
+        public void AffectVertical_TopHandle_AllowsTopToGoNegative()
+        {
+            var rect = new NRectangleViewModel();
+            rect.Left.Value = 0;
+            rect.Top.Value = 100;
+            rect.Width.Value = 50;
+            rect.Height.Value = 50;
+
+            ResizeThumb.AffectVertical(
+                new System.Windows.Controls.Primitives.DragDeltaEventArgs(0, -200),
+                System.Windows.VerticalAlignment.Top,
+                100,
+                40,
+                rect);
+
+            Assert.That(rect.Top.Value, Is.EqualTo(-100));
+            Assert.That(rect.Height.Value, Is.EqualTo(250));
+        }
+
+        [Test]
+        public void AffectHorizontal_LeftHandle_StillClampsShrinkAtMinDeltaHorizontal()
+        {
+            var rect = new NRectangleViewModel();
+            rect.Left.Value = 100;
+            rect.Top.Value = 0;
+            rect.Width.Value = 50;
+            rect.Height.Value = 50;
+
+            // Drag the left handle 1000 to the right (heavy shrink). The
+            // minDeltaHorizontal clamp must still kick in at 40 so Width does
+            // not collapse below MIN_ONE_SIDE_LENGTH (10).
+            ResizeThumb.AffectHorizontal(
+                new System.Windows.Controls.Primitives.DragDeltaEventArgs(1000, 0),
+                System.Windows.HorizontalAlignment.Left,
+                100,
+                40,
+                rect);
+
+            // Left moves right by 40, Width shrinks to 10 (the floor).
+            Assert.That(rect.Left.Value, Is.EqualTo(140));
+            Assert.That(rect.Width.Value, Is.EqualTo(10));
+        }
+
         [Test]
         public void VerticalAndHorizontal()
         {
