@@ -4,6 +4,7 @@ using Moq;
 using NUnit.Framework;
 using Prism.Services.Dialogs;
 using System.Linq;
+using TsOperationHistory.Extensions;
 
 namespace boilersGraphics.Test
 {
@@ -331,6 +332,121 @@ namespace boilersGraphics.Test
             viewModel.UndoCommand.Execute();
 
             Assert.That(viewModel.AllItems.Value.OfType<GroupItemViewModel>().Count(), Is.EqualTo(1));
+        }
+
+        // Property-level Undo coverage: properties commonly mutated through
+        // Recorder.Current.ExecuteSetProperty (resize, rotate, edge / fill
+        // changes). These guard the property-set + Undo round-trip without
+        // requiring the UI command surface that drives them in production.
+
+        [Test]
+        public void Resize_Width_ExecuteSetProperty_Undo_RestoresOriginalWidth()
+        {
+            var (viewModel, _) = CreateSingleLayerViewModel();
+            var r = new NRectangleViewModel();
+            r.Width.Value = 30;
+            viewModel.AddItemCommand.Execute(r);
+
+            var mainWindowVM = viewModel.MainWindowVM;
+            mainWindowVM.Recorder.BeginRecode();
+            mainWindowVM.Recorder.Current.ExecuteSetProperty(r, "Width.Value", 80.0);
+            mainWindowVM.Recorder.EndRecode();
+            Assert.That(r.Width.Value, Is.EqualTo(80));
+
+            viewModel.UndoCommand.Execute();
+            Assert.That(r.Width.Value, Is.EqualTo(30));
+        }
+
+        [Test]
+        public void Resize_Height_ExecuteSetProperty_Undo_RestoresOriginalHeight()
+        {
+            var (viewModel, _) = CreateSingleLayerViewModel();
+            var r = new NRectangleViewModel();
+            r.Height.Value = 25;
+            viewModel.AddItemCommand.Execute(r);
+
+            var mainWindowVM = viewModel.MainWindowVM;
+            mainWindowVM.Recorder.BeginRecode();
+            mainWindowVM.Recorder.Current.ExecuteSetProperty(r, "Height.Value", 90.0);
+            mainWindowVM.Recorder.EndRecode();
+            Assert.That(r.Height.Value, Is.EqualTo(90));
+
+            viewModel.UndoCommand.Execute();
+            Assert.That(r.Height.Value, Is.EqualTo(25));
+        }
+
+        [Test]
+        public void Rotate_RotationAngle_ExecuteSetProperty_Undo_RestoresOriginalAngle()
+        {
+            var (viewModel, _) = CreateSingleLayerViewModel();
+            var r = new NRectangleViewModel();
+            viewModel.AddItemCommand.Execute(r);
+            Assert.That(r.RotationAngle.Value, Is.EqualTo(0));
+
+            var mainWindowVM = viewModel.MainWindowVM;
+            mainWindowVM.Recorder.BeginRecode();
+            mainWindowVM.Recorder.Current.ExecuteSetProperty(r, "RotationAngle.Value", 45.0);
+            mainWindowVM.Recorder.EndRecode();
+            Assert.That(r.RotationAngle.Value, Is.EqualTo(45));
+
+            viewModel.UndoCommand.Execute();
+            Assert.That(r.RotationAngle.Value, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void EdgeThickness_ExecuteSetProperty_Undo_RestoresOriginalThickness()
+        {
+            var (viewModel, _) = CreateSingleLayerViewModel();
+            var r = new NRectangleViewModel();
+            r.EdgeThickness.Value = 1.0;
+            viewModel.AddItemCommand.Execute(r);
+
+            var mainWindowVM = viewModel.MainWindowVM;
+            mainWindowVM.Recorder.BeginRecode();
+            mainWindowVM.Recorder.Current.ExecuteSetProperty(r, "EdgeThickness.Value", 5.0);
+            mainWindowVM.Recorder.EndRecode();
+            Assert.That(r.EdgeThickness.Value, Is.EqualTo(5));
+
+            viewModel.UndoCommand.Execute();
+            Assert.That(r.EdgeThickness.Value, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void EdgeBrush_ExecuteSetProperty_Undo_RestoresOriginalBrush()
+        {
+            var (viewModel, _) = CreateSingleLayerViewModel();
+            var r = new NRectangleViewModel();
+            var original = r.EdgeBrush.Value;
+            viewModel.AddItemCommand.Execute(r);
+
+            var newBrush = System.Windows.Media.Brushes.Crimson;
+            var mainWindowVM = viewModel.MainWindowVM;
+            mainWindowVM.Recorder.BeginRecode();
+            mainWindowVM.Recorder.Current.ExecuteSetProperty(r, "EdgeBrush.Value", newBrush);
+            mainWindowVM.Recorder.EndRecode();
+            Assert.That(r.EdgeBrush.Value, Is.SameAs(newBrush));
+
+            viewModel.UndoCommand.Execute();
+            Assert.That(r.EdgeBrush.Value, Is.SameAs(original));
+        }
+
+        [Test]
+        public void FillBrush_ExecuteSetProperty_Undo_RestoresOriginalBrush()
+        {
+            var (viewModel, _) = CreateSingleLayerViewModel();
+            var r = new NRectangleViewModel();
+            var original = r.FillBrush.Value;
+            viewModel.AddItemCommand.Execute(r);
+
+            var newBrush = System.Windows.Media.Brushes.SkyBlue;
+            var mainWindowVM = viewModel.MainWindowVM;
+            mainWindowVM.Recorder.BeginRecode();
+            mainWindowVM.Recorder.Current.ExecuteSetProperty(r, "FillBrush.Value", newBrush);
+            mainWindowVM.Recorder.EndRecode();
+            Assert.That(r.FillBrush.Value, Is.SameAs(newBrush));
+
+            viewModel.UndoCommand.Execute();
+            Assert.That(r.FillBrush.Value, Is.SameAs(original));
         }
     }
 }
