@@ -450,7 +450,9 @@ namespace boilersGraphics.Test
             var root = new XElement("boilersGraphic");
             var copyObj = new XElement("CopyObjects");
             root.Add(copyObj);
-            Clipboard.SetDataObject(new ClipboardDTO(root.ToString()), false);
+            var dataObject = new DataObject();
+            dataObject.SetData(ClipboardDTO.ClipboardFormat, root.ToString());
+            Clipboard.SetDataObject(dataObject, false);
 
             Assert.That(viewModel.CanExecutePaste(), Is.False);
         }
@@ -471,7 +473,9 @@ namespace boilersGraphics.Test
 
             var root = new XElement("boilersGraphics");
             root.Add(new XElement("Dummy"));
-            Clipboard.SetDataObject(new ClipboardDTO(root.ToString()), false);
+            var dataObject = new DataObject();
+            dataObject.SetData(ClipboardDTO.ClipboardFormat, root.ToString());
+            Clipboard.SetDataObject(dataObject, false);
 
             Assert.That(viewModel.CanExecutePaste(), Is.False);
         }
@@ -509,7 +513,9 @@ namespace boilersGraphics.Test
             layer1.IsSelected.Value = true;
 
             var root = new XElement("boilersGraphics");
-            Clipboard.SetDataObject(new ClipboardDTO(root.ToString().Substring(0, root.ToString().Length - 1)), false);
+            var dataObject = new DataObject();
+            dataObject.SetData(ClipboardDTO.ClipboardFormat, root.ToString().Substring(0, root.ToString().Length - 1));
+            Clipboard.SetDataObject(dataObject, false);
 
             Assert.That(viewModel.CanExecutePaste(), Is.False);
         }
@@ -531,7 +537,9 @@ namespace boilersGraphics.Test
             var root = new XElement("boilersGraphics");
             var copyObj = new XElement("CopyObjects");
             root.Add(copyObj);
-            Clipboard.SetDataObject(new ClipboardDTO(root.ToString()), false);
+            var dataObject = new DataObject();
+            dataObject.SetData(ClipboardDTO.ClipboardFormat, root.ToString());
+            Clipboard.SetDataObject(dataObject, false);
 
             Assert.That(viewModel.CanExecutePaste(), Is.False);
         }

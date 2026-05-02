@@ -1551,10 +1551,10 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     private void ExecutePasteCommand()
     {
         var obj = Clipboard.GetDataObject();
-        if (obj.GetDataPresent(typeof(ClipboardDTO)))
+        if (obj.GetDataPresent(ClipboardDTO.ClipboardFormat))
         {
-            var clipboardDTO = obj.GetData(typeof(ClipboardDTO)) as ClipboardDTO;
-            var root = XElement.Parse(clipboardDTO.Root);
+            var str = obj.GetData(ClipboardDTO.ClipboardFormat) as string;
+            var root = XElement.Parse(str);
             ObjectDeserializer.ReadCopyObjectsFromXML(this, root);
         }
         else if (Clipboard.ContainsImage())
@@ -1607,10 +1607,9 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     public bool CanExecutePaste()
     {
         var obj = Clipboard.GetDataObject();
-        if (obj.GetDataPresent(typeof(ClipboardDTO)))
+        if (obj.GetDataPresent(ClipboardDTO.ClipboardFormat))
         {
-            var clipboardDTO = obj.GetData(typeof(ClipboardDTO)) as ClipboardDTO;
-            var str = clipboardDTO.Root;
+            var str = obj.GetData(ClipboardDTO.ClipboardFormat) as string;
             try
             {
                 var root = XElement.Parse(str);
@@ -1692,7 +1691,9 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
             root.Add(copyObj);
             copyObj.Add(ObjectSerializer.ExtractItems(Layers.AsValueEnumerable().SelectMany(x => x.Children)
                 .Where(x => (x as LayerItem).IsSelected.Value).Cast<LayerItem>().ToArray()));
-            Clipboard.SetDataObject(new ClipboardDTO(root.ToString()), false);
+            var dataObject = new DataObject();
+            dataObject.SetData(ClipboardDTO.ClipboardFormat, root.ToString());
+            Clipboard.SetDataObject(dataObject, false);
         }
         else if (SelectedLayers.Value.AsValueEnumerable().Count() > 0)
         {
@@ -1703,7 +1704,9 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
             copyObj.Add(new XElement("Layers"));
             copyObj.Element("Layers")
                 .Add(ObjectSerializer.SerializeLayers(new ObservableList<LayerTreeViewItemBase>(SelectedLayers.Value).ToNotifyCollectionChangedSlim()));
-            Clipboard.SetDataObject(new ClipboardDTO(root.ToString()), false);
+            var dataObject = new DataObject();
+            dataObject.SetData(ClipboardDTO.ClipboardFormat, root.ToString());
+            Clipboard.SetDataObject(dataObject, false);
         }
     }
 
