@@ -213,6 +213,14 @@ public class ResizeThumb : SnapPoint
 
                         foreach (var snapPoint in snapPoints)
                         {
+                            // Skip snap points that belong to the item being
+                            // resized; otherwise dragging the right handle
+                            // can latch onto the rectangle's own right-edge
+                            // / center / corner snap points and collapse the
+                            // rectangle (or freeze it at its own thumb's
+                            // position).
+                            if (ReferenceEquals(snapPoint.Item1.DataContext, designerItem)) continue;
+
                             var p = GetPosition(rect, VerticalAlignment, HorizontalAlignment);
                             var oppositeP = GetPosition(rect, OppositeVertical(VerticalAlignment),
                                 OppositeHorizontal(HorizontalAlignment));
