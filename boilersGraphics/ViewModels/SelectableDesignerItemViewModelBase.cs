@@ -177,9 +177,18 @@ public abstract class SelectableDesignerItemViewModelBase : BindableBase, ISelec
         MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(ZIndex, () => ZIndex = new BindableReactiveProperty<int>(zIndex));
         MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(EdgeBrush, () => EdgeBrush = new BindableReactiveProperty<Brush>(edgeBrush));
         MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(FillBrush, () => FillBrush = new BindableReactiveProperty<Brush>(fillBrush));
-        MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(EdgeThickness, () => EdgeThickness = new BindableReactiveProperty<double>(edgeThickness));
-
+        // Order matters: derived properties must be registered BEFORE the
+        // base properties they depend on. Recorder.Undo rolls operations
+        // back in reverse-registration order, and the derived rollback's
+        // closure dereferences the base property *at execution time*. If the
+        // base hasn't been restored yet, the closure captures the still-
+        // disposed instance and ToReadOnlyBindableReactiveProperty subscribes
+        // to it -> ObjectDisposedException. By registering HalfEdgeThickness
+        // first, EdgeThickness is restored first on Undo, so the
+        // EdgeThickness.Select(...) chain rebuilds against the live instance.
         MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(HalfEdgeThickness, () => HalfEdgeThickness = EdgeThickness.Select(x => x / 2).ToReadOnlyBindableReactiveProperty());
+
+        MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(EdgeThickness, () => EdgeThickness = new BindableReactiveProperty<double>(edgeThickness));
 
         MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(PathGeometry, () => PathGeometry = PathGeometryNoRotate.ToReadOnlyBindableReactiveProperty());
         

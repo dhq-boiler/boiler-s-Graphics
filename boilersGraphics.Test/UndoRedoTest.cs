@@ -306,9 +306,6 @@ namespace boilersGraphics.Test
         }
 
         [Test]
-        [Ignore("Pre-existing regression: Ungroup disposes the group's reactive " +
-                "properties, so a subsequent Undo throws ObjectDisposedException " +
-                "when re-subscribing to the restored group. Tracked separately.")]
         public void Ungroup_Undo_RestoresGroup()
         {
             var (viewModel, _) = CreateSingleLayerViewModel();
