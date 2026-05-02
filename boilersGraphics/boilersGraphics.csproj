@@ -157,7 +157,14 @@
     <PackageReference Include="GitInfo" Version="2.3.0" />
     <PackageReference Include="Homura" Version="3.4.2" />
     <PackageReference Include="MdXaml" Version="1.27.0" />
-    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.2.0" />
+    <!-- Microsoft.Windows.CsWinRT explicit reference removed: the
+         net9.0-windows10.0.26100.0 TFM already pulls in
+         Microsoft.Windows.SDK.NET.Ref which provides static Windows.*
+         projections. The explicit CsWinRT 2.2.0 reference triggered
+         cswinrt.exe at build time, which is a Windows PE exe and
+         cannot run on the wdac-mcp-staging Linux build enclave
+         (exit 126 / Permission denied). Restore only if a specific
+         CsWinRT feature is needed beyond what the SDK ref provides. -->
     <PackageReference Include="NLog" Version="6.0.1" />
     <PackageReference Include="NLog.Schema" Version="6.0.1" />
     <PackageReference Include="ObservableCollections" Version="3.3.4" />
