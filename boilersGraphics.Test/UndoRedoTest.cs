@@ -204,6 +204,111 @@ namespace boilersGraphics.Test
         }
 
         [Test]
+        public void AlignLeft_Undo_RestoresPositions()
+        {
+            var (viewModel, _) = CreateSingleLayerViewModel();
+
+            var item1 = new NRectangleViewModel();
+            item1.Left.Value = 10; item1.Top.Value = 10;
+            item1.Width.Value = 20; item1.Height.Value = 20;
+            viewModel.AddItemCommand.Execute(item1);
+
+            var item2 = new NRectangleViewModel();
+            item2.Left.Value = 50; item2.Top.Value = 30;
+            item2.Width.Value = 20; item2.Height.Value = 20;
+            viewModel.AddItemCommand.Execute(item2);
+
+            SelectByItem(viewModel, item1);
+            SelectByItem(viewModel, item2);
+
+            viewModel.AlignLeftCommand.Execute();
+            Assert.That(item2.Left.Value, Is.EqualTo(10));
+
+            viewModel.UndoCommand.Execute();
+
+            Assert.That(item1.Left.Value, Is.EqualTo(10));
+            Assert.That(item2.Left.Value, Is.EqualTo(50));
+        }
+
+        [Test]
+        public void AlignTop_Undo_RestoresPositions()
+        {
+            var (viewModel, _) = CreateSingleLayerViewModel();
+
+            var item1 = new NRectangleViewModel();
+            item1.Left.Value = 10; item1.Top.Value = 10;
+            item1.Width.Value = 20; item1.Height.Value = 20;
+            viewModel.AddItemCommand.Execute(item1);
+
+            var item2 = new NRectangleViewModel();
+            item2.Left.Value = 30; item2.Top.Value = 50;
+            item2.Width.Value = 20; item2.Height.Value = 20;
+            viewModel.AddItemCommand.Execute(item2);
+
+            SelectByItem(viewModel, item1);
+            SelectByItem(viewModel, item2);
+
+            viewModel.AlignTopCommand.Execute();
+            Assert.That(item2.Top.Value, Is.EqualTo(10));
+
+            viewModel.UndoCommand.Execute();
+
+            Assert.That(item1.Top.Value, Is.EqualTo(10));
+            Assert.That(item2.Top.Value, Is.EqualTo(50));
+        }
+
+        [Test]
+        public void Union_Undo_RemovesCombinedGeometry()
+        {
+            var (viewModel, layer) = CreateSingleLayerViewModel();
+
+            var item1 = new NRectangleViewModel();
+            item1.Left.Value = 10; item1.Top.Value = 10;
+            item1.Width.Value = 20; item1.Height.Value = 20;
+            viewModel.AddItemCommand.Execute(item1);
+
+            var item2 = new NRectangleViewModel();
+            item2.Left.Value = 20; item2.Top.Value = 20;
+            item2.Width.Value = 20; item2.Height.Value = 20;
+            viewModel.AddItemCommand.Execute(item2);
+
+            SelectByItem(viewModel, item1);
+            SelectByItem(viewModel, item2);
+
+            var beforeCount = viewModel.AllItems.Value.Length;
+            viewModel.UnionCommand.Execute();
+            Assert.That(viewModel.AllItems.Value.OfType<CombineGeometryViewModel>().Count(),
+                Is.GreaterThan(0));
+
+            viewModel.UndoCommand.Execute();
+
+            Assert.That(viewModel.AllItems.Value.OfType<CombineGeometryViewModel>().Count(),
+                Is.EqualTo(0));
+        }
+
+        [Test]
+        [Ignore("Pre-existing regression: DuplicateObjects calls multiple individual " +
+                "Recorder operations without wrapping them in BeginRecode/EndRecode, " +
+                "so a single Undo only removes the latest copy instead of the entire " +
+                "duplicate batch. Tracked separately.")]
+        public void Duplicate_Undo_RemovesCopies()
+        {
+            var (viewModel, layer) = CreateSingleLayerViewModel();
+            var r = AddRectangles(viewModel, 2);
+
+            SelectByItem(viewModel, r[0]);
+            SelectByItem(viewModel, r[1]);
+
+            var beforeCount = layer.Children.Count;
+            viewModel.DuplicateCommand.Execute();
+            Assert.That(layer.Children.Count, Is.GreaterThan(beforeCount));
+
+            viewModel.UndoCommand.Execute();
+
+            Assert.That(layer.Children.Count, Is.EqualTo(beforeCount));
+        }
+
+        [Test]
         [Ignore("Pre-existing regression: Ungroup disposes the group's reactive " +
                 "properties, so a subsequent Undo throws ObjectDisposedException " +
                 "when re-subscribing to the restored group. Tracked separately.")]
