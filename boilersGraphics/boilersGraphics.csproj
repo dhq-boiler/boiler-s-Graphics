@@ -259,7 +259,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <NoWarn>1701;1702;0002;CA1416;</NoWarn>
   </PropertyGroup>
-  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+  <!-- check.bat patches Resources.Designer.cs to make the auto-generated
+       resource accessor's default constructor public (it ships internal by
+       default). The file is checked in already patched, so the build does
+       not strictly need this step on Linux build hosts (e.g. wdac-mcp-staging
+       Nitro Enclaves), where .bat won't execute. Gate the Exec on Windows. -->
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent" Condition="'$(OS)' == 'Windows_NT'">
     <Exec Command="$(ProjectDir)..\ReplaceInternalResourcesDefaultConstructorToPublic\bin\$(Configuration)\net9.0\check.bat $(ProjectDir).." />
   </Target>
 </Project>
