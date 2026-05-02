@@ -117,8 +117,13 @@ public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewMode
 
     private void Init()
     {
-        MinWidth = 0;
-        MinHeight = 0;
+        // MinWidth/MinHeight default to 10 so resize handles can never
+        // overlap PART_DragThumb at the same screen position. At Width = 0
+        // the right and left handles collapse onto the drag thumb, which
+        // wins the WPF hit test and prevents the user from dragging the
+        // handle back outward — the rectangle gets stuck.
+        MinWidth = 10;
+        MinHeight = 10;
 
         Left
             .Zip(Left.Skip(1), (Old, New) => new { OldItem = Old, NewItem = New })
