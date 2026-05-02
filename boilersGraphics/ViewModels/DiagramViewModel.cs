@@ -4587,22 +4587,34 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
 
     private void DuplicateObjects(IEnumerable<SelectableDesignerItemViewModelBase> items)
     {
-        var selectedItems = from item in items.OfType<DesignerItemViewModelBase>()
-            orderby item.ZIndex.Value
-            select item;
+        // Wrap the entire batch so a single Undo rolls back all duplicates at
+        // once. Without this, each ExecuteAdd recorded inside DuplicateDesignerItem /
+        // DuplicateConnector becomes its own undo entry and the user has to Undo
+        // N times to clear an N-item duplicate.
+        MainWindowVM.Recorder.BeginRecode();
+        try
+        {
+            var selectedItems = from item in items.OfType<DesignerItemViewModelBase>()
+                orderby item.ZIndex.Value
+                select item;
 
-        var oldNewList = new List<Tuple<SelectableDesignerItemViewModelBase, SelectableDesignerItemViewModelBase>>();
+            var oldNewList = new List<Tuple<SelectableDesignerItemViewModelBase, SelectableDesignerItemViewModelBase>>();
 
-        foreach (var item in selectedItems) DuplicateDesignerItem(selectedItems, oldNewList, item);
+            foreach (var item in selectedItems) DuplicateDesignerItem(selectedItems, oldNewList, item);
 
-        var selectedConnectors = (from item in items.OfType<SnapPointViewModel>().Select(x => x.Parent.Value)
-                .OfType<ConnectorBaseViewModel>()
-            orderby item.ZIndex.Value
-            select item).Distinct();
+            var selectedConnectors = (from item in items.OfType<SnapPointViewModel>().Select(x => x.Parent.Value)
+                    .OfType<ConnectorBaseViewModel>()
+                orderby item.ZIndex.Value
+                select item).Distinct();
 
-        foreach (var connector in selectedConnectors) DuplicateConnector(oldNewList, connector);
+            foreach (var connector in selectedConnectors) DuplicateConnector(oldNewList, connector);
 
-        EssentialCodeForBugAvoidance();
+            EssentialCodeForBugAvoidance();
+        }
+        finally
+        {
+            MainWindowVM.Recorder.EndRecode();
+        }
     }
 
     private void EssentialCodeForBugAvoidance()

@@ -288,10 +288,6 @@ namespace boilersGraphics.Test
         }
 
         [Test]
-        [Ignore("Pre-existing regression: DuplicateObjects calls multiple individual " +
-                "Recorder operations without wrapping them in BeginRecode/EndRecode, " +
-                "so a single Undo only removes the latest copy instead of the entire " +
-                "duplicate batch. Tracked separately.")]
         public void Duplicate_Undo_RemovesCopies()
         {
             var (viewModel, layer) = CreateSingleLayerViewModel();
