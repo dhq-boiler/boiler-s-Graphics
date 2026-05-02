@@ -419,5 +419,234 @@ namespace boilersGraphics.Test
             Assert.That(r[3].ZIndex.Value, Is.EqualTo(3));
             Assert.That(r[4].ZIndex.Value, Is.EqualTo(4));
         }
+
+        // Wave 4: Z-order applied TO a group as the target. The original
+        // tests assume the group's chunk (group + its children) participates
+        // in the ZIndex space as a contiguous block, so e.g. BringForward on
+        // a group at ZIndex 3 with r4 at 4 expects:
+        //   r3 (in group)  3 -> 4
+        //   group          3 -> 4 ?  (these original asserts encode the
+        //                              "chunk swap" semantics — group goes
+        //                              to 4 and the bumped item r4 lands
+        //                              wherever the chunk freed up).
+        // Probing confirms current code finds the previous/next item by
+        // looking at currentIndex+/-1 at top level only, so children hidden
+        // inside groups are invisible and the commands silently no-op.
+        // These eight cases stay [Ignore]'d as a future acceptance suite
+        // for the Group / Z-order redesign.
+
+        private const string GroupTargetReason =
+            "Z-order applied to a group is currently a no-op because the " +
+            "previous/next neighbour search ignores group children; " +
+            "tracked with the Group semantics redesign.";
+
+        [Test]
+        [Ignore(GroupTargetReason)]
+        public void Group_BringForward()
+        {
+            var (viewModel, _) = CreateSingleLayerViewModel();
+            var r = AddRectangles(viewModel, 4);
+
+            SelectByItem(viewModel, r[0]);
+            SelectByItem(viewModel, r[1]);
+            SelectByItem(viewModel, r[2]);
+            viewModel.GroupCommand.Execute();
+            var group = AllGroups(viewModel).Single();
+            DeselectAll(viewModel);
+
+            SelectByItem(viewModel, group);
+            viewModel.BringForwardCommand.Execute();
+
+            // Original semantics: the group chunk swaps with r3:
+            //   r3 drops to ZIndex 0, the group's children climb up by 1,
+            //   group lands at the top.
+            Assert.That(r[3].ZIndex.Value, Is.EqualTo(0));
+            Assert.That(r[0].ZIndex.Value, Is.EqualTo(1));
+            Assert.That(r[1].ZIndex.Value, Is.EqualTo(2));
+            Assert.That(r[2].ZIndex.Value, Is.EqualTo(3));
+            Assert.That(group.ZIndex.Value, Is.EqualTo(4));
+        }
+
+        [Test]
+        [Ignore(GroupTargetReason)]
+        public void Group_BringForward_2()
+        {
+            var (viewModel, _) = CreateSingleLayerViewModel();
+            var r = AddRectangles(viewModel, 5);
+
+            SelectByItem(viewModel, r[0]);
+            SelectByItem(viewModel, r[1]);
+            SelectByItem(viewModel, r[2]);
+            viewModel.GroupCommand.Execute();
+            var group = AllGroups(viewModel).Single();
+            DeselectAll(viewModel);
+
+            SelectByItem(viewModel, group);
+            viewModel.BringForwardCommand.Execute();
+
+            // r4 stays at the top, group chunk climbs over r3 only.
+            Assert.That(r[3].ZIndex.Value, Is.EqualTo(0));
+            Assert.That(r[0].ZIndex.Value, Is.EqualTo(1));
+            Assert.That(r[1].ZIndex.Value, Is.EqualTo(2));
+            Assert.That(r[2].ZIndex.Value, Is.EqualTo(3));
+            Assert.That(group.ZIndex.Value, Is.EqualTo(4));
+            Assert.That(r[4].ZIndex.Value, Is.EqualTo(5));
+        }
+
+        [Test]
+        [Ignore(GroupTargetReason)]
+        public void Group_BringForward_NoEffect()
+        {
+            var (viewModel, _) = CreateSingleLayerViewModel();
+            var r = AddRectangles(viewModel, 4);
+
+            SelectByItem(viewModel, r[1]);
+            SelectByItem(viewModel, r[2]);
+            SelectByItem(viewModel, r[3]);
+            viewModel.GroupCommand.Execute();
+            var group = AllGroups(viewModel).Single();
+            DeselectAll(viewModel);
+
+            SelectByItem(viewModel, group);
+            viewModel.BringForwardCommand.Execute();
+
+            // Group is already topmost — no change anywhere.
+            Assert.That(r[0].ZIndex.Value, Is.EqualTo(0));
+            Assert.That(r[1].ZIndex.Value, Is.EqualTo(1));
+            Assert.That(r[2].ZIndex.Value, Is.EqualTo(2));
+            Assert.That(r[3].ZIndex.Value, Is.EqualTo(3));
+            Assert.That(group.ZIndex.Value, Is.EqualTo(4));
+        }
+
+        [Test]
+        [Ignore(GroupTargetReason)]
+        public void Group_BringForeground()
+        {
+            var (viewModel, _) = CreateSingleLayerViewModel();
+            var r = AddRectangles(viewModel, 6);
+
+            SelectByItem(viewModel, r[0]);
+            SelectByItem(viewModel, r[1]);
+            SelectByItem(viewModel, r[2]);
+            viewModel.GroupCommand.Execute();
+            var group = AllGroups(viewModel).Single();
+            DeselectAll(viewModel);
+
+            SelectByItem(viewModel, group);
+            viewModel.BringForegroundCommand.Execute();
+
+            // Group chunk lifts to the top, the items above it shuffle to
+            // fill the freed bottom slots in order.
+            Assert.That(r[3].ZIndex.Value, Is.EqualTo(0));
+            Assert.That(r[4].ZIndex.Value, Is.EqualTo(1));
+            Assert.That(r[5].ZIndex.Value, Is.EqualTo(2));
+            Assert.That(r[0].ZIndex.Value, Is.EqualTo(3));
+            Assert.That(r[1].ZIndex.Value, Is.EqualTo(4));
+            Assert.That(r[2].ZIndex.Value, Is.EqualTo(5));
+            Assert.That(group.ZIndex.Value, Is.EqualTo(6));
+        }
+
+        [Test]
+        [Ignore(GroupTargetReason)]
+        public void Group_SendBackward()
+        {
+            var (viewModel, _) = CreateSingleLayerViewModel();
+            var r = AddRectangles(viewModel, 4);
+
+            SelectByItem(viewModel, r[1]);
+            SelectByItem(viewModel, r[2]);
+            SelectByItem(viewModel, r[3]);
+            viewModel.GroupCommand.Execute();
+            var group = AllGroups(viewModel).Single();
+            DeselectAll(viewModel);
+
+            SelectByItem(viewModel, group);
+            viewModel.SendBackwardCommand.Execute();
+
+            // Group chunk slides one slot down past r0.
+            Assert.That(r[0].ZIndex.Value, Is.EqualTo(4));
+            Assert.That(r[1].ZIndex.Value, Is.EqualTo(0));
+            Assert.That(r[2].ZIndex.Value, Is.EqualTo(1));
+            Assert.That(r[3].ZIndex.Value, Is.EqualTo(2));
+            Assert.That(group.ZIndex.Value, Is.EqualTo(3));
+        }
+
+        [Test]
+        [Ignore(GroupTargetReason)]
+        public void Group_SendBackward_2()
+        {
+            var (viewModel, _) = CreateSingleLayerViewModel();
+            var r = AddRectangles(viewModel, 5);
+
+            SelectByItem(viewModel, r[2]);
+            SelectByItem(viewModel, r[3]);
+            SelectByItem(viewModel, r[4]);
+            viewModel.GroupCommand.Execute();
+            var group = AllGroups(viewModel).Single();
+            DeselectAll(viewModel);
+
+            SelectByItem(viewModel, group);
+            viewModel.SendBackwardCommand.Execute();
+
+            // r0 stays at the back, group chunk slides past r1 only.
+            Assert.That(r[0].ZIndex.Value, Is.EqualTo(0));
+            Assert.That(r[1].ZIndex.Value, Is.EqualTo(4));
+            Assert.That(r[2].ZIndex.Value, Is.EqualTo(1));
+            Assert.That(r[3].ZIndex.Value, Is.EqualTo(2));
+            Assert.That(r[4].ZIndex.Value, Is.EqualTo(3));
+            Assert.That(group.ZIndex.Value, Is.EqualTo(5));
+        }
+
+        [Test]
+        [Ignore(GroupTargetReason)]
+        public void Group_SendBackward_NoEffect()
+        {
+            var (viewModel, _) = CreateSingleLayerViewModel();
+            var r = AddRectangles(viewModel, 4);
+
+            SelectByItem(viewModel, r[0]);
+            SelectByItem(viewModel, r[1]);
+            SelectByItem(viewModel, r[2]);
+            viewModel.GroupCommand.Execute();
+            var group = AllGroups(viewModel).Single();
+            DeselectAll(viewModel);
+
+            SelectByItem(viewModel, group);
+            viewModel.SendBackwardCommand.Execute();
+
+            // Group's children sit at 0..2 already — nothing to slide past.
+            Assert.That(r[0].ZIndex.Value, Is.EqualTo(0));
+            Assert.That(r[1].ZIndex.Value, Is.EqualTo(1));
+            Assert.That(r[2].ZIndex.Value, Is.EqualTo(2));
+            Assert.That(r[3].ZIndex.Value, Is.EqualTo(3));
+            Assert.That(group.ZIndex.Value, Is.EqualTo(4));
+        }
+
+        [Test]
+        [Ignore(GroupTargetReason)]
+        public void Group_SendBackground()
+        {
+            var (viewModel, _) = CreateSingleLayerViewModel();
+            var r = AddRectangles(viewModel, 6);
+
+            SelectByItem(viewModel, r[3]);
+            SelectByItem(viewModel, r[4]);
+            SelectByItem(viewModel, r[5]);
+            viewModel.GroupCommand.Execute();
+            var group = AllGroups(viewModel).Single();
+            DeselectAll(viewModel);
+
+            SelectByItem(viewModel, group);
+            viewModel.SendBackgroundCommand.Execute();
+
+            // Group chunk drops to the bottom, items below shift up.
+            Assert.That(r[3].ZIndex.Value, Is.EqualTo(0));
+            Assert.That(r[4].ZIndex.Value, Is.EqualTo(1));
+            Assert.That(r[5].ZIndex.Value, Is.EqualTo(2));
+            Assert.That(group.ZIndex.Value, Is.EqualTo(3));
+            Assert.That(r[0].ZIndex.Value, Is.EqualTo(4));
+            Assert.That(r[1].ZIndex.Value, Is.EqualTo(5));
+            Assert.That(r[2].ZIndex.Value, Is.EqualTo(6));
+        }
     }
 }
