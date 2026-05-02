@@ -3926,106 +3926,30 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     private void ExecuteBringForwardCommand()
     {
         MainWindowVM.Recorder.BeginRecode();
-        
-        var ordered = SelectedItems.Value.AsValueEnumerable().OrderByDescending(item => item.ZIndex.Value);
 
-        var count = Layers.AsValueEnumerable().SelectMany(x => x.Children).Count();
+        var orderedSelected = SelectedItems.Value
+            .AsValueEnumerable()
+            .OrderByDescending(item => item.ZIndex.Value)
+            .ToList();
 
-        for (var i = 0; i < ordered.Count(); ++i)
+        foreach (var current in orderedSelected)
         {
-            var currentIndex = ordered.ElementAt(i).ZIndex.Value;
-            if (SelectedLayers.Value.AsValueEnumerable().First().Children.AsValueEnumerable().Max(x => (x as LayerItem).Item.Value.ZIndex.Value) ==
-                currentIndex)
-                continue; //レイヤー内の最大ZIndex値と同じだった場合はcontinueして次の選択アイテムへ
-            var next = (from x in Layers.AsValueEnumerable().SelectMany(x => x.Children)
-                where (x as LayerItem).Item.Value.ZIndex.Value == currentIndex + 1
-                select x).SingleOrDefault();
+            var topLevel = TopLevelItemsForOrdering();
+            var currentIndex = current.ZIndex.Value;
 
+            var next = topLevel
+                .Where(li => li.Item.Value.ZIndex.Value > currentIndex)
+                .OrderBy(li => li.Item.Value.ZIndex.Value)
+                .FirstOrDefault();
             if (next == null) continue;
 
-            var newIndex = (next as LayerItem).Item.Value.ParentID != Guid.Empty
-                ? (Layers.AsValueEnumerable().SelectMany(x => x.Children)
-                        .Single(x => (x as LayerItem).Item.Value.ID == (next as LayerItem).Item.Value.ParentID) as
-                    LayerItem).Item.Value.ZIndex.Value
-                : Math.Min(count - 1 - i, currentIndex + 1);
-            if (currentIndex != newIndex)
-            {
-                if (ordered.ElementAt(i) is GroupItemViewModel)
-                {
-                    MainWindowVM.Recorder.Current.ExecuteSetProperty(ordered.ElementAt(i), "ZIndex.Value", newIndex);
+            var nextItem = next.Item.Value;
+            var nextZIndex = nextItem.ZIndex.Value;
 
-                    var orderedElementID = ordered.ElementAt(i).ID;
-                    var children = Layers.AsValueEnumerable().SelectMany(xx => xx.Children)
-                        .Where(item => (item as LayerItem).Item.Value.ParentID == orderedElementID)
-                        .OrderByDescending(item => (item as LayerItem).Item.Value.ZIndex.Value)
-                        .ToList();
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(current, "ZIndex.Value", nextZIndex);
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(nextItem, "ZIndex.Value", currentIndex);
 
-                    var youngestChildrenZIndex = 0;
-
-                    for (var j = 0; j < children.AsValueEnumerable().Count(); ++j)
-                    {
-                        var child = children.AsValueEnumerable().ElementAt(j);
-                        youngestChildrenZIndex = newIndex - j - 1;
-                        MainWindowVM.Recorder.Current.ExecuteSetProperty((child as LayerItem).Item.Value,
-                            "ZIndex.Value", newIndex - j - 1);
-                    }
-                    
-                    var orderedElementZIndex = ordered.ElementAt(i).ZIndex.Value;
-                    var younger = from item in Layers.AsValueEnumerable().SelectMany(xx => xx.Children)
-                        where (item as LayerItem).Item.Value.ID != orderedElementID &&
-                              (item as LayerItem).Item.Value.ParentID != orderedElementID
-                              && (item as LayerItem).Item.Value.ZIndex.Value <= orderedElementZIndex &&
-                              (item as LayerItem).Item.Value.ZIndex.Value >= youngestChildrenZIndex
-                        select item;
-
-                    var x = from item in Layers.AsValueEnumerable().SelectMany(xx => xx.Children)
-                        where (item as LayerItem).Item.Value.ID != orderedElementID &&
-                              (item as LayerItem).Item.Value.ParentID != orderedElementID
-                              && (item as LayerItem).Item.Value.ZIndex.Value < youngestChildrenZIndex
-                        select item;
-
-                    var z = x.ToList();
-                    z.AddRange(younger.ToArray());
-
-                    for (var j = 0; j < z.AsValueEnumerable().Count(); ++j)
-                        MainWindowVM.Recorder.Current.ExecuteSetProperty((z.AsValueEnumerable().ElementAt(j) as LayerItem).Item.Value,
-                            "ZIndex.Value", j);
-                }
-                else
-                {
-                    MainWindowVM.Recorder.Current.ExecuteSetProperty(ordered.ElementAt(i), "ZIndex.Value", newIndex);
-                    var exists = Layers.AsValueEnumerable().SelectMany(x => x.Children)
-                        .Where(item => (item as LayerItem).Item.Value.ZIndex.Value == newIndex);
-
-                    foreach (var item in exists)
-                    {
-                        ((item as LayerItem).Item.Value as EffectViewModel)?.DisposeMonitoringItem(ordered.ElementAt(i));
-                        if ((item as LayerItem).Item.Value != ordered.ElementAt(i))
-                        {
-                            if ((item as LayerItem).Item.Value is GroupItemViewModel)
-                            {
-                                var children = from it in Layers.AsValueEnumerable().SelectMany(x => x.Children)
-                                               where (it as LayerItem).Item.Value.ParentID == (item as LayerItem).Item.Value.ID
-                                               select it;
-
-                                foreach (var child in children)
-                                    MainWindowVM.Recorder.Current.ExecuteSetProperty((child as LayerItem).Item.Value,
-                                        "ZIndex.Value", newIndex);
-
-                                MainWindowVM.Recorder.Current.ExecuteSetProperty((item as LayerItem).Item.Value,
-                                    "ZIndex.Value", currentIndex + children.Count());
-                            }
-                            else
-                            {
-                                MainWindowVM.Recorder.Current.ExecuteSetProperty((item as LayerItem).Item.Value,
-                                    "ZIndex.Value", currentIndex);
-                            }
-
-                            (ordered.ElementAt(i) as EffectViewModel)?.Render();
-                        }
-                    }
-                }
-            }
+            (current as EffectViewModel)?.Render();
         }
 
         Sort(Layers);
@@ -4033,6 +3957,20 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
         MainWindowVM.Recorder.EndRecode();
 
         UpdateStatisticsCountMoveToFront();
+    }
+
+    /// <summary>
+    /// Direct LayerItem children of the currently selected layers (i.e.
+    /// items participating in top-level Z-order). Group children sitting
+    /// inside a group's LayerItem.Children are intentionally excluded.
+    /// </summary>
+    private List<LayerItem> TopLevelItemsForOrdering()
+    {
+        return SelectedLayers.Value
+            .AsValueEnumerable()
+            .SelectMany(layer => layer.Children)
+            .OfType<LayerItem>()
+            .ToList();
     }
 
     private void UpdateStatisticsCountMoveToFront()
@@ -4049,123 +3987,30 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     private void ExecuteSendBackwardCommand()
     {
         MainWindowVM.Recorder.BeginRecode();
-        
-        var ordered = SelectedItems.Value.AsValueEnumerable().OrderBy(item => item.ZIndex.Value);
 
-        var count = Layers.AsValueEnumerable().SelectMany(x => x.Children).Count();
+        var orderedSelected = SelectedItems.Value
+            .AsValueEnumerable()
+            .OrderBy(item => item.ZIndex.Value)
+            .ToList();
 
-        for (var i = 0; i < ordered.Count(); ++i)
+        foreach (var current in orderedSelected)
         {
-            var currentIndex = ordered.ElementAt(i).ZIndex.Value;
-            if (SelectedLayers.Value.AsValueEnumerable().First().Children.AsValueEnumerable().Min(x => (x as LayerItem).Item.Value.ZIndex.Value) ==
-                currentIndex)
-                continue; //レイヤー内の最小ZIndex値と同じだった場合はcontinueして次の選択アイテムへ
-            var previous = (from x in Layers.AsValueEnumerable().SelectMany(x => x.Children)
-                where (x as LayerItem).Item.Value.ZIndex.Value == currentIndex - 1
-                select x).SingleOrDefault();
+            var topLevel = TopLevelItemsForOrdering();
+            var currentIndex = current.ZIndex.Value;
 
+            var previous = topLevel
+                .Where(li => li.Item.Value.ZIndex.Value < currentIndex)
+                .OrderByDescending(li => li.Item.Value.ZIndex.Value)
+                .FirstOrDefault();
             if (previous == null) continue;
 
-            var newIndex = (previous as LayerItem).Item.Value is GroupItemViewModel
-                ? Layers.AsValueEnumerable().SelectMany(x => x.Children)
-                    .Where(x => (x as LayerItem).Item.Value.ParentID == (previous as LayerItem).Item.Value.ID)
-                    .Min(x => (x as LayerItem).Item.Value.ZIndex.Value)
-                : Math.Max(i, currentIndex - 1);
-            if (currentIndex != newIndex)
-            {
-                if (ordered.ElementAt(i) is GroupItemViewModel)
-                {
-                    var orderedElementID = ordered.ElementAt(i).ID;
-                    var children = (from item in Layers.AsValueEnumerable().SelectMany(x => x.Children)
-                        where (item as LayerItem).Item.Value.ParentID == orderedElementID
-                        orderby (item as LayerItem).Item.Value.ZIndex.Value descending
-                        select item).ToList();
+            var previousItem = previous.Item.Value;
+            var previousZIndex = previousItem.ZIndex.Value;
 
-                    if (children.AsValueEnumerable().Any(c => (c as LayerItem).Item.Value.ZIndex.Value == 0)) continue;
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(current, "ZIndex.Value", previousZIndex);
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(previousItem, "ZIndex.Value", currentIndex);
 
-                    MainWindowVM.Recorder.Current.ExecuteSetProperty(ordered.ElementAt(i), "ZIndex.Value", newIndex);
-
-                    var youngestChildrenZIndex = 0;
-
-                    for (var j = 0; j < children.AsValueEnumerable().Count(); ++j)
-                    {
-                        var child = children.AsValueEnumerable().ElementAt(j);
-                        youngestChildrenZIndex = newIndex - j - 1;
-                        MainWindowVM.Recorder.Current.ExecuteSetProperty((child as LayerItem).Item.Value,
-                            "ZIndex.Value", newIndex - j - 1);
-                    }
-
-                    var orderedElementZIndex = ordered.ElementAt(i).ZIndex.Value;
-                    var older = from item in Layers.AsValueEnumerable().SelectMany(xx => xx.Children)
-                        where (item as LayerItem).Item.Value.ID != orderedElementID &&
-                              (item as LayerItem).Item.Value.ParentID != orderedElementID
-                              && (item as LayerItem).Item.Value.ZIndex.Value <= orderedElementZIndex &&
-                              (item as LayerItem).Item.Value.ZIndex.Value >= youngestChildrenZIndex
-                        select item;
-
-                    var x = from item in Layers.AsValueEnumerable().SelectMany(xx => xx.Children)
-                        where (item as LayerItem).Item.Value.ID != orderedElementID &&
-                              (item as LayerItem).Item.Value.ParentID != orderedElementID
-                              && (item as LayerItem).Item.Value.ZIndex.Value > orderedElementZIndex
-                        select item;
-
-                    var z = older.ToList();
-                    z.AddRange(x.ToArray());
-                    z.Reverse();
-
-                    for (var j = 0; j < z.AsValueEnumerable().Count(); ++j)
-                    {
-                        var elm = z.AsValueEnumerable().ElementAt(j);
-                        MainWindowVM.Recorder.Current.ExecuteSetProperty((elm as LayerItem).Item.Value, "ZIndex.Value",
-                            Layers.AsValueEnumerable().SelectMany(xx => xx.Children).Count() - j - 1);
-                    }
-                }
-                else
-                {
-                    MainWindowVM.Recorder.Current.ExecuteSetProperty(ordered.ElementAt(i), "ZIndex.Value", newIndex);
-                    
-                    (ordered.ElementAt(i) as EffectViewModel)?.Render();
-                    
-                    var exists = Layers.AsValueEnumerable().SelectMany(x => x.Children).Where(item =>
-                        (item as LayerItem).Item.Value.ZIndex.Value == newIndex);
-
-                    foreach (var item in exists)
-                    {
-                        if ((item as LayerItem).Item.Value != ordered.ElementAt(i))
-                        {
-                            if ((item as LayerItem).Item.Value.ParentID != Guid.Empty)
-                            {
-                                var children = from it in Layers.AsValueEnumerable().SelectMany(x => x.Children)
-                                    where (it as LayerItem).Item.Value.ParentID ==
-                                          (item as LayerItem).Item.Value.ParentID
-                                    select it;
-
-                                foreach (var child in children)
-                                    MainWindowVM.Recorder.Current.ExecuteSetProperty((child as LayerItem).Item.Value,
-                                        "ZIndex.Value", newIndex);
-
-                                var parent = (from it in Layers.AsValueEnumerable().SelectMany(x => x.Children)
-                                    where (it as LayerItem).Item.Value.ID == (item as LayerItem).Item.Value.ParentID
-                                    select it).Single();
-
-                                (parent as LayerItem).Item.Value.ZIndex.Value =
-                                    children.Max(x => (x as LayerItem).Item.Value.ZIndex.Value) + 1;
-                                MainWindowVM.Recorder.Current.ExecuteSetProperty((parent as LayerItem).Item.Value,
-                                    "ZIndex.Value", children.Max(x => (x as LayerItem).Item.Value.ZIndex.Value) + 1);
-                            }
-                            else
-                            {
-                                MainWindowVM.Recorder.Current.ExecuteSetProperty((item as LayerItem).Item.Value,
-                                    "ZIndex.Value", currentIndex);
-                            }
-                            ((item as LayerItem)?.Item.Value as EffectViewModel)?.BeginMonitoring(ordered.ElementAt(i));
-                            ((item as LayerItem)?.Item.Value as EffectViewModel)?.Render();
-                            break;
-                        }
-                    }
-                }
-            
-            }
+            (current as EffectViewModel)?.Render();
         }
 
         Sort(Layers);
@@ -4190,76 +4035,35 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     {
         MainWindowVM.Recorder.BeginRecode();
 
-        var ordered = SelectedItems.Value.AsValueEnumerable().OrderByDescending(item => item.ZIndex.Value);
+        var orderedSelected = SelectedItems.Value
+            .AsValueEnumerable()
+            .OrderByDescending(item => item.ZIndex.Value)
+            .ToList();
 
-        var count = Layers.AsValueEnumerable().SelectMany(x => x.Children).Count();
-
-        for (var i = 0; i < ordered.Count(); ++i)
+        foreach (var current in orderedSelected)
         {
-            var current = ordered.ElementAt(i);
-            var currentIndex = current.ZIndex.Value;
-            var newIndex = SelectedLayers.Value.AsValueEnumerable().SelectMany(x => x.Children).Count() - 1;
-            if (currentIndex != newIndex)
+            // Treat the operation as repeated swap-with-next-top-level-item
+            // until current sits on top. Each step swaps ZIndex values of
+            // current and its immediate top-level neighbour, leaving group
+            // children's ZIndex intact (their structure within the group
+            // stays put per the design).
+            while (true)
             {
-                var oldCurrentIndex = current.ZIndex.Value;
-                MainWindowVM.Recorder.Current.ExecuteSetProperty(current, "ZIndex.Value", newIndex);
+                var topLevel = TopLevelItemsForOrdering();
+                var currentIndex = current.ZIndex.Value;
+                var next = topLevel
+                    .Where(li => li.Item.Value.ZIndex.Value > currentIndex)
+                    .OrderBy(li => li.Item.Value.ZIndex.Value)
+                    .FirstOrDefault();
+                if (next == null) break;
 
-                if (current is GroupItemViewModel)
-                {
-                    var children = from item in Layers.AsValueEnumerable().SelectMany(x => x.Children)
-                        where (item as LayerItem).Item.Value.ParentID == current.ID
-                        orderby (item as LayerItem).Item.Value.ZIndex.Value descending
-                        select item;
-
-                    for (var j = 0; j < children.Count(); ++j)
-                    {
-                        var child = children.ElementAt(j);
-                        MainWindowVM.Recorder.Current.ExecuteSetProperty((child as LayerItem).Item.Value,
-                            "ZIndex.Value", current.ZIndex.Value - j - 1);
-                    }
-
-                    var minValue = children.Min(x => (x as LayerItem).Item.Value.ZIndex.Value);
-
-                    var other = (from item in Layers.AsValueEnumerable().SelectMany(x => x.Children)
-                        where (item as LayerItem).Item.Value.ParentID != current.ID &&
-                              (item as LayerItem).Item.Value.ID != current.ID
-                        orderby (item as LayerItem).Item.Value.ZIndex.Value descending
-                        select item).ToList();
-
-                    for (var j = 0; j < other.AsValueEnumerable().Count(); ++j)
-                    {
-                        var item = other.AsValueEnumerable().ElementAt(j);
-                        MainWindowVM.Recorder.Current.ExecuteSetProperty((item as LayerItem).Item.Value, "ZIndex.Value",
-                            minValue - j);
-                    }
-                }
-                else
-                {
-                    // Shift every item in (oldCurrentIndex, newIndex] within the
-                    // selected layers down by 1 so the slot at newIndex is freed
-                    // without leaving a gap or duplicate ZIndex.
-                    var movedItem = current;
-                    var lowerBound = oldCurrentIndex;
-                    var upperBound = newIndex;
-                    var shiftTargets = SelectedLayers.Value
-                        .SelectMany(x => x.Children)
-                        .OfType<LayerItem>()
-                        .Where(li => li.Item.Value != movedItem
-                                     && li.Item.Value.ZIndex.Value > lowerBound
-                                     && li.Item.Value.ZIndex.Value <= upperBound)
-                        .OrderBy(li => li.Item.Value.ZIndex.Value)
-                        .ToList();
-
-                    foreach (var li in shiftTargets)
-                    {
-                        (li.Item.Value as EffectViewModel)?.DisposeMonitoringItem(movedItem);
-                        MainWindowVM.Recorder.Current.ExecuteSetProperty(
-                            li.Item.Value, "ZIndex.Value", li.Item.Value.ZIndex.Value - 1);
-                    }
-
-                    (movedItem as EffectViewModel)?.Render();
-                }
+                var nextItem = next.Item.Value;
+                var nextZIndex = nextItem.ZIndex.Value;
+                MainWindowVM.Recorder.Current.ExecuteSetProperty(current, "ZIndex.Value", nextZIndex);
+                MainWindowVM.Recorder.Current.ExecuteSetProperty(nextItem, "ZIndex.Value", currentIndex);
             }
+
+            (current as EffectViewModel)?.Render();
         }
 
         Sort(Layers);
@@ -4284,76 +4088,32 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     {
         MainWindowVM.Recorder.BeginRecode();
 
-        var ordered = SelectedItems.Value.AsValueEnumerable().OrderByDescending(item => item.ZIndex.Value);
+        var orderedSelected = SelectedItems.Value
+            .AsValueEnumerable()
+            .OrderBy(item => item.ZIndex.Value)
+            .ToList();
 
-        var count = Layers.AsValueEnumerable().SelectMany(x => x.Children).Count();
-
-        for (var i = 0; i < ordered.Count(); ++i)
+        foreach (var current in orderedSelected)
         {
-            var current = ordered.ElementAt(i);
-            var currentIndex = current.ZIndex.Value;
-            var newIndex = current is GroupItemViewModel
-                ? Layers.AsValueEnumerable().SelectMany(x => x.Children).Where(x => (x as LayerItem).Item.Value.ParentID == current.ID)
-                    .Count()
-                : SelectedLayers.Value.AsValueEnumerable().First().Children.AsValueEnumerable().Min(x => (x as LayerItem).Item.Value.ZIndex.Value);
-            if (currentIndex != newIndex)
+            // Mirror BringForeground: repeatedly swap with the next-lower
+            // top-level neighbour until current sits at the bottom.
+            while (true)
             {
-                var oldCurrentIndex = current.ZIndex.Value;
-                MainWindowVM.Recorder.Current.ExecuteSetProperty(current, "ZIndex.Value", newIndex);
-                (current as EffectViewModel)?.Render();
+                var topLevel = TopLevelItemsForOrdering();
+                var currentIndex = current.ZIndex.Value;
+                var previous = topLevel
+                    .Where(li => li.Item.Value.ZIndex.Value < currentIndex)
+                    .OrderByDescending(li => li.Item.Value.ZIndex.Value)
+                    .FirstOrDefault();
+                if (previous == null) break;
 
-                if (current is GroupItemViewModel)
-                {
-                    var children = (from item in Layers.AsValueEnumerable().SelectMany(x => x.Children)
-                        where (item as LayerItem).Item.Value.ParentID == current.ID
-                        orderby (item as LayerItem).Item.Value.ZIndex.Value descending
-                        select item).ToList();
-
-                    for (var j = 0; j < children.AsValueEnumerable().Count(); ++j)
-                    {
-                        var child = children.AsValueEnumerable().ElementAt(j);
-                        MainWindowVM.Recorder.Current.ExecuteSetProperty((child as LayerItem).Item.Value,
-                            "ZIndex.Value", current.ZIndex.Value - j - 1);
-                    }
-
-                    var maxValue = Layers.AsValueEnumerable().SelectMany(x => x.Children).Count() - 1;
-
-                    var other = (from item in Layers.AsValueEnumerable().SelectMany(x => x.Children)
-                        where (item as LayerItem).Item.Value.ParentID != current.ID &&
-                              (item as LayerItem).Item.Value.ID != current.ID
-                        orderby (item as LayerItem).Item.Value.ZIndex.Value descending
-                        select item).ToList();
-
-                    for (var j = 0; j < other.AsValueEnumerable().Count(); ++j)
-                    {
-                        var item = other.AsValueEnumerable().ElementAt(j);
-                        MainWindowVM.Recorder.Current.ExecuteSetProperty((item as LayerItem).Item.Value, "ZIndex.Value",
-                            maxValue - j);
-                    }
-                }
-                else
-                {
-                    var exists = Layers.AsValueEnumerable().SelectMany(x => x.Children).Where(item =>
-                        (item as LayerItem).Item.Value.ZIndex.Value >= newIndex &&
-                        (item as LayerItem).Item.Value.ZIndex.Value < oldCurrentIndex)
-                        .Select(x => (x as LayerItem).Item.Value)
-                        .Except(new List<SelectableDesignerItemViewModelBase>() { current })
-                        .OrderBy(x => x.ZIndex.Value).ToList();
-
-                    foreach (var item in exists)
-                    {
-                        if (item != current)
-                        {
-                            MainWindowVM.Recorder.Current.ExecuteSetProperty(item,
-                                "ZIndex.Value", item.ZIndex.Value + 1);
-                            (item as EffectViewModel)?.BeginMonitoring(current);
-                            (item as EffectViewModel)?.Render();
-                        }
-                    }
-
-                }
-            
+                var previousItem = previous.Item.Value;
+                var previousZIndex = previousItem.ZIndex.Value;
+                MainWindowVM.Recorder.Current.ExecuteSetProperty(current, "ZIndex.Value", previousZIndex);
+                MainWindowVM.Recorder.Current.ExecuteSetProperty(previousItem, "ZIndex.Value", currentIndex);
             }
+
+            (current as EffectViewModel)?.Render();
         }
 
         Sort(Layers);
