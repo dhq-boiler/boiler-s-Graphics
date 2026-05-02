@@ -852,6 +852,12 @@
   <data name="String_SnapRange" xml:space="preserve">
     <value>Range to snap to a point</value>
   </data>
+  <data name="String_EnableAutoScrollOnDrag" xml:space="preserve">
+    <value>Auto-scroll viewport while dragging</value>
+  </data>
+  <data name="String_AutoScrollOnDragSpeed" xml:space="preserve">
+    <value>Auto-scroll speed (px/tick)</value>
+  </data>
   <data name="String_SourceCodeLicense" xml:space="preserve">
     <value>Source code license</value>
   </data>

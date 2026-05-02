@@ -44,7 +44,7 @@
             <controls:SimpleGrid
                 Columns="2"
                 Orientation="Horizontal"
-                Rows="10">
+                Rows="11">
                 <Label
                     Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_CanvasWidth, Mode=OneWay}" />
                 <TextBox
@@ -396,6 +396,39 @@
                     Margin="5"
                     Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_EnableImageEmbedding, Mode=OneWay}"
                     IsChecked="{Binding EditTarget.Value.EnableImageEmbedding.Value}" />
+                <DockPanel />
+                <CheckBox
+                    x:Name="enableAutoScrollOnDrag"
+                    Margin="5"
+                    Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_EnableAutoScrollOnDrag, Mode=OneWay}"
+                    IsChecked="{Binding EditTarget.Value.EnableAutoScrollOnDrag.Value}" />
+                <DockPanel>
+                    <Label
+                        Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.String_AutoScrollOnDragSpeed, Mode=OneWay}" />
+                    <TextBox
+                        HorizontalAlignment="Stretch"
+                        HorizontalContentAlignment="Right"
+                        Background="{StaticResource ControlDarkerBackground}"
+                        Foreground="{StaticResource ControlDefaultForeground}"
+                        Text="{Binding EditTarget.Value.AutoScrollOnDragSpeed.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        <TextBox.Style>
+                            <Style TargetType="{x:Type TextBox}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=enableAutoScrollOnDrag, Path=IsChecked}"
+                                                 Value="True">
+                                        <Setter Property="IsReadOnly" Value="False" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ElementName=enableAutoScrollOnDrag, Path=IsChecked}"
+                                                 Value="False">
+                                        <Setter Property="IsReadOnly" Value="True" />
+                                        <Setter Property="Foreground" Value="Gray" />
+                                        <Setter Property="BorderBrush" Value="Gray" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBox.Style>
+                    </TextBox>
+                </DockPanel>
             </controls:SimpleGrid>
         </StackPanel>
     </DockPanel>

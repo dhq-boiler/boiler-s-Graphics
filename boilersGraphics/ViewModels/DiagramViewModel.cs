@@ -1746,6 +1746,8 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
         preferences.AutoSaveInterval.Value = AutoSaveInterval.Value;
         preferences.AngleType.Value = AngleType.Value;
         preferences.EnableImageEmbedding.Value = EnableImageEmbedding.Value;
+        preferences.EnableAutoScrollOnDrag.Value = EnableAutoScrollOnDrag.Value;
+        preferences.AutoScrollOnDragSpeed.Value = AutoScrollOnDragSpeed.Value;
         dlgService.ShowDialog(nameof(Views.Preference), new DialogParameters { { "Preferences", preferences } },
             ret => result = ret);
         if (result != null && result.Result == ButtonResult.OK)
@@ -1764,6 +1766,8 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
             AutoSaveInterval.Value = s.AutoSaveInterval.Value;
             AngleType.Value = s.AngleType.Value;
             EnableImageEmbedding.Value = s.EnableImageEmbedding.Value;
+            EnableAutoScrollOnDrag.Value = s.EnableAutoScrollOnDrag.Value;
+            AutoScrollOnDragSpeed.Value = s.AutoScrollOnDragSpeed.Value;
             SetAutoSave();
         }
     }
@@ -2207,6 +2211,13 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     public BindableReactiveProperty<AngleType> AngleType { get; set; } = new();
 
     public BindableReactiveProperty<bool> EnableImageEmbedding { get; set; } = new();
+
+    // Default to enabled with a moderate speed (8 px / 30 ms tick).
+    // Affects DragThumb's auto-scroll-on-drag behavior. Settable via the
+    // Preference dialog. Speed is the per-tick scroll increment in pixels;
+    // 1.0 is very slow, 30.0 is very fast.
+    public BindableReactiveProperty<bool> EnableAutoScrollOnDrag { get; set; } = new(true);
+    public BindableReactiveProperty<double> AutoScrollOnDragSpeed { get; set; } = new(8d);
 
     public BindableReactiveProperty<Visibility> ContextMenuVisibility { get; } = new();
 

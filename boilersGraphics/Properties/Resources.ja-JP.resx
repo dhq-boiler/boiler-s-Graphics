@@ -852,6 +852,12 @@
   <data name="String_SnapRange" xml:space="preserve">
     <value>ポイントにスナップする範囲</value>
   </data>
+  <data name="String_EnableAutoScrollOnDrag" xml:space="preserve">
+    <value>ドラッグ中にビューポートを自動スクロール</value>
+  </data>
+  <data name="String_AutoScrollOnDragSpeed" xml:space="preserve">
+    <value>自動スクロール速度 (px/tick)</value>
+  </data>
   <data name="String_SourceCodeLicense" xml:space="preserve">
     <value>ソースコードのライセンス</value>
   </data>

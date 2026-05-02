@@ -21,6 +21,8 @@ internal class Preference : BindableBase
     public BindableReactiveProperty<TimeSpan> AutoSaveInterval { get; set; } = new();
     public BindableReactiveProperty<AngleType> AngleType { get; set; } = new();
     public BindableReactiveProperty<bool> EnableImageEmbedding { get; set; } = new();
+    public BindableReactiveProperty<bool> EnableAutoScrollOnDrag { get; set; } = new();
+    public BindableReactiveProperty<double> AutoScrollOnDragSpeed { get; set; } = new();
 
     public ObservableList<double> EdgeThicknessOptions { get; } = new ObservableList<double>()
     {

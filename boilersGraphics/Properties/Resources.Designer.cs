@@ -2246,7 +2246,25 @@ namespace boilersGraphics.Properties {
                 return ResourceManager.GetString("String_SnapRange", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Auto-scroll viewport while dragging に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_EnableAutoScrollOnDrag {
+            get {
+                return ResourceManager.GetString("String_EnableAutoScrollOnDrag", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Auto-scroll speed (px/tick) に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_AutoScrollOnDragSpeed {
+            get {
+                return ResourceManager.GetString("String_AutoScrollOnDragSpeed", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Source code license に類似しているローカライズされた文字列を検索します。
         /// </summary>
