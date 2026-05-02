@@ -41,12 +41,10 @@ public static class LayerTreeViewItemCollection
 
     private static void Rearrangement(OperationRecorder recorder, NotifyCollectionChangedSynchronizedViewList<LayerTreeViewItemBase> layers)
     {
-        var queue = new Queue<LayerTreeViewItemBase>(layers);
-        LayerTreeViewItemBase item = null;
+        var snapshot = layers.AsValueEnumerable().ToList();
         var zindex = 0;
-        while (queue.AsValueEnumerable().Count() > 0)
+        foreach (var item in snapshot)
         {
-            item = queue.Dequeue();
             zindex = item.SetZIndex(recorder, zindex);
         }
     }

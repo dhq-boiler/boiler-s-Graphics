@@ -36,7 +36,7 @@ public class Layer : LayerTreeViewItemBase, IObservable<LayerObservable>, ICompa
 
         if (!isPreview)
         {
-            var temp = Children.ObserveElementObservableProperty(x => (x as LayerItem).Item.Value)
+            var temp = Children.ObserveElementObservableProperty(x => (x as LayerItem).Item)
                 .ToUnit()
                 .Merge(Children.ObserveElementObservableProperty(x => x.IsSelected).ToUnit())
                 .ToUnit()
