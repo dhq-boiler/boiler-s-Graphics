@@ -197,15 +197,142 @@ namespace boilersGraphics.Test
             Assert.That(r[4].ZIndex.Value, Is.EqualTo(4));
         }
 
-        // NOTE: The original OrderingTest had four "GroupIncluded" cases
-        // (BringForward / BringForeground / SendBackward / SendBackground
-        // performed on a target sandwiched between two groups) that
-        // assumed group creation shifted surrounding items' ZIndex and
-        // that Z-order operations skipped over an entire group. The
-        // current Group implementation leaves child ZIndexes unchanged
-        // and stacks the group at max(ZIndex)+1, so those tests do not
-        // translate cleanly. They are intentionally not ported in this
-        // wave — pick up after Group ZIndex semantics are revisited.
+        // The original OrderingTest had four "GroupIncluded" cases that
+        // performed Z-order on a target sandwiched between two groups.
+        // They assume group creation reshuffles surrounding ZIndexes and
+        // that Z-order operations jump over an entire group block —
+        // semantics the current implementation does not provide:
+        //   * Group leaves child ZIndexes unchanged and stacks the new
+        //     group at max(ZIndex)+1, so top-level ZIndex space contains
+        //     gaps where grouped children sit (visible from inside).
+        //   * BringForward / SendBackward look for currentIndex+/-1 at
+        //     top level and become no-ops when the next slot lives
+        //     inside a group, leaving the user unable to reorder around
+        //     a group block.
+        // The four cases below are kept as [Ignore]'d beacons so the
+        // intended behavior is visible in the suite. Drop the [Ignore]
+        // once Group / Z-order interaction is revisited.
+
+        private const string GroupIncludedReason =
+            "Z-order around a group block is currently a no-op or " +
+            "produces inconsistent ZIndexes; tracked with the Group " +
+            "semantics redesign.";
+
+        [Test]
+        [Ignore(GroupIncludedReason)]
+        public void BringForward_GroupIncluded()
+        {
+            var (viewModel, _) = CreateSingleLayerViewModel();
+            var r = AddRectangles(viewModel, 7);
+
+            SelectByItem(viewModel, r[1]);
+            SelectByItem(viewModel, r[2]);
+            viewModel.GroupCommand.Execute();
+            var groupA = AllGroups(viewModel).Single();
+            DeselectAll(viewModel);
+
+            SelectByItem(viewModel, r[4]);
+            SelectByItem(viewModel, r[5]);
+            viewModel.GroupCommand.Execute();
+            var groupB = AllGroups(viewModel).Single(g => g != groupA);
+            DeselectAll(viewModel);
+
+            SelectByItem(viewModel, r[3]);
+            viewModel.BringForwardCommand.Execute();
+
+            // r[3] should jump past the entire groupB block (group + its
+            // two children) and land just above groupB.
+            Assert.That(r[3].ZIndex.Value, Is.EqualTo(7));
+            Assert.That(r[4].ZIndex.Value, Is.EqualTo(4));
+            Assert.That(r[5].ZIndex.Value, Is.EqualTo(5));
+            Assert.That(groupB.ZIndex.Value, Is.EqualTo(6));
+        }
+
+        [Test]
+        [Ignore(GroupIncludedReason)]
+        public void BringForeground_GroupIncluded()
+        {
+            var (viewModel, _) = CreateSingleLayerViewModel();
+            var r = AddRectangles(viewModel, 7);
+
+            SelectByItem(viewModel, r[1]);
+            SelectByItem(viewModel, r[2]);
+            viewModel.GroupCommand.Execute();
+            var groupA = AllGroups(viewModel).Single();
+            DeselectAll(viewModel);
+
+            SelectByItem(viewModel, r[4]);
+            SelectByItem(viewModel, r[5]);
+            viewModel.GroupCommand.Execute();
+            var groupB = AllGroups(viewModel).Single(g => g != groupA);
+            DeselectAll(viewModel);
+
+            SelectByItem(viewModel, r[3]);
+            viewModel.BringForegroundCommand.Execute();
+
+            // r[3] should land at the very top, with everything above it
+            // compacting down by one in ZIndex space.
+            Assert.That(r[3].ZIndex.Value, Is.EqualTo(8));
+            Assert.That(r[6].ZIndex.Value, Is.EqualTo(7));
+        }
+
+        [Test]
+        [Ignore(GroupIncludedReason)]
+        public void SendBackward_GroupIncluded()
+        {
+            var (viewModel, _) = CreateSingleLayerViewModel();
+            var r = AddRectangles(viewModel, 7);
+
+            SelectByItem(viewModel, r[1]);
+            SelectByItem(viewModel, r[2]);
+            viewModel.GroupCommand.Execute();
+            var groupA = AllGroups(viewModel).Single();
+            DeselectAll(viewModel);
+
+            SelectByItem(viewModel, r[4]);
+            SelectByItem(viewModel, r[5]);
+            viewModel.GroupCommand.Execute();
+            var groupB = AllGroups(viewModel).Single(g => g != groupA);
+            DeselectAll(viewModel);
+
+            SelectByItem(viewModel, r[3]);
+            viewModel.SendBackwardCommand.Execute();
+
+            // r[3] should jump past the entire groupA block and land
+            // just below groupA.
+            Assert.That(r[3].ZIndex.Value, Is.EqualTo(1));
+            Assert.That(r[1].ZIndex.Value, Is.EqualTo(2));
+            Assert.That(r[2].ZIndex.Value, Is.EqualTo(3));
+            Assert.That(groupA.ZIndex.Value, Is.EqualTo(4));
+        }
+
+        [Test]
+        [Ignore(GroupIncludedReason)]
+        public void SendBackground_GroupIncluded()
+        {
+            var (viewModel, _) = CreateSingleLayerViewModel();
+            var r = AddRectangles(viewModel, 7);
+
+            SelectByItem(viewModel, r[1]);
+            SelectByItem(viewModel, r[2]);
+            viewModel.GroupCommand.Execute();
+            var groupA = AllGroups(viewModel).Single();
+            DeselectAll(viewModel);
+
+            SelectByItem(viewModel, r[4]);
+            SelectByItem(viewModel, r[5]);
+            viewModel.GroupCommand.Execute();
+            var groupB = AllGroups(viewModel).Single(g => g != groupA);
+            DeselectAll(viewModel);
+
+            SelectByItem(viewModel, r[3]);
+            viewModel.SendBackgroundCommand.Execute();
+
+            // r[3] should land at ZIndex 0; everything below it in the
+            // original layout shifts up by one.
+            Assert.That(r[3].ZIndex.Value, Is.EqualTo(0));
+            Assert.That(r[0].ZIndex.Value, Is.EqualTo(1));
+        }
 
         [Test]
         public void Group_3items_inLayerWith4()
