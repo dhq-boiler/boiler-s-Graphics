@@ -452,7 +452,7 @@ namespace boilersGraphics.Test
             root.Add(copyObj);
             var dataObject = new DataObject();
             dataObject.SetData(ClipboardDTO.ClipboardFormat, root.ToString());
-            Clipboard.SetDataObject(dataObject, false);
+            ClipboardHelper.SetDataObject(dataObject, false);
 
             Assert.That(viewModel.CanExecutePaste(), Is.False);
         }
@@ -475,7 +475,7 @@ namespace boilersGraphics.Test
             root.Add(new XElement("Dummy"));
             var dataObject = new DataObject();
             dataObject.SetData(ClipboardDTO.ClipboardFormat, root.ToString());
-            Clipboard.SetDataObject(dataObject, false);
+            ClipboardHelper.SetDataObject(dataObject, false);
 
             Assert.That(viewModel.CanExecutePaste(), Is.False);
         }
@@ -515,7 +515,7 @@ namespace boilersGraphics.Test
             var root = new XElement("boilersGraphics");
             var dataObject = new DataObject();
             dataObject.SetData(ClipboardDTO.ClipboardFormat, root.ToString().Substring(0, root.ToString().Length - 1));
-            Clipboard.SetDataObject(dataObject, false);
+            ClipboardHelper.SetDataObject(dataObject, false);
 
             Assert.That(viewModel.CanExecutePaste(), Is.False);
         }
@@ -539,7 +539,7 @@ namespace boilersGraphics.Test
             root.Add(copyObj);
             var dataObject = new DataObject();
             dataObject.SetData(ClipboardDTO.ClipboardFormat, root.ToString());
-            Clipboard.SetDataObject(dataObject, false);
+            ClipboardHelper.SetDataObject(dataObject, false);
 
             Assert.That(viewModel.CanExecutePaste(), Is.False);
         }
