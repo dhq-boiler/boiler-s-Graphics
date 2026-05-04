@@ -49,11 +49,49 @@ namespace TsOperationHistory.Test
             Assert.That(c.RollForwardTargets.Count(), Is.EqualTo(2));
         }
 
-        // NOTE: MoveTo の Redo 経路 (target が RollForwardTargets のみに存在するケース)
-        // は OperationControllerExtensions.MoveTo の実装が UndoStack.Contains で判定する
-        // 都合上、UndoStack の列挙が Undos と Redos.Reverse の両方を返すため isRollBack
-        // も同時に true となり、Undo 側の while ループが Peek=null で無限ループする。
-        // 実装側の修正が必要なため、現時点では Redo 経路のテストは追加しない。
+        [Test]
+        public void MoveTo_targetがRedoStackにあれば該当までRedoしてさらにRedo()
+        {
+            var c = new OperationController();
+            var op1 = NamedOp("a");
+            var op2 = NamedOp("b");
+            var op3 = NamedOp("c");
+            c.Execute(op1);
+            c.Execute(op2);
+            c.Execute(op3);
+            c.Undo(); // op3 が Redo へ
+            c.Undo(); // op2 が Redo へ
+            c.Undo(); // op1 が Redo へ
+            // Undos = [], Redos = [op3, op2, op1] (push 順、新しい方が末尾)
+            // RollForwardTargets = Redos.Reverse() = [op1, op2, op3]
+
+            c.MoveTo(op2);
+
+            // op2 を Push 済みの状態で停止
+            Assert.That(c.Peek(), Is.SameAs(op2));
+            // op3 はまだ Redo に残っている
+            Assert.That(c.CanRedo, Is.True);
+            // op1 と op2 は Undo 側に
+            Assert.That(c.UndoStack.Undos.Value.Contains(op1), Is.True);
+            Assert.That(c.UndoStack.Undos.Value.Contains(op2), Is.True);
+        }
+
+        [Test]
+        public void MoveTo_targetが先頭Redoでも1回のRedoで到達()
+        {
+            var c = new OperationController();
+            var op1 = NamedOp("a");
+            var op2 = NamedOp("b");
+            c.Execute(op1);
+            c.Execute(op2);
+            c.Undo(); // op2 が Redo へ
+            // Undos = [op1], Redos = [op2]
+
+            c.MoveTo(op2);
+
+            Assert.That(c.Peek(), Is.SameAs(op2));
+            Assert.That(c.CanRedo, Is.False);
+        }
 
         [Test]
         public void MoveTo_targetが両方に存在しないなら何もしない()
