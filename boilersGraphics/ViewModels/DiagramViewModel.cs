@@ -787,7 +787,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     {
         var renderer = this.Renderer;
         var bitmap = renderer.Render(null, DesignerCanvas.GetInstance(), this, BackgroundItem.Value, BackgroundItem.Value);
-        Clipboard.SetImage(bitmap);
+        ClipboardHelper.SetImage(bitmap);
     }
 
     [Conditional("DEBUG")]
@@ -1551,16 +1551,16 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
 
     private void ExecutePasteCommand()
     {
-        var obj = Clipboard.GetDataObject();
-        if (obj.GetDataPresent(ClipboardDTO.ClipboardFormat))
+        var obj = ClipboardHelper.GetDataObject();
+        if (ClipboardHelper.GetDataPresent(obj, ClipboardDTO.ClipboardFormat))
         {
-            var str = obj.GetData(ClipboardDTO.ClipboardFormat) as string;
+            var str = ClipboardHelper.GetData(obj, ClipboardDTO.ClipboardFormat) as string;
             var root = XElement.Parse(str);
             ObjectDeserializer.ReadCopyObjectsFromXML(this, root);
         }
-        else if (Clipboard.ContainsImage())
+        else if (ClipboardHelper.ContainsImage())
         {
-            var bitmap = Clipboard.GetImage();
+            var bitmap = ClipboardHelper.GetImage();
             var pic = new PictureDesignerItemViewModel();
             pic.Owner = this;
             var encoder = new JpegBitmapEncoder();
@@ -1607,10 +1607,10 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
 
     public bool CanExecutePaste()
     {
-        var obj = Clipboard.GetDataObject();
-        if (obj.GetDataPresent(ClipboardDTO.ClipboardFormat))
+        var obj = ClipboardHelper.GetDataObject();
+        if (ClipboardHelper.GetDataPresent(obj, ClipboardDTO.ClipboardFormat))
         {
-            var str = obj.GetData(ClipboardDTO.ClipboardFormat) as string;
+            var str = ClipboardHelper.GetData(obj, ClipboardDTO.ClipboardFormat) as string;
             try
             {
                 var root = XElement.Parse(str);
@@ -1644,7 +1644,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                 return false;
             }
         }
-        else if (Clipboard.ContainsImage())
+        else if (ClipboardHelper.ContainsImage())
         {
             return true;
         }
@@ -1694,7 +1694,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                 .Where(x => (x as LayerItem).IsSelected.Value).Cast<LayerItem>().ToArray()));
             var dataObject = new DataObject();
             dataObject.SetData(ClipboardDTO.ClipboardFormat, root.ToString());
-            Clipboard.SetDataObject(dataObject, false);
+            ClipboardHelper.SetDataObject(dataObject, false);
         }
         else if (SelectedLayers.Value.AsValueEnumerable().Count() > 0)
         {
@@ -1707,7 +1707,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                 .Add(ObjectSerializer.SerializeLayers(new ObservableList<LayerTreeViewItemBase>(SelectedLayers.Value).ToNotifyCollectionChangedSlim()));
             var dataObject = new DataObject();
             dataObject.SetData(ClipboardDTO.ClipboardFormat, root.ToString());
-            Clipboard.SetDataObject(dataObject, false);
+            ClipboardHelper.SetDataObject(dataObject, false);
         }
     }
 
