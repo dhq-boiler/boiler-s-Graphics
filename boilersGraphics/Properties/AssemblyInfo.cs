@@ -43,23 +43,10 @@ using boilersGraphics;
 )]
 
 
-// アセンブリのバージョン情報は次の 4 つの値で構成されています:
-//
-//      メジャー バージョン
-//      マイナー バージョン
-//      ビルド番号
-//      Revision
-//
-// すべての値を指定するか、次を使用してビルド番号とリビジョン番号を既定に設定できます
-// 既定値にすることができます:
-// [assembly: AssemblyVersion("1.0.*")]
-
-// Versions used to be derived from GitInfo's ThisAssembly.Git.* compile-time
-// constants. GitInfo was removed because its source-generated
-// ThisAssembly.GitInfo.g.cs ends up duplicated in WPF SDK's wpftmp
-// intermediate project, breaking compilation on build hosts that share obj/
-// (e.g. wdac-mcp-staging Linux enclave). Hardcoded fallback values keep the
-// assembly metadata in a sane shape; bump these manually on releases.
-[assembly: AssemblyVersion("0.0.0")]
-[assembly: AssemblyFileVersion("0.0.0")]
-[assembly: AssemblyInformationalVersion("v0.0.0.0-develop")]
+// AssemblyVersion / AssemblyFileVersion / AssemblyInformationalVersion are
+// produced by the SDK's GenerateAssemblyInfo target from the AssemblyVersion
+// / FileVersion / InformationalVersion MSBuild properties, which the
+// SetGitDerivedVersion target in boilersGraphics.csproj populates from
+// `git rev-list` / `git rev-parse`. This avoids the wpftmp obj/-sharing
+// issue that GitInfo's source generator hit, while still embedding the
+// commit count / branch / sha into the assembly metadata.

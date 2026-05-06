@@ -3,7 +3,29 @@
     <TargetFramework>net9.0-windows10.0.26100.0</TargetFramework>
     <OutputType>WinExe</OutputType>
     <LangVersion>latest</LangVersion>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <!-- Let the SDK generate AssemblyVersion / FileVersion / InformationalVersion
+         from MSBuild properties (populated by SetGitDerivedVersion below).
+         The remaining title/description/etc. attributes are still hand-written
+         in Properties/AssemblyInfo.cs, so suppress the SDK from generating
+         duplicates of those (CS0579 otherwise). -->
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
+    <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
+    <!-- The SDK otherwise appends ".+<SourceRevisionId>" (full sha) to our
+         InformationalVersion, which already carries the short sha from
+         SetGitDerivedVersion. Turn that off so the version string stays
+         clean. -->
+    <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
+    <!-- VersionPrefix is the fallback used when no v* tag is reachable from
+         HEAD (shallow clones, source archives, fresh repos). When a tag is
+         available, SetGitDerivedVersion overrides VersionPrefix with the
+         tag value (with the leading "v" stripped). InformationalVersion
+         appends commit count since that tag, branch, and short sha. -->
+    <VersionPrefix>0.0.0</VersionPrefix>
     <UseWindowsForms>true</UseWindowsForms>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
@@ -154,17 +176,13 @@
   <ItemGroup>
     <PackageReference Include="CalcBinding" Version="2.5.2" />
     <PackageReference Include="Dapper.StrongName" Version="2.1.66" />
-    <!-- GitInfo removed: it generates ThisAssembly.GitInfo.g.cs into obj/,
-         and the WPF SDK's wpftmp intermediate project shares the parent
-         obj/ while also nesting its own. Both generated files end up in
-         wpftmp's Compile glob and CS0102 / CS0229 fire across every
-         ThisAssembly.Git member. The wdac-mcp-staging Linux build host
-         hits the same path. PackageReference Condition tricks don't help
-         because PackageReference flows through project.assets.json which
-         is shared between the main build and wpftmp.
-         If git-derived versioning is needed, restore via a property that
-         the WPF SDK does not echo into the wpftmp Compile glob. -->
-    <!-- <PackageReference Include="GitInfo" Version="2.3.0" /> -->
+    <!-- GitInfo replaced by the SetGitDerivedVersion target at the bottom of
+         this file. The previous Source-Generator-based approach (GitInfo's
+         ThisAssembly.GitInfo.g.cs) was duplicated into the WPF SDK's wpftmp
+         intermediate project's Compile glob, breaking compilation on hosts
+         that share obj/ (wdac-mcp-staging Linux enclave). The Target now
+         flows commit count / branch / sha into MSBuild properties only, so
+         no extra .cs files reach the wpftmp Compile glob. -->
     <PackageReference Include="Homura" Version="3.4.2" />
     <PackageReference Include="MdXaml" Version="1.27.0" />
     <!-- Microsoft.Windows.CsWinRT explicit reference removed: the
@@ -283,5 +301,52 @@
        Nitro Enclaves), where .bat won't execute. Gate the Exec on Windows. -->
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent" Condition="'$(OS)' == 'Windows_NT'">
     <Exec Command="$(ProjectDir)..\ReplaceInternalResourcesDefaultConstructorToPublic\bin\$(Configuration)\net9.0\check.bat $(ProjectDir).." />
+  </Target>
+  <!-- Populate AssemblyVersion / FileVersion / InformationalVersion from git.
+       Runs before GetAssemblyVersion / GenerateAssemblyInfo so the SDK picks
+       up the values when emitting <obj>/<Asm>.AssemblyInfo.cs.
+       Step 1: Find the latest reachable v* tag → VersionPrefix.
+       Step 2: Count commits since that tag (or all of HEAD if no tag).
+       Step 3: Capture short sha and branch.
+       Each git invocation uses IgnoreExitCode=true and falls back below,
+       so builds still succeed where .git is absent (shallow clones, source
+       archives, wpftmp intermediate runs). Output is properties only — no
+       extra .cs file is added to the Compile glob, which is what kept
+       GitInfo from working under the WPF wpftmp obj/ sharing. -->
+  <Target Name="SetGitDerivedVersion" BeforeTargets="GetAssemblyVersion;GenerateAssemblyInfo;CoreGenerateAssemblyInfo">
+    <Exec Command="git describe --tags --abbrev=0 --match &quot;v*&quot;" ConsoleToMSBuild="true" IgnoreExitCode="true" StandardOutputImportance="low" StandardErrorImportance="low" WorkingDirectory="$(MSBuildProjectDirectory)">
+      <Output TaskParameter="ConsoleOutput" PropertyName="_GitLatestTag" />
+      <Output TaskParameter="ExitCode" PropertyName="_GitLatestTagExit" />
+    </Exec>
+    <PropertyGroup>
+      <_GitLatestTag Condition="'$(_GitLatestTagExit)' != '0'"></_GitLatestTag>
+      <_GitVersionFromTag Condition="'$(_GitLatestTag)' != '' and $(_GitLatestTag.StartsWith('v'))">$(_GitLatestTag.Substring(1))</_GitVersionFromTag>
+      <_GitVersionFromTag Condition="'$(_GitLatestTag)' != '' and !$(_GitLatestTag.StartsWith('v'))">$(_GitLatestTag)</_GitVersionFromTag>
+      <VersionPrefix Condition="'$(_GitVersionFromTag)' != ''">$(_GitVersionFromTag)</VersionPrefix>
+      <_CommitsRange Condition="'$(_GitLatestTag)' != ''">$(_GitLatestTag)..HEAD</_CommitsRange>
+      <_CommitsRange Condition="'$(_GitLatestTag)' == ''">HEAD</_CommitsRange>
+    </PropertyGroup>
+    <Exec Command="git rev-list --count $(_CommitsRange)" ConsoleToMSBuild="true" IgnoreExitCode="true" StandardOutputImportance="low" StandardErrorImportance="low" WorkingDirectory="$(MSBuildProjectDirectory)">
+      <Output TaskParameter="ConsoleOutput" PropertyName="_GitCommitCount" />
+      <Output TaskParameter="ExitCode" PropertyName="_GitCommitCountExit" />
+    </Exec>
+    <Exec Command="git rev-parse --short HEAD" ConsoleToMSBuild="true" IgnoreExitCode="true" StandardOutputImportance="low" StandardErrorImportance="low" WorkingDirectory="$(MSBuildProjectDirectory)">
+      <Output TaskParameter="ConsoleOutput" PropertyName="_GitCommitSha" />
+      <Output TaskParameter="ExitCode" PropertyName="_GitCommitShaExit" />
+    </Exec>
+    <Exec Command="git rev-parse --abbrev-ref HEAD" ConsoleToMSBuild="true" IgnoreExitCode="true" StandardOutputImportance="low" StandardErrorImportance="low" WorkingDirectory="$(MSBuildProjectDirectory)">
+      <Output TaskParameter="ConsoleOutput" PropertyName="_GitBranch" />
+      <Output TaskParameter="ExitCode" PropertyName="_GitBranchExit" />
+    </Exec>
+    <PropertyGroup>
+      <_GitCommitCount Condition="'$(_GitCommitCountExit)' != '0' or '$(_GitCommitCount)' == ''">0</_GitCommitCount>
+      <_GitCommitSha Condition="'$(_GitCommitShaExit)' != '0' or '$(_GitCommitSha)' == ''">unknown</_GitCommitSha>
+      <_GitBranch Condition="'$(_GitBranchExit)' != '0' or '$(_GitBranch)' == ''">develop</_GitBranch>
+      <AssemblyVersion>$(VersionPrefix)</AssemblyVersion>
+      <FileVersion>$(VersionPrefix)</FileVersion>
+      <Version>$(VersionPrefix)</Version>
+      <InformationalVersion>v$(VersionPrefix).$(_GitCommitCount)-$(_GitBranch)+$(_GitCommitSha)</InformationalVersion>
+    </PropertyGroup>
+    <Message Text="boilersGraphics version: $(InformationalVersion) (AssemblyVersion=$(AssemblyVersion), tag=$(_GitLatestTag))" Importance="high" />
   </Target>
 </Project>
