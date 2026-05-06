@@ -68,9 +68,9 @@ public class LetterAdorner : Adorner
             itemBase.EdgeBrush.Value = itemBase.Owner.EdgeBrush.Value.Clone();
             itemBase.EdgeThickness.Value = itemBase.Owner.EdgeThickness.Value.Value;
             itemBase.FillBrush.Value = itemBase.Owner.FillBrush.Value.Clone();
-            itemBase.IsSelected.Value = true;
             itemBase.IsVisible.Value = true;
             itemBase.Owner.DeselectAll();
+            itemBase.IsSelected.Value = true;
             itemBase.ZIndex.Value = itemBase.Owner.Layers
                 .SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).AsValueEnumerable().Count();
             ((AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel).AddItemCommand.Execute(itemBase);

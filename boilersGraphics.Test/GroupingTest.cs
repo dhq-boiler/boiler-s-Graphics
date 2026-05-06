@@ -3,11 +3,10 @@ using boilersGraphics.Properties;
 using boilersGraphics.ViewModels;
 using Moq;
 using NUnit.Framework;
+using ObservableCollections;
 using Prism.Services.Dialogs;
-using Reactive.Bindings;
 using System;
 using System.Linq;
-using System.Reactive.Linq;
 
 namespace boilersGraphics.Test
 {
@@ -334,7 +333,7 @@ namespace boilersGraphics.Test
             Assert.That((diagramVM.Layers[0].Children[1].Children[1] as LayerItem).Item.Value.ZIndex.Value, Is.EqualTo(4));
         }
 
-        private void DisplayTree(ReactiveCollection<LayerTreeViewItemBase> layers, int offset = 0)
+        private void DisplayTree(NotifyCollectionChangedSynchronizedViewList<LayerTreeViewItemBase> layers, int offset = 0)
         {
             foreach (var layer in layers)
             {

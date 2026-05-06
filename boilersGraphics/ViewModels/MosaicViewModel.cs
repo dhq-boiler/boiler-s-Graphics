@@ -23,7 +23,6 @@ public class MosaicViewModel : EffectViewModel
 {
     public MosaicViewModel()
     {
-        Initialize();
     }
 
     public override void Initialize()
@@ -52,7 +51,7 @@ public class MosaicViewModel : EffectViewModel
         Application.Current.Dispatcher.Invoke(() =>
         {
             var mainWindowViewModel = Application.Current.MainWindow.DataContext as MainWindowViewModel;
-            var renderer = new EffectRenderer(new WpfVisualTreeHelper(), DiagramViewModel.Instance.Renderer.GetCache());
+            var renderer = new EffectRenderer(new WpfVisualTreeHelper(), ((IDiagramViewModel)Owner).Renderer.GetCache());
             var rtb = renderer.Render(Rect.Value, Application.Current.MainWindow.GetChildOfType<DesignerCanvas>(),
                 mainWindowViewModel.DiagramViewModel, mainWindowViewModel.DiagramViewModel.BackgroundItem.Value, this, 0, this.ZIndex.Value - 1);
             var newFormattedBitmapSource = new FormatConvertedBitmap();
@@ -133,26 +132,8 @@ public class MosaicViewModel : EffectViewModel
 
     private static long GetMosaicPixelIndex(int a, double b)
     {
-        var aDivideByB = a / b;
-        var mod = aDivideByB % 1;
-        double ceiling;
-        double floor;
-        if (mod < 0.5)
-        {
-            //mod = 0.4 -> 1.4 -> (long)1.4 -> 1
-            floor = (long)aDivideByB + (long)(1d + mod);
-            //mod = 0.4 -> -0.1 -> (long)-0.1 -> 0
-            ceiling = (long)aDivideByB + (long)(mod - 0.5);
-        }
-        else
-        {
-            //mod = 0.6 -> 1.1 -> (long)1.1 -> 1
-            floor = (long)aDivideByB + (long)(0.5 + mod);
-            //mod = 0.6 -> -0.4 -> (long)-0.4 -> 0
-            ceiling = (long)aDivideByB + (long)(mod - 1);
-        }
-
-        return (long)(0.5 * (floor + ceiling) * b);
+        var blockIndex = (long)(a / b);
+        return (long)Math.Round(blockIndex * b + b / 2.0);
     }
 
     public override async Task OnRectChanged(Rect rect)
@@ -164,6 +145,7 @@ public class MosaicViewModel : EffectViewModel
     {
         var clone = new MosaicViewModel();
         clone.Owner = Owner;
+        clone.Initialize();
         clone.Left.Value = Left.Value;
         clone.Top.Value = Top.Value;
         clone.Width.Value = Width.Value;

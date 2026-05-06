@@ -1,5 +1,8 @@
-﻿using boilersGraphics.ViewModels;
+using boilersGraphics.Models;
+using boilersGraphics.ViewModels;
+using Moq;
 using NUnit.Framework;
+using Prism.Services.Dialogs;
 using System.Linq;
 
 namespace boilersGraphics.Test
@@ -7,993 +10,638 @@ namespace boilersGraphics.Test
     [TestFixture]
     public class OrderingTest
     {
-        //[Test]
-        //public void BringForward()
-        //{
-        //    var viewModel = new DiagramViewModel();
-        //    var r0 = new NRectangleViewModel();
-        //    var r1 = new NRectangleViewModel();
-        //    var r2 = new NRectangleViewModel();
-        //    var r3 = new NRectangleViewModel();
-        //    var r4 = new NRectangleViewModel();
-
-        //    r0.ZIndex.Value = 0;
-        //    r1.ZIndex.Value = 1;
-        //    r2.ZIndex.Value = 2;
-        //    r3.ZIndex.Value = 3;
-        //    r4.ZIndex.Value = 4;
-
-        //    viewModel.Items.Add(r0);
-        //    viewModel.Items.Add(r1);
-        //    viewModel.Items.Add(r2);
-        //    viewModel.Items.Add(r3);
-        //    viewModel.Items.Add(r4);
-
-        //    viewModel.SelectedItems.AddRangeOnScheduler(r2);
-
-        //    viewModel.BringForwardCommand.Execute();
-
-        //    Assert.That(r0.ZIndex.Value, Is.EqualTo(0));
-        //    Assert.That(r1.ZIndex.Value, Is.EqualTo(1));
-        //    Assert.That(r2.ZIndex.Value, Is.EqualTo(3));
-        //    Assert.That(r3.ZIndex.Value, Is.EqualTo(2));
-        //    Assert.That(r4.ZIndex.Value, Is.EqualTo(4));
-        //}
-
-        //[Test]
-        //public void BringForward_GroupIncluded()
-        //{
-        //    var viewModel = new DiagramViewModel();
-        //    var r0 = new NRectangleViewModel();
-        //    var r1 = new NRectangleViewModel();
-        //    var r2 = new NRectangleViewModel();
-        //    var r3 = new NRectangleViewModel();
-        //    var r4 = new NRectangleViewModel();
-        //    var r5 = new NRectangleViewModel();
-        //    var r6 = new NRectangleViewModel();
-
-        //    r0.ZIndex.Value = 0;
-        //    r1.ZIndex.Value = 1; //group
-        //    r2.ZIndex.Value = 2; //group
-        //    r3.ZIndex.Value = 3; //target
-        //    r4.ZIndex.Value = 4; //group
-        //    r5.ZIndex.Value = 5; //group
-        //    r6.ZIndex.Value = 6;
-
-        //    viewModel.Items.Add(r0);
-        //    viewModel.Items.Add(r1);
-        //    viewModel.Items.Add(r2);
-        //    viewModel.Items.Add(r3);
-        //    viewModel.Items.Add(r4);
-        //    viewModel.Items.Add(r5);
-        //    viewModel.Items.Add(r6);
-
-        //    viewModel.SelectedItems.AddRangeOnScheduler(r1, r2);
-
-        //    viewModel.GroupCommand.Execute();
-
-        //    viewModel.SelectedItems.Clear();
-        //    viewModel.SelectedItems.AddRangeOnScheduler(r4, r5);
-
-        //    viewModel.GroupCommand.Execute();
-
-        //    Assert.That(r0.ZIndex.Value, Is.EqualTo(0));
-        //    Assert.That(r1.ZIndex.Value, Is.EqualTo(1)); //group
-        //    Assert.That(r2.ZIndex.Value, Is.EqualTo(2)); //group
-        //    Assert.That(viewModel.Items.ElementAt(7).ZIndex.Value, Is.EqualTo(3));
-        //    Assert.That(r3.ZIndex.Value, Is.EqualTo(4)); //target
-        //    Assert.That(r4.ZIndex.Value, Is.EqualTo(5)); //group
-        //    Assert.That(r5.ZIndex.Value, Is.EqualTo(6)); //group
-        //    Assert.That(viewModel.Items.ElementAt(8).ZIndex.Value, Is.EqualTo(7));
-        //    Assert.That(r6.ZIndex.Value, Is.EqualTo(8));
-
-        //    viewModel.SelectedItems.Clear();
-        //    viewModel.SelectedItems.Add(r3);
-
-        //    viewModel.BringForwardCommand.Execute();
-
-        //    Assert.That(r0.ZIndex.Value, Is.EqualTo(0));
-        //    Assert.That(r1.ZIndex.Value, Is.EqualTo(1)); //group
-        //    Assert.That(r2.ZIndex.Value, Is.EqualTo(2)); //group
-        //    Assert.That(viewModel.Items.ElementAt(7).ZIndex.Value, Is.EqualTo(3));
-        //    Assert.That(r3.ZIndex.Value, Is.EqualTo(7)); //target
-        //    Assert.That(r4.ZIndex.Value, Is.EqualTo(4)); //group
-        //    Assert.That(r5.ZIndex.Value, Is.EqualTo(5)); //group
-        //    Assert.That(viewModel.Items.ElementAt(8).ZIndex.Value, Is.EqualTo(6));
-        //    Assert.That(r6.ZIndex.Value, Is.EqualTo(8));
-        //}
-
-        //[Test]
-        //public void BringForward_NoEffect()
-        //{
-        //    var viewModel = new DiagramViewModel();
-        //    var r0 = new NRectangleViewModel();
-        //    var r1 = new NRectangleViewModel();
-        //    var r2 = new NRectangleViewModel();
-        //    var r3 = new NRectangleViewModel();
-        //    var r4 = new NRectangleViewModel();
-
-        //    r0.ZIndex.Value = 0;
-        //    r1.ZIndex.Value = 1;
-        //    r2.ZIndex.Value = 2;
-        //    r3.ZIndex.Value = 3;
-        //    r4.ZIndex.Value = 4;
-
-        //    viewModel.Items.Add(r0);
-        //    viewModel.Items.Add(r1);
-        //    viewModel.Items.Add(r2);
-        //    viewModel.Items.Add(r3);
-        //    viewModel.Items.Add(r4);
-
-        //    viewModel.SelectedItems.AddRangeOnScheduler(r4);
-
-        //    viewModel.BringForwardCommand.Execute();
-
-        //    Assert.That(r0.ZIndex.Value, Is.EqualTo(0));
-        //    Assert.That(r1.ZIndex.Value, Is.EqualTo(1));
-        //    Assert.That(r2.ZIndex.Value, Is.EqualTo(2));
-        //    Assert.That(r3.ZIndex.Value, Is.EqualTo(3));
-        //    Assert.That(r4.ZIndex.Value, Is.EqualTo(4));
-        //}
-
-        //[Test]
-        //public void BringForeground()
-        //{
-        //    var viewModel = new DiagramViewModel();
-        //    var r0 = new NRectangleViewModel();
-        //    var r1 = new NRectangleViewModel();
-        //    var r2 = new NRectangleViewModel();
-        //    var r3 = new NRectangleViewModel();
-        //    var r4 = new NRectangleViewModel();
-
-        //    r0.ZIndex.Value = 0;
-        //    r1.ZIndex.Value = 1;
-        //    r2.ZIndex.Value = 2;
-        //    r3.ZIndex.Value = 3;
-        //    r4.ZIndex.Value = 4;
-
-        //    viewModel.Items.Add(r0);
-        //    viewModel.Items.Add(r1);
-        //    viewModel.Items.Add(r2);
-        //    viewModel.Items.Add(r3);
-        //    viewModel.Items.Add(r4);
-
-        //    viewModel.SelectedItems.AddRangeOnScheduler(r2);
-
-        //    viewModel.BringForegroundCommand.Execute();
-
-        //    Assert.That(r0.ZIndex.Value, Is.EqualTo(0));
-        //    Assert.That(r1.ZIndex.Value, Is.EqualTo(1));
-        //    Assert.That(r2.ZIndex.Value, Is.EqualTo(4));
-        //    Assert.That(r3.ZIndex.Value, Is.EqualTo(2));
-        //    Assert.That(r4.ZIndex.Value, Is.EqualTo(3));
-        //}
-
-        //[Test]
-        //public void BringForeground_GroupIncluded()
-        //{
-        //    var viewModel = new DiagramViewModel();
-        //    var r0 = new NRectangleViewModel();
-        //    var r1 = new NRectangleViewModel();
-        //    var r2 = new NRectangleViewModel();
-        //    var r3 = new NRectangleViewModel();
-        //    var r4 = new NRectangleViewModel();
-        //    var r5 = new NRectangleViewModel();
-        //    var r6 = new NRectangleViewModel();
-
-        //    r0.ZIndex.Value = 0;
-        //    r1.ZIndex.Value = 1; //group
-        //    r2.ZIndex.Value = 2; //group
-        //    r3.ZIndex.Value = 3; //target
-        //    r4.ZIndex.Value = 4; //group
-        //    r5.ZIndex.Value = 5; //group
-        //    r6.ZIndex.Value = 6;
-
-        //    viewModel.Items.Add(r0);
-        //    viewModel.Items.Add(r1);
-        //    viewModel.Items.Add(r2);
-        //    viewModel.Items.Add(r3);
-        //    viewModel.Items.Add(r4);
-        //    viewModel.Items.Add(r5);
-        //    viewModel.Items.Add(r6);
-
-        //    viewModel.SelectedItems.AddRangeOnScheduler(r1, r2);
-
-        //    viewModel.GroupCommand.Execute();
-
-        //    viewModel.SelectedItems.Clear();
-        //    viewModel.SelectedItems.AddRangeOnScheduler(r4, r5);
-
-        //    viewModel.GroupCommand.Execute();
-
-        //    Assert.That(r0.ZIndex.Value, Is.EqualTo(0));
-        //    Assert.That(r1.ZIndex.Value, Is.EqualTo(1)); //group
-        //    Assert.That(r2.ZIndex.Value, Is.EqualTo(2)); //group
-        //    Assert.That(viewModel.Items.ElementAt(7).ZIndex.Value, Is.EqualTo(3));
-        //    Assert.That(r3.ZIndex.Value, Is.EqualTo(4)); //target
-        //    Assert.That(r4.ZIndex.Value, Is.EqualTo(5)); //group
-        //    Assert.That(r5.ZIndex.Value, Is.EqualTo(6)); //group
-        //    Assert.That(viewModel.Items.ElementAt(8).ZIndex.Value, Is.EqualTo(7));
-        //    Assert.That(r6.ZIndex.Value, Is.EqualTo(8));
-
-        //    viewModel.SelectedItems.Clear();
-        //    viewModel.SelectedItems.Add(r3);
-
-        //    viewModel.BringForegroundCommand.Execute();
-
-        //    Assert.That(r0.ZIndex.Value, Is.EqualTo(0));
-        //    Assert.That(r1.ZIndex.Value, Is.EqualTo(1)); //group
-        //    Assert.That(r2.ZIndex.Value, Is.EqualTo(2)); //group
-        //    Assert.That(viewModel.Items.ElementAt(7).ZIndex.Value, Is.EqualTo(3));
-        //    Assert.That(r3.ZIndex.Value, Is.EqualTo(8)); //target
-        //    Assert.That(r4.ZIndex.Value, Is.EqualTo(4)); //group
-        //    Assert.That(r5.ZIndex.Value, Is.EqualTo(5)); //group
-        //    Assert.That(viewModel.Items.ElementAt(8).ZIndex.Value, Is.EqualTo(6));
-        //    Assert.That(r6.ZIndex.Value, Is.EqualTo(7));
-        //}
-
-        //[Test]
-        //public void BringForeground_NoEffect()
-        //{
-        //    var viewModel = new DiagramViewModel();
-        //    var r0 = new NRectangleViewModel();
-        //    var r1 = new NRectangleViewModel();
-        //    var r2 = new NRectangleViewModel();
-        //    var r3 = new NRectangleViewModel();
-        //    var r4 = new NRectangleViewModel();
-
-        //    r0.ZIndex.Value = 0;
-        //    r1.ZIndex.Value = 1;
-        //    r2.ZIndex.Value = 2;
-        //    r3.ZIndex.Value = 3;
-        //    r4.ZIndex.Value = 4;
-
-        //    viewModel.Items.Add(r0);
-        //    viewModel.Items.Add(r1);
-        //    viewModel.Items.Add(r2);
-        //    viewModel.Items.Add(r3);
-        //    viewModel.Items.Add(r4);
-
-        //    viewModel.SelectedItems.AddRangeOnScheduler(r4);
-
-        //    viewModel.BringForegroundCommand.Execute();
-
-        //    Assert.That(r0.ZIndex.Value, Is.EqualTo(0));
-        //    Assert.That(r1.ZIndex.Value, Is.EqualTo(1));
-        //    Assert.That(r2.ZIndex.Value, Is.EqualTo(2));
-        //    Assert.That(r3.ZIndex.Value, Is.EqualTo(3));
-        //    Assert.That(r4.ZIndex.Value, Is.EqualTo(4));
-        //}
-
-        //[Test]
-        //public void SendBackward()
-        //{
-        //    var viewModel = new DiagramViewModel();
-        //    var r0 = new NRectangleViewModel();
-        //    var r1 = new NRectangleViewModel();
-        //    var r2 = new NRectangleViewModel();
-        //    var r3 = new NRectangleViewModel();
-        //    var r4 = new NRectangleViewModel();
-
-        //    r0.ZIndex.Value = 0;
-        //    r1.ZIndex.Value = 1;
-        //    r2.ZIndex.Value = 2;
-        //    r3.ZIndex.Value = 3;
-        //    r4.ZIndex.Value = 4;
-
-        //    viewModel.Items.Add(r0);
-        //    viewModel.Items.Add(r1);
-        //    viewModel.Items.Add(r2);
-        //    viewModel.Items.Add(r3);
-        //    viewModel.Items.Add(r4);
-
-        //    viewModel.SelectedItems.AddRangeOnScheduler(r2);
-
-        //    viewModel.SendBackwardCommand.Execute();
-
-        //    Assert.That(r0.ZIndex.Value, Is.EqualTo(0));
-        //    Assert.That(r1.ZIndex.Value, Is.EqualTo(2));
-        //    Assert.That(r2.ZIndex.Value, Is.EqualTo(1));
-        //    Assert.That(r3.ZIndex.Value, Is.EqualTo(3));
-        //    Assert.That(r4.ZIndex.Value, Is.EqualTo(4));
-        //}
-
-        //[Test]
-        //public void SendBackward_GroupIncluded()
-        //{
-        //    var viewModel = new DiagramViewModel();
-        //    var r0 = new NRectangleViewModel();
-        //    var r1 = new NRectangleViewModel();
-        //    var r2 = new NRectangleViewModel();
-        //    var r3 = new NRectangleViewModel();
-        //    var r4 = new NRectangleViewModel();
-        //    var r5 = new NRectangleViewModel();
-        //    var r6 = new NRectangleViewModel();
-
-        //    r0.ZIndex.Value = 0;
-        //    r1.ZIndex.Value = 1; //group
-        //    r2.ZIndex.Value = 2; //group
-        //    r3.ZIndex.Value = 3; //target
-        //    r4.ZIndex.Value = 4; //group
-        //    r5.ZIndex.Value = 5; //group
-        //    r6.ZIndex.Value = 6;
-
-        //    viewModel.Items.Add(r0);
-        //    viewModel.Items.Add(r1);
-        //    viewModel.Items.Add(r2);
-        //    viewModel.Items.Add(r3);
-        //    viewModel.Items.Add(r4);
-        //    viewModel.Items.Add(r5);
-        //    viewModel.Items.Add(r6);
-
-        //    viewModel.SelectedItems.AddRangeOnScheduler(r1, r2);
-
-        //    viewModel.GroupCommand.Execute();
-
-        //    viewModel.SelectedItems.Clear();
-        //    viewModel.SelectedItems.AddRangeOnScheduler(r4, r5);
-
-        //    viewModel.GroupCommand.Execute();
-
-        //    Assert.That(r0.ZIndex.Value, Is.EqualTo(0));
-        //    Assert.That(r1.ZIndex.Value, Is.EqualTo(1)); //group
-        //    Assert.That(r2.ZIndex.Value, Is.EqualTo(2)); //group
-        //    Assert.That(viewModel.Items.ElementAt(7).ZIndex.Value, Is.EqualTo(3));
-        //    Assert.That(r3.ZIndex.Value, Is.EqualTo(4)); //target
-        //    Assert.That(r4.ZIndex.Value, Is.EqualTo(5)); //group
-        //    Assert.That(r5.ZIndex.Value, Is.EqualTo(6)); //group
-        //    Assert.That(viewModel.Items.ElementAt(8).ZIndex.Value, Is.EqualTo(7));
-        //    Assert.That(r6.ZIndex.Value, Is.EqualTo(8));
-
-        //    viewModel.SelectedItems.Clear();
-        //    viewModel.SelectedItems.Add(r3);
-
-        //    viewModel.SendBackwardCommand.Execute();
-
-        //    Assert.That(r0.ZIndex.Value, Is.EqualTo(0));
-        //    Assert.That(r1.ZIndex.Value, Is.EqualTo(2)); //group
-        //    Assert.That(r2.ZIndex.Value, Is.EqualTo(3)); //group
-        //    Assert.That(viewModel.Items.ElementAt(7).ZIndex.Value, Is.EqualTo(4));
-        //    Assert.That(r3.ZIndex.Value, Is.EqualTo(1)); //target
-        //    Assert.That(r4.ZIndex.Value, Is.EqualTo(5)); //group
-        //    Assert.That(r5.ZIndex.Value, Is.EqualTo(6)); //group
-        //    Assert.That(viewModel.Items.ElementAt(8).ZIndex.Value, Is.EqualTo(7));
-        //    Assert.That(r6.ZIndex.Value, Is.EqualTo(8));
-        //}
-
-        //[Test]
-        //public void SendBackward_NoEffect()
-        //{
-        //    var viewModel = new DiagramViewModel();
-        //    var r0 = new NRectangleViewModel();
-        //    var r1 = new NRectangleViewModel();
-        //    var r2 = new NRectangleViewModel();
-        //    var r3 = new NRectangleViewModel();
-        //    var r4 = new NRectangleViewModel();
-
-        //    r0.ZIndex.Value = 0;
-        //    r1.ZIndex.Value = 1;
-        //    r2.ZIndex.Value = 2;
-        //    r3.ZIndex.Value = 3;
-        //    r4.ZIndex.Value = 4;
-
-        //    viewModel.Items.Add(r0);
-        //    viewModel.Items.Add(r1);
-        //    viewModel.Items.Add(r2);
-        //    viewModel.Items.Add(r3);
-        //    viewModel.Items.Add(r4);
-
-        //    viewModel.SelectedItems.AddRangeOnScheduler(r0);
-
-        //    viewModel.SendBackwardCommand.Execute();
-
-        //    Assert.That(r0.ZIndex.Value, Is.EqualTo(0));
-        //    Assert.That(r1.ZIndex.Value, Is.EqualTo(1));
-        //    Assert.That(r2.ZIndex.Value, Is.EqualTo(2));
-        //    Assert.That(r3.ZIndex.Value, Is.EqualTo(3));
-        //    Assert.That(r4.ZIndex.Value, Is.EqualTo(4));
-        //}
-
-        //[Test]
-        //public void SendBackground()
-        //{
-        //    var viewModel = new DiagramViewModel();
-        //    var r0 = new NRectangleViewModel();
-        //    var r1 = new NRectangleViewModel();
-        //    var r2 = new NRectangleViewModel();
-        //    var r3 = new NRectangleViewModel();
-        //    var r4 = new NRectangleViewModel();
-
-        //    r0.ZIndex.Value = 0;
-        //    r1.ZIndex.Value = 1;
-        //    r2.ZIndex.Value = 2;
-        //    r3.ZIndex.Value = 3;
-        //    r4.ZIndex.Value = 4;
-
-        //    viewModel.Items.Add(r0);
-        //    viewModel.Items.Add(r1);
-        //    viewModel.Items.Add(r2);
-        //    viewModel.Items.Add(r3);
-        //    viewModel.Items.Add(r4);
-
-        //    viewModel.SelectedItems.AddRangeOnScheduler(r2);
-
-        //    viewModel.SendBackgroundCommand.Execute();
-
-        //    Assert.That(r0.ZIndex.Value, Is.EqualTo(1));
-        //    Assert.That(r1.ZIndex.Value, Is.EqualTo(2));
-        //    Assert.That(r2.ZIndex.Value, Is.EqualTo(0));
-        //    Assert.That(r3.ZIndex.Value, Is.EqualTo(3));
-        //    Assert.That(r4.ZIndex.Value, Is.EqualTo(4));
-        //}
-
-        //[Test]
-        //public void SendBackgroud_GroupIncluded()
-        //{
-        //    var viewModel = new DiagramViewModel();
-        //    var r0 = new NRectangleViewModel();
-        //    var r1 = new NRectangleViewModel();
-        //    var r2 = new NRectangleViewModel();
-        //    var r3 = new NRectangleViewModel();
-        //    var r4 = new NRectangleViewModel();
-        //    var r5 = new NRectangleViewModel();
-        //    var r6 = new NRectangleViewModel();
-
-        //    r0.ZIndex.Value = 0;
-        //    r1.ZIndex.Value = 1; //group
-        //    r2.ZIndex.Value = 2; //group
-        //    r3.ZIndex.Value = 3; //target
-        //    r4.ZIndex.Value = 4; //group
-        //    r5.ZIndex.Value = 5; //group
-        //    r6.ZIndex.Value = 6;
-
-        //    viewModel.Items.Add(r0);
-        //    viewModel.Items.Add(r1);
-        //    viewModel.Items.Add(r2);
-        //    viewModel.Items.Add(r3);
-        //    viewModel.Items.Add(r4);
-        //    viewModel.Items.Add(r5);
-        //    viewModel.Items.Add(r6);
-
-        //    viewModel.SelectedItems.AddRangeOnScheduler(r1, r2);
-
-        //    viewModel.GroupCommand.Execute();
-
-        //    viewModel.SelectedItems.Clear();
-        //    viewModel.SelectedItems.AddRangeOnScheduler(r4, r5);
-
-        //    viewModel.GroupCommand.Execute();
-
-        //    Assert.That(r0.ZIndex.Value, Is.EqualTo(0));
-        //    Assert.That(r1.ZIndex.Value, Is.EqualTo(1)); //group
-        //    Assert.That(r2.ZIndex.Value, Is.EqualTo(2)); //group
-        //    Assert.That(viewModel.Items.ElementAt(7).ZIndex.Value, Is.EqualTo(3));
-        //    Assert.That(r3.ZIndex.Value, Is.EqualTo(4)); //target
-        //    Assert.That(r4.ZIndex.Value, Is.EqualTo(5)); //group
-        //    Assert.That(r5.ZIndex.Value, Is.EqualTo(6)); //group
-        //    Assert.That(viewModel.Items.ElementAt(8).ZIndex.Value, Is.EqualTo(7));
-        //    Assert.That(r6.ZIndex.Value, Is.EqualTo(8));
-
-        //    viewModel.SelectedItems.Clear();
-        //    viewModel.SelectedItems.Add(r3);
-
-        //    viewModel.SendBackgroundCommand.Execute();
-
-        //    Assert.That(r0.ZIndex.Value, Is.EqualTo(1));
-        //    Assert.That(r1.ZIndex.Value, Is.EqualTo(2)); //group
-        //    Assert.That(r2.ZIndex.Value, Is.EqualTo(3)); //group
-        //    Assert.That(viewModel.Items.ElementAt(7).ZIndex.Value, Is.EqualTo(4));
-        //    Assert.That(r3.ZIndex.Value, Is.EqualTo(0)); //target
-        //    Assert.That(r4.ZIndex.Value, Is.EqualTo(5)); //group
-        //    Assert.That(r5.ZIndex.Value, Is.EqualTo(6)); //group
-        //    Assert.That(viewModel.Items.ElementAt(8).ZIndex.Value, Is.EqualTo(7));
-        //    Assert.That(r6.ZIndex.Value, Is.EqualTo(8));
-        //}
-
-        //[Test]
-        //public void SendBackground_NoEffect()
-        //{
-        //    var viewModel = new DiagramViewModel();
-        //    var r0 = new NRectangleViewModel();
-        //    var r1 = new NRectangleViewModel();
-        //    var r2 = new NRectangleViewModel();
-        //    var r3 = new NRectangleViewModel();
-        //    var r4 = new NRectangleViewModel();
-
-        //    r0.ZIndex.Value = 0;
-        //    r1.ZIndex.Value = 1;
-        //    r2.ZIndex.Value = 2;
-        //    r3.ZIndex.Value = 3;
-        //    r4.ZIndex.Value = 4;
-
-        //    viewModel.Items.Add(r0);
-        //    viewModel.Items.Add(r1);
-        //    viewModel.Items.Add(r2);
-        //    viewModel.Items.Add(r3);
-        //    viewModel.Items.Add(r4);
-
-        //    viewModel.SelectedItems.AddRangeOnScheduler(r0);
-
-        //    viewModel.SendBackgroundCommand.Execute();
-
-        //    Assert.That(r0.ZIndex.Value, Is.EqualTo(0));
-        //    Assert.That(r1.ZIndex.Value, Is.EqualTo(1));
-        //    Assert.That(r2.ZIndex.Value, Is.EqualTo(2));
-        //    Assert.That(r3.ZIndex.Value, Is.EqualTo(3));
-        //    Assert.That(r4.ZIndex.Value, Is.EqualTo(4));
-        //}
-
-        //[Test]
-        //public void Group()
-        //{
-        //    var viewModel = new DiagramViewModel();
-        //    var r1 = new NRectangleViewModel();
-        //    var r2 = new NRectangleViewModel();
-        //    var r3 = new NRectangleViewModel();
-        //    var r4 = new NRectangleViewModel();
-
-        //    r1.ZIndex.Value = 0;
-        //    r2.ZIndex.Value = 1;
-        //    r3.ZIndex.Value = 2;
-        //    r4.ZIndex.Value = 3;
-
-        //    viewModel.Items.Add(r1);
-        //    viewModel.Items.Add(r2);
-        //    viewModel.Items.Add(r3);
-        //    viewModel.Items.Add(r4);
-
-        //    viewModel.SelectedItems.AddRangeOnScheduler(r1, r2, r3);
-
-        //    viewModel.GroupCommand.Execute();
-
-        //    Assert.That(r1.ZIndex.Value, Is.EqualTo(0));
-        //    Assert.That(r2.ZIndex.Value, Is.EqualTo(1));
-        //    Assert.That(r3.ZIndex.Value, Is.EqualTo(2));
-        //    Assert.That(viewModel.Items.ElementAt(4).ZIndex.Value, Is.EqualTo(3));
-        //    Assert.That(r4.ZIndex.Value, Is.EqualTo(4));
-        //}
-
-        //[Test]
-        //public void Group_2()
-        //{
-        //    var viewModel = new DiagramViewModel();
-        //    var r0 = new NRectangleViewModel() { Name = "r0" };
-        //    var r1 = new NRectangleViewModel() { Name = "r1" };
-        //    var r2 = new NRectangleViewModel() { Name = "r2" }; //group
-        //    var r3 = new NRectangleViewModel() { Name = "r3" }; //group
-        //    var r4 = new NRectangleViewModel() { Name = "r4" }; //group
-        //    var r5 = new NRectangleViewModel() { Name = "r5" };
-        //    var r6 = new NRectangleViewModel() { Name = "r6" };
-
-        //    r0.ZIndex.Value = 0;
-        //    r1.ZIndex.Value = 1;
-        //    r2.ZIndex.Value = 2; //group
-        //    r3.ZIndex.Value = 3; //group
-        //    r4.ZIndex.Value = 4; //group
-        //    r5.ZIndex.Value = 5;
-        //    r6.ZIndex.Value = 6;
-
-        //    viewModel.Items.Add(r0);
-        //    viewModel.Items.Add(r1);
-        //    viewModel.Items.Add(r2); //group
-        //    viewModel.Items.Add(r3); //group
-        //    viewModel.Items.Add(r4); //group
-        //    viewModel.Items.Add(r5);
-        //    viewModel.Items.Add(r6);
-
-        //    viewModel.SelectedItems.AddRangeOnScheduler(r2, r3, r4);
-
-        //    viewModel.GroupCommand.Execute();
-
-        //    Assert.That(r0.ZIndex.Value, Is.EqualTo(0));
-        //    Assert.That(r1.ZIndex.Value, Is.EqualTo(1));
-        //    Assert.That(r2.ZIndex.Value, Is.EqualTo(2));
-        //    Assert.That(r3.ZIndex.Value, Is.EqualTo(3));
-        //    Assert.That(r4.ZIndex.Value, Is.EqualTo(4));
-        //    Assert.That(viewModel.Items.ElementAt(7).ZIndex.Value, Is.EqualTo(5));
-        //    Assert.That(r5.ZIndex.Value, Is.EqualTo(6));
-        //    Assert.That(r6.ZIndex.Value, Is.EqualTo(7));
-        //}
-
-        //[Test]
-        //public void Group_Discontinuous()
-        //{
-        //    var viewModel = new DiagramViewModel();
-        //    var r1 = new NRectangleViewModel();
-        //    var r2 = new NRectangleViewModel();
-        //    var r3 = new NRectangleViewModel();
-        //    var r4 = new NRectangleViewModel();
-        //    var r5 = new NRectangleViewModel();
-
-        //    r1.ZIndex.Value = 0;
-        //    r2.ZIndex.Value = 1;
-        //    r3.ZIndex.Value = 2;
-        //    r4.ZIndex.Value = 3;
-        //    r5.ZIndex.Value = 4;
-
-        //    viewModel.Items.Add(r1);
-        //    viewModel.Items.Add(r2);
-        //    viewModel.Items.Add(r3);
-        //    viewModel.Items.Add(r4);
-        //    viewModel.Items.Add(r5);
-
-        //    viewModel.SelectedItems.AddRangeOnScheduler(r1, r2, r4);
-
-        //    viewModel.GroupCommand.Execute();
-
-        //    Assert.That(r1.ZIndex.Value, Is.EqualTo(1));
-        //    Assert.That(r2.ZIndex.Value, Is.EqualTo(2));
-        //    Assert.That(r3.ZIndex.Value, Is.EqualTo(0));
-        //    Assert.That(r4.ZIndex.Value, Is.EqualTo(3));
-        //    Assert.That(viewModel.Items.ElementAt(5).ZIndex.Value, Is.EqualTo(4));
-        //    Assert.That(r5.ZIndex.Value, Is.EqualTo(5));
-        //}
-
-        //[Test]
-        //public void Ungroup()
-        //{
-        //    var viewModel = new DiagramViewModel();
-        //    var r1 = new NRectangleViewModel();
-        //    var r2 = new NRectangleViewModel();
-        //    var r3 = new NRectangleViewModel();
-        //    var r4 = new NRectangleViewModel();
-        //    var r5 = new NRectangleViewModel();
-
-        //    r1.ZIndex.Value = 0;
-        //    r2.ZIndex.Value = 1;
-        //    r3.ZIndex.Value = 2;
-        //    r4.ZIndex.Value = 3;
-        //    r5.ZIndex.Value = 4;
-
-        //    viewModel.Items.Add(r1);
-        //    viewModel.Items.Add(r2);
-        //    viewModel.Items.Add(r3);
-        //    viewModel.Items.Add(r4);
-        //    viewModel.Items.Add(r5);
-
-        //    viewModel.SelectedItems.AddRangeOnScheduler(r1, r2, r4);
-
-        //    viewModel.GroupCommand.Execute();
-
-        //    viewModel.UngroupCommand.Execute();
-
-        //    Assert.That(r1.ZIndex.Value, Is.EqualTo(1));
-        //    Assert.That(r2.ZIndex.Value, Is.EqualTo(2));
-        //    Assert.That(r3.ZIndex.Value, Is.EqualTo(0));
-        //    Assert.That(r4.ZIndex.Value, Is.EqualTo(3));
-        //    Assert.That(r5.ZIndex.Value, Is.EqualTo(4));
-        //}
-
-        //[Test]
-        //public void Group_BringForward()
-        //{
-        //    var viewModel = new DiagramViewModel();
-        //    var r1 = new NRectangleViewModel();
-        //    var r2 = new NRectangleViewModel();
-        //    var r3 = new NRectangleViewModel();
-        //    var r4 = new NRectangleViewModel();
-
-        //    r1.ZIndex.Value = 0;
-        //    r2.ZIndex.Value = 1;
-        //    r3.ZIndex.Value = 2;
-        //    r4.ZIndex.Value = 3;
-
-        //    viewModel.Items.Add(r1);
-        //    viewModel.Items.Add(r2);
-        //    viewModel.Items.Add(r3);
-        //    viewModel.Items.Add(r4);
-
-        //    viewModel.SelectedItems.AddRangeOnScheduler(r1, r2, r3);
-
-        //    viewModel.GroupCommand.Execute();
-
-        //    viewModel.SelectedItems.Clear();
-        //    viewModel.SelectedItems.Add(viewModel.Items.OfType<GroupItemViewModel>().Single());
-
-        //    viewModel.BringForwardCommand.Execute();
-
-        //    Assert.That(viewModel.Items.ElementAt(0).ZIndex.Value, Is.EqualTo(1));
-        //    Assert.That(viewModel.Items.ElementAt(1).ZIndex.Value, Is.EqualTo(2));
-        //    Assert.That(viewModel.Items.ElementAt(2).ZIndex.Value, Is.EqualTo(3));
-        //    Assert.That(viewModel.Items.ElementAt(3).ZIndex.Value, Is.EqualTo(0));
-        //    Assert.That(viewModel.Items.ElementAt(4).ZIndex.Value, Is.EqualTo(4));
-        //}
-
-        //[Test]
-        //public void Group_BringForward_2()
-        //{
-        //    var viewModel = new DiagramViewModel();
-        //    var r1 = new NRectangleViewModel();
-        //    var r2 = new NRectangleViewModel();
-        //    var r3 = new NRectangleViewModel();
-        //    var r4 = new NRectangleViewModel();
-        //    var r5 = new NRectangleViewModel();
-
-        //    r1.ZIndex.Value = 0;
-        //    r2.ZIndex.Value = 1;
-        //    r3.ZIndex.Value = 2;
-        //    r4.ZIndex.Value = 3;
-        //    r5.ZIndex.Value = 4;
-
-        //    viewModel.Items.Add(r1);
-        //    viewModel.Items.Add(r2);
-        //    viewModel.Items.Add(r3);
-        //    viewModel.Items.Add(r4);
-        //    viewModel.Items.Add(r5);
-
-        //    viewModel.SelectedItems.AddRangeOnScheduler(r1, r2, r3);
-
-        //    viewModel.GroupCommand.Execute();
-
-        //    viewModel.SelectedItems.Clear();
-        //    viewModel.SelectedItems.Add(viewModel.Items.OfType<GroupItemViewModel>().Single());
-
-        //    viewModel.BringForwardCommand.Execute();
-
-        //    Assert.That(viewModel.Items.ElementAt(0).ZIndex.Value, Is.EqualTo(1));
-        //    Assert.That(viewModel.Items.ElementAt(1).ZIndex.Value, Is.EqualTo(2));
-        //    Assert.That(viewModel.Items.ElementAt(2).ZIndex.Value, Is.EqualTo(3));
-        //    Assert.That(viewModel.Items.ElementAt(3).ZIndex.Value, Is.EqualTo(0));
-        //    Assert.That(viewModel.Items.ElementAt(4).ZIndex.Value, Is.EqualTo(5));
-        //    Assert.That(viewModel.Items.ElementAt(5).ZIndex.Value, Is.EqualTo(4));
-        //}
-
-        //[Test]
-        //public void Group_BringForward_NoEffect()
-        //{
-        //    var viewModel = new DiagramViewModel();
-        //    var r1 = new NRectangleViewModel();
-        //    var r2 = new NRectangleViewModel();
-        //    var r3 = new NRectangleViewModel();
-        //    var r4 = new NRectangleViewModel();
-
-        //    r1.ZIndex.Value = 0;
-        //    r2.ZIndex.Value = 1; //group
-        //    r3.ZIndex.Value = 2; //group
-        //    r4.ZIndex.Value = 3; //group
-
-        //    viewModel.Items.Add(r1);
-        //    viewModel.Items.Add(r2);
-        //    viewModel.Items.Add(r3);
-        //    viewModel.Items.Add(r4);
-
-        //    viewModel.SelectedItems.AddRangeOnScheduler(r2, r3, r4);
-
-        //    viewModel.GroupCommand.Execute();
-
-        //    viewModel.SelectedItems.Clear();
-        //    viewModel.SelectedItems.Add(viewModel.Items.OfType<GroupItemViewModel>().Single());
-
-        //    viewModel.BringForwardCommand.Execute();
-
-        //    Assert.That(viewModel.Items.ElementAt(0).ZIndex.Value, Is.EqualTo(0));
-        //    Assert.That(viewModel.Items.ElementAt(1).ZIndex.Value, Is.EqualTo(1));
-        //    Assert.That(viewModel.Items.ElementAt(2).ZIndex.Value, Is.EqualTo(2));
-        //    Assert.That(viewModel.Items.ElementAt(3).ZIndex.Value, Is.EqualTo(3));
-        //    Assert.That(viewModel.Items.ElementAt(4).ZIndex.Value, Is.EqualTo(4));
-        //}
-
-        //[Test]
-        //public void Group_BringForeground()
-        //{
-        //    var viewModel = new DiagramViewModel();
-        //    var r0 = new NRectangleViewModel() { Name = "r0" }; //group
-        //    var r1 = new NRectangleViewModel() { Name = "r1" }; //group
-        //    var r2 = new NRectangleViewModel() { Name = "r2" }; //group
-        //    var r3 = new NRectangleViewModel() { Name = "r3" };
-        //    var r4 = new NRectangleViewModel() { Name = "r4" };
-        //    var r5 = new NRectangleViewModel() { Name = "r5" };
-
-        //    r0.ZIndex.Value = 0; //group
-        //    r1.ZIndex.Value = 1; //group
-        //    r2.ZIndex.Value = 2; //group
-        //    r3.ZIndex.Value = 3;
-        //    r4.ZIndex.Value = 4;
-        //    r5.ZIndex.Value = 5;
-
-        //    viewModel.Items.Add(r0); //group
-        //    viewModel.Items.Add(r1); //group
-        //    viewModel.Items.Add(r2); //group
-        //    viewModel.Items.Add(r3);
-        //    viewModel.Items.Add(r4);
-        //    viewModel.Items.Add(r5);
-
-        //    viewModel.SelectedItems.AddRangeOnScheduler(r0, r1, r2);
-
-        //    viewModel.GroupCommand.Execute();
-
-        //    Assert.That(r0.ZIndex.Value, Is.EqualTo(0));
-        //    Assert.That(r1.ZIndex.Value, Is.EqualTo(1));
-        //    Assert.That(r2.ZIndex.Value, Is.EqualTo(2));
-        //    Assert.That(viewModel.Items.ElementAt(6).ZIndex.Value, Is.EqualTo(3));
-        //    Assert.That(r3.ZIndex.Value, Is.EqualTo(4));
-        //    Assert.That(r4.ZIndex.Value, Is.EqualTo(5));
-        //    Assert.That(r5.ZIndex.Value, Is.EqualTo(6));
-
-        //    viewModel.SelectedItems.Clear();
-        //    viewModel.SelectedItems.Add(viewModel.Items.OfType<GroupItemViewModel>().Single());
-
-        //    viewModel.BringForegroundCommand.Execute();
-
-        //    Assert.That(r0.ZIndex.Value, Is.EqualTo(3));
-        //    Assert.That(r1.ZIndex.Value, Is.EqualTo(4));
-        //    Assert.That(r2.ZIndex.Value, Is.EqualTo(5));
-        //    Assert.That(viewModel.Items.ElementAt(6).ZIndex.Value, Is.EqualTo(6));
-        //    Assert.That(r3.ZIndex.Value, Is.EqualTo(0));
-        //    Assert.That(r4.ZIndex.Value, Is.EqualTo(1));
-        //    Assert.That(r5.ZIndex.Value, Is.EqualTo(2));
-        //}
-
-        //[Test]
-        //public void Group_SendBackward()
-        //{
-        //    var viewModel = new DiagramViewModel();
-        //    var r1 = new NRectangleViewModel() { Name = "r1" };
-        //    var r2 = new NRectangleViewModel() { Name = "r2" };
-        //    var r3 = new NRectangleViewModel() { Name = "r3" };
-        //    var r4 = new NRectangleViewModel() { Name = "r4" };
-
-        //    r1.ZIndex.Value = 0;
-        //    r2.ZIndex.Value = 1;
-        //    r3.ZIndex.Value = 2;
-        //    r4.ZIndex.Value = 3;
-
-        //    viewModel.Items.Add(r1);
-        //    viewModel.Items.Add(r2);
-        //    viewModel.Items.Add(r3);
-        //    viewModel.Items.Add(r4);
-
-        //    viewModel.SelectedItems.AddRangeOnScheduler(r2, r3, r4);
-
-        //    viewModel.GroupCommand.Execute();
-
-        //    viewModel.SelectedItems.Clear();
-        //    viewModel.SelectedItems.Add(viewModel.Items.OfType<GroupItemViewModel>().Single());
-
-        //    viewModel.SendBackwardCommand.Execute();
-
-        //    Assert.That(viewModel.Items.ElementAt(0).ZIndex.Value, Is.EqualTo(4));
-        //    Assert.That(viewModel.Items.ElementAt(1).ZIndex.Value, Is.EqualTo(0));
-        //    Assert.That(viewModel.Items.ElementAt(2).ZIndex.Value, Is.EqualTo(1));
-        //    Assert.That(viewModel.Items.ElementAt(3).ZIndex.Value, Is.EqualTo(2));
-        //    Assert.That(viewModel.Items.ElementAt(4).ZIndex.Value, Is.EqualTo(3));
-        //}
-
-        //[Test]
-        //public void Group_SendBackward_2()
-        //{
-        //    var viewModel = new DiagramViewModel();
-        //    var r0 = new NRectangleViewModel() { Name = "r0" };
-        //    var r1 = new NRectangleViewModel() { Name = "r1" };
-        //    var r2 = new NRectangleViewModel() { Name = "r2" };
-        //    var r3 = new NRectangleViewModel() { Name = "r3" };
-        //    var r4 = new NRectangleViewModel() { Name = "r4" };
-        //    var r5 = new NRectangleViewModel() { Name = "r5" };
-        //    var r6 = new NRectangleViewModel() { Name = "r6" };
-        //    var r7 = new NRectangleViewModel() { Name = "r7" };
-
-        //    r0.ZIndex.Value = 0;
-        //    r1.ZIndex.Value = 1;
-        //    r2.ZIndex.Value = 2; //group
-        //    r3.ZIndex.Value = 3; //group
-        //    r4.ZIndex.Value = 4; //group
-        //    r5.ZIndex.Value = 5;
-        //    r6.ZIndex.Value = 6;
-        //    r7.ZIndex.Value = 7;
-
-        //    viewModel.Items.Add(r0);
-        //    viewModel.Items.Add(r1);
-        //    viewModel.Items.Add(r2);
-        //    viewModel.Items.Add(r3);
-        //    viewModel.Items.Add(r4);
-        //    viewModel.Items.Add(r5);
-        //    viewModel.Items.Add(r6);
-        //    viewModel.Items.Add(r7);
-
-        //    viewModel.SelectedItems.AddRangeOnScheduler(r2, r3, r4);
-
-        //    viewModel.GroupCommand.Execute();
-
-        //    viewModel.SelectedItems.Clear();
-        //    viewModel.SelectedItems.Add(viewModel.Items.OfType<GroupItemViewModel>().Single());
-
-        //    viewModel.SendBackwardCommand.Execute();
-
-        //    Assert.That(viewModel.Items.ElementAt(0).ZIndex.Value, Is.EqualTo(0));
-        //    Assert.That(viewModel.Items.ElementAt(1).ZIndex.Value, Is.EqualTo(5));
-        //    Assert.That(viewModel.Items.ElementAt(2).ZIndex.Value, Is.EqualTo(1)); //group
-        //    Assert.That(viewModel.Items.ElementAt(3).ZIndex.Value, Is.EqualTo(2)); //group
-        //    Assert.That(viewModel.Items.ElementAt(4).ZIndex.Value, Is.EqualTo(3)); //group
-        //    Assert.That(viewModel.Items.ElementAt(5).ZIndex.Value, Is.EqualTo(6));
-        //    Assert.That(viewModel.Items.ElementAt(6).ZIndex.Value, Is.EqualTo(7));
-        //    Assert.That(viewModel.Items.ElementAt(7).ZIndex.Value, Is.EqualTo(8));
-        //    Assert.That(viewModel.Items.ElementAt(8).ZIndex.Value, Is.EqualTo(4)); //group
-        //}
-
-        //[Test]
-        //public void Group_SendBackward_NoEffect()
-        //{
-        //    var viewModel = new DiagramViewModel();
-        //    var r1 = new NRectangleViewModel() { Name = "r1" };
-        //    var r2 = new NRectangleViewModel() { Name = "r2" };
-        //    var r3 = new NRectangleViewModel() { Name = "r3" };
-        //    var r4 = new NRectangleViewModel() { Name = "r4" };
-
-        //    r1.ZIndex.Value = 0;
-        //    r2.ZIndex.Value = 1;
-        //    r3.ZIndex.Value = 2;
-        //    r4.ZIndex.Value = 3;
-
-        //    viewModel.Items.Add(r1);
-        //    viewModel.Items.Add(r2);
-        //    viewModel.Items.Add(r3);
-        //    viewModel.Items.Add(r4);
-
-        //    viewModel.SelectedItems.AddRangeOnScheduler(r1, r2, r3);
-
-        //    viewModel.GroupCommand.Execute();
-
-        //    viewModel.SelectedItems.Clear();
-        //    viewModel.SelectedItems.Add(viewModel.Items.OfType<GroupItemViewModel>().Single());
-
-        //    viewModel.SendBackwardCommand.Execute();
-
-        //    Assert.That(viewModel.Items.ElementAt(0).ZIndex.Value, Is.EqualTo(0));
-        //    Assert.That(viewModel.Items.ElementAt(1).ZIndex.Value, Is.EqualTo(1));
-        //    Assert.That(viewModel.Items.ElementAt(2).ZIndex.Value, Is.EqualTo(2));
-        //    Assert.That(viewModel.Items.ElementAt(3).ZIndex.Value, Is.EqualTo(4));
-        //    Assert.That(viewModel.Items.ElementAt(4).ZIndex.Value, Is.EqualTo(3));
-        //}
-
-        //[Test]
-        //public void Group_SendBackground()
-        //{
-        //    var viewModel = new DiagramViewModel();
-        //    var r0 = new NRectangleViewModel() { Name = "r0" };
-        //    var r1 = new NRectangleViewModel() { Name = "r1" };
-        //    var r2 = new NRectangleViewModel() { Name = "r2" };
-        //    var r3 = new NRectangleViewModel() { Name = "r3" }; //group
-        //    var r4 = new NRectangleViewModel() { Name = "r4" }; //group
-        //    var r5 = new NRectangleViewModel() { Name = "r5" }; //group
-
-        //    r0.ZIndex.Value = 0;
-        //    r1.ZIndex.Value = 1;
-        //    r2.ZIndex.Value = 2;
-        //    r3.ZIndex.Value = 3; //group
-        //    r4.ZIndex.Value = 4; //group
-        //    r5.ZIndex.Value = 5; //group
-
-        //    viewModel.Items.Add(r0);
-        //    viewModel.Items.Add(r1);
-        //    viewModel.Items.Add(r2);
-        //    viewModel.Items.Add(r3); //group
-        //    viewModel.Items.Add(r4); //group
-        //    viewModel.Items.Add(r5); //group
-
-        //    viewModel.SelectedItems.AddRangeOnScheduler(r3, r4, r5);
-
-        //    viewModel.GroupCommand.Execute();
-
-        //    Assert.That(r0.ZIndex.Value, Is.EqualTo(0));
-        //    Assert.That(r1.ZIndex.Value, Is.EqualTo(1));
-        //    Assert.That(r2.ZIndex.Value, Is.EqualTo(2));
-        //    Assert.That(r3.ZIndex.Value, Is.EqualTo(3));
-        //    Assert.That(r4.ZIndex.Value, Is.EqualTo(4));
-        //    Assert.That(r5.ZIndex.Value, Is.EqualTo(5));
-        //    Assert.That(viewModel.Items.ElementAt(6).ZIndex.Value, Is.EqualTo(6));
-
-        //    viewModel.SelectedItems.Clear();
-        //    viewModel.SelectedItems.Add(viewModel.Items.OfType<GroupItemViewModel>().Single());
-
-        //    viewModel.SendBackgroundCommand.Execute();
-
-        //    Assert.That(r0.ZIndex.Value, Is.EqualTo(4));
-        //    Assert.That(r1.ZIndex.Value, Is.EqualTo(5));
-        //    Assert.That(r2.ZIndex.Value, Is.EqualTo(6));
-        //    Assert.That(r3.ZIndex.Value, Is.EqualTo(0));
-        //    Assert.That(r4.ZIndex.Value, Is.EqualTo(1));
-        //    Assert.That(r5.ZIndex.Value, Is.EqualTo(2));
-        //    Assert.That(viewModel.Items.ElementAt(6).ZIndex.Value, Is.EqualTo(3));
-        //}
+        private static (DiagramViewModel viewModel, Layer layer) CreateSingleLayerViewModel()
+        {
+            boilersGraphics.App.IsTest = true;
+            var dlgService = new Mock<IDialogService>();
+            var mainWindowViewModel = new MainWindowViewModel(dlgService.Object);
+            var viewModel = new DiagramViewModel(mainWindowViewModel);
+            viewModel.Layers.Clear();
+
+            var layer = new Layer();
+            layer.Name.Value = "Layer1";
+            viewModel.Layers.Add(layer);
+            layer.IsSelected.Value = true;
+
+            return (viewModel, layer);
+        }
+
+        private static NRectangleViewModel[] AddRectangles(DiagramViewModel viewModel, int count)
+        {
+            var rects = Enumerable.Range(0, count).Select(_ => new NRectangleViewModel()).ToArray();
+            foreach (var r in rects)
+                viewModel.AddItemCommand.Execute(r);
+            return rects;
+        }
+
+        private static void DeselectAll(DiagramViewModel viewModel)
+        {
+            foreach (var layer in viewModel.Layers)
+                foreach (var child in layer.Children)
+                    DeselectRecursive(child);
+        }
+
+        private static void DeselectRecursive(LayerTreeViewItemBase item)
+        {
+            item.IsSelected.Value = false;
+            // The LayerItem -> underlying-item IsSelected propagation does
+            // not always fire (e.g. for groups), so set the inner item's
+            // IsSelected explicitly too.
+            if (item is LayerItem li && li.Item.Value != null)
+                li.Item.Value.IsSelected.Value = false;
+            foreach (var child in item.Children)
+                DeselectRecursive(child);
+        }
+
+        private static void SelectByItem(DiagramViewModel viewModel, SelectableDesignerItemViewModelBase target)
+        {
+            foreach (var layer in viewModel.Layers)
+                if (TrySelectInItem(layer, target)) return;
+        }
+
+        private static bool TrySelectInItem(LayerTreeViewItemBase item, SelectableDesignerItemViewModelBase target)
+        {
+            if (item is LayerItem li && li.Item.Value == target)
+            {
+                li.IsSelected.Value = true;
+                return true;
+            }
+            foreach (var child in item.Children)
+                if (TrySelectInItem(child, target)) return true;
+            return false;
+        }
+
+        private static GroupItemViewModel[] AllGroups(DiagramViewModel viewModel)
+            => viewModel.AllItems.Value.OfType<GroupItemViewModel>().ToArray();
+
+        [Test]
+        public void BringForward()
+        {
+            var (viewModel, _) = CreateSingleLayerViewModel();
+            var r = AddRectangles(viewModel, 5);
+
+            viewModel.Layers[0].Children[2].IsSelected.Value = true;
+            viewModel.BringForwardCommand.Execute();
+
+            Assert.That(r[0].ZIndex.Value, Is.EqualTo(0));
+            Assert.That(r[1].ZIndex.Value, Is.EqualTo(1));
+            Assert.That(r[2].ZIndex.Value, Is.EqualTo(3));
+            Assert.That(r[3].ZIndex.Value, Is.EqualTo(2));
+            Assert.That(r[4].ZIndex.Value, Is.EqualTo(4));
+        }
+
+        [Test]
+        public void BringForward_NoEffect()
+        {
+            var (viewModel, _) = CreateSingleLayerViewModel();
+            var r = AddRectangles(viewModel, 5);
+
+            viewModel.Layers[0].Children[4].IsSelected.Value = true;
+            viewModel.BringForwardCommand.Execute();
+
+            Assert.That(r[0].ZIndex.Value, Is.EqualTo(0));
+            Assert.That(r[1].ZIndex.Value, Is.EqualTo(1));
+            Assert.That(r[2].ZIndex.Value, Is.EqualTo(2));
+            Assert.That(r[3].ZIndex.Value, Is.EqualTo(3));
+            Assert.That(r[4].ZIndex.Value, Is.EqualTo(4));
+        }
+
+        [Test]
+        public void BringForeground()
+        {
+            var (viewModel, _) = CreateSingleLayerViewModel();
+            var r = AddRectangles(viewModel, 5);
+
+            viewModel.Layers[0].Children[2].IsSelected.Value = true;
+            viewModel.BringForegroundCommand.Execute();
+
+            Assert.That(r[0].ZIndex.Value, Is.EqualTo(0));
+            Assert.That(r[1].ZIndex.Value, Is.EqualTo(1));
+            Assert.That(r[2].ZIndex.Value, Is.EqualTo(4));
+            Assert.That(r[3].ZIndex.Value, Is.EqualTo(2));
+            Assert.That(r[4].ZIndex.Value, Is.EqualTo(3));
+        }
+
+        [Test]
+        public void BringForeground_NoEffect()
+        {
+            var (viewModel, _) = CreateSingleLayerViewModel();
+            var r = AddRectangles(viewModel, 5);
+
+            viewModel.Layers[0].Children[4].IsSelected.Value = true;
+            viewModel.BringForegroundCommand.Execute();
+
+            Assert.That(r[0].ZIndex.Value, Is.EqualTo(0));
+            Assert.That(r[1].ZIndex.Value, Is.EqualTo(1));
+            Assert.That(r[2].ZIndex.Value, Is.EqualTo(2));
+            Assert.That(r[3].ZIndex.Value, Is.EqualTo(3));
+            Assert.That(r[4].ZIndex.Value, Is.EqualTo(4));
+        }
+
+        [Test]
+        public void SendBackward()
+        {
+            var (viewModel, _) = CreateSingleLayerViewModel();
+            var r = AddRectangles(viewModel, 5);
+
+            viewModel.Layers[0].Children[2].IsSelected.Value = true;
+            viewModel.SendBackwardCommand.Execute();
+
+            Assert.That(r[0].ZIndex.Value, Is.EqualTo(0));
+            Assert.That(r[1].ZIndex.Value, Is.EqualTo(2));
+            Assert.That(r[2].ZIndex.Value, Is.EqualTo(1));
+            Assert.That(r[3].ZIndex.Value, Is.EqualTo(3));
+            Assert.That(r[4].ZIndex.Value, Is.EqualTo(4));
+        }
+
+        [Test]
+        public void SendBackward_NoEffect()
+        {
+            var (viewModel, _) = CreateSingleLayerViewModel();
+            var r = AddRectangles(viewModel, 5);
+
+            viewModel.Layers[0].Children[0].IsSelected.Value = true;
+            viewModel.SendBackwardCommand.Execute();
+
+            Assert.That(r[0].ZIndex.Value, Is.EqualTo(0));
+            Assert.That(r[1].ZIndex.Value, Is.EqualTo(1));
+            Assert.That(r[2].ZIndex.Value, Is.EqualTo(2));
+            Assert.That(r[3].ZIndex.Value, Is.EqualTo(3));
+            Assert.That(r[4].ZIndex.Value, Is.EqualTo(4));
+        }
+
+        [Test]
+        public void SendBackground()
+        {
+            var (viewModel, _) = CreateSingleLayerViewModel();
+            var r = AddRectangles(viewModel, 5);
+
+            viewModel.Layers[0].Children[2].IsSelected.Value = true;
+            viewModel.SendBackgroundCommand.Execute();
+
+            Assert.That(r[0].ZIndex.Value, Is.EqualTo(1));
+            Assert.That(r[1].ZIndex.Value, Is.EqualTo(2));
+            Assert.That(r[2].ZIndex.Value, Is.EqualTo(0));
+            Assert.That(r[3].ZIndex.Value, Is.EqualTo(3));
+            Assert.That(r[4].ZIndex.Value, Is.EqualTo(4));
+        }
+
+        [Test]
+        public void SendBackground_NoEffect()
+        {
+            var (viewModel, _) = CreateSingleLayerViewModel();
+            var r = AddRectangles(viewModel, 5);
+
+            viewModel.Layers[0].Children[0].IsSelected.Value = true;
+            viewModel.SendBackgroundCommand.Execute();
+
+            Assert.That(r[0].ZIndex.Value, Is.EqualTo(0));
+            Assert.That(r[1].ZIndex.Value, Is.EqualTo(1));
+            Assert.That(r[2].ZIndex.Value, Is.EqualTo(2));
+            Assert.That(r[3].ZIndex.Value, Is.EqualTo(3));
+            Assert.That(r[4].ZIndex.Value, Is.EqualTo(4));
+        }
+
+        // Wave 2: Z-order on an item that lives between two groups.
+        // Under the "swap with the next/previous top-level neighbour"
+        // design, groups and ungrouped items at the layer's top level
+        // form one ordering. Children inside a group keep their ZIndex
+        // values intact when their parent moves.
+
+        [Test]
+        public void BringForward_GroupIncluded()
+        {
+            var (viewModel, _) = CreateSingleLayerViewModel();
+            var r = AddRectangles(viewModel, 7);
+
+            SelectByItem(viewModel, r[1]);
+            SelectByItem(viewModel, r[2]);
+            viewModel.GroupCommand.Execute();
+            var groupA = AllGroups(viewModel).Single();
+            DeselectAll(viewModel);
+
+            SelectByItem(viewModel, r[4]);
+            SelectByItem(viewModel, r[5]);
+            viewModel.GroupCommand.Execute();
+            var groupB = AllGroups(viewModel).Single(g => g != groupA);
+            DeselectAll(viewModel);
+
+            // Top-level ZIndex order: r0(0), r3(3), r6(6), groupA(7), groupB(8)
+            SelectByItem(viewModel, r[3]);
+            viewModel.BringForwardCommand.Execute();
+
+            // r3 swaps ZIndex with the next top-level neighbour above it (r6).
+            Assert.That(r[0].ZIndex.Value, Is.EqualTo(0));
+            Assert.That(r[1].ZIndex.Value, Is.EqualTo(1));
+            Assert.That(r[2].ZIndex.Value, Is.EqualTo(2));
+            Assert.That(r[6].ZIndex.Value, Is.EqualTo(3));
+            Assert.That(r[4].ZIndex.Value, Is.EqualTo(4));
+            Assert.That(r[5].ZIndex.Value, Is.EqualTo(5));
+            Assert.That(r[3].ZIndex.Value, Is.EqualTo(6));
+            Assert.That(groupA.ZIndex.Value, Is.EqualTo(7));
+            Assert.That(groupB.ZIndex.Value, Is.EqualTo(8));
+        }
+
+        [Test]
+        public void BringForeground_GroupIncluded()
+        {
+            var (viewModel, _) = CreateSingleLayerViewModel();
+            var r = AddRectangles(viewModel, 7);
+
+            SelectByItem(viewModel, r[1]);
+            SelectByItem(viewModel, r[2]);
+            viewModel.GroupCommand.Execute();
+            var groupA = AllGroups(viewModel).Single();
+            DeselectAll(viewModel);
+
+            SelectByItem(viewModel, r[4]);
+            SelectByItem(viewModel, r[5]);
+            viewModel.GroupCommand.Execute();
+            var groupB = AllGroups(viewModel).Single(g => g != groupA);
+            DeselectAll(viewModel);
+
+            SelectByItem(viewModel, r[3]);
+            viewModel.BringForegroundCommand.Execute();
+
+            // r3 walks past r6, groupA and groupB one swap at a time and
+            // lands at ZIndex 8; each neighbour drops one slot.
+            Assert.That(r[0].ZIndex.Value, Is.EqualTo(0));
+            Assert.That(r[1].ZIndex.Value, Is.EqualTo(1));
+            Assert.That(r[2].ZIndex.Value, Is.EqualTo(2));
+            Assert.That(r[6].ZIndex.Value, Is.EqualTo(3));
+            Assert.That(r[4].ZIndex.Value, Is.EqualTo(4));
+            Assert.That(r[5].ZIndex.Value, Is.EqualTo(5));
+            Assert.That(groupA.ZIndex.Value, Is.EqualTo(6));
+            Assert.That(groupB.ZIndex.Value, Is.EqualTo(7));
+            Assert.That(r[3].ZIndex.Value, Is.EqualTo(8));
+        }
+
+        [Test]
+        public void SendBackward_GroupIncluded()
+        {
+            var (viewModel, _) = CreateSingleLayerViewModel();
+            var r = AddRectangles(viewModel, 7);
+
+            SelectByItem(viewModel, r[1]);
+            SelectByItem(viewModel, r[2]);
+            viewModel.GroupCommand.Execute();
+            var groupA = AllGroups(viewModel).Single();
+            DeselectAll(viewModel);
+
+            SelectByItem(viewModel, r[4]);
+            SelectByItem(viewModel, r[5]);
+            viewModel.GroupCommand.Execute();
+            var groupB = AllGroups(viewModel).Single(g => g != groupA);
+            DeselectAll(viewModel);
+
+            SelectByItem(viewModel, r[3]);
+            viewModel.SendBackwardCommand.Execute();
+
+            // r3 swaps with r0 (the next top-level item below it).
+            Assert.That(r[3].ZIndex.Value, Is.EqualTo(0));
+            Assert.That(r[1].ZIndex.Value, Is.EqualTo(1));
+            Assert.That(r[2].ZIndex.Value, Is.EqualTo(2));
+            Assert.That(r[0].ZIndex.Value, Is.EqualTo(3));
+            Assert.That(r[4].ZIndex.Value, Is.EqualTo(4));
+            Assert.That(r[5].ZIndex.Value, Is.EqualTo(5));
+            Assert.That(r[6].ZIndex.Value, Is.EqualTo(6));
+            Assert.That(groupA.ZIndex.Value, Is.EqualTo(7));
+            Assert.That(groupB.ZIndex.Value, Is.EqualTo(8));
+        }
+
+        [Test]
+        public void SendBackground_GroupIncluded()
+        {
+            var (viewModel, _) = CreateSingleLayerViewModel();
+            var r = AddRectangles(viewModel, 7);
+
+            SelectByItem(viewModel, r[1]);
+            SelectByItem(viewModel, r[2]);
+            viewModel.GroupCommand.Execute();
+            var groupA = AllGroups(viewModel).Single();
+            DeselectAll(viewModel);
+
+            SelectByItem(viewModel, r[4]);
+            SelectByItem(viewModel, r[5]);
+            viewModel.GroupCommand.Execute();
+            var groupB = AllGroups(viewModel).Single(g => g != groupA);
+            DeselectAll(viewModel);
+
+            SelectByItem(viewModel, r[3]);
+            viewModel.SendBackgroundCommand.Execute();
+
+            // Only r0 sits below r3 at top level, so SendBackground reduces
+            // to a single swap with r0 — same final state as SendBackward.
+            Assert.That(r[3].ZIndex.Value, Is.EqualTo(0));
+            Assert.That(r[1].ZIndex.Value, Is.EqualTo(1));
+            Assert.That(r[2].ZIndex.Value, Is.EqualTo(2));
+            Assert.That(r[0].ZIndex.Value, Is.EqualTo(3));
+            Assert.That(r[4].ZIndex.Value, Is.EqualTo(4));
+            Assert.That(r[5].ZIndex.Value, Is.EqualTo(5));
+            Assert.That(r[6].ZIndex.Value, Is.EqualTo(6));
+            Assert.That(groupA.ZIndex.Value, Is.EqualTo(7));
+            Assert.That(groupB.ZIndex.Value, Is.EqualTo(8));
+        }
+
+        [Test]
+        public void Group_3items_inLayerWith4()
+        {
+            var (viewModel, _) = CreateSingleLayerViewModel();
+            var r = AddRectangles(viewModel, 4);
+
+            SelectByItem(viewModel, r[0]);
+            SelectByItem(viewModel, r[1]);
+            SelectByItem(viewModel, r[2]);
+            viewModel.GroupCommand.Execute();
+            var group = AllGroups(viewModel).Single();
+
+            Assert.That(r[0].ZIndex.Value, Is.EqualTo(0));
+            Assert.That(r[1].ZIndex.Value, Is.EqualTo(1));
+            Assert.That(r[2].ZIndex.Value, Is.EqualTo(2));
+            Assert.That(r[3].ZIndex.Value, Is.EqualTo(3));
+            Assert.That(group.ZIndex.Value, Is.EqualTo(4));
+        }
+
+        [Test]
+        public void Group_middleItems_inLayerWith7()
+        {
+            var (viewModel, _) = CreateSingleLayerViewModel();
+            var r = AddRectangles(viewModel, 7);
+
+            SelectByItem(viewModel, r[2]);
+            SelectByItem(viewModel, r[3]);
+            SelectByItem(viewModel, r[4]);
+            viewModel.GroupCommand.Execute();
+            var group = AllGroups(viewModel).Single();
+
+            Assert.That(r[0].ZIndex.Value, Is.EqualTo(0));
+            Assert.That(r[1].ZIndex.Value, Is.EqualTo(1));
+            Assert.That(r[2].ZIndex.Value, Is.EqualTo(2));
+            Assert.That(r[3].ZIndex.Value, Is.EqualTo(3));
+            Assert.That(r[4].ZIndex.Value, Is.EqualTo(4));
+            Assert.That(r[5].ZIndex.Value, Is.EqualTo(5));
+            Assert.That(r[6].ZIndex.Value, Is.EqualTo(6));
+            Assert.That(group.ZIndex.Value, Is.EqualTo(7));
+        }
+
+        [Test]
+        public void Group_discontinuousItems()
+        {
+            var (viewModel, _) = CreateSingleLayerViewModel();
+            var r = AddRectangles(viewModel, 5);
+
+            SelectByItem(viewModel, r[0]);
+            SelectByItem(viewModel, r[1]);
+            SelectByItem(viewModel, r[3]);
+            viewModel.GroupCommand.Execute();
+            var group = AllGroups(viewModel).Single();
+
+            Assert.That(r[0].ZIndex.Value, Is.EqualTo(0));
+            Assert.That(r[1].ZIndex.Value, Is.EqualTo(1));
+            Assert.That(r[2].ZIndex.Value, Is.EqualTo(2));
+            Assert.That(r[3].ZIndex.Value, Is.EqualTo(3));
+            Assert.That(r[4].ZIndex.Value, Is.EqualTo(4));
+            Assert.That(group.ZIndex.Value, Is.EqualTo(5));
+        }
+
+        [Test]
+        public void Ungroup_restoresChildrenToTopLevel()
+        {
+            var (viewModel, _) = CreateSingleLayerViewModel();
+            var r = AddRectangles(viewModel, 5);
+
+            SelectByItem(viewModel, r[0]);
+            SelectByItem(viewModel, r[1]);
+            SelectByItem(viewModel, r[3]);
+            viewModel.GroupCommand.Execute();
+            var group = AllGroups(viewModel).Single();
+            Assert.That(group, Is.Not.Null);
+
+            DeselectAll(viewModel);
+            SelectByItem(viewModel, group);
+            viewModel.UngroupCommand.Execute();
+
+            Assert.That(AllGroups(viewModel), Is.Empty);
+            Assert.That(r[0].ZIndex.Value, Is.EqualTo(0));
+            Assert.That(r[1].ZIndex.Value, Is.EqualTo(1));
+            Assert.That(r[2].ZIndex.Value, Is.EqualTo(2));
+            Assert.That(r[3].ZIndex.Value, Is.EqualTo(3));
+            Assert.That(r[4].ZIndex.Value, Is.EqualTo(4));
+        }
+
+        // Wave 4: Z-order applied TO a group as the target. Per the
+        // "swap with the next/previous top-level neighbour" design,
+        // moving a group only changes the group's own ZIndex; the
+        // ZIndex of items inside the group stays untouched. When the
+        // group already sits at the top (which is where Group leaves
+        // it) BringForward / BringForeground are no-ops.
+
+        [Test]
+        public void Group_BringForward()
+        {
+            var (viewModel, _) = CreateSingleLayerViewModel();
+            var r = AddRectangles(viewModel, 4);
+
+            SelectByItem(viewModel, r[0]);
+            SelectByItem(viewModel, r[1]);
+            SelectByItem(viewModel, r[2]);
+            viewModel.GroupCommand.Execute();
+            var group = AllGroups(viewModel).Single();
+            DeselectAll(viewModel);
+
+            // After grouping: r0=0, r1=1, r2=2 (in group), r3=3, group=4.
+            // Group already sits on top of the only top-level neighbour (r3).
+            SelectByItem(viewModel, group);
+            viewModel.BringForwardCommand.Execute();
+
+            Assert.That(r[0].ZIndex.Value, Is.EqualTo(0));
+            Assert.That(r[1].ZIndex.Value, Is.EqualTo(1));
+            Assert.That(r[2].ZIndex.Value, Is.EqualTo(2));
+            Assert.That(r[3].ZIndex.Value, Is.EqualTo(3));
+            Assert.That(group.ZIndex.Value, Is.EqualTo(4));
+        }
+
+        [Test]
+        public void Group_BringForward_2()
+        {
+            var (viewModel, _) = CreateSingleLayerViewModel();
+            var r = AddRectangles(viewModel, 5);
+
+            SelectByItem(viewModel, r[0]);
+            SelectByItem(viewModel, r[1]);
+            SelectByItem(viewModel, r[2]);
+            viewModel.GroupCommand.Execute();
+            var group = AllGroups(viewModel).Single();
+            DeselectAll(viewModel);
+
+            // Group sits on top after creation (group=5), no neighbour
+            // above to swap with.
+            SelectByItem(viewModel, group);
+            viewModel.BringForwardCommand.Execute();
+
+            Assert.That(r[0].ZIndex.Value, Is.EqualTo(0));
+            Assert.That(r[1].ZIndex.Value, Is.EqualTo(1));
+            Assert.That(r[2].ZIndex.Value, Is.EqualTo(2));
+            Assert.That(r[3].ZIndex.Value, Is.EqualTo(3));
+            Assert.That(r[4].ZIndex.Value, Is.EqualTo(4));
+            Assert.That(group.ZIndex.Value, Is.EqualTo(5));
+        }
+
+        [Test]
+        public void Group_BringForward_NoEffect()
+        {
+            var (viewModel, _) = CreateSingleLayerViewModel();
+            var r = AddRectangles(viewModel, 4);
+
+            SelectByItem(viewModel, r[1]);
+            SelectByItem(viewModel, r[2]);
+            SelectByItem(viewModel, r[3]);
+            viewModel.GroupCommand.Execute();
+            var group = AllGroups(viewModel).Single();
+            DeselectAll(viewModel);
+
+            // Group already at the top, BringForward is a no-op.
+            SelectByItem(viewModel, group);
+            viewModel.BringForwardCommand.Execute();
+
+            Assert.That(r[0].ZIndex.Value, Is.EqualTo(0));
+            Assert.That(r[1].ZIndex.Value, Is.EqualTo(1));
+            Assert.That(r[2].ZIndex.Value, Is.EqualTo(2));
+            Assert.That(r[3].ZIndex.Value, Is.EqualTo(3));
+            Assert.That(group.ZIndex.Value, Is.EqualTo(4));
+        }
+
+        [Test]
+        public void Group_BringForeground()
+        {
+            var (viewModel, _) = CreateSingleLayerViewModel();
+            var r = AddRectangles(viewModel, 6);
+
+            SelectByItem(viewModel, r[0]);
+            SelectByItem(viewModel, r[1]);
+            SelectByItem(viewModel, r[2]);
+            viewModel.GroupCommand.Execute();
+            var group = AllGroups(viewModel).Single();
+            DeselectAll(viewModel);
+
+            // Group already at the top (group=6), BringForeground is a no-op.
+            SelectByItem(viewModel, group);
+            viewModel.BringForegroundCommand.Execute();
+
+            Assert.That(r[0].ZIndex.Value, Is.EqualTo(0));
+            Assert.That(r[1].ZIndex.Value, Is.EqualTo(1));
+            Assert.That(r[2].ZIndex.Value, Is.EqualTo(2));
+            Assert.That(r[3].ZIndex.Value, Is.EqualTo(3));
+            Assert.That(r[4].ZIndex.Value, Is.EqualTo(4));
+            Assert.That(r[5].ZIndex.Value, Is.EqualTo(5));
+            Assert.That(group.ZIndex.Value, Is.EqualTo(6));
+        }
+
+        [Test]
+        public void Group_SendBackward()
+        {
+            var (viewModel, _) = CreateSingleLayerViewModel();
+            var r = AddRectangles(viewModel, 4);
+
+            SelectByItem(viewModel, r[1]);
+            SelectByItem(viewModel, r[2]);
+            SelectByItem(viewModel, r[3]);
+            viewModel.GroupCommand.Execute();
+            var group = AllGroups(viewModel).Single();
+            DeselectAll(viewModel);
+
+            // Setup: r0=0, r1=1, r2=2, r3=3 (group's children), group=4.
+            // Top-level: r0, group. SendBackward swaps group with r0;
+            // children stay at 1, 2, 3.
+            SelectByItem(viewModel, group);
+            viewModel.SendBackwardCommand.Execute();
+
+            Assert.That(group.ZIndex.Value, Is.EqualTo(0));
+            Assert.That(r[1].ZIndex.Value, Is.EqualTo(1));
+            Assert.That(r[2].ZIndex.Value, Is.EqualTo(2));
+            Assert.That(r[3].ZIndex.Value, Is.EqualTo(3));
+            Assert.That(r[0].ZIndex.Value, Is.EqualTo(4));
+        }
+
+        [Test]
+        public void Group_SendBackward_2()
+        {
+            var (viewModel, _) = CreateSingleLayerViewModel();
+            var r = AddRectangles(viewModel, 5);
+
+            SelectByItem(viewModel, r[2]);
+            SelectByItem(viewModel, r[3]);
+            SelectByItem(viewModel, r[4]);
+            viewModel.GroupCommand.Execute();
+            var group = AllGroups(viewModel).Single();
+            DeselectAll(viewModel);
+
+            // Setup: r0=0, r1=1, r2=2, r3=3, r4=4 (group's children),
+            // group=5. Top-level: r0, r1, group. SendBackward on group
+            // swaps with r1.
+            SelectByItem(viewModel, group);
+            viewModel.SendBackwardCommand.Execute();
+
+            Assert.That(r[0].ZIndex.Value, Is.EqualTo(0));
+            Assert.That(group.ZIndex.Value, Is.EqualTo(1));
+            Assert.That(r[2].ZIndex.Value, Is.EqualTo(2));
+            Assert.That(r[3].ZIndex.Value, Is.EqualTo(3));
+            Assert.That(r[4].ZIndex.Value, Is.EqualTo(4));
+            Assert.That(r[1].ZIndex.Value, Is.EqualTo(5));
+        }
+
+        [Test]
+        public void Group_SendBackward_OneStep()
+        {
+            var (viewModel, _) = CreateSingleLayerViewModel();
+            var r = AddRectangles(viewModel, 4);
+
+            SelectByItem(viewModel, r[0]);
+            SelectByItem(viewModel, r[1]);
+            SelectByItem(viewModel, r[2]);
+            viewModel.GroupCommand.Execute();
+            var group = AllGroups(viewModel).Single();
+            DeselectAll(viewModel);
+
+            // Setup: r0=0, r1=1, r2=2 (group's children), r3=3, group=4.
+            // Top-level: r3, group. SendBackward swaps group with r3.
+            SelectByItem(viewModel, group);
+            viewModel.SendBackwardCommand.Execute();
+
+            Assert.That(r[0].ZIndex.Value, Is.EqualTo(0));
+            Assert.That(r[1].ZIndex.Value, Is.EqualTo(1));
+            Assert.That(r[2].ZIndex.Value, Is.EqualTo(2));
+            Assert.That(group.ZIndex.Value, Is.EqualTo(3));
+            Assert.That(r[3].ZIndex.Value, Is.EqualTo(4));
+        }
+
+        [Test]
+        public void Group_SendBackground()
+        {
+            var (viewModel, _) = CreateSingleLayerViewModel();
+            var r = AddRectangles(viewModel, 6);
+
+            SelectByItem(viewModel, r[3]);
+            SelectByItem(viewModel, r[4]);
+            SelectByItem(viewModel, r[5]);
+            viewModel.GroupCommand.Execute();
+            var group = AllGroups(viewModel).Single();
+            DeselectAll(viewModel);
+
+            // Setup: r0=0, r1=1, r2=2, r3=3, r4=4, r5=5 (group's children),
+            // group=6. Top-level: r0, r1, r2, group. SendBackground walks
+            // the group past r2, r1, r0 in turn — each gets bumped up by
+            // exactly one slot.
+            SelectByItem(viewModel, group);
+            viewModel.SendBackgroundCommand.Execute();
+
+            Assert.That(group.ZIndex.Value, Is.EqualTo(0));
+            Assert.That(r[0].ZIndex.Value, Is.EqualTo(1));
+            Assert.That(r[1].ZIndex.Value, Is.EqualTo(2));
+            Assert.That(r[3].ZIndex.Value, Is.EqualTo(3));
+            Assert.That(r[4].ZIndex.Value, Is.EqualTo(4));
+            Assert.That(r[5].ZIndex.Value, Is.EqualTo(5));
+            Assert.That(r[2].ZIndex.Value, Is.EqualTo(6));
+        }
     }
 }

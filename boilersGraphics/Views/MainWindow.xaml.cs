@@ -116,6 +116,103 @@ public partial class MainWindow : Window
         SystemCommands.CloseWindow(this);
     }
 
+    private DateTime _lastTabClickTime;
+    private Models.CanvasPage _lastTabClickPage;
+
+    private void CanvasTab_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        if (sender is FrameworkElement fe && fe.DataContext is Models.CanvasPage page)
+        {
+            var vm = DataContext as ViewModels.MainWindowViewModel;
+            if (vm == null) return;
+
+            var now = DateTime.Now;
+            // Double-click detection
+            if (_lastTabClickPage == page && (now - _lastTabClickTime).TotalMilliseconds < 400)
+            {
+                page.IsEditing = true;
+                _lastTabClickPage = null;
+                e.Handled = true;
+
+                // Focus the TextBox after it becomes visible
+                Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Input, () =>
+                {
+                    if (fe is Border border)
+                    {
+                        var textBox = FindVisualChild<TextBox>(border);
+                        if (textBox != null)
+                        {
+                            textBox.Focus();
+                            textBox.SelectAll();
+                        }
+                    }
+                });
+                return;
+            }
+
+            _lastTabClickTime = now;
+            _lastTabClickPage = page;
+
+            var index = vm.CanvasPages.IndexOf(page);
+            if (index >= 0)
+                vm.SwitchCanvas(index);
+        }
+    }
+
+    private void CanvasTab_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+    {
+        // Intentionally empty - prevents event bubbling issues
+    }
+
+    private void CanvasTabRename_KeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Enter || e.Key == Key.Escape)
+        {
+            if (sender is TextBox tb && tb.DataContext is Models.CanvasPage page)
+            {
+                if (e.Key == Key.Escape)
+                    tb.Text = page.Name; // Revert
+                page.IsEditing = false;
+            }
+        }
+    }
+
+    private void CanvasTabRename_LostFocus(object sender, RoutedEventArgs e)
+    {
+        if (sender is TextBox tb && tb.DataContext is Models.CanvasPage page)
+        {
+            page.IsEditing = false;
+        }
+    }
+
+    private void CanvasTabClose_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is FrameworkElement fe && fe.DataContext is Models.CanvasPage page)
+        {
+            var vm = DataContext as ViewModels.MainWindowViewModel;
+            if (vm != null)
+            {
+                var index = vm.CanvasPages.IndexOf(page);
+                if (index >= 0)
+                    vm.RemoveCanvas(index);
+            }
+        }
+    }
+
+    private static T FindVisualChild<T>(DependencyObject parent) where T : DependencyObject
+    {
+        for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
+        {
+            var child = VisualTreeHelper.GetChild(parent, i);
+            if (child is T result)
+                return result;
+            var found = FindVisualChild<T>(child);
+            if (found != null)
+                return found;
+        }
+        return null;
+    }
+
     private void CommandBinding_CanExecute_Maximize(object sender, CanExecuteRoutedEventArgs e)
     {
         e.CanExecute = true;

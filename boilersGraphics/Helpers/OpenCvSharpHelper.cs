@@ -62,7 +62,11 @@ public static class OpenCvSharpHelper
     public static RenderTargetBitmap GetImage(FrameworkElement view)
     {
         var size = new Size(view.ActualWidth, view.ActualHeight);
-        if (size.IsEmpty)
+        // Size.IsEmpty は Size.Empty (-1,-1) でしか true にならないので、
+        // 0 サイズの View でも RenderTargetBitmap の引数 (>0 必須) で
+        // ArgumentOutOfRangeException が発生する。実 ActualWidth/Height が
+        // 0 以下のケースもガードして null を返す。
+        if (size.IsEmpty || size.Width <= 0 || size.Height <= 0)
             return null;
 
         var result = new RenderTargetBitmap((int)size.Width, (int)size.Height, 96, 96, PixelFormats.Pbgra32);

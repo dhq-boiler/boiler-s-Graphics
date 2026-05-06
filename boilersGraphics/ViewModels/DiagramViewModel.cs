@@ -60,7 +60,6 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     public DiagramViewModel(MainWindowViewModel mainWindowViewModel, bool isPreview = false)
     {
         MainWindowVM = mainWindowViewModel;
-        Instance = this;
 
         if (!App.IsTest)
         {
@@ -677,7 +676,6 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
         Mediator.Instance.Register(this);
     }
 
-    public static DiagramViewModel Instance { get; private set; }
     public Renderer Renderer { get; } = new(new WpfVisualTreeHelper());
     public DelegateCommand<object> CreateNewDiagramCommand { get; }
     public DelegateCommand LoadCommand { get; }
@@ -787,9 +785,9 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
 
     private void ExecuteCopyCanvasToClipboardCommand()
     {
-        var renderer = DiagramViewModel.Instance.Renderer;
+        var renderer = this.Renderer;
         var bitmap = renderer.Render(null, DesignerCanvas.GetInstance(), this, BackgroundItem.Value, BackgroundItem.Value);
-        Clipboard.SetImage(bitmap);
+        ClipboardHelper.SetImage(bitmap);
     }
 
     [Conditional("DEBUG")]
@@ -800,6 +798,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
 
     private void PackAutoSaveFiles()
     {
+        if (App.IsTest || App.Current is null) return;
         App.Current.Dispatcher.Invoke(() =>
         {
             AutoSaveFiles?.Clear();
@@ -901,7 +900,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
             var versionXML = new XElement("Version", BGSXFileVersion.ToString());
             var layersXML = new XElement("Layers", ObjectSerializer.SerializeLayers(Layers));
             var configurationXML = new XElement("Configuration", ObjectSerializer.SerializeConfiguration(this));
-            var attachmentsXML = new XElement("Attachments", ObjectSerializer.SerializeAttachments());
+            var attachmentsXML = new XElement("Attachments", ObjectSerializer.SerializeAttachments(this));
 
             var root = new XElement("boilersGraphics");
             root.Add(versionXML);
@@ -1338,39 +1337,47 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                 combine.PathGeometry.Value.Bounds.Height);
             Add(combine);
         }
-        else if (selectedItems.AsValueEnumerable().Count() == 2 && item1 is EffectViewModel effect)
+        else if (selectedItems.AsValueEnumerable().Count() == 2 && (item1 is EffectViewModel || GetSelectedItemLast() is EffectViewModel))
         {
             var item2 = GetSelectedItemLast();
-            Remove(item2);
 
-            var designerItem1 = item1 as DesignerItemViewModelBase;
-            var designerItem2 = item2 as DesignerItemViewModelBase;
+            // EffectViewModelを保持し、もう一方を削除する
+            EffectViewModel effect;
+            SelectableDesignerItemViewModelBase otherItem;
+            if (item1 is EffectViewModel effect1)
+            {
+                effect = effect1;
+                otherItem = item2;
+            }
+            else
+            {
+                effect = (EffectViewModel)item2;
+                otherItem = item1;
+            }
+            Remove(otherItem);
 
-            var item1PathGeometry = item1.PathGeometryNoRotate.Value;
-            var item2PathGeometry = item2.PathGeometryNoRotate.Value;
+            var designerEffect = effect as DesignerItemViewModelBase;
+            var designerOther = otherItem as DesignerItemViewModelBase;
 
-            if (item1.RotationAngle.Value != 0) item1PathGeometry = designerItem1.PathGeometryRotate.Value;
-            if (designerItem1 is not CombineGeometryViewModel)
-                item1PathGeometry = GeometryCreator.Translate(item1PathGeometry, designerItem1.Left.Value,
-                    designerItem1.Top.Value);
+            var effectPathGeometry = effect.PathGeometryNoRotate.Value;
+            var otherPathGeometry = otherItem.PathGeometryNoRotate.Value;
 
-            if (item2.RotationAngle.Value != 0) item2PathGeometry = designerItem2.PathGeometryRotate.Value;
+            if (effect.RotationAngle.Value != 0) effectPathGeometry = designerEffect.PathGeometryRotate.Value;
+            if (designerEffect is not CombineGeometryViewModel)
+                effectPathGeometry = GeometryCreator.Translate(effectPathGeometry, designerEffect.Left.Value,
+                    designerEffect.Top.Value);
 
-            if (designerItem2 is not CombineGeometryViewModel)
-                item2PathGeometry = GeometryCreator.Translate(item2PathGeometry, designerItem2.Left.Value,
-                    designerItem2.Top.Value);
+            if (otherItem.RotationAngle.Value != 0) otherPathGeometry = designerOther.PathGeometryRotate.Value;
 
-            MainWindowVM.Recorder.Current.ExecuteSetProperty(effect, "PathGeometryNoRotate.Value",
-                GeometryCreator.Translate(Geometry.Combine(item1PathGeometry, item2PathGeometry, mode, null), -designerItem1.Left.Value, -designerItem1.Top.Value));
-            
-            MainWindowVM.Recorder.Current.ExecuteSetProperty(effect, "UpdatingStrategy.Value", SelectableDesignerItemViewModelBase.PathGeometryUpdatingStrategy.ResizeWhilePreservingOriginalShape);
+            if (designerOther is not CombineGeometryViewModel)
+                otherPathGeometry = GeometryCreator.Translate(otherPathGeometry, designerOther.Left.Value,
+                    designerOther.Top.Value);
 
-            var rect = Geometry.Combine(item1PathGeometry, item2PathGeometry, mode, null).Bounds;
-            MainWindowVM.Recorder.Current.ExecuteSetProperty(effect, "Left.Value", rect.Left);
-            MainWindowVM.Recorder.Current.ExecuteSetProperty(effect, "Top.Value", rect.Top);
-            MainWindowVM.Recorder.Current.ExecuteSetProperty(effect, "PathGeometryNoRotate.Value", GeometryCreator.Translate(effect.PathGeometryNoRotate.Value, -effect.PathGeometryNoRotate.Value.Bounds.Left, -effect.PathGeometryNoRotate.Value.Bounds.Top));
-            MainWindowVM.Recorder.Current.ExecuteSetProperty(effect, "Width.Value", rect.Width);
-            MainWindowVM.Recorder.Current.ExecuteSetProperty(effect, "Height.Value", rect.Height);
+            var combinedAbsolute = Geometry.Combine(effectPathGeometry, otherPathGeometry, mode, null);
+            var combinedLocal = GeometryCreator.Translate(combinedAbsolute, -designerEffect.Left.Value, -designerEffect.Top.Value);
+
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(effect, "UpdatingStrategy.Value", SelectableDesignerItemViewModelBase.PathGeometryUpdatingStrategy.Fixed);
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(effect, "PathGeometryNoRotate.Value", combinedLocal);
         }
         else
         {
@@ -1417,14 +1424,13 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                     Geometry.Combine(item1PathGeometry, item2PathGeometry, mode, null));
             }
 
-            MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "Left.Value",
-                combine.PathGeometryNoRotate.Value.Bounds.Left);
-            MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "Top.Value",
-                combine.PathGeometryNoRotate.Value.Bounds.Top);
-            MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "Width.Value",
-                combine.PathGeometryNoRotate.Value.Bounds.Width);
-            MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "Height.Value",
-                combine.PathGeometryNoRotate.Value.Bounds.Height);
+            var bounds = combine.PathGeometryNoRotate.Value.Bounds;
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "Left.Value", bounds.Left);
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "Top.Value", bounds.Top);
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "PathGeometryNoRotate.Value",
+                GeometryCreator.Translate(combine.PathGeometryNoRotate.Value, -bounds.Left, -bounds.Top));
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "Width.Value", bounds.Width);
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(combine, "Height.Value", bounds.Height);
             Add(combine);
         }
 
@@ -1545,16 +1551,16 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
 
     private void ExecutePasteCommand()
     {
-        var obj = Clipboard.GetDataObject();
-        if (obj.GetDataPresent(typeof(ClipboardDTO)))
+        var obj = ClipboardHelper.GetDataObject();
+        if (ClipboardHelper.GetDataPresent(obj, ClipboardDTO.ClipboardFormat))
         {
-            var clipboardDTO = obj.GetData(typeof(ClipboardDTO)) as ClipboardDTO;
-            var root = XElement.Parse(clipboardDTO.Root);
+            var str = ClipboardHelper.GetData(obj, ClipboardDTO.ClipboardFormat) as string;
+            var root = XElement.Parse(str);
             ObjectDeserializer.ReadCopyObjectsFromXML(this, root);
         }
-        else if (Clipboard.ContainsImage())
+        else if (ClipboardHelper.ContainsImage())
         {
-            var bitmap = Clipboard.GetImage();
+            var bitmap = ClipboardHelper.GetImage();
             var pic = new PictureDesignerItemViewModel();
             pic.Owner = this;
             var encoder = new JpegBitmapEncoder();
@@ -1601,11 +1607,10 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
 
     public bool CanExecutePaste()
     {
-        var obj = Clipboard.GetDataObject();
-        if (obj.GetDataPresent(typeof(ClipboardDTO)))
+        var obj = ClipboardHelper.GetDataObject();
+        if (ClipboardHelper.GetDataPresent(obj, ClipboardDTO.ClipboardFormat))
         {
-            var clipboardDTO = obj.GetData(typeof(ClipboardDTO)) as ClipboardDTO;
-            var str = clipboardDTO.Root;
+            var str = ClipboardHelper.GetData(obj, ClipboardDTO.ClipboardFormat) as string;
             try
             {
                 var root = XElement.Parse(str);
@@ -1639,7 +1644,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                 return false;
             }
         }
-        else if (Clipboard.ContainsImage())
+        else if (ClipboardHelper.ContainsImage())
         {
             return true;
         }
@@ -1687,7 +1692,9 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
             root.Add(copyObj);
             copyObj.Add(ObjectSerializer.ExtractItems(Layers.AsValueEnumerable().SelectMany(x => x.Children)
                 .Where(x => (x as LayerItem).IsSelected.Value).Cast<LayerItem>().ToArray()));
-            Clipboard.SetDataObject(new ClipboardDTO(root.ToString()), false);
+            var dataObject = new DataObject();
+            dataObject.SetData(ClipboardDTO.ClipboardFormat, root.ToString());
+            ClipboardHelper.SetDataObject(dataObject, false);
         }
         else if (SelectedLayers.Value.AsValueEnumerable().Count() > 0)
         {
@@ -1698,7 +1705,9 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
             copyObj.Add(new XElement("Layers"));
             copyObj.Element("Layers")
                 .Add(ObjectSerializer.SerializeLayers(new ObservableList<LayerTreeViewItemBase>(SelectedLayers.Value).ToNotifyCollectionChangedSlim()));
-            Clipboard.SetDataObject(new ClipboardDTO(root.ToString()), false);
+            var dataObject = new DataObject();
+            dataObject.SetData(ClipboardDTO.ClipboardFormat, root.ToString());
+            ClipboardHelper.SetDataObject(dataObject, false);
         }
     }
 
@@ -1737,6 +1746,8 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
         preferences.AutoSaveInterval.Value = AutoSaveInterval.Value;
         preferences.AngleType.Value = AngleType.Value;
         preferences.EnableImageEmbedding.Value = EnableImageEmbedding.Value;
+        preferences.EnableAutoScrollOnDrag.Value = EnableAutoScrollOnDrag.Value;
+        preferences.AutoScrollOnDragSpeed.Value = AutoScrollOnDragSpeed.Value;
         dlgService.ShowDialog(nameof(Views.Preference), new DialogParameters { { "Preferences", preferences } },
             ret => result = ret);
         if (result != null && result.Result == ButtonResult.OK)
@@ -1755,6 +1766,8 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
             AutoSaveInterval.Value = s.AutoSaveInterval.Value;
             AngleType.Value = s.AngleType.Value;
             EnableImageEmbedding.Value = s.EnableImageEmbedding.Value;
+            EnableAutoScrollOnDrag.Value = s.EnableAutoScrollOnDrag.Value;
+            AutoScrollOnDragSpeed.Value = s.AutoScrollOnDragSpeed.Value;
             SetAutoSave();
         }
     }
@@ -1899,6 +1912,94 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     {
         Layers.Clear();
         Layers.Add(new Layer());
+    }
+
+    private void LoadCanvasPagesFromXml(XElement root, MainWindowViewModel mainWindowVM)
+    {
+        var canvasesElement = root.Element("Canvases");
+        if (canvasesElement == null)
+        {
+            // Legacy single-canvas file: create one page with current canvas state
+            mainWindowVM.CanvasPages.Clear();
+            var page = new Models.CanvasPage("Canvas 1");
+            page.SerializedData = SerializeCanvasState();
+            mainWindowVM.CanvasPages.Add(page);
+            mainWindowVM.ActiveCanvasIndex.Value = 0;
+            return;
+        }
+
+        mainWindowVM.CanvasPages.Clear();
+        int index = 0;
+        foreach (var canvasElement in canvasesElement.Elements("Canvas"))
+        {
+            var name = canvasElement.Attribute("Name")?.Value ?? $"Canvas {index + 1}";
+            var page = new Models.CanvasPage(name);
+            page.SerializedData = new XElement(canvasElement);
+            mainWindowVM.CanvasPages.Add(page);
+            index++;
+        }
+
+        var activeIndexElement = root.Element("ActiveCanvasIndex");
+        int activeIndex = 0;
+        if (activeIndexElement != null)
+            int.TryParse(activeIndexElement.Value, out activeIndex);
+
+        activeIndex = Math.Max(0, Math.Min(activeIndex, mainWindowVM.CanvasPages.Count - 1));
+        mainWindowVM.ActiveCanvasIndex.Value = activeIndex;
+
+        // The current canvas (loaded via legacy path) represents the active canvas
+        // Update its serialized data
+        if (mainWindowVM.CanvasPages.Count > 0)
+        {
+            mainWindowVM.CanvasPages[activeIndex].SerializedData = SerializeCanvasState();
+        }
+    }
+
+    public XElement SerializeCanvasState()
+    {
+        var canvas = new XElement("Canvas");
+        canvas.Add(new XElement("Layers", ObjectSerializer.SerializeLayers(Layers)));
+
+        var background = BackgroundItem.Value;
+        var bgElement = new XElement("Background");
+        bgElement.Add(new XElement("Left", background.Left.Value));
+        bgElement.Add(new XElement("Top", background.Top.Value));
+        bgElement.Add(new XElement("Width", background.Width.Value));
+        bgElement.Add(new XElement("Height", background.Height.Value));
+        bgElement.Add(new XElement("FillBrush",
+            XElement.Parse(Helpers.WpfObjectSerializer.Serialize(CanvasFillBrush.Value))));
+        canvas.Add(bgElement);
+
+        return canvas;
+    }
+
+    public void RestoreCanvasState(XElement canvas)
+    {
+        Layers.Clear();
+
+        var bgElement = canvas.Element("Background");
+        if (bgElement != null)
+        {
+            var background = BackgroundItem.Value;
+            background.Left.Value = double.Parse(bgElement.Element("Left").Value);
+            background.Top.Value = double.Parse(bgElement.Element("Top").Value);
+            background.Width.Value = double.Parse(bgElement.Element("Width").Value);
+            background.Height.Value = double.Parse(bgElement.Element("Height").Value);
+
+            var fillBrushElement = bgElement.Element("FillBrush");
+            if (fillBrushElement != null && fillBrushElement.HasElements)
+            {
+                var brush = Helpers.WpfObjectSerializer.Deserialize(
+                    fillBrushElement.Elements().First().ToString());
+                if (brush is System.Windows.Media.Brush b)
+                    CanvasFillBrush.Value = b;
+            }
+        }
+
+        ObjectDeserializer.ReadObjectsFromXML(this, null, canvas);
+
+        if (Layers.Count == 0)
+            Layers.Add(new Layer());
     }
 
     private void ExecuteExportCommand()
@@ -2111,6 +2212,13 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
 
     public BindableReactiveProperty<bool> EnableImageEmbedding { get; set; } = new();
 
+    // Default to enabled with a moderate speed (8 px / 30 ms tick).
+    // Affects DragThumb's auto-scroll-on-drag behavior. Settable via the
+    // Preference dialog. Speed is the per-tick scroll increment in pixels;
+    // 1.0 is very slow, 30.0 is very fast.
+    public BindableReactiveProperty<bool> EnableAutoScrollOnDrag { get; set; } = new(true);
+    public BindableReactiveProperty<double> AutoScrollOnDragSpeed { get; set; } = new(8d);
+
     public BindableReactiveProperty<Visibility> ContextMenuVisibility { get; } = new();
 
     public BindableReactiveProperty<ColorSpots> ColorSpots { get; } = new();
@@ -2174,18 +2282,39 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
 
     private void ExecuteSaveAsCommand()
     {
-        var versionXML = new XElement("Version", BGSXFileVersion.ToString());
-        var layersXML = new XElement("Layers", ObjectSerializer.SerializeLayers(Layers));
-        var configurationXML = new XElement("Configuration", ObjectSerializer.SerializeConfiguration(this));
-        var attachmentsXML = new XElement("Attachments", ObjectSerializer.SerializeAttachments());
-
-        var root = new XElement("boilersGraphics");
-        root.Add(versionXML);
-        root.Add(layersXML);
-        root.Add(configurationXML);
-        root.Add(attachmentsXML);
-
+        var root = BuildSaveXElement();
         SaveFileWithSaveFileDialog(root);
+    }
+
+    internal XElement BuildSaveXElement()
+    {
+        var root = new XElement("boilersGraphics");
+        root.Add(new XElement("Version", BGSXFileVersion.ToString()));
+
+        var canvasPages = MainWindowVM.CanvasPages;
+        if (canvasPages.Count > 1 || (canvasPages.Count == 1 && canvasPages[0].SerializedData != null))
+        {
+            // Save current canvas state before serializing all pages
+            MainWindowVM.SaveCurrentCanvasState();
+
+            var canvasesXml = new XElement("Canvases");
+            for (int i = 0; i < canvasPages.Count; i++)
+            {
+                var page = canvasPages[i];
+                var canvasXml = page.SerializedData ?? SerializeCanvasState();
+                canvasXml.SetAttributeValue("Name", page.Name);
+                canvasesXml.Add(canvasXml);
+            }
+            root.Add(canvasesXml);
+            root.Add(new XElement("ActiveCanvasIndex", MainWindowVM.ActiveCanvasIndex.Value));
+        }
+
+        // Always include legacy-compatible single-canvas format
+        root.Add(new XElement("Layers", ObjectSerializer.SerializeLayers(Layers)));
+        root.Add(new XElement("Configuration", ObjectSerializer.SerializeConfiguration(this)));
+        root.Add(new XElement("Attachments", ObjectSerializer.SerializeAttachments(this)));
+
+        return root;
     }
 
     private void SaveFileWithSaveFileDialog(XElement xElement)
@@ -2252,16 +2381,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
 
     private void ExecuteOverwriteCommand()
     {
-        var versionXML = new XElement("Version", BGSXFileVersion.ToString());
-        var layersXML = new XElement("Layers", ObjectSerializer.SerializeLayers(Layers));
-        var configurationXML = new XElement("Configuration", ObjectSerializer.SerializeConfiguration(this));
-        var attachmentsXML = new XElement("Attachments", ObjectSerializer.SerializeAttachments());
-
-        var root = new XElement("boilersGraphics");
-        root.Add(versionXML);
-        root.Add(layersXML);
-        root.Add(configurationXML);
-        root.Add(attachmentsXML);
+        var root = BuildSaveXElement();
         Save(root);
     }
 
@@ -3240,6 +3360,9 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
 
                 await PostProcessInFileLoadingSequence(mainwindowViewModel).ConfigureAwait(false);
 
+                // Load multi-canvas pages if present
+                LoadCanvasPagesFromXml(root, mainwindowViewModel);
+
                 vm.Output.Value += Environment.NewLine;
                 vm.Output.Value += Resources.Log_FinishLoadFromFile;
                 LogManager.GetCurrentClassLogger().Info(Resources.Log_FinishLoadFromFile);
@@ -3814,106 +3937,30 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     private void ExecuteBringForwardCommand()
     {
         MainWindowVM.Recorder.BeginRecode();
-        
-        var ordered = SelectedItems.Value.AsValueEnumerable().OrderByDescending(item => item.ZIndex.Value);
 
-        var count = Layers.AsValueEnumerable().SelectMany(x => x.Children).Count();
+        var orderedSelected = SelectedItems.Value
+            .AsValueEnumerable()
+            .OrderByDescending(item => item.ZIndex.Value)
+            .ToList();
 
-        for (var i = 0; i < ordered.Count(); ++i)
+        foreach (var current in orderedSelected)
         {
-            var currentIndex = ordered.ElementAt(i).ZIndex.Value;
-            if (SelectedLayers.Value.AsValueEnumerable().First().Children.AsValueEnumerable().Max(x => (x as LayerItem).Item.Value.ZIndex.Value) ==
-                currentIndex)
-                continue; //レイヤー内の最大ZIndex値と同じだった場合はcontinueして次の選択アイテムへ
-            var next = (from x in Layers.AsValueEnumerable().SelectMany(x => x.Children)
-                where (x as LayerItem).Item.Value.ZIndex.Value == currentIndex + 1
-                select x).SingleOrDefault();
+            var topLevel = TopLevelItemsForOrdering();
+            var currentIndex = current.ZIndex.Value;
 
+            var next = topLevel
+                .Where(li => li.Item.Value.ZIndex.Value > currentIndex)
+                .OrderBy(li => li.Item.Value.ZIndex.Value)
+                .FirstOrDefault();
             if (next == null) continue;
 
-            var newIndex = (next as LayerItem).Item.Value.ParentID != Guid.Empty
-                ? (Layers.AsValueEnumerable().SelectMany(x => x.Children)
-                        .Single(x => (x as LayerItem).Item.Value.ID == (next as LayerItem).Item.Value.ParentID) as
-                    LayerItem).Item.Value.ZIndex.Value
-                : Math.Min(count - 1 - i, currentIndex + 1);
-            if (currentIndex != newIndex)
-            {
-                if (ordered.ElementAt(i) is GroupItemViewModel)
-                {
-                    MainWindowVM.Recorder.Current.ExecuteSetProperty(ordered.ElementAt(i), "ZIndex.Value", newIndex);
+            var nextItem = next.Item.Value;
+            var nextZIndex = nextItem.ZIndex.Value;
 
-                    var orderedElementID = ordered.ElementAt(i).ID;
-                    var children = Layers.AsValueEnumerable().SelectMany(xx => xx.Children)
-                        .Where(item => (item as LayerItem).Item.Value.ParentID == orderedElementID)
-                        .OrderByDescending(item => (item as LayerItem).Item.Value.ZIndex.Value)
-                        .ToList();
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(current, "ZIndex.Value", nextZIndex);
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(nextItem, "ZIndex.Value", currentIndex);
 
-                    var youngestChildrenZIndex = 0;
-
-                    for (var j = 0; j < children.AsValueEnumerable().Count(); ++j)
-                    {
-                        var child = children.AsValueEnumerable().ElementAt(j);
-                        youngestChildrenZIndex = newIndex - j - 1;
-                        MainWindowVM.Recorder.Current.ExecuteSetProperty((child as LayerItem).Item.Value,
-                            "ZIndex.Value", newIndex - j - 1);
-                    }
-                    
-                    var orderedElementZIndex = ordered.ElementAt(i).ZIndex.Value;
-                    var younger = from item in Layers.AsValueEnumerable().SelectMany(xx => xx.Children)
-                        where (item as LayerItem).Item.Value.ID != orderedElementID &&
-                              (item as LayerItem).Item.Value.ParentID != orderedElementID
-                              && (item as LayerItem).Item.Value.ZIndex.Value <= orderedElementZIndex &&
-                              (item as LayerItem).Item.Value.ZIndex.Value >= youngestChildrenZIndex
-                        select item;
-
-                    var x = from item in Layers.AsValueEnumerable().SelectMany(xx => xx.Children)
-                        where (item as LayerItem).Item.Value.ID != orderedElementID &&
-                              (item as LayerItem).Item.Value.ParentID != orderedElementID
-                              && (item as LayerItem).Item.Value.ZIndex.Value < youngestChildrenZIndex
-                        select item;
-
-                    var z = x.ToList();
-                    z.AddRange(younger.ToArray());
-
-                    for (var j = 0; j < z.AsValueEnumerable().Count(); ++j)
-                        MainWindowVM.Recorder.Current.ExecuteSetProperty((z.AsValueEnumerable().ElementAt(j) as LayerItem).Item.Value,
-                            "ZIndex.Value", j);
-                }
-                else
-                {
-                    MainWindowVM.Recorder.Current.ExecuteSetProperty(ordered.ElementAt(i), "ZIndex.Value", newIndex);
-                    var exists = Layers.AsValueEnumerable().SelectMany(x => x.Children)
-                        .Where(item => (item as LayerItem).Item.Value.ZIndex.Value == newIndex);
-
-                    foreach (var item in exists)
-                    {
-                        ((item as LayerItem).Item.Value as EffectViewModel)?.DisposeMonitoringItem(ordered.ElementAt(i));
-                        if ((item as LayerItem).Item.Value != ordered.ElementAt(i))
-                        {
-                            if ((item as LayerItem).Item.Value is GroupItemViewModel)
-                            {
-                                var children = from it in Layers.AsValueEnumerable().SelectMany(x => x.Children)
-                                               where (it as LayerItem).Item.Value.ParentID == (item as LayerItem).Item.Value.ID
-                                               select it;
-
-                                foreach (var child in children)
-                                    MainWindowVM.Recorder.Current.ExecuteSetProperty((child as LayerItem).Item.Value,
-                                        "ZIndex.Value", newIndex);
-
-                                MainWindowVM.Recorder.Current.ExecuteSetProperty((item as LayerItem).Item.Value,
-                                    "ZIndex.Value", currentIndex + children.Count());
-                            }
-                            else
-                            {
-                                MainWindowVM.Recorder.Current.ExecuteSetProperty((item as LayerItem).Item.Value,
-                                    "ZIndex.Value", currentIndex);
-                            }
-
-                            (ordered.ElementAt(i) as EffectViewModel)?.Render();
-                        }
-                    }
-                }
-            }
+            (current as EffectViewModel)?.Render();
         }
 
         Sort(Layers);
@@ -3921,6 +3968,20 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
         MainWindowVM.Recorder.EndRecode();
 
         UpdateStatisticsCountMoveToFront();
+    }
+
+    /// <summary>
+    /// Direct LayerItem children of the currently selected layers (i.e.
+    /// items participating in top-level Z-order). Group children sitting
+    /// inside a group's LayerItem.Children are intentionally excluded.
+    /// </summary>
+    private List<LayerItem> TopLevelItemsForOrdering()
+    {
+        return SelectedLayers.Value
+            .AsValueEnumerable()
+            .SelectMany(layer => layer.Children)
+            .OfType<LayerItem>()
+            .ToList();
     }
 
     private void UpdateStatisticsCountMoveToFront()
@@ -3937,123 +3998,30 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     private void ExecuteSendBackwardCommand()
     {
         MainWindowVM.Recorder.BeginRecode();
-        
-        var ordered = SelectedItems.Value.AsValueEnumerable().OrderBy(item => item.ZIndex.Value);
 
-        var count = Layers.AsValueEnumerable().SelectMany(x => x.Children).Count();
+        var orderedSelected = SelectedItems.Value
+            .AsValueEnumerable()
+            .OrderBy(item => item.ZIndex.Value)
+            .ToList();
 
-        for (var i = 0; i < ordered.Count(); ++i)
+        foreach (var current in orderedSelected)
         {
-            var currentIndex = ordered.ElementAt(i).ZIndex.Value;
-            if (SelectedLayers.Value.AsValueEnumerable().First().Children.AsValueEnumerable().Min(x => (x as LayerItem).Item.Value.ZIndex.Value) ==
-                currentIndex)
-                continue; //レイヤー内の最小ZIndex値と同じだった場合はcontinueして次の選択アイテムへ
-            var previous = (from x in Layers.AsValueEnumerable().SelectMany(x => x.Children)
-                where (x as LayerItem).Item.Value.ZIndex.Value == currentIndex - 1
-                select x).SingleOrDefault();
+            var topLevel = TopLevelItemsForOrdering();
+            var currentIndex = current.ZIndex.Value;
 
+            var previous = topLevel
+                .Where(li => li.Item.Value.ZIndex.Value < currentIndex)
+                .OrderByDescending(li => li.Item.Value.ZIndex.Value)
+                .FirstOrDefault();
             if (previous == null) continue;
 
-            var newIndex = (previous as LayerItem).Item.Value is GroupItemViewModel
-                ? Layers.AsValueEnumerable().SelectMany(x => x.Children)
-                    .Where(x => (x as LayerItem).Item.Value.ParentID == (previous as LayerItem).Item.Value.ID)
-                    .Min(x => (x as LayerItem).Item.Value.ZIndex.Value)
-                : Math.Max(i, currentIndex - 1);
-            if (currentIndex != newIndex)
-            {
-                if (ordered.ElementAt(i) is GroupItemViewModel)
-                {
-                    var orderedElementID = ordered.ElementAt(i).ID;
-                    var children = (from item in Layers.AsValueEnumerable().SelectMany(x => x.Children)
-                        where (item as LayerItem).Item.Value.ParentID == orderedElementID
-                        orderby (item as LayerItem).Item.Value.ZIndex.Value descending
-                        select item).ToList();
+            var previousItem = previous.Item.Value;
+            var previousZIndex = previousItem.ZIndex.Value;
 
-                    if (children.AsValueEnumerable().Any(c => (c as LayerItem).Item.Value.ZIndex.Value == 0)) continue;
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(current, "ZIndex.Value", previousZIndex);
+            MainWindowVM.Recorder.Current.ExecuteSetProperty(previousItem, "ZIndex.Value", currentIndex);
 
-                    MainWindowVM.Recorder.Current.ExecuteSetProperty(ordered.ElementAt(i), "ZIndex.Value", newIndex);
-
-                    var youngestChildrenZIndex = 0;
-
-                    for (var j = 0; j < children.AsValueEnumerable().Count(); ++j)
-                    {
-                        var child = children.AsValueEnumerable().ElementAt(j);
-                        youngestChildrenZIndex = newIndex - j - 1;
-                        MainWindowVM.Recorder.Current.ExecuteSetProperty((child as LayerItem).Item.Value,
-                            "ZIndex.Value", newIndex - j - 1);
-                    }
-
-                    var orderedElementZIndex = ordered.ElementAt(i).ZIndex.Value;
-                    var older = from item in Layers.AsValueEnumerable().SelectMany(xx => xx.Children)
-                        where (item as LayerItem).Item.Value.ID != orderedElementID &&
-                              (item as LayerItem).Item.Value.ParentID != orderedElementID
-                              && (item as LayerItem).Item.Value.ZIndex.Value <= orderedElementZIndex &&
-                              (item as LayerItem).Item.Value.ZIndex.Value >= youngestChildrenZIndex
-                        select item;
-
-                    var x = from item in Layers.AsValueEnumerable().SelectMany(xx => xx.Children)
-                        where (item as LayerItem).Item.Value.ID != orderedElementID &&
-                              (item as LayerItem).Item.Value.ParentID != orderedElementID
-                              && (item as LayerItem).Item.Value.ZIndex.Value > orderedElementZIndex
-                        select item;
-
-                    var z = older.ToList();
-                    z.AddRange(x.ToArray());
-                    z.Reverse();
-
-                    for (var j = 0; j < z.AsValueEnumerable().Count(); ++j)
-                    {
-                        var elm = z.AsValueEnumerable().ElementAt(j);
-                        MainWindowVM.Recorder.Current.ExecuteSetProperty((elm as LayerItem).Item.Value, "ZIndex.Value",
-                            Layers.AsValueEnumerable().SelectMany(xx => xx.Children).Count() - j - 1);
-                    }
-                }
-                else
-                {
-                    MainWindowVM.Recorder.Current.ExecuteSetProperty(ordered.ElementAt(i), "ZIndex.Value", newIndex);
-                    
-                    (ordered.ElementAt(i) as EffectViewModel)?.Render();
-                    
-                    var exists = Layers.AsValueEnumerable().SelectMany(x => x.Children).Where(item =>
-                        (item as LayerItem).Item.Value.ZIndex.Value == newIndex);
-
-                    foreach (var item in exists)
-                    {
-                        if ((item as LayerItem).Item.Value != ordered.ElementAt(i))
-                        {
-                            if ((item as LayerItem).Item.Value.ParentID != Guid.Empty)
-                            {
-                                var children = from it in Layers.AsValueEnumerable().SelectMany(x => x.Children)
-                                    where (it as LayerItem).Item.Value.ParentID ==
-                                          (item as LayerItem).Item.Value.ParentID
-                                    select it;
-
-                                foreach (var child in children)
-                                    MainWindowVM.Recorder.Current.ExecuteSetProperty((child as LayerItem).Item.Value,
-                                        "ZIndex.Value", newIndex);
-
-                                var parent = (from it in Layers.AsValueEnumerable().SelectMany(x => x.Children)
-                                    where (it as LayerItem).Item.Value.ID == (item as LayerItem).Item.Value.ParentID
-                                    select it).Single();
-
-                                (parent as LayerItem).Item.Value.ZIndex.Value =
-                                    children.Max(x => (x as LayerItem).Item.Value.ZIndex.Value) + 1;
-                                MainWindowVM.Recorder.Current.ExecuteSetProperty((parent as LayerItem).Item.Value,
-                                    "ZIndex.Value", children.Max(x => (x as LayerItem).Item.Value.ZIndex.Value) + 1);
-                            }
-                            else
-                            {
-                                MainWindowVM.Recorder.Current.ExecuteSetProperty((item as LayerItem).Item.Value,
-                                    "ZIndex.Value", currentIndex);
-                            }
-                            ((item as LayerItem)?.Item.Value as EffectViewModel)?.BeginMonitoring(ordered.ElementAt(i));
-                            ((item as LayerItem)?.Item.Value as EffectViewModel)?.Render();
-                            break;
-                        }
-                    }
-                }
-            
-            }
+            (current as EffectViewModel)?.Render();
         }
 
         Sort(Layers);
@@ -4078,83 +4046,35 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     {
         MainWindowVM.Recorder.BeginRecode();
 
-        var ordered = SelectedItems.Value.AsValueEnumerable().OrderByDescending(item => item.ZIndex.Value);
+        var orderedSelected = SelectedItems.Value
+            .AsValueEnumerable()
+            .OrderByDescending(item => item.ZIndex.Value)
+            .ToList();
 
-        var count = Layers.AsValueEnumerable().SelectMany(x => x.Children).Count();
-
-        for (var i = 0; i < ordered.Count(); ++i)
+        foreach (var current in orderedSelected)
         {
-            var current = ordered.ElementAt(i);
-            var currentIndex = current.ZIndex.Value;
-            var newIndex = SelectedLayers.Value.AsValueEnumerable().SelectMany(x => x.Children).Count() - 1;
-            if (currentIndex != newIndex)
+            // Treat the operation as repeated swap-with-next-top-level-item
+            // until current sits on top. Each step swaps ZIndex values of
+            // current and its immediate top-level neighbour, leaving group
+            // children's ZIndex intact (their structure within the group
+            // stays put per the design).
+            while (true)
             {
-                var oldCurrentIndex = current.ZIndex.Value;
-                MainWindowVM.Recorder.Current.ExecuteSetProperty(current, "ZIndex.Value", newIndex);
+                var topLevel = TopLevelItemsForOrdering();
+                var currentIndex = current.ZIndex.Value;
+                var next = topLevel
+                    .Where(li => li.Item.Value.ZIndex.Value > currentIndex)
+                    .OrderBy(li => li.Item.Value.ZIndex.Value)
+                    .FirstOrDefault();
+                if (next == null) break;
 
-                if (current is GroupItemViewModel)
-                {
-                    var children = from item in Layers.AsValueEnumerable().SelectMany(x => x.Children)
-                        where (item as LayerItem).Item.Value.ParentID == current.ID
-                        orderby (item as LayerItem).Item.Value.ZIndex.Value descending
-                        select item;
-
-                    for (var j = 0; j < children.Count(); ++j)
-                    {
-                        var child = children.ElementAt(j);
-                        MainWindowVM.Recorder.Current.ExecuteSetProperty((child as LayerItem).Item.Value,
-                            "ZIndex.Value", current.ZIndex.Value - j - 1);
-                    }
-
-                    var minValue = children.Min(x => (x as LayerItem).Item.Value.ZIndex.Value);
-
-                    var other = (from item in Layers.AsValueEnumerable().SelectMany(x => x.Children)
-                        where (item as LayerItem).Item.Value.ParentID != current.ID &&
-                              (item as LayerItem).Item.Value.ID != current.ID
-                        orderby (item as LayerItem).Item.Value.ZIndex.Value descending
-                        select item).ToList();
-
-                    for (var j = 0; j < other.AsValueEnumerable().Count(); ++j)
-                    {
-                        var item = other.AsValueEnumerable().ElementAt(j);
-                        MainWindowVM.Recorder.Current.ExecuteSetProperty((item as LayerItem).Item.Value, "ZIndex.Value",
-                            minValue - j);
-                    }
-                }
-                else
-                {
-                    var exists = Layers.AsValueEnumerable().SelectMany(x => x.Children).Where(item =>
-                        (item as LayerItem).Item.Value.ZIndex.Value == newIndex);
-
-                    foreach (var item in exists)
-                    {
-                        ((item as LayerItem).Item.Value as EffectViewModel)?.DisposeMonitoringItem(ordered.ElementAt(i));
-                        if ((item as LayerItem).Item.Value != ordered.ElementAt(i))
-                        {
-                            if ((item as LayerItem).Item.Value is GroupItemViewModel)
-                            {
-                                var children = from it in Layers.AsValueEnumerable().SelectMany(x => x.Children)
-                                               where (it as LayerItem).Item.Value.ParentID == (item as LayerItem).Item.Value.ID
-                                               select it;
-
-                                foreach (var child in children)
-                                    MainWindowVM.Recorder.Current.ExecuteSetProperty((child as LayerItem).Item.Value,
-                                        "ZIndex.Value", newIndex);
-
-                                MainWindowVM.Recorder.Current.ExecuteSetProperty((item as LayerItem).Item.Value,
-                                    "ZIndex.Value", currentIndex + children.Count());
-                            }
-                            else
-                            {
-                                MainWindowVM.Recorder.Current.ExecuteSetProperty((item as LayerItem).Item.Value,
-                                    "ZIndex.Value", currentIndex);
-                            }
-
-                            (ordered.ElementAt(i) as EffectViewModel)?.Render();
-                        }
-                    }
-                }
+                var nextItem = next.Item.Value;
+                var nextZIndex = nextItem.ZIndex.Value;
+                MainWindowVM.Recorder.Current.ExecuteSetProperty(current, "ZIndex.Value", nextZIndex);
+                MainWindowVM.Recorder.Current.ExecuteSetProperty(nextItem, "ZIndex.Value", currentIndex);
             }
+
+            (current as EffectViewModel)?.Render();
         }
 
         Sort(Layers);
@@ -4179,76 +4099,32 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     {
         MainWindowVM.Recorder.BeginRecode();
 
-        var ordered = SelectedItems.Value.AsValueEnumerable().OrderByDescending(item => item.ZIndex.Value);
+        var orderedSelected = SelectedItems.Value
+            .AsValueEnumerable()
+            .OrderBy(item => item.ZIndex.Value)
+            .ToList();
 
-        var count = Layers.AsValueEnumerable().SelectMany(x => x.Children).Count();
-
-        for (var i = 0; i < ordered.Count(); ++i)
+        foreach (var current in orderedSelected)
         {
-            var current = ordered.ElementAt(i);
-            var currentIndex = current.ZIndex.Value;
-            var newIndex = current is GroupItemViewModel
-                ? Layers.AsValueEnumerable().SelectMany(x => x.Children).Where(x => (x as LayerItem).Item.Value.ParentID == current.ID)
-                    .Count()
-                : SelectedLayers.Value.AsValueEnumerable().First().Children.AsValueEnumerable().Min(x => (x as LayerItem).Item.Value.ZIndex.Value);
-            if (currentIndex != newIndex)
+            // Mirror BringForeground: repeatedly swap with the next-lower
+            // top-level neighbour until current sits at the bottom.
+            while (true)
             {
-                var oldCurrentIndex = current.ZIndex.Value;
-                MainWindowVM.Recorder.Current.ExecuteSetProperty(current, "ZIndex.Value", newIndex);
-                (current as EffectViewModel)?.Render();
+                var topLevel = TopLevelItemsForOrdering();
+                var currentIndex = current.ZIndex.Value;
+                var previous = topLevel
+                    .Where(li => li.Item.Value.ZIndex.Value < currentIndex)
+                    .OrderByDescending(li => li.Item.Value.ZIndex.Value)
+                    .FirstOrDefault();
+                if (previous == null) break;
 
-                if (current is GroupItemViewModel)
-                {
-                    var children = (from item in Layers.AsValueEnumerable().SelectMany(x => x.Children)
-                        where (item as LayerItem).Item.Value.ParentID == current.ID
-                        orderby (item as LayerItem).Item.Value.ZIndex.Value descending
-                        select item).ToList();
-
-                    for (var j = 0; j < children.AsValueEnumerable().Count(); ++j)
-                    {
-                        var child = children.AsValueEnumerable().ElementAt(j);
-                        MainWindowVM.Recorder.Current.ExecuteSetProperty((child as LayerItem).Item.Value,
-                            "ZIndex.Value", current.ZIndex.Value - j - 1);
-                    }
-
-                    var maxValue = Layers.AsValueEnumerable().SelectMany(x => x.Children).Count() - 1;
-
-                    var other = (from item in Layers.AsValueEnumerable().SelectMany(x => x.Children)
-                        where (item as LayerItem).Item.Value.ParentID != current.ID &&
-                              (item as LayerItem).Item.Value.ID != current.ID
-                        orderby (item as LayerItem).Item.Value.ZIndex.Value descending
-                        select item).ToList();
-
-                    for (var j = 0; j < other.AsValueEnumerable().Count(); ++j)
-                    {
-                        var item = other.AsValueEnumerable().ElementAt(j);
-                        MainWindowVM.Recorder.Current.ExecuteSetProperty((item as LayerItem).Item.Value, "ZIndex.Value",
-                            maxValue - j);
-                    }
-                }
-                else
-                {
-                    var exists = Layers.AsValueEnumerable().SelectMany(x => x.Children).Where(item =>
-                        (item as LayerItem).Item.Value.ZIndex.Value >= newIndex &&
-                        (item as LayerItem).Item.Value.ZIndex.Value < oldCurrentIndex)
-                        .Select(x => (x as LayerItem).Item.Value)
-                        .Except(new List<SelectableDesignerItemViewModelBase>() { current })
-                        .OrderBy(x => x.ZIndex.Value).ToList();
-
-                    foreach (var item in exists)
-                    {
-                        if (item != current)
-                        {
-                            MainWindowVM.Recorder.Current.ExecuteSetProperty(item,
-                                "ZIndex.Value", item.ZIndex.Value + 1);
-                            (item as EffectViewModel)?.BeginMonitoring(current);
-                            (item as EffectViewModel)?.Render();
-                        }
-                    }
-
-                }
-            
+                var previousItem = previous.Item.Value;
+                var previousZIndex = previousItem.ZIndex.Value;
+                MainWindowVM.Recorder.Current.ExecuteSetProperty(current, "ZIndex.Value", previousZIndex);
+                MainWindowVM.Recorder.Current.ExecuteSetProperty(previousItem, "ZIndex.Value", currentIndex);
             }
+
+            (current as EffectViewModel)?.Render();
         }
 
         Sort(Layers);
@@ -4711,22 +4587,34 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
 
     private void DuplicateObjects(IEnumerable<SelectableDesignerItemViewModelBase> items)
     {
-        var selectedItems = from item in items.OfType<DesignerItemViewModelBase>()
-            orderby item.ZIndex.Value
-            select item;
+        // Wrap the entire batch so a single Undo rolls back all duplicates at
+        // once. Without this, each ExecuteAdd recorded inside DuplicateDesignerItem /
+        // DuplicateConnector becomes its own undo entry and the user has to Undo
+        // N times to clear an N-item duplicate.
+        MainWindowVM.Recorder.BeginRecode();
+        try
+        {
+            var selectedItems = from item in items.OfType<DesignerItemViewModelBase>()
+                orderby item.ZIndex.Value
+                select item;
 
-        var oldNewList = new List<Tuple<SelectableDesignerItemViewModelBase, SelectableDesignerItemViewModelBase>>();
+            var oldNewList = new List<Tuple<SelectableDesignerItemViewModelBase, SelectableDesignerItemViewModelBase>>();
 
-        foreach (var item in selectedItems) DuplicateDesignerItem(selectedItems, oldNewList, item);
+            foreach (var item in selectedItems) DuplicateDesignerItem(selectedItems, oldNewList, item);
 
-        var selectedConnectors = (from item in items.OfType<SnapPointViewModel>().Select(x => x.Parent.Value)
-                .OfType<ConnectorBaseViewModel>()
-            orderby item.ZIndex.Value
-            select item).Distinct();
+            var selectedConnectors = (from item in items.OfType<SnapPointViewModel>().Select(x => x.Parent.Value)
+                    .OfType<ConnectorBaseViewModel>()
+                orderby item.ZIndex.Value
+                select item).Distinct();
 
-        foreach (var connector in selectedConnectors) DuplicateConnector(oldNewList, connector);
+            foreach (var connector in selectedConnectors) DuplicateConnector(oldNewList, connector);
 
-        EssentialCodeForBugAvoidance();
+            EssentialCodeForBugAvoidance();
+        }
+        finally
+        {
+            MainWindowVM.Recorder.EndRecode();
+        }
     }
 
     private void EssentialCodeForBugAvoidance()
@@ -4827,15 +4715,23 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
         LayerItem parentLayerItem = null)
     {
         var clone = connector.Clone() as ConnectorBaseViewModel;
-        clone.ZIndex.Value = Layers.SelectMany(x => x.Children).Count();
+        var items = Layers.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children);
+        if (parentLayerItem != null)
+            items = items.Union(
+                parentLayerItem.Children.SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children));
+        clone.ZIndex.Value = items.OfType<LayerItem>().Max(x => x.Item.Value.ZIndex.Value) + 1;
         if (groupItem != null)
         {
             clone.ParentID = groupItem.ID;
             clone.EnableForSelection.Value = false;
             groupItem.AddGroup(MainWindowVM.Recorder, clone);
+            var newLayerItem = new LayerItem(clone, parentLayerItem, layerItemName);
+            parentLayerItem.Children.Add(newLayerItem);
         }
-
-        Add(clone);
+        else
+        {
+            Add(clone);
+        }
 
         oldNewList.Add(
             new Tuple<SelectableDesignerItemViewModelBase, SelectableDesignerItemViewModelBase>(connector, clone));

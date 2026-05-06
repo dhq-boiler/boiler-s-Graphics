@@ -3,7 +3,7 @@ using Homura.ORM.Mapping;
 
 namespace boilersGraphics.Models;
 
-[DefaultVersion(typeof(Version5))]
+[DefaultVersion(typeof(Version8))]
 public class Statistics : PkIdEntity
 {
     private int _brushToolDrawCount;
@@ -71,6 +71,7 @@ public class Statistics : PkIdEntity
     private int _numberOfDrawsOfTheMosaicTool;
     private int _numberOfDrawsOfTheGaussianFilterTool;
     private int _numberOfDrawsOfTheColorCorrectTool;
+    private int _numberOfPdfExports;
 
 
     /// <summary>
@@ -731,5 +732,17 @@ public class Statistics : PkIdEntity
     {
         get => _numberOfDrawsOfTheColorCorrectTool;
         set => SetProperty(ref _numberOfDrawsOfTheColorCorrectTool, value);
+    }
+
+    /// <summary>
+    /// PDFエクスポートした回数
+    /// </summary>
+    [Since(typeof(Version8))]
+    [Column("NumberOfPdfExports", "INTEGER DEFAULT 0", 66)]
+    [NotNull]
+    public int NumberOfPdfExports
+    {
+        get => _numberOfPdfExports;
+        set => SetProperty(ref _numberOfPdfExports, value);
     }
 }

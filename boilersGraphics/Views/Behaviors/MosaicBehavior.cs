@@ -51,6 +51,7 @@ public class MosaicBehavior : Behavior<DesignerCanvas>
             var viewModel = AssociatedObject.DataContext as IDiagramViewModel;
             item = new MosaicViewModel();
             item.Owner = viewModel;
+            item.Initialize();
             e.Handled = true;
         }
     }
@@ -64,6 +65,7 @@ public class MosaicBehavior : Behavior<DesignerCanvas>
             var viewModel = AssociatedObject.DataContext as IDiagramViewModel;
             item = new MosaicViewModel();
             item.Owner = viewModel;
+            item.Initialize();
         }
     }
 
@@ -79,6 +81,7 @@ public class MosaicBehavior : Behavior<DesignerCanvas>
                 var viewModel = AssociatedObject.DataContext as IDiagramViewModel;
                 item = new MosaicViewModel();
                 item.Owner = viewModel;
+                item.Initialize();
             }
     }
 

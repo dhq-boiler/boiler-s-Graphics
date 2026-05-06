@@ -26,7 +26,6 @@ public class ColorCorrectViewModel : EffectViewModel
 {
     public ColorCorrectViewModel()
     {
-        Initialize();
     }
 
     public BindableReactiveProperty<ColorCorrectType> CCType { get; } = new(ColorCorrectType.HSV);
@@ -61,7 +60,7 @@ public class ColorCorrectViewModel : EffectViewModel
 
         Application.Current.Dispatcher.Invoke(() =>
         {
-            var renderer = new EffectRenderer(new WpfVisualTreeHelper(), DiagramViewModel.Instance.Renderer.GetCache());
+            var renderer = new EffectRenderer(new WpfVisualTreeHelper(), ((IDiagramViewModel)Owner).Renderer.GetCache());
             var rtb = renderer.Render(Rect.Value, DesignerCanvas.GetInstance(), 
                 MainWindowViewModel.Instance.DiagramViewModel, MainWindowViewModel.Instance.DiagramViewModel.BackgroundItem.Value, this, 0, this.ZIndex.Value - 1);
             var newFormattedBitmapSource = new FormatConvertedBitmap();
@@ -192,6 +191,7 @@ public class ColorCorrectViewModel : EffectViewModel
     {
         var clone = new ColorCorrectViewModel();
         clone.Owner = Owner;
+        clone.Initialize();
         clone.Left.Value = Left.Value;
         clone.Top.Value = Top.Value;
         clone.Width.Value = Width.Value;

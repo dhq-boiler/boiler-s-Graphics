@@ -100,8 +100,8 @@ namespace boilersGraphics.Views.Behaviors
             {
                 Kurukuru.Set(_cursor);
                 var designerCanvas = Application.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-                var rtb = new EffectRenderer(new WpfVisualTreeHelper(), DiagramViewModel.Instance.Renderer.GetCache()).Render(_viewModel.ViewModel.Value.Rect.Value,
-                    DesignerCanvas.GetInstance(), DiagramViewModel.Instance, DiagramViewModel.Instance.BackgroundItem.Value,
+                var rtb = new EffectRenderer(new WpfVisualTreeHelper(), MainWindowViewModel.Instance.DiagramViewModel.Renderer.GetCache()).Render(_viewModel.ViewModel.Value.Rect.Value,
+                    DesignerCanvas.GetInstance(), MainWindowViewModel.Instance.DiagramViewModel, MainWindowViewModel.Instance.DiagramViewModel.BackgroundItem.Value,
                     _viewModel.ViewModel.Value, 0, _viewModel.ViewModel.Value.ZIndex.Value - 1);
                 var writeableBitmap = new WriteableBitmap(rtb);
                 var position = e.GetPosition(designerCanvas);
@@ -144,8 +144,8 @@ namespace boilersGraphics.Views.Behaviors
             {
                 Kurukuru.Set(_cursor);
                 var designerCanvas = Application.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-                var rtb = new EffectRenderer(new WpfVisualTreeHelper(), DiagramViewModel.Instance.Renderer.GetCache()).Render(_viewModel.ViewModel.Value.Rect.Value,
-                    DesignerCanvas.GetInstance(), DiagramViewModel.Instance, DiagramViewModel.Instance.BackgroundItem.Value,
+                var rtb = new EffectRenderer(new WpfVisualTreeHelper(), MainWindowViewModel.Instance.DiagramViewModel.Renderer.GetCache()).Render(_viewModel.ViewModel.Value.Rect.Value,
+                    DesignerCanvas.GetInstance(), MainWindowViewModel.Instance.DiagramViewModel, MainWindowViewModel.Instance.DiagramViewModel.BackgroundItem.Value,
                     _viewModel.ViewModel.Value);
                 var writeableBitmap = new WriteableBitmap(rtb);
                 var position = e.GetPosition(designerCanvas);
@@ -186,8 +186,8 @@ namespace boilersGraphics.Views.Behaviors
             {
                 Kurukuru.Set(_cursor);
                 var designerCanvas = Application.Current.MainWindow.GetChildOfType<DesignerCanvas>();
-                var rtb = new EffectRenderer(new WpfVisualTreeHelper(), DiagramViewModel.Instance.Renderer.GetCache()).Render(_viewModel.ViewModel.Value.Rect.Value,
-                    DesignerCanvas.GetInstance(), DiagramViewModel.Instance, DiagramViewModel.Instance.BackgroundItem.Value,
+                var rtb = new EffectRenderer(new WpfVisualTreeHelper(), MainWindowViewModel.Instance.DiagramViewModel.Renderer.GetCache()).Render(_viewModel.ViewModel.Value.Rect.Value,
+                    DesignerCanvas.GetInstance(), MainWindowViewModel.Instance.DiagramViewModel, MainWindowViewModel.Instance.DiagramViewModel.BackgroundItem.Value,
                     _viewModel.ViewModel.Value);
                 var writeableBitmap = new WriteableBitmap(rtb);
                 var position = e.GetTouchPoint(designerCanvas);

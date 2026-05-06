@@ -114,7 +114,7 @@ public class ResizeThumb : SnapPoint
                     if (VerticalAlignment == VerticalAlignment.Top && HorizontalAlignment == HorizontalAlignment.Left)
                     {
                         var left = pictureDesignerItemViewModel.Left.Value;
-                        dragDeltaHorizontal = Math.Min(Math.Max(-minLeft, e.HorizontalChange), minDeltaHorizontal);
+                        dragDeltaHorizontal = Math.Min(e.HorizontalChange, minDeltaHorizontal);
                         pictureDesignerItemViewModel.Left.Value = left + dragDeltaHorizontal;
                         pictureDesignerItemViewModel.Width.Value =
                             pictureDesignerItemViewModel.Width.Value - dragDeltaHorizontal;
@@ -128,7 +128,7 @@ public class ResizeThumb : SnapPoint
                              HorizontalAlignment == HorizontalAlignment.Right)
                     {
                         var top = pictureDesignerItemViewModel.Top.Value;
-                        dragDeltaVertical = Math.Min(Math.Max(-minTop, e.VerticalChange), minDeltaVertical);
+                        dragDeltaVertical = Math.Min(e.VerticalChange, minDeltaVertical);
                         pictureDesignerItemViewModel.Top.Value = top + dragDeltaVertical;
                         pictureDesignerItemViewModel.Height.Value =
                             pictureDesignerItemViewModel.Height.Value - dragDeltaVertical;
@@ -140,7 +140,7 @@ public class ResizeThumb : SnapPoint
                              HorizontalAlignment == HorizontalAlignment.Left)
                     {
                         var left = pictureDesignerItemViewModel.Left.Value;
-                        dragDeltaHorizontal = Math.Min(Math.Max(-minLeft, e.HorizontalChange), minDeltaHorizontal);
+                        dragDeltaHorizontal = Math.Min(e.HorizontalChange, minDeltaHorizontal);
                         pictureDesignerItemViewModel.Left.Value = left + dragDeltaHorizontal;
                         pictureDesignerItemViewModel.Width.Value =
                             pictureDesignerItemViewModel.Width.Value - dragDeltaHorizontal;
@@ -166,7 +166,7 @@ public class ResizeThumb : SnapPoint
                     if (VerticalAlignment == VerticalAlignment.Top && HorizontalAlignment == HorizontalAlignment.Left)
                     {
                         var left = ellipseViewModel.Left.Value;
-                        dragDeltaHorizontal = Math.Min(Math.Max(-minLeft, e.HorizontalChange), minDeltaHorizontal);
+                        dragDeltaHorizontal = Math.Min(e.HorizontalChange, minDeltaHorizontal);
                         ellipseViewModel.Left.Value = left + dragDeltaHorizontal;
                         ellipseViewModel.Width.Value = ellipseViewModel.Width.Value - dragDeltaHorizontal;
                         ellipseViewModel.Height.Value = ellipseViewModel.Width.Value - dragDeltaHorizontal;
@@ -176,7 +176,7 @@ public class ResizeThumb : SnapPoint
                              HorizontalAlignment == HorizontalAlignment.Right)
                     {
                         var top = ellipseViewModel.Top.Value;
-                        dragDeltaVertical = Math.Min(Math.Max(-minTop, e.VerticalChange), minDeltaVertical);
+                        dragDeltaVertical = Math.Min(e.VerticalChange, minDeltaVertical);
                         ellipseViewModel.Top.Value = top + dragDeltaVertical;
                         ellipseViewModel.Height.Value = ellipseViewModel.Height.Value - dragDeltaVertical;
                         ellipseViewModel.Width.Value = ellipseViewModel.Height.Value - dragDeltaVertical;
@@ -185,7 +185,7 @@ public class ResizeThumb : SnapPoint
                              HorizontalAlignment == HorizontalAlignment.Left)
                     {
                         var left = ellipseViewModel.Left.Value;
-                        dragDeltaHorizontal = Math.Min(Math.Max(-minLeft, e.HorizontalChange), minDeltaHorizontal);
+                        dragDeltaHorizontal = Math.Min(e.HorizontalChange, minDeltaHorizontal);
                         ellipseViewModel.Left.Value = left + dragDeltaHorizontal;
                         ellipseViewModel.Width.Value = ellipseViewModel.Width.Value - dragDeltaHorizontal;
                         ellipseViewModel.Height.Value = ellipseViewModel.Width.Value - dragDeltaHorizontal;
@@ -203,7 +203,7 @@ public class ResizeThumb : SnapPoint
                     var rect = new Rect(viewModel.Left.Value, viewModel.Top.Value, viewModel.Width.Value,
                         viewModel.Height.Value);
                     dragDeltaVertical = Math.Min(-e.VerticalChange, minDeltaVertical);
-                    dragDeltaHorizontal = Math.Min(Math.Max(-minLeft, e.HorizontalChange), minDeltaHorizontal);
+                    dragDeltaHorizontal = Math.Min(e.HorizontalChange, minDeltaHorizontal);
                     Sum(ref rect, dragDeltaHorizontal, dragDeltaVertical, HorizontalAlignment, VerticalAlignment);
 
                     if (diagramVM.EnablePointSnap.Value)
@@ -213,6 +213,14 @@ public class ResizeThumb : SnapPoint
 
                         foreach (var snapPoint in snapPoints)
                         {
+                            // Skip snap points that belong to the item being
+                            // resized; otherwise dragging the right handle
+                            // can latch onto the rectangle's own right-edge
+                            // / center / corner snap points and collapse the
+                            // rectangle (or freeze it at its own thumb's
+                            // position).
+                            if (ReferenceEquals(snapPoint.Item1.DataContext, designerItem)) continue;
+
                             var p = GetPosition(rect, VerticalAlignment, HorizontalAlignment);
                             var oppositeP = GetPosition(rect, OppositeVertical(VerticalAlignment),
                                 OppositeHorizontal(HorizontalAlignment));
@@ -235,10 +243,16 @@ public class ResizeThumb : SnapPoint
                             //ドラッグ終了座標を一時変数で上書きしてスナップ
                             SetRect(ref rect, snapped.Item2, VerticalAlignment, HorizontalAlignment);
 
+                            // Snap may push Width / Height below MIN_ONE_SIDE_LENGTH.
+                            // Clamp them so resize handles never collapse onto
+                            // PART_DragThumb at the same position (which would
+                            // make the handles unhittable afterward).
+                            var snapMinWidth = Math.Max(viewModel.MinWidth, MIN_ONE_SIDE_LENGTH);
+                            var snapMinHeight = Math.Max(viewModel.MinHeight, MIN_ONE_SIDE_LENGTH);
                             viewModel.Left.Value = rect.X;
                             viewModel.Top.Value = rect.Y;
-                            viewModel.Width.Value = rect.Width;
-                            viewModel.Height.Value = rect.Height;
+                            viewModel.Width.Value = Math.Max(snapMinWidth, rect.Width);
+                            viewModel.Height.Value = Math.Max(snapMinHeight, rect.Height);
 
                             _SnapResult = SnapResult.Snapped;
 
@@ -275,42 +289,58 @@ public class ResizeThumb : SnapPoint
                     }
                     else
                     {
+                        // Hard floor Width / Height at MIN_ONE_SIDE_LENGTH so the
+                        // resize handles never collapse onto PART_DragThumb at
+                        // the same screen position. Without this floor the user
+                        // can drag the right handle past the left edge, leave
+                        // the rectangle stuck at Width = 0, and lose the ability
+                        // to drag the handle back outward (PART_DragThumb wins
+                        // the WPF hit test once the thumbs overlap it).
+                        var effectiveMinHeight = Math.Max(viewModel.MinHeight, MIN_ONE_SIDE_LENGTH);
+                        var effectiveMinWidth = Math.Max(viewModel.MinWidth, MIN_ONE_SIDE_LENGTH);
+
                         if (VerticalAlignment == VerticalAlignment.Bottom)
                         {
                             dragDeltaVertical = Math.Min(-e.VerticalChange, minDeltaVertical);
                             var old = viewModel.Top.Value;
-                            viewModel.Height.Value = viewModel.Height.Value - dragDeltaVertical;
+                            viewModel.Height.Value = Math.Max(effectiveMinHeight,
+                                viewModel.Height.Value - dragDeltaVertical);
                             viewModel.UpdatePathGeometryIfEnable("Height", viewModel.Height.Value, old);
                         }
                         else if (VerticalAlignment == VerticalAlignment.Top)
                         {
                             var top = viewModel.Top.Value;
-                            dragDeltaVertical = Math.Min(Math.Max(-minTop, e.VerticalChange), minDeltaVertical);
-                            var old = viewModel.Top.Value;
-                            viewModel.Top.Value = top + dragDeltaVertical;
-                            viewModel.UpdatePathGeometryIfEnable("Top", viewModel.Top.Value, old);
-                            old = viewModel.Height.Value;
-                            viewModel.Height.Value = viewModel.Height.Value - dragDeltaVertical;
-                            viewModel.UpdatePathGeometryIfEnable("Height", viewModel.Height.Value, old);
+                            dragDeltaVertical = Math.Min(e.VerticalChange, minDeltaVertical);
+                            var oldHeight = viewModel.Height.Value;
+                            var newHeight = Math.Max(effectiveMinHeight, oldHeight - dragDeltaVertical);
+                            // Adjust Top by however much Height was actually allowed to shrink.
+                            var actualVerticalDelta = oldHeight - newHeight;
+                            var oldTop = viewModel.Top.Value;
+                            viewModel.Top.Value = top + actualVerticalDelta;
+                            viewModel.UpdatePathGeometryIfEnable("Top", viewModel.Top.Value, oldTop);
+                            viewModel.Height.Value = newHeight;
+                            viewModel.UpdatePathGeometryIfEnable("Height", viewModel.Height.Value, oldHeight);
                         }
 
                         if (HorizontalAlignment == HorizontalAlignment.Left)
                         {
                             var left = viewModel.Left.Value;
-                            dragDeltaHorizontal = Math.Min(Math.Max(-minLeft, e.HorizontalChange),
-                                minDeltaHorizontal);
-                            var old = viewModel.Left.Value;
-                            viewModel.Left.Value = left + dragDeltaHorizontal;
-                            viewModel.UpdatePathGeometryIfEnable("Left", viewModel.Left.Value, old);
-                            old = viewModel.Width.Value;
-                            viewModel.Width.Value = viewModel.Width.Value - dragDeltaHorizontal;
-                            viewModel.UpdatePathGeometryIfEnable("Width", viewModel.Width.Value, old);
+                            dragDeltaHorizontal = Math.Min(e.HorizontalChange, minDeltaHorizontal);
+                            var oldWidth = viewModel.Width.Value;
+                            var newWidth = Math.Max(effectiveMinWidth, oldWidth - dragDeltaHorizontal);
+                            var actualHorizontalDelta = oldWidth - newWidth;
+                            var oldLeft = viewModel.Left.Value;
+                            viewModel.Left.Value = left + actualHorizontalDelta;
+                            viewModel.UpdatePathGeometryIfEnable("Left", viewModel.Left.Value, oldLeft);
+                            viewModel.Width.Value = newWidth;
+                            viewModel.UpdatePathGeometryIfEnable("Width", viewModel.Width.Value, oldWidth);
                         }
                         else if (HorizontalAlignment == HorizontalAlignment.Right)
                         {
                             dragDeltaHorizontal = Math.Min(-e.HorizontalChange, minDeltaHorizontal);
                             var old = viewModel.Width.Value;
-                            viewModel.Width.Value = viewModel.Width.Value - dragDeltaHorizontal;
+                            viewModel.Width.Value = Math.Max(effectiveMinWidth,
+                                viewModel.Width.Value - dragDeltaHorizontal);
                             viewModel.UpdatePathGeometryIfEnable("Width", viewModel.Width.Value, old);
                         }
                     }
@@ -326,20 +356,31 @@ public class ResizeThumb : SnapPoint
     public static double AffectHorizontal(DragDeltaEventArgs e, HorizontalAlignment horizontalAlignment, double minLeft,
         double minDeltaHorizontal, DesignerItemViewModelBase? viewModel)
     {
+        var effectiveMinWidth = Math.Max(viewModel.MinWidth, MIN_ONE_SIDE_LENGTH);
         var dragDeltaHorizontal = default(double);
         switch (horizontalAlignment)
         {
             case HorizontalAlignment.Left:
                 var left = viewModel.Left.Value;
-                dragDeltaHorizontal = Math.Min(Math.Max(-minLeft, e.HorizontalChange), minDeltaHorizontal);
+                // Only clamp the shrink direction (positive HorizontalChange) via
+                // minDeltaHorizontal. We deliberately do NOT clamp the grow direction
+                // with -minLeft: the right handle has no symmetric canvas-right clamp,
+                // and dragging the left edge past the canvas left edge is a legitimate
+                // resize (Left simply becomes negative, mirroring how the right handle
+                // can grow Width past the canvas right edge).
+                dragDeltaHorizontal = Math.Min(e.HorizontalChange, minDeltaHorizontal);
+                var oldWidth = viewModel.Width.Value;
+                var newWidth = Math.Max(effectiveMinWidth, oldWidth - dragDeltaHorizontal);
+                var actualHorizontalDelta = oldWidth - newWidth;
                 viewModel.Pool.Value = "Left";
-                viewModel.Left.Value = left + dragDeltaHorizontal;
-                viewModel.Width.Value = viewModel.Width.Value - dragDeltaHorizontal;
+                viewModel.Left.Value = left + actualHorizontalDelta;
+                viewModel.Width.Value = newWidth;
                 viewModel.Pool.Value = string.Empty;
                 break;
             case HorizontalAlignment.Right:
                 dragDeltaHorizontal = Math.Min(-e.HorizontalChange, minDeltaHorizontal);
-                viewModel.Width.Value = viewModel.Width.Value - dragDeltaHorizontal;
+                viewModel.Width.Value = Math.Max(effectiveMinWidth,
+                    viewModel.Width.Value - dragDeltaHorizontal);
                 break;
         }
 
@@ -349,18 +390,23 @@ public class ResizeThumb : SnapPoint
     public static double AffectVertical(DragDeltaEventArgs e, VerticalAlignment verticalAlignment, double minTop,
         double minDeltaVertical, DesignerItemViewModelBase? viewModel)
     {
+        var effectiveMinHeight = Math.Max(viewModel.MinHeight, MIN_ONE_SIDE_LENGTH);
         var dragDeltaVertical = default(double);
         switch (verticalAlignment)
         {
             case VerticalAlignment.Bottom:
                 dragDeltaVertical = Math.Min(-e.VerticalChange, minDeltaVertical);
-                viewModel.Height.Value = viewModel.Height.Value - dragDeltaVertical;
+                viewModel.Height.Value = Math.Max(effectiveMinHeight,
+                    viewModel.Height.Value - dragDeltaVertical);
                 break;
             case VerticalAlignment.Top:
-                dragDeltaVertical = Math.Min(Math.Max(-minTop, e.VerticalChange), minDeltaVertical);
+                dragDeltaVertical = Math.Min(e.VerticalChange, minDeltaVertical);
+                var oldHeight = viewModel.Height.Value;
+                var newHeight = Math.Max(effectiveMinHeight, oldHeight - dragDeltaVertical);
+                var actualVerticalDelta = oldHeight - newHeight;
                 viewModel.Pool.Value = "Top";
-                viewModel.Top.Value += dragDeltaVertical;
-                viewModel.Height.Value = viewModel.Height.Value - dragDeltaVertical;
+                viewModel.Top.Value += actualVerticalDelta;
+                viewModel.Height.Value = newHeight;
                 viewModel.Pool.Value = string.Empty;
                 break;
         }
@@ -648,7 +694,7 @@ public class ResizeThumb : SnapPoint
         throw new Exception("alignment conbination is wrong");
     }
 
-    private static void CalculateDragLimits(IEnumerable<SelectableDesignerItemViewModelBase> selectedDesignerItems,
+    internal static void CalculateDragLimits(IEnumerable<SelectableDesignerItemViewModelBase> selectedDesignerItems,
         out double minLeft, out double minTop, out double minDeltaHorizontal, out double minDeltaVertical)
     {
         minLeft = double.MaxValue;
@@ -669,8 +715,16 @@ public class ResizeThumb : SnapPoint
                     minLeft = double.IsNaN(left) ? 0 : Math.Min(left, minLeft);
                     minTop = double.IsNaN(top) ? 0 : Math.Min(top, minTop);
 
-                    minDeltaVertical = Math.Min(minDeltaVertical, designerItemViewModel.Height.Value - designerItemViewModel.MinHeight);
-                    minDeltaHorizontal = Math.Min(minDeltaHorizontal, designerItemViewModel.Width.Value - designerItemViewModel.MinWidth);
+                    // Floor MinWidth/MinHeight at MIN_ONE_SIDE_LENGTH so the
+                    // rectangle cannot collapse to zero. At Width = 0 the
+                    // resize thumbs overlap PART_DragThumb at the same
+                    // position and PART_DragThumb wins the hit test, leaving
+                    // the user unable to drag the right (or left) handle
+                    // back outward — the rectangle gets stuck.
+                    var effectiveMinHeight = Math.Max(designerItemViewModel.MinHeight, MIN_ONE_SIDE_LENGTH);
+                    var effectiveMinWidth = Math.Max(designerItemViewModel.MinWidth, MIN_ONE_SIDE_LENGTH);
+                    minDeltaVertical = Math.Min(minDeltaVertical, designerItemViewModel.Height.Value - effectiveMinHeight);
+                    minDeltaHorizontal = Math.Min(minDeltaHorizontal, designerItemViewModel.Width.Value - effectiveMinWidth);
                     break;
                 }
                 case ConnectorBaseViewModel connectorBaseViewModel:

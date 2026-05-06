@@ -123,9 +123,9 @@ public class PolygonAdorner : Adorner
                 snapPoint.Template = controlTemplate;
                 return snapPoint;
             }).ToArray());
-            item.IsSelected.Value = true;
             item.IsVisible.Value = true;
             item.Owner.DeselectAll();
+            item.IsSelected.Value = true;
             ((AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel).AddItemCommand.Execute(item);
 
             UpdateStatisticsCount();

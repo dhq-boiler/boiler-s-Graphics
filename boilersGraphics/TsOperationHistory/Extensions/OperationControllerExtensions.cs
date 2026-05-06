@@ -7,9 +7,12 @@ public static class OperationControllerExtensions
 {
     public static void MoveTo(this IOperationController controller, IOperation target)
     {
-        var isRollBack = controller.UndoStack.AsValueEnumerable().Contains(target);
-
-        var isRollForward = controller.RollForwardTargets.AsValueEnumerable().Contains(target);
+        // controller.UndoStack は Undos と Redos.Reverse の両方を列挙するため、
+        // Contains で判定すると target が Redos 側にあっても isRollBack=true となり
+        // Undos が空になった後の Peek=null で while ループが永久に回る。
+        // Undos と Redos を別々に確認することで Undo/Redo の正しい分岐を選ぶ。
+        var isRollBack = controller.UndoStack.Undos.Value.AsValueEnumerable().Contains(target);
+        var isRollForward = controller.UndoStack.Redos.Value.AsValueEnumerable().Contains(target);
 
         if (isRollBack is false && isRollForward is false)
             return;

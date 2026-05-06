@@ -81,14 +81,14 @@ public class BezierCurveAdorner : Adorner
             item.EdgeThickness.Value = item.Owner.EdgeThickness.Value.Value;
             item.ZIndex.Value = item.Owner.Layers
                 .SelectRecursive<LayerTreeViewItemBase, LayerTreeViewItemBase>(x => x.Children).AsValueEnumerable().Count();
-            item.IsSelected.Value = true;
             item.PathGeometryNoRotate.Value = GeometryCreator.CreateBezierCurve(item);
             item.IsVisible.Value = true;
-            item.SnapPoint0VM.Value.IsSelected.Value = true;
-            item.SnapPoint1VM.Value.IsSelected.Value = true;
             item.SnapPoint0VM.Value.IsHitTestVisible.Value = true;
             item.SnapPoint1VM.Value.IsHitTestVisible.Value = true;
             item.Owner.DeselectAll();
+            item.IsSelected.Value = true;
+            item.SnapPoint0VM.Value.IsSelected.Value = true;
+            item.SnapPoint1VM.Value.IsSelected.Value = true;
             ((AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel).AddItemCommand.Execute(item);
 
             UpdateStatisticsCount();

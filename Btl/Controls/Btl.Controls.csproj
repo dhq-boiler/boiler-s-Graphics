@@ -10,6 +10,11 @@
 	<PlatformTarget>x64</PlatformTarget>
 	<RuntimeIdentifiers>win-x64;win-x86</RuntimeIdentifiers>
 	<Platforms>AnyCPU;x64;x86</Platforms>
+    <!-- Class library — cannot single-file publish. Kept out of solution-level
+         publish runs (e.g. wdac-mcp-staging Linux build host) so they don't
+         fail with NETSDK1099. ProjectReference consumers still pick the
+         compiled DLL up via normal build output copying. -->
+    <IsPublishable>false</IsPublishable>
   </PropertyGroup>
   <ItemGroup>
     <AppDesigner Include="Properties\" />

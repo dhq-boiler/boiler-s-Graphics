@@ -294,6 +294,9 @@
   <data name="Dialog_Statistics_NumberOfExportsAsWmp" xml:space="preserve">
     <value>Number of exports as WMP</value>
   </data>
+  <data name="Dialog_Statistics_NumberOfExportsAsPdf" xml:space="preserve">
+    <value>Number of exports as PDF</value>
+  </data>
   <data name="Dialog_Statistics_NumberOfIntersects" xml:space="preserve">
     <value>Number of intersects</value>
   </data>
@@ -666,6 +669,9 @@
   <data name="String_Cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
+  <data name="String_Canvas" xml:space="preserve">
+    <value>Canvas</value>
+  </data>
   <data name="String_CanvasEdgeBrush" xml:space="preserve">
     <value>Canvas EdgeBrush</value>
   </data>
@@ -845,6 +851,12 @@
   </data>
   <data name="String_SnapRange" xml:space="preserve">
     <value>Range to snap to a point</value>
+  </data>
+  <data name="String_EnableAutoScrollOnDrag" xml:space="preserve">
+    <value>Auto-scroll viewport while dragging</value>
+  </data>
+  <data name="String_AutoScrollOnDragSpeed" xml:space="preserve">
+    <value>Auto-scroll speed (px/tick)</value>
   </data>
   <data name="String_SourceCodeLicense" xml:space="preserve">
     <value>Source code license</value>

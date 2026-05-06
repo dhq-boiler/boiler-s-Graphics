@@ -108,6 +108,7 @@ public static class Extensions
                      dataContext1.GetType().GetProperty("Parent"),
                      dataContext1.GetType().GetProperty("SelectedItems"),
                      dataContext1.GetType().GetProperty("Chars"),
+                     dataContext1.GetType().GetProperty("SnapObjs"),
                  }))
         {
             var val = property.GetValue(dataContext1);
@@ -115,10 +116,27 @@ public static class Extensions
                 return true;
             if (val is IEnumerable enumerable)
             {
-                foreach (var item in enumerable)
+                IEnumerator enumerator;
+                try
                 {
-                    if (HasDescendants(item, dataContext2))
-                        return true;
+                    enumerator = enumerable.GetEnumerator();
+                }
+                catch
+                {
+                    continue;
+                }
+
+                try
+                {
+                    while (enumerator.MoveNext())
+                    {
+                        if (HasDescendants(enumerator.Current, dataContext2))
+                            return true;
+                    }
+                }
+                finally
+                {
+                    (enumerator as IDisposable)?.Dispose();
                 }
             }
         }

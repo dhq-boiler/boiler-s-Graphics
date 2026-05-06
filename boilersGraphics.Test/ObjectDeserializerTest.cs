@@ -134,5 +134,102 @@ namespace boilersGraphics.Test
             Assert.That(layerItemChildren[0].Name.Value, Is.EqualTo("アイテム4"));
             Assert.That(layerItemChildren[1].Name.Value, Is.EqualTo("アイテム5"));
         }
+
+        [Test]
+        public void CountObjectsFromXML_LayersFormat_ChildLayerItem数を返す()
+        {
+            string xml = @"<boilersGraphics>
+              <Layers>
+                <Layer>
+                  <Name>L1</Name>
+                  <Children>
+                    <LayerItem><Name>A</Name></LayerItem>
+                    <LayerItem><Name>B</Name></LayerItem>
+                    <LayerItem><Name>C</Name></LayerItem>
+                  </Children>
+                </Layer>
+              </Layers>
+            </boilersGraphics>";
+            var root = XElement.Parse(xml);
+            Assert.That(ObjectDeserializer.CountObjectsFromXML(root), Is.EqualTo(3));
+        }
+
+        [Test]
+        public void CountObjectsFromXML_複数レイヤーで合算()
+        {
+            string xml = @"<boilersGraphics>
+              <Layers>
+                <Layer>
+                  <Children>
+                    <LayerItem/>
+                    <LayerItem/>
+                  </Children>
+                </Layer>
+                <Layer>
+                  <Children>
+                    <LayerItem/>
+                  </Children>
+                </Layer>
+              </Layers>
+            </boilersGraphics>";
+            var root = XElement.Parse(xml);
+            Assert.That(ObjectDeserializer.CountObjectsFromXML(root), Is.EqualTo(3));
+        }
+
+        [Test]
+        public void CountObjectsFromXML_LayersなしならDesignerItemsとConnectionsを合算()
+        {
+            string xml = @"<boilersGraphics>
+              <DesignerItems>
+                <DesignerItem><ID>1</ID></DesignerItem>
+                <DesignerItem><ID>2</ID></DesignerItem>
+              </DesignerItems>
+              <Connections>
+                <Connection><ID>3</ID></Connection>
+              </Connections>
+            </boilersGraphics>";
+            var root = XElement.Parse(xml);
+            Assert.That(ObjectDeserializer.CountObjectsFromXML(root), Is.EqualTo(3));
+        }
+
+        [Test]
+        public void CountObjectsFromXML_空のXMLでも0を返す()
+        {
+            var root = XElement.Parse("<boilersGraphics />");
+            Assert.That(ObjectDeserializer.CountObjectsFromXML(root), Is.EqualTo(0));
+        }
+
+        [Test]
+        public void CountObjectsFromXML_LayersありDesignerItemsありはLayers側を採用()
+        {
+            // Layers がある場合は DesignerItems は無視される（先に return 構造）
+            string xml = @"<boilersGraphics>
+              <Layers>
+                <Layer>
+                  <Children>
+                    <LayerItem/>
+                  </Children>
+                </Layer>
+              </Layers>
+              <DesignerItems>
+                <DesignerItem/>
+                <DesignerItem/>
+              </DesignerItems>
+            </boilersGraphics>";
+            var root = XElement.Parse(xml);
+            Assert.That(ObjectDeserializer.CountObjectsFromXML(root), Is.EqualTo(1));
+        }
+
+        [Test]
+        public void Base64StringToBitmap_有効なPNGをBitmapImageに変換できる()
+        {
+            // 1x1 透明 PNG (67 bytes) の Base64
+            string pngBase64 = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=";
+            var bmp = ObjectDeserializer.Base64StringToBitmap(pngBase64);
+            Assert.That(bmp, Is.Not.Null);
+            Assert.That(bmp.IsFrozen, Is.True);
+            Assert.That(bmp.PixelWidth, Is.EqualTo(1));
+            Assert.That(bmp.PixelHeight, Is.EqualTo(1));
+        }
     }
 }

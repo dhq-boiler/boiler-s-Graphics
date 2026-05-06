@@ -87,6 +87,8 @@ public class MainWindowViewModel : BindableBase, IDisposable
         DiagramViewModel.EnableMiniMap.Value = true;
         DiagramViewModel.EnableBrushThickness.Value = true;
 
+        InitializeCanvasManagement();
+
         Title.Value = $"{App.GetAppNameAndVersion()}";
         DiagramViewModel.FileName.Value = "*";
 
@@ -425,6 +427,184 @@ public class MainWindowViewModel : BindableBase, IDisposable
         set => SetProperty(ref _DiagramViewModel, value);
     }
 
+    public System.Collections.ObjectModel.ObservableCollection<CanvasPage> CanvasPages { get; } = new();
+    public BindableReactiveProperty<int> ActiveCanvasIndex { get; } = new(0);
+
+    public DelegateCommand AddCanvasCommand { get; private set; }
+    public DelegateCommand<int?> SwitchCanvasCommand { get; private set; }
+    public DelegateCommand<int?> RemoveCanvasCommand { get; private set; }
+    public DelegateCommand PlayAnimationCommand { get; private set; }
+    public DelegateCommand StopAnimationCommand { get; private set; }
+    public DelegateCommand ExportAnimationGifCommand { get; private set; }
+    public BindableReactiveProperty<bool> IsAnimationPlaying { get; } = new(false);
+    public BindableReactiveProperty<int> AnimationFps { get; } = new(10);
+
+    private System.Windows.Threading.DispatcherTimer _animationTimer;
+
+    public void InitializeCanvasManagement()
+    {
+        AddCanvasCommand = new DelegateCommand(AddCanvas);
+        SwitchCanvasCommand = new DelegateCommand<int?>(i => { if (i.HasValue) SwitchCanvas(i.Value); });
+        RemoveCanvasCommand = new DelegateCommand<int?>(i => { if (i.HasValue) RemoveCanvas(i.Value); });
+        PlayAnimationCommand = new DelegateCommand(PlayAnimation, () => CanvasPages.Count > 1 && !IsAnimationPlaying.Value);
+        StopAnimationCommand = new DelegateCommand(StopAnimation, () => IsAnimationPlaying.Value);
+        ExportAnimationGifCommand = new DelegateCommand(ExportAnimationGif, () => CanvasPages.Count > 1);
+
+        // Initialize with one default canvas page
+        if (CanvasPages.Count == 0)
+        {
+            var firstPage = new CanvasPage("Canvas" + " 1");
+            firstPage.IsActive = true;
+            CanvasPages.Add(firstPage);
+        }
+    }
+
+    public void UpdateActiveStates()
+    {
+        for (int i = 0; i < CanvasPages.Count; i++)
+            CanvasPages[i].IsActive = (i == ActiveCanvasIndex.Value);
+    }
+
+    public void AddCanvas()
+    {
+        // Save current canvas state
+        SaveCurrentCanvasState();
+
+        // Create new page
+        var newIndex = CanvasPages.Count;
+        var newPage = new CanvasPage("Canvas" + $" {newIndex + 1}");
+        CanvasPages.Add(newPage);
+
+        // Switch to the new page (creates a blank canvas)
+        ActiveCanvasIndex.Value = newIndex;
+        UpdateActiveStates();
+        DiagramViewModel.Layers.Clear();
+        DiagramViewModel.Layers.Add(new Layer());
+        RaiseAnimationCanExecuteChanged();
+    }
+
+    private void RaiseAnimationCanExecuteChanged()
+    {
+        PlayAnimationCommand?.RaiseCanExecuteChanged();
+        StopAnimationCommand?.RaiseCanExecuteChanged();
+        ExportAnimationGifCommand?.RaiseCanExecuteChanged();
+    }
+
+    public void SwitchCanvas(int targetIndex)
+    {
+        if (targetIndex < 0 || targetIndex >= CanvasPages.Count) return;
+        if (targetIndex == ActiveCanvasIndex.Value) return;
+
+        // Save current canvas state
+        SaveCurrentCanvasState();
+
+        // Load target canvas state
+        ActiveCanvasIndex.Value = targetIndex;
+        UpdateActiveStates();
+        var targetPage = CanvasPages[targetIndex];
+
+        if (targetPage.SerializedData != null)
+        {
+            DiagramViewModel.RestoreCanvasState(targetPage.SerializedData);
+        }
+        else
+        {
+            // New blank canvas
+            DiagramViewModel.Layers.Clear();
+            DiagramViewModel.Layers.Add(new Layer());
+        }
+
+        // Reset undo/redo for the new canvas
+        Controller.Flush();
+    }
+
+    public void RemoveCanvas(int index)
+    {
+        if (CanvasPages.Count <= 1) return; // Must keep at least one
+        if (index < 0 || index >= CanvasPages.Count) return;
+
+        CanvasPages.RemoveAt(index);
+
+        if (index <= ActiveCanvasIndex.Value)
+        {
+            var newIndex = Math.Max(0, ActiveCanvasIndex.Value - 1);
+            ActiveCanvasIndex.Value = newIndex;
+            UpdateActiveStates();
+            var page = CanvasPages[newIndex];
+            if (page.SerializedData != null)
+                DiagramViewModel.RestoreCanvasState(page.SerializedData);
+            else
+            {
+                DiagramViewModel.Layers.Clear();
+                DiagramViewModel.Layers.Add(new Layer());
+            }
+        }
+        else
+        {
+            UpdateActiveStates();
+        }
+        RaiseAnimationCanExecuteChanged();
+    }
+
+    public void SaveCurrentCanvasState()
+    {
+        if (ActiveCanvasIndex.Value >= 0 && ActiveCanvasIndex.Value < CanvasPages.Count)
+        {
+            var currentPage = CanvasPages[ActiveCanvasIndex.Value];
+            currentPage.SerializedData = DiagramViewModel.SerializeCanvasState();
+        }
+    }
+
+    private void PlayAnimation()
+    {
+        if (CanvasPages.Count <= 1) return;
+
+        SaveCurrentCanvasState();
+        IsAnimationPlaying.Value = true;
+        PlayAnimationCommand.RaiseCanExecuteChanged();
+        StopAnimationCommand.RaiseCanExecuteChanged();
+
+        _animationTimer = new System.Windows.Threading.DispatcherTimer();
+        _animationTimer.Interval = TimeSpan.FromMilliseconds(CanvasPages[ActiveCanvasIndex.Value].DurationMs);
+        _animationTimer.Tick += AnimationTimer_Tick;
+        _animationTimer.Start();
+    }
+
+    private void AnimationTimer_Tick(object sender, EventArgs e)
+    {
+        int nextIndex = (ActiveCanvasIndex.Value + 1) % CanvasPages.Count;
+        SwitchCanvas(nextIndex);
+
+        // Update interval for next frame
+        if (_animationTimer != null)
+            _animationTimer.Interval = TimeSpan.FromMilliseconds(CanvasPages[ActiveCanvasIndex.Value].DurationMs);
+    }
+
+    private void StopAnimation()
+    {
+        if (_animationTimer != null)
+        {
+            _animationTimer.Stop();
+            _animationTimer.Tick -= AnimationTimer_Tick;
+            _animationTimer = null;
+        }
+
+        IsAnimationPlaying.Value = false;
+        PlayAnimationCommand.RaiseCanExecuteChanged();
+        StopAnimationCommand.RaiseCanExecuteChanged();
+    }
+
+    private void ExportAnimationGif()
+    {
+        var saveDialog = new Microsoft.Win32.SaveFileDialog();
+        saveDialog.Filter = "Animated GIF|*.gif";
+        if (saveDialog.ShowDialog() == true)
+        {
+            SaveCurrentCanvasState();
+            Helpers.AnimationGifExporter.Export(saveDialog.FileName, this);
+        }
+    }
+
     public ToolBarViewModel ToolBarViewModel
     {
         get => _ToolBarViewModel;
@@ -616,6 +796,7 @@ public class MainWindowViewModel : BindableBase, IDisposable
         dvManager.RegisterChangePlan(new ChangePlan_bG_Version5());
         dvManager.RegisterChangePlan(new ChangePlan_bG_Version6());
         dvManager.RegisterChangePlan(new ChangePlan_bG_Version7());
+        dvManager.RegisterChangePlan(new ChangePlan_bG_Version8());
         dvManager.FinishedToUpgradeTo += DvManager_FinishedToUpgradeTo;
 
         dvManager.UpgradeToTargetVersion();

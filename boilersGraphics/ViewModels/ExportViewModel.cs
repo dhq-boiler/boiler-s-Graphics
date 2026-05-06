@@ -67,7 +67,7 @@ public class ExportViewModel : BindableBase, IDialogAware, IDisposable
                 designerCanvas.LayoutTransform = new MatrixTransform();
 
                 var backgroundItem = diagramViewModel.BackgroundItem.Value;
-                var renderer = DiagramViewModel.Instance.Renderer;
+                var renderer = diagramViewModel.Renderer;
                 var rtb = renderer.Render(x, designerCanvas, diagramViewModel, backgroundItem, backgroundItem);
                 //OpenCvSharpHelper.ImShow("preview", rtb);
                 Preview.Value = rtb;
@@ -158,19 +158,38 @@ public class ExportViewModel : BindableBase, IDialogAware, IDisposable
     private void Export(MainWindowViewModel mainWindowViewModel, DesignerCanvas designerCanvas,
         DiagramViewModel diagramViewModel)
     {
+        var extension = System.IO.Path.GetExtension(Path.Value);
+
+        if (extension == ".pdf")
+        {
+            Helpers.PdfExporter.Export(Path.Value, diagramViewModel, SliceRect.Value);
+            LogManager.GetCurrentClassLogger().Info($"Exported:{Path.Value}");
+            UpdateStatisticsCount(mainWindowViewModel);
+            UpdatePdfStatisticsCount(mainWindowViewModel);
+            return;
+        }
+
         var backgroundItem = diagramViewModel.BackgroundItem.Value;
-        var renderer = DiagramViewModel.Instance.Renderer;
+        var renderer = diagramViewModel.Renderer;
         var rtb = renderer.Render(SliceRect.Value, designerCanvas, diagramViewModel, backgroundItem, diagramViewModel.BackgroundItem.Value);
 
         //OpenCvSharpHelper.ImShow("test", rtb);
 
-        var generator = FileGenerator.Create(System.IO.Path.GetExtension(Path.Value));
+        var generator = FileGenerator.Create(extension);
         generator.AddFrame(BitmapFrame.Create(rtb));
         generator.SetQualityLevel(QualityLevel.Value);
         generator.Save(mainWindowViewModel, Path.Value);
         LogManager.GetCurrentClassLogger().Info($"Exported:{Path.Value}");
 
         UpdateStatisticsCount(mainWindowViewModel);
+    }
+
+    private static void UpdatePdfStatisticsCount(MainWindowViewModel mainWindowViewModel)
+    {
+        var statistics = mainWindowViewModel.Statistics.Value;
+        statistics.NumberOfPdfExports++;
+        var dao = new StatisticsDao();
+        dao.Update(statistics);
     }
 
 
@@ -220,7 +239,7 @@ public class ExportViewModel : BindableBase, IDialogAware, IDisposable
     {
         var fileDialog = new SaveFileDialog();
         fileDialog.Filter =
-            "JPEG file|*.jpg;*.jpeg|PNG file|*.png|GIF file|*.gif|BMP file|*.bmp|TIFF file|*.tiff|WMP file|*.wmp";
+            "PDF file|*.pdf|JPEG file|*.jpg;*.jpeg|PNG file|*.png|GIF file|*.gif|BMP file|*.bmp|TIFF file|*.tiff|WMP file|*.wmp";
         if (fileDialog.ShowDialog() == true) Path.Value = fileDialog.FileName;
     }
 

@@ -24,13 +24,13 @@ namespace boilersGraphics.ViewModels
             monitoringItems.AsValueEnumerable().ToList().ForEach(x => x.Value.Dispose());
             monitoringItems.Clear();
 
-            BeginMonitoring(DiagramViewModel.Instance.AllItems.Value);
+            BeginMonitoring(Owner.AllItems.Value);
 
-            Disposable.AddTo(DiagramViewModel.Instance.AllItems.AsObservable().Subscribe(new Action<SelectableDesignerItemViewModelBase[]>(items =>
+            Disposable.AddTo(Owner.AllItems.AsObservable().Subscribe(new Action<SelectableDesignerItemViewModelBase[]>(items =>
             {
                 BeginMonitoring(items);
             })), _CompositeDisposable);
-            DiagramViewModel.Instance.AllItems.Value
+            Owner.AllItems.Value
                 .ToObservable().ToObservableList().ObserveElementObservableProperty(x => x).Subscribe(
                     x =>
                     {
@@ -43,7 +43,7 @@ namespace boilersGraphics.ViewModels
                             DisposeMonitoringItem(x);
                         }
                     }).AddTo(_CompositeDisposable);
-            DiagramViewModel.Instance.Layers.SelectRecursive((Func<LayerTreeViewItemBase, IEnumerable<LayerTreeViewItemBase>>)(x => x.Children))
+            Owner.Layers.SelectRecursive((Func<LayerTreeViewItemBase, IEnumerable<LayerTreeViewItemBase>>)(x => x.Children))
                 .ToObservable().ToObservableList().ObserveElementObservableProperty(x => x).Subscribe(pp =>
             {
                 if (pp is Layer)

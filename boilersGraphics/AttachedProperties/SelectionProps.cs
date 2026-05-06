@@ -51,9 +51,12 @@ public static class SelectionProps
                         return s.Parent.Value.EdgeThickness.Value;
                     return 0d;
                 });
-                var edgeThicknessFirst = edgeThicknesses.First();
-                if (edgeThicknesses.Count() > 0 && edgeThicknesses.All(x => x == edgeThicknessFirst))
-                    owner.EdgeThickness.Value = edgeThicknesses.First();
+                if (edgeThicknesses.Count() > 0)
+                {
+                    var edgeThicknessFirst = edgeThicknesses.First();
+                    if (edgeThicknesses.All(x => x == edgeThicknessFirst))
+                        owner.EdgeThickness.Value = edgeThicknessFirst;
+                }
                 else
                     owner.EdgeThickness.Value = null;
             }
@@ -116,9 +119,12 @@ public static class SelectionProps
                         return 0d;
                     })
                     .Where(x => x != double.NaN);
-                var edgeThicknessFirst = edgeThicknesses.First();
-                if (edgeThicknesses.Count() > 0 && edgeThicknesses.All(x => x == edgeThicknessFirst))
-                    owner.EdgeThickness.Value = edgeThicknesses.First();
+                if (edgeThicknesses.Count() > 0)
+                {
+                    var edgeThicknessFirst = edgeThicknesses.First();
+                    if (edgeThicknesses.All(x => x == edgeThicknessFirst))
+                        owner.EdgeThickness.Value = edgeThicknessFirst;
+                }
             }
         }
     }

@@ -1,10 +1,9 @@
-﻿using System;
+﻿namespace boilersGraphics.Helpers;
 
-namespace boilersGraphics.Helpers;
-
-[Serializable]
 public class ClipboardDTO
 {
+    public const string ClipboardFormat = "boilersGraphics.ClipboardDTO";
+
     public ClipboardDTO(string root)
     {
         Root = root;

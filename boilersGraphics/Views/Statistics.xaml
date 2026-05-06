@@ -147,6 +147,10 @@
             <Label d:Content="0" Content="{Binding NumberOfWmpExports.Value}" />
         </DockPanel>
         <DockPanel>
+            <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfExportsAsPdf}" />
+            <Label d:Content="0" Content="{Binding NumberOfPdfExports.Value}" />
+        </DockPanel>
+        <DockPanel>
             <Label Content="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Dialog_Statistics_NumberOfTimesGrouped}" />
             <Label d:Content="0" Content="{Binding NumberOfTimesGrouped.Value}" />
         </DockPanel>

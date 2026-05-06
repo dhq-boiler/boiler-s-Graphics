@@ -91,7 +91,7 @@ public abstract class LayerTreeViewItemBase : BindableBase, IDisposable, IObserv
             {
                 menuItem = new MenuItem
                 {
-                    Command = DiagramViewModel.Instance.PropertyCommand,
+                    Command = MainWindowViewModel.Instance.DiagramViewModel.PropertyCommand,
                 };
                 menuItem.SetBinding(MenuItem.HeaderProperty, new Binding()
                 {
@@ -216,7 +216,7 @@ public abstract class LayerTreeViewItemBase : BindableBase, IDisposable, IObserv
     {
         LogManager.GetCurrentClassLogger().Trace("detected Layer changes. run Layer.UpdateAppearance().");
 
-        var renderer = DiagramViewModel.Instance?.Renderer;
+        var renderer = MainWindowViewModel.Instance.DiagramViewModel?.Renderer;
         if (renderer == null)
         {
             LogManager.GetCurrentClassLogger().Warn("Renderer is null, skipping appearance update.");

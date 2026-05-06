@@ -136,8 +136,8 @@ public class Renderer : IDisposable
     {
         var size = GetRenderSize(sliceRect, diagramViewModel, minZIndex, maxZIndex);
 
-        var width = (int)size.Width;
-        var height = (int)size.Height;
+        var width = (int)Math.Ceiling(size.Width);
+        var height = (int)Math.Ceiling(size.Height);
         if (width <= 0) width = 1;
         if (height <= 0) height = 1;
 
@@ -248,6 +248,8 @@ public class Renderer : IDisposable
         switch (item.Item)
         {
             case DesignerItemViewModelBase designerItem:
+                if (item.Width <= 0 || item.Height <= 0)
+                    return Rect.Empty;
                 return new Rect(item.Left, item.Top, item.Width, item.Height);
             case ConnectorBaseViewModel connector:
                 return new Rect(item.LeftTop, item.Bounds.Size);
@@ -462,11 +464,18 @@ public class Renderer : IDisposable
 
         if (sliceRect.HasValue)
         {
-            rect.X = 0;
-            rect.Y = 0;
+            // sliceRectオフセットを適用して背景を正しい位置に描画
+            var bgRect = new Rect(
+                backgroundData.Left - sliceRect.Value.X,
+                backgroundData.Top - sliceRect.Value.Y,
+                backgroundData.Width,
+                backgroundData.Height);
+            context.DrawRectangle(brush, null, bgRect);
         }
-
-        context.DrawRectangle(brush, null, rect);
+        else
+        {
+            context.DrawRectangle(brush, null, rect);
+        }
         return true;
     }
 
@@ -538,7 +547,7 @@ public class Renderer : IDisposable
             
             //前景を描画
             renderedCount += RenderForeground(sliceRect, diagramViewModel, designerCanvas, context,
-                DiagramViewModel.Instance.BackgroundItem.Value,
+                diagramViewModel.BackgroundItem.Value,
                 allViews, minZIndex, maxZIndex, caller);
         }
 
@@ -621,6 +630,8 @@ public class Renderer : IDisposable
 
         if (item is ISizeRps size1)
         {
+            if (size1.Width.Value <= 0 || size1.Height.Value <= 0)
+                return;
             view.Measure(new Size(size1.Width.Value, size1.Height.Value));
             if (App.IsTest)
             {
@@ -633,6 +644,8 @@ public class Renderer : IDisposable
         }
         else if (item is ISizeReadOnlyRps size2)
         {
+            if (size2.Width.Value <= 0 || size2.Height.Value <= 0)
+                return;
             view.Measure(new Size(size2.Width.Value, size2.Height.Value));
             view.Arrange(new Rect(new Point(), new Size(size2.Width.Value, size2.Height.Value)));
         }
@@ -923,6 +936,49 @@ public class Renderer : IDisposable
     /// </summary>
     private bool RenderItemWithDataCached(Rect? sliceRect, DrawingContext context, RenderItemData itemData, BackgroundViewModel background)
     {
+        // sliceRect指定時はキャッシュを使わず、ビューのVisualBrushを直接描画
+        if (sliceRect.HasValue)
+        {
+            var viewBrush = new VisualBrush(itemData.View)
+            {
+                Stretch = Stretch.Fill,
+                ViewboxUnits = BrushMappingMode.Absolute,
+                Viewbox = new Rect(0, 0, itemData.Width, itemData.Height),
+                TileMode = TileMode.None
+            };
+            var drawRect = new Rect(
+                itemData.Left - sliceRect.Value.X,
+                itemData.Top - sliceRect.Value.Y,
+                itemData.Width,
+                itemData.Height);
+
+            switch (itemData.Item)
+            {
+                case DesignerItemViewModelBase designerItem:
+                    if (Math.Abs(designerItem.RotationAngle.Value) > 0.01)
+                    {
+                        context.PushTransform(new RotateTransform(designerItem.RotationAngle.Value,
+                            designerItem.CenterX.Value - sliceRect.Value.X,
+                            designerItem.CenterY.Value - sliceRect.Value.Y));
+                        context.DrawRectangle(viewBrush, null, drawRect);
+                        context.Pop();
+                    }
+                    else
+                    {
+                        context.DrawRectangle(viewBrush, null, drawRect);
+                    }
+                    break;
+
+                case ConnectorBaseViewModel:
+                    context.DrawRectangle(viewBrush, null, drawRect);
+                    break;
+
+                default:
+                    return false;
+            }
+            return true;
+        }
+
         var itemKey = itemData.Item;
         var isDirty = _cache.IsDirty(itemKey);
 
@@ -932,7 +988,7 @@ public class Renderer : IDisposable
             // キャッシュが有効な場合、キャッシュされたDrawingVisualを使用
             if (cachedVisual.IsValid(itemData))
             {
-                var cachedRect = CalculateRenderRect(sliceRect, itemData, background);
+                var cachedRect = CalculateRenderRect(null, itemData, background);
                 if (cachedRect == Rect.Empty) return false;
 
                 // キャッシュされたVisualBrushを描画
@@ -1004,7 +1060,7 @@ public class Renderer : IDisposable
         s_logger.Debug($"新規キャッシュ作成: {itemData.Item.GetType().Name}");
 
         // 実際の描画
-        var renderRect = CalculateRenderRect(sliceRect, itemData, background);
+        var renderRect = CalculateRenderRect(null, itemData, background);
         if (renderRect == Rect.Empty) return false;
 
         context.DrawRectangle(visualBrush, null, renderRect);

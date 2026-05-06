@@ -1,7 +1,10 @@
 ﻿using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Windows;
 using boilersGraphics;
+
+[assembly: InternalsVisibleTo("boilersGraphics.Test")]
 
 // アセンブリに関する一般情報は以下の属性セットをとおして制御されます。
 // アセンブリに関連付けられている情報を変更するには、
@@ -40,31 +43,10 @@ using boilersGraphics;
 )]
 
 
-// アセンブリのバージョン情報は次の 4 つの値で構成されています:
-//
-//      メジャー バージョン
-//      マイナー バージョン
-//      ビルド番号
-//      Revision
-//
-// すべての値を指定するか、次を使用してビルド番号とリビジョン番号を既定に設定できます
-// 既定値にすることができます:
-// [assembly: AssemblyVersion("1.0.*")]
-
-//[assembly: boilersGraphics.Helpers.AssemblyErrorLog(boilersGraphics.ThisAssembly.Git.BaseVersion.Major + "." + boilersGraphics.ThisAssembly.Git.BaseVersion.Minor + "." + boilersGraphics.ThisAssembly.Git.BaseVersion.Patch)]
-[assembly:
-    AssemblyVersion(ThisAssembly.Git.BaseVersion.Major + "." + ThisAssembly.Git.BaseVersion.Minor + "." +
-                    ThisAssembly.Git.BaseVersion.Patch)]
-
-[assembly:
-    AssemblyFileVersion(ThisAssembly.Git.SemVer.Major + "." + ThisAssembly.Git.SemVer.Minor + "." +
-                        ThisAssembly.Git.SemVer.Patch)]
-
-[assembly: AssemblyInformationalVersion(
-    "v" +
-    ThisAssembly.Git.SemVer.Major + "." +
-    ThisAssembly.Git.SemVer.Minor + "." +
-    ThisAssembly.Git.SemVer.Patch + "." +
-    ThisAssembly.Git.Commits + "-" +
-    ThisAssembly.Git.Branch + "+" +
-    ThisAssembly.Git.Commit)]
+// AssemblyVersion / AssemblyFileVersion / AssemblyInformationalVersion are
+// produced by the SDK's GenerateAssemblyInfo target from the AssemblyVersion
+// / FileVersion / InformationalVersion MSBuild properties, which the
+// SetGitDerivedVersion target in boilersGraphics.csproj populates from
+// `git rev-list` / `git rev-parse`. This avoids the wpftmp obj/-sharing
+// issue that GitInfo's source generator hit, while still embedding the
+// commit count / branch / sha into the assembly metadata.

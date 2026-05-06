@@ -80,11 +80,14 @@ public static class R3Extensions
     }
 
     /// <summary>
-    /// Observes element property changes in NotifyCollectionChangedSynchronizedViewList
+    /// Observes element property changes in NotifyCollectionChangedSynchronizedViewList.
+    /// The selector must return the property's <see cref="R3.Observable{TProperty}"/>
+    /// (e.g. a <see cref="R3.BindableReactiveProperty{TProperty}"/>) so that this
+    /// extension can actually subscribe to per-element changes.
     /// </summary>
     public static R3.Observable<TProperty> ObserveElementObservableProperty<T, TProperty>(
         this NotifyCollectionChangedSynchronizedViewList<T> source,
-        Func<T, TProperty> propertySelector) where T : class
+        Func<T, R3.Observable<TProperty>> propertySelector) where T : class
     {
         return R3.Observable.Create<TProperty>(observer =>
         {
@@ -92,48 +95,31 @@ public static class R3Extensions
 
             void SubscribeToElements()
             {
-                // Clear existing subscriptions
                 foreach (var disposable in disposables)
                 {
                     disposable?.Dispose();
                 }
                 disposables.Clear();
 
-                // Subscribe to current elements
                 foreach (var item in source)
                 {
-                    if (item != null)
+                    if (item == null) continue;
+                    try
                     {
-                        try
-                        {
-                            var value = propertySelector(item);
-                            observer.OnNext(value);
-                            
-                            // If the property is R3 Observable, subscribe to changes
-                            if (value is R3.Observable<TProperty> r3Observable)
-                            {
-                                var subscription = r3Observable.Subscribe(x => observer.OnNext(x));
-                                disposables.Add(subscription);
-                            }
-                            // If the property has an observable, try to subscribe
-                            else if (value is R3.ReactiveProperty<TProperty> reactiveProperty)
-                            {
-                                var subscription = reactiveProperty.Subscribe(x => observer.OnNext(x));
-                                disposables.Add(subscription);
-                            }
-                        }
-                        catch
-                        {
-                            // Ignore errors in property access
-                        }
+                        var observable = propertySelector(item);
+                        if (observable == null) continue;
+                        var subscription = observable.Subscribe(v => observer.OnNext(v));
+                        disposables.Add(subscription);
+                    }
+                    catch
+                    {
+                        // Ignore errors in property access
                     }
                 }
             }
 
-            // Initial subscription
             SubscribeToElements();
 
-            // Subscribe to collection changes
             void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
             {
                 SubscribeToElements();
@@ -169,13 +155,13 @@ public static class R3Extensions
     {
         var observableList = new ObservableList<T>();
 
-        // ‰Šú’l‚ğİ’è
+        // ï¿½ï¿½ï¿½ï¿½ï¿½lï¿½ï¿½İ’ï¿½
         if (source.CurrentValue != null)
         {
             observableList.AddRange(source.CurrentValue);
         }
 
-        // ƒ\[ƒX‚Ì•ÏX‚ğŠÄ‹
+        // ï¿½\ï¿½[ï¿½Xï¿½Ì•ÏXï¿½ï¿½ï¿½Äï¿½
         source.Subscribe(newList =>
         {
             observableList.Clear();
@@ -192,13 +178,13 @@ public static class R3Extensions
     {
         var observableList = new ObservableList<T>();
 
-        // ‰Šú’l‚ğ’Ç‰Á
+        // ï¿½ï¿½ï¿½ï¿½ï¿½lï¿½ï¿½Ç‰ï¿½
         if (source.CurrentValue != null)
         {
             observableList.Add(source.CurrentValue);
         }
 
-        // •ÏX‚ğŠÄ‹
+        // ï¿½ÏXï¿½ï¿½ï¿½Äï¿½
         source.Subscribe(newValue =>
         {
             observableList.Clear();
@@ -215,7 +201,7 @@ public static class R3Extensions
     {
         var observableList = new ObservableList<T>();
 
-        // •ÏX‚ğŠÄ‹
+        // ï¿½ÏXï¿½ï¿½ï¿½Äï¿½
         source.Subscribe(newValue =>
         {
             observableList.Clear();
@@ -239,12 +225,12 @@ public static class R3Extensions
     }
 
     /// <summary>
-    /// NotifyCollectionChangedSynchronizedViewList‚Ì—v‘f‚ÌƒvƒƒpƒeƒB•ÏX‚ğŠÄ‹‚·‚éObservable‚ğì¬‚µ‚Ü‚·
+    /// NotifyCollectionChangedSynchronizedViewListï¿½Ì—vï¿½fï¿½Ìƒvï¿½ï¿½ï¿½pï¿½eï¿½Bï¿½ÏXï¿½ï¿½ï¿½Äï¿½ï¿½ï¿½ï¿½ï¿½Observableï¿½ï¿½ï¿½ì¬ï¿½ï¿½ï¿½Ü‚ï¿½
     /// </summary>
-    /// <typeparam name="T">ƒŠƒXƒg‚Ì—v‘f‚ÌŒ^iINotifyPropertyChanged‚ğÀ‘•‚µ‚Ä‚¢‚é•K—v‚ª‚ ‚è‚Ü‚·j</typeparam>
-    /// <param name="source">ŠÄ‹‘ÎÛ‚ÌNotifyCollectionChangedSynchronizedViewList</param>
-    /// <param name="propertySelector">ŠÄ‹‚·‚éƒvƒƒpƒeƒB‚ğw’è‚·‚éƒZƒŒƒNƒ^[</param>
-    /// <returns>ƒvƒƒpƒeƒB•ÏX‚ğ’Ê’m‚·‚éObservable</returns>
+    /// <typeparam name="T">ï¿½ï¿½ï¿½Xï¿½gï¿½Ì—vï¿½fï¿½ÌŒ^ï¿½iINotifyPropertyChangedï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½Kï¿½vï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ü‚ï¿½ï¿½j</typeparam>
+    /// <param name="source">ï¿½Äï¿½ï¿½ÎÛ‚ï¿½NotifyCollectionChangedSynchronizedViewList</param>
+    /// <param name="propertySelector">ï¿½Äï¿½ï¿½ï¿½ï¿½ï¿½vï¿½ï¿½ï¿½pï¿½eï¿½Bï¿½ï¿½ï¿½wï¿½è‚·ï¿½ï¿½Zï¿½ï¿½ï¿½Nï¿½^ï¿½[</param>
+    /// <returns>ï¿½vï¿½ï¿½ï¿½pï¿½eï¿½Bï¿½ÏXï¿½ï¿½Ê’mï¿½ï¿½ï¿½ï¿½Observable</returns>
     public static Observable<Unit> ObserveElementPropertyChanged<T>(this NotifyCollectionChangedSynchronizedViewList<T> source, Expression<Func<T, object>> propertySelector)
         where T : INotifyPropertyChanged
     {
@@ -253,7 +239,7 @@ public static class R3Extensions
             var disposables = new CompositeDisposable();
             var propertyName = GetPropertyName(propertySelector);
 
-            // Šù‘¶‚Ì—v‘f‚ÌƒvƒƒpƒeƒB•ÏX‚ğŠÄ‹
+            // ï¿½ï¿½ï¿½ï¿½ï¿½Ì—vï¿½fï¿½Ìƒvï¿½ï¿½ï¿½pï¿½eï¿½Bï¿½ÏXï¿½ï¿½ï¿½Äï¿½
             foreach (var item in source)
             {
                 if (item != null)
@@ -268,7 +254,7 @@ public static class R3Extensions
                 }
             }
 
-            // ƒRƒŒƒNƒVƒ‡ƒ“•ÏX‚ğŠÄ‹‚µ‚ÄV‚µ‚¢—v‘f‚ÌƒvƒƒpƒeƒB•ÏX‚àŠÄ‹
+            // ï¿½Rï¿½ï¿½ï¿½Nï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½ÏXï¿½ï¿½ï¿½Äï¿½ï¿½ï¿½ï¿½ÄVï¿½ï¿½ï¿½ï¿½ï¿½vï¿½fï¿½Ìƒvï¿½ï¿½ï¿½pï¿½eï¿½Bï¿½ÏXï¿½ï¿½ï¿½Äï¿½
             Observable.FromEvent<NotifyCollectionChangedEventHandler, NotifyCollectionChangedEventArgs>(
                 h => (sender, e) => h(e),
                 h => source.CollectionChanged += h,
@@ -296,7 +282,7 @@ public static class R3Extensions
                             }
                             break;
                         case NotifyCollectionChangedAction.Remove:
-                            // íœ‚³‚ê‚½—v‘f‚ÌŠÄ‹‚Í©“®“I‚É‰ğœ‚³‚ê‚é
+                            // ï¿½íœï¿½ï¿½ï¿½ê‚½ï¿½vï¿½fï¿½ÌŠÄï¿½ï¿½Íï¿½ï¿½ï¿½ï¿½Iï¿½É‰ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
                             break;
                         case NotifyCollectionChangedAction.Replace:
                             if (change.NewItems != null)
@@ -317,7 +303,7 @@ public static class R3Extensions
                             }
                             break;
                         case NotifyCollectionChangedAction.Reset:
-                            // ‘S‚ÄƒNƒŠƒA‚µ‚ÄÄ“xŠÄ‹‚ğİ’è
+                            // ï¿½Sï¿½ÄƒNï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½ÄÄ“xï¿½Äï¿½ï¿½ï¿½İ’ï¿½
                             disposables.Clear();
                             foreach (var item in source)
                             {

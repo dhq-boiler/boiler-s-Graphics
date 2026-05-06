@@ -6,6 +6,10 @@
     <Nullable>enable</Nullable>
 
     <IsPackable>false</IsPackable>
+    <!-- Test project — UseAppHost is false by default, so single-file publish
+         fails with NETSDK1098. Skip it during solution-level publish runs
+         (e.g. wdac-mcp-staging Linux build host). dotnet test still works. -->
+    <IsPublishable>false</IsPublishable>
   </PropertyGroup>
 
   <ItemGroup>

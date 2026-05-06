@@ -24,7 +24,6 @@ public class BlurEffectViewModel : EffectViewModel
 {
     public BlurEffectViewModel()
     {
-        Initialize();
     }
 
     public override void Initialize()
@@ -51,7 +50,7 @@ public class BlurEffectViewModel : EffectViewModel
     {
         if (Width.Value <= 0 || Height.Value <= 0) return;
 
-        var renderer = new EffectRenderer(new WpfVisualTreeHelper(), DiagramViewModel.Instance.Renderer.GetCache());
+        var renderer = new EffectRenderer(new WpfVisualTreeHelper(), ((IDiagramViewModel)Owner).Renderer.GetCache());
         var rtb = renderer.Render(new Rect(Left.Value, Top.Value, Width.Value, Height.Value),
             Application.Current.MainWindow.GetChildOfType<DesignerCanvas>(),
             (Application.Current.MainWindow.DataContext as MainWindowViewModel).DiagramViewModel,
@@ -96,6 +95,7 @@ public class BlurEffectViewModel : EffectViewModel
         {
             Owner = Owner
         };
+        clone.Initialize();
         clone.Left.Value = Left.Value;
         clone.Top.Value = Top.Value;
         clone.Width.Value = Width.Value;

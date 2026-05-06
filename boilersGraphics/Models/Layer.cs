@@ -36,7 +36,7 @@ public class Layer : LayerTreeViewItemBase, IObservable<LayerObservable>, ICompa
 
         if (!isPreview)
         {
-            var temp = Children.ObserveElementObservableProperty(x => (x as LayerItem).Item.Value)
+            var temp = Children.ObserveElementObservableProperty(x => (x as LayerItem).Item)
                 .ToUnit()
                 .Merge(Children.ObserveElementObservableProperty(x => x.IsSelected).ToUnit())
                 .ToUnit()
@@ -59,7 +59,7 @@ public class Layer : LayerTreeViewItemBase, IObservable<LayerObservable>, ICompa
             temp.ObserveOnCurrentSynchronizationContext()
                 .Subscribe(x =>
                 {
-                    DiagramViewModel.Instance.Renderer.InvalidateViewCache();
+                    MainWindowViewModel.Instance.DiagramViewModel.Renderer.InvalidateViewCache();
                     InvalidateCache();
                     UpdateAppearanceBothParentAndChildBatched();
                 })
@@ -130,7 +130,7 @@ public class Layer : LayerTreeViewItemBase, IObservable<LayerObservable>, ICompa
         var _items = items;
         if (backgroundIncluded)
         {
-            _items = _items.AsValueEnumerable().Union(new SelectableDesignerItemViewModelBase[] { DiagramViewModel.Instance.BackgroundItem.Value }).ToArray();
+            _items = _items.AsValueEnumerable().Union(new SelectableDesignerItemViewModelBase[] { MainWindowViewModel.Instance.DiagramViewModel.BackgroundItem.Value }).ToArray();
         }
         var width = Measure.GetWidth(_items, out minX, out maxX);
         var height = Measure.GetHeight(_items, out minY, out maxY);
@@ -140,7 +140,7 @@ public class Layer : LayerTreeViewItemBase, IObservable<LayerObservable>, ICompa
 
         Rect? sliceRect = null;
         _items.AsValueEnumerable().OfType<IRect>().ToList().ForEach(x => sliceRect = (!sliceRect.HasValue ? x.Rect.Value : Rect.Union(sliceRect.Value, x.Rect.Value)));
-        var renderer = DiagramViewModel.Instance.Renderer;
+        var renderer = MainWindowViewModel.Instance.DiagramViewModel.Renderer;
         var cache = renderer.GetCache();
 
         // Dirtyなアイテムのみをフィルタリング
@@ -149,20 +149,20 @@ public class Layer : LayerTreeViewItemBase, IObservable<LayerObservable>, ICompa
             .ToList();
 
         //背景オブジェクトを除く、アイテムがない場合
-        if (_items.AsValueEnumerable().Except(new SelectableDesignerItemViewModelBase[]{ DiagramViewModel.Instance.BackgroundItem.Value }).Count() == 0)
+        if (_items.AsValueEnumerable().Except(new SelectableDesignerItemViewModelBase[]{ MainWindowViewModel.Instance.DiagramViewModel.BackgroundItem.Value }).Count() == 0)
         {
             //アピアランスには背景オブジェクトのみをレンダリングする
             Appearance.Value = renderer.Render(sliceRect, DesignerCanvas.GetInstance(),
-                DiagramViewModel.Instance,
-                DiagramViewModel.Instance.BackgroundItem.Value, null, -1,
+                MainWindowViewModel.Instance.DiagramViewModel,
+                MainWindowViewModel.Instance.DiagramViewModel.BackgroundItem.Value, null, -1,
                 -1);
         }
         else //背景オブジェクトを除く、アイテムがある場合
         {
             //アピアランスには背景オブジェクトを除いて、ZIndexが範囲内のオブジェクトのみをレンダリングする
             Appearance.Value = renderer.Render(sliceRect, DesignerCanvas.GetInstance(),
-                DiagramViewModel.Instance,
-                DiagramViewModel.Instance.BackgroundItem.Value, null, _items.AsValueEnumerable().Except(new SelectableDesignerItemViewModelBase[] { DiagramViewModel.Instance.BackgroundItem.Value }).Min(x => x.ZIndex.Value),
+                MainWindowViewModel.Instance.DiagramViewModel,
+                MainWindowViewModel.Instance.DiagramViewModel.BackgroundItem.Value, null, _items.AsValueEnumerable().Except(new SelectableDesignerItemViewModelBase[] { MainWindowViewModel.Instance.DiagramViewModel.BackgroundItem.Value }).Min(x => x.ZIndex.Value),
                 _items.AsValueEnumerable().Max(x => x.ZIndex.Value));
         }
 
@@ -224,7 +224,7 @@ public class Layer : LayerTreeViewItemBase, IObservable<LayerObservable>, ICompa
         using (var context = visual.RenderOpen())
         {
             //白背景でビットマップを初期化
-            context.DrawRectangle(DiagramViewModel.Instance.BackgroundItem.Value.FillBrush.Value, null, new Rect(new Point(), new Size(width, height)));
+            context.DrawRectangle(MainWindowViewModel.Instance.DiagramViewModel.BackgroundItem.Value.FillBrush.Value, null, new Rect(new Point(), new Size(width, height)));
         }
 
         return visual;

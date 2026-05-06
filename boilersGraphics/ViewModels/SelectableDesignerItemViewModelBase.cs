@@ -48,7 +48,19 @@ public abstract class SelectableDesignerItemViewModelBase : BindableBase, ISelec
 
     public SelectableDesignerItemViewModelBase[] SelectedItems => Owner.SelectedItems.Value;
 
-    public IDiagramViewModel Owner { get; set; }
+    private IDiagramViewModel _owner;
+    public IDiagramViewModel Owner
+    {
+        get => _owner;
+        set
+        {
+            if (_owner != value)
+            {
+                _owner = value;
+                InitMagnificationBindings();
+            }
+        }
+    }
     public int Id { get; set; }
 
     // ↓ Flags ↓
@@ -103,43 +115,21 @@ public abstract class SelectableDesignerItemViewModelBase : BindableBase, ISelec
 
     public IDisposable GroupDisposable { get; set; }
 
-    public R3.ReadOnlyReactiveProperty<double> SnapPointSize { get; private set; } = Observable.Return(4)
-        .CombineLatest(DiagramViewModel.Instance.MagnificationRate,
-            (standardSize, rate) => { return standardSize / (rate / 100d); }).ToReadOnlyReactiveProperty();
+    public R3.ReadOnlyReactiveProperty<double> SnapPointSize { get; private set; }
 
-    public R3.ReadOnlyReactiveProperty<double> ThumbSize { get; private set; } = Observable.Return(7)
-        .CombineLatest(DiagramViewModel.Instance.MagnificationRate,
-            (standardSize, rate) => { return standardSize / (rate / 100d); }).ToReadOnlyReactiveProperty();
+    public R3.ReadOnlyReactiveProperty<double> ThumbSize { get; private set; }
 
-    public R3.ReadOnlyReactiveProperty<double> ThumbThickness { get; private set; } = Observable.Return(1)
-        .CombineLatest(DiagramViewModel.Instance.MagnificationRate,
-            (standardSize, rate) => { return standardSize / (rate / 100d); }).ToReadOnlyReactiveProperty();
+    public R3.ReadOnlyReactiveProperty<double> ThumbThickness { get; private set; }
 
-    public R3.ReadOnlyReactiveProperty<Thickness> RotateThumbMargin { get; private set; } = Observable.Return(-20)
-        .CombineLatest(DiagramViewModel.Instance.MagnificationRate,
-            (standardSize, rate) => { return new Thickness(0, standardSize / (rate / 100d), 0, 0); })
-        .ToReadOnlyReactiveProperty();
+    public R3.ReadOnlyReactiveProperty<Thickness> RotateThumbMargin { get; private set; }
 
-    public R3.ReadOnlyReactiveProperty<Thickness> RotateThumbConnectorMargin { get; private set; } = Observable.Return(-11)
-        .CombineLatest(DiagramViewModel.Instance.MagnificationRate,
-            (standardSize, rate) => { return new Thickness(0, standardSize / (rate / 100d), 0, 0); })
-        .ToReadOnlyReactiveProperty();
+    public R3.ReadOnlyReactiveProperty<Thickness> RotateThumbConnectorMargin { get; private set; }
 
-    public R3.ReadOnlyReactiveProperty<double> RotateThumbConnectorY2 { get; private set; } = Observable.Return(11)
-        .CombineLatest(DiagramViewModel.Instance.MagnificationRate,
-            (standardSize, rate) => { return standardSize / (rate / 100d); }).ToReadOnlyReactiveProperty();
+    public R3.ReadOnlyReactiveProperty<double> RotateThumbConnectorY2 { get; private set; }
 
-    public R3.ReadOnlyReactiveProperty<double> RotateThumbConnectorThickness { get; private set; } = Observable.Return(1)
-        .CombineLatest(DiagramViewModel.Instance.MagnificationRate,
-            (standardSize, rate) => { return standardSize / (rate / 100d); }).ToReadOnlyReactiveProperty();
+    public R3.ReadOnlyReactiveProperty<double> RotateThumbConnectorThickness { get; private set; }
 
-    public R3.ReadOnlyReactiveProperty<Thickness> RotateThumbGridMargin { get; private set;} = Observable.Return(-3)
-        .CombineLatest(DiagramViewModel.Instance.MagnificationRate,
-            (standardSize, rate) =>
-            {
-                return new Thickness(standardSize / (rate / 100d), standardSize / (rate / 100d),
-                    standardSize / (rate / 100d), standardSize / (rate / 100d));
-            }).ToReadOnlyReactiveProperty();
+    public R3.ReadOnlyReactiveProperty<Thickness> RotateThumbGridMargin { get; private set; }
 
     public abstract bool SupportsPropertyDialog { get; }
 
@@ -187,9 +177,18 @@ public abstract class SelectableDesignerItemViewModelBase : BindableBase, ISelec
         MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(ZIndex, () => ZIndex = new BindableReactiveProperty<int>(zIndex));
         MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(EdgeBrush, () => EdgeBrush = new BindableReactiveProperty<Brush>(edgeBrush));
         MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(FillBrush, () => FillBrush = new BindableReactiveProperty<Brush>(fillBrush));
-        MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(EdgeThickness, () => EdgeThickness = new BindableReactiveProperty<double>(edgeThickness));
-
+        // Order matters: derived properties must be registered BEFORE the
+        // base properties they depend on. Recorder.Undo rolls operations
+        // back in reverse-registration order, and the derived rollback's
+        // closure dereferences the base property *at execution time*. If the
+        // base hasn't been restored yet, the closure captures the still-
+        // disposed instance and ToReadOnlyBindableReactiveProperty subscribes
+        // to it -> ObjectDisposedException. By registering HalfEdgeThickness
+        // first, EdgeThickness is restored first on Undo, so the
+        // EdgeThickness.Select(...) chain rebuilds against the live instance.
         MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(HalfEdgeThickness, () => HalfEdgeThickness = EdgeThickness.Select(x => x / 2).ToReadOnlyBindableReactiveProperty());
+
+        MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(EdgeThickness, () => EdgeThickness = new BindableReactiveProperty<double>(edgeThickness));
 
         MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(PathGeometry, () => PathGeometry = PathGeometryNoRotate.ToReadOnlyBindableReactiveProperty());
         
@@ -205,37 +204,37 @@ public abstract class SelectableDesignerItemViewModelBase : BindableBase, ISelec
 
         // ReadOnlyReactivePropertyは通常のDisposeのみ
         MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(SnapPointSize, () => SnapPointSize = Observable.Return(4)
-            .CombineLatest(DiagramViewModel.Instance.MagnificationRate,
+            .CombineLatest(Owner.MagnificationRate,
                 (standardSize, rate) => { return standardSize / (rate / 100d); }).ToReadOnlyReactiveProperty());
 
         MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(ThumbSize, () => ThumbSize = Observable.Return(7)
-            .CombineLatest(DiagramViewModel.Instance.MagnificationRate,
+            .CombineLatest(Owner.MagnificationRate,
                 (standardSize, rate) => { return standardSize / (rate / 100d); }).ToReadOnlyReactiveProperty());
 
         MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(ThumbThickness, () => ThumbThickness = Observable.Return(1)
-            .CombineLatest(DiagramViewModel.Instance.MagnificationRate,
+            .CombineLatest(Owner.MagnificationRate,
                 (standardSize, rate) => { return standardSize / (rate / 100d); }).ToReadOnlyReactiveProperty());
 
         MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(RotateThumbMargin, () => RotateThumbMargin = Observable.Return(-20)
-            .CombineLatest(DiagramViewModel.Instance.MagnificationRate,
+            .CombineLatest(Owner.MagnificationRate,
                 (standardSize, rate) => { return new Thickness(0, standardSize / (rate / 100d), 0, 0); })
             .ToReadOnlyReactiveProperty());
 
         MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(RotateThumbConnectorMargin, () => RotateThumbConnectorMargin = Observable.Return(-11)
-            .CombineLatest(DiagramViewModel.Instance.MagnificationRate,
+            .CombineLatest(Owner.MagnificationRate,
                 (standardSize, rate) => { return new Thickness(0, standardSize / (rate / 100d), 0, 0); })
             .ToReadOnlyReactiveProperty());
 
         MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(RotateThumbConnectorY2, () => RotateThumbConnectorY2 = Observable.Return(11)
-            .CombineLatest(DiagramViewModel.Instance.MagnificationRate,
+            .CombineLatest(Owner.MagnificationRate,
                 (standardSize, rate) => { return standardSize / (rate / 100d); }).ToReadOnlyReactiveProperty());
 
         MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(RotateThumbConnectorThickness, () => RotateThumbConnectorThickness = Observable.Return(1)
-            .CombineLatest(DiagramViewModel.Instance.MagnificationRate,
+            .CombineLatest(Owner.MagnificationRate,
                 (standardSize, rate) => { return standardSize / (rate / 100d); }).ToReadOnlyReactiveProperty());
 
         MainWindowViewModel.Instance.Recorder.Current.ExecuteDispose(RotateThumbGridMargin, () => RotateThumbGridMargin = Observable.Return(-3)
-            .CombineLatest(DiagramViewModel.Instance.MagnificationRate,
+            .CombineLatest(Owner.MagnificationRate,
                 (standardSize, rate) =>
                 {
                     return new Thickness(standardSize / (rate / 100d), standardSize / (rate / 100d),
@@ -339,6 +338,56 @@ public abstract class SelectableDesignerItemViewModelBase : BindableBase, ISelec
             PenLineJoin.Round
         };
         StrokeDashArray.Value = new DoubleCollection();
+
+        InitMagnificationBindings();
+    }
+
+    private void InitMagnificationBindings()
+    {
+        var magnificationRate = Owner?.MagnificationRate ?? MainWindowViewModel.Instance?.DiagramViewModel?.MagnificationRate;
+        if (magnificationRate != null)
+        {
+            SnapPointSize = Observable.Return(4)
+                .CombineLatest(magnificationRate,
+                    (standardSize, rate) => standardSize / (rate / 100d)).ToReadOnlyReactiveProperty();
+            ThumbSize = Observable.Return(7)
+                .CombineLatest(magnificationRate,
+                    (standardSize, rate) => standardSize / (rate / 100d)).ToReadOnlyReactiveProperty();
+            ThumbThickness = Observable.Return(1)
+                .CombineLatest(magnificationRate,
+                    (standardSize, rate) => standardSize / (rate / 100d)).ToReadOnlyReactiveProperty();
+            RotateThumbMargin = Observable.Return(-20)
+                .CombineLatest(magnificationRate,
+                    (standardSize, rate) => new Thickness(0, standardSize / (rate / 100d), 0, 0))
+                .ToReadOnlyReactiveProperty();
+            RotateThumbConnectorMargin = Observable.Return(-11)
+                .CombineLatest(magnificationRate,
+                    (standardSize, rate) => new Thickness(0, standardSize / (rate / 100d), 0, 0))
+                .ToReadOnlyReactiveProperty();
+            RotateThumbConnectorY2 = Observable.Return(11)
+                .CombineLatest(magnificationRate,
+                    (standardSize, rate) => standardSize / (rate / 100d)).ToReadOnlyReactiveProperty();
+            RotateThumbConnectorThickness = Observable.Return(1)
+                .CombineLatest(magnificationRate,
+                    (standardSize, rate) => standardSize / (rate / 100d)).ToReadOnlyReactiveProperty();
+            RotateThumbGridMargin = Observable.Return(-3)
+                .CombineLatest(magnificationRate,
+                    (standardSize, rate) => new Thickness(standardSize / (rate / 100d), standardSize / (rate / 100d),
+                        standardSize / (rate / 100d), standardSize / (rate / 100d)))
+                .ToReadOnlyReactiveProperty();
+        }
+        else
+        {
+            // Fallback: initialize with default fixed values when no MagnificationRate is available
+            SnapPointSize = Observable.Return(4.0).ToReadOnlyReactiveProperty();
+            ThumbSize = Observable.Return(7.0).ToReadOnlyReactiveProperty();
+            ThumbThickness = Observable.Return(1.0).ToReadOnlyReactiveProperty();
+            RotateThumbMargin = Observable.Return(new Thickness(0, -20, 0, 0)).ToReadOnlyReactiveProperty();
+            RotateThumbConnectorMargin = Observable.Return(new Thickness(0, -11, 0, 0)).ToReadOnlyReactiveProperty();
+            RotateThumbConnectorY2 = Observable.Return(11.0).ToReadOnlyReactiveProperty();
+            RotateThumbConnectorThickness = Observable.Return(1.0).ToReadOnlyReactiveProperty();
+            RotateThumbGridMargin = Observable.Return(new Thickness(-3, -3, -3, -3)).ToReadOnlyReactiveProperty();
+        }
     }
 
     public abstract Type GetViewType();

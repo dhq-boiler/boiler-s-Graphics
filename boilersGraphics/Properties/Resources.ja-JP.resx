@@ -294,6 +294,9 @@
   <data name="Dialog_Statistics_NumberOfExportsAsWmp" xml:space="preserve">
     <value>WMPエクスポートした回数</value>
   </data>
+  <data name="Dialog_Statistics_NumberOfExportsAsPdf" xml:space="preserve">
+    <value>PDFエクスポートした回数</value>
+  </data>
   <data name="Dialog_Statistics_NumberOfIntersects" xml:space="preserve">
     <value>Intersectした回数</value>
   </data>
@@ -666,6 +669,9 @@
   <data name="String_Cancel" xml:space="preserve">
     <value>キャンセル</value>
   </data>
+  <data name="String_Canvas" xml:space="preserve">
+    <value>キャンバス</value>
+  </data>
   <data name="String_CanvasEdgeBrush" xml:space="preserve">
     <value>キャンバスのエッジブラシ</value>
   </data>
@@ -845,6 +851,12 @@
   </data>
   <data name="String_SnapRange" xml:space="preserve">
     <value>ポイントにスナップする範囲</value>
+  </data>
+  <data name="String_EnableAutoScrollOnDrag" xml:space="preserve">
+    <value>ドラッグ中にビューポートを自動スクロール</value>
+  </data>
+  <data name="String_AutoScrollOnDragSpeed" xml:space="preserve">
+    <value>自動スクロール速度 (px/tick)</value>
   </data>
   <data name="String_SourceCodeLicense" xml:space="preserve">
     <value>ソースコードのライセンス</value>

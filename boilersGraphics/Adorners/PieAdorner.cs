@@ -187,8 +187,8 @@ internal class PieAdorner : Adorner
                 _item.PathGeometryNoRotate.Value = null;
                 _item.Height.Value = geometry.Bounds.Height;
                 _item.IsVisible.Value = true;
-                _item.IsSelected.Value = true;
                 _item.Owner.DeselectAll();
+                _item.IsSelected.Value = true;
                 ((AdornedElement as DesignerCanvas).DataContext as IDiagramViewModel).AddItemCommand.Execute(_item);
                 _snapAction.OnMouseUp(this);
                 UpdateStatisticsCount();

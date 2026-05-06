@@ -2458,6 +2458,78 @@
             </StatusBarItem>
         </StatusBar>
 
+        <!--  Canvas Page Tabs  -->
+        <DockPanel DockPanel.Dock="Bottom" Height="28" Background="#FF2D2D30">
+            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                <Button Content="&#9654;" Width="28" Margin="1,2"
+                        Command="{Binding PlayAnimationCommand}"
+                        ToolTip="Play animation preview"
+                        FontSize="10" Foreground="#FF00CC00"
+                        Background="#FF3E3E42" BorderBrush="#FF555555" />
+                <Button Content="&#9632;" Width="28" Margin="1,2"
+                        Command="{Binding StopAnimationCommand}"
+                        ToolTip="Stop animation"
+                        FontSize="10" Foreground="#FFCC3333"
+                        Background="#FF3E3E42" BorderBrush="#FF555555" />
+                <Button Content="GIF" Width="36" Margin="1,2"
+                        Command="{Binding ExportAnimationGifCommand}"
+                        ToolTip="Export as animated GIF"
+                        FontSize="9" FontWeight="Bold" Foreground="#FFCCCCCC"
+                        Background="#FF3E3E42" BorderBrush="#FF555555" />
+                <Button Content="+" Width="28" Margin="1,2"
+                        Command="{Binding AddCanvasCommand}"
+                        ToolTip="Add new canvas page"
+                        FontSize="14" FontWeight="Bold" Foreground="White"
+                        Background="#FF3E3E42" BorderBrush="#FF555555" />
+            </StackPanel>
+            <ItemsControl ItemsSource="{Binding CanvasPages}" DockPanel.Dock="Left">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border x:Name="TabBorder" Margin="1,2,0,0" Padding="6,2" CornerRadius="3,3,0,0"
+                                BorderThickness="1" Cursor="Hand"
+                                MouseLeftButtonDown="CanvasTab_MouseLeftButtonDown"
+                                MouseLeftButtonUp="CanvasTab_MouseLeftButtonUp">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock x:Name="TabText" Text="{Binding Name}" VerticalAlignment="Center" FontSize="11"
+                                           Visibility="Visible" />
+                                <TextBox x:Name="TabRenameBox" Text="{Binding Name, UpdateSourceTrigger=LostFocus}"
+                                         FontSize="11" MinWidth="60" VerticalAlignment="Center"
+                                         Visibility="Collapsed"
+                                         KeyDown="CanvasTabRename_KeyDown"
+                                         LostFocus="CanvasTabRename_LostFocus" />
+                                <Button Content="&#xD7;" FontSize="10" Margin="6,0,0,0" Padding="2,0"
+                                        VerticalAlignment="Center" Cursor="Hand"
+                                        Background="Transparent" BorderThickness="0" Foreground="#FF999999"
+                                        Click="CanvasTabClose_Click"
+                                        ToolTip="Remove this canvas page" />
+                            </StackPanel>
+                        </Border>
+                        <DataTemplate.Triggers>
+                            <DataTrigger Binding="{Binding IsActive}" Value="True">
+                                <Setter TargetName="TabBorder" Property="Background" Value="#FF007ACC" />
+                                <Setter TargetName="TabBorder" Property="BorderBrush" Value="#FF007ACC" />
+                                <Setter TargetName="TabText" Property="Foreground" Value="White" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding IsActive}" Value="False">
+                                <Setter TargetName="TabBorder" Property="Background" Value="#FF3E3E42" />
+                                <Setter TargetName="TabBorder" Property="BorderBrush" Value="#FF555555" />
+                                <Setter TargetName="TabText" Property="Foreground" Value="#FFCCCCCC" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding IsEditing}" Value="True">
+                                <Setter TargetName="TabText" Property="Visibility" Value="Collapsed" />
+                                <Setter TargetName="TabRenameBox" Property="Visibility" Value="Visible" />
+                            </DataTrigger>
+                        </DataTemplate.Triggers>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </DockPanel>
+
         <!--  Diagram Control  -->
         <usercontrol:DiagramControl
             x:Name="DiagramControl"

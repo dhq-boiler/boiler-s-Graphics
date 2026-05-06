@@ -578,12 +578,12 @@ internal class ObjectSerializer
         return colorSpots;
     }
 
-    internal static IEnumerable<XElement> SerializeAttachments()
+    internal static IEnumerable<XElement> SerializeAttachments(DiagramViewModel diagramViewModel)
     {
         using (var memStream = new MemoryStream())
         {
-            var renderer = DiagramViewModel.Instance.Renderer;
-            var image = renderer.Render(null, DesignerCanvas.GetInstance(), DiagramViewModel.Instance, DiagramViewModel.Instance.BackgroundItem.Value, DiagramViewModel.Instance.BackgroundItem.Value);
+            var renderer = diagramViewModel.Renderer;
+            var image = renderer.Render(null, DesignerCanvas.GetInstance(), diagramViewModel, diagramViewModel.BackgroundItem.Value, diagramViewModel.BackgroundItem.Value);
             var writeableBitmap = new WriteableBitmap(image);
             var encoder = new PngBitmapEncoder();
             encoder.Frames.Add(BitmapFrame.Create(writeableBitmap));
