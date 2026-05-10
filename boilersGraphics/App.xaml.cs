@@ -34,6 +34,9 @@ namespace boilersGraphics;
 /// </summary>
 public partial class App : PrismApplication
 {
+    [GeneratedRegex(@"^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{4}\|.+?\|.+?\|.+?$")]
+    private static partial Regex NLogLineRegex();
+
     public App()
     {
         Instance = this;
@@ -115,7 +118,7 @@ public partial class App : PrismApplication
                 {
                     var logLines = streamReader.ReadToEnd().Split(new[] { Environment.NewLine }, StringSplitOptions.None);
                     var countedLogLines = logLines.Length <= lineCount ? logLines : logLines[^lineCount..];
-                    var filteredLogLines = countedLogLines.Where(line => Regex.IsMatch(line, @"^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{4}\|.+?\|.+?\|.+?$")).ToList();
+                    var filteredLogLines = countedLogLines.Where(line => NLogLineRegex().IsMatch(line)).ToList();
 
                     for (int i = Math.Min(lineCount, filteredLogLines.Count); i > 0; i--)
                     {

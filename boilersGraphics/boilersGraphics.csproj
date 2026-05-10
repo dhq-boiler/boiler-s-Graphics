@@ -176,6 +176,10 @@
   <ItemGroup>
     <PackageReference Include="CalcBinding" Version="2.5.2" />
     <PackageReference Include="Dapper.StrongName" Version="2.1.66" />
+    <PackageReference Include="DependencyPropertyGenerator" Version="1.5.0">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <!-- GitInfo replaced by the SetGitDerivedVersion target at the bottom of
          this file. The previous Source-Generator-based approach (GitInfo's
          ThisAssembly.GitInfo.g.cs) was duplicated into the WPF SDK's wpftmp

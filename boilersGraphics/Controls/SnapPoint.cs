@@ -1,15 +1,13 @@
-﻿using boilersGraphics.Helpers;
-using System.Windows;
+using boilersGraphics.Helpers;
+using DependencyPropertyGenerator;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 
 namespace boilersGraphics.Controls;
 
-public class SnapPoint : Thumb
+[DependencyProperty<SnapPointPosition>("SnapPointPosition")]
+public partial class SnapPoint : Thumb
 {
-    public static readonly DependencyProperty SnapPointPositionProperty =
-        DependencyProperty.Register("SnapPointPosition", typeof(SnapPointPosition), typeof(SnapPoint));
-
     public SnapPoint()
     {
     }
@@ -18,11 +16,5 @@ public class SnapPoint : Thumb
     {
         SetValue(Canvas.LeftProperty, x);
         SetValue(Canvas.TopProperty, y);
-    }
-
-    public SnapPointPosition SnapPointPosition
-    {
-        get => (SnapPointPosition)GetValue(SnapPointPositionProperty);
-        set => SetValue(SnapPointPositionProperty, value);
     }
 }

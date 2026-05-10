@@ -1,4 +1,5 @@
-﻿using System;
+using DependencyPropertyGenerator;
+using System;
 using System.ComponentModel;
 using System.Threading;
 using System.Windows;
@@ -9,13 +10,9 @@ namespace boilersGraphics.Views;
 /// <summary>
 ///     Interaction logic for AutoScrollingLabel.xaml
 /// </summary>
+[DependencyProperty<string>("Text")]
 public partial class AutoScrollingLabel : UserControl
 {
-    public static readonly DependencyProperty TextProperty = DependencyProperty.Register("Text",
-        typeof(string),
-        typeof(AutoScrollingLabel),
-        new FrameworkPropertyMetadata(null, OnTextChanged));
-
     private DateTime _beginAutoScroll;
     private DateTime _reachedDefaultPosition;
 
@@ -26,16 +23,9 @@ public partial class AutoScrollingLabel : UserControl
         InitializeComponent();
     }
 
-    public string Text
+    partial void OnTextChanged(string newValue)
     {
-        get => (string)GetValue(TextProperty);
-        set => SetValue(TextProperty, value);
-    }
-
-    private static void OnTextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        var ctrl = d as AutoScrollingLabel;
-        if (ctrl != null) ctrl.Control_Label.Content = ctrl.Text;
+        Control_Label.Content = newValue;
     }
 
     private void UserControl_Loaded(object sender, RoutedEventArgs e)

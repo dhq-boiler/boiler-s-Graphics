@@ -1,4 +1,5 @@
-﻿using System;
+using DependencyPropertyGenerator;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -10,13 +11,9 @@ namespace boilersGraphics.Views;
  * http://d.hatena.ne.jp/CoMo/20110428/1303996288
  */
 
-public class AdornedBy : Adorner
+[AttachedDependencyProperty<ControlTemplate, FrameworkElement>("Template")]
+public partial class AdornedBy : Adorner
 {
-    public static readonly DependencyProperty TemplateProperty =
-        DependencyProperty.RegisterAttached("Template",
-            typeof(ControlTemplate), typeof(AdornedBy),
-            new FrameworkPropertyMetadata(null, OnTemplateChanged));
-
     //テンプレート描画用のControlオブジェクトへの参照
     private FrameworkElement _Content;
 
@@ -28,20 +25,10 @@ public class AdornedBy : Adorner
     //描画されるために不可欠なので実装をしておく
     protected override int VisualChildrenCount => 1;
 
-    public static ControlTemplate GetTemplate(DependencyObject obj)
-    {
-        return (ControlTemplate)obj.GetValue(TemplateProperty);
-    }
-
-    public static void SetTemplate(DependencyObject obj, ControlTemplate value)
-    {
-        obj.SetValue(TemplateProperty, value);
-    }
-
     //添付プロパティTemplateの設定時に初期化処理を行う
-    private static void OnTemplateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    static partial void OnTemplateChanged(FrameworkElement sender, ControlTemplate newValue)
     {
-        var adorned = d as FrameworkElement;
+        var adorned = sender;
         var me = new AdornedBy(adorned);
 
         //装飾層に登録する
@@ -52,7 +39,7 @@ public class AdornedBy : Adorner
             adorned.Loaded += (_, __) => me.AddToAdornerLayer();
 
         //子Controlオブジェクトを生成して設定されたテンプレートを設定する
-        var t = e.NewValue as ControlTemplate;
+        var t = newValue;
         var ctrl = new Control { Template = t };
         var sourceElement = me.AdornedElement as FrameworkElement;
         ctrl.DataContext = sourceElement.DataContext;

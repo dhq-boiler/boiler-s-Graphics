@@ -3,6 +3,7 @@ using boilersGraphics.Extensions;
 using boilersGraphics.Helpers;
 using boilersGraphics.Models;
 using boilersGraphics.ViewModels;
+using DependencyPropertyGenerator;
 using Microsoft.Xaml.Behaviors;
 using NLog;
 using System;
@@ -23,7 +24,8 @@ public class DropArguments
     public MoveableTreeViewBehavior.InsertType Type { get; set; }
 }
 
-public class MoveableTreeViewBehavior : Behavior<TreeView>
+[DependencyProperty<ICommand>("DropCommand")]
+public partial class MoveableTreeViewBehavior : Behavior<TreeView>
 {
     public enum InsertType
     {
@@ -301,19 +303,4 @@ public class MoveableTreeViewBehavior : Behavior<TreeView>
                SystemParameters.MinimumVerticalDragDistance < Math.Abs(delta.Y);
     }
 
-    #region DropCommand
-
-    public ICommand DropCommand
-    {
-        get => (ICommand)GetValue(DropCommandProperty);
-        set => SetValue(DropCommandProperty, value);
-    }
-
-    public static readonly DependencyProperty DropCommandProperty = DependencyProperty.Register(
-        "DropCommand",
-        typeof(ICommand),
-        typeof(MoveableTreeViewBehavior),
-        new UIPropertyMetadata(null));
-
-    #endregion
 }

@@ -17,7 +17,7 @@ using ZLinq;
 
 namespace boilersGraphics.ViewModels;
 
-public class PrivacyPolicyViewModel : BindableBase, IDialogAware
+public partial class PrivacyPolicyViewModel : BindableBase, IDialogAware
 {
     private readonly CompositeDisposable disposables = new();
 
@@ -140,6 +140,12 @@ public class PrivacyPolicyViewModel : BindableBase, IDialogAware
         return list.AsValueEnumerable().FirstOrDefault();
     }
 
+    [GeneratedRegex(@"^(?:改定|制定)：(?<year>\d+?)年(?<month>\d+?)月(?<day>\d+?)日$")]
+    private static partial Regex EnactmentDateJpRegex();
+
+    [GeneratedRegex(@"^(?:Revised|Established):\s*(?<date>.+)$")]
+    private static partial Regex EnactmentDateEnRegex();
+
     private static DateTime ExtractLatestDateOfEnactment(string markdown)
     {
         var lines = markdown.Split("\n");
@@ -148,15 +154,15 @@ public class PrivacyPolicyViewModel : BindableBase, IDialogAware
             var trimmed = line.Trim();
 
             // Japanese format: 改定：2022年2月6日 / 制定：2021年12月15日
-            var regex = new Regex("^(?:改定|制定)：(?<year>\\d+?)年(?<month>\\d+?)月(?<day>\\d+?)日$");
-            if (regex.IsMatch(trimmed))
+            var jpRegex = EnactmentDateJpRegex();
+            if (jpRegex.IsMatch(trimmed))
             {
-                var mc = regex.Match(trimmed);
+                var mc = jpRegex.Match(trimmed);
                 return DateTime.Parse($"{mc.Groups["year"].Value}/{mc.Groups["month"].Value}/{mc.Groups["day"].Value}");
             }
 
             // English format: Revised: February 6, 2022 / Established: December 15, 2021
-            var enRegex = new Regex("^(?:Revised|Established):\\s*(?<date>.+)$");
+            var enRegex = EnactmentDateEnRegex();
             if (enRegex.IsMatch(trimmed))
             {
                 var mc = enRegex.Match(trimmed);

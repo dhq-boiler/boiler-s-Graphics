@@ -1,4 +1,5 @@
-﻿using System.Windows;
+using DependencyPropertyGenerator;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -7,20 +8,12 @@ namespace boilersGraphics.Views;
 /// <summary>
 ///     LabelTextBox.xaml の相互作用ロジック
 /// </summary>
+[DependencyProperty<string>("Text")]
 public partial class LabelTextBox : UserControl
 {
-    public static readonly DependencyProperty TextProperty =
-        DependencyProperty.Register("Text", typeof(string), typeof(LabelTextBox));
-
     public LabelTextBox()
     {
         InitializeComponent();
-    }
-
-    public string Text
-    {
-        get => (string)GetValue(TextProperty);
-        set => SetValue(TextProperty, value);
     }
 
     public TextBlock TargetTextBlock => LabelTextBox_internal_textblock;

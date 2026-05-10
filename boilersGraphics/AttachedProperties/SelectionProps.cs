@@ -1,6 +1,7 @@
 ﻿using boilersGraphics.Extensions;
 using boilersGraphics.Models;
 using boilersGraphics.ViewModels;
+using DependencyPropertyGenerator;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -8,7 +9,8 @@ using ZLinq;
 
 namespace boilersGraphics.AttachedProperties;
 
-public static class SelectionProps
+[AttachedDependencyProperty<bool, FrameworkElement>("EnabledForSelection", DefaultValue = false)]
+public static partial class SelectionProps
 {
     private static void Fe_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
@@ -129,31 +131,11 @@ public static class SelectionProps
         }
     }
 
-    #region EnabledForSelection
-
-    public static readonly DependencyProperty EnabledForSelectionProperty =
-        DependencyProperty.RegisterAttached("EnabledForSelection", typeof(bool), typeof(SelectionProps),
-            new FrameworkPropertyMetadata(false,
-                OnEnabledForSelectionChanged));
-
-    public static bool GetEnabledForSelection(DependencyObject d)
+    static partial void OnEnabledForSelectionChanged(FrameworkElement sender, bool newValue)
     {
-        return (bool)d.GetValue(EnabledForSelectionProperty);
-    }
-
-    public static void SetEnabledForSelection(DependencyObject d, bool value)
-    {
-        d.SetValue(EnabledForSelectionProperty, value);
-    }
-
-    private static void OnEnabledForSelectionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        var fe = (FrameworkElement)d;
-        if ((bool)e.NewValue)
-            fe.PreviewMouseLeftButtonDown += Fe_PreviewMouseLeftButtonDown;
+        if (newValue)
+            sender.PreviewMouseLeftButtonDown += Fe_PreviewMouseLeftButtonDown;
         else
-            fe.PreviewMouseLeftButtonDown -= Fe_PreviewMouseLeftButtonDown;
+            sender.PreviewMouseLeftButtonDown -= Fe_PreviewMouseLeftButtonDown;
     }
-
-    #endregion
 }

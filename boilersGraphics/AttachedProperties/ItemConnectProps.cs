@@ -1,10 +1,12 @@
-﻿using boilersGraphics.ViewModels;
+using boilersGraphics.ViewModels;
+using DependencyPropertyGenerator;
 using System.Windows;
 using System.Windows.Input;
 
 namespace boilersGraphics.AttachedProperties;
 
-public static class ItemConnectProps
+[AttachedDependencyProperty<bool, FrameworkElement>("EnabledForConnection", DefaultValue = false)]
+public static partial class ItemConnectProps
 {
     private static void Fe_MouseEnter(object sender, MouseEventArgs e)
     {
@@ -25,39 +27,17 @@ public static class ItemConnectProps
         }
     }
 
-    #region EnabledForConnection
-
-    public static readonly DependencyProperty EnabledForConnectionProperty =
-        DependencyProperty.RegisterAttached("EnabledForConnection", typeof(bool), typeof(ItemConnectProps),
-            new FrameworkPropertyMetadata(false,
-                OnEnabledForConnectionChanged));
-
-    public static bool GetEnabledForConnection(DependencyObject d)
+    static partial void OnEnabledForConnectionChanged(FrameworkElement sender, bool newValue)
     {
-        return (bool)d.GetValue(EnabledForConnectionProperty);
-    }
-
-    public static void SetEnabledForConnection(DependencyObject d, bool value)
-    {
-        d.SetValue(EnabledForConnectionProperty, value);
-    }
-
-    private static void OnEnabledForConnectionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        var fe = (FrameworkElement)d;
-
-
-        if ((bool)e.NewValue)
+        if (newValue)
         {
-            fe.MouseEnter += Fe_MouseEnter;
-            fe.MouseLeave += Fe_MouseLeave;
+            sender.MouseEnter += Fe_MouseEnter;
+            sender.MouseLeave += Fe_MouseLeave;
         }
         else
         {
-            fe.MouseEnter -= Fe_MouseEnter;
-            fe.MouseLeave -= Fe_MouseLeave;
+            sender.MouseEnter -= Fe_MouseEnter;
+            sender.MouseLeave -= Fe_MouseLeave;
         }
     }
-
-    #endregion
 }

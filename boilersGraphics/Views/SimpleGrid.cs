@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using DependencyPropertyGenerator;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
@@ -7,7 +8,10 @@ using ZLinq;
 namespace boilersGraphics.Views;
 
 [DesignTimeVisible(true)]
-public class SimpleGrid : Panel
+[DependencyProperty<int>("Rows", DefaultValue = 1)]
+[DependencyProperty<int>("Columns", DefaultValue = 1)]
+[DependencyProperty<Orientation>("Orientation", DefaultValue = Orientation.Horizontal)]
+public partial class SimpleGrid : Panel
 {
     private List<Cell> _cells;
 
@@ -186,64 +190,4 @@ public class SimpleGrid : Panel
         }
     }
 
-    #region 依存プロパティ
-
-    public static readonly DependencyProperty RowsProperty = DependencyProperty.Register("Rows",
-        typeof(int),
-        typeof(SimpleGrid),
-        new FrameworkPropertyMetadata(1, OnRowsChanged));
-
-    public static readonly DependencyProperty ColumnsProperty = DependencyProperty.Register("Columns",
-        typeof(int),
-        typeof(SimpleGrid),
-        new FrameworkPropertyMetadata(1, OnColumnsChanged));
-
-    public static readonly DependencyProperty OrientationProperty = DependencyProperty.Register("Orientation",
-        typeof(Orientation),
-        typeof(SimpleGrid),
-        new FrameworkPropertyMetadata(Orientation.Horizontal));
-
-    #endregion //依存プロパティ
-
-    #region 依存プロパティコールバック
-
-    private static void OnRowsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        var ctrl = d as SimpleGrid;
-        if (ctrl != null)
-        {
-        }
-    }
-
-    private static void OnColumnsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        var ctrl = d as SimpleGrid;
-        if (ctrl != null)
-        {
-        }
-    }
-
-    #endregion //依存プロパティコールバック
-
-    #region CLR プロパティ
-
-    public int Rows
-    {
-        get => (int)GetValue(RowsProperty);
-        set => SetValue(RowsProperty, value);
-    }
-
-    public int Columns
-    {
-        get => (int)GetValue(ColumnsProperty);
-        set => SetValue(ColumnsProperty, value);
-    }
-
-    public Orientation Orientation
-    {
-        get => (Orientation)GetValue(OrientationProperty);
-        set => SetValue(OrientationProperty, value);
-    }
-
-    #endregion //CLR プロパティ
 }

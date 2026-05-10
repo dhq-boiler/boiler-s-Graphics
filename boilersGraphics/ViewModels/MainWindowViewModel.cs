@@ -38,7 +38,7 @@ using Version = boilersGraphics.Views.Version;
 
 namespace boilersGraphics.ViewModels;
 
-public class MainWindowViewModel : BindableBase, IDisposable
+public partial class MainWindowViewModel : BindableBase, IDisposable
 {
     private readonly CompositeDisposable _CompositeDisposable = new();
     private DiagramViewModel _DiagramViewModel;
@@ -723,6 +723,12 @@ public class MainWindowViewModel : BindableBase, IDisposable
         LogManager.Configuration = config;
     }
 
+    [GeneratedRegex(@"^改定：(?<year>\d+?)年(?<month>\d+?)月(?<day>\d+?)日$")]
+    private static partial Regex PrivacyPolicyRevisedJpRegex();
+
+    [GeneratedRegex(@"^制定：(?<year>\d+?)年(?<month>\d+?)月(?<day>\d+?)日$")]
+    private static partial Regex PrivacyPolicyEstablishedJpRegex();
+
     private DateTime? PickoutLatestPrivacyPolicyDateOfEnactment()
     {
         var privacyPolicyUrl = "https://raw.githubusercontent.com/dhq-boiler/boiler-s-Graphics/master/PrivacyPolicy.md";
@@ -732,18 +738,18 @@ public class MainWindowViewModel : BindableBase, IDisposable
             var lines = markdown.Split("\n");
             foreach (var line in lines.AsValueEnumerable().Reverse())
             {
-                var regex = new Regex("^改定：(?<year>\\d+?)年(?<month>\\d+?)月(?<day>\\d+?)日$");
-                if (regex.IsMatch(line))
+                var revised = PrivacyPolicyRevisedJpRegex();
+                if (revised.IsMatch(line))
                 {
-                    var mc = regex.Match(line);
+                    var mc = revised.Match(line);
                     return DateTime.Parse(
                         $"{mc.Groups["year"].Value}/{mc.Groups["month"].Value}/{mc.Groups["day"].Value}");
                 }
 
-                regex = new Regex("^制定：(?<year>\\d+?)年(?<month>\\d+?)月(?<day>\\d+?)日$");
-                if (regex.IsMatch(line))
+                var established = PrivacyPolicyEstablishedJpRegex();
+                if (established.IsMatch(line))
                 {
-                    var mc = regex.Match(line);
+                    var mc = established.Match(line);
                     return DateTime.Parse(
                         $"{mc.Groups["year"].Value}/{mc.Groups["month"].Value}/{mc.Groups["day"].Value}");
                 }
