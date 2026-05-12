@@ -2321,8 +2321,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
 
         if (PartDefinitions.Count > 0)
         {
-            root.Add(boilersGraphics.Helpers.Parts.PartSerializer.SerializeAll(
-                PartDefinitions.Select(vm => vm.Model)));
+            root.Add(boilersGraphics.Helpers.Parts.PartSerializer.SerializeAll(PartDefinitions));
         }
 
         return root;

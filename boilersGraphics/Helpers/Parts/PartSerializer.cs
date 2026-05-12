@@ -1,4 +1,5 @@
 using boilersGraphics.Models.Parts;
+using boilersGraphics.ViewModels.Parts;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -20,6 +21,25 @@ internal static class PartSerializer
     {
         return new XElement("PartDefinitions",
             definitions.Select(SerializeDefinition));
+    }
+
+    public static XElement SerializeAll(IEnumerable<PartDefinitionViewModel> viewModels)
+    {
+        return new XElement("PartDefinitions",
+            viewModels.Select(SerializeDefinitionFromViewModel));
+    }
+
+    public static XElement SerializeDefinitionFromViewModel(PartDefinitionViewModel viewModel)
+    {
+        if (viewModel is null) throw new ArgumentNullException(nameof(viewModel));
+
+        return new XElement("PartDefinition",
+            new XAttribute("Id", viewModel.Id.Value),
+            new XElement("Name", viewModel.Name.Value ?? string.Empty),
+            new XElement("Items",
+                viewModel.Items.Select(item => ObjectSerializer.ExtractItem(item))),
+            new XElement("ExposedProperties",
+                viewModel.Model.ExposedProperties.Select(SerializeExposedProperty)));
     }
 
     public static XElement SerializePartFile(PartDefinition definition)

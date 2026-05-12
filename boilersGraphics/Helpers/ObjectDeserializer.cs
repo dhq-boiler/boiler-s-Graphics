@@ -236,8 +236,23 @@ public class ObjectDeserializer
             .FirstOrDefault();
         if (partDefinitionsElm is not null)
         {
-            foreach (var def in PartDeserializer.DeserializeAll(partDefinitionsElm))
-                diagramViewModel.PartDefinitions.Add(new PartDefinitionViewModel(def));
+            foreach (var defElm in partDefinitionsElm.Elements("PartDefinition"))
+            {
+                var def = PartDeserializer.DeserializeDefinition(defElm);
+                var vm = new PartDefinitionViewModel(def);
+
+                var itemsElm = defElm.Element("Items");
+                if (itemsElm is not null)
+                {
+                    foreach (var designerItemElm in itemsElm.Elements("DesignerItem"))
+                    {
+                        var item = ExtractDesignerItemViewModelBase(diagramViewModel, designerItemElm);
+                        if (item is not null)
+                            vm.Items.Add(item);
+                    }
+                }
+                diagramViewModel.PartDefinitions.Add(vm);
+            }
         }
     }
 
