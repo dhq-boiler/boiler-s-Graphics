@@ -1,0 +1,23 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:parts="clr-namespace:boilersGraphics.ViewModels.Parts">
+    <DataTemplate DataType="{x:Type parts:PartInstanceViewModel}">
+        <Grid
+            Width="{Binding Width.Value}"
+            Height="{Binding Height.Value}"
+            IsHitTestVisible="False">
+            <Border
+                BorderBrush="#80808080"
+                BorderThickness="1"
+                Background="#10808080"
+                SnapsToDevicePixels="True" />
+            <TextBlock
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Foreground="#A0808080"
+                FontSize="11"
+                Text="パーツ" />
+        </Grid>
+    </DataTemplate>
+</ResourceDictionary>
