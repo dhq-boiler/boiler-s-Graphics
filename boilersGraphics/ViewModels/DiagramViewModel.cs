@@ -108,6 +108,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
             UniformWidthCommand = new DelegateCommand(() => ExecuteUniformWidthCommand(), () => CanExecuteUniform());
             UniformHeightCommand = new DelegateCommand(() => ExecuteUniformHeightCommand(), () => CanExecuteUniform());
             DuplicateCommand = new DelegateCommand(() => ExecuteDuplicateCommand(), () => CanExecuteDuplicate());
+            PromoteToPartCommand = new DelegateCommand(() => ExecutePromoteToPartCommand(), () => CanExecutePromoteToPart());
             CutCommand = new DelegateCommand(() => ExecuteCutCommand(), () => CanExecuteCut());
             CopyCommand = new DelegateCommand(() => ExecuteCopyCommand(), () => CanExecuteCopy());
             CopyCanvasToClipboardCommand = new DelegateCommand(() => ExecuteCopyCanvasToClipboardCommand());
@@ -685,6 +686,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     public DelegateCommand ExportCommand { get; }
     public DelegateCommand GroupCommand { get; }
     public DelegateCommand UngroupCommand { get; }
+    public DelegateCommand PromoteToPartCommand { get; }
     public DelegateCommand BringForegroundCommand { get; }
     public DelegateCommand BringForwardCommand { get; }
     public DelegateCommand SendBackwardCommand { get; }
@@ -4769,6 +4771,46 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     }
 
     #endregion //Duplicate
+
+    #region Promote
+
+    private bool CanExecutePromoteToPart()
+    {
+        return SelectedItems.Value
+            .AsValueEnumerable()
+            .OfType<DesignerItemViewModelBase>()
+            .Any(x => x is not boilersGraphics.ViewModels.Parts.PartInstanceViewModel);
+    }
+
+    private void ExecutePromoteToPartCommand()
+    {
+        var selected = SelectedItems.Value
+            .AsValueEnumerable()
+            .OfType<DesignerItemViewModelBase>()
+            .Where(x => x is not boilersGraphics.ViewModels.Parts.PartInstanceViewModel)
+            .ToArray();
+        if (selected.Length == 0) return;
+
+        var name = $"パーツ{PartDefinitions.Count + 1}";
+
+        MainWindowVM.Recorder.BeginRecode();
+        try
+        {
+            var result = boilersGraphics.Helpers.Parts.PartOperations.Promote(selected, name);
+            PartDefinitions.Add(result.Definition);
+
+            foreach (var item in selected)
+                ExecuteRemoveItemCommand(item);
+
+            ExecuteAddItemCommand(result.Instance);
+        }
+        finally
+        {
+            MainWindowVM.Recorder.EndRecode();
+        }
+    }
+
+    #endregion //Promote
 
     public void OverwriteColorSpot(Brush brush)
     {
