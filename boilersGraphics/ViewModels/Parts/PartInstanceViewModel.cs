@@ -7,6 +7,7 @@ using R3;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Media;
 using Path = System.Windows.Shapes.Path;
@@ -21,6 +22,8 @@ public class PartInstanceViewModel : DesignerItemViewModelBase
 
     public ReadOnlyDictionary<Guid, BindableReactiveProperty<object>> ParameterValues { get; }
 
+    public ReactiveCommand MouseDoubleClickCommand { get; } = new();
+
     public override bool IsResizable => false;
 
     public override bool SupportsPropertyDialog => false;
@@ -28,6 +31,7 @@ public class PartInstanceViewModel : DesignerItemViewModelBase
     public PartInstanceViewModel()
     {
         ParameterValues = new ReadOnlyDictionary<Guid, BindableReactiveProperty<object>>(_parameterValues);
+        InitMouseDoubleClick();
     }
 
     public PartInstanceViewModel(Guid definitionId) : this()
@@ -39,6 +43,25 @@ public class PartInstanceViewModel : DesignerItemViewModelBase
         : base(id, parent, left, top)
     {
         ParameterValues = new ReadOnlyDictionary<Guid, BindableReactiveProperty<object>>(_parameterValues);
+        InitMouseDoubleClick();
+    }
+
+    private void InitMouseDoubleClick()
+    {
+        MouseDoubleClickCommand
+            .Subscribe(_ => RequestEditDefinition())
+            .AddTo(_CompositeDisposable);
+    }
+
+    private void RequestEditDefinition()
+    {
+        if (Owner is not DiagramViewModel diagram) return;
+
+        var definition = diagram.PartDefinitions
+            .FirstOrDefault(d => d.Id.Value == DefinitionId.Value);
+        if (definition is null) return;
+
+        diagram.OpenPartEditor(definition);
     }
 
     public BindableReactiveProperty<object> GetOrCreateParameterValue(Guid exposedPropertyId, object defaultValue = null)
