@@ -624,7 +624,7 @@ public class ObjectDeserializer
                     object value = null;
                     if (!string.IsNullOrEmpty(typeAttr) &&
                         Enum.TryParse<ExposedPropertyType>(typeAttr, out var epType))
-                        value = PartDeserializer.ParseValue(epType, pvElm.Value);
+                        value = PartDeserializer.ParseTypedValue(pvElm, epType);
                     partInstance.GetOrCreateParameterValue(epId, value);
                 }
             }

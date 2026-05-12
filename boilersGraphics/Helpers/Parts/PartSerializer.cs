@@ -1,5 +1,6 @@
 using boilersGraphics.Models.Parts;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -50,7 +51,7 @@ internal static class PartSerializer
             new XElement("IsArray", property.IsArray));
 
         if (property.DefaultValue is not null)
-            element.Add(SerializeTypedValue("DefaultValue", property.Type, property.DefaultValue));
+            element.Add(SerializeTypedValue("DefaultValue", property.Type, property.DefaultValue, property.IsArray));
 
         if (property.MinValue.HasValue)
             element.Add(new XElement("MinValue", property.MinValue.Value.ToString("R", CultureInfo.InvariantCulture)));
@@ -72,10 +73,22 @@ internal static class PartSerializer
             new XElement("TargetProperty", binding.TargetProperty ?? string.Empty));
     }
 
-    public static XElement SerializeTypedValue(string elementName, ExposedPropertyType type, object value)
+    public static XElement SerializeTypedValue(string elementName, ExposedPropertyType type, object value, bool isArray = false)
     {
         var elm = new XElement(elementName, new XAttribute("Type", type.ToString()));
-        elm.Value = FormatValue(type, value);
+        if (isArray)
+        {
+            elm.SetAttributeValue("IsArray", true);
+            if (value is IEnumerable items && value is not string)
+            {
+                foreach (var item in items)
+                    elm.Add(new XElement("Item", FormatValue(type, item)));
+            }
+        }
+        else
+        {
+            elm.Value = FormatValue(type, value);
+        }
         return elm;
     }
 
@@ -118,6 +131,19 @@ internal static class PartSerializer
         var elm = new XElement("ParameterValue",
             new XAttribute("ExposedPropertyId", exposedPropertyId));
         if (value is null) return elm;
+
+        if (value is IEnumerable items && value is not string)
+        {
+            var list = items.Cast<object>().ToList();
+            var elementType = list.Count > 0
+                ? InferType(list[0])
+                : ExposedPropertyType.String;
+            elm.SetAttributeValue("Type", elementType.ToString());
+            elm.SetAttributeValue("IsArray", true);
+            foreach (var item in list)
+                elm.Add(new XElement("Item", FormatValue(elementType, item)));
+            return elm;
+        }
 
         var type = InferType(value);
         elm.SetAttributeValue("Type", type.ToString());

@@ -116,6 +116,39 @@ internal static class PartOperations
         PartDefinitionViewModel Definition,
         PartInstanceViewModel Instance);
 
+    public const int MaxNestingDepth = 32;
+
+    public static bool WouldCreateCycle(
+        Guid hostDefinitionId,
+        Guid newChildDefinitionId,
+        IReadOnlyDictionary<Guid, PartDefinitionViewModel> registry)
+    {
+        if (registry is null) throw new ArgumentNullException(nameof(registry));
+        if (hostDefinitionId == newChildDefinitionId) return true;
+        var visited = new HashSet<Guid>();
+        return DependsOn(newChildDefinitionId, hostDefinitionId, registry, visited, 0);
+    }
+
+    private static bool DependsOn(
+        Guid current,
+        Guid target,
+        IReadOnlyDictionary<Guid, PartDefinitionViewModel> registry,
+        HashSet<Guid> visited,
+        int depth)
+    {
+        if (depth >= MaxNestingDepth) return true;
+        if (!visited.Add(current)) return false;
+        if (!registry.TryGetValue(current, out var def)) return false;
+        foreach (var item in def.Items)
+        {
+            if (item is not PartInstanceViewModel pi) continue;
+            var childDefId = pi.DefinitionId.Value;
+            if (childDefId == target) return true;
+            if (DependsOn(childDefId, target, registry, visited, depth + 1)) return true;
+        }
+        return false;
+    }
+
     private static (double X, double Y, double Width, double Height) ComputeBounds(
         IReadOnlyList<DesignerItemViewModelBase> items)
     {

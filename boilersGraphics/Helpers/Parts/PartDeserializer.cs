@@ -103,6 +103,17 @@ internal static class PartDeserializer
         if (!string.IsNullOrEmpty(typeAttr) &&
             Enum.TryParse<ExposedPropertyType>(typeAttr, out var parsed))
             type = parsed;
+
+        var isArrayAttr = element.Attribute("IsArray")?.Value;
+        if (!string.IsNullOrEmpty(isArrayAttr) &&
+            bool.TryParse(isArrayAttr, out var isArray) && isArray)
+        {
+            var list = new System.Collections.Generic.List<object>();
+            foreach (var item in element.Elements("Item"))
+                list.Add(ParseValue(type, item.Value));
+            return list;
+        }
+
         return ParseValue(type, element.Value);
     }
 
