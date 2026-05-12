@@ -4791,8 +4791,39 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
             .ToArray();
         if (selected.Length == 0) return;
 
-        var name = $"パーツ{PartDefinitions.Count + 1}";
+        var defaultName = $"パーツ{PartDefinitions.Count + 1}";
 
+        if (App.IsTest || Application.Current is null)
+        {
+            CompletePromote(selected, defaultName);
+            return;
+        }
+
+        var container = (Application.Current as Prism.Unity.PrismApplication)?.Container
+                        as Prism.Ioc.IContainerExtension;
+        if (container is null)
+        {
+            CompletePromote(selected, defaultName);
+            return;
+        }
+
+        var dialogService = new Prism.Services.Dialogs.DialogService(container);
+        var parameters = new Prism.Services.Dialogs.DialogParameters
+        {
+            { ViewModels.PromoteToPartDialogViewModel.SelectedPartNameKey, defaultName },
+        };
+        dialogService.ShowDialog(nameof(Views.PromoteToPart), parameters, ret =>
+        {
+            if (ret.Result != Prism.Services.Dialogs.ButtonResult.OK) return;
+            var name = ret.Parameters.GetValue<string>(
+                ViewModels.PromoteToPartDialogViewModel.SelectedPartNameKey);
+            if (string.IsNullOrWhiteSpace(name)) name = defaultName;
+            CompletePromote(selected, name);
+        });
+    }
+
+    private void CompletePromote(DesignerItemViewModelBase[] selected, string name)
+    {
         MainWindowVM.Recorder.BeginRecode();
         try
         {

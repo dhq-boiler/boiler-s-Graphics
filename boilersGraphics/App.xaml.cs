@@ -230,6 +230,7 @@ public partial class App : PrismApplication
         containerRegistry.RegisterDialog<CustomMessageBox, CustomMessageBoxViewModel>();
         containerRegistry.RegisterDialog<PrivacyPolicy, PrivacyPolicyViewModel>();
         containerRegistry.RegisterDialog<UndoHistory, UndoHistoryViewModel>();
+        containerRegistry.RegisterDialog<PromoteToPart, PromoteToPartDialogViewModel>();
 
         containerRegistry.RegisterForNavigation<Detail>();
         containerRegistry.RegisterDialog<DetailRectangle, DetailRectangleViewModel>();
