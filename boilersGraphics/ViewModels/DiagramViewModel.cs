@@ -2172,6 +2172,9 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
 
     public NotifyCollectionChangedSynchronizedViewList<LayerTreeViewItemBase> Layers { get; }
 
+    public System.Collections.ObjectModel.ObservableCollection<boilersGraphics.ViewModels.Parts.PartDefinitionViewModel> PartDefinitions { get; }
+        = new System.Collections.ObjectModel.ObservableCollection<boilersGraphics.ViewModels.Parts.PartDefinitionViewModel>();
+
     public IReadOnlyBindableReactiveProperty<LayerTreeViewItemBase[]> SelectedLayers { get; }
 
     public IReadOnlyBindableReactiveProperty<SelectableDesignerItemViewModelBase[]> AllItems { get; }
@@ -2313,6 +2316,12 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
         root.Add(new XElement("Layers", ObjectSerializer.SerializeLayers(Layers)));
         root.Add(new XElement("Configuration", ObjectSerializer.SerializeConfiguration(this)));
         root.Add(new XElement("Attachments", ObjectSerializer.SerializeAttachments(this)));
+
+        if (PartDefinitions.Count > 0)
+        {
+            root.Add(boilersGraphics.Helpers.Parts.PartSerializer.SerializeAll(
+                PartDefinitions.Select(vm => vm.Model)));
+        }
 
         return root;
     }

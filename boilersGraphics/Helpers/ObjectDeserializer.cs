@@ -229,6 +229,16 @@ public class ObjectDeserializer
                 progressBarWithOutputViewModel.Current.Value++;
             }, DispatcherPriority.ApplicationIdle);
         }
+
+        var partDefinitionsElm = root.Elements()
+            .AsValueEnumerable()
+            .Where(x => x.Name == "PartDefinitions")
+            .FirstOrDefault();
+        if (partDefinitionsElm is not null)
+        {
+            foreach (var def in PartDeserializer.DeserializeAll(partDefinitionsElm))
+                diagramViewModel.PartDefinitions.Add(new PartDefinitionViewModel(def));
+        }
     }
 
     private static LayerItem ReadLayerItemFromXML(DiagramViewModel diagramViewModel, Layer layerObj, XElement layerItem)
