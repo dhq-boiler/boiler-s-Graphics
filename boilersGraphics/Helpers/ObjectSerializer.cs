@@ -1,7 +1,9 @@
 ﻿using boilersGraphics.Controls;
 using boilersGraphics.Extensions;
+using boilersGraphics.Helpers.Parts;
 using boilersGraphics.Models;
 using boilersGraphics.ViewModels;
+using boilersGraphics.ViewModels.Parts;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -235,6 +237,16 @@ internal class ObjectSerializer
             }
 
             if (designerItem is NPolygonViewModel polygon) list.Add(new XElement("Data", polygon.Data.Value));
+
+            if (designerItem is PartInstanceViewModel partInstance)
+            {
+                list.Add(new XElement("DefinitionId", partInstance.DefinitionId.Value));
+                var pv = new XElement("ParameterValues");
+                foreach (var kv in partInstance.ParameterValues)
+                    pv.Add(PartSerializer.SerializeParameterValue(kv.Key, kv.Value.Value));
+                list.Add(pv);
+            }
+
             var designerItemXML = new XElement("DesignerItem", list);
             return designerItemXML;
         }

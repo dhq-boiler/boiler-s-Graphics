@@ -1,8 +1,11 @@
 ﻿using boilersGraphics.Exceptions;
+using boilersGraphics.Helpers.Parts;
 using boilersGraphics.Models;
+using boilersGraphics.Models.Parts;
 using boilersGraphics.Properties;
 using boilersGraphics.ViewModels;
 using boilersGraphics.ViewModels.ColorCorrect;
+using boilersGraphics.ViewModels.Parts;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -592,6 +595,31 @@ public class ObjectDeserializer
         }
 
         if (item is NPolygonViewModel polygon) polygon.Data.Value = designerItemElm.Element("Data").Value;
+
+        if (item is PartInstanceViewModel partInstance)
+        {
+            var defIdText = designerItemElm.Element("DefinitionId")?.Value;
+            if (!string.IsNullOrEmpty(defIdText) && Guid.TryParse(defIdText, out var defId))
+                partInstance.DefinitionId.Value = defId;
+
+            var pvRoot = designerItemElm.Element("ParameterValues");
+            if (pvRoot is not null)
+            {
+                foreach (var pvElm in pvRoot.Elements("ParameterValue"))
+                {
+                    var epIdText = pvElm.Attribute("ExposedPropertyId")?.Value;
+                    if (string.IsNullOrEmpty(epIdText) || !Guid.TryParse(epIdText, out var epId))
+                        continue;
+                    var typeAttr = pvElm.Attribute("Type")?.Value;
+                    object value = null;
+                    if (!string.IsNullOrEmpty(typeAttr) &&
+                        Enum.TryParse<ExposedPropertyType>(typeAttr, out var epType))
+                        value = PartDeserializer.ParseValue(epType, pvElm.Value);
+                    partInstance.GetOrCreateParameterValue(epId, value);
+                }
+            }
+        }
+
         item.UpdatePathGeometryIfEnable(string.Empty, 0, 0, true);
         item.RenderingEnabled.Value = true;
         return item;
