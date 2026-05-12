@@ -109,6 +109,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
             UniformHeightCommand = new DelegateCommand(() => ExecuteUniformHeightCommand(), () => CanExecuteUniform());
             DuplicateCommand = new DelegateCommand(() => ExecuteDuplicateCommand(), () => CanExecuteDuplicate());
             PromoteToPartCommand = new DelegateCommand(() => ExecutePromoteToPartCommand(), () => CanExecutePromoteToPart());
+            DetachPartCommand = new DelegateCommand(() => ExecuteDetachPartCommand(), () => CanExecuteDetachPart());
             CutCommand = new DelegateCommand(() => ExecuteCutCommand(), () => CanExecuteCut());
             CopyCommand = new DelegateCommand(() => ExecuteCopyCommand(), () => CanExecuteCopy());
             CopyCanvasToClipboardCommand = new DelegateCommand(() => ExecuteCopyCanvasToClipboardCommand());
@@ -687,6 +688,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     public DelegateCommand GroupCommand { get; }
     public DelegateCommand UngroupCommand { get; }
     public DelegateCommand PromoteToPartCommand { get; }
+    public DelegateCommand DetachPartCommand { get; }
     public DelegateCommand BringForegroundCommand { get; }
     public DelegateCommand BringForwardCommand { get; }
     public DelegateCommand SendBackwardCommand { get; }
@@ -4841,6 +4843,47 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     }
 
     #endregion //Promote
+
+    #region Detach
+
+    private bool CanExecuteDetachPart()
+    {
+        return SelectedItems.Value
+            .AsValueEnumerable()
+            .OfType<boilersGraphics.ViewModels.Parts.PartInstanceViewModel>()
+            .Any();
+    }
+
+    private void ExecuteDetachPartCommand()
+    {
+        var instance = SelectedItems.Value
+            .AsValueEnumerable()
+            .OfType<boilersGraphics.ViewModels.Parts.PartInstanceViewModel>()
+            .FirstOrDefault();
+        if (instance is null) return;
+
+        var definition = PartDefinitions
+            .FirstOrDefault(d => d.Id.Value == instance.DefinitionId.Value);
+        if (definition is null) return;
+
+        MainWindowVM.Recorder.BeginRecode();
+        try
+        {
+            var detachedItems = boilersGraphics.Helpers.Parts.PartOperations
+                .Detach(instance, definition);
+
+            ExecuteRemoveItemCommand(instance);
+
+            foreach (var item in detachedItems)
+                ExecuteAddItemCommand(item);
+        }
+        finally
+        {
+            MainWindowVM.Recorder.EndRecode();
+        }
+    }
+
+    #endregion //Detach
 
     public void OverwriteColorSpot(Brush brush)
     {
