@@ -110,6 +110,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
             DuplicateCommand = new DelegateCommand(() => ExecuteDuplicateCommand(), () => CanExecuteDuplicate());
             PromoteToPartCommand = new DelegateCommand(() => ExecutePromoteToPartCommand(), () => CanExecutePromoteToPart());
             DetachPartCommand = new DelegateCommand(() => ExecuteDetachPartCommand(), () => CanExecuteDetachPart());
+            ClonePartDefinitionCommand = new DelegateCommand(() => ExecuteClonePartDefinitionCommand(), () => CanExecuteClonePartDefinition());
             CutCommand = new DelegateCommand(() => ExecuteCutCommand(), () => CanExecuteCut());
             CopyCommand = new DelegateCommand(() => ExecuteCopyCommand(), () => CanExecuteCopy());
             CopyCanvasToClipboardCommand = new DelegateCommand(() => ExecuteCopyCanvasToClipboardCommand());
@@ -689,6 +690,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     public DelegateCommand UngroupCommand { get; }
     public DelegateCommand PromoteToPartCommand { get; }
     public DelegateCommand DetachPartCommand { get; }
+    public DelegateCommand ClonePartDefinitionCommand { get; }
     public DelegateCommand BringForegroundCommand { get; }
     public DelegateCommand BringForwardCommand { get; }
     public DelegateCommand SendBackwardCommand { get; }
@@ -4884,6 +4886,49 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     }
 
     #endregion //Detach
+
+    #region ClonePartDefinition
+
+    private bool CanExecuteClonePartDefinition()
+    {
+        return SelectedItems.Value
+            .AsValueEnumerable()
+            .OfType<boilersGraphics.ViewModels.Parts.PartInstanceViewModel>()
+            .Any();
+    }
+
+    private void ExecuteClonePartDefinitionCommand()
+    {
+        var instance = SelectedItems.Value
+            .AsValueEnumerable()
+            .OfType<boilersGraphics.ViewModels.Parts.PartInstanceViewModel>()
+            .FirstOrDefault();
+        if (instance is null) return;
+
+        var definition = PartDefinitions
+            .FirstOrDefault(d => d.Id.Value == instance.DefinitionId.Value);
+        if (definition is null) return;
+
+        var newName = GenerateCloneName(definition.Name.Value);
+        var clone = boilersGraphics.Helpers.Parts.PartOperations.Clone(definition, newName);
+        PartDefinitions.Add(clone);
+    }
+
+    private string GenerateCloneName(string originalName)
+    {
+        var baseName = string.IsNullOrWhiteSpace(originalName) ? "パーツ" : originalName;
+        var candidate = $"{baseName}のコピー";
+        if (!PartDefinitions.Any(d => d.Name.Value == candidate))
+            return candidate;
+        for (var i = 2; ; i++)
+        {
+            candidate = $"{baseName}のコピー{i}";
+            if (!PartDefinitions.Any(d => d.Name.Value == candidate))
+                return candidate;
+        }
+    }
+
+    #endregion //ClonePartDefinition
 
     public void OverwriteColorSpot(Brush brush)
     {
