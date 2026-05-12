@@ -60,14 +60,36 @@
             </StackPanel>
         </Border>
 
-        <!--  Center canvas placeholder (Phase 1-c-6-d で内部図形描画を入れる)  -->
+        <!--  Center canvas: read-only preview of PartDefinition.Items (Phase 1-c-6-c)  -->
         <Grid Background="#1E1E1E">
+            <ScrollViewer
+                HorizontalScrollBarVisibility="Auto"
+                VerticalScrollBarVisibility="Auto">
+                <ItemsControl ItemsSource="{Binding Definition.Items}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <Canvas
+                                MinWidth="400"
+                                MinHeight="300"
+                                Background="Transparent" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemContainerStyle>
+                        <Style TargetType="ContentPresenter">
+                            <Setter Property="Canvas.Left" Value="{Binding Left.Value}" />
+                            <Setter Property="Canvas.Top" Value="{Binding Top.Value}" />
+                            <Setter Property="Panel.ZIndex" Value="{Binding ZIndex.Value}" />
+                        </Style>
+                    </ItemsControl.ItemContainerStyle>
+                </ItemsControl>
+            </ScrollViewer>
             <TextBlock
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                FontSize="14"
-                Foreground="#808080"
-                Text="(編集キャンバスは Phase 1-c-6-d 以降で実装)" />
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Margin="8,8,0,0"
+                FontSize="10"
+                Foreground="#80808080"
+                Text="(読み取り専用プレビュー — 編集機能は Phase 1-c-6-d 以降)" />
         </Grid>
     </DockPanel>
 </UserControl>
