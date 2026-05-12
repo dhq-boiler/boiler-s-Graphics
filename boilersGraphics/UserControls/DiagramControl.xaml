@@ -501,6 +501,7 @@
                             <ContextMenu Visibility="{Binding ContextMenuVisibility.Value}">
                                 <MenuItem Command="{Binding PropertyCommand}" Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.MenuItem_Property, Mode=OneWay}" />
                                 <MenuItem Command="{Binding PromoteToPartCommand}" Header="パーツ化…" />
+                                <MenuItem Command="{Binding EditPartDefinitionCommand}" Header="パーツ定義を編集…" />
                                 <MenuItem Command="{Binding DetachPartCommand}" Header="パーツから切り離す" />
                                 <MenuItem Command="{Binding ClonePartDefinitionCommand}" Header="複製して新パーツとして登録" />
                                 <MenuItem Header="{Binding Source={x:Static helper:ResourceService.Current}, Path=Resources.Grouping, Mode=OneWay}">

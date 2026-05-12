@@ -114,4 +114,17 @@ public class ClonePartDefinitionCommandTest
         var cloneId = vm.PartDefinitions.Last().Id.Value;
         Assert.That(cloneId, Is.Not.EqualTo(originalId));
     }
+
+    [Test, RequiresThread(ApartmentState.STA)]
+    public void ClonePartDefinitionCommand_実行後に新クローンでPartEditorを開く要求が出る()
+    {
+        var (vm, _) = CreateSingleLayerViewModel();
+        var instance = CreatePromoted(vm, new NRectangleViewModel(0, 0, 10, 10));
+        instance.IsSelected.Value = true;
+
+        vm.ClonePartDefinitionCommand.Execute();
+
+        var clone = vm.PartDefinitions.Last();
+        Assert.That(vm.LastRequestedEditorTarget, Is.SameAs(clone));
+    }
 }

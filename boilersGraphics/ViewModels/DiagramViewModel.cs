@@ -111,6 +111,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
             PromoteToPartCommand = new DelegateCommand(() => ExecutePromoteToPartCommand(), () => CanExecutePromoteToPart());
             DetachPartCommand = new DelegateCommand(() => ExecuteDetachPartCommand(), () => CanExecuteDetachPart());
             ClonePartDefinitionCommand = new DelegateCommand(() => ExecuteClonePartDefinitionCommand(), () => CanExecuteClonePartDefinition());
+            EditPartDefinitionCommand = new DelegateCommand(() => ExecuteEditPartDefinitionCommand(), () => CanExecuteEditPartDefinition());
             CutCommand = new DelegateCommand(() => ExecuteCutCommand(), () => CanExecuteCut());
             CopyCommand = new DelegateCommand(() => ExecuteCopyCommand(), () => CanExecuteCopy());
             CopyCanvasToClipboardCommand = new DelegateCommand(() => ExecuteCopyCanvasToClipboardCommand());
@@ -691,6 +692,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     public DelegateCommand PromoteToPartCommand { get; }
     public DelegateCommand DetachPartCommand { get; }
     public DelegateCommand ClonePartDefinitionCommand { get; }
+    public DelegateCommand EditPartDefinitionCommand { get; }
     public DelegateCommand BringForegroundCommand { get; }
     public DelegateCommand BringForwardCommand { get; }
     public DelegateCommand SendBackwardCommand { get; }
@@ -4912,6 +4914,8 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
         var newName = GenerateCloneName(definition.Name.Value);
         var clone = boilersGraphics.Helpers.Parts.PartOperations.Clone(definition, newName);
         PartDefinitions.Add(clone);
+
+        OpenPartEditor(clone);
     }
 
     private string GenerateCloneName(string originalName)
@@ -4929,6 +4933,66 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     }
 
     #endregion //ClonePartDefinition
+
+    #region EditPartDefinition
+
+    /// <summary>
+    /// Test hook: when running with App.IsTest = true, OpenPartEditor records the
+    /// requested definition here instead of opening a window. Tests can inspect
+    /// this to verify the editor was triggered. In production this stays null.
+    /// </summary>
+    internal boilersGraphics.ViewModels.Parts.PartDefinitionViewModel LastRequestedEditorTarget { get; set; }
+
+    private bool CanExecuteEditPartDefinition()
+    {
+        return SelectedItems.Value
+            .AsValueEnumerable()
+            .OfType<boilersGraphics.ViewModels.Parts.PartInstanceViewModel>()
+            .Any();
+    }
+
+    private void ExecuteEditPartDefinitionCommand()
+    {
+        var instance = SelectedItems.Value
+            .AsValueEnumerable()
+            .OfType<boilersGraphics.ViewModels.Parts.PartInstanceViewModel>()
+            .FirstOrDefault();
+        if (instance is null) return;
+
+        var definition = PartDefinitions
+            .FirstOrDefault(d => d.Id.Value == instance.DefinitionId.Value);
+        if (definition is null) return;
+
+        OpenPartEditor(definition);
+    }
+
+    internal void OpenPartEditor(boilersGraphics.ViewModels.Parts.PartDefinitionViewModel definition)
+    {
+        if (definition is null) return;
+
+        if (App.IsTest || Application.Current is null)
+        {
+            LastRequestedEditorTarget = definition;
+            return;
+        }
+
+        var container = (Application.Current as Prism.Unity.PrismApplication)?.Container
+                        as Prism.Ioc.IContainerExtension;
+        if (container is null)
+        {
+            LastRequestedEditorTarget = definition;
+            return;
+        }
+
+        var dialogService = new Prism.Services.Dialogs.DialogService(container);
+        var parameters = new Prism.Services.Dialogs.DialogParameters
+        {
+            { ViewModels.Parts.PartEditorViewModel.PartDefinitionKey, definition },
+        };
+        dialogService.Show(nameof(Views.PartEditor), parameters, _ => { });
+    }
+
+    #endregion //EditPartDefinition
 
     public void OverwriteColorSpot(Brush brush)
     {
