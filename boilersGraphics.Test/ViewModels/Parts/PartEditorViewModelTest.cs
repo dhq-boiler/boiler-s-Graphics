@@ -251,6 +251,35 @@ public class PartEditorViewModelTest
     }
 
     [Test, RequiresThread(ApartmentState.STA)]
+    public void SelectEdgeColorCommand_DialogServiceなし_SelectedItemなし_例外なし()
+    {
+        var vm = new PartEditorViewModel();
+        Assert.DoesNotThrow(() => vm.SelectEdgeColorCommand.Execute(Unit.Default));
+    }
+
+    [Test, RequiresThread(ApartmentState.STA)]
+    public void SelectFillColorCommand_DialogServiceなし_SelectedItemなし_例外なし()
+    {
+        var vm = new PartEditorViewModel();
+        Assert.DoesNotThrow(() => vm.SelectFillColorCommand.Execute(Unit.Default));
+    }
+
+    [Test, RequiresThread(ApartmentState.STA)]
+    public void SelectEdgeColorCommand_DialogServiceなし_SelectedItemあり_例外なし()
+    {
+        var vm = new PartEditorViewModel();
+        var defVm = new PartDefinitionViewModel(new PartDefinition { Name = "リング" });
+        vm.OnDialogOpened(new DialogParameters
+        {
+            { PartEditorViewModel.PartDefinitionKey, defVm }
+        });
+        vm.AddRectangleCommand.Execute(Unit.Default);
+        vm.SelectItem(defVm.Items[0]);
+
+        Assert.DoesNotThrow(() => vm.SelectEdgeColorCommand.Execute(Unit.Default));
+    }
+
+    [Test, RequiresThread(ApartmentState.STA)]
     public void OnDialogClosed_例外なくDisposeできる()
     {
         var vm = new PartEditorViewModel();

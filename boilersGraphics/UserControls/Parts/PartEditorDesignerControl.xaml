@@ -172,13 +172,19 @@
                             VerticalAlignment="Center"
                             Foreground="#DDDDDD"
                             Text="色" />
-                        <Border
+                        <Button
                             Grid.Column="1"
-                            Height="20"
+                            Height="22"
+                            Padding="1"
+                            AutomationProperties.AutomationId="EdgeColorButton"
+                            Background="Transparent"
                             BorderBrush="#3F3F46"
                             BorderThickness="1"
-                            Background="{Binding EdgeBrush.Value}"
-                            ToolTip="枠線の色 (編集は次フェーズで対応)" />
+                            Command="{Binding DataContext.SelectEdgeColorCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                            Cursor="Hand"
+                            ToolTip="クリックで枠線の色を編集">
+                            <Border Background="{Binding EdgeBrush.Value}" />
+                        </Button>
                     </Grid>
 
                     <TextBlock
@@ -196,13 +202,19 @@
                             VerticalAlignment="Center"
                             Foreground="#DDDDDD"
                             Text="色" />
-                        <Border
+                        <Button
                             Grid.Column="1"
-                            Height="20"
+                            Height="22"
+                            Padding="1"
+                            AutomationProperties.AutomationId="FillColorButton"
+                            Background="Transparent"
                             BorderBrush="#3F3F46"
                             BorderThickness="1"
-                            Background="{Binding FillBrush.Value}"
-                            ToolTip="塗りつぶしの色 (編集は次フェーズで対応)" />
+                            Command="{Binding DataContext.SelectFillColorCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                            Cursor="Hand"
+                            ToolTip="クリックで塗りつぶしの色を編集">
+                            <Border Background="{Binding FillBrush.Value}" />
+                        </Button>
                     </Grid>
                 </StackPanel>
             </ScrollViewer>

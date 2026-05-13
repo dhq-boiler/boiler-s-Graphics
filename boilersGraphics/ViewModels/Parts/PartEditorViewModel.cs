@@ -1,4 +1,7 @@
-﻿using boilersGraphics.ViewModels;
+﻿using boilersGraphics.Helpers;
+using boilersGraphics.Models;
+using boilersGraphics.ViewModels;
+using boilersGraphics.Views;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
@@ -20,6 +23,7 @@ public class PartEditorViewModel : BindableBase, IDialogAware, IDisposable
     private static readonly Color DefaultEdgeColor = Colors.Gray;
     private static readonly Color DefaultFillColor = Color.FromArgb(0x30, 0x80, 0x80, 0x80);
 
+    private readonly IDialogService _dialogService;
     private readonly CompositeDisposable _disposables = new();
     private bool _disposed;
 
@@ -39,12 +43,22 @@ public class PartEditorViewModel : BindableBase, IDialogAware, IDisposable
 
     public ReactiveCommand DeleteSelectedCommand { get; }
 
+    public ReactiveCommand SelectEdgeColorCommand { get; }
+
+    public ReactiveCommand SelectFillColorCommand { get; }
+
     public BindableReactiveProperty<SelectableDesignerItemViewModelBase> SelectedItem { get; } = new();
 
     public event Action<IDialogResult> RequestClose;
 
-    public PartEditorViewModel()
+    public PartEditorViewModel() : this(null)
     {
+    }
+
+    public PartEditorViewModel(IDialogService dialogService)
+    {
+        _dialogService = dialogService;
+
         CloseCommand = new DelegateCommand(() =>
         {
             RequestClose?.Invoke(new DialogResult(ButtonResult.OK));
@@ -58,6 +72,16 @@ public class PartEditorViewModel : BindableBase, IDialogAware, IDisposable
         DeleteSelectedCommand = new ReactiveCommand();
         DeleteSelectedCommand
             .Subscribe(_ => DeleteSelected())
+            .AddTo(_disposables);
+
+        SelectEdgeColorCommand = new ReactiveCommand();
+        SelectEdgeColorCommand
+            .Subscribe(_ => SelectColor(isEdge: true))
+            .AddTo(_disposables);
+
+        SelectFillColorCommand = new ReactiveCommand();
+        SelectFillColorCommand
+            .Subscribe(_ => SelectColor(isEdge: false))
             .AddTo(_disposables);
     }
 
@@ -112,6 +136,49 @@ public class PartEditorViewModel : BindableBase, IDialogAware, IDisposable
         Definition.Items.Remove(target as DesignerItemViewModelBase);
         TrySetIsSelected(target, false);
         SelectedItem.Value = null;
+    }
+
+    private void SelectColor(bool isEdge)
+    {
+        if (_dialogService is null) return;
+
+        var target = SelectedItem.Value;
+        if (target is null) return;
+
+        Brush currentBrush;
+        try
+        {
+            currentBrush = isEdge ? target.EdgeBrush.Value : target.FillBrush.Value;
+        }
+        catch (ObjectDisposedException)
+        {
+            return;
+        }
+
+        IDialogResult dialogResult = null;
+        _dialogService.ShowDialog(
+            nameof(ColorPicker),
+            new DialogParameters
+            {
+                { "ColorExchange", new ColorExchange { Old = currentBrush } },
+                // ColorPicker のサブ ViewModel (SolidColorPickerViewModel) は ColorSpots を非 null 前提で参照する。
+                // PartEditor からは DiagramViewModel.ColorSpots を引っ張ってこないので空の ColorSpots を渡す。
+                { "ColorSpots", new ColorSpots() }
+            },
+            ret => dialogResult = ret);
+
+        var exchange = dialogResult?.Parameters.GetValue<ColorExchange>("ColorExchange");
+        if (exchange?.New is null) return;
+
+        try
+        {
+            if (isEdge) target.EdgeBrush.Value = exchange.New;
+            else target.FillBrush.Value = exchange.New;
+        }
+        catch (ObjectDisposedException)
+        {
+            // SelectedItem が直前に Dispose されたケース。何もしない。
+        }
     }
 
     public bool CanCloseDialog() => true;
