@@ -701,6 +701,9 @@
                                 <MenuItem
                                     Command="{Binding DiagramViewModel.ImportPartCommand}"
                                     Header="パーツをインポート… (.bgpart)" />
+                                <MenuItem
+                                    Command="{Binding DiagramViewModel.RemoveUnusedPartDefinitionsCommand}"
+                                    Header="未使用パーツ定義を削除…" />
                                 <Separator />
                                 <MenuItem
                                     Command="{Binding ExitApplicationCommand}"

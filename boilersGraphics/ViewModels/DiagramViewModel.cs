@@ -117,6 +117,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
             EditPartDefinitionCommand = new DelegateCommand(() => ExecuteEditPartDefinitionCommand(), () => CanExecuteEditPartDefinition());
             ExportPartCommand = new DelegateCommand(() => ExecuteExportPartCommand(), () => CanExecuteExportPart());
             ImportPartCommand = new DelegateCommand(() => ExecuteImportPartCommand());
+            RemoveUnusedPartDefinitionsCommand = new DelegateCommand(() => ExecuteRemoveUnusedPartDefinitionsCommand());
             CutCommand = new DelegateCommand(() => ExecuteCutCommand(), () => CanExecuteCut());
             CopyCommand = new DelegateCommand(() => ExecuteCopyCommand(), () => CanExecuteCopy());
             CopyCanvasToClipboardCommand = new DelegateCommand(() => ExecuteCopyCanvasToClipboardCommand());
@@ -706,6 +707,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     public DelegateCommand EditPartDefinitionCommand { get; }
     public DelegateCommand ExportPartCommand { get; }
     public DelegateCommand ImportPartCommand { get; }
+    public DelegateCommand RemoveUnusedPartDefinitionsCommand { get; }
     public DelegateCommand BringForegroundCommand { get; }
     public DelegateCommand BringForwardCommand { get; }
     public DelegateCommand SendBackwardCommand { get; }
@@ -2257,6 +2259,63 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
         IReadOnlyList<boilersGraphics.ViewModels.Parts.PartInstanceViewModel> OrphanedInstances)
     {
         public bool HasOrphans => OrphanedInstances.Count > 0;
+    }
+
+    /// <summary>
+    /// Phase 1-c-6-d-7: 指定 Definition Id を参照する PartInstance の数を返す (キャンバス全体)。
+    /// 0 なら「未使用」。
+    /// </summary>
+    public int GetPartInstanceReferenceCount(Guid definitionId)
+    {
+        var items = AllItems.Value;
+        if (items is null) return 0;
+
+        var count = 0;
+        foreach (var item in items)
+        {
+            if (item is boilersGraphics.ViewModels.Parts.PartInstanceViewModel pi
+                && pi.DefinitionId.Value == definitionId)
+            {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    /// <summary>
+    /// Phase 1-c-6-d-7: どの PartInstance からも参照されていない PartDefinition の一覧を返す。
+    /// </summary>
+    public IReadOnlyList<boilersGraphics.ViewModels.Parts.PartDefinitionViewModel> GetUnusedPartDefinitions()
+    {
+        var result = new List<boilersGraphics.ViewModels.Parts.PartDefinitionViewModel>();
+        foreach (var def in PartDefinitions)
+        {
+            if (GetPartInstanceReferenceCount(def.Id.Value) == 0)
+                result.Add(def);
+        }
+        return result;
+    }
+
+    /// <summary>
+    /// Phase 1-c-6-d-7: 未使用 PartDefinition を Recorder 経由で削除する。Undo で復元可能。
+    /// 戻り値は削除した件数。
+    /// </summary>
+    public int RemoveUnusedPartDefinitions()
+    {
+        var unused = GetUnusedPartDefinitions();
+        if (unused.Count == 0) return 0;
+
+        MainWindowVM.Recorder.BeginRecode();
+        try
+        {
+            foreach (var def in unused)
+                MainWindowVM.Recorder.Current.ExecuteRemove(PartDefinitions, def);
+        }
+        finally
+        {
+            MainWindowVM.Recorder.EndRecode();
+        }
+        return unused.Count;
     }
 
     public IReadOnlyBindableReactiveProperty<LayerTreeViewItemBase[]> SelectedLayers { get; }
@@ -5270,6 +5329,50 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     }
 
     #endregion //ImportExportPart
+
+    #region RemoveUnusedPartDefinitions
+
+    /// <summary>
+    /// Test hook: ExecuteRemoveUnusedPartDefinitionsCommand が確認ダイアログをスキップした上で
+    /// 実際に何件を削除したかを記録する。App.IsTest = true の時、確認 MessageBox を出さず即削除する。
+    /// </summary>
+    internal int LastUnusedRemovalCount { get; set; }
+
+    private void ExecuteRemoveUnusedPartDefinitionsCommand()
+    {
+        var unused = GetUnusedPartDefinitions();
+        if (unused.Count == 0)
+        {
+            if (!App.IsTest && Application.Current is not null)
+            {
+                MessageBox.Show(
+                    "未使用のパーツ定義はありません。",
+                    "未使用パーツ定義の削除",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information);
+            }
+            LastUnusedRemovalCount = 0;
+            return;
+        }
+
+        if (!App.IsTest && Application.Current is not null)
+        {
+            var result = MessageBox.Show(
+                $"未使用のパーツ定義が {unused.Count} 件あります。削除しますか?\n(Undo で復元できます)",
+                "未使用パーツ定義の削除",
+                MessageBoxButton.OKCancel,
+                MessageBoxImage.Question);
+            if (result != MessageBoxResult.OK)
+            {
+                LastUnusedRemovalCount = 0;
+                return;
+            }
+        }
+
+        LastUnusedRemovalCount = RemoveUnusedPartDefinitions();
+    }
+
+    #endregion //RemoveUnusedPartDefinitions
 
     public void OverwriteColorSpot(Brush brush)
     {
