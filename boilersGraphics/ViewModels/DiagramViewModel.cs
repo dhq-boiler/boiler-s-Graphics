@@ -18,6 +18,7 @@ using R3;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -60,6 +61,8 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
     public DiagramViewModel(MainWindowViewModel mainWindowViewModel, bool isPreview = false)
     {
         MainWindowVM = mainWindowViewModel;
+
+        PartDefinitions.CollectionChanged += OnPartDefinitionsCollectionChanged;
 
         if (!App.IsTest)
         {
@@ -2187,6 +2190,69 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
 
     public System.Collections.ObjectModel.ObservableCollection<boilersGraphics.ViewModels.Parts.PartDefinitionViewModel> PartDefinitions { get; }
         = new System.Collections.ObjectModel.ObservableCollection<boilersGraphics.ViewModels.Parts.PartDefinitionViewModel>();
+
+    // PartDefinitions の Id 索引 (Phase 1-c-8)。PartDefinitions の CollectionChanged を購読して同期。
+    private readonly Dictionary<Guid, boilersGraphics.ViewModels.Parts.PartDefinitionViewModel> _partDefinitionsById = new();
+
+    public IReadOnlyDictionary<Guid, boilersGraphics.ViewModels.Parts.PartDefinitionViewModel> PartDefinitionsById => _partDefinitionsById;
+
+    public bool TryGetPartDefinition(Guid id, out boilersGraphics.ViewModels.Parts.PartDefinitionViewModel definition)
+        => _partDefinitionsById.TryGetValue(id, out definition);
+
+    private void OnPartDefinitionsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    {
+        switch (e.Action)
+        {
+            case NotifyCollectionChangedAction.Add:
+                if (e.NewItems is null) break;
+                foreach (boilersGraphics.ViewModels.Parts.PartDefinitionViewModel def in e.NewItems)
+                    _partDefinitionsById[def.Id.Value] = def;
+                break;
+            case NotifyCollectionChangedAction.Remove:
+                if (e.OldItems is null) break;
+                foreach (boilersGraphics.ViewModels.Parts.PartDefinitionViewModel def in e.OldItems)
+                    _partDefinitionsById.Remove(def.Id.Value);
+                break;
+            case NotifyCollectionChangedAction.Replace:
+                if (e.OldItems is not null)
+                    foreach (boilersGraphics.ViewModels.Parts.PartDefinitionViewModel def in e.OldItems)
+                        _partDefinitionsById.Remove(def.Id.Value);
+                if (e.NewItems is not null)
+                    foreach (boilersGraphics.ViewModels.Parts.PartDefinitionViewModel def in e.NewItems)
+                        _partDefinitionsById[def.Id.Value] = def;
+                break;
+            case NotifyCollectionChangedAction.Reset:
+                _partDefinitionsById.Clear();
+                foreach (var def in PartDefinitions)
+                    _partDefinitionsById[def.Id.Value] = def;
+                break;
+        }
+    }
+
+    /// <summary>
+    /// AllItems の PartInstance が PartDefinitions に存在する DefinitionId を参照しているかを検査する。
+    /// Save/Load の前後で孤児参照を検出するために使う (Phase 1-c-8)。
+    /// </summary>
+    public PartReferenceValidationResult ValidatePartReferences()
+    {
+        var orphans = new List<boilersGraphics.ViewModels.Parts.PartInstanceViewModel>();
+        var items = AllItems.Value;
+        if (items is null) return new PartReferenceValidationResult(orphans);
+
+        foreach (var item in items)
+        {
+            if (item is not boilersGraphics.ViewModels.Parts.PartInstanceViewModel pi) continue;
+            if (!_partDefinitionsById.ContainsKey(pi.DefinitionId.Value))
+                orphans.Add(pi);
+        }
+        return new PartReferenceValidationResult(orphans);
+    }
+
+    public readonly record struct PartReferenceValidationResult(
+        IReadOnlyList<boilersGraphics.ViewModels.Parts.PartInstanceViewModel> OrphanedInstances)
+    {
+        public bool HasOrphans => OrphanedInstances.Count > 0;
+    }
 
     public IReadOnlyBindableReactiveProperty<LayerTreeViewItemBase[]> SelectedLayers { get; }
 
@@ -4872,9 +4938,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
             .FirstOrDefault();
         if (instance is null) return;
 
-        var definition = PartDefinitions
-            .FirstOrDefault(d => d.Id.Value == instance.DefinitionId.Value);
-        if (definition is null) return;
+        if (!TryGetPartDefinition(instance.DefinitionId.Value, out var definition)) return;
 
         MainWindowVM.Recorder.BeginRecode();
         try
@@ -4913,9 +4977,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
             .FirstOrDefault();
         if (instance is null) return;
 
-        var definition = PartDefinitions
-            .FirstOrDefault(d => d.Id.Value == instance.DefinitionId.Value);
-        if (definition is null) return;
+        if (!TryGetPartDefinition(instance.DefinitionId.Value, out var definition)) return;
 
         var newName = GenerateCloneName(definition.Name.Value);
         var clone = boilersGraphics.Helpers.Parts.PartOperations.Clone(definition, newName);
@@ -4965,9 +5027,7 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
             .FirstOrDefault();
         if (instance is null) return;
 
-        var definition = PartDefinitions
-            .FirstOrDefault(d => d.Id.Value == instance.DefinitionId.Value);
-        if (definition is null) return;
+        if (!TryGetPartDefinition(instance.DefinitionId.Value, out var definition)) return;
 
         OpenPartEditor(definition);
     }

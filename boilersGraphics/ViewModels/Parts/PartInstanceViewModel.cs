@@ -71,10 +71,7 @@ public class PartInstanceViewModel : DesignerItemViewModelBase
     private void RequestEditDefinition()
     {
         if (Owner is not DiagramViewModel diagram) return;
-
-        var definition = diagram.PartDefinitions
-            .FirstOrDefault(d => d.Id.Value == DefinitionId.Value);
-        if (definition is null) return;
+        if (!diagram.TryGetPartDefinition(DefinitionId.Value, out var definition)) return;
 
         diagram.OpenPartEditor(definition);
     }
