@@ -225,8 +225,8 @@ public class ToolBarViewModel
                 SelectOneToolItem("letter-vertical");
             })));
         // Phase 2-b-2: モノスペーステキストツール (Q-10 採用名)
-        // アイコンは既存 A_dark.png を流用 (専用アイコンは Phase 2-b-3 以降で差し替え予定)
-        ToolItems.Add(new ToolItemData("monotext", "pack://application:,,,/Assets/img/A_dark.png",
+        // 専用アイコン: MDI console-line (Phase 2-b の差し替え完了)
+        ToolItems.Add(new ToolItemData("monotext", "pack://application:,,,/Assets/img/monotext_dark.png",
             "モノスペーステキスト", new DelegateCommand(() =>
             {
                 MainWindowViewModel.Instance.ClearCurrentOperationAndDetails();
@@ -236,8 +236,8 @@ public class ToolBarViewModel
                 SelectOneToolItem("monotext");
             })));
         // Phase 2-c: データジェネレータツール (Q-10 採用名)
-        // アイコンは既存 A_dark.png を流用 (専用アイコンは後で差し替え予定)
-        ToolItems.Add(new ToolItemData("datagen", "pack://application:,,,/Assets/img/A_dark.png",
+        // 専用アイコン: MDI shuffle-variant
+        ToolItems.Add(new ToolItemData("datagen", "pack://application:,,,/Assets/img/datagen_dark.png",
             "データジェネレータ", new DelegateCommand(() =>
             {
                 MainWindowViewModel.Instance.ClearCurrentOperationAndDetails();
@@ -247,8 +247,8 @@ public class ToolBarViewModel
                 SelectOneToolItem("datagen");
             })));
         // Phase 2-d: 数値列ツール (Q-10 採用名)
-        // アイコンは既存 A_dark.png を流用 (専用アイコンは後で差し替え予定)
-        ToolItems.Add(new ToolItemData("numseq", "pack://application:,,,/Assets/img/A_dark.png",
+        // 専用アイコン: MDI numeric
+        ToolItems.Add(new ToolItemData("numseq", "pack://application:,,,/Assets/img/numseq_dark.png",
             "数値列", new DelegateCommand(() =>
             {
                 MainWindowViewModel.Instance.ClearCurrentOperationAndDetails();

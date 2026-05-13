@@ -168,6 +168,9 @@
     <Resource Include="Assets\img\square150x150logo_scale_200_Qpf_icon.ico" />
     <Resource Include="square150x150logo_scale_200_Qpf_icon.ico" />
     <Resource Include="Assets\img\slice_tool.png" />
+    <Resource Include="Assets\img\monotext_dark.png" />
+    <Resource Include="Assets\img\datagen_dark.png" />
+    <Resource Include="Assets\img\numseq_dark.png" />
     <Resource Include="Fonts\JetBrainsMono-Regular.ttf" />
     <Resource Include="Fonts\JetBrainsMono-Bold.ttf" />
     <Resource Include="Fonts\JetBrainsMono-Italic.ttf" />
