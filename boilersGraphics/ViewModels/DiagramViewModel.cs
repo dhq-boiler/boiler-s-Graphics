@@ -5069,8 +5069,94 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
         var parameters = new Prism.Services.Dialogs.DialogParameters
         {
             { ViewModels.Parts.PartEditorViewModel.PartDefinitionKey, definition },
+            { ViewModels.Parts.PartEditorViewModel.DiagramKey, this },
         };
         dialogService.Show(nameof(Views.PartEditor), parameters, _ => { });
+    }
+
+    /// <summary>
+    /// Phase 1-c-6-d-6: Definition に公開パラメータを追加し、その Definition を参照する全 PartInstance の
+    /// ParameterValues にも DefaultValue を投入する。Recorder 経由で Undo に対応。
+    /// </summary>
+    public void AddExposedPropertyToDefinition(
+        boilersGraphics.ViewModels.Parts.PartDefinitionViewModel definition,
+        boilersGraphics.ViewModels.Parts.ExposedPropertyViewModel exposedProperty)
+    {
+        if (definition is null || exposedProperty is null) return;
+
+        MainWindowVM.Recorder.BeginRecode();
+        try
+        {
+            MainWindowVM.Recorder.Current.ExecuteAdd(definition.ExposedProperties, exposedProperty);
+            SyncExposedPropertyAddedToInstances(definition, exposedProperty);
+        }
+        finally
+        {
+            MainWindowVM.Recorder.EndRecode();
+        }
+    }
+
+    /// <summary>
+    /// Phase 1-c-6-d-6: Definition から公開パラメータを削除し、その Definition を参照する全 PartInstance の
+    /// ParameterValues からも除去する。
+    /// </summary>
+    public void RemoveExposedPropertyFromDefinition(
+        boilersGraphics.ViewModels.Parts.PartDefinitionViewModel definition,
+        boilersGraphics.ViewModels.Parts.ExposedPropertyViewModel exposedProperty)
+    {
+        if (definition is null || exposedProperty is null) return;
+
+        MainWindowVM.Recorder.BeginRecode();
+        try
+        {
+            MainWindowVM.Recorder.Current.ExecuteRemove(definition.ExposedProperties, exposedProperty);
+            SyncExposedPropertyRemovedFromInstances(definition, exposedProperty);
+        }
+        finally
+        {
+            MainWindowVM.Recorder.EndRecode();
+        }
+    }
+
+    private void SyncExposedPropertyAddedToInstances(
+        boilersGraphics.ViewModels.Parts.PartDefinitionViewModel definition,
+        boilersGraphics.ViewModels.Parts.ExposedPropertyViewModel exposedProperty)
+    {
+        var items = AllItems.Value;
+        if (items is null) return;
+
+        var defId = definition.Id.Value;
+        var epId = exposedProperty.Id.Value;
+        var defaultValue = exposedProperty.DefaultValue.Value;
+
+        foreach (var item in items)
+        {
+            if (item is boilersGraphics.ViewModels.Parts.PartInstanceViewModel pi
+                && pi.DefinitionId.Value == defId)
+            {
+                pi.GetOrCreateParameterValue(epId, defaultValue);
+            }
+        }
+    }
+
+    private void SyncExposedPropertyRemovedFromInstances(
+        boilersGraphics.ViewModels.Parts.PartDefinitionViewModel definition,
+        boilersGraphics.ViewModels.Parts.ExposedPropertyViewModel exposedProperty)
+    {
+        var items = AllItems.Value;
+        if (items is null) return;
+
+        var defId = definition.Id.Value;
+        var epId = exposedProperty.Id.Value;
+
+        foreach (var item in items)
+        {
+            if (item is boilersGraphics.ViewModels.Parts.PartInstanceViewModel pi
+                && pi.DefinitionId.Value == defId)
+            {
+                pi.RemoveParameterValue(epId);
+            }
+        }
     }
 
     #endregion //EditPartDefinition

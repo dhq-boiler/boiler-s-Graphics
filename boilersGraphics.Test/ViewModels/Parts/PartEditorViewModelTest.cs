@@ -1,6 +1,7 @@
 ﻿using boilersGraphics.Models.Parts;
 using boilersGraphics.ViewModels;
 using boilersGraphics.ViewModels.Parts;
+using Moq;
 using NUnit.Framework;
 using Prism.Services.Dialogs;
 using R3;
@@ -277,6 +278,116 @@ public class PartEditorViewModelTest
         vm.SelectItem(defVm.Items[0]);
 
         Assert.DoesNotThrow(() => vm.SelectEdgeColorCommand.Execute(Unit.Default));
+    }
+
+    // Phase 1-c-6-d-6: 公開パラメータ編集 UI
+
+    [Test, RequiresThread(ApartmentState.STA)]
+    public void AddExposedPropertyDirect_Diagramなし_DefinitionのExposedPropertiesに追加される()
+    {
+        var vm = new PartEditorViewModel();
+        var defVm = new PartDefinitionViewModel(new PartDefinition { Name = "リング" });
+        vm.OnDialogOpened(new DialogParameters
+        {
+            { PartEditorViewModel.PartDefinitionKey, defVm }
+        });
+        var ep = new ExposedPropertyViewModel(new ExposedProperty
+        {
+            Name = "半径",
+            Type = ExposedPropertyType.Double,
+            DefaultValue = 10d,
+        });
+
+        vm.AddExposedPropertyDirect(ep);
+
+        Assert.That(defVm.ExposedProperties, Has.Count.EqualTo(1));
+        Assert.That(defVm.ExposedProperties[0], Is.SameAs(ep));
+    }
+
+    [Test, RequiresThread(ApartmentState.STA)]
+    public void AddExposedPropertyDirect_Definitionなし_例外なし()
+    {
+        var vm = new PartEditorViewModel();
+        var ep = new ExposedPropertyViewModel(new ExposedProperty { Name = "X" });
+        Assert.DoesNotThrow(() => vm.AddExposedPropertyDirect(ep));
+    }
+
+    [Test, RequiresThread(ApartmentState.STA)]
+    public void AddExposedPropertyDirect_nullEp_例外なし()
+    {
+        var vm = new PartEditorViewModel();
+        var defVm = new PartDefinitionViewModel(new PartDefinition { Name = "リング" });
+        vm.OnDialogOpened(new DialogParameters
+        {
+            { PartEditorViewModel.PartDefinitionKey, defVm }
+        });
+        Assert.DoesNotThrow(() => vm.AddExposedPropertyDirect(null));
+        Assert.That(defVm.ExposedProperties, Has.Count.EqualTo(0));
+    }
+
+    [Test, RequiresThread(ApartmentState.STA)]
+    public void RemoveExposedPropertyCommand_Diagramなし_DefinitionのExposedPropertiesから消える()
+    {
+        var vm = new PartEditorViewModel();
+        var defVm = new PartDefinitionViewModel(new PartDefinition { Name = "リング" });
+        vm.OnDialogOpened(new DialogParameters
+        {
+            { PartEditorViewModel.PartDefinitionKey, defVm }
+        });
+        var ep = new ExposedPropertyViewModel(new ExposedProperty { Name = "半径" });
+        vm.AddExposedPropertyDirect(ep);
+
+        vm.RemoveExposedPropertyCommand.Execute(ep);
+
+        Assert.That(defVm.ExposedProperties, Has.Count.EqualTo(0));
+    }
+
+    [Test, RequiresThread(ApartmentState.STA)]
+    public void RemoveExposedPropertyCommand_存在しないep_例外なし()
+    {
+        var vm = new PartEditorViewModel();
+        var defVm = new PartDefinitionViewModel(new PartDefinition { Name = "リング" });
+        vm.OnDialogOpened(new DialogParameters
+        {
+            { PartEditorViewModel.PartDefinitionKey, defVm }
+        });
+        var ep = new ExposedPropertyViewModel(new ExposedProperty { Name = "未登録" });
+
+        Assert.DoesNotThrow(() => vm.RemoveExposedPropertyCommand.Execute(ep));
+    }
+
+    [Test, RequiresThread(ApartmentState.STA)]
+    public void AddExposedPropertyCommand_DialogServiceなし_例外なし_何も追加されない()
+    {
+        var vm = new PartEditorViewModel();
+        var defVm = new PartDefinitionViewModel(new PartDefinition { Name = "リング" });
+        vm.OnDialogOpened(new DialogParameters
+        {
+            { PartEditorViewModel.PartDefinitionKey, defVm }
+        });
+
+        Assert.DoesNotThrow(() => vm.AddExposedPropertyCommand.Execute(Unit.Default));
+        Assert.That(defVm.ExposedProperties, Has.Count.EqualTo(0),
+            "DialogService が無いと追加経路が無いので、何も追加されない");
+    }
+
+    [Test, RequiresThread(ApartmentState.STA)]
+    public void OnDialogOpened_DiagramKey付き_Diagramプロパティに反映される()
+    {
+        boilersGraphics.App.IsTest = true;
+        var dlgService = new Mock<IDialogService>();
+        var mw = new MainWindowViewModel(dlgService.Object);
+        var diagram = new DiagramViewModel(mw);
+
+        var vm = new PartEditorViewModel();
+        var defVm = new PartDefinitionViewModel(new PartDefinition { Name = "リング" });
+        vm.OnDialogOpened(new DialogParameters
+        {
+            { PartEditorViewModel.PartDefinitionKey, defVm },
+            { PartEditorViewModel.DiagramKey, diagram },
+        });
+
+        Assert.That(vm.Diagram, Is.SameAs(diagram));
     }
 
     [Test, RequiresThread(ApartmentState.STA)]

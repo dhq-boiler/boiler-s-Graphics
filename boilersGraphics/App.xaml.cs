@@ -232,6 +232,7 @@ public partial class App : PrismApplication
         containerRegistry.RegisterDialog<UndoHistory, UndoHistoryViewModel>();
         containerRegistry.RegisterDialog<PromoteToPart, PromoteToPartDialogViewModel>();
         containerRegistry.RegisterDialog<PartEditor, boilersGraphics.ViewModels.Parts.PartEditorViewModel>();
+        containerRegistry.RegisterDialog<AddExposedProperty, boilersGraphics.ViewModels.Parts.AddExposedPropertyDialogViewModel>();
 
         containerRegistry.RegisterForNavigation<Detail>();
         containerRegistry.RegisterDialog<DetailRectangle, DetailRectangleViewModel>();

@@ -1,5 +1,6 @@
 ﻿using boilersGraphics.Helpers;
 using boilersGraphics.Models;
+using boilersGraphics.Models.Parts;
 using boilersGraphics.ViewModels;
 using boilersGraphics.Views;
 using Prism.Commands;
@@ -14,6 +15,7 @@ namespace boilersGraphics.ViewModels.Parts;
 public class PartEditorViewModel : BindableBase, IDialogAware, IDisposable
 {
     public const string PartDefinitionKey = "PartDefinition";
+    public const string DiagramKey = "Diagram";
 
     private const double DefaultShapeLeft = 50d;
     private const double DefaultShapeTop = 50d;
@@ -37,6 +39,12 @@ public class PartEditorViewModel : BindableBase, IDialogAware, IDisposable
 
     public PartDefinitionViewModel Definition { get; private set; }
 
+    /// <summary>
+    /// Phase 1-c-6-d-6: 親 DiagramViewModel への参照。ExposedProperty の Add/Remove を Instance に同期するために使う。
+    /// OnDialogOpened で渡される。null の場合 (テスト時など) は同期をスキップして Definition のみ更新する。
+    /// </summary>
+    public DiagramViewModel Diagram { get; private set; }
+
     public DelegateCommand CloseCommand { get; }
 
     public ReactiveCommand AddRectangleCommand { get; }
@@ -46,6 +54,10 @@ public class PartEditorViewModel : BindableBase, IDialogAware, IDisposable
     public ReactiveCommand SelectEdgeColorCommand { get; }
 
     public ReactiveCommand SelectFillColorCommand { get; }
+
+    public ReactiveCommand AddExposedPropertyCommand { get; }
+
+    public ReactiveCommand<ExposedPropertyViewModel> RemoveExposedPropertyCommand { get; }
 
     public BindableReactiveProperty<SelectableDesignerItemViewModelBase> SelectedItem { get; } = new();
 
@@ -82,6 +94,16 @@ public class PartEditorViewModel : BindableBase, IDialogAware, IDisposable
         SelectFillColorCommand = new ReactiveCommand();
         SelectFillColorCommand
             .Subscribe(_ => SelectColor(isEdge: false))
+            .AddTo(_disposables);
+
+        AddExposedPropertyCommand = new ReactiveCommand();
+        AddExposedPropertyCommand
+            .Subscribe(_ => AddExposedProperty())
+            .AddTo(_disposables);
+
+        RemoveExposedPropertyCommand = new ReactiveCommand<ExposedPropertyViewModel>();
+        RemoveExposedPropertyCommand
+            .Subscribe(RemoveExposedProperty)
             .AddTo(_disposables);
     }
 
@@ -181,6 +203,55 @@ public class PartEditorViewModel : BindableBase, IDialogAware, IDisposable
         }
     }
 
+    private void AddExposedProperty()
+    {
+        if (Definition is null) return;
+
+        ExposedProperty model = null;
+        if (_dialogService is not null)
+        {
+            IDialogResult dialogResult = null;
+            _dialogService.ShowDialog(
+                nameof(Views.AddExposedProperty),
+                new DialogParameters(),
+                ret => dialogResult = ret);
+
+            if (dialogResult is null || dialogResult.Result != ButtonResult.OK) return;
+            model = dialogResult.Parameters.GetValue<ExposedProperty>(
+                AddExposedPropertyDialogViewModel.ExposedPropertyKey);
+        }
+
+        if (model is null) return;
+
+        var ep = new ExposedPropertyViewModel(model);
+        if (Diagram is not null)
+            Diagram.AddExposedPropertyToDefinition(Definition, ep);
+        else
+            Definition.ExposedProperties.Add(ep);
+    }
+
+    /// <summary>
+    /// Test hook: ダイアログを経由せずに直接 ExposedProperty を追加する。実機呼び出しは AddExposedPropertyCommand 経由。
+    /// </summary>
+    internal void AddExposedPropertyDirect(ExposedPropertyViewModel ep)
+    {
+        if (Definition is null || ep is null) return;
+        if (Diagram is not null)
+            Diagram.AddExposedPropertyToDefinition(Definition, ep);
+        else
+            Definition.ExposedProperties.Add(ep);
+    }
+
+    private void RemoveExposedProperty(ExposedPropertyViewModel ep)
+    {
+        if (Definition is null || ep is null) return;
+
+        if (Diagram is not null)
+            Diagram.RemoveExposedPropertyFromDefinition(Definition, ep);
+        else
+            Definition.ExposedProperties.Remove(ep);
+    }
+
     public bool CanCloseDialog() => true;
 
     public void OnDialogClosed()
@@ -195,6 +266,9 @@ public class PartEditorViewModel : BindableBase, IDialogAware, IDisposable
 
         Definition = parameters.GetValue<PartDefinitionViewModel>(PartDefinitionKey);
         if (Definition is null) return;
+
+        if (parameters.ContainsKey(DiagramKey))
+            Diagram = parameters.GetValue<DiagramViewModel>(DiagramKey);
 
         UpdateTitle(Definition.Name.Value);
         Definition.Name
