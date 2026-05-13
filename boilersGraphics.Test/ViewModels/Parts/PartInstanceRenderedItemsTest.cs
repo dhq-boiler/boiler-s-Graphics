@@ -233,4 +233,67 @@ public class PartInstanceRenderedItemsTest
         Assert.That(instance.HasRenderedItems.Value, Is.False);
         Assert.That(instance.IsRenderedItemsEmpty.Value, Is.True);
     }
+
+    // ---- Phase 2-f-3: 後付け Definition / デシリアライズ経路の再初期化 ----
+
+    [Test, RequiresThread(ApartmentState.STA)]
+    public void PartDefinition後付けで既存PartInstanceが再Initializeされる()
+    {
+        var diagram = new MainWindowViewModel(new Moq.Mock<Prism.Services.Dialogs.IDialogService>().Object).DiagramViewModel;
+
+        // PartInstance を Layer に追加 (Definition なしの状態)
+        var (definition, _, ep) = BuildDefinitionWithWidthBinding();
+        var instance = new PartInstanceViewModel(definition.Id.Value) { Owner = diagram };
+        instance.Left.Value = 10;
+        instance.Top.Value = 20;
+        instance.Width.Value = 200;
+        instance.Height.Value = 100;
+        diagram.AddItemCommand.Execute(instance);
+
+        // 1) Definition 未登録なので RenderedItems は空
+        Assert.That(instance.RenderedItems.Count, Is.EqualTo(0));
+
+        // 2) PartDefinitions に Definition を後から追加
+        diagram.PartDefinitions.Add(definition);
+
+        // 3) PartInstance が自動的に Initialize される
+        Assert.That(instance.RenderedItems.Count, Is.EqualTo(1));
+        Assert.That(instance.HasRenderedItems.Value, Is.True);
+        Assert.That(instance.TryGetParameterValue(ep.Id.Value, out _), Is.True);
+    }
+
+    [Test, RequiresThread(ApartmentState.STA)]
+    public void ObjectDeserializer経路_Definition先読み済みなら即時Initialize()
+    {
+        var diagram = new MainWindowViewModel(new Moq.Mock<Prism.Services.Dialogs.IDialogService>().Object).DiagramViewModel;
+        var (definition, _, _) = BuildDefinitionWithWidthBinding();
+        diagram.PartDefinitions.Add(definition); // 先に登録
+
+        var xml = new System.Xml.Linq.XElement("DesignerItem",
+            new System.Xml.Linq.XElement("ID", Guid.NewGuid()),
+            new System.Xml.Linq.XElement("ParentID", Guid.Empty),
+            new System.Xml.Linq.XElement("Type", typeof(PartInstanceViewModel).FullName),
+            new System.Xml.Linq.XElement("Left", 0),
+            new System.Xml.Linq.XElement("Top", 0),
+            new System.Xml.Linq.XElement("Width", 100),
+            new System.Xml.Linq.XElement("Height", 100),
+            new System.Xml.Linq.XElement("ZIndex", 0),
+            new System.Xml.Linq.XElement("EdgeBrush", System.Xml.Linq.XElement.Parse(
+                boilersGraphics.Helpers.WpfObjectSerializer.Serialize(new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Transparent)))),
+            new System.Xml.Linq.XElement("FillBrush", System.Xml.Linq.XElement.Parse(
+                boilersGraphics.Helpers.WpfObjectSerializer.Serialize(new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Transparent)))),
+            new System.Xml.Linq.XElement("EdgeThickness", 0),
+            new System.Xml.Linq.XElement("PathGeometryNoRotate", "M 0,0 L 100,0 L 100,100 L 0,100 Z"),
+            new System.Xml.Linq.XElement("PathGeometryRotate", "M 0,0 L 100,0 L 100,100 L 0,100 Z"),
+            new System.Xml.Linq.XElement("RotationAngle", 0),
+            new System.Xml.Linq.XElement("StrokeLineJoin", "Miter"),
+            new System.Xml.Linq.XElement("StrokeMiterLimit", 10),
+            new System.Xml.Linq.XElement("StrokeDashArray", string.Empty),
+            new System.Xml.Linq.XElement("DefinitionId", definition.Id.Value));
+
+        var restored = (PartInstanceViewModel)boilersGraphics.Helpers.ObjectDeserializer.ExtractDesignerItemViewModelBase(diagram, xml);
+
+        Assert.That(restored.DefinitionId.Value, Is.EqualTo(definition.Id.Value));
+        Assert.That(restored.RenderedItems.Count, Is.EqualTo(1), "Definition 先読みなら即時 Initialize される");
+    }
 }

@@ -720,6 +720,15 @@ public class ObjectDeserializer
                     partInstance.GetOrCreateParameterValue(epId, value);
                 }
             }
+
+            // Phase 2-f-3: Definition が既に読み込み済みなら即時 Initialize。
+            // PartDefinitions セクションが Layers より後の順で読まれるプロジェクトファイルでは、
+            // ここでは見つからないが、その場合は DiagramViewModel.PartDefinitions の CollectionChanged 経路で後から Initialize される。
+            if (diagramViewModel is not null
+                && diagramViewModel.TryGetPartDefinition(partInstance.DefinitionId.Value, out var partDef))
+            {
+                partInstance.InitializeRenderedItems(partDef);
+            }
         }
 
         item.UpdatePathGeometryIfEnable(string.Empty, 0, 0, true);

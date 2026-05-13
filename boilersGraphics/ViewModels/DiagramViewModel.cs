@@ -2223,7 +2223,10 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
             case NotifyCollectionChangedAction.Add:
                 if (e.NewItems is null) break;
                 foreach (boilersGraphics.ViewModels.Parts.PartDefinitionViewModel def in e.NewItems)
+                {
                     _partDefinitionsById[def.Id.Value] = def;
+                    InitializePartInstancesForDefinition(def);
+                }
                 break;
             case NotifyCollectionChangedAction.Remove:
                 if (e.OldItems is null) break;
@@ -2236,13 +2239,38 @@ public class DiagramViewModel : BindableBase, IDiagramViewModel, IDisposable
                         _partDefinitionsById.Remove(def.Id.Value);
                 if (e.NewItems is not null)
                     foreach (boilersGraphics.ViewModels.Parts.PartDefinitionViewModel def in e.NewItems)
+                    {
                         _partDefinitionsById[def.Id.Value] = def;
+                        InitializePartInstancesForDefinition(def);
+                    }
                 break;
             case NotifyCollectionChangedAction.Reset:
                 _partDefinitionsById.Clear();
                 foreach (var def in PartDefinitions)
+                {
                     _partDefinitionsById[def.Id.Value] = def;
+                    InitializePartInstancesForDefinition(def);
+                }
                 break;
+        }
+    }
+
+    /// <summary>
+    /// Phase 2-f-3: Definition が後から (デシリアライズ完了後 / Import 後) 追加された場合に、
+    /// その Definition を参照済みの PartInstance を全部 InitializeRenderedItems で再配線する。
+    /// PartDefinitions の CollectionChanged から呼ばれる。
+    /// </summary>
+    private void InitializePartInstancesForDefinition(boilersGraphics.ViewModels.Parts.PartDefinitionViewModel def)
+    {
+        var items = AllItems.Value;
+        if (items is null) return;
+        foreach (var item in items)
+        {
+            if (item is boilersGraphics.ViewModels.Parts.PartInstanceViewModel pi
+                && pi.DefinitionId.Value == def.Id.Value)
+            {
+                pi.InitializeRenderedItems(def);
+            }
         }
     }
 
